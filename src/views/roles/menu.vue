@@ -481,15 +481,25 @@
         const { results } = await queryMenu({})
 
         results.map((items) => {
+          const {
+            meta = {},
+            name,
+            objectId,
+            icon,
+            parent,
+            createdAt,
+            orderBy,
+            url,
+          } = items
           var obj = {}
-          obj.name = items.name
-          obj.meta = items.meta
-          obj.objectId = items.objectId
-          obj.icon = items.icon
-          obj.parent = items.parent.objectId
-          obj.createtime = utc2beijing(items.createdAt)
-          obj.orderBy = items.orderBy
-          obj.url = items.url
+          obj.name = name
+          obj.meta = meta
+          obj.objectId = objectId
+          obj.icon = icon
+          obj.parent = parent.objectId
+          obj.createtime = utc2beijing(createdAt)
+          obj.orderBy = orderBy
+          obj.url = url
 
           this.data.push(obj)
         })

@@ -80,7 +80,11 @@ router.beforeEach(async (to, from, next) => {
 })
 router.afterEach((to) => {
   // 输出路由信息，方便找到点击的页面
-  console.log('%c%s', 'color: red;font-size: 12px;', to.meta.component)
+  console.log(
+    '%c%s',
+    'color: red;font-size: 12px;',
+    to.meta.component || JSON.stringify(to)
+  )
   if (to.meta.title) document.title = getPageTitle(`${to.meta.title}`)
   if (VabProgress.status) VabProgress.done()
 })

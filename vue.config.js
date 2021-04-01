@@ -61,7 +61,7 @@ module.exports = {
     },
     proxy: {
       [baseURL]: {
-        target: proxyUrl.sukeUrl,
+        target: proxyUrl.xinmaheUrl,
         ws: true,
         changeOrigin: true,
         pathRewrite: {
