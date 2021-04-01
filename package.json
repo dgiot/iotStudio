@@ -1,0 +1,105 @@
+{
+  "name": "dgiot_dashboard",
+  "version": "1.0.0",
+  "author": "iotn2n",
+  "license": "Mozilla Public License Version 2.0",
+  "private": true,
+  "homepage": "https://github.com/dgiot/dgiot_dashboard.git",
+  "scripts": {
+    "dev": "vue-cli-service serve",
+    "start": "vue-cli-service serve",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "build:report": "vue-cli-service build --report",
+    "lint": "vue-cli-service lint",
+    "lint:style": "stylelint **/*.{vue,scss} --fix",
+    "inspect": "vue-cli-service inspect",
+    "ncu": "yarn global add npm-check-updates",
+    "update": "ncu -u --reject eslint,sass-loader,compression-webpack-plugin,filemanager-webpack-plugin --registry https://registry.npm.taobao.org&&npm install --registry=https://registry.npm.taobao.org&&cnpm i image-webpack-loader -D",
+    "clear": "npm cache clean -f&&rimraf node_modules&&npm install --registry=https://registry.npm.taobao.org&&cnpm i image-webpack-loader -D",
+    "image-webpack-loader": "cnpm i image-webpack-loader -D"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dgiot/dgiot_dashboard.git"
+  },
+  "dependencies": {
+    "@logicflow/core": "^0.2.9",
+    "@logicflow/extension": "^0.2.9",
+    "@quasar/extras": "^1.10.0",
+    "core-js": "^3.9.1",
+    "element-ui": "^2.15.1",
+    "konva": "^7.2.5",
+    "quasar": "^1.15.9",
+    "resize-detector": "^0.3.0",
+    "vab-contextmenu": "^0.0.1",
+    "vab-count": "^0.0.1",
+    "vab-cropper": "^0.0.1",
+    "vab-icons": "0.0.19",
+    "vab-magnifier": "0.0.1",
+    "vab-player": "^0.0.4",
+    "vab-quill": "^3.0.1",
+    "vue-count-to": "^1.0.13",
+    "vue-json-editor": "^1.4.3",
+    "vue-konva": "^2.1.7",
+    "zx-markdown-editor": "^0.0.2",
+    "topology-vue": "^0.5.7"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.5.12",
+    "@vue/cli-plugin-eslint": "^4.5.12",
+    "@vue/cli-plugin-router": "^4.5.12",
+    "@vue/cli-plugin-vuex": "^4.5.12",
+    "@vue/cli-service": "^4.5.12",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "body-parser": "^1.19.0",
+    "chalk": "^4.1.0",
+    "chokidar": "^3.5.1",
+    "commitizen": "^4.2.3",
+    "compression-webpack-plugin": "^6.1.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^7.21.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.8.0",
+    "filemanager-webpack-plugin": "^3.1.1",
+    "husky": "^6.0.0",
+    "image-webpack-loader": "^7.0.1",
+    "lint-staged": "^10.5.4",
+    "prettier": "^2.2.1",
+    "raw-loader": "^4.0.2",
+    "sass": "^1.32.8",
+    "sass-loader": "^10.1.1",
+    "script-loader": "^0.7.2",
+    "stylelint": "^13.12.0",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-recess-order": "^2.3.0",
+    "svg-sprite-loader": "^6.0.2",
+    "vue-eslint-parser": "^7.6.0",
+    "vue-template-compiler": "^2.6.12",
+    "webpackbar": "^5.0.0-3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue}": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  },
+  "engines": {
+    "node": ">= 12.0.0",
+    "npm": ">= 3.0.0"
+  }
+}

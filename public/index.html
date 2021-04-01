@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0" name="viewport" />
+    <link href="<%= BASE_URL %>favicon.ico" rel="icon" />
+    <title><%= VUE_APP_TITLE %></title>
+    <meta content="<%= VUE_APP_Keywords %>" name="keywords" />
+    <meta content="<%= VUE_APP_Description %>" name="description" />
+    <meta content="<%= VUE_APP_AUTHOR %>" name="author" />
+    <link href="<%= BASE_URL %>static/css/loading.css" rel="stylesheet" />
+    <!-- 引入样式 -->
+    <% for(var css of htmlWebpackPlugin.options.staticUrl.css) { %>
+    <link rel="stylesheet" href="<%=css%>" />
+    <% } %>
+    <!-- 引入JS -->
+    <% for(var js of htmlWebpackPlugin.options.staticUrl.js) { %>
+    <script charset="utf-8" src="<%=js%>"></script>
+    <% } %>
+  </head>
+  <body>
+    <noscript>
+      非常抱歉鉴于安全考量,您无法查看<%= VUE_APP_TITLE %>源代码
+    </noscript>
+    <div id="dgiot">
+      <div class="first-loading-wrp">
+        <div class="loading-wrp">
+          <span class="dot dot-spin">
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+          </span>
+        </div>
+        <h1><%= VUE_APP_TITLE %></h1>
+      </div>
+    </div>
+  </body>
+</html>

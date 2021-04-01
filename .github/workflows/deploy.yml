@@ -1,0 +1,30 @@
+name: Deploy
+
+on:
+  push:
+
+jobs:
+  Cloudbase:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12"
+      - name: Use cnpm
+        run: npm install cnpm -g --registry=https://registry.npm.taobao.org
+      - name: install
+        run: cnpm install
+      - name: build
+        run: cnpm run build
+      - name: Deploy static to Tencent CloudBase
+        id: deployStatic
+        uses: TencentCloudBase/cloudbase-action@v1.1.1
+        with:
+          secretId: ${{ secrets.SECRET_ID }}
+          secretKey: ${{ secrets.SECRET_KEY }}
+          envId: ${{ secrets.ENV_ID }}
+          staticSrcPath: dist
