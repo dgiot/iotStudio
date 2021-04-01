@@ -8,19 +8,25 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout
+      - name: Checkout 🛎️
         uses: actions/checkout@v2
-      - name: Use Node
+      - name: Use Node ☊
         uses: actions/setup-node@v1
         with:
-          node-version: "12"
-      - name: Use cnpm
-        run: npm install cnpm -g --registry=https://registry.npm.taobao.org
-      - name: install
-        run: cnpm install
-      - name: build
-        run: cnpm run build
-      - name: Deploy static to Tencent CloudBase
+          node-version: "12.16.0"
+      - name: Use yarn 🧶
+        run: npm install -g yarn
+      - name: install 🔥
+        run: yarn
+      - name: build 🔧
+        run: yarn build
+      - name: Deploy static to github pagese 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist
+      - name: Deploy static to Tencent CloudBase ☁️
         id: deployStatic
         uses: TencentCloudBase/cloudbase-action@v1.1.1
         with:
