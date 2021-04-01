@@ -236,7 +236,7 @@
               <el-form-item
                 v-show="custom_status == 'add'"
                 label="所属应用"
-                prop="roles"
+                prop="relationApp"
               >
                 <el-input
                   v-model="form.relationApp"
@@ -433,6 +433,7 @@
   import { getServer } from '@/api/Role/index'
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
+
   export default {
     data() {
       return {

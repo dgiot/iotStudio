@@ -11,7 +11,7 @@ export default {
       currentConnections: 'Current Connections',
     },
     home: {
-      app_count: 'application',
+      cla_count: 'application',
       pro_count: 'products',
       app_count: 'provider',
       dev_count: 'devices',

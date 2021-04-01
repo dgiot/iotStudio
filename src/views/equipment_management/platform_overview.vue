@@ -59,7 +59,7 @@
               <vab-icon icon="apps-fill" />
             </el-col>
             <el-col :span="12" class="card-right">
-              <p>{{ $translateTitle('home.app_count') }}</p>
+              <p>{{ $translateTitle('home.cla_count') }}</p>
               <p>{{ app_count }}</p>
             </el-col>
           </el-card>

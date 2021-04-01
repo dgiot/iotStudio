@@ -8,7 +8,7 @@ export default {
       currentConnections: '当前连接数',
     },
     home: {
-      app_count: '项目总数',
+      cla_count: '项目总数',
       pro_count: '产品总数',
       app_count: '应用总数',
       dev_count: '设备总数',

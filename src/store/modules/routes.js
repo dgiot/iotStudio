@@ -2,7 +2,7 @@
  * @description 路由拦截状态管理，目前两种模式：all模式与intelligence模式，其中partialRoutes是菜单暂未使用
  */
 import { asyncRoutes, constantRoutes, resetRouter } from '@/router'
-import { errorRoutes } from '@/config/router.config'
+import { errorRoutes, defaultRoutes, indexRoutes } from '@/config/router.config'
 import { getRouterList } from '@/api/User'
 import { convertRouter, filterRoutes } from '@/utils/routes'
 const state = () => ({
@@ -57,6 +57,8 @@ const actions = {
    */
   async setRoutes({ commit }, mode = 'none') {
     // 默认前端路由
+    let _defaultRoutes = []
+    _defaultRoutes.push(indexRoutes, defaultRoutes)
     let routes = [...asyncRoutes]
     // 设置后端路由(不需要可以删除)
     const { results } = await getRouterList()
@@ -74,20 +76,22 @@ const actions = {
      */
     let data = []
     results.forEach((item, key) => {
-      if (item.children) {
+      if (item.children && item.meta) {
         item.children.forEach((i, k) => {
-          i.hidden = i.meta.hidden || false
-          i.meta.noKeepAlive = i.meta.noKeepAlive || false
-          i.menuHidden = i.meta.menuHidden || false
-          i.alwaysShow = i.meta.alwaysShow || false
-          i.name = i.name
-          i.path = i.url
-          i.component = i.meta.component
-          i.meta.title = i.meta.title
-          i.meta.icon = i.meta.icon
+          if (i.meta) {
+            i.name = i.name
+            i.path = i.url
+            i.component = i.meta.component
+            i.hidden = i.meta.hidden || false
+            i.meta.noKeepAlive = i.meta.noKeepAlive || false
+            i.menuHidden = i.meta.menuHidden || false
+            i.alwaysShow = i.meta.alwaysShow || false
+            i.meta.title = i.meta.title
+            i.meta.icon = i.meta.icon
+          }
         })
       }
-      if (item.meta.redirect) {
+      if (item.meta && item.meta.redirect) {
         data.push({
           hidden: item.meta.hidden || false,
           menuHidden: item.meta.menuHidden || false,
@@ -103,7 +107,7 @@ const actions = {
           },
           children: item.children,
         })
-      } else {
+      } else if (item.meta) {
         data.push({
           hidden: item.hidden || false,
           menuHidden: item.menuHidden || false,
@@ -118,6 +122,14 @@ const actions = {
           },
           children: item.children,
         })
+      } else {
+        Vue.prototype.$baseMessage(
+          '后端没有正确的返回路由,将展示默认路由',
+          'error',
+          false,
+          'vab-hey-message-error'
+        )
+        data = _defaultRoutes
       }
     })
     if (data[data.length - 1].path !== '*') {

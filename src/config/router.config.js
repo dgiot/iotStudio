@@ -25,9 +25,41 @@ const indexRoutes = {
     },
   ],
 }
+// defaultRoutes
+const defaultRoutes = {
+  path: '/roles',
+  name: 'User',
+  component: 'Layout',
+  redirect: '/structures',
+  meta: {
+    title: '多租户',
+    icon: 'admin-fill',
+  },
+  children: [
+    {
+      path: '/roles/menu',
+      name: 'Menu_management',
+      component: '@/views/roles/menu',
+      meta: {
+        icon: 'menu-2-fill',
+        title: '菜单管理',
+      },
+    },
+    {
+      path: '/roles/roles',
+      name: 'Role_management',
+      component: '@/views/roles/rolelist/roles',
+      meta: {
+        title: '角色管理',
+        icon: 'admin-line',
+      },
+    },
+  ],
+}
 // 出错路由重定向
 const errorRoutes = { path: '*', redirect: '/404', hidden: true }
 module.exports = {
-  indexRoutes: indexRoutes,
-  errorRoutes: errorRoutes,
+  indexRoutes,
+  errorRoutes,
+  defaultRoutes,
 }

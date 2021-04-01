@@ -26,7 +26,6 @@
   "dependencies": {
     "@logicflow/core": "^0.2.9",
     "@logicflow/extension": "^0.2.9",
-    "@quasar/extras": "^1.10.0",
     "core-js": "^3.9.1",
     "element-ui": "^2.15.1",
     "konva": "^7.2.5",
@@ -84,7 +83,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "node_modules/cz-customizable"
+      "path": "node_modules/cz-conventional-changelog"
     }
   },
   "husky": {

@@ -20,6 +20,7 @@ module.exports = {
   messageName: 'msg',
   proxyUrl: {
     // 175
+    xinmaheUrl: 'http://47.110.83.36/',
     toppanDocx: 'http://124.156.217.175:8085/',
     PrometheusUrl: 'http://101.32.100.234:9090/',
     server: 'http://132.232.119.105',
