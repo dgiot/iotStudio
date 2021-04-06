@@ -830,7 +830,7 @@
         const params = {
           limit: this.formData.pageSize,
           skip: (this.formData.pageIndex - 1) * this.formData.pageSize,
-          keys: 'count(*)',
+          count: 'objectId',
           include: 'product',
           where: {
             product: productid,

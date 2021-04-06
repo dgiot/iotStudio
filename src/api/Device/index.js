@@ -47,7 +47,7 @@ export async function postDevice(params) {
 // }
 export async function getDeviceCountByProduct(productId) {
   const params = {
-    keys: 'count(*)',
+    count: 'objectId',
     skip: 0,
     limit: 1,
     where: {

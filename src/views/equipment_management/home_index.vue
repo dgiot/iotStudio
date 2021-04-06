@@ -824,7 +824,7 @@
       // async getActiveDevices() {
       //   var params = {
       //     limit: 1,
-      //     keys: 'count(*)',
+      //     count: 'objectId',
       //     where: {
       //       status: 'ACTIVE',
       //     },
@@ -851,7 +851,7 @@
       async getOnlineDevices() {
         var params = {
           limit: 1,
-          keys: 'count(*)',
+          count: 'objectId',
           where: {
             status: 'ONLINE',
           },
@@ -899,7 +899,7 @@
           limit: this.devicelength,
           skip: this.devicestart,
           order: '-createdAt',
-          keys: 'count(*)',
+          count: 'objectId',
           include: 'product',
           where: {},
         }
@@ -930,8 +930,6 @@
         this.listLoading = false
         this.tableData = results
         this.devicetotal = count
-        // // 查询激活设备
-        // this.getActiveDevices()
         // 查询在线设备
         this.getOnlineDevices()
       },
@@ -1359,7 +1357,7 @@
                   this.getDevices()
                 } else {
                   var params = {
-                    keys: 'count(*)',
+                    count: 'objectId',
                     where: {
                       name: { $in: [this.deviceform.name] },
                       devaddr: { $in: [this.deviceform.devaddr] },

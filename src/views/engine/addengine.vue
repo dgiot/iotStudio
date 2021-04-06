@@ -460,7 +460,7 @@
       },
       showAllChannel() {
         const params = {
-          keys: 'count(*)',
+          count: 'objectId',
           limit: this.allChannelstart,
           where: {},
         }

@@ -581,7 +581,7 @@
           limit: this.pagesize,
           order: '-createdAt',
           where: where,
-          keys: 'count(*)',
+          count: 'objectId',
         }
         let { results, count } = await queryRole(params)
         if (results) {

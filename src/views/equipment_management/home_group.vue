@@ -937,7 +937,7 @@
       /* el-popover点击关闭*/
       makeSure(scope) {
         const params = {
-          keys: 'count(*)',
+          count: 'objectId',
           skip: 0,
           limit: 1,
           where: {

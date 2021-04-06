@@ -552,7 +552,7 @@
           this.start = 0
         }
         const params = {
-          keys: 'count(*)',
+          count: 'objectId',
           order: '-createdAt',
           limit: this.length,
           skip: this.start,

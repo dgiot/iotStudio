@@ -719,7 +719,7 @@
           order: '-updatedAt',
           skip: this.start,
           limit: this.pagesize,
-          keys: 'count(*)',
+          count: 'objectId',
           where: {},
         }
         if (this.formInline.region !== 1) {

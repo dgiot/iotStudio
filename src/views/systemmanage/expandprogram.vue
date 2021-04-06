@@ -782,7 +782,7 @@
       },
       chaxun() {
         const params = {
-          keys: 'count(*)',
+          count: 'objectId',
           skip: this.decoderstart,
           limit: this.decoderlength,
           where: {

@@ -34,7 +34,7 @@ export async function getChannelCountByProduct(
   type
 ) {
   const params = {
-    keys: 'count(*)',
+    count: 'objectId',
     limit: channellength,
     skip: channelstart,
     where: {

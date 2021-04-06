@@ -688,7 +688,7 @@
           limit: this.pagesize,
           skip: this.start,
           where: {},
-          keys: 'count(*)',
+          count: 'objectId',
         }
         const { results } = await queryUser(params)
         if (results) {

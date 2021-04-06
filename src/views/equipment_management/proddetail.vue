@@ -4220,7 +4220,7 @@
         }
         this.CategoryKey = this.$route.query.CategoryKey
         const params = {
-          keys: 'count(*)',
+          count: 'objectId',
           limit: this.productlength,
           skip: this.productstart,
           where: {
@@ -4709,7 +4709,7 @@
 
       chaxun() {
         const params = {
-          keys: 'count(*)',
+          count: 'objectId',
           skip: this.decoderstart,
           limit: this.decoderlength,
           where: {

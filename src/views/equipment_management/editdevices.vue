@@ -936,7 +936,7 @@
         const params = {
           limit: this.childrenDeviceLength,
           skip: this.childrenDeviceStart,
-          keys: 'count(*)',
+          count: 'objectId',
           include: 'product',
           parentId: this.deviceId,
           where: setkey,
@@ -1217,7 +1217,7 @@
         const params = {
           limit: this.dirlength,
           skip: (this.dirstart - 1) * this.dirlength,
-          keys: 'count(*)',
+          count: 'objectId',
           where: {
             product: val,
           },

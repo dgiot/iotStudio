@@ -173,7 +173,7 @@
         getProject({
           limit: this.page.pageSize,
           skip: this.page.currentPage,
-          keys: 'count(*)',
+          count: 'objectId',
           where,
         }).then((res) => {
           const r = res.results
@@ -279,7 +279,7 @@
 
       makeSure(scope) {
         const params = {
-          keys: 'count(*)',
+          count: 'objectId',
           skip: 0,
           limit: 1,
           where: {

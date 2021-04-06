@@ -852,7 +852,7 @@
         }
         var category = []
         const parsms = {
-          keys: 'count(*)',
+          count: 'objectId',
           order: '-updatedAt',
           limit: this.length,
           skip: this.start,
@@ -1085,7 +1085,7 @@
       /* el-popover点击关闭*/
       makeSure(scope) {
         const params = {
-          keys: 'count(*)',
+          count: 'objectId',
           skip: 0,
           limit: 1,
           where: {

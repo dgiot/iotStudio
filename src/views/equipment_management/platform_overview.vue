@@ -211,7 +211,7 @@
         // （4）如果表中只有一列，则count(*)效率最优
         // （5）如果表有多列，且不存在主键，则count(1)效率优于count(*)
         let params = {
-          // keys: 'count(*)',
+          // count: 'objectId',
           count: 'objectId',
           limit: 1,
           skip: 0,

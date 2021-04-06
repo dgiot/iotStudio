@@ -307,7 +307,7 @@
         if (text.length) {
           params = {
             order: '-createdAt',
-            keys: 'count(*)',
+            count: 'objectId',
             limit: this.limit,
             skip: this.skip,
             where: {
@@ -320,7 +320,7 @@
         } else {
           params = {
             order: '-createdAt',
-            keys: 'count(*)',
+            count: 'objectId',
             limit: this.limit,
             skip: this.skip,
             where: { type: 'Product' },

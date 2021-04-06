@@ -1215,7 +1215,7 @@
         this.listLoading = true
         const parsms = {
           order: '-createdAt',
-          keys: 'count(*)',
+          count: 'objectId',
           limit: this.length,
           skip: this.start,
           where: {
@@ -1253,7 +1253,7 @@
         this.listLoading = true
         const parsms = {
           order: '-createdAt',
-          keys: 'count(*)',
+          count: 'objectId',
           limit: this.length,
           skip: this.start,
           where: {

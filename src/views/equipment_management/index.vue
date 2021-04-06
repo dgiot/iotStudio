@@ -1068,7 +1068,7 @@
           order: '-updatedAt',
           limit: this.devicelength,
           skip: this.devicestart,
-          keys: 'count(*)',
+          count: 'objectId',
           include: 'product',
           where: {
             product: this.$route.query.productid,
