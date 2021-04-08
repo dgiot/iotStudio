@@ -196,7 +196,7 @@
             />
           </div>
         </el-dialog>
-        <div>
+        <div v-if="AllDict">
           <div style="background: #ffffff">
             <label id="plug-name" />
           </div>
@@ -325,8 +325,8 @@
           where: { category: { $nin: ['Evidence'] } },
           order: 'updatedAt', // -updatedAt  updatedAt
         }
-        const { reults } = await queryProduct(params)
-        if (reults) {
+        const { results } = await queryProduct(params)
+        if (results) {
           this.AllDict = results
           this.handleCurrentChange(results[0])
         }

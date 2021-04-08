@@ -606,6 +606,7 @@ export default {
       newusers: 'New users',
       username: 'Username',
       email: 'Email',
+      rolename: 'role name',
       phonenumber: 'Phonnumber',
       department: 'Department',
       createdtime: 'Created time',

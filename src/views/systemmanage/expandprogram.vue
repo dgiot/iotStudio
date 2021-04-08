@@ -35,7 +35,7 @@
       </span>
     </el-dialog>
     <el-row :gutter="24">
-      <el-col :span="6">
+      <el-col :span="7">
         <el-button type="primary" @click="addApi">新增Api</el-button>
         <el-table
           ref="singleTable"
@@ -44,50 +44,58 @@
           style="width: 100%"
           @current-change="handleCurrentChange"
         >
-          <el-table-column label="类型" width="100">
+          <el-table-column align="center" label="类型" width="100">
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.type }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="mod" width="100">
+          <el-table-column
+            label="mod"
+            width="120"
+            :show-overflow-tooltip="true"
+            align="center"
+          >
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.mod }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button
                 size="mini"
+                title="调测"
                 @click="handleTest(scope.$index, scope.row.type, scope.row.mod)"
               >
-                调测
+                <vab-icon icon="bug-line" />
               </el-button>
               <el-button
                 size="mini"
                 type="primary"
+                title="发布"
                 @click="
                   handleRelease(scope.$index, scope.row.type, scope.row.mod)
                 "
               >
-                发布
+                <vab-icon icon="run-line" />
               </el-button>
               <el-button
                 size="mini"
                 type="danger"
+                title="下架"
                 @click="
                   handleDelete(scope.$index, scope.row.type, scope.row.mod)
                 "
               >
-                下架
+                <vab-icon icon="delete-bin-2-fill" />
               </el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="17">
         <!-- <el-tab-pane label="物解析" name="fourth"> -->
         <div class="protolheader">
-          <el-tabs v-model="activeName">
+          <el-tabs v-model="activeName" size="mini">
             <el-tab-pane label="设计" name="design">
               <json-edit ref="jsonEditor" v-model="itemSwagger" />
             </el-tab-pane>
@@ -835,7 +843,7 @@
 <style rel="stylesheet/scss" lang="scss">
   .things-parse {
     width: 100%;
-
+    margin: 20px;
     .ace_editor {
       margin-right: 80px;
     }

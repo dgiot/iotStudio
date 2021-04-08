@@ -410,6 +410,7 @@ export default {
       newusers: '新增用户',
       username: '用户名',
       email: '邮箱',
+      rolename: '角色名',
       phonenumber: '电话',
       department: '部门',
       createdtime: '创建时间',

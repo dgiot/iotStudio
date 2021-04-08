@@ -37,7 +37,7 @@
           <div class="search">
             <el-input
               v-model="search"
-              :placeholder="$translateTitle('user.name')"
+              :placeholder="$translateTitle('user.rolename')"
               size="mini"
               clearable
             />
@@ -63,6 +63,7 @@
           </div>
           <div class="tableroles" style="margin-top: 20px">
             <el-table
+              highlight-current-row
               :data="roleList"
               :row-class-name="tableRowClassName"
               :row-style="selectedHighlight"
@@ -71,7 +72,7 @@
               @row-click="getDetailmenu"
             >
               <el-table-column
-                :label="$translateTitle('user.name')"
+                :label="$translateTitle('user.rolename')"
                 align="center"
               >
                 <template slot-scope="scope">
@@ -258,7 +259,7 @@
     >
       <el-form :model="form">
         <el-form-item
-          :label="$translateTitle('user.name')"
+          :label="$translateTitle('user.rolename')"
           :label-width="formLabelWidth"
         >
           <el-input
@@ -783,7 +784,10 @@
 <style scoped lang="scss">
   .roles {
     background: #ffffff;
-
+  ::v-deep  .el-table__body tr.current-row>td{
+      background-color: #fdf3ea;
+      color: #f19944;
+    }
     .rightTable {
       height: calc( 100vh - #{$base-top-bar-height}*4 - 25px );
       overflow-x: hidden;
@@ -833,6 +837,7 @@
   }
 </style>
 <style lang="scss">
+
   .roles .search .el-input {
     width: 200px;
   }

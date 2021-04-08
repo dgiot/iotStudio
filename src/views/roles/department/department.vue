@@ -489,8 +489,8 @@
 <style scoped lang="scss">
   .department {
     width: 90%;
-
-    margin: 0 auto;
+    margin: auto;
+    margin-top: 20px;
   }
 </style>
 <style lang="scss">
