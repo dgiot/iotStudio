@@ -140,11 +140,11 @@
     </vue-ruler-tool>
     <div
       style="
+        position: relative;
         height: 20px;
         line-height: 20px;
-        border-top: #ccc solid 1px;
-        position: relative;
         background-color: white;
+        border-top: #ccc solid 1px;
       "
     >
       <el-row :gutter="10">
@@ -155,7 +155,7 @@
           <el-button type="primary" @click="printData">当前数据</el-button>
         </el-col>
         <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
-          <p style="height: 20px; line-height: 20px; font-size: 18px">
+          <p style="height: 20px; font-size: 18px; line-height: 20px">
             已选组件个数：{{ selectedComponents.length }}
           </p>
         </el-col>
@@ -168,7 +168,7 @@
             label
             :label-value="`${selectedValue}%`"
             snap
-            style="width: 200px; float: right"
+            style="float: right; width: 200px"
           />
         </el-col>
       </el-row>
@@ -179,17 +179,14 @@
 <script>
   import VueRulerTool from './ruler'
   import TopoBase from './TopoBase'
-
-  import uid from '@/assets/libs/uid.js'
-
   import topoUtil from './util/topo-util'
-  import { deepCopy } from '@/assets/libs/utils'
+  import { deepCopy, uid } from '@/utils'
 
   import {
     checkInRange,
     checkByPointInRect,
     checkByRectCollisionDetection,
-  } from '@/assets/libs/topo'
+  } from '@/utils/topo'
 
   import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
 
@@ -602,17 +599,16 @@
 
 <style lang="scss">
   .topo-main {
-    background-color: white;
-    border: #ccc solid 1px;
     position: relative;
     overflow-x: hidden;
     overflow-y: hidden;
+    background-color: white;
+    border: #ccc solid 1px;
 
     .topo-layer {
+      position: absolute;
       width: 100%;
       height: 100%;
-      position: absolute;
-      transform-origin: left top;
       overflow: auto;
       // background-color: white;
       // background-clip: padding-box;
@@ -636,115 +632,116 @@
           #ccc 75%,
           #ccc
         );
-      background-size: 20px 20px;
       background-position: 0 0, 10px 10px;
+      background-size: 20px 20px;
+      transform-origin: left top;
 
       .topo-frame-selection {
-        background-color: #8787e7;
-        opacity: 0.3;
-        border: #0000ff solid 1px;
         position: absolute;
         z-index: 999;
+        background-color: #8787e7;
+        border: #0000ff solid 1px;
+        opacity: 0.3;
       }
 
       .topo-layer-view {
         position: absolute;
-        height: 100px;
         width: 100px;
-        background-color: #999;
+        height: 100px;
         cursor: move;
+        background-color: #999;
         border: #ccc solid 1px;
 
         .resize-left-top {
           position: absolute;
-          height: 10px;
+          top: -5px;
+          left: -5px;
           width: 10px;
+          height: 10px;
+          cursor: nwse-resize;
           background-color: white;
           border: 1px solid #0cf;
-          left: -5px;
-          top: -5px;
-          cursor: nwse-resize;
         }
 
         .resize-left-center {
           position: absolute;
-          height: 10px;
-          width: 10px;
-          background-color: white;
-          border: 1px solid #0cf;
-          left: -5px;
           top: 50%;
+          left: -5px;
+          width: 10px;
+          height: 10px;
           margin-top: -5px;
           cursor: ew-resize;
+          background-color: white;
+          border: 1px solid #0cf;
         }
 
         .resize-left-bottom {
           position: absolute;
-          height: 10px;
+          bottom: -5px;
+          left: -5px;
           width: 10px;
+          height: 10px;
+          cursor: nesw-resize;
           background-color: white;
           border: 1px solid #0cf;
-          left: -5px;
-          bottom: -5px;
-          cursor: nesw-resize;
         }
 
         .resize-right-top {
           position: absolute;
-          height: 10px;
+          top: -5px;
+          right: -5px;
           width: 10px;
+          height: 10px;
+          cursor: nesw-resize;
           background-color: white;
           border: 1px solid #0cf;
-          right: -5px;
-          top: -5px;
-          cursor: nesw-resize;
         }
 
         .resize-right-center {
           position: absolute;
-          height: 10px;
-          width: 10px;
-          background-color: white;
-          border: 1px solid #0cf;
-          right: -5px;
           top: 50%;
+          right: -5px;
+          width: 10px;
+          height: 10px;
           margin-top: -5px;
           cursor: ew-resize;
+          background-color: white;
+          border: 1px solid #0cf;
         }
 
         .resize-right-bottom {
           position: absolute;
-          height: 10px;
-          width: 10px;
-          background-color: white;
-          border: 1px solid #0cf;
           right: -5px;
           bottom: -5px;
+          width: 10px;
+          height: 10px;
           cursor: nwse-resize;
+          background-color: white;
+          border: 1px solid #0cf;
         }
 
         .resize-center-top {
           position: absolute;
-          height: 10px;
-          width: 10px;
-          background-color: white;
-          border: 1px solid #0cf;
           top: -5px;
           left: 50%;
+          width: 10px;
+          height: 10px;
           margin-left: -5px;
           cursor: ns-resize;
+          background-color: white;
+          border: 1px solid #0cf;
         }
 
         .resize-center-bottom {
           position: absolute;
-          height: 10px;
-          width: 10px;
-          background-color: white;
-          border: 1px solid #0cf;
           bottom: -5px;
           left: 50%;
+          width: 10px;
+          height: 10px;
           margin-left: -5px;
           cursor: ns-resize;
+          background-color: white;
+          border: 1px solid #0cf;
         }
       }
 

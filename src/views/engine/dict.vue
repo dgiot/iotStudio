@@ -37,6 +37,14 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :span="12">
+              <el-form-item label="字典名称" title="字典唯一标识" prop="key">
+                <el-input
+                  v-model="addDictForm.key"
+                  :disabled="editDictId == '' ? false : true"
+                />
+              </el-form-item>
+            </el-col>
             <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
               <el-form-item
                 :label="item.title.zh"
@@ -56,7 +64,7 @@
                 <el-input v-else v-model="addDictForm[item.name]" />
               </el-form-item>
             </el-col>
-            <el-col :span="12" style="height: 47px">
+            <el-col :span="12" style="z-index: 99999">
               <el-form-item
                 :rules1="[
                   {
@@ -82,7 +90,7 @@
                     />
                   </template>
                 </el-input>
-                <div v-if="showTree">
+                <div v-if="showTree" class="device-tree">
                   <el-tree
                     :data="allApps"
                     :props="defaultProps"
@@ -111,7 +119,11 @@
               placeholder="请输入内容"
             />
           </el-form-item>
-          <el-form-item size="mini">
+          <el-form-item
+            size="mini"
+            label-width="0px"
+            style="text-align: center"
+          >
             <el-button
               v-if="editDictId"
               type="primary"
@@ -552,6 +564,11 @@
           stripe
         >
           <el-table-column label="索引" type="index" width="50" />
+          <el-table-column prop="key" label="字典名称">
+            <template slot-scope="scope">
+              {{ scope.row.key }}
+            </template>
+          </el-table-column>
           <el-table-column prop="type" label="字典编号">
             <template slot-scope="scope">
               {{ scope.row.objectId }}
@@ -719,6 +736,7 @@
         arrlist: [],
         addDictForm: {
           templateId: '',
+          key: '',
         },
         rules: {},
         rules1: {},
@@ -835,6 +853,8 @@
         } else {
           getDict(objectId).then((res) => {
             this.dialogtempconfig = res.data.params
+            // console.log(res.data.params)
+            // this.dialogtempconfig.key = res.key
           })
           this.listLoading = true
           const parsms = {
@@ -857,6 +877,7 @@
             }
             this.dictList.push(data)
           })
+          console.log(this.dictList)
         }
       },
       async dialogType() {
@@ -899,6 +920,9 @@
           this.listLoading = true
           this.arrlist = res.data.params
           var obj1 = {
+            key: [
+              { required: true, message: '请输入字典名称', trigger: 'blur' },
+            ],
             templateId: [
               { required: true, message: '请选择字典类型', trigger: 'blur' },
             ],
@@ -936,6 +960,7 @@
           this.rules1 = obj1
           if (!this.editDictId) {
             this.addDictForm = obj
+            console.log(obj)
           }
           this.addDictForm.templateId = objectId
           this.addDictForm.templateName = res.data.name
@@ -1056,6 +1081,7 @@
         this.addDictForm = {}
         this.arrlist = []
         this.rules1 = {
+          key: [{ required: true, message: '请输入字典名称', trigger: 'blur' }],
           templateId: [
             { required: true, message: '请选择字典类型', trigger: 'blur' },
           ],
@@ -1082,8 +1108,7 @@
       },
 
       async addDict_temp(form) {
-        const aclKey =
-          'role' + ':' + JSON.parse(this.$Cookies.get('roles'))[0].name
+        const aclKey = 'role' + ':' + JSON.parse(Cookies.get('roles'))[0].name
         const set_acl = {}
         set_acl[aclKey] = {
           read: true,
@@ -1121,7 +1146,8 @@
         const params = {
           data: obj,
           ACL: set_acl,
-          key: 'dict_' + Math.round(new Date().getTime() / 1000),
+          // key: 'dict_' + Math.round(new Date().getTime() / 1000),
+          key: form.key,
           type: form.templateId,
         }
         const res = await postDict(params)
@@ -1143,7 +1169,7 @@
       async put_Dict_temp(editDictId, row) {
         const params = {
           data: row,
-          key: 'dict',
+          key: row.key,
         }
         const { updatedAt } = await putDict(editDictId, params)
         if (updatedAt != undefined) {
@@ -1175,6 +1201,7 @@
       async disabledDict(row, type) {
         row.enable = type
         const params = {
+          key: row.key,
           data: row,
         }
         const { updatedAt } = await putDict(row.objectId, params)
@@ -1271,6 +1298,24 @@
 
 <style lang="scss" scoped>
   .dict {
+    .device-tree {
+      height: 100px;
+      overflow: auto;
+      ::v-deep {
+        .el-scrollbar .el-scrollbar__wrap {
+          overflow-x: hidden;
+        }
+        .clearfix {
+          margin: 0;
+        }
+        .el-tree > .el-tree-node {
+          display: inline-block;
+          min-width: 100%;
+          height: 100px; //这里的高根据实际情况
+        }
+      }
+    }
+    margin: 20px;
     ::v-deep .el-table .warning-row {
       background: oldlace;
     }

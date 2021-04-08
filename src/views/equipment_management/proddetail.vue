@@ -1089,7 +1089,11 @@
                               placeholder="请选择"
                             >
                               <el-option
-                                v-for="(item, index) in ['normal', 'modbus']"
+                                v-for="(item, index) in [
+                                  'normal',
+                                  'modbus',
+                                  'DLT645',
+                                ]"
                                 :key="index"
                                 :label="item"
                                 :value="item"

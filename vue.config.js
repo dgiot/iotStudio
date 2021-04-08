@@ -20,13 +20,15 @@ const {
   webpackBanner,
   webpackBarName,
   staticUrl,
+  Keywords,
+  Description,
+  dateTime,
 } = require('./src/config')
 const rely = require('vue-plugin-rely')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
 const FileManagerPlugin = require('filemanager-webpack-plugin')
-const dateTime = new Date()
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 process.env.VUE_APP_TITLE = title
@@ -34,12 +36,8 @@ process.env.VUE_APP_AUTHOR = author
 process.env.VUE_APP_UPDATE_TIME = dateTime
 process.env.VUE_APP_VERSION = version
 process.env.VUE_APP_RELY = rely
-process.env.VUE_APP_server = proxyUrl.server
-process.env.VUE_APP_imgserver = proxyUrl.imgurl
-process.env.VUE_APP_Prometheus = proxyUrl.PrometheusUrl
-process.env.VUE_APP_toppanDocx = proxyUrl.toppanDocx
-process.env.VUE_APP_Keywords = 'zete--Keywords'
-process.env.VUE_APP_Description = 'zete--description'
+process.env.VUE_APP_Keywords = Keywords
+process.env.VUE_APP_Description = Description
 const resolve = (dir) => {
   return path.join(__dirname, dir)
 }
@@ -61,36 +59,11 @@ module.exports = {
     },
     proxy: {
       [baseURL]: {
-        target: proxyUrl.sukeUrl,
+        target: 'http://prod.iotn2n.com/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {
           ['^' + baseURL]: '',
-        },
-      },
-
-      '/imgurl': {
-        target: process.env.VUE_APP_imgserver,
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/imgurl': '',
-        },
-      },
-      '/PrometheusUrl': {
-        target: process.env.VUE_APP_Prometheus,
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/PrometheusUrl': '',
-        },
-      },
-      '/toppanDocx': {
-        target: process.env.VUE_APP_toppanDocx,
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/toppanDocx': '',
         },
       },
     },

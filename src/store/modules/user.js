@@ -74,7 +74,8 @@ const actions = {
   async login({ commit }, userInfo) {
     const data = await login(userInfo)
     const token = data[tokenName]
-    const { nick, objectId } = data
+    const { nick, objectId, roles } = data
+    Cookies.set('roles', roles)
     if (nick) commit('setUsername', nick)
     if (objectId) commit('setObejectId', objectId)
     const page_title = getToken('title', 'sessionStorage') || title

@@ -68,7 +68,14 @@ module.exports = {
   // 代码生成机生成在view下的文件夹名称
   templateFolder: 'project',
   webpackBarName: '杭州数蛙科技有限公司',
+  // 控制台输出的名称
   dateTime: new Date(),
+  // 打包时间
   webpackBanner:
     ' build: 杭州数蛙科技有限公司 \n copyright: dgiot_dashboard \n time: ',
+  // webpack.BannerPlugin打包输出信息
+  Keywords: '一站式物联网PaaS平台|物联网应用服务',
+  // 网站seo关键字
+  Description: '提供物联网垂直领域应用使能平台及解决方案',
+  // 网站seo描述
 }
