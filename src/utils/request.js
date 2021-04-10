@@ -55,7 +55,7 @@ const handleData = ({ config, data, status, statusText }) => {
       // return data.data ? data.data : data.msg
       // 或者依然保持完整的格式
       return data
-    case 401:
+    case 401 || 209:
       store.dispatch('user/resetAll')
       router.push({ path: '/login', replace: true })
       break
