@@ -8,6 +8,7 @@ import {
   update_object,
   create_object,
   query_object_header,
+  shuwa_batch,
 } from '@/api/shuwa_parse'
 
 import {
@@ -143,6 +144,7 @@ export default {
     Vue.prototype.$getToken = getToken
     Vue.prototype.$setToken = setToken
     Vue.prototype.$removeToken = removeToken
+    Vue.prototype.$shuwa_batch = shuwa_batch
     Vue.prototype.$translateTitle = translateTitle
     Vue.prototype.$getIndustry = getIndustry
     Vue.prototype.$query_object_header = query_object_header

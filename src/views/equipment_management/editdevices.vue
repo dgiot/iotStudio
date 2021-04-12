@@ -238,7 +238,7 @@
                   <div style="height: 70px">
                     <span style="font-size: 16px">{{ item.name }}</span>
                     <span style="float: right; margin-right: 10px">
-                      <svg-icon :icon-class="item.name" />
+                      <!-- <svg-icon :icon-class="item.name" /> -->
                     </span>
                   </div>
                   <div
@@ -489,7 +489,7 @@
                   :label="$translateTitle('equipment.nodetype')"
                   align="center"
                 >
-                  <template slot-scope="scope">
+                  <!-- <template slot-scope="scope">
                     <svg-icon
                       v-if="scope.row.nodeType == 0"
                       icon-class="iot"
@@ -500,7 +500,7 @@
                       icon-class="wgicon"
                       style="width: 2rem; height: 2rem"
                     />
-                  </template>
+                  </template> -->
                 </el-table-column>
                 <el-table-column
                   :label="

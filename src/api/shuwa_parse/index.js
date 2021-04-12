@@ -146,3 +146,20 @@ export async function create_object(tabclass, data) {
     })
   }
 }
+
+/**
+ * 数蛙全局通用接口方法 批处理
+ * @param {*} tabclass  表名 必传 不可为空
+ */
+
+export async function shuwa_batch(data) {
+  return request({
+    url: `/batch`,
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  })
+}

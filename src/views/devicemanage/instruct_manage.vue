@@ -15,7 +15,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="getInstruct(0)">查询</el-button>
+          <el-button type="primary" @click="Instruct(0)">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -48,47 +48,39 @@
         <el-table-column type="selection" width="55" />
         <el-table-column label="指令名称" align="center" sortable width="200">
           <template slot-scope="scope">
-            {{ scope.row.attributes.name }}
+            {{ scope.row.name }}
           </template>
         </el-table-column>
         <!-- <el-table-column  label="指令编号" align="center" width="120">
-            <template slot-scope="scope">{{ scope.row.attributes.name }}</template>
+            <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>-->
         <el-table-column label="指令类型" align="center" width="100">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.attributes.op == 'Read'" type="primary">
-              读
-            </el-tag>
+            <el-tag v-if="scope.row.op == 'Read'" type="primary">读</el-tag>
             <el-tag v-else type="success">写</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="指令标识" align="center">
-          <template slot-scope="scope">{{ scope.row.attributes.di }}</template>
+          <template slot-scope="scope">{{ scope.row.di }}</template>
         </el-table-column>
-        <el-table-column
-          label="指令序号"
-          align="center"
-          prop="attributes.order"
-        />
+        <el-table-column label="指令序号" align="center" prop="order" />
         <el-table-column label="超时时长" align="center">
           <template slot-scope="scope">
-            {{ scope.row.attributes.duration + '秒' }}
+            {{ scope.row.duration + '秒' }}
           </template>
         </el-table-column>
         <el-table-column label="子网编号" align="center" width="200">
-          <template slot-scope="scope">{{ scope.row.attributes.pn }}</template>
+          <template slot-scope="scope">{{ scope.row.pn }}</template>
         </el-table-column>
         <el-table-column label="生效轮次" align="center">
           <template slot-scope="scope">
-            {{ scope.row.attributes.rotation }}
+            {{ scope.row.rotation }}
           </template>
         </el-table-column>
 
         <el-table-column label="是否启用" align="center" width="100">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.attributes.enable" type="success">
-              是
-            </el-tag>
+            <el-tag v-if="scope.row.enable" type="success">是</el-tag>
             <el-tag v-else type="danger">否</el-tag>
           </template>
         </el-table-column>
@@ -104,7 +96,7 @@
             <el-button
               type="danger"
               size="small"
-              @click="deleteInstruct(scope.row.id)"
+              @click="deleteInstruct(scope.row.objectId)"
             >
               删 除
             </el-button>
@@ -188,7 +180,7 @@
               />
             </el-form-item>
 
-            <p style="font-size: 12px; padding-left: 125px; line-height: 20px">
+            <p style="padding-left: 125px; font-size: 12px; line-height: 20px">
               1. 指令序号相同,会作为同一组消息发送
               <br />
               2. 消息的发送顺序按照指令序号排序
@@ -233,11 +225,11 @@
               </el-select>
               <p
                 style="
-                  color: black;
-                  margin: 0;
                   position: absolute;
                   top: 40px;
+                  margin: 0;
                   font-size: 12px;
+                  color: black;
                 "
               >
                 例如:1,3,5,8;(可选可自主填写)(注意:逗号为英文逗号)
@@ -281,7 +273,12 @@
 </template>
 <script>
   import { returnLogin } from '@/utils/return'
-  import { getIndustry } from '@/api/Dict/index'
+  import {
+    queryIndustry,
+    delIndustry,
+    updateIndustry,
+    postIndustry,
+  } from '@/api/Dict/index'
   export default {
     name: 'Instruct',
     props: {
@@ -373,7 +370,7 @@
       },
     },
     mounted() {
-      this.getInstruct()
+      this.Instruct()
     },
     updated() {},
     methods: {
@@ -400,7 +397,7 @@
           }
         })
       },
-      getInstruct(start) {
+      async Instruct(start) {
         if (start == 0) {
           this.start = 0
         }
@@ -421,52 +418,78 @@
         //     }
         //   })
         // })
+        let params = {
+          where: {
+            device: this.devicesId,
+          },
+          skip: this.start,
+          limit: this.pagesize,
+          order: '-createdAt',
+          count: 'objectId',
+        }
+        if (this.formInline.name) {
+          params.where.name = this.formInline.name
+        }
+        const { count, results } = await queryIndustry(params)
+        this.total = count
+        this.instructData = results
       },
       addInstruct() {
         this.dialogFormVisible = true
         this.$refs.form.resetFields()
       },
       check(formName) {
-        this.$refs[formName].validate((valid) => {
+        this.$refs[formName].validate(async (valid) => {
+          let products = {
+            className: 'Product',
+            objectId: this.productId,
+            __type: 'Pointer',
+          }
+          let devices = {
+            className: 'Device',
+            objectId: this.devicesId,
+            __type: 'Pointer',
+          }
           if (valid) {
-            // var Instruct = Parse.Object.extend('Instruct')
-            // var instruct = new Instruct()
-            // if (this.instructid != '') {
-            //   instruct.id = this.instructid
-            // }
-            // var Devices = Parse.Object.extend('Device')
-            // var devices = new Devices()
-            // devices.id = this.devicesId
-            // var Product = Parse.Object.extend('Product')
-            // var product = new Product()
-            // product.id = this.productId
-            // instruct.set('device', devices)
-            // instruct.set('product', product)
-            // // instruct.set("instruct", this.form);
-            // instruct.set('name', this.form.name)
-            // instruct.set('enable', this.form.enable)
-            // instruct.set('op', this.form.type)
-            // instruct.set('rotation', this.form.rotation)
-            // instruct.set('duration', this.form.duration)
-            // instruct.set('order', this.form.order)
-            // instruct.set('interval', this.form.interval)
-            // instruct.set('di', this.form.pointer)
-            // instruct.set('pn', this.form.subnet)
-            // instruct.set('devaddr', this.form.lowerhair)
-            // instruct.save().then(resultes => {
-            //   if (resultes) {
-            //     this.$message({
-            //       type: 'success',
-            //       message: `${this.dialogTitle}成功`
-            //     })
-            //     this.$refs.form.resetFields()
-            //     this.dialogClosed()
-            //     this.instructid = ''
-            //     this.getInstruct()
-            //   }
-            // }, error => {
-            //   console.log(error)
-            // })
+            let params = {
+              device: devices,
+              product: products,
+              name: this.form.name,
+              enable: this.form.enable,
+              op: this.form.type,
+              rotation: this.form.rotation,
+              duration: this.form.duration,
+              order: this.form.order,
+              interval: this.form.interval,
+              di: this.form.pointer,
+              pn: this.form.subnet,
+              devaddr: this.form.lowerhair,
+            }
+            let res
+            if (this.instructid != '') {
+              res = await updateIndustry(this.instructid, params)
+            } else {
+              let roles = JSON.parse(Cookies.get('roles'))
+              const aclKey1 = 'role' + ':' + roles[0].name
+              const aclObj = {}
+              aclObj[aclKey1] = {
+                read: true,
+                write: true,
+              }
+
+              params.ACL = aclObj
+              res = await postIndustry(params)
+            }
+            if (res.objectId) {
+              this.$message({
+                type: 'success',
+                message: `${this.dialogTitle}成功`,
+              })
+              this.$refs.form.resetFields()
+              this.dialogClosed()
+              this.instructid = ''
+              this.Instruct()
+            }
           } else {
             this.$message('有必填项未填写')
             return false
@@ -475,11 +498,11 @@
       },
       handleSizeChange(val) {
         this.pagesize = val
-        this.getInstruct()
+        this.Instruct()
       },
       handleCurrentChange(val) {
         this.start = (val - 1) * this.pagesize
-        this.getInstruct()
+        this.Instruct()
       },
       // 编辑
       dialogBtn_em(formName, type, data) {
@@ -489,19 +512,19 @@
         let opt1
         if (type == 2) {
           opt1 = {
-            name: data.attributes.name,
-            pointer: data.attributes.di,
-            type: data.attributes.op,
-            enable: data.attributes.enable,
-            duration: data.attributes.duration,
-            order: data.attributes.order,
-            interval: data.attributes.interval,
-            lowerhair: data.attributes.devaddr,
-            rotation: data.attributes.rotation,
-            subnet: data.attributes.pn,
+            name: data.name,
+            pointer: data.di,
+            type: data.op,
+            enable: data.enable,
+            duration: data.duration,
+            order: data.order,
+            interval: data.interval,
+            lowerhair: data.devaddr,
+            rotation: data.rotation,
+            subnet: data.pn,
           }
           opt = Object.assign({}, opt1)
-          this.instructid = data.id
+          this.instructid = data.objectId
         } else {
           console.log(data)
           opt = Object.assign({}, data)
@@ -515,73 +538,59 @@
           cancelButtonText: '取消',
           type: 'warning',
         })
-          .then(() => {
-            // var Instruct = Parse.Object.extend('Instruct')
-            // var instruct = new Instruct()
-            // instruct.id = id
-            // instruct.destroy().then(response => {
-            //   if (response) {
-            //     this.$message({
-            //       type: 'success',
-            //       message: '删除成功!'
-            //     })
-            //     this.getInstruct()
-            //   }
-            // }, error => {
-            //   returnLogin(error)
-            // })
+          .then(async () => {
+            const res = await delIndustry(id)
+            if (res) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!',
+              })
+              this.Instruct()
+            }
           })
           .catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除',
-            })
+            // this.$message({
+            //   type: 'info',
+            //   message: '已取消删除',
+            // })
           })
       },
       handleSelectionChange(val) {
         this.multipleTable = val
       },
       // 批量删除
-      deleteAll() {
+      async deleteAll(val) {
         if (this.multipleTable.length == 0) {
           this.$message({
             message: '请挑选要删除的指令',
             type: 'warning',
           })
+          return
         } else {
-          var arr = []
-          this.multipleTable.map((item) => {
-            arr.push(
-              new Promise((resolve, reject) => {
-                // var Instruct = Parse.Object.extend('Instruct')
-                // var instruct = new Instruct()
-                // instruct.id = item.id
-                // return instruct.destroy().then(resultes => {
-                //   if (resultes) {
-                //     resolve(resultes)
-                //   }
-                // }, error => {
-                //   reject(error)
-                // })
-              })
-            )
+          let requests = []
+          this.multipleTable.map(async (item) => {
+            requests.push({
+              body: {},
+              method: 'DELETE',
+              path: `/classes/Instruct/${item.objectId}`,
+            })
           })
-          Promise.all(arr)
-            .then((data) => {
-              this.$message({
-                message: '删除成功',
-                type: 'success',
-              })
-              if (data.length == this.multipleTable.length) {
-                this.getInstruct()
-              }
+          const params = {
+            requests: requests,
+          }
+          const result = await this.$shuwa_batch(params)
+          if (!result.error) {
+            this.$message({
+              message: '删除成功',
+              type: 'success',
             })
-            .catch((error) => {
-              this.$message({
-                message: error,
-                type: 'error',
-              })
+            this.Instruct()
+          } else {
+            this.$message({
+              message: `删除失败${result.error}`,
+              type: 'error',
             })
+          }
         }
       },
     },
@@ -589,10 +598,10 @@
 </script>
 <style lang="scss" scoped>
   .instruct {
-    background: #ffffff;
-    padding: 20px;
     box-sizing: border-box;
     min-height: 100%;
+    padding: 20px;
+    background: #ffffff;
     .instruct_button {
       display: flex;
       flex-direction: row-reverse;

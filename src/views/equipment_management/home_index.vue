@@ -234,7 +234,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            v-show="Default.title == '云寓智慧公寓平台'"
+            v-if="Default.title == '云寓智慧公寓平台'"
             label="授权码"
             align="center"
             width="200"

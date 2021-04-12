@@ -32,6 +32,19 @@ export async function getIndustry(key, limit) {
   return query_object('Dict', params)
 }
 
+export async function queryIndustry(params) {
+  return query_object('Instruct', params)
+}
+export async function postIndustry(params) {
+  return create_object('Instruct', params)
+}
+export async function delIndustry(ObjectId) {
+  return del_object('Instruct', ObjectId)
+}
+export async function updateIndustry(ObjectId, params) {
+  return update_object('Instruct', ObjectId, params)
+}
+
 export async function getAllunit(key, limit) {
   const params = {
     limit: limit || 100,
