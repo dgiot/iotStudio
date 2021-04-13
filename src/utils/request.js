@@ -99,14 +99,20 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const token = store.getters['user/token']
-
+    let { headers = {} } = config
     // 不规范写法 可根据setting.config.js tokenName配置随意自定义headers
     // if (token) config.headers[tokenName] = token
-
-    // 规范写法 不可随意自定义
-    if (token) {
+    if (headers['_company']) {
+      console.log(headers['_company'])
+      const { Authorization = '', sessionToken = '' } = config.headers
+      console.log(Authorization)
+      config.headers['Authorization'] = Authorization
+      config.headers['sessionToken'] = sessionToken
+    } else if (token) {
       config.headers['Authorization'] = `Bearer ${token}`
-      config.headers['sessionToken'] = `${token}`
+      headers['sessionToken'] = `${token}`
+    } else {
+      console.log(headers)
     }
     if (
       config.data &&

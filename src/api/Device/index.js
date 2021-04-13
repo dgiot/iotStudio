@@ -13,10 +13,19 @@ import {
   del_object,
   update_object,
   create_object,
+  query_object_header,
 } from '@/api/shuwa_parse'
 
 export async function queryDevice(params) {
   return query_object('Device', params)
+}
+
+export async function querycompanyDevice(params, access_token) {
+  return query_object_header('Device', params, {
+    Authorization: access_token,
+    sessionToken: access_token,
+    _company: true,
+  })
 }
 
 export async function getDevice(ObjectId) {

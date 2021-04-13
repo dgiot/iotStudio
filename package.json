@@ -24,25 +24,19 @@
     "url": "git+https://github.com/dgiot/dgiot_dashboard.git"
   },
   "dependencies": {
+    "@babel/helper-plugin-utils": "^7.13.0",
     "@logicflow/core": "^0.2.9",
     "@logicflow/extension": "^0.2.9",
     "core-js": "^3.9.1",
     "element-ui": "^2.15.1",
     "konva": "^7.2.5",
-    "quasar": "^1.15.9",
     "resize-detector": "^0.3.0",
-    "vab-contextmenu": "^0.0.1",
-    "vab-count": "^0.0.1",
-    "vab-cropper": "^0.0.1",
+    "topology-vue": "^0.5.7",
     "vab-icons": "0.0.19",
-    "vab-magnifier": "0.0.1",
-    "vab-player": "^0.0.4",
-    "vab-quill": "^3.0.1",
     "vue-count-to": "^1.0.13",
     "vue-json-editor": "^1.4.3",
     "vue-konva": "^2.1.7",
-    "zx-markdown-editor": "^0.0.2",
-    "topology-vue": "^0.5.7"
+    "zx-markdown-editor": "^0.0.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",

@@ -1,5 +1,4 @@
-import { uid } from 'quasar'
-import { deepCopy } from '@/utils'
+import { deepCopy, uid } from '@/utils'
 import jsonData from '@/assets/data/topo-data.json'
 const state = () => ({
   topoData: {

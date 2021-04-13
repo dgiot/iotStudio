@@ -11,8 +11,18 @@ export async function queryMenu(params) {
   return query_object('Menu', params)
 }
 
-export async function getMenu(ObjectId) {
+export async function getMenu(name) {
   return get_object('Menu', ObjectId)
+}
+
+export async function getToken(company) {
+  return request({
+    url: `token`,
+    method: 'get',
+    params: {
+      name: company,
+    },
+  })
 }
 
 export async function delMenu(ObjectId) {

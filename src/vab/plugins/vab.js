@@ -2,7 +2,6 @@ import { loadingText, messageDuration } from '@/config'
 import { Loading, Message, MessageBox, Notification } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/token'
-import { dependencies } from '../../../package.json'
 
 const token = store.getters['user/token']
 

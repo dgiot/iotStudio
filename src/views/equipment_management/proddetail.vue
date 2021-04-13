@@ -631,7 +631,7 @@
             :visible.sync="wmxdialogVisible"
             :before-close="wmxhandleClose"
             :close-on-click-modal="false"
-            width="40%"
+            width="60%"
             top="5vh"
           >
             <div class="wmxheader">
@@ -639,7 +639,9 @@
                 ref="sizeForm"
                 :model="sizeForm"
                 :rules="sizerule"
-                size="small"
+                size="mini"
+                label-position="left"
+                label-width="150px"
               >
                 <!-- update 2020 05-27 hughWang -->
                 <!-- 功能名称  -->
@@ -657,8 +659,8 @@
                       <template slot="title">
                         <h3 style="font-size: normal">数据存储</h3>
                       </template>
-                      <el-row :gutter="30">
-                        <el-col :span="10">
+                      <el-row :gutter="24">
+                        <el-col :span="12">
                           <el-form-item
                             :label="$translateTitle('product.functionname')"
                             prop="name"
@@ -667,7 +669,7 @@
                           </el-form-item>
                         </el-col>
 
-                        <el-col :span="10">
+                        <el-col :span="12">
                           <el-form-item
                             :label="$translateTitle('product.identifier')"
                             prop="identifier"
@@ -677,9 +679,12 @@
                           <!--type-->
                         </el-col>
                       </el-row>
-                      <el-form-item required label="取值范围(数值)">
-                        <el-col :span="9">
-                          <el-form-item prop="startnumber">
+                      <el-row :gutter="24">
+                        <el-col :span="12">
+                          <el-form-item
+                            prop="startnumber"
+                            label="取值范围(最小值)"
+                          >
                             <el-input
                               v-model.number="sizeForm.startnumber"
                               :placeholder="
@@ -689,9 +694,11 @@
                             />
                           </el-form-item>
                         </el-col>
-                        <el-col :span="2">-</el-col>
-                        <el-col :span="9">
-                          <el-form-item prop="endnumber">
+                        <el-col :span="12">
+                          <el-form-item
+                            prop="endnumber"
+                            label="取值范围(最大值)"
+                          >
                             <el-input
                               v-model.number="sizeForm.endnumber"
                               :placeholder="
@@ -702,13 +709,13 @@
                             />
                           </el-form-item>
                         </el-col>
-                      </el-form-item>
-
-                      <el-row :gutter="30">
-                        <el-col :span="10">
+                      </el-row>
+                      <el-row :gutter="24">
+                        <el-col :span="12">
                           <el-form-item label="步长" prop="step">
                             <el-input-number
                               v-model="sizeForm.step"
+                              style="width: 100%"
                               :precision="2"
                               :min="0"
                               :step="0.01"
@@ -717,13 +724,14 @@
                           </el-form-item>
                         </el-col>
 
-                        <el-col :span="10">
+                        <el-col :span="12">
                           <el-form-item
                             :label="$translateTitle('product.readandwritetype')"
                             prop="isread"
                           >
                             <el-radio-group
                               v-model="sizeForm.isread"
+                              style="width: 100%"
                               size="medium"
                             >
                               <el-radio label="rw">
@@ -737,8 +745,8 @@
                         </el-col>
                       </el-row>
 
-                      <el-row :gutter="30">
-                        <el-col :span="10">
+                      <el-row :gutter="24">
+                        <el-col :span="12">
                           <!-- 数据类型 -->
                           <el-form-item
                             :label="$translateTitle('product.datatype')"
@@ -747,6 +755,7 @@
                             <!--少个@change=selectStruct-->
                             <el-select
                               v-model="sizeForm.type"
+                              style="width: 100%"
                               @change="selectStruct"
                             >
                               <el-option
@@ -784,14 +793,14 @@
                             </el-select>
                           </el-form-item>
                         </el-col>
-                        <el-col :span="2" />
-                        <el-col :span="10">
+                        <el-col :span="12">
                           <!-- 单位 -->
                           <el-form-item
                             :label="$translateTitle('product.unit')"
                           >
                             <el-select
                               v-model="sizeForm.unit"
+                              style="width: 100%"
                               :placeholder="$translateTitle('product.unit')"
                               filterable
                             >
@@ -809,9 +818,65 @@
                     <el-collapse-item name="2">
                       <template slot="title">
                         <h3 style="font-size: normal">数据采集</h3>
+                        <el-row style="margin: 0 auto">
+                          <el-col :span="2">
+                            <el-popover
+                              placement="right"
+                              width="400"
+                              trigger="click"
+                            >
+                              <el-table
+                                :data="
+                                  wmxData.slice(
+                                    (wmxstart - 1) * wmxPageSize,
+                                    wmxstart * wmxPageSize
+                                  )
+                                "
+                              >
+                                <el-table-column label="标识符">
+                                  <template slot-scope="scope">
+                                    <span style="margin-left: 10px">
+                                      {{ scope.row.identifier }}
+                                    </span>
+                                  </template>
+                                </el-table-column>
+                                <el-table-column label="功能名称">
+                                  <template slot-scope="scope">
+                                    <span style="margin-left: 10px">
+                                      {{ scope.row.name }}
+                                    </span>
+                                  </template>
+                                </el-table-column>
+                                <el-table-column label="数据类型">
+                                  <template slot-scope="scope">
+                                    <span style="margin-left: 10px">
+                                      {{ scope.row.dataType.type }}
+                                    </span>
+                                  </template>
+                                </el-table-column>
+                              </el-table>
+                              <el-pagination
+                                :page-sizes="[10, 20, 30, 50]"
+                                :page-size="wmxPageSize"
+                                :total="wmxData.length"
+                                style="margin-top: 10px"
+                                layout="total, sizes, prev, pager, next, jumper"
+                                @size-change="wmxSizeChange"
+                                @current-change="wmxCurrentChange"
+                              />
+                              <el-button
+                                slot="reference"
+                                style="text-align: center"
+                                size="mini"
+                              >
+                                添加变量
+                              </el-button>
+                            </el-popover>
+                          </el-col>
+                        </el-row>
                       </template>
                       <el-row :gutter="24">
-                        <el-col :span="24">
+                        <el-col :span="12">
                           <el-tooltip
                             style="float: left"
                             effect="dark"
@@ -838,12 +903,12 @@
                             </div>
                             <i class="el-icon-question" />
                           </el-tooltip>
-                          <el-form-item label="采集策略">
+                          <el-form-item label="采集策略(单位：秒)">
                             <!-- <el-input v-model="sizeForm.rate" auto-complete="off">   <template slot="append">秒</template>
                             </el-input> -->
                             <el-select
                               v-model="sizeForm.strategy"
-                              style="width: 85%"
+                              style="width: 95%"
                               size="mini"
                               filterable
                               allow-create
@@ -858,64 +923,44 @@
                                 size="mini"
                               />
                             </el-select>
-                            <el-button size="mini">秒</el-button>
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                          <el-form-item label="采集轮次">
+                            <!-- <el-input v-model="sizeForm.rate" auto-complete="off">   <template slot="append">秒</template>
+                            </el-input> -->
+                            <el-select
+                              v-model="sizeForm.round"
+                              style="width: 100%"
+                              size="mini"
+                              filterable
+                              allow-create
+                              default-first-option
+                              placeholder="请选择"
+                            >
+                              <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                              />
+                            </el-select>
+                            <p
+                              style="
+                                position: absolute;
+                                top: 26px;
+                                margin: 0;
+                                font-size: 12px;
+                                color: black;
+                              "
+                            >
+                              例如:1,3,5,8;(可选可自主填写)(注意:逗号为英文逗号)
+                            </p>
                           </el-form-item>
                         </el-col>
                       </el-row>
-                      <el-row>
-                        <el-col :span="2">
-                          <el-popover
-                            placement="right"
-                            width="400"
-                            trigger="click"
-                          >
-                            <el-table
-                              :data="
-                                wmxData.slice(
-                                  (wmxstart - 1) * wmxPageSize,
-                                  wmxstart * wmxPageSize
-                                )
-                              "
-                            >
-                              <el-table-column label="标识符">
-                                <template slot-scope="scope">
-                                  <span style="margin-left: 10px">
-                                    {{ scope.row.identifier }}
-                                  </span>
-                                </template>
-                              </el-table-column>
-                              <el-table-column label="功能名称">
-                                <template slot-scope="scope">
-                                  <span style="margin-left: 10px">
-                                    {{ scope.row.name }}
-                                  </span>
-                                </template>
-                              </el-table-column>
-                              <el-table-column label="数据类型">
-                                <template slot-scope="scope">
-                                  <span style="margin-left: 10px">
-                                    {{ scope.row.dataType.type }}
-                                  </span>
-                                </template>
-                              </el-table-column>
-                            </el-table>
-                            <el-pagination
-                              :page-sizes="[10, 20, 30, 50]"
-                              :page-size="wmxPageSize"
-                              :total="wmxData.length"
-                              style="margin-top: 10px"
-                              layout="total, sizes, prev, pager, next, jumper"
-                              @size-change="wmxSizeChange"
-                              @current-change="wmxCurrentChange"
-                            />
-                            <el-button slot="reference" size="mini">
-                              添加变量
-                            </el-button>
-                          </el-popover>
-                        </el-col>
-                      </el-row>
                       <el-row :gutter="24">
-                        <el-col :span="22">
+                        <el-col :span="12">
                           <el-tooltip
                             style="float: left"
                             effect="dark"
@@ -973,18 +1018,29 @@
                             </div>
                             <i class="el-icon-question" />
                           </el-tooltip>
-                          <el-form-item label="采集公式" style="width: 100%">
+                          <el-form-item label="采集公式">
                             <el-input
                               v-model="sizeForm.collection"
-                              :rows="5"
+                              style="width: 95%"
+                              :rows="1"
                               type="textarea"
                               placeholder="%s"
                             />
                           </el-form-item>
                         </el-col>
+                        <el-col :span="12">
+                          <el-form-item label="采集顺序" style="width: 100%">
+                            <el-input-number
+                              v-model="sizeForm.Order"
+                              style="width: 100%"
+                              :min="0"
+                              label="采集顺序"
+                            />
+                          </el-form-item>
+                        </el-col>
                       </el-row>
-                      <el-row>
-                        <el-col :span="22">
+                      <el-row :gutter="24">
+                        <el-col :span="24">
                           <el-tooltip effect="dark" placement="right-start">
                             <div slot="content">
                               1. 采集值: 主动向设备写数据经控制公式计算后下发 。
@@ -1038,10 +1094,11 @@
                             </div>
                             <i class="el-icon-question" style="float: left" />
                           </el-tooltip>
-                          <el-form-item label="控制公式" style="width: 100%">
+                          <el-form-item label="控制公式">
                             <el-input
                               v-model="sizeForm.control"
-                              :rows="5"
+                              style="width: 98%"
+                              :rows="1"
                               type="textarea"
                               placeholder="%s"
                             />
@@ -1061,32 +1118,32 @@
                       </template>
                       <el-divider />
                       <div name="dataIdentification">
-                        <el-form-item label="数据标识" required>
-                          <el-col :span="9">
-                            <el-form-item prop="dis">
+                        <el-row :gutter="24">
+                          <el-col :span="12">
+                            <el-form-item label="数据标识" required prop="dis">
                               <el-input
                                 v-model="sizeForm.dis"
                                 placeholder="数据标识"
                               />
                             </el-form-item>
                           </el-col>
-                          <el-col :span="2">-</el-col>
-                          <el-col :span="9">
-                            <el-form-item>
+                          <el-col :span="12">
+                            <el-form-item label="数据" required>
                               <el-input
                                 v-model.number="sizeForm.dinumber"
                                 placeholder="数据个数"
                               />
                             </el-form-item>
                           </el-col>
-                        </el-form-item>
+                        </el-row>
                       </div>
-                      <el-row :gutter="30">
-                        <el-col :span="10">
+                      <el-row :gutter="24">
+                        <el-col :span="12">
                           <el-form-item label="协议类型">
                             <el-select
                               v-model="sizeForm.protocol"
                               placeholder="请选择"
+                              style="width: 100%"
                             >
                               <el-option
                                 v-for="(item, index) in [
@@ -1103,7 +1160,7 @@
                         </el-col>
                         <el-col
                           v-show="sizeForm.protocol == 'modbus'"
-                          :span="10"
+                          :span="12"
                         >
                           <el-form-item label="字节序" prop="byteorder">
                             <el-select
@@ -1123,8 +1180,8 @@
                           </el-form-item>
                         </el-col>
                       </el-row>
-                      <el-row v-show="showNewItem" :gutter="30">
-                        <el-col :span="10">
+                      <el-row v-show="showNewItem" :gutter="24">
+                        <el-col :span="12">
                           <el-form-item label="寄存器状态" prop="byteorder">
                             <el-select
                               v-model="sizeForm.operatetype"
@@ -1151,7 +1208,7 @@
                           </el-form-item>
                         </el-col>
 
-                        <el-col :span="10">
+                        <el-col :span="12">
                           <el-form-item label="数据类型">
                             <el-select
                               v-model="sizeForm.originaltype"
@@ -1171,6 +1228,7 @@
                                   'customizedData',
                                 ]"
                                 :key="index"
+                                style="width: 100%"
                                 :label="item"
                                 :value="item"
                               />
@@ -1206,6 +1264,7 @@
                             class="inputnumber"
                             type="number"
                             readonly
+                            style="width: 100%"
                           />
                         </el-form-item>
                       </el-col>
@@ -1477,8 +1536,8 @@
                     structform.type == 'double'
                   "
                 >
-                  <el-form-item required label="取值范围(数值)">
-                    <el-col :span="9">
+                  <el-form-item required label="取值范围">
+                    <el-col :span="12">
                       <el-form-item prop="startnumber">
                         <el-input
                           v-model.number="structform.startnumber"
@@ -1488,8 +1547,7 @@
                         />
                       </el-form-item>
                     </el-col>
-                    <el-col :span="2">-</el-col>
-                    <el-col :span="9">
+                    <el-col :span="12">
                       <el-form-item prop="endnumber">
                         <el-input
                           v-model.number="structform.endnumber"
@@ -2608,6 +2666,11 @@
         }
       }
       return {
+        options: [
+          { value: 'first', label: '第一轮' },
+          { value: 'last', label: '最后一轮' },
+          { value: 'all', label: '全部' },
+        ],
         activeIndex: '',
         editableTabsValue: '1',
         editableTabs: [],
@@ -3106,7 +3169,7 @@
           originaltype: 'int16',
           slaveid: 256,
           collection: '%s',
-          control: '%s',
+          control: '%q',
         }
       },
       changeValue(formName) {
@@ -3232,7 +3295,7 @@
           this.multipleSelection.map((item) => {
             arr.push(
               new Promise((reslove, reject) => {
-                return subupadte(item.id, 'update')
+                return subupadte(item.objectId, 'update')
                   .then((resultes) => {
                     if (resultes) {
                       reslove(resultes)
@@ -3456,7 +3519,7 @@
       // 自定义模型弹窗
       customize(row) {
         this.resourcedialogFormVisible = true
-        this.resourcechannelid = row.id
+        this.resourcechannelid = row.objectId
         // for (var key in row.config) {
         //   channelrow[key] = row.config[key];
         // }
@@ -3725,6 +3788,9 @@
                   },
                 },
                 dataForm: {
+                  Round: this.sizeForm.Round,
+                  Order: this.sizeForm.Order,
+                  data: this.sizeForm.dinumber,
                   address: this.sizeForm.dis,
                   quantity: this.sizeForm.dinumber,
                   rate: this.sizeForm.rate,
@@ -4700,7 +4766,7 @@
       },
       // 通道更新协议状态
       updatesub(row) {
-        subupadte(row.id, 'update')
+        subupadte(row.objectId, 'update')
           .then((resultes) => {
             if (resultes) {
               this.$message('重载成功')
@@ -5274,7 +5340,7 @@
     text-align: left;
   } */
 </style>
-<style>
+<style scoped>
   .editproduct .el-tabs__item {
     width: 150px;
     height: 50px;
@@ -5330,11 +5396,20 @@
     margin-bottom: 5px;
   }
 
-  .editproduct .el-form-item__content {
-    margin-left: 0;
-    clear: both;
+  ::v-deep .el-form-item__content {
+    /*line-height: 24px !important;*/
+    /*margin-left: 0;*/
+    /*clear: both;*/
+    /*margin-top: -25px !important;*/
+    /*color: pink;*/
   }
-
+  ::v-deep .el-form-item__label {
+    height: 48px;
+    line-height: 30px;
+  }
+  ::v-deep .el-form-item--mini .el-form-item__error {
+    margin-top: -13px;
+  }
   .editproduct .el-dialog__header {
     border-bottom: 1px solid #dddddd;
   }

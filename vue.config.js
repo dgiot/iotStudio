@@ -59,7 +59,7 @@ module.exports = {
     },
     proxy: {
       [baseURL]: {
-        target: 'http://prod.iotn2n.com/',
+        target: 'http://121.40.78.136:5080',
         ws: true,
         changeOrigin: true,
         pathRewrite: {
