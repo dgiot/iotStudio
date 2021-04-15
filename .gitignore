@@ -34,5 +34,5 @@ pnpm-debug.log*
 .yarn/install-state.gz
 
 # config
-gitbit
-github
+/gitbit
+/github
