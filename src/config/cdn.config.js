@@ -15,8 +15,6 @@ module.exports = {
       'https://unpkg.com/codemirror@5.58.2/lib/codemirror.css',
       'https://unpkg.com/codemirror@5.58.3/addon/lint/lint.css',
       'https://unpkg.com/codemirror@5.58.3/theme/rubyblue.css',
-      'https://unpkg.com/zx-markdown-editor@0.0.2/dist/zx-markdown-editor.css',
-      'https://unpkg.com/vab-contextmenu@0.0.1/dist/vab-contextmenu.css',
       'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/topology-vue/topology-vue.css',
     ],
     js: [

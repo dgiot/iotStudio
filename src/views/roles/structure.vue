@@ -237,16 +237,6 @@
                   </el-table-column>
                 </el-table>
                 <!--分页组件-->
-                <el-pagination
-                  :total="total"
-                  :page-sizes="[1, 5, 10]"
-                  :page-size="pagesize"
-                  style="margin-top: 8px"
-                  layout="total, prev, pager, next, sizes"
-                  class="total_pagination"
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                />
               </div>
             </el-col>
           </el-row>

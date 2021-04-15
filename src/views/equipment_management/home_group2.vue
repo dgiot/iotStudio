@@ -38,30 +38,25 @@
           <div class="protable">
             <el-table
               v-loading="listLoading"
+              :header-cell-style="{ 'text-align': 'center' }"
+              :cell-style="{ 'text-align': 'center' }"
               :data="proTableData"
               style="width: 100%"
             >
-              <el-table-column prop="objectId" label="ProductID" width="200" />
-              <el-table-column
-                :label="$translateTitle('product.productname')"
-                width="200"
-              >
+              <el-table-column prop="objectId" label="ProductID" width="160" />
+              <el-table-column :label="$translateTitle('product.productname')">
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
               <el-table-column
                 :label="$translateTitle('product.productgrouping')"
-                width="200"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.devType }}</span>
                 </template>
               </el-table-column>
-              <el-table-column
-                :label="$translateTitle('product.nodetype')"
-                width="200"
-              >
+              <el-table-column :label="$translateTitle('product.nodetype')">
                 <template slot-scope="scope">
                   <span v-if="scope.row.nodeType == 1">
                     {{ $translateTitle('product.gateway') }}
@@ -79,23 +74,55 @@
               <!--                  <span>{{ scope.row.CategoryKey }}</span>-->
               <!--                </template>-->
               <!--              </el-table-column>-->
-              <el-table-column :label="$translateTitle('product.addingtime')">
+              <el-table-column
+                width="180"
+                :label="$translateTitle('product.addingtime')"
+              >
                 <template slot-scope="scope">
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="$translateTitle('developer.operation')">
+              <el-table-column
+                fixed="right"
+                width="600"
+                :label="$translateTitle('developer.operation')"
+              >
                 <template slot-scope="scope">
-                  <el-link
+                  <el-button
                     :underline="false"
                     type="primary"
                     icon="el-icon-view"
                     @click="deviceToDetail(scope.row)"
                   >
-                    配置
-                  </el-link>
+                    {{ $translateTitle('product.config') }}
+                  </el-button>
+                  <el-button
+                    :underline="false"
+                    icon="el-icon-attract"
+                    type="primary"
+                    @click="GoTodevices(scope.row)"
+                  >
+                    {{ $translateTitle('product.equipment') }}
+                  </el-button>
+                  <el-button
+                    :underline="false"
+                    icon="el-icon-grape"
+                    type="success"
+                    @click="editorProduct(scope.row)"
+                  >
+                    {{ $translateTitle('product.dict') }}
+                  </el-button>
+                  <el-button
+                    :underline="false"
+                    icon="el-icon-edit"
+                    type="success"
+                    @click="editorProduct(scope.row)"
+                  >
+                    {{ $translateTitle('concentrator.edit') }}
+                  </el-button>
                   <el-popover
                     :ref="`popover-${scope.$index}`"
+                    style="margin-left: 10px"
                     placement="top"
                     width="300"
                   >
@@ -117,54 +144,38 @@
                         {{ $translateTitle('developer.determine') }}
                       </el-button>
                     </div>
-                    <el-link
+                    <el-button
                       slot="reference"
                       :underline="false"
                       icon="el-icon-delete"
                       type="danger"
                     >
                       {{ $translateTitle('developer.delete') }}
-                    </el-link>
+                    </el-button>
                   </el-popover>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-attract"
-                    type="primary"
-                    @click="GoTodevices(scope.row)"
-                  >
-                    {{ $translateTitle('product.equipment') }}
-                  </el-link>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-edit"
-                    type="success"
-                    @click="editorProduct(scope.row)"
-                  >
-                    修改
-                  </el-link>
-                  <!--                  <el-link-->
+                  <!--                  <el-button-->
                   <!--                    :underline="false"-->
                   <!--                    icon="el-icon-s-promotion"-->
                   <!--                    type="primary"-->
                   <!--                    @click="proudctView(scope.row)"-->
                   <!--                  >-->
                   <!--                    运行组态-->
-                  <!--                  </el-link>-->
-                  <!--                  <el-link-->
+                  <!--                  </el-button>-->
+                  <!--                  <el-button-->
                   <!--                    :underline="false"-->
                   <!--                    icon="el-icon-link"-->
                   <!--                    type="primary"-->
                   <!--                    @click="proudctEdit(scope.row)"-->
                   <!--                  >-->
                   <!--                    编辑组态-->
-                  <!--                  </el-link>-->
-                  <!-- <el-link
+                  <!--                  </el-button>-->
+                  <!-- <el-button
                     :disabled="scope.row.config.config.cloneState == true"
                     :underline="false"
                     icon="el-icon-link"
                     type="primary"
                     @click="proudctClone(scope.row)"
-                  >备份</el-link> -->
+                  >备份</el-button> -->
                 </template>
               </el-table-column>
             </el-table>

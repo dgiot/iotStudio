@@ -14,14 +14,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "12"
-      - name: rm env
-        run: rm -rf .env && rm -rf .env.local
-      - name: Use yarn
-        run: npm install -g yarn
-      - name: write .env
-        run: echo VUE_GITHUB_USER_NAME = ${{ secrets.VUE_GITHUB_USER_NAME }} >> .env && echo VUE_APP_SECRET_KEY = ${{ secrets.VUE_APP_SECRET_KEY }} >> .env
-      - name: write .env.local
-        run: echo VUE_GITHUB_USER_NAME = ${{ secrets.VUE_GITHUB_USER_NAME }} >> .env.local && echo VUE_APP_SECRET_KEY = ${{ secrets.VUE_APP_SECRET_KEY }} >> .env.local
       - name: install
         run: yarn
       - name: build

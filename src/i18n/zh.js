@@ -172,6 +172,10 @@ export default {
       powersupply: '供电单位',
     },
     developer: {
+      Application: '应用商',
+      Company: '单位',
+      authcode: '授权码',
+      createdAt: '创建时间',
       servicechannelmanagement: '服务通道管理',
       servicechannel: '服务通道',
       equipmentchannel: '设备通道',
@@ -215,6 +219,9 @@ export default {
       disabled: '已禁用',
     },
     product: {
+      config: '配置',
+      dict: '词典',
+      edit: '设备',
       myproduct: '我的产品',
       createproduct: '创建产品',
       searchproductname: '请输入产品名称搜索',

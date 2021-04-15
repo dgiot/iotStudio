@@ -171,11 +171,11 @@ const actions = {
   async getDefault({ commit, dispatch }) {
     const Default = await SiteDefault()
     // console.log(copyright, dashboard, logo, objectId, title)
-    const { copyright, dashboard, logo, objectId, title } = Default
+    const { copyright, logo, objectId, title } = Default
     if (title) dispatch('settings/setTitle', title, { root: true })
     if (logo) commit('setAvatar', logo)
 
-    const res = { copyright, dashboard, logo, objectId, title }
+    const res = { copyright, logo, objectId, title }
     if (copyright) dispatch('acl/setCopyright', copyright, { root: true })
     if (Default) dispatch('acl/setDefault', res, { root: true })
   },

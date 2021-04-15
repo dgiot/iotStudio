@@ -97,7 +97,7 @@
         <div class="protolheader">
           <el-tabs v-model="activeName" size="mini">
             <el-tab-pane label="设计" name="design">
-              <json-edit ref="jsonEditor" v-model="itemSwagger" />
+              <JsonEditor ref="jsonEdit" v-model="itemSwagger" />
             </el-tab-pane>
             <el-tab-pane label="编码" name="code">
               <el-form
@@ -152,7 +152,7 @@
   import { getDeviceCountByProduct } from '@/api/Device/index'
   import { getChannelCountByProduct } from '@/api/Channel/index'
   import { getAllunit, getDictCount } from '@/api/Dict/index'
-  import jsonEdit from './jsonEdit/index'
+  import JsonEditor from '@/components/jsonEditor/index'
   // const Base64 = require('js-base64').Base64
   import {
     delExproto,
@@ -179,7 +179,9 @@
   import { returnLogin } from '@/utils/return'
   export default {
     name: 'ThingsParse',
-    components: { jsonEdit },
+    components: {
+      JsonEditor,
+    },
     props: {},
     data() {
       var validCode = (rule, value, callback) => {
@@ -218,7 +220,7 @@
           ProductKey: '',
           ProductAll: 0,
         },
-        swaggerPath: '',
+        swaggerPath: process.env.VUE_APP_URL + '/swagger/#/',
         decoderstart: 0,
         decodertotal: 0,
         decoderlength: 10,
@@ -254,21 +256,6 @@
       },
     },
     mounted() {
-      const hostIncludes = [
-        '192.168.2.69',
-        '192.168.2.58',
-        '127.0.0.1',
-        'localhost',
-      ]
-      const { hostname } = location
-
-      if (!hostIncludes.includes(hostname)) {
-        this.swaggerPath = hostname + '' + ':5080/swagger/#/'
-      } else {
-        this.swaggerPath = 'http://pump.iotn2n.com:5080/swagger/#/'
-      }
-      console.log(` this.swaggerPath is ${this.swaggerPath}`)
-
       // editor编辑器使用
       editor2 = ace.edit('editor2')
       editor2.session.setMode('ace/mode/python') // 设置语言
@@ -282,11 +269,18 @@
       // this.Industry();
       // this.getAllunit();
       this.getAllDict()
+      this.setPath()
       if (this.$route.query.activeName) {
         this.activeName = this.$route.query.activeName
       }
     },
     methods: {
+      setPath() {
+        console.log(process.env.NODE_ENV)
+        if (process.env.NODE_ENV !== 'development') {
+          this.swaggerPath = location.origin + '/swagger/#/'
+        }
+      },
       // 李宏杰新增   下架api
       handleDelete(index, type, mod) {
         this.$confirm('确认要下架该api吗？')

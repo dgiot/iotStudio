@@ -143,7 +143,7 @@
                   style="margin-right: 3px"
                   size="mini"
                   type="success"
-                  @click="Gotoproduct(item)"
+                  @click="Gotoproduct(item.objectId)"
                 >
                   查看产品
                 </el-button>
@@ -220,6 +220,9 @@
         const res = await this.$moreHttp({
           dev_num: await dev_count(params),
           app_num: await app_count(params),
+          projectList: await app_count({
+            limit: 30,
+          }),
           Product_num: await product_count(params),
           Project_num: await Project_count(params),
           dev_active_num: await dev_active_count(
@@ -244,6 +247,7 @@
           app_num = { count: 0 },
           dev_active_num = { count: 0 },
           dev_online_num = { count: 0 },
+          projectList = { results: {} },
         } = res
         this.$baseColorfullLoading().close()
         console.log(res)
@@ -252,23 +256,24 @@
         this.product_count = Product_num.count
         this.project_count = Project_num.count
         this.app_count = app_num.count
+        this.projectList = projectList.results
         this.dev_active_count = dev_active_num.count
         this.dev_online_count = dev_online_num.count
       },
       handleChange() {},
       handleClickVisit(project) {
-        const url =
-          window.location.origin +
-          '/iot/' +
-          project.attributes.productIdentifier +
-          '#/login'
-        window.open(url, '__blank')
+        const { productIdentifier = '' } = project
+        if (productIdentifier) {
+          const url =
+            window.location.origin + '/iot/' + productIdentifier + '#/login'
+          window.open(url, '__blank')
+        }
       },
-      Gotoproduct(project) {
+      Gotoproduct(id) {
         this.$router.push({
           path: '/product',
           query: {
-            project: project.id,
+            project: id,
           },
         })
       },

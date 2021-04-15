@@ -49,7 +49,6 @@ const mutations = {
   },
   setDefault(state, Default) {
     state.Default = Default
-    console.log('Default', Default)
     setToken('Default', JSON.stringify(Default), 'sessionStorage')
   },
 }

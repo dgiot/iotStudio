@@ -19,6 +19,8 @@ let loadingInstance
 const codeVerificationArray = isArray(successCode)
   ? [...successCode]
   : [...[successCode]]
+// 不需要token请求的路由
+const noCookiePages = ['', '/login']
 
 const CODE_MESSAGE = {
   200: '服务器成功返回请求数据',
@@ -55,9 +57,11 @@ const handleData = ({ config, data, status, statusText }) => {
       // return data.data ? data.data : data.msg
       // 或者依然保持完整的格式
       return data
-    case 401 || 209:
-      store.dispatch('user/resetAll')
-      router.push({ path: '/login', replace: true })
+    case 401:
+      backHome()
+      break
+    case 209:
+      backHome()
       break
     case 403:
       router.push({ path: '/403' })
@@ -65,7 +69,8 @@ const handleData = ({ config, data, status, statusText }) => {
   }
   // 异常处理
   // 若data.msg存在，覆盖默认提醒消息
-  const message = `${config.url} 后端接口 ${code} 异常：${
+  const { url = '' } = config
+  const message = `${url} 后端接口 ${code} 异常：${
     !data
       ? CODE_MESSAGE[code]
       : !data[messageName]
@@ -99,21 +104,21 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const token = store.getters['user/token']
+    const { path = '/' } = router.history.current
     let { headers = {} } = config
     // 不规范写法 可根据setting.config.js tokenName配置随意自定义headers
     // if (token) config.headers[tokenName] = token
     if (headers['_company']) {
-      console.log(headers['_company'])
-      const { Authorization = '', sessionToken = '' } = config.headers
-      console.log(Authorization)
-      config.headers['Authorization'] = Authorization
-      config.headers['sessionToken'] = sessionToken
+      const { sessionToken = '' } = config.headers
+      config.headers[`${tokenName}`] = sessionToken
     } else if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`
-      headers['sessionToken'] = `${token}`
-    } else {
-      console.log(headers)
+      config.headers[`${tokenName}`] = token
+    } else if (noCookiePages.indexOf(path) == -1 && !headers[`${tokenName}`]) {
+      Vue.prototype.$baseMessage(`当前页${path}未获取到${tokenName}`, 'error')
+      router.push({ path: '/login', replace: true })
+      return
     }
+
     if (
       config.data &&
       config.headers['Content-Type'] ===
@@ -157,5 +162,8 @@ instance.interceptors.response.use(
     // } else return handleData(response)
   }
 )
-
+function backHome() {
+  store.dispatch('user/resetAll')
+  router.push({ path: '/login', replace: true })
+}
 export default instance

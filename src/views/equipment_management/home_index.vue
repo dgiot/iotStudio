@@ -1,58 +1,9 @@
 <template>
   <div class="equipment">
-    <div class="equ_header">
-      <ul>
-        <li>
-          <p>
-            <span class="svg-container">
-              <vab-icon icon="device-fill" />
-            </span>
-            {{ $translateTitle('equipment.totalequipment') }}
-            <el-tooltip
-              :content="$translateTitle('equipment.totalequipment')"
-              placement="top"
-            >
-              <i class="el-icon-question" />
-            </el-tooltip>
-          </p>
-          <span>{{ devicetotal }}</span>
-        </li>
-        <!--        <li>-->
-        <!--          <p>-->
-        <!--            <span class="svg-container">-->
-        <!--              <vab-icon icon="numbers-fill" />-->
-        <!--            </span>-->
-        <!--            {{ $translateTitle('equipment.activationdevice') }}-->
-        <!--            <el-tooltip-->
-        <!--              :content="$translateTitle('equipment.totalactive')"-->
-        <!--              placement="top"-->
-        <!--            >-->
-        <!--              <i class="el-icon-question" />-->
-        <!--            </el-tooltip>-->
-        <!--          </p>-->
-        <!--          <span>{{ activeall }}</span>-->
-        <!--        </li>-->
-        <li>
-          <p>
-            <span class="svg-container">
-              <vab-icon icon="24-hours-line" />
-            </span>
-            {{ $translateTitle('equipment.onlinedevices') }}
-            <el-tooltip
-              :content="$translateTitle('equipment.totalonline')"
-              placement="top"
-            >
-              <i class="el-icon-question" />
-            </el-tooltip>
-          </p>
-          <span>{{ onlineall }}</span>
-        </li>
-      </ul>
-    </div>
     <div class="equtabs">
       <!--tabs第一个标签页-->
       <el-row :gutter="24">
-        <el-col :span="4">
+        <el-col :span="3">
           <div class="leftTree">
             <el-tree
               :data="deptTreeData"
@@ -74,7 +25,56 @@
             </el-tree>
           </div>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="21">
+          <div class="equ_header">
+            <ul>
+              <li>
+                <p>
+                  <span class="svg-container">
+                    <vab-icon icon="device-fill" />
+                  </span>
+                  {{ $translateTitle('equipment.totalequipment') }}
+                  <el-tooltip
+                    :content="$translateTitle('equipment.totalequipment')"
+                    placement="top"
+                  >
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                </p>
+                <span>{{ devicetotal }}</span>
+              </li>
+              <!--        <li>-->
+              <!--          <p>-->
+              <!--            <span class="svg-container">-->
+              <!--              <vab-icon icon="numbers-fill" />-->
+              <!--            </span>-->
+              <!--            {{ $translateTitle('equipment.activationdevice') }}-->
+              <!--            <el-tooltip-->
+              <!--              :content="$translateTitle('equipment.totalactive')"-->
+              <!--              placement="top"-->
+              <!--            >-->
+              <!--              <i class="el-icon-question" />-->
+              <!--            </el-tooltip>-->
+              <!--          </p>-->
+              <!--          <span>{{ activeall }}</span>-->
+              <!--        </li>-->
+              <li>
+                <p>
+                  <span class="svg-container">
+                    <vab-icon icon="24-hours-line" />
+                  </span>
+                  {{ $translateTitle('equipment.onlinedevices') }}
+                  <el-tooltip
+                    :content="$translateTitle('equipment.totalonline')"
+                    placement="top"
+                  >
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                </p>
+                <span>{{ onlineall }}</span>
+              </li>
+            </ul>
+          </div>
           <div style="margin-top: 20px" class="equdevices">
             <el-select
               v-model="equvalue"
@@ -178,22 +178,27 @@
             >
               <el-table-column type="selection" align="center" width="55" />
               <el-table-column
-                :label="
-                  $translateTitle('equipment.devicenumber') +
-                  '/' +
-                  $translateTitle('equipment.name')
-                "
+                :label="$translateTitle('equipment.devicenumber')"
                 align="center"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.devaddr }}</span>
-                  <p style="margin: 0; color: green">{{ scope.row.name }}</p>
+                  {{ scope.row.devaddr }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('equipment.name')"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <span style="margin: 0; color: green">
+                    {{ scope.row.name }}
+                  </span>
                 </template>
               </el-table-column>
               <el-table-column
                 :label="$translateTitle('equipment.state')"
                 align="center"
-                width="200"
+                width="80"
               >
                 <template slot-scope="scope">
                   <span
@@ -244,7 +249,7 @@
                 </template>
               </el-table-column>
               <el-table-column
-                v-if="Default.title != '云寓智慧公寓平台'"
+                v-if="Company != '云寓智慧公寓平台'"
                 :label="$translateTitle('equipment.nodetype')"
                 align="center"
               >
@@ -260,10 +265,10 @@
                 </template>
               </el-table-column>
               <el-table-column
-                v-if="Default.title == '云寓智慧公寓平台'"
-                label="授权码"
+                v-if="Company == '云寓智慧公寓平台'"
+                :label="$translateTitle('developer.authcode')"
                 align="center"
-                width="200"
+                width="100"
               >
                 <template slot-scope="scope">
                   <span>
@@ -276,13 +281,35 @@
                 </template>
               </el-table-column>
               <el-table-column
+                v-if="Company == '云寓智慧公寓平台'"
+                :label="$translateTitle('developer.Company')"
+                align="center"
+                width="200"
+              >
+                <span>
+                  {{ toggeleCompany }}
+                </span>
+              </el-table-column>
+              <el-table-column
+                v-if="Company == '云寓智慧公寓平台'"
+                :label="$translateTitle('developer.Application')"
+                align="center"
+                width="200"
+              >
+                <template slot-scope="scope">
+                  <span>
+                    {{ scope.row.basedata.yysId }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
                 :label="
                   $translateTitle('developer.enable') +
                   '/' +
                   $translateTitle('developer.prohibit')
                 "
                 align="center"
-                width="200"
+                width="100"
               >
                 <template slot-scope="scope">
                   <el-switch
@@ -304,7 +331,11 @@
               <!--              <span v-else>—</span>-->
               <!--            </template>-->
               <!--          </el-table-column>-->
-              <el-table-column label="创建时间" width="200">
+              <el-table-column
+                align="center"
+                :label="$translateTitle('developer.createdAt')"
+                width="200"
+              >
                 <template slot-scope="scope">
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
@@ -315,7 +346,7 @@
               >
                 <template slot-scope="scope">
                   <el-link
-                    v-if="Default.title != '云寓智慧公寓平台'"
+                    v-if="Company != '云寓智慧公寓平台'"
                     :underline="false"
                     type="primary"
                     icon="el-icon-view"
@@ -376,16 +407,6 @@
                 </template>
               </el-table-column>
             </el-table>
-            <div class="elpagination" style="margin-top: 20px">
-              <el-pagination
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="devicelength"
-                :total="devicetotal"
-                layout="total, sizes, prev, pager, next, jumper"
-                @size-change="deviceSizeChange"
-                @current-change="deviceCurrentChange"
-              />
-            </div>
           </div>
           <!--添加设备弹窗-->
           <el-dialog
@@ -424,7 +445,11 @@
                   :label="$translateTitle('equipment.devicenumber')"
                   prop="devaddr"
                 >
-                  <el-input v-model="deviceform.devaddr" />
+                  <el-input
+                    v-model="deviceform.devaddr"
+                    :disabled="equipmentEditor == '编辑'"
+                    :readonly="equipmentEditor == '编辑'"
+                  />
                 </el-form-item>
                 <el-form-item
                   :label="$translateTitle('product.productname')"
@@ -432,8 +457,9 @@
                 >
                   <el-select
                     v-model="deviceform.productName"
+                    :disabled="equipmentEditor == '编辑'"
+                    :readonly="equipmentEditor == '编辑'"
                     :placeholder="$translateTitle('equipment.entername')"
-                    :disabled="!productenable || !changeproduct"
                   >
                     <el-option
                       v-for="(item, index) in proTableData1"
@@ -457,13 +483,13 @@
                   <el-input v-model="deviceform.brand" />
                 </el-form-item>
                 <el-form-item
-                  v-if="Default.title == '云寓智慧公寓平台'"
+                  v-if="Company == '云寓智慧公寓平台'"
                   :label="$translateTitle('equipment.auth')"
                 >
                   <el-input v-model="deviceform.auth" />
                 </el-form-item>
                 <el-form-item
-                  v-if="Default.title == '云寓智慧公寓平台'"
+                  v-if="Company == '云寓智慧公寓平台'"
                   :label="$translateTitle('equipment.application')"
                 >
                   <el-select
@@ -570,9 +596,20 @@
         </el-col>
       </el-row>
     </div>
+    <div class="elpagination" style="margin-top: 20px">
+      <el-pagination
+        :page-sizes="[10, 20, 30, 50]"
+        :page-size="devicelength"
+        :total="devicetotal"
+        layout="total, sizes, prev, pager, next, jumper"
+        @size-change="deviceSizeChange"
+        @current-change="deviceCurrentChange"
+      />
+    </div>
   </div>
 </template>
 <script>
+  import * as utils from '@/utils/vuex'
   import { mapGetters } from 'vuex'
   import { get_object } from '@/api/shuwa_parse'
   import { queryDict } from '@/api/Direct/index.js'
@@ -615,6 +652,8 @@
         }
       }
       return {
+        toggeleCompany: '',
+        Company: '',
         access_token: '',
         curDepartmentId: '',
         deptTreeData: [],
@@ -731,7 +770,6 @@
     },
     computed: {
       ...mapGetters({
-        Default: 'acl/Default',
         token: 'user/token',
       }),
     },
@@ -746,10 +784,11 @@
       },
     },
     mounted() {
+      let Default = utils.getToken('Default', 'sessionStorage')
+      this.Company = JSON.parse(Default)['title']
       this.access_token = store.getters['user/token']
       this.getMenu()
       this.searchProduct()
-      this.getDevices(0)
       this.queryYysId()
       language = Cookies.get('language')
       // this.$store.dispatch('getUserId', '111')
@@ -759,9 +798,10 @@
     },
     methods: {
       async getMenu() {
-        const res = await Roletree()
-        if (res) {
-          this.deptTreeData = res.results
+        const { results } = await Roletree()
+        if (results) {
+          this.deptTreeData = results
+          this.handleNodeClick(results[0], 0)
         } else {
           this.$message('部门列表获取失败')
           this.deptTreeData = []
@@ -771,12 +811,15 @@
       async handleNodeClick(data, node) {
         if (node.level != 1) {
           // 在这里获取点击厂家的session
-          this.curDepartmentId = data.objectId
           const { access_token = '' } = await getToken(data.name)
           this.access_token = access_token
         } else {
           this.access_token = store.getters['user/token']
         }
+        // 点击的公司名
+        const { name, objectId } = data
+        this.curDepartmentId = objectId
+        this.toggeleCompany = name
         this.getDevices(0)
       },
       async queryYysId() {
@@ -1512,12 +1555,12 @@
     },
   }
 </script>
-<style lang="scss" scoped>
-  .equipment {
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
+<style lang="scss" rel="stylesheet/scss" scoped>
+  .equtabs {
+    height: calc(100vh - #{$base-top-bar-height}* 4 - 56px);
+    margin: 20px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 
     .equ_header {
       box-sizing: border-box;
@@ -1561,8 +1604,18 @@
       }
     }
   }
-</style>
-<style>
+  .leftTree {
+    height: calc(100vh - #{$base-top-bar-height}* 4 - 20px);
+    width: 200px;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    ::v-deep .el-tree {
+      height: calc(100vh - 60px * 4 - 20px);
+      width: 200px;
+      overflow-x: scroll;
+      overflow-y: scroll;
+    }
+  }
   .equipment .el-tabs__item {
     height: 50px;
     margin: 0;

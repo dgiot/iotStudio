@@ -1,16 +1,21 @@
 <template>
   <footer class="vab-footer">
-    {{ copyright.replace(/Copyright /, '') }}
+    <h3 v-if="Company != '云寓智慧公寓平台'">
+      {{ copyright.replace(/Copyright /, '') }}
+    </h3>
+    <h3 v-else>{{ Company }}</h3>
   </footer>
 </template>
 
 <script>
   import { title } from '@/config'
   import { mapGetters } from 'vuex'
+  import * as utils from '@/utils/vuex'
   export default {
     name: 'VabFooter',
     data() {
       return {
+        Company: '',
         fullYear: new Date().getFullYear(),
         title,
       }
@@ -19,6 +24,10 @@
       ...mapGetters({
         copyright: 'acl/copyright',
       }),
+    },
+    created() {
+      let Default = utils.getToken('Default', 'sessionStorage')
+      this.Company = JSON.parse(Default)['title']
     },
   }
 </script>

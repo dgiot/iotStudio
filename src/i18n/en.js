@@ -149,7 +149,7 @@ export default {
       规则引擎: 'Rule Engine',
       规则管理: 'Rule Manage',
       资源通道: 'Resource',
-      设备详情: 'Equipment、',
+      设备详情: 'Equipment',
       在线调试: 'Online testing',
       终端监控: 'ZETag monitoring',
       网关监控: 'AP monitoring',
