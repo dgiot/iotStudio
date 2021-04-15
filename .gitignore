@@ -33,9 +33,6 @@ pnpm-debug.log*
 .yarn/build-state.yml
 .yarn/install-state.gz
 
-# VAB
-public/video
-*.zip
-*.7z
-*.rar
-email.sh
+# config
+gitbit
+github
