@@ -83,8 +83,13 @@ const handleData = ({ config, data, status, statusText }) => {
  * @description axios初始化
  */
 let serviceBaseUrl = baseURL
-const { host } = window.location
-if (host == 'dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com') {
+const { hostname } = window.location
+let localHost = [
+  'dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com',
+  '127.0.0.1',
+  'localhost',
+]
+if (localHost.indexOf(hostname)) {
   serviceBaseUrl = process.env.VUE_APP_URL
 }
 const instance = axios.create({
