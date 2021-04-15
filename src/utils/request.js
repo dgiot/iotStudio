@@ -86,11 +86,13 @@ let serviceBaseUrl = baseURL
 const { hostname } = window.location
 let localHost = [
   'dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com',
+  'dgiot.github.io',
+  'dgiot.gitee.io',
   '127.0.0.1',
   'localhost',
 ]
 if (localHost.indexOf(hostname)) {
-  serviceBaseUrl = process.env.VUE_APP_URL
+  serviceBaseUrl = process.env.VUE_APP_URL + '/iotapi/'
 }
 const instance = axios.create({
   baseURL: serviceBaseUrl,
