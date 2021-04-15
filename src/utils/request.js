@@ -21,7 +21,8 @@ const codeVerificationArray = isArray(successCode)
   : [...[successCode]]
 // 不需要token请求的路由
 const noCookiePages = ['', '/login']
-
+// 返回失败的code
+const errCode = [200, 209, 401]
 const CODE_MESSAGE = {
   200: '服务器成功返回请求数据',
   201: '新建或修改数据成功',
@@ -57,10 +58,7 @@ const handleData = ({ config, data, status, statusText }) => {
       // return data.data ? data.data : data.msg
       // 或者依然保持完整的格式
       return data
-    case 401:
-      backHome()
-      break
-    case 209:
+    case errCode.indexOf(Number(code)) !== -1:
       backHome()
       break
     case 403:
@@ -87,8 +85,7 @@ const handleData = ({ config, data, status, statusText }) => {
 let serviceBaseUrl = baseURL
 const { host } = window.location
 if (host == 'dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com') {
-  serviceBaseUrl =
-    'https://dgiotdashboard-8gb17b3673ff6cdd-1253666439.ap-shanghai.app.tcloudbase.com/'
+  serviceBaseUrl = process.env.VUE_APP_URL
 }
 const instance = axios.create({
   baseURL: serviceBaseUrl,
