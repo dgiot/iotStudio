@@ -108,7 +108,7 @@
                     :underline="false"
                     icon="el-icon-grape"
                     type="success"
-                    @click="editorProduct(scope.row)"
+                    @click="editorDict(scope.row)"
                   >
                     {{ $translateTitle('product.dict') }}
                   </el-button>
@@ -380,6 +380,20 @@
           </el-button>
         </div>
       </el-dialog>
+      <el-dialog
+        title="提示"
+        :visible.sync="dictVisible"
+        width="30%"
+        :before-close="handleClose"
+      >
+        <span>这是一段信息</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dictVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dictVisible = false">
+            确 定
+          </el-button>
+        </span>
+      </el-dialog>
     </div>
 
     <div class="import-dialog">
@@ -448,6 +462,7 @@
   export default {
     data() {
       return {
+        dictVisible: false,
         listLoading: false,
         custom_row: {},
         custom_status: 'add',
@@ -932,6 +947,9 @@
             this.getParent(item.id, originarr, [])
           }
         })
+      },
+      editorDict(row) {
+        this.dictVisible = true
       },
       editorProduct(row) {
         this.custom_status = 'edit'
