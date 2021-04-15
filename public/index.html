@@ -14,10 +14,6 @@
     <% for(var css of htmlWebpackPlugin.options.staticUrl.css) { %>
     <link rel="stylesheet" href="<%=css%>" />
     <% } %>
-    <!-- 引入JS -->
-    <% for(var js of htmlWebpackPlugin.options.staticUrl.js) { %>
-    <script charset="utf-8" src="<%=js%>"></script>
-    <% } %>
   </head>
   <body>
     <noscript>
@@ -36,5 +32,9 @@
         <h1><%= VUE_APP_TITLE %></h1>
       </div>
     </div>
+    <!-- 引入JS -->
+    <% for(var js of htmlWebpackPlugin.options.staticUrl.js) { %>
+    <script charset="utf-8" src="<%=js%>"></script>
+    <% } %>
   </body>
 </html>

@@ -1,5 +1,16 @@
 import { loadingText, messageDuration } from '@/config'
 import { Loading, Message, MessageBox, Notification } from 'element-ui'
+import store from '@/store'
+import { getToken } from '@/utils/token'
+
+const token = store.getters['user/token']
+
+/**
+ * @description 全局token
+ */
+Vue.prototype.$baseToken = () => {
+  return token || getToken()
+}
 
 /**
  * @description 全局加载层
