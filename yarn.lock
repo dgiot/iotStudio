@@ -11502,7 +11502,7 @@ v8-compile-cache@^2.0.3, v8-compile-cache@^2.2.0:
 
 "vab-icons@git+https://hub.fastgit.org/zxcasvw/vab-icons.git":
   version "0.0.19"
-  resolved "git+https://hub.fastgit.org/zxcasvw/vab-icons.git#76f7ed9a659a6674585cedd94e72c30f1fe0a529"
+  resolved "git+https://hub.fastgit.org/zxcasvw/vab-icons.git#9b6a93942880ee21594110bf55310b7b097d9beb"
   dependencies:
     core-js "^3.9.1"
     remixicon "^2.5.0"
