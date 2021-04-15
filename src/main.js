@@ -15,6 +15,9 @@ import '@/vab'
 Vue.use(utilwen)
 Vue.use(VueKonva)
 Vue.config.productionTip = false
+if (process.env.NODE_ENV !== 'development') {
+  Vue.config.productionTip = true
+}
 new Vue({
   el: '#dgiot',
   i18n,
