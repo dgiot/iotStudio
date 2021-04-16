@@ -286,9 +286,11 @@
                 align="center"
                 width="200"
               >
-                <span>
-                  {{ toggeleCompany }}
-                </span>
+                <template slot-scope="scope">
+                  <span>
+                    {{ scope.row.toggeleCompany }}
+                  </span>
+                </template>
               </el-table-column>
               <el-table-column
                 v-if="Company == '云寓智慧公寓平台'"
@@ -1041,6 +1043,17 @@
           params,
           this.access_token
         )
+        results.forEach((item) => {
+          if (item.ACL) {
+            for (var key in item.ACL) {
+              item.toggeleCompany = key.substr(5)
+              // obj.applicationtText = key ? key.substr(5) : ''
+            }
+          } else {
+            item.toggeleCompany = ''
+          }
+        })
+        console.log(results)
         this.listLoading = false
         this.tableData = results
         this.devicetotal = count

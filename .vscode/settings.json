@@ -17,6 +17,7 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "terminal.integrated.shell.windows": "D:\\Software\\Git\\bin\\bash.exe",
   "liveServer.settings.donotShowInfoMsg": true,
   "explorer.confirmDelete": false,
   "javascript.updateImportsOnFileMove.enabled": "always",

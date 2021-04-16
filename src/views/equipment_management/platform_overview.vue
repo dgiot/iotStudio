@@ -204,6 +204,7 @@
     }, //如果页面有keep-alive缓存功能，这个函数会触发
     methods: {
       async getAllAxios() {
+        console.log(process.env)
         this.$baseColorfullLoading(1, '批量请求数据中')
         // （1）如果列为主键，count(列名)效率优于count(1)
         // （2）如果列不为主键，count(1)效率优于count(列名)
