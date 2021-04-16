@@ -174,7 +174,6 @@ const actions = {
     const { copyright, logo, objectId, title } = Default
     if (title) dispatch('settings/setTitle', title, { root: true })
     if (logo) commit('setAvatar', logo)
-
     const res = { copyright, logo, objectId, title }
     if (copyright) dispatch('acl/setCopyright', copyright, { root: true })
     if (Default) dispatch('acl/setDefault', res, { root: true })

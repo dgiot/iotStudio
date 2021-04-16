@@ -1,9 +1,39 @@
 <template>
   <div class="equipment">
+    <div class="dialog">
+      <el-dialog :visible.sync="popoverVisible" top="5vh" width="30vh">
+        <div class="leftTree">
+          <p style="text-align: center">
+            {{ $translateTitle('developer.Company') }} :
+            {{ deciceCompany }}
+          </p>
+          <el-tree
+            :data="deptTreeData"
+            :props="roleProps"
+            :expand-on-click-node="false"
+            node-key="index"
+            default-expand-all
+          >
+            <!-- @node-click="handleNodeClick" -->
+            <!-- eslint-disable-next-line -->
+            <div slot-scope="{ node, data }" class="custom-tree-node">
+              <span
+                :class="{
+                  selected: data.objectId == curDepartmentId,
+                }"
+                @click="transferAcl(data)"
+              >
+                {{ node.label }}
+              </span>
+            </div>
+          </el-tree>
+        </div>
+      </el-dialog>
+    </div>
     <div class="equtabs">
       <!--tabs第一个标签页-->
-      <el-row :gutter="24">
-        <el-col :span="3">
+      <el-row :gutter="gutter">
+        <el-col :span="leftRow">
           <div class="leftTree">
             <el-tree
               :data="deptTreeData"
@@ -25,7 +55,7 @@
             </el-tree>
           </div>
         </el-col>
-        <el-col :span="21">
+        <el-col :span="gutter - leftRow">
           <div class="equ_header">
             <ul>
               <li>
@@ -76,6 +106,12 @@
             </ul>
           </div>
           <div style="margin-top: 20px" class="equdevices">
+            <!-- 显示影藏 -->
+            <vab-icon
+              style="cursor: pointer"
+              :icon="vabicon"
+              @click="leftRow = leftRow == 3 ? 0 : 3"
+            />
             <el-select
               v-model="equvalue"
               :disabled="!productenable"
@@ -171,6 +207,7 @@
             <el-table
               ref="filterTable"
               v-loading="listLoading"
+              height="550"
               :data="tableData"
               :row-style="rowClass"
               style="width: 100%; margin-top: 20px; text-align: center"
@@ -249,22 +286,6 @@
                 </template>
               </el-table-column>
               <el-table-column
-                v-if="Company != '云寓智慧公寓平台'"
-                :label="$translateTitle('equipment.nodetype')"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <vab-icon
-                    :icon="
-                      scope.row.nodeType == 0 ? 'hotel-bed-fill' : 'hotel-fill'
-                    "
-                    style="width: 2rem; height: 2rem"
-                  />
-                  <!-- <el-tag type="success" >设备</el-tag>
-                  <el-tag type="success" v-else>网关</el-tag>-->
-                </template>
-              </el-table-column>
-              <el-table-column
                 v-if="Company == '云寓智慧公寓平台'"
                 :label="$translateTitle('developer.authcode')"
                 align="center"
@@ -281,14 +302,13 @@
                 </template>
               </el-table-column>
               <el-table-column
-                v-if="Company == '云寓智慧公寓平台'"
                 :label="$translateTitle('developer.Company')"
                 align="center"
                 width="200"
               >
                 <template slot-scope="scope">
                   <span>
-                    {{ scope.row.toggeleCompany }}
+                    {{ scope.row.Company }}
                   </span>
                 </template>
               </el-table-column>
@@ -343,14 +363,26 @@
                 </template>
               </el-table-column>
               <el-table-column
+                width="300"
+                fixed="right"
                 :label="$translateTitle('developer.operation')"
                 align="center"
               >
                 <template slot-scope="scope">
+                  <vab-icon style="color: #1890ff" icon="file-transfer-line" />
+
+                  <el-link
+                    :underline="false"
+                    type="primary"
+                    @click="showTree(scope.row.objectId, scope.row.Company)"
+                  >
+                    {{ $translateTitle('equipment.move') }}
+                  </el-link>
                   <el-link
                     v-if="Company != '云寓智慧公寓平台'"
                     :underline="false"
                     type="primary"
+                    style="margin: 0 10px"
                     icon="el-icon-view"
                     @click="deviceToDetail(scope.row)"
                   >
@@ -359,6 +391,7 @@
                   <el-link
                     :underline="false"
                     type="primary"
+                    style="margin: 0 10px 0 0"
                     icon="el-icon-edit"
                     @click="editorDevice(scope.row)"
                   >
@@ -409,6 +442,16 @@
                 </template>
               </el-table-column>
             </el-table>
+            <div class="elpagination" style="margin-top: 30px">
+              <el-pagination
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="devicelength"
+                :total="devicetotal"
+                layout="total, sizes, prev, pager, next, jumper"
+                @size-change="deviceSizeChange"
+                @current-change="deviceCurrentChange"
+              />
+            </div>
           </div>
           <!--添加设备弹窗-->
           <el-dialog
@@ -598,16 +641,6 @@
         </el-col>
       </el-row>
     </div>
-    <div class="elpagination" style="margin-top: 20px">
-      <el-pagination
-        :page-sizes="[10, 20, 30, 50]"
-        :page-size="devicelength"
-        :total="devicetotal"
-        layout="total, sizes, prev, pager, next, jumper"
-        @size-change="deviceSizeChange"
-        @current-change="deviceCurrentChange"
-      />
-    </div>
   </div>
 </template>
 <script>
@@ -628,7 +661,7 @@
     BmCityList,
   } from 'vue-baidu-map'
   import { returnLogin } from '@/utils/return'
-  import { querycompanyDevice } from '@/api/Device'
+  import { querycompanyDevice, putDevice } from '@/api/Device'
   import { Roletree, getToken } from '@/api/Menu'
   var language
   var pcdata
@@ -654,8 +687,14 @@
         }
       }
       return {
-        toggeleCompany: '',
-        Company: '',
+        deviceId: '',
+        deciceCompany: '',
+        gutter: 24,
+        leftRow: 3,
+        rightRow: 21,
+        popoverVisible: false,
+        vabicon: 'ancient-gate-fill',
+        Company: sessionStorage.getItem('title') || '',
         access_token: '',
         curDepartmentId: '',
         deptTreeData: [],
@@ -786,8 +825,6 @@
       },
     },
     mounted() {
-      let Default = utils.getToken('Default', 'sessionStorage')
-      this.Company = JSON.parse(Default)['title']
       this.access_token = store.getters['user/token']
       this.getMenu()
       this.searchProduct()
@@ -799,6 +836,54 @@
       // }
     },
     methods: {
+      // 显示菜单树
+      showTree(objectId, acl) {
+        this.deviceId = objectId
+        this.deciceCompany = acl
+        this.popoverVisible = !this.popoverVisible
+      },
+      // 迁移设备
+      transferAcl(data) {
+        const aclKey1 = 'role' + ':' + data.name
+        const aclObj = {}
+        aclObj[aclKey1] = {
+          read: true,
+          write: true,
+        }
+        const parmas = {
+          ACL: aclObj,
+          detail: { factory: data.depname },
+        }
+        this.$confirm(
+          this.$translateTitle(`确定要将设备迁移到` + data.name + '吗'),
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        )
+          .then(async () => {
+            const { updatedAt } = await putDevice(this.deviceId, parmas)
+            if (updatedAt) {
+              this.popoverVisible = false
+              this.getMenu()
+              this.$message({
+                type: 'success',
+                message: this.$translateTitle(`迁移成功`),
+              })
+            } else {
+              this.$message({
+                type: 'error',
+                message: this.$translateTitle(`迁移失败`),
+              })
+            }
+          })
+          .catch((e) => {
+            console.log(e)
+          })
+        console.log(data.name)
+      },
       async getMenu() {
         const { results } = await Roletree()
         if (results) {
@@ -821,7 +906,7 @@
         // 点击的公司名
         const { name, objectId } = data
         this.curDepartmentId = objectId
-        this.toggeleCompany = name
+        this.Company = name
         this.getDevices(0)
       },
       async queryYysId() {
@@ -1046,14 +1131,13 @@
         results.forEach((item) => {
           if (item.ACL) {
             for (var key in item.ACL) {
-              item.toggeleCompany = key.substr(5)
+              item.Company = key.substr(5)
               // obj.applicationtText = key ? key.substr(5) : ''
             }
           } else {
-            item.toggeleCompany = ''
+            item.Company = ''
           }
         })
-        console.log(results)
         this.listLoading = false
         this.tableData = results
         this.devicetotal = count
@@ -1570,7 +1654,7 @@
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
   .equtabs {
-    height: calc(100vh - #{$base-top-bar-height}* 4 - 56px);
+    height: calc(100vh - #{$base-top-bar-height}* 4 + 38px);
     margin: 20px;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -1618,13 +1702,13 @@
     }
   }
   .leftTree {
-    height: calc(100vh - #{$base-top-bar-height}* 4 - 20px);
     width: 200px;
+    /* height: calc(100vh - #{$base-top-bar-height}* 4 + 38px); */
     overflow-x: scroll;
     overflow-y: scroll;
     ::v-deep .el-tree {
-      height: calc(100vh - 60px * 4 - 20px);
       width: 200px;
+      height: calc(100vh - 60px * 4 + 30px);
       overflow-x: scroll;
       overflow-y: scroll;
     }

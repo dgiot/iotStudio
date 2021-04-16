@@ -15,7 +15,7 @@
     name: 'VabFooter',
     data() {
       return {
-        Company: '',
+        Company: sessionStorage.getItem('title') || '',
         fullYear: new Date().getFullYear(),
         title,
       }
@@ -24,10 +24,6 @@
       ...mapGetters({
         copyright: 'acl/copyright',
       }),
-    },
-    created() {
-      let Default = utils.getToken('Default', 'sessionStorage')
-      this.Company = JSON.parse(Default)['title']
     },
   }
 </script>

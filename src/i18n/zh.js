@@ -92,6 +92,7 @@ export default {
     },
     route: {},
     equipment: {
+      move: '迁移',
       application: '应用商',
       auth: '授权码',
       equipmentstatistics: '设备统计',

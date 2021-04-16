@@ -38,6 +38,7 @@
           <div class="protable">
             <el-table
               v-loading="listLoading"
+              height="60vh"
               :header-cell-style="{ 'text-align': 'center' }"
               :cell-style="{ 'text-align': 'center' }"
               :data="proTableData"
@@ -386,6 +387,7 @@
         :title="title_dict_edit_dialog"
         :close-on-click-modal="false"
         size="mini"
+        :before-close="closeDict"
         @open="opendialog('tempparams')"
       >
         <el-form
@@ -471,8 +473,9 @@
       </el-dialog>
 
       <el-dialog
+        v-if="dictVisible"
+        :close-on-click-modal="false"
         :title="title_temp_dialog"
-        dict-visible
         :visible.sync="dictVisible"
         width="80%"
       >
@@ -640,7 +643,7 @@
             <el-button type="primary" @click="onJsonSave('dictTempForm')">
               提交
             </el-button>
-            <el-button @click="dict_temp_dialog = false">取消</el-button>
+            <el-button @click="dictVisible = false">取消</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -899,6 +902,19 @@
       this.projectName = ''
     },
     methods: {
+      delRow(index, rows) {
+        rows.splice(index, 1)
+        // this.onJsonSave("dictTempForm");
+      },
+      editRow(row, index, params) {
+        this.editIndexId = index
+        this.title_dict_edit_dialog = '修改字典数据'
+        this.edit_dict_temp_dialog = true
+        this.tempparams = row
+      },
+      closeDict() {
+        this.$refs.tempparams.resetFields()
+      },
       onJsonSave(formName) {
         // 点击保存触发
         // console.log("onJsonSave", this.dictTempForm.params);
@@ -1309,11 +1325,12 @@
           cType: '',
           enable: '1',
           description: '',
-          params: config.basedate,
+          params: [],
         }
         this.title_temp_dialog = '创建字典模板'
         if (config.basedate) {
           this.title_temp_dialog = '修改字典模板'
+          this.dictTempForm = config.basedate
         }
         this.rule = {
           name: [

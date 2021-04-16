@@ -83,14 +83,16 @@ const handleData = ({ config, data, status, statusText }) => {
  * @description axios初始化
  */
 let serviceBaseUrl = baseURL
+// 判断当前环境是否为github page和gitee page
 const { hostname } = window.location
 let localHost = [
   'dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com',
   'dgiiot.gitee.io',
-  '127.0.0.1',
-  'localhost',
 ]
-if (localHost.indexOf(hostname)) {
+// if (process.env.NODE_ENV == 'development') {
+//   localHost.push('localhost', '127.0.0.1')
+// }
+if (localHost.indexOf(hostname) > -1) {
   serviceBaseUrl = process.env.VUE_APP_URL + '/iotapi/'
 }
 const instance = axios.create({
