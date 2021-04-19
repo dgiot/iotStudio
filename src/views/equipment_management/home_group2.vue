@@ -15,6 +15,7 @@
             <el-form-item>
               <el-input
                 v-model="formInline.productname"
+                clearable
                 :placeholder="$translateTitle('product.searchproductname')"
               />
             </el-form-item>
@@ -64,6 +65,13 @@
                   </span>
                   <span v-if="scope.row.nodeType == 0">
                     {{ $translateTitle('product.equipment') }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="$translateTitle('home.category')">
+                <template slot-scope="scope">
+                  <span>
+                    {{ getCategory(scope.row.category) }}
                   </span>
                 </template>
               </el-table-column>
@@ -712,12 +720,13 @@
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
   import vueJsonEditor from 'vue-json-editor'
-  import { putDict } from '@/api/Direct'
+  import Category from '@/api/Mock/Category'
   export default {
     components: { vueJsonEditor },
     data() {
       return {
         productInfo: {},
+        category: Category,
         dictOptions: ['String', 'Boolean', 'Number'],
         edit_dict_temp_dialog: false,
         title_dict_edit_dialog: '新增字典数据',
@@ -895,6 +904,8 @@
     },
     computed: {},
     mounted() {
+      const { project = '' } = this.$route.query
+      this.formInline.productname = project
       this.Industry()
       this.searchProduct(0)
     },
@@ -902,6 +913,16 @@
       this.projectName = ''
     },
     methods: {
+      getCategory(key) {
+        console.log(key)
+        let name = ''
+        this.category.filter((item) => {
+          if (item.type == key) {
+            name = item.data.CategoryName
+          }
+        })
+        return name
+      },
       delRow(index, rows) {
         rows.splice(index, 1)
         // this.onJsonSave("dictTempForm");

@@ -105,30 +105,31 @@
         <el-col
           v-for="item in projectList"
           :key="item.id"
-          :xs="12"
-          :sm="8"
+          :xs="24"
+          :sm="24"
           :md="8"
-          :lg="6"
-          :xl="4"
+          :lg="{ span: '4-8' }"
         >
           <el-card class="box-card" shadow="always">
             <div slot="header" class="clearfix">
-              <span style="font-weight: bolder">{{ item.title }}</span>
+              <span>
+                {{ item.name }}
+              </span>
             </div>
-            <div class="text item">
-              <span>工程单位：</span>
+            <div v-if="item.userUnit" class="text item">
+              <span>{{ $translateTitle('home.unit') }}</span>
               <span>{{ item.userUnit }}</span>
             </div>
-            <div class="text item">
-              <span>服务规模：</span>
+            <div v-if="item.scale" class="text item">
+              <span>{{ $translateTitle('home.scale') }}：</span>
               <span>{{ item.scale }}</span>
             </div>
             <div class="text item">
-              <span>所属行业：</span>
-              <span>{{ item.category }}</span>
+              <span>{{ $translateTitle('home.category') }}：</span>
+              <span>{{ getCategory(item.category) }}</span>
             </div>
             <div class="text item">
-              <span>更新时间：</span>
+              <span>{{ $translateTitle('home.updatedAt') }}：</span>
               <span>
                 {{
                   new Date(item.updatedAt).toLocaleDateString() +
@@ -137,23 +138,24 @@
                 }}
               </span>
             </div>
-            <div class="text item" style="float: right">
+            <div class="text item" style="text-align: center">
               <el-button-group>
                 <el-button
                   style="margin-right: 3px"
                   size="mini"
                   type="success"
-                  @click="Gotoproduct(item.objectId)"
+                  @click="Gotoproduct(item.name)"
                 >
-                  查看产品
+                  {{ $translateTitle('home.preview') }}
                 </el-button>
                 <el-button
                   size="mini"
                   type="primary"
                   target="_blank"
+                  :disabled="!item.productIdentifier"
                   @click="handleClickVisit(item)"
                 >
-                  进入登录
+                  {{ $translateTitle('home.login') }}
                 </el-button>
               </el-button-group>
             </div>
@@ -168,19 +170,13 @@
 </template>
 <script>
   import { batch } from '@/api/Batch/index'
-  import {
-    Project_count,
-    product_count,
-    app_count,
-    dev_count,
-    dev_active_count,
-    dev_online_count,
-  } from '@/api/Platform/index'
+  import Category from '@/api/Mock/Category'
   export default {
     name: 'Index',
     components: {},
     data() {
       return {
+        category: Category,
         activeName: 'devchart',
         filterBox: 'filterBox-first',
         project_count: '-',
@@ -198,83 +194,171 @@
     },
     mounted() {
       this.getAllAxios()
+      console.log(this.category)
     },
     activated() {
       console.log('keep-alive生效')
     }, //如果页面有keep-alive缓存功能，这个函数会触发
     methods: {
+      getCategory(key) {
+        console.log(key)
+        let name = ''
+        this.category.filter((item) => {
+          if (item.type == key) {
+            name = item.data.CategoryName
+          }
+        })
+        return name
+      },
+      // async getAllAxios() {
+      //   console.log(process.env)
+      //   this.$baseColorfullLoading(
+      //     1,
+      //     this.$translateTitle('home.messag_loding')
+      //   )
+      //   // （1）如果列为主键，count(列名)效率优于count(1)
+      //   // （2）如果列不为主键，count(1)效率优于count(列名)
+      //   // （3）如果表中存在主键，count(主键列名)效率最优
+      //   // （4）如果表中只有一列，则count(*)效率最优
+      //   // （5）如果表有多列，且不存在主键，则count(1)效率优于count(*)
+      //   let params = {
+      //     // count: 'objectId',
+      //     count: 'objectId',
+      //     limit: 1,
+      //     skip: 0,
+      //     where: {},
+      //   }
+      //   const res = await this.$moreHttp({
+      //     dev_num: await dev_count(params),
+      //     app_num: await app_count(params),
+      //     projectList: await app_count({
+      //       limit: 30,
+      //     }),
+      //     Product_num: await product_count(params),
+      //     Project_num: await Project_count(params),
+      //     dev_active_num: await dev_active_count(
+      //       Object.assign(params, {
+      //         where: {
+      //           status: 'ACTIVE',
+      //         },
+      //       })
+      //     ),
+      //     dev_online_num: await dev_online_count(
+      //       Object.assign(params, {
+      //         where: {
+      //           status: 'ONLINE',
+      //         },
+      //       })
+      //     ),
+      //   })
+      //   const {
+      //     dev_num = { count: 0 },
+      //     Product_num = { count: 0 },
+      //     Project_num = { count: 0 },
+      //     app_num = { count: 0 },
+      //     dev_active_num = { count: 0 },
+      //     dev_online_num = { count: 0 },
+      //     projectList = { results: {} },
+      //   } = res
+      //   this.$baseColorfullLoading().close()
+      //   console.log(res)
+      //   console.log(dev_online_num)
+      //   this.dev_count = dev_num.count || 0
+      //   this.product_count = Product_num.count
+      //   this.project_count = Project_num.count
+      //   this.app_count = app_num.count
+      //   this.projectList = projectList.results
+      //   this.dev_active_count = dev_active_num.count
+      //   this.dev_online_count = dev_online_num.count
+      // },
       async getAllAxios() {
-        console.log(process.env)
-        this.$baseColorfullLoading(1, '批量请求数据中')
-        // （1）如果列为主键，count(列名)效率优于count(1)
-        // （2）如果列不为主键，count(1)效率优于count(列名)
-        // （3）如果表中存在主键，count(主键列名)效率最优
-        // （4）如果表中只有一列，则count(*)效率最优
-        // （5）如果表有多列，且不存在主键，则count(1)效率优于count(*)
-        let params = {
-          // count: 'objectId',
+        this.$baseColorfullLoading(
+          1,
+          this.$translateTitle('home.messag_loding')
+        )
+        let _queryParams = {
           count: 'objectId',
           limit: 1,
           skip: 0,
           where: {},
         }
-        const res = await this.$moreHttp({
-          dev_num: await dev_count(params),
-          app_num: await app_count(params),
-          projectList: await app_count({
-            limit: 30,
-          }),
-          Product_num: await product_count(params),
-          Project_num: await Project_count(params),
-          dev_active_num: await dev_active_count(
-            Object.assign(params, {
+        const params = [
+          {
+            method: 'GET',
+            path: '/classes/Project',
+            body: _queryParams,
+          },
+          {
+            method: 'GET',
+            path: '/classes/Product',
+            body: {
+              count: 'objectId',
+              skip: 0,
+              where: {},
+            },
+          },
+          {
+            method: 'GET',
+            path: '/classes/App',
+            body: _queryParams,
+          },
+          {
+            method: 'GET',
+            path: '/classes/Device',
+            body: _queryParams,
+          },
+          {
+            method: 'GET',
+            path: '/classes/Device',
+            body: {
+              count: 'objectId',
+              limit: 1,
+              skip: 0,
               where: {
                 status: 'ACTIVE',
               },
-            })
-          ),
-          dev_online_num: await dev_online_count(
-            Object.assign(params, {
+            },
+          },
+          {
+            method: 'GET',
+            path: '/classes/Device',
+            body: {
+              count: 'objectId',
+              limit: 1,
+              skip: 0,
               where: {
                 status: 'ONLINE',
               },
-            })
-          ),
-        })
-        const {
-          dev_num = { count: 0 },
-          Product_num = { count: 0 },
-          Project_num = { count: 0 },
-          app_num = { count: 0 },
-          dev_active_num = { count: 0 },
-          dev_online_num = { count: 0 },
-          projectList = { results: {} },
-        } = res
+            },
+          },
+        ]
+        const res = await batch(params)
+        if (res) {
+          this.dev_count = res[0].success.count
+          this.projectList = res[1].success.results
+          this.product_count = res[1].success.count
+          this.project_count = res[2].success.count
+          this.dev_count = res[3].success.count
+          this.app_count = res[4].success.count
+          this.dev_online_count = res[5].success.count
+        }
         this.$baseColorfullLoading().close()
-        console.log(res)
-        console.log(dev_online_num)
-        this.dev_count = dev_num.count || 0
-        this.product_count = Product_num.count
-        this.project_count = Project_num.count
-        this.app_count = app_num.count
-        this.projectList = projectList.results
-        this.dev_active_count = dev_active_num.count
-        this.dev_online_count = dev_online_num.count
       },
       handleChange() {},
       handleClickVisit(project) {
         const { productIdentifier = '' } = project
+        console.log(project)
         if (productIdentifier) {
           const url =
             window.location.origin + '/iot/' + productIdentifier + '#/login'
           window.open(url, '__blank')
         }
       },
-      Gotoproduct(id) {
+      Gotoproduct(name) {
         this.$router.push({
-          path: '/product',
+          path: '/dashboard/productlist',
           query: {
-            project: id,
+            project: name,
           },
         })
       },
@@ -378,6 +462,10 @@
     .box-card {
       padding: 5px;
       margin: 5px;
+    }
+    .clearfix {
+      ont-weight: bolder;
+      text-align: center;
     }
     .card-left {
       font-size: 80px;

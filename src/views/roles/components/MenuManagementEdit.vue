@@ -292,9 +292,9 @@
         this.dialogFormVisible = true
       },
       close() {
-        this.$refs['form'].resetFields()
+        // this.$refs['form'].resetFields()
         this.menuid = ''
-        this.form = this.$options.data().form
+        // this.form = this.$options.data().form
         this.dialogFormVisible = false
       },
       save() {

@@ -11,6 +11,13 @@ export default {
       currentConnections: 'Current Connections',
     },
     home: {
+      login: 'login',
+      preview: 'preview',
+      updatedAt: 'Update time',
+      category: 'category',
+      unit: 'Engineering unit',
+      scale: 'Engineering unit',
+      messag_loding: 'Loading',
       cla_count: 'application',
       pro_count: 'products',
       app_count: 'provider',
