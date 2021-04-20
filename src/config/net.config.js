@@ -19,5 +19,5 @@ module.exports = {
   // 状态信息的字段名称
   messageName: 'msg',
   // 服务器代理地址
-  proxyUrl: 'http://suke168.com',
+  proxyUrl: 'http://132.232.12.21',
 }

@@ -2,7 +2,7 @@
  * @description 路由拦截状态管理，目前两种模式：all模式与intelligence模式，其中partialRoutes是菜单暂未使用
  */
 import { asyncRoutes, constantRoutes, resetRouter } from '@/router'
-import { errorRoutes, defaultRoutes, indexRoutes } from '@/config/router.config'
+import { errorRoutes, defaultRoutes } from '@/config/router.config'
 import { getRouterList } from '@/api/User'
 import { convertRouter, filterRoutes } from '@/utils/routes'
 const state = () => ({
@@ -58,7 +58,7 @@ const actions = {
   async setRoutes({ commit }, mode = 'none') {
     // 默认前端路由
     let _defaultRoutes = []
-    _defaultRoutes.push(indexRoutes, defaultRoutes)
+    _defaultRoutes.push(defaultRoutes)
     let routes = [...asyncRoutes]
     // 设置后端路由(不需要可以删除)
     const { results } = await getRouterList()
@@ -134,7 +134,6 @@ const actions = {
     })
     if (data[data.length - 1].path !== '*') {
       data.push(errorRoutes)
-      console.log(data)
       routes = convertRouter(data)
     }
 
