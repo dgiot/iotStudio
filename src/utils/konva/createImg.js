@@ -24,7 +24,6 @@ function createImg(params) {
     width: imageObj.width,
     height: imageObj.height,
   })
-  console.log(res)
   return res
 }
 export default createImg

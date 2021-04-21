@@ -7,114 +7,41 @@
         :visible.sync="drawer"
         direction="rtl"
       >
-        <websocket />
+        <websocket :topic="topic" />
       </el-drawer>
-    </div>
-    <div class="dialog">
-      <el-dialog
-        :visible.sync="showSetting"
-        width="20%"
-        :before-close="handleClose"
-      >
-        <el-form ref="form" :model="form" :rules="rules">
-          <el-form-item
-            label="mqtt地址"
-            prop="url"
-            :label-width="formLabelWidth"
-          >
-            <el-input v-model="form.url" autocomplete="off" />
-          </el-form-item>
-          <el-form-item
-            label="topic"
-            prop="topic"
-            :label-width="formLabelWidth"
-          >
-            <el-input v-model="form.topic" autocomplete="off" />
-          </el-form-item>
-          <el-form-item style="text-align: center">
-            <el-button type="primary" @click="submitForm('form')">
-              立即订阅
-            </el-button>
-            <el-button @click="resetForm('form')">重置</el-button>
-          </el-form-item>
-        </el-form>
-        <!-- <span slot="footer" class="dialog-footer">
-          <el-button @click="showSetting = false">取 消</el-button>
-          <el-button type="primary" @click="showSetting = false">
-            确 定
-          </el-button>
-        </span> -->
-        <span slot="footer" class="dialog-footer" style="height: 30px">
-          <el-switch
-            v-model="stopValue"
-            style="display: inline-block; margin-right: 10px"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            inactive-text="自动刷新"
-            @change="stopsub"
-          />
-        </span>
-      </el-dialog>
     </div>
     <div class="header">
       <el-row :gutter="24">
-        <el-col :span="8">
-          <el-input v-model="text" placeholder="请输入你要修改的内容">
-            <template slot="append">
-              <el-button
-                type="primary"
-                plain
-                :disabled="!text.length"
-                @click="_setText(text)"
-              >
-                setText
-              </el-button>
-            </template>
-          </el-input>
-        </el-col>
-        <el-col :span="8">
-          <el-input v-model="text" placeholder="请输入mqtt订阅id">
-            <template slot="append">
-              <el-button
-                type="primary"
-                plain
-                :disabled="!text.length"
-                @click="subscribe"
-              >
-                订阅mqtt
-              </el-button>
-            </template>
-          </el-input>
-        </el-col>
-        <el-col :span="8">
-          <el-button
-            type="warning"
-            icon="el-icon-document-add"
-            @click="_addRect"
-          >
-            绘制rete
-          </el-button>
-          <el-button
-            type="warning"
-            icon="el-icon-document-add"
-            @click="_addText"
-          >
-            绘制text
-          </el-button>
-          <el-button
-            type="success"
-            icon="el-icon-setting"
-            @click="drawer = !drawer"
-          >
-            tools
+        <el-col :span="6">
+          <el-button type="success" icon="el-icon-setting" @click="drawerFlag">
+            websocket
           </el-button>
           <el-button
             icon="el-icon-document-add"
-            :disabled="text.length == 0"
-            @click="handleCloseSub"
+            :disabled="deviceid.length < 0"
+            @click="subscribeMqtt(LayerData)"
+          >
+            订阅mqtt
+          </el-button>
+          <el-button
+            icon="el-icon-document-add"
+            :disabled="stop_Mqtt"
+            @click="handleCloseSub(LayerData)"
           >
             取消订阅mqtt
           </el-button>
+        </el-col>
+        <el-col :span="4">
+          自动刷新
+          <el-switch
+            v-model="value"
+            :disabled="deviceid.length < 0"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            active-text="关闭"
+            inactive-text="开启"
+            @change="stopsub"
+          />
         </el-col>
       </el-row>
     </div>
@@ -128,14 +55,7 @@
   </div>
 </template>
 <script>
-  var subdialog
-  import {
-    Websocket,
-    sendInfo,
-    TOPIC_EMPTY,
-    MSG_EMPTY,
-    DISCONNECT_MSG,
-  } from '@/utils/wxscoket.js'
+  import { Websocket, sendInfo } from '@/utils/wxscoket.js'
   import createStage from '@/utils/konva/createStage'
   import createText from '@/utils/konva/createText'
   import createRect from '@/utils/konva/createRect'
@@ -149,18 +69,21 @@
     },
     data() {
       return {
+        deviceid: this.$route.query.deviceid || '',
+        konva: konva,
         textConfig: [],
         imgConfig: [],
         rectConfig: [],
         LayerData: [],
         drawer: false,
+        topic: '',
+        stop_Mqtt: true,
         subdialogtimer: null,
         rules: {
           url: [{ required: true, message: '请输入url', trigger: 'blur' }],
           topic: [{ required: true, message: '请输入topic', trigger: 'blur' }],
         },
         subdialogid: 'subdialogid',
-        showSetting: false,
         layer: new Konva.Layer(),
         simpleText: {},
         stage: {},
@@ -170,6 +93,7 @@
           url: '',
           topic: '',
         },
+        value: false,
         formLabelWidth: '80px',
       }
     },
@@ -188,11 +112,32 @@
       this.createKonva()
     },
     methods: {
+      // 订阅mqtt
+      subscribeMqtt(data = []) {
+        this.subscribe(this.deviceid)
+        // data.forEach((item) => {
+        //   if (item.id) {
+        //     this.subscribe(item.id)
+        //   }
+        // })
+      },
+      // 处理mqtt信息
+      handleMqttMsg(subdialogid) {
+        var submessage = ''
+        var channeltopic = new RegExp('log/channel/' + subdialogid)
+        Websocket.add_hook(channeltopic, (Msg) => {
+          console.log('重新绘制konva', Msg)
+          this.konva = Msg
+          this.createKonva()
+          console.log('mqtt Msg', Msg, subdialogid)
+        })
+      },
       // 取消订阅mqtt
-      handleCloseSub() {
+      handleCloseSub(data) {
+        this.stop_Mqtt = true
         var text0 = JSON.stringify({ action: 'stop_logger' })
         var sendInfo = {
-          topic: 'channel/' + this.subdialogid,
+          topic: 'channel/' + this.deviceid,
           text: text0,
           retained: true,
           qos: 2,
@@ -212,90 +157,35 @@
           text0 = JSON.stringify({ action: 'start_logger' })
         }
         var sendInfo = {
-          topic: 'channel/' + this.subdialogid,
+          topic: 'channel/' + this.deviceid,
           text: text0,
           retained: true,
           qos: 2,
         }
         Websocket.sendMessage(sendInfo)
       },
+      // 打开websocket
+      drawerFlag() {
+        this.topic = `log/channel/${this.deviceid}`
+        this.drawer = true
+      },
       // mqtt订阅
-      subscribe() {
-        this.subdialogid = this.text
-        var text0 = JSON.stringify({ action: 'start_logger' })
+      subscribe(subdialogid) {
         var info = {
-          topic: 'log/channel/' + this.subdialogid,
+          topic: 'log/channel/' + subdialogid,
           qos: 2,
         }
-        let _this = this
-        Websocket.subscribe(info, function (res) {
-          console.log('res', res)
+        Websocket.subscribe(info, (res) => {
+          console.log(res)
           if (res.result) {
-            var sendInfo = {
-              topic: 'channel/' + this.subdialogid,
-              text: text0,
-              retained: true,
-              qos: 2,
-            }
-            Websocket.sendMessage(sendInfo)
-            _this.subdialogtimer = window.setInterval(() => {
-              Websocket.sendMessage(sendInfo)
-            }, 600000)
-          }
-        })
-        var submessage = ''
-        var channeltopic = new RegExp('log/channel/' + this.subdialogid)
-        Websocket.add_hook(channeltopic, function (Msg) {
-          console.log('mqtt Msg', Msg)
-          // 判断长度
-          if (subdialog.session.getLength() >= 1000) {
-            submessage = ''
+            this.$message(`订阅成功 topic: ${info.topic}`, 'sussess')
+            this.stop_Mqtt = false
+            this.handleMqttMsg(subdialogid)
           } else {
-            submessage += _this.nowtime() + Msg + `\n`
-          }
-          subdialog.setValue(submessage)
-          subdialog.gotoLine(subdialog.session.getLength())
-        })
-        console.log(subdialog)
-        this.showSetting = false
-      },
-      // 弹窗订阅日志
-      nowtime() {
-        var timestamp = Date.parse(new Date())
-        var date = new Date(timestamp)
-        var Y = date.getFullYear() + '年'
-        var M =
-          (date.getMonth() + 1 <= 10
-            ? '0' + (date.getMonth() + 1)
-            : date.getMonth() + 1) + '月'
-        var D =
-          (date.getDate() + 1 <= 10 ? '0' + date.getDate() : date.getDate()) +
-          '日  '
-        var h =
-          (date.getHours() + 1 <= 10
-            ? '0' + date.getHours()
-            : date.getHours()) + ':'
-        var m =
-          (date.getMinutes() + 1 <= 10
-            ? '0' + date.getMinutes()
-            : date.getMinutes()) + ':'
-        var s =
-          date.getSeconds() + 1 <= 10
-            ? '0' + date.getSeconds()
-            : date.getSeconds()
-        return h + m + s + ' '
-      },
-      // 配置mqtt信息订阅消息
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.subscribe()
+            this.$message('订阅失败,请手动订阅mqtt', 'error')
+            this.subscribeMqtt([])
           }
         })
-      },
-      // 清空表单
-      resetForm(formName) {
-        this.$refs[formName].resetFields()
       },
       handleClose() {},
       // 新增rect
@@ -329,15 +219,20 @@
         this.stage.add(this.layer)
       },
       // 设置文本
-      async _setText(text) {
-        const { tween } = await setText(this.stage.find('#_text')[0], text)
-        if (tween) this.$message('手动修改成功')
+      async _setText(id, text) {
+        const { tween } = await setText(this.stage.find(`#${id}`)[0], text)
       },
       // js 绘制
       createKonva() {
+        if (this.deviceid) {
+          this.subscribe(this.deviceid)
+        }
+        console.log(this.konva)
+        let konvaConfig = this.konva
+        console.log('konvaConfig', konvaConfig)
         let _stateConfig = this.stageConfig
-        if (konva) {
-          const { data } = konva
+        if (konvaConfig) {
+          const { data } = konvaConfig
           _stateConfig = Object.assign(this.stageConfig, data.Stage)
           this.LayerData = data.Layer
         } else {
@@ -346,14 +241,14 @@
 
         this.LayerData.filter((item) => {
           switch (item.type) {
-            case 'text':
-              this.textConfig.push(item)
-              this.layer.add(createText(item))
-              break
             case 'image':
               this.imgConfig.push(item)
               this.layer.add(createImg(item))
               this.layer.batchDraw()
+              break
+            case 'text':
+              this.textConfig.push(item)
+              this.layer.add(createText(item))
               break
             case 'rect':
               this.rectConfig.push(item)
@@ -365,9 +260,6 @@
           }
         })
         this.stage.add(this.layer)
-      },
-      onError() {
-        this.$message('非Json数据类型')
       },
     },
   }

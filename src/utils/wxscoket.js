@@ -109,21 +109,25 @@ var Websocket = {
   },
 
   add_hook: function (Re, Callback) {
-    if (this.hooks.length > 0) {
-      for (var i = 0; i < this.hooks.length; i++) {
-        if (this.hooks[i].re.toString() == Re.toString()) {
-          this.hooks[i].re = Re
-          this.hooks[i].callback = Callback
+    var _this = this
+    if (_this.hooks.length > 0) {
+      for (var i = 0; i < _this.hooks.length; i++) {
+        if (_this.hooks[i].re.toString() == Re.toString()) {
+          _this.hooks[i].re = Re
+          _this.hooks[i].callback = Callback
           return
         }
       }
     }
-    this.hooks.push({ re: Re, callback: Callback })
+    _this.hooks.push({ re: Re, callback: Callback })
   },
 
   dispatch: function (message) {
+    console.log('message', message)
+    var _this = this
     var topic = message.destinationName
-    this.hooks.map((item) => {
+    const hooks = _this.hooks
+    hooks.map((item) => {
       if (item.re.test(topic)) {
         item.callback(message.payloadString)
       }
@@ -210,7 +214,6 @@ var Websocket = {
   },
   subscribe: function (subInfo, callback) {
     var _this = this
-    console.log(_this, '_this')
     if (!_this.client || !_this.client.isConnected()) {
       console.log(DISCONNECT_MSG)
       _this.connect()

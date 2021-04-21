@@ -397,6 +397,15 @@
                   >
                     {{ $translateTitle('concentrator.edit') }}
                   </el-link>
+                  <el-link
+                    :underline="false"
+                    type="primary"
+                    style="margin: 0 10px 0 0"
+                    icon="el-icon-s-flag                    "
+                    @click="konvaDevice(scope.row)"
+                  >
+                    {{ $translateTitle('concentrator.konva') }}
+                  </el-link>
                   <el-popover
                     :ref="`popover-${scope.$index}`"
                     placement="top"
@@ -1728,6 +1737,15 @@
             deviceid: row.objectId,
             nodeType: row.nodeType,
             ischildren: 'false',
+          },
+        })
+      },
+      // 组态
+      konvaDevice(row) {
+        this.$router.push({
+          path: '/Topo/VueKonva',
+          query: {
+            deviceid: row.objectId,
           },
         })
       },

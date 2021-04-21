@@ -157,6 +157,7 @@ export default {
       userinfo: '个人信息',
     },
     concentrator: {
+      konva: '组态',
       concentrator: '集中器',
       input: '请输入内容',
       search: '查询',
