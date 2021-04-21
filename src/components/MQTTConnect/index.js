@@ -1,7 +1,7 @@
 export default {
   client: {},
   options: {
-    host: '',
+    host: location.hostname || '',
     port: 8083,
     username: '',
     isSSL: false,

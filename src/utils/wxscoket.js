@@ -2,9 +2,9 @@ var TOPIC_EMPTY = 'topic为空！'
 var MSG_EMPTY = '消息内容为空！'
 var DISCONNECT_MSG = '当前尚未连接'
 import { tokenTableName, storage } from '@/config'
+var userName = 'konva'
 import { getToken } from '@/utils/vuex'
 var clientssession = getToken(tokenTableName, storage)
-console.log('clientssession', clientssession)
 var info = {
   topic: 'web/' + clientssession,
   qos: 2,
@@ -62,7 +62,7 @@ var Websocket = {
     host: location.hostname,
     port: 8083,
     clientId: 'C_' + new Date().getTime(),
-    userName: 'test',
+    userName: userName,
     password: 'test123',
     keepAlive: null,
     keepAliveInterval: 10,
@@ -136,7 +136,6 @@ var Websocket = {
     if (_this.client && _this.client.isConnected()) {
       return
     } else {
-      console.log('139', 139)
       _this.newClient()
     }
     _this.client.onConnectionLost = function (responseObject) {

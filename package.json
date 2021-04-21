@@ -17,11 +17,11 @@
     "ncu": "yarn global add npm-check-updates",
     "update": "ncu -u --reject eslint,sass-loader,compression-webpack-plugin,filemanager-webpack-plugin --registry https://registry.npm.taobao.org&&npm install --registry=https://registry.npm.taobao.org",
     "clear": "npm cache clean -f&&rimraf node_modules&&npm install --registry=https://registry.npm.taobao.org",
-    "use:github": "rimraf .git/config && rimraf .git && mkdir .git && cp -r github/* .git && npm run remoteinfo && git pull origin master && git add . && git cz && exit 0",
-    "use:gitbit": "rimraf .git/config && rimraf .git && mkdir .git && cp -r gitbit/* .git && npm run remoteinfo && git pull origin master  && git add . && git cz && exit 0",
+    "use:github": "rimraf .git/config && rimraf .git && mkdir .git && cp -r github/* .git && npm run remoteinfo && git pull origin master && git add . && git cz",
+    "use:gitbit": "rimraf .git/config && rimraf .git && mkdir .git && cp -r gitbit/* .git && npm run remoteinfo && git pull origin master  && git add . && git cz",
     "remoteinfo": "git remote -v",
-    "set:github": "npm run remoteinfo && git push origin master && rimraf github && mkdir github && cp -r .git/* github && if exist github echo 'github' && exit 0",
-    "set:gitbit": "npm run remoteinfo && git push origin master && rimraf gitbit && mkdir gitbit && cp -r .git/* gitbit && if exist gitbit echo 'gitbit' && exit 0"
+    "set:github": "npm run remoteinfo && git push origin master && rimraf github && mkdir github && cp -r .git/* github && if exist github echo 'github'",
+    "set:gitbit": "npm run remoteinfo && git push origin master && rimraf gitbit && mkdir gitbit && cp -r .git/* gitbit && if exist gitbit echo 'gitbit'"
   },
   "repository": {
     "type": "git",

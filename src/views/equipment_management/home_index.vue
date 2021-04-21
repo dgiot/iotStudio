@@ -480,90 +480,141 @@
                 :rules="rules"
                 label-width="150px"
               >
-                <el-form-item
-                  :label="$translateTitle('equipment.devicename')"
-                  prop="name"
-                >
-                  <el-input v-model="deviceform.name" />
-                </el-form-item>
-                <el-form-item
-                  :label="$translateTitle('equipment.devicenumber')"
-                  prop="devaddr"
-                >
-                  <el-input
-                    v-model="deviceform.devaddr"
-                    :disabled="equipmentEditor == '编辑'"
-                    :readonly="equipmentEditor == '编辑'"
-                  />
-                </el-form-item>
-                <el-form-item
-                  :label="$translateTitle('product.productname')"
-                  prop="productName"
-                >
-                  <el-select
-                    v-model="deviceform.productName"
-                    :disabled="equipmentEditor == '编辑'"
-                    :readonly="equipmentEditor == '编辑'"
-                    :placeholder="$translateTitle('equipment.entername')"
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.devicename')"
+                      prop="name"
+                    >
+                      <el-input v-model="deviceform.name" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.devicenumber')"
+                      prop="devaddr"
+                    >
+                      <el-input
+                        v-model="deviceform.devaddr"
+                        :disabled="equipmentEditor == '编辑'"
+                        :readonly="equipmentEditor == '编辑'"
+                      />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('product.productname')"
+                      prop="productName"
+                    >
+                      <el-select
+                        v-model="deviceform.productName"
+                        :disabled="equipmentEditor == '编辑'"
+                        :readonly="equipmentEditor == '编辑'"
+                        :placeholder="$translateTitle('equipment.entername')"
+                        @change="selectChange"
+                      >
+                        <el-option
+                          v-for="(item, index) in proTableData1"
+                          :key="index"
+                          :label="item.name"
+                          :value="item.objectId"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.assetnumber')"
+                    >
+                      <el-input v-model="deviceform.assetNum" />
+                    </el-form-item>
+                  </el-col>
+
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.equipmenttype')"
+                    >
+                      <el-input v-model="deviceform.devModel" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.equipmentbrand')"
+                    >
+                      <el-input v-model="deviceform.brand" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      v-if="Company == '云寓智慧公寓平台'"
+                      :label="$translateTitle('equipment.auth')"
+                    >
+                      <el-input v-model="deviceform.auth" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      v-if="Company == '云寓智慧公寓平台'"
+                      :label="$translateTitle('equipment.application')"
+                    >
+                      <el-select
+                        v-model="deviceform.yysId"
+                        :placeholder="$translateTitle('equipment.application')"
+                      >
+                        <el-option
+                          v-for="(item, index) in yysSelect"
+                          :key="index"
+                          :label="item.name"
+                          :value="item.key"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.installationlocation')"
+                    >
+                      <el-input
+                        v-model="deviceform.address"
+                        @focus="updateLocation"
+                      />
+                    </el-form-item>
+                  </el-col>
+                  <el-col
+                    v-for="(item, index) in arrlist"
+                    :key="index"
+                    :span="12"
                   >
-                    <el-option
-                      v-for="(item, index) in proTableData1"
-                      :key="index"
-                      :label="item.name"
-                      :value="item.objectId"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item :label="$translateTitle('equipment.assetnumber')">
-                  <el-input v-model="deviceform.assetNum" />
-                </el-form-item>
-                <el-form-item
-                  :label="$translateTitle('equipment.equipmenttype')"
-                >
-                  <el-input v-model="deviceform.devModel" />
-                </el-form-item>
-                <el-form-item
-                  :label="$translateTitle('equipment.equipmentbrand')"
-                >
-                  <el-input v-model="deviceform.brand" />
-                </el-form-item>
-                <el-form-item
-                  v-if="Company == '云寓智慧公寓平台'"
-                  :label="$translateTitle('equipment.auth')"
-                >
-                  <el-input v-model="deviceform.auth" />
-                </el-form-item>
-                <el-form-item
-                  v-if="Company == '云寓智慧公寓平台'"
-                  :label="$translateTitle('equipment.application')"
-                >
-                  <el-select
-                    v-model="deviceform.yysId"
-                    :placeholder="$translateTitle('equipment.application')"
-                  >
-                    <el-option
-                      v-for="(item, index) in yysSelect"
-                      :key="index"
-                      :label="item.name"
-                      :value="item.key"
-                    />
-                  </el-select>
-                </el-form-item>
-                <el-form-item
-                  :label="$translateTitle('equipment.installationlocation')"
-                >
-                  <el-input
-                    v-model="deviceform.address"
-                    @focus="updateLocation"
-                  />
-                </el-form-item>
-                <el-form-item :label="$translateTitle('developer.describe')">
-                  <el-input
-                    v-model="deviceform.desc"
-                    :autosize="{ minRows: 4, maxRows: 4 }"
-                    type="textarea"
-                  />
-                </el-form-item>
+                    <el-form-item
+                      :label="item.title.zh"
+                      :prop="item.name"
+                      :required="item.required"
+                    >
+                      <el-select
+                        v-if="item.type == 'Boolean'"
+                        v-model="deviceform[item.name]"
+                        style="width: 100%"
+                        class="notauto"
+                        readonly
+                      >
+                        <el-option :value="true" label="是" />
+                        <el-option :value="false" label="否" />
+                      </el-select>
+                      <el-input v-else v-model="deviceform[item.name]" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="24">
+                    <el-form-item
+                      :label="$translateTitle('developer.describe')"
+                    >
+                      <el-input
+                        v-model="deviceform.desc"
+                        :autosize="{ minRows: 4, maxRows: 4 }"
+                        type="textarea"
+                      />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
               </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -663,6 +714,7 @@
   import { returnLogin } from '@/utils/return'
   import { querycompanyDevice, putDevice } from '@/api/Device'
   import { Roletree, getToken } from '@/api/Menu'
+
   var language
   var pcdata
   export default {
@@ -687,6 +739,7 @@
         }
       }
       return {
+        arrlist: [],
         deviceId: '',
         deciceCompany: '',
         gutter: 24,
@@ -1382,6 +1435,7 @@
       },
       addDeviceForm() {
         this.devicedialogVisible = true
+        this.arrlist = []
         this.equipmentEditor = '添加'
         if (this.$route.query.productid) {
           this.deviceform.productName = this.$route.query.productid
@@ -1423,7 +1477,8 @@
       },
       /* device添加表单提交*/
       async editorDevice(row) {
-        console.log(row)
+        this.arrlist = []
+        this.selectChange(row.product.objectId)
         const {
           devaddr,
           detail,
@@ -1529,6 +1584,41 @@
           })
         }
       },
+      selectChange(objectId) {
+        getProduct(objectId).then((res) => {
+          const { config = { basedate: {} } } = res
+          if (config.basedate.params.length > 0) {
+            this.arrlist = config.basedate.params
+            console.log(this.arrlist)
+            this.arrlist.map((item) => {
+              if (item.default) {
+                this.deviceform[item.name] = item.default
+              } else {
+                this.deviceform[item.name] = ''
+              }
+              if (item.required) {
+                if (item.type == 'Boolean') {
+                  this.rules[item.name] = [
+                    {
+                      required: true,
+                      message: '请选择' + item.title.zh,
+                      trigger: 'change',
+                    },
+                  ]
+                } else {
+                  this.rules[item.name] = [
+                    {
+                      required: true,
+                      message: '请输入' + item.title.zh,
+                      trigger: 'blur',
+                    },
+                  ]
+                }
+              }
+            })
+          }
+        })
+      },
       async submitForm(formName) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
@@ -1544,6 +1634,24 @@
               address: this.bmapform.address,
               desc: this.deviceform.desc,
             }
+            var obj = {}
+            for (var key in this.deviceform) {
+              obj[key] = this.deviceform[key]
+            }
+            this.$delete(obj, 'address')
+            this.$delete(obj, 'assetNum')
+            this.$delete(obj, 'batchId')
+            this.$delete(obj, 'brand')
+            this.$delete(obj, 'desc')
+            this.$delete(obj, 'devModel')
+            this.$delete(obj, 'devType')
+            this.$delete(obj, 'devaddr')
+            this.$delete(obj, 'isEnable')
+            this.$delete(obj, 'name')
+            this.$delete(obj, 'netType')
+            this.$delete(obj, 'nodeType')
+            this.$delete(obj, 'productName')
+            this.$delete(obj, 'status')
             getProduct(this.deviceform.productName).then((response) => {
               if (response) {
                 if (this.deviceid != '') {
@@ -1558,10 +1666,7 @@
                     },
                     detail: detail,
                     location: location,
-                    basedata: {
-                      auth: this.deviceform.auth,
-                      yysId: this.deviceform.yysId,
-                    },
+                    basedata: obj,
                   }
                   this.updateDevice(devicesParmas)
                   this.handleClose()
@@ -1594,10 +1699,7 @@
                         lastOnlineTime: 0,
                         detail: detail,
                         location: location,
-                        basedata: {
-                          auth: this.deviceform.auth,
-                          yysId: this.deviceform.yysId,
-                        },
+                        basedata: obj,
                       }
                       // console.log(devicesParmas)
                       this.createDevice(devicesParmas)
@@ -1654,7 +1756,7 @@
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
   .equtabs {
-    height: calc(100vh - #{$base-top-bar-height}* 4 + 38px);
+    height: calc(100vh - #{$base-top-bar-height} * 4 + 38px);
     margin: 20px;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -1701,11 +1803,13 @@
       }
     }
   }
+
   .leftTree {
     width: 200px;
     /* height: calc(100vh - #{$base-top-bar-height}* 4 + 38px); */
     overflow-x: scroll;
     overflow-y: scroll;
+
     ::v-deep .el-tree {
       width: 200px;
       height: calc(100vh - 60px * 4 + 30px);
@@ -1713,6 +1817,7 @@
       overflow-y: scroll;
     }
   }
+
   .equipment .el-tabs__item {
     height: 50px;
     margin: 0;

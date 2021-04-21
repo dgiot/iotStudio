@@ -721,6 +721,7 @@
   import { getHashClass } from '@/api/Hash'
   import vueJsonEditor from 'vue-json-editor'
   import Category from '@/api/Mock/Category'
+
   export default {
     components: { vueJsonEditor },
     data() {
@@ -934,6 +935,7 @@
         this.tempparams = row
       },
       closeDict() {
+        this.edit_dict_temp_dialog = !this.edit_dict_temp_dialog
         this.$refs.tempparams.resetFields()
       },
       onJsonSave(formName) {
@@ -1338,6 +1340,7 @@
         })
       },
       editorDict(row) {
+        console.log('row', row)
         const { objectId, config = { basedate: {} } } = row
         this.productInfo = row
         this.editDictTempId = objectId
@@ -1349,7 +1352,7 @@
           params: [],
         }
         this.title_temp_dialog = '创建字典模板'
-        if (config.basedate) {
+        if (config.basedate.name) {
           this.title_temp_dialog = '修改字典模板'
           this.dictTempForm = config.basedate
         }
@@ -1663,6 +1666,7 @@
     height: 100%;
     padding: 20px;
   }
+
   .devproduct .el-tabs__header {
     margin: 0;
   }

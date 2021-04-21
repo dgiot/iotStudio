@@ -1,3 +1,9 @@
+/**
+ *
+ * @param {*} id
+ * @returns
+ */
+// https://konvajs.org/api/Konva.Container.html#findOne
 function findnode(id) {
   if (id) {
     var node = stage.findOne(id)
