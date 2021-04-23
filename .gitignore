@@ -36,3 +36,6 @@ pnpm-debug.log*
 # config
 /gitbit
 /github
+
+# files
+src/views/platform/*
