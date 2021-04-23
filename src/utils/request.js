@@ -8,6 +8,7 @@ import {
   successCode,
   tokenName,
 } from '@/config'
+import globalUrl from '@/utils/globalUrl'
 import store from '@/store'
 
 import router from '@/router'
@@ -88,13 +89,15 @@ const { hostname } = window.location
 let localHost = [
   'dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com',
   'dgiiot.gitee.io',
+  'dgiot.github.io',
 ]
+
 // if (process.env.NODE_ENV == 'development') {
 //   localHost.push('localhost', '127.0.0.1')
 // }
-if (localHost.indexOf(hostname) > -1) {
-  serviceBaseUrl = process.env.VUE_APP_URL + '/iotapi/'
-}
+
+serviceBaseUrl = globalUrl(hostname, localHost) + '/iotapi/'
+
 const instance = axios.create({
   baseURL: serviceBaseUrl,
   timeout: requestTimeout,

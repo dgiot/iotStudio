@@ -666,7 +666,6 @@
       },
       // 初始化用户
       async userFordepartment(start) {
-        return false
         this.pictLoading = true
         this.tempData = []
         if (start == 0) {

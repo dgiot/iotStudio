@@ -1,14 +1,21 @@
 var TOPIC_EMPTY = 'topic为空！'
 var MSG_EMPTY = '消息内容为空！'
 var DISCONNECT_MSG = '当前尚未连接'
-import { tokenTableName, storage } from '@/config'
 var userName = 'konva'
-import { getToken } from '@/utils/vuex'
+let localHost = [
+  'dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com',
+  'dgiiot.gitee.io',
+  'dgiot.github.io',
+]
 var clientssession = getToken(tokenTableName, storage)
 var info = {
   topic: 'web/' + clientssession,
   qos: 2,
 }
+import { tokenTableName, storage } from '@/config'
+import globalUrl from '@/utils/globalUrl'
+import { getToken } from '@/utils/vuex'
+const { hostname } = window.location
 function getsession(session) {
   clientssession = session
   info = {
@@ -52,14 +59,18 @@ var sendInfo = {
   qos: 0,
   retained: true,
 }
-
+// if (process.env.NODE_ENV == 'development') {
+//   localHost.push('localhost', '127.0.0.1')
+// }
+let _scokethost =
+  globalUrl(hostname, localHost).split('//')[1] || location.hostname
 // eslint-disable-next-line no-unused-vars
 var Websocket = {
   modName: 'websocket',
   client: null,
   connState: false,
   cInfo: {
-    host: location.hostname,
+    host: _scokethost,
     port: 8083,
     clientId: 'C_' + new Date().getTime(),
     userName: userName,
@@ -310,4 +321,5 @@ export {
   DISCONNECT_MSG,
   didata,
   getsession,
+  _scokethost,
 }

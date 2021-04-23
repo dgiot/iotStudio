@@ -296,6 +296,7 @@
     Card,
   } from 'element-ui'
   import MQTTConnect from '@/components/MQTTConnect/index'
+  import { _scokethost } from '@/utils/wxscoket'
   export default {
     name: 'WebsocketView',
     components: {
@@ -329,7 +330,7 @@
         retryTimes: 0,
         loading: false,
         sending: false,
-        host: window.location.hostname,
+        host: _scokethost,
         port: 8083,
         path: '/mqtt',
         username: '',

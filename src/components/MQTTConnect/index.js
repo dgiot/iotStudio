@@ -1,7 +1,8 @@
+import { _scokethost } from '@/utils/wxscoket'
 export default {
   client: {},
   options: {
-    host: location.hostname || '',
+    host: _scokethost,
     port: 8083,
     username: '',
     isSSL: false,
