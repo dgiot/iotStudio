@@ -24,7 +24,7 @@
               </el-button>
               <el-button
                 icon="el-icon-document-add"
-                :disabled="deviceid.length < 0"
+                :disabled="productid.length < 0"
                 @click="subscribeMqtt(LayerData)"
               >
                 订阅mqtt
@@ -41,7 +41,7 @@
               自动刷新
               <el-switch
                 v-model="value"
-                :disabled="deviceid.length < 0"
+                :disabled="productid.length < 0"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
                 active-text="关闭"
@@ -80,7 +80,7 @@
     data() {
       return {
         activeNames: [],
-        deviceid: this.$route.query.deviceid || '',
+        productid: this.$route.query.productid || '',
         konva: konva,
         textConfig: [],
         imgConfig: [],
@@ -120,8 +120,8 @@
       },
     },
     mounted() {
-      if (this.deviceid) {
-        console.log(this.deviceid)
+      if (this.productid) {
+        console.log(this.productid)
         this.createKonva()
       } else {
         this._initCreate()
@@ -130,7 +130,7 @@
     methods: {
       // 订阅mqtt
       subscribeMqtt(data = []) {
-        this.subscribe(this.deviceid)
+        this.subscribe(this.productid)
         // data.forEach((item) => {
         //   if (item.id) {
         //     this.subscribe(item.id)
@@ -212,7 +212,7 @@
         this.stop_Mqtt = true
         var text0 = JSON.stringify({ action: 'stop_logger' })
         var sendInfo = {
-          topic: 'thing/' + this.deviceid + '/post',
+          topic: 'thing/' + this.productid + '/post',
           text: text0,
           retained: true,
           qos: 2,
@@ -232,7 +232,7 @@
           text0 = JSON.stringify({ action: 'start_logger' })
         }
         var sendInfo = {
-          topic: 'thing/' + this.deviceid + '/post',
+          topic: 'thing/' + this.productid + '/post',
           text: text0,
           retained: true,
           qos: 2,
@@ -241,13 +241,13 @@
       },
       // 打开websocket
       drawerFlag() {
-        this.topic = `thing/${this.deviceid}/post`
+        this.topic = `thing/${this.productid}/post`
         this.drawer = true
       },
       // mqtt订阅
       subscribe(subdialogid) {
         var info = {
-          topic: `thing/${this.deviceid}/post`,
+          topic: `thing/${this.productid}/post`,
           qos: 2,
         }
         Websocket.subscribe(info, (res) => {
@@ -336,15 +336,15 @@
       // js 绘制
       async createKonva() {
         console.log(this.$route.query)
-        const { deviceid, type } = this.$route.query
+        const { productid, devaddr = '' } = this.$route.query
         let params = {
-          objectId: deviceid,
-          type: type,
+          productid: productid,
+          devaddr: devaddr,
         }
         // const { msg = '' } = await _getTopo(params)
         const { message = '' } = await _getTopo(params)
         if (message == 'SUCCESS') {
-          this.subscribe(this.deviceid)
+          this.subscribe(this.productid)
           console.log('订阅mqtt消息')
         } else {
           this._initCreate()

@@ -89,4 +89,27 @@ router.afterEach((to) => {
   )
   if (to.meta.title) document.title = getPageTitle(`${to.meta.title}`)
   if (VabProgress.status) VabProgress.done()
+  setTimeout(() => {
+    var _hmt = _hmt || []
+    ;(function () {
+      //每次执行前，先移除上次插入的代码
+      document.getElementById('baidu_tj') &&
+        document.getElementById('baidu_tj').remove()
+      var hm = document.createElement('script')
+      hm.src = 'https://hm.baidu.com/hm.js?a0f8b01930320b849a92a00e0c6da990'
+      hm.id = 'baidu_tj'
+
+      //每次执行前，先移除上次插入的代码
+      document.getElementById('umeng_tj') &&
+        document.getElementById('umeng_tj').remove()
+      var umeng = document.createElement('script')
+      umeng.src =
+        'https://s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845'
+      umeng.id = 'umeng_tj'
+
+      var s = document.getElementsByTagName('script')[0]
+      s.parentNode.insertBefore(hm, s)
+      s.parentNode.insertBefore(umeng, s)
+    })()
+  }, 0)
 })

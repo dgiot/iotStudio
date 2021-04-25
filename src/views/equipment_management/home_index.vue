@@ -2040,8 +2040,8 @@
         this.$router.push({
           path: '/Topo/VueKonva',
           query: {
-            deviceid: row.objectId,
-            type: 'device',
+            productid: row.product.objectId,
+            devaddr: row.devaddr,
           },
         })
       },
