@@ -6,7 +6,7 @@
  * @FilePath: \dgiot_dashboard\src\utils\vuex.js
  * @Description: vuex持久化方法
  */
-
+import { expiresTime } from '@/config'
 import cookie from 'js-cookie'
 /**
  * @description 获取token
@@ -44,7 +44,7 @@ export function setToken(tokenName, token, storage) {
     } else if ('sessionStorage' === storage) {
       return sessionStorage.setItem(tokenName, token)
     } else if ('cookie' === storage) {
-      return cookie.set(tokenName, token, { expires: 1 })
+      return cookie.set(tokenName, token, { expires: expiresTime })
     } else {
       return localStorage.setItem(tokenName, token)
     }

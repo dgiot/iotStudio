@@ -619,46 +619,50 @@
           })
         }
       },
-      getCheckedKeys (data, keys, key) {
-        var res = [];
-        recursion(data, false);
-        return res;
+      getCheckedKeys(data, keys, key) {
+        var res = []
+        recursion(data, false)
+        return res
 
         // arr -> 树形总数据
         // keys -> getCheckedKeys获取到的选中key值
         // isChild -> 用来判断是否是子节点
-        function recursion (arr, isChild) {
-          var aCheck = [];
-          for ( var i = 0; i < arr.length; i++ ) {
-            var obj = arr[i];
-            aCheck[i] = false;
+        function recursion(arr, isChild) {
+          var aCheck = []
+          for (var i = 0; i < arr.length; i++) {
+            var obj = arr[i]
+            aCheck[i] = false
 
-            if ( obj.children ) {
-              aCheck[i] = recursion(obj.children, true) ? true : aCheck[i];
-              if ( aCheck[i] ) {
-                res.push(obj);
+            if (obj.children) {
+              aCheck[i] = recursion(obj.children, true) ? true : aCheck[i]
+              if (aCheck[i]) {
+                res.push(obj)
               }
             }
 
-            for ( var j = 0; j < keys.length; j++ ) {
-              if ( obj[key] == keys[j] ) {
-                aCheck[i] = true;
-                if ( res.indexOf(obj[key]) == -1 ) {
-                  res.push(obj);
+            for (var j = 0; j < keys.length; j++) {
+              if (obj[key] == keys[j]) {
+                aCheck[i] = true
+                if (res.indexOf(obj[key]) == -1) {
+                  res.push(obj)
                 }
-                break;
+                break
               }
             }
           }
-          if ( isChild ) {
-            return aCheck.indexOf(true) != -1;
+          if (isChild) {
+            return aCheck.indexOf(true) != -1
           }
         }
       },
       // 修改角色权限
       async exportRolerole(row) {
         let checkmenu = []
-        let selectMenu = this.getCheckedKeys(this.menuTreeData, this.$refs.menusTree.getCheckedKeys(), 'objectId'); // 选中子级时选中父级
+        let selectMenu = this.getCheckedKeys(
+          this.menuTreeData,
+          this.$refs.menusTree.getCheckedKeys(),
+          'objectId'
+        ) // 选中子级时选中父级
         // let selectMenu = this.$refs.menusTree.getCheckedNodes()  // 只选中子级
         let usersList = []
         let rolesList = []
@@ -784,12 +788,12 @@
 <style scoped lang="scss">
   .roles {
     background: #ffffff;
-  ::v-deep  .el-table__body tr.current-row>td{
-      background-color: #fdf3ea;
+    ::v-deep .el-table__body tr.current-row > td {
       color: #f19944;
+      background-color: #fdf3ea;
     }
     .rightTable {
-      height: calc( 100vh - #{$base-top-bar-height}*4 - 25px );
+      height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
       overflow-x: hidden;
       overflow-y: scroll;
       .search {
@@ -803,22 +807,22 @@
     }
   }
   .rolefooter {
-    height: calc( 100vh - #{$base-top-bar-height}*4 - 25px );
-    overflow-x: hidden;
-    overflow-y: scroll;
     display: flex;
     width: 100%;
+    height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
     //height: auto;
     margin-top: 10px;
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
   .footerleft,
   .footerright {
-    height: calc( 100vh - #{$base-top-bar-height}*4 - 25px );
-    overflow-x: hidden;
-    overflow-y: scroll;
     box-sizing: border-box;
     width: 45%;
+    height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
     padding: 20px;
+    overflow-x: hidden;
+    overflow-y: scroll;
     border: 1px solid #cccccc;
   }
   .footerright {
@@ -837,13 +841,12 @@
   }
 </style>
 <style lang="scss">
-
   .roles .search .el-input {
     width: 200px;
   }
 
   .leftTree {
-    height: calc( 100vh - #{$base-top-bar-height}*4 - 25px );
+    height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
     overflow-x: hidden;
     overflow-y: scroll;
     span.selected {

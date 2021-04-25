@@ -7,6 +7,10 @@ let localHost = [
   'dgiiot.gitee.io',
   'dgiot.github.io',
 ]
+
+if (process.env.NODE_ENV == 'development') {
+  localHost.push('localhost', '127.0.0.1')
+}
 var clientssession = getToken(tokenTableName, storage)
 var info = {
   topic: 'web/' + clientssession,
@@ -64,6 +68,7 @@ var sendInfo = {
 // }
 let _scokethost =
   globalUrl(hostname, localHost).split('//')[1] || location.hostname
+console.log(_scokethost)
 // eslint-disable-next-line no-unused-vars
 var Websocket = {
   modName: 'websocket',

@@ -78,3 +78,48 @@ export async function dev_online_count(params) {
     params: params,
   })
 }
+/**
+ * 新建报告模板
+ * @param {*} data
+ * @returns
+ */
+export async function cereteReport(data) {
+  return request({
+    url: '/python_pump_reporttemp',
+    method: 'post',
+    headers: {
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  })
+}
+
+/**
+ * 上传报告模板文件
+ * @param {*} data
+ * @returns
+ */
+export async function postReportFile(formData) {
+  return request({
+    url: '/reportTemp',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: formData,
+  })
+}
+
+/**
+ * 修好报告模板文件
+ * @param {*} data
+ * @returns
+ */
+export async function putReportFile(data) {
+  return request({
+    url: '/reportTemp',
+    method: 'put',
+    data: data,
+  })
+}

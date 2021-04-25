@@ -90,6 +90,7 @@
                 :expand-on-click-node="false"
                 show-checkbox
                 node-key="objectId"
+                default-props
                 accordion
               >
                 <!-- eslint-disable-next-line -->
@@ -275,17 +276,17 @@
         })
       },
       menuTreeData() {
-        return this.dataMenus.filter((father) => {
+        const cloneData = JSON.parse(JSON.stringify(this.dataMenus))
+        return cloneData.filter((father) => {
           father.title =
             father.meta && father.meta.title ? father.meta.title : ''
-          const branchArr = this.dataMenus.filter(
+          /* eslint-disable */
+          const branchArr = cloneData.filter(
             (child) => father.objectId == child.parentId
           )
-
-          if (branchArr.length > 0) {
-            father.children = branchArr
-          }
+          branchArr.length > 0 ? (father.children = branchArr) : ''
           return father.parentId == 0
+          /* eslint-disable */
         })
       },
     },
@@ -386,13 +387,12 @@
 
         this.menuListRes.map((items) => {
           allMenus.map((mentItem) => {
-            if (items.name == mentItem) {
-              tempMenuList.push(items.name)
+            if (items.meta.title == mentItem) {
+              this.roleMenuList.push(items.objectId)
             }
           })
         })
 
-        this.roleMenuList = [...new Set(tempMenuList)]
         // set ###
         this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
 

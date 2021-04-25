@@ -2041,6 +2041,7 @@
           path: '/Topo/VueKonva',
           query: {
             deviceid: row.objectId,
+            type: 'device',
           },
         })
       },

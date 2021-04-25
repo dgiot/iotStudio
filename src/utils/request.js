@@ -6,7 +6,9 @@ import {
   requestTimeout,
   statusName,
   successCode,
+  errorCode,
   tokenName,
+  CODE_MESSAGE,
 } from '@/config'
 import globalUrl from '@/utils/globalUrl'
 import store from '@/store'
@@ -23,23 +25,10 @@ const codeVerificationArray = isArray(successCode)
 // 不需要token请求的路由
 const noCookiePages = ['', '/login']
 // 返回失败的code
-const errCode = [200, 209, 401]
-const CODE_MESSAGE = {
-  200: '服务器成功返回请求数据',
-  201: '新建或修改数据成功',
-  202: '一个请求已经进入后台排队(异步任务)',
-  204: '删除数据成功',
-  400: '发出信息有误',
-  401: '用户没有权限(令牌、用户名、密码错误)',
-  403: '用户得到授权，但是访问是被禁止的',
-  404: '访问资源不存在',
-  406: '请求格式不可得',
-  410: '请求资源被永久删除，且不会被看到',
-  500: '服务器发生错误',
-  502: '网关错误',
-  503: '服务不可用，服务器暂时过载或维护',
-  504: '网关超时',
-}
+// 操作正常Code数组
+const errorcodeVerificationArray = isArray(errorCode)
+  ? [...errorCode]
+  : [...[errorCode]]
 
 const handleData = ({ config, data, status, statusText }) => {
   if (loadingInstance) loadingInstance.close()
@@ -49,6 +38,7 @@ const handleData = ({ config, data, status, statusText }) => {
   let code = data && data[statusName] ? data[statusName] : status
   // 若code属于操作正常code，则status修改为200
   if (codeVerificationArray.includes(code)) code = 200
+  if (errorcodeVerificationArray.includes(code)) backHome()
   switch (code) {
     case 200:
       // 业务层级错误处理，以下是假定restful有一套统一输出格式(指不管成功与否都有相应的数据格式)情况下进行处理
@@ -59,9 +49,6 @@ const handleData = ({ config, data, status, statusText }) => {
       // return data.data ? data.data : data.msg
       // 或者依然保持完整的格式
       return data
-    case errCode.indexOf(Number(code)) !== -1:
-      backHome()
-      break
     case 403:
       router.push({ path: '/403' })
       break

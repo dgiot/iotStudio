@@ -11,39 +11,47 @@
       </el-drawer>
     </div>
     <div class="header">
-      <el-row :gutter="24">
-        <el-col :span="6">
-          <el-button type="success" icon="el-icon-setting" @click="drawerFlag">
-            websocket
-          </el-button>
-          <el-button
-            icon="el-icon-document-add"
-            :disabled="deviceid.length < 0"
-            @click="subscribeMqtt(LayerData)"
-          >
-            订阅mqtt
-          </el-button>
-          <el-button
-            icon="el-icon-document-add"
-            :disabled="stop_Mqtt"
-            @click="handleCloseSub(LayerData)"
-          >
-            取消订阅mqtt
-          </el-button>
-        </el-col>
-        <el-col :span="4">
-          自动刷新
-          <el-switch
-            v-model="value"
-            :disabled="deviceid.length < 0"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            active-text="关闭"
-            inactive-text="开启"
-            @change="stopsub"
-          />
-        </el-col>
-      </el-row>
+      <el-collapse v-model="activeNames">
+        <el-collapse-item name="1">
+          <el-row :gutter="24">
+            <el-col :span="6">
+              <el-button
+                type="success"
+                icon="el-icon-setting"
+                @click="drawerFlag"
+              >
+                websocket
+              </el-button>
+              <el-button
+                icon="el-icon-document-add"
+                :disabled="deviceid.length < 0"
+                @click="subscribeMqtt(LayerData)"
+              >
+                订阅mqtt
+              </el-button>
+              <el-button
+                icon="el-icon-document-add"
+                :disabled="stop_Mqtt"
+                @click="handleCloseSub(LayerData)"
+              >
+                取消订阅mqtt
+              </el-button>
+            </el-col>
+            <el-col :span="4">
+              自动刷新
+              <el-switch
+                v-model="value"
+                :disabled="deviceid.length < 0"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-text="关闭"
+                inactive-text="开启"
+                @change="stopsub"
+              />
+            </el-col>
+          </el-row>
+        </el-collapse-item>
+      </el-collapse>
     </div>
     <div class="konva">
       <el-row :gutter="24">
@@ -57,18 +65,21 @@
 <script>
   import { Websocket, sendInfo } from '@/utils/wxscoket.js'
   import createStage from '@/utils/konva/createStage'
+  import createGroup from '@/utils/konva/createGroup'
   import createText from '@/utils/konva/createText'
   import createRect from '@/utils/konva/createRect'
   import createImg from '@/utils/konva/createImg'
   import setText from '@/utils/konva/setText'
   import konva from '@/api/Mock/konva'
   import websocket from '@/views/tools/websocket'
+  import { _getTopo } from '@/api/Topo'
   export default {
     components: {
       websocket,
     },
     data() {
       return {
+        activeNames: [],
         deviceid: this.$route.query.deviceid || '',
         konva: konva,
         textConfig: [],
@@ -109,7 +120,12 @@
       },
     },
     mounted() {
-      this.createKonva()
+      if (this.deviceid) {
+        console.log(this.deviceid)
+        this.createKonva()
+      } else {
+        this._initCreate()
+      }
     },
     methods: {
       // 订阅mqtt
@@ -123,13 +139,72 @@
       },
       // 处理mqtt信息
       handleMqttMsg(subdialogid) {
+        this.LayerData = []
         var submessage = ''
-        var channeltopic = new RegExp('log/channel/' + subdialogid)
+        var channeltopic = new RegExp('thing/' + subdialogid + '/post')
         Websocket.add_hook(channeltopic, (Msg) => {
-          console.log('重新绘制konva', Msg)
-          this.konva = Msg
-          this.createKonva()
-          console.log('mqtt Msg', Msg, subdialogid)
+          let decodeMqtt = Base64.decode(Msg + '')
+          console.log(decodeMqtt, 'decodeMqtt')
+          let LayerData = this.LayerData
+          console.log(LayerData)
+          if (decodeMqtt) {
+            let _stateConfig = this.stageConfig
+            const {
+              konva = {
+                Group: { id: 'group_9c5930e565', rotation: 20, x: 120, y: 40 },
+                Layer: {
+                  fill: '#e579f2',
+                  fontFamily: 'Calibri',
+                  fontSize: 26,
+                  id: 'layer_9c5930e565',
+                  text: '16',
+                  x: 480,
+                  y: 21,
+                },
+                Shape: [
+                  {
+                    fill: '#e579f2',
+                    fontFamily: 'Calibri',
+                    fontSize: 26,
+                    id: 'Acrel',
+                    text: '16',
+                    x: 480,
+                    y: 21,
+                  },
+                ],
+                Stage: { height: 248, id: 'stage_9c5930e565', width: 1643 },
+              },
+            } = decodeMqtt
+            if (konva) {
+              console.log(konva)
+              _stateConfig = Object.assign(this.stageConfig, konva.Stage)
+              this.textConfig.push(konva.Layer)
+              this.layer.add(createText(konva.Layer))
+              this.stage = createStage(_stateConfig)
+              this.stage.add(this.layer)
+              console.log(this.stage.toJSON(), '绘制完成')
+            }
+            // this.LayerData.filter((item) => {
+            //   switch (item.type) {
+            //     case 'image':
+            //       this.imgConfig.push(item)
+            //       this.layer.add(createImg(item))
+            //       this.layer.batchDraw()
+            //       break
+            //     case 'text':
+            //       this.textConfig.push(item)
+            //       this.layer.add(createText(item))
+            //       break
+            //     case 'rect':
+            //       this.rectConfig.push(item)
+            //       this.layer.add(createRect(item))
+            //       break
+            //     default:
+            //       console.log(item.type, item)
+            //       break
+            //   }
+            // })
+          }
         })
       },
       // 取消订阅mqtt
@@ -137,7 +212,7 @@
         this.stop_Mqtt = true
         var text0 = JSON.stringify({ action: 'stop_logger' })
         var sendInfo = {
-          topic: 'channel/' + this.deviceid,
+          topic: 'thing/' + this.deviceid + '/post',
           text: text0,
           retained: true,
           qos: 2,
@@ -157,7 +232,7 @@
           text0 = JSON.stringify({ action: 'start_logger' })
         }
         var sendInfo = {
-          topic: 'channel/' + this.deviceid,
+          topic: 'thing/' + this.deviceid + '/post',
           text: text0,
           retained: true,
           qos: 2,
@@ -166,18 +241,19 @@
       },
       // 打开websocket
       drawerFlag() {
-        this.topic = `log/channel/${this.deviceid}`
+        this.topic = `thing/${this.deviceid}/post`
         this.drawer = true
       },
       // mqtt订阅
       subscribe(subdialogid) {
         var info = {
-          topic: 'log/channel/' + subdialogid,
+          topic: `thing/${this.deviceid}/post`,
           qos: 2,
         }
         Websocket.subscribe(info, (res) => {
           console.log(res)
           if (res.result) {
+            // thing/9c5930e565/9CA525B343F0/post
             this.$message(`订阅成功 topic: ${info.topic}`, 'sussess')
             this.stop_Mqtt = false
             this.handleMqttMsg(subdialogid)
@@ -222,12 +298,7 @@
       async _setText(id, text) {
         const { tween } = await setText(this.stage.find(`#${id}`)[0], text)
       },
-      // js 绘制
-      createKonva() {
-        if (this.deviceid) {
-          this.subscribe(this.deviceid)
-        }
-        console.log(this.konva)
+      _initCreate() {
         let konvaConfig = this.konva
         console.log('konvaConfig', konvaConfig)
         let _stateConfig = this.stageConfig
@@ -260,6 +331,24 @@
           }
         })
         this.stage.add(this.layer)
+        console.log(this.stage.toJSON())
+      },
+      // js 绘制
+      async createKonva() {
+        console.log(this.$route.query)
+        const { deviceid, type } = this.$route.query
+        let params = {
+          objectId: deviceid,
+          type: type,
+        }
+        // const { msg = '' } = await _getTopo(params)
+        const { message = '' } = await _getTopo(params)
+        if (message == 'SUCCESS') {
+          this.subscribe(this.deviceid)
+          console.log('订阅mqtt消息')
+        } else {
+          this._initCreate()
+        }
       },
     },
   }
@@ -273,8 +362,8 @@
     width: 100%;
     height: calc(100vh - 211px);
     .header {
-      height: 40px;
-      padding: 10px;
+      /* height: 40px;
+      padding: 10px; */
     }
     .konva {
       /* width: 100vh; */

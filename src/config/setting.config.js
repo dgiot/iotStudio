@@ -34,6 +34,8 @@ module.exports = {
   tokenName: 'sessionToken',
   // token在localStorage、sessionStorage、cookie存储的key的名称
   tokenTableName: 'sessionToken',
+  // token 有效期时长
+  expiresTime: 60 * 1000 * 15,
   // token存储位置localStorage sessionStorage cookie
   storage: 'cookie',
   // token失效回退到登录页时是否记录本次的路由
@@ -60,7 +62,7 @@ module.exports = {
   // vertical column comprehensive common布局时是否只保持一个子菜单的展开
   uniqueOpened: false,
   // vertical column comprehensive common布局时默认展开的菜单path，使用逗号隔开建议只展开一个
-  defaultOpeneds: ['/vab'],
+  defaultOpeneds: [''],
   // 需要加loading层的请求，防止重复提交
   debounce: ['doEdit'],
   // 分栏布局和综合布局时，是否点击一级菜单默认开启第一个二级菜单
