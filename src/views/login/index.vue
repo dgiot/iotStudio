@@ -108,8 +108,15 @@
         else callback()
       }
       const validatePassword = (rule, value, callback) => {
-        if (!isPassword(value))
-          callback(new Error(this.$translateTitle('密码不能少于6位')))
+        let pwdlength = 4
+        if (!isPassword(value, pwdlength))
+          callback(
+            new Error(
+              this.$translateTitle('密码不能少于') +
+                pwdlength +
+                this.$translateTitle('位')
+            )
+          )
         else callback()
       }
       return {

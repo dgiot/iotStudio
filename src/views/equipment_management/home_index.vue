@@ -2042,6 +2042,8 @@
           query: {
             productid: row.product.objectId,
             devaddr: row.devaddr,
+            deviceid: row.objectId,
+            type: 'device',
           },
         })
       },

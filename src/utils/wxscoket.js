@@ -232,7 +232,7 @@ var Websocket = {
     var _this = this
     if (!_this.client || !_this.client.isConnected()) {
       console.log(DISCONNECT_MSG)
-      _this.connect()
+      // _this.connect()
       return
     }
     if (!subInfo.topic) {

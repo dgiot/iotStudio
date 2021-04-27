@@ -14,7 +14,7 @@
       <el-collapse v-model="activeNames">
         <el-collapse-item name="1">
           <el-row :gutter="24">
-            <el-col :span="6">
+            <el-col :span="8">
               <el-button
                 type="success"
                 icon="el-icon-setting"
@@ -32,9 +32,15 @@
               <el-button
                 icon="el-icon-document-add"
                 :disabled="stop_Mqtt"
-                @click="handleCloseSub(LayerData)"
+                @click="handleCloseSub()"
               >
                 取消订阅mqtt
+              </el-button>
+              <el-button
+                icon="el-icon-document-brush"
+                @click="handleKonvaStyle()"
+              >
+                {{ iskonvaBg ? '隐藏' : '显示' }}背景
               </el-button>
             </el-col>
             <el-col :span="4">
@@ -53,7 +59,7 @@
         </el-collapse-item>
       </el-collapse>
     </div>
-    <div class="konva">
+    <div ref="konva" class="konva">
       <el-row :gutter="24">
         <el-col :span="24">
           <div id="container" ref="container"></div>
@@ -69,19 +75,22 @@
   import createText from '@/utils/konva/createText'
   import createRect from '@/utils/konva/createRect'
   import createImg from '@/utils/konva/createImg'
+  import createShape from '@/utils/konva/createShape'
+  import updateShape from '@/utils/konva/updateShape'
   import setText from '@/utils/konva/setText'
-  import konva from '@/api/Mock/konva'
   import websocket from '@/views/tools/websocket'
   import { _getTopo } from '@/api/Topo'
+  import { isBase64 } from '@/utils'
   export default {
     components: {
       websocket,
     },
     data() {
       return {
+        iskonvaBg: true,
         activeNames: [],
         productid: this.$route.query.productid || '',
-        konva: konva,
+        konva: [],
         textConfig: [],
         imgConfig: [],
         rectConfig: [],
@@ -95,9 +104,10 @@
           topic: [{ required: true, message: '请输入topic', trigger: 'blur' }],
         },
         subdialogid: 'subdialogid',
-        layer: new Konva.Layer(),
+        layer: {},
+        group: {},
+        stagedefault: [],
         simpleText: {},
-        stage: {},
         text: '',
         stopValue: '',
         form: {
@@ -120,12 +130,16 @@
       },
     },
     mounted() {
+      this.handleCloseSub()
       if (this.productid) {
-        console.log(this.productid)
         this.createKonva()
+        console.log('订阅mqtt消息')
       } else {
         this._initCreate()
       }
+    },
+    destroyed() {
+      this.handleCloseSub()
     },
     methods: {
       // 订阅mqtt
@@ -139,76 +153,37 @@
       },
       // 处理mqtt信息
       handleMqttMsg(subdialogid) {
-        this.LayerData = []
         var submessage = ''
         var channeltopic = new RegExp('thing/' + subdialogid + '/post')
         Websocket.add_hook(channeltopic, (Msg) => {
-          let decodeMqtt = Base64.decode(Msg + '')
-          console.log(decodeMqtt, 'decodeMqtt')
-          let LayerData = this.LayerData
-          console.log(LayerData)
-          if (decodeMqtt) {
-            let _stateConfig = this.stageConfig
-            const {
-              konva = {
-                Group: { id: 'group_9c5930e565', rotation: 20, x: 120, y: 40 },
-                Layer: {
-                  fill: '#e579f2',
-                  fontFamily: 'Calibri',
-                  fontSize: 26,
-                  id: 'layer_9c5930e565',
-                  text: '16',
-                  x: 480,
-                  y: 21,
-                },
-                Shape: [
-                  {
-                    fill: '#e579f2',
-                    fontFamily: 'Calibri',
-                    fontSize: 26,
-                    id: 'Acrel',
-                    text: '16',
-                    x: 480,
-                    y: 21,
-                  },
-                ],
-                Stage: { height: 248, id: 'stage_9c5930e565', width: 1643 },
-              },
-            } = decodeMqtt
-            if (konva) {
-              console.log(konva)
-              _stateConfig = Object.assign(this.stageConfig, konva.Stage)
-              this.textConfig.push(konva.Layer)
-              this.layer.add(createText(konva.Layer))
-              this.stage = createStage(_stateConfig)
-              this.stage.add(this.layer)
-              console.log(this.stage.toJSON(), '绘制完成')
-            }
-            // this.LayerData.filter((item) => {
-            //   switch (item.type) {
-            //     case 'image':
-            //       this.imgConfig.push(item)
-            //       this.layer.add(createImg(item))
-            //       this.layer.batchDraw()
-            //       break
-            //     case 'text':
-            //       this.textConfig.push(item)
-            //       this.layer.add(createText(item))
-            //       break
-            //     case 'rect':
-            //       this.rectConfig.push(item)
-            //       this.layer.add(createRect(item))
-            //       break
-            //     default:
-            //       console.log(item.type, item)
-            //       break
-            //   }
-            // })
+          console.log('收到消息', Msg)
+          if (!isBase64(Msg)) {
+            console.log('非base64数据类型')
+            return
+          }
+          let decodeMqtt = JSON.parse(Base64.decode(Msg))
+          console.log(decodeMqtt.konva)
+          const Shape = decodeMqtt.konva.Shape
+          const stagedefault = this.stagedefault
+          if (Shape) {
+            updateShape(Shape)
+              .then((result) => {
+                console.log(result)
+                console.log('konva数据更新成功')
+              })
+              .catch((err) => {
+                console.log('konva数据更新失败', err)
+              })
           }
         })
       },
+      // 显示隐藏背景图
+      handleKonvaStyle(iskonvaBg) {
+        this.iskonvaBg = !this.iskonvaBg
+        this.activeClass = this.iskonvaBg ? 'konva' : ''
+      },
       // 取消订阅mqtt
-      handleCloseSub(data) {
+      handleCloseSub() {
         this.stop_Mqtt = true
         var text0 = JSON.stringify({ action: 'stop_logger' })
         var sendInfo = {
@@ -217,9 +192,9 @@
           retained: true,
           qos: 2,
         }
-        Websocket.sendMessage(sendInfo)
-        window.clearInterval(this.subdialogtimer)
-        this.subdialogtimer = null
+        Websocket.unsubscribe(sendInfo, (res) => {
+          console.log('取消订阅mqtt', res.msg)
+        })
       },
       // 是否自动刷新mqtt消息
       stopsub(value) {
@@ -251,12 +226,10 @@
           qos: 2,
         }
         Websocket.subscribe(info, (res) => {
-          console.log(res)
           if (res.result) {
             // thing/9c5930e565/9CA525B343F0/post
             this.$message(`订阅成功 topic: ${info.topic}`, 'sussess')
             this.stop_Mqtt = false
-            this.handleMqttMsg(subdialogid)
           } else {
             this.$message('订阅失败,请手动订阅mqtt', 'error')
             this.subscribeMqtt([])
@@ -264,30 +237,6 @@
         })
       },
       handleClose() {},
-      // 新增rect
-      _addRect() {
-        let randomNum = Mock.mock({
-          'number|1-300': 200,
-        }).number
-        let rect = createRect(
-          randomNum,
-          randomNum,
-          randomNum,
-          randomNum,
-          Mock.mock('@rgb'),
-          randomNum,
-          {
-            x: randomNum,
-            y: randomNum,
-          },
-          true,
-          Mock.mock({
-            'string|1-5': '★',
-          })
-        )
-        this.layer.add(rect)
-        this.stage.add(this.layer)
-      },
       // 新增文本
       _addText() {
         let text = createText({})
@@ -296,56 +245,97 @@
       },
       // 设置文本
       async _setText(id, text) {
+        console.log(this.stage.find(`#${id}`)[0])
         const { tween } = await setText(this.stage.find(`#${id}`)[0], text)
+        console.log(tween)
       },
       _initCreate() {
-        let konvaConfig = this.konva
-        console.log('konvaConfig', konvaConfig)
-        let _stateConfig = this.stageConfig
-        if (konvaConfig) {
-          const { data } = konvaConfig
-          _stateConfig = Object.assign(this.stageConfig, data.Stage)
-          this.LayerData = data.Layer
-        } else {
-        }
-        this.stage = createStage(_stateConfig)
-
-        this.LayerData.filter((item) => {
-          switch (item.type) {
-            case 'image':
-              this.imgConfig.push(item)
-              this.layer.add(createImg(item))
-              this.layer.batchDraw()
-              break
-            case 'text':
-              this.textConfig.push(item)
-              this.layer.add(createText(item))
-              break
-            case 'rect':
-              this.rectConfig.push(item)
-              this.layer.add(createRect(item))
-              break
-            default:
-              console.log(item.type, item)
-              break
-          }
-        })
-        this.stage.add(this.layer)
-        console.log(this.stage.toJSON())
+        let background =
+          'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png'
+        this.$refs.konva.style.backgroundImage = `url(${background})`
+        // let konvaConfig = this.konva
+        // console.log('konvaConfig', konvaConfig)
+        // let _stateConfig = this.stageConfig
+        // if (konvaConfig) {
+        //   const { data } = konvaConfig
+        //   _stateConfig = Object.assign(this.stageConfig, data.Stage)
+        //   this.LayerData = data.Layer
+        // } else {
+        // }
+        // this.stage = createStage(_stateConfig)
+        // this.LayerData.filter((item) => {
+        //   switch (item.type) {
+        //     case 'image':
+        //       this.imgConfig.push(item)
+        //       this.layer.add(createImg(item))
+        //       this.layer.batchDraw()
+        //       break
+        //     case 'text':
+        //       this.textConfig.push(item)
+        //       this.layer.add(createText(item))
+        //       break
+        //     case 'rect':
+        //       this.rectConfig.push(item)
+        //       this.layer.add(createRect(item))
+        //       break
+        //     default:
+        //       console.log(item.type, item)
+        //       break
+        //   }
+        // })
+        // this.stage.add(this.layer)
+        // console.log(this.stage.toJSON())
       },
       // js 绘制
       async createKonva() {
-        console.log(this.$route.query)
-        const { productid, devaddr = '' } = this.$route.query
+        const { productid, devaddr = undefined } = this.$route.query
         let params = {
           productid: productid,
           devaddr: devaddr,
         }
         // const { msg = '' } = await _getTopo(params)
-        const { message = '' } = await _getTopo(params)
+        const { message = '', data } = await _getTopo(params)
         if (message == 'SUCCESS') {
-          this.subscribe(this.productid)
-          console.log('订阅mqtt消息')
+          //
+          if (this.$route.query.type == 'device') {
+            this.productid = this.$route.query.deviceid
+          }
+          this.handleMqttMsg(this.productid)
+          // set backgroundImage
+          console.log(data)
+          const {
+            background = '',
+            Shape = [],
+            Group = {},
+            Layer = {},
+            Stage = {},
+          } = data
+          this.stagedefault = Shape
+          this.$refs.konva.style.backgroundImage = `url(${background})`
+          this.stage = new Konva.Stage(Object.assign(this.stageConfig, Stage))
+          let layer = new Konva.Layer(Layer)
+          // create group
+          let group = new Konva.Group(Group)
+          // this.layer.add(createText(data.Layer))
+          // create Shape
+          let _Shape = createShape(group, Shape)
+          layer.add(_Shape)
+          // 鼠标事件
+          group.on('mouseover', function () {
+            document.body.style.cursor = 'pointer'
+          })
+          group.on('mouseout', function () {
+            document.body.style.cursor = 'default'
+          })
+          group.on('click', function (e) {
+            console.log('attrs', e.target.attrs)
+          })
+          layer.batchDraw()
+          this.stage.add(layer)
+          console.log('绘制完成')
+          this.$nextTick(() => {
+            this.subscribe(this.productid)
+          })
         } else {
           this._initCreate()
         }
@@ -361,15 +351,9 @@
     }
     width: 100%;
     height: calc(100vh - 211px);
-    .header {
-      /* height: 40px;
-      padding: 10px; */
-    }
     .konva {
-      /* width: 100vh; */
       height: 100%;
-      background: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png')
-        no-repeat;
+      /* background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png'); */
       background-size: 100% 100%;
     }
   }

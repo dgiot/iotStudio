@@ -720,6 +720,16 @@ function s4() {
     .substring(1)
 }
 
+export function isBase64(str) {
+  if (str === '' || str.trim() === '') {
+    return false
+  }
+  try {
+    return btoa(atob(str)) == str
+  } catch (err) {
+    return false
+  }
+}
 export default function () {
   return (
     s4() +

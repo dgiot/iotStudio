@@ -12,8 +12,8 @@ export function isExternal(path) {
  * @param value
  * @returns {boolean}
  */
-export function isPassword(value) {
-  return value.length >= 6
+export function isPassword(value, length) {
+  return value.length >= length
 }
 
 /**
