@@ -38,4 +38,3 @@ pnpm-debug.log*
 /github
 
 # files
-src/views/platform/*

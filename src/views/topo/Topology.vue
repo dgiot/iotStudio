@@ -13,8 +13,7 @@
 
 <script>
   // 导入topology-vue组件
-  import topology from 'topology-vue'
-  Vue.use(topology)
+
   import {
     defalutMenus,
     defalutUserMenus,

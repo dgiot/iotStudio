@@ -1,6 +1,24 @@
 <template>
-  <div class="grid-content">
-    <div class="drawer">
+  <div class="_vuekonva">
+    <div class="_dialog">
+      <el-dialog :visible.sync="ShapeVisible" width="100vh" class="_shape">
+        <el-tabs v-model="tabsName">
+          <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
+          <el-tab-pane label="配置管理" name="ShapeJson">
+            <span>
+              <vue-json-editor v-model="Shapeconfig" :mode="'code'" lang="zh" />
+            </span>
+          </el-tab-pane>
+        </el-tabs>
+        <span v-if="tabsName == 'ShapeJson'" slot="footer">
+          <el-button @click="ShapeVisible = false">取 消</el-button>
+          <el-button type="primary" @click="ShapeVisible = false">
+            确 定
+          </el-button>
+        </span>
+      </el-dialog>
+    </div>
+    <div class="_drawer">
       <el-drawer
         :with-header="false"
         size="40%"
@@ -10,7 +28,7 @@
         <websocket :topic="topic" />
       </el-drawer>
     </div>
-    <div class="header">
+    <div class="_header">
       <el-collapse v-model="activeNames">
         <el-collapse-item name="1">
           <el-row :gutter="24">
@@ -25,7 +43,7 @@
               <el-button
                 icon="el-icon-document-add"
                 :disabled="productid.length < 0"
-                @click="subscribeMqtt(LayerData)"
+                @click="subscribe(productid)"
               >
                 订阅mqtt
               </el-button>
@@ -35,12 +53,6 @@
                 @click="handleCloseSub()"
               >
                 取消订阅mqtt
-              </el-button>
-              <el-button
-                icon="el-icon-document-brush"
-                @click="handleKonvaStyle()"
-              >
-                {{ iskonvaBg ? '隐藏' : '显示' }}背景
               </el-button>
             </el-col>
             <el-col :span="4">
@@ -59,43 +71,93 @@
         </el-collapse-item>
       </el-collapse>
     </div>
-    <div ref="konva" class="konva">
-      <el-row :gutter="24">
-        <el-col :span="24">
-          <div id="container" ref="container"></div>
+    <div class="_mian">
+      <el-row :gutter="gutter" class="_row">
+        <el-col :span="leftrow">
+          <div class="_left"><topo-allocation /></div>
+        </el-col>
+        <el-col :span="gutter - leftrow - rightrow" class="_konvarow">
+          <div ref="konva" :class="konvaClass"></div>
+          <div v-if="!isDevice && !productconfig.length" class="_info">
+            <el-row :gutter="10">
+              <el-col :span="6">
+                <el-button
+                  type="success"
+                  plain
+                  :disabled="productid.length < 1"
+                  @click="preview('save')"
+                >
+                  保存
+                </el-button>
+              </el-col>
+              <el-col :span="6">
+                <el-button
+                  type="primary"
+                  :disabled="productid.length < 1"
+                  plain
+                  @click="preview('info')"
+                >
+                  当前数据
+                </el-button>
+              </el-col>
+              <el-col :span="6">
+                <el-button type="info" plain @click="preview('search')">
+                  分享
+                </el-button>
+              </el-col>
+              <el-col :span="6">
+                <vab-slider v-model="per" :min="0" :max="100" />
+              </el-col>
+            </el-row>
+          </div>
+        </el-col>
+        <el-col :span="rightrow">
+          <div class="_right"><topo-operation /></div>
         </el-col>
       </el-row>
     </div>
   </div>
 </template>
 <script>
-  import { Websocket, sendInfo } from '@/utils/wxscoket.js'
-  import createStage from '@/utils/konva/createStage'
-  import createGroup from '@/utils/konva/createGroup'
-  import createText from '@/utils/konva/createText'
-  import createRect from '@/utils/konva/createRect'
-  import createImg from '@/utils/konva/createImg'
-  import createShape from '@/utils/konva/createShape'
-  import updateShape from '@/utils/konva/updateShape'
-  import setText from '@/utils/konva/setText'
+  const context = require.context('./components', true, /\.vue$/)
+  let res_components = {}
+  context.keys().forEach((fileName) => {
+    let comp = context(fileName)
+    res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
+  })
+  import vueJsonEditor from 'vue-json-editor'
+  import { createShape, updateShape, setText } from '@/utils/konva'
   import websocket from '@/views/tools/websocket'
-  import { _getTopo } from '@/api/Topo'
   import { isBase64 } from '@/utils'
+  import { Websocket } from '@/utils/wxscoket.js'
+  import { _getTopo } from '@/api/Topo'
+  import { putProduct, queryProduct } from '@/api/Product'
   export default {
     components: {
       websocket,
+      vueJsonEditor,
+      ...res_components,
     },
     data() {
       return {
-        iskonvaBg: true,
+        per: '100',
+        paramsconfig: {},
+        productconfig: {},
         activeNames: [],
+        gutter: 24,
+        leftrow: 0,
+        rightrow: 0,
         productid: this.$route.query.productid || '',
+        isDevice: this.$route.query.type ? true : false,
         konva: [],
+        konvaClass: ['konva', '_center'],
         textConfig: [],
         imgConfig: [],
         rectConfig: [],
         LayerData: [],
         drawer: false,
+        ShapeVisible: false,
+        Shapeconfig: { id: '' },
         topic: '',
         stop_Mqtt: true,
         subdialogtimer: null,
@@ -104,6 +166,7 @@
           topic: [{ required: true, message: '请输入topic', trigger: 'blur' }],
         },
         subdialogid: 'subdialogid',
+        tabsName: 'ShapeJson',
         layer: {},
         group: {},
         stagedefault: [],
@@ -125,13 +188,13 @@
           width: el[0].clientWidth,
           height: el[0].clientHeight,
           container: 'container',
-          id: '_container',
+          id: 'container',
         }
       },
     },
     mounted() {
-      this.handleCloseSub()
       if (this.productid) {
+        this.handleCloseSub()
         this.createKonva()
         console.log('订阅mqtt消息')
       } else {
@@ -142,18 +205,35 @@
       this.handleCloseSub()
     },
     methods: {
-      // 订阅mqtt
-      subscribeMqtt(data = []) {
-        this.subscribe(this.productid)
-        // data.forEach((item) => {
-        //   if (item.id) {
-        //     this.subscribe(item.id)
-        //   }
-        // })
+      // 预览
+      preview(type) {
+        switch (type) {
+          case 'save':
+            this.updataProduct(this.$route.query.productid)
+            break
+          case 'info':
+            alert(this.stage.toJSON())
+            break
+          case 'search':
+            this.$message.success('开发中')
+            break
+        }
+      },
+      // 更新产品
+      async updataProduct(productid) {
+        console.log('updatatopo')
+        const { config } = this.productconfig
+        // 提交前需要先对数据进行合并
+        let upconfig = Object.assign(config, this.paramsconfig)
+        let params = {
+          config: upconfig,
+        }
+        let res = await putProduct(productid, params)
+        console.log(res)
+        this.$message.success('产品组态更新成功')
       },
       // 处理mqtt信息
       handleMqttMsg(subdialogid) {
-        var submessage = ''
         var channeltopic = new RegExp('thing/' + subdialogid + '/post')
         Websocket.add_hook(channeltopic, (Msg) => {
           console.log('收到消息', Msg)
@@ -177,11 +257,6 @@
           }
         })
       },
-      // 显示隐藏背景图
-      handleKonvaStyle(iskonvaBg) {
-        this.iskonvaBg = !this.iskonvaBg
-        this.activeClass = this.iskonvaBg ? 'konva' : ''
-      },
       // 取消订阅mqtt
       handleCloseSub() {
         this.stop_Mqtt = true
@@ -200,10 +275,8 @@
       stopsub(value) {
         var text0
         if (value == false) {
-          // this.subaction = 'start'
           text0 = JSON.stringify({ action: 'stop_logger' })
         } else {
-          // this.subaction = 'stop'
           text0 = JSON.stringify({ action: 'start_logger' })
         }
         var sendInfo = {
@@ -222,7 +295,7 @@
       // mqtt订阅
       subscribe(subdialogid) {
         var info = {
-          topic: `thing/${this.productid}/post`,
+          topic: `thing/${subdialogid}/post`,
           qos: 2,
         }
         Websocket.subscribe(info, (res) => {
@@ -236,55 +309,10 @@
           }
         })
       },
-      handleClose() {},
-      // 新增文本
-      _addText() {
-        let text = createText({})
-        this.layer.add(text)
-        this.stage.add(this.layer)
-      },
-      // 设置文本
-      async _setText(id, text) {
-        console.log(this.stage.find(`#${id}`)[0])
-        const { tween } = await setText(this.stage.find(`#${id}`)[0], text)
-        console.log(tween)
-      },
       _initCreate() {
         let background =
           'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png'
         this.$refs.konva.style.backgroundImage = `url(${background})`
-        // let konvaConfig = this.konva
-        // console.log('konvaConfig', konvaConfig)
-        // let _stateConfig = this.stageConfig
-        // if (konvaConfig) {
-        //   const { data } = konvaConfig
-        //   _stateConfig = Object.assign(this.stageConfig, data.Stage)
-        //   this.LayerData = data.Layer
-        // } else {
-        // }
-        // this.stage = createStage(_stateConfig)
-        // this.LayerData.filter((item) => {
-        //   switch (item.type) {
-        //     case 'image':
-        //       this.imgConfig.push(item)
-        //       this.layer.add(createImg(item))
-        //       this.layer.batchDraw()
-        //       break
-        //     case 'text':
-        //       this.textConfig.push(item)
-        //       this.layer.add(createText(item))
-        //       break
-        //     case 'rect':
-        //       this.rectConfig.push(item)
-        //       this.layer.add(createRect(item))
-        //       break
-        //     default:
-        //       console.log(item.type, item)
-        //       break
-        //   }
-        // })
-        // this.stage.add(this.layer)
-        // console.log(this.stage.toJSON())
       },
       // js 绘制
       async createKonva() {
@@ -293,9 +321,16 @@
           productid: productid,
           devaddr: devaddr,
         }
-        // const { msg = '' } = await _getTopo(params)
         const { message = '', data } = await _getTopo(params)
+        // 绘制前不光需要获取到组态数据，还需要获取产品数据
+        const { results = [] } = await queryProduct({
+          where: { objectId: this.productid },
+        })
+        this.productconfig = results[0]
+        console.log(this.productconfig)
         if (message == 'SUCCESS') {
+          console.log(data)
+          this.paramsconfig = { konva: data }
           //
           if (this.$route.query.type == 'device') {
             this.productid = this.$route.query.deviceid
@@ -310,26 +345,43 @@
             Layer = {},
             Stage = {},
           } = data
+          // 生成页面canvas组
+          console.log(Stage, 'container')
+          var _konvarow = document.querySelectorAll('._center')[0]
+          let div = document.createElement('div')
+          div.setAttribute('id', Stage.container)
+          _konvarow.append(div)
           this.stagedefault = Shape
           this.$refs.konva.style.backgroundImage = `url(${background})`
           this.stage = new Konva.Stage(Object.assign(this.stageConfig, Stage))
+          let _this = this
           let layer = new Konva.Layer(Layer)
           // create group
           let group = new Konva.Group(Group)
           // this.layer.add(createText(data.Layer))
           // create Shape
-          let _Shape = createShape(group, Shape)
-          layer.add(_Shape)
-          // 鼠标事件
-          group.on('mouseover', function () {
+          createShape(group, Shape)
+          // function
+          // 设置页面是从设备界面进入 则不添加以下事件
+          if (this.isDevice && this.productconfig) {
+            this.konvaClass.push('isDevice')
+            this.leftrow = this.rightrow = 0
+          } else {
+            this.leftrow = this.rightrow = 3
+            group.on('click', (e) => {
+              _this.ShapeVisible = true
+              console.log(e)
+              _this.Shapeconfig = e.target.attrs
+            })
+          }
+          group.on('mouseover', () => {
             document.body.style.cursor = 'pointer'
           })
-          group.on('mouseout', function () {
+          group.on('mouseout', () => {
             document.body.style.cursor = 'default'
           })
-          group.on('click', function (e) {
-            console.log('attrs', e.target.attrs)
-          })
+          // views
+          layer.add(group)
           layer.batchDraw()
           this.stage.add(layer)
           console.log('绘制完成')
@@ -344,17 +396,48 @@
   }
 </script>
 <style lang="scss" scoped>
-  .grid-content {
+  ._vuekonva {
+    width: 100%;
+    background-size: 100% 100%;
     ::v-deep .el-drawer__body {
       overflow-x: auto;
       overflow-y: auto;
     }
-    width: 100%;
-    height: calc(100vh - 211px);
-    .konva {
-      height: 100%;
-      /* background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png'); */
-      background-size: 100% 100%;
+    ._dialog {
+      ::v-deep .el-dialog__footer {
+        margin: 0 auto;
+        text-align: center;
+      }
+    }
+    ._drawer {
+      width: 100%;
+    }
+    ._header {
+      width: 100%;
+    }
+    ._mian {
+      ._row {
+        ._konvarow {
+          padding: 0 !important;
+          // border: 1px solid red;
+          box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
+          .konva {
+            min-width: 100vh;
+            min-height: calc(100vh - 262px);
+            // background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png');
+            background-size: 100% 100%;
+            border-bottom: 1px solid #ebeef5;
+          }
+          .isDevice {
+            min-height: calc(100vh - 211px);
+          }
+        }
+        ._info {
+          height: 40px;
+          line-height: 40px;
+          background-color: white;
+        }
+      }
     }
   }
 </style>

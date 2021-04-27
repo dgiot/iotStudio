@@ -6,14 +6,12 @@ import i18n from './i18n'
 import store from './store'
 import router from './router'
 import utilwen from './utils/utilwen'
-import VueKonva from 'vue-konva'
 import '@/vab'
 
 /**
  * use
  */
 Vue.use(utilwen)
-Vue.use(VueKonva)
 Vue.config.productionTip = false
 if (process.env.NODE_ENV !== 'development') {
   Vue.config.productionTip = true

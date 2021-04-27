@@ -71,6 +71,10 @@ module.exports = {
     // https://blog.csdn.net/weixin_43972992/article/details/105159723
     return {
       externals: {
+        'topology-vue': 'topology',
+        konva: 'Konva',
+        'vue-count-to': 'CountTo',
+        'vue-konva': 'VueKonva',
         mockjs: 'Mock',
         'js-md5': 'md5',
         'js-base64': 'Base64',
