@@ -152,10 +152,9 @@
                   size="mini"
                   type="primary"
                   target="_blank"
-                  :disabled="!item.productIdentifier"
                   @click="handleClickVisit(item)"
                 >
-                  {{ $translateTitle('home.login') }}
+                  {{ $translateTitle('home.konva') }}
                 </el-button>
               </el-button-group>
             </div>
@@ -346,13 +345,12 @@
       },
       handleChange() {},
       handleClickVisit(project) {
-        const { productIdentifier = '' } = project
-        console.log(project)
-        if (productIdentifier) {
-          const url =
-            window.location.origin + '/iot/' + productIdentifier + '#/login'
-          window.open(url, '__blank')
-        }
+        this.$router.push({
+          path: '/Topo/VueKonva',
+          query: {
+            productid: project.objectId,
+          },
+        })
       },
       Gotoproduct(name) {
         this.$router.push({

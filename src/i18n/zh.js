@@ -8,6 +8,7 @@ export default {
       currentConnections: '当前连接数',
     },
     home: {
+      konva: '进入组态',
       updatedAt: '更新时间',
       preview: '查看产品',
       login: '进入登录',
