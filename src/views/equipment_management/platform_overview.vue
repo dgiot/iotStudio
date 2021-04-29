@@ -148,14 +148,14 @@
                 >
                   {{ $translateTitle('home.preview') }}
                 </el-button>
-                <el-button
+                <!-- <el-button
                   size="mini"
                   type="primary"
                   target="_blank"
                   @click="handleClickVisit(item)"
                 >
                   {{ $translateTitle('home.konva') }}
-                </el-button>
+                </el-button> -->
               </el-button-group>
             </div>
           </el-card>

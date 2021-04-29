@@ -98,6 +98,9 @@ export default {
     },
     route: {
       云组态: 'cloudConfigurationt',
+      云检测: 'testing',
+      云系统: 'system',
+      组态大屏: 'screen',
       字典管理: 'Dictionary management',
       词典管理: 'Dictionary management',
       通道管理: 'Channel management',
@@ -364,6 +367,7 @@ export default {
       disabled: 'Disabled',
     },
     product: {
+      share: 'share',
       myproduct: 'MyProduct',
       createproduct: 'Create Product',
       searchproductname: 'Input Product Name of Search',
@@ -678,6 +682,7 @@ export default {
       Testconnection: 'Test connection',
     },
     task: {
+      data: 'data',
       Configurationtask: 'Configuration task',
       Delete: 'Delete',
       Taskname: 'Task name',
@@ -726,6 +731,7 @@ export default {
       close: 'Close',
       closeOthers: 'Close Others',
       closeAll: 'Close All',
+      open: 'Open',
     },
   },
 }

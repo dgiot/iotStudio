@@ -229,6 +229,7 @@ export default {
       disabled: '已禁用',
     },
     product: {
+      share: '分享',
       config: '配置',
       dict: '词典',
       edit: '设备',
@@ -491,6 +492,7 @@ export default {
       Testconnection: '测试连接',
     },
     task: {
+      data: '数据',
       Configurationtask: '配置任务',
       Delete: '删除',
       Taskname: '任务名称',
@@ -537,6 +539,7 @@ export default {
       close: '关闭',
       closeOthers: '关闭其它',
       closeAll: '关闭所有',
+      open: '开启',
     },
   },
 }

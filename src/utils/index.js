@@ -85,7 +85,15 @@ export function formatTime(time, option) {
     )
   }
 }
-
+/**
+ *
+ * @param {*} url
+ * @returns boolean
+ */
+export function isImage(url) {
+  var reg = /\.(png|jpg|gif|jpeg|webp)$/
+  return reg.test(url)
+}
 /**
  * @description 将url请求参数转为json格式
  * @param url

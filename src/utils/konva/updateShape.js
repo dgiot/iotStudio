@@ -5,13 +5,13 @@ let _errorDate = []
 export default async function updateShape(Shape) {
   Shape.forEach((_item) => {
     switch (_item.type) {
-      case 'image':
+      case 'Image':
         _setImage(_item.id, _item.text)
         break
-      case 'text':
+      case 'Text':
         _setText(_item.id, _item.text)
         break
-      case 'rect':
+      case 'Rect':
         _setRect(_item.id, _item.text)
         break
       default:

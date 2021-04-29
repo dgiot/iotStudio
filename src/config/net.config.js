@@ -38,6 +38,6 @@ module.exports = {
     504: '网关超时',
   },
   // 服务器代理地址
-  proxyUrl: 'https://prod.iotn2n.com',
-  // proxyUrl: 'http://132.232.12.21',
+  // proxyUrl: 'https://prod.iotn2n.com',
+  proxyUrl: 'http://132.232.12.21',
 }
