@@ -409,7 +409,7 @@
             })
           })
           let toJSON = this.stage.toJSON()
-          _this.createKonva(JSON.parse(toJSON), _this.globalStageid, 'edit')
+          this.createKonva(JSON.parse(toJSON), this.globalStageid, 'edit')
           console.log('konva数据更新成功')
           // })
           // const stagedefault = this.stagedefault
@@ -428,6 +428,10 @@
       // 取消订阅mqtt
       async handleCloseSub() {
         let _this = this
+        if (_this.$route.query.type == 'device') {
+          _this.productid = _this.$route.query.deviceid
+        }
+        _this.handleMqttMsg(_this.productid)
         _this.stop_Mqtt = true
         var text0 = JSON.stringify({ action: 'stop_logger' })
         var sendInfo = {
@@ -448,7 +452,7 @@
         const { message = '', data } = await _getTopo(params)
         // 绘制前不光需要获取到组态数据，还需要获取产品数据
         const { results = [] } = await queryProduct({
-          where: { objectId: _this.productid },
+          where: { objectId: _this.$route.query.productid },
         })
         _this.productconfig = results[0]
         console.log(_this.productconfig)
@@ -459,10 +463,6 @@
           _this.createKonva(data, _this.globalStageid, 'create')
           _this.paramsconfig = { konva: data }
           //
-          if (_this.$route.query.type == 'device') {
-            _this.productid = _this.$route.query.deviceid
-          }
-          _this.handleMqttMsg(_this.productid)
           // set backgroundImage
         }
       },
