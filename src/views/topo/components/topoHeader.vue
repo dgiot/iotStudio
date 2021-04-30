@@ -11,47 +11,41 @@
         <websocket :topic="topic" />
       </el-drawer>
     </div>
-    <el-collapse v-model="activeNames">
-      <el-collapse-item name="1">
-        <el-row :gutter="24">
-          <el-col :span="8">
-            <el-button
-              type="success"
-              icon="el-icon-setting"
-              @click="drawerFlag"
-            >
-              websocket
-            </el-button>
-            <el-button
-              icon="el-icon-document-add"
-              :disabled="productid.length < 0"
-              @click="subscribe(productid)"
-            >
-              {{ $translateTitle('leftbar.subscriptions') }} mqtt
-            </el-button>
-            <el-button
-              icon="el-icon-document-add"
-              :disabled="stopMqtt"
-              @click="CloseSub()"
-            >
-              {{ $translateTitle('leftbar. cancel') }} mqtt
-            </el-button>
-          </el-col>
-          <el-col :span="4">
-            {{ $translateTitle('tagsView.refresh') }}
-            <el-switch
-              v-model="switchvalue"
-              :disabled="productid.length < 0"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              :active-text="$translateTitle('tagsView.close')"
-              :inactive-text="$translateTitle('tagsView.open')"
-              @change="stopsub"
-            />
-          </el-col>
-        </el-row>
-      </el-collapse-item>
-    </el-collapse>
+    <div>
+      <el-row :gutter="24">
+        <el-col :span="8">
+          <el-button type="success" icon="el-icon-setting" @click="drawerFlag">
+            websocket
+          </el-button>
+          <el-button
+            icon="el-icon-document-add"
+            :disabled="productid.length < 0"
+            @click="subscribe(productid)"
+          >
+            {{ $translateTitle('leftbar.subscriptions') }} mqtt
+          </el-button>
+          <el-button
+            icon="el-icon-document-add"
+            :disabled="stopMqtt"
+            @click="CloseSub()"
+          >
+            {{ $translateTitle('leftbar. cancel') }} mqtt
+          </el-button>
+        </el-col>
+        <el-col :span="4">
+          {{ $translateTitle('tagsView.refresh') }}
+          <el-switch
+            v-model="switchvalue"
+            :disabled="productid.length < 0"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            :active-text="$translateTitle('tagsView.close')"
+            :inactive-text="$translateTitle('tagsView.open')"
+            @change="stopsub"
+          />
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 

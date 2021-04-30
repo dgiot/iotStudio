@@ -29,8 +29,11 @@
             @click="upload"
           />
         </el-input>
-        <el-button type="primary" @click="updataImg(bachgroundurl)">
+        <el-button size="mini" type="primary" @click="updataImg(bachgroundurl)">
           更新背景
+        </el-button>
+        <el-button size="mini" type="primary" @click="clearImg()">
+          {{ isVisible ? '隐藏' : '显示' }}背景
         </el-button>
       </el-tab-pane>
       <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
@@ -46,10 +49,6 @@
     name: 'Operation',
     components: {},
     props: {
-      img: {
-        type: String,
-        default: '',
-      },
       stopMqtt: {
         type: Boolean,
         default: false,
@@ -65,6 +64,7 @@
     },
     data() {
       return {
+        isVisible: true,
         fileList: [
           {
             name: 'food.jpeg',
@@ -77,7 +77,7 @@
               'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
           },
         ],
-        bachgroundurl: this.img,
+        bachgroundurl: '',
         activeName: 'setting',
       }
     },
@@ -94,6 +94,10 @@
       updataImg(img) {
         // 触发父组件更新事件
         this.$emit('upImg', img)
+      },
+      clearImg() {
+        this.isVisible = !this.isVisible
+        this.$emit('clearImg', this.isVisible)
       },
       upload() {
         this.$refs['upload'].$children[0].$refs.input.click()

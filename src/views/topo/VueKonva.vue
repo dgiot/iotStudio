@@ -38,24 +38,6 @@
       />
     </div>
     <div class="_mian">
-      <i
-        v-show="arrowFlag"
-        style="top: 1vh; right: 100vh"
-        :class="[
-          headevisible ? 'el-icon-arrow-up' : 'el-icon-arrow-down',
-          arrowClass,
-        ]"
-        @click="headevisible = !headevisible"
-      ></i>
-      <i
-        v-show="arrowFlag"
-        style="right: 100vh; bottom: 1vh"
-        :class="[
-          infoFlag ? 'el-icon-arrow-down' : 'el-icon-arrow-up',
-          arrowClass,
-        ]"
-        @click="infoFlag = !infoFlag"
-      ></i>
       <el-row :gutter="gutter" class="_row">
         <transition name="fade">
           <el-col :span="leftrow">
@@ -70,55 +52,44 @@
         </transition>
 
         <el-col :span="gutter - leftrow - rightrow" class="_konvarow">
-          <div
-            ref="konva"
-            :class="konvaClass"
-            @mouseover="konvaMouseover(productid)"
-            @mouseleave="konvaMouseleave(productid)"
-          >
-            <i
-              v-show="arrowFlag"
-              style="top: 35vh; left: 1vh"
-              :class="[
-                leftrow == 3 ? 'el-icon-arrow-left' : 'el-icon-arrow-right',
-                arrowClass,
-              ]"
-              @click="toggleClass('leftrow')"
-            ></i>
-            <i
-              v-show="arrowFlag"
-              style="top: 35vh; right: 1vh"
-              :class="[
-                rightrow == 3 ? 'el-icon-arrow-right' : 'el-icon-arrow-left',
-                arrowClass,
-              ]"
-              @click="toggleClass('rightrow')"
-            ></i>
-          </div>
+          <div ref="konva" :class="konvaClass"></div>
 
           <div
+            v-show="!isDevice && productid"
             :style="{
-              display: infoFlag ? 'block' : 'none',
+              display: infoFlag ? 'block' : 'block',
             }"
             class="_info"
           >
             <el-row :gutter="10">
-              <el-col :span="6">
+              <el-col :span="8">
                 <el-button
                   type="success"
                   plain
                   :disabled="productid.length < 1"
-                  @click="preview('save')"
+                  @click="regulate('save')"
                 >
-                  {{ $translateTitle('product.preservation') }}
+                  保存数据
+                </el-button>
+
+                <el-button type="success" plain @click="regulate('top')">
+                  {{ headevisible ? '隐藏顶部' : '显示顶部' }}
+                </el-button>
+
+                <el-button type="success" plain @click="regulate('right')">
+                  {{ rightrow ? '隐藏右侧' : '显示右侧' }}
+                </el-button>
+
+                <el-button type="success" plain @click="regulate('left')">
+                  {{ leftrow ? '隐藏左侧' : '显示左侧' }}
                 </el-button>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="4">
                 <el-button
                   type="primary"
                   :disabled="productid.length < 1"
                   plain
-                  @click="preview('info')"
+                  @click="regulate('info')"
                 >
                   {{ $translateTitle('task.data') }}
                 </el-button>
@@ -128,7 +99,7 @@
                   type="info"
                   plain
                   :disabled="productid.length < 1"
-                  @click="preview('search')"
+                  @click="regulate('search')"
                 >
                   {{ $translateTitle('product.share') }}
                 </el-button>
@@ -142,7 +113,11 @@
         <el-col :span="rightrow">
           <transition name="fade">
             <div class="_right">
-              <topo-operation :img="konvaBg" @upImg="upProduct" />
+              <topo-operation
+                ref="operation"
+                @upImg="upProduct"
+                @clearImg="clearImg"
+              />
             </div>
           </transition>
         </el-col>
@@ -182,13 +157,13 @@
         per: '100',
         paramsconfig: {},
         productconfig: {},
+        backgroundImage: '',
         gutter: 24,
         leftrow: 0,
         rightrow: 0,
         productid: this.$route.query.productid || '',
         isDevice: this.$route.query.type == 'device' ? true : false,
         konvaClass: ['konva', '_center'],
-        konvaBg: '',
         drawer: false,
         ShapeVisible: false,
         arrowFlag: false,
@@ -306,13 +281,22 @@
         console.log('konva数据更新成功')
       },
       // 预览
-      preview(type) {
+      regulate(type) {
         switch (type) {
           case 'save':
             this.updataProduct(this.$route.query.productid)
             break
           case 'info':
             alert(this.stage.toJSON())
+            break
+          case 'top':
+            this.headevisible = !this.headevisible
+            break
+          case 'right':
+            this.toggleClass('rightrow')
+            break
+          case 'left':
+            this.toggleClass('leftrow')
             break
           case 'search':
             this.$message.success('开发中')
@@ -326,15 +310,15 @@
           this.leftrow = this.leftrow == 3 ? 0 : 3
         }
       },
-      konvaMouseover(id) {
-        if (id && !this.isDevice) {
-          this.arrowFlag = true
+      clearImg(isVisible) {
+        let img = ' '
+        if (isVisible) {
+          img = this.backgroundImage
         }
-      },
-      konvaMouseleave(id) {
-        if (id && !this.isDevice) {
-          this.arrowFlag = false
-        }
+        console.log(isVisible)
+        console.log(this.backgroundImage)
+        this.$refs.konva.style.backgroundImage = `url(${img})`
+        this.$refs['operation'].bachgroundurl = img
       },
       async upProduct(img) {
         if (isImage(img)) {
@@ -484,7 +468,7 @@
           Stage = data.Stage
         }
         console.log(data)
-        _this.konvaBg = background
+        _this.$refs['operation'].bachgroundurl = background
         console.log(Stage)
         console.log(Stage.attrs.height, Stage.attrs.width, '450')
         Stage.attrs.height = _this.stageConfig.height
@@ -496,6 +480,7 @@
 
         div.setAttribute('id', globalStageid)
         _this.$refs.konva.style.backgroundImage = `url(${background})`
+        _this.backgroundImage = background
         console.log(Stage)
         _this.stage = Konva.Node.create(Stage, globalStageid)
         var Group = _this.stage.find('Group')
