@@ -39,10 +39,10 @@
 
 <style lang="scss" scoped>
   .topo-editor {
-    padding: 10px;
     position: relative;
     width: 100%;
     height: calc(100vh - 210px);
+    padding: 10px;
     background-color: #eee;
 
     .topo-toolbox {

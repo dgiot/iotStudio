@@ -2,33 +2,52 @@
   "konva": {
     "Stage": {
       "attrs": {
-        "id": "container",
+        "id": "current1",
         "width": 1667,
-        "height": 800,
+        "height": 680,
         "draggable": true
       },
+      "className": "Stage",
       "children": [
         {
           "attrs": {
-            "id": "layer_040a1c7933"
+            "id": "curren2t1",
+            "listening": false
           },
+          "className": "Layer",
           "children": [
             {
               "attrs": {
-                "id": "Acrel",
+                "id": "curr23ent1",
+                "source": "http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png"
+              },
+              "className": "Image"
+            }
+          ]
+        },
+        {
+          "attrs": {
+            "id": "996"
+          },
+          "className": "Layer",
+          "children": [
+            {
+              "attrs": {
+                "id": "switch",
                 "width": 2000,
                 "height": 2000
               },
+              "className": "Group",
               "children": [
                 {
                   "attrs": {
                     "x": 100,
                     "y": 130,
-                    "id": "Acrel",
+                    "id": "switch",
                     "fill": "#000000",
-                    "text": "group.item.Acrel",
+                    "text": "开关",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -36,13 +55,13 @@
                 },
                 {
                   "attrs": {
-                    "x": 100,
-                    "y": 160,
-                    "id": "current",
+                    "x": 744,
+                    "y": 230,
+                    "id": "opening",
                     "fill": "#000000",
-                    "text": "group.item.current",
+                    "text": "球阀开度",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -50,13 +69,13 @@
                 },
                 {
                   "attrs": {
-                    "x": 100,
-                    "y": 190,
-                    "id": "effect",
+                    "x": 932,
+                    "y": 281,
+                    "id": "pressure_out",
                     "fill": "#000000",
-                    "text": "group.item.effect",
+                    "text": "出口压力",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -66,11 +85,11 @@
                   "attrs": {
                     "x": 100,
                     "y": 220,
-                    "id": "factor",
+                    "id": "pressure_in",
                     "fill": "#000000",
-                    "text": "group.item.factor",
+                    "text": "进口压1力",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -80,11 +99,11 @@
                   "attrs": {
                     "x": 100,
                     "y": 250,
-                    "id": "flow",
+                    "id": "factor",
                     "fill": "#000000",
-                    "text": "group.item.flow",
+                    "text": "功率因数",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -94,11 +113,11 @@
                   "attrs": {
                     "x": 100,
                     "y": 280,
-                    "id": "head",
+                    "id": "torque",
                     "fill": "#000000",
-                    "text": "group.item.head",
+                    "text": "转矩",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -108,25 +127,11 @@
                   "attrs": {
                     "x": 100,
                     "y": 310,
-                    "id": "opening",
-                    "fill": "#000000",
-                    "text": "group.item.opening",
-                    "type": "text",
-                    "fontSize": 26,
-                    "draggable": true,
-                    "fontFamily": "Calibri"
-                  },
-                  "className": "Text"
-                },
-                {
-                  "attrs": {
-                    "x": 100,
-                    "y": 340,
                     "id": "power",
                     "fill": "#000000",
-                    "text": "group.item.power",
+                    "text": "功2222率",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -134,13 +139,27 @@
                 },
                 {
                   "attrs": {
-                    "x": 100,
-                    "y": 370,
-                    "id": "pressure_in",
+                    "x": 226,
+                    "y": 265,
+                    "id": "vol",
                     "fill": "#000000",
-                    "text": "group.item.pressure_in",
+                    "text": "电压",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
+                    "draggable": true,
+                    "fontFamily": "Calibri"
+                  },
+                  "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 248,
+                    "y": 224,
+                    "id": "current",
+                    "fill": "#000000",
+                    "text": "电流",
+                    "type": "text",
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -150,11 +169,11 @@
                   "attrs": {
                     "x": 100,
                     "y": 400,
-                    "id": "pressure_out",
+                    "id": "flow",
                     "fill": "#000000",
-                    "text": "group.item.pressure_out",
+                    "text": "流量",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -166,9 +185,9 @@
                     "y": 430,
                     "id": "speed",
                     "fill": "#000000",
-                    "text": "group.item.speed",
+                    "text": "转速2222",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -178,11 +197,11 @@
                   "attrs": {
                     "x": 100,
                     "y": 460,
-                    "id": "switch",
+                    "id": "temperature",
                     "fill": "#000000",
-                    "text": "group.item.switch",
+                    "text": "温度",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -192,11 +211,11 @@
                   "attrs": {
                     "x": 100,
                     "y": 490,
-                    "id": "temperature",
+                    "id": "effect",
                     "fill": "#000000",
-                    "text": "group.item.temperature",
+                    "text": "效率",
                     "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -206,39 +225,21 @@
                   "attrs": {
                     "x": 100,
                     "y": 520,
-                    "id": "torque",
+                    "id": "head",
                     "fill": "#000000",
-                    "text": "group.item.torque",
+                    "text": "扬程",
                     "type": "text",
-                    "fontSize": 26,
-                    "draggable": true,
-                    "fontFamily": "Calibri"
-                  },
-                  "className": "Text"
-                },
-                {
-                  "attrs": {
-                    "x": 100,
-                    "y": 550,
-                    "id": "vol",
-                    "fill": "#000000",
-                    "text": "group.item.vol",
-                    "type": "text",
-                    "fontSize": 26,
+                    "fontSize": 20,
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
                   "className": "Text"
                 }
-              ],
-              "className": "Group"
+              ]
             }
-          ],
-          "className": "Layer"
+          ]
         }
-      ],
-      "className": "Stage"
-    },
-    "background": "http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/konva/assets/taiti.png"
+      ]
+    }
   }
 }

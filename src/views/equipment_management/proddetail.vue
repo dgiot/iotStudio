@@ -3227,7 +3227,7 @@
       },
       async getAllunit() {
         this.allunit = []
-        const { results } = await getAllunit('unit', 100)
+        const { results } = await getAllunit('unit', 200)
         this.allunit = results.concat([])
         this.allunit.unshift({
           data: {

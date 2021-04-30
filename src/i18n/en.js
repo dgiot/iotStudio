@@ -733,5 +733,14 @@ export default {
       closeAll: 'Close All',
       open: 'Open',
     },
+    konva: {
+      hide: '隐藏',
+      show: '显示',
+      top: '顶部',
+      right: '右侧',
+      left: '左侧',
+      save: '保存',
+      data: '数据',
+    },
   },
 }

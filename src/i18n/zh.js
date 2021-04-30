@@ -541,5 +541,14 @@ export default {
       closeAll: '关闭所有',
       open: '开启',
     },
+    konva: {
+      hide: 'hide',
+      show: 'show',
+      top: 'top',
+      right: 'right',
+      left: 'left',
+      save: 'save',
+      data: '',
+    },
   },
 }

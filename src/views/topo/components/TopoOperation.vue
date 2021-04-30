@@ -1,6 +1,6 @@
 <!-- 组件说明 -->
 <template>
-  <div>
+  <div class="operation">
     <el-tabs v-model="activeName">
       <div class="unvisible">
         <el-upload
@@ -20,7 +20,7 @@
         </el-upload>
       </div>
       <el-tab-pane label="配置" name="setting">
-        <el-input v-model="bachgroundurl" placeholder="">
+        <!-- <el-input v-model="bachgroundurl" placeholder="">
           <el-button
             slot="append"
             type="primary"
@@ -28,26 +28,64 @@
             style="cursor: pointer"
             @click="upload"
           />
-        </el-input>
-        <el-button size="mini" type="primary" @click="updataImg(bachgroundurl)">
+        </el-input> -->
+        <!-- <el-button size="mini" type="primary" @click="updataImg(bachgroundurl)">
           更新背景
         </el-button>
         <el-button size="mini" type="primary" @click="clearImg()">
           {{ isVisible ? '隐藏' : '显示' }}背景
-        </el-button>
+        </el-button> -->
+        <el-form
+          style="color: black"
+          size="mini"
+          label-width="80px"
+          :model="Shapeconfig"
+        >
+          <el-form-item
+            v-for="(item, index) in Shapeconfig"
+            v-show="isShowItem(`${index}`)"
+            :key="index"
+            :label="index"
+          >
+            <el-input
+              v-if="isShowLable(`${index}`)"
+              v-model="Shapeconfig[index]"
+              style="width: 80%"
+              :disabled="isdisabled(`${index}`)"
+            />
+            <el-radio
+              v-else
+              v-model="Shapeconfig[index]"
+              :label="Shapeconfig[index]"
+            >
+              {{ Shapeconfig[index] }}
+            </el-radio>
+          </el-form-item>
+          <el-form-item v-if="Shapeconfig.id">
+            <el-button type="primary" @click="saveKonvaitem(Shapeconfig)">
+              {{ $translateTitle('developer.determine') }}
+            </el-button>
+            <el-button type="primary" @click="showJson = !showJson">
+              {{ $translateTitle('developer.json') }}
+            </el-button>
+          </el-form-item>
+        </el-form>
+        <vue-json-editor
+          v-show="showJson"
+          v-model="Shapeconfig"
+          :mode="'code'"
+          lang="zh"
+        />
       </el-tab-pane>
-      <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
-      <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
-      <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
-  // import x from ''
+  import vueJsonEditor from 'vue-json-editor'
   export default {
     name: 'Operation',
-    components: {},
+    components: { vueJsonEditor },
     props: {
       stopMqtt: {
         type: Boolean,
@@ -64,7 +102,11 @@
     },
     data() {
       return {
+        disableLable: ['id'],
+        hideLable: ['draggable'],
+        ShowItem: ['container'],
         isVisible: true,
+        showJson: false,
         fileList: [
           {
             name: 'food.jpeg',
@@ -77,6 +119,7 @@
               'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
           },
         ],
+        Shapeconfig: {},
         bachgroundurl: '',
         activeName: 'setting',
       }
@@ -91,9 +134,22 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      isShowItem(lable) {
+        return !this.ShowItem.includes(lable)
+      },
+      isdisabled(lable) {
+        return this.disableLable.includes(lable)
+      },
+      isShowLable(disabled) {
+        return !this.hideLable.includes(disabled)
+      },
       updataImg(img) {
         // 触发父组件更新事件
         this.$emit('upImg', img)
+      },
+      saveKonvaitem(config) {
+        // 触发父组件更新事件
+        this.$emit('upconfig', config)
       },
       clearImg() {
         this.isVisible = !this.isVisible
@@ -121,3 +177,12 @@
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }
 </script>
+<style lang="scss" scoped>
+  .operation {
+    height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
+    margin-left: 10px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    color: wheat;
+  }
+</style>
