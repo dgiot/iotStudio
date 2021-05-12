@@ -23,6 +23,7 @@ const {
   Keywords,
   Description,
   dateTime,
+  group1,
 } = require('./src/config')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
@@ -37,6 +38,7 @@ process.env.VUE_APP_VERSION = version
 process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxyUrl
+process.env.group1 = group1
 const resolve = (dir) => {
   return path.join(__dirname, dir)
 }
@@ -63,6 +65,14 @@ module.exports = {
         changeOrigin: true,
         pathRewrite: {
           ['^' + baseURL]: '',
+        },
+      },
+      '/group1': {
+        target: process.env.group1,
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/group1': '',
         },
       },
     },

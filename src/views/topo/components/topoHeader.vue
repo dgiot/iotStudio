@@ -31,8 +31,6 @@
           >
             {{ $translateTitle('leftbar. cancel') }} mqtt
           </el-button>
-        </el-col>
-        <el-col :span="4">
           {{ $translateTitle('tagsView.refresh') }}
           <el-switch
             v-model="switchvalue"
@@ -44,6 +42,24 @@
             @change="stopsub"
           />
         </el-col>
+        <el-col :span="16">
+          <div class="tools">
+            <div id="btnList">
+              <el-button @click="flagFn('pencil')">铅笔</el-button>
+              <el-button @click="flagFn('ellipse')">椭圆-空心</el-button>
+              <el-button @click="flagFn('rect')">矩形</el-button>
+              <el-button @click="flagFn('rectH')">矩形-空心</el-button>
+              <el-button @click="flagFn('text')">文字</el-button>
+              <el-button @click="flagFn('image')">图片</el-button>
+              <el-button @click="removeFn()">删除</el-button>
+              <el-color-picker
+                v-model="graphColor"
+                size="medium"
+                @change="setColor"
+              />
+            </div>
+          </div>
+        </el-col>
       </el-row>
     </div>
   </div>
@@ -52,6 +68,7 @@
 <script>
   import { Websocket } from '@/utils/wxscoket.js'
   import websocket from '@/views/tools/websocket'
+  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   export default {
     name: 'TopoHeader',
     components: { websocket },
@@ -81,7 +98,32 @@
         drawer: this.drawerflag,
       }
     },
-    computed: {},
+    computed: {
+      ...mapState({
+        // graphColor: 'konva/graphColor',
+        drawing: 'konva/drawing',
+        graphNow: 'konva/graphNow',
+        pointStart: 'konva/pointStart',
+        draw: 'konva/draw',
+        flag: 'konva/flag',
+      }),
+      graphColor: {
+        get() {
+          return this.$store.state.konva.graphColor
+        },
+        set(val) {
+          this.$store.commit('konva/setGraphColor', val)
+        },
+      },
+      // ...mapGetters({
+      //   graphColor: 'konva/graphColor',
+      //   drawing: 'konva/drawing',
+      //   graphNow: 'konva/graphNow',
+      //   pointStart: 'konva/pointStart',
+      //   draw: 'konva/draw',
+      //   flag: 'konva/flag',
+      // }),
+    },
     mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
@@ -90,6 +132,18 @@
     beforeDestroy() {}, //生命周期 - 销毁之前
     activated() {},
     methods: {
+      ...mapMutations({
+        setDrawing: 'konva/setDrawing',
+        setPointStart: 'konva/setPointStart',
+        setDraw: 'konva/setDraw',
+        setFlag: 'konva/setFlag',
+        setGraphNow: 'konva/setGraphNow',
+        setGraphColor: 'konva/setGraphColor',
+      }),
+      setColor(v) {
+        this.setGraphColor(v)
+      },
+      // flagFn
       // 打开websocket
       drawerFlag() {
         this.topic = `thing/${this.productid}/post`
@@ -111,6 +165,20 @@
             this.$message('订阅失败,请手动订阅mqtt', 'error')
           }
         })
+      },
+      flagFn(v) {
+        this.setFlag(v)
+        this.$emit('createShape', v, this.graphColor)
+      },
+      removeFn() {
+        if (this.graphNow) {
+          this.graphNow.remove()
+          stage.find('Transformer').destroy()
+          layer.draw()
+          this.setGraphNow(null)
+        } else {
+          this.$message.error('请选择图形')
+        }
       },
       destroyed() {
         console.log('取消订阅mqtt')

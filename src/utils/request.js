@@ -84,7 +84,6 @@ let localHost = [
 // }
 
 serviceBaseUrl = globalUrl(hostname, localHost) + '/iotapi/'
-
 const instance = axios.create({
   baseURL: serviceBaseUrl,
   timeout: requestTimeout,
@@ -98,9 +97,19 @@ const instance = axios.create({
  */
 instance.interceptors.request.use(
   (config) => {
+    const { NODE_ENV = '' } = process.env
     const token = store.getters['user/token']
     const { path = '/' } = router.history.current
-    let { headers = {} } = config
+    let { headers = {}, baseURL, url } = config
+    if (headers['proxy'] == true) {
+      if (NODE_ENV == 'production') {
+        config.baseURL = headers.url
+        console.log(config, 'proxy')
+      } else {
+        config.baseURL = 'group1/'
+        console.log(config, 'proxy')
+      }
+    }
     // 不规范写法 可根据setting.config.js tokenName配置随意自定义headers
     // if (token) config.headers[tokenName] = token
     if (headers['_company']) {

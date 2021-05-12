@@ -73,21 +73,6 @@
                 </p>
                 <span>{{ devicetotal }}</span>
               </li>
-              <!--        <li>-->
-              <!--          <p>-->
-              <!--            <span class="svg-container">-->
-              <!--              <vab-icon icon="numbers-fill" />-->
-              <!--            </span>-->
-              <!--            {{ $translateTitle('equipment.activationdevice') }}-->
-              <!--            <el-tooltip-->
-              <!--              :content="$translateTitle('equipment.totalactive')"-->
-              <!--              placement="top"-->
-              <!--            >-->
-              <!--              <i class="el-icon-question" />-->
-              <!--            </el-tooltip>-->
-              <!--          </p>-->
-              <!--          <span>{{ activeall }}</span>-->
-              <!--        </li>-->
               <li>
                 <p>
                   <span class="svg-container">
@@ -209,7 +194,6 @@
               v-show="isALL"
               ref="filterTable"
               v-loading="listLoading"
-              height="550"
               :data="tableData"
               :row-style="rowClass"
               style="width: 100%; margin-top: 20px; text-align: center"
@@ -438,7 +422,6 @@
               v-show="!isALL"
               ref="filterTable"
               v-loading="listLoading"
-              height="550"
               :data="tableData"
               :row-style="rowClass"
               style="width: 100%"
@@ -577,26 +560,33 @@
                   v-if="item.type == 'Boolean'"
                   :key="index"
                   align="center"
-                  :label="item.title.zh"
-                  :prop="item.name"
+                  :label="item.name"
+                  :prop="item.identifier"
                 >
                   <template slot-scope="scope">
-                    <span v-if="scope.row[item.name]">是</span>
+                    <span v-if="scope.row[item.default]">是</span>
                     <span v-else>否</span>
                   </template>
                 </el-table-column>
                 <el-table-column
+                  v-else-if="item.type == 'Enum'"
+                  :key="index"
+                  align="center"
+                  :label="item.name"
+                  :prop="item.identifier"
+                />
+                <el-table-column
                   v-else
                   :key="index"
                   align="center"
-                  :label="item.title.zh"
-                  :prop="item.name"
+                  :label="item.name"
+                  :prop="item.identifier"
                 />
               </template>
               <el-table-column
                 align="center"
                 :label="$translateTitle('developer.createdAt')"
-                width="200"
+                width="180"
               >
                 <template slot-scope="scope">
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
@@ -816,13 +806,14 @@
                     :span="12"
                   >
                     <el-form-item
-                      :label="item.title.zh"
-                      :prop="item.name"
+                      :label="item.name"
+                      :prop="item.identifier"
                       :required="item.required"
+                      :readonly="item.readonly"
                     >
                       <el-select
                         v-if="item.type == 'Boolean'"
-                        v-model="deviceform[item.name]"
+                        v-model="deviceform[item.identifier]"
                         style="width: 100%"
                         class="notauto"
                         readonly
@@ -830,7 +821,20 @@
                         <el-option :value="true" label="是" />
                         <el-option :value="false" label="否" />
                       </el-select>
-                      <el-input v-else v-model="deviceform[item.name]" />
+                      <el-select
+                        v-else-if="item.type == 'Enum'"
+                        v-model="deviceform[item.identifier]"
+                        style="width: 100%"
+                        class="notauto"
+                      >
+                        <el-option
+                          v-for="(spec, index1) in item.specs"
+                          :key="index1"
+                          :label="spec.attributevalue"
+                          :value="spec.attributevalue"
+                        />
+                      </el-select>
+                      <el-input v-else v-model="deviceform[item.identifier]" />
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">
@@ -1128,7 +1132,7 @@
           getProduct(objectId).then((res) => {
             const { config = { basedate: { params: [] } } } = res
             this.dialogtempconfig = []
-            if (config.basedate.params.length > 0) {
+            if (config.basedate.params && config.basedate.params.length > 0) {
               this.dialogtempconfig = config.basedate.params
               console.log('this.dialogtempconfig', this.dialogtempconfig)
             }
@@ -1259,7 +1263,7 @@
         // 点击的公司名
         const { name, objectId } = data
         this.curDepartmentId = objectId
-        this.Company = name
+        // this.Company = name
         this.getDevices(0)
       },
       async queryYysId() {
@@ -1822,6 +1826,9 @@
           auth: basedata.auth,
           yysId: basedata.yysId,
         }
+        for (var key in basedata) {
+          this.deviceform[key] = basedata[key]
+        }
         this.bmapform = {
           address: detail.address,
         }
@@ -1893,27 +1900,36 @@
           const { config = { basedate: {} } } = res
           if (config.basedate.params.length > 0) {
             this.arrlist = config.basedate.params
-            console.log(this.arrlist)
             this.arrlist.map((item) => {
-              if (item.default) {
-                this.deviceform[item.name] = item.default
+              if (item.type == 'Boolean') {
+                this.$set(this.deviceform, item.identifier, item.default)
+              } else if (item.type == 'Enum') {
+                this.$set(
+                  this.deviceform,
+                  item.identifier,
+                  item.specs[0].attributevalue
+                )
               } else {
-                this.deviceform[item.name] = ''
+                if (item.default) {
+                  this.$set(this.deviceform, item.identifier, item.default)
+                } else {
+                  this.$set(this.deviceform, item.identifier, '')
+                }
               }
               if (item.required) {
                 if (item.type == 'Boolean') {
-                  this.rules[item.name] = [
+                  this.rules[item.identifier] = [
                     {
                       required: true,
-                      message: '请选择' + item.title.zh,
+                      message: '请选择' + item.name,
                       trigger: 'change',
                     },
                   ]
                 } else {
-                  this.rules[item.name] = [
+                  this.rules[item.identifier] = [
                     {
                       required: true,
-                      message: '请输入' + item.title.zh,
+                      message: '请输入' + item.name,
                       trigger: 'blur',
                     },
                   ]
@@ -1956,6 +1972,7 @@
             this.$delete(obj, 'nodeType')
             this.$delete(obj, 'productName')
             this.$delete(obj, 'status')
+            this.$delete(obj, 'productid')
             getProduct(this.deviceform.productName).then((response) => {
               if (response) {
                 if (this.deviceid != '') {

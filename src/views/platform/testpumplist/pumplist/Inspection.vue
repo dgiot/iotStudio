@@ -1,30 +1,33 @@
 <template>
-  <el-container>
-    <!-- dialog -->
+  <!-- dialog -->
+  <div>
     <div class="dialog-mian">
       <el-dialog :visible.sync="add_taskdialog" width="40%">
         <el-form
-          ref="formRef"
+          ref="task_form"
           :model="task_form"
           :rules="formRule"
           label-width="120px"
         >
           <el-divider content-position="left" style="color: blue">
-            检测任务基本信息
+            基本信息
           </el-divider>
           <el-row>
             <el-col :span="12">
               <div class="grid-content bg-purple">
-                <el-form-item label="任务名称：" prop="task_name">
+                <el-form-item label="任务名称：" prop="name">
                   <el-input
                     v-model="task_form.name"
                     placeholder="请输入任务名称"
                   />
                 </el-form-item>
-                <el-form-item label="质检项目" prop="reportId">
+                <el-form-item
+                  label="报告模板"
+                  prop="basedata.info.testContent.name"
+                >
                   <el-select
                     v-model="task_form.basedata.info.testContent.name"
-                    placeholder="质检项目"
+                    placeholder="报告模板"
                     style="width: 100%"
                     @change="changeReport"
                   >
@@ -41,7 +44,7 @@
             <!--右边的地方-->
             <el-col :span="12">
               <div class="grid-content bg-purple-light">
-                <el-form-item label="开始时间：" prop="starttime">
+                <el-form-item label="开始时间：" prop="basedata.info.starttime">
                   <el-date-picker
                     v-model="task_form.basedata.info.starttime"
                     type="datetime"
@@ -49,7 +52,7 @@
                   />
                 </el-form-item>
 
-                <el-form-item label="结束时间：" prop="endtime">
+                <el-form-item label="结束时间：" prop="basedata.info.endtime">
                   <el-date-picker
                     v-model="task_form.basedata.info.endtime"
                     type="datetime"
@@ -59,9 +62,6 @@
               </div>
             </el-col>
           </el-row>
-          <el-divider content-position="left" style="color: blue">
-            检测资源信息
-          </el-divider>
           <el-row>
             <el-col :span="12">
               <div class="grid-content bg-purple" />
@@ -88,7 +88,7 @@
             </el-col>
             <el-col :span="12">
               <div class="grid-content bg-purple-light">
-                <el-form-item label="检验编号" prop="bedname">
+                <el-form-item label="任务模板" prop="bedname">
                   <el-input v-model="task_form.basedata.info.inspnumber" />
                 </el-form-item>
               </div>
@@ -98,233 +98,35 @@
 
         <div slot="footer" class="dialog-footer">
           <el-button @click="add_taskdialog = false">取 消</el-button>
-          <el-button type="primary" @click="submiTask('formRef')">
+          <el-button type="primary" @click="submiTask('task_form')">
             确 定
           </el-button>
         </div>
       </el-dialog>
     </div>
-    <el-aside v-show="treeState" width="300px">
-      <RoleTree ref="roleTreeRef" />
-    </el-aside>
-    <el-main>
-      <div class="inspection">
-        <el-tabs type="border-card">
-          <el-tab-pane :label="'审核中(' + total + ')'">
-            <el-row>
-              <el-col :span="12">&nbsp;</el-col>
-              <el-col :span="12" style="text-align: right">
-                <p>
-                  <el-button
-                    type="primary"
-                    size="medium"
-                    icon="el-icon-plus"
-                    @click="add_taskdialog = true"
-                  >
-                    新增任务
-                  </el-button>
-                </p>
-              </el-col>
-            </el-row>
-
-            <div class="tasklist">
-              <el-table :data="taskList.undoneData" stripe border>
-                <el-table-column type="index" label="id" />
-                <!-- <el-table-column label="检验编号" align="center" prop="basedata.inspection_number" /> -->
-
-                <el-table-column
-                  label="检验/试验编号"
-                  align="center"
-                  prop="basedata.inspection_number"
+    <div class="inspection">
+      <el-tabs type="border-card">
+        <el-tab-pane :label="'审核中(' + total + ')'">
+          <el-row>
+            <el-col :span="12">&nbsp;</el-col>
+            <el-col :span="12" style="text-align: right">
+              <p>
+                <el-button
+                  type="primary"
+                  size="medium"
+                  icon="el-icon-plus"
+                  @click="add_taskdialog = true"
                 >
-                  <template slot-scope="scope">
-                    <span>
-                      {{ $objGet(scope.row, 'basedata.BasicInfo.bianhao') }}
-                    </span>
-                  </template>
-                </el-table-column>
+                  新增任务
+                </el-button>
+              </p>
+            </el-col>
+          </el-row>
 
-                <el-table-column prop="name" label="任务名称" align="center" />
-
-                <el-table-column
-                  prop="basedata.insectionName"
-                  label="质检项目"
-                  align="center"
-                />
-
-                <el-table-column
-                  prop="basedata.bedname"
-                  label="测试台体"
-                  align="center"
-                  width="150"
-                />
-
-                <el-table-column
-                  label="开始时间"
-                  prop="$timestampToTime(scope.row.basedata.starttime)}"
-                  align="center"
-                >
-                  <template slot-scope="scope">
-                    <span>
-                      {{ $timestampToTime(scope.row.basedata.starttime) }}
-                    </span>
-                  </template>
-                </el-table-column>
-
-                <el-table-column
-                  label="结束时间"
-                  prop="$timestampToTime(scope.row.basedata.endtime)}"
-                  align="center"
-                >
-                  <template slot-scope="scope">
-                    <span>
-                      {{ $timestampToTime(scope.row.basedata.endtime) }}
-                    </span>
-                  </template>
-                </el-table-column>
-
-                <el-table-column label="创建日期" align="center">
-                  <template slot-scope="scope">
-                    <span>
-                      {{ $utc2beijing(scope.row.createdAt).substring(0, 16) }}
-                    </span>
-                  </template>
-                </el-table-column>
-
-                <el-table-column label="状态" align="center" width="160">
-                  <template slot-scope="scope">
-                    <!-- verifyStatus 0 未审核, 1 审核通过 2 审核不通过 -->
-
-                    <span v-if="scope.row.basedata.verifyStatus > 0">
-                      {{
-                        ['', '审核通过', '审核不通过'][
-                          scope.row.basedata.verifyStatus
-                        ]
-                      }}
-                    </span>
-
-                    <span v-else>
-                      {{
-                        ['未开始', '正在测试', '测试完成'][
-                          scope.row.basedata.testStatus
-                        ] || '未测试'
-                      }}
-                    </span>
-                  </template>
-                </el-table-column>
-
-                <el-table-column align="center" label="报告操作" width="240">
-                  <template slot-scope="scope">
-                    <!-- <span v-if="userRoles.org_type != '中心厂家检测员' "> -->
-                    <el-button
-                      v-show="scope.row.basedata.testStatus == 1"
-                      type="success"
-                      size="mini"
-                      @click="clientView(scope.row, scope.$index)"
-                    >
-                      取证
-                    </el-button>
-
-                    <el-button
-                      v-show="scope.row.basedata.testStatus == 2"
-                      :disabled="!scope.row.basedata.hasReport"
-                      type="success"
-                      style="margin-left: 20px"
-                      size="mini"
-                      @click="stepfun(scope.row)"
-                    >
-                      导出
-                    </el-button>
-
-                    <el-button
-                      v-show="scope.row.basedata.testStatus == 0"
-                      size="mini"
-                      @click="showTaskStartBox(scope.row)"
-                    >
-                      开始
-                    </el-button>
-
-                    <!-- testStatus = 2 代表完成 -->
-
-                    <el-button
-                      v-show="
-                        scope.row.basedata.testStatus > 0 &&
-                        scope.row.basedata.testStatus < 2
-                      "
-                      type="primary"
-                      size="mini"
-                      @click="beforeFinish(scope.row)"
-                    >
-                      完成
-                    </el-button>
-
-                    <el-tooltip
-                      class="item"
-                      effect="dark"
-                      content="生成报告以后才能导出"
-                      placement="top-start"
-                    >
-                      <el-button
-                        v-show="scope.row.basedata.testStatus == 2"
-                        size="mini"
-                        icon="el-icon-document"
-                        @click="beforGetTestReport(scope.row)"
-                      >
-                        报告
-                      </el-button>
-                    </el-tooltip>
-
-                    <!-- </span> -->
-                  </template>
-                </el-table-column>
-
-                <el-table-column width="320" align="center">
-                  <template slot-scope="scope">
-                    <el-dropdown>
-                      <el-button size="small">
-                        更多操作
-                        <i class="el-icon-arrow-down el-icon--right" />
-                      </el-button>
-                      <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item
-                          :disabled="scope.row.basedata.testStatus == 2"
-                          @click.native="editorClient(scope.row)"
-                        >
-                          编 辑
-                        </el-dropdown-item>
-                        <el-dropdown-item
-                          @click.native="deleteClient(scope.row.objectId)"
-                        >
-                          删 除
-                        </el-dropdown-item>
-                        <el-dropdown-item
-                          @click.native="examineVerify(scope.row)"
-                        >
-                          详 情
-                        </el-dropdown-item>
-                      </el-dropdown-menu>
-                    </el-dropdown>
-                  </template>
-                </el-table-column>
-              </el-table>
-
-              <div style="margin-top: 20px">
-                <el-pagination
-                  :page-sizes="pageSizes"
-                  :page-size="pagesize"
-                  :total="totalCount"
-                  layout="total, sizes, prev, pager, next, jumper"
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                />
-              </div>
-            </div>
-          </el-tab-pane>
-
-          <el-tab-pane :label="'审核完成(' + total1 + ')'">
-            <el-table :data="taskList.doneData" stripe border>
+          <div class="tasklist">
+            <el-table :data="taskList.undoneData" stripe border>
               <el-table-column type="index" label="id" />
-              <!-- <el-table-column label="检验编号" align="center" prop="basedata.inspection_number" /> -->
+              <!-- <el-table-column label="任务模板" align="center" prop="basedata.inspection_number" /> -->
 
               <el-table-column
                 label="检验/试验编号"
@@ -342,7 +144,7 @@
 
               <el-table-column
                 prop="basedata.insectionName"
-                label="质检项目"
+                label="报告模板"
                 align="center"
               />
 
@@ -399,7 +201,7 @@
 
                   <span v-else>
                     {{
-                      ['未测试', '正在测试', '测试完成'][
+                      ['未开始', '正在测试', '测试完成'][
                         scope.row.basedata.testStatus
                       ] || '未测试'
                     }}
@@ -407,22 +209,21 @@
                 </template>
               </el-table-column>
 
-              <el-table-column
-                v-if="userRoles.org_type != '中心厂家检测员'"
-                label="数据操作"
-                width="320"
-                align="center"
-              >
+              <el-table-column align="center" label="报告操作" width="240">
                 <template slot-scope="scope">
+                  <!-- <span v-if="userRoles.org_type != '中心厂家检测员' "> -->
                   <el-button
-                    type="danger"
+                    v-show="scope.row.basedata.testStatus == 1"
+                    type="success"
                     size="mini"
-                    @click="deleteClient(scope.row.objectId)"
+                    @click="clientView(scope.row, scope.$index)"
                   >
-                    删 除
+                    取证
                   </el-button>
 
                   <el-button
+                    v-show="scope.row.basedata.testStatus == 2"
+                    :disabled="!scope.row.basedata.hasReport"
                     type="success"
                     style="margin-left: 20px"
                     size="mini"
@@ -430,6 +231,75 @@
                   >
                     导出
                   </el-button>
+
+                  <el-button
+                    v-show="scope.row.basedata.testStatus == 0"
+                    size="mini"
+                    @click="showTaskStartBox(scope.row)"
+                  >
+                    开始
+                  </el-button>
+
+                  <!-- testStatus = 2 代表完成 -->
+
+                  <el-button
+                    v-show="
+                      scope.row.basedata.testStatus > 0 &&
+                      scope.row.basedata.testStatus < 2
+                    "
+                    type="primary"
+                    size="mini"
+                    @click="beforeFinish(scope.row)"
+                  >
+                    完成
+                  </el-button>
+
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="生成报告以后才能导出"
+                    placement="top-start"
+                  >
+                    <el-button
+                      v-show="scope.row.basedata.testStatus == 2"
+                      size="mini"
+                      icon="el-icon-document"
+                      @click="beforGetTestReport(scope.row)"
+                    >
+                      报告
+                    </el-button>
+                  </el-tooltip>
+
+                  <!-- </span> -->
+                </template>
+              </el-table-column>
+
+              <el-table-column width="320" align="center">
+                <template slot-scope="scope">
+                  <el-dropdown>
+                    <el-button size="small">
+                      更多操作
+                      <i class="el-icon-arrow-down el-icon--right" />
+                    </el-button>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item
+                        :disabled="scope.row.basedata.testStatus == 2"
+                        @click.native="editorClient(scope.row)"
+                      >
+                        编 辑
+                      </el-dropdown-item>
+                      <el-dropdown-item
+                        @click.native="deleteClient(scope.row.objectId)"
+                      >
+                        删 除
+                      </el-dropdown-item>
+                      <el-dropdown-item
+                        @click.native="examineVerify(scope.row)"
+                      >
+                        详 情
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                 </template>
               </el-table-column>
             </el-table>
@@ -438,23 +308,147 @@
               <el-pagination
                 :page-sizes="pageSizes"
                 :page-size="pagesize"
-                :total="total1"
+                :total="totalCount"
                 layout="total, sizes, prev, pager, next, jumper"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
               />
             </div>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
-    </el-main>
-  </el-container>
+          </div>
+        </el-tab-pane>
+
+        <el-tab-pane :label="'审核完成(' + total1 + ')'">
+          <el-table :data="taskList.doneData" stripe border>
+            <el-table-column type="index" label="id" />
+            <!-- <el-table-column label="任务模板" align="center" prop="basedata.inspection_number" /> -->
+
+            <el-table-column
+              label="检验/试验编号"
+              align="center"
+              prop="basedata.inspection_number"
+            >
+              <template slot-scope="scope">
+                <span>
+                  {{ $objGet(scope.row, 'basedata.BasicInfo.bianhao') }}
+                </span>
+              </template>
+            </el-table-column>
+
+            <el-table-column prop="name" label="任务名称" align="center" />
+
+            <el-table-column
+              prop="basedata.insectionName"
+              label="报告模板"
+              align="center"
+            />
+
+            <el-table-column
+              prop="basedata.bedname"
+              label="测试台体"
+              align="center"
+              width="150"
+            />
+
+            <el-table-column
+              label="开始时间"
+              prop="$timestampToTime(scope.row.basedata.starttime)}"
+              align="center"
+            >
+              <template slot-scope="scope">
+                <span>
+                  {{ $timestampToTime(scope.row.basedata.starttime) }}
+                </span>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="结束时间"
+              prop="$timestampToTime(scope.row.basedata.endtime)}"
+              align="center"
+            >
+              <template slot-scope="scope">
+                <span>
+                  {{ $timestampToTime(scope.row.basedata.endtime) }}
+                </span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="创建日期" align="center">
+              <template slot-scope="scope">
+                <span>
+                  {{ $utc2beijing(scope.row.createdAt).substring(0, 16) }}
+                </span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="状态" align="center" width="160">
+              <template slot-scope="scope">
+                <!-- verifyStatus 0 未审核, 1 审核通过 2 审核不通过 -->
+
+                <span v-if="scope.row.basedata.verifyStatus > 0">
+                  {{
+                    ['', '审核通过', '审核不通过'][
+                      scope.row.basedata.verifyStatus
+                    ]
+                  }}
+                </span>
+
+                <span v-else>
+                  {{
+                    ['未测试', '正在测试', '测试完成'][
+                      scope.row.basedata.testStatus
+                    ] || '未测试'
+                  }}
+                </span>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              v-if="userRoles.org_type != '中心厂家检测员'"
+              label="数据操作"
+              width="320"
+              align="center"
+            >
+              <template slot-scope="scope">
+                <el-button
+                  type="danger"
+                  size="mini"
+                  @click="deleteClient(scope.row.objectId)"
+                >
+                  删 除
+                </el-button>
+
+                <el-button
+                  type="success"
+                  style="margin-left: 20px"
+                  size="mini"
+                  @click="stepfun(scope.row)"
+                >
+                  导出
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <div style="margin-top: 20px">
+            <el-pagination
+              :page-sizes="pageSizes"
+              :page-size="pagesize"
+              :total="total1"
+              layout="total, sizes, prev, pager, next, jumper"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+  </div>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
 
-  import RoleTree from '@/views/platform/testpumplist/pumplist/RoleTree'
   import {
     queryDevice,
     getDevice,
@@ -464,17 +458,16 @@
   } from '@/api/Device'
   import { queryProduct } from '@/api/Product'
   import { eventBus } from '@/api/eventBus'
+  import { aclObj } from '@/utils/Acl'
   export default {
     name: 'Insection',
-    components: {
-      RoleTree,
-    },
+    components: {},
     data() {
       return {
         productId: '',
         testbedlist: [],
         groupList: ['南方泵业', '利欧泵业'],
-        reportList: [], // 质检项目
+        reportList: [], // 报告模板
         task_form: {
           basedata: {
             info: {
@@ -485,8 +478,8 @@
                 name: '',
                 config: '',
                 objectId: '',
-              }, // 质检项目信息
-              inspnumber: '', // 检验编号
+              }, // 报告模板信息
+              inspnumber: '', // 任务模板
               devInfo: {
                 name: '',
                 config: '',
@@ -510,16 +503,19 @@
           isEnable: false,
         },
         formRule: {
-          task_name: [
+          name: [
             { required: true, message: '请输入任务名称', trigger: 'blur' },
           ],
           bedIndex: [
             { required: true, message: '请选择测试台体', trigger: 'change' },
           ],
-          endtime: [
-            { required: false, message: '请选择结束时间', trigger: 'change' },
+          'basedata.info.testContent.name': [
+            { required: true, message: '请选择报告模板', trigger: 'change' },
           ],
-          starttime: [
+          'basedata.info.endtime': [
+            { required: true, message: '请选择结束时间', trigger: 'change' },
+          ],
+          'basedata.info.starttime': [
             { required: true, message: '请选择开始时间', trigger: 'change' },
           ],
         },
@@ -603,15 +599,10 @@
     },
     methods: {
       // 提交任务报告
-      async submiTask(form) {
-        console.log(form)
+      submiTask(form) {
+        console.log(form, aclObj)
         console.log(this.task_form)
-        const aclKey1 = this.$Cookies.get('appids')
-        const aclObj = {}
-        aclObj[aclKey1] = {
-          read: true,
-          write: true,
-        }
+
         // const {} = this.task_form
         const paramsObj = {
           ACL: aclObj,
@@ -628,26 +619,30 @@
             objectId: this.productId,
           },
         }
-        const res = await postDevice(paramsObj)
-        if (res) {
-          this.$message({
-            type: 'success',
-            mesaage: '新建设备成功',
-          })
-          this.getTasktable()
-          this.add_taskdialog = false
-        } else {
-          this.$message({
-            type: 'success',
-            mesaage: '新建设备失败,请检查参数',
-          })
-        }
+        this.$refs[form].validate(async (valid) => {
+          if (valid) {
+            const res = await postDevice(paramsObj)
+            if (res) {
+              this.$message({
+                type: 'success',
+                mesaage: '新建设备成功',
+              })
+              this.getTasktable()
+              this.add_taskdialog = false
+            } else {
+              this.$message({
+                type: 'success',
+                mesaage: '新建设备失败,请检查参数',
+              })
+            }
+          }
+        })
       },
       async getStandard() {
         const params = {
           where: {
-            category: 'Evidence',
-            nodeType: 1,
+            // category: 'Evidence',
+            // nodeType: 1,
           },
           order: '-updatedAt', // -updatedAt  updatedAt
         }
@@ -1169,18 +1164,20 @@
           // key:'',
           where: { 'basedata.info.identification': 'pump' },
         }
-        const res = await queryDevice(params)
+        const { results } = await queryDevice(params)
         loading.close()
-        if (res.length) {
+        if (results.length) {
           const undoneData = []
           const doneData = []
-          res.forEach((item) => {
+          results.forEach((item) => {
             if (item.basedata.info.verifyStatus) {
               doneData.push(item)
             } else {
               undoneData.push(item)
             }
           })
+          console.log(doneData)
+          console.log(doneData)
           this.taskList.undoneData = undoneData
           this.taskList.doneData = doneData
         } else {
@@ -1194,6 +1191,7 @@
           ? this.taskList.undoneData.length
           : 0
         this.total1 = this.taskList.doneData ? this.taskList.doneData.length : 0
+        console.log(this.taskList)
       },
       handleSizeChange(val) {
         this.PageSize = val
@@ -1337,7 +1335,6 @@
   .inspection {
     box-sizing: border-box;
     min-height: 875px;
-    padding: 20px;
     background-size: cover;
   }
 

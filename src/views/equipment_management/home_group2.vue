@@ -397,97 +397,7 @@
           </el-button>
         </div>
       </el-dialog>
-
-      <el-dialog
-        :visible.sync="edit_dict_temp_dialog"
-        :title="title_dict_edit_dialog"
-        :close-on-click-modal="false"
-        size="mini"
-        :before-close="closeDict"
-        @open="opendialog('tempparams')"
-      >
-        <el-form
-          ref="tempparams"
-          :model="tempparams"
-          size="mini"
-          status-icon
-          label-width="70px"
-          class="demo-ruleForm"
-        >
-          <el-row :gutter="24">
-            <el-col :span="5">
-              <el-form-item label="名称" label-width="50px" prop="name">
-                <el-input v-model="tempparams.name" autocomplete="off" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="5">
-              <el-form-item label="类型" label-width="50px" prop="type">
-                <el-select
-                  v-model="tempparams.type"
-                  placeholder="请选择"
-                  @change="tempTypeChange"
-                >
-                  <el-option
-                    v-for="item in dictOptions"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="5">
-              <el-form-item label="序号" label-width="50px" prop="order">
-                <el-input v-model.number="tempparams.order" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="必填" label-width="50px">
-                <el-radio v-model="tempparams.required" :label="true" border>
-                  是
-                </el-radio>
-                <el-radio v-model="tempparams.required" :label="false" border>
-                  否
-                </el-radio>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item label="中文标题" prop="title">
-            <el-input v-model="tempparams.title.zh" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="英文标题" prop="title">
-            <el-input v-model="tempparams.title.en" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="默认值" prop="default">
-            <el-select
-              v-if="tempparams.type == 'Boolean'"
-              v-model="tempparams.default"
-              class="notauto"
-              readonly
-            >
-              <el-option :value="true" label="是" />
-              <el-option :value="false" label="否" />
-            </el-select>
-            <el-input
-              v-else-if="tempparams.type == 'Number'"
-              v-model.number="tempparams.default"
-            />
-            <el-input v-else v-model="tempparams.default" />
-          </el-form-item>
-          <el-form-item label="中文描述" prop="title">
-            <el-input v-model="tempparams.description.zh" autocomplete="off" />
-          </el-form-item>
-          <el-form-item label="英文描述" prop="title">
-            <el-input v-model="tempparams.description.en" autocomplete="off" />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitFormTempDict()">
-              提交
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-
+      <!--新增字典-->
       <el-dialog
         v-if="dictVisible"
         :close-on-click-modal="false"
@@ -554,60 +464,24 @@
                   height="300"
                   style="width: 100%; text-align: center"
                 >
-                  <el-table-column prop="name" label="名称" />
-                  <el-table-column prop="type" label="类型" />
                   <el-table-column prop="order" label="序号" />
-                  <el-table-column prop="default" label="默认值">
-                    <template slot-scope="scope">
-                      <span
-                        v-if="
-                          scope.row.default == true &&
-                          scope.row.type == 'Boolean'
-                        "
-                      >
-                        是
-                      </span>
-                      <span
-                        v-else-if="
-                          scope.row.default == false &&
-                          scope.row.type == 'Boolean'
-                        "
-                      >
-                        否
-                      </span>
-                      <span v-else-if="scope.row.type == 'Number'">
-                        {{ scope.row.default }}
-                      </span>
-                      <span v-else>{{ scope.row.default }}</span>
-                    </template>
-                  </el-table-column>
+                  <el-table-column prop="identifier" label="标识符" />
+                  <el-table-column prop="name" label="功能名称" />
+                  <el-table-column prop="type" label="数据类型" />
+                  <el-table-column prop="address" label="数据地址" />
+                  <el-table-column prop="bytes" label="数据长度" />
                   <el-table-column prop="required" label="是否必填">
                     <template slot-scope="scope">
                       <span v-if="scope.row.required">是</span>
                       <span v-else>否</span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="description" label="中文标题">
+                  <el-table-column prop="readonly" label="是否只读">
                     <template slot-scope="scope">
-                      {{ scope.row.title.zh }}
+                      <span v-if="scope.row.readonly">是</span>
+                      <span v-else>否</span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="description" label="英文标题">
-                    <template slot-scope="scope">
-                      {{ scope.row.title.en }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="description" label="中文描述">
-                    <template slot-scope="scope">
-                      {{ scope.row.description.zh }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="description" label="英文描述">
-                    <template slot-scope="scope">
-                      {{ scope.row.description.en }}
-                    </template>
-                  </el-table-column>
-
                   <el-table-column label="操作" width="160" align="center">
                     <template slot-scope="scope">
                       <el-button
@@ -660,6 +534,172 @@
               提交
             </el-button>
             <el-button @click="dictVisible = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+      <!--新增字典数据-->
+      <el-dialog
+        :visible.sync="edit_dict_temp_dialog"
+        :title="title_dict_edit_dialog"
+        :close-on-click-modal="false"
+        size="mini"
+        :before-close="closeDict"
+        @open="opendialog('tempparams')"
+      >
+        <el-form
+          ref="tempparams"
+          :model="tempparams"
+          size="mini"
+          label-position="left"
+          label-width="80px"
+        >
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item
+                :label="$translateTitle('product.functionname')"
+                prop="name"
+              >
+                <el-input v-model="tempparams.name" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item
+                :label="$translateTitle('product.identifier')"
+                prop="identifier"
+              >
+                <el-input v-model="tempparams.identifier" />
+              </el-form-item>
+              <!--type-->
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="数据类型" prop="type">
+                <el-select
+                  v-model="tempparams.type"
+                  placeholder="请选择"
+                  @change="tempTypeChange"
+                >
+                  <el-option
+                    v-for="item in dictOptions"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="序号" prop="order">
+                <el-input v-model.number="tempparams.order" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="数据地址" prop="dis">
+                <el-input v-model="tempparams.address" placeholder="数据地址" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="数据长度">
+                <el-input
+                  v-model.number="tempparams.bytes"
+                  placeholder="数据长度(字节)"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="必填">
+                <el-radio v-model="tempparams.required" :label="true" border>
+                  是
+                </el-radio>
+                <el-radio v-model="tempparams.required" :label="false" border>
+                  否
+                </el-radio>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="只读">
+                <el-radio v-model="tempparams.readonly" :label="true" border>
+                  是
+                </el-radio>
+                <el-radio v-model="tempparams.readonly" :label="false" border>
+                  否
+                </el-radio>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-form-item
+            v-if="tempparams.type != 'Enum'"
+            label="默认值"
+            prop="default"
+          >
+            <el-select
+              v-if="tempparams.type == 'Boolean'"
+              v-model="tempparams.default"
+              class="notauto"
+              readonly
+            >
+              <el-option :value="true" label="是" />
+              <el-option :value="false" label="否" />
+            </el-select>
+            <el-input
+              v-else-if="tempparams.type == 'Number'"
+              v-model.number="tempparams.default"
+            />
+            <el-input v-else v-model="tempparams.default" />
+          </el-form-item>
+          <el-form-item v-if="tempparams.type == 'Enum'" label="Enum数据">
+            <el-tabs v-model="elactiveName1">
+              <el-tab-pane label="Table" name="Table1">
+                <!--枚举型添加格式-->
+                <el-button
+                  type="primary"
+                  class="mt-3"
+                  size="mini"
+                  icon="el-icon-plus"
+                  @click.native="addDomain"
+                >
+                  新 增
+                </el-button>
+                <el-table
+                  :data="tempparams.specs"
+                  style="width: 100%; text-align: center"
+                >
+                  <el-table-column label="属性" align="center">
+                    <template slot-scope="scope">
+                      <el-input v-model="scope.row.attribute" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="属性值" align="center">
+                    <template slot-scope="scope">
+                      <el-input v-model="scope.row.attributevalue" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="操作" align="center">
+                    <template slot-scope="scope">
+                      <el-button
+                        size="mini"
+                        type="danger"
+                        plain
+                        title="删除"
+                        @click.native="removeDomain(scope.row)"
+                      >
+                        删除
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-tab-pane>
+            </el-tabs>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitFormTempDict()">
+              提交
+            </el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -729,32 +769,35 @@
   import { getHashClass } from '@/api/Hash'
   import vueJsonEditor from 'vue-json-editor'
   import Category from '@/api/Mock/Category'
-
   export default {
     components: { vueJsonEditor },
     data() {
       return {
         productInfo: {},
         category: Category,
-        dictOptions: ['String', 'Boolean', 'Number'],
+        dictOptions: ['String', 'Boolean', 'Number', 'Enum'],
         edit_dict_temp_dialog: false,
         title_dict_edit_dialog: '新增字典数据',
         tempparams: {
           name: '',
+          identifier: '',
           type: '',
           order: 0,
-          title: {
-            en: '',
-            zh: '',
-          },
-          default: 5,
+          address: '',
+          bytes: '',
+          default: 0,
           required: false,
-          description: {
-            en: '',
-            zh: '',
-          },
+          readonly: true,
+          specs: [
+            {
+              attribute: '',
+              attributevalue: '',
+            },
+          ],
+          struct: {},
         },
         elactiveName: 'Table',
+        elactiveName1: 'Table1',
         editDictTempId: '',
         title_temp_dialog: '',
         dictTempForm: '',
@@ -922,6 +965,28 @@
       this.projectName = ''
     },
     methods: {
+      submitEnum() {
+        if (this.tempparams.type == 'Enum') {
+          this.tempparams.specs.map((items) => {
+            var newkey = items['attribute']
+            this.tempparams.struct[newkey] = items['attributevalue']
+          })
+        }
+      },
+      // 添加枚举型
+      addDomain() {
+        this.tempparams.specs.push({
+          attribute: '',
+          attributevalue: '',
+        })
+      },
+      // 删除枚举型
+      removeDomain(item) {
+        var index = this.tempparams.specs.indexOf(item)
+        if (index !== -1) {
+          this.tempparams.specs.splice(index, 1)
+        }
+      },
       // 组态
       konvaDevice(row) {
         this.$router.push({
@@ -985,6 +1050,7 @@
         }
       },
       submitFormTempDict() {
+        this.submitEnum()
         this.edit_dict_temp_dialog = false
         if (this.editIndexId != undefined) {
           this.dictTempForm.params[this.editIndexId] = this.tempparams
@@ -1014,18 +1080,21 @@
         this.edit_dict_temp_dialog = true
         this.tempparams = {
           name: '',
+          identifier: '',
           type: '',
           order: 0,
-          title: {
-            en: '',
-            zh: '',
-          },
+          address: '',
+          bytes: '',
           default: 0,
           required: false,
-          description: {
-            en: '',
-            zh: '',
-          },
+          readonly: true,
+          specs: [
+            {
+              attribute: '',
+              attributevalue: '',
+            },
+          ],
+          struct: {},
         }
       },
       onError() {
@@ -1290,7 +1359,9 @@
           order: '-updatedAt',
           limit: this.length,
           skip: this.start,
-          where: {},
+          where: {
+            category: 'IotHub',
+          },
         }
         if (this.formInline.productname != '') {
           parsms.where.name = this.formInline.productname
@@ -1369,7 +1440,8 @@
           params: [],
         }
         this.title_temp_dialog = '创建字典模板'
-        if (config.basedate.name) {
+        console.log(config)
+        if (config.basedate && config.basedate.name) {
           this.title_temp_dialog = '修改字典模板'
           this.dictTempForm = config.basedate
         }

@@ -148,14 +148,15 @@
                 >
                   {{ $translateTitle('home.preview') }}
                 </el-button>
-                <!-- <el-button
+                <el-button
+                  v-if="NODE_ENV == 'development'"
                   size="mini"
                   type="primary"
                   target="_blank"
                   @click="handleClickVisit(item)"
                 >
                   {{ $translateTitle('home.konva') }}
-                </el-button> -->
+                </el-button>
               </el-button-group>
             </div>
           </el-card>
@@ -175,6 +176,7 @@
     components: {},
     data() {
       return {
+        NODE_ENV: process.env.NODE_ENV,
         category: Category,
         activeName: 'devchart',
         filterBox: 'filterBox-first',
@@ -293,7 +295,11 @@
             body: {
               count: 'objectId',
               skip: 0,
-              where: {},
+              where: {
+                category: 'IotHub',
+                // category: 'Evidence',
+                // nodeType: 1,
+              },
             },
           },
           {

@@ -16,9 +16,11 @@
     "inspect": "vue-cli-service inspect",
     "ncu": "yarn global add npm-check-updates",
     "update": "ncu -u --reject eslint,sass-loader,compression-webpack-plugin,filemanager-webpack-plugin --registry https://registry.npm.taobao.org&&npm install --registry=https://registry.npm.taobao.org",
+    "changelog:zh": "conventional-changelog -p angular -i CHANGELOG.ZH.md -s",
+    "changelog:en": "conventional-changelog -p angular -i CHANGELOG.EN.md -s",
     "clear": "npm cache clean -f&&rimraf node_modules&&npm install --registry=https://registry.npm.taobao.org",
-    "use:github": "rimraf .git/config && rimraf .git && mkdir .git && cp -r github/* .git && npm run remoteinfo && git pull origin master && git add . && git cz",
-    "use:gitbit": "rimraf .git/config && rimraf .git && mkdir .git && cp -r gitbit/* .git && npm run remoteinfo && git pull origin master  && git add . && git cz",
+    "use:github": "rimraf .git/config && rimraf .git && mkdir .git && cp -r github/* .git && npm run remoteinfo && git pull origin master && yarn changelog:zh && yarn changelog:en && git add . && git cz",
+    "use:gitbit": "rimraf .git/config && rimraf .git && mkdir .git && cp -r gitbit/* .git && npm run remoteinfo && git pull origin master  && yarn changelog:zh && yarn changelog:en  && git add . && git cz",
     "remoteinfo": "git remote -v",
     "set:github": "npm run remoteinfo && git push origin master && rimraf github && mkdir github && cp -r .git/* github && if exist github echo 'github'",
     "set:gitbit": "npm run remoteinfo && git push origin master && rimraf gitbit && mkdir gitbit && cp -r .git/* gitbit && if exist gitbit echo 'gitbit'"

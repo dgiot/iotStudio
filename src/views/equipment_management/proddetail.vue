@@ -1185,6 +1185,7 @@
                           <el-form-item label="寄存器状态" prop="byteorder">
                             <el-select
                               v-model="sizeForm.operatetype"
+                              style="width: 100%"
                               placeholder="请选择"
                             >
                               <el-option
@@ -1198,6 +1199,10 @@
                                   {
                                     value: 'inputRegister',
                                     label: '输入寄存器',
+                                  },
+                                  {
+                                    value: 'other',
+                                    label: '其他',
                                   },
                                 ]"
                                 :key="item.value"

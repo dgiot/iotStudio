@@ -1,5 +1,9 @@
 <template>
-  <div class="login-container">
+  <div
+    ref="container"
+    class="login-container"
+    :style="{ backgroundImage: 'url(' + backgroundImage + ')' }"
+  >
     <el-row>
       <el-col :lg="14" :md="11" :sm="24" :xl="14" :xs="24">
         <div style="color: transparent">占位符</div>
@@ -13,8 +17,7 @@
           label-position="left"
         >
           <div v-if="Default.title" class="title-tips">
-            {{ $translateTitle('欢迎来到')
-            }}{{ $translateTitle(Default.title) }}！
+            {{ $translateTitle('登录') }}
           </div>
           <el-form-item prop="username" style="margin-top: 40px">
             <el-input
@@ -120,6 +123,8 @@
         else callback()
       }
       return {
+        backgroundImage:
+          'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
         nodeEnv: process.env.NODE_ENV,
         form: {
           username: '',
@@ -151,6 +156,8 @@
       ...mapGetters({
         Default: 'acl/Default',
         license: 'acl/license',
+        logo: 'user/logo',
+        backgroundimage: 'user/backgroundimage',
       }),
     },
     watch: {
@@ -171,6 +178,11 @@
         getDefault: 'user/getDefault',
       }),
       async initShuwa() {
+        console.log(this.backgroundimage)
+        if (this.backgroundimage) {
+          console.log('this.backgroundimage', this.backgroundimage)
+          this.backgroundImage = this.backgroundimage
+        }
         await this.getlicense()
         await this.getDefault()
       },
@@ -209,8 +221,7 @@
 <style lang="scss" scoped>
   .login-container {
     height: 100vh;
-    background: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg')
-      center center fixed no-repeat;
+    // background: url('') center center fixed no-repeat;
     background-size: cover;
   }
 

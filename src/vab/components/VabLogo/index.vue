@@ -16,7 +16,7 @@
         :class="{ 'hidden-xs-only': theme.layout === 'horizontal' }"
         class="title"
       >
-        {{ title }}
+        {{ name }}
       </span>
     </router-link>
   </div>
@@ -29,8 +29,8 @@
     name: 'VabLogo',
     computed: {
       ...mapGetters({
-        logo: 'settings/logo',
-        title: 'settings/title',
+        logo: 'user/logo',
+        name: 'user/name',
         theme: 'settings/theme',
       }),
     },

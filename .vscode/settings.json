@@ -21,7 +21,6 @@
     "system/": true,
     "!/system/**/*.ps*": true
   },
-  "terminal.integrated.shell.windows": "D:\\Software\\Git\\bin\\bash.exe",
   "liveServer.settings.donotShowInfoMsg": true,
   "explorer.confirmDelete": false,
   "javascript.updateImportsOnFileMove.enabled": "always",
@@ -50,5 +49,6 @@
   "path-intellisense.mappings": {
     "@": "${workspaceRoot}/src"
   },
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "terminal.integrated.shell.windows": "D:\\Software\\Git\\bin\\bash.exe"
 }

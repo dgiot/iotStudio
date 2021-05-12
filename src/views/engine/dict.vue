@@ -415,7 +415,6 @@
           clearable
         />
         <el-button
-          :disabled="!search_dict.length"
           size="mini"
           type="primary"
           icon="el-icon-search"
@@ -733,6 +732,7 @@
     components: { vueJsonEditor },
     data() {
       return {
+        queryid: this.$route.query.dictid,
         arrlist: [],
         addDictForm: {
           templateId: '',
@@ -1043,7 +1043,8 @@
         return ''
       },
       searchDict(v) {
-        console.log(v)
+        this.queryid = ''
+        this.getDictData()
       },
       /**
        * 創建詞典模板
@@ -1240,7 +1241,7 @@
       },
       async getDictData() {
         this.listLoading = true
-        const parsms = {
+        let parsms = {
           order: '-createdAt',
           count: 'objectId',
           limit: this.length,
@@ -1249,10 +1250,19 @@
             type: 'dict_template',
           },
         }
+        if (this.queryid) {
+          parsms.where['objectId'] = this.queryid
+        }
+        if (this.search_dict) {
+          parsms.where['data.name'] = this.search_dict
+        }
         const { results, count } = await queryDict(parsms)
         this.total1 = count
         this.dictRecordOpt = []
         this.dictRecord = results
+        if (this.queryid) {
+          this.search_dict = this.dictRecord[0].data.name
+        }
         this.listLoading = false
         this.dictRecordOpt.push(
           { data: { name: 'ALL' }, objectId: '0' },

@@ -2,34 +2,18 @@
   "konva": {
     "Stage": {
       "attrs": {
+        "x": 396,
+        "y": 28,
         "id": "current1",
-        "width": 1667,
-        "height": 680,
+        "width": 1666,
+        "height": 305,
         "draggable": true
       },
-      "className": "Stage",
       "children": [
-        {
-          "attrs": {
-            "id": "curren2t1",
-            "listening": false
-          },
-          "className": "Layer",
-          "children": [
-            {
-              "attrs": {
-                "id": "curr23ent1",
-                "source": "http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png"
-              },
-              "className": "Image"
-            }
-          ]
-        },
         {
           "attrs": {
             "id": "996"
           },
-          "className": "Layer",
           "children": [
             {
               "attrs": {
@@ -37,8 +21,14 @@
                 "width": 2000,
                 "height": 2000
               },
-              "className": "Group",
               "children": [
+                {
+                  "attrs": {
+                    "id": "curr23ent1",
+                    "source": "http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png"
+                  },
+                  "className": "Image"
+                },
                 {
                   "attrs": {
                     "x": 100,
@@ -62,6 +52,7 @@
                     "text": "球阀开度",
                     "type": "text",
                     "fontSize": 20,
+                    "container": "",
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -73,9 +64,10 @@
                     "y": 281,
                     "id": "pressure_out",
                     "fill": "#000000",
-                    "text": "出口压力",
+                    "text": "出口压",
                     "type": "text",
                     "fontSize": 20,
+                    "container": "",
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -129,9 +121,10 @@
                     "y": 310,
                     "id": "power",
                     "fill": "#000000",
-                    "text": "功2222率",
+                    "text": "功率",
                     "type": "text",
                     "fontSize": 20,
+                    "container": "",
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -185,9 +178,10 @@
                     "y": 430,
                     "id": "speed",
                     "fill": "#000000",
-                    "text": "转速2222",
+                    "text": "转速111",
                     "type": "text",
                     "fontSize": 20,
+                    "container": "",
                     "draggable": true,
                     "fontFamily": "Calibri"
                   },
@@ -234,12 +228,57 @@
                     "fontFamily": "Calibri"
                   },
                   "className": "Text"
+                },
+                {
+                  "attrs": {
+                    "x": 146,
+                    "id": "1111146123",
+                    "y": 37,
+                    "name": "line",
+                    "points": [5, 70, 140, 23, 250, 60, 300, 20],
+                    "stroke": "red",
+                    "lineCap": "round",
+                    "tension": 0.5,
+                    "lineJoin": "round",
+                    "draggable": true,
+                    "strokeWidth": 15
+                  },
+                  "className": "Line"
+                },
+                {
+                  "attrs": {
+                    "x": 40,
+                    "y": 40,
+                    "id": "1111123",
+                    "name": "ellipse",
+                    "stroke": "red",
+                    "radiusX": 20,
+                    "radiusY": 20,
+                    "draggable": true,
+                    "strokeWidth": 4
+                  },
+                  "className": "Ellipse"
+                },
+                {
+                  "attrs": {
+                    "x": 50,
+                    "y": 50,
+                    "id": "11111",
+                    "width": 106,
+                    "height": 118,
+                    "draggable": true,
+                    "source": "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2234238213,2776120128&fm=26&gp=0.jpg"
+                  },
+                  "className": "Image"
                 }
-              ]
+              ],
+              "className": "Group"
             }
-          ]
+          ],
+          "className": "Layer"
         }
-      ]
+      ],
+      "className": "Stage"
     }
   }
 }

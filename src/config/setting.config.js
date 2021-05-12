@@ -38,6 +38,8 @@ module.exports = {
   expiresTime: 60 * 1000 * 15,
   // token存储位置localStorage sessionStorage cookie
   storage: 'cookie',
+  // 退出登录后不清空的cookie列表
+  cookieWhiteList: ['backgroundimage', 'logo', 'Copyright', 'title', 'name'],
   // token失效回退到登录页时是否记录本次的路由
   recordRoute: true,
   // 是否开启logo，不显示时设置false，请填写src/icon路径下的图标名称
