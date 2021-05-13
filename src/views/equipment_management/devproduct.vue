@@ -97,14 +97,18 @@
                     icon="el-icon-view"
                     @click="deviceToDetail(scope.row)"
                   >
-                    配置
+                    <!-- 配置 -->
+                    {{ $translateTitle('product.config') }}
                   </el-link>
                   <el-popover
                     :ref="`popover-${scope.$index}`"
                     placement="top"
                     width="300"
                   >
-                    <p>确定删除这个{{ scope.row.name }}产品吗？</p>
+                    <p>
+                      {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                      }}{{ $translateTitle('equipment.cpm') }}
+                    </p>
                     <div style="margin: 0; text-align: right">
                       <el-button
                         size="mini"
@@ -145,7 +149,8 @@
                     type="success"
                     @click="editorProduct(scope.row)"
                   >
-                    编 辑
+                    <!-- 编辑 -->
+                    {{ $translateTitle('concentrator.edit') }}
                   </el-link>
                   <el-link
                     :underline="false"
@@ -153,7 +158,8 @@
                     type="primary"
                     @click="proudctView(scope.row)"
                   >
-                    运行组态
+                    <!-- 运行组态 -->
+                    {{ $translateTitle('product.monitorconfiguration') }}
                   </el-link>
                 </template>
               </el-table-column>
@@ -205,7 +211,10 @@
               >
                 <el-input v-model="form.name" autocomplete="off" />
               </el-form-item>
-              <el-form-item label="产品分组" prop="devType">
+              <el-form-item
+                :label="$translateTitle('product.productgrouping')"
+                prop="devType"
+              >
                 <!-- <el-form-item :label=" $translateTitle('product.productidentification')" prop="devType"> -->
                 <el-input v-model="form.devType" autocomplete="off" />
               </el-form-item>
@@ -224,7 +233,7 @@
               <!--  :label="item.attributes.desc"
               :value="item.attributes.name"-->
 
-              <el-form-item
+              <!-- <el-form-item
                 :rules="[
                   {
                     required: true,
@@ -233,6 +242,16 @@
                   },
                 ]"
                 label="所属应用"
+              > -->
+              <el-form-item
+                :rules="[
+                  {
+                    required: true,
+                    message: $translateTitle('product.pleaseselectyourapp'),
+                    trigger: 'blur',
+                  },
+                ]"
+                :label="$translateTitle('application.applicationtype')"
               >
                 <el-select
                   v-model="form.relationApp"
@@ -325,7 +344,8 @@
                   />
                 </el-select>
               </el-form-item>
-              <el-form-item label="产品模型">
+              <!-- <el-form-item label="产品模型"> -->
+              <el-form-item :label="$translateTitle('developer.productmodel')">
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i
                   v-else
@@ -359,7 +379,8 @@
                   style="vertical-align: text-bottom"
                   @click="deleteImgsrc"
                 >
-                  删除
+                  <!-- 删除 -->
+                  {{ $translateTitle('developer.delete') }}
                 </el-button>
               </el-form-item>
               <el-form-item
@@ -384,7 +405,12 @@
     </div>
 
     <div class="import-dialog">
-      <el-dialog :visible.sync="importDialogShow" title="导入产品" width="25%">
+      <!-- <el-dialog :visible.sync="importDialogShow" title="导入产品" width="25%"> -->
+      <el-dialog
+        :visible.sync="importDialogShow"
+        :title="$translateTitle('product.importpro')"
+        width="25%"
+      >
         <el-form ref="uploadProForm" :model="formPro">
           <!--   <el-row :gutter="20">
   <el-col :span="12">
@@ -409,7 +435,8 @@
             accept=".xls, .xlsx, .zip"
           >
             <el-button slot="trigger" size="small" type="primary">
-              选泽文件
+              <!-- 选择文件 -->
+              {{ $translateTitle('application.selectfiles') }}
             </el-button>
           </el-upload>
 
@@ -422,7 +449,8 @@
             type="primary"
             @click="submitUpload"
           >
-            上 传
+            <!-- 上传 -->
+            {{ $translateTitle('application.upload') }}
           </el-button>
 
           <el-button
@@ -430,7 +458,8 @@
             class="btn-right"
             @click="importDialogShow = false"
           >
-            取 消
+            <!-- 取消 -->
+            {{ $translateTitle('developer.cancel') }}
           </el-button>
         </div>
       </el-dialog>

@@ -1,6 +1,13 @@
 /**
  * @description 导出网络配置
  **/
+var group1 = 'https://prod.iotn2n.com:1250'
+var proxyUrl = 'https://prod.iotn2n.com'
+if (process.env.NODE_ENV == 'development') {
+  const developer = require('./developer.config')
+  group1 = developer.group1
+  proxyUrl = developer.proxyUrl
+}
 module.exports = {
   // 默认的接口地址，开发环境和生产环境走/mock-server
   // 当然你也可以选择自己配置成需要的接口地址，如"https://api.xxx.com"
@@ -38,6 +45,6 @@ module.exports = {
     504: '网关超时',
   },
   // 服务器代理地址
-  group1: 'http://132.232.12.21:1250',
-  proxyUrl: 'https://prod.iotn2n.com',
+  group1,
+  proxyUrl,
 }

@@ -105,14 +105,14 @@
                   >
                     {{ $translateTitle('product.config') }}
                   </el-button>
-                  <el-button
+                  <!-- <el-button
                     :underline="false"
                     icon="el-icon-attract"
                     type="primary"
                     @click="GoTodevices(scope.row)"
                   >
                     {{ $translateTitle('product.equipment') }}
-                  </el-button>
+                  </el-button> -->
                   <el-button
                     :underline="false"
                     icon="el-icon-grape"

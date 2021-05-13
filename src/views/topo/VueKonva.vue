@@ -624,14 +624,16 @@
             _this.stage.batchDraw()
           }
         })
-        _this.stage.on('click', (e) => {
-          // _this.ShapeVisible = true
-          let Shapeconfig = e.target.attrs
-          console.log('click stage info', e.target.attrs) // 这里为dom 对象 临时解决方式是将其赋值为空。否则json解析会报错
-          Shapeconfig['container'] = ''
-          if (!_this.rightrow) _this.rightrow = 6
-          _this.$refs['operation'].Shapeconfig = Shapeconfig
-        })
+        // _this.stage.on('click', (e) => {
+        //   // _this.ShapeVisible = true
+        //   let Shapeconfig = e.target.attrs
+        //   var json = _this.stage.find(`$&{e.target.attrs.id}`)
+        //   console.log(json)
+        //   console.log('click stage info', e.target.attrs) // 这里为dom 对象 临时解决方式是将其赋值为空。否则json解析会报错
+        //   Shapeconfig['container'] = ''
+        //   if (!_this.rightrow) _this.rightrow = 6
+        //   _this.$refs['operation'].Shapeconfig = Shapeconfig
+        // })
         var Group = _this.stage.find('Group')
         // 设置页面是从设备界面进入 则不添加以下事件
         if (_this.isDevice && _this.productconfig) {
@@ -645,6 +647,11 @@
           console.log(_G, '_G')
           _G.on('click', (e) => {
             // _this.ShapeVisible = true
+            console.log(
+              Group.find(`$&{e.target.attrs.id}`),
+              `${e.target.attrs.id}`
+            )
+            console.log(e.target.attrs)
             if (!_this.rightrow) _this.rightrow = 6
             _this.$refs['operation'].Shapeconfig = e.target.attrs
             _this.Shapeconfig = e.target.attrs

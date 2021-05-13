@@ -1,18 +1,30 @@
 <template>
   <div class="things-parse">
-    <el-dialog :visible.sync="apiDialog" title="新增Api" width="15%">
+    <el-dialog
+      :visible.sync="apiDialog"
+      :title="$translateTitle('product.newapi')"
+      width="30%"
+    >
       <el-form
         ref="formLabelAlign"
         :rules="rules"
         :model="formLabelAlign"
         size="mini"
         label-position="left"
-        label-width="80px"
+        label-width="170px"
       >
-        <el-form-item label="模块名称" prop="name">
+        <!-- <el-form-item label="模块名称" prop="name"> -->
+        <el-form-item
+          :label="$translateTitle('plugins.modulename')"
+          prop="name"
+        >
           <el-input v-model="formLabelAlign.name" />
         </el-form-item>
-        <el-form-item label="编程语言" prop="language">
+        <!-- <el-form-item label="编程语言" prop="language"> -->
+        <el-form-item
+          :label="$translateTitle('plugins.programinglanguage')"
+          prop="language"
+        >
           <el-select v-model="formLabelAlign.language" placeholder="活动区域">
             <el-option
               v-for="item in formLabelAlign.languageList"

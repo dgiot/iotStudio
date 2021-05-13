@@ -9,7 +9,6 @@
   "editor.tabSize": 2,
   "editor.detectIndentation": false,
   "emmet.triggerExpansionOnTab": true,
-  "editor.formatOnSave": true,
   "javascript.format.enable": true,
   "git.enableSmartCommit": true,
   "git.autofetch": true,
@@ -45,10 +44,10 @@
   "prettier.htmlWhitespaceSensitivity": "ignore",
   "prettier.vueIndentScriptAndStyle": true,
   "vetur.format.defaultFormatter.html": "prettier",
-  "files.autoSave": "onFocusChange",
+  "files.autoSave": "off",
   "path-intellisense.mappings": {
     "@": "${workspaceRoot}/src"
   },
   "files.eol": "\n",
-  "terminal.integrated.shell.windows": "D:\\Software\\Git\\bin\\bash.exe"
+  // "terminal.integrated.shell.windows": "D:\\Software\\Git\\bin\\bash.exe"
 }

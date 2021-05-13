@@ -3,7 +3,11 @@
 <template>
   <div class="structure">
     <div class="adduserDiadlog">
-      <el-dialog :visible.sync="adduserDiadlog" title="新增用户" width="600px">
+      <el-dialog
+        :visible.sync="adduserDiadlog"
+        :title="$translateTitle('user.newusers')"
+        width="600px"
+      >
         <div>
           <el-form
             ref="userInfoFormRef"
@@ -13,57 +17,75 @@
             label-width="100px"
             class="demo-ruleForm"
           >
-            <el-form-item label="姓名" prop="nick">
+            <el-form-item :label="$translateTitle('user.name1')" prop="nick">
               <el-input
                 v-model="userInfoForm.nick"
-                placeholder="2-7个文字"
+                :placeholder="$translateTitle('product.eqwords')"
                 auto-complete="off"
               />
             </el-form-item>
 
-            <el-form-item label="手机号" prop="phone">
+            <el-form-item
+              :label="$translateTitle('product.phone')"
+              prop="phone"
+              :width="85"
+            >
               <el-input
                 v-model="userInfoForm.phone"
                 :maxlength="11"
-                placeholder="请输入手机号"
+                :placeholder="$translateTitle('product.enterphonenumber')"
                 auto-complete="off"
               />
             </el-form-item>
-            <el-form-item label="邮箱" prop="email">
+            <el-form-item :label="$translateTitle('user.email')" prop="email">
               <el-input
                 v-model="userInfoForm.email"
-                placeholder="请输入邮箱"
+                :placeholder="$translateTitle('product.enteremail')"
                 auto-complete="off"
               />
             </el-form-item>
-            <el-form-item label="账号" prop="account">
+            <el-form-item
+              :label="$translateTitle('user.account')"
+              prop="account"
+            >
               <el-input
                 v-model="userInfoForm.account"
-                placeholder="请输入账号"
+                :placeholder="$translateTitle('product.enteraccount')"
                 auto-complete="off"
               />
             </el-form-item>
 
-            <el-form-item label="密码" prop="password">
+            <el-form-item
+              :label="$translateTitle('developer.password')"
+              prop="password"
+            >
               <el-input
                 v-model="userInfoForm.password"
                 type="password"
                 auto-complete="off"
-                placeholder="请输入6-10位数字字母组合"
+                :placeholder="$translateTitle('product.entermmzh')"
               />
             </el-form-item>
-            <el-form-item label="确认密码" prop="checkPass">
+            <!-- <el-form-item label="确认密码" prop="checkPass"> -->
+            <el-form-item
+              :label="$translateTitle('developer.confirmpassword')"
+              prop="checkPass"
+            >
               <el-input
                 v-model="userInfoForm.checkPass"
                 type="password"
                 auto-complete="off"
-                placeholder="请再次输入密码"
+                :placeholder="$translateTitle('product.enterpwa')"
               />
             </el-form-item>
-            <el-form-item label="部门选择" prop="departmentid">
+            <!-- <el-form-item label="部门选择" prop="departmentid"> -->
+            <el-form-item
+              :label="$translateTitle('developer.departmentselection')"
+              prop="departmentid"
+            >
               <el-select
                 v-model="userInfoForm.departmentid"
-                placeholder="请选择部门"
+                :placeholder="$translateTitle('product.selectdepartment')"
               >
                 <el-option
                   v-for="item in deptOption"
@@ -76,8 +98,14 @@
           </el-form>
         </div>
         <div slot="footer">
-          <el-button @click="adduserDiadlog = false">取 消</el-button>
-          <el-button type="primary" @click="addUser">确 定</el-button>
+          <el-button @click="adduserDiadlog = false">
+            <!-- 取消 -->
+            {{ $translateTitle('developer.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="addUser">
+            <!-- 确定 -->
+            {{ $translateTitle('developer.determine') }}
+          </el-button>
         </div>
       </el-dialog>
     </div>
@@ -121,7 +149,8 @@
                     size="small"
                     @click="userFordepartment()"
                   >
-                    所有用户
+                    <!-- 所有用户 -->
+                    {{ $translateTitle('user.allusers') }}
                   </el-button>
                 </div>
                 <!-- <el-tree
@@ -156,7 +185,7 @@
                         </el-button>-->
                         <i
                           class="el-icon-circle-plus-outline"
-                          title="添加用户"
+                          :title="$translateTitle('developer.adduser')"
                           @click="addItemUser(data)"
                         />
                       </span>
@@ -172,22 +201,25 @@
                   :data="tableFilterData"
                   style="width: 90%; margin-top: 20px"
                 >
-                  <el-table-column label="用户名">
+                  <el-table-column :label="$translateTitle('user.username')">
                     <template slot-scope="scope">
                       <div>{{ scope.row.username }}</div>
                     </template>
                   </el-table-column>
-                  <el-table-column label="电话">
+                  <el-table-column :label="$translateTitle('user.phonenumber')">
                     <template slot-scope="scope">
                       <div>{{ scope.row.phone }}</div>
                     </template>
                   </el-table-column>
-                  <el-table-column :show-overflow-tooltip="true" label="邮箱">
+                  <el-table-column
+                    :show-overflow-tooltip="true"
+                    :label="$translateTitle('user.email')"
+                  >
                     <template slot-scope="scope">
                       <div>{{ scope.row.email }}</div>
                     </template>
                   </el-table-column>
-                  <el-table-column label="部门">
+                  <el-table-column :label="$translateTitle('user.department')">
                     <template slot-scope="scope">
                       <div>
                         {{ scope.row.departmentname || departmentname }}
@@ -197,7 +229,7 @@
 
                   <el-table-column
                     :show-overflow-tooltip="true"
-                    label="创建时间"
+                    :label="$translateTitle('user.createdtime')"
                   >
                     <template slot-scope="scope">
                       <span>

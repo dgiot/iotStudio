@@ -178,9 +178,8 @@
         getDefault: 'user/getDefault',
       }),
       async initShuwa() {
-        console.log(this.backgroundimage)
+        console.log(`VUE_APP_URL is ${process.env.VUE_APP_URL}`)
         if (this.backgroundimage) {
-          console.log('this.backgroundimage', this.backgroundimage)
           this.backgroundImage = this.backgroundimage
         }
         await this.getlicense()

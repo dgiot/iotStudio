@@ -73,11 +73,7 @@ const handleData = ({ config, data, status, statusText }) => {
 let serviceBaseUrl = baseURL
 // 判断当前环境是否为github page和gitee page
 const { hostname } = window.location
-let localHost = [
-  'dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com',
-  'dgiiot.gitee.io',
-  'dgiot.github.io',
-]
+let localHost = ['tcloudbaseapp.com', 'gitee.io', 'github.io', 'vercel.app']
 
 // if (process.env.NODE_ENV == 'development') {
 //   localHost.push('localhost', '127.0.0.1')

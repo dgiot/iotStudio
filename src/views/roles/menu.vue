@@ -10,17 +10,20 @@
                 type="primary"
                 @click="toggleExpandAll(isdefaultExpandAll)"
               >
-                展开/收起菜单
+                <!-- 展开/收起菜单 -->
+                {{ $translateTitle('product.Expandcollapsemenu') }}
               </el-button>
               <el-button
                 icon="el-icon-plus"
                 type="primary"
                 @click="handleEdit({}, 'one')"
               >
-                新增一级菜单
+                <!-- 新增一级菜单 -->
+                {{ $translateTitle('product.Newfirstlevelmenu') }}
               </el-button>
               <el-button type="primary" @click="centerUploadBox">
-                导入菜单
+                <!-- 导入菜单 -->
+                {{ $translateTitle('product.Importmenu') }}
                 <i class="el-icon-upload el-icon--right" />
               </el-button>
               <input
@@ -47,30 +50,39 @@
           :default-expand-all="isdefaultExpandAll"
           row-key="objectId"
         >
-          <el-table-column align="center" fixed label="标题" width="200">
+          <el-table-column
+            align="center"
+            fixed
+            :label="$translateTitle('product.title')"
+            width="200"
+          >
             <template #default="{ row }">
               <span>
                 {{ row.meta.title }}
               </span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="name" prop="name" />
           <el-table-column
             align="center"
-            label="路径"
+            :label="$translateTitle('user.name')"
+            prop="name"
+          />
+          <el-table-column
+            align="center"
+            :label="$translateTitle('developer.path')"
             width="220"
             prop="url"
             show-overflow-tooltip
           />
           <el-table-column
             align="center"
-            label="排序"
+            :label="$translateTitle('menu.sort')"
             sortable
             prop="orderBy"
           />
           <el-table-column
             align="center"
-            label="vue文件路径"
+            :label="'vue ' + $translateTitle('developer.filepath')"
             width="400"
             show-overflow-tooltip
           >
@@ -83,7 +95,7 @@
           <el-table-column
             align="center"
             show-overflow-tooltip
-            label="重定向"
+            :label="$translateTitle('developer.redirect')"
             width="200"
           >
             <template #default="{ row }">
@@ -94,31 +106,61 @@
           </el-table-column>
           <el-table-column
             align="center"
-            label="高级配置"
+            :label="$translateTitle('task.Advancedconfiguration')"
             show-overflow-tooltip
+            :width="200"
           >
             <template #default="{ row }">
               <el-popover trigger="hover" placement="top">
                 <p>
-                  是否隐藏：
-                  <el-tag type="success" title="是否隐藏">
-                    {{ row.meta.hidden ? '是' : '否' }}
+                  <!-- 是否隐藏： -->
+                  {{ $translateTitle('product.Hideornot' + ':') }}
+                  <el-tag
+                    type="success"
+                    :title="$translateTitle('product.Hideornot')"
+                  >
+                    {{
+                      row.meta.hidden
+                        ? $translateTitle('product.yes')
+                        : $translateTitle('product.no')
+                    }}
                   </el-tag>
                 </p>
                 <p>
-                  当前路由是否可关闭多标签页：
+                  <!-- 当前路由是否可关闭多标签页： -->
+                  {{
+                    $translateTitle(
+                      'product.Whetherthecurrentroutecanclosemultipletabs' + ':'
+                    )
+                  }}
                   <el-tag
                     v-if="row.meta"
                     type="info"
-                    title="当前路由是否可关闭多标签页"
+                    :title="
+                      $translateTitle(
+                        'product.Whetherthecurrentroutecanclosemultipletabs'
+                      )
+                    "
                   >
-                    {{ row.meta.noClosable ? '是' : '否' }}
+                    {{
+                      row.meta.noClosable
+                        ? $translateTitle('product.yes')
+                        : $translateTitle('product.no')
+                    }}
                   </el-tag>
                 </p>
                 <p>
-                  是否无缓存：
-                  <el-tag v-if="row.meta" title="是否无缓存">
-                    {{ row.meta.noKeepAlive ? '是' : '否' }}
+                  <!-- 是否无缓存： -->
+                  {{ $translateTitle('product.Nocache' + ':') }}
+                  <el-tag
+                    v-if="row.meta"
+                    :title="$translateTitle('product.Nocache')"
+                  >
+                    {{
+                      row.meta.noKeepAlive
+                        ? $translateTitle('product.yes')
+                        : $translateTitle('product.no')
+                    }}
                   </el-tag>
                 </p>
                 <div slot="reference" class="name-wrapper">
@@ -132,7 +174,7 @@
           <el-table-column
             width="220px"
             fixed="right"
-            label="操作"
+            :label="$translateTitle('developer.operation')"
             align="center"
           >
             <template #default="{ row }">

@@ -49,7 +49,10 @@
             <span v-else-if="scope.row.type == 2">
               {{ $translateTitle('developer.resourcechannel') }}
             </span>
-            <span v-else>任务通道</span>
+            <span v-else>
+              <!-- 任务通道 -->
+              {{ $translateTitle('developer.missionchannel') }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column :label="$translateTitle('developer.servicetype')">
@@ -61,9 +64,13 @@
         <el-table-column :label="$translateTitle('developer.channelstatus')">
           <template slot-scope="scope">
             <span v-if="scope.row.status == 'ONLINE'" style="color: green">
-              在线
+              <!-- 在线 -->
+              {{ $translateTitle('product.online') }}
             </span>
-            <span v-else style="color: red">离线</span>
+            <span v-else style="color: red">
+              <!-- 离线 -->
+              {{ $translateTitle('product.offline') }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column
@@ -91,7 +98,8 @@
               size="mini"
               @click="editorChannel(scope.row)"
             >
-              编辑
+              <!-- 编辑 -->
+              {{ $translateTitle('task.Edit') }}
             </el-button>
             <el-button
               v-if="scope.row.isEnable == false"
@@ -115,14 +123,19 @@
               size="mini"
               @click="updateChannel(scope.row)"
             >
-              详情
+              <!-- 详情 -->
+              {{ $translateTitle('product.details') }}
             </el-button>
             <el-popover
               :ref="`popover-${scope.$index}`"
               placement="top"
               width="300"
             >
-              <p>确定删除这个{{ scope.row.name }}通道吗？</p>
+              <!-- <p>确定删除这个{{ scope.row.name }}通道吗？</p> -->
+              <p>
+                {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                }}{{ $translateTitle('equipment.channel') }}
+              </p>
               <div style="margin: 0; text-align: right">
                 <el-button
                   size="mini"
@@ -177,7 +190,8 @@
               size="mini"
               @click="subProTopic(scope.row)"
             >
-              订阅日志
+              <!-- 订阅日志 -->
+              {{ $translateTitle('product.subscriptionlog') }}
             </el-button>
           </template>
         </el-table-column>
@@ -208,11 +222,21 @@
         :rules="addrules"
         label-width="auto"
       >
-        <el-form-item label="通道类型" prop="region">
-          <el-select
+        <!-- <el-form-item label="通道类型" prop="region"> -->
+        <el-form-item
+          :label="$translateTitle('developer.channeltype')"
+          prop="region"
+        >
+          <!-- <el-select
             v-model="addchannel.region"
             disabled
             placeholder="通道类型"
+            @change="removeauto"
+          > -->
+          <el-select
+            v-model="addchannel.region"
+            disabled
+            :placeholder="$translateTitle('developer.channeltype')"
             @change="removeauto"
           >
             <el-option
@@ -259,7 +283,8 @@
                     style="float: right"
                     @click="setCard(item.cType)"
                   >
-                    已选
+                    <!-- 已选 -->
+                    {{ $translateTitle('product.selected') }}
                   </el-button>
                 </div>
                 <div class="text item">
@@ -309,10 +334,20 @@
           </el-select>
         </el-form-item> -->
 
-        <el-form-item prop="applicationtText" label="所属应用">
-          <el-input
+        <!-- <el-form-item prop="applicationtText" label="所属应用"> -->
+        <el-form-item
+          prop="applicationtText"
+          :label="$translateTitle('application.applicationtype')"
+        >
+          <!-- <el-input
             v-model="addchannel.applicationtText"
             placeholder="请选择所属应用"
+            readonly
+            @focus="showTree = !showTree"
+          /> -->
+          <el-input
+            v-model="addchannel.applicationtText"
+            :placeholder="$translateTitle('product.pleaseselectyourapp')"
             readonly
             @focus="showTree = !showTree"
           />
@@ -345,8 +380,16 @@
               class="notauto"
               readonly
             >
-              <el-option :value="true" label="是" />
-              <el-option :value="false" label="否" />
+              <!-- <el-option :value="true" label="是" />
+              <el-option :value="false" label="否" /> -->
+              <el-option
+                :value="true"
+                :label="$translateTitle('product.yes')"
+              />
+              <el-option
+                :value="false"
+                :label="$translateTitle('product.no')"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -372,7 +415,12 @@
       </div>
     </el-dialog>
     <!--详情展示-->
-    <el-dialog :visible.sync="dialogVisible" title="通道详情" width="50%">
+    <!-- <el-dialog :visible.sync="dialogVisible" title="通道详情" width="50%"> -->
+    <el-dialog
+      :visible.sync="dialogVisible"
+      :title="$translateTitle('equipment.channeldetails')"
+      width="50%"
+    >
       <div>
         <el-row>
           <el-col :span="12">ID:</el-col>
@@ -394,7 +442,8 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false">
-          确 定
+          <!-- 确定 -->
+          {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>
     </el-dialog>

@@ -13,7 +13,8 @@
       <div class="product">
         <ul>
           <li>
-            <span>产品名称:</span>
+            <!-- <span>产品名称:</span> -->
+            {{ $translateTitle('product.productname') }}:
             <span>{{ productName }}</span>
           </li>
           <li>
@@ -160,7 +161,8 @@
                     v-if="productdetail.netType == 'CELLULAR'"
                     class="notbottom"
                   >
-                    蜂窝(2G/3G/4G)
+                    <!-- 蜂窝(2G/3G/4G) -->
+                    {{ $translateTitle('product.honeycomb') }}(2G/3G/4G)
                   </td>
                   <td
                     v-else-if="productdetail.netType == 'WIFI'"
@@ -172,7 +174,8 @@
                     v-else-if="productdetail.netType == 'ETHERNET'"
                     class="notbottom"
                   >
-                    以太网
+                    <!-- 以太网 -->
+                    {{ $translateTitle('product.ethernet') }}
                   </td>
                   <td
                     v-else-if="productdetail.netType == 'LORA'"
@@ -383,7 +386,8 @@
         >
           <div style="text-align: right">
             <el-button type="primary" size="small" @click="checkAddTest">
-              物模型采集公式
+              <!-- 物模型采集公式 -->
+              {{ $translateTitle('product.collectionformulaofobjectmodel') }}
             </el-button>
             <el-button type="primary" size="small" @click="checkschema">
               {{ $translateTitle('product.viewobjectmodel') }}
@@ -393,6 +397,7 @@
             <el-button type="primary" size="small" @click="createProperty">
               {{ $translateTitle('product.newcustomattribute') }}
             </el-button>
+            <!-- 新建标准属性 -->
             <el-button type="primary" size="small" @click="addcategory">
               {{ $translateTitle('product.newstandardattribute') }}
             </el-button>
@@ -523,7 +528,8 @@
                     size="mini"
                     @click="wmxDataFill(scope.row, scope.$index)"
                   >
-                    编辑
+                    <!-- 编辑 -->
+                    {{ $translateTitle('task.Edit') }}
                   </el-button>
                 </template>
               </el-table-column>
@@ -657,7 +663,10 @@
                   <el-collapse v-model="collapseName">
                     <el-collapse-item name="1">
                       <template slot="title">
-                        <h3 style="font-size: normal">数据存储</h3>
+                        <h3 style="font-size: normal">
+                          <!-- 数据存储 -->
+                          {{ $translateTitle('task.datastorage') }}
+                        </h3>
                       </template>
                       <el-row :gutter="24">
                         <el-col :span="12">
@@ -681,9 +690,13 @@
                       </el-row>
                       <el-row :gutter="24">
                         <el-col :span="12">
-                          <el-form-item
+                          <!-- <el-form-item
                             prop="startnumber"
                             label="取值范围(最小值)"
+                          > -->
+                          <el-form-item
+                            prop="startnumber"
+                            :label="$translateTitle('product.valuerangemin')"
                           >
                             <el-input
                               v-model.number="sizeForm.startnumber"
@@ -695,9 +708,13 @@
                           </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                          <el-form-item
+                          <!-- <el-form-item
                             prop="endnumber"
                             label="取值范围(最大值)"
+                          > -->
+                          <el-form-item
+                            prop="endnumber"
+                            :label="$translateTitle('product.valuerangemax')"
                           >
                             <el-input
                               v-model.number="sizeForm.endnumber"
@@ -817,7 +834,10 @@
                     </el-collapse-item>
                     <el-collapse-item name="2">
                       <template slot="title">
-                        <h3 style="font-size: normal">数据采集</h3>
+                        <h3 style="font-size: normal">
+                          <!-- 数据采集 -->
+                          {{ $translateTitle('task.dataacquisition') }}
+                        </h3>
                         <el-row style="margin: 0 auto">
                           <el-col :span="2">
                             <el-popover
@@ -833,21 +853,32 @@
                                   )
                                 "
                               >
-                                <el-table-column label="标识符">
+                                <!-- <el-table-column label="标识符"> -->
+                                <el-table-column
+                                  :label="$translateTitle('product.identifier')"
+                                >
                                   <template slot-scope="scope">
                                     <span style="margin-left: 10px">
                                       {{ scope.row.identifier }}
                                     </span>
                                   </template>
                                 </el-table-column>
-                                <el-table-column label="功能名称">
+                                <!-- <el-table-column label="功能名称"> -->
+                                <el-table-column
+                                  :label="
+                                    $translateTitle('product.functionname')
+                                  "
+                                >
                                   <template slot-scope="scope">
                                     <span style="margin-left: 10px">
                                       {{ scope.row.name }}
                                     </span>
                                   </template>
                                 </el-table-column>
-                                <el-table-column label="数据类型">
+                                <!-- <el-table-column label="数据类型"> -->
+                                <el-table-column
+                                  :label="$translateTitle('product.datatype')"
+                                >
                                   <template slot-scope="scope">
                                     <span style="margin-left: 10px">
                                       {{ scope.row.dataType.type }}
@@ -869,7 +900,8 @@
                                 style="text-align: center"
                                 size="mini"
                               >
-                                添加变量
+                                <!-- 添加变量 -->
+                                {{ $translateTitle('product.addvariable') }}
                               </el-button>
                             </el-popover>
                           </el-col>
@@ -1745,7 +1777,11 @@
         <!--协议解析-->
         <!-- <div style="diaplay:none;"> -->
         <!-- <div> -->
-        <el-tab-pane label="物解析" name="fourth">
+        <!-- <el-tab-pane label="物解析" name="fourth"> -->
+        <el-tab-pane
+          :label="$translateTitle('product.matteranalysis')"
+          name="fourth"
+        >
           <div class="protolheader">
             <el-form
               ref="formInline"
@@ -1788,7 +1824,8 @@
                   size="small"
                   @click="subAce1('formInline')"
                 >
-                  设为公共
+                  <!-- 设为公共 -->
+                  {{ $translateTitle('product.setaspublic') }}
                 </el-button>
                 <el-button type="primary" size="small" @click="chaxun">
                   {{ $translateTitle('product.publicagreementlibrary') }}
@@ -1799,16 +1836,23 @@
                   {{ $translateTitle('product.compile') }}
                 </el-button>
                 <el-button type="success" size="small" @click="updatesubdialog">
-                  热加载
+                  <!-- 热加载 -->
+                  {{ $translateTitle('product.thermalloading') }}
                 </el-button>
               </el-form-item>
             </el-form>
           </div>
           <!--通道热加载-->
-          <el-dialog
+          <!-- <el-dialog
             :visible.sync="protoldialog"
             :close-on-click-modal="false"
             title="通道热加载"
+            width="50%"
+          > -->
+          <el-dialog
+            :visible.sync="protoldialog"
+            :close-on-click-modal="false"
+            :title="$translateTitle('product.tdthermalloading')"
             width="50%"
           >
             <el-table
@@ -1862,7 +1906,8 @@
             </el-table>
             <div slot="footer" class="dialog-footer">
               <el-button type="primary" @click="updateAllChannel">
-                确定
+                <!-- 确定 -->
+                {{ $translateTitle('developer.determine') }}
               </el-button>
             </div>
           </el-dialog>
@@ -1901,7 +1946,11 @@
                   <span>{{ scope.row.data.desc }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="创建时间" align="center">
+              <!-- <el-table-column label="创建时间" align="center"> -->
+              <el-table-column
+                :label="$translateTitle('equipment.createdAt')"
+                align="center"
+              >
                 <template slot-scope="scope">
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
@@ -2014,7 +2063,10 @@
                   <span v-if="scope.row.type == 1">
                     {{ $translateTitle('developer.collectionchannel') }}
                   </span>
-                  <span v-else-if="scope.row.type == 3">任务通道</span>
+                  <span v-else-if="scope.row.type == 3">
+                    <!-- 任务通道 -->
+                    {{ $translateTitle('developer.missionchannel') }}
+                  </span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -2041,14 +2093,16 @@
                     size="mini"
                     @click="subProTopic(scope.row)"
                   >
-                    订阅日志
+                    <!-- 订阅日志 -->
+                    {{ $translateTitle('product.subscriptionlog') }}
                   </el-button>
                   <el-button
                     type="primary"
                     size="mini"
                     @click="updatesub(scope.row)"
                   >
-                    重载配置
+                    <!-- 重载配置 -->
+                    {{ $translateTitle('product.overloadconfiguration') }}
                   </el-button>
                 </template>
               </el-table-column>
@@ -2070,10 +2124,21 @@
         <!-- <el-tab-pane label="物采集" name="eighth">
           <TaskCollection1 :productId="productId" :isreload="isreload" />
         </el-tab-pane>-->
-        <el-tab-pane label="物存储" name="seven">
+        <!-- <el-tab-pane label="物存储" name="seven"> -->
+        <el-tab-pane
+          :label="$translateTitle('product.materialstorage')"
+          name="seven"
+        >
           <div class="productchannel" style="padding: 10px; text-align: right">
-            <el-popover
+            <!-- <el-popover
               title="自定义数据模型提示"
+              placement="right"
+              width="600"
+              trigger="hover"
+              @show="questionModel"
+            > -->
+            <el-popover
+              :title="$translateTitle('developer.tipsforcustomdatamodel')"
               placement="right"
               width="600"
               trigger="hover"
@@ -2090,7 +2155,8 @@
                 size="mini"
                 icon="el-icon-question"
               >
-                自定义数据模型帮助
+                <!-- 自定义数据模型帮助 -->
+                {{ $translateTitle('developer.customizedatamodelhelp') }}
               </el-button>
             </el-popover>
             <el-button
@@ -2164,7 +2230,8 @@
                     size="mini"
                     @click="subProTopic(scope.row)"
                   >
-                    订阅日志
+                    <!-- 订阅日志 -->
+                    {{ $translateTitle('product.subscriptionlog') }}
                   </el-button>
 
                   <el-button
@@ -2172,7 +2239,8 @@
                     size="mini"
                     @click="customize(scope.row)"
                   >
-                    自定义模型
+                    <!-- 自定义模型 -->
+                    {{ $translateTitle('product.custommodel') }}
                   </el-button>
 
                   <!-- <el-button type="primary" size="mini" @click="customize(scope.row)">自定义模型</el-button> -->
@@ -2293,14 +2361,23 @@
         ><textarea class="ace_text-input" style="overflow:scroll" /></pre>
       </div>
       <span slot="footer" class="dialog-footer" style="height: 30px">
-        <el-button type="primary" @click="preserve">更新</el-button>
+        <el-button type="primary" @click="preserve">
+          <!-- 更新 -->
+          {{ $translateTitle('equipment.update') }}
+        </el-button>
       </span>
     </el-dialog>
     <!--通道弹窗-->
-    <el-dialog
+    <!-- <el-dialog
       :visible.sync="innerVisible"
       :close-on-click-modal="false"
       title="添加通道"
+      append-to-body
+    > -->
+    <el-dialog
+      :visible.sync="innerVisible"
+      :close-on-click-modal="false"
+      :title="$translateTitle('equipment.addchannel')"
       append-to-body
     >
       <div class="addchannel">
@@ -2328,7 +2405,10 @@
               <span v-else-if="scope.row.type == 2">
                 {{ $translateTitle('developer.resourcechannel') }}
               </span>
-              <span v-else>任务通道</span>
+              <span v-else>
+                <!-- 任务通道 -->
+                {{ $translateTitle('developer.missionchannel') }}
+              </span>
             </template>
           </el-table-column>
           <el-table-column :label="$translateTitle('developer.servicetype')">
@@ -2406,7 +2486,8 @@
           <el-row>
             <el-col :span="8">
               <div class="grid-content bg-purple">
-                <el-form-item label="物模型">
+                <!-- <el-form-item label="物模型"> -->
+                <el-form-item :label="$translateTitle('product.physicalmodel')">
                   <pre
                     id="editormodel"
                     class="ace_editor"
@@ -2417,7 +2498,10 @@
             </el-col>
             <el-col :span="16">
               <div class="grid-content bg-purple-light">
-                <el-form-item label="自定义数据模型">
+                <!-- <el-form-item label="自定义数据模型"> -->
+                <el-form-item
+                  :label="$translateTitle('product.customizedatamodel')"
+                >
                   <pre
                     id="editorcreate"
                     class="ace_editor"
@@ -2430,12 +2514,23 @@
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="closeWuDialog">退 出</el-button>
-        <el-button type="primary" @click="addData">保 存</el-button>
+        <el-button @click="closeWuDialog">
+          <!-- 退 出 -->
+          {{ $translateTitle('product.quit') }}
+        </el-button>
+        <el-button type="primary" @click="addData">
+          <!-- 保 存 -->
+          {{ $translateTitle('product.preservation') }}
+        </el-button>
       </div>
     </el-dialog>
 
-    <el-dialog :visible.sync="exportDialogShow" title="导出" width="25%">
+    <!-- <el-dialog :visible.sync="exportDialogShow" title="导出" width="25%"> -->
+    <el-dialog
+      :visible.sync="exportDialogShow"
+      :title="$translateTitle('product.export')"
+      width="25%"
+    >
       <!-- <p class="export-p">  <a :href="exportUrl" :download="exportNameDownload">文件下载 </a></p>       -->
 
       <div slot="footer" class="dialog-footer">
@@ -2444,18 +2539,27 @@
           class="btn-right"
           @click="exportDialogShow = false"
         >
-          关闭
+          <!-- 关闭 -->
+          {{ $translateTitle('tagsView.close') }}
         </el-button>
       </div>
     </el-dialog>
 
     <!--物模型采集公式按钮-->
-    <el-dialog
+    <!-- <el-dialog
       :fullscreen="true"
       :before-close="handleCloseCollecttion"
       :visible.sync="collectionDialogVisible"
       :close-on-click-modal="false"
       title="查看采集公式"
+      width="100%"
+    > -->
+    <el-dialog
+      :fullscreen="true"
+      :before-close="handleCloseCollecttion"
+      :visible.sync="collectionDialogVisible"
+      :close-on-click-modal="false"
+      :title="$translateTitle('product.viewcollectionformula')"
       width="100%"
     >
       <el-row>
@@ -2510,12 +2614,17 @@
             >
               <div class="diaCollRightCls">
                 <el-row style="margin: 10px">
-                  <el-button type="success">测试</el-button>
+                  <el-button type="success">
+                    <!-- 测试 -->
+                    {{ $translateTitle('rule.Test') }}
+                  </el-button>
                   <el-button type="info" @click="onReductionTap(index)">
-                    还原
+                    <!-- 还原 -->
+                    {{ $translateTitle('product.reduction') }}
                   </el-button>
                   <el-button type="primary" @click="onSaveTap(index)">
-                    保存
+                    <!-- 保存 -->
+                    {{ $translateTitle('product.preservation') }}
                   </el-button>
                 </el-row>
                 <pre

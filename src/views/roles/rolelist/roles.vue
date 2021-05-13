@@ -24,7 +24,7 @@
               <span>
                 <i
                   class="el-icon-circle-plus-outline"
-                  title="添加角色"
+                  :title="$translateTitle('product.addrole')"
                   @click="setDialogRole(data)"
                 />
               </span>
@@ -58,7 +58,8 @@
             </el-button>-->
             <!-- icon="el-icon-search" -->
             <el-button type="primary" size="mini" @click="getRolesList()">
-              所有角色
+              <!-- 所有角色 -->
+              {{ $translateTitle('product.allroles') }}
             </el-button>
           </div>
           <div class="tableroles" style="margin-top: 20px">
@@ -112,20 +113,25 @@
                     size="medium"
                     @click="exportRolerole(scope.row)"
                   >
-                    <span class="el-dropdown-link">修改</span>
+                    <span class="el-dropdown-link">
+                      <!-- 修改 -->
+                      {{ $translateTitle('product.modify') }}
+                    </span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item
                         icon="el-icon-document"
                         @click.native="exportRoletemp(scope.row)"
                       >
-                        保存模板
+                        <!-- 保存模板 -->
+                        {{ $translateTitle('product.savetemplate') }}
                       </el-dropdown-item>
                       <!-- <el-dropdown-item icon="el-icon-document" @click.native="handleEditrole(scope.row)" >编辑</el-dropdown-item> -->
                       <el-dropdown-item
                         icon="el-icon-delete"
                         @click.native="handleDelete(scope.row)"
                       >
-                        删除
+                        <!-- 删除 -->
+                        {{ $translateTitle('task.Delete') }}
                       </el-dropdown-item>
                       <!-- <el-dropdown-item @click.native="taskDetail(scope.row.objectId,scope.row.test_bed.id)">详情</el-dropdown-item> -->
                     </el-dropdown-menu>
@@ -153,7 +159,10 @@
               <span class="svg-container">
                 <vab-icon icon="role_group" />
               </span>
-              <span>分配权限</span>
+              <span>
+                <!-- 分配权限 -->
+                {{ $translateTitle('user.assignroles1') }}
+              </span>
             </p>
             <div class="rolecontrol">
               <el-tree
@@ -177,7 +186,10 @@
               <span class="svg-container">
                 <vab-icon icon="menu_group" />
               </span>
-              <span>菜单分配</span>
+              <span>
+                <!-- 菜单分配 -->
+                {{ $translateTitle('user.assignmenu') }}
+              </span>
             </p>
             <div class="menucontrol" style="margin-top: 30px">
               <el-tree
@@ -203,7 +215,7 @@
 
     <el-dialog
       :visible="centerDialogRole"
-      title="添加角色"
+      :title="$translateTitle('product.addrole')"
       width="20%"
       center
       @close="closeDialogRole"

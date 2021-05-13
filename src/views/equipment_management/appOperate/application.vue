@@ -27,9 +27,14 @@
             <div class="grid-content bg-purple">
               <dl>
                 <dt>
-                  App ID
+                  <!-- App ID -->
+                  {{ $translateTitle('product.appid') }}
                   <el-tooltip
-                    content="在SDK调用过程中唯一的一个应用标识"
+                    :content="
+                      $translateTitle(
+                        'product.TheonlyapplicationIDintheSDKcallingprocess'
+                      )
+                    "
                     placement="bottom"
                   >
                     <i class="el-icon-question" />
@@ -37,9 +42,10 @@
                 </dt>
                 <dd>{{ item.objectId }}</dd>
                 <dt>
-                  App Secret
+                  <!-- App Secret -->
+                  {{ $translateTitle('product.appsecret') }}
                   <el-tooltip
-                    content="调用API时的Token,用来验证请求合法性,请注意保密"
+                    :content="$translateTitle('product.aaab')"
                     placement="bottom"
                   >
                     <i class="el-icon-question" />
@@ -59,11 +65,16 @@
                       round
                       @click="xianshi(item.objectId)"
                     >
-                      完整密钥
+                      <!-- 完整密钥 -->
+                      {{ $translateTitle('product.fullkey') }}
                     </el-button>
                   </i>
                 </dd>
-                <dt>应用名称</dt>
+                <dt>
+                  <!-- 应用名称 -->
+                  {{ $translateTitle('task.Applicationname') }}
+                  <i class="el-icon-s-promotion" />
+                </dt>
                 <dd v-if="item.name">{{ item.name }}</dd>
                 <dd v-else>-</dd>
               </dl>
@@ -72,21 +83,27 @@
           <el-col :span="4">
             <div class="grid-content bg-purple">
               <p class="editor">
-                <strong>操作:</strong>
+                <strong>
+                  <!-- 操作: -->
+                  {{ $translateTitle('task.Operation') + ':' }}
+                </strong>
               </p>
               <p class="editor">
                 <el-link type="primary" @click="updateapp(item)">
-                  修改应用
+                  <!-- 修改应用 -->
+                  {{ $translateTitle('developer.Modifyapplication') }}
                 </el-link>
               </p>
               <p class="editor">
                 <el-link type="primary" @click="nodeDeployment(item)">
-                  节点部署
+                  <!-- 节点部署 -->
+                  {{ $translateTitle('developer.Nodedeployment') }}
                 </el-link>
               </p>
               <p class="editor">
                 <el-link type="primary" @click="applicationDeployment(item)">
-                  应用部署
+                  <!-- 应用部署 -->
+                  {{ $translateTitle('developer.Applicationdeployment') }}
                 </el-link>
               </p>
             </div>
@@ -107,13 +124,13 @@
     <el-dialog
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
-      title="添加应用"
+      :title="$translateTitle('developer.addapp')"
       width="55%"
     >
       <div
         v-loading="loading"
         class="block"
-        element-loading-text="正在等待返回"
+        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
         element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.8)"
       >
@@ -123,50 +140,75 @@
                   <el-option v-for="(item,index) in selectapp" :key="index" :label="item.attributes.subtitle" :value="item.id"></el-option>
                </el-select>
           </el-form-item>-->
-          <el-form-item label="应用名称" prop="desc">
+          <el-form-item
+            :label="$translateTitle('application.applicationname')"
+            prop="desc"
+          >
             <el-input
               v-model="form.desc"
               style="width: 80%"
-              placheholder="请输入应用名称"
+              :placheholder="
+                $translateTitle('product.enter1') +
+                $translateTitle('application.applicationname')
+              "
             />
           </el-form-item>
-          <el-form-item label="Token有效时间">
+          <el-form-item
+            :label="$translateTitle('application.tokeneffectivetime')"
+          >
             <el-input
               v-model="form.time"
               type="number"
               style="width: 80%"
-              placheholder="请输入应用时间"
+              :placheholder="$translateTitle('product.enterapptime')"
             />
-            <span style="margin-left: 5px">秒</span>
+            <span style="margin-left: 5px">
+              <!-- 秒 -->
+              {{ $translateTitle('application.seconds') }}
+            </span>
           </el-form-item>
-          <el-form-item label="word预览服务器">
+          <el-form-item :label="$translateTitle('product.Wordpreviewserver')">
             <el-input
               v-model="form.wordpreview"
               style="width: 80%"
-              placheholder="请输入word预览服务器地址"
+              :placheholder="
+                $translateTitle('product.enter1') +
+                $translateTitle('product.Wordpreviewserver')
+              "
             />
           </el-form-item>
-          <el-form-item label="word生产服务器">
+          <el-form-item
+            :label="$translateTitle('product.Wordproductionserver')"
+          >
             <el-input
               v-model="form.wordproduct"
               style="width: 80%"
-              placheholder="请输入word生产服务器地址"
+              :placheholder="
+                $translateTitle('product.enter1') +
+                $translateTitle('product.Wordproductionserver')
+              "
             />
           </el-form-item>
 
-          <el-form-item label="文件资源" prop="file">
+          <el-form-item
+            :label="$translateTitle('application.fileresources')"
+            prop="file"
+          >
             <el-input
               v-model="form.file"
               style="width: 80%"
-              placheholder="请输入url"
+              :placheholder="$translateTitle('product.enter1') + url"
             />
           </el-form-item>
 
-          <el-form-item label="组态资源" prop="topo">
+          <el-form-item
+            :label="$translateTitle('application.Configurationresources')"
+            prop="topo"
+          >
             <el-input
               v-model="form.topo"
               style="width: 80%"
-              placheholder="请输入url"
+              placheholder="$translateTitle('product.enter1') + url"
             />
           </el-form-item>
 
@@ -174,7 +216,7 @@
             <el-input
               v-model="form.graphql"
               style="width: 80%"
-              placheholder="请输入url"
+              placheholder="$translateTitle('product.enter1') + url"
             />
           </el-form-item>
 
@@ -182,7 +224,7 @@
             <el-input
               v-model="form.rest"
               style="width: 80%"
-              placheholder="请输入url"
+              placheholder="$translateTitle('product.enter1') + url"
             />
           </el-form-item>
 
@@ -190,30 +232,48 @@
             <el-input
               v-model="form.home"
               style="width: 80%"
-              placheholder="请输入路径"
+              :placheholder="
+                $translateTitle('product.enter1') +
+                $translateTitle('developer.path')
+              "
             />
           </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="Define('form')">确 定</el-button>
+        <el-button @click="dialogVisible = false">
+          <!-- 取消 -->
+          {{ $translateTitle('developer.cancel') }}
+        </el-button>
+        <el-button type="primary" @click="Define('form')">
+          <!-- 确定 -->
+          {{ $translateTitle('developer.determine') }}
+        </el-button>
       </span>
     </el-dialog>
 
     <!--修改应用信息-->
-    <el-dialog
+    <!-- <el-dialog
       :visible.sync="update"
       :close-on-click-modal="false"
       title="修改应用信息"
       width="55%"
+    > -->
+    <el-dialog
+      :visible.sync="update"
+      :close-on-click-modal="false"
+      :title="
+        $translateTitle('product.modify') +
+        $translateTitle('product.Applicationinformation')
+      "
+      width="55%"
     >
       <div class="block">
-        <el-form ref="form1" :rules="Rule" :model="form1" label-width="120px">
+        <el-form ref="form1" :rules="Rule" :model="form1" label-width="170px">
           <!-- <el-form-item label="应用名称" prop="desc">
             <el-input v-model="form1.desc" style="width:80%" />
           </el-form-item> -->
-          <el-form-item label="访问密钥">
+          <el-form-item :label="$translateTitle('application.Accesskey')">
             <el-input v-model="form1.secret" style="width: 80%" readonly>
               <el-button
                 slot="append"
@@ -222,43 +282,62 @@
               />
             </el-input>
           </el-form-item>
-          <el-form-item label="Token有效时间">
+          <el-form-item
+            :label="$translateTitle('application.tokeneffectivetime')"
+          >
             <el-input
               v-model="form1.time"
               type="number"
               style="width: 80%"
-              placheholder="请输入应用时间"
+              :placheholder="$translateTitle('product.enterapptime')"
             />
-            <span style="margin-left: 5px">秒</span>
+            <span style="margin-left: 5px">
+              <!-- 秒 -->
+              {{ $translateTitle('task.Seconds') }}
+            </span>
           </el-form-item>
-          <el-form-item label="word预览服务器">
+          <el-form-item :label="$translateTitle('product.Wordpreviewserver')">
             <el-input
               v-model="form1.wordpreview"
               style="width: 80%"
-              placheholder="请输入word预览服务器地址"
+              :placheholder="
+                $translateTitle('product.enter1') +
+                $translateTitle('product.Wordpreviewserver')
+              "
             />
           </el-form-item>
-          <el-form-item label="word生产服务器">
+          <el-form-item
+            :label="$translateTitle('product.Wordproductionserver')"
+          >
             <el-input
               v-model="form1.wordproduct"
               style="width: 80%"
-              placheholder="请输入word生产服务器地址"
+              :placheholder="
+                $translateTitle('product.enter1') +
+                $translateTitle('product.Wordproductionserver')
+              "
             />
           </el-form-item>
 
-          <el-form-item label="文件资源" prop="file">
+          <el-form-item
+            :label="$translateTitle('application.fileresources')"
+            prop="file"
+          >
             <el-input
               v-model="form1.file"
               style="width: 80%"
-              placheholder="请输入url"
+              placheholder="$translateTitle('product.enter1') + url"
             />
           </el-form-item>
 
-          <el-form-item label="组态资源" prop="topo">
+          <el-form-item
+            :label="$translateTitle('application.Configurationresources')"
+            prop="topo"
+          >
             <el-input
               v-model="form1.topo"
               style="width: 80%"
-              placheholder="请输入url"
+              placheholder="$translateTitle('product.enter1') + url"
             />
           </el-form-item>
 
@@ -266,7 +345,7 @@
             <el-input
               v-model="form1.graphql"
               style="width: 80%"
-              placheholder="请输入url"
+              placheholder="$translateTitle('product.enter1') + url"
             />
           </el-form-item>
 
@@ -274,7 +353,7 @@
             <el-input
               v-model="form1.rest"
               style="width: 80%"
-              placheholder="请输入url"
+              placheholder="$translateTitle('product.enter1') + url"
             />
           </el-form-item>
 
@@ -282,15 +361,22 @@
             <el-input
               v-model="form1.home"
               style="width: 80%"
-              placheholder="请输入路径"
+              :placheholder="
+                $translateTitle('product.enter1') +
+                $translateTitle('developer.path')
+              "
             />
           </el-form-item>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="update = false">取 消</el-button>
+        <el-button @click="update = false">
+          <!-- 取消 -->
+          {{ $translateTitle('developer.cancel') }}
+        </el-button>
         <el-button type="primary" @click="updatedDefine('form1')">
-          确 定
+          <!-- 确定 -->
+          {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>
     </el-dialog>

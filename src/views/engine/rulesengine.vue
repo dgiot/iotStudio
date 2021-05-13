@@ -23,7 +23,11 @@
             <span @click="detailRules(scope.row.id)">{{ scope.row.id }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="主题" align="center">
+        <!-- <el-table-column label="主题" align="center"> -->
+        <el-table-column
+          :label="$translateTitle('leftbar.topics')"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.for.join(',') }}</span>
           </template>
@@ -39,7 +43,8 @@
             </p>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="已命中">
+        <!-- <el-table-column align="center" label="已命中"> -->
+        <el-table-column align="center" :label="$translateTitle('product.hit')">
           <template slot-scope="scope">
             <span>{{ matched(scope.row.metrics) }}</span>
           </template>
@@ -55,7 +60,8 @@
               plain
               @click="detailRules(scope.row.id)"
             >
-              查看
+              <!-- 查看 -->
+              {{ $translateTitle('equipment.see') }}
             </el-button>
             <el-button
               type="info"
@@ -63,7 +69,8 @@
               plain
               @click="deleteRule(scope.row.id)"
             >
-              删除
+              <!-- 删除 -->
+              {{ $translateTitle('developer.delete') }}
             </el-button>
           </template>
         </el-table-column>

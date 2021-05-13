@@ -3,7 +3,7 @@
     <div class="search">
       <el-input
         v-model="search"
-        placeholder="请输入内容"
+        :placeholder="$translateTitle('concentrator.input')"
         style="width: 200px"
         clearable
       />
@@ -23,26 +23,42 @@
       default-expand-all
       row-key="objectId"
     >
-      <el-table-column align="center" label="name" show-overflow-tooltip>
+      <el-table-column
+        align="center"
+        :label="$translateTitle('equipment.name')"
+        show-overflow-tooltip
+      >
         <template #default="{ row }">
           <span>
             {{ row.name }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="alias" show-overflow-tooltip>
+      <el-table-column
+        align="center"
+        :label="$translateTitle('product.alias')"
+        show-overflow-tooltip
+      >
         <template #default="{ row }">
           <span>
             {{ row.alias }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="createdTime" show-overflow-tooltip>
+      <el-table-column
+        align="center"
+        :label="$translateTitle('user.createdtime')"
+        show-overflow-tooltip
+      >
         <template #default="{ row }">
           <span>{{ row.createtime }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" show-overflow-tooltip>
+      <el-table-column
+        align="center"
+        :label="$translateTitle('task.Operation')"
+        show-overflow-tooltip
+      >
         <template #default="{ row }">
           <el-button
             size="mini"

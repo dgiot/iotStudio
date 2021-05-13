@@ -111,15 +111,24 @@
                 :value="item.objectId"
               />
             </el-select>
-            <el-select
+            <!-- <el-select
               v-model="onlinedevices"
               placeholder="请选择状态"
               class="selectdetail"
               size="small"
               clearable
+            > -->
+            <el-select
+              v-model="onlinedevices"
+              :placeholder="$translateTitle('equipment.pleaseselectstatus')"
+              class="selectdetail"
+              size="small"
+              clearable
             >
-              <el-option value="在线" />
-              <el-option value="离线" />
+              <!-- <el-option value="在线" /> -->
+              <el-option :value="$translateTitle('zetadevices.online')" />
+              <!-- <el-option value="离线" /> -->
+              <el-option :value="$translateTitle('zetadevices.offline')" />
             </el-select>
             <el-select
               v-model="selectdevice"
@@ -230,9 +239,14 @@
                   >
                     {{ $translateTitle('product.online') }}
                   </span>
-                  <el-tooltip
+                  <!-- <el-tooltip
                     v-if="scope.row.status == 'ONLINE'"
                     content="设备已经上线"
+                    placement="top"
+                  > -->
+                  <el-tooltip
+                    v-if="scope.row.status == 'ONLINE'"
+                    :content="$translateTitle('equipment.thedeviceisonline')"
                     placement="top"
                   >
                     <i class="el-icon-question" />
@@ -244,9 +258,14 @@
                   >
                     {{ $translateTitle('product.offline') }}
                   </span>
-                  <el-tooltip
+                  <!-- <el-tooltip
                     v-if="scope.row.status == 'OFFLINE'"
                     content="设备已经离线"
+                    placement="top"
+                  > -->
+                  <el-tooltip
+                    v-if="scope.row.status == 'OFFLINE'"
+                    :content="$translateTitle('equipment.thedeviceisoffline')"
                     placement="top"
                   >
                     <i class="el-icon-question" />
@@ -258,7 +277,8 @@
                     "
                     :class="scope.row.status"
                   >
-                    未注册
+                    <!-- 未注册 -->
+                    {{ $translateTitle('product.unregistered') }}
                   </span>
                 </template>
               </el-table-column>
@@ -388,7 +408,11 @@
                     placement="top"
                     width="300"
                   >
-                    <p>确定删除这个{{ scope.row.name }}设备吗？</p>
+                    <!-- <p>确定删除这个{{ scope.row.name }}设备吗？</p> -->
+                    <p>
+                      {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                      }}{{ $translateTitle('equipment.sbm') }}
+                    </p>
                     <div style="margin: 0; text-align: right">
                       <el-button
                         size="mini"
@@ -459,9 +483,14 @@
                   >
                     {{ $translateTitle('product.online') }}
                   </span>
-                  <el-tooltip
+                  <!-- <el-tooltip
                     v-if="scope.row.status == 'ONLINE'"
                     content="设备已经上线"
+                    placement="top"
+                  > -->
+                  <el-tooltip
+                    v-if="scope.row.status == 'ONLINE'"
+                    :content="$translateTitle('equipment.thedeviceisonline')"
                     placement="top"
                   >
                     <i class="el-icon-question" />
@@ -473,9 +502,14 @@
                   >
                     {{ $translateTitle('product.offline') }}
                   </span>
-                  <el-tooltip
+                  <!-- <el-tooltip
                     v-if="scope.row.status == 'OFFLINE'"
                     content="设备已经离线"
+                    placement="top"
+                  > -->
+                  <el-tooltip
+                    v-if="scope.row.status == 'OFFLINE'"
+                    :content="$translateTitle('equipment.thedeviceisoffline')"
                     placement="top"
                   >
                     <i class="el-icon-question" />
@@ -487,7 +521,8 @@
                     "
                     :class="scope.row.status"
                   >
-                    未注册
+                    <!-- 未注册 -->
+                    {{ $translateTitle('product.unregistered') }}
                   </span>
                 </template>
               </el-table-column>
@@ -564,8 +599,14 @@
                   :prop="item.identifier"
                 >
                   <template slot-scope="scope">
-                    <span v-if="scope.row[item.default]">是</span>
-                    <span v-else>否</span>
+                    <span v-if="scope.row[item.default]">
+                      <!-- 是 -->
+                      {{ $translateTitle('product.yes') }}
+                    </span>
+                    <span v-else>
+                      <!-- 否 -->
+                      {{ $translateTitle('product.no') }}
+                    </span>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -632,7 +673,11 @@
                     placement="top"
                     width="300"
                   >
-                    <p>确定删除这个{{ scope.row.name }}设备吗？</p>
+                    <!-- <p>确定删除这个{{ scope.row.name }}设备吗？</p> -->
+                    <p>
+                      {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                      }}{{ $translateTitle('equipment.sbm') }}
+                    </p>
                     <div style="margin: 0; text-align: right">
                       <el-button
                         size="mini"
@@ -674,8 +719,15 @@
             </div>
           </div>
           <!--添加设备弹窗-->
-          <el-dialog
+          <!-- <el-dialog
             :title="'设备' + equipmentEditor"
+            :visible.sync="devicedialogVisible"
+            :close-on-click-modal="false"
+            :before-close="handleClose"
+            width="50%"
+          > -->
+          <el-dialog
+            :title="$translateTitle('product.edit') + equipmentEditor"
             :visible.sync="devicedialogVisible"
             :close-on-click-modal="false"
             :before-close="handleClose"
@@ -818,8 +870,16 @@
                         class="notauto"
                         readonly
                       >
-                        <el-option :value="true" label="是" />
-                        <el-option :value="false" label="否" />
+                        <!-- <el-option :value="true" label="是" /> -->
+                        <el-option
+                          :value="true"
+                          :label="$translateTitle('product.yes')"
+                        />
+                        <!-- <el-option :value="false" label="否" /> -->
+                        <el-option
+                          :value="false"
+                          :label="$translateTitle('product.no')"
+                        />
                       </el-select>
                       <el-select
                         v-else-if="item.type == 'Enum'"
@@ -860,12 +920,20 @@
               </el-button>
             </span>
           </el-dialog>
-          <el-dialog
+          <!-- <el-dialog
             v-drag-dialog
             :visible.sync="bmapdialogVisible"
             :close-on-click-modal="false"
             :before-close="handleClosebmap"
             title="设备安装地址"
+            width="50%"
+          > -->
+          <el-dialog
+            v-drag-dialog
+            :visible.sync="bmapdialogVisible"
+            :close-on-click-modal="false"
+            :before-close="handleClosebmap"
+            :title="$translateTitle('developer.equipmentinstallationaddress')"
             width="50%"
           >
             <div>
@@ -873,13 +941,17 @@
                 <!-- <el-form-item label="地址">
               <el-input v-model="bmapform.location" placeholder="请输入市或者县名称"></el-input>
             </el-form-item>-->
-                <el-form-item label="地址名称">
+                <!-- <el-form-item label="地址名称"> -->
+                <el-form-item :label="$translateTitle('developer.addressname')">
                   <el-input v-model="bmapform.keyword" />
                 </el-form-item>
                 <!-- <el-form-item>
               <el-button type="primary" @click="addressSure">搜 索</el-button>
             </el-form-item>-->
-                <el-form-item label="选中地址">
+                <!-- <el-form-item label="选中地址"> -->
+                <el-form-item
+                  :label="$translateTitle('developer.selectaddress')"
+                >
                   <el-input v-model="bmapform.address" readonly />
                 </el-form-item>
               </el-form>
@@ -919,8 +991,14 @@
               </baidu-map>
             </div>
             <span slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="addressSure">保 存</el-button>
-              <el-button @click="bmapdialogVisible = false">取 消</el-button>
+              <el-button type="primary" @click="addressSure">
+                <!-- 保存 -->
+                {{ $translateTitle('product.preservation') }}
+              </el-button>
+              <el-button @click="bmapdialogVisible = false">
+                <!-- 取消 -->
+                {{ $translateTitle('developer.cancel') }}
+              </el-button>
             </span>
           </el-dialog>
         </el-col>
