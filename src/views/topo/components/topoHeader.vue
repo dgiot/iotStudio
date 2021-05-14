@@ -102,7 +102,7 @@
       ...mapState({
         // graphColor: 'konva/graphColor',
         drawing: 'konva/drawing',
-        graphNow: 'konva/graphNow',
+        // graphNow: 'konva/graphNow',
         pointStart: 'konva/pointStart',
         draw: 'konva/draw',
         flag: 'konva/flag',
@@ -113,6 +113,11 @@
         },
         set(val) {
           this.$store.commit('konva/setGraphColor', val)
+        },
+      },
+      graphNow: {
+        get() {
+          return this.$store.state.konva.graphNow
         },
       },
       // ...mapGetters({
@@ -168,14 +173,13 @@
       },
       flagFn(v) {
         this.setFlag(v)
-        this.$emit('createShape', v, this.graphColor)
+        // this.$emit('createShape', v, this.graphColor)
+        if (v) this.setDraw(true)
       },
       removeFn() {
+        console.log(this.graphNow)
         if (this.graphNow) {
-          this.graphNow.remove()
-          stage.find('Transformer').destroy()
-          layer.draw()
-          this.setGraphNow(null)
+          this.$emit('removeShape', this.graphNow)
         } else {
           this.$message.error('请选择图形')
         }

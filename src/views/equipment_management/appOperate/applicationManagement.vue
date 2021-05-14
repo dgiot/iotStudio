@@ -1,7 +1,11 @@
 <template>
   <div id="application">
     <el-tabs v-model="activeName">
-      <el-tab-pane label="应用管理" name="app">
+      <!-- <el-tab-pane label="应用管理" name="app"> -->
+      <el-tab-pane
+        :label="$translateTitle('developer.Applicationmanagement')"
+        name="app"
+      >
         <div class="form">
           <div class="search">
             <el-input
@@ -25,7 +29,11 @@
             :label="$translateTitle('application.applicationname')"
             prop="title"
           />
-          <el-table-column prop="userUnit" label="应用单位" />
+          <!-- 应用单位 -->
+          <el-table-column
+            prop="userUnit"
+            :label="$translateTitle('developer.Applicationunit')"
+          />
           <!-- 服务规模 -->
           <el-table-column
             :label="$translateTitle('application.scaleofservice')"
@@ -53,7 +61,10 @@
                 placement="top"
                 width="300"
               >
-                <p>确定删除这个{{ scope.row.name }}应用吗？</p>
+                <p>
+                  {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                  }}{{ $translateTitle('equipment.yym') }}
+                </p>
                 <div style="margin: 0; text-align: right">
                   <el-button
                     size="mini"
@@ -90,14 +101,16 @@
               </el-button>
               <el-button type="text" size="small" @click="Gotoproduct(scope)">
                 <i class="el-icon-s-management" />
-                管理
+                <!-- 管理 -->
+                {{ $translateTitle('leftbar.management') }}
               </el-button>
               <el-link
                 :underline="false"
                 type="primary"
                 @click="applicationDeployment(scope.row)"
               >
-                部署
+                <!-- 部署 -->
+                {{ $translateTitle('developer.deploy') }}
               </el-link>
             </template>
           </el-table-column>

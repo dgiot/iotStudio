@@ -6,11 +6,18 @@
         style="margin-bottom: 20px"
       >
         <el-breadcrumb-item :to="{ path: '/roles/applicationManagement' }">
-          返回应用管理
+          <!-- 返回应用管理 -->
+          {{ $translateTitle('application.return') }}
         </el-breadcrumb-item>
-        <el-breadcrumb-item>部署服务</el-breadcrumb-item>
+        <el-breadcrumb-item>
+          <!-- 部署服务 -->
+          {{ $translateTitle('developer.DeploymentServices') }}
+        </el-breadcrumb-item>
       </el-breadcrumb>
-      <h3>服务器部署</h3>
+      <h3>
+        <!-- 服务器部署 -->
+        {{ $translateTitle('developer.Serverdeployment') }}
+      </h3>
       <el-form
         :inline="true"
         :model="formInline"
@@ -24,21 +31,44 @@
             :disabled="appid && appid.length == 0"
             @click="downlictool()"
           >
-            下载引导脚本
+            <!-- 下载引导脚本 -->
+            {{ $translateTitle('product.Downloadbootscripts') }}
           </el-button>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="formInline.user" placeholder="请输入用户名称" />
+          <!-- <el-input v-model="formInline.user" placeholder="请输入用户名称" /> -->
+          <el-input
+            v-model="formInline.user"
+            :placeholder="$translateTitle('product.entertheusername')"
+          />
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.region" placeholder="运行状态">
+          <!-- <el-select v-model="formInline.region" placeholder="运行状态">
             <el-option :value="1" label="全部" />
             <el-option :value="true" label="在线" />
             <el-option :value="false" label="离线" />
+          </el-select> -->
+          <el-select
+            v-model="formInline.region"
+            :placeholder="$translateTitle('equipment.runningstate')"
+          >
+            <el-option :value="1" :label="$translateTitle('zetadevices.all')" />
+            <el-option
+              :value="true"
+              :label="$translateTitle('zetadevices.online')"
+            />
+            <el-option
+              :value="false"
+              :label="$translateTitle('zetadevices.offline')"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.app" placeholder="应用商名称">
+          <!-- <el-select v-model="formInline.app" placeholder="应用商名称"> -->
+          <el-select
+            v-model="formInline.app"
+            :placeholder="$translateTitle('product.Nameofapplicationprovider')"
+          >
             <el-option
               v-for="(item, index) in applist"
               :key="index"
@@ -48,61 +78,134 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="formInline.version" placeholder="请选择应用类型">
+          <!-- <el-select v-model="formInline.version" placeholder="请选择应用类型">
             <el-option label="标准版" value="standard" />
             <el-option label="企业版" value="enterprise" />
             <el-option label="旗舰版" value="ultimate" />
+          </el-select> -->
+          <el-select
+            v-model="formInline.version"
+            :placeholder="$translateTitle('developer.selectapplicationtype')"
+          >
+            <el-option
+              :label="$translateTitle('product.Standard')"
+              value="standard"
+            />
+            <el-option
+              :label="$translateTitle('product.Enterprise')"
+              value="enterprise"
+            />
+            <el-option
+              :label="$translateTitle('product.Flagship')"
+              value="ultimate"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="getOrigin(0)">查询</el-button>
-          <el-button type="primary" @click="addServer">新增</el-button>
+          <el-button type="primary" @click="getOrigin(0)">
+            <!-- 查询 -->
+            {{ $translateTitle('concentrator.search') }}
+          </el-button>
+          <el-button type="primary" @click="addServer">
+            <!-- 新增 -->
+            {{ $translateTitle('product.newlyadded') }}
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="servertable">
       <el-table :data="tableData" style="width: 100%; text-align: center">
-        <el-table-column label="编号" type="index" width="50" align="center" />
-        <el-table-column label="客户名称" align="center" width="100">
+        <!-- <el-table-column label="编号" type="index" width="50" align="center" /> -->
+        <el-table-column
+          :label="$translateTitle('equipment.number')"
+          type="index"
+          width="80"
+          align="center"
+        />
+        <!-- <el-table-column label="客户名称" align="center" width="100"> -->
+        <el-table-column
+          :label="$translateTitle('user.Customername')"
+          align="center"
+          width="150"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.customer_name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="客户应用" align="center" width="200">
+        <!-- <el-table-column label="客户应用" align="center" width="200"> -->
+        <el-table-column
+          :label="$translateTitle('user.Customerapplication')"
+          align="center"
+          width="200"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.appname }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="版本" align="center" width="100">
+        <!-- <el-table-column label="版本" align="center" width="100"> -->
+        <el-table-column
+          :label="$translateTitle('plugins.version')"
+          align="center"
+          width="100"
+        >
           <template slot-scope="scope">
             <span v-if="scope.row.product">
               {{ scope.row.product.shuwa_iot_software }}
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="服务器IP" align="center" width="150">
+        <!-- <el-table-column label="服务器IP" align="center" width="150"> -->
+        <el-table-column
+          :label="$translateTitle('resource.server') + ' IP'"
+          align="center"
+          width="150"
+        >
           <template slot-scope="scope">
             <p v-if="scope.row.private_ip">
-              {{ scope.row.private_ip + '(私)' }}
+              {{
+                scope.row.private_ip +
+                '(' +
+                $translateTitle('task.private') +
+                ')'
+              }}
             </p>
-            <p v-if="scope.row.public_ip">{{ scope.row.public_ip + '(公)' }}</p>
+            <p v-if="scope.row.public_ip">
+              {{
+                scope.row.public_ip + '(' + $translateTitle('task.pubic') + ')'
+              }}
+            </p>
           </template>
         </el-table-column>
-        <el-table-column label="服务器配置" align="center" width="150">
+        <!-- <el-table-column label="服务器配置" align="center" width="150"> -->
+        <el-table-column
+          :label="$translateTitle('product.Serverconfiguration')"
+          align="center"
+          width="150"
+        >
           <template v-if="scope.row.private_ip" slot-scope="scope">
             <el-popover trigger="hover" placement="top">
-              <p>IP地址: {{ scope.row.private_ip }}</p>
-              <p>MAC地址: {{ scope.row.mac }}</p>
+              <p>
+                {{ $translateTitle('equipment.ipaddress') }}:
+                {{ scope.row.private_ip }}
+              </p>
+              <p>
+                {{ $translateTitle('equipment.macaddress') }}:
+                {{ scope.row.mac }}
+              </p>
               <div slot="reference" class="name-wrapper">
                 <el-tag effect="dark">
+                  <!-- ////////////////////////////////////////////////// -->
+                  <!-- ////////////////////////////////////////////////// -->
+                  <!-- ////////////////////////////////////////////////// -->
+                  <!-- ////////////////////////////////////////////////// -->
                   <span>
                     {{
                       scope.row.core +
-                      '核' +
+                      $translateTitle('node.core') +
                       scope.row.memory +
                       ' ' +
                       scope.row.disk +
-                      '内存'
+                      $translateTitle('node.memory')
                     }}
                   </span>
                 </el-tag>
@@ -110,9 +213,9 @@
             </el-popover>
           </template>
         </el-table-column>
-
+        <!-- 机器码 -->
         <el-table-column
-          label="机器码"
+          :label="$translateTitle('product.Machinecode')"
           align="center"
           show-overflow-tooltip
           width="200"
@@ -121,46 +224,76 @@
             <span>{{ scope.row.key }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="授权码" align="center">
+        <!-- 授权码 -->
+        <el-table-column
+          :label="$translateTitle('developer.authcode')"
+          align="center"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.license }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="连接状态" align="center" width="100">
+        <!-- 连接状态 -->
+        <el-table-column
+          :label="$translateTitle('concentrator.connection')"
+          align="center"
+          width="100"
+        >
           <template slot-scope="scope">
             <span v-if="scope.row.is_online == true" style="color: green">
-              在线
+              <!-- 在线 -->
+              {{ $translateTitle('zetadevices.online') }}
             </span>
-            <span v-else style="color: red">离线</span>
+            <span v-else style="color: red">
+              <!-- 离线 -->
+              {{ $translateTitle('zetadevices.offline') }}
+            </span>
           </template>
         </el-table-column>
-        <el-table-column label="部署情况" align="center" width="100">
+        <!-- 部署情况 -->
+        <el-table-column
+          :label="$translateTitle('developer.Deployment')"
+          align="center"
+          width="100"
+        >
           <template slot-scope="scope">
             <span v-if="scope.row.status == 'unauthorized'" style="color: red">
-              未授权
+              <!-- 未授权 -->
+              {{ $translateTitle('developer.Unauthorized') }}
             </span>
             <span
               v-else-if="scope.row.status == 'start_install'"
               style="color: green"
             >
-              开始部署
+              <!-- 开始部署 -->
+              {{ $translateTitle('product.Startdeployment') }}
             </span>
             <span
               v-else-if="scope.row.status == 'installing'"
               style="color: green"
             >
-              部署中
+              <!-- 部署中 -->
+              {{ $translateTitle('product.Underdeployment') }}
             </span>
-            <span v-else style="color: green">部署完成</span>
+            <span v-else style="color: green">
+              <!-- 部署完成 -->
+              {{ $translateTitle('product.Deploymentcomplete') }}
+            </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="500">
+        <!-- 操作 -->
+        <el-table-column
+          :label="$translateTitle('node.operation')"
+          align="center"
+          width="500"
+        >
           <template slot-scope="scope">
             <el-button
               size="mini"
               @click="handleDetail(scope.$index, scope.row)"
             >
-              详 情
+              <!-- 详情 -->
+              {{ $translateTitle('application.detail') }}
             </el-button>
             <el-button
               size="mini"
@@ -168,28 +301,32 @@
               icon="el-icon-s-operation"
               @click="addserver(scope.row)"
             >
-              在线安装
+              <!-- 在线安装 -->
+              {{ $translateTitle('zetadevices.Onlineinstallation') }}
             </el-button>
             <el-button
               size="mini"
               type="success"
               @click="uploadLicense1(scope.row)"
             >
-              离线安装
+              <!-- 离线安装 -->
+              {{ $translateTitle('zetadevices.Offlineinstallation') }}
             </el-button>
             <el-button
               size="mini"
               type="primary"
               @click="onlineLictool(scope.row)"
             >
-              在线升级
+              <!-- 在线升级 -->
+              {{ $translateTitle('zetadevices.Onlineupgrade') }}
             </el-button>
             <el-button
               size="mini"
               type="success"
               @click="offlineLictool(scope.row)"
             >
-              离线升级
+              <!-- 离线升级 -->
+              {{ $translateTitle('zetadevices.Offlineupgrade') }}
             </el-button>
           </template>
         </el-table-column>
@@ -206,10 +343,11 @@
       />
     </div>
     <!--新增编辑弹窗-->
+    <!-- 服务部署 -->
     <el-dialog
       :visible.sync="dialogFormVisible"
       :close-on-click-modal="false"
-      title="服务部署"
+      :title="$translateTitle('developer.Servicedeployment')"
     >
       <el-form
         ref="ruleForm"
@@ -223,11 +361,29 @@
                <template slot="append">台</template>
           </el-input>
         </el-form-item>-->
-        <el-form-item label="应用类型" prop="region">
+        <!-- <el-form-item label="应用类型" prop="region">
           <el-select v-model="ruleForm.region" placeholder="请选择应用类型">
             <el-option label="标准版" value="standard" />
             <el-option label="企业版" value="enterprise" />
             <el-option label="旗舰版" value="ultimate" />
+          </el-select> -->
+        <el-form-item
+          :label="$translateTitle('developer.applicationtype')"
+          prop="region"
+        >
+          <el-select v-model="ruleForm.region" placeholder="请选择应用类型">
+            <el-option
+              :label="$translateTitle('product.Standard')"
+              value="standard"
+            />
+            <el-option
+              :label="$translateTitle('product.Enterprise')"
+              value="enterprise"
+            />
+            <el-option
+              :label="$translateTitle('product.Flagship')"
+              value="ultimate"
+            />
           </el-select>
           <p
             style="
@@ -238,7 +394,12 @@
               color: #cc6e00;
             "
           >
-            标准版本为单机版
+            <!-- 标准版本为单机版 -->
+            {{
+              $translateTitle(
+                'product.Thestandardversionisthestandaloneversion'
+              )
+            }}
           </p>
         </el-form-item>
         <!-- <el-form-item label="应用名称" prop="appname">
@@ -247,21 +408,46 @@
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>
         </el-form-item>-->
-        <el-form-item label="授权码" prop="licensekey">
+        <!-- 授权码 -->
+        <el-form-item
+          :label="$translateTitle('developer.authcode')"
+          prop="licensekey"
+        >
+          <!-- 请输入license授权码 -->
           <el-input
             v-model="ruleForm.licensekey"
-            placeholder="请输入license授权码"
+            :placeholder="$translateTitle('product.enterthelicensecode')"
           />
         </el-form-item>
-        <el-form-item label="客户名称" prop="username">
-          <el-input v-model="ruleForm.username" placeholder="请输入客户名称" />
+        <!-- 客户名称 -->
+        <el-form-item
+          :label="$translateTitle('user.Customername')"
+          prop="username"
+        >
+          <el-input
+            v-model="ruleForm.username"
+            :placeholder="
+              $translateTitle('product.enter1') +
+              $translateTitle('user.Customername')
+            "
+          />
           <!-- <el-select v-model="" placeholder="请选择应用版本">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
           </el-select>-->
         </el-form-item>
-        <el-form-item label="软件版本" prop="version">
-          <el-input v-model="ruleForm.version" placeholder="请输入服务版本" />
+        <!-- 软件版本 -->
+        <el-form-item
+          :label="$translateTitle('plugins.version')"
+          prop="version"
+        >
+          <el-input
+            v-model="ruleForm.version"
+            :placeholder="
+              $translateTitle('product.enter1') +
+              $translateTitle('plugins.version')
+            "
+          />
           <!-- <el-select v-model="" placeholder="请选择应用版本">
             <el-option label="区域一" value="shanghai"></el-option>
             <el-option label="区域二" value="beijing"></el-option>
@@ -294,17 +480,21 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="updatedLicense('ruleForm')">
-          部 署
+          <!-- 部署 -->
+          {{ $translateTitle('developer.deploy') }}
         </el-button>
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button @click="dialogFormVisible = false">
+          <!-- 取消 -->
+          {{ $translateTitle('developer.cancel') }}
+        </el-button>
       </div>
     </el-dialog>
     <!--详情信息dialog-->
-
+    <!-- 详情 -->
     <el-dialog
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
-      title="详情"
+      :title="$translateTitle('product.details')"
       width="50%"
     >
       <div>
@@ -316,25 +506,34 @@
       </span>
     </el-dialog>
     <!--新增dialog-->
-
+    <!-- 服务器配置 -->
     <el-dialog
       :visible.sync="serverdialogVisible"
       :close-on-click-modal="false"
-      title="服务器配置"
+      :title="$translateTitle('product.Serverconfiguration')"
       width="50%"
     >
       <el-form
         ref="serverForm"
         :model="serverForm"
         :rules="serverrules"
-        label-width="100px"
+        label-width="150px"
         class="demo-serverForm"
       >
-        <el-form-item label="用户名称" prop="customer_name">
+        <!-- 用户名称 -->
+        <el-form-item
+          :label="$translateTitle('product.username')"
+          prop="customer_name"
+        >
           <el-input v-model="serverForm.customer_name" />
         </el-form-item>
-        <el-form-item label="应用名称" prop="app">
-          <el-select v-model="serverForm.app" placeholder="应用商名称">
+        <!-- 应用名称 -->
+        <el-form-item :label="$translateTitle('product.appid')" prop="app">
+          <!-- 应用商名称 -->
+          <el-select
+            v-model="serverForm.app"
+            :placeholder="$translateTitle('product.Nameofapplicationprovider')"
+          >
             <el-option
               v-for="(item, index) in applist"
               :key="index"
@@ -343,20 +542,51 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="服务器IP(私)" prop="serverip">
+        <!-- 服务器IP(私) -->
+        <el-form-item
+          :label="
+            $translateTitle('resource.server') +
+            ' IP' +
+            '(' +
+            $translateTitle('task.private') +
+            ')'
+          "
+          prop="serverip"
+        >
           <el-input v-model="serverForm.serverip" />
         </el-form-item>
-        <el-form-item label="服务器IP(公)" prop="publicip">
+        <!-- 服务器IP(公) -->
+        <el-form-item
+          :label="
+            $translateTitle('resource.server') +
+            ' IP' +
+            '(' +
+            $translateTitle('task.public') +
+            ')'
+          "
+          prop="publicip"
+        >
           <el-input v-model="serverForm.publicip" />
         </el-form-item>
-        <el-form-item label="MAC地址" prop="mac">
+        <!-- MAC地址 -->
+        <el-form-item
+          :label="$translateTitle('equipment.macaddress')"
+          prop="mac"
+        >
           <el-input v-model="serverForm.mac" />
         </el-form-item>
-        <el-form-item label="服务器配置" required>
+        <!-- 服务器配置 -->
+        <el-form-item
+          :label="$translateTitle('product.Serverconfiguration')"
+          required
+        >
           <el-col :span="11">
             <el-form-item prop="serverhe">
               <el-input v-model="serverForm.serverhe">
-                <template slot="append">核</template>
+                <template slot="append">
+                  <!-- 核 -->
+                  {{ $translateTitle('node.core') }}
+                </template>
               </el-input>
             </el-form-item>
           </el-col>
@@ -369,31 +599,89 @@
             </el-form-item>
           </el-col>
         </el-form-item>
-        <el-form-item label="内存" prop="disk">
+        <!-- 内存 -->
+        <el-form-item :label="$translateTitle('node.memory')" prop="disk">
           <el-input v-model.number="serverForm.disk">
             <template slot="append">G</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="机器码" prop="serverkey">
-          <el-input v-model="serverForm.serverkey" placeholder="请输入机器码" />
-        </el-form-item>
-        <el-form-item label="授权码">
+        <!-- 机器码 -->
+        <el-form-item
+          :label="$translateTitle('product.Machinecode')"
+          prop="serverkey"
+        >
+          <!-- 请输入机器码 -->
           <el-input
-            v-model="serverForm.licence"
-            placeholder="请输入授权码(未授权可为空)"
+            v-model="serverForm.serverkey"
+            :placeholder="
+              $translateTitle('product.enter1') +
+              $translateTitle('product.Machinecode')
+            "
           />
         </el-form-item>
-        <el-form-item label="服务器状态" prop="status">
+        <!-- 授权码 -->
+        <el-form-item :label="$translateTitle('developer.authcode')">
+          <!-- 请输入授权码(未授权可为空) -->
+          <el-input
+            v-model="serverForm.licence"
+            :placeholder="
+              $translateTitle('product.enter1') +
+              $translateTitle('developer.authcode') +
+              ' (' +
+              $translateTitle('developer.Unauthorizedcanbeempty') +
+              ')'
+            "
+          />
+        </el-form-item>
+        <!-- <el-form-item label="服务器状态" prop="status">
           <el-select v-model="serverForm.status" placeholder="应用商名称">
             <el-option label="未授权" value="unauthorized" />
             <el-option label="开始部署" value="start_install" />
             <el-option label="部署中" value="installing" />
             <el-option label="部署完成" value="installed" />
           </el-select>
+        </el-form-item> -->
+        <el-form-item
+          :label="
+            $translateTitle('resource.server') + $translateTitle('node.state')
+          "
+          prop="status"
+        >
+          <el-select
+            v-model="serverForm.status"
+            :placeholder="$translateTitle('product.Nameofapplicationprovider')"
+          >
+            <el-option
+              :label="$translateTitle('developer.Unauthorized')"
+              value="unauthorized"
+            />
+            <el-option
+              :label="$translateTitle('product.Startdeployment')"
+              value="start_install"
+            />
+            <el-option
+              :label="$translateTitle('product.Underdeployment')"
+              value="installing"
+            />
+            <el-option
+              :label="$translateTitle('product.Deploymentcomplete')"
+              value="installed"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="在线状态" prop="online">
-          <span v-if="serverForm.online" style="color: #13ce66">在线</span>
-          <span v-else style="color: #ff4949">离线</span>
+        <el-form-item
+          :label="$translateTitle('zetadevices.onlinestate')"
+          prop="online"
+          :label-width="50"
+        >
+          <span v-if="serverForm.online" style="color: #13ce66">
+            <!-- 在线 -->
+            {{ $translateTitle('zetadevices.online') }}
+          </span>
+          <span v-else style="color: #ff4949">
+            <!-- 离线 -->
+            {{ $translateTitle('zetadevices.offline') }}
+          </span>
           <el-switch
             v-model="serverForm.online"
             active-color="#13ce66"
@@ -402,27 +690,47 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="serverdialogVisible = false">取 消</el-button>
+        <el-button @click="serverdialogVisible = false">
+          <!-- 取消 -->
+          {{ $translateTitle('developer.cancel') }}
+        </el-button>
         <el-button type="primary" @click="serverOption('serverForm')">
-          确 定
+          <!-- 确定 -->
+          {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>
     </el-dialog>
     <!--在线升级弹窗-->
-    <el-dialog :visible.sync="dialogOnline" title="在线升级">
+    <!-- 在线升级 -->
+    <el-dialog
+      :visible.sync="dialogOnline"
+      :title="$translateTitle('zetadevices.Onlineupgrade')"
+    >
       <el-form ref="onlineform" :model="onlineform" :rules="onlineformrule">
-        <el-form-item label="版本号" label-width="120px" prop="name">
+        <!-- 版本号 -->
+        <el-form-item
+          :label="$translateTitle('plugins.version')"
+          label-width="120px"
+          prop="name"
+        >
           <el-input
             v-model="onlineform.name"
-            placeholder="请输入版本号"
+            :placeholder="
+              $translateTitle('product.enter1') +
+              $translateTitle('plugins.version')
+            "
             autocomplete="off"
           />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogOnline = false">取 消</el-button>
+        <el-button @click="dialogOnline = false">
+          <!-- 取消 -->
+          {{ $translateTitle('developer.cancel') }}
+        </el-button>
         <el-button type="primary" @click="updateLictool('onlineform')">
-          确 定
+          <!-- 确定 -->
+          {{ $translateTitle('developer.determine') }}
         </el-button>
       </div>
     </el-dialog>

@@ -9,8 +9,12 @@
           style="width: 100%"
           @current-change="handleCurrentChange"
         >
-          <el-table-column prop="objectId" label="Id" />
-          <el-table-column prop="name" label="产品名称" />
+          <el-table-column prop="objectId" label="ID" />
+          <!-- <el-table-column prop="name" label="产品名称" /> -->
+          <el-table-column
+            prop="name"
+            :label="$translateTitle('task.productname')"
+          />
         </el-table>
       </el-col>
       <el-col :span="20">
@@ -56,7 +60,8 @@
                 size="small"
                 @click="subAce1('thingsParseModel')"
               >
-                设为公共
+                <!-- 设为公共 -->
+                {{ $translateTitle('product.setaspublic') }}
               </el-button>
               <el-button type="primary" size="small" @click="chaxun">
                 {{ $translateTitle('product.publicagreementlibrary') }}
@@ -65,16 +70,23 @@
                 {{ $translateTitle('product.compile') }}
               </el-button>
               <el-button type="success" size="small" @click="updatesubdialog">
-                热加载
+                <!-- 热加载 -->
+                {{ $translateTitle('product.thermalloading') }}
               </el-button>
             </el-form-item>
           </el-form>
         </div>
         <!--通道热加载-->
-        <el-dialog
+        <!-- <el-dialog
           :visible.sync="protoldialog"
           :close-on-click-modal="false"
           title="通道热加载"
+          width="50%"
+        > -->
+        <el-dialog
+          :visible.sync="protoldialog"
+          :close-on-click-modal="false"
+          :title="$translateTitle('product.tdthermalloading')"
           width="50%"
         >
           <el-table
@@ -119,7 +131,11 @@
             </el-table-column>
           </el-table>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="updateAllChannel">确定</el-button>
+            <!-- <el-button type="primary" @click="updateAllChannel">确定</el-button> -->
+            <el-button type="primary" @click="updateAllChannel">
+              <!-- 确定 -->
+              {{ $translateTitle('developer.determine') }}
+            </el-button>
           </div>
         </el-dialog>
         <!--公共协议库弹窗-->
@@ -157,7 +173,11 @@
                 <span>{{ scope.row.data.desc }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="创建时间" align="center">
+            <!-- <el-table-column label="创建时间" align="center"> -->
+            <el-table-column
+              :label="$translateTitle('application.createtime')"
+              align="center"
+            >
               <template slot-scope="scope">
                 <span>{{ utc2beijing(scope.row.createdAt) }}</span>
               </template>

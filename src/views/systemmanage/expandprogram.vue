@@ -25,7 +25,11 @@
           :label="$translateTitle('plugins.programinglanguage')"
           prop="language"
         >
-          <el-select v-model="formLabelAlign.language" placeholder="活动区域">
+          <!-- <el-select v-model="formLabelAlign.language" placeholder="活动区域"> -->
+          <el-select
+            v-model="formLabelAlign.language"
+            :placeholder="$translateTitle('resource.zoneofaction')"
+          >
             <el-option
               v-for="item in formLabelAlign.languageList"
               :key="item"
@@ -41,14 +45,21 @@
           size="mini"
           @click="submitFormApi('formLabelAlign')"
         >
-          创建
+          <!-- 创建 -->
+          {{ $translateTitle('developer.create') }}
         </el-button>
-        <el-button size="mini" @click="apiDialog = false">取消</el-button>
+        <el-button size="mini" @click="apiDialog = false">
+          <!-- 取消 -->
+          {{ $translateTitle('developer.cancel') }}
+        </el-button>
       </span>
     </el-dialog>
     <el-row :gutter="24">
       <el-col :span="7">
-        <el-button type="primary" @click="addApi">新增Api</el-button>
+        <el-button type="primary" @click="addApi">
+          <!-- 新增Api -->
+          {{ $translateTitle('product.newapi') }}
+        </el-button>
         <el-table
           ref="singleTable"
           :data="AllDict"
@@ -56,11 +67,20 @@
           style="width: 100%"
           @current-change="handleCurrentChange"
         >
-          <el-table-column align="center" label="类型" width="100">
+          <!-- <el-table-column align="center" label="类型" width="100"> -->
+          <el-table-column
+            align="center"
+            :label="$translateTitle('rule.Type')"
+            width="100"
+          >
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.type }}</span>
             </template>
           </el-table-column>
+          <!-- ----------------------which mod--------------------------------- -->
+          <!-- ----------------------which mod--------------------------------- -->
+          <!-- ----------------------which mod--------------------------------- -->
+          <!-- ----------------------which mod--------------------------------- -->
           <el-table-column
             label="mod"
             width="120"
@@ -71,29 +91,54 @@
               <span style="margin-left: 10px">{{ scope.row.mod }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center">
+          <!-- <el-table-column label="操作" align="center"> -->
+          <el-table-column
+            :label="$translateTitle('task.Operation')"
+            align="center"
+          >
             <template slot-scope="scope">
-              <el-button
+              <!-- <el-button
                 size="mini"
                 title="调测"
+                @click="handleTest(scope.$index, scope.row.type, scope.row.mod)"
+              > -->
+              <el-button
+                size="mini"
+                :title="$translateTitle('rule.testnewequipment')"
                 @click="handleTest(scope.$index, scope.row.type, scope.row.mod)"
               >
                 <vab-icon icon="bug-line" />
               </el-button>
-              <el-button
+              <!-- <el-button
                 size="mini"
                 type="primary"
                 title="发布"
                 @click="
                   handleRelease(scope.$index, scope.row.type, scope.row.mod)
                 "
+              > -->
+              <el-button
+                size="mini"
+                type="primary"
+                :title="$translateTitle('product.pub')"
+                @click="
+                  handleRelease(scope.$index, scope.row.type, scope.row.mod)
+                "
               >
                 <vab-icon icon="run-line" />
               </el-button>
-              <el-button
+              <!-- <el-button
                 size="mini"
                 type="danger"
                 title="下架"
+                @click="
+                  handleDelete(scope.$index, scope.row.type, scope.row.mod)
+                "
+              > -->
+              <el-button
+                size="mini"
+                type="danger"
+                :title="$translateTitle('equipment.Offtheshelf')"
                 @click="
                   handleDelete(scope.$index, scope.row.type, scope.row.mod)
                 "
@@ -108,10 +153,15 @@
         <!-- <el-tab-pane label="物解析" name="fourth"> -->
         <div class="protolheader">
           <el-tabs v-model="activeName" size="mini">
-            <el-tab-pane label="设计" name="design">
+            <!-- <el-tab-pane label="设计" name="design"> -->
+            <el-tab-pane
+              :label="$translateTitle('product.Design')"
+              name="design"
+            >
               <JsonEditor ref="jsonEdit" v-model="itemSwagger" />
             </el-tab-pane>
-            <el-tab-pane label="编码" name="code">
+            <!-- <el-tab-pane label="编码" name="code"> -->
+            <el-tab-pane :label="$translateTitle('product.code')" name="code">
               <el-form
                 ref="thingsParseModel"
                 :inline="true"
@@ -149,7 +199,8 @@
               </div>
             </el-tab-pane>
 
-            <el-tab-pane label="测试" name="swagger">
+            <!-- <el-tab-pane label="测试" name="swagger"> -->
+            <el-tab-pane :label="$translateTitle('rule.Test')" name="swagger">
               <iframe :src="swaggerPath" width="100%" height="700vh" />
             </el-tab-pane>
           </el-tabs>

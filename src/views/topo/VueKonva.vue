@@ -18,7 +18,7 @@
         :stop-mqtt="stop_Mqtt"
         :value="value"
         @messageData="set_mqttflag"
-        @createShape="createShape"
+        @removeShape="removeShape"
       />
     </div>
     <div class="_mian">
@@ -131,6 +131,7 @@
     dragBox,
     stageMousemove,
     stageMousedown,
+    createState,
   } from '@/utils/konva'
   import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   import { isBase64, isImage } from '@/utils'
@@ -159,17 +160,17 @@
         headevisible: false,
         infoFlag: false,
         arrowClass: 'arrowClass',
-        Shapeconfig: { id: '' },
         topic: '',
         stop_Mqtt: true,
         tabsName: 'ShapeJson',
         globalStageid: '',
         value: false,
+        kovaUpType: '',
       }
     },
     computed: {
       ...mapState({
-        graphColor: 'konva/graphColor',
+        // graphColor: 'konva/graphColor',
         // drawing: 'konva/drawing',
         //   graphNow: 'konva/graphNow',
         pointStart: 'konva/pointStart',
@@ -179,6 +180,19 @@
       flag: {
         get() {
           return this.$store.state.konva.flag
+        },
+      },
+      graphColor: {
+        get() {
+          return this.$store.state.konva.graphColor
+        },
+        set(val) {
+          this.$store.commit('konva/setGraphColor', val)
+        },
+      },
+      draw: {
+        get() {
+          return this.$store.state.konva.draw
         },
       },
       graphNow: {
@@ -263,124 +277,38 @@
       set_mqttflag(v) {
         this.stop_Mqtt = v
       },
-      // 创建图层
-      createShape(v, color) {
-        console.log('类型', v)
-        var state
-        var _group = this.stage.find('Group')[0]
+      // removeShape
+      removeShape(node) {
+        console.log()
         var Layer = this.stage.find('Layer')[0]
-        switch (v) {
-          case 'pencil':
-            state = new Konva.Line({
-              name: 'line',
-              id: `line_${Mock.mock('@string')}`,
-              points: [5, 70, 140, 23, 250, 60, 300, 20],
-              stroke: color,
-              strokeWidth: 15,
-              lineCap: 'round',
-              lineJoin: 'round',
-              tension: 0.5,
-              draggable: true,
-            })
-            break
-          case 'ellipse':
-            // 椭圆
-            state = new Konva.Ellipse({
-              name: 'ellipse',
-              id: `ellipse_${Mock.mock('@string')}`,
-              x: 40,
-              y: 40,
-              radiusX: 20,
-              radiusY: 20,
-              stroke: color,
-              strokeWidth: 4,
-              draggable: true,
-            })
-            break
-          case 'rect':
-          case 'rectH':
-            state = new Konva.Rect({
-              name: 'rect',
-              x: 20,
-              id: `rect_${Mock.mock('@string')}`,
-              y: 20,
-              width: 100,
-              height: 50,
-              fill: color,
-              stroke: 'black',
-              strokeWidth: 4,
-              opacity: 1,
-              draggable: true,
-            })
-            break
-          case 'text':
-            state = new Konva.Text({
-              text: '双击编辑文字',
-              id: `text_${Mock.mock('@string')}`,
-              x: 20,
-              y: 20,
-              fill: color,
-              fontSize: 12,
-              width: 300,
-              draggable: true,
-            })
-            break
-          case 'image':
-            let imgsrc =
-              'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2234238213,2776120128&fm=26&gp=0.jpg'
-            var imageObj = new Image()
-            state = new Konva.Image({
-              x: 50,
-              y: 50,
-              source: imgsrc,
-              id: `image_${Mock.mock('@string')}`,
-              image: imageObj,
-              width: 106,
-              height: 118,
-              draggable: true,
-            })
-
-            imageObj.src = imgsrc
-            imageObj.crossOrigin = 'Anonymous'
-            // alternative API:
-            break
-          default:
-            break
-        }
-
-        _group.add(state)
-        Layer.draw()
+        node.remove()
+        node.destroy()
         Layer.batchDraw()
-        this.stage.add(Layer)
+        this.setGraphNow('')
+        if (node.attrs.id == this.$refs['operation'].Shapeconfig.attrs.id)
+          this.$refs['operation'].Shapeconfig = []
       },
       // saveKonvaitem
       saveKonvaitem(config) {
-        // console.log(e, 'mouseout')
-        // find item in the data
-        //  bug
-        // const item = this.stage.find((i) => i.id === id)
-        // for (var k in config) {
-        //   console.log(config[`${k}`])
-        // }
         let _this = this
-        console.log(_this.stage.find(`#${config.id}`))
-        console.log('config.idconfig.id')
-
+        console.log(_this.stage.find(`#${config.attrs.id}`))
+        console.log('config.attrs.id', config.attrs.id)
+        let _uptype
         var Text = _this.stage.find('Text')
-        console.log(Text)
+        var Imgage = _this.stage.find('Imgage')
+        var Group = _this.stage.find('Group')
+        var stage = _this.stage.find(config.attrs.id)
+        console.log('stage', stage)
         var tweens = []
         for (var n = 0; n < tweens.length; n++) {
           tweens[n].destroy()
         }
-        var Imgage = _this.stage.find('Imgage')
         Imgage.each((shape) => {
-          if (shape.attrs.id == config.id) {
-            console.log(config)
-            console.log(shape)
-            shape.text(config.text)
+          if (shape.attrs.id == config.attrs.id) {
+            _this.kovaUpType = 'Imgage'
             tweens.push(
               new Konva.Tween({
-                node: shape,
+                node: Object.assign(shape, config),
                 Opacity: 0.8,
                 duration: 1,
                 easing: Konva.Easings.ElasticEaseOut,
@@ -388,15 +316,12 @@
             )
           }
         })
-        var Group = _this.stage.find('Group')
         Group.each((shape) => {
-          if (shape.attrs.id == config.id) {
-            console.log(config)
-            console.log(shape)
-            shape.text(config.text)
+          if (shape.attrs.id == config.attrs.id) {
+            _this.kovaUpType = 'Group'
             tweens.push(
               new Konva.Tween({
-                node: shape,
+                node: Object.assign(shape, config),
                 Opacity: 0.8,
                 duration: 1,
                 easing: Konva.Easings.ElasticEaseOut,
@@ -405,13 +330,11 @@
           }
         })
         Text.each((shape) => {
-          if (shape.attrs.id == config.id) {
-            console.log(config)
-            console.log(shape)
-            shape.text(config.text)
+          if (shape.attrs.id == config.attrs.id) {
+            _this.kovaUpType = 'Text'
             tweens.push(
               new Konva.Tween({
-                node: shape,
+                node: Object.assign(shape, config),
                 Opacity: 0.8,
                 duration: 1,
                 easing: Konva.Easings.ElasticEaseOut,
@@ -419,10 +342,16 @@
             )
           }
         })
-        let toJSON = _this.stage.toJSON()
-        console.log(toJSON)
-        _this.ShapeVisible = false
         _this.stage.batchDraw()
+        if (_this.stage.attrs.id == config.attrs.id) {
+          _this.kovaUpType = 'Layer'
+          _this.stage = config
+        }
+        console.clear()
+        console.info(`updata type is ${_this.kovaUpType}`)
+        let toJSON = _this.stage
+        // console.log(toJSON)
+        _this.ShapeVisible = false
         console.log('konva数据更新成功')
         _this.updataProduct(_this.productid)
         // _this.updataProduct(_this.productid)
@@ -484,12 +413,16 @@
       },
       // 更新产品
       async updataProduct(productid) {
-        if (!this.stage.toJSON()) {
-          return
-        }
         console.log('updatatopo')
         let config = this.productconfig.config
-        config.konva.Stage = JSON.parse(this.stage.toJSON())
+        let stage
+        if (this.kovaUpType != 'Layer') {
+          if (!this.stage.toJSON()) return
+          stage = JSON.parse(this.stage.toJSON())
+        } else {
+          stage = this.stage
+        }
+        config.konva.Stage = stage
         // 提交前需要先对数据进行合并
         // let upconfig = Object.assign(config, this.paramsconfig)
         let params = {
@@ -578,7 +511,7 @@
         })
         _this.productconfig = results[0]
         console.log(_this.productconfig)
-
+        _this.$refs['operation'].productconfig = results[0]
         if (message == 'SUCCESS') {
           console.log(data.Stage.attrs.id)
           _this.globalStageid = data.Stage.attrs.id
@@ -595,13 +528,10 @@
         let _this = this
         if (type != 'create') {
           Stage = data
-          background = _this.productconfig.config.konva.background
         } else {
-          background = data.background
           Stage = data.Stage
         }
         console.log(data)
-        _this.$refs['operation'].bachgroundurl = background
         console.log(Stage.attrs.height, Stage.attrs.width, '450')
         Stage.attrs.height = _this.stageConfig.height
         Stage.attrs.width = _this.stageConfig.width
@@ -613,27 +543,34 @@
         console.log('globalStageid', globalStageid)
         console.log(Stage, 'Stage')
         _this.stage = Konva.Node.create(Stage, globalStageid)
-        // 2 create layer
-        _this.stage.find('Image').each((node) => {
-          const img = new Image()
-          img.src = node.getAttr('source')
-          _this.backgroundImage = img.src
-          this.$refs['operation'].bachgroundurl = img.src
-          img.onload = () => {
-            node.image(img)
-            _this.stage.batchDraw()
+        _this.stage.on('click', (e) => {
+          var node = e.target
+
+          console.log(node.toJSON())
+          if (_this.isDevice) return
+          _this.setGraphNow(e.target)
+
+          _this.$refs['operation'].Shapeconfig = JSON.parse(node.toJSON())
+          if (!_this.flag) {
+            return
           }
+          console.log('类型', _this.flag)
+          console.log('this.draw', _this.draw)
+          console.log('color', _this.graphColor)
+          var color = _this.graphColor
+          var type = _this.flag
+          var params
+          var _group = _this.stage.find('Group')[0]
+          var Layer = _this.stage.find('Layer')[0]
+          console.log(e.evt)
+          const { offsetX, offsetY } = e.evt
+          var state = createState(type, offsetX, offsetY, color, params)
+          _group.add(state)
+          Layer.draw()
+          Layer.batchDraw()
+          _this.setFlag('')
+          _this.setDraw(false)
         })
-        // _this.stage.on('click', (e) => {
-        //   // _this.ShapeVisible = true
-        //   let Shapeconfig = e.target.attrs
-        //   var json = _this.stage.find(`$&{e.target.attrs.id}`)
-        //   console.log(json)
-        //   console.log('click stage info', e.target.attrs) // 这里为dom 对象 临时解决方式是将其赋值为空。否则json解析会报错
-        //   Shapeconfig['container'] = ''
-        //   if (!_this.rightrow) _this.rightrow = 6
-        //   _this.$refs['operation'].Shapeconfig = Shapeconfig
-        // })
         var Group = _this.stage.find('Group')
         // 设置页面是从设备界面进入 则不添加以下事件
         if (_this.isDevice && _this.productconfig) {
@@ -644,20 +581,19 @@
           _this.rightrow = 6
         }
         Group.each(function (_G) {
-          console.log(_G, '_G')
           _G.on('click', (e) => {
             // _this.ShapeVisible = true
-            console.log(
-              Group.find(`$&{e.target.attrs.id}`),
-              `${e.target.attrs.id}`
-            )
-            console.log(e.target.attrs)
-            if (!_this.rightrow) _this.rightrow = 6
-            _this.$refs['operation'].Shapeconfig = e.target.attrs
-            _this.Shapeconfig = e.target.attrs
+            console.log(`#${e.target.attrs.id}`)
+            var node = e.target
+            console.log(e)
+            _this.setGraphNow(e.target)
+            if (!_this.rightrow && !_this.isDevice) _this.rightrow = 6
+            // _this.$refs['operation'].Shapeconfig = node.toJSON()
           })
           _G.on('mouseup', (e) => {
             console.log(e, 'mouseup')
+            if (!_this.isDevice && _this.productid) _this.headevisible = true
+
             document.body.style.cursor = 'pointer'
           })
           _G.on('mouseover', (e) => {

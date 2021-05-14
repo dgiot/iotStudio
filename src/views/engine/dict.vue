@@ -1660,11 +1660,11 @@
       background: #f0f9eb;
     }
 
-    ::v-deep.jsoneditor-vue {
+    ::v-deep .jsoneditor-vue {
       height: 300px;
     }
 
-    ::v-deep.json-save-btn {
+    ::v-deep .json-save-btn {
       cursor: pointer;
     }
     .dict_type ::v-deep .el-form-item {

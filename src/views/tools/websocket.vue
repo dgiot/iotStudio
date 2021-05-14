@@ -17,8 +17,9 @@
               <el-input v-model.number="port" />
             </el-form-item>
           </el-col>
+
           <el-col :span="8">
-            <el-form-item label="Path">
+            <el-form-item :label="$translateTitle('developer.path')">
               <el-input v-model="path" />
             </el-form-item>
           </el-col>

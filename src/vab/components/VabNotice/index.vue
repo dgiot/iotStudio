@@ -42,7 +42,6 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { getList } from '@/api/notice'
 
   export default {
     name: 'VabNotice',
@@ -59,13 +58,13 @@
       }),
     },
     created() {
-      this.$nextTick(() => {
-        if (this.theme.showNotice) this.fetchData()
-      })
+      // this.$nextTick(() => {
+      //   if (this.theme.showNotice) this.fetchData()
+      // })
     },
     methods: {
       handleClick() {
-        this.fetchData()
+        // this.fetchData()
       },
       handleClearNotice() {
         this.badge = null
@@ -77,11 +76,11 @@
           'vab-hey-message-success'
         )
       },
-      async fetchData() {
-        const { data = [] } = await getList()
-        this.badge = data.length === 0 ? null : data.length
-        this.list = data
-      },
+      // async fetchData() {
+      //   const { data = [] } = await getList()
+      //   this.badge = data.length === 0 ? null : data.length
+      //   this.list = data
+      // },
     },
   }
 </script>

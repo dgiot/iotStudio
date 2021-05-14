@@ -197,8 +197,8 @@
                   />
                   <el-table-column :label="$translateTitle('rule.Parameter')">
                     <template slot-scope="scope">
-                      <span v-if="scope.row.params.$resource">
-                        {{ '关联资源:' + scope.row.params.$resource }}
+                      <span v-if="scope.row.args.$resource">
+                        {{ '关联资源:' + scope.row.args.$resource }}
                       </span>
                       <span v-else />
                     </template>
@@ -273,7 +273,7 @@
                       <el-button
                         size="mini"
                         type="primary"
-                        @click="relationChannel(scope.row.objectId)"
+                        @click="relationChannel(scope.row)"
                       >
                         {{ $translateTitle('developer.add') }}
                       </el-button>
@@ -441,11 +441,11 @@
       openDialog() {
         this.dialogVisible = true
       },
-      relationChannel(objectId) {
+      relationChannel(row) {
         this.actionData.push({
           name: 'data_to_resource',
-          params: {
-            $resource: 'channel:' + objectId,
+          args: {
+            $resource: 'resource:' + row.objectId,
             // type: this.ctype
           },
         })

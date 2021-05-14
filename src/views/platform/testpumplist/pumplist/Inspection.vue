@@ -10,24 +10,36 @@
           label-width="120px"
         >
           <el-divider content-position="left" style="color: blue">
-            基本信息
+            <!-- 基本信息 -->
+            {{ $translateTitle('concentrator.basicinformation') }}
           </el-divider>
           <el-row>
             <el-col :span="12">
               <div class="grid-content bg-purple">
-                <el-form-item label="任务名称：" prop="name">
+                <!-- <el-form-item label="任务名称：" prop="name"> -->
+                <el-form-item
+                  :label="$translateTitle('task.Taskname')"
+                  prop="name"
+                >
                   <el-input
                     v-model="task_form.name"
-                    placeholder="请输入任务名称"
+                    :placeholder="
+                      $translateTitle('product.enter1') +
+                      $translateTitle('task.Taskname')
+                    "
                   />
                 </el-form-item>
-                <el-form-item
+                <!-- <el-form-item
                   label="报告模板"
+                  prop="basedata.info.testContent.name"
+                > -->
+                <el-form-item
+                  :label="$translateTitle('developer.Reporttemplate')"
                   prop="basedata.info.testContent.name"
                 >
                   <el-select
                     v-model="task_form.basedata.info.testContent.name"
-                    placeholder="报告模板"
+                    :placeholder="$translateTitle('developer.Reporttemplate')"
                     style="width: 100%"
                     @change="changeReport"
                   >
@@ -44,15 +56,22 @@
             <!--右边的地方-->
             <el-col :span="12">
               <div class="grid-content bg-purple-light">
-                <el-form-item label="开始时间：" prop="basedata.info.starttime">
+                <!-- 开始时间 -->
+                <el-form-item
+                  :label="$translateTitle('task.starttime') + ':'"
+                  prop="basedata.info.starttime"
+                >
                   <el-date-picker
                     v-model="task_form.basedata.info.starttime"
                     type="datetime"
                     value-format="timestamp"
                   />
                 </el-form-item>
-
-                <el-form-item label="结束时间：" prop="basedata.info.endtime">
+                <!-- 结束时间： -->
+                <el-form-item
+                  :label="$translateTitle('task.endttime') + ':'"
+                  prop="basedata.info.endtime"
+                >
                   <el-date-picker
                     v-model="task_form.basedata.info.endtime"
                     type="datetime"
@@ -68,11 +87,18 @@
             </el-col>
             <el-col :span="12">
               <div class="grid-content bg-purple-light">
-                <el-form-item label="测试台体" prop="bedname">
+                <!-- <el-form-item label="测试台体" prop="bedname"> -->
+                <el-form-item
+                  :label="$translateTitle('product.testplatform')"
+                  prop="bedname"
+                >
                   <el-select
                     v-model="task_form.basedata.info.devInfo.name"
                     style="width: 100%"
-                    placeholder="请选择测试台体"
+                    :placeholder="
+                      $translateTitle('task.Select') +
+                      $translateTitle('product.testplatform')
+                    "
                     @change="changeBed"
                   >
                     <!-- item.objectId -->
@@ -88,7 +114,11 @@
             </el-col>
             <el-col :span="12">
               <div class="grid-content bg-purple-light">
-                <el-form-item label="任务模板" prop="bedname">
+                <!-- <el-form-item label="任务模板" prop="bedname"> -->
+                <el-form-item
+                  :label="$translateTitle('task.Tasktemplate')"
+                  prop="bedname"
+                >
                   <el-input v-model="task_form.basedata.info.inspnumber" />
                 </el-form-item>
               </div>
@@ -97,16 +127,24 @@
         </el-form>
 
         <div slot="footer" class="dialog-footer">
-          <el-button @click="add_taskdialog = false">取 消</el-button>
+          <el-button @click="add_taskdialog = false">
+            <!-- 取消 -->
+            {{ $translateTitle('developer.cancel') }}
+          </el-button>
           <el-button type="primary" @click="submiTask('task_form')">
-            确 定
+            <!-- 确定 -->
+            {{ $translateTitle('developer.determine') }}
           </el-button>
         </div>
       </el-dialog>
     </div>
     <div class="inspection">
       <el-tabs type="border-card">
-        <el-tab-pane :label="'审核中(' + total + ')'">
+        <!-- <el-tab-pane :label="'审核中(' + total + ')'"> -->
+        <!-- $translateTitle('product.Underreview') -->
+        <el-tab-pane
+          :label="$translateTitle('product.Underreview') + '(' + total + ')'"
+        >
           <el-row>
             <el-col :span="12">&nbsp;</el-col>
             <el-col :span="12" style="text-align: right">
@@ -117,7 +155,8 @@
                   icon="el-icon-plus"
                   @click="add_taskdialog = true"
                 >
-                  新增任务
+                  <!-- 新增任务 -->
+                  {{ $translateTitle('product.Newtasks') }}
                 </el-button>
               </p>
             </el-col>
@@ -128,8 +167,13 @@
               <el-table-column type="index" label="id" />
               <!-- <el-table-column label="任务模板" align="center" prop="basedata.inspection_number" /> -->
 
-              <el-table-column
+              <!-- <el-table-column
                 label="检验/试验编号"
+                align="center"
+                prop="basedata.inspection_number"
+              > -->
+              <el-table-column
+                :label="$translateTitle('product.Inspectiontestnumber')"
                 align="center"
                 prop="basedata.inspection_number"
               >
@@ -140,23 +184,27 @@
                 </template>
               </el-table-column>
 
-              <el-table-column prop="name" label="任务名称" align="center" />
-
               <el-table-column
-                prop="basedata.insectionName"
-                label="报告模板"
+                prop="name"
+                :label="$translateTitle('task.Taskname')"
                 align="center"
               />
-
+              <!-- 报告模板 -->
+              <el-table-column
+                prop="basedata.insectionName"
+                :label="$translateTitle('developer.Reporttemplate')"
+                align="center"
+              />
+              <!-- 测试台体 -->
               <el-table-column
                 prop="basedata.bedname"
-                label="测试台体"
+                :label="$translateTitle('product.testplatform')"
                 align="center"
                 width="150"
               />
-
+              <!-- 开始时间 -->
               <el-table-column
-                label="开始时间"
+                :label="$translateTitle('task.starttime')"
                 prop="$timestampToTime(scope.row.basedata.starttime)}"
                 align="center"
               >
@@ -166,9 +214,9 @@
                   </span>
                 </template>
               </el-table-column>
-
+              <!-- 结束时间 -->
               <el-table-column
-                label="结束时间"
+                :label="$translateTitle('task.endtime')"
                 prop="$timestampToTime(scope.row.basedata.endtime)}"
                 align="center"
               >
@@ -178,8 +226,11 @@
                   </span>
                 </template>
               </el-table-column>
-
-              <el-table-column label="创建日期" align="center">
+              <!-- 创建日期 -->
+              <el-table-column
+                :label="$translateTitle('application.createtime')"
+                align="center"
+              >
                 <template slot-scope="scope">
                   <span>
                     {{ $utc2beijing(scope.row.createdAt).substring(0, 16) }}
@@ -187,29 +238,54 @@
                 </template>
               </el-table-column>
 
-              <el-table-column label="状态" align="center" width="160">
+              <!-- <el-table-column label="状态" align="center" width="160"> -->
+              <el-table-column
+                :label="$translateTitle('equipment.state')"
+                align="center"
+                width="160"
+              >
                 <template slot-scope="scope">
                   <!-- verifyStatus 0 未审核, 1 审核通过 2 审核不通过 -->
 
                   <span v-if="scope.row.basedata.verifyStatus > 0">
-                    {{
+                    <!-- {{
                       ['', '审核通过', '审核不通过'][
                         scope.row.basedata.verifyStatus
                       ]
+                    }} -->
+                    {{
+                      [
+                        '',
+                        $translateTitle('product.Approved'),
+                        $translateTitle('product.notapproved'),
+                      ][scope.row.basedata.verifyStatus]
                     }}
                   </span>
 
                   <span v-else>
-                    {{
+                    <!-- {{
                       ['未开始', '正在测试', '测试完成'][
                         scope.row.basedata.testStatus
                       ] || '未测试'
+                    }} -->
+                    {{
+                      [
+                        $translateTitle('product.notstarted'),
+                        $translateTitle('product.testing'),
+                        $translateTitle('product.finishtest'),
+                      ][scope.row.basedata.testStatus] ||
+                      $translateTitle('product.notested')
                     }}
                   </span>
                 </template>
               </el-table-column>
 
-              <el-table-column align="center" label="报告操作" width="240">
+              <!-- <el-table-column align="center" label="报告操作" width="240"> -->
+              <el-table-column
+                align="center"
+                :label="$translateTitle('product.Reportoperation')"
+                width="240"
+              >
                 <template slot-scope="scope">
                   <!-- <span v-if="userRoles.org_type != '中心厂家检测员' "> -->
                   <el-button
@@ -218,7 +294,8 @@
                     size="mini"
                     @click="clientView(scope.row, scope.$index)"
                   >
-                    取证
+                    <!-- 取证 -->
+                    {{ $translateTitle('product.obtainevidence') }}
                   </el-button>
 
                   <el-button
@@ -229,7 +306,8 @@
                     size="mini"
                     @click="stepfun(scope.row)"
                   >
-                    导出
+                    <!-- 导出 -->
+                    {{ $translateTitle('product.export') }}
                   </el-button>
 
                   <el-button
@@ -237,7 +315,8 @@
                     size="mini"
                     @click="showTaskStartBox(scope.row)"
                   >
-                    开始
+                    <!-- 开始 -->
+                    {{ $translateTitle('task.start') }}
                   </el-button>
 
                   <!-- testStatus = 2 代表完成 -->
@@ -251,13 +330,24 @@
                     size="mini"
                     @click="beforeFinish(scope.row)"
                   >
-                    完成
+                    <!-- 完成 -->
+                    {{ $translateTitle('product.finish') }}
                   </el-button>
 
-                  <el-tooltip
+                  <!-- <el-tooltip
                     class="item"
                     effect="dark"
                     content="生成报告以后才能导出"
+                    placement="top-start"
+                  > -->
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    :content="
+                      $translateTitle(
+                        'product.Reportgenerationcannotbeexported'
+                      )
+                    "
                     placement="top-start"
                   >
                     <el-button
@@ -266,7 +356,8 @@
                       icon="el-icon-document"
                       @click="beforGetTestReport(scope.row)"
                     >
-                      报告
+                      <!-- 报告 -->
+                      {{ $translateTitle('product.report') }}
                     </el-button>
                   </el-tooltip>
 
@@ -278,7 +369,8 @@
                 <template slot-scope="scope">
                   <el-dropdown>
                     <el-button size="small">
-                      更多操作
+                      <!-- 更多操作 -->
+                      {{ $translateTitle('task.moreoperations') }}
                       <i class="el-icon-arrow-down el-icon--right" />
                     </el-button>
                     <el-dropdown-menu slot="dropdown">
@@ -286,17 +378,20 @@
                         :disabled="scope.row.basedata.testStatus == 2"
                         @click.native="editorClient(scope.row)"
                       >
-                        编 辑
+                        <!-- 编辑 -->
+                        {{ $translateTitle('developer.edit') }}
                       </el-dropdown-item>
                       <el-dropdown-item
                         @click.native="deleteClient(scope.row.objectId)"
                       >
-                        删 除
+                        <!-- 删除 -->
+                        {{ $translateTitle('developer.delete') }}
                       </el-dropdown-item>
                       <el-dropdown-item
                         @click.native="examineVerify(scope.row)"
                       >
-                        详 情
+                        <!-- 详情 -->
+                        {{ $translateTitle('product.details') }}
                       </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
@@ -317,13 +412,15 @@
           </div>
         </el-tab-pane>
 
-        <el-tab-pane :label="'审核完成(' + total1 + ')'">
+        <el-tab-pane
+          :label="$translateTitle('product.finishreview') + '(' + total1 + ')'"
+        >
           <el-table :data="taskList.doneData" stripe border>
             <el-table-column type="index" label="id" />
             <!-- <el-table-column label="任务模板" align="center" prop="basedata.inspection_number" /> -->
 
             <el-table-column
-              label="检验/试验编号"
+              :label="$translateTitle('product.Inspectiontestnumber')"
               align="center"
               prop="basedata.inspection_number"
             >
@@ -334,23 +431,27 @@
               </template>
             </el-table-column>
 
-            <el-table-column prop="name" label="任务名称" align="center" />
-
+            <!-- <el-table-column prop="name" label="任务名称" align="center" /> -->
+            <el-table-column
+              prop="name"
+              :label="$translateTitle('protaskduct.Taskname')"
+              align="center"
+            />
             <el-table-column
               prop="basedata.insectionName"
-              label="报告模板"
+              :label="$translateTitle('developer.Reporttemplate')"
               align="center"
             />
 
             <el-table-column
               prop="basedata.bedname"
-              label="测试台体"
+              :label="$translateTitle('product.testplatform')"
               align="center"
               width="150"
             />
 
             <el-table-column
-              label="开始时间"
+              :label="$translateTitle('task.starttime')"
               prop="$timestampToTime(scope.row.basedata.starttime)}"
               align="center"
             >
@@ -362,7 +463,7 @@
             </el-table-column>
 
             <el-table-column
-              label="结束时间"
+              :label="$translateTitle('task.endtime')"
               prop="$timestampToTime(scope.row.basedata.endtime)}"
               align="center"
             >
@@ -373,7 +474,10 @@
               </template>
             </el-table-column>
 
-            <el-table-column label="创建日期" align="center">
+            <el-table-column
+              :label="$translateTitle('application.createtime')"
+              align="center"
+            >
               <template slot-scope="scope">
                 <span>
                   {{ $utc2beijing(scope.row.createdAt).substring(0, 16) }}
@@ -387,17 +491,22 @@
 
                 <span v-if="scope.row.basedata.verifyStatus > 0">
                   {{
-                    ['', '审核通过', '审核不通过'][
-                      scope.row.basedata.verifyStatus
-                    ]
+                    [
+                      '',
+                      $translateTitle('product.Approved'),
+                      $translateTitle('product.notapproved'),
+                    ][scope.row.basedata.verifyStatus]
                   }}
                 </span>
 
                 <span v-else>
                   {{
-                    ['未测试', '正在测试', '测试完成'][
-                      scope.row.basedata.testStatus
-                    ] || '未测试'
+                    [
+                      $translateTitle('product.notstarted'),
+                      $translateTitle('product.testing'),
+                      $translateTitle('product.finishtest'),
+                    ][scope.row.basedata.testStatus] ||
+                    $translateTitle('product.notested')
                   }}
                 </span>
               </template>
@@ -405,7 +514,7 @@
 
             <el-table-column
               v-if="userRoles.org_type != '中心厂家检测员'"
-              label="数据操作"
+              :label="$translateTitle('product.Dataoperation')"
               width="320"
               align="center"
             >
@@ -415,7 +524,8 @@
                   size="mini"
                   @click="deleteClient(scope.row.objectId)"
                 >
-                  删 除
+                  <!-- 删除 -->
+                  {{ $translateTitle('developer.delete') }}
                 </el-button>
 
                 <el-button
@@ -424,7 +534,8 @@
                   size="mini"
                   @click="stepfun(scope.row)"
                 >
-                  导出
+                  <!-- 导出 -->
+                  {{ $translateTitle('product.export') }}
                 </el-button>
               </template>
             </el-table-column>

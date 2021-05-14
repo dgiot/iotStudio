@@ -640,6 +640,7 @@
             width="60%"
             top="5vh"
           >
+            {{ sizeForm }}
             <div class="wmxheader">
               <el-form
                 ref="sizeForm"
@@ -651,22 +652,12 @@
               >
                 <!-- update 2020 05-27 hughWang -->
                 <!-- 功能名称  -->
-
                 <!--INT,FLOAT,DOUBLE数据类型添加模式-->
-                <div
-                  v-if="
-                    sizeForm.type == 'int' ||
-                    sizeForm.type == 'float' ||
-                    sizeForm.type == 'double'
-                  "
-                >
+                <div>
                   <el-collapse v-model="collapseName">
                     <el-collapse-item name="1">
                       <template slot="title">
-                        <h3 style="font-size: normal">
-                          <!-- 数据存储 -->
-                          {{ $translateTitle('task.datastorage') }}
-                        </h3>
+                        {{ $translateTitle('task.datastorage') }}
                       </template>
                       <el-row :gutter="24">
                         <el-col :span="12">
@@ -688,80 +679,6 @@
                           <!--type-->
                         </el-col>
                       </el-row>
-                      <el-row :gutter="24">
-                        <el-col :span="12">
-                          <!-- <el-form-item
-                            prop="startnumber"
-                            label="取值范围(最小值)"
-                          > -->
-                          <el-form-item
-                            prop="startnumber"
-                            :label="$translateTitle('product.valuerangemin')"
-                          >
-                            <el-input
-                              v-model.number="sizeForm.startnumber"
-                              :placeholder="
-                                $translateTitle('product.minimumvalue')
-                              "
-                              type="number"
-                            />
-                          </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                          <!-- <el-form-item
-                            prop="endnumber"
-                            label="取值范围(最大值)"
-                          > -->
-                          <el-form-item
-                            prop="endnumber"
-                            :label="$translateTitle('product.valuerangemax')"
-                          >
-                            <el-input
-                              v-model.number="sizeForm.endnumber"
-                              :placeholder="
-                                $translateTitle('product.maximumvalue')
-                              "
-                              type="number"
-                              @input="changeValue('sizeForm')"
-                            />
-                          </el-form-item>
-                        </el-col>
-                      </el-row>
-                      <el-row :gutter="24">
-                        <el-col :span="12">
-                          <el-form-item label="步长" prop="step">
-                            <el-input-number
-                              v-model="sizeForm.step"
-                              style="width: 100%"
-                              :precision="2"
-                              :min="0"
-                              :step="0.01"
-                              controls-position="right"
-                            />
-                          </el-form-item>
-                        </el-col>
-
-                        <el-col :span="12">
-                          <el-form-item
-                            :label="$translateTitle('product.readandwritetype')"
-                            prop="isread"
-                          >
-                            <el-radio-group
-                              v-model="sizeForm.isread"
-                              style="width: 100%"
-                              size="medium"
-                            >
-                              <el-radio label="rw">
-                                {{ $translateTitle('product.readandwrite') }}
-                              </el-radio>
-                              <el-radio label="r">
-                                {{ $translateTitle('product.onlyread') }}
-                              </el-radio>
-                            </el-radio-group>
-                          </el-form-item>
-                        </el-col>
-                      </el-row>
-
                       <el-row :gutter="24">
                         <el-col :span="12">
                           <!-- 数据类型 -->
@@ -811,6 +728,92 @@
                           </el-form-item>
                         </el-col>
                         <el-col :span="12">
+                          <el-form-item
+                            :label="$translateTitle('product.readandwritetype')"
+                            prop="isread"
+                          >
+                            <el-radio-group
+                              v-model="sizeForm.isread"
+                              style="width: 100%"
+                              size="medium"
+                            >
+                              <el-radio label="rw">
+                                {{ $translateTitle('product.readandwrite') }}
+                              </el-radio>
+                              <el-radio label="r">
+                                {{ $translateTitle('product.onlyread') }}
+                              </el-radio>
+                            </el-radio-group>
+                          </el-form-item>
+                        </el-col>
+                      </el-row>
+                      <el-row
+                        v-if="
+                          sizeForm.type == 'int' ||
+                          sizeForm.type == 'float' ||
+                          sizeForm.type == 'double'
+                        "
+                        :gutter="24"
+                      >
+                        <el-col :span="12">
+                          <!-- <el-form-item
+                            prop="startnumber"
+                            label="取值范围(最小值)"
+                          > -->
+                          <el-form-item
+                            prop="startnumber"
+                            :label="$translateTitle('product.valuerangemin')"
+                          >
+                            <el-input
+                              v-model.number="sizeForm.startnumber"
+                              :placeholder="
+                                $translateTitle('product.minimumvalue')
+                              "
+                              type="number"
+                            />
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                          <!-- <el-form-item
+                            prop="endnumber"
+                            label="取值范围(最大值)"
+                          > -->
+                          <el-form-item
+                            prop="endnumber"
+                            :label="$translateTitle('product.valuerangemax')"
+                          >
+                            <el-input
+                              v-model.number="sizeForm.endnumber"
+                              :placeholder="
+                                $translateTitle('product.maximumvalue')
+                              "
+                              type="number"
+                              @input="changeValue('sizeForm')"
+                            />
+                          </el-form-item>
+                        </el-col>
+                      </el-row>
+                      <el-row
+                        v-if="
+                          sizeForm.type == 'int' ||
+                          sizeForm.type == 'float' ||
+                          sizeForm.type == 'double'
+                        "
+                        :gutter="24"
+                      >
+                        <el-col :span="12">
+                          <el-form-item label="步长" prop="step">
+                            <el-input-number
+                              v-model="sizeForm.step"
+                              style="width: 100%"
+                              :precision="2"
+                              :min="0"
+                              :step="0.01"
+                              controls-position="right"
+                            />
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
                           <!-- 单位 -->
                           <el-form-item
                             :label="$translateTitle('product.unit')"
@@ -831,6 +834,173 @@
                           </el-form-item>
                         </el-col>
                       </el-row>
+                      <!--BOOL数据类型添加格式-->
+                      <el-row v-if="sizeForm.type == 'bool'" :gutter="24">
+                        <el-col :span="12">
+                          <el-form-item
+                            :label="$translateTitle('product.attribute')"
+                            required
+                            prop="truevalue"
+                          >
+                            <el-input
+                              v-model="sizeForm.truevalue"
+                              :placeholder="
+                                $translateTitle('product.attribute')
+                              "
+                              type="number"
+                              readonly
+                            />
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                          <el-form-item label="-">
+                            <el-input
+                              v-model="sizeForm.true"
+                              :placeholder="$translateTitle('product.egopen')"
+                            />
+                          </el-form-item>
+                        </el-col>
+                      </el-row>
+                      <el-row v-if="sizeForm.type == 'bool'" :gutter="24">
+                        <el-col :span="12">
+                          <el-form-item>
+                            <el-input
+                              v-model="sizeForm.falsevalue"
+                              :placeholder="
+                                $translateTitle('product.attribute')
+                              "
+                              type="number"
+                              readonly
+                            />
+                          </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                          <el-form-item label="-">
+                            <el-input
+                              v-model="sizeForm.false"
+                              :placeholder="$translateTitle('product.egclose')"
+                            />
+                          </el-form-item>
+                        </el-col>
+                      </el-row>
+                      <!--枚举型添加格式-->
+                      <el-row v-if="sizeForm.type == 'enum'" :gutter="24">
+                        <el-col :span="24">
+                          <el-form-item label="枚举项">
+                            <!--枚举型添加格式-->
+                            <el-link
+                              :underline="false"
+                              icon="el-icon-plus"
+                              type="primary"
+                              @click="addDomain"
+                            >
+                              {{ $translateTitle('product.add') }}
+                            </el-link>
+                            <el-table
+                              :data="sizeForm.struct"
+                              style="width: 100%; text-align: center"
+                            >
+                              <el-table-column label="属性" align="center">
+                                <template slot-scope="scope">
+                                  <el-input v-model="scope.row.attribute" />
+                                </template>
+                              </el-table-column>
+                              <el-table-column label="属性值" align="center">
+                                <template slot-scope="scope">
+                                  <el-input
+                                    v-model="scope.row.attributevalue"
+                                  />
+                                </template>
+                              </el-table-column>
+                              <el-table-column label="操作" align="center">
+                                <template slot-scope="scope">
+                                  <el-button
+                                    size="mini"
+                                    type="danger"
+                                    plain
+                                    title="删除"
+                                    @click.native="removeDomain(scope.row)"
+                                  >
+                                    删除
+                                  </el-button>
+                                </template>
+                              </el-table-column>
+                            </el-table>
+                          </el-form-item>
+                        </el-col>
+                      </el-row>
+                      <!--结构体类型添加格式-->
+                      <div v-if="sizeForm.type == 'struct'">
+                        <el-form-item label="JSON对象" required>
+                          <ul style="padding-left: 20px; margin: 0">
+                            <li
+                              v-for="(item, index) in sizeForm.struct"
+                              :key="index"
+                              value="item"
+                              style="display: flex; list-style: none"
+                            >
+                              <div>
+                                <span>
+                                  {{
+                                    $translateTitle('product.parametername') +
+                                    ':'
+                                  }}}
+                                </span>
+                                <span>{{ item.name }}</span>
+                              </div>
+                              <div>
+                                <el-link
+                                  :underline="false"
+                                  type="primary"
+                                  style="margin-left: 20px"
+                                  @click="editStruct(item, index)"
+                                >
+                                  {{ $translateTitle('developer.edit') }}
+                                </el-link>
+                                <el-link
+                                  :underline="false"
+                                  type="primary"
+                                  @click="deleteStruct(index)"
+                                >
+                                  {{ $translateTitle('developer.delete') }}
+                                </el-link>
+                              </div>
+                            </li>
+                          </ul>
+                          <el-link
+                            :underline="false"
+                            icon="el-icon-plus"
+                            type="primary"
+                            @click="addStruct('structform')"
+                          >
+                            {{ $translateTitle('product.addparameter') }}
+                          </el-link>
+                        </el-form-item>
+                      </div>
+                      <!--字符串添加格式-->
+                      <div v-if="sizeForm.type == 'string'">
+                        <el-form-item
+                          :label="$translateTitle('product.datalength')"
+                          prop="string"
+                        >
+                          <el-input
+                            v-model.number="sizeForm.string"
+                            type="number"
+                          >
+                            <template slot="append">
+                              {{ $translateTitle('product.byte') }}
+                            </template>
+                          </el-input>
+                        </el-form-item>
+                      </div>
+                      <!--date类型添加格式-->
+                      <div v-if="sizeForm.type == 'date'">
+                        <el-form-item
+                          :label="$translateTitle('product.timeformat')"
+                        >
+                          <el-input v-model="sizeForm.date" readonly />
+                        </el-form-item>
+                      </div>
                     </el-collapse-item>
                     <el-collapse-item name="2">
                       <template slot="title">
@@ -1145,9 +1315,7 @@
                         </el-col> -->
                     </el-collapse-item>
                     <el-collapse-item name="3">
-                      <template slot="title">
-                        <h3 style="font-size: normal">数据来源</h3>
-                      </template>
+                      <template slot="title">数据来源</template>
                       <el-divider />
                       <div name="dataIdentification">
                         <el-row :gutter="24">
@@ -1285,184 +1453,6 @@
                     </el-collapse-item>
                   </el-collapse>
                 </div>
-
-                <!--BOOL数据类型添加格式-->
-                <div v-if="sizeForm.type == 'bool'">
-                  <el-form-item
-                    :label="$translateTitle('product.attribute')"
-                    required
-                  >
-                    <div style="height: 40px">
-                      <el-col :span="11">
-                        <el-form-item>
-                          <el-input
-                            v-model="sizeForm.truevalue"
-                            :placeholder="$translateTitle('product.attribute')"
-                            class="inputnumber"
-                            type="number"
-                            readonly
-                            style="width: 100%"
-                          />
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="2">-</el-col>
-                      <el-col :span="11">
-                        <el-form-item prop="true">
-                          <el-input
-                            v-model="sizeForm.true"
-                            :placeholder="$translateTitle('product.egopen')"
-                            class="inputnumber"
-                          />
-                        </el-form-item>
-                      </el-col>
-                    </div>
-                    <div style="margin-top: 20px">
-                      <el-col :span="11">
-                        <el-form-item>
-                          <el-input
-                            v-model="sizeForm.falsevalue"
-                            :placeholder="$translateTitle('product.attribute')"
-                            class="inputnumber"
-                            type="number"
-                            readonly
-                          />
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="2">-</el-col>
-                      <el-col :span="11">
-                        <el-form-item prop="true">
-                          <el-input
-                            v-model="sizeForm.false"
-                            :placeholder="$translateTitle('product.egclose')"
-                            class="inputnumber"
-                          />
-                        </el-form-item>
-                      </el-col>
-                    </div>
-                  </el-form-item>
-                </div>
-                <!--枚举型添加格式-->
-                <div v-if="sizeForm.type == 'enum'">
-                  <el-form-item
-                    v-for="(item, index) in sizeForm.specs"
-                    :key="index"
-                    required
-                  >
-                    <el-col :span="9">
-                      <el-form-item
-                        :label="$translateTitle('product.attribute') + index"
-                        :prop="'specs.' + index + '.attribute'"
-                        :rules="[{ required: true, message: '输入属性' }]"
-                      >
-                        <el-input
-                          v-model="item.attribute"
-                          :placeholder="$translateTitle('product.egnumber0')"
-                        />
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2" class="line">-</el-col>
-                    <el-col :span="9">
-                      <el-form-item
-                        :label="
-                          $translateTitle('product.attributevalue') + index
-                        "
-                        :prop="'specs.' + index + '.attributevalue'"
-                        :rules="[{ required: true, message: '输入属性值' }]"
-                      >
-                        <el-input
-                          v-model="item.attributevalue"
-                          :placeholder="$translateTitle('developer.describe')"
-                        />
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2" class="line" />
-                    <el-col :span="4" class="line">
-                      <el-link
-                        :underline="false"
-                        type="primary"
-                        icon="el-icon-minus"
-                        style="margin-top: 30px; margin-left: 5px"
-                        @click.prevent="removeDomain(item)"
-                      >
-                        {{ $translateTitle('developer.delete') }}
-                      </el-link>
-                    </el-col>
-                  </el-form-item>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-plus"
-                    type="primary"
-                    @click="addDomain"
-                  >
-                    {{ $translateTitle('product.add') }}
-                  </el-link>
-                </div>
-                <!--结构体类型添加格式-->
-                <div v-if="sizeForm.type == 'struct'">
-                  <el-form-item label="JSON对象" required>
-                    <ul style="padding-left: 20px; margin: 0">
-                      <li
-                        v-for="(item, index) in sizeForm.struct"
-                        :key="index"
-                        value="item"
-                        style="display: flex; list-style: none"
-                      >
-                        <div>
-                          <span>
-                            {{
-                              $translateTitle('product.parametername') + ':'
-                            }}}
-                          </span>
-                          <span>{{ item.name }}</span>
-                        </div>
-                        <div>
-                          <el-link
-                            :underline="false"
-                            type="primary"
-                            style="margin-left: 20px"
-                            @click="editStruct(item, index)"
-                          >
-                            {{ $translateTitle('developer.edit') }}
-                          </el-link>
-                          <el-link
-                            :underline="false"
-                            type="primary"
-                            @click="deleteStruct(index)"
-                          >
-                            {{ $translateTitle('developer.delete') }}
-                          </el-link>
-                        </div>
-                      </li>
-                    </ul>
-                    <el-link
-                      :underline="false"
-                      icon="el-icon-plus"
-                      type="primary"
-                      @click="addStruct('structform')"
-                    >
-                      {{ $translateTitle('product.addparameter') }}
-                    </el-link>
-                  </el-form-item>
-                </div>
-                <!--字符串添加格式-->
-                <div v-if="sizeForm.type == 'string'">
-                  <el-form-item
-                    :label="$translateTitle('product.datalength')"
-                    prop="string"
-                  >
-                    <el-input v-model.number="sizeForm.string" type="number">
-                      <template slot="append">
-                        {{ $translateTitle('product.byte') }}
-                      </template>
-                    </el-input>
-                  </el-form-item>
-                </div>
-                <!--date类型添加格式-->
-                <div v-if="sizeForm.type == 'date'">
-                  <el-form-item :label="$translateTitle('product.timeformat')">
-                    <el-input v-model="sizeForm.date" readonly />
-                  </el-form-item>
-                </div>
               </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -1566,13 +1556,7 @@
                   </el-form-item>
                 </div>
 
-                <div
-                  v-if="
-                    structform.type == 'int' ||
-                    structform.type == 'float' ||
-                    structform.type == 'double'
-                  "
-                >
+                <div>
                   <el-form-item required label="取值范围">
                     <el-col :span="12">
                       <el-form-item prop="startnumber">
@@ -3268,13 +3252,13 @@
           unit: '',
           string: '',
           date: 'String类型的UTC时间戳 (毫秒)',
-          specs: [
+          specs: {},
+          struct: [
             {
               attribute: '',
               attributevalue: '',
             },
           ],
-          struct: [],
           rate: 1,
           offset: 0,
           byteorder: 'big',
@@ -3861,9 +3845,9 @@
         }
       },
       addDomain() {
-        this.sizeForm.specs.push({
-          value: '',
-          name: '',
+        this.sizeForm.struct.push({
+          attribute: '',
+          attributevalue: '',
         })
       },
       removeDomain1(item) {
@@ -3882,16 +3866,36 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            var obj = {}
-
+            var obj = {
+              name: this.sizeForm.name,
+              dataForm: {
+                Round: this.sizeForm.Round,
+                Order: this.sizeForm.Order,
+                data: this.sizeForm.dinumber,
+                address: this.sizeForm.dis,
+                quantity: this.sizeForm.dinumber,
+                rate: this.sizeForm.rate,
+                offset: this.sizeForm.offset,
+                byteorder: this.sizeForm.byteorder,
+                protocol: this.sizeForm.protocol,
+                operatetype: this.sizeForm.operatetype,
+                originaltype: this.sizeForm.originaltype,
+                slaveid: this.sizeForm.slaveid,
+                collection: this.sizeForm.collection,
+                control: this.sizeForm.control,
+                strategy: this.sizeForm.strategy,
+              },
+              required: true,
+              accessMode: this.sizeForm.isread,
+              identifier: this.sizeForm.identifier,
+            }
             // 提交之前需要先判断类型
             if (
               this.sizeForm.type == 'float' ||
               this.sizeForm.type == 'double' ||
               this.sizeForm.type == 'int'
             ) {
-              obj = {
-                name: this.sizeForm.name,
+              var obj1 = {
                 dataType: {
                   type: this.sizeForm.type.toLowerCase(),
                   specs: {
@@ -3901,27 +3905,8 @@
                     unit: this.sizeForm.unit == '' ? '' : this.sizeForm.unit,
                   },
                 },
-                dataForm: {
-                  Round: this.sizeForm.Round,
-                  Order: this.sizeForm.Order,
-                  data: this.sizeForm.dinumber,
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber,
-                  rate: this.sizeForm.rate,
-                  offset: this.sizeForm.offset,
-                  byteorder: this.sizeForm.byteorder,
-                  protocol: this.sizeForm.protocol,
-                  operatetype: this.sizeForm.operatetype,
-                  originaltype: this.sizeForm.originaltype,
-                  slaveid: this.sizeForm.slaveid,
-                  collection: this.sizeForm.collection,
-                  control: this.sizeForm.control,
-                  strategy: this.sizeForm.strategy,
-                },
-                required: true,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier,
               }
+              Object.assign(obj, obj1)
               // 去除多余的属性
               if (!this.showNewItem) {
                 delete obj.dataForm.operatetype
@@ -3929,8 +3914,7 @@
                 delete obj.dataForm.slaveid
               }
             } else if (this.sizeForm.type == 'bool') {
-              obj = {
-                name: this.sizeForm.name,
+              var obj1 = {
                 dataType: {
                   type: this.sizeForm.type.toLowerCase(),
                   specs: {
@@ -3938,78 +3922,44 @@
                     1: this.sizeForm.true,
                   },
                 },
-                dataForm: {
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber,
-                },
-                required: false,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier,
               }
+              Object.assign(obj, obj1)
             } else if (this.sizeForm.type == 'enum') {
               var specs = {}
-              this.sizeForm.specs.map((items) => {
+              this.sizeForm.struct.map((items) => {
                 var newkey = items['attribute']
                 specs[newkey] = items['attributevalue']
               })
-              obj = {
-                name: this.sizeForm.name,
+              var obj1 = {
                 dataType: {
                   type: this.sizeForm.type.toLowerCase(),
                   specs: specs,
                 },
-                dataForm: {
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber,
-                },
-                required: true,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier,
               }
+              Object.assign(obj, obj1)
             } else if (this.sizeForm.type == 'struct') {
-              obj = {
-                name: this.sizeForm.name,
+              var obj1 = {
                 dataType: {
                   type: this.sizeForm.type.toLowerCase(),
                   specs: this.sizeForm.struct,
                 },
-                dataForm: {
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber,
-                },
-                required: true,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier,
               }
+              Object.assign(obj, obj1)
             } else if (this.sizeForm.type == 'string') {
-              obj = {
-                name: this.sizeForm.name,
+              var obj1 = {
                 dataType: {
                   type: this.sizeForm.type.toLowerCase(),
                   size: this.sizeForm.string,
                 },
-                dataForm: {
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber,
-                },
-                required: true,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier,
               }
+              Object.assign(obj, obj1)
             } else if (this.sizeForm.type == 'date') {
-              obj = {
-                name: this.sizeForm.name,
+              var obj1 = {
                 dataType: {
                   type: this.sizeForm.type.toLowerCase(),
                 },
-                dataForm: {
-                  address: this.sizeForm.dis,
-                  quantity: this.sizeForm.dinumber,
-                },
-                required: true,
-                accessMode: this.sizeForm.isread,
-                identifier: this.sizeForm.identifier,
               }
+              Object.assign(obj, obj1)
             }
 
             // 检测到
@@ -4064,7 +4014,6 @@
             name: rowData.name,
             // rowData.dataType
             type: rowData.dataType.type,
-
             endnumber: this.$objGet(rowData, 'dataType.specs.max'),
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
@@ -4098,8 +4047,19 @@
             true: rowData.dataType.specs[1],
             false: rowData.dataType.specs[0],
             // rowData.dataForm.
+            startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+            step: this.$objGet(rowData, 'dataType.specs.step'),
+            unit: this.$objGet(rowData, 'dataType.specs.unit'),
+            // : rowData.dataForm.
             dis: this.$objGet(rowData, 'dataForm.address'),
             dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+            rate: this.$objGet(rowData, 'dataForm.rate'),
+            offset: this.$objGet(rowData, 'dataForm.offset'),
+            byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+            protocol: this.$objGet(rowData, 'dataForm.protocol'),
+            operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+            originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
+            slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
             required: false,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
@@ -4111,21 +4071,31 @@
               rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
           }
         } else if (rowData.dataType.type == 'enum') {
-          var specsArray = []
-
+          var structArray = []
           for (const key in rowData.dataType.specs) {
-            specsArray.push({
+            structArray.push({
               attribute: key,
               attributevalue: rowData.dataType.specs[key],
             })
           }
-
           obj = {
             name: rowData.name,
             type: rowData.dataType.type,
-            specs: specsArray,
+            specs: rowData.dataType.specs,
+            struct: structArray,
+            startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+            step: this.$objGet(rowData, 'dataType.specs.step'),
+            unit: this.$objGet(rowData, 'dataType.specs.unit'),
+            // : rowData.dataForm.
             dis: this.$objGet(rowData, 'dataForm.address'),
             dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+            rate: this.$objGet(rowData, 'dataForm.rate'),
+            offset: this.$objGet(rowData, 'dataForm.offset'),
+            byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+            protocol: this.$objGet(rowData, 'dataForm.protocol'),
+            operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+            originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
+            slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
             required: true,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
@@ -4141,8 +4111,19 @@
             name: rowData.name,
             type: rowData.dataType.type,
             struct: rowData.dataType.specs,
+            startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+            step: this.$objGet(rowData, 'dataType.specs.step'),
+            unit: this.$objGet(rowData, 'dataType.specs.unit'),
+            // : rowData.dataForm.
             dis: this.$objGet(rowData, 'dataForm.address'),
             dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+            rate: this.$objGet(rowData, 'dataForm.rate'),
+            offset: this.$objGet(rowData, 'dataForm.offset'),
+            byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+            protocol: this.$objGet(rowData, 'dataForm.protocol'),
+            operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+            originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
+            slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
             required: true,
             isread: rowData.accessMode,
             collection:
@@ -4162,8 +4143,19 @@
             control:
               rowData.dataForm == undefined ? '' : rowData.dataForm.control,
             string: rowData.dataType.size,
+            startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+            step: this.$objGet(rowData, 'dataType.specs.step'),
+            unit: this.$objGet(rowData, 'dataType.specs.unit'),
+            // : rowData.dataForm.
             dis: this.$objGet(rowData, 'dataForm.address'),
             dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+            rate: this.$objGet(rowData, 'dataForm.rate'),
+            offset: this.$objGet(rowData, 'dataForm.offset'),
+            byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+            protocol: this.$objGet(rowData, 'dataForm.protocol'),
+            operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+            originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
+            slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
             required: true,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
@@ -4180,16 +4172,25 @@
               rowData.dataForm == undefined ? '' : rowData.dataForm.control,
             strategy:
               rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
+            startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+            step: this.$objGet(rowData, 'dataType.specs.step'),
+            unit: this.$objGet(rowData, 'dataType.specs.unit'),
+            // : rowData.dataForm.
             dis: this.$objGet(rowData, 'dataForm.address'),
             dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+            rate: this.$objGet(rowData, 'dataForm.rate'),
+            offset: this.$objGet(rowData, 'dataForm.offset'),
+            byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+            protocol: this.$objGet(rowData, 'dataForm.protocol'),
+            operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+            originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
+            slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
             required: true,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
           }
         }
-
         this.sizeForm = obj
-
         // console.log("this.sizeForm ", this.sizeForm);
       },
       // 物模型结构体
@@ -4242,7 +4243,7 @@
               }
             } else if (this.structform.type == 'enum') {
               var specs = {}
-              this.structform.specs.map((items) => {
+              this.structform.struct.map((items) => {
                 var newkey = items['attribute']
                 specs[newkey] = items['attributevalue']
               })
@@ -4250,6 +4251,7 @@
                 name: this.structform.name,
                 dataType: {
                   type: this.structform.type.toLowerCase(),
+                  struct: this.structform.struct,
                   specs: specs,
                 },
                 dataForm: {

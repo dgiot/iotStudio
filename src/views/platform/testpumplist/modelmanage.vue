@@ -11,11 +11,18 @@
                 class="demo-form-inline"
                 size="small"
               >
-                <el-form-item label="质检项目">
+                <!-- <el-form-item label="质检项目"> -->
+                <el-form-item
+                  :label="$translateTitle('developer.qualityinspectionitems')"
+                  label-width="100"
+                >
                   <el-input
                     v-model="formInline.name"
                     clearable
-                    placeholder="请输入项目名称"
+                    :placeholder="
+                      $translateTitle('product.enter1') +
+                      $translateTitle('product.itemname')
+                    "
                   />
                 </el-form-item>
                 <el-form-item>
@@ -24,10 +31,13 @@
                     :disabled="formInline.name.length == 0"
                     @click="searchProduct(formInline.name)"
                   >
-                    查询
+                    <!-- 查询 -->
+                    {{ $translateTitle('concentrator.search') }}
                   </el-button>
                   <el-button type="primary" size="small" @click="addStandard">
-                    新增质检项目
+                    <!-- 新增质检项目 -->
+                    {{ $translateTitle('product.newlyadded')
+                    }}{{ $translateTitle('developer.qualityinspectionitems') }}
                   </el-button>
                 </el-form-item>
               </el-form>
@@ -40,7 +50,8 @@
                   size="small"
                   @click="getIotHubProduct"
                 >
-                  查看台体
+                  <!-- 查看台体 -->
+                  {{ $translateTitle('product.Viewtheplatform') }}
                 </el-button>
               </div>
             </el-col>
@@ -54,29 +65,48 @@
             tooltip-effect="dark"
             style="width: 100%"
           >
-            <el-table-column
+            <!-- <el-table-column
               type="index"
               label="序号"
               align="center"
               width="50"
+            /> -->
+            <el-table-column
+              type="index"
+              :label="$translateTitle('equipment.serialnumber')"
+              align="center"
+              width="120"
             />
             <el-table-column label="ID" align="center" width="200">
               <template slot-scope="scope">
                 <span>{{ scope.row.objectId }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="项目名称" align="center">
+            <!-- <el-table-column label="项目名称" align="center"> -->
+            <el-table-column
+              :label="$translateTitle('product.itemname')"
+              align="center"
+            >
               <template slot-scope="scope">{{ scope.row.name }}</template>
             </el-table-column>
 
-            <el-table-column label="类型" align="center">
+            <!-- <el-table-column label="类型" align="center"> -->
+            <el-table-column
+              :label="$translateTitle('rule.Type')"
+              align="center"
+            >
               <template slot-scope="scope">
                 <el-tag type="success">{{ scope.row.devType }}</el-tag>
               </template>
             </el-table-column>
 
-            <el-table-column
+            <!-- <el-table-column
               label="关联词典"
+              align="center"
+              show-overflow-tooltip
+            > -->
+            <el-table-column
+              :label="$translateTitle('developer.Associationdictionary')"
               align="center"
               show-overflow-tooltip
             >
@@ -86,28 +116,36 @@
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="检测标准管理" align="center" width="300">
+            <!-- <el-table-column label="检测标准管理" align="center" width="300"> -->
+            <el-table-column
+              :label="$translateTitle('developer.Inspectionstandardmanagement')"
+              align="center"
+              :width="400"
+            >
               <template slot-scope="scope">
                 <el-button
                   type="danger"
                   size="small"
                   @click="detailReportChildren(scope.row, 'delete')"
                 >
-                  删 除
+                  <!-- 删除 -->
+                  {{ $translateTitle('task.Delete') }}
                 </el-button>
                 <el-button
                   type="primary"
                   size="small"
                   @click="detailReportChildren(scope.row, 'template')"
                 >
-                  模版管理
+                  <!-- 模版管理 -->
+                  {{ $translateTitle('developer.Templatemanagement') }}
                 </el-button>
                 <el-button
                   type="info"
                   size="small"
                   @click="productView(scope.row.objectId)"
                 >
-                  绘图
+                  <!-- 绘图 -->
+                  {{ $translateTitle('developer.mapping') }}
                 </el-button>
               </template>
             </el-table-column>
@@ -122,23 +160,42 @@
             @current-change="handleCurrentChange"
           />
         </div>
-        <el-dialog
+        <!-- <el-dialog
           :visible.sync="dialogVisible"
           title="检验质检项目"
+          width="60%"
+        > -->
+        <el-dialog
+          :visible.sync="dialogVisible"
+          :title="
+            $translateTitle('developer.Inspectionandqualityinspectionitems')
+          "
           width="60%"
         >
           <div class="addContent">
             <el-form ref="reportForm" :rules="rules" :model="reportForm">
               <el-row :gutter="12">
                 <el-col :span="12">
-                  <el-form-item
+                  <!-- <el-form-item
                     prop="name"
                     :label-width="formLabelWidth"
                     label="报告模版字典"
+                  > -->
+                  <el-form-item
+                    prop="name"
+                    :label-width="formLabelWidth"
+                    :label="
+                      $translateTitle('developer.Reporttemplatedictionary')
+                    "
                   >
-                    <el-select
+                    <!-- <el-select
                       v-model="reportForm.value"
                       placeholder="请选择"
+                      @change="changev"
+                    > -->
+                    <el-select
+                      v-model="reportForm.value"
+                      :placeholder="$translateTitle('task.Select')"
                       @change="changev"
                     >
                       <el-option
@@ -151,19 +208,29 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item
+                  <!-- <el-form-item
                     prop="name"
                     :label-width="formLabelWidth"
                     label="报告模板名称"
+                  > -->
+                  <el-form-item
+                    prop="name"
+                    :label-width="formLabelWidth"
+                    :label="$translateTitle('developer.Reporttemplatename')"
                   >
                     <el-input v-model="reportForm.name" placeholder="" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item
+                  <!-- <el-form-item
                     prop="devTypeText"
                     :label-width="formLabelWidth"
                     label="报告模版类型"
+                  > -->
+                  <el-form-item
+                    prop="devTypeText"
+                    :label-width="formLabelWidth"
+                    :label="$translateTitle('developer.Reporttemplatename')"
                   >
                     <el-input v-model="reportForm.devTypeText" placeholder="" />
                   </el-form-item>
@@ -217,7 +284,10 @@
               <el-row>
                 <el-col :span="1">&nbsp;</el-col>
                 <el-col :span="2">
-                  <span style="font-weight: bold">数据文件</span>
+                  <span style="font-weight: bold">
+                    <!-- 数据文件 -->
+                    {{ $translateTitle('developer.datafile') }}
+                  </span>
                 </el-col>
 
                 <el-col :span="4">
@@ -246,25 +316,37 @@
             </el-form>
           </div>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button @click="dialogVisible = false">
+              <!-- 取消 -->
+              {{ $translateTitle('developer.cancel') }}
+            </el-button>
             <!-- <el-button type="primary" @click="addReport">确 定</el-button> -->
             <el-button type="primary" @click="addReporttemp('reportForm')">
-              确 定
+              <!-- 确定 -->
+              {{ $translateTitle('developer.determine') }}
             </el-button>
           </span>
         </el-dialog>
         <!--标准模版添加-->
         <el-dialog
           :visible.sync="dialogChildrenForm"
-          title="新增标准模版"
+          :title="$translateTitle('developer.Newstandardtemplate')"
           width="30%"
         >
           <el-form ref="childrenFormRef" :model="childrenform">
-            <el-form-item :label-width="formLabelWidth" label="模版名称">
+            <!-- <el-form-item :label-width="formLabelWidth" label="模版名称"> -->
+            <el-form-item
+              :label-width="formLabelWidth"
+              :label="$translateTitle('developer.Templatename')"
+            >
               <el-input v-model="childrenform.name" autocomplete="off" />
             </el-form-item>
 
-            <el-form-item :label-width="formLabelWidth" label="模版模型">
+            <!-- <el-form-item :label-width="formLabelWidth" label="模版模型"> -->
+            <el-form-item
+              :label-width="formLabelWidth"
+              :label="$translateTitle('developer.Templatemodel')"
+            >
               <img
                 v-if="childrenform.imageSrc"
                 :src="fileDomain + childrenform.imageSrc"
@@ -293,7 +375,11 @@
                 />
               </form>
             </el-form-item>
-            <el-form-item :label-width="formLabelWidth" label="排序">
+            <!-- <el-form-item :label-width="formLabelWidth" label="排序"> -->
+            <el-form-item
+              :label-width="formLabelWidth"
+              :label="$translateTitle('menu.sort')"
+            >
               <el-input-number
                 v-model="childrenform.index"
                 :min="1"
@@ -302,30 +388,54 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogChildrenForm = false">取 消</el-button>
+            <el-button @click="dialogChildrenForm = false">
+              <!-- 取消 -->
+              {{ $translateTitle('developer.cancel') }}
+            </el-button>
             <el-button type="primary" @click="addStandardChildren">
-              确 定
+              <!-- 确定 -->
+              {{ $translateTitle('developer.determine') }}
             </el-button>
           </div>
         </el-dialog>
         <!--模版管理-->
-        <el-dialog :visible.sync="dialogTableVisible" title="模版" top="5vh">
+        <!-- <el-dialog :visible.sync="dialogTableVisible" title="模版" top="5vh"> -->
+        <el-dialog
+          :visible.sync="dialogTableVisible"
+          :title="$translateTitle('product.Template')"
+          top="5vh"
+        >
           <el-table
             :data="producttable"
             style="width: 100%; text-align: center"
           >
-            <el-table-column
+            <!-- <el-table-column
               label="序号"
               type="index"
               align="center"
               width="100"
+            /> -->
+            <el-table-column
+              :label="$translateTitle('equipment.serialnumber')"
+              type="index"
+              align="center"
+              width="130"
             />
-            <el-table-column label="名称" align="center" width="100">
+            <!-- <el-table-column label="名称" align="center" width="100"> -->
+            <el-table-column
+              :label="$translateTitle('equipment.name')"
+              align="center"
+              width="130"
+            >
               <template slot-scope="scope">
                 <span>{{ scope.row.name }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="内容" align="center">
+            <!-- <el-table-column label="内容" align="center"> -->
+            <el-table-column
+              :label="$translateTitle('concentrator.content')"
+              align="center"
+            >
               <template slot-scope="scope">
                 <el-image
                   style="z-index: 9999; width: 100px; height: 100px"
@@ -339,21 +449,27 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column label="模版管理" align="center">
+            <!-- <el-table-column label="模版管理" align="center"> -->
+            <el-table-column
+              :label="$translateTitle('developer.Templatemanagement1')"
+              align="center"
+            >
               <template slot-scope="scope">
                 <el-button
                   type="primary"
                   size="small"
                   @click="productView(scope.row.objectId)"
                 >
-                  绘图
+                  <!-- 绘图 -->
+                  {{ $translateTitle('developer.mapping') }}
                 </el-button>
                 <el-button
                   type="删除"
                   size="small"
                   @click="deleteProduct(scope.row)"
                 >
-                  删除
+                  <!-- 删除 -->
+                  {{ $translateTitle('task.Delete') }}
                 </el-button>
               </template>
             </el-table-column>
@@ -371,23 +487,47 @@
         </el-dialog>
 
         <!--台体查看弹窗-->
-        <el-dialog :visible.sync="iotHubDialogShow" title="台体列表" top="5vh">
+        <!-- <el-dialog :visible.sync="iotHubDialogShow" title="台体列表" top="5vh"> -->
+        <el-dialog
+          :visible.sync="iotHubDialogShow"
+          :title="$translateTitle('product.platformlist')"
+          top="5vh"
+        >
           <el-table
             :data="iotHubProductList"
             stripe
             style="width: 100%; text-align: center"
           >
-            <el-table-column label="序号" type="index" />
+            <!-- <el-table-column label="序号" type="index" />
             <el-table-column label="名称" prop="name" />
-            <el-table-column label="描述" prop="desc" />
+            <el-table-column label="描述" prop="desc" /> -->
+            <el-table-column
+              :label="$translateTitle('equipment.serialnumber')"
+              type="index"
+              :width="150"
+            />
+            <el-table-column
+              :label="$translateTitle('equipment.name')"
+              prop="name"
+            />
+            <el-table-column
+              :label="$translateTitle('developer.describe')"
+              prop="desc"
+            />
 
-            <el-table-column label="网络类型" align="center">
+            <!-- <el-table-column label="网络类型" align="center"> -->
+            <el-table-column
+              :label="$translateTitle('developer.Networktype')"
+              align="center"
+            >
               <template slot-scope="scope">
                 <span v-if="scope.row.netType == 'CELLULAR'">
-                  蜂窝(2G/3G/4G)
+                  {{ $translateTitle('product.honeycomb') }}(2G/3G/4G)
                 </span>
                 <span v-else-if="scope.row.netType == 'WIFI'">WiFi</span>
-                <span v-else-if="scope.row.netType == 'ETHERNET'">以太网</span>
+                <span v-else-if="scope.row.netType == 'ETHERNET'">
+                  {{ $translateTitle('product.ethernet') }}
+                </span>
                 <span v-else-if="scope.row.netType == 'LORA'">LoRaWAN</span>
                 <span v-else>{{ scope.row.netType }}</span>
               </template>

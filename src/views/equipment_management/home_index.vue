@@ -868,7 +868,6 @@
                         v-model="deviceform[item.identifier]"
                         style="width: 100%"
                         class="notauto"
-                        readonly
                       >
                         <!-- <el-option :value="true" label="是" /> -->
                         <el-option
