@@ -1,12 +1,8 @@
  name: release
-
- on:
-   watch:
-     types: started
+ on: repository_dispatch
  jobs:
    build:
      runs-on: ubuntu-latest
-     if: ${{ secrets.isRelease }} == true
      steps:
        - name: "create release"
          uses: elgohr/Github-Release-Action@master

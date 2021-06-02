@@ -1490,7 +1490,8 @@
       },
       getMenu() {
         this.deptTreeData = this.roleTree
-        this.handleNodeClick(results[0], 0)
+        console.log(this.deptTreeData)
+        this.handleNodeClick(this.deptTreeData[0], 0)
       },
       async handleNodeClick(data, node) {
         if (node.level != 1) {

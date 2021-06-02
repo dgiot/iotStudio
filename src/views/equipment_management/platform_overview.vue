@@ -31,11 +31,14 @@
                 auto-complete="off"
                 clearable
                 readonly
-                @focus="queryForm.workGroupTreeShow = true"
-              >
+                @click="info"
+                @focus="
+                  queryForm.workGroupTreeShow = !queryForm.workGroupTreeShow
+                "
+              />
+              <div v-if="queryForm.workGroupTreeShow" class="workGroupTreeShow">
                 <el-tree
-                  v-show="queryForm.workGroupTreeShow"
-                  slot="suffix"
+                  v-if="queryForm.workGroupTreeShow"
                   ref="workGroup"
                   :data="deptTreeData"
                   :props="roleProps"
@@ -54,7 +57,7 @@
                     </span>
                   </div>
                 </el-tree>
-              </el-input>
+              </div>
             </el-form-item>
             <el-form-item label="周期">
               <el-date-picker
@@ -401,6 +404,9 @@
       ...mapMutations({
         setRoleTree: 'global/setRoleTree',
       }),
+      info() {
+        console.log(111)
+      },
       queryData() {
         this.queryForm.pageNo = 1
         this.fetchData()
@@ -658,6 +664,11 @@
   .platform {
     .map_header {
       height: 40px;
+      .workGroupTreeShow {
+        height: 100px;
+        overflow: auto;
+        background: #eeeeee;
+      }
     }
     box-sizing: border-box;
     width: 100%;
