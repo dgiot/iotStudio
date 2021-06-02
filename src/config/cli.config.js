@@ -15,7 +15,7 @@ module.exports = {
   // 进行编译的依赖
   transpileDependencies: ['resize-detector'],
   // 开发环境端口号
-  devPort: '9999',
+  devPort: '80',
   // 需要自动注入并加载的模块
   providePlugin: {},
   // npm run build时是否自动生成7z压缩包

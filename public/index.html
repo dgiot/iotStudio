@@ -9,6 +9,10 @@
     <meta content="<%= VUE_APP_Keywords %>" name="keywords" />
     <meta content="<%= VUE_APP_Description %>" name="description" />
     <meta content="<%= VUE_APP_AUTHOR %>" name="author" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
     <link href="<%= BASE_URL %>static/css/loading.css" rel="stylesheet" />
     <!-- 引入样式 -->
     <% for(var css of htmlWebpackPlugin.options.staticUrl.css) { %>

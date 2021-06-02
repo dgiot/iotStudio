@@ -125,6 +125,37 @@
               type="textarea"
               readonly
             />
+            <div class="chartsinfo">
+              <el-row type="flex" class="row-bg" justify="space-center">
+                <el-col :span="6">
+                  <el-date-picker
+                    v-model="datetimerange"
+                    type="datetimerange"
+                    :picker-options="pickerOptions"
+                    :range-separator="$translateTitle('developer.to')"
+                    :start-placeholder="$translateTitle('developer.startTime')"
+                    :end-placeholder="$translateTitle('developer.EndTime')"
+                    @change="queryFlag = false"
+                  />
+                </el-col>
+                <el-col :span="12">
+                  <el-button
+                    type="primary"
+                    :disabled="queryFlag"
+                    icon="el-icon-search"
+                    @click="queryChart"
+                  >
+                    {{ $translateTitle('developer.search') }}
+                  </el-button>
+                  <!--                  <el-button type="primary" icon="el-icon-download">-->
+                  <!--                    {{ $translateTitle('developer.download') }}-->
+                  <!--                  </el-button>-->
+                </el-col>
+              </el-row>
+              <div class="chartsmain">
+                <ve-line :data="chartData" :settings="chartSettings" />
+              </div>
+            </div>
           </div>
         </el-tab-pane>
         <el-tab-pane
@@ -255,19 +286,17 @@
                       {{ item.dataType.specs.unit }}
                     </span>
                   </div>
-
                   <div
                     v-if="
-                      item.dataType.type == 'enmu' ||
+                      item.dataType.type == 'enum' ||
                       item.dataType.type == 'bool'
                     "
                     :title="item.dataType.type"
                     class="stla"
                   >
-                    <span>{{ item.value | filterVal }}</span>
+                    <!--                    <span>{{ item.value | filterVal }}</span>-->
                     <span>{{ item.dataType.specs[item.value] }}</span>
                   </div>
-
                   <div
                     v-if="item.dataType.type == 'struct'"
                     :title="item.dataType.type"
@@ -289,7 +318,7 @@
                         <span>{{ key.name + ':' }}ee</span>
                         <span>{{ key.value }}aa</span>
                         <span v-if="key.dataType.specs.unit">
-                          {{ key.dataType.specs.unit }}rr
+                          {{ key.dataType.specs.unit }}
                         </span>
                       </div>
                       <div
@@ -748,11 +777,11 @@
   </div>
 </template>
 <script>
-  import { getTdDevice } from '@/api/Device/index.js'
+  import { getTdDevice, getDabDevice } from '@/api/Device/index.js'
   import { utc2beijing, timestampToTime } from '@/utils/index'
   import LineChart from '../dashboard/admin/components/LineChart'
-  import { returnLogin } from '@/utils/return'
   import Instruct from '../devicemanage/instruct_manage'
+
   var dataobj = {}
   export default {
     components: {
@@ -794,6 +823,47 @@
     },
     data() {
       return {
+        pickerOptions: {
+          shortcuts: [
+            {
+              text: this.$translateTitle('developer.LastWeek'),
+              onClick(picker) {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+                picker.$emit('pick', [start, end])
+              },
+            },
+            {
+              text: this.$translateTitle('developer.LastMonth'),
+              onClick(picker) {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+                picker.$emit('pick', [start, end])
+              },
+            },
+            {
+              text: this.$translateTitle('developer.LastThreeMonths'),
+              onClick(picker) {
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+                picker.$emit('pick', [start, end])
+              },
+            },
+          ],
+        },
+        chartData: {
+          identifier: [],
+          columns: [],
+          rows: [],
+        },
+        chartSettings: {},
+        chartDataRow: [],
+        chartDataColums: [],
+        queryFlag: true,
+        datetimerange: '',
         width: 0,
         lineChartData: '',
         datafordetail: [],
@@ -864,6 +934,7 @@
         dirstart: 1,
         dirlength: 20,
         selectproduct: '',
+        watchNum: 0,
       }
     },
     watch: {
@@ -874,6 +945,7 @@
     },
     mounted() {
       this.getDeviceDetail()
+      this.initChart()
     },
     // 清除定时器
     destroyed() {
@@ -881,6 +953,82 @@
       this.timer = null
     },
     methods: {
+      initChart() {
+        const end = new Date()
+        const start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+        this.datetimerange = [start, end]
+        this.queryFlag = false
+        this.$nextTick(() => {
+          // 当页面加载完后 去请求时序数据
+          this.queryChart()
+        })
+      },
+      async queryChart() {
+        if (this.datetimerange.length) {
+          let deviceid = this.$route.query.deviceid
+          let endTime = moment(this.datetimerange[1]).valueOf()
+          let startTime = moment(this.datetimerange[0]).valueOf()
+          console.log('endTime', endTime)
+          console.log('startTime', startTime)
+          const limit = moment(endTime).diff(moment(startTime), 'days')
+
+          let params = {
+            limit: limit,
+            skip: 0,
+            where: { createdat: { $gte: 'now - 10d' } },
+          }
+          const { results } = await getDabDevice(deviceid, params)
+          console.log('res', results)
+          if (results) {
+            this.properties.forEach((i) => {
+              // 在获取设备数据的时候 先将 name push 进 columns
+              this.chartData.identifier.push(i.identifier) // 数据唯一标识
+              this.chartData.columns.push(i.name)
+            })
+            this.chartData.identifier.unshift('日期')
+            this.chartData.columns.unshift('日期')
+            results.forEach((i, index) => {
+              i['日期'] = moment().subtract(index, 'days').format('YYYY-MM-DD') // 处理时间轴
+              for (var k in i) {
+                for (var d in this.chartData.identifier) {
+                  console.log(this.chartData.identifier[d]) // 处理数据
+                  if (k == this.chartData.identifier[d]) {
+                    i[this.chartData.columns[d]] = i[k]
+                  }
+                }
+              }
+            })
+            // this.chartSettings.xAxisType = this.chartData.identifier
+            this.chartData.rows = results
+          }
+          //   //
+          //   columns.push(item.name)
+          //   this.watchNum++
+          //   let rows = {}
+          //   let columns = []
+          //   if (vm.chartData.columns.indexOf('日期') != -1) {
+          //     rows['日期'] = moment().format('YYYY-MM-DD HH:mm:ss')
+          //   } else {
+          //     columns.unshift('日期')
+          //   }
+          //   rows[`${item.name}`] = item.value ? item.value : 0
+          // }
+          //   vm.chartDataRow = columns.filter(function (item) {
+          //     return item
+          //   })
+          // console.log(vm.chartData, '  vm.chartData')
+          // console.log(' this.watchNum', vm.watchNum)
+          // vm.chartDataRow.push(rows)
+          // vm.chartData.columns = vm.chartDataColums
+          // console.log(rows, 'rowsrows')
+          // console.log('this.chartDataRow', vm.chartDataRow)
+          // vm.chartData.rows = vm.chartDataRow
+          // console.log(this.chartData.rows, '  vm.chartData.rows')
+        } else {
+          this.$message.error('请选择查询时间')
+        }
+      },
       print(item) {
         console.log(item)
       },
@@ -1010,6 +1158,7 @@
             vm.properties = JSON.parse(
               JSON.stringify(this.$objGet(resultes, 'product.thing.properties'))
             )
+            console.log(vm.properties, ' vm.properties ')
             // console.log('vm.properties', vm.properties)
             if (vm.properties) {
               vm.properties.map((items) => {
@@ -1431,6 +1580,9 @@
   }
 </script>
 <style scoped>
+  .chartsinfo {
+    margin-top: 15px;
+  }
   .editdevices {
     box-sizing: border-box;
     width: 100%;

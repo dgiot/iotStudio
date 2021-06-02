@@ -126,26 +126,47 @@
             :required="item.required"
             :prop="item.showname"
           >
+            <el-tooltip effect="dark" placement="right-start">
+              <div slot="content">
+                {{ item.description.zh }}
+              </div>
+              <i class="el-icon-question" style="float: left" />
+            </el-tooltip>
             <el-input
               v-if="item.type == 'string'"
               v-model="addchannel[item.showname]"
+              style="width: 98%"
             />
             <el-input
               v-else-if="item.type == 'integer'"
               v-model.number="addchannel[item.showname]"
+              style="width: 98%"
             />
             <el-image
               v-else-if="item.showname == 'ico'"
-              style="display: none"
+              style="display: none; width: 98%"
             />
             <el-select
               v-else-if="item.type == 'boolean'"
               v-model="addchannel[item.showname]"
+              style="width: 98%"
               class="notauto"
               readonly
             >
               <el-option :value="true" label="是" />
               <el-option :value="false" label="否" />
+            </el-select>
+            <el-select
+              v-else-if="item.type == 'enum'"
+              v-model="addchannel[item.showname]"
+              style="width: 98%"
+            >
+              <el-option
+                v-for="(item1, index1) in item.enum"
+                :key="index1"
+                :label="item.enum[index1]"
+                :value="item.enum[index1]"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -180,6 +201,7 @@
   import { postChannel } from '@/api/Channel'
   import { mapActions, mapGetters } from 'vuex'
   import { handleActivePath } from '@/utils/routes'
+
   export default {
     name: 'CreateResourcechannel',
     components: {},
@@ -322,6 +344,7 @@
                   }
                 }
               })
+              console.log('arr', this.arrlist)
               obj.region = val
               obj.desc = ''
               obj.name = ''
@@ -440,16 +463,20 @@
   /* @import url() */
   .createResourcechannel {
     margin: 20px;
+
     .device-tree {
       height: 200px;
       overflow: auto;
+
       ::v-deep {
         .el-scrollbar .el-scrollbar__wrap {
           overflow-x: hidden;
         }
+
         .clearfix {
           margin: 0;
         }
+
         .el-tree > .el-tree-node {
           display: inline-block;
           min-width: 100%;
@@ -457,6 +484,7 @@
         }
       }
     }
+
     .dialog-footer {
       text-align: center;
     }

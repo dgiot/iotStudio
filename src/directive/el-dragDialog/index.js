@@ -6,7 +6,7 @@ const install = function (Vue) {
 
 if (window.Vue) {
   window['el-drag-dialog'] = drag
-  Vue.use(install); // eslint-disable-line
+  Vue.use(install) // eslint-disable-line
 }
 
 drag.install = install

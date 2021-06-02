@@ -48,6 +48,6 @@
   "path-intellisense.mappings": {
     "@": "${workspaceRoot}/src"
   },
-  "files.eol": "\n",
+  "files.eol": "\n"
   // "terminal.integrated.shell.windows": "D:\\Software\\Git\\bin\\bash.exe"
 }

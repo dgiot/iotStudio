@@ -213,7 +213,7 @@
       :visible.sync="channelForm"
       :close-on-click-modal="false"
       :before-close="handleClose"
-      width="30%"
+      width="50%"
       top="10vh"
     >
       <el-form
@@ -222,7 +222,6 @@
         :rules="addrules"
         label-width="auto"
       >
-        <!-- <el-form-item label="通道类型" prop="region"> -->
         <el-form-item
           :label="$translateTitle('developer.channeltype')"
           prop="region"
@@ -317,34 +316,10 @@
             autocomplete="off"
           />
         </el-form-item>
-
-        <!-- 所属应用(角色) app -->
-        <!-- <el-form-item
-          :label=" $translateTitle('application.applicationtype')"
-          :rules="[
-            { required: true, message: '请选择所属应用',trigger: 'blur'},
-          ]"
-        >
-          <el-select v-model="addchannel.applicationtText" :placeholder=" $translateTitle('application.applicationtype')">
-            <el-option
-              v-for="item in applicationList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.name"/>
-          </el-select>
-        </el-form-item> -->
-
-        <!-- <el-form-item prop="applicationtText" label="所属应用"> -->
         <el-form-item
           prop="applicationtText"
           :label="$translateTitle('application.applicationtype')"
         >
-          <!-- <el-input
-            v-model="addchannel.applicationtText"
-            placeholder="请选择所属应用"
-            readonly
-            @focus="showTree = !showTree"
-          /> -->
           <el-input
             v-model="addchannel.applicationtText"
             :placeholder="$translateTitle('product.pleaseselectyourapp')"
@@ -366,19 +341,27 @@
             :required="item.required"
             :prop="item.showname"
           >
+            <el-tooltip effect="dark" placement="right-start">
+              <div slot="content">
+                {{ item.description.zh }}
+              </div>
+              <i class="el-icon-question" style="float: left" />
+            </el-tooltip>
             <el-input
               v-if="item.type == 'string'"
               v-model="addchannel[item.showname]"
+              style="width: 96%"
             />
             <el-input
               v-else-if="item.type == 'integer'"
               v-model.number="addchannel[item.showname]"
+              style="width: 96%"
             />
             <el-select
               v-else-if="item.type == 'boolean'"
               v-model="addchannel[item.showname]"
+              style="width: 96%"
               class="notauto"
-              readonly
             >
               <!-- <el-option :value="true" label="是" />
               <el-option :value="false" label="否" /> -->
@@ -389,6 +372,19 @@
               <el-option
                 :value="false"
                 :label="$translateTitle('product.no')"
+              />
+            </el-select>
+            <el-select
+              v-else-if="item.type == 'enum'"
+              v-model="addchannel[item.showname]"
+              style="width: 96%"
+              class="notauto"
+            >
+              <el-option
+                v-for="(item1, index1) in item.enum"
+                :key="index1"
+                :label="item.enum[index1]"
+                :value="item.enum[index1]"
               />
             </el-select>
           </el-form-item>

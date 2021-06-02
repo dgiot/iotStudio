@@ -8,174 +8,419 @@
 -->
 <template>
   <div class="platform">
-    <el-tabs v-model="activeName">
-      <el-row>
-        <el-col
-          :lg="{ span: '4-8' }"
-          class="card-panel-col"
-          :xs="24"
-          :sm="24"
-          :md="8"
-          :xl="4"
-        >
-          <el-card class="box-card">
-            <el-col :span="12" class="card-left">
-              <vab-icon icon="projector-2-fill" />
-            </el-col>
-            <el-col :span="12" class="card-right">
-              <p>{{ $translateTitle('home.app_count') }}</p>
-              <p>{{ project_count }}</p>
-            </el-col>
-          </el-card>
-        </el-col>
-        <el-col
-          :lg="{ span: '4-8' }"
-          class="card-panel-col"
-          :xs="24"
-          :sm="24"
-          :md="8"
-          :xl="4"
-        >
-          <el-card class="box-card">
-            <el-col :span="12">
-              <vab-icon icon="projector-fill" />
-            </el-col>
-            <el-col :span="12" class="card-right">
-              <p>{{ $translateTitle('home.pro_count') }}</p>
-              <p>{{ product_count }}</p>
-            </el-col>
-          </el-card>
-        </el-col>
-        <el-col
-          :lg="{ span: '4-8' }"
-          class="card-panel-col"
-          :xs="24"
-          :sm="24"
-          :md="8"
-          :xl="4"
-        >
-          <el-card class="box-card">
-            <el-col :span="12">
-              <vab-icon icon="apps-fill" />
-            </el-col>
-            <el-col :span="12" class="card-right">
-              <p>{{ $translateTitle('home.cla_count') }}</p>
-              <p>{{ app_count }}</p>
-            </el-col>
-          </el-card>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="24"
-          :md="8"
-          :lg="{ span: '4-8' }"
-          class="card-panel-col"
-          :xl="4"
-        >
-          <el-card class="box-card">
-            <el-col :span="12">
-              <vab-icon icon="device-recover-fill" />
-            </el-col>
-            <el-col :span="12" class="card-right">
-              <p>{{ $translateTitle('home.dev_count') }}</p>
-              <p>{{ dev_count }}</p>
-            </el-col>
-          </el-card>
-        </el-col>
-        <el-col
-          :xs="24"
-          :sm="24"
-          :md="8"
-          :lg="{ span: '4-8' }"
-          class="card-panel-col"
-          :xl="4"
-        >
-          <el-card class="box-card">
-            <el-col :span="12">
-              <vab-icon icon="bar-chart-2-line" />
-            </el-col>
-            <el-col :span="12" class="card-right">
-              <p>{{ $translateTitle('home.dev_online') }}</p>
-              <p>{{ dev_online_count }}</p>
-            </el-col>
-          </el-card>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col
-          v-for="item in projectList"
-          :key="item.id"
-          :xs="24"
-          :sm="24"
-          :md="8"
-          :lg="{ span: '4-8' }"
-        >
-          <el-card class="box-card" shadow="always">
-            <div slot="header" class="clearfix">
-              <span>
-                {{ item.name }}
-              </span>
-            </div>
-            <div v-if="item.userUnit" class="text item">
-              <span>{{ $translateTitle('home.unit') }}</span>
-              <span>{{ item.userUnit }}</span>
-            </div>
-            <div v-if="item.scale" class="text item">
-              <span>{{ $translateTitle('home.scale') }}：</span>
-              <span>{{ item.scale }}</span>
-            </div>
-            <div class="text item">
-              <span>{{ $translateTitle('home.category') }}：</span>
-              <span>{{ getCategory(item.category) }}</span>
-            </div>
-            <div class="text item">
-              <span>{{ $translateTitle('home.updatedAt') }}：</span>
-              <span>
-                {{
-                  new Date(item.updatedAt).toLocaleDateString() +
-                  ' ' +
-                  new Date(item.updatedAt).toLocaleTimeString()
-                }}
-              </span>
-            </div>
-            <div class="text item" style="text-align: center">
-              <el-button-group>
-                <el-button
-                  style="margin-right: 3px"
-                  size="mini"
-                  type="success"
-                  @click="Gotoproduct(item.name)"
+    <div class="map_header">
+      <vab-query-form>
+        <vab-query-form-top-panel>
+          <el-form
+            :inline="true"
+            label-width="50px"
+            :model="queryForm"
+            @submit.native.prevent
+          >
+            <el-form-item label="产品">
+              <el-input
+                v-model.trim="queryForm.account"
+                clearable
+                placeholder="请输入账号"
+              />
+            </el-form-item>
+            <el-form-item label="部门">
+              <el-input
+                ref="workGroupInput"
+                v-model="queryForm.workGroupName"
+                auto-complete="off"
+                clearable
+                readonly
+                @focus="queryForm.workGroupTreeShow = true"
+              >
+                <el-tree
+                  v-show="queryForm.workGroupTreeShow"
+                  slot="suffix"
+                  ref="workGroup"
+                  :data="deptTreeData"
+                  :props="roleProps"
+                  class="workGroupTree"
+                  node-key="index"
+                  default-expand-all
+                  :expand-on-click-node="false"
+                  @node-click="handleNodeClick"
                 >
-                  {{ $translateTitle('home.preview') }}
+                  <div slot-scope="{ node, data }" class="custom-tree-node">
+                    <span
+                      :class="{ selected: data.objectId == curDepartmentId }"
+                      @click="handleNodeClick(data, node)"
+                    >
+                      {{ node.label }}
+                    </span>
+                  </div>
+                </el-tree>
+              </el-input>
+            </el-form-item>
+            <el-form-item label="周期">
+              <el-date-picker
+                v-model="queryForm.searchDate"
+                end-placeholder="结束日期"
+                format="yyyy-MM-dd"
+                start-placeholder="开始日期"
+                type="daterange"
+                value-format="yyyy-MM-dd"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                icon="el-icon-search"
+                type="primary"
+                @click="queryData"
+              >
+                查询
+              </el-button>
+              <el-button
+                :icon="leftRow == 18 ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
+                type="primary"
+                @click="leftRow == 18 ? (leftRow = 24) : (leftRow = 18)"
+              >
+                显示/关闭右侧
+              </el-button>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-top-panel>
+      </vab-query-form>
+    </div>
+    <el-row :row="24">
+      <el-col :span="leftRow" :xs="24">
+        <el-row v-show="false">
+          <el-col
+            v-for="item in projectList"
+            :key="item.id"
+            :xs="24"
+            :sm="24"
+            :md="8"
+            :lg="{ span: '4-8' }"
+          >
+            <el-card class="box-card" shadow="always">
+              <div slot="header" class="clearfix">
+                <span>
+                  {{ item.name }}
+                </span>
+              </div>
+              <div v-if="item.userUnit" class="text item">
+                <span>{{ $translateTitle('home.unit') }}</span>
+                <span>{{ item.userUnit }}</span>
+              </div>
+              <div v-if="item.scale" class="text item">
+                <span>{{ $translateTitle('home.scale') }}：</span>
+                <span>{{ item.scale }}</span>
+              </div>
+              <div class="text item">
+                <span>{{ $translateTitle('home.category') }}：</span>
+                <span>{{ getCategory(item.category) }}</span>
+              </div>
+              <div class="text item">
+                <span>{{ $translateTitle('home.updatedAt') }}：</span>
+                <span>
+                  {{
+                    new Date(item.updatedAt).toLocaleDateString() +
+                    ' ' +
+                    new Date(item.updatedAt).toLocaleTimeString()
+                  }}
+                </span>
+              </div>
+              <div class="text item" style="text-align: center">
+                <el-button-group>
+                  <el-button
+                    style="margin-right: 3px"
+                    size="mini"
+                    type="success"
+                    @click="Gotoproduct(item.name)"
+                  >
+                    {{ $translateTitle('home.preview') }}
+                  </el-button>
+                  <el-button
+                    v-if="NODE_ENV == 'development'"
+                    size="mini"
+                    type="primary"
+                    target="_blank"
+                    @click="handleClickVisit(item)"
+                  >
+                    {{ $translateTitle('home.konva') }}
+                  </el-button>
+                </el-button-group>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-row :span="24">
+          <div class="chart_map">
+            <baidu-map
+              :scroll-wheel-zoom="true"
+              class="baidu_map"
+              :center="{ lng: 116.404, lat: 39.915 }"
+              :zoom="sizeZoom"
+            >
+              <bm-control>
+                <el-button size="mini" @click="sizeZoom = 19">
+                  {{ $translateTitle('home.max') }}
                 </el-button>
-                <el-button
-                  v-if="NODE_ENV == 'development'"
-                  size="mini"
-                  type="primary"
-                  target="_blank"
-                  @click="handleClickVisit(item)"
-                >
-                  {{ $translateTitle('home.konva') }}
+                <el-button size="mini" @click="sizeZoom = 10">
+                  {{ $translateTitle('home.restore') }}
                 </el-button>
-              </el-button-group>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-      <!-- <el-tab-pane label="统计总览" name="devchart">
-
-      </el-tab-pane> -->
-    </el-tabs>
+                <el-button size="mini" @click="sizeZoom = 3">
+                  {{ $translateTitle('home.min') }}
+                </el-button>
+                <bm-panorama
+                  anchor="BMAP_ANCHOR_TOP_LEFT"
+                  :offset="{ width: 460, height: 0 }"
+                />
+                <bm-overview-map :is-open="true" />
+                <bm-scale :offset="{ width: 200, height: 0 }" />
+                <bm-city-list :offset="{ width: 280, height: 0 }" />
+                <bm-map-type
+                  anchor="BMAP_ANCHOR_TOP_LEFT"
+                  :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
+                  :offset="{ width: 360, height: 0 }"
+                />
+              </bm-control>
+              <bm-marker
+                v-for="(item, index) in tableData"
+                :key="item.objectId"
+                :content="item.name"
+                :position="{
+                  lng: item.location.longitude,
+                  lat: item.location.latitude,
+                }"
+                :dragging="true"
+                animation="BMAP_ANIMATION_BOUNCE"
+              >
+                <bm-label
+                  :content="item.name"
+                  :label-style="{ color: 'red', fontSize: '12px' }"
+                  :offset="{
+                    width: -35 * index,
+                    height: 30 * index,
+                  }"
+                  @click="deviceToDetail(item)"
+                />
+              </bm-marker>
+              <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
+              <bm-geolocation
+                :show-address-bar="true"
+                :auto-location="true"
+                anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+              />
+            </baidu-map>
+          </div>
+        </el-row>
+      </el-col>
+      <el-col :span="24 - leftRow" :xs="24">
+        <div class="home_card">
+          <div class="box-card">
+            <el-card>
+              <div slot="header" class="clearfix">
+                <span>{{ $translateTitle('home.info') }}</span>
+              </div>
+              <div>
+                <el-row>
+                  <el-col :span="18">
+                    <ve-histogram
+                      :extend="chartExtend"
+                      height="260px"
+                      :data="chartData"
+                      :settings="chartSetting"
+                    />
+                  </el-col>
+                  <el-col :span="6">
+                    <div style="margin: 20px 0 20px 20px">
+                      <p>
+                        {{
+                          $translateTitle('home.app_count') +
+                          ':' +
+                          project_count
+                        }}
+                      </p>
+                      <p>
+                        {{
+                          $translateTitle('home.pro_count') +
+                          ':' +
+                          product_count
+                        }}
+                      </p>
+                      <p>
+                        {{
+                          $translateTitle('home.cla_count') + ':' + app_count
+                        }}
+                      </p>
+                      <p>
+                        {{
+                          $translateTitle('home.dev_count') + ':' + dev_count
+                        }}
+                      </p>
+                      <p>
+                        {{
+                          $translateTitle('home.dev_online') +
+                          ':' +
+                          dev_online_count
+                        }}
+                      </p>
+                      <p>
+                        {{ $translateTitle('home.dev_unline') + ':' }}
+                        {{ dev_count - dev_online_count }}
+                      </p>
+                    </div>
+                  </el-col>
+                </el-row>
+              </div>
+            </el-card>
+          </div>
+          <div class="box-card">
+            <el-card>
+              <div slot="header" class="clearfix">
+                <span>未确认报警展示</span>
+                <el-button style="float: right; padding: 3px 0" type="text">
+                  操作按钮
+                </el-button>
+              </div>
+              <div v-for="o in 4" :key="o" class="text item">
+                {{ '设备 ' + o }}
+              </div>
+            </el-card>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
   import { batch } from '@/api/Batch/index'
+  import { queryDevice } from '@/api/Device'
   import Category from '@/api/Mock/Category'
+  import { Roletree, getToken } from '@/api/Menu'
+  import {
+    BmNavigation,
+    BaiduMap,
+    BmGeolocation,
+    BmCityList,
+    BmMarker,
+    BmLabel,
+    BmControl,
+    BmPanorama,
+    BmOverviewMap,
+    BmMapType,
+    BmScale,
+  } from 'vue-baidu-map'
+  import store from '@/store'
   export default {
     name: 'Index',
-    components: {},
+    components: {
+      BmScale,
+      BmMapType,
+      BmOverviewMap,
+      BmPanorama,
+      BmControl,
+      BmLabel,
+      BaiduMap,
+      BmNavigation,
+      BmGeolocation,
+      BmCityList,
+      BmMarker,
+    },
     data() {
       return {
+        queryForm: {
+          account: '',
+          searchDate: '',
+          pageNo: 1,
+          pageSize: 20,
+          workGroupName: '',
+          workGroupTreeShow: false,
+        },
+        roleProps: {
+          children: 'children',
+          label: 'name',
+        },
+        curDepartmentId: '',
+        leftRow: 18,
+        deptTreeData: [],
+        chartExtend: {
+          series: {
+            center: ['50%', '50%'],
+          },
+          'yAxis.0.min': 0, // 设置左边最小值
+
+          // 'yAxis.0.max': 20, //设置左边最大值
+
+          'yAxis.0.minInterval': 1, // minInterval设置间隔值，1为整数
+
+          'yAxis.1.splitLine.show': false, // yAxis.1： y轴右侧
+
+          'yAxis.1.minInterval': 10, // minInterval设置间隔值，1为整数
+        },
+        chartData: {
+          columns: [],
+          rows: [],
+        },
+        sizeZoom: 10,
+        tableData: [],
+        chartSetting: {
+          yAxis: {
+            type: 'value',
+            minInterval: 1,
+          },
+        },
+
+        chartSettings: {
+          radius: ['60px', '80px'],
+          label: {
+            formatter: (params) => {
+              if (params.dataIndex === 0) {
+                return `{a| 通过率${params.percent}%}`
+              } else {
+                return `{b| 未过率${params.percent}%}`
+              }
+            },
+            rich: {
+              a: {
+                color: '#438de7',
+              },
+              b: {
+                color: '#7b7d86',
+              },
+            },
+          },
+          itemStyle: {
+            color: (seriesIndex) => {
+              if (seriesIndex.dataIndex === 0) {
+                return {
+                  type: 'linear',
+                  x: 0,
+                  y: 1,
+                  x2: 0,
+                  y2: 0,
+                  colorStops: [
+                    {
+                      offset: 0,
+                      color: '#4a8eea', // 0% 处的颜色
+                    },
+                    {
+                      offset: 1,
+                      color: '#75b9f9', // 100% 处的颜色
+                    },
+                    {
+                      offset: 1,
+                      color: '#77c5f7', // 100% 处的颜色
+                    },
+                    {
+                      offset: 1,
+                      color: '#78d0f5', // 100% 处的颜色
+                    },
+                  ],
+                  global: false, // 缺省为 false
+                }
+              } else {
+                return '#dbdbe3'
+              }
+            },
+          },
+        },
         NODE_ENV: process.env.NODE_ENV,
         category: Category,
         activeName: 'devchart',
@@ -195,12 +440,54 @@
     },
     mounted() {
       this.getAllAxios()
-      console.log(this.category)
+      this.getDevices()
+      this.getRoletree()
     },
     activated() {
       console.log('keep-alive生效')
     }, //如果页面有keep-alive缓存功能，这个函数会触发
     methods: {
+      queryData() {
+        this.queryForm.pageNo = 1
+        this.fetchData()
+      },
+      async getRoletree() {
+        await Roletree()
+          .then((res) => {
+            console.log(res)
+            this.deptTreeData = res.results
+            this.handleNodeClick(res.results[0], 0)
+          })
+          .catch((e) => {
+            console.log(e)
+          })
+      },
+      async handleNodeClick(data, node) {
+        this.queryForm.workGroupName = node.label
+        this.queryForm.workGroupTreeShow = false
+        if (node.level != 1) {
+          // 在这里获取点击厂家的session
+          const { access_token = '' } = await getToken(data.name)
+          this.access_token = access_token
+        } else {
+          this.access_token = store.getters['user/token']
+        }
+        // 点击的公司名
+        const { name, objectId } = data
+        this.curDepartmentId = objectId
+        // this.Company = name
+        this.getDevices(0)
+      },
+      async getDevices() {
+        const { results } = await queryDevice({})
+        results.forEach((i) => {
+          if (!i.location) {
+            // location 容错处理
+            i.location = { longitude: 0, latitude: 0 }
+          }
+        })
+        this.tableData = results
+      },
       getCategory(key) {
         console.log(key)
         let name = ''
@@ -273,6 +560,21 @@
       //   this.dev_online_count = dev_online_num.count
       // },
       async getAllAxios() {
+        var rows = {}
+        this.chartData.columns.push(
+          '日期',
+          this.$translateTitle('home.app_count'),
+          this.$translateTitle('home.pro_count'),
+          this.$translateTitle('home.cla_count'),
+          this.$translateTitle('home.dev_count'),
+          this.$translateTitle('home.dev_online'),
+          this.$translateTitle('home.dev_unline')
+        )
+        this.chartData.columns.forEach((i) => {
+          rows[i] = 0
+          rows['日期'] = moment().format('YYYY-MM-DD')
+        })
+        this.chartData.rows[0] = rows
         this.$baseColorfullLoading(
           1,
           this.$translateTitle('home.messag_loding')
@@ -293,8 +595,10 @@
             method: 'GET',
             path: '/classes/Product',
             body: {
+              // 这里查product 是导致整个查询变慢的主要原因
               count: 'objectId',
               skip: 0,
+              keys: 'updatedAt,category,desc',
               where: {
                 category: 'IotHub',
                 // category: 'Evidence',
@@ -337,17 +641,43 @@
             },
           },
         ]
-        const res = await batch(params)
-        if (res) {
-          this.dev_count = res[0].success.count
-          this.projectList = res[1].success.results
-          this.product_count = res[1].success.count
-          this.project_count = res[2].success.count
-          this.dev_count = res[3].success.count
-          this.app_count = res[4].success.count
-          this.dev_online_count = res[5].success.count
-        }
-        this.$baseColorfullLoading().close()
+        await batch(params)
+          .then((res) => {
+            let columnsdata = []
+            this.$baseColorfullLoading().close()
+            this.dev_count = res[0].success.count
+            this.projectList = res[1].success.results
+            this.product_count = res[1].success.count
+            this.project_count = res[2].success.count
+            this.dev_count = res[3].success.count
+            this.app_count = res[4].success.count
+            this.dev_online_count = res[5].success.count
+            columnsdata.push(
+              moment().format('YYYY-MM-DD'),
+              this.project_count,
+              this.product_count,
+              this.app_count,
+              this.dev_count,
+              this.dev_online_count,
+              this.dev_count - this.dev_online_count
+            )
+            this.chartData.columns.forEach((i, index) => {
+              // rows[`${this.chartData.columns}`] = index
+              for (var key in rows) {
+                // rows['类别'] = this.chartData.columns
+                if (key == i) {
+                  rows[`${key}`] = columnsdata[index]
+                }
+              }
+            })
+            this.chartData.rows[0] = rows
+          })
+          .catch((error) => {
+            this.$baseColorfullLoading().close()
+            console.log(error)
+            this.chartData.rows[0] = rows
+          })
+        this.$set(this.chartData, 'rows', [rows])
       },
       handleChange() {},
       handleClickVisit(project) {
@@ -370,101 +700,28 @@
   }
 </script>
 <style lang="scss" scoped>
-  @media only screen and (min-width: 768px) {
-    .el-col-sm-4-8 {
-      width: 20%;
-    }
-
-    .el-col-sm-offset-4-8 {
-      margin-left: 20%;
-    }
-
-    .el-col-sm-pull-4-8 {
-      position: relative;
-
-      right: 20%;
-    }
-
-    .el-col-sm-push-4-8 {
-      position: relative;
-
-      left: 20%;
-    }
-  }
-
-  @media only screen and (min-width: 992px) {
-    .el-col-md-4-8 {
-      width: 20%;
-    }
-
-    .el-col-md-offset-4-8 {
-      margin-left: 20%;
-    }
-
-    .el-col-md-pull-4-8 {
-      position: relative;
-
-      right: 20%;
-    }
-
-    .el-col-md-push-4-8 {
-      position: relative;
-
-      left: 20%;
-    }
-  }
-
-  @media only screen and (min-width: 1200px) {
-    .el-col-lg-4-8 {
-      width: 20%;
-    }
-
-    .el-col-lg-offset-4-8 {
-      margin-left: 20%;
-    }
-
-    .el-col-lg-pull-4-8 {
-      position: relative;
-
-      right: 20%;
-    }
-
-    .el-col-lg-push-4-8 {
-      position: relative;
-
-      left: 20%;
-    }
-  }
-
-  @media only screen and (min-width: 1920px) {
-    .el-col-xl-4-8 {
-      width: 20%;
-    }
-
-    .el-col-xl-offset-4-8 {
-      margin-left: 20%;
-    }
-
-    .el-col-xl-pull-4-8 {
-      position: relative;
-
-      right: 20%;
-    }
-
-    .el-col-xl-push-4-8 {
-      position: relative;
-
-      left: 20%;
-    }
-  }
   .platform {
+    .map_header {
+      height: 40px;
+    }
     box-sizing: border-box;
     width: 100%;
     //height: calc(100vh - #{$base-top-bar-height}* 3 - 25px);
     padding: 10px;
     background-size: 100%;
+    .chart_map {
+      .baidu_map {
+        height: calc(78vh - 20px);
+      }
+      margin: 8px;
+    }
+    //.home_card {
+    //  margin: 20px;
+    //  .box-card {
+    //    height: 50%;
+    //  }
+    //}
     .box-card {
-      padding: 5px;
       margin: 5px;
     }
     .clearfix {
@@ -478,15 +735,16 @@
     .card-right p:first-child {
       padding: 5px;
       margin: 0px;
+      font-size: 14px;
       font-weight: bolder;
     }
-    .card-right p:last-child {
-      padding: 5px;
-      margin: 0px;
-      font-size: 40px;
-      font-weight: bolder;
-      color: #8b1515;
-    }
+    //.card-right p:last-child {
+    //  padding: 5px;
+    //  margin: 0px;
+    //  font-size: 40px;
+    //  font-weight: bolder;
+    //  color: #8b1515;
+    //}
   }
   .text {
     font-size: 14px;
@@ -500,6 +758,7 @@
     width: 50px;
     height: 50px;
     margin: auto;
+    margin-top: -10px;
     font-size: 50px !important;
     font-size: 40px;
     color: black;

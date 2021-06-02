@@ -167,7 +167,7 @@
 <!--eslint-disable-->
 <script>
   import { Table, TableColumn, Popover, Tooltip } from 'element-ui'
-  import {getDateDiff} from '@/utils/index'
+  import { getDateDiff } from '@/utils/index'
   import dateformat from '@/utils/utilwen'
   export default {
     name: 'AlarmsView',
@@ -210,7 +210,9 @@
           })
           .catch((error) => {
             this.loading = false
-            this.$message.error(error || this.$translateTitle('error.networkError'))
+            this.$message.error(
+              error || this.$translateTitle('error.networkError')
+            )
           })
       },
       getDuration(duration) {
@@ -233,7 +235,9 @@
             this.loadData()
           })
           .catch((error) => {
-            this.$message.error(error || this.$translateTitle('error.networkError'))
+            this.$message.error(
+              error || this.$translateTitle('error.networkError')
+            )
           })
       },
       handleClearAll() {
@@ -252,7 +256,9 @@
                 this.loadData()
               })
               .catch((error) => {
-                this.$message.error(error || this.$translateTitle('error.networkError'))
+                this.$message.error(
+                  error || this.$translateTitle('error.networkError')
+                )
               })
           })
           .catch(() => {})

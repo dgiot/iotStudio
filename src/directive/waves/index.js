@@ -6,7 +6,7 @@ const install = function (Vue) {
 
 if (window.Vue) {
   window.waves = waves
-  Vue.use(install); // eslint-disable-line
+  Vue.use(install) // eslint-disable-line
 }
 
 waves.install = install

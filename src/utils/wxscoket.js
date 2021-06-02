@@ -2,11 +2,7 @@ var TOPIC_EMPTY = 'topic为空！'
 var MSG_EMPTY = '消息内容为空！'
 var DISCONNECT_MSG = '当前尚未连接'
 var userName = 'konva'
-let localHost = [
-  'dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com',
-  'dgiiot.gitee.io',
-  'dgiot.github.io',
-]
+let localHost = ['tcloudbaseapp.com', 'gitee.io', 'github.io']
 
 if (process.env.NODE_ENV == 'development') {
   localHost.push('localhost', '127.0.0.1')
@@ -66,8 +62,17 @@ var sendInfo = {
 // if (process.env.NODE_ENV == 'development') {
 //   localHost.push('localhost', '127.0.0.1')
 // }
-let _scokethost =
-  globalUrl(hostname, localHost).split('//')[1] || location.hostname
+let _scokethost = ''
+_scokethost = globalUrl(hostname, localHost).split('//')[1] || location.hostname
+// var result = localHost.some((i) => {
+//   return hostname.indexOf(i) > -1
+// })
+// if (result) {
+//   console.log(process.env.VUE_APP_URL)
+//   _scokethost = process.env.VUE_APP_URL.split('//')[1]
+// } else {
+//   _scokethost = ''
+// }
 console.log(_scokethost)
 // eslint-disable-next-line no-unused-vars
 var Websocket = {

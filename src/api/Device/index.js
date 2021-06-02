@@ -80,3 +80,11 @@ export async function getTdDevice(objectId) {
     data: initData,
   })
 }
+// 获取设备时序数据
+export async function getDabDevice(objectId, params) {
+  return request({
+    url: `device/${objectId}`,
+    method: 'get',
+    params,
+  })
+}

@@ -19,12 +19,13 @@
         :value="value"
         @messageData="set_mqttflag"
         @removeShape="removeShape"
+        @ImageTable="ImageTable"
       />
     </div>
     <div class="_mian">
       <el-row :gutter="gutter" class="_row">
         <transition name="fade">
-          <!-- <el-col :span="leftrow">
+          <el-col v-show="showTable" :span="leftrow">
             <div class="_left">
               <topo-allocation
                 @fatherMousedown="mousedown"
@@ -32,7 +33,7 @@
                 @fatherMouseup="mouseup"
               />
             </div>
-          </el-col> -->
+          </el-col>
         </transition>
 
         <el-col :span="gutter - leftrow - rightrow" class="_konvarow">
@@ -106,6 +107,7 @@
                 ref="operation"
                 @upImg="upProduct"
                 @upconfig="saveKonvaitem"
+                @handleCloseSub="handleCloseSub"
                 @clearImg="clearImg"
               />
             </div>
@@ -116,6 +118,7 @@
   </div>
 </template>
 <script>
+  import { uuid } from '@/utils'
   const context = require.context('./components', true, /\.vue$/)
   let res_components = {}
   context.keys().forEach((fileName) => {
@@ -166,45 +169,19 @@
         globalStageid: '',
         value: false,
         kovaUpType: '',
+        showTable: false,
       }
     },
     computed: {
-      ...mapState({
-        // graphColor: 'konva/graphColor',
-        // drawing: 'konva/drawing',
-        //   graphNow: 'konva/graphNow',
+      ...mapGetters({
+        graphColor: 'konva/graphColor',
+        drawing: 'konva/drawing',
+        graphNow: 'konva/graphNow',
         pointStart: 'konva/pointStart',
         draw: 'konva/draw',
-        //   flag: 'konva/flag',
+        flag: 'konva/flag',
+        drawParams: 'konva/drawParams',
       }),
-      flag: {
-        get() {
-          return this.$store.state.konva.flag
-        },
-      },
-      graphColor: {
-        get() {
-          return this.$store.state.konva.graphColor
-        },
-        set(val) {
-          this.$store.commit('konva/setGraphColor', val)
-        },
-      },
-      draw: {
-        get() {
-          return this.$store.state.konva.draw
-        },
-      },
-      graphNow: {
-        get() {
-          return this.$store.state.konva.graphNow
-        },
-      },
-      drawing: {
-        get() {
-          return this.$store.state.konva.drawing
-        },
-      },
       stageConfig() {
         let el = document.getElementsByClassName('konva')
         return {
@@ -234,6 +211,7 @@
         setFlag: 'konva/setFlag',
         setGraphNow: 'konva/setGraphNow',
         setGraphColor: 'konva/setGraphColor',
+        setDrawParams: 'konva/setDrawParams',
       }),
       // @click//单击
       // @mousedown//按下
@@ -246,9 +224,9 @@
       // @mouseover//在
       mousedown(item) {
         console.log(item)
-        var _center = document.querySelectorAll('._center')[0]
-        let oElement = document.querySelectorAll(`.${item}`)[0]
-        console.log(Position(oElement))
+        // var _center = document.querySelectorAll('._center')[0]
+        // let oElement = document.querySelectorAll(`.${item}`)[0]
+        // console.log(Position(oElement))
 
         // dragBox(
         //   document.querySelectorAll(`.${item}`)[0],
@@ -265,13 +243,14 @@
         // console.log(Position(oElement))
       },
       mouseup(item) {
+        console.log(item)
         // dragBox(
         //   document.querySelectorAll(`.${item}`)[0],
         //   document.querySelectorAll('.konvajs-content')[0]
         // )
-        var _center = document.querySelectorAll('._center')[0]
-        let oElement = document.querySelectorAll(`.${item}`)[0]
-        console.log(Position(oElement))
+        // var _center = document.querySelectorAll('._center')[0]
+        // let oElement = document.querySelectorAll(`.${item}`)[0]
+        // console.log(Position(oElement))
       },
       // set_mqttflag
       set_mqttflag(v) {
@@ -279,14 +258,22 @@
       },
       // removeShape
       removeShape(node) {
-        console.log()
-        var Layer = this.stage.find('Layer')[0]
+        let _this = this
+        //  此处不能删除图片 bug
+        console.log('删除的节点', node)
+        _this.stage.find('Transformer').destroy()
         node.remove()
-        node.destroy()
-        Layer.batchDraw()
-        this.setGraphNow('')
-        if (node.attrs.id == this.$refs['operation'].Shapeconfig.attrs.id)
-          this.$refs['operation'].Shapeconfig = []
+        var Layer = _this.stage.find('Layer')[0]
+        Layer.draw()
+        _this.setGraphNow('')
+        if (node.attrs.id == _this.$refs['operation'].Shapeconfig.attrs.id)
+          _this.$refs['operation'].Shapeconfig = []
+        _this.updataProduct(this.productid)
+      },
+      // ImageTable
+      ImageTable(type) {
+        this.leftrow = type ? 3 : 0
+        this.showTable = type
       },
       // saveKonvaitem
       saveKonvaitem(config) {
@@ -295,7 +282,7 @@
         console.log('config.attrs.id', config.attrs.id)
         let _uptype
         var Text = _this.stage.find('Text')
-        var Imgage = _this.stage.find('Imgage')
+        var Image = _this.stage.find('Image')
         var Group = _this.stage.find('Group')
         var stage = _this.stage.find(config.attrs.id)
         console.log('stage', stage)
@@ -303,9 +290,10 @@
         for (var n = 0; n < tweens.length; n++) {
           tweens[n].destroy()
         }
-        Imgage.each((shape) => {
+        Image.each((shape) => {
+          console.log('图片相关', shape)
           if (shape.attrs.id == config.attrs.id) {
-            _this.kovaUpType = 'Imgage'
+            _this.kovaUpType = 'Image'
             tweens.push(
               new Konva.Tween({
                 node: Object.assign(shape, config),
@@ -383,7 +371,7 @@
         if (type == 'rightrow') {
           this.rightrow = this.rightrow == 6 ? 0 : 6
         } else {
-          // this.leftrow = this.leftrow == 3 ? 0 : 3
+          this.leftrow = this.leftrow == 3 ? 0 : 3
         }
       },
       clearImg(isVisible) {
@@ -543,9 +531,15 @@
         console.log('globalStageid', globalStageid)
         console.log(Stage, 'Stage')
         _this.stage = Konva.Node.create(Stage, globalStageid)
+        var Layer = _this.stage.find('Layer')[0]
         _this.stage.on('click', (e) => {
           var node = e.target
-
+          // 如果点击空白处 移除图形选择框
+          // 移除图形选择框
+          if (node == _this.stage) {
+            _this.stage.find('Transformer').destroy()
+            Layer.draw()
+          }
           console.log(node.toJSON())
           if (_this.isDevice) return
           _this.setGraphNow(e.target)
@@ -557,14 +551,20 @@
           console.log('类型', _this.flag)
           console.log('this.draw', _this.draw)
           console.log('color', _this.graphColor)
+          console.log('drawParams', _this.drawParams)
           var color = _this.graphColor
           var type = _this.flag
-          var params
+          var params = _this.DrawParams
+          console.log('params', _this.drawParams)
           var _group = _this.stage.find('Group')[0]
-          var Layer = _this.stage.find('Layer')[0]
-          console.log(e.evt)
           const { offsetX, offsetY } = e.evt
-          var state = createState(type, offsetX, offsetY, color, params)
+          var state = createState(
+            type,
+            offsetX,
+            offsetY,
+            color,
+            _this.drawParams
+          )
           _group.add(state)
           Layer.draw()
           Layer.batchDraw()
@@ -572,6 +572,83 @@
           _this.setDraw(false)
         })
         var Group = _this.stage.find('Group')
+        var Text = _this.stage.find('Text')
+        console.log(Text, 'Text')
+        Text.each(function (_G) {
+          _G.on('mouseenter', function () {
+            _this.stage.container().style.cursor = 'move'
+          })
+
+          _G.on('mouseleave', function () {
+            _this.stage.container().style.cursor = 'default'
+          })
+          _G.on('dblclick', function (e) {
+            _this.stage.find('Transformer').destroy()
+            // 在画布上创建具有绝对位置的textarea
+
+            // 首先，我们需要为textarea找到位置
+
+            // 首先，让我们找到文本节点相对于舞台的位置:
+            let textPosition = this.getAbsolutePosition()
+
+            // 然后让我们在页面上找到stage容器的位置
+            let stageBox = _this.stage.container().getBoundingClientRect()
+
+            // 因此textarea的位置将是上面位置的和
+            console.log('eeeeeeeeeeeeeeeee', e)
+            let areaPosition = {
+              x: stageBox.left + textPosition.x,
+              y: stageBox.top + textPosition.y,
+              color: e.target.attrs.fill,
+              text: e.target.attrs.text,
+            }
+
+            // 创建textarea并设置它的样式
+            let textarea = document.createElement('textarea')
+            document.body.appendChild(textarea)
+            let T = this.text()
+            if (T === '双击编辑文字') {
+              textarea.value = ''
+              textarea.setAttribute('placeholder', '请输入文字')
+            } else {
+              textarea.value = T
+            }
+            textarea.style.position = 'absolute'
+            textarea.style.top = areaPosition.y + 'px'
+            textarea.style.left = areaPosition.x + 'px'
+            textarea.style.background = 'none'
+            textarea.style.border = '1px dashed #000'
+            textarea.style.outline = 'none'
+            textarea.style.color = areaPosition.color
+            textarea.focus()
+
+            this.setAttr('text', '')
+            Layer.draw()
+
+            // 确定输入的文字
+            let confirm = (val) => {
+              this.text(val ? val : '双击编辑文字')
+              Layer.draw()
+              // 隐藏在输入
+              if (textarea) document.body.removeChild(textarea)
+            }
+            // 回车键
+            let keydown = (e) => {
+              if (e.keyCode === 13) {
+                textarea.removeEventListener('blur', blur)
+                confirm(textarea.value)
+              }
+            }
+            // 鼠标失去焦点
+            let blur = () => {
+              textarea.removeEventListener('keydown', keydown)
+              confirm(textarea.value)
+            }
+
+            textarea.addEventListener('keydown', keydown)
+            textarea.addEventListener('blur', blur)
+          })
+        })
         // 设置页面是从设备界面进入 则不添加以下事件
         if (_this.isDevice && _this.productconfig) {
           _this.konvaClass.push('isDevice')
@@ -582,6 +659,17 @@
         }
         Group.each(function (_G) {
           _G.on('click', (e) => {
+            // 创建图形选框事件
+            const tr = new Konva.Transformer({
+              borderStroke: '#000', // 虚线颜色
+              borderStrokeWidth: 1, //虚线大小
+              borderDash: [5], // 虚线间距
+              keepRatio: false, // 不等比缩放
+              id: `Transformer_${uuid(6)}`,
+            })
+            Layer.add(tr)
+            tr.attachTo(e.target)
+            Layer.draw()
             // _this.ShapeVisible = true
             console.log(`#${e.target.attrs.id}`)
             var node = e.target
@@ -600,11 +688,26 @@
             document.body.style.cursor = 'pointer'
           })
           _G.on('mouseout', (e) => {
+            // _this.stage.find('Transformer').destroy() // 禁用后 无法拖动
             const id = e.target.id()
             const item = _this.stage.find((i) => i.id === id)
             item.x = e.target.x()
             item.y = e.target.y()
             document.body.style.cursor = 'default'
+          })
+        })
+        var Imgage = _this.stage.find('Image')
+        console.log('Imgage', Imgage)
+        var _group = _this.stage.find('Group')[0]
+        Imgage.each(function (img) {
+          // 这里会引起内存泄露
+          console.log('无法loadjson 图片,所以使用konva 的api創建', img.attrs)
+          // 图片加载会耗时 需解决
+          Konva.Image.fromURL(img.attrs.source, function (darthNode) {
+            darthNode.setAttrs(img.attrs)
+            _group.add(darthNode)
+            Layer.draw()
+            Layer.batchDraw()
           })
         })
         console.log('绘制完成')

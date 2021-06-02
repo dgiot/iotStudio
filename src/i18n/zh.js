@@ -21,6 +21,11 @@ export default {
       app_count: '应用总数',
       dev_count: '设备总数',
       dev_online: '在线设备',
+      dev_unline: '离线设备',
+      max: '缩放至最大',
+      min: '缩放至最小',
+      restore: '还原',
+      info: '信息总览',
     },
     // leftbar
     leftbar: {
@@ -100,6 +105,9 @@ export default {
     },
     route: {},
     equipment: {
+      list: '设备列表',
+      map: '设备地图',
+      location: '位置',
       number: '编号',
       Offtheshelf: '下架',
       Updatetemplate: '更新模版',
@@ -201,6 +209,13 @@ export default {
       powersupply: '供电单位',
     },
     developer: {
+      to: '至',
+      EndTime: '结束时间',
+      startTime: '开始时间',
+      LastWeek: '最近一周',
+      LastMonth: '最近一个月',
+      LastThreeMonths: '最近三个月',
+      download: '下载',
       Unauthorizedcanbeempty: '未授权可为空',
       Servicedeployment: '服务部署',
       Deployment: '部署情况',
@@ -422,6 +437,7 @@ export default {
       edit: '设备',
       myproduct: '我的产品',
       createproduct: '创建产品',
+      editproduct: '修改产品',
       searchproductname: '请输入产品名称搜索',
       productname: '产品名称',
       productgrouping: '产品分组',

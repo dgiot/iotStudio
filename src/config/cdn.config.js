@@ -15,11 +15,13 @@ let staticUrl = {
     'https://unpkg.com/codemirror@5.58.3/addon/lint/lint.css',
     'https://unpkg.com/codemirror@5.58.3/theme/rubyblue.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/topology-vue/topology-vue.css',
+    'https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css"',
   ],
   js: [
     'https://unpkg.com/vue@2.6.12/dist/vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
     'https://unpkg.com/vue-router/dist/vue-router.min.js',
     'https://unpkg.com/vue-i18n@8.24.1/dist/vue-i18n.min.js',
+    'https://unpkg.com/cos-js-sdk-v5@1.2.10/dist/cos-js-sdk-v5.min.js',
     'https://unpkg.com/nprogress@0.2.0/nprogress.js',
     'https://unpkg.com/js-md5@0.7.3/build/md5.min.js',
     'https://unpkg.com/ace-builds@1.4.9/src-min/ace.js',
@@ -50,6 +52,9 @@ let staticUrl = {
     'https://unpkg.com/jszip@3.6.0/dist/jszip.min.js',
     'https://unpkg.com/jquery@3.6.0/dist/jquery.min.js',
     'https://unpkg.com/echarts@5.0.2/dist/echarts.min.js',
+    'https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js',
+    'https://cdn.jsdelivr.net/npm/echarts-amap/dist/echarts-amap.min.js',
+    'https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js',
     'https://unpkg.com/echarts@5.0.2/theme/macarons.js',
     'https://unpkg.com/dayjs@1.10.4/dayjs.min.js',
     'https://unpkg.com/lodash@4.17.21/lodash.min.js',

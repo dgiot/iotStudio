@@ -83,6 +83,7 @@ module.exports = {
       externals: {
         'topology-vue': 'topology',
         konva: 'Konva',
+        VCharts: 'v-charts',
         'vue-count-to': 'CountTo',
         'vue-konva': 'VueKonva',
         mockjs: 'Mock',
@@ -91,6 +92,7 @@ module.exports = {
         $: 'jquery',
         ace: 'ace',
         mqtt: 'mqtt',
+        'cos-js-sdk-v5': 'COS',
         'paho-mqtt': 'paho',
         Sortable: 'Sortable',
         vue: 'Vue',

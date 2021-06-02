@@ -2,7 +2,8 @@
   "title": "图表",
   "icon": "insert_chart",
   "opened": false,
-  "items": [{
+  "items": [
+    {
       "text": "line",
       "icon": "show_chart",
       "isFontIcon": true,

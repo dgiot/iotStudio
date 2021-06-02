@@ -62,5 +62,5 @@ cnpm run build
 | gitee            | [https://gitee.com/dgiot](https://gitee.com/dgiiot?from=git)                              |
 | Official website | [https://www.iotn2n.com](https://www.iotn2n.com?from=git)                                 |
 | blog             | [https://tech.iotn2n.com](https://tech.iotn2n.com?from=git)                               |
-| demon            | [https://prod.iotn2n.com](https://prod.iotn2n.com?from=git)                             |
+| demon            | [https://prod.iotn2n.com](https://prod.iotn2n.com?from=git)                               |
 | WeChat           | ![qrcode.png](http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/wechat/qrcode.png) |

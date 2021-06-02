@@ -50,10 +50,10 @@
               <el-button @click="flagFn('rect')">矩形</el-button>
               <el-button @click="flagFn('rectH')">矩形-空心</el-button>
               <el-button @click="flagFn('text')">文字</el-button>
-              <el-button @click="flagFn('image')">图片</el-button>
+              <el-button @click="showImageTable(isshow)">图片</el-button>
               <el-button @click="removeFn()">删除</el-button>
               <el-color-picker
-                v-model="graphColor"
+                v-model="pickerColor"
                 size="medium"
                 @change="setColor"
               />
@@ -93,33 +93,22 @@
     data() {
       return {
         topic: '',
+        isshow: true,
+        pickerColor: this.graphColor,
         activeNames: [],
         switchvalue: this.value,
         drawer: this.drawerflag,
       }
     },
     computed: {
-      ...mapState({
-        // graphColor: 'konva/graphColor',
+      ...mapGetters({
+        graphColor: 'konva/graphColor',
         drawing: 'konva/drawing',
-        // graphNow: 'konva/graphNow',
+        graphNow: 'konva/graphNow',
         pointStart: 'konva/pointStart',
         draw: 'konva/draw',
         flag: 'konva/flag',
       }),
-      graphColor: {
-        get() {
-          return this.$store.state.konva.graphColor
-        },
-        set(val) {
-          this.$store.commit('konva/setGraphColor', val)
-        },
-      },
-      graphNow: {
-        get() {
-          return this.$store.state.konva.graphNow
-        },
-      },
       // ...mapGetters({
       //   graphColor: 'konva/graphColor',
       //   drawing: 'konva/drawing',
@@ -144,6 +133,7 @@
         setFlag: 'konva/setFlag',
         setGraphNow: 'konva/setGraphNow',
         setGraphColor: 'konva/setGraphColor',
+        setDrawParams: 'konva/setDrawParams',
       }),
       setColor(v) {
         this.setGraphColor(v)
@@ -172,6 +162,7 @@
         })
       },
       flagFn(v) {
+        if (v == 'text') this.setDrawParams({ text: '请输入相关文字' })
         this.setFlag(v)
         // this.$emit('createShape', v, this.graphColor)
         if (v) this.setDraw(true)
@@ -183,6 +174,10 @@
         } else {
           this.$message.error('请选择图形')
         }
+      },
+      showImageTable(type) {
+        this.isshow = !this.isshow
+        this.$emit('ImageTable', type)
       },
       destroyed() {
         console.log('取消订阅mqtt')

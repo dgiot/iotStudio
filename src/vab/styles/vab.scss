@@ -57,7 +57,7 @@ html {
           transition: $base-transition;
 
           > section {
-            height: calc( 100vh - #{$base-top-bar-height}*2.7);
+            height: calc(100vh - #{$base-top-bar-height}* 2.7);
             overflow-x: hidden;
             overflow-y: scroll;
             background: $base-color-white;
@@ -200,9 +200,8 @@ html {
       opacity: 0.6;
       backdrop-filter: blur(10px);
     }
-    .el-notification{
+    .el-notification {
       max-width: 330px !important;
-
     }
     /* el-image-viewer遮罩 */
     .el-image-viewer__mask {

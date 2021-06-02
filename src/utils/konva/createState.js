@@ -4,13 +4,15 @@
  * @returns
  */
 // https://konvajs.org/api/Konva.Stage.html
+import { uuid } from '@/utils'
 function createState(type, offsetX, offsetY, color, params) {
+  console.log(params, 'konva create params')
   var state
   switch (type) {
     case 'pencil':
       state = new Konva.Line({
         name: 'line',
-        id: `line_${Mock.mock('@string')}`,
+        id: `line_${uuid(6)}`,
         // points: [5, 70, 140, 23, 250, 60, 300, 20],
         stroke: color,
         strokeWidth: 15,
@@ -24,7 +26,7 @@ function createState(type, offsetX, offsetY, color, params) {
       // 椭圆
       state = new Konva.Ellipse({
         name: 'ellipse',
-        id: `ellipse_${Mock.mock('@string')}`,
+        id: `ellipse_${uuid(6)}`,
         x: offsetX,
         y: offsetY,
         radiusX: 20,
@@ -39,7 +41,7 @@ function createState(type, offsetX, offsetY, color, params) {
       state = new Konva.Rect({
         name: 'rect',
         x: offsetX,
-        id: `rect_${Mock.mock('@string')}`,
+        id: `rect_${uuid(6)}`,
         y: offsetY,
         width: 100,
         height: 50,
@@ -52,8 +54,8 @@ function createState(type, offsetX, offsetY, color, params) {
       break
     case 'text':
       state = new Konva.Text({
-        text: '双击编辑文字',
-        id: `text_${Mock.mock('@string')}`,
+        text: params.text,
+        id: `text_${uuid(6)}`,
         x: offsetX,
         y: offsetY,
         fill: color,
@@ -63,22 +65,23 @@ function createState(type, offsetX, offsetY, color, params) {
       })
       break
     case 'image':
-      let imgsrc =
-        'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2234238213,2776120128&fm=26&gp=0.jpg'
       var imageObj = new Image()
+      console.log(params)
       state = new Konva.Image({
         x: offsetX,
         y: offsetY,
-        source: imgsrc,
-        id: `image_${Mock.mock('@string')}`,
+        id: `image_${uuid(6)}`,
         image: imageObj,
-        width: 106,
-        height: 118,
+        source: params.src,
+        width: params.width,
+        height: params.height,
         draggable: true,
       })
-
-      imageObj.src = imgsrc
+      imageObj.src = params.src
       imageObj.crossOrigin = 'Anonymous'
+
+      // imageObj.src = imgsrc
+      // imageObj.crossOrigin = 'Anonymous'
       // alternative API:
       break
     default:

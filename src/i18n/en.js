@@ -22,7 +22,8 @@ export default {
       pro_count: 'products',
       app_count: 'provider',
       dev_count: 'devices',
-      dev_online: 'online equipment',
+      dev_online: 'online',
+      dev_unline: 'unline',
     },
     // leftbar
     leftbar: {
@@ -547,6 +548,7 @@ export default {
       share: 'share',
       myproduct: 'MyProduct',
       createproduct: 'Create Product',
+      editproduct: 'edit Product',
       searchproductname: 'Input Product Name of Search',
       productname: 'ProductName',
       productgrouping: 'Product Grouping',
@@ -716,7 +718,10 @@ export default {
       programinglanguage: 'Programing language',
     },
     equipment: {
+      list: 'table',
+      map: 'map',
       number: 'Number',
+      location: 'location',
       Offtheshelf: 'Off the shelf',
       Updatetemplate: 'Update template',
       defaultvalue: 'Default value',

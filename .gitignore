@@ -36,6 +36,5 @@ pnpm-debug.log*
 # config
 /gitbit
 /github
-/src/config/developer.config.js
 
 # files

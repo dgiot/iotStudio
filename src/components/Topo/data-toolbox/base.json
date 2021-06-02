@@ -2,7 +2,8 @@
   "title": "基本",
   "icon": "payment",
   "opened": false,
-  "items": [{
+  "items": [
+    {
       "text": "Text",
       "icon": "el-icon-user",
       "isFontIcon": true,
@@ -195,7 +196,8 @@
           "zIndex": 1,
           "transform": 0,
           "lineWidth": 2,
-          "points": [{
+          "points": [
+            {
               "x": 0,
               "y": 0
             },
@@ -239,7 +241,8 @@
           "zIndex": 1,
           "transform": 0,
           "lineWidth": 2,
-          "points": [{
+          "points": [
+            {
               "x": 20,
               "y": 20
             },

@@ -75,14 +75,6 @@
                   </span>
                 </template>
               </el-table-column>
-              <!--              <el-table-column-->
-              <!--                :label="$translateTitle('product.classification')"-->
-              <!--                width="200"-->
-              <!--              >-->
-              <!--                <template slot-scope="scope">-->
-              <!--                  <span>{{ scope.row.CategoryKey }}</span>-->
-              <!--                </template>-->
-              <!--              </el-table-column>-->
               <el-table-column
                 width="180"
                 :label="$translateTitle('product.addingtime')"
@@ -105,19 +97,11 @@
                   >
                     {{ $translateTitle('product.config') }}
                   </el-button>
-                  <!-- <el-button
-                    :underline="false"
-                    icon="el-icon-attract"
-                    type="primary"
-                    @click="GoTodevices(scope.row)"
-                  >
-                    {{ $translateTitle('product.equipment') }}
-                  </el-button> -->
                   <el-button
                     :underline="false"
                     icon="el-icon-grape"
                     type="success"
-                    @click="editorDict(scope.row)"
+                    @click="editorDict(scope.row.objectId)"
                   >
                     {{ $translateTitle('product.dict') }}
                   </el-button>
@@ -213,7 +197,7 @@
     <div class="prodialog">
       <!-- 创建产品对话框 ###-->
       <el-dialog
-        :title="$translateTitle('product.createproduct')"
+        :title="moduleTitle"
         :visible.sync="dialogFormVisible"
         :close-on-click-modal="false"
         :before-close="handleClose"
@@ -261,15 +245,12 @@
 
               <!--  :label="item.attributes.desc"
               :value="item.attributes.name"-->
-              <el-form-item
-                v-show="custom_status == 'add'"
-                label="所属应用"
-                prop="relationApp"
-              >
+              <el-form-item label="所属应用" prop="relationApp">
                 <el-input
                   v-model="form.relationApp"
                   placeholder="请选择所属应用"
                   readonly
+                  :disabled="custom_status == 'edit'"
                   @focus="showTree = !showTree"
                 />
                 <div v-if="showTree">
@@ -332,6 +313,7 @@
                   v-else
                   v-loading="loading"
                   class="el-icon-plus avatar-uploader-icon"
+                  @click="uploadCkick"
                 />
                 <form
                   ref="uploadform"
@@ -343,7 +325,6 @@
                     type="file"
                     style="
                       position: relative;
-                      top: -100px;
                       z-index: 5;
                       width: 100px;
                       height: 100px;
@@ -362,6 +343,7 @@
                 >
                   删除
                 </el-button>
+                <br />
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('developer.describe')"
@@ -392,7 +374,7 @@
           <el-button type="primary" @click="submitForm()">
             {{ $translateTitle('developer.determine') }}
           </el-button>
-          <el-button @click="dialogFormVisible = false">
+          <el-button @click="handleCloseDialogForm()">
             {{ $translateTitle('developer.cancel') }}
           </el-button>
         </div>
@@ -552,7 +534,7 @@
           :model="tempparams"
           size="mini"
           label-position="left"
-          label-width="80px"
+          label-width="100px"
         >
           <el-row :gutter="24">
             <el-col :span="12">
@@ -580,18 +562,48 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="数据类型" prop="type">
+              <el-form-item
+                :label="$translateTitle('product.datatype')"
+                prop="type"
+              >
                 <el-select
                   v-model="tempparams.type"
                   placeholder="请选择"
+                  style="width: 100%"
                   @change="tempTypeChange"
                 >
+                  <!--                  <el-option-->
+                  <!--                    :label="$translateTitle('product.struct')"-->
+                  <!--                    value="struct"-->
+                  <!--                  />-->
                   <el-option
-                    v-for="item in dictOptions"
-                    :key="item"
-                    :label="item"
-                    :value="item"
+                    :label="$translateTitle('product.init')"
+                    value="int"
                   />
+                  <el-option
+                    :label="$translateTitle('product.float')"
+                    value="float"
+                  />
+                  <el-option
+                    :label="$translateTitle('product.double')"
+                    value="double"
+                  />
+                  <el-option
+                    :label="$translateTitle('product.bool')"
+                    value="bool"
+                  />
+                  <el-option
+                    :label="$translateTitle('product.enum')"
+                    value="enum"
+                  />
+                  <el-option
+                    :label="$translateTitle('product.string')"
+                    value="string"
+                  />
+                  <!--                  <el-option-->
+                  <!--                    :label="$translateTitle('product.date')"-->
+                  <!--                    value="date"-->
+                  <!--                  />-->
                 </el-select>
               </el-form-item>
             </el-col>
@@ -623,7 +635,7 @@
                   style="width: 100%"
                 >
                   <el-option
-                    v-for="(item, index) in ['normal', 'modbus']"
+                    v-for="(item, index) in ['normal', 'modbus', 'mingcheng']"
                     :key="index"
                     :label="item"
                     :value="item"
@@ -632,20 +644,30 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
-            <el-col :span="12">
+          <el-row :gutter="24">
+            <el-col v-show="tempparams.protocol == 'modbus'" :span="12">
               <el-form-item label="从机地址">
-                <el-input v-model="tempparams.slaveid" auto-complete="off" />
+                <el-input v-model="tempparams.slaveid" placeholder="从机地址" />
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col
+              v-show="
+                tempparams.protocol == 'modbus' ||
+                tempparams.protocol == 'mingcheng'
+              "
+              :span="12"
+            >
               <el-form-item label="数据地址" prop="address">
                 <el-input v-model="tempparams.address" placeholder="数据地址" />
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
-            <el-col :span="12">
+            <el-col
+              v-show="
+                tempparams.protocol == 'modbus' ||
+                tempparams.protocol == 'mingcheng'
+              "
+              :span="12"
+            >
               <el-form-item label="数据长度">
                 <el-input
                   v-model.number="tempparams.bytes"
@@ -700,39 +722,60 @@
 
                   余数：%s%10
                   <br />
-
-                  2. 计算值 添加变量按钮,
-                  <br />
-                  复制对应的标识符
-                  <br />
-
-                  例：pressure_out
-                  <br />
-                  加：pressure_out+10
-                  <br />
-
-                  减：pressure_out-10
-                  <br />
-
-                  乘：pressure_out*10
-                  <br />
-
-                  除：pressure_out/10
-                  <br />
-
-                  余数：pressure_out%10
-                  <br />
                 </div>
                 <i class="el-icon-question" />
               </el-tooltip>
-              <el-form-item label="数据公式">
+              <el-form-item label="采集公式">
                 <el-input
                   v-model="tempparams.collection"
+                  style="width: 100%"
                   :rows="1"
                   type="textarea"
                 />
               </el-form-item>
             </el-col>
+            <el-col :span="12">
+              <el-tooltip
+                style="float: left"
+                effect="dark"
+                placement="right-start"
+              >
+                <div slot="content">
+                  1. 设置值 平台下行数据经设置公式计算后设置 。
+                  <br />
+                  公式中的%s为占位符，是固定字段。
+                  <br />
+
+                  如：
+                  <br />
+
+                  加：%s+10
+                  <br />
+
+                  减：%s-10
+                  <br />
+
+                  乘：%s*10
+                  <br />
+
+                  除：%s/10
+                  <br />
+
+                  余数：%s%10
+                  <br />
+                </div>
+                <i class="el-icon-question" />
+              </el-tooltip>
+              <el-form-item label="设置公式">
+                <el-input
+                  v-model="tempparams.setting"
+                  :rows="1"
+                  type="textarea"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="12">
               <el-form-item label="必填">
                 <el-radio v-model="tempparams.required" :label="true" border>
@@ -743,24 +786,24 @@
                 </el-radio>
               </el-form-item>
             </el-col>
-            <!--            <el-col :span="12">-->
-            <!--              <el-form-item label="只读">-->
-            <!--                <el-radio v-model="tempparams.readonly" :label="true" border>-->
-            <!--                  是-->
-            <!--                </el-radio>-->
-            <!--                <el-radio v-model="tempparams.readonly" :label="false" border>-->
-            <!--                  否-->
-            <!--                </el-radio>-->
-            <!--              </el-form-item>-->
-            <!--            </el-col>-->
+            <el-col :span="12">
+              <el-form-item label="只读">
+                <el-radio v-model="tempparams.readonly" :label="true" border>
+                  是
+                </el-radio>
+                <el-radio v-model="tempparams.readonly" :label="false" border>
+                  否
+                </el-radio>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-form-item
-            v-if="tempparams.type != 'Enum'"
+            v-if="tempparams.type != 'enum'"
             label="默认值"
             prop="default"
           >
             <el-select
-              v-if="tempparams.type == 'Boolean'"
+              v-if="tempparams.type == 'bool'"
               v-model="tempparams.default"
               class="notauto"
               readonly
@@ -769,12 +812,12 @@
               <el-option :value="false" label="否" />
             </el-select>
             <el-input
-              v-else-if="tempparams.type == 'Number'"
+              v-else-if="tempparams.type == 'int'"
               v-model.number="tempparams.default"
             />
             <el-input v-else v-model="tempparams.default" />
           </el-form-item>
-          <el-form-item v-if="tempparams.type == 'Enum'" label="Enum数据">
+          <el-form-item v-if="tempparams.type == 'enum'" label="Enum数据">
             <el-tabs v-model="elactiveName1">
               <el-tab-pane label="Table" name="Table1">
                 <!--枚举型添加格式-->
@@ -830,14 +873,6 @@
     <div class="import-dialog">
       <el-dialog :visible.sync="importDialogShow" title="导入产品" width="25%">
         <el-form ref="uploadProForm" :model="formPro">
-          <!--   <el-row :gutter="20">
-  <el-col :span="12">
-     <el-input  placeholder=" " size="small" v-model="formPro.name" :disabled="true"> </el-input>
-     </el-col>
-  <el-col :span="12">
-
-  </el-col>
-          -->
           <el-upload
             ref="fileUpload"
             :action="uploadAction"
@@ -882,8 +917,10 @@
   </div>
 </template>
 <script>
+  import Upload from '@/components/UploadFile/input'
+  import { mapGetters } from 'vuex'
   import { delProduct, getProduct, putProduct } from '@/api/Product'
-  import { getAllunit, getDictCount } from '@/api/Dict/index'
+  import { getAllunit } from '@/api/Dict/index'
   import { queryDevice } from '@/api/Device/index'
   import { Roletree } from '@/api/Menu/index'
   import { export_txt_to_zip } from '@/utils/Export2Zip.js'
@@ -891,16 +928,17 @@
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
   import vueJsonEditor from 'vue-json-editor'
+  import { UploadImg } from '@/api/File'
   import Category from '@/api/Mock/Category'
+  import { uuid } from '@/utils'
   export default {
     components: { vueJsonEditor },
     data() {
       return {
-        //单位
+        moduleTitle: this.$translateTitle('product.createproduct'),
         allunit: [],
         productInfo: {},
         category: Category,
-        dictOptions: ['String', 'Boolean', 'Number', 'Enum'],
         edit_dict_temp_dialog: false,
         title_dict_edit_dialog: '新增字典数据',
         tempparams: {
@@ -1080,28 +1118,37 @@
         showTree: false,
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters({
+        token: 'user/token',
+      }),
+    },
     mounted() {
       const { project = '' } = this.$route.query
       this.formInline.productname = project
       this.Industry()
-      this.getAllunit()
       this.searchProduct(0)
     },
     beforeDestroy() {
       this.projectName = ''
     },
     methods: {
+      uploadCkick() {
+        this.loading = true
+        // 触发子组件的点击事件
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
+      },
+      fileInfo(info) {
+        console.log('info', info)
+        this.imageUrl = info.url
+        this.loading = false
+      },
       async getAllunit() {
         this.allunit = []
         const { results } = await getAllunit('unit', 200)
         this.allunit = results.concat([])
-        // this.allunit.unshift({
-        //   data: {
-        //     Name: '无',
-        //     Symbol: '',
-        //   },
-        // })
       },
       submitEnum() {
         if (this.tempparams.type == 'Enum') {
@@ -1156,7 +1203,7 @@
       },
       closeDict() {
         this.edit_dict_temp_dialog = !this.edit_dict_temp_dialog
-        this.$refs.tempparams.resetFields()
+        // this.$refs.tempparams.resetFields()
       },
       onJsonSave(formName) {
         // 点击保存触发
@@ -1204,9 +1251,10 @@
         })
       },
       tempTypeChange(value) {
-        if (value == 'Boolean') {
+        if (value == 'bool') {
           this.tempparams.default = true
-        } else if (value == 'Number') {
+          this.tempparams.default = true
+        } else if (value == 'int') {
           this.tempparams.default = 0
         } else {
           this.tempparams.default = undefined
@@ -1233,6 +1281,8 @@
             },
           ],
           struct: {},
+          collection: '%s',
+          setting: '%s',
           unit: '',
         }
       },
@@ -1240,6 +1290,7 @@
         this.$message('非Json数据类型')
       },
       handleNodeClick(data) {
+        console.log(data, 'data')
         this.$set(this.form, 'relationApp', data.name)
         this.showTree = !this.showTree
       },
@@ -1358,39 +1409,6 @@
         event.stopPropagation()
         this.imageUrl = ''
       },
-      upload(event) {
-        this.loading = true
-        if (event) {
-          var file = event.target.files[0] // name: "dangqi1.png" || type: "image/png"
-          var name = file.name
-          var testmsg = event.target.files[0].type
-          var type = file.type.split('/')[0]
-          var extension =
-            testmsg === 'image/jpeg' ||
-            testmsg === 'image/JPEG' ||
-            testmsg === 'image/png' ||
-            testmsg === 'image/PNG' ||
-            testmsg === 'image/bpm' ||
-            testmsg === 'image/BPM'
-          if (!extension) {
-            // 将图片img转化为base64
-            this.$message({
-              message: '请上传图片',
-              type: 'error',
-            })
-            return false // 必须加上return false; 才能阻止
-          } else {
-            var reader = new FileReader()
-            reader.readAsDataURL(file)
-            var that = this
-            reader.onloadend = function () {
-              var dataURL = reader.result
-              var blob = that.dataURItoBlob(dataURL)
-              that.uploadFile(blob, name) // 执行上传接口
-            }
-          }
-        }
-      },
       dataURItoBlob(dataURI) {
         // base64 解码
         var byteString = atob(dataURI.split(',')[1])
@@ -1403,32 +1421,6 @@
         return new Blob([ab], {
           type: mimeString,
         })
-      },
-      uploadFile(imgUrl, name) {
-        var formdata = new FormData()
-        formdata.append('file', imgUrl, name)
-        formdata.append('output', 'json')
-        formdata.append('path', this.form.relationApp)
-        // formdata.append("path", Cookies.get("appids"));
-        formdata.append('auth_token', this.access_token) // 下面是要传递的参数
-        // 此处必须设置为  multipart/form-data
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data', // 之前说的以表单传数据的格式来传递fromdata
-          },
-        }
-        this.$http
-          .post(this.fileServer, formdata)
-          .then((res) => {
-            if (res) {
-              this.imageUrl = res.body.url
-              this.loading = false
-            }
-          })
-          .catch((error) => {
-            this.loading = false
-            this.$message(error.bodyText)
-          })
       },
       submitUpload() {
         // this.uploadAction = Cookies.get('apiserver') + '/product?appid=' + Cookies.get("appids");
@@ -1477,7 +1469,7 @@
       async getDict(category) {
         category = [...new Set(category)]
         const parsms = {
-          limit: 1000,
+          limit: 100,
           where: {
             'data.key': 'category',
             type: category[0],
@@ -1498,6 +1490,7 @@
           order: '-updatedAt',
           limit: this.length,
           skip: this.start,
+          keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon',
           where: {
             category: 'IotHub',
           },
@@ -1530,18 +1523,29 @@
       handleClose() {
         this.dialogFormVisible = false
       },
+      // 关闭dialog 事件
+      handleCloseDialogForm() {
+        this.dialogFormVisible = false
+        // 重置表单
+        this.$nextTick(() => {
+          this.$refs['form'].resetFields()
+        })
+      },
       // 添加产品弹窗
       addproduct() {
+        this.moduleTitle = this.$translateTitle('product.createproduct')
+        this.imageUrl = ''
+        this.handleNodeClick(this.allApps[0])
         this.form = {
           name: '',
-          category: [],
+          category: ['IotHub'],
           nodeType: 0,
           desc: '',
           netType: ' ',
           devType: '',
           productSecret: '',
+          relationApp: this.allApps[0].name,
           roles: [],
-          relationApp: '',
         }
         this.custom_status = 'add'
         this.dialogFormVisible = true
@@ -1566,11 +1570,12 @@
           }
         })
       },
-      editorDict(row) {
-        console.log('row', row)
-        const { objectId, config = { basedate: {} } } = row
+      async editorDict(ObjectId) {
+        this.getAllunit()
+        const row = await getProduct(ObjectId)
+        const { config = { basedate: {} } } = row
         this.productInfo = row
-        this.editDictTempId = objectId
+        this.editDictTempId = ObjectId
         this.dictTempForm = {
           name: '',
           cType: '',
@@ -1599,10 +1604,12 @@
         this.dictVisible = true
       },
       editorProduct(row) {
+        this.imageUrl = ''
+        this.moduleTitle = this.$translateTitle('product.editproduct')
         this.custom_status = 'edit'
         this.custom_row = row
         // this.form.roles = [];
-        this.form.relationApp = ''
+        // this.form.relationApp = ''
         this.dialogFormVisible = true
         this.productid = row.objectId
         this.getIndustryParent(row.category, this.categoryList)
@@ -1616,14 +1623,14 @@
         if (row.icon) {
           this.imageUrl = row.icon
         }
-        for (var key in row.ACL.permissionsById) {
+        for (var key in row.ACL) {
           this.form.relationApp = key ? key.substr(5) : ''
         }
-        this.selectApp(this.form.relationApp)
+        // this.selectApp(this.form.relationApp)
       },
       async Industry() {
         const parsms = {
-          limit: 1000,
+          limit: 100,
           where: {
             'data.key': 'category',
           },
@@ -1639,7 +1646,6 @@
         })
         // this.searchProduct();
         this.categoryListOptions = this.treeData(this.categoryList)
-
         // console.log(results)
       },
       submitForm() {
@@ -1678,6 +1684,40 @@
                 ACL: setAcl,
                 topics: [],
                 dynamicReg: false,
+                config: {
+                  konva: {
+                    Stage: {
+                      attrs: {
+                        x: 14,
+                        y: 29,
+                        id: 'container',
+                        width: 1868,
+                        height: 469,
+                        draggable: true,
+                      },
+                      children: [
+                        {
+                          attrs: {
+                            id: 'Layer_' + Mock.mock('@string'),
+                          },
+                          children: [
+                            {
+                              attrs: {
+                                id: 'Group_' + Mock.mock('@string'),
+                                width: 2000,
+                                height: 2000,
+                              },
+                              children: [],
+                              className: 'Group',
+                            },
+                          ],
+                          className: 'Layer',
+                        },
+                      ],
+                      className: 'Stage',
+                    },
+                  },
+                },
               }
               params = Object.assign(initparams, addparams)
               this.createProduct(params)

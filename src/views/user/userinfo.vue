@@ -1,20 +1,5 @@
 <template>
   <div class="userinfo">
-    <div class="dialog">
-      <el-dialog width="100vh" height="500vh" :visible.sync="dialogVisible">
-        <el-upload
-          ref="upload"
-          class="upload-demo"
-          action="no"
-          :http-request="handleUpload"
-          :limit="1"
-        >
-          <el-button size="small" type="success" class="el-icon-upload">
-            点击上传图片
-          </el-button>
-        </el-upload>
-      </el-dialog>
-    </div>
     <div class="personal-center-container">
       <el-row :gutter="20">
         <el-col :lg="12" :md="12" :sm="24" :xl="8" :xs="24">
@@ -23,8 +8,9 @@
               <el-avatar
                 :size="100"
                 :src="avatar"
-                @click.native="uploadCkick('avatar')"
+                @click.native="uploadCkick('userinfo.avatar')"
               />
+              <upload ref="uploadFinish" @fileInfo="fileInfo" />
               <ul class="personal-center-user-info-list">
                 <li>
                   <vab-icon icon="user-2-line" />
@@ -113,7 +99,7 @@
                         </el-input>
                       </el-form-item>
                       <el-form-item label="企业logo">
-                        <el-input v-model="companyinfo.logo">
+                        <el-input v-model="companyinfo.logo" readonly disabled>
                           <template slot="prepend">
                             <vab-icon
                               icon="remixicon-fill"
@@ -124,7 +110,7 @@
                             <vab-icon
                               icon="chat-upload-fill"
                               style="color: #3492ed"
-                              @click="uploadCkick('logo')"
+                              @click="uploadCkick('companyinfo.logo')"
                             />
                           </template>
                         </el-input>
@@ -147,7 +133,11 @@
                         </el-input>
                       </el-form-item>
                       <el-form-item label="首页背景图">
-                        <el-input v-model="companyinfo.backgroundimage">
+                        <el-input
+                          v-model="companyinfo.backgroundimage"
+                          readonly
+                          disabled
+                        >
                           <template slot="prepend">
                             <vab-icon
                               icon="bank-card-line"
@@ -158,7 +148,9 @@
                             <vab-icon
                               icon="chat-upload-fill"
                               style="color: #3492ed"
-                              @click="uploadCkick('backgroundimage')"
+                              @click="
+                                uploadCkick('companyinfo.backgroundimage')
+                              "
                             />
                           </template>
                         </el-input>
@@ -181,12 +173,16 @@
 </template>
 <script>
   var editor
+  import Upload from '@/components/UploadFile/input'
   import { mapGetters, mapMutations } from 'vuex'
   import { isPhone, isUrl } from '@/utils/validate'
   import { UploadImg } from '@/api/File'
   import { putUser } from '@/api/User'
   export default {
     name: 'Userinfo',
+    components: {
+      Upload,
+    },
     data() {
       const validatePhone = (rule, value, callback) => {
         if (value && !isPhone(value)) {
@@ -224,6 +220,7 @@
           Copyright: '',
           backgroundimage: '',
         },
+        upNodeType: '',
       }
     },
     computed: {
@@ -243,50 +240,29 @@
         setname: 'user/setname',
         setcopyright: 'user/setCopyright',
       }),
-      //上传操作调用的函数
-      async handleUpload(file) {
-        var formData = new FormData()
-        let filetype = file.file.name.substring(
-          file.file.name.lastIndexOf('.') + 1
-        )
-        formData.append('file', file.file)
-        formData.append('output', 'json')
-        formData.append(
-          'filename',
-          Mock.mock('@string') + this.objectId + this.filetype + '.jpg'
-        )
-        formData.append('path', 'group1')
-        formData.append('auth_token', this.token)
-        const { url } = await UploadImg(formData, filetype)
-        console.log(url)
-        if (url) {
-          this.dialogVisible = !this.dialogVisible
-          switch (this.filetype) {
-            case 'avatar':
-              this.userinfo.avatar = url
-              this.setAvatar(this.userinfo.avatar)
-              break
-            case 'logo':
-              this.companyinfo.logo = url
-              this.setlogo(this.companyinfo.logo)
-              break
-            case 'backgroundimage':
-              this.companyinfo.backgroundimage = url
-              this.setBackgroundimage(this.companyinfo.backgroundimage)
-              break
-            default:
-              console.log('type', this.filetype)
-              break
-          }
-          this.$nextTick(() => {
-            this.$refs.upload.clearFiles()
-          })
+      fileInfo(info) {
+        console.log('uploadFinish', info)
+        let type = this.upNodeType
+        console.log('upNodeType', this[type])
+        this[type] = info.url
+        switch (type) {
+          case 'userinfo.avatar':
+            this.userinfo.avatar = info.url
+            this.setAvatar(info.url)
+            break
+          case 'companyinfo.logo':
+            this.setlogo(info.url)
+            break
+          case 'companyinfo.backgroundimage':
+            this.setBackgroundimage(info.url)
+            break
+          default:
+            console.log('type', this.filetype)
+            break
         }
+        this.onSubmit()
       },
       async onSubmit() {
-        this.setlogo(this.companyinfo.logo)
-        this.setBackgroundimage(this.companyinfo.backgroundimage)
-        this.setAvatar(this.userinfo.avatar)
         this.setname(this.companyinfo.name)
         this.setcopyright(this.companyinfo.Copyright)
         if (this.userinfo.phone.length != 0 && !isPhone(this.userinfo.phone)) {
@@ -334,12 +310,11 @@
           )
       },
       uploadCkick(type) {
-        this.filetype = type
-        this.dialogVisible = !this.dialogVisible
-        // console.log(this.$refs['uploadBox'].$refs.upload.$refs['upload-inner'])
-        // this.$refs['uploadBox'].$refs.upload.$refs[
-        //   'upload-inner'
-        // ].$refs.input.click()
+        this.upNodeType = type
+        // 触发子组件的点击事件
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
       },
 
       async queryUserInfo() {

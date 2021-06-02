@@ -70,7 +70,9 @@
             this.loadListeners()
           })
           .catch((error) => {
-            this.$message.error(error || this.$translateTitle('error.networkError'))
+            this.$message.error(
+              error || this.$translateTitle('error.networkError')
+            )
           })
       },
       loadListeners() {
@@ -80,7 +82,9 @@
             this.listeners = response.data
           })
           .catch((error) => {
-            this.$message.error(error || this.$translateTitle('error.networkError'))
+            this.$message.error(
+              error || this.$translateTitle('error.networkError')
+            )
           })
       },
     },

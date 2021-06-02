@@ -6,7 +6,7 @@ const install = function (Vue) {
 
 if (window.Vue) {
   window.clipboard = Clipboard
-  Vue.use(install); // eslint-disable-line
+  Vue.use(install) // eslint-disable-line
 }
 
 Clipboard.install = install
