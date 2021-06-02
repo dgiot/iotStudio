@@ -1,5 +1,8 @@
 ## 1.0.0 (2021-06-02)
 
+* build: config ([61f8aae](https://github.com/dgiot/dgiot_dashboard/commit/61f8aae))
+* build: global url ([b1ff8f5](https://github.com/dgiot/dgiot_dashboard/commit/b1ff8f5))
+* build(deploy  static to tencent server): deploy  static to Tencent Server ([8889e0a](https://github.com/dgiot/dgiot_dashboard/commit/8889e0a))
 * fix(.github/workflows/deploy.yml): build error ([b59282d](https://github.com/dgiot/dgiot_dashboard/commit/b59282d))
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
 * feat: 组态 ([033a3ac](https://github.com/dgiot/dgiot_dashboard/commit/033a3ac))
@@ -21,8 +24,6 @@
 * feat: vueKonva ([685c77a](https://github.com/dgiot/dgiot_dashboard/commit/685c77a))
 * feat(statistics): statistics ([722a5ff](https://github.com/dgiot/dgiot_dashboard/commit/722a5ff))
 * feat(vuekonva): vueKonva ([102dacd](https://github.com/dgiot/dgiot_dashboard/commit/102dacd))
-* build: global url ([b1ff8f5](https://github.com/dgiot/dgiot_dashboard/commit/b1ff8f5))
-* build(deploy  static to tencent server): deploy  static to Tencent Server ([8889e0a](https://github.com/dgiot/dgiot_dashboard/commit/8889e0a))
 * feat(src\views\topo\vuekonva.vue src\api src\utils): vue konva ([8b063db](https://github.com/dgiot/dgiot_dashboard/commit/8b063db))
 * Update README.md ([a1d502d](https://github.com/dgiot/dgiot_dashboard/commit/a1d502d))
 
