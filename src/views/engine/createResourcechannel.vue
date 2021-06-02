@@ -196,7 +196,6 @@
 </template>
 
 <script>
-  import { Roletree } from '@/api/Menu/index'
   import { resourceTypes } from '@/api/Rules'
   import { postChannel } from '@/api/Channel'
   import { mapActions, mapGetters } from 'vuex'
@@ -233,9 +232,12 @@
         },
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters({
+        roleTree: 'global/roleTree',
+      }),
+    },
     mounted() {
-      this.getRole()
       this.getResource()
     },
     beforeCreate() {}, //生命周期 - 创建之前
@@ -432,6 +434,7 @@
         this.$refs.addchannel.clearValidate(`${type}`)
       },
       async getResource() {
+        this.allApps = this.roleTree
         const res = await resourceTypes()
         res.forEach((item) => {
           if (!item.params.ico) {
@@ -447,10 +450,6 @@
         this.$nextTick(() => {
           this.initFrom()
         })
-      },
-      async getRole() {
-        const { results = [] } = await Roletree()
-        this.allApps = results
       },
       onSubmit() {
         console.log('submit!')

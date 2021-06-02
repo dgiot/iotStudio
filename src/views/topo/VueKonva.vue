@@ -126,16 +126,7 @@
     res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
   })
 
-  import {
-    createShape,
-    updateShape,
-    setText,
-    Position,
-    dragBox,
-    stageMousemove,
-    stageMousedown,
-    createState,
-  } from '@/utils/konva'
+  import { createState } from '@/utils/konva'
   import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   import { isBase64, isImage } from '@/utils'
   import { Websocket } from '@/utils/wxscoket.js'

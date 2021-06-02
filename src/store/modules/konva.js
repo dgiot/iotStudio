@@ -46,7 +46,7 @@ const mutations = {
 }
 const actions = {
   setSizeForm({ commit }, form) {
-    commit('setSizeForm', color)
+    commit('setSizeForm', form)
   },
   setGraphColor({ commit }, color) {
     commit('setGraphColor', color)

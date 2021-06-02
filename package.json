@@ -19,7 +19,7 @@
     "changelog:zh": "rimraf CHANGELOG.ZH.md && conventional-changelog -p -i CHANGELOG.ZH.md -w -r 0 -s",
     "changelog:en": "rimraf CHANGELOG.EN.md && conventional-changelog -p -i CHANGELOG.EN.md -w -r 0 -s",
     "clear": "npm cache clean -f&&rimraf node_modules&&npm install --registry=https://registry.npm.taobao.org",
-    "clear:install": "npm run clear && cnpm install",
+    "clear:install": "npm install -g rimraf && npm run clear && cnpm install",
     "use:github": "npm run copy:config && rimraf .git/config && rimraf .git && mkdir .git && cp -r github/* .git && npm run remoteinfo && git pull origin master && yarn changelog:zh && yarn changelog:en && git add . && git cz",
     "use:gitbit": "rimraf .git/config && rimraf .git && mkdir .git && cp -r gitbit/* .git && npm run remoteinfo && git pull origin master  && yarn changelog:zh && yarn changelog:en  && git add . && git cz",
     "remoteinfo": "git remote -v",

@@ -4,6 +4,7 @@ dgiot 前端框架
 
 简体中文 | [English](./README.md)
 
+
 ## 相关源码地址项目源码
 
 | 源码平台 | 源码地址                                                                                      |
@@ -11,12 +12,15 @@ dgiot 前端框架
 | github   | [https://github.com/dgiot/dgiot_dashboard](https://github.com/dgiot/dgiot_dashboard?from=git) |
 | gitee    | [https://gitee.com/dgiiot/dgiot_dashboard](https://gitee.com/dgiiot/dgiot_dashboard?from=git) |
 
+## 开发环境
+[下载 dgiot_develop_tools](http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/dgiot/deploy/dgiot_develop_tools.zip)
+
 ## 安装使用
 
 - 获取项目代码
 
 ```bash
-git clone https://github.com/dgiot/dgiot_dashboard.git
+git clone https://github.com.cnpmjs.org/dgiot/dgiot_dashboard.git
 ```
 
 - 安装依赖
@@ -24,35 +28,36 @@ git clone https://github.com/dgiot/dgiot_dashboard.git
 ```bash
 cd dgiot_dashboard
 
-npm install cnpm -g --registry=https://registry.npm.taobao.org
-
-cnpm install
-
+yarn install
 ```
 
 - 运行
 
 ```bash
-cnpm run serve
+yarn dev
 ```
+- 运行成功
+ ![b65e47b3-afcf-9bf4-4190-ab6c557ef217.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/b65e47b3-afcf-9bf4-4190-ab6c557ef217.png)
 
+- [本地预览](http://localhost/)  
+  
+- 登录
+  
+  | 用户名       | 密码                                                                                      |
+  | -------------- | ----------------------------------------------------------------------------------------- |
+  | dgiot_admin         | dgiot_admin                             |
+  
+- 设备详情预览
+  ![b87bd877-7cb6-f6b6-1eac-ae17b39bf928.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/b87bd877-7cb6-f6b6-1eac-ae17b39bf928.png)
+- [项目预览](https://tech.iotn2n.com/zh/frontend/web/#%E9%A1%B9%E7%9B%AE%E9%A2%84%E8%A7%88)
 - 打包
 
 ```bash
-cnpm run build
+yarn build
 ```
 
-## 预览地址
+## [线上预览](https://iotn2n.vercel.app/?ftom=git)
 
-[腾讯云预览地址](https://dgiotdashboard-8gb17b3673ff6cdd-1253666439.ap-shanghai.app.tcloudbase.com?ftom=git)
-
-## 扫码预览
-
-![dgiot_dashboard.png](http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/wechat/dgiot_dashboard.png)
-
-## 环境要求
-
-- node > 14.5
 
 ### 关于我们
 

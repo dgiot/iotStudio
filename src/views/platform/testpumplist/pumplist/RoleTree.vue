@@ -41,7 +41,8 @@
 
 <script>
   import { eventBus } from '@/api/eventBus'
-  import { Roletree, getToken } from '@/api/Menu'
+  import { mapGetters } from 'vuex'
+  import { getToken } from '@/api/Menu'
   export default {
     name: 'RoleTree',
     components: {},
@@ -59,7 +60,11 @@
         deptTreeData: [],
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters({
+        roleTree: 'global/roleTree',
+      }),
+    },
     watch: {
       inputVal(val) {
         this.$refs.tree.filter(val)
@@ -123,9 +128,8 @@
             console.log('err ###', err)
           })
       },
-      async getRoletree() {
-        const { results = [] } = await Roletree()
-        this.deptTreeData = this.formatList(results)
+      getRoletree() {
+        this.deptTreeData = this.roleTree
         this.getFatherToken(this.deptTreeData[0].name)
       },
       formatList(responseArr) {

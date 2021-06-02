@@ -290,6 +290,7 @@
   </div>
 </template>
 <script>
+  import { mapGetters, mapMutations } from 'vuex'
   import { batch } from '@/api/Batch/index'
   import { queryDevice } from '@/api/Device'
   import Category from '@/api/Mock/Category'
@@ -366,61 +367,6 @@
             minInterval: 1,
           },
         },
-
-        chartSettings: {
-          radius: ['60px', '80px'],
-          label: {
-            formatter: (params) => {
-              if (params.dataIndex === 0) {
-                return `{a| 通过率${params.percent}%}`
-              } else {
-                return `{b| 未过率${params.percent}%}`
-              }
-            },
-            rich: {
-              a: {
-                color: '#438de7',
-              },
-              b: {
-                color: '#7b7d86',
-              },
-            },
-          },
-          itemStyle: {
-            color: (seriesIndex) => {
-              if (seriesIndex.dataIndex === 0) {
-                return {
-                  type: 'linear',
-                  x: 0,
-                  y: 1,
-                  x2: 0,
-                  y2: 0,
-                  colorStops: [
-                    {
-                      offset: 0,
-                      color: '#4a8eea', // 0% 处的颜色
-                    },
-                    {
-                      offset: 1,
-                      color: '#75b9f9', // 100% 处的颜色
-                    },
-                    {
-                      offset: 1,
-                      color: '#77c5f7', // 100% 处的颜色
-                    },
-                    {
-                      offset: 1,
-                      color: '#78d0f5', // 100% 处的颜色
-                    },
-                  ],
-                  global: false, // 缺省为 false
-                }
-              } else {
-                return '#dbdbe3'
-              }
-            },
-          },
-        },
         NODE_ENV: process.env.NODE_ENV,
         category: Category,
         activeName: 'devchart',
@@ -438,6 +384,11 @@
         },
       }
     },
+    computed: {
+      ...mapGetters({
+        roleTree: 'global/roleTree',
+      }),
+    },
     mounted() {
       this.getAllAxios()
       this.getDevices()
@@ -447,6 +398,9 @@
       console.log('keep-alive生效')
     }, //如果页面有keep-alive缓存功能，这个函数会触发
     methods: {
+      ...mapMutations({
+        setRoleTree: 'global/setRoleTree',
+      }),
       queryData() {
         this.queryForm.pageNo = 1
         this.fetchData()
@@ -455,12 +409,13 @@
         await Roletree()
           .then((res) => {
             console.log(res)
-            this.deptTreeData = res.results
+            this.setRoleTree(res.results)
             this.handleNodeClick(res.results[0], 0)
           })
           .catch((e) => {
             console.log(e)
           })
+        this.deptTreeData = this.roleTree
       },
       async handleNodeClick(data, node) {
         this.queryForm.workGroupName = node.label
