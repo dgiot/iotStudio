@@ -1,5 +1,6 @@
 ## 1.0.0 (2021-06-02)
 
+* fix(.github/workflows/deploy.yml): build error ([b59282d](https://github.com/dgiot/dgiot_dashboard/commit/b59282d))
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
 * feat: 组态 ([033a3ac](https://github.com/dgiot/dgiot_dashboard/commit/033a3ac))
 * feat: api ([e899453](https://github.com/dgiot/dgiot_dashboard/commit/e899453))
