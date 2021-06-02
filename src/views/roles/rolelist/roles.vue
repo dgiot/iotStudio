@@ -319,12 +319,12 @@
   import {
     saveRoletemp,
     delRole,
-    putRole,
     queryRole,
     roleMenu,
     saveRole,
   } from '@/api/Role/index'
-  import { Roletree, queryMenu } from '@/api/Menu/index'
+  import { mapGetters } from 'vuex'
+  import { queryMenu } from '@/api/Menu/index'
   import { Permission } from '@/api/Permission/index'
   import addroles from '@/views/roles/rolelist/addroles'
   export default {
@@ -368,6 +368,9 @@
       }
     },
     computed: {
+      ...mapGetters({
+        roleTree: 'global/roleTree',
+      }),
       permissionTreeData() {
         const cloneData = JSON.parse(JSON.stringify(this.dataPermissions))
         return cloneData.filter((father) => {
@@ -410,6 +413,9 @@
 
     methods: {
       async getMenu() {
+
+        this.deptTreeData = this.roleTree
+        this.handleNodeClick(this.deptTreeData[0])
         this.data = []
         this.dataMenus = []
         const { results } = await queryMenu({})
@@ -425,15 +431,6 @@
             this.data.push(obj)
             this.dataMenus.push(obj)
           })
-        }
-        const res = await Roletree()
-        if (res) {
-          this.deptTreeData = res.results
-          this.handleNodeClick(this.deptTreeData[0])
-        } else {
-          this.$message('部门列表获取失败')
-          this.deptTreeData = []
-          console.log(err)
         }
       },
       diguiquchu(datas, arr, v, needdelarr) {

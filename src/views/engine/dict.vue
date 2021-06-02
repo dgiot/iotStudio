@@ -1050,8 +1050,8 @@
 </template>
 <script>
   import { queryDict, postDict, getDict, putDict } from '@/api/Direct/index.js'
+  import { mapGetters } from 'vuex'
   import { resourceTypes } from '@/api/Rules'
-  import { Roletree } from '@/api/Menu/index'
   import vueJsonEditor from 'vue-json-editor'
   export default {
     name: 'Dict',
@@ -1141,6 +1141,9 @@
       }
     },
     computed: {
+      ...mapGetters({
+        roleTree: 'global/roleTree',
+      }),
       dragOptions() {
         return {
           animation: 600,
@@ -1207,8 +1210,7 @@
         }
       },
       async dialogType() {
-        const { results = [] } = await Roletree()
-        this.allApps = results
+        this.allApps = this.roleTree
         const res = await resourceTypes()
         this.channelregion = res
       },

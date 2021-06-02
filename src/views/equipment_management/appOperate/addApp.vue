@@ -359,14 +359,12 @@
 </template>
 
 <script>
-  // const Base64 = require('js-base64').Base64
-  import { Roletree } from '@/api/Menu/index'
+  import { mapGetters } from 'vuex'
   import { queryDict } from '@/api/Dict/index'
   import { handleZero } from '@/utils/index'
   import { app_count } from '@/api/Platform/index'
   import { postProduct, putProduct } from '@/api/Product/index'
   import { postRelation } from '@/api/Relation/index'
-  import { returnLogin } from '@/utils/return'
   export default {
     data() {
       return {
@@ -426,6 +424,9 @@
       }
     },
     computed: {
+      ...mapGetters({
+        roleTree: 'global/roleTree',
+      }),
       treeData() {
         const cloneData = JSON.parse(JSON.stringify(this.form.options)) // 对源数据深度克隆
         return cloneData.filter((father) => {
@@ -693,8 +694,7 @@
       },
       // 获取行业信息
       async Industry() {
-        const { results = [] } = await Roletree()
-        this.allApps = results
+        this.allApps = this.roleTree
         this.form.options = []
         const res = await queryDict({
           limit: 1000,

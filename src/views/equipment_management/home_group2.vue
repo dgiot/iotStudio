@@ -797,6 +797,18 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="列表显示">
+                <el-radio v-model="tempparams.isshow" :label="true" border>
+                  是
+                </el-radio>
+                <el-radio v-model="tempparams.isshow" :label="false" border>
+                  否
+                </el-radio>
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-form-item
             v-if="tempparams.type != 'enum'"
             label="默认值"
@@ -917,20 +929,16 @@
   </div>
 </template>
 <script>
-  import Upload from '@/components/UploadFile/input'
   import { mapGetters } from 'vuex'
   import { delProduct, getProduct, putProduct } from '@/api/Product'
   import { getAllunit } from '@/api/Dict/index'
   import { queryDevice } from '@/api/Device/index'
-  import { Roletree } from '@/api/Menu/index'
   import { export_txt_to_zip } from '@/utils/Export2Zip.js'
   import { getServer } from '@/api/Role/index'
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
   import vueJsonEditor from 'vue-json-editor'
-  import { UploadImg } from '@/api/File'
   import Category from '@/api/Mock/Category'
-  import { uuid } from '@/utils'
   export default {
     components: { vueJsonEditor },
     data() {
@@ -1121,6 +1129,7 @@
     computed: {
       ...mapGetters({
         token: 'user/token',
+        roleTree: 'global/roleTree',
       }),
     },
     mounted() {
@@ -1516,9 +1525,8 @@
         }
         this.getApps()
       },
-      async getApps() {
-        const { results = [] } = await Roletree()
-        this.allApps = results
+      getApps() {
+        this.allApps = this.roleTree
       },
       handleClose() {
         this.dialogFormVisible = false

@@ -2445,7 +2445,7 @@
           originaltype: 'int16',
           slaveid: 256,
           collection: '%s',
-          control: '%q',
+          control: '%d',
           nobound: [],
         }
       },

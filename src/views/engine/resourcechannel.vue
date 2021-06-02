@@ -446,12 +446,12 @@
   </div>
 </template>
 <script>
-  import { queryChannel, delChannel, postChannel } from '@/api/Channel/index'
+  import { delChannel, postChannel } from '@/api/Channel/index'
+  import { mapGetters } from 'vuex'
   import { subupadte } from '@/api/System/index'
   import { queryRole } from '@/api/Role/index'
   import { resourceTypes } from '@/api/Rules'
   import { returnLogin } from '@/utils/return'
-  import { Roletree } from '@/api/Menu/index'
   var subdialog
   import {
     Websocket,
@@ -516,6 +516,11 @@
           label: 'label',
         },
       }
+    },
+    computed: {
+      ...mapGetters({
+        roleTree: 'global/roleTree',
+      }),
     },
     mounted() {
       this.Get_Re_Channel(0)
@@ -604,8 +609,7 @@
       },
       // 初始化弹框数据
       async dialogType() {
-        const { results = [] } = await Roletree()
-        this.allApps = results
+        this.allApps = this.roleTree
         const res = await resourceTypes()
         this.channelregion = res
       },

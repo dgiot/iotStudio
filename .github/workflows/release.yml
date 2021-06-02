@@ -1,15 +1,16 @@
-# name: release
+ name: release
 
-# on:
-#   watch:
-#     types: started
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: "create release"
-#         uses: elgohr/Github-Release-Action@master
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.token }}
-#         with:
-#           args: ${{ secrets.args }}
+ on:
+   watch:
+     types: started
+ jobs:
+   build:
+     runs-on: ubuntu-latest
+     if: ${{ secrets.isRelease }} == true
+     steps:
+       - name: "create release"
+         uses: elgohr/Github-Release-Action@master
+         env:
+           GITHUB_TOKEN: ${{ secrets.token }}
+         with:
+           args: ${{ secrets.args }}

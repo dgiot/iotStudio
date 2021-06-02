@@ -321,14 +321,8 @@
 </template>
 <script>
   import { Promise } from 'q'
-  import { Roletree } from '@/api/Menu/index'
-  import {
-    postUser,
-    delUser,
-    queryUser,
-    EmployeesHired,
-    EmployeeTurnover,
-  } from '@/api/User/index'
+  import { mapGetters } from 'vuex'
+  import { queryUser, EmployeesHired, EmployeeTurnover } from '@/api/User/index'
   import { queryRoledepartment } from '@/api/Role/index'
   var arr = []
   export default {
@@ -458,6 +452,9 @@
       }
     },
     computed: {
+      ...mapGetters({
+        roleTree: 'global/roleTree',
+      }),
       tableFilterData() {
         return this.tempData
       },
@@ -753,17 +750,9 @@
         }
       },
       // 查询部门
-      async searchAllOption() {
-        const { results = [] } = await Roletree()
-        if (results) {
-          this.deptTreeData = results
-          // this.handleNodeClick(this.deptTreeData[0])
-          this.userFordepartment()
-        } else {
-          this.$message('部门列表获取失败')
-          this.deptTreeData = []
-          console.log(err)
-        }
+      searchAllOption() {
+        this.deptTreeData = this.roleTree
+        this.userFordepartment()
       },
     },
   }

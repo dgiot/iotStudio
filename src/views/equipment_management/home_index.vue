@@ -635,7 +635,7 @@
                   </el-table-column>
                   <template v-for="(item, index) in dialogtempconfig">
                     <el-table-column
-                      v-if="item.type == 'bool'"
+                      v-if="item.type == 'bool' && item.isshow"
                       :key="index"
                       align="center"
                       :label="item.name"
@@ -653,7 +653,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column
-                      v-else-if="item.type == 'enum'"
+                      v-else-if="item.type == 'enum' && item.isshow"
                       :key="index"
                       align="center"
                       :label="item.name"
@@ -665,7 +665,7 @@
                       </template>
                     </el-table-column>
                     <el-table-column
-                      v-else
+                      v-else-if="item.isshow"
                       :key="index"
                       align="center"
                       :label="item.name"
@@ -1150,7 +1150,6 @@
   </div>
 </template>
 <script>
-  import * as utils from '@/utils/vuex'
   import { mapGetters } from 'vuex'
   import { get_object } from '@/api/shuwa_parse'
   import { queryDict } from '@/api/Direct/index.js'
@@ -1175,7 +1174,7 @@
   } from 'vue-baidu-map'
   import { returnLogin } from '@/utils/return'
   import { querycompanyDevice, putDevice } from '@/api/Device'
-  import { Roletree, getToken } from '@/api/Menu'
+  import { getToken } from '@/api/Menu'
 
   var language
   var pcdata
@@ -1336,6 +1335,7 @@
     computed: {
       ...mapGetters({
         token: 'user/token',
+        roleTree: 'global/roleTree',
       }),
     },
     watch: {
@@ -1488,16 +1488,9 @@
           })
         console.log(data.name)
       },
-      async getMenu() {
-        const { results } = await Roletree()
-        if (results) {
-          this.deptTreeData = results
-          this.handleNodeClick(results[0], 0)
-        } else {
-          this.$message('部门列表获取失败')
-          this.deptTreeData = []
-          console.log(err)
-        }
+      getMenu() {
+        this.deptTreeData = this.roleTree
+        this.handleNodeClick(results[0], 0)
       },
       async handleNodeClick(data, node) {
         if (node.level != 1) {

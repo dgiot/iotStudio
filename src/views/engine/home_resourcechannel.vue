@@ -483,7 +483,7 @@
   import { queryRole } from '@/api/Role/index'
   import { subupadte } from '@/api/System/index'
   import { resourceTypes } from '@/api/Rules'
-  import { returnLogin } from '@/utils/return'
+  import { mapGetters } from 'vuex'
   var subdialog
   import {
     Websocket,
@@ -553,6 +553,9 @@
         },
       }
     },
+    ...mapGetters({
+      roleTree: 'global/roleTree',
+    }),
     mounted() {
       this.Get_Re_Channel(0)
       this.dialogType()
@@ -664,8 +667,7 @@
       },
       // 初始化弹框数据
       async dialogType() {
-        const { results = [] } = await Roletree()
-        this.allApps = results
+        this.allApps = this.roleTree
         const res = await resourceTypes()
         res.forEach((item) => {
           if (!item.params.ico) {
