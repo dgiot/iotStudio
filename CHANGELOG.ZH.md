@@ -1,9 +1,5 @@
 ## 1.0.0 (2021-06-02)
 
-* build: global url ([b1ff8f5](https://github.com/dgiot/dgiot_dashboard/commit/b1ff8f5))
-* build(deploy  static to tencent server): deploy  static to Tencent Server ([8889e0a](https://github.com/dgiot/dgiot_dashboard/commit/8889e0a))
-* feat(src\views\topo\vuekonva.vue src\api src\utils): vue konva ([8b063db](https://github.com/dgiot/dgiot_dashboard/commit/8b063db))
-* Update README.md ([a1d502d](https://github.com/dgiot/dgiot_dashboard/commit/a1d502d))
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
 * feat: 组态 ([033a3ac](https://github.com/dgiot/dgiot_dashboard/commit/033a3ac))
 * feat: api ([e899453](https://github.com/dgiot/dgiot_dashboard/commit/e899453))
@@ -13,6 +9,7 @@
 * feat: changelog ([781eff1](https://github.com/dgiot/dgiot_dashboard/commit/781eff1))
 * feat: cli ([eaad820](https://github.com/dgiot/dgiot_dashboard/commit/eaad820))
 * feat: cli ([3c6e3fb](https://github.com/dgiot/dgiot_dashboard/commit/3c6e3fb))
+* feat: developer.config.js ([5b136cf](https://github.com/dgiot/dgiot_dashboard/commit/5b136cf))
 * feat: device table ([ec42525](https://github.com/dgiot/dgiot_dashboard/commit/ec42525))
 * feat: home button ([5ebcb7f](https://github.com/dgiot/dgiot_dashboard/commit/5ebcb7f))
 * feat: konva ([ce9a210](https://github.com/dgiot/dgiot_dashboard/commit/ce9a210))
@@ -23,6 +20,10 @@
 * feat: vueKonva ([685c77a](https://github.com/dgiot/dgiot_dashboard/commit/685c77a))
 * feat(statistics): statistics ([722a5ff](https://github.com/dgiot/dgiot_dashboard/commit/722a5ff))
 * feat(vuekonva): vueKonva ([102dacd](https://github.com/dgiot/dgiot_dashboard/commit/102dacd))
+* build: global url ([b1ff8f5](https://github.com/dgiot/dgiot_dashboard/commit/b1ff8f5))
+* build(deploy  static to tencent server): deploy  static to Tencent Server ([8889e0a](https://github.com/dgiot/dgiot_dashboard/commit/8889e0a))
+* feat(src\views\topo\vuekonva.vue src\api src\utils): vue konva ([8b063db](https://github.com/dgiot/dgiot_dashboard/commit/8b063db))
+* Update README.md ([a1d502d](https://github.com/dgiot/dgiot_dashboard/commit/a1d502d))
 
 
 
