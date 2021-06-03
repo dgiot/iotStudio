@@ -1,5 +1,6 @@
 ## 1.0.0 (2021-06-03)
 
+* ci: release-drafter.yml ([1d0facc](https://github.com/dgiot/dgiot_dashboard/commit/1d0facc))
 * ci(.github/release-drafter.yml): action ([1ec1c48](https://github.com/dgiot/dgiot_dashboard/commit/1ec1c48))
 
 
