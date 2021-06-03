@@ -1,5 +1,6 @@
 ## 1.0.0 (2021-06-03)
 
+* fix(.github/workflows/release_changelog.yml): yaml format ([457c7f0](https://github.com/dgiot/dgiot_dashboard/commit/457c7f0))
 * build: action ([07f9543](https://github.com/dgiot/dgiot_dashboard/commit/07f9543))
 * ci: release-drafter.yml ([1d0facc](https://github.com/dgiot/dgiot_dashboard/commit/1d0facc))
 * ci(.github/release-drafter.yml): action ([1ec1c48](https://github.com/dgiot/dgiot_dashboard/commit/1ec1c48))

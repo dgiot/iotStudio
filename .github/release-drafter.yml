@@ -1,44 +1,48 @@
 name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
-template: |
-  # What's Changed
-  $CHANGES
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 categories:
-  - title: 'Breaking'
-    label: 'type: breaking'
-  - title: 'New'
-    label: 'type: feature'
-  - title: 'Feat'
-    label: 'type: feat'
-  - title: 'Build'
-    label: 'type: build'
-  - title: 'fix'
-    label: 'type: fix'
-  - title: 'refactor'
-    label: 'type: refactor'
+  - title: 'Features'
+    labels:
+      - 'feature'
+      - 'feat'
+      - 'enhancement'
   - title: 'Bug Fixes'
-    label: 'type: bug'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+  - title: 'Docs'
+    labels:
+      - 'docs'
+  - title: 'style'
+    labels:
+      - 'style'
+  - title: 'refactor'
+    labels:
+      - 'refactor'
+      - 'perf'
+      - 'test'
+      - 'refactor'
+  - title: 'build'
+    labels:
+      - 'build'
+      - 'ci'
+  - title: 'revert'
+    labels:
+      - 'revert'
   - title: 'Maintenance'
-    label: 'type: maintenance'
-  - title: 'Documentation'
-    label: 'type: docs'
-  - title: 'Dependency Updates'
-    label: 'type: dependencies'
-
+    label: 'chore'
 version-resolver:
   major:
     labels:
-      - 'type: breaking'
+      - 'major'
   minor:
     labels:
-      - 'type: feature'
+      - 'minor'
   patch:
     labels:
-      - 'type: bug'
-      - 'type: maintenance'
-      - 'type: docs'
-      - 'type: dependencies'
-      - 'type: security'
-
-exclude-labels:
-  - 'skip-changelog'
+      - 'patch'
+  default: patch
+template: |
+  $CHANGES
