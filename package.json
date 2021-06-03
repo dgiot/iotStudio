@@ -9,7 +9,7 @@
     "dev": "vue-cli-service serve",
     "start": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build &&  cp -r swagger.json dist && cp -r swagger dist",
     "build:report": "vue-cli-service build --report",
     "lint": "vue-cli-service lint",
     "lint:style": "stylelint **/*.{vue,scss} --fix",

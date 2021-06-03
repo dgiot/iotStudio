@@ -4,6 +4,7 @@
 * ci: deploy static to Tencent Server ([620bf3d](https://github.com/dgiot/dgiot_dashboard/commit/620bf3d))
 * ci: release ([73710e0](https://github.com/dgiot/dgiot_dashboard/commit/73710e0))
 * ci(.github/workflows/deploy.yml): deploy static to Tencent Server action ([4294874](https://github.com/dgiot/dgiot_dashboard/commit/4294874))
+* ci(.github/workflows/deploy.yml): easingthemes/ssh-deploy action ([c12e44b](https://github.com/dgiot/dgiot_dashboard/commit/c12e44b))
 * ci(.github/workflows/release.yml): create a Release action ([1f1529b](https://github.com/dgiot/dgiot_dashboard/commit/1f1529b))
 * ci(.github/workflows/release.yml): release action ([ba836b9](https://github.com/dgiot/dgiot_dashboard/commit/ba836b9))
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
