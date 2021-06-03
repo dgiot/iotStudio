@@ -33,11 +33,15 @@ jobs:
           envId: ${{ secrets.ENV_ID }}
           staticSrcPath: dist
       - name: Deploy static to Tencent Server
-        uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
-          ARGS: '-avz --delete'
-          SOURCE: 'dist/'
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: ${{ secrets.TARGET }}
+        run: |
+          echo ${{ secrets.ACCESS_TOKEN }} > login
+          ssh -i ${{ secrets.login }}
+          scp dist ${{ secrets.FilePath }}
+#        uses: easingthemes/ssh-deploy@v2.1.5
+#        env:
+#          SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
+#          ARGS: '-avz --delete'
+#          SOURCE: 'dist/'
+#          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+#          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+#          TARGET: ${{ secrets.TARGET }}
