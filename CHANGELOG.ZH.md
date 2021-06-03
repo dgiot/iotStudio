@@ -1,6 +1,7 @@
 ## 1.0.0 (2021-06-03)
 
 * ci: create a Release action ([1cc3891](https://github.com/dgiot/dgiot_dashboard/commit/1cc3891))
+* ci: deploy static to Tencent Server ([620bf3d](https://github.com/dgiot/dgiot_dashboard/commit/620bf3d))
 * ci: release ([73710e0](https://github.com/dgiot/dgiot_dashboard/commit/73710e0))
 * ci(.github/workflows/deploy.yml): deploy static to Tencent Server action ([4294874](https://github.com/dgiot/dgiot_dashboard/commit/4294874))
 * ci(.github/workflows/release.yml): create a Release action ([1f1529b](https://github.com/dgiot/dgiot_dashboard/commit/1f1529b))
