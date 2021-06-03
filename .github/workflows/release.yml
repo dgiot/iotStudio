@@ -6,7 +6,7 @@ on:
     tags:
       - v*
 jobs:
-  "Create a Release":
+  Create_Release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master

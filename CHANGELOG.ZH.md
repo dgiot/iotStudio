@@ -1,5 +1,6 @@
 ## 1.0.0 (2021-06-03)
 
+* ci: create a Release action ([1cc3891](https://github.com/dgiot/dgiot_dashboard/commit/1cc3891))
 * ci: release ([73710e0](https://github.com/dgiot/dgiot_dashboard/commit/73710e0))
 * ci(.github/workflows/release.yml): release action ([ba836b9](https://github.com/dgiot/dgiot_dashboard/commit/ba836b9))
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
