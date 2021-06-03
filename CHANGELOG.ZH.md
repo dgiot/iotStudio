@@ -1,5 +1,7 @@
 ## 1.0.0 (2021-06-03)
 
+* ci: release ([73710e0](https://github.com/dgiot/dgiot_dashboard/commit/73710e0))
+* ci(.github/workflows/release.yml): release action ([ba836b9](https://github.com/dgiot/dgiot_dashboard/commit/ba836b9))
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
 * feat: 组态 ([033a3ac](https://github.com/dgiot/dgiot_dashboard/commit/033a3ac))
 * feat: action ([314117e](https://github.com/dgiot/dgiot_dashboard/commit/314117e))
@@ -22,7 +24,6 @@
 * feat: vueKonva ([685c77a](https://github.com/dgiot/dgiot_dashboard/commit/685c77a))
 * feat(statistics): statistics ([722a5ff](https://github.com/dgiot/dgiot_dashboard/commit/722a5ff))
 * feat(vuekonva): vueKonva ([102dacd](https://github.com/dgiot/dgiot_dashboard/commit/102dacd))
-* ci(.github/workflows/release.yml): release action ([ba836b9](https://github.com/dgiot/dgiot_dashboard/commit/ba836b9))
 * docs(readme-cn.md && readme.md): dgiot_dashboard description ([596ff04](https://github.com/dgiot/dgiot_dashboard/commit/596ff04))
 * feat(src\views\topo\vuekonva.vue src\api src\utils): vue konva ([8b063db](https://github.com/dgiot/dgiot_dashboard/commit/8b063db))
 * Update README.md ([a1d502d](https://github.com/dgiot/dgiot_dashboard/commit/a1d502d))
