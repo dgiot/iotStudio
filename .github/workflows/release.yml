@@ -2,9 +2,7 @@ name: release
 on:
   push:
     branches:
-      - master
-    tags:
-      - v*
+      - main
 jobs:
   Create_Release:
     runs-on: ubuntu-latest
