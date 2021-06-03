@@ -1,5 +1,9 @@
 ## 1.0.0 (2021-06-03)
 
+* build: config ([61f8aae](https://github.com/dgiot/dgiot_dashboard/commit/61f8aae))
+* build: global url ([b1ff8f5](https://github.com/dgiot/dgiot_dashboard/commit/b1ff8f5))
+* build(deploy  static to tencent server): deploy  static to Tencent Server ([8889e0a](https://github.com/dgiot/dgiot_dashboard/commit/8889e0a))
+* build(package.json): swagger ([540c1dc](https://github.com/dgiot/dgiot_dashboard/commit/540c1dc))
 * ci: create a Release action ([1cc3891](https://github.com/dgiot/dgiot_dashboard/commit/1cc3891))
 * ci: deploy static to Tencent Server ([620bf3d](https://github.com/dgiot/dgiot_dashboard/commit/620bf3d))
 * ci: release ([73710e0](https://github.com/dgiot/dgiot_dashboard/commit/73710e0))
@@ -32,9 +36,6 @@
 * docs(readme-cn.md && readme.md): dgiot_dashboard description ([596ff04](https://github.com/dgiot/dgiot_dashboard/commit/596ff04))
 * feat(src\views\topo\vuekonva.vue src\api src\utils): vue konva ([8b063db](https://github.com/dgiot/dgiot_dashboard/commit/8b063db))
 * Update README.md ([a1d502d](https://github.com/dgiot/dgiot_dashboard/commit/a1d502d))
-* build: config ([61f8aae](https://github.com/dgiot/dgiot_dashboard/commit/61f8aae))
-* build: global url ([b1ff8f5](https://github.com/dgiot/dgiot_dashboard/commit/b1ff8f5))
-* build(deploy  static to tencent server): deploy  static to Tencent Server ([8889e0a](https://github.com/dgiot/dgiot_dashboard/commit/8889e0a))
 * fix(.github/workflows/deploy.yml): build error ([b59282d](https://github.com/dgiot/dgiot_dashboard/commit/b59282d))
 
 
