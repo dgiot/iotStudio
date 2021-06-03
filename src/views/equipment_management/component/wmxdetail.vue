@@ -574,7 +574,7 @@
               <el-col :span="12">
                 <el-form-item label="采集顺序" style="width: 100%">
                   <el-input-number
-                    v-model="sizeForm.Order"
+                    v-model="sizeForm.order"
                     style="width: 100%"
                     :min="0"
                     label="采集顺序"

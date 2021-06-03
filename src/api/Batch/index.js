@@ -9,6 +9,7 @@
 // http://132.232.119.105:5080/swagger/#/Data/post_batch
 import request from '@/utils/request'
 import { Message } from 'element-ui'
+import store from '@/store'
 const Vue = require('vue')
 
 /**
@@ -55,7 +56,11 @@ export async function Batchdelete(method, tableClass, ObjectIdArr, body) {
  * @param {*}
  * @description  调用方法参考  src\views\equipment_management\platform_overview.vue
  */
-export async function batch(data) {
+export async function batch(
+  data,
+  access_token = store.getters['user/token'],
+  _company = false
+) {
   console.log(data, 'axios from batch')
   return request({
     url: 'batch',
@@ -63,6 +68,8 @@ export async function batch(data) {
     headers: {
       accept: 'application/json',
       'Content-Type': 'application/json',
+      sessionToken: access_token,
+      _company: _company,
     },
     data: { requests: data },
   })

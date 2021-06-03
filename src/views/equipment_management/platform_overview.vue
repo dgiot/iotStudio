@@ -8,30 +8,39 @@
 -->
 <template>
   <div class="platform">
-    <div class="map_header">
+    <div
+      :style="{ height: queryForm.workGroupTreeShow ? '140px' : '40px' }"
+      class="map_header"
+    >
       <vab-query-form>
         <vab-query-form-top-panel>
           <el-form
             :inline="true"
-            label-width="50px"
+            label-width="100px"
             :model="queryForm"
             @submit.native.prevent
           >
-            <el-form-item label="产品">
-              <el-input
-                v-model.trim="queryForm.account"
-                clearable
-                placeholder="请输入账号"
-              />
+            <el-form-item :label="$translateTitle('equipment.products')">
+              <el-select
+                v-model="queryForm.account"
+                class="selectdetail"
+                size="small"
+                @change="selectProdChange"
+              >
+                <el-option
+                  v-for="(item, index) in _Product"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.objectId"
+                />
+              </el-select>
             </el-form-item>
-            <el-form-item label="部门">
+            <el-form-item :label="$translateTitle('user.department')">
               <el-input
                 ref="workGroupInput"
                 v-model="queryForm.workGroupName"
-                auto-complete="off"
-                clearable
                 readonly
-                @click="info"
+                auto-complete="off"
                 @focus="
                   queryForm.workGroupTreeShow = !queryForm.workGroupTreeShow
                 "
@@ -46,7 +55,6 @@
                   node-key="index"
                   default-expand-all
                   :expand-on-click-node="false"
-                  @node-click="handleNodeClick"
                 >
                   <div slot-scope="{ node, data }" class="custom-tree-node">
                     <span
@@ -59,7 +67,7 @@
                 </el-tree>
               </div>
             </el-form-item>
-            <el-form-item label="周期">
+            <el-form-item :label="$translateTitle('user.createdtime')">
               <el-date-picker
                 v-model="queryForm.searchDate"
                 end-placeholder="结束日期"
@@ -75,14 +83,19 @@
                 type="primary"
                 @click="queryData"
               >
-                查询
+                {{ $translateTitle('concentrator.search') }}
               </el-button>
               <el-button
                 :icon="leftRow == 18 ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
                 type="primary"
                 @click="leftRow == 18 ? (leftRow = 24) : (leftRow = 18)"
               >
-                显示/关闭右侧
+                {{
+                  leftRow == 18
+                    ? $translateTitle('konva.hide')
+                    : $translateTitle('konva.show')
+                }}
+                {{ $translateTitle('konva.right') }}
               </el-button>
             </el-form-item>
           </el-form>
@@ -91,67 +104,6 @@
     </div>
     <el-row :row="24">
       <el-col :span="leftRow" :xs="24">
-        <el-row v-show="false">
-          <el-col
-            v-for="item in projectList"
-            :key="item.id"
-            :xs="24"
-            :sm="24"
-            :md="8"
-            :lg="{ span: '4-8' }"
-          >
-            <el-card class="box-card" shadow="always">
-              <div slot="header" class="clearfix">
-                <span>
-                  {{ item.name }}
-                </span>
-              </div>
-              <div v-if="item.userUnit" class="text item">
-                <span>{{ $translateTitle('home.unit') }}</span>
-                <span>{{ item.userUnit }}</span>
-              </div>
-              <div v-if="item.scale" class="text item">
-                <span>{{ $translateTitle('home.scale') }}：</span>
-                <span>{{ item.scale }}</span>
-              </div>
-              <div class="text item">
-                <span>{{ $translateTitle('home.category') }}：</span>
-                <span>{{ getCategory(item.category) }}</span>
-              </div>
-              <div class="text item">
-                <span>{{ $translateTitle('home.updatedAt') }}：</span>
-                <span>
-                  {{
-                    new Date(item.updatedAt).toLocaleDateString() +
-                    ' ' +
-                    new Date(item.updatedAt).toLocaleTimeString()
-                  }}
-                </span>
-              </div>
-              <div class="text item" style="text-align: center">
-                <el-button-group>
-                  <el-button
-                    style="margin-right: 3px"
-                    size="mini"
-                    type="success"
-                    @click="Gotoproduct(item.name)"
-                  >
-                    {{ $translateTitle('home.preview') }}
-                  </el-button>
-                  <el-button
-                    v-if="NODE_ENV == 'development'"
-                    size="mini"
-                    type="primary"
-                    target="_blank"
-                    @click="handleClickVisit(item)"
-                  >
-                    {{ $translateTitle('home.konva') }}
-                  </el-button>
-                </el-button-group>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
         <el-row :span="24">
           <div class="chart_map">
             <baidu-map
@@ -293,6 +245,7 @@
   </div>
 </template>
 <script>
+  import { queryProduct } from '@/api/Product'
   import { mapGetters, mapMutations } from 'vuex'
   import { batch } from '@/api/Batch/index'
   import { queryDevice } from '@/api/Device'
@@ -336,6 +289,7 @@
           pageSize: 20,
           workGroupName: '',
           workGroupTreeShow: false,
+          access_token: '',
         },
         roleProps: {
           children: 'children',
@@ -390,12 +344,16 @@
     computed: {
       ...mapGetters({
         roleTree: 'global/roleTree',
+        _Product: 'global/_Product',
+        language: 'settings/language',
+        token: 'user/token',
       }),
     },
     mounted() {
-      this.getAllAxios()
+      this.getAllAxios({}, this.token, false)
       this.getDevices()
       this.getRoletree()
+      this.getProduct()
     },
     activated() {
       console.log('keep-alive生效')
@@ -403,13 +361,31 @@
     methods: {
       ...mapMutations({
         setRoleTree: 'global/setRoleTree',
+        set_Product: 'global/set_Product',
       }),
-      info() {
-        console.log(111)
+      async getProduct() {
+        const params = {
+          count: 'objectId',
+          order: '-updatedAt',
+          keys: 'name',
+          where: {
+            category: 'IotHub',
+          },
+        }
+        const { results } = await queryProduct(params)
+        results.unshift({
+          name: this.language == 'zh' ? '全部产品' : 'All Products',
+          objectId: '0',
+        })
+        this.set_Product(results)
+        this.queryForm.account =
+          this.language == 'zh' ? '全部产品' : 'All Products'
+      },
+      selectProdChange(objectId) {
+        console.log(objectId)
       },
       queryData() {
-        this.queryForm.pageNo = 1
-        this.fetchData()
+        this.getAllAxios({}, this.queryForm.access_token, true)
       },
       async getRoletree() {
         await Roletree()
@@ -417,6 +393,7 @@
             console.log(res)
             this.setRoleTree(res.results)
             this.handleNodeClick(res.results[0], 0)
+            this.queryForm.workGroupTreeShow = false
           })
           .catch((e) => {
             console.log(e)
@@ -424,20 +401,20 @@
         this.deptTreeData = this.roleTree
       },
       async handleNodeClick(data, node) {
-        this.queryForm.workGroupName = node.label
-        this.queryForm.workGroupTreeShow = false
+        this.queryForm.workGroupName = data.label
+        this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
         if (node.level != 1) {
           // 在这里获取点击厂家的session
           const { access_token = '' } = await getToken(data.name)
-          this.access_token = access_token
+          this.queryForm.access_token = access_token
         } else {
-          this.access_token = store.getters['user/token']
+          console.log(node.level, '登录的token', this.token)
+          this.queryForm.access_token = this.token
         }
         // 点击的公司名
         const { name, objectId } = data
         this.curDepartmentId = objectId
-        // this.Company = name
-        this.getDevices(0)
+        console.log('this.queryForm.access_token', this.queryForm.access_token)
       },
       async getDevices() {
         const { results } = await queryDevice({})
@@ -448,16 +425,6 @@
           }
         })
         this.tableData = results
-      },
-      getCategory(key) {
-        console.log(key)
-        let name = ''
-        this.category.filter((item) => {
-          if (item.type == key) {
-            name = item.data.CategoryName
-          }
-        })
-        return name
       },
       // async getAllAxios() {
       //   console.log(process.env)
@@ -520,7 +487,17 @@
       //   this.dev_active_count = dev_active_num.count
       //   this.dev_online_count = dev_online_num.count
       // },
-      async getAllAxios() {
+      async getAllAxios(data, token, flag) {
+        let product
+        if (this.queryForm.account != '' || this.queryForm.account != 0) {
+          product = this.queryForm.account
+        } else {
+          this.queryForm.account = '*'
+        }
+        this.chartData = {
+          columns: [],
+          rows: [],
+        }
         var rows = {}
         this.chartData.columns.push(
           '日期',
@@ -575,7 +552,14 @@
           {
             method: 'GET',
             path: '/classes/Device',
-            body: _queryParams,
+            body: {
+              count: 'objectId',
+              limit: 1,
+              skip: 0,
+              where: {
+                product: product,
+              },
+            },
           },
           {
             method: 'GET',
@@ -586,6 +570,7 @@
               skip: 0,
               where: {
                 status: 'ACTIVE',
+                product: product,
               },
             },
           },
@@ -598,11 +583,13 @@
               skip: 0,
               where: {
                 status: 'ONLINE',
+                product: product,
               },
             },
           },
         ]
-        await batch(params)
+        data = params
+        await batch(data, token, flag)
           .then((res) => {
             let columnsdata = []
             this.$baseColorfullLoading().close()
@@ -667,7 +654,6 @@
       .workGroupTreeShow {
         height: 100px;
         overflow: auto;
-        background: #eeeeee;
       }
     }
     box-sizing: border-box;
@@ -704,13 +690,6 @@
       font-size: 14px;
       font-weight: bolder;
     }
-    //.card-right p:last-child {
-    //  padding: 5px;
-    //  margin: 0px;
-    //  font-size: 40px;
-    //  font-weight: bolder;
-    //  color: #8b1515;
-    //}
   }
   .text {
     font-size: 14px;

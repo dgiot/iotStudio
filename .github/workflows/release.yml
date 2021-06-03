@@ -1,5 +1,10 @@
  name: release
- on: repository_dispatch
+ on:
+   push:
+     branches:
+       - master
+     tags:
+       - v*
  jobs:
    build:
      runs-on: ubuntu-latest

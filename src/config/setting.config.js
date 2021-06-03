@@ -41,7 +41,7 @@ module.exports = {
   // 退出登录后不清空的cookie列表
   cookieWhiteList: ['backgroundimage', 'logo', 'Copyright', 'title', 'name'],
   // token失效回退到登录页时是否记录本次的路由
-  recordRoute: true,
+  recordRoute: false,
   // 是否开启logo，不显示时设置false，请填写src/icon路径下的图标名称
   // 如需使用内置RemixIcon图标，请自行去logo组件切换注释代码(内置svg雪碧图较大，对性能有一定影响)
   logo: 'vuejs-fill',

@@ -12,21 +12,18 @@ import cookie from 'js-cookie'
  * @description 获取token
  * @param tokenName
  * @param storage
+ * @type token type ['Number','String','Boolean','Number','Undefined','Object','Function']
  * @returns {void|*}
  */
-export function getToken(tokenName, storage) {
-  if (storage) {
-    if ('localStorage' === storage) {
-      return localStorage.getItem(tokenName) || ''
-    } else if ('sessionStorage' === storage) {
-      return sessionStorage.getItem(tokenName) || ''
-    } else if ('cookie' === storage) {
-      return cookie.get(tokenName) || ''
-    } else {
-      return localStorage.getItem(tokenName) || ''
-    }
+export function getToken(tokenName, storage = 'storage', type = '') {
+  if ('localStorage' === storage) {
+    return localStorage.getItem(tokenName) || type
+  } else if ('sessionStorage' === storage) {
+    return sessionStorage.getItem(tokenName) || type
+  } else if ('cookie' === storage) {
+    return cookie.get(tokenName) || type
   } else {
-    return localStorage.getItem(tokenName) || ''
+    return localStorage.getItem(tokenName) || type
   }
 }
 
@@ -37,17 +34,13 @@ export function getToken(tokenName, storage) {
  * @param storage
  * @returns {void|*}
  */
-export function setToken(tokenName, token, storage) {
-  if (storage) {
-    if ('localStorage' === storage) {
-      return localStorage.setItem(tokenName, token)
-    } else if ('sessionStorage' === storage) {
-      return sessionStorage.setItem(tokenName, token)
-    } else if ('cookie' === storage) {
-      return cookie.set(tokenName, token, { expires: expiresTime })
-    } else {
-      return localStorage.setItem(tokenName, token)
-    }
+export function setToken(tokenName, token, storage = 'storage') {
+  if ('localStorage' === storage) {
+    return localStorage.setItem(tokenName, token)
+  } else if ('sessionStorage' === storage) {
+    return sessionStorage.setItem(tokenName, token)
+  } else if ('cookie' === storage) {
+    return cookie.set(tokenName, token, { expires: expiresTime })
   } else {
     return localStorage.setItem(tokenName, token)
   }
@@ -59,17 +52,13 @@ export function setToken(tokenName, token, storage) {
  * @param storage
  * @returns {void|Promise<void>}
  */
-export function removeToken(tokenName, storage) {
-  if (storage) {
-    if ('localStorage' === storage) {
-      return localStorage.removeItem(tokenName)
-    } else if ('sessionStorage' === storage) {
-      return sessionStorage.removeItem(tokenName)
-    } else if ('cookie' === storage) {
-      return cookie.remove(tokenName)
-    } else {
-      return localStorage.removeItem(tokenName)
-    }
+export function removeToken(tokenName, storage = 'storage') {
+  if ('localStorage' === storage) {
+    return localStorage.removeItem(tokenName)
+  } else if ('sessionStorage' === storage) {
+    return sessionStorage.removeItem(tokenName)
+  } else if ('cookie' === storage) {
+    return cookie.remove(tokenName)
   } else {
     return localStorage.removeItem(tokenName)
   }
