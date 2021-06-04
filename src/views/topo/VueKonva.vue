@@ -270,7 +270,7 @@
             console.log('updata type is image', shape, config)
             upshape = shape
             _this.kovaUpType = 'Image'
-            upshape.zIndex(hapeConfig.zIndex)
+            upshape.zIndex(ShapeConfig.zIndex)
             upshape.opacity(ShapeConfig.opacity)
             Layer.draw()
             tweens.push(
@@ -555,6 +555,7 @@
         })
         const Group = _this.stage.find('Group')
         const Text = _this.stage.find('Text')
+        console.clear()
         console.log(Text, 'Text')
         Text.each(function (_G) {
           _G.on('mouseenter', function () {
