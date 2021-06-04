@@ -730,7 +730,6 @@
   import { getProduct } from '@/api/Product/index.js'
   import { returnLogin } from '@/utils/return'
   import { getBatchNumer } from '@/api/Dict'
-  var language
   var pcdata
   export default {
     components: {
@@ -875,7 +874,6 @@
       this.getDevices(0)
       this.addDeviceBatch(0)
       this.queryYysId()
-      language = Cookies.get('language')
       // this.$store.dispatch('getUserId', '111')
       if (this.$route.query.productid) {
         // this.selectProductid(this.$route.query.productid)

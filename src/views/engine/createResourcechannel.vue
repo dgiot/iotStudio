@@ -1,5 +1,6 @@
 <template>
   <div class="createResourcechannel">
+    <upload ref="uploadFinish" @fileInfo="fileInfo" />
     <el-form
       ref="addchannel"
       :rules="addrules"
@@ -108,6 +109,7 @@
                         "
                         class="image"
                         style="width: 50px; height: 50px"
+                        @click="uploadCkick(item.params.ico.default, index)"
                       />
                     </el-col>
                     <el-col :span="12">
@@ -196,14 +198,15 @@
 </template>
 
 <script>
-  import { resourceTypes } from '@/api/Rules'
+  import { resourceTypes, putResourceTypes } from '@/api/Rules'
   import { postChannel } from '@/api/Channel'
   import { mapActions, mapGetters } from 'vuex'
-  import { handleActivePath } from '@/utils/routes'
-
+  import Upload from '@/components/UploadFile/input'
   export default {
     name: 'CreateResourcechannel',
-    components: {},
+    components: {
+      Upload,
+    },
     data() {
       return {
         channelregion: [],
@@ -234,7 +237,7 @@
     },
     computed: {
       ...mapGetters({
-        roleTree: 'global/roleTree',
+        roleTree: 'user/roleTree',
       }),
     },
     mounted() {
@@ -262,6 +265,21 @@
         this.channelForm = false
         this.$refs['addchannel'].resetFields()
         this.resourceid = ''
+      },
+      uploadCkick(type, index) {
+        console.log(type, index)
+        this.channeindex = index
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
+      },
+      async fileInfo(info) {
+        console.log('uploadFinish', info)
+        console.log(this.channelregion)
+        this.channelregion[this.channeindex].params.ico.default = info.url
+        console.log(this.channelregion[this.channeindex].params.ico.default)
+        const res = await putResourceTypes(this.channelregion)
+        console.log(res)
       },
       // 关闭本页面
       handleClose() {

@@ -425,7 +425,7 @@
     },
     computed: {
       ...mapGetters({
-        roleTree: 'global/roleTree',
+        roleTree: 'user/roleTree',
       }),
       treeData() {
         const cloneData = JSON.parse(JSON.stringify(this.form.options)) // 对源数据深度克隆

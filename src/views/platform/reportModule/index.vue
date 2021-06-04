@@ -86,9 +86,8 @@
   </div>
 </template>
 <script>
-  //   import { Parse } from 'parse'
+  import { getToken, removeToken, setToken } from '@/utils/vuex'
   import { getReport, getReportdetail } from '@/api/reportmodule/reportmodule'
-  import Cookies from 'js-cookie'
   export default {
     data() {
       return {
@@ -172,7 +171,7 @@
             id: id,
           },
         })
-        Cookies.set('reportId', id)
+        setToken('reportId', id, 'sessionStorage')
       },
     },
   }

@@ -1142,7 +1142,7 @@
     },
     computed: {
       ...mapGetters({
-        roleTree: 'global/roleTree',
+        roleTree: 'user/roleTree',
       }),
       dragOptions() {
         return {

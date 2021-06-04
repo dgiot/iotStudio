@@ -8,6 +8,8 @@
  */
 import { expiresTime, cookieWhiteList } from '@/config'
 import cookie from 'js-cookie'
+const Base64 = require('js-base64').Base64
+import { isBase64 } from '@/utils'
 /**
  * @description 获取token
  * @param tokenName
@@ -15,15 +17,20 @@ import cookie from 'js-cookie'
  * @type token type ['Number','String','Boolean','Number','Undefined','Object','Function']
  * @returns {void|*}
  */
-export function getToken(tokenName, storage = 'storage', type = '') {
+export function getToken(tokenName, storage = 'sessionStorage', type = '') {
+  let res = localStorage.getItem(tokenName) || type
   if ('localStorage' === storage) {
-    return localStorage.getItem(tokenName) || type
+    res = localStorage.getItem(tokenName) || type
   } else if ('sessionStorage' === storage) {
-    return sessionStorage.getItem(tokenName) || type
-  } else if ('cookie' === storage) {
-    return cookie.get(tokenName) || type
+    res = sessionStorage.getItem(tokenName) || type
   } else {
-    return localStorage.getItem(tokenName) || type
+    res = cookie.get(tokenName) || type
+  }
+  if (!isBase64(res)) {
+    return res
+  } else {
+    let Base64Decode = JSON.parse(Base64.decode(res))
+    return Base64Decode.token
   }
 }
 
@@ -34,15 +41,14 @@ export function getToken(tokenName, storage = 'storage', type = '') {
  * @param storage
  * @returns {void|*}
  */
-export function setToken(tokenName, token, storage = 'storage') {
+export function setToken(tokenName, settoken, storage = 'sessionStorage') {
+  let token = JSON.stringify({ token: settoken })
   if ('localStorage' === storage) {
-    return localStorage.setItem(tokenName, token)
+    return localStorage.setItem(tokenName, Base64.encode(token))
   } else if ('sessionStorage' === storage) {
-    return sessionStorage.setItem(tokenName, token)
-  } else if ('cookie' === storage) {
-    return cookie.set(tokenName, token, { expires: expiresTime })
+    return sessionStorage.setItem(tokenName, Base64.encode(token))
   } else {
-    return localStorage.setItem(tokenName, token)
+    return cookie.set(tokenName, Base64.encode(token), { expires: expiresTime })
   }
 }
 
@@ -57,15 +63,13 @@ export function removeToken(tokenName, storage = 'storage') {
     return localStorage.removeItem(tokenName)
   } else if ('sessionStorage' === storage) {
     return sessionStorage.removeItem(tokenName)
-  } else if ('cookie' === storage) {
-    return cookie.remove(tokenName)
   } else {
-    return localStorage.removeItem(tokenName)
+    return cookie.remove(tokenName)
   }
 }
 function foreach() {
-  var strCookie = document.cookie
-  var arrCookie = strCookie.split('; ')
+  const strCookie = document.cookie
+  const arrCookie = strCookie.split('; ')
   console.log(`退出后清除Cookies ${arrCookie}`)
   for (var i = 0; i < arrCookie.length; i++) {
     var arr = arrCookie[i].split('=')
@@ -73,7 +77,7 @@ function foreach() {
   }
 }
 function GetCookieVal(offset) {
-  var endstr = document.cookie.indexOf(';', offset)
+  let endstr = document.cookie.indexOf(';', offset)
   if (endstr == -1) endstr = document.cookie.length
   return decodeURIComponent(document.cookie.substring(offset, endstr))
 }
@@ -85,10 +89,10 @@ function DelCookie(name) {
     document.cookie = name + '=' + cval + '; expires=' + exp.toGMTString()
 }
 function GetCookie(name) {
-  var arg = name + '='
-  var alen = arg.length
-  var clen = document.cookie.length
-  var i = 0
+  const arg = name + '='
+  const alen = arg.length
+  const clen = document.cookie.length
+  let i = 0
   while (i < clen) {
     var j = i + alen
     if (document.cookie.substring(i, j) == arg) return GetCookieVal(j)
@@ -98,9 +102,9 @@ function GetCookie(name) {
   return null
 }
 export function clearCookie() {
-  var date = new Date()
+  const date = new Date()
   date.setTime(date.getTime() - 10000)
-  var keys = document.cookie.match(/[^ =;]+(?=\=)/g)
+  const keys = document.cookie.match(/[^ =;]+(?=\=)/g)
   if (keys) {
     for (var i = keys.length; i--; )
       if (cookieWhiteList.indexOf(keys[i]) < -1)

@@ -2246,7 +2246,7 @@
           string: '',
           specs: [],
           dis: 'Edit-24',
-          dinumber: '528590',
+          dinumber: 'null',
         },
         tableData: [],
         activeName: 'first',
@@ -2416,7 +2416,7 @@
           resource: 1,
           identifier: '',
           dis: 'Edit-24',
-          dinumber: '528590',
+          dinumber: 'null',
           type: 'int',
           startnumber: '',
           endnumber: '',
@@ -3050,7 +3050,6 @@
             order: sizeForm.order,
             data: sizeForm.dinumber,
             address: sizeForm.dis,
-            quantity: sizeForm.dinumber,
             rate: sizeForm.rate,
             offset: sizeForm.offset,
             byteorder: sizeForm.byteorder,
@@ -3191,7 +3190,7 @@
             dis: this.$objGet(rowData, 'dataForm.address'),
             order: this.$objGet(rowData, 'dataForm.order'),
             round: this.$objGet(rowData, 'dataForm.round'),
-            dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+            dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
             byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
@@ -3224,7 +3223,7 @@
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
             order: this.$objGet(rowData, 'dataForm.order'),
-            dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+            dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
             byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
@@ -3261,7 +3260,7 @@
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
             order: this.$objGet(rowData, 'dataForm.order'),
-            dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+            dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
             byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
@@ -3290,7 +3289,7 @@
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
             order: this.$objGet(rowData, 'dataForm.order'),
-            dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+            dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
             byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
@@ -3323,7 +3322,7 @@
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
             order: this.$objGet(rowData, 'dataForm.order'),
-            dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+            dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
             byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
@@ -3353,7 +3352,7 @@
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
             order: this.$objGet(rowData, 'dataForm.order'),
-            dinumber: this.$objGet(rowData, 'dataForm.quantity'),
+            dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
             byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
@@ -3393,7 +3392,7 @@
                 },
                 dataForm: {
                   address: this.structform.dis,
-                  quantity: this.structform.dinumber,
+                  data: this.structform.dinumber,
                 },
                 required: true,
                 accessMode: this.structform.isread,
@@ -3411,7 +3410,7 @@
                 },
                 dataForm: {
                   address: this.structform.dis,
-                  quantity: this.structform.dinumber,
+                  data: this.structform.dinumber,
                 },
                 required: false,
                 accessMode: this.structform.isread,
@@ -3432,7 +3431,7 @@
                 },
                 dataForm: {
                   address: this.structform.dis,
-                  quantity: this.structform.dinumber,
+                  data: this.structform.dinumber,
                 },
                 required: true,
                 accessMode: this.structform.isread,
@@ -3447,7 +3446,7 @@
                 },
                 dataForm: {
                   address: this.structform.dis,
-                  quantity: this.structform.dinumber,
+                  data: this.structform.dinumber,
                 },
                 required: true,
                 accessMode: this.structform.isread,
@@ -3461,7 +3460,7 @@
                 },
                 dataForm: {
                   address: this.structform.dis,
-                  quantity: this.structform.dinumber,
+                  data: this.structform.dinumber,
                 },
                 required: true,
                 accessMode: this.structform.isread,
@@ -4602,24 +4601,24 @@
   }
 
   /* .editheader .product ul li:first-child,
-  .editheader .product ul li:last-child {
-    width: 25%;
-    list-style: none;
-    color: #74777a;
-    font-size: 16px;
-    line-height: 50px;
-    float: left;
-    text-align: left;
-  }
-  .editheader .product ul li:nth-child(2) {
-    width: 50%;
-    list-style: none;
-    color: #74777a;
-    font-size: 16px;
-    line-height: 50px;
-    float: left;
-    text-align: left;
-  } */
+.editheader .product ul li:last-child {
+  width: 25%;
+  list-style: none;
+  color: #74777a;
+  font-size: 16px;
+  line-height: 50px;
+  float: left;
+  text-align: left;
+}
+.editheader .product ul li:nth-child(2) {
+  width: 50%;
+  list-style: none;
+  color: #74777a;
+  font-size: 16px;
+  line-height: 50px;
+  float: left;
+  text-align: left;
+} */
 </style>
 <style scoped>
   .editproduct .el-tabs__item {
@@ -4717,8 +4716,8 @@
   }
 
   /* .editproduct .row-expand-cover + tr {
-    display: none;
-  } */
+  display: none;
+} */
   .editproduct .el-table__expanded-cell {
     left: 100px;
     box-sizing: border-box;
@@ -4732,8 +4731,8 @@
   }
 
   /* .editproduct #pane-sixeth {
-    display: flex;
-  } */
+  display: flex;
+} */
   .editproduct .el-col-2 {
     text-align: center;
   }

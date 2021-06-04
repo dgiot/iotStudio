@@ -192,6 +192,7 @@
         }
       }
       return {
+        channeindex: 0,
         registerRules: {
           phone: [
             {

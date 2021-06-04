@@ -27,15 +27,10 @@
         <transition name="fade">
           <el-col v-show="showTable" :span="leftrow">
             <div class="_left">
-              <topo-allocation
-                @fatherMousedown="mousedown"
-                @fatherMousemove="mousemove"
-                @fatherMouseup="mouseup"
-              />
+              <topo-allocation />
             </div>
           </el-col>
         </transition>
-
         <el-col :span="gutter - leftrow - rightrow" class="_konvarow">
           <div ref="konva" :class="konvaClass"></div>
 
@@ -127,7 +122,7 @@
   })
 
   import { createState } from '@/utils/konva'
-  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import { isBase64, isImage } from '@/utils'
   import { Websocket } from '@/utils/wxscoket.js'
   import { _getTopo } from '@/api/Topo'
@@ -204,44 +199,10 @@
         setGraphColor: 'konva/setGraphColor',
         setDrawParams: 'konva/setDrawParams',
       }),
-      // @click//单击
-      // @mousedown//按下
-      // @mouseup//抬起
-      // @dblclick//双击
-      // @mousemove//移动
-      // @mouseleave//离开
-      // @mouseout //移出
-      // @mouseenter//进入
-      // @mouseover//在
-      mousedown(item) {
-        console.log(item)
-        // var _center = document.querySelectorAll('._center')[0]
-        // let oElement = document.querySelectorAll(`.${item}`)[0]
-        // console.log(Position(oElement))
-
-        // dragBox(
-        //   document.querySelectorAll(`.${item}`)[0],
-        //   document.querySelectorAll('.konvajs-content')[0]
-        // )
-      },
       _initCreate() {
         let background =
           'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png'
         this.$refs.konva.style.backgroundImage = `url(${background})`
-      },
-      mousemove(item) {
-        // let oElement = document.querySelectorAll(`.${item}`)[0]
-        // console.log(Position(oElement))
-      },
-      mouseup(item) {
-        console.log(item)
-        // dragBox(
-        //   document.querySelectorAll(`.${item}`)[0],
-        //   document.querySelectorAll('.konvajs-content')[0]
-        // )
-        // var _center = document.querySelectorAll('._center')[0]
-        // let oElement = document.querySelectorAll(`.${item}`)[0]
-        // console.log(Position(oElement))
       },
       // set_mqttflag
       set_mqttflag(v) {
@@ -250,11 +211,32 @@
       // removeShape
       removeShape(node) {
         let _this = this
-        //  此处不能删除图片 bug
+        const Layer = _this.stage.find('Layer')[0]
         console.log('删除的节点', node)
+        var Image = _this.stage.find('Image')
+        var tweens = []
+        for (var n = 0; n < tweens.length; n++) {
+          tweens[n].destroy()
+        }
+        if (node.attrs.image) {
+          console.log('is img', node.attrs.id)
+          console.log(node.target, 'node.target')
+          Image.each((shape) => {
+            console.log('图片相关', shape)
+            if (shape.attrs.id == node.attrs.id) {
+              console.log(shape, 'shape.target 找到了这个node 节点')
+              console.log(node, 'shape.target 找到了这个node 节点')
+              shape.remove()
+              shape.destroy()
+              node.remove()
+              node.destroy()
+              Layer.draw()
+            }
+          })
+        }
+        console.log('删除的节点', node.remove())
         _this.stage.find('Transformer').destroy()
         node.remove()
-        var Layer = _this.stage.find('Layer')[0]
         Layer.draw()
         _this.setGraphNow('')
         if (node.attrs.id == _this.$refs['operation'].Shapeconfig.attrs.id)
@@ -267,29 +249,36 @@
         this.showTable = type
       },
       // saveKonvaitem
-      saveKonvaitem(config) {
+      saveKonvaitem(config, ShapeConfig = { index: 1, opacity: 1 }) {
         let _this = this
         console.log(_this.stage.find(`#${config.attrs.id}`))
         console.log('config.attrs.id', config.attrs.id)
-        let _uptype
-        var Text = _this.stage.find('Text')
-        var Image = _this.stage.find('Image')
-        var Group = _this.stage.find('Group')
-        var stage = _this.stage.find(config.attrs.id)
+        const Text = _this.stage.find('Text')
+        const Image = _this.stage.find('Image')
+        const Group = _this.stage.find('Group')
+        const stage = _this.stage.find(config.attrs.id)
+        const Layer = _this.stage.find('Layer')[0]
+        let upshape = stage
         console.log('stage', stage)
-        var tweens = []
-        for (var n = 0; n < tweens.length; n++) {
+        const tweens = []
+        for (let n = 0; n < tweens.length; n++) {
           tweens[n].destroy()
+          tweens[n].remove()
         }
         Image.each((shape) => {
-          console.log('图片相关', shape)
           if (shape.attrs.id == config.attrs.id) {
+            console.log('updata type is image', shape, config)
+            upshape = shape
             _this.kovaUpType = 'Image'
+            upshape.zIndex(hapeConfig.zIndex)
+            upshape.opacity(ShapeConfig.opacity)
+            Layer.draw()
             tweens.push(
               new Konva.Tween({
-                node: Object.assign(shape, config),
-                Opacity: 0.8,
+                node: shape,
+                Opacity: ShapeConfig.opacity,
                 duration: 1,
+                zIndex: ShapeConfig.zIndex,
                 easing: Konva.Easings.ElasticEaseOut,
               }).play()
             )
@@ -298,6 +287,7 @@
         Group.each((shape) => {
           if (shape.attrs.id == config.attrs.id) {
             _this.kovaUpType = 'Group'
+            upshape = shape
             tweens.push(
               new Konva.Tween({
                 node: Object.assign(shape, config),
@@ -311,6 +301,7 @@
         Text.each((shape) => {
           if (shape.attrs.id == config.attrs.id) {
             _this.kovaUpType = 'Text'
+            upshape = shape
             tweens.push(
               new Konva.Tween({
                 node: Object.assign(shape, config),
@@ -321,6 +312,11 @@
             )
           }
         })
+        if (_this.kovaUpType != 'Image') {
+          upshape.zIndex(ShapeConfig.index)
+          upshape.opacity(ShapeConfig.opacity)
+          Layer.draw()
+        }
         _this.stage.batchDraw()
         if (_this.stage.attrs.id == config.attrs.id) {
           _this.kovaUpType = 'Layer'
@@ -328,12 +324,9 @@
         }
         console.clear()
         console.info(`updata type is ${_this.kovaUpType}`)
-        let toJSON = _this.stage
-        // console.log(toJSON)
         _this.ShapeVisible = false
         console.log('konva数据更新成功')
         _this.updataProduct(_this.productid)
-        // _this.updataProduct(_this.productid)
       },
       // 预览
       regulate(type) {
@@ -412,7 +405,7 @@
           this.handleCloseSub()
           this.$message.success(this.$translateTitle('产品组态更新成功'))
         } else {
-          this.$message.error(this.$translateTitle(`error`))
+          this.$message.error(this.$translateTitle(`${error}`))
         }
       },
       // 处理mqtt信息
@@ -429,9 +422,9 @@
           const Shape = decodeMqtt.konva
           // apply transition to all nodes in the array
           // Text.each(function (shape) {
-          var Text = this.stage.find('Text')
+          const Text = this.stage.find('Text')
           console.log(Text)
-          var tweens = []
+          const tweens = []
           for (var n = 0; n < tweens.length; n++) {
             tweens[n].destroy()
           }
@@ -445,7 +438,6 @@
                 tweens.push(
                   new Konva.Tween({
                     node: shape,
-                    Opacity: 0.8,
                     duration: 1,
                     easing: Konva.Easings.ElasticEaseOut,
                   }).play()
@@ -453,7 +445,6 @@
               }
             })
           })
-          let toJSON = this.stage.toJSON()
           _this.stage.batchDraw()
           console.log('konva数据更新成功')
           _this.updataProduct(this.productid)
@@ -503,7 +494,7 @@
       // js 绘制
       createKonva(data, globalStageid, type) {
         console.log('type', type)
-        let Stage, background
+        let Stage
         let _this = this
         if (type != 'create') {
           Stage = data
@@ -522,6 +513,7 @@
         console.log('globalStageid', globalStageid)
         console.log(Stage, 'Stage')
         _this.stage = Konva.Node.create(Stage, globalStageid)
+        console.log('data', data)
         var Layer = _this.stage.find('Layer')[0]
         _this.stage.on('click', (e) => {
           var node = e.target
@@ -543,11 +535,10 @@
           console.log('this.draw', _this.draw)
           console.log('color', _this.graphColor)
           console.log('drawParams', _this.drawParams)
-          var color = _this.graphColor
-          var type = _this.flag
-          var params = _this.DrawParams
+          const color = _this.graphColor
+          const type = _this.flag
           console.log('params', _this.drawParams)
-          var _group = _this.stage.find('Group')[0]
+          const _group = _this.stage.find('Group')[0]
           const { offsetX, offsetY } = e.evt
           var state = createState(
             type,
@@ -562,8 +553,8 @@
           _this.setFlag('')
           _this.setDraw(false)
         })
-        var Group = _this.stage.find('Group')
-        var Text = _this.stage.find('Text')
+        const Group = _this.stage.find('Group')
+        const Text = _this.stage.find('Text')
         console.log(Text, 'Text')
         Text.each(function (_G) {
           _G.on('mouseenter', function () {
@@ -649,7 +640,7 @@
           _this.rightrow = 6
         }
         Group.each(function (_G) {
-          _G.on('click', (e) => {
+          _G.on('dblclick', (e) => {
             // 创建图形选框事件
             const tr = new Konva.Transformer({
               borderStroke: '#000', // 虚线颜色
@@ -664,8 +655,10 @@
             // _this.ShapeVisible = true
             console.log(`#${e.target.attrs.id}`)
             var node = e.target
-            console.log(e)
+            console.log('当前图层层级', Number(node.zIndex()))
             _this.setGraphNow(e.target)
+            _this.$refs['operation'].ShapeIndex = Number(node.zIndex())
+            _this.$refs['operation'].ShapeOpacity = node.opacity()
             if (!_this.rightrow && !_this.isDevice) _this.rightrow = 6
             // _this.$refs['operation'].Shapeconfig = node.toJSON()
           })
@@ -701,6 +694,8 @@
             Layer.batchDraw()
           })
         })
+        Layer.draw()
+        Layer.batchDraw()
         console.log('绘制完成')
         if (this.$refs.topoheader)
           this.$refs.topoheader.subscribe(_this.productid)

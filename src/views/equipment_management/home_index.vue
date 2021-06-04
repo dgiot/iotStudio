@@ -1,7 +1,7 @@
 <template>
   <div class="equipment">
     <div class="dialog">
-      <el-dialog :visible.sync="popoverVisible" top="5vh" width="30vh">
+      <el-dialog :visible.sync="popoverVisible" top="5vh" width="40vh">
         <div class="leftTree">
           <p style="text-align: center">
             {{ $translateTitle('developer.Company') }} :
@@ -1176,7 +1176,6 @@
   import { querycompanyDevice, putDevice } from '@/api/Device'
   import { getToken } from '@/api/Menu'
 
-  var language
   var pcdata
   export default {
     components: {
@@ -1207,6 +1206,7 @@
         }
       }
       return {
+        language: '',
         isALL: true,
         sizeZoom: 10,
         activeName: 'first',
@@ -1335,7 +1335,9 @@
     computed: {
       ...mapGetters({
         token: 'user/token',
-        roleTree: 'global/roleTree',
+        roleTree: 'user/roleTree',
+        access_token: 'user/token',
+        language: 'sessings/token',
       }),
     },
     watch: {
@@ -1349,11 +1351,9 @@
       },
     },
     mounted() {
-      this.access_token = store.getters['user/token']
       this.getMenu()
       this.searchProduct()
       this.queryYysId()
-      language = Cookies.get('language')
       // this.$store.dispatch('getUserId', '111')
       // if (this.$route.query.productid) {
       //   this.selectProductid(this.$route.query.productid)
@@ -1468,20 +1468,21 @@
           }
         )
           .then(async () => {
-            const { updatedAt } = await putDevice(this.deviceId, parmas)
-            if (updatedAt) {
-              this.popoverVisible = false
-              this.getMenu()
-              this.$message({
-                type: 'success',
-                message: this.$translateTitle(`迁移成功`),
-              })
-            } else {
-              this.$message({
-                type: 'error',
-                message: this.$translateTitle(`迁移失败`),
-              })
-            }
+            await putDevice(this.deviceId, parmas).then((res) => {
+              if (res.ACL || res.detail) {
+                this.popoverVisible = false
+                this.getMenu()
+                this.$message({
+                  type: 'success',
+                  message: this.$translateTitle(`迁移成功`),
+                })
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: this.$translateTitle(`迁移失败`),
+                })
+              }
+            })
           })
           .catch((e) => {
             console.log(e)
@@ -1685,7 +1686,7 @@
         const { results } = await this.$query_object('Product', parsms)
         this.proTableData = results
         this.proTableData.unshift({
-          name: language == 'zh' ? '全部产品' : 'All Products',
+          name: this.language == 'zh' ? '全部产品' : 'All Products',
           objectId: '0',
         })
 

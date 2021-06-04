@@ -7,6 +7,15 @@ export function resourceTypes() {
     params: {},
   })
 }
+
+export function putResourceTypes(data) {
+  return request({
+    url: 'resource_types',
+    method: 'put',
+    data,
+  })
+}
+
 export function addRule(actions, ctx, description, rawsql) {
   return request({
     url: 'rules',

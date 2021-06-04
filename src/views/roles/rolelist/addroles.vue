@@ -23,14 +23,6 @@
             placeholder="请输入部门名称"
           />
         </el-form-item>
-
-        <!--      <el-form-item label="岗位" prop="departmentid">
-          <el-input
-            v-model="roleFormObj.org_type"
-
-          />
-        </el-form-item> -->
-
         <el-form-item label="岗位" prop="role">
           <el-select
             v-model="roleFormObj.dictvalue"
@@ -70,6 +62,7 @@
 <script>
   import { queryDict } from '@/api/Dict/index'
   import { queryRole, addRoles } from '@/api/Role/index'
+  import { Roletree } from '@/api/Menu'
 
   export default {
     data() {

@@ -659,6 +659,25 @@
             <template slot="title">数据来源</template>
             <el-row :gutter="24">
               <el-col :span="12">
+                <el-form-item label="数据地址">
+                  <el-input
+                    v-model="sizeForm.dis"
+                    :disabled="sizeForm.isdis"
+                    placeholder="数据地址"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="数据长度">
+                  <el-input
+                    v-model.number="sizeForm.dinumber"
+                    placeholder="数据长度（字节）"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="24">
+              <el-col :span="12">
                 <el-form-item label="协议类型">
                   <el-select
                     v-model="sizeForm.protocol"
@@ -679,37 +698,12 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item label="数据地址">
-                  <el-input
-                    v-model="sizeForm.dis"
-                    :disabled="sizeForm.isdis"
-                    placeholder="数据地址"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24">
               <el-col v-show="sizeForm.protocol == 'modbus'" :span="12">
                 <el-form-item label="从机地址">
                   <el-input
                     v-model="sizeForm.slaveid"
                     placeholder="数据地址(10进制)"
                     auto-complete="off"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col
-                v-show="
-                  sizeForm.protocol == 'modbus' ||
-                  sizeForm.protocol == 'mingcheng'
-                "
-                :span="12"
-              >
-                <el-form-item label="数据长度">
-                  <el-input
-                    v-model.number="sizeForm.dinumber"
-                    placeholder="数据长度（字节）"
                   />
                 </el-form-item>
               </el-col>
@@ -1036,7 +1030,7 @@
             unit: that.$objGet(item, 'dataType.specs.unit'),
             // : item.dataForm.
             round: that.$objGet(item, 'dataForm.round'),
-            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
             byteorder: that.$objGet(item, 'dataForm.byteorder'),
@@ -1067,7 +1061,7 @@
             step: that.$objGet(item, 'dataType.specs.step'),
             unit: that.$objGet(item, 'dataType.specs.unit'),
             round: that.$objGet(item, 'dataForm.round'),
-            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
             byteorder: that.$objGet(item, 'dataForm.byteorder'),
@@ -1100,7 +1094,7 @@
             step: that.$objGet(item, 'dataType.specs.step'),
             unit: that.$objGet(item, 'dataType.specs.unit'),
             round: that.$objGet(item, 'dataForm.round'),
-            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
             byteorder: that.$objGet(item, 'dataForm.byteorder'),
@@ -1125,7 +1119,7 @@
             step: that.$objGet(item, 'dataType.specs.step'),
             unit: that.$objGet(item, 'dataType.specs.unit'),
             round: that.$objGet(item, 'dataForm.round'),
-            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
             byteorder: that.$objGet(item, 'dataForm.byteorder'),
@@ -1153,7 +1147,7 @@
             step: that.$objGet(item, 'dataType.specs.step'),
             unit: that.$objGet(item, 'dataType.specs.unit'),
             round: that.$objGet(item, 'dataForm.round'),
-            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
             byteorder: that.$objGet(item, 'dataForm.byteorder'),
@@ -1178,7 +1172,7 @@
             step: that.$objGet(item, 'dataType.specs.step'),
             unit: that.$objGet(item, 'dataType.specs.unit'),
             round: that.$objGet(item, 'dataForm.round'),
-            dinumber: that.$objGet(item, 'dataForm.quantity'),
+            dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
             byteorder: that.$objGet(item, 'dataForm.byteorder'),

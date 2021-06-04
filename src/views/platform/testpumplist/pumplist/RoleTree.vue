@@ -62,7 +62,7 @@
     },
     computed: {
       ...mapGetters({
-        roleTree: 'global/roleTree',
+        roleTree: 'user/roleTree',
       }),
     },
     watch: {

@@ -1,13 +1,27 @@
 /**
  * @description 登录、获取用户信息、退出登录、清除token逻辑，不建议修改
  */
-
+const getLocalStorage = (key) => {
+  const value = localStorage.getItem(key)
+  if (isJson(value)) {
+    return JSON.parse(value)
+  } else {
+    return false
+  }
+}
 import { getUserInfo, login, logout, socialLogin } from '@/api/User/index'
-import { tokenTableName, storage, title, tokenName } from '@/config'
+import { tokenTableName, storage, title, tokenName, i18n } from '@/config'
 import { getToken, removeToken, setToken, clearCookie } from '@/utils/vuex'
 import { resetRouter } from '@/router'
+import { Roletree } from '@/api/Menu'
+import { queryProduct } from '@/api/Product'
 import { license, SiteDefault } from '@/api/License'
+import { isJson } from '@/utils/validate'
+const { language } = getLocalStorage('language')
 const state = () => ({
+  language: language || i18n,
+  roleTree: getToken('roleTree', 'sessionStorage'), // 处理数据类型不匹配
+  _Product: getToken('Product', 'sessionStorage'),
   token: getToken(tokenTableName, storage),
   name: getToken('name', storage),
   username: getToken('username', storage),
@@ -23,6 +37,9 @@ const state = () => ({
   objectId: getToken('objectId', storage),
 })
 const getters = {
+  language: (state) => state.language,
+  roleTree: (state) => state.roleTree,
+  _Product: (state) => state._Product,
   token: (state) => state.token,
   username: (state) => state.username,
   avatar: (state) => state.avatar,
@@ -33,6 +50,14 @@ const getters = {
   name: (state) => state.name,
 }
 const mutations = {
+  setRoleTree(state, tree) {
+    state.roleTree = tree
+    setToken('roleTree', tree, 'sessionStorage') // 解决数据持久化问题
+  },
+  set_Product(state, Product) {
+    state._Product = Product
+    setToken('Product', Product, 'sessionStorage') // 解决数据持久化问题
+  },
   setname(state, name) {
     state.name = name
     setToken('name', name, storage)
@@ -125,14 +150,46 @@ const actions = {
     console.log(tag.companyinfo.title, 'tag info')
     const { title, Copyright, name, logo } = tag.companyinfo
     const { avatar } = tag.userinfo
-    commit('setAvatar', avatar)
-    Cookies.set('roles', roles)
-    Cookies.set('copyright', Copyright)
-    Cookies.set('title', title)
-    Cookies.set('name', name)
-    Cookies.set('logo', logo)
-    Cookies.set('avatar', avatar)
+    setToken('setAvatar', avatar, 'sessionStorage')
+    setToken('roles', roles, 'sessionStorage')
+    setToken('title', title, 'sessionStorage')
+    setToken('copyright', Copyright, 'sessionStorage')
+    setToken('title', title, 'sessionStorage')
+    setToken('name', name, 'sessionStorage')
+    setToken('logo', logo, 'sessionStorage')
+    setToken('avatar', avatar, 'sessionStorage')
     if (objectId) commit('setObejectId', objectId)
+    // 登录成功后,需要将以下参数存入vuex
+
+    Roletree()
+      .then((res) => {
+        commit('setRoleTree', res.results)
+      })
+      .catch((e) => {
+        console.log(`get role error ${e}`)
+        commit('setRoleTree', [])
+      })
+    const params = {
+      count: 'objectId',
+      order: '-updatedAt',
+      keys: 'name',
+      where: {
+        category: 'IotHub',
+      },
+    }
+    queryProduct(params)
+      .then((res) => {
+        let results = res.results
+        results.unshift({
+          name: language == 'zh' ? '全部产品' : 'All Products',
+          objectId: '0',
+        })
+        commit('set_Product', results)
+      })
+      .catch((e) => {
+        console.log(`query role error ${e}`)
+        commit('set_Product', [])
+      })
     if (token) {
       commit('setToken', token)
       const hour = new Date().getHours()

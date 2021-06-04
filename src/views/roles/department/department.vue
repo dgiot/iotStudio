@@ -297,9 +297,9 @@
           })
 
           /*     let branchArr = this.dataPermissions.filter( (child) => {
-            return father.objectId == child.parentId
-            }
-        ); */
+          return father.objectId == child.parentId
+          }
+      ); */
 
           // 如果存在子级，则给父级添加一个children，并赋值
           if (branchArr.length > 0) {
@@ -314,234 +314,234 @@
           father.title =
             father.meta && father.meta.title ? father.meta.title : ''
           /* eslint-disable */
-          const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parentId
-          )
-          branchArr.length > 0 ? (father.children = branchArr) : ''
-          return father.parentId == 0
-          /* eslint-disable */
-        })
-      },
-    },
-    mounted() {
-      this.gettable()
-      this.getMenu()
-      this.getRoleschema()
-
-      /* eventBus.$on("dialogHide", () => {
-      this.centerDialogRole = false;
-    }); */
-    },
-
-    methods: {
-      handleClickRefresh() {
-        const ranNum = Math.ceil(Math.random() * 25)
-        this.form.secret = Base64.encode(
-          String.fromCharCode(65 + ranNum) +
-            Math.ceil(Math.random() * 10000000) +
-            Number(new Date())
+        const branchArr = cloneData.filter(
+          (child) => father.objectId == child.parentId
         )
-      },
-      async getMenu() {
-        this.data = []
-        this.dataMenus = []
-        const { results } = await queryMenu({})
-        if (results) {
-          this.menuListRes = results
-          results.map((items) => {
-            var obj = {}
-            obj.label = items.name
-            obj.meta = items.meta
-            obj.objectId = items.objectId
-            obj.parentId = items.parent.objectId
-            obj.createtime = new Date(items.createdAt).toLocaleDateString()
-            this.data.push(obj)
-            this.dataMenus.push(obj)
-          })
-        }
-      },
-      async gettable() {
-        const { results } = await queryDict({
-          where: {
-            type: 'roletemp',
-          },
-        })
-        if (results) this.roletempList = results
-      },
-      // 获取权限
-      async getRoleschema() {
-        this.dataPermissions = []
-        const { results } = await queryPermission({})
-        if (results) {
-          this.permissionListRes = results
-          results.map((items) => {
-            var obj = {}
-            obj.label = items.alias
-            obj.name = items.name
-            obj.objectId = items.objectId
-            obj.parentId = items.parent.objectId
-            obj.createtime = new Date(items.createdAt).toLocaleDateString()
-            this.dataPermissions.push(obj)
-          })
-        }
-      },
-      tableRowClassName({ row, rowIndex }) {
-        // 把每一行的索引放进row
-
-        row.index = rowIndex
-      },
-      selectedHighlight({ row, rowIndex }) {
-        if (this.currentSelectIndex === rowIndex) {
-          return {
-            color: '#409EFF',
-            'font-weight': 'bold',
-          }
-        }
-      },
-      getDetailmenu(row, column, event, cell) {
-        if (row.data.tag && row.data.tag.appconfig) {
-          this.form = row.data.tag.appconfig
-        } else {
-          this.handleClickRefresh()
-        }
-        if (column && column.label == '操作') {
-          return
-        }
-        this.currentSelectIndex = row.index
-
-        this.doSetChecked(row.data.menus, row.data.rules)
-      },
-      doSetChecked(allMenus, allPermissions) {
-        this.roleMenuList = []
-        this.rolePermissonList = []
-
-        const tempMenuList = []
-        const tempPermissonList = []
-
-        this.menuListRes.map((items) => {
-          allMenus.map((mentItem) => {
-            if (items.meta.title == mentItem) {
-              this.roleMenuList.push(items.objectId)
-            }
-          })
-        })
-
-        // set ###
-        this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
-
-        this.permissionListRes.map((items) => {
-          allPermissions.map((mentItem) => {
-            if (items.name == mentItem) {
-              tempPermissonList.push(items.name)
-            }
-          })
-        })
-
-        this.rolePermissonList = [...new Set(tempPermissonList)]
-
-        // set ###
-        this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
-      },
-      // 删除模板
-      async handleDelete(index, row, data) {
-        const res = await delDict(row.objectId)
-        if (res) {
-          this.$message({
-            type: 'success',
-            message: '删除成功',
-          }),
-            data.splice(index, 1)
-        } else {
-          this.$message({
-            type: 'error',
-            message: '删除失败',
-          })
-        }
-      },
-      // 保存模板
-      exportRoletemp(row) {
-        this.$confirm('确定要更新吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        })
-          .then(async () => {
-            const checkrole = []
-            const checkmenu = []
-            const selectMenu = this.$refs.menusTree.getCheckedNodes()
-            const selectRermission = this.$refs.permissionTree.getCheckedNodes()
-
-            if (
-              selectMenu &&
-              selectRermission &&
-              selectMenu.length > 0 &&
-              selectRermission.length > 0
-            ) {
-              selectMenu.forEach((item) => {
-                checkmenu.push(item.label)
-              })
-              selectRermission.forEach((item) => {
-                checkrole.push(item.name)
-              })
-            } else {
-              this.$message({ mesaage: '数据为空' })
-              return
-            }
-
-            var newData = row.data
-            if (!row.data.tag) {
-              newData.tag = {}
-            }
-            newData['tag'].appconfig = this.form
-            newData.menus = checkmenu
-            newData.rules = checkrole
-
-            const loading = this.$loading({
-              background: 'rgba(0, 0, 0, 0.5)',
-            })
-            const res = await putDict(row.objectId, {
-              data: newData,
-            })
-            if (res) {
-              loading.close()
-              if (res) {
-                this.$message({ message: '更新成功' })
-              }
-            } else {
-              loading.close()
-              this.$message({ message: '更新失败' })
-            }
-          })
-          .catch((e) => {
-            console.log(e)
-          })
-      },
+        branchArr.length > 0 ? (father.children = branchArr) : ''
+        return father.parentId == 0
+        /* eslint-disable */
+      })
     },
-  }
+  },
+  mounted() {
+    this.gettable()
+    this.getMenu()
+    this.getRoleschema()
+
+    /* eventBus.$on("dialogHide", () => {
+    this.centerDialogRole = false;
+  }); */
+  },
+
+  methods: {
+    handleClickRefresh() {
+      const ranNum = Math.ceil(Math.random() * 25)
+      this.form.secret = Base64.encode(
+        String.fromCharCode(65 + ranNum) +
+        Math.ceil(Math.random() * 10000000) +
+        Number(new Date())
+      )
+    },
+    async getMenu() {
+      this.data = []
+      this.dataMenus = []
+      const { results } = await queryMenu({})
+      if (results) {
+        this.menuListRes = results
+        results.map((items) => {
+          var obj = {}
+          obj.label = items.name
+          obj.meta = items.meta
+          obj.objectId = items.objectId
+          obj.parentId = items.parent.objectId
+          obj.createtime = new Date(items.createdAt).toLocaleDateString()
+          this.data.push(obj)
+          this.dataMenus.push(obj)
+        })
+      }
+    },
+    async gettable() {
+      const { results } = await queryDict({
+        where: {
+          type: 'roletemp',
+        },
+      })
+      if (results) this.roletempList = results
+    },
+    // 获取权限
+    async getRoleschema() {
+      this.dataPermissions = []
+      const { results } = await queryPermission({})
+      if (results) {
+        this.permissionListRes = results
+        results.map((items) => {
+          var obj = {}
+          obj.label = items.alias
+          obj.name = items.name
+          obj.objectId = items.objectId
+          obj.parentId = items.parent.objectId
+          obj.createtime = new Date(items.createdAt).toLocaleDateString()
+          this.dataPermissions.push(obj)
+        })
+      }
+    },
+    tableRowClassName({ row, rowIndex }) {
+      // 把每一行的索引放进row
+
+      row.index = rowIndex
+    },
+    selectedHighlight({ row, rowIndex }) {
+      if (this.currentSelectIndex === rowIndex) {
+        return {
+          color: '#409EFF',
+          'font-weight': 'bold',
+        }
+      }
+    },
+    getDetailmenu(row, column, event, cell) {
+      if (row.data.tag && row.data.tag.appconfig) {
+        this.form = row.data.tag.appconfig
+      } else {
+        this.handleClickRefresh()
+      }
+      if (column && column.label == '操作') {
+        return
+      }
+      this.currentSelectIndex = row.index
+
+      this.doSetChecked(row.data.menus, row.data.rules)
+    },
+    doSetChecked(allMenus, allPermissions) {
+      this.roleMenuList = []
+      this.rolePermissonList = []
+
+      // const tempMenuList = []
+      const tempPermissonList = []
+
+      this.menuListRes.map((items) => {
+        allMenus.map((mentItem) => {
+          if (items.name == mentItem) {
+            this.roleMenuList.push(items.objectId)
+          }
+        })
+      })
+
+      // set ###
+      this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
+
+      this.permissionListRes.map((items) => {
+        allPermissions.map((mentItem) => {
+          if (items.name == mentItem) {
+            tempPermissonList.push(items.name)
+          }
+        })
+      })
+
+      this.rolePermissonList = [...new Set(tempPermissonList)]
+
+      // set ###
+      this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
+    },
+    // 删除模板
+    async handleDelete(index, row, data) {
+      const res = await delDict(row.objectId)
+      if (res) {
+        this.$message({
+          type: 'success',
+          message: '删除成功',
+        }),
+          data.splice(index, 1)
+      } else {
+        this.$message({
+          type: 'error',
+          message: '删除失败',
+        })
+      }
+    },
+    // 保存模板
+    exportRoletemp(row) {
+      this.$confirm('确定要更新吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(async () => {
+          const checkrole = []
+          const checkmenu = []
+          const selectMenu = this.$refs.menusTree.getCheckedNodes()
+          const selectRermission = this.$refs.permissionTree.getCheckedNodes()
+
+          if (
+            selectMenu &&
+            selectRermission &&
+            selectMenu.length > 0 &&
+            selectRermission.length > 0
+          ) {
+            selectMenu.forEach((item) => {
+              checkmenu.push(item.label)
+            })
+            selectRermission.forEach((item) => {
+              checkrole.push(item.name)
+            })
+          } else {
+            this.$message({ mesaage: '数据为空' })
+            return
+          }
+
+          var newData = row.data
+          if (!row.data.tag) {
+            newData.tag = {}
+          }
+          newData['tag'].appconfig = this.form
+          newData.menus = checkmenu
+          newData.rules = checkrole
+
+          const loading = this.$loading({
+            background: 'rgba(0, 0, 0, 0.5)',
+          })
+          const res = await putDict(row.objectId, {
+            data: newData,
+          })
+          if (res) {
+            loading.close()
+            if (res) {
+              this.$message({ message: '更新成功' })
+            }
+          } else {
+            loading.close()
+            this.$message({ message: '更新失败' })
+          }
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    },
+  },
+}
 </script>
 <style scoped lang="scss">
-  .department {
-    width: 90%;
-    margin: auto;
-    margin-top: 20px;
-  }
+.department {
+  width: 90%;
+  margin: auto;
+  margin-top: 20px;
+}
 </style>
 <style lang="scss">
-  .roles .search .el-input {
-    width: 200px;
+.roles .search .el-input {
+  width: 200px;
+}
+
+.leftTree {
+  span.selected {
+    font-weight: bold;
+    color: #409eff;
+  }
+  .el-tree-node {
+    margin-top: 5px;
   }
 
-  .leftTree {
-    span.selected {
-      font-weight: bold;
-      color: #409eff;
-    }
-    .el-tree-node {
-      margin-top: 5px;
-    }
-
-    .custom-tree-node .el-icon-circle-plus-outline:hover {
-      color: #409eff;
-    }
+  .custom-tree-node .el-icon-circle-plus-outline:hover {
+    color: #409eff;
   }
+}
 </style>

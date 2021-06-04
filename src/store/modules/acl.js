@@ -11,10 +11,10 @@ import { storage } from '@/config'
 const state = () => ({
   admin: false,
   role: [],
-  copyright: getToken('copyright', storage),
-  license: getToken('license', storage),
+  copyright: getToken('copyright', 'sessionStorage'),
+  license: getToken('license', 'sessionStorage'),
   Default: getToken('Default', 'sessionStorage'),
-  logo: getToken('logo', storage),
+  logo: getToken('logo', 'sessionStorage'),
 })
 const getters = {
   copyright: (state) => state.copyright,
@@ -28,11 +28,11 @@ const getters = {
 const mutations = {
   setCopyright(state, copyright) {
     state.copyright = copyright
-    setToken('copyright', copyright, storage)
+    setToken('copyright', copyright, 'sessionStorage')
   },
   setLogo(state, logo) {
     state.logo = logo
-    setToken('logo', logo, storage)
+    setToken('logo', logo, 'sessionStorage')
   },
   setFull(state, admin) {
     state.admin = admin
@@ -45,7 +45,7 @@ const mutations = {
   },
   setLicense(state, license) {
     state.license = license
-    setToken('license', false, storage)
+    setToken('license', false, 'sessionStorage')
   },
   setDefault(state, Default) {
     state.Default = Default

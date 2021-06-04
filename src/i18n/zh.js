@@ -788,6 +788,7 @@ export default {
       left: '左侧',
       save: '保存',
       data: '数据',
+      card: '卡片',
     },
   },
 }

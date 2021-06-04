@@ -453,7 +453,7 @@
     },
     computed: {
       ...mapGetters({
-        roleTree: 'global/roleTree',
+        roleTree: 'user/roleTree',
       }),
       tableFilterData() {
         return this.tempData

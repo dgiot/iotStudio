@@ -177,8 +177,19 @@
         getlicense: 'user/getlicense',
         getDefault: 'user/getDefault',
       }),
+      getCategory(key) {
+        console.log(key)
+        let name = ''
+        this.category.filter((item) => {
+          if (item.type == key) {
+            name = item.data.CategoryName
+          }
+        })
+        return name
+      },
       async initShuwa() {
         console.log(`VUE_APP_URL is ${process.env.VUE_APP_URL}`)
+        console.log(`NODE_ENV is ${process.env.NODE_ENV}`)
         if (this.backgroundimage) {
           this.backgroundImage = this.backgroundimage
         }

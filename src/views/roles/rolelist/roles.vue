@@ -369,7 +369,7 @@
     },
     computed: {
       ...mapGetters({
-        roleTree: 'global/roleTree',
+        roleTree: 'user/roleTree',
       }),
       permissionTreeData() {
         const cloneData = JSON.parse(JSON.stringify(this.dataPermissions))
@@ -558,6 +558,9 @@
             }
           })
         })
+        console.log("this.menuListRes",this.menuListRes)
+        console.log("this.checkMenus",this.checkMenus)
+        console.log("this.roleMenuList",this.roleMenuList)
         // set ###
         this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
 

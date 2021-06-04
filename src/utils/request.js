@@ -55,16 +55,16 @@ const handleData = ({ config, data, status, statusText }) => {
   }
   // 异常处理
   // 若data.msg存在，覆盖默认提醒消息
-  const { url = '' } = config
-  const message = `${url} 后端接口 ${code} 异常：${
-    !data
-      ? CODE_MESSAGE[code]
-      : !data[messageName]
-      ? statusText
-      : data[messageName]
-  }`
-  Vue.prototype.$baseMessage(message, 'error', false, 'vab-hey-message-error')
-  return Promise.reject(message)
+  // const { url = '' } = config
+  // const message = `${url} 后端接口 ${code} 异常：${
+  //   !data
+  //     ? CODE_MESSAGE[code]
+  //     : !data[messageName]
+  //     ? statusText
+  //     : data[messageName]
+  // }`
+  // Vue.prototype.$baseMessage(message, 'error', false, 'vab-hey-message-error')
+  // return Promise.reject(message)
 }
 
 /**

@@ -1129,7 +1129,7 @@
     computed: {
       ...mapGetters({
         token: 'user/token',
-        roleTree: 'global/roleTree',
+        roleTree: 'user/roleTree',
       }),
     },
     mounted() {

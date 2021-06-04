@@ -1,5 +1,6 @@
 <template>
   <div class="resourcechannel">
+    <upload ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="firsttable">
       <el-form
         :inline="true"
@@ -295,6 +296,13 @@
                         "
                         class="image"
                         style="width: 50px; height: 50px"
+                        @click="
+                          uploadCkick(
+                            item.params.ico.default,
+                            index,
+                            'channelregion'
+                          )
+                        "
                       />
                     </el-col>
                     <el-col :span="12">
@@ -349,9 +357,24 @@
             </el-tooltip>
             <el-input
               v-if="item.type == 'string'"
+              v-show="item.title.zh !== '通道ICO'"
               v-model="addchannel[item.showname]"
               style="width: 96%"
             />
+            <el-input
+              v-if="item.title.zh == '通道ICO'"
+              v-show="item.title.zh == '通道ICO'"
+              v-model.number="addchannel[item.showname]"
+              style="width: 96%"
+            >
+              <el-button
+                slot="append"
+                icon="el-icon-upload"
+                @click="
+                  uploadCkick(addchannel[item.showname], index, 'arrlist')
+                "
+              />
+            </el-input>
             <el-input
               v-else-if="item.type == 'integer'"
               v-model.number="addchannel[item.showname]"
@@ -479,10 +502,10 @@
     postChannel,
     putChannel,
   } from '@/api/Channel/index'
-  import { Roletree } from '@/api/Menu/index'
+  import Upload from '@/components/UploadFile/input'
   import { queryRole } from '@/api/Role/index'
   import { subupadte } from '@/api/System/index'
-  import { resourceTypes } from '@/api/Rules'
+  import { putResourceTypes, resourceTypes } from '@/api/Rules'
   import { mapGetters } from 'vuex'
   var subdialog
   import {
@@ -493,9 +516,14 @@
     DISCONNECT_MSG,
   } from '@/utils/wxscoket.js'
   export default {
+    components: {
+      Upload,
+    },
     // inject: ['reload'],
     data() {
       return {
+        channeindex: 0,
+        channeType: '',
         listLoading: false,
         dialogVisible: false,
         isopen: 'suo',
@@ -554,7 +582,7 @@
       }
     },
     ...mapGetters({
-      roleTree: 'global/roleTree',
+      roleTree: 'user/roleTree',
     }),
     mounted() {
       this.Get_Re_Channel(0)
@@ -562,6 +590,23 @@
       this.getApplication()
     },
     methods: {
+      uploadCkick(type, index, channeType) {
+        console.log(type, index)
+        this.channeindex = index
+        this.channeType = channeType
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
+      },
+      fileInfo(info) {
+        console.log('uploadFinish', info)
+        if (this.channeType == 'arrlist') {
+          this.arrlist[this.channeindex].default = info.url
+          console.log(this.arrlist[this.channeindex])
+        } else {
+          this.channelregion[this.channeindex].params.ico.default = info.url
+        }
+      },
       addchannelForm(formName) {
         if (this.resourceid) {
           // this.$message("编辑通道")

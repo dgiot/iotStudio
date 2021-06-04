@@ -7,11 +7,184 @@
  * @FilePath: \dgiot_dashboard\src\views\equipment_management\platform_overview.vue
 -->
 <template>
-  <div class="platform">
+  <div ref="platform" class="platform">
     <div
-      :style="{ height: queryForm.workGroupTreeShow ? '140px' : '40px' }"
+      :style="{ height: queryForm.workGroupTreeShow ? '160px' : '140px' }"
       class="map_header"
     >
+      <div v-show="cardHeight != '0px'" class="map_card">
+        <el-row>
+          <el-col
+            :lg="{ span: '4-8' }"
+            class="card-panel-col"
+            :xs="24"
+            :sm="24"
+            :md="8"
+            :xl="4"
+          >
+            <el-card class="box-card">
+              <el-col :span="12" class="card-left">
+                <vab-icon icon="projector-2-fill" />
+              </el-col>
+              <el-col :span="12" class="card-right">
+                <p>{{ $translateTitle('home.app_count') }}</p>
+                <p>{{ project_count }}</p>
+              </el-col>
+            </el-card>
+          </el-col>
+          <el-col
+            :lg="{ span: '4-8' }"
+            class="card-panel-col"
+            :xs="24"
+            :sm="24"
+            :md="8"
+            :xl="4"
+          >
+            <el-card class="box-card">
+              <el-col :span="12">
+                <vab-icon icon="projector-fill" />
+              </el-col>
+              <el-col :span="12" class="card-right">
+                <p>{{ $translateTitle('home.pro_count') }}</p>
+                <p>{{ product_count }}</p>
+              </el-col>
+            </el-card>
+          </el-col>
+          <el-col
+            :lg="{ span: '4-8' }"
+            class="card-panel-col"
+            :xs="24"
+            :sm="24"
+            :md="8"
+            :xl="4"
+          >
+            <el-card class="box-card">
+              <el-col :span="12">
+                <vab-icon icon="apps-fill" />
+              </el-col>
+              <el-col :span="12" class="card-right">
+                <p>{{ $translateTitle('home.cla_count') }}</p>
+                <p>{{ app_count }}</p>
+              </el-col>
+            </el-card>
+          </el-col>
+          <el-col
+            :xs="24"
+            :sm="24"
+            :md="8"
+            :lg="{ span: '4-8' }"
+            class="card-panel-col"
+            :xl="4"
+          >
+            <el-card class="box-card">
+              <el-col :span="12">
+                <vab-icon icon="device-recover-fill" />
+              </el-col>
+              <el-col :span="12" class="card-right">
+                <p>{{ $translateTitle('home.dev_count') }}</p>
+                <p>{{ dev_count }}</p>
+              </el-col>
+            </el-card>
+          </el-col>
+          <el-col
+            :xs="24"
+            :sm="24"
+            :md="8"
+            :lg="{ span: '4-8' }"
+            class="card-panel-col"
+            :xl="4"
+          >
+            <el-card class="box-card">
+              <el-col :span="12">
+                <vab-icon icon="bar-chart-2-line" />
+              </el-col>
+              <el-col :span="12" class="card-right">
+                <p>{{ $translateTitle('home.dev_online') }}</p>
+                <p>{{ dev_online_count }}</p>
+              </el-col>
+            </el-card>
+          </el-col>
+          <el-col
+            :xs="24"
+            :sm="24"
+            :md="8"
+            :lg="{ span: '4-8' }"
+            class="card-panel-col"
+            :xl="4"
+          >
+            <el-card class="box-card">
+              <el-col :span="12">
+                <vab-icon icon="mail-close-fill" />
+              </el-col>
+              <el-col :span="12" class="card-right">
+                <p>{{ $translateTitle('home.dev_unline') }}</p>
+                <p>{{ dev_count - dev_online_count || 0 }}</p>
+              </el-col>
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-row style="display: none">
+          <el-col
+            v-for="item in projectList"
+            :key="item.id"
+            :xs="24"
+            :sm="24"
+            :md="8"
+            :lg="{ span: '4-8' }"
+          >
+            <el-card class="box-card" shadow="always">
+              <div slot="header" class="clearfix">
+                <span>
+                  {{ item.name }}
+                </span>
+              </div>
+              <div v-if="item.userUnit" class="text item">
+                <span>{{ $translateTitle('home.unit') }}</span>
+                <span>{{ item.userUnit }}</span>
+              </div>
+              <div v-if="item.scale" class="text item">
+                <span>{{ $translateTitle('home.scale') }}：</span>
+                <span>{{ item.scale }}</span>
+              </div>
+              <div class="text item">
+                <span>{{ $translateTitle('home.category') }}：</span>
+                <span>{{ getCategory(item.category) }}</span>
+              </div>
+              <div class="text item">
+                <span>{{ $translateTitle('home.updatedAt') }}：</span>
+                <span>
+                  {{
+                    new Date(item.updatedAt).toLocaleDateString() +
+                    ' ' +
+                    new Date(item.updatedAt).toLocaleTimeString()
+                  }}
+                </span>
+              </div>
+              <div class="text item" style="text-align: center">
+                <el-button-group>
+                  <el-button
+                    style="margin-right: 3px"
+                    size="mini"
+                    type="success"
+                    @click="Gotoproduct(item.name)"
+                  >
+                    {{ $translateTitle('home.preview') }}
+                  </el-button>
+                  <el-button
+                    v-if="NODE_ENV == 'development'"
+                    size="mini"
+                    type="primary"
+                    target="_blank"
+                    @click="handleClickVisit(item)"
+                  >
+                    {{ $translateTitle('home.konva') }}
+                  </el-button>
+                </el-button-group>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
       <vab-query-form>
         <vab-query-form-top-panel>
           <el-form
@@ -86,16 +259,56 @@
                 {{ $translateTitle('concentrator.search') }}
               </el-button>
               <el-button
+                :icon="leftWidth != '0px' ? 'el-icon-back' : 'el-icon-right'"
+                type="primary"
+                @click="toggleLeftWidth(leftWidth)"
+              >
+                {{
+                  leftWidth != '0px'
+                    ? $translateTitle('konva.hide')
+                    : $translateTitle('konva.show')
+                }}
+                {{ $translateTitle('konva.left') }}
+              </el-button>
+              <el-button
+                :icon="
+                  fixedPaddingTop != '0px' ? 'el-icon-top' : 'el-icon-bottom'
+                "
+                type="primary"
+                @click="setPadding(fixedPaddingTop)"
+              >
+                {{
+                  fixedPaddingTop != '0px'
+                    ? $translateTitle('konva.hide')
+                    : $translateTitle('konva.show')
+                }}
+                {{ $translateTitle('konva.top') }}
+              </el-button>
+              <el-button
                 :icon="leftRow == 18 ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
                 type="primary"
                 @click="leftRow == 18 ? (leftRow = 24) : (leftRow = 18)"
+              >
+                {{
+                  cardHeight != '0px'
+                    ? $translateTitle('konva.hide')
+                    : $translateTitle('konva.show')
+                }}
+                {{ $translateTitle('konva.right') }}
+              </el-button>
+              <el-button
+                :icon="
+                  cardHeight != '0px' ? 'el-icon-s-unfold' : 'el-icon-s-fold'
+                "
+                type="primary"
+                @click="toggleCard(cardHeight)"
               >
                 {{
                   leftRow == 18
                     ? $translateTitle('konva.hide')
                     : $translateTitle('konva.show')
                 }}
-                {{ $translateTitle('konva.right') }}
+                {{ $translateTitle('konva.card') }}
               </el-button>
             </el-form-item>
           </el-form>
@@ -251,6 +464,8 @@
   import { queryDevice } from '@/api/Device'
   import Category from '@/api/Mock/Category'
   import { Roletree, getToken } from '@/api/Menu'
+  import { Websocket } from '@/utils/wxscoket.js'
+  import { uuid } from '@/utils'
   import {
     BmNavigation,
     BaiduMap,
@@ -295,6 +510,9 @@
           children: 'children',
           label: 'name',
         },
+        leftWidth: '',
+        cardHeight: '',
+        fixedPaddingTop: '',
         curDepartmentId: '',
         leftRow: 18,
         deptTreeData: [],
@@ -316,7 +534,7 @@
           columns: [],
           rows: [],
         },
-        sizeZoom: 10,
+        sizeZoom: 6,
         tableData: [],
         chartSetting: {
           yAxis: {
@@ -343,13 +561,19 @@
     },
     computed: {
       ...mapGetters({
-        roleTree: 'global/roleTree',
-        _Product: 'global/_Product',
+        roleTree: 'user/roleTree',
+        _Product: 'user/_Product',
         language: 'settings/language',
         token: 'user/token',
       }),
     },
     mounted() {
+      this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
+        'padding-top'
+      ]
+      this.leftWidth = window.getComputedStyle($('.vab-side-bar')[0])['width']
+      this.cardHeight = window.getComputedStyle($('.map_card')[0])['height']
+      console.log(this.fixedPaddingTop, this.leftWidth, this.cardHeight)
       this.getAllAxios({}, this.token, false)
       this.getDevices()
       this.getRoletree()
@@ -363,6 +587,72 @@
         setRoleTree: 'global/setRoleTree',
         set_Product: 'global/set_Product',
       }),
+      /*
+       连接webscroket
+       */
+      getCategory(key) {
+        console.log(key)
+        let name = ''
+        this.category.filter((item) => {
+          if (item.type == key) {
+            name = item.data.CategoryName
+          }
+        })
+        return name
+      },
+      connectScoket() {
+        var channeltopic = `thing/${this.queryForm.access_token}/${uuid(6)}`
+        console.log('订阅mqtt channeltopic', channeltopic)
+        Websocket.add_hook(channeltopic, (Msg) => {
+          console.log('收到消息', Msg)
+        })
+      },
+      toggleCard(height) {
+        console.log('cardHeight', height)
+        if (height != '0px') {
+          $('.map_card').css({ height: '0px' })
+          $('.map_header').css({ height: '60px' })
+          this.cardHeight = '0px'
+        } else {
+          $('.map_card').css({ height: '98px' })
+          $('.map_header').css({ height: '160px' })
+          this.cardHeight = '98px'
+        }
+      },
+      toggleLeftWidth(width) {
+        console.log(width, 'width')
+        if (width != '0px') {
+          $('.vab-side-bar').css({ width: '0px' })
+          $('.vab-main').css({ 'margin-left': '0px' })
+          this.leftWidth = '0px'
+        } else {
+          $('.vab-side-bar').css({ width: '200px' })
+          $('.vab-main').css({ 'margin-left': '200px' })
+          this.leftWidth = '200px'
+        }
+      },
+      setPadding(top) {
+        console.log(top, 'top')
+        if (top != '0px') {
+          $('.fixed').css({ 'padding-top': '0px' })
+          $('.fixed-header').css({ height: '0px', display: 'none' })
+          $('.vab-tabs').css({ 'nim-height': '0px' })
+          $('.baidu_map').css({ height: 'calc(78vh + 90px + 160px)' })
+
+          $('section').css({ height: 'calc(100vh - 60px* 2.7 + 110px)' })
+        } else {
+          $('.fixed').css({ 'padding-top': '110px' })
+          $('.fixed-header').css({ height: '110px', display: 'block' })
+          $('.vab-tabs').css({ 'nim-height': '50px' })
+          $('.baidu_map').css({ height: 'calc(78vh - 20px)' })
+          $('section').css({ height: 'calc(100vh - 60px* 2.7)' })
+        }
+        this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
+          'padding-top'
+        ]
+        console.log($('.fixed')[0].style)
+        console.log(this.fixedPaddingTop)
+      },
       async getProduct() {
         const params = {
           count: 'objectId',
@@ -415,6 +705,7 @@
         const { name, objectId } = data
         this.curDepartmentId = objectId
         console.log('this.queryForm.access_token', this.queryForm.access_token)
+        this.connectScoket()
       },
       async getDevices() {
         const { results } = await queryDevice({})
@@ -426,67 +717,6 @@
         })
         this.tableData = results
       },
-      // async getAllAxios() {
-      //   console.log(process.env)
-      //   this.$baseColorfullLoading(
-      //     1,
-      //     this.$translateTitle('home.messag_loding')
-      //   )
-      //   // （1）如果列为主键，count(列名)效率优于count(1)
-      //   // （2）如果列不为主键，count(1)效率优于count(列名)
-      //   // （3）如果表中存在主键，count(主键列名)效率最优
-      //   // （4）如果表中只有一列，则count(*)效率最优
-      //   // （5）如果表有多列，且不存在主键，则count(1)效率优于count(*)
-      //   let params = {
-      //     // count: 'objectId',
-      //     count: 'objectId',
-      //     limit: 1,
-      //     skip: 0,
-      //     where: {},
-      //   }
-      //   const res = await this.$moreHttp({
-      //     dev_num: await dev_count(params),
-      //     app_num: await app_count(params),
-      //     projectList: await app_count({
-      //       limit: 30,
-      //     }),
-      //     Product_num: await product_count(params),
-      //     Project_num: await Project_count(params),
-      //     dev_active_num: await dev_active_count(
-      //       Object.assign(params, {
-      //         where: {
-      //           status: 'ACTIVE',
-      //         },
-      //       })
-      //     ),
-      //     dev_online_num: await dev_online_count(
-      //       Object.assign(params, {
-      //         where: {
-      //           status: 'ONLINE',
-      //         },
-      //       })
-      //     ),
-      //   })
-      //   const {
-      //     dev_num = { count: 0 },
-      //     Product_num = { count: 0 },
-      //     Project_num = { count: 0 },
-      //     app_num = { count: 0 },
-      //     dev_active_num = { count: 0 },
-      //     dev_online_num = { count: 0 },
-      //     projectList = { results: {} },
-      //   } = res
-      //   this.$baseColorfullLoading().close()
-      //   console.log(res)
-      //   console.log(dev_online_num)
-      //   this.dev_count = dev_num.count || 0
-      //   this.product_count = Product_num.count
-      //   this.project_count = Project_num.count
-      //   this.app_count = app_num.count
-      //   this.projectList = projectList.results
-      //   this.dev_active_count = dev_active_num.count
-      //   this.dev_online_count = dev_online_num.count
-      // },
       async getAllAxios(data, token, flag) {
         let product
         if (this.queryForm.account != '' || this.queryForm.account != 0) {
@@ -650,7 +880,7 @@
 <style lang="scss" scoped>
   .platform {
     .map_header {
-      height: 40px;
+      height: 160px;
       .workGroupTreeShow {
         height: 100px;
         overflow: auto;
@@ -675,6 +905,13 @@
     //}
     .box-card {
       margin: 5px;
+    }
+    .el-card__body {
+      div {
+        p {
+          text-align: center;
+        }
+      }
     }
     .clearfix {
       ont-weight: bolder;
