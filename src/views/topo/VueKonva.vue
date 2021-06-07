@@ -498,8 +498,8 @@
         })
         _this.productconfig = results[0]
         console.log(_this.productconfig)
-        _this.$refs['operation'].productconfig = results[0]
         if (message == 'SUCCESS') {
+          _this.$refs['operation'].productconfig = results[0]
           console.log(data.Stage.attrs.id)
           _this.globalStageid = data.Stage.attrs.id
           _this.createKonva(data, _this.globalStageid, 'create')

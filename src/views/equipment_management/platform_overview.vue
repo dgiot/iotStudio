@@ -600,8 +600,8 @@
         })
       },
       /*
-       连接webscroket
-       */
+     连接webscroket
+     */
       getCategory(key) {
         console.log(key)
         let name = ''
