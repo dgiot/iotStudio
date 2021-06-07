@@ -1,5 +1,6 @@
 <template>
   <div class="devproduct">
+    <upload ref="uploadFinish" @fileInfo="fileInfo" />
     <el-tabs v-model="activeName">
       <el-tab-pane
         :label="$translateTitle('product.myproduct') + '(' + total + ')'"
@@ -250,7 +251,7 @@
                   v-model="form.relationApp"
                   placeholder="请选择所属应用"
                   readonly
-                  :disabled="custom_status == 'edit'"
+                  :disabled="custom_status == 'edit' && form.relationApp != ''"
                   @focus="showTree = !showTree"
                 />
                 <div v-if="showTree">
@@ -929,6 +930,7 @@
   </div>
 </template>
 <script>
+  import Upload from '@/components/UploadFile/input'
   import { mapGetters } from 'vuex'
   import { delProduct, getProduct, putProduct } from '@/api/Product'
   import { getAllunit } from '@/api/Dict/index'
@@ -940,7 +942,7 @@
   import vueJsonEditor from 'vue-json-editor'
   import Category from '@/api/Mock/Category'
   export default {
-    components: { vueJsonEditor },
+    components: { vueJsonEditor, Upload },
     data() {
       return {
         moduleTitle: this.$translateTitle('product.createproduct'),
@@ -1631,9 +1633,16 @@
         if (row.icon) {
           this.imageUrl = row.icon
         }
+        let rows = []
         for (var key in row.ACL) {
-          this.form.relationApp = key ? key.substr(5) : ''
+          rows.push(key)
+          if (key.includes('role')) {
+            console.log(key, 'key')
+            this.form.relationApp = key ? key.substr(5) : ''
+          }
         }
+        console.log(rows)
+        console.log(this.form.relationApp)
         // this.selectApp(this.form.relationApp)
       },
       async Industry() {

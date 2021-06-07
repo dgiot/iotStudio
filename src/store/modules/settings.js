@@ -53,7 +53,7 @@ const { collapse } = getLocalStorage('collapse')
 const { language } = getLocalStorage('language')
 const state = () => ({
   showThemeSetting: showThemeSetting,
-  logo: getToken('logo', storage),
+  logo: getToken('logo', 'sessionStorage'),
   title: getToken('title', 'sessionStorage') || '物联网开发平台',
   device: 'desktop',
   collapse: collapse || false,

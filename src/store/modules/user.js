@@ -23,18 +23,19 @@ const state = () => ({
   roleTree: getToken('roleTree', 'sessionStorage'), // 处理数据类型不匹配
   _Product: getToken('Product', 'sessionStorage'),
   token: getToken(tokenTableName, storage),
-  name: getToken('name', storage),
-  username: getToken('username', storage),
+  name: getToken('name', 'sessionStorage'),
+  username: getToken('username', 'sessionStorage'),
   setlogo: getToken('logo', 'sessionStorage'),
   setBackgroundimage: getToken('backgroundimage', 'sessionStorage'),
-  avatar: getToken('avatar', storage),
-  Copyright: getToken('Copyright', storage),
+  avatar: getToken('avatar', 'sessionStorage'),
+  Copyright: getToken('Copyright', 'sessionStorage'),
   logo:
-    getToken('logo', storage) || 'http://www.iotn2n.com/favicon.ico?1558342112',
+    getToken('logo', 'sessionStorage') ||
+    'http://www.iotn2n.com/favicon.ico?1558342112',
   backgroundimage:
-    getToken('backgroundimage', storage) ||
+    getToken('backgroundimage', 'sessionStorage') ||
     'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
-  objectId: getToken('objectId', storage),
+  objectId: getToken('objectId', 'sessionStorage'),
 })
 const getters = {
   language: (state) => state.language,
@@ -60,19 +61,19 @@ const mutations = {
   },
   setname(state, name) {
     state.name = name
-    setToken('name', name, storage)
+    setToken('name', name, 'sessionStorage')
   },
   setCopyright(state, Copyright) {
     state.Copyright = Copyright
-    setToken('logo', Copyright, storage)
+    setToken('logo', Copyright, 'storagesessionStorage')
   },
   setlogo(state, url) {
     state.logo = url
-    setToken('logo', url, storage)
+    setToken('logo', url, 'sessionStorage')
   },
   setBackgroundimage(state, url) {
     state.backgroundimage = url
-    setToken('backgroundimage', url, storage)
+    setToken('backgroundimage', url, 'sessionStorage')
   },
   /**
    * @description 设置用户登录Id
@@ -81,7 +82,7 @@ const mutations = {
    */
   setObejectId(state, objectId) {
     state.objectId = objectId
-    setToken('objectId', objectId, storage)
+    setToken('objectId', objectId, 'sessionStorage')
   },
   /**
    * @description 设置token
@@ -99,7 +100,7 @@ const mutations = {
    */
   setUsername(state, username) {
     state.username = username
-    setToken('username', username, storage)
+    setToken('username', username, 'sessionStorage')
   },
   /**
    * @description 设置头像
@@ -108,7 +109,7 @@ const mutations = {
    */
   setAvatar(state, avatar) {
     state.avatar = avatar
-    setToken('avatar', avatar, storage)
+    setToken('avatar', avatar, 'sessionStorage')
   },
 }
 const actions = {
@@ -273,7 +274,7 @@ const actions = {
   },
   async getlicense({ commit, dispatch }) {
     const { result } = await license()
-    setToken('license', false, storage)
+    setToken('license', false)
     if (result) dispatch('acl/setLicense', result, { root: true })
   },
   async getDefault({ commit, dispatch }) {
