@@ -400,8 +400,8 @@
         let params = {
           config: upconfig,
         }
-        console.clear()
-        console.log('11111111')
+        // console.clear()
+        // console.log('11111111')
         await putProduct(productid, params)
           .then((res) => {
             console.log(res, '产品组态更新成功')
@@ -415,14 +415,20 @@
       // 处理mqtt信息
       handleMqttMsg(subdialogid) {
         let _this = this
+
         var channeltopic = new RegExp('thing/' + subdialogid + '/post')
         Websocket.add_hook(channeltopic, (Msg) => {
+          let decodeMqtt
+          let updataId = []
           console.log('收到消息', Msg)
           if (!isBase64(Msg)) {
             console.log('非base64数据类型')
             return
+          } else {
+            decodeMqtt = JSON.parse(Base64.decode(Msg))
+            console.log('消息解密消息', decodeMqtt)
           }
-          let decodeMqtt = JSON.parse(Base64.decode(Msg))
+
           console.log(decodeMqtt.konva)
           const Shape = decodeMqtt.konva
           // apply transition to all nodes in the array
@@ -447,12 +453,17 @@
                     easing: Konva.Easings.ElasticEaseOut,
                   }).play()
                 )
+              } else {
+                updataId.push(i.id)
               }
             })
           })
+          if (updataId) {
+            console.log('没有对应的id', updataId)
+          }
           _this.stage.batchDraw()
           console.log('konva数据更新成功')
-          _this.updataProduct(this.productid)
+          // _this.updataProduct(this.productid)
         })
       },
       // 取消订阅mqtt

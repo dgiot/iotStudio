@@ -703,18 +703,15 @@
         this.deptTreeData = this.roleTree
       },
       change(e) {
-        $('.el-scrollbar').css({ display: 'block' })
+        console.log(e)
         if (e) {
           $('.el-tree').css({ height: '100px', display: 'block' })
-        } else {
-          $('.el-tree').css({ height: '0px', display: 'none' })
         }
       },
       async handleNodeClick(data, node) {
         console.log(this.$refs['workGroup'].$el)
         $('.el-tree').css({ height: '0px', display: 'none' })
         $('.el-select-dropdown').css({ display: 'none' })
-        $('.el-scrollbar').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
         this.treeDataValue = data.label
         console.log(this.treeDataValue)
