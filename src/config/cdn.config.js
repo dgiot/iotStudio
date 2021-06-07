@@ -75,6 +75,7 @@ let staticUrl = {
     'https://unpkg.com/codemirror@5.58.3/addon/lint/json-lint.js',
     'https://unpkg.com/vue-codemirror@4.0.6/dist/vue-codemirror.js',
     'https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js',
+    'https://api.map.baidu.com/getscript?v=3.0&ak=fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG',
   ],
 }
 // 统计代码

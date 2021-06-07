@@ -209,36 +209,35 @@
               </el-select>
             </el-form-item>
             <el-form-item :label="$translateTitle('user.department')">
-              <el-input
-                ref="workGroupInput"
+              <el-select
                 v-model="queryForm.workGroupName"
-                readonly
-                auto-complete="off"
-                @focus="
-                  queryForm.workGroupTreeShow = !queryForm.workGroupTreeShow
-                "
-              />
-              <div v-if="queryForm.workGroupTreeShow" class="workGroupTreeShow">
-                <el-tree
-                  v-if="queryForm.workGroupTreeShow"
-                  ref="workGroup"
-                  :data="deptTreeData"
-                  :props="roleProps"
-                  class="workGroupTree"
-                  node-key="index"
-                  default-expand-all
-                  :expand-on-click-node="false"
+                placeholder="请选择"
+                clearable
+                @visible-change="change($event)"
+              >
+                <el-option
+                  :value="treeDataValue"
+                  style="height: auto; padding: 0"
                 >
-                  <div slot-scope="{ node, data }" class="custom-tree-node">
-                    <span
-                      :class="{ selected: data.objectId == curDepartmentId }"
-                      @click="handleNodeClick(data, node)"
-                    >
-                      {{ node.label }}
-                    </span>
-                  </div>
-                </el-tree>
-              </div>
+                  <el-tree
+                    ref="workGroup"
+                    :data="deptTreeData"
+                    :props="roleProps"
+                    node-key="index"
+                    default-expand-all
+                    :expand-on-click-node="false"
+                  >
+                    <div slot-scope="{ node, data }" class="custom-tree-node">
+                      <span
+                        :class="{ selected: data.objectId == curDepartmentId }"
+                        @click="handleNodeClick(data, node)"
+                      >
+                        {{ node.label }}
+                      </span>
+                    </div>
+                  </el-tree>
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item :label="$translateTitle('user.createdtime')">
               <el-date-picker
@@ -351,13 +350,14 @@
               <bm-marker
                 v-for="(item, index) in tableData"
                 :key="item.objectId"
+                :dragging="true"
                 :content="item.name"
                 :position="{
                   lng: item.location.longitude,
                   lat: item.location.latitude,
                 }"
-                :dragging="true"
                 animation="BMAP_ANIMATION_BOUNCE"
+                @click="show = !show"
               >
                 <bm-label
                   :content="item.name"
@@ -479,7 +479,6 @@
     BmMapType,
     BmScale,
   } from 'vue-baidu-map'
-  import store from '@/store'
   export default {
     name: 'Index',
     components: {
@@ -515,6 +514,7 @@
         fixedPaddingTop: '',
         curDepartmentId: '',
         leftRow: 18,
+        treeDataValue: '',
         deptTreeData: [],
         chartExtend: {
           series: {
@@ -534,7 +534,8 @@
           columns: [],
           rows: [],
         },
-        sizeZoom: 6,
+        show: false,
+        sizeZoom: 5,
         tableData: [],
         chartSetting: {
           yAxis: {
@@ -587,6 +588,17 @@
         setRoleTree: 'global/setRoleTree',
         set_Product: 'global/set_Product',
       }),
+      // 设备详情
+      deviceToDetail(row) {
+        this.$router.push({
+          path: '/roles/editdevices',
+          query: {
+            deviceid: row.objectId,
+            nodeType: row.nodeType,
+            ischildren: 'false',
+          },
+        })
+      },
       /*
        连接webscroket
        */
@@ -690,8 +702,22 @@
           })
         this.deptTreeData = this.roleTree
       },
+      change(e) {
+        $('.el-scrollbar').css({ display: 'block' })
+        if (e) {
+          $('.el-tree').css({ height: '100px', display: 'block' })
+        } else {
+          $('.el-tree').css({ height: '0px', display: 'none' })
+        }
+      },
       async handleNodeClick(data, node) {
+        console.log(this.$refs['workGroup'].$el)
+        $('.el-tree').css({ height: '0px', display: 'none' })
+        $('.el-select-dropdown').css({ display: 'none' })
+        $('.el-scrollbar').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
+        this.treeDataValue = data.label
+        console.log(this.treeDataValue)
         this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
         if (node.level != 1) {
           // 在这里获取点击厂家的session
@@ -706,6 +732,7 @@
         this.curDepartmentId = objectId
         console.log('this.queryForm.access_token', this.queryForm.access_token)
         this.connectScoket()
+        // $('.el-select-dropdown').css({ height: '0px', display: 'none' })
       },
       async getDevices() {
         const { results } = await queryDevice({})
@@ -884,6 +911,7 @@
       .workGroupTreeShow {
         height: 100px;
         overflow: auto;
+        overflow-y: scroll;
       }
     }
     box-sizing: border-box;
@@ -904,7 +932,32 @@
     //  }
     //}
     .box-card {
+      //background: red;
       margin: 5px;
+      i {
+        color: #fff;
+      }
+    }
+
+    .map_card ::v-deep .el-row {
+      .card-panel-col:nth-child(1) .el-card {
+        background: #673bb7;
+      }
+      .card-panel-col:nth-child(2) .el-card {
+        background: #8bc24a;
+      }
+      .card-panel-col:nth-child(3) .el-card {
+        background: #00bcd5;
+      }
+      .card-panel-col:nth-child(4) .el-card {
+        background: #ea1e63;
+      }
+      .card-panel-col:nth-child(5) .el-card {
+        background: #ff4c4f;
+      }
+      .card-panel-col:nth-child(6) .el-card {
+        background: #1890ff;
+      }
     }
     .el-card__body {
       div {
@@ -924,8 +977,11 @@
     .card-right p:first-child {
       padding: 5px;
       margin: 0px;
-      font-size: 14px;
       font-weight: bolder;
+    }
+    .card-right p {
+      color: #fff;
+      font-size: 18px;
     }
   }
   .text {

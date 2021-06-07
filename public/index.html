@@ -16,7 +16,7 @@
     <link href="<%= BASE_URL %>static/css/loading.css" rel="stylesheet" />
     <!-- 引入样式 -->
     <% for(var css of htmlWebpackPlugin.options.staticUrl.css) { %>
-    <link rel="stylesheet" href="<%=css%>?<%=new Date().getTime()%>" />
+    <link rel="stylesheet" href="<%=css%>" />
     <% } %>
   </head>
   <body>
@@ -37,8 +37,7 @@
     </div>
     <!-- 引入JS -->
     <% for(var js of htmlWebpackPlugin.options.staticUrl.js) { %>
-    <script charset="utf-8" src="<%=js%>?<%=new Date().getTime()%>"></script>
+    <script charset="utf-8" src="<%=js%>"></script>
     <% } %>
-    <script charset="utf-8" src="https://api.map.baidu.com/getscript?v=3.0&ak=fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG" async></script>
   </body>
 </html>
