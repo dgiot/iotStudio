@@ -511,7 +511,7 @@
         _konvarow.appendChild(div)
         div.setAttribute('id', globalStageid)
         console.log('globalStageid', globalStageid)
-        console.log(Stage, 'Stage')
+        console.log(JSON.stringify(Stage), 'Stage')
         _this.stage = Konva.Node.create(Stage, globalStageid)
         console.log('data', data)
         var Layer = _this.stage.find('Layer')[0]
@@ -555,7 +555,7 @@
         })
         const Group = _this.stage.find('Group')
         const Text = _this.stage.find('Text')
-        console.clear()
+        // console.clear()
         console.log(Text, 'Text')
         Text.each(function (_G) {
           _G.on('mouseenter', function () {
@@ -682,17 +682,54 @@
           })
         })
         var Imgage = _this.stage.find('Image')
-        console.log('Imgage', Imgage)
-        var _group = _this.stage.find('Group')[0]
-        Imgage.each(function (img) {
-          // 这里会引起内存泄露
-          console.log('无法loadjson 图片,所以使用konva 的api創建', img.attrs)
-          // 图片加载会耗时 需解决
-          Konva.Image.fromURL(img.attrs.source, function (darthNode) {
-            darthNode.setAttrs(img.attrs)
-            _group.add(darthNode)
+        Imgage.forEach((node) => {
+          console.log('img node ', node)
+          const img = new Image()
+          img.src = node.getAttr('source')
+          img.onload = () => {
+            node.image(img)
+            _this.stage.batchDraw()
+          }
+        })
+        Group.each(function (_G) {
+          _G.on('dblclick', (e) => {
+            // 创建图形选框事件
+            const tr = new Konva.Transformer({
+              borderStroke: '#000', // 虚线颜色
+              borderStrokeWidth: 1, //虚线大小
+              borderDash: [5], // 虚线间距
+              keepRatio: false, // 不等比缩放
+              id: `Transformer_${uuid(6)}`,
+            })
+            Layer.add(tr)
+            tr.attachTo(e.target)
             Layer.draw()
-            Layer.batchDraw()
+            // _this.ShapeVisible = true
+            console.log(`#${e.target.attrs.id}`)
+            var node = e.target
+            console.log('当前图层层级', Number(node.zIndex()))
+            _this.setGraphNow(e.target)
+            _this.$refs['operation'].ShapeIndex = Number(node.zIndex())
+            _this.$refs['operation'].ShapeOpacity = node.opacity()
+            if (!_this.rightrow && !_this.isDevice) _this.rightrow = 6
+            // _this.$refs['operation'].Shapeconfig = node.toJSON()
+          })
+          _G.on('mouseup', (e) => {
+            console.log(e, 'mouseup')
+            if (!_this.isDevice && _this.productid) _this.headevisible = true
+
+            document.body.style.cursor = 'pointer'
+          })
+          _G.on('mouseover', (e) => {
+            document.body.style.cursor = 'pointer'
+          })
+          _G.on('mouseout', (e) => {
+            // _this.stage.find('Transformer').destroy() // 禁用后 无法拖动
+            const id = e.target.id()
+            const item = _this.stage.find((i) => i.id === id)
+            item.x = e.target.x()
+            item.y = e.target.y()
+            document.body.style.cursor = 'default'
           })
         })
         Layer.draw()
