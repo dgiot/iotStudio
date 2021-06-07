@@ -9,7 +9,7 @@
 <template>
   <div ref="platform" class="platform">
     <div
-      :style="{ height: queryForm.workGroupTreeShow ? '160px' : '140px' }"
+      :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
       class="map_header"
     >
       <div v-show="cardHeight != '0px'" class="map_card">
@@ -600,8 +600,8 @@
         })
       },
       /*
-       连接webscroket
-       */
+     连接webscroket
+     */
       getCategory(key) {
         console.log(key)
         let name = ''
@@ -623,11 +623,9 @@
         console.log('cardHeight', height)
         if (height != '0px') {
           $('.map_card').css({ height: '0px' })
-          $('.map_header').css({ height: '60px' })
           this.cardHeight = '0px'
         } else {
           $('.map_card').css({ height: '98px' })
-          $('.map_header').css({ height: '160px' })
           this.cardHeight = '98px'
         }
       },
@@ -709,7 +707,6 @@
         }
       },
       async handleNodeClick(data, node) {
-        console.log(this.$refs['workGroup'].$el)
         $('.el-tree').css({ height: '0px', display: 'none' })
         $('.el-select-dropdown').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
@@ -904,7 +901,7 @@
 <style lang="scss" scoped>
   .platform {
     .map_header {
-      height: 160px;
+      height: auto;
       .workGroupTreeShow {
         height: 100px;
         overflow: auto;
