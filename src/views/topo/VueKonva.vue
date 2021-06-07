@@ -459,7 +459,7 @@
             })
           })
           if (updataId) {
-            console.log('没有对应的id', updataId)
+            console.log('以下组态id未更新', updataId)
           }
           _this.stage.batchDraw()
           console.log('konva数据更新成功')

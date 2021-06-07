@@ -728,6 +728,14 @@ function s4() {
     .substring(1)
 }
 
+export function json2params(json, slice = '&') {
+  return Object.keys(json)
+    .reduce((acc, item) => {
+      return String(acc) + item + '=' + json[item] + slice
+    }, '')
+    .slice(0, -1)
+}
+
 export function isBase64(str) {
   if (str === '' || str.trim() === '') {
     return false

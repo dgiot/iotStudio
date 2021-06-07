@@ -1206,7 +1206,6 @@
         }
       }
       return {
-        language: '',
         isALL: true,
         sizeZoom: 10,
         activeName: 'first',
@@ -1221,7 +1220,6 @@
         popoverVisible: false,
         vabicon: 'ancient-gate-fill',
         Company: sessionStorage.getItem('title') || '',
-        access_token: '',
         curDepartmentId: '',
         deptTreeData: [],
         roleProps: {
@@ -1336,8 +1334,7 @@
       ...mapGetters({
         token: 'user/token',
         roleTree: 'user/roleTree',
-        access_token: 'user/token',
-        language: 'sessings/token',
+        language: 'settings/language',
       }),
     },
     watch: {
@@ -1500,7 +1497,7 @@
           const { access_token = '' } = await getToken(data.name)
           this.access_token = access_token
         } else {
-          this.access_token = store.getters['user/token']
+          this.access_token = this.token
         }
         // 点击的公司名
         const { name, objectId } = data

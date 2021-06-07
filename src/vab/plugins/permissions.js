@@ -64,7 +64,7 @@ router.beforeEach(async (to, from, next) => {
       } catch (err) {
         console.error('错误拦截:', err)
         await store.dispatch('user/resetAll')
-        next(toLoginRoute(to.path))
+        next(toLoginRoute(to))
       }
     }
   } else {
@@ -77,16 +77,19 @@ router.beforeEach(async (to, from, next) => {
           replace: true,
         })
       } else next()
-    } else next(toLoginRoute(to.path))
+    } else next(toLoginRoute(to))
   }
 })
 router.afterEach((to) => {
   // 输出路由信息，方便找到点击的页面
-  console.log(
-    '%c%s',
-    'color: red;font-size: 12px;',
-    to.meta.component || JSON.stringify(to)
-  )
-  if (to.meta.title) document.title = getPageTitle(`${to.meta.title}`)
+  let routecInfo
+  if (to.meta) {
+    routecInfo = to.meta.component
+    document.title = getPageTitle(`${to.meta.title}`)
+  } else {
+    routecInfo = to
+  }
+  console.log('%c%s', 'color: red;font-size: 12px;', routecInfo)
+
   if (VabProgress.status) VabProgress.done()
 })

@@ -87,7 +87,7 @@
       },
       async logout() {
         await this._logout()
-        await this.$router.push(toLoginRoute(this.$route.path))
+        await this.$router.push(toLoginRoute(this.$route))
       },
     },
   }

@@ -498,8 +498,8 @@
         })
       },
       handleCurrentChange(val) {
-        console.log(val)
-        this.itemSwagger = val.swagger
+        const { swagger = {} } = val
+        this.itemSwagger = swagger
         // this.currentRow = val.code;
         // this.$refs.singleTable.setCurrentRow(val.code);
         editor = ace.edit('editor')

@@ -2,7 +2,7 @@ import path from 'path'
 import { isExternal } from '@/utils/validate'
 import { hasAccess } from '@/utils/hasAccess'
 import { recordRoute } from '@/config'
-
+import { json2params } from '@/utils/index'
 /**
  * @description all模式渲染后端返回路由,支持包含views路径的所有页面
  * @param asyncRoutes
@@ -71,10 +71,11 @@ export function handleActivePath(route, isTabsBar = false) {
  * @param currentPath 当前页面地址
  */
 export function toLoginRoute(currentPath) {
+  const { path = '', params = {}, query = {} } = currentPath
   if (recordRoute && currentPath !== '/')
     return {
       path: '/login',
-      query: { redirect: currentPath },
+      query: { redirect: path + '?' + json2params(query) },
       replace: true,
     }
   else return { path: '/login', replace: true }
