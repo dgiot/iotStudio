@@ -8,8 +8,14 @@
 -->
 <template>
   <div ref="platform" class="platform">
+    <mqtt
+      ref="mqtt"
+      :connect="isConnect"
+      :topic="channeltopic"
+      @mqttMsg="mqttMsg"
+    />
     <div
-      :style="{ height: queryForm.workGroupTreeShow ? '160px' : '140px' }"
+      :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
       class="map_header"
     >
       <div v-show="cardHeight != '0px'" class="map_card">
@@ -458,13 +464,13 @@
   </div>
 </template>
 <script>
+  import mqtt from '@/components/Mqtt'
   import { queryProduct } from '@/api/Product'
   import { mapGetters, mapMutations } from 'vuex'
   import { batch } from '@/api/Batch/index'
   import { queryDevice } from '@/api/Device'
   import Category from '@/api/Mock/Category'
   import { Roletree, getToken } from '@/api/Menu'
-  import { Websocket } from '@/utils/wxscoket.js'
   import { uuid } from '@/utils'
   import {
     BmNavigation,
@@ -493,9 +499,12 @@
       BmGeolocation,
       BmCityList,
       BmMarker,
+      mqtt,
     },
     data() {
       return {
+        channeltopic: '',
+        isConnect: false,
         queryForm: {
           account: '',
           searchDate: '',
@@ -600,8 +609,8 @@
         })
       },
       /*
-       连接webscroket
-       */
+     连接webscroket
+     */
       getCategory(key) {
         console.log(key)
         let name = ''
@@ -612,22 +621,16 @@
         })
         return name
       },
-      connectScoket() {
-        var channeltopic = `thing/${this.queryForm.access_token}/${uuid(6)}`
-        console.log('订阅mqtt channeltopic', channeltopic)
-        Websocket.add_hook(channeltopic, (Msg) => {
-          console.log('收到消息', Msg)
-        })
+      mqttMsg(e) {
+        console.log(e)
       },
       toggleCard(height) {
         console.log('cardHeight', height)
         if (height != '0px') {
           $('.map_card').css({ height: '0px' })
-          $('.map_header').css({ height: '60px' })
           this.cardHeight = '0px'
         } else {
           $('.map_card').css({ height: '98px' })
-          $('.map_header').css({ height: '160px' })
           this.cardHeight = '98px'
         }
       },
@@ -709,7 +712,6 @@
         }
       },
       async handleNodeClick(data, node) {
-        console.log(this.$refs['workGroup'].$el)
         $('.el-tree').css({ height: '0px', display: 'none' })
         $('.el-select-dropdown').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
@@ -728,7 +730,9 @@
         const { name, objectId } = data
         this.curDepartmentId = objectId
         console.log('this.queryForm.access_token', this.queryForm.access_token)
-        this.connectScoket()
+        this.channeltopic = `thing/${this.queryForm.access_token}/${uuid(6)}`
+        // this.isConnect = true
+        this.$refs.mqtt.clientMqtt()
         // $('.el-select-dropdown').css({ height: '0px', display: 'none' })
       },
       async getDevices() {
@@ -904,7 +908,7 @@
 <style lang="scss" scoped>
   .platform {
     .map_header {
-      height: 160px;
+      height: auto;
       .workGroupTreeShow {
         height: 100px;
         overflow: auto;

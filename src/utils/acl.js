@@ -3,8 +3,9 @@
  *
  * @return  {[type]}  [return description]
  */
-function aclObj() {
-  let roles = JSON.parse(Cookies.get('roles'))
+import { getToken } from '@/utils/vuex'
+export function aclObj() {
+  let roles = getToken('roles', 'sessionStorage')
   const aclKey1 = 'role' + ':' + roles[0].name
   const aclObj = {}
   aclObj[aclKey1] = {

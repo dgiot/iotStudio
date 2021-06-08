@@ -1,6 +1,11 @@
 <!--f27f2683b124-->
 <template>
   <div class="editdevices">
+    <mqtt
+      :client-id="'default'"
+      :topic="'test/topic2222222'"
+      @mqttMsg="mqttMsg"
+    />
     <div class="editheader">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/roles/thing' }">
@@ -221,187 +226,247 @@
           :label="$translateTitle('equipment.runningstate')"
           name="third"
         >
-          <div
-            style="box-sizing: border-box; padding: 10px; background: #ffffff"
-          >
-            <div style="text-align: right">
-              <div style="float: left">
-                <span>{{ $translateTitle('equipment.realtimerefresh') }}</span>
-                <el-switch
-                  v-model="isupdate"
-                  active-color="#13ce66"
-                  inactive-color="#cccccc"
-                  @change="updateTrue($event)"
-                />
-              </div>
-
-              <!-- 右上角(图表,表格)的按钮 -->
-              <el-button-group>
-                <el-button
-                  :class="!isshowtable ? 'buttonactive' : ''"
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="isshowtable = false"
-                >
-                  {{ $translateTitle('equipment.chart') }}
-                </el-button>
-                <el-button
-                  :class="isshowtable ? 'buttonactive' : ''"
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="isshowtable = true"
-                >
-                  {{ $translateTitle('equipment.table') }}
-                </el-button>
-              </el-button-group>
-            </div>
-
-            <div v-if="!isshowtable" class="thirdtb">
-              <!--运行状态卡片-->
-              <ul style="display: flex; flex-wrap: wrap">
-                <li
-                  v-for="(item, index) in properties"
-                  :key="index"
-                  class="updatedtable"
-                >
-                  <div style="height: 70px">
-                    <span style="font-size: 16px">{{ item.name }}</span>
-                    <span style="float: right; margin-right: 10px">
-                      <!-- <svg-icon :icon-class="item.name" /> -->
+          <div>
+            <el-tabs type="border-card">
+              <el-tab-pane :label="$translateTitle('equipment.real-time')">
+                <div style="text-align: right">
+                  <div style="float: left">
+                    <span>
+                      {{ $translateTitle('equipment.realtimerefresh') }}
                     </span>
+                    <el-switch
+                      v-model="isupdate"
+                      active-color="#13ce66"
+                      inactive-color="#cccccc"
+                      @change="updateTrue($event)"
+                    />
                   </div>
-                  <div
-                    v-if="
-                      item.dataType.type == 'double' ||
-                      item.dataType.type == 'float' ||
-                      item.dataType.type == 'int'
-                    "
-                    :title="item.dataType.type"
-                    class="stla"
-                  >
-                    <span>{{ item.value | filterVal }}</span>
-                    <span v-if="item.dataType.specs.unit">
-                      {{ item.dataType.specs.unit }}
-                    </span>
-                  </div>
-                  <div
-                    v-if="
-                      item.dataType.type == 'enum' ||
-                      item.dataType.type == 'bool'
-                    "
-                    :title="item.dataType.type"
-                    class="stla"
-                  >
-                    <!--                    <span>{{ item.value | filterVal }}</span>-->
-                    <span>{{ item.dataType.specs[item.value] }}</span>
-                  </div>
-                  <div
-                    v-if="item.dataType.type == 'struct'"
-                    :title="item.dataType.type"
-                    class="stla"
-                  >
-                    <i
-                      v-for="(key, indexK) in item.specs"
-                      :key="indexK"
-                      style="display: block; height: 30px; font-style: normal"
+
+                  <!-- 右上角(图表,表格)的按钮 -->
+                  <el-button-group>
+                    <el-button
+                      :class="!isshowtable ? 'buttonactive' : ''"
+                      type="primary"
+                      plain
+                      size="small"
+                      @click="isshowtable = false"
                     >
-                      <div
-                        v-if="
-                          key.dataType.type == 'double' ||
-                          key.dataType.type == 'float' ||
-                          key.dataType.type == 'int'
-                        "
-                        class="stla"
-                      >
-                        <span>{{ key.name + ':' }}ee</span>
-                        <span>{{ key.value }}aa</span>
-                        <span v-if="key.dataType.specs.unit">
-                          {{ key.dataType.specs.unit }}
+                      {{ $translateTitle('equipment.chart') }}
+                    </el-button>
+                    <el-button
+                      :class="isshowtable ? 'buttonactive' : ''"
+                      type="primary"
+                      plain
+                      size="small"
+                      @click="isshowtable = true"
+                    >
+                      {{ $translateTitle('equipment.table') }}
+                    </el-button>
+                  </el-button-group>
+                </div>
+
+                <div v-if="!isshowtable" class="thirdtb">
+                  <!--运行状态卡片-->
+                  <ul style="display: flex; flex-wrap: wrap">
+                    <li
+                      v-for="(item, index) in properties"
+                      :key="index"
+                      class="updatedtable"
+                    >
+                      <div style="height: 70px">
+                        <span style="font-size: 16px">{{ item.name }}</span>
+                        <span style="float: right; margin-right: 10px">
+                          <!-- <svg-icon :icon-class="item.name" /> -->
                         </span>
                       </div>
                       <div
                         v-if="
-                          key.dataType.type == 'enmu' ||
-                          key.dataType.type == 'bool'
+                          item.dataType.type == 'double' ||
+                          item.dataType.type == 'float' ||
+                          item.dataType.type == 'int'
                         "
+                        :title="item.dataType.type"
                         class="stla"
                       >
-                        <span>{{ key.name + ':' }}</span>
-                        <span>{{ key.value }}</span>
-                        <span>{{ key.dataType.specs[key.value] }}</span>
+                        <span>{{ item.value | filterVal }}</span>
+                        <span v-if="item.dataType.specs.unit">
+                          {{ item.dataType.specs.unit }}
+                        </span>
                       </div>
-                    </i>
-                  </div>
+                      <div
+                        v-if="
+                          item.dataType.type == 'enum' ||
+                          item.dataType.type == 'bool'
+                        "
+                        :title="item.dataType.type"
+                        class="stla"
+                      >
+                        <!--                    <span>{{ item.value | filterVal }}</span>-->
+                        <span>{{ item.dataType.specs[item.value] }}</span>
+                      </div>
+                      <div
+                        v-if="item.dataType.type == 'struct'"
+                        :title="item.dataType.type"
+                        class="stla"
+                      >
+                        <i
+                          v-for="(key, indexK) in item.specs"
+                          :key="indexK"
+                          style="
+                            display: block;
+                            height: 30px;
+                            font-style: normal;
+                          "
+                        >
+                          <div
+                            v-if="
+                              key.dataType.type == 'double' ||
+                              key.dataType.type == 'float' ||
+                              key.dataType.type == 'int'
+                            "
+                            class="stla"
+                          >
+                            <span>{{ key.name + ':' }}ee</span>
+                            <span>{{ key.value }}aa</span>
+                            <span v-if="key.dataType.specs.unit">
+                              {{ key.dataType.specs.unit }}
+                            </span>
+                          </div>
+                          <div
+                            v-if="
+                              key.dataType.type == 'enmu' ||
+                              key.dataType.type == 'bool'
+                            "
+                            class="stla"
+                          >
+                            <span>{{ key.name + ':' }}</span>
+                            <span>{{ key.value }}</span>
+                            <span>{{ key.dataType.specs[key.value] }}</span>
+                          </div>
+                        </i>
+                      </div>
 
-                  <div class="ta">
-                    <span class="fontSize">
-                      {{ $translateTitle('equipment.updatetime') + ':' }}
-                    </span>
-                    <span
-                      v-if="item.createdat"
-                      class="fontSize"
-                      @click="print(properties)"
-                    >
-                      {{ timestampToTime(item.createdat) }}
-                    </span>
-                  </div>
-                  <div class="ta">
-                    <el-link
-                      :underline="false"
-                      type="primary"
-                      @click="dataDetail(item)"
-                    >
-                      查看数据
-                    </el-link>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div v-if="isshowtable" class="thirdtable">
-              <!--运行状态表格-->
+                      <div class="ta">
+                        <span class="fontSize">
+                          {{ $translateTitle('equipment.updatetime') + ':' }}
+                        </span>
+                        <span
+                          v-if="item.createdat"
+                          class="fontSize"
+                          @click="print(properties)"
+                        >
+                          {{ timestampToTime(item.createdat) }}
+                        </span>
+                      </div>
+                      <div class="ta">
+                        <el-link
+                          :underline="false"
+                          type="primary"
+                          @click="dataDetail(item)"
+                        >
+                          查看数据
+                        </el-link>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div v-if="isshowtable" class="thirdtable">
+                  <!--运行状态表格-->
 
-              <el-table
-                :data="
-                  thirdData.slice(
-                    (thirdstart - 1) * thirdlength,
-                    thirdstart * thirdlength
-                  )
-                "
-                style="width: 100%; margin-top: 10px; text-align: center"
-              >
-                <el-table-column
-                  :label="$translateTitle('equipment.serialnumber')"
-                  align="center"
-                  type="index"
-                  width="100"
-                />
+                  <el-table
+                    :data="
+                      thirdData.slice(
+                        (thirdstart - 1) * thirdlength,
+                        thirdstart * thirdlength
+                      )
+                    "
+                    style="width: 100%; margin-top: 10px; text-align: center"
+                  >
+                    <el-table-column
+                      :label="$translateTitle('equipment.serialnumber')"
+                      align="center"
+                      type="index"
+                      width="100"
+                    />
 
-                <el-table-column
-                  :label="$translateTitle('equipment.value')"
-                  prop="value"
-                  align="center"
-                  show-overflow-tooltip
-                />
-                <el-table-column
-                  :label="$translateTitle('equipment.time')"
-                  prop="time"
-                  align="center"
-                  width="300"
-                />
-              </el-table>
-              <el-pagination
-                :page-sizes="[10, 25, 50, 100]"
-                :page-size="thirdlength"
-                :total="thirdtotal"
-                background
-                layout="total, sizes, prev, pager, next, jumper"
-                style="margin-top: 20px"
-                @size-change="handleSizeChange1"
-                @current-change="handleCurrentChange1"
-              />
-            </div>
+                    <el-table-column
+                      :label="$translateTitle('equipment.value')"
+                      prop="value"
+                      align="center"
+                      show-overflow-tooltip
+                    />
+                    <el-table-column
+                      :label="$translateTitle('equipment.time')"
+                      prop="time"
+                      align="center"
+                      width="300"
+                    />
+                  </el-table>
+                  <el-pagination
+                    :page-sizes="[10, 25, 50, 100]"
+                    :page-size="thirdlength"
+                    :total="thirdtotal"
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    style="margin-top: 20px"
+                    @size-change="handleSizeChange1"
+                    @current-change="handleCurrentChange1"
+                  />
+                </div>
+              </el-tab-pane>
+              <el-tab-pane :label="$translateTitle('equipment.historical')">
+                <el-row>
+                  <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+                    <vab-query-form>
+                      <vab-query-form-top-panel :span="12">
+                        <el-select
+                          v-model="value"
+                          clearable
+                          placeholder="请选择"
+                        >
+                          <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                          />
+                        </el-select>
+                        <el-select
+                          v-model="value"
+                          clearable
+                          placeholder="请选择"
+                        >
+                          <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                          />
+                        </el-select>
+                        <el-col :span="6">
+                          <el-date-picker
+                            v-model="datetimerange"
+                            type="datetimerange"
+                            :picker-options="pickerOptions"
+                            :range-separator="$translateTitle('developer.to')"
+                            :start-placeholder="
+                              $translateTitle('developer.startTime')
+                            "
+                            :end-placeholder="
+                              $translateTitle('developer.EndTime')
+                            "
+                            @change="queryFlag = false"
+                          />
+                        </el-col>
+                      </vab-query-form-top-panel>
+                    </vab-query-form>
+                    <div>
+                      <ve-line :data="vechartData" />
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-tab-pane>
+            </el-tabs>
           </div>
         </el-tab-pane>
         <!--         <el-tab-pane label="事件管理" name="fixth">事件管理</el-tab-pane>
@@ -781,12 +846,13 @@
   import { utc2beijing, timestampToTime } from '@/utils/index'
   import LineChart from '../dashboard/admin/components/LineChart'
   import Instruct from '../devicemanage/instruct_manage'
-
+  import mqtt from '@/components/Mqtt'
   var dataobj = {}
   export default {
     components: {
       LineChart,
       Instruct,
+      mqtt,
     },
     filters: {
       filterVal(val) {
@@ -859,9 +925,44 @@
           columns: [],
           rows: [],
         },
+        options: [
+          {
+            value: '选项1',
+            label: '黄金糕',
+          },
+          {
+            value: '选项2',
+            label: '双皮奶',
+          },
+          {
+            value: '选项3',
+            label: '蚵仔煎',
+          },
+          {
+            value: '选项4',
+            label: '龙须面',
+          },
+          {
+            value: '选项5',
+            label: '北京烤鸭',
+          },
+        ],
+        value: '',
+
         chartSettings: {},
         chartDataRow: [],
         chartDataColums: [],
+        vechartData: {
+          columns: ['日期', '访问用户', '下单用户', '下单率'],
+          rows: [
+            { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
+            { 日期: '1/2', 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
+            { 日期: '1/3', 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
+            { 日期: '1/4', 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
+            { 日期: '1/5', 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
+            { 日期: '1/6', 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 },
+          ],
+        },
         queryFlag: true,
         datetimerange: '',
         width: 0,
@@ -953,6 +1054,9 @@
       this.timer = null
     },
     methods: {
+      mqttMsg(e) {
+        console.log(e)
+      },
       initChart() {
         const end = new Date()
         const start = new Date()
@@ -992,7 +1096,6 @@
               i['日期'] = moment().subtract(index, 'days').format('YYYY-MM-DD') // 处理时间轴
               for (var k in i) {
                 for (var d in this.chartData.identifier) {
-                  console.log(this.chartData.identifier[d]) // 处理数据
                   if (k == this.chartData.identifier[d]) {
                     i[this.chartData.columns[d]] = i[k]
                   }
