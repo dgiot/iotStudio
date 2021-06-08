@@ -290,9 +290,9 @@
                 {{ $translateTitle('konva.top') }}
               </el-button>
               <el-button
-                :icon="leftRow == 18 ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
+                :icon="leftRow == 20 ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
                 type="primary"
-                @click="leftRow == 18 ? (leftRow = 24) : (leftRow = 18)"
+                @click="leftRow == 20 ? (leftRow = 24) : (leftRow = 20)"
               >
                 {{
                   cardHeight != '0px'
@@ -309,7 +309,7 @@
                 @click="toggleCard(cardHeight)"
               >
                 {{
-                  leftRow == 18
+                  leftRow == 20
                     ? $translateTitle('konva.hide')
                     : $translateTitle('konva.show')
                 }}
@@ -393,71 +393,50 @@
                 <span>{{ $translateTitle('home.info') }}</span>
               </div>
               <div>
-                <el-row>
-                  <el-col :span="18">
-                    <ve-histogram
-                      :extend="chartExtend"
-                      height="260px"
-                      :data="chartData"
-                      :settings="chartSetting"
-                    />
-                  </el-col>
-                  <el-col :span="6">
-                    <div style="margin: 20px 0 20px 20px">
-                      <p>
-                        {{
-                          $translateTitle('home.app_count') +
-                          ':' +
-                          project_count
-                        }}
-                      </p>
-                      <p>
-                        {{
-                          $translateTitle('home.pro_count') +
-                          ':' +
-                          product_count
-                        }}
-                      </p>
-                      <p>
-                        {{
-                          $translateTitle('home.cla_count') + ':' + app_count
-                        }}
-                      </p>
-                      <p>
-                        {{
-                          $translateTitle('home.dev_count') + ':' + dev_count
-                        }}
-                      </p>
-                      <p>
-                        {{
-                          $translateTitle('home.dev_online') +
-                          ':' +
-                          dev_online_count
-                        }}
-                      </p>
-                      <p>
-                        {{ $translateTitle('home.dev_unline') + ':' }}
-                        {{ dev_count - dev_online_count }}
-                      </p>
+                <el-row :gutter="24">
+                  <el-col :span="24">
+                    <div class="grid-content bg-purple">
+                      <el-row
+                        v-for="item in _Product"
+                        v-show="item.objectId != 0"
+                        :key="item.objectId"
+                        class="row-bg"
+                        justify="space-around"
+                      >
+                        <el-col :span="6">
+                          <el-image
+                            style="width: 26px; height: 26px"
+                            :src="item.icon"
+                            :preview-src-list="[`${item.icon}`]"
+                          >
+                            <div slot="error" class="image-slot">
+                              <i class="el-icon-picture-outline"></i>
+                            </div>
+                          </el-image>
+                        </el-col>
+                        <el-col :span="10">
+                          <el-link type="primary" :underline="false">
+                            {{ item.icon }}
+                            {{ item.name }}
+                          </el-link>
+                        </el-col>
+                        <el-col :span="2">
+                          <el-link
+                            type="success"
+                            :underline="false"
+                            :disabled="item.num <= 0"
+                          >
+                            {{ item.devname }}
+                          </el-link>
+                        </el-col>
+                      </el-row>
                     </div>
                   </el-col>
                 </el-row>
               </div>
             </el-card>
           </div>
-          <div class="box-card">
-            <el-card>
-              <div slot="header" class="clearfix">
-                <span>未确认报警展示</span>
-                <el-button style="float: right; padding: 3px 0" type="text">
-                  操作按钮
-                </el-button>
-              </div>
-              <div v-for="o in 4" :key="o" class="text item">
-                {{ '设备 ' + o }}
-              </div>
-            </el-card>
-          </div>
+          <div class="box-card"></div>
         </div>
       </el-col>
     </el-row>
@@ -503,6 +482,8 @@
     },
     data() {
       return {
+        imgurl:
+          'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
         channeltopic: '',
         isConnect: false,
         queryForm: {
@@ -522,7 +503,7 @@
         cardHeight: '',
         fixedPaddingTop: '',
         curDepartmentId: '',
-        leftRow: 18,
+        leftRow: 20,
         treeDataValue: '',
         deptTreeData: [],
         chartExtend: {
@@ -672,7 +653,7 @@
         const params = {
           count: 'objectId',
           order: '-updatedAt',
-          keys: 'name',
+          keys: 'name,icon',
           where: {
             category: 'IotHub',
           },
@@ -794,7 +775,7 @@
               // 这里查product 是导致整个查询变慢的主要原因
               count: 'objectId',
               skip: 0,
-              keys: 'updatedAt,category,desc',
+              keys: 'updatedAt,category,desc,icon',
               where: {
                 category: 'IotHub',
                 // category: 'Evidence',
@@ -938,6 +919,31 @@
       i {
         color: #fff;
       }
+      .el-row {
+        margin-bottom: 20px;
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+      .el-col {
+        border-radius: 4px;
+      }
+      .bg-purple-dark {
+        background: #99a9bf;
+      }
+      .bg-purple {
+      }
+      .bg-purple-light {
+        background: #e5e9f2;
+      }
+      .grid-content {
+        border-radius: 4px;
+      }
+      .row-bg {
+        padding: 10px 0;
+        background-color: #f9fafc;
+        height: 40px;
+      }
     }
 
     .map_card ::v-deep .el-row {
@@ -957,7 +963,7 @@
         background: #ff4c4f;
       }
       .card-panel-col:nth-child(6) .el-card {
-        background: #1890ff;
+        background: #2090ff;
       }
     }
     .el-card__body {
@@ -982,7 +988,7 @@
     }
     .card-right p {
       color: #fff;
-      font-size: 18px;
+      font-size: 20px;
     }
   }
   .text {
@@ -990,7 +996,7 @@
   }
 
   .item {
-    margin-bottom: 18px;
+    margin-bottom: 20px;
   }
   i {
     display: block !important;
