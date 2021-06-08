@@ -1,6 +1,11 @@
 <!--f27f2683b124-->
 <template>
   <div class="editdevices">
+    <mqtt
+      :client-id="'default'"
+      :topic="'test/topic2222222'"
+      @mqttMsg="mqttMsg"
+    />
     <div class="editheader">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/roles/thing' }">
@@ -127,9 +132,10 @@
             />
             <div class="chartsinfo">
               <el-row type="flex" class="row-bg" justify="space-center">
-                <el-col :span="6">
+                <el-col :span="8">
+                  {{ $translateTitle('developer.time') }}
                   <el-date-picker
-                    v-model="datetimerange"
+                    v-model="params.datetimerange"
                     type="datetimerange"
                     :picker-options="pickerOptions"
                     :range-separator="$translateTitle('developer.to')"
@@ -138,7 +144,54 @@
                     @change="queryFlag = false"
                   />
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="5">
+                  {{ $translateTitle('developer.type') }}
+                  <el-select v-model="params.style" placeholder="请选择">
+                    <el-option
+                      v-for="item in chartType"
+                      :key="item.type"
+                      :label="item.name"
+                      :value="item.type"
+                      :disabled="disabledChart.indexOf(item.type) != -1"
+                    />
+                  </el-select>
+                </el-col>
+                <el-col :span="5">
+                  {{ $translateTitle('developer.interval') }}
+                  <el-input-number
+                    v-model="params.number"
+                    :min="1"
+                    placeholder="请输入内容"
+                  />
+                  <el-select
+                    v-model="params.interval"
+                    placeholder="请选择"
+                    style="width: 60px"
+                  >
+                    <el-option
+                      v-for="item in interval"
+                      :key="item.type"
+                      :label="item.name"
+                      :value="item.type"
+                    />
+                  </el-select>
+                </el-col>
+                <el-col :span="5">
+                  {{ $translateTitle('developer.function') }}
+                  <el-select
+                    v-model="params._function"
+                    style="width: 100px"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      v-for="item in functionarr"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    />
+                  </el-select>
+                </el-col>
+                <el-col :span="2">
                   <el-button
                     type="primary"
                     :disabled="queryFlag"
@@ -153,7 +206,178 @@
                 </el-col>
               </el-row>
               <div class="chartsmain">
-                <ve-line :data="chartData" :settings="chartSettings" />
+                <ve-line
+                  v-if="params.style == 'line'"
+                  :extend="chartExtend"
+                  style="margin-top: 20px"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+                <ve-histogram
+                  v-else-if="params.style == 'histogram'"
+                  :extend="chartExtend"
+                  style="margin-top: 20px"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+                <ve-bar
+                  v-else-if="params.style == 'bar'"
+                  :extend="chartExtend"
+                  style="margin-top: 20px"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+                <ve-pie
+                  v-else-if="params.style == 'pie'"
+                  :extend="chartExtend"
+                  style="margin-top: 20px"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+                <ve-ring
+                  v-else-if="params.style == 'ring'"
+                  :extend="chartExtend"
+                  style="margin-top: 20px"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+                <ve-waterfall
+                  v-else-if="params.style == 'waterfall'"
+                  :extend="chartExtend"
+                  style="margin-top: 20px"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+                <ve-funnel
+                  v-else-if="params.style == 'funnel'"
+                  :extend="chartExtend"
+                  style="margin-top: 20px"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+                <ve-radar
+                  v-else-if="params.style == 'radar'"
+                  :extend="chartExtend"
+                  style="margin-top: 20px"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+                <ve-heatmap
+                  v-else-if="params.style == 'heatmap'"
+                  :extend="chartExtend"
+                  style="margin-top: 20px"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+                <ve-scatter
+                  v-else-if="params.style == 'scatter'"
+                  :extend="chartExtend"
+                  style="margin-top: 20px"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+                <ve-candle
+                  v-else-if="params.style == 'candle'"
+                  :extend="chartExtend"
+                  style="margin-top: 20px"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+              </div>
+              <div class="chartOther">
+                <el-row :gutter="20">
+                  <el-col
+                    v-for="(item, index) in chartData.child"
+                    v-show="item.columns[1] != '日期'"
+                    :key="item.columns[1]"
+                    :span="6"
+                  >
+                    <el-card class="box-card">
+                      <div slot="header" class="clearfix">
+                        <span>{{ item.columns[1] }} : {{ item.unit }}</span>
+                      </div>
+                      <ve-histogram
+                        height="300px"
+                        :extend="chartExtend"
+                        :legend-visible="false"
+                        :data="chartData.child[index]"
+                        :set-option-opts="false"
+                        :settings="chartSettings"
+                        :data-zoom="chartDataZoom"
+                        :toolbox="toolbox"
+                        :loading="loading"
+                        :after-config="afterConfig"
+                        :data-empty="dataEmpty"
+                      />
+                    </el-card>
+                  </el-col>
+                </el-row>
               </div>
             </div>
           </div>
@@ -221,187 +445,256 @@
           :label="$translateTitle('equipment.runningstate')"
           name="third"
         >
-          <div
-            style="box-sizing: border-box; padding: 10px; background: #ffffff"
-          >
-            <div style="text-align: right">
-              <div style="float: left">
-                <span>{{ $translateTitle('equipment.realtimerefresh') }}</span>
-                <el-switch
-                  v-model="isupdate"
-                  active-color="#13ce66"
-                  inactive-color="#cccccc"
-                  @change="updateTrue($event)"
-                />
-              </div>
-
-              <!-- 右上角(图表,表格)的按钮 -->
-              <el-button-group>
-                <el-button
-                  :class="!isshowtable ? 'buttonactive' : ''"
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="isshowtable = false"
-                >
-                  {{ $translateTitle('equipment.chart') }}
-                </el-button>
-                <el-button
-                  :class="isshowtable ? 'buttonactive' : ''"
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="isshowtable = true"
-                >
-                  {{ $translateTitle('equipment.table') }}
-                </el-button>
-              </el-button-group>
-            </div>
-
-            <div v-if="!isshowtable" class="thirdtb">
-              <!--运行状态卡片-->
-              <ul style="display: flex; flex-wrap: wrap">
-                <li
-                  v-for="(item, index) in properties"
-                  :key="index"
-                  class="updatedtable"
-                >
-                  <div style="height: 70px">
-                    <span style="font-size: 16px">{{ item.name }}</span>
-                    <span style="float: right; margin-right: 10px">
-                      <!-- <svg-icon :icon-class="item.name" /> -->
+          <div>
+            <el-tabs type="border-card">
+              <el-tab-pane :label="$translateTitle('equipment.real-time')">
+                <div style="text-align: right">
+                  <div style="float: left">
+                    <span>
+                      {{ $translateTitle('equipment.realtimerefresh') }}
                     </span>
+                    <el-switch
+                      v-model="isupdate"
+                      active-color="#13ce66"
+                      inactive-color="#cccccc"
+                      @change="updateTrue($event)"
+                    />
                   </div>
-                  <div
-                    v-if="
-                      item.dataType.type == 'double' ||
-                      item.dataType.type == 'float' ||
-                      item.dataType.type == 'int'
-                    "
-                    :title="item.dataType.type"
-                    class="stla"
-                  >
-                    <span>{{ item.value | filterVal }}</span>
-                    <span v-if="item.dataType.specs.unit">
-                      {{ item.dataType.specs.unit }}
-                    </span>
-                  </div>
-                  <div
-                    v-if="
-                      item.dataType.type == 'enum' ||
-                      item.dataType.type == 'bool'
-                    "
-                    :title="item.dataType.type"
-                    class="stla"
-                  >
-                    <!--                    <span>{{ item.value | filterVal }}</span>-->
-                    <span>{{ item.dataType.specs[item.value] }}</span>
-                  </div>
-                  <div
-                    v-if="item.dataType.type == 'struct'"
-                    :title="item.dataType.type"
-                    class="stla"
-                  >
-                    <i
-                      v-for="(key, indexK) in item.specs"
-                      :key="indexK"
-                      style="display: block; height: 30px; font-style: normal"
+
+                  <!-- 右上角(图表,表格)的按钮 -->
+                  <el-button-group>
+                    <el-button
+                      :class="!isshowtable ? 'buttonactive' : ''"
+                      type="primary"
+                      plain
+                      size="small"
+                      @click="isshowtable = false"
                     >
-                      <div
-                        v-if="
-                          key.dataType.type == 'double' ||
-                          key.dataType.type == 'float' ||
-                          key.dataType.type == 'int'
-                        "
-                        class="stla"
-                      >
-                        <span>{{ key.name + ':' }}ee</span>
-                        <span>{{ key.value }}aa</span>
-                        <span v-if="key.dataType.specs.unit">
-                          {{ key.dataType.specs.unit }}
+                      {{ $translateTitle('equipment.chart') }}
+                    </el-button>
+                    <el-button
+                      :class="isshowtable ? 'buttonactive' : ''"
+                      type="primary"
+                      plain
+                      size="small"
+                      @click="isshowtable = true"
+                    >
+                      {{ $translateTitle('equipment.table') }}
+                    </el-button>
+                  </el-button-group>
+                </div>
+
+                <div v-if="!isshowtable" class="thirdtb">
+                  <!--运行状态卡片-->
+                  <ul style="display: flex; flex-wrap: wrap">
+                    <li
+                      v-for="(item, index) in properties"
+                      :key="index"
+                      class="updatedtable"
+                    >
+                      <div style="height: 70px">
+                        <span style="font-size: 16px">{{ item.name }}</span>
+                        <span style="float: right; margin-right: 10px">
+                          <!-- <svg-icon :icon-class="item.name" /> -->
                         </span>
                       </div>
                       <div
                         v-if="
-                          key.dataType.type == 'enmu' ||
-                          key.dataType.type == 'bool'
+                          item.dataType.type == 'double' ||
+                          item.dataType.type == 'float' ||
+                          item.dataType.type == 'int'
                         "
+                        :title="item.dataType.type"
                         class="stla"
                       >
-                        <span>{{ key.name + ':' }}</span>
-                        <span>{{ key.value }}</span>
-                        <span>{{ key.dataType.specs[key.value] }}</span>
+                        <span>{{ item.value | filterVal }}</span>
+                        <span v-if="item.dataType.specs.unit">
+                          {{ item.dataType.specs.unit }}
+                        </span>
                       </div>
-                    </i>
-                  </div>
+                      <div
+                        v-if="
+                          item.dataType.type == 'enum' ||
+                          item.dataType.type == 'bool'
+                        "
+                        :title="item.dataType.type"
+                        class="stla"
+                      >
+                        <!--                    <span>{{ item.value | filterVal }}</span>-->
+                        <span>{{ item.dataType.specs[item.value] }}</span>
+                      </div>
+                      <div
+                        v-if="item.dataType.type == 'struct'"
+                        :title="item.dataType.type"
+                        class="stla"
+                      >
+                        <i
+                          v-for="(key, indexK) in item.specs"
+                          :key="indexK"
+                          style="
+                            display: block;
+                            height: 30px;
+                            font-style: normal;
+                          "
+                        >
+                          <div
+                            v-if="
+                              key.dataType.type == 'double' ||
+                              key.dataType.type == 'float' ||
+                              key.dataType.type == 'int'
+                            "
+                            class="stla"
+                          >
+                            <span>{{ key.name + ':' }}ee</span>
+                            <span>{{ key.value }}aa</span>
+                            <span v-if="key.dataType.specs.unit">
+                              {{ key.dataType.specs.unit }}
+                            </span>
+                          </div>
+                          <div
+                            v-if="
+                              key.dataType.type == 'enmu' ||
+                              key.dataType.type == 'bool'
+                            "
+                            class="stla"
+                          >
+                            <span>{{ key.name + ':' }}</span>
+                            <span>{{ key.value }}</span>
+                            <span>{{ key.dataType.specs[key.value] }}</span>
+                          </div>
+                        </i>
+                      </div>
 
-                  <div class="ta">
-                    <span class="fontSize">
-                      {{ $translateTitle('equipment.updatetime') + ':' }}
-                    </span>
-                    <span
-                      v-if="item.createdat"
-                      class="fontSize"
-                      @click="print(properties)"
-                    >
-                      {{ timestampToTime(item.createdat) }}
-                    </span>
-                  </div>
-                  <div class="ta">
-                    <el-link
-                      :underline="false"
-                      type="primary"
-                      @click="dataDetail(item)"
-                    >
-                      查看数据
-                    </el-link>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div v-if="isshowtable" class="thirdtable">
-              <!--运行状态表格-->
+                      <div class="ta">
+                        <span class="fontSize">
+                          {{ $translateTitle('equipment.updatetime') + ':' }}
+                        </span>
+                        <span
+                          v-if="item.createdat"
+                          class="fontSize"
+                          @click="print(properties)"
+                        >
+                          {{ timestampToTime(item.createdat) }}
+                        </span>
+                      </div>
+                      <div class="ta">
+                        <el-link
+                          :underline="false"
+                          type="primary"
+                          @click="dataDetail(item)"
+                        >
+                          查看数据
+                        </el-link>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div v-if="isshowtable" class="thirdtable">
+                  <!--运行状态表格-->
 
-              <el-table
-                :data="
-                  thirdData.slice(
-                    (thirdstart - 1) * thirdlength,
-                    thirdstart * thirdlength
-                  )
-                "
-                style="width: 100%; margin-top: 10px; text-align: center"
-              >
-                <el-table-column
-                  :label="$translateTitle('equipment.serialnumber')"
-                  align="center"
-                  type="index"
-                  width="100"
-                />
+                  <el-table
+                    :data="
+                      thirdData.slice(
+                        (thirdstart - 1) * thirdlength,
+                        thirdstart * thirdlength
+                      )
+                    "
+                    style="width: 100%; margin-top: 10px; text-align: center"
+                  >
+                    <el-table-column
+                      :label="$translateTitle('equipment.serialnumber')"
+                      align="center"
+                      type="index"
+                      width="100"
+                    />
 
-                <el-table-column
-                  :label="$translateTitle('equipment.value')"
-                  prop="value"
-                  align="center"
-                  show-overflow-tooltip
-                />
-                <el-table-column
-                  :label="$translateTitle('equipment.time')"
-                  prop="time"
-                  align="center"
-                  width="300"
-                />
-              </el-table>
-              <el-pagination
-                :page-sizes="[10, 25, 50, 100]"
-                :page-size="thirdlength"
-                :total="thirdtotal"
-                background
-                layout="total, sizes, prev, pager, next, jumper"
-                style="margin-top: 20px"
-                @size-change="handleSizeChange1"
-                @current-change="handleCurrentChange1"
-              />
-            </div>
+                    <el-table-column
+                      :label="$translateTitle('equipment.value')"
+                      prop="value"
+                      align="center"
+                      show-overflow-tooltip
+                    />
+                    <el-table-column
+                      :label="$translateTitle('equipment.time')"
+                      prop="time"
+                      align="center"
+                      width="300"
+                    />
+                  </el-table>
+                  <el-pagination
+                    :page-sizes="[10, 25, 50, 100]"
+                    :page-size="thirdlength"
+                    :total="thirdtotal"
+                    background
+                    layout="total, sizes, prev, pager, next, jumper"
+                    style="margin-top: 20px"
+                    @size-change="handleSizeChange1"
+                    @current-change="handleCurrentChange1"
+                  />
+                </div>
+              </el-tab-pane>
+              <el-tab-pane :label="$translateTitle('equipment.historical')">
+                <el-row>
+                  <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+                    <vab-query-form>
+                      <vab-query-form-top-panel :span="12">
+                        <el-select
+                          v-model="value"
+                          clearable
+                          placeholder="请选择"
+                        >
+                          <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                          />
+                        </el-select>
+                        <el-select
+                          v-model="value"
+                          clearable
+                          placeholder="请选择"
+                        >
+                          <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                          />
+                        </el-select>
+                        <el-col :span="6">
+                          <el-date-picker
+                            v-model="params.datetimerange"
+                            type="datetimerange"
+                            :picker-options="pickerOptions"
+                            :range-separator="$translateTitle('developer.to')"
+                            :start-placeholder="
+                              $translateTitle('developer.startTime')
+                            "
+                            :end-placeholder="
+                              $translateTitle('developer.EndTime')
+                            "
+                            @change="queryFlag = false"
+                          />
+                        </el-col>
+                      </vab-query-form-top-panel>
+                    </vab-query-form>
+                    <div>
+                      <ve-line
+                        :data="chartData"
+                        :set-option-opts="false"
+                        :settings="chartSettings"
+                        :data-zoom="chartDataZoom"
+                        :toolbox="toolbox"
+                        :loading="loading"
+                        :after-config="afterConfig"
+                        :data-empty="dataEmpty"
+                      />
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-tab-pane>
+            </el-tabs>
           </div>
         </el-tab-pane>
         <!--         <el-tab-pane label="事件管理" name="fixth">事件管理</el-tab-pane>
@@ -781,12 +1074,14 @@
   import { utc2beijing, timestampToTime } from '@/utils/index'
   import LineChart from '../dashboard/admin/components/LineChart'
   import Instruct from '../devicemanage/instruct_manage'
-
+  import mqtt from '@/components/Mqtt'
+  import chartType from '@/api/Mock/Chart'
   var dataobj = {}
   export default {
     components: {
       LineChart,
       Instruct,
+      mqtt,
     },
     filters: {
       filterVal(val) {
@@ -822,7 +1117,52 @@
       },
     },
     data() {
+      this.chartExtend = {
+        grid: {
+          right: 40,
+        },
+        yAxis: [
+          {
+            type: 'value',
+            axisLabel: {
+              formatter: '{value} %',
+            },
+          },
+        ],
+      }
+      this.toolbox = {
+        orient: 'vertical',
+        right: -5,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none',
+          },
+          magicType: {
+            type: [
+              'line',
+              'bar',
+              'histogram',
+              'pie',
+              'ring',
+              'waterfall',
+              'funnel',
+              'radar',
+              'heatmap',
+              'scatter',
+              'candle',
+              'stack',
+            ],
+          },
+          dataView: { show: true, readOnly: false },
+          saveAsImage: { show: true },
+          restore: { show: true },
+        },
+      }
+
       return {
+        loading: true,
+        dataEmpty: true,
+        chartDataZoom: [{ type: 'slider' }],
         pickerOptions: {
           shortcuts: [
             {
@@ -859,11 +1199,104 @@
           columns: [],
           rows: [],
         },
+        params: {
+          _function: 'last',
+          style: '',
+          number: 1,
+          interval: 'd',
+          datetimerange: '',
+          keys: '*',
+          limit: 10,
+        },
+        interval: [
+          {
+            type: 'y',
+            name: '年',
+          },
+          // {
+          //   type: 'd',
+          //   name: '月',
+          // },
+          {
+            type: 'd',
+            name: '日',
+          },
+          {
+            type: 'h',
+            name: '时',
+          },
+          {
+            type: 'm',
+            name: '分',
+          },
+          {
+            type: 's',
+            name: '秒',
+          },
+
+          {
+            type: 'a',
+            name: '毫秒',
+          },
+        ],
+        functionarr: [
+          'count',
+          'avg',
+          'sum',
+          'stddev',
+          'min',
+          'max',
+          'first',
+          'last',
+        ],
+        disabledChart: [
+          'map',
+          'sankey',
+          'wordcloud',
+          'liquidfill',
+          'tree',
+          'gauge',
+        ],
+        chartType: chartType,
+        options: [
+          {
+            value: '选项1',
+            label: '黄金糕',
+          },
+          {
+            value: '选项2',
+            label: '双皮奶',
+          },
+          {
+            value: '选项3',
+            label: '蚵仔煎',
+          },
+          {
+            value: '选项4',
+            label: '龙须面',
+          },
+          {
+            value: '选项5',
+            label: '北京烤鸭',
+          },
+        ],
+        value: '',
+
         chartSettings: {},
         chartDataRow: [],
         chartDataColums: [],
+        vechartData: {
+          columns: ['日期', '访问用户', '下单用户', '下单率'],
+          rows: [
+            { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
+            { 日期: '1/2', 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
+            { 日期: '1/3', 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
+            { 日期: '1/4', 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
+            { 日期: '1/5', 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
+            { 日期: '1/6', 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 },
+          ],
+        },
         queryFlag: true,
-        datetimerange: '',
         width: 0,
         lineChartData: '',
         datafordetail: [],
@@ -944,6 +1377,7 @@
       },
     },
     mounted() {
+      this.params.style = this.chartType[1].type
       this.getDeviceDetail()
       this.initChart()
     },
@@ -953,78 +1387,71 @@
       this.timer = null
     },
     methods: {
+      afterConfig(options) {
+        options.tooltip.showDelay = 500
+        return options
+      },
+      mqttMsg(e) {
+        console.log(e)
+      },
       initChart() {
         const end = new Date()
         const start = new Date()
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-        this.datetimerange = [start, end]
+        this.params.datetimerange = [start, end]
         this.queryFlag = false
         this.$nextTick(() => {
           // 当页面加载完后 去请求时序数据
           this.queryChart()
         })
       },
-      async queryChart() {
-        if (this.datetimerange.length) {
+      queryChart() {
+        this.chartData = {
+          identifier: [],
+          columns: [],
+          rows: [],
+        }
+        this.$baseColorfullLoading(
+          1,
+          this.$translateTitle('home.messag_loding')
+        )
+        if (this.params.datetimerange.length) {
           let deviceid = this.$route.query.deviceid
-          let endTime = moment(this.datetimerange[1]).valueOf()
-          let startTime = moment(this.datetimerange[0]).valueOf()
+          let endTime = moment(this.params.datetimerange[1]).valueOf()
+          let startTime = moment(this.params.datetimerange[0]).valueOf()
           console.log('endTime', endTime)
           console.log('startTime', startTime)
-          const limit = moment(endTime).diff(moment(startTime), 'days')
-
+          // const limit = moment(endTime).diff(moment(startTime), 'days')
+          const {
+            interval,
+            keys,
+            limit,
+            number,
+            style,
+            _function,
+          } = this.params
           let params = {
+            starttime: startTime,
+            endtime: endTime,
+            interval: number + interval,
+            keys: keys,
             limit: limit,
-            skip: 0,
-            where: { createdat: { $gte: 'now - 10d' } },
+            function: _function,
+            style: style,
           }
-          const { results } = await getDabDevice(deviceid, params)
-          console.log('res', results)
-          if (results) {
-            this.properties.forEach((i) => {
-              // 在获取设备数据的时候 先将 name push 进 columns
-              this.chartData.identifier.push(i.identifier) // 数据唯一标识
-              this.chartData.columns.push(i.name)
+          getDabDevice(deviceid, params)
+            .then((res) => {
+              this.$baseColorfullLoading().close()
+              console.log(res)
+              this.chartData = res.chartData
+              this.loading = false
+              this.dataEmpty = false
             })
-            this.chartData.identifier.unshift('日期')
-            this.chartData.columns.unshift('日期')
-            results.forEach((i, index) => {
-              i['日期'] = moment().subtract(index, 'days').format('YYYY-MM-DD') // 处理时间轴
-              for (var k in i) {
-                for (var d in this.chartData.identifier) {
-                  console.log(this.chartData.identifier[d]) // 处理数据
-                  if (k == this.chartData.identifier[d]) {
-                    i[this.chartData.columns[d]] = i[k]
-                  }
-                }
-              }
+            .catch((e) => {
+              console.log(e)
+              this.loading = false
+              this.$baseColorfullLoading().close()
             })
-            // this.chartSettings.xAxisType = this.chartData.identifier
-            this.chartData.rows = results
-          }
-          //   //
-          //   columns.push(item.name)
-          //   this.watchNum++
-          //   let rows = {}
-          //   let columns = []
-          //   if (vm.chartData.columns.indexOf('日期') != -1) {
-          //     rows['日期'] = moment().format('YYYY-MM-DD HH:mm:ss')
-          //   } else {
-          //     columns.unshift('日期')
-          //   }
-          //   rows[`${item.name}`] = item.value ? item.value : 0
-          // }
-          //   vm.chartDataRow = columns.filter(function (item) {
-          //     return item
-          //   })
-          // console.log(vm.chartData, '  vm.chartData')
-          // console.log(' this.watchNum', vm.watchNum)
-          // vm.chartDataRow.push(rows)
-          // vm.chartData.columns = vm.chartDataColums
-          // console.log(rows, 'rowsrows')
-          // console.log('this.chartDataRow', vm.chartDataRow)
-          // vm.chartData.rows = vm.chartDataRow
-          // console.log(this.chartData.rows, '  vm.chartData.rows')
         } else {
           this.$message.error('请选择查询时间')
         }

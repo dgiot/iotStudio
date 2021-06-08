@@ -736,6 +736,35 @@ export function json2params(json, slice = '&') {
     .slice(0, -1)
 }
 
+export function tree2Array(treeObj, rootid) {
+  const temp = [] // 设置临时数组，用来存放队列
+  const out = [] // 设置输出数组，用来存放要输出的一维数组
+  temp.push(treeObj)
+  // 首先把根元素存放入out中
+  let pid = rootid
+  const obj = deepCopy(treeObj)
+  obj.pid = pid
+  delete obj['children']
+  out.push(obj)
+  // 对树对象进行广度优先的遍历
+  while (temp.length > 0) {
+    const first = temp.shift()
+    const children = first.children
+    if (children && children.length > 0) {
+      pid = first.id
+      const len = first.children.length
+      for (let i = 0; i < len; i++) {
+        temp.push(children[i])
+        const obj = deepCopy(children[i])
+        obj.pid = pid
+        delete obj['children']
+        out.push(obj)
+      }
+    }
+  }
+  return out
+}
+
 export function isBase64(str) {
   if (str === '' || str.trim() === '') {
     return false
