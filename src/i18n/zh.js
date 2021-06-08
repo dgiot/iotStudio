@@ -105,6 +105,8 @@ export default {
     },
     route: {},
     equipment: {
+      'real-time': '实时数据',
+      historical: '历史数据',
       list: '设备列表',
       map: '设备地图',
       location: '位置',

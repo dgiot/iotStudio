@@ -8,6 +8,12 @@
 -->
 <template>
   <div ref="platform" class="platform">
+    <mqtt
+      ref="mqtt"
+      :connect="isConnect"
+      :topic="channeltopic"
+      @mqttMsg="mqttMsg"
+    />
     <div
       :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
       class="map_header"
@@ -458,13 +464,13 @@
   </div>
 </template>
 <script>
+  import mqtt from '@/components/Mqtt'
   import { queryProduct } from '@/api/Product'
   import { mapGetters, mapMutations } from 'vuex'
   import { batch } from '@/api/Batch/index'
   import { queryDevice } from '@/api/Device'
   import Category from '@/api/Mock/Category'
   import { Roletree, getToken } from '@/api/Menu'
-  import { Websocket } from '@/utils/wxscoket.js'
   import { uuid } from '@/utils'
   import {
     BmNavigation,
@@ -493,9 +499,12 @@
       BmGeolocation,
       BmCityList,
       BmMarker,
+      mqtt,
     },
     data() {
       return {
+        channeltopic: '',
+        isConnect: false,
         queryForm: {
           account: '',
           searchDate: '',
@@ -612,12 +621,8 @@
         })
         return name
       },
-      connectScoket() {
-        var channeltopic = `thing/${this.queryForm.access_token}/${uuid(6)}`
-        console.log('订阅mqtt channeltopic', channeltopic)
-        Websocket.add_hook(channeltopic, (Msg) => {
-          console.log('收到消息', Msg)
-        })
+      mqttMsg(e) {
+        console.log(e)
       },
       toggleCard(height) {
         console.log('cardHeight', height)
@@ -725,7 +730,9 @@
         const { name, objectId } = data
         this.curDepartmentId = objectId
         console.log('this.queryForm.access_token', this.queryForm.access_token)
-        this.connectScoket()
+        this.channeltopic = `thing/${this.queryForm.access_token}/${uuid(6)}`
+        // this.isConnect = true
+        this.$refs.mqtt.clientMqtt()
         // $('.el-select-dropdown').css({ height: '0px', display: 'none' })
       },
       async getDevices() {

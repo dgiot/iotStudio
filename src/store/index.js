@@ -3,7 +3,7 @@
  * @Date: 2021-01-14 14:35:36
  * @LastEditTime: 2021-03-25 20:33:20
  * @LastEditors: h7ml
- * @FilePath: \shuwa_dashboard\src\store\index.js
+ * @FilePath: \shuwa_dashboard\src\store\acl.js
  * @Description:
  */
 /**

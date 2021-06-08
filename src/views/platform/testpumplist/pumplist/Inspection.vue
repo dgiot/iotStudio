@@ -569,7 +569,7 @@
   } from '@/api/Device'
   import { queryProduct } from '@/api/Product'
   import { eventBus } from '@/api/eventBus'
-  import { aclObj } from '@/utils/Acl'
+  import { aclObj } from '@/utils/acl'
   export default {
     name: 'Insection',
     components: {},

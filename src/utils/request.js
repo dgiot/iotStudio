@@ -2,13 +2,11 @@ import {
   baseURL,
   contentType,
   debounce,
-  messageName,
   requestTimeout,
   statusName,
   successCode,
   errorCode,
   tokenName,
-  CODE_MESSAGE,
 } from '@/config'
 import globalUrl from '@/utils/globalUrl'
 import store from '@/store'
@@ -73,7 +71,14 @@ const handleData = ({ config, data, status, statusText }) => {
 let serviceBaseUrl = baseURL
 // 判断当前环境是否为github page和gitee page
 const { hostname } = window.location
-let localHost = ['tcloudbaseapp.com', 'gitee.io', 'github.io', 'vercel.app']
+let localHost = [
+  'tcloudbaseapp.com',
+  'gitee.io',
+  'github.io',
+  'vercel.app',
+  '127.0',
+  '192.168',
+]
 
 // if (process.env.NODE_ENV == 'development') {
 //   localHost.push('localhost', '127.0.0.1')

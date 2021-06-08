@@ -1,5 +1,6 @@
 <template>
   <div class="resourcechannel">
+    <mqtt ref="mqtt" :topic="channeltopic" @mqttMsg="mqttMsg" />
     <upload ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="firsttable">
       <el-form
@@ -505,23 +506,20 @@
   import Upload from '@/components/UploadFile/input'
   import { queryRole } from '@/api/Role/index'
   import { subupadte } from '@/api/System/index'
-  import { putResourceTypes, resourceTypes } from '@/api/Rules'
+  import { resourceTypes } from '@/api/Rules'
   import { mapGetters } from 'vuex'
   var subdialog
-  import {
-    Websocket,
-    sendInfo,
-    TOPIC_EMPTY,
-    MSG_EMPTY,
-    DISCONNECT_MSG,
-  } from '@/utils/wxscoket.js'
+  import { Websocket } from '@/utils/wxscoket.js'
+  import mqtt from '@/components/Mqtt'
   export default {
     components: {
       Upload,
+      mqtt,
     },
     // inject: ['reload'],
     data() {
       return {
+        channeltopic: '',
         channeindex: 0,
         channeType: '',
         listLoading: false,
@@ -976,6 +974,9 @@
             : date.getSeconds()
         return h + m + s + ' '
       },
+      mqttMsg(e) {
+        console.log(e)
+      },
       subProTopic(row) {
         this.subdialog = true
         this.subdialogid = row.objectId
@@ -998,6 +999,8 @@
         var channeltopic = new RegExp('log/channel/' + row.objectId)
         var submessage = ''
         var _this = this
+        _this.channeltopic = info.topic
+        _this.$refs.mqtt.clientMqtt()
         Websocket.add_hook(channeltopic, function (Msg) {
           // 判断长度
           if (subdialog.session.getLength() >= 1000) {
