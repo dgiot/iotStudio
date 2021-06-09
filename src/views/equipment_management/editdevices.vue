@@ -133,27 +133,38 @@
             <div class="chartsinfo">
               <div
                 class="queryHeader"
-                :style="{ height: Device == 'desktop' ? '70px' : '300px' }"
+                :style="{ height: Device == 'desktop' ? '50px' : '240px' }"
               >
                 <vab-query-form-top-panel>
                   <el-form
                     :inline="true"
                     :model="queryForm"
-                    :label-width="Device == 'desktop' ? '100px' : '80px'"
+                    :label-width="Device == 'desktop' ? '80px' : '70px'"
                     @submit.native.prevent
                   >
-                    <el-form-item :label="$translateTitle('developer.time')">
+                    <el-form-item
+                      :label="$translateTitle('developer.startTime')"
+                    >
                       <el-date-picker
-                        v-model="params.datetimerange"
-                        type="datetimerange"
-                        :picker-options="pickerOptions"
-                        :range-separator="$translateTitle('developer.to')"
-                        :start-placeholder="
-                          $translateTitle('developer.startTime')
-                        "
-                        :end-placeholder="$translateTitle('developer.EndTime')"
+                        v-model="params.startTime"
+                        type="datetime"
+                        align="right"
                         size="mini"
-                        @change="queryFlag = false"
+                        style="width: 83%"
+                        :placeholder="$translateTitle('developer.startTime')"
+                        :picker-options="pickerOptionsDay"
+                      />
+                    </el-form-item>
+                    <el-form-item :label="$translateTitle('developer.EndTime')">
+                      <el-date-picker
+                        v-model="params.endTime"
+                        style="width: 83%"
+                        size="mini"
+                        type="datetime"
+                        align="right"
+                        :clearable="false"
+                        :placeholder="$translateTitle('developer.EndTime')"
+                        :picker-options="pickerOptionsDay"
                       />
                     </el-form-item>
                     <el-form-item :label="$translateTitle('developer.type')">
@@ -214,8 +225,6 @@
                           :value="item"
                         />
                       </el-select>
-                    </el-form-item>
-                    <el-form-item>
                       <el-button
                         size="mini"
                         type="primary"
@@ -233,7 +242,6 @@
                 <ve-line
                   v-if="params.style == 'line'"
                   :extend="chartExtend"
-                  style="margin-top: 20px"
                   :data="chartData"
                   :set-option-opts="false"
                   :settings="chartSettings"
@@ -245,8 +253,8 @@
                 />
                 <ve-histogram
                   v-else-if="params.style == 'histogram'"
+                  :height="Device == 'desktop' ? '500px' : '550px'"
                   :extend="chartExtend"
-                  style="margin-top: 20px"
                   :data="chartData"
                   :set-option-opts="false"
                   :settings="chartSettings"
@@ -259,7 +267,6 @@
                 <ve-bar
                   v-else-if="params.style == 'bar'"
                   :extend="chartExtend"
-                  style="margin-top: 20px"
                   :data="chartData"
                   :set-option-opts="false"
                   :settings="chartSettings"
@@ -272,7 +279,6 @@
                 <ve-pie
                   v-else-if="params.style == 'pie'"
                   :extend="chartExtend"
-                  style="margin-top: 20px"
                   :data="chartData"
                   :set-option-opts="false"
                   :settings="chartSettings"
@@ -285,7 +291,6 @@
                 <ve-ring
                   v-else-if="params.style == 'ring'"
                   :extend="chartExtend"
-                  style="margin-top: 20px"
                   :data="chartData"
                   :set-option-opts="false"
                   :settings="chartSettings"
@@ -298,7 +303,6 @@
                 <ve-waterfall
                   v-else-if="params.style == 'waterfall'"
                   :extend="chartExtend"
-                  style="margin-top: 20px"
                   :data="chartData"
                   :set-option-opts="false"
                   :settings="chartSettings"
@@ -311,7 +315,6 @@
                 <ve-funnel
                   v-else-if="params.style == 'funnel'"
                   :extend="chartExtend"
-                  style="margin-top: 20px"
                   :data="chartData"
                   :set-option-opts="false"
                   :settings="chartSettings"
@@ -324,7 +327,6 @@
                 <ve-radar
                   v-else-if="params.style == 'radar'"
                   :extend="chartExtend"
-                  style="margin-top: 20px"
                   :data="chartData"
                   :set-option-opts="false"
                   :settings="chartSettings"
@@ -337,7 +339,6 @@
                 <ve-heatmap
                   v-else-if="params.style == 'heatmap'"
                   :extend="chartExtend"
-                  style="margin-top: 20px"
                   :data="chartData"
                   :set-option-opts="false"
                   :settings="chartSettings"
@@ -350,7 +351,6 @@
                 <ve-scatter
                   v-else-if="params.style == 'scatter'"
                   :extend="chartExtend"
-                  style="margin-top: 20px"
                   :data="chartData"
                   :set-option-opts="false"
                   :settings="chartSettings"
@@ -363,7 +363,6 @@
                 <ve-candle
                   v-else-if="params.style == 'candle'"
                   :extend="chartExtend"
-                  style="margin-top: 20px"
                   :data="chartData"
                   :set-option-opts="false"
                   :settings="chartSettings"
@@ -1244,6 +1243,32 @@
             },
           ],
         },
+        pickerOptionsDay: {
+          shortcuts: [
+            {
+              text: this.$translateTitle('developer.today'),
+              onClick(picker) {
+                picker.$emit('pick', new Date())
+              },
+            },
+            {
+              text: this.$translateTitle('developer.yesterday'),
+              onClick(picker) {
+                const date = new Date()
+                date.setTime(date.getTime() - 3600 * 1000 * 24)
+                picker.$emit('pick', date)
+              },
+            },
+            {
+              text: this.$translateTitle('developer.A week ago'),
+              onClick(picker) {
+                const date = new Date()
+                date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+                picker.$emit('pick', date)
+              },
+            },
+          ],
+        },
         chartData: {
           identifier: [],
           columns: [],
@@ -1257,6 +1282,8 @@
           datetimerange: '',
           keys: '*',
           limit: 10,
+          endTime: new Date(),
+          startTime: new Date().getTime() - 3600 * 1000 * 24 * 7,
         },
         interval: [
           {
@@ -1333,19 +1360,6 @@
         value: '',
 
         chartSettings: {},
-        chartDataRow: [],
-        chartDataColums: [],
-        vechartData: {
-          columns: ['日期', '访问用户', '下单用户', '下单率'],
-          rows: [
-            { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
-            { 日期: '1/2', 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
-            { 日期: '1/3', 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
-            { 日期: '1/4', 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
-            { 日期: '1/5', 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
-            { 日期: '1/6', 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 },
-          ],
-        },
         queryFlag: true,
         width: 0,
         lineChartData: '',
@@ -1493,14 +1507,14 @@
           columns: [],
           rows: [],
         }
-        this.$baseColorfullLoading(
-          1,
-          this.$translateTitle('home.messag_loding')
-        )
-        if (this.params.datetimerange.length) {
+        if (this.params.startTime && this.params.endTime) {
+          this.$baseColorfullLoading(
+            1,
+            this.$translateTitle('home.messag_loding')
+          )
           let deviceid = this.$route.query.deviceid
-          let endTime = moment(this.params.datetimerange[1]).valueOf()
-          let startTime = moment(this.params.datetimerange[0]).valueOf()
+          // let endTime = moment(this.params.datetimerange[1]).valueOf()
+          // let startTime = moment(this.params.datetimerange[0]).valueOf()
           console.log('endTime', endTime)
           console.log('startTime', startTime)
           // const limit = moment(endTime).diff(moment(startTime), 'days')
@@ -1511,10 +1525,12 @@
             number,
             style,
             _function,
+            startTime,
+            endTime,
           } = this.params
           let params = {
-            starttime: startTime,
-            endtime: endTime,
+            starttime: moment(startTime).valueOf(),
+            endtime: moment(endTime).valueOf(),
             interval: number + interval,
             keys: keys,
             limit: limit,
@@ -1535,7 +1551,9 @@
               this.$baseColorfullLoading().close()
             })
         } else {
-          this.$message.error('请选择查询时间')
+          this.$message.error(
+            this.$translateTitle('developer.Please select the query time')
+          )
         }
       },
       print(item) {
@@ -2089,10 +2107,20 @@
   }
 </script>
 <style scoped lang="scss">
+  ::v-deep {
+    .el-icon-time {
+      display: none;
+    }
+    .el-date-editor--datetime {
+      input {
+        padding: 0 10px;
+      }
+    }
+  }
   .chartsinfo {
     margin-top: 15px;
     .chartsmain {
-      margin-top: 30px;
+      margin: 30px 0;
     }
   }
   .editdevices {
