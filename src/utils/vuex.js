@@ -18,19 +18,20 @@ import { isBase64 } from '@/utils'
  * @returns {void|*}
  */
 export function getToken(tokenName, storage = 'sessionStorage', type = '') {
-  let res = localStorage.getItem(tokenName) || type
-  if ('localStorage' === storage) {
-    res = localStorage.getItem(tokenName) || type
-  } else if ('sessionStorage' === storage) {
-    res = sessionStorage.getItem(tokenName) || type
-  } else {
-    res = cookie.get(tokenName) || type
-  }
-  if (!isBase64(res)) {
-    return res
-  } else {
+  let res =
+    'localStorage' === storage
+      ? localStorage.getItem(tokenName)
+      : 'sessionStorage' === storage
+      ? sessionStorage.getItem(tokenName)
+      : cookie.get(tokenName)
+  if (res && isBase64(res)) {
     let Base64Decode = JSON.parse(Base64.decode(res))
-    return Base64Decode.token
+    if (tokenName == 'avatar') {
+      console.log(tokenName, Base64Decode.vuexinfo)
+    }
+    return Base64Decode.vuexinfo
+  } else {
+    return type
   }
 }
 
@@ -42,7 +43,7 @@ export function getToken(tokenName, storage = 'sessionStorage', type = '') {
  * @returns {void|*}
  */
 export function setToken(tokenName, settoken, storage = 'sessionStorage') {
-  let token = JSON.stringify({ token: settoken })
+  let token = JSON.stringify({ vuexinfo: settoken })
   if ('localStorage' === storage) {
     return localStorage.setItem(tokenName, Base64.encode(token))
   } else if ('sessionStorage' === storage) {

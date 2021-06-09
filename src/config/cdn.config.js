@@ -75,17 +75,12 @@ let staticUrl = {
     'https://unpkg.com/codemirror@5.58.3/addon/lint/json-lint.js',
     'https://unpkg.com/vue-codemirror@4.0.6/dist/vue-codemirror.js',
     'https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js',
-    'https://api.map.baidu.com/getscript?v=3.0&ak=fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG',
+    'https://hm.baidu.com/hm.js?a0f8b01930320b849a92a00e0c6da990',
+    'https://s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845',
   ],
 }
-// 统计代码
-let statistics = [
-  'https://hm.baidu.com/hm.js?a0f8b01930320b849a92a00e0c6da990',
-  'https://s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845',
-]
 if (process.env.NODE_ENV !== 'development') {
   staticUrl.js[0] = 'https://unpkg.com/vue@2.6.12/dist/vue.min.js'
-  staticUrl.js.push(statistics)
 }
 
 module.exports = { staticUrl }

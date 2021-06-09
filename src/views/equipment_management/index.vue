@@ -675,6 +675,7 @@
           </el-form>
           <!-- <label>地址：<input v-model="bmapfrom.keyword"></label> -->
           <baidu-map
+            ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
             :center="center"
             :zoom="zoom"
             :scroll-wheel-zoom="true"

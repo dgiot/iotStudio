@@ -31,6 +31,7 @@
       </el-dialog>
       <el-dialog :visible.sync="mapDialog" top="5vh" width="80vh">
         <baidu-map
+          ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
           :center="center"
           :zoom="zoom"
           :scroll-wheel-zoom="true"
@@ -805,6 +806,7 @@
               name="second"
             >
               <baidu-map
+                ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
                 :scroll-wheel-zoom="true"
                 class="map"
                 :center="{ lng: 116.404, lat: 39.915 }"
@@ -1100,6 +1102,7 @@
               </el-form>
               <!-- <label>地址：<input v-model="bmapfrom.keyword"></label> -->
               <baidu-map
+                ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
                 :center="center"
                 :zoom="zoom"
                 :scroll-wheel-zoom="true"
