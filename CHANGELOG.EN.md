@@ -1,4 +1,4 @@
-## 1.0.0 (2021-06-08)
+## 1.0.0 (2021-06-09)
 
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
 * feat: 组态 ([033a3ac](https://github.com/dgiot/dgiot_dashboard/commit/033a3ac))

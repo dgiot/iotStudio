@@ -131,8 +131,8 @@
               readonly
             />
             <div class="chartsinfo">
-              <el-row type="flex" class="row-bg" justify="space-center">
-                <el-col :span="8">
+              <el-row :gutter="24">
+                <el-col :xs="24" :sm="24" :md="10" :xl="7">
                   {{ $translateTitle('developer.time') }}
                   <el-date-picker
                     v-model="params.datetimerange"
@@ -141,12 +141,18 @@
                     :range-separator="$translateTitle('developer.to')"
                     :start-placeholder="$translateTitle('developer.startTime')"
                     :end-placeholder="$translateTitle('developer.EndTime')"
+                    size="mini"
                     @change="queryFlag = false"
                   />
                 </el-col>
-                <el-col :span="5">
+                <el-col :xs="24" :sm="24" :md="3" :xl="5">
                   {{ $translateTitle('developer.type') }}
-                  <el-select v-model="params.style" placeholder="请选择">
+                  <el-select
+                    v-model="params.style"
+                    size="mini"
+                    style="width: 90px"
+                    placeholder="请选择"
+                  >
                     <el-option
                       v-for="item in chartType"
                       :key="item.type"
@@ -156,17 +162,20 @@
                     />
                   </el-select>
                 </el-col>
-                <el-col :span="5">
+                <el-col :xs="24" :sm="24" :md="5" :xl="5">
                   {{ $translateTitle('developer.interval') }}
                   <el-input-number
                     v-model="params.number"
+                    size="mini"
+                    style="width: 100px"
                     :min="1"
                     placeholder="请输入内容"
                   />
                   <el-select
                     v-model="params.interval"
+                    size="mini"
                     placeholder="请选择"
-                    style="width: 60px"
+                    style="width: 80px"
                   >
                     <el-option
                       v-for="item in interval"
@@ -176,10 +185,11 @@
                     />
                   </el-select>
                 </el-col>
-                <el-col :span="5">
+                <el-col :xs="24" :sm="24" :md="6" :xl="6">
                   {{ $translateTitle('developer.function') }}
                   <el-select
                     v-model="params._function"
+                    size="mini"
                     style="width: 100px"
                     placeholder="请选择"
                   >
@@ -190,9 +200,8 @@
                       :value="item"
                     />
                   </el-select>
-                </el-col>
-                <el-col :span="2">
                   <el-button
+                    size="mini"
                     type="primary"
                     :disabled="queryFlag"
                     icon="el-icon-search"
@@ -200,9 +209,6 @@
                   >
                     {{ $translateTitle('developer.search') }}
                   </el-button>
-                  <!--                  <el-button type="primary" icon="el-icon-download">-->
-                  <!--                    {{ $translateTitle('developer.download') }}-->
-                  <!--                  </el-button>-->
                 </el-col>
               </el-row>
               <div class="chartsmain">
@@ -356,13 +362,28 @@
                     v-for="(item, index) in chartData.child"
                     v-show="item.columns[1] != '日期'"
                     :key="item.columns[1]"
-                    :span="6"
+                    :xs="xs"
+                    :sm="sm"
+                    :md="md"
+                    :xl="xl"
                   >
                     <el-card class="box-card">
                       <div slot="header" class="clearfix">
                         <span>{{ item.columns[1] }} : {{ item.unit }}</span>
+
+                        <el-button-group
+                          style="float: right; padding: 3px 0"
+                          type="text"
+                        >
+                          <el-button icon="el-icon-warning-outline" />
+                          <el-button
+                            icon="el-icon-full-screen"
+                            @click="toggleCardRow(index, xs, sm, md, xl)"
+                          />
+                        </el-button-group>
                       </div>
                       <ve-histogram
+                        ref="charts"
                         height="300px"
                         :extend="chartExtend"
                         :legend-visible="false"
@@ -635,7 +656,7 @@
               </el-tab-pane>
               <el-tab-pane :label="$translateTitle('equipment.historical')">
                 <el-row>
-                  <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+                  <el-col :lg="20" :md="16" :sm="24" :xl="20" :xs="24">
                     <vab-query-form>
                       <vab-query-form-top-panel :span="12">
                         <el-select
@@ -1161,6 +1182,10 @@
 
       return {
         loading: true,
+        xl: 6,
+        xs: 24,
+        sm: 24,
+        md: 12,
         dataEmpty: true,
         chartDataZoom: [{ type: 'slider' }],
         pickerOptions: {
@@ -1375,18 +1400,45 @@
         deep: true,
         handler(val) {},
       },
+      sm(v) {
+        this.$nextTick((_) => {
+          this.resizeTheChart()
+          setTimeout(() => {
+            this.loading = false
+          }, 2000)
+        })
+      },
     },
     mounted() {
       this.params.style = this.chartType[1].type
       this.getDeviceDetail()
       this.initChart()
+      window.addEventListener('resize', this.resizeTheChart)
     },
     // 清除定时器
     destroyed() {
       window.clearInterval(this.timer)
       this.timer = null
     },
+    beforeDestroy() {
+      window.removeEventListener('resize', this.resizeTheChart)
+    },
     methods: {
+      resizeTheChart() {
+        let charts = this.$refs[`charts`]
+        if (charts) {
+          charts.forEach((chart) => {
+            chart.resize()
+          })
+          console.log('重绘完成', charts)
+        }
+      },
+      toggleCardRow(index, xs, sm, md, xl) {
+        sm == 24 ? (this.sm = 12) : (this.sm = 24)
+        md == 12 ? (this.md = 24) : (this.md = 12)
+        xl == 6 ? (this.xl = 12) : (this.xl = 6)
+        this.loading = true
+      },
       afterConfig(options) {
         options.tooltip.showDelay = 500
         return options

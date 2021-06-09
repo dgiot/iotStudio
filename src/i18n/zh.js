@@ -211,9 +211,9 @@ export default {
       powersupply: '供电单位',
     },
     developer: {
-      interval: '统计间隔',
-      function: '聚合/计算函数',
-      type: '图表类型',
+      interval: '间隔',
+      function: '计算函数',
+      type: '类型',
       time: '时间段',
       to: '至',
       EndTime: '结束时间',

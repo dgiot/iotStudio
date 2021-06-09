@@ -83,7 +83,7 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach((to) => {
   // 输出路由信息，方便找到点击的页面
   let routecInfo
-  if (to.meta) {
+  if (to.meta && to.meta.title) {
     routecInfo = to.meta.component
     document.title = getPageTitle(`${to.meta.title}`)
   } else {

@@ -127,72 +127,73 @@ const actions = {
    * @param {*} userInfo
    */
   async login({ commit }, userInfo) {
-    const data = await login(userInfo)
-    const token = data[tokenName]
-    const { nick } = data
-    if (nick) commit('setUsername', nick)
-    const page_title = getToken('title', 'sessionStorage') || title
-    const {
-      objectId,
-      roles,
-      tag = {
-        companyinfo: {
-          title: `欢迎${nick}您登录${page_title}`,
-          Copyright: '© 2017-2021 数蛙科技 Corporation, All Rights Reserved',
-          name: 'dg-iot',
-          logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
-        },
-        userinfo: {
-          avatar:
-            'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3290107827,2759304074&fm=26&gp=0.jpg',
-        },
-      },
-    } = data
-    console.log(tag.companyinfo.title, 'tag info')
-    const { title, Copyright, name, logo } = tag.companyinfo
-    const { avatar } = tag.userinfo
-    setToken('setAvatar', avatar, 'sessionStorage')
-    setToken('roles', roles, 'sessionStorage')
-    setToken('title', title, 'sessionStorage')
-    setToken('copyright', Copyright, 'sessionStorage')
-    setToken('title', title, 'sessionStorage')
-    setToken('name', name, 'sessionStorage')
-    setToken('logo', logo, 'sessionStorage')
-    setToken('avatar', avatar, 'sessionStorage')
-    if (objectId) commit('setObejectId', objectId)
-    // 登录成功后,需要将以下参数存入vuex
-
-    Roletree()
-      .then((res) => {
-        commit('setRoleTree', res.results)
-      })
-      .catch((e) => {
-        console.log(`get role error ${e}`)
-        commit('setRoleTree', [])
-      })
-    const params = {
-      count: 'objectId',
-      order: '-updatedAt',
-      keys: 'name',
-      where: {
-        category: 'IotHub',
-      },
-    }
-    queryProduct(params)
-      .then((res) => {
-        let results = res.results
-        results.unshift({
-          name: language == 'zh' ? '全部产品' : 'All Products',
-          objectId: '0',
-        })
-        commit('set_Product', results)
-      })
-      .catch((e) => {
-        console.log(`query role error ${e}`)
-        commit('set_Product', [])
-      })
+    const data = (await login(userInfo)) || {}
+    const { sessionToken = '' } = data
+    let token = sessionToken
     if (token) {
       commit('setToken', token)
+      const { nick } = data
+      if (nick) commit('setUsername', nick)
+      const page_title = getToken('title', 'sessionStorage') || title
+      const {
+        objectId,
+        roles,
+        tag = {
+          companyinfo: {
+            title: `欢迎${nick}您登录${page_title}`,
+            Copyright: '© 2017-2021 数蛙科技 Corporation, All Rights Reserved',
+            name: 'dg-iot',
+            logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
+          },
+          userinfo: {
+            avatar:
+              'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3290107827,2759304074&fm=26&gp=0.jpg',
+          },
+        },
+      } = data
+      console.log(tag.companyinfo.title, 'tag info')
+      const { title, Copyright, name, logo } = tag.companyinfo
+      const { avatar } = tag.userinfo
+      setToken('setAvatar', avatar, 'sessionStorage')
+      setToken('roles', roles, 'sessionStorage')
+      setToken('title', title, 'sessionStorage')
+      setToken('copyright', Copyright, 'sessionStorage')
+      setToken('title', title, 'sessionStorage')
+      setToken('name', name, 'sessionStorage')
+      setToken('logo', logo, 'sessionStorage')
+      setToken('avatar', avatar, 'sessionStorage')
+      if (objectId) commit('setObejectId', objectId)
+      // 登录成功后,需要将以下参数存入vuex
+
+      Roletree()
+        .then((res) => {
+          commit('setRoleTree', res.results)
+        })
+        .catch((e) => {
+          console.log(`get role error ${e}`)
+          commit('setRoleTree', [])
+        })
+      const params = {
+        count: 'objectId',
+        order: '-updatedAt',
+        keys: 'name',
+        where: {
+          category: 'IotHub',
+        },
+      }
+      queryProduct(params)
+        .then((res) => {
+          let results = res.results
+          results.unshift({
+            name: language == 'zh' ? '全部产品' : 'All Products',
+            objectId: '0',
+          })
+          commit('set_Product', results)
+        })
+        .catch((e) => {
+          console.log(`query role error ${e}`)
+          commit('set_Product', [])
+        })
       const hour = new Date().getHours()
       const thisTime =
         hour < 8
