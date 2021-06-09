@@ -323,8 +323,9 @@
     <el-row :row="24">
       <el-col :span="leftRow" :xs="24">
         <el-row :span="24">
-          <div class="chart_map">
+          <div v-show="tableData" class="chart_map">
             <baidu-map
+              ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
               :scroll-wheel-zoom="true"
               class="baidu_map"
               :center="{ lng: 116.404, lat: 39.915 }"
@@ -397,8 +398,7 @@
                   <el-col :span="24">
                     <div class="grid-content bg-purple">
                       <el-row
-                        v-for="item in _Product"
-                        v-show="item.objectId != 0"
+                        v-for="item in Product"
                         :key="item.objectId"
                         class="row-bg"
                         justify="space-around"
@@ -416,7 +416,6 @@
                         </el-col>
                         <el-col :span="10">
                           <el-link type="primary" :underline="false">
-                            {{ item.icon }}
                             {{ item.name }}
                           </el-link>
                         </el-col>
@@ -447,7 +446,6 @@
   import { queryProduct } from '@/api/Product'
   import { mapGetters, mapMutations } from 'vuex'
   import { batch } from '@/api/Batch/index'
-  import { queryDevice } from '@/api/Device'
   import Category from '@/api/Mock/Category'
   import { Roletree, getToken } from '@/api/Menu'
   import { uuid } from '@/utils'
@@ -482,6 +480,7 @@
     },
     data() {
       return {
+        Product: [],
         imgurl:
           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
         channeltopic: '',
@@ -519,10 +518,6 @@
           'yAxis.1.splitLine.show': false, // yAxis.1： y轴右侧
 
           'yAxis.1.minInterval': 10, // minInterval设置间隔值，1为整数
-        },
-        chartData: {
-          columns: [],
-          rows: [],
         },
         show: false,
         sizeZoom: 5,
@@ -566,7 +561,6 @@
       this.cardHeight = window.getComputedStyle($('.map_card')[0])['height']
       console.log(this.fixedPaddingTop, this.leftWidth, this.cardHeight)
       this.getAllAxios({}, this.token, false)
-      this.getDevices()
       this.getRoletree()
       this.getProduct()
     },
@@ -649,24 +643,6 @@
         console.log($('.fixed')[0].style)
         console.log(this.fixedPaddingTop)
       },
-      async getProduct() {
-        const params = {
-          count: 'objectId',
-          order: '-updatedAt',
-          keys: 'name,icon',
-          where: {
-            category: 'IotHub',
-          },
-        }
-        const { results } = await queryProduct(params)
-        results.unshift({
-          name: this.language == 'zh' ? '全部产品' : 'All Products',
-          objectId: '0',
-        })
-        this.set_Product(results)
-        this.queryForm.account =
-          this.language == 'zh' ? '全部产品' : 'All Products'
-      },
       selectProdChange(objectId) {
         console.log(objectId)
       },
@@ -685,6 +661,21 @@
             console.log(e)
           })
         this.deptTreeData = this.roleTree
+      },
+      async getProduct() {
+        const { results } = await queryProduct({
+          count: 'objectId',
+          order: '-updatedAt',
+          keys: 'name,icon',
+          where: {
+            category: 'IotHub',
+          },
+        })
+        results.unshift({
+          name: this.language == 'zh' ? '全部产品' : 'All Products',
+          objectId: '0',
+        })
+        this.set_Product(results)
       },
       change(e) {
         console.log(e)
@@ -713,45 +704,27 @@
         console.log('this.queryForm.access_token', this.queryForm.access_token)
         this.channeltopic = `thing/${this.queryForm.access_token}/${uuid(6)}`
         // this.isConnect = true
-        this.$refs.mqtt.clientMqtt()
+        if (this.$refs.mqtt) {
+          this.$refs.mqtt.clientMqtt()
+        }
         // $('.el-select-dropdown').css({ height: '0px', display: 'none' })
       },
-      async getDevices() {
-        const { results } = await queryDevice({})
-        results.forEach((i) => {
-          if (!i.location) {
-            // location 容错处理
-            i.location = { longitude: 0, latitude: 0 }
-          }
-        })
-        this.tableData = results
-      },
       async getAllAxios(data, token, flag) {
+        this.dev_count = 0
+        this.projectList = []
+        this.product_count = 0
+        this.project_count = 0
+        this.dev_count = 0
+        this.app_count = 0
+        this.dev_online_count = 0
+        this.Product = []
+        this.tableData = []
         let product
         if (this.queryForm.account != '' || this.queryForm.account != 0) {
           product = this.queryForm.account
         } else {
           this.queryForm.account = '*'
         }
-        this.chartData = {
-          columns: [],
-          rows: [],
-        }
-        var rows = {}
-        this.chartData.columns.push(
-          '日期',
-          this.$translateTitle('home.app_count'),
-          this.$translateTitle('home.pro_count'),
-          this.$translateTitle('home.cla_count'),
-          this.$translateTitle('home.dev_count'),
-          this.$translateTitle('home.dev_online'),
-          this.$translateTitle('home.dev_unline')
-        )
-        this.chartData.columns.forEach((i) => {
-          rows[i] = 0
-          rows['日期'] = moment().format('YYYY-MM-DD')
-        })
-        this.chartData.rows[0] = rows
         this.$baseColorfullLoading(
           1,
           this.$translateTitle('home.messag_loding')
@@ -826,11 +799,30 @@
               },
             },
           },
+          {
+            method: 'GET',
+            path: '/classes/Product',
+            body: {
+              count: 'objectId',
+              order: '-updatedAt',
+              keys: 'name,icon',
+              where: {
+                category: 'IotHub',
+              },
+            },
+          },
+          {
+            method: 'GET',
+            path: '/classes/Device',
+            body: {
+              count: 'objectId',
+              order: '-updatedAt',
+            },
+          },
         ]
         data = params
         await batch(data, token, flag)
           .then((res) => {
-            let columnsdata = []
             this.$baseColorfullLoading().close()
             this.dev_count = res[0].success.count
             this.projectList = res[1].success.results
@@ -839,32 +831,22 @@
             this.dev_count = res[3].success.count
             this.app_count = res[4].success.count
             this.dev_online_count = res[5].success.count
-            columnsdata.push(
-              moment().format('YYYY-MM-DD'),
-              this.project_count,
-              this.product_count,
-              this.app_count,
-              this.dev_count,
-              this.dev_online_count,
-              this.dev_count - this.dev_online_count
-            )
-            this.chartData.columns.forEach((i, index) => {
-              // rows[`${this.chartData.columns}`] = index
-              for (var key in rows) {
-                // rows['类别'] = this.chartData.columns
-                if (key == i) {
-                  rows[`${key}`] = columnsdata[index]
-                }
+            this.Product = res[6].success.results
+            this.queryForm.account =
+              this.language == 'zh' ? '全部产品' : 'All Products'
+            this.tableData = res[7].success.results
+            this.tableData.forEach((i) => {
+              if (!i.location) {
+                // location 容错处理
+                i.location = { longitude: 0, latitude: 0 }
               }
             })
-            this.chartData.rows[0] = rows
+            console.log(this.tableData)
           })
           .catch((error) => {
             this.$baseColorfullLoading().close()
             console.log(error)
-            this.chartData.rows[0] = rows
           })
-        this.$set(this.chartData, 'rows', [rows])
       },
       handleChange() {},
       handleClickVisit(project) {

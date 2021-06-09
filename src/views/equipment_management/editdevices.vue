@@ -131,86 +131,104 @@
               readonly
             />
             <div class="chartsinfo">
-              <el-row :gutter="24">
-                <el-col :xs="24" :sm="24" :md="10" :xl="7">
-                  {{ $translateTitle('developer.time') }}
-                  <el-date-picker
-                    v-model="params.datetimerange"
-                    type="datetimerange"
-                    :picker-options="pickerOptions"
-                    :range-separator="$translateTitle('developer.to')"
-                    :start-placeholder="$translateTitle('developer.startTime')"
-                    :end-placeholder="$translateTitle('developer.EndTime')"
-                    size="mini"
-                    @change="queryFlag = false"
-                  />
-                </el-col>
-                <el-col :xs="24" :sm="24" :md="3" :xl="5">
-                  {{ $translateTitle('developer.type') }}
-                  <el-select
-                    v-model="params.style"
-                    size="mini"
-                    style="width: 90px"
-                    placeholder="请选择"
+              <div
+                class="queryHeader"
+                :style="{ height: Device == 'desktop' ? '70px' : '300px' }"
+              >
+                <vab-query-form-top-panel>
+                  <el-form
+                    :inline="true"
+                    :model="queryForm"
+                    :label-width="Device == 'desktop' ? '100px' : '80px'"
+                    @submit.native.prevent
                   >
-                    <el-option
-                      v-for="item in chartType"
-                      :key="item.type"
-                      :label="item.name"
-                      :value="item.type"
-                      :disabled="disabledChart.indexOf(item.type) != -1"
-                    />
-                  </el-select>
-                </el-col>
-                <el-col :xs="24" :sm="24" :md="5" :xl="5">
-                  {{ $translateTitle('developer.interval') }}
-                  <el-input-number
-                    v-model="params.number"
-                    size="mini"
-                    style="width: 100px"
-                    :min="1"
-                    placeholder="请输入内容"
-                  />
-                  <el-select
-                    v-model="params.interval"
-                    size="mini"
-                    placeholder="请选择"
-                    style="width: 80px"
-                  >
-                    <el-option
-                      v-for="item in interval"
-                      :key="item.type"
-                      :label="item.name"
-                      :value="item.type"
-                    />
-                  </el-select>
-                </el-col>
-                <el-col :xs="24" :sm="24" :md="6" :xl="6">
-                  {{ $translateTitle('developer.function') }}
-                  <el-select
-                    v-model="params._function"
-                    size="mini"
-                    style="width: 100px"
-                    placeholder="请选择"
-                  >
-                    <el-option
-                      v-for="item in functionarr"
-                      :key="item"
-                      :label="item"
-                      :value="item"
-                    />
-                  </el-select>
-                  <el-button
-                    size="mini"
-                    type="primary"
-                    :disabled="queryFlag"
-                    icon="el-icon-search"
-                    @click="queryChart"
-                  >
-                    {{ $translateTitle('developer.search') }}
-                  </el-button>
-                </el-col>
-              </el-row>
+                    <el-form-item :label="$translateTitle('developer.time')">
+                      <el-date-picker
+                        v-model="params.datetimerange"
+                        type="datetimerange"
+                        :picker-options="pickerOptions"
+                        :range-separator="$translateTitle('developer.to')"
+                        :start-placeholder="
+                          $translateTitle('developer.startTime')
+                        "
+                        :end-placeholder="$translateTitle('developer.EndTime')"
+                        size="mini"
+                        @change="queryFlag = false"
+                      />
+                    </el-form-item>
+                    <el-form-item :label="$translateTitle('developer.type')">
+                      <el-select
+                        v-model="params.style"
+                        size="mini"
+                        style="width: 90px"
+                        placeholder="请选择"
+                      >
+                        <el-option
+                          v-for="item in chartType"
+                          :key="item.type"
+                          :label="item.name"
+                          :value="item.type"
+                          :disabled="disabledChart.indexOf(item.type) != -1"
+                        />
+                      </el-select>
+                    </el-form-item>
+
+                    <el-form-item
+                      :label="$translateTitle('developer.interval')"
+                    >
+                      <el-input-number
+                        v-model="params.number"
+                        size="mini"
+                        style="width: 100px"
+                        :min="1"
+                        placeholder="请输入内容"
+                      />
+                      <el-select
+                        v-model="params.interval"
+                        size="mini"
+                        placeholder="请选择"
+                        style="width: 70px"
+                      >
+                        <el-option
+                          v-for="item in interval"
+                          :key="item.type"
+                          :label="item.name"
+                          :value="item.type"
+                        />
+                      </el-select>
+                    </el-form-item>
+
+                    <el-form-item
+                      :label="$translateTitle('developer.function')"
+                    >
+                      <el-select
+                        v-model="params._function"
+                        size="mini"
+                        style="width: 100px"
+                        placeholder="请选择"
+                      >
+                        <el-option
+                          v-for="item in functionarr"
+                          :key="item"
+                          :label="item"
+                          :value="item"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button
+                        size="mini"
+                        type="primary"
+                        :disabled="queryFlag"
+                        icon="el-icon-search"
+                        @click="queryChart"
+                      >
+                        {{ $translateTitle('developer.search') }}
+                      </el-button>
+                    </el-form-item>
+                  </el-form>
+                </vab-query-form-top-panel>
+              </div>
               <div class="chartsmain">
                 <ve-line
                   v-if="params.style == 'line'"
@@ -1091,6 +1109,7 @@
   </div>
 </template>
 <script>
+  import { mapGetters, mapMutations } from 'vuex'
   import { getTdDevice, getDabDevice } from '@/api/Device/index.js'
   import { utc2beijing, timestampToTime } from '@/utils/index'
   import LineChart from '../dashboard/admin/components/LineChart'
@@ -1181,6 +1200,12 @@
       }
 
       return {
+        queryForm: {
+          account: '',
+          searchDate: '',
+          pageNo: 1,
+          pageSize: 20,
+        },
         loading: true,
         xl: 6,
         xs: 24,
@@ -1394,6 +1419,11 @@
         selectproduct: '',
         watchNum: 0,
       }
+    },
+    computed: {
+      ...mapGetters({
+        Device: 'settings/device',
+      }),
     },
     watch: {
       properties: {
@@ -2058,9 +2088,12 @@
     },
   }
 </script>
-<style scoped>
+<style scoped lang="scss">
   .chartsinfo {
     margin-top: 15px;
+    .chartsmain {
+      margin-top: 30px;
+    }
   }
   .editdevices {
     box-sizing: border-box;

@@ -89,7 +89,7 @@ const mutations = {
    * @param {*} state
    * @param {*} token
    */
-  setToken(state, token) {
+  _setToken(state, token) {
     state.token = token
     setToken(tokenTableName, token, storage)
   },
@@ -126,12 +126,12 @@ const actions = {
    * @param {*} { commit }
    * @param {*} userInfo
    */
-  async login({ commit }, userInfo) {
+  async login({ commit, dispatch }, userInfo) {
     const data = (await login(userInfo)) || {}
     const { sessionToken = '' } = data
     let token = sessionToken
     if (token) {
-      commit('setToken', token)
+      commit('_setToken', token)
       const { nick } = data
       if (nick) commit('setUsername', nick)
       const page_title = getToken('title', 'sessionStorage') || title
@@ -154,16 +154,28 @@ const actions = {
       console.log(tag.companyinfo.title, 'tag info')
       const { title, Copyright, name, logo } = tag.companyinfo
       const { avatar } = tag.userinfo
-      setToken('setAvatar', avatar, 'sessionStorage')
-      setToken('roles', roles, 'sessionStorage')
-      setToken('title', title, 'sessionStorage')
-      setToken('copyright', Copyright, 'sessionStorage')
-      setToken('title', title, 'sessionStorage')
-      setToken('name', name, 'sessionStorage')
-      setToken('logo', logo, 'sessionStorage')
-      setToken('avatar', avatar, 'sessionStorage')
-      if (objectId) commit('setObejectId', objectId)
+      commit('setAvatar', avatar)
+      commit('setname', name)
+      commit('setlogo', logo)
+      dispatch('settings/setTitle', title, { root: true })
+      dispatch('acl/setRole', roles, { root: true })
+      dispatch('settings/setTitle', title, { root: true })
+      dispatch('acl/setCopyright', Copyright, { root: true })
+      commit('setObejectId', objectId)
       // 登录成功后,需要将以下参数存入vuex
+
+      const hour = new Date().getHours()
+      const thisTime =
+        hour < 8
+          ? '早上好'
+          : hour <= 11
+          ? '上午好'
+          : hour <= 13
+          ? '中午好'
+          : hour < 18
+          ? '下午好'
+          : '晚上好'
+      Vue.prototype.$baseNotify(title, `${thisTime}！`)
 
       Roletree()
         .then((res) => {
@@ -194,18 +206,6 @@ const actions = {
           console.log(`query role error ${e}`)
           commit('set_Product', [])
         })
-      const hour = new Date().getHours()
-      const thisTime =
-        hour < 8
-          ? '早上好'
-          : hour <= 11
-          ? '上午好'
-          : hour <= 13
-          ? '中午好'
-          : hour < 18
-          ? '下午好'
-          : '晚上好'
-      Vue.prototype.$baseNotify(title, `${thisTime}！`)
     } else {
       Vue.prototype.$baseMessage(
         `登录接口异常，未正确返回${tokenName}...`,
@@ -275,7 +275,6 @@ const actions = {
   },
   async getlicense({ commit, dispatch }) {
     const { result } = await license()
-    setToken('license', false)
     if (result) dispatch('acl/setLicense', result, { root: true })
   },
   async getDefault({ commit, dispatch }) {
@@ -304,7 +303,7 @@ const actions = {
     commit('setObejectId', '')
     commit('setAvatar', '')
     commit('routes/setRoutes', [], { root: true })
-    await dispatch('setToken', '')
+    await dispatch('_setToken', '')
     await dispatch('acl/setFull', false, { root: true })
     await dispatch('acl/setRole', [], { root: true })
     await dispatch('acl/setAbility', [], { root: true })
@@ -327,8 +326,8 @@ const actions = {
    * @param {*} { commit }
    * @param {*} token
    */
-  setToken({ commit }, token) {
-    commit('setToken', token)
+  _setToken({ commit }, token) {
+    commit('_setToken', token)
   },
   setAvatar({ commit }, avatar) {
     commit('setAvatar', avatar)

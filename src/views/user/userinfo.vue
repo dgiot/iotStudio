@@ -172,11 +172,9 @@
   </div>
 </template>
 <script>
-  var editor
   import Upload from '@/components/UploadFile/input'
   import { mapGetters, mapMutations } from 'vuex'
   import { isPhone, isUrl } from '@/utils/validate'
-  import { UploadImg } from '@/api/File'
   import { putUser } from '@/api/User'
   export default {
     name: 'Userinfo',
@@ -231,7 +229,9 @@
       }),
     },
     mounted() {
-      this.queryUserInfo()
+      this.$nextTick(() => {
+        this.queryUserInfo()
+      })
     },
     methods: {
       ...mapMutations({
