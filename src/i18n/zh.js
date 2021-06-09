@@ -105,6 +105,8 @@ export default {
     },
     route: {},
     equipment: {
+      'real-time': '实时数据',
+      historical: '历史数据',
       list: '设备列表',
       map: '设备地图',
       location: '位置',
@@ -209,6 +211,10 @@ export default {
       powersupply: '供电单位',
     },
     developer: {
+      interval: '间隔',
+      function: '计算函数',
+      type: '类型',
+      time: '时间段',
       to: '至',
       EndTime: '结束时间',
       startTime: '开始时间',

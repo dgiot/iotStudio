@@ -8,8 +8,14 @@
 -->
 <template>
   <div ref="platform" class="platform">
+    <mqtt
+      ref="mqtt"
+      :connect="isConnect"
+      :topic="channeltopic"
+      @mqttMsg="mqttMsg"
+    />
     <div
-      :style="{ height: queryForm.workGroupTreeShow ? '160px' : '140px' }"
+      :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
       class="map_header"
     >
       <div v-show="cardHeight != '0px'" class="map_card">
@@ -284,9 +290,9 @@
                 {{ $translateTitle('konva.top') }}
               </el-button>
               <el-button
-                :icon="leftRow == 18 ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
+                :icon="leftRow == 20 ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
                 type="primary"
-                @click="leftRow == 18 ? (leftRow = 24) : (leftRow = 18)"
+                @click="leftRow == 20 ? (leftRow = 24) : (leftRow = 20)"
               >
                 {{
                   cardHeight != '0px'
@@ -303,7 +309,7 @@
                 @click="toggleCard(cardHeight)"
               >
                 {{
-                  leftRow == 18
+                  leftRow == 20
                     ? $translateTitle('konva.hide')
                     : $translateTitle('konva.show')
                 }}
@@ -387,84 +393,63 @@
                 <span>{{ $translateTitle('home.info') }}</span>
               </div>
               <div>
-                <el-row>
-                  <el-col :span="18">
-                    <ve-histogram
-                      :extend="chartExtend"
-                      height="260px"
-                      :data="chartData"
-                      :settings="chartSetting"
-                    />
-                  </el-col>
-                  <el-col :span="6">
-                    <div style="margin: 20px 0 20px 20px">
-                      <p>
-                        {{
-                          $translateTitle('home.app_count') +
-                          ':' +
-                          project_count
-                        }}
-                      </p>
-                      <p>
-                        {{
-                          $translateTitle('home.pro_count') +
-                          ':' +
-                          product_count
-                        }}
-                      </p>
-                      <p>
-                        {{
-                          $translateTitle('home.cla_count') + ':' + app_count
-                        }}
-                      </p>
-                      <p>
-                        {{
-                          $translateTitle('home.dev_count') + ':' + dev_count
-                        }}
-                      </p>
-                      <p>
-                        {{
-                          $translateTitle('home.dev_online') +
-                          ':' +
-                          dev_online_count
-                        }}
-                      </p>
-                      <p>
-                        {{ $translateTitle('home.dev_unline') + ':' }}
-                        {{ dev_count - dev_online_count }}
-                      </p>
+                <el-row :gutter="24">
+                  <el-col :span="24">
+                    <div class="grid-content bg-purple">
+                      <el-row
+                        v-for="item in _Product"
+                        v-show="item.objectId != 0"
+                        :key="item.objectId"
+                        class="row-bg"
+                        justify="space-around"
+                      >
+                        <el-col :span="6">
+                          <el-image
+                            style="width: 26px; height: 26px"
+                            :src="item.icon"
+                            :preview-src-list="[`${item.icon}`]"
+                          >
+                            <div slot="error" class="image-slot">
+                              <i class="el-icon-picture-outline"></i>
+                            </div>
+                          </el-image>
+                        </el-col>
+                        <el-col :span="10">
+                          <el-link type="primary" :underline="false">
+                            {{ item.icon }}
+                            {{ item.name }}
+                          </el-link>
+                        </el-col>
+                        <el-col :span="2">
+                          <el-link
+                            type="success"
+                            :underline="false"
+                            :disabled="item.num <= 0"
+                          >
+                            {{ item.devname }}
+                          </el-link>
+                        </el-col>
+                      </el-row>
                     </div>
                   </el-col>
                 </el-row>
               </div>
             </el-card>
           </div>
-          <div class="box-card">
-            <el-card>
-              <div slot="header" class="clearfix">
-                <span>未确认报警展示</span>
-                <el-button style="float: right; padding: 3px 0" type="text">
-                  操作按钮
-                </el-button>
-              </div>
-              <div v-for="o in 4" :key="o" class="text item">
-                {{ '设备 ' + o }}
-              </div>
-            </el-card>
-          </div>
+          <div class="box-card"></div>
         </div>
       </el-col>
     </el-row>
   </div>
 </template>
 <script>
+  import mqtt from '@/components/Mqtt'
   import { queryProduct } from '@/api/Product'
   import { mapGetters, mapMutations } from 'vuex'
   import { batch } from '@/api/Batch/index'
   import { queryDevice } from '@/api/Device'
   import Category from '@/api/Mock/Category'
   import { Roletree, getToken } from '@/api/Menu'
-  import { Websocket } from '@/utils/wxscoket.js'
   import { uuid } from '@/utils'
   import {
     BmNavigation,
@@ -493,9 +478,14 @@
       BmGeolocation,
       BmCityList,
       BmMarker,
+      mqtt,
     },
     data() {
       return {
+        imgurl:
+          'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+        channeltopic: '',
+        isConnect: false,
         queryForm: {
           account: '',
           searchDate: '',
@@ -513,7 +503,7 @@
         cardHeight: '',
         fixedPaddingTop: '',
         curDepartmentId: '',
-        leftRow: 18,
+        leftRow: 20,
         treeDataValue: '',
         deptTreeData: [],
         chartExtend: {
@@ -600,8 +590,8 @@
         })
       },
       /*
-       连接webscroket
-       */
+     连接webscroket
+     */
       getCategory(key) {
         console.log(key)
         let name = ''
@@ -612,22 +602,16 @@
         })
         return name
       },
-      connectScoket() {
-        var channeltopic = `thing/${this.queryForm.access_token}/${uuid(6)}`
-        console.log('订阅mqtt channeltopic', channeltopic)
-        Websocket.add_hook(channeltopic, (Msg) => {
-          console.log('收到消息', Msg)
-        })
+      mqttMsg(e) {
+        console.log(e)
       },
       toggleCard(height) {
         console.log('cardHeight', height)
         if (height != '0px') {
           $('.map_card').css({ height: '0px' })
-          $('.map_header').css({ height: '60px' })
           this.cardHeight = '0px'
         } else {
           $('.map_card').css({ height: '98px' })
-          $('.map_header').css({ height: '160px' })
           this.cardHeight = '98px'
         }
       },
@@ -669,7 +653,7 @@
         const params = {
           count: 'objectId',
           order: '-updatedAt',
-          keys: 'name',
+          keys: 'name,icon',
           where: {
             category: 'IotHub',
           },
@@ -709,7 +693,6 @@
         }
       },
       async handleNodeClick(data, node) {
-        console.log(this.$refs['workGroup'].$el)
         $('.el-tree').css({ height: '0px', display: 'none' })
         $('.el-select-dropdown').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
@@ -728,7 +711,9 @@
         const { name, objectId } = data
         this.curDepartmentId = objectId
         console.log('this.queryForm.access_token', this.queryForm.access_token)
-        this.connectScoket()
+        this.channeltopic = `thing/${this.queryForm.access_token}/${uuid(6)}`
+        // this.isConnect = true
+        this.$refs.mqtt.clientMqtt()
         // $('.el-select-dropdown').css({ height: '0px', display: 'none' })
       },
       async getDevices() {
@@ -790,7 +775,7 @@
               // 这里查product 是导致整个查询变慢的主要原因
               count: 'objectId',
               skip: 0,
-              keys: 'updatedAt,category,desc',
+              keys: 'updatedAt,category,desc,icon',
               where: {
                 category: 'IotHub',
                 // category: 'Evidence',
@@ -904,7 +889,7 @@
 <style lang="scss" scoped>
   .platform {
     .map_header {
-      height: 160px;
+      height: auto;
       .workGroupTreeShow {
         height: 100px;
         overflow: auto;
@@ -934,6 +919,31 @@
       i {
         color: #fff;
       }
+      .el-row {
+        margin-bottom: 20px;
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+      .el-col {
+        border-radius: 4px;
+      }
+      .bg-purple-dark {
+        background: #99a9bf;
+      }
+      .bg-purple {
+      }
+      .bg-purple-light {
+        background: #e5e9f2;
+      }
+      .grid-content {
+        border-radius: 4px;
+      }
+      .row-bg {
+        padding: 10px 0;
+        background-color: #f9fafc;
+        height: 40px;
+      }
     }
 
     .map_card ::v-deep .el-row {
@@ -953,7 +963,7 @@
         background: #ff4c4f;
       }
       .card-panel-col:nth-child(6) .el-card {
-        background: #1890ff;
+        background: #2090ff;
       }
     }
     .el-card__body {
@@ -978,7 +988,7 @@
     }
     .card-right p {
       color: #fff;
-      font-size: 18px;
+      font-size: 20px;
     }
   }
   .text {
@@ -986,7 +996,7 @@
   }
 
   .item {
-    margin-bottom: 18px;
+    margin-bottom: 20px;
   }
   i {
     display: block !important;

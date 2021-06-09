@@ -273,7 +273,7 @@
 </template>
 <script>
   import { returnLogin } from '@/utils/return'
-  import { aclObj } from '@/utils/Acl'
+  import { aclObj } from '@/utils/acl'
   import {
     queryIndustry,
     delIndustry,

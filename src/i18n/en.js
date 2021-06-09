@@ -718,6 +718,8 @@ export default {
       programinglanguage: 'Programing language',
     },
     equipment: {
+      'real-time': 'real-time',
+      historical: 'historical',
       list: 'table',
       map: 'map',
       number: 'Number',
