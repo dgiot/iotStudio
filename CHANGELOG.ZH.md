@@ -10,6 +10,7 @@
 * feat: changelog ([781eff1](https://github.com/dgiot/dgiot_dashboard/commit/781eff1))
 * feat: cli ([eaad820](https://github.com/dgiot/dgiot_dashboard/commit/eaad820))
 * feat: cli ([3c6e3fb](https://github.com/dgiot/dgiot_dashboard/commit/3c6e3fb))
+* feat: data storage && Chart adaptation ([38a6b00](https://github.com/dgiot/dgiot_dashboard/commit/38a6b00))
 * feat: developer.config.js ([5b136cf](https://github.com/dgiot/dgiot_dashboard/commit/5b136cf))
 * feat: device table ([ec42525](https://github.com/dgiot/dgiot_dashboard/commit/ec42525))
 * feat: echarts ([81324f3](https://github.com/dgiot/dgiot_dashboard/commit/81324f3))
