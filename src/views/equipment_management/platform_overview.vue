@@ -8,7 +8,7 @@
 -->
 <template>
   <div ref="platform" class="platform">
-    <mqtt
+    <VabMqtt
       ref="mqtt"
       :connect="isConnect"
       :topic="channeltopic"
@@ -199,21 +199,6 @@
             :model="queryForm"
             @submit.native.prevent
           >
-            <el-form-item :label="$translateTitle('equipment.products')">
-              <el-select
-                v-model="queryForm.account"
-                class="selectdetail"
-                size="small"
-                @change="selectProdChange"
-              >
-                <el-option
-                  v-for="(item, index) in _Product"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.objectId"
-                />
-              </el-select>
-            </el-form-item>
             <el-form-item :label="$translateTitle('user.department')">
               <el-select
                 v-model="queryForm.workGroupName"
@@ -243,6 +228,21 @@
                     </div>
                   </el-tree>
                 </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$translateTitle('equipment.products')">
+              <el-select
+                v-model="queryForm.account"
+                class="selectdetail"
+                size="small"
+                @change="selectProdChange"
+              >
+                <el-option
+                  v-for="(item, index) in _Product"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.objectId"
+                />
               </el-select>
             </el-form-item>
             <el-form-item :label="$translateTitle('user.createdtime')">
@@ -442,7 +442,6 @@
   </div>
 </template>
 <script>
-  import mqtt from '@/components/Mqtt'
   import { queryProduct } from '@/api/Product'
   import { mapGetters, mapMutations } from 'vuex'
   import { batch } from '@/api/Batch/index'
@@ -476,7 +475,6 @@
       BmGeolocation,
       BmCityList,
       BmMarker,
-      mqtt,
     },
     data() {
       return {
@@ -922,9 +920,9 @@
         border-radius: 4px;
       }
       .row-bg {
+        height: 40px;
         padding: 10px 0;
         background-color: #f9fafc;
-        height: 40px;
       }
     }
 
@@ -969,8 +967,8 @@
       font-weight: bolder;
     }
     .card-right p {
-      color: #fff;
       font-size: 20px;
+      color: #fff;
     }
   }
   .text {

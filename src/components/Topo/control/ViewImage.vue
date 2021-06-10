@@ -54,10 +54,10 @@
 
 <style lang="scss">
   .view-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 100%;
     text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 </style>

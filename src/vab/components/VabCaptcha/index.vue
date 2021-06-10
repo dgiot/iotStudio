@@ -41,6 +41,7 @@
    */
   let _$mouseDown = false // 鼠标是否在滑块组中按下，因为和html没有绑定，所以没有放在data中，并以_$开头
   export default {
+    name: 'VabCaptcha',
     props: {
       captchaConfig: {
         type: Object,

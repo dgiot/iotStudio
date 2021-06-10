@@ -70,7 +70,7 @@
           <el-input v-model="record.topic" placeholder="Topic" />
         </el-form-item>
         <el-form-item prop="qos" label="QoS">
-          <emq-select
+          <vab-emq-select
             v-model="record.qos"
             class="el-select--public"
             popper-class="el-select--public"
@@ -98,11 +98,11 @@
 </template>
 
 <script>
-  import EmqSelect from '@/components/EmqSelect'
+  import VabEmqSelect from '@/vab/components/VabEmqSelect'
   export default {
-    name: 'ClientsSubscriptions',
+    name: 'VabClientsSubscriptions',
     components: {
-      EmqSelect,
+      VabEmqSelect,
     },
     props: {
       clientId: {
@@ -198,8 +198,8 @@
 <style lang="scss">
   .clients-subscriptions {
     .oper-btn-group {
-      text-align: right;
       margin: 24px 0;
+      text-align: right;
     }
     .client-sub-table {
       margin-bottom: 24px;

@@ -134,9 +134,9 @@
     height: calc(100vh - 210px);
     .wresize-panel-left {
       position: absolute;
-      left: 0px;
       top: 0px;
       bottom: 0px;
+      left: 0px;
     }
 
     .wresize-panel-center {
@@ -147,8 +147,8 @@
 
     .wresize-panel-right {
       position: absolute;
-      right: 0px;
       top: 0px;
+      right: 0px;
       bottom: 0px;
     }
 

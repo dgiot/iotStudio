@@ -71,11 +71,11 @@
 
 <style lang="scss">
   .view-chart-gauge {
-    height: 100%;
-    width: 100%;
-    text-align: center;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    text-align: center;
   }
 </style>

@@ -56,7 +56,7 @@
 <script>
   import { UploadImg } from '@/api/File'
   export default {
-    name: 'UploadFile',
+    name: 'VabUploadFile',
     props: {
       accept: {
         type: String,

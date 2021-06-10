@@ -42,7 +42,7 @@
 <style scoped>
   .international-icon {
     font-size: 25px;
-    cursor: pointer;
     vertical-align: -5px !important;
+    cursor: pointer;
   }
 </style>

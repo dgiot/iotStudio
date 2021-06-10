@@ -296,7 +296,7 @@
     Col,
     Card,
   } from 'element-ui'
-  import MQTTConnect from '@/components/MQTTConnect/index'
+  import MQTTConnect from '@/utils/MQTTConnect'
   import { _scokethost } from '@/utils/wxscoket'
   export default {
     name: 'WebsocketView',

@@ -343,10 +343,8 @@
                 </el-form-item>
                 <el-form-item label="法人代表身份证" required>
                   <el-col :span="11">
-
                               :on-success="handleAvatarSuccessFront"
                       :before-upload="beforeAvatarUpload"
-
                     <el-upload
                       :show-file-list="false"
                       class="avatar-uploader"
@@ -363,7 +361,6 @@
                   </el-col>
                   <el-col :span="2" class="line">-</el-col>
                   <el-col :span="11" style="position:relative">
-
                        :on-success="handleAvatarSuccessContrary"
                       :before-upload="beforeAvatarUpload"
                     <el-upload
@@ -428,10 +425,8 @@
                   <el-input v-model="authenticationPreviewForm.identity" placeholder="请输入法人身份证号码（18位）" readonly/>
                 </el-form-item>
                 <el-form-item label="企业营业执照" required>
-
                           :on-success="handleAvatarSuccessBusiness"
                     :before-upload="beforeAvatarUpload"
-
                   <el-upload
                     :show-file-list="false"
                     class="avatar-uploader"
@@ -474,7 +469,6 @@
             </el-col>
           </el-row>
         </el-form>
-
         <div style="text-align:center;">
           <el-button type="primary" style="margin-top: 12px;" @click="addEmpower">提交审核</el-button>
           <el-button type="info" @click="goBack">返回上一步</el-button>
@@ -726,7 +720,6 @@
 </template>
 <script>
   import { regionData, CodeToText } from 'element-china-area-data'
-
   // import Parse from 'parse'
   import { returnLogin } from '@/utils/return'
   import LaboratoryForm from '@/components/laboratoryForm'
@@ -773,7 +766,6 @@
       }
       const Registered = function (rule, value, callback) {
         var rules = /^(([^0][0-9]+|0)\.([0-9]{1,2})$)|^(([^0][0-9]+|0)$)|^(([1-9]+)\.([0-9]{1,2})$)|^(([1-9]+)$)/
-
         if (!rules.test(value)) {
           callback(new Error('请填写公司注册资金,精确2位小数'))
         } else {
@@ -792,7 +784,6 @@
           },
         ],
         tabIndex: 1,
-
         allactive: 1,
         active: 1,
         authenticationForm: {
@@ -1174,7 +1165,6 @@
     mounted() {
       // this.originData()
     },
-
     methods: {
       upload(event, type) {
         this.imgtype = type
@@ -1272,7 +1262,6 @@
             }
           })
         }
-
         this.editableTabsValue = activeName
         this.editableTabs = tabs.filter((tab) => tab.name !== targetName)
       },
@@ -1504,7 +1493,6 @@
       handleClose() {
         this.dialogVisible = false
       },
-
       nextTo(formName1, formName2) {
         var valid1
         var valid2
@@ -1621,7 +1609,6 @@
         this.authenticationPreviewForm = this.authenticationForm
         this.ruleForm1 = this.ruleForm
         this.ruleForm2 = this.ruleformcma
-
         var Authentication = Parse.Object.extend('Authentication')
         var authentication = new Authentication()
         authentication.id = this.ewpowerid
@@ -1700,7 +1687,6 @@
       .el-form {
         .el-col-12 {
           padding: 20px;
-
           @media screen and (max-width: 1300px) {
             width: 100%;
           }

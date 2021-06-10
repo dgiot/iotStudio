@@ -1,6 +1,6 @@
 <template>
   <div class="createResourcechannel">
-    <upload ref="uploadFinish" @fileInfo="fileInfo" />
+    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <el-form
       ref="addchannel"
       :rules="addrules"
@@ -201,12 +201,9 @@
   import { resourceTypes, putResourceTypes } from '@/api/Rules'
   import { postChannel } from '@/api/Channel'
   import { mapActions, mapGetters } from 'vuex'
-  import Upload from '@/components/UploadFile/input'
   export default {
     name: 'CreateResourcechannel',
-    components: {
-      Upload,
-    },
+    components: {},
     data() {
       return {
         channelregion: [],

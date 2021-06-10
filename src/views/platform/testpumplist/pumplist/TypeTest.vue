@@ -137,9 +137,9 @@
 
     th,
     td {
-      border: 1px solid #ccc;
       padding: 8px;
       text-align: center;
+      border: 1px solid #ccc;
     }
   }
   div.box-2 {
@@ -147,11 +147,11 @@
     background: #ddd;
   }
   .type-test-right-box {
-    margin-top: 80px;
     height: 400px;
+    margin-top: 80px;
   }
   .type-test-rb-box {
-    margin-top: 10px;
     padding: 20px;
+    margin-top: 10px;
   }
 </style>

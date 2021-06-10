@@ -4,11 +4,11 @@
       <div class="left1">
         <p
           style="
-            border-bottom: 1px solid #cccccc;
-            color: #409eff;
-            font-size: 14px;
             height: 40px;
             margin: 0;
+            font-size: 14px;
+            color: #409eff;
+            border-bottom: 1px solid #cccccc;
           "
         >
           取证产品信息
@@ -54,11 +54,11 @@
       <div class="left2">
         <p
           style="
-            border-bottom: 1px solid #cccccc;
-            color: #409eff;
-            font-size: 14px;
             height: 40px;
             margin: 0;
+            font-size: 14px;
+            color: #409eff;
+            border-bottom: 1px solid #cccccc;
           "
         >
           取证设备信息
@@ -125,11 +125,11 @@
       <div class="left3">
         <p
           style="
-            border-bottom: 1px solid #cccccc;
-            color: #409eff;
-            font-size: 14px;
             height: 40px;
             margin: 0;
+            font-size: 14px;
+            color: #409eff;
+            border-bottom: 1px solid #cccccc;
           "
         >
           取证设备信息
@@ -340,10 +340,10 @@
       <div class="left4">
         <p
           style="
-            border-bottom: 1px solid #cccccc;
-            color: #409eff;
-            font-size: 14px;
             height: 40px;
+            font-size: 14px;
+            color: #409eff;
+            border-bottom: 1px solid #cccccc;
           "
         >
           质检报告文件上传
@@ -485,28 +485,28 @@
 </script>
 <style lang="scss" scoped>
   .evidence_detail {
-    width: 100%;
-    background: #ffffff;
-    display: flex;
-    padding: 20px;
     box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    padding: 20px;
+    background: #ffffff;
     .evidence_right {
-      width: 350px;
       box-sizing: border-box;
+      width: 350px;
       .el-card {
         .el-card__body {
           padding: 0;
           .box_content {
+            box-sizing: border-box;
             width: 100%;
             height: auto;
             padding: 10px;
-            box-sizing: border-box;
             .content {
+              box-sizing: border-box;
               width: 100%;
               height: auto;
-              background: #f0e2f1;
               padding: 5px;
-              box-sizing: border-box;
+              background: #f0e2f1;
               ::v-deep .el-form-item {
                 margin-bottom: 5px;
                 .el-form-item__label {
@@ -519,21 +519,21 @@
       }
 
       ::v-deep .box_top {
-        height: 40px;
         width: 100%;
+        height: 40px;
+        line-height: 40px;
+        color: white;
         text-align: center;
         background: #409eff;
-        color: white;
-        line-height: 40px;
       }
     }
     .evidence_left {
-      width: calc(100% - 350px);
       box-sizing: border-box;
+      width: calc(100% - 350px);
       .devices1 {
         ::v-deep .el-form-item__label {
-          border: 0;
           line-height: 20px;
+          border: 0;
         }
         ::v-deep .el-form-item {
           margin-bottom: 10px;

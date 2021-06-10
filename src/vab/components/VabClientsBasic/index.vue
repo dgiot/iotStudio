@@ -224,7 +224,7 @@
 <script>
   import { intercept } from '@/utils'
   export default {
-    name: 'ClientsBasic',
+    name: 'VabClientsBasic',
     filters: {
       transToUnlimit(val) {
         return val === 0 ? 'Unlimited' : val
@@ -259,9 +259,9 @@
   .clients-basic {
     .clients-basic-form {
       .form-item-desc {
-        color: #5f6067;
         margin-left: 20px;
         font-size: 14px;
+        color: #5f6067;
       }
       .el-form-item__content {
         color: #f8f8f8;

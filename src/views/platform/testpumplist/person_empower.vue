@@ -8,10 +8,10 @@
     <div v-if="active == 1" class="empower1">
       <h3
         style="
-          border: 1px solid #cccccc;
           height: 40px;
-          line-height: 40px;
           padding-left: 20px;
+          line-height: 40px;
+          border: 1px solid #cccccc;
         "
       >
         个人资质认证
@@ -68,11 +68,11 @@
                       style="
                         position: relative;
                         top: -200px;
-                        opacity: 0;
                         z-index: 5;
-                        height: 200px;
                         width: 200px;
+                        height: 200px;
                         cursor: pointer;
+                        opacity: 0;
                       "
                       @change="upload($event, 'front')"
                     />
@@ -83,8 +83,8 @@
                     style="
                       position: absolute;
                       top: 90px;
-                      color: #8c939d;
                       left: 110px;
+                      color: #8c939d;
                     "
                   >
                     正面
@@ -96,8 +96,8 @@
                     type="danger"
                     style="
                       position: absolute;
-                      left: 200px;
                       top: 150px;
+                      left: 200px;
                       margin-left: 0;
                     "
                     @click="powerform.frontimageUrl = ''"
@@ -124,11 +124,11 @@
                       style="
                         position: relative;
                         top: -200px;
-                        opacity: 0;
                         z-index: 5;
-                        height: 200px;
                         width: 200px;
+                        height: 200px;
                         cursor: pointer;
+                        opacity: 0;
                       "
                       @change="upload($event, 'contrary')"
                     />
@@ -139,8 +139,8 @@
                     style="
                       position: absolute;
                       top: 90px;
-                      color: #8c939d;
                       left: 110px;
+                      color: #8c939d;
                     "
                   >
                     反面
@@ -152,8 +152,8 @@
                     type="danger"
                     style="
                       position: absolute;
-                      left: 190px;
                       top: 150px;
+                      left: 190px;
                       margin-left: 0;
                     "
                     @click="powerform.contraryimageUrl = ''"
@@ -213,11 +213,11 @@
                     style="
                       position: relative;
                       top: -200px;
-                      opacity: 0;
                       z-index: 5;
-                      height: 200px;
                       width: 200px;
+                      height: 200px;
                       cursor: pointer;
+                      opacity: 0;
                     "
                     @change="upload($event, 'joblicenseUrl')"
                   />
@@ -228,8 +228,8 @@
                   style="
                     position: absolute;
                     top: 90px;
-                    color: #8c939d;
                     left: 120px;
+                    color: #8c939d;
                   "
                 >
                   职业资质
@@ -241,8 +241,8 @@
                   type="danger"
                   style="
                     position: absolute;
-                    left: 200px;
                     top: 150px;
+                    left: 200px;
                     margin-left: 0;
                   "
                   @click="powerform.joblicenseUrl = ''"
@@ -332,7 +332,7 @@
     <div v-if="active == 2" class="empower2">
       <div
         class="block"
-        style="margin: 0 auto; text-align: center; padding: 30px"
+        style="padding: 30px; margin: 0 auto; text-align: center"
       >
         <el-image>
           <div slot="error" class="image-slot">
@@ -349,7 +349,7 @@
             }}
           </span>
         </p>
-        <p style="color: #cccccc; font-size: 14px">
+        <p style="font-size: 14px; color: #cccccc">
           预计3到5个工作日完成，请耐心等待，谢谢您的配合和理解
         </p>
         <p>
@@ -643,10 +643,10 @@
 </script>
 <style lang="scss" scoped>
   .person_empower {
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     padding: 20px 60px;
-    box-sizing: border-box;
     background: #ffffff;
     .empower1 {
       .el-form {
@@ -677,38 +677,38 @@
 </style>
 <style>
   .person_empower .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
   }
   .person_empower.avatar-uploader .el-upload:hover {
     border-color: #409eff;
   }
   .person_empower .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
     width: 250px;
     height: 178px;
+    font-size: 28px;
     line-height: 178px;
+    color: #8c939d;
     text-align: center;
     border: 1px dashed #cccccc;
   }
   .person_empower .avatar {
+    display: block;
     width: 250px;
     height: 178px;
-    display: block;
   }
   .image-slot {
-    font-size: 30px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     width: 250px;
     height: 250px;
-    background: #f5f7fa;
+    font-size: 30px;
     color: #909399;
+    background: #f5f7fa;
   }
   .person_empower .el-tabs__header {
     margin-top: 20px;

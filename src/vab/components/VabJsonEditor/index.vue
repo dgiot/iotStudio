@@ -7,7 +7,7 @@
 
 <script>
   export default {
-    name: 'JsonEditor',
+    name: 'VabJsonEditor',
     /* eslint-disable vue/require-prop-types */
     props: ['value'],
     data() {

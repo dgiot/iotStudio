@@ -1,6 +1,6 @@
 <template>
   <div class="devproduct">
-    <upload ref="uploadFinish" @fileInfo="fileInfo" />
+    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <el-tabs v-model="activeName">
       <el-tab-pane
         :label="$translateTitle('product.myproduct') + '(' + total + ')'"
@@ -930,7 +930,6 @@
   </div>
 </template>
 <script>
-  import Upload from '@/components/UploadFile/input'
   import { mapGetters } from 'vuex'
   import { delProduct, getProduct, putProduct } from '@/api/Product'
   import { getAllunit } from '@/api/Dict/index'
@@ -942,7 +941,7 @@
   import vueJsonEditor from 'vue-json-editor'
   import Category from '@/api/Mock/Category'
   export default {
-    components: { vueJsonEditor, Upload },
+    components: { vueJsonEditor },
     data() {
       return {
         moduleTitle: this.$translateTitle('product.createproduct'),

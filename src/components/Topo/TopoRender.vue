@@ -131,14 +131,14 @@
 
 <style lang="scss">
   .topo-render {
-    overflow: auto;
-    background-color: white;
-    background-clip: padding-box;
-    background-origin: padding-box;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
     position: relative;
     height: 100%;
+    overflow: auto;
+    background-color: white;
+    background-repeat: no-repeat;
+    background-clip: padding-box;
+    background-origin: padding-box;
+    background-size: 100% 100%;
 
     .topo-render-wrapper {
       position: absolute;

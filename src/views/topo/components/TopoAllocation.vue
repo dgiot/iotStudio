@@ -3,7 +3,7 @@
   <div class="icon-selector-popper">
     <div class="dialog">
       <el-dialog title="" :visible.sync="dialogVisible" width="400px">
-        <upload-file :accept="accept" @fileInfo="fileInfo" />
+        <vab-upload-file :accept="accept" @fileInfo="fileInfo" />
       </el-dialog>
     </div>
     <el-collapse v-model="activeNames" accordion>
@@ -61,11 +61,9 @@
 
 <script>
   import { getMaterial } from '@/api/material'
-  import UploadFile from '@/components/UploadFile/index'
-  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+  import { mapMutations } from 'vuex'
   export default {
     name: 'Allocation',
-    components: { UploadFile },
     data() {
       return {
         accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF',

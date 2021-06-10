@@ -21,7 +21,7 @@
 <script>
   import { UploadImg } from '@/api/File'
   export default {
-    name: 'Input',
+    name: 'VabInput',
     components: {},
     props: {
       accept: {

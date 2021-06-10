@@ -67,11 +67,11 @@
                           style="
                             position: relative;
                             top: -200px;
-                            opacity: 0;
                             z-index: 5;
-                            height: 200px;
                             width: 200px;
+                            height: 200px;
                             cursor: pointer;
+                            opacity: 0;
                           "
                           @change="upload($event, 'front')"
                         />
@@ -82,8 +82,8 @@
                         style="
                           position: absolute;
                           top: 90px;
-                          color: #8c939d;
                           left: 110px;
+                          color: #8c939d;
                         "
                       >
                         正面
@@ -94,8 +94,8 @@
                         type="danger"
                         style="
                           position: absolute;
-                          left: 200px;
                           top: 150px;
+                          left: 200px;
                           margin-left: 0;
                         "
                         @click="authenticationForm.frontimageUrl = ''"
@@ -122,11 +122,11 @@
                           style="
                             position: relative;
                             top: -200px;
-                            opacity: 0;
                             z-index: 5;
-                            height: 200px;
                             width: 200px;
+                            height: 200px;
                             cursor: pointer;
+                            opacity: 0;
                           "
                           @change="upload($event, 'contrary')"
                         />
@@ -137,8 +137,8 @@
                         style="
                           position: absolute;
                           top: 90px;
-                          color: #8c939d;
                           left: 110px;
+                          color: #8c939d;
                         "
                       >
                         反面
@@ -150,8 +150,8 @@
                         type="danger"
                         style="
                           position: absolute;
-                          left: 190px;
                           top: 150px;
+                          left: 190px;
                           margin-left: 0;
                         "
                         @click="authenticationForm.contraryimageUrl = ''"
@@ -243,11 +243,11 @@
                         style="
                           position: relative;
                           top: -200px;
-                          opacity: 0;
                           z-index: 5;
-                          height: 200px;
                           width: 200px;
+                          height: 200px;
                           cursor: pointer;
+                          opacity: 0;
                         "
                         @change="upload($event, 'business')"
                       />
@@ -258,8 +258,8 @@
                       style="
                         position: absolute;
                         top: 90px;
-                        color: #8c939d;
                         left: 100px;
+                        color: #8c939d;
                       "
                     >
                       企业营业执照
@@ -270,8 +270,8 @@
                       type="danger"
                       style="
                         position: absolute;
-                        left: 200px;
                         top: 150px;
+                        left: 200px;
                         margin-left: 0;
                       "
                       @click="authenticationForm.businesslicense = ''"
@@ -378,8 +378,8 @@
                         style="
                           position: absolute;
                           top: 90px;
-                          color: #8c939d;
                           left: 80px;
+                          color: #8c939d;
                         "
                       >
                         身份证正面
@@ -409,8 +409,8 @@
                         style="
                           position: absolute;
                           top: 90px;
-                          color: #8c939d;
                           left: 80px;
+                          color: #8c939d;
                         "
                       >
                         身份证正反面
@@ -506,8 +506,8 @@
                       style="
                         position: absolute;
                         top: 90px;
-                        color: #8c939d;
                         left: 80px;
+                        color: #8c939d;
                       "
                     >
                       企业营业执照
@@ -572,16 +572,16 @@
       <div
         v-if="laboratoryactive == 1"
         class="block"
-        style="padding: 30px; box-sizing: border-box"
+        style="box-sizing: border-box; padding: 30px"
       >
         <p
           style="
-            border: 1px solid #cccccc;
-            font-size: 20px;
             height: 40px;
-            line-height: 40px;
-            margin: 0;
             padding-left: 20px;
+            margin: 0;
+            font-size: 20px;
+            line-height: 40px;
+            border: 1px solid #cccccc;
           "
         >
           企业实验室认证
@@ -649,7 +649,7 @@
     <div v-if="allactive == 3">
       <div
         class="block"
-        style="margin: 0 auto; text-align: center; padding: 30px"
+        style="padding: 30px; margin: 0 auto; text-align: center"
       >
         <el-image>
           <div slot="error" class="image-slot">
@@ -661,7 +661,7 @@
         </el-image>
         <p style="font-size: 25px; color: #409eff">正在审核中</p>
         <p style="font-size: 20px">审核员联系电话：17201202365</p>
-        <p style="color: #cccccc; font-size: 14px">
+        <p style="font-size: 14px; color: #cccccc">
           预计3到5个工作日完成，请耐心等待，谢谢您的配合和理解
         </p>
         <p>
@@ -690,9 +690,9 @@
           <el-row>
             <p
               style="
-                border-bottom: 1px solid #cccccc;
-                color: #409eff;
                 font-size: 14px;
+                color: #409eff;
+                border-bottom: 1px solid #cccccc;
               "
             >
               其他证书
@@ -774,8 +774,8 @@
                       style="
                         position: absolute;
                         top: 90px;
-                        color: #8c939d;
                         left: 50px;
+                        color: #8c939d;
                       "
                     >
                       证书电子文件
@@ -787,8 +787,8 @@
                     type="danger"
                     style="
                       position: absolute;
-                      left: 200px;
                       top: 150px;
+                      left: 200px;
                       margin-left: 0;
                     "
                     @click="addotherform.imgsrc = ''"
@@ -1531,10 +1531,10 @@
 </script>
 <style lang="scss" scoped>
   .empower {
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     padding: 20px 60px;
-    box-sizing: border-box;
     background: #ffffff;
     .empowerone {
       width: 100%;
@@ -1607,38 +1607,38 @@
 </style>
 <style>
   .empower .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
   }
   .empower.avatar-uploader .el-upload:hover {
     border-color: #409eff;
   }
   .empower .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
     width: 250px;
     height: 178px;
+    font-size: 28px;
     line-height: 178px;
+    color: #8c939d;
     text-align: center;
     border: 1px solid #cccccc;
   }
   .empower .avatar {
+    display: block;
     width: 250px;
     height: 178px;
-    display: block;
   }
   .image-slot {
-    font-size: 30px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     width: 250px;
     height: 250px;
-    background: #f5f7fa;
+    font-size: 30px;
     color: #909399;
+    background: #f5f7fa;
   }
   .empower .el-tabs__header {
     margin-top: 20px;

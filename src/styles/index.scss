@@ -18,8 +18,8 @@ label {
 }
 
 html {
-  height: 100%;
   box-sizing: border-box;
+  height: 100%;
 }
 
 #app {
@@ -35,10 +35,10 @@ html {
 a,
 a:focus,
 a:hover {
-  cursor: pointer;
   color: inherit;
-  outline: none;
   text-decoration: none;
+  cursor: pointer;
+  outline: none;
 }
 
 div:focus {
@@ -53,19 +53,19 @@ a:active {
 a,
 a:focus,
 a:hover {
-  cursor: pointer;
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .clearfix {
   &:after {
-    visibility: hidden;
     display: block;
-    font-size: 0;
-    content: ' ';
-    clear: both;
     height: 0;
+    clear: both;
+    font-size: 0;
+    visibility: hidden;
+    content: ' ';
   }
 }
 

@@ -4,14 +4,14 @@
       <el-tab-pane label="特性曲线">
         <div style="border-bottom: 1px solid #cccccc">
           <div id="echarts" style="width: 100%; height: 400px" />
-          <div style="width: 100%; text-align: center; margin-bottom: 20px">
+          <div style="width: 100%; margin-bottom: 20px; text-align: center">
             <el-button type="primary" @click="Getdata">采 集</el-button>
           </div>
         </div>
 
         <div
           id="bottom"
-          style="width: 100%; height: 400px; margin-top: 20px; display: flex"
+          style="display: flex; width: 100%; height: 400px; margin-top: 20px"
         >
           <div id="bottomleft" style="width: 70%; height: 100%" />
           <div id="bottomright" style="width: 30%; height: 100%">
@@ -22,7 +22,7 @@
             <el-table
               :data="Dataavange"
               border
-              style="width: 100%; margin-top: 10px; height: 100%"
+              style="width: 100%; height: 100%; margin-top: 10px"
             >
               <el-table-column :label="'流量\n(m³/h)'" prop="flow" />
               <el-table-column :label="'扬程\n(m)'" prop="head" />
@@ -623,10 +623,10 @@
 </script>
 <style scoped>
   .consoleevidece {
+    box-sizing: border-box;
     width: 100%;
     min-height: 875px;
     padding: 20px;
-    box-sizing: border-box;
     background: #ffffff;
   }
 </style>
