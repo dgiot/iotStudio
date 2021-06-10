@@ -100,15 +100,15 @@
       margin-bottom: 32px;
     }
     .card-panel {
-      height: 80px;
-      cursor: pointer;
-      font-size: 12px;
       position: relative;
+      height: 80px;
       overflow: hidden;
+      font-size: 12px;
       color: #666;
+      cursor: pointer;
       background: #fff;
-      box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
       border-color: rgba(0, 0, 0, 0.05);
+      box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
       &:hover {
         .card-panel-icon-wrapper {
           color: #fff;
@@ -140,10 +140,10 @@
       }
       .card-panel-icon-wrapper {
         float: left;
-        margin: 14px 0 0 14px;
         padding: 16px;
-        transition: all 0.38s ease-out;
+        margin: 14px 0 0 14px;
         border-radius: 6px;
+        transition: all 0.38s ease-out;
       }
       .card-panel-icon {
         float: left;
@@ -151,14 +151,14 @@
       }
       .card-panel-description {
         float: right;
-        font-weight: bold;
         margin: 13px;
         margin-left: 0px;
+        font-weight: bold;
         .card-panel-text {
+          margin-bottom: 12px;
+          font-size: 16px;
           line-height: 18px;
           color: rgba(0, 0, 0, 1);
-          font-size: 16px;
-          margin-bottom: 12px;
         }
         .card-panel-num {
           font-size: 20px;

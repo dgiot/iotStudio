@@ -2,11 +2,11 @@
   <div class="testbedpump">
     <Pumpdepartment
       style="
+        flex-shrink: 0;
         width: 360px;
         height: 100vh;
-        overflow: scroll;
-        flex-shrink: 0;
         padding: 10px;
+        overflow: scroll;
       "
       @pumpDetail="getPumpNode"
     />
@@ -275,7 +275,7 @@
         <el-table
           ref="multipleTable"
           :data="bedDevicesData"
-          style="width: 100%; text-align: center; margin-top: 20px"
+          style="width: 100%; margin-top: 20px; text-align: center"
           border
         >
           <el-table-column label="设备类别" align="center">
@@ -330,7 +330,7 @@
         <el-table
           ref="multipleTable1"
           :data="bedDevicesData"
-          style="width: 100%; text-align: center; margin-top: 20px"
+          style="width: 100%; margin-top: 20px; text-align: center"
           @selection-change="deviceSelect"
         >
           <el-table-column type="selection" width="55" />
@@ -423,11 +423,11 @@
                       style="
                         position: relative;
                         top: -200px;
-                        opacity: 0;
                         z-index: 5;
-                        height: 200px;
                         width: 200px;
+                        height: 200px;
                         cursor: pointer;
+                        opacity: 0;
                       "
                       @change="upload($event)"
                     />
@@ -730,18 +730,18 @@
     methods: {
       getDevices() {
         /*        var device = Parse.Object.extend("Device");
-       var query = new Parse.Query(device);
+     var query = new Parse.Query(device);
 
-       query.include("product")
+     query.include("product")
 
-        // 执行查询
-        query.find({
-          success: function(results){
+      // 执行查询
+      query.find({
+        success: function(results){
 
-            // results contains all of the User objects, and their associated Weapon objects, too
-          }
-        });
-  */
+          // results contains all of the User objects, and their associated Weapon objects, too
+        }
+      });
+*/
         this.$axiosWen
           .get('iotapi/classes/Device', {
             params: {
@@ -1072,18 +1072,18 @@
       },
       devicesDetail(row) {
         /*       this.testbedid =row.id
-      this.bedDevicedialog=true
-      this.testbedname = row.attributes.name
-      var Testbed = Parse.Object.extend("Testbed");
-      var testbed = new Testbed();
-      testbed.id = row.id
-      var relation = testbed.relation("devices");
-      var query = relation.query()
-      query.find().then(resultes=>{
-        console.log(resultes)
-        this.bedDevicesData=resultes
-      })
-         }
+    this.bedDevicedialog=true
+    this.testbedname = row.attributes.name
+    var Testbed = Parse.Object.extend("Testbed");
+    var testbed = new Testbed();
+    testbed.id = row.id
+    var relation = testbed.relation("devices");
+    var query = relation.query()
+    query.find().then(resultes=>{
+      console.log(resultes)
+      this.bedDevicesData=resultes
+    })
+       }
 */
 
         const devaddr = row['devaddr']
@@ -1371,29 +1371,29 @@
 </script>
 <style lang="scss" scoped>
   .testbedpump {
-    width: 100%;
-    min-height: 875px;
     box-sizing: border-box;
     display: flex;
+    width: 100%;
+    min-height: 875px;
     .bedtable {
       margin-top: 20px;
     }
     ::v-deep .deviceheader {
-      height: 60px;
-      width: 100%;
-      background: green;
       display: flex;
+      width: 100%;
+      height: 60px;
       padding: 10px;
+      background: green;
       div {
         height: 40px;
+        margin: 0 auto;
         line-height: 40px;
         text-align: center;
-        margin: 0 auto;
       }
       .headerone {
         width: 100px;
-        background: #409eff;
         color: white;
+        background: #409eff;
       }
       .headertwo {
         width: 100px;
@@ -1408,21 +1408,21 @@
       }
     }
     ::v-deep .devicetwo {
-      height: 60px;
-      width: 100%;
-      background: #0066cc;
       display: flex;
+      width: 100%;
+      height: 60px;
       padding: 10px;
+      background: #0066cc;
       div {
         height: 40px;
+        margin: 0 auto;
         line-height: 40px;
         text-align: center;
-        margin: 0 auto;
       }
       .devicetwoone {
         width: 100px;
-        background: #409eff;
         color: white;
+        background: #409eff;
       }
       .devicetwotwo {
         width: 100px;
@@ -1448,38 +1448,38 @@
 </style>
 <style>
   .testbedpump .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
   }
   .testbedpump.avatar-uploader .el-upload:hover {
     border-color: #409eff;
   }
   .testbedpump .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
     width: 250px;
     height: 178px;
+    font-size: 28px;
     line-height: 178px;
+    color: #8c939d;
     text-align: center;
     border: 1px dashed #cccccc;
   }
   .testbedpump .avatar {
+    display: block;
     width: 250px;
     height: 178px;
-    display: block;
   }
   .image-slot {
-    font-size: 30px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     width: 250px;
     height: 250px;
-    background: #f5f7fa;
+    font-size: 30px;
     color: #909399;
+    background: #f5f7fa;
   }
   .testbedpump .text {
     font-size: 14px;

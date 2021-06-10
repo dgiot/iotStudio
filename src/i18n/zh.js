@@ -105,6 +105,14 @@ export default {
     },
     route: {},
     equipment: {
+      info: '信息',
+      Department: '所属部门',
+      'Equipment Overview': '设备概况',
+      'device status': '设备状态',
+      'Failure analysis': '故障分析',
+      condition: '搜索条件',
+      'Warning today': '今日告警',
+      Products: '所属产品',
       'real-time': '实时数据',
       historical: '历史数据',
       list: '设备列表',
@@ -341,6 +349,8 @@ export default {
       Reporttemplate: '报告模板',
     },
     product: {
+      'Device Information': '设备信息',
+      'Time series data': '时序数据',
       enterthelicensecode: '请输入license授权码',
       Thestandardversionisthestandaloneversion: '标准版本为单机版',
       Deploymentcomplete: '部署完成',

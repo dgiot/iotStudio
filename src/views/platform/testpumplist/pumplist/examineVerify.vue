@@ -69,7 +69,7 @@
               </el-table>
               <div
                 v-show="userRoles.org_type != '中心厂家检测员'"
-                style="text-align: center; padding: 20px"
+                style="padding: 20px; text-align: center"
               >
                 <!-- size="medium" -->
 

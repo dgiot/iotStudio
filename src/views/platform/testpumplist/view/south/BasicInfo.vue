@@ -299,7 +299,7 @@
       </el-col> -->
         <el-col
           :span="24"
-          style="height: 70px; line-height: 70px; margin-bottom: 16px"
+          style="height: 70px; margin-bottom: 16px; line-height: 70px"
         >
           <el-row>
             <el-col :span="2">
@@ -486,13 +486,13 @@
       </el-row>
       <el-row>
         <el-col :span="6">
-          <el-form-item label="验收等级" style="width: 100%; display: block">
+          <el-form-item label="验收等级" style="display: block; width: 100%">
             <el-input v-model="BasicInfoObj.yanshoudengji" />
           </el-form-item>
         </el-col>
         <el-col
           :span="24"
-          style="height: 70px; line-height: 70px; margin-bottom: 16px"
+          style="height: 70px; margin-bottom: 16px; line-height: 70px"
         >
           <el-row>
             <el-col :span="2">
@@ -510,7 +510,7 @@
       </el-row>
       <el-row class="beizhu1">
         <el-col :span="24">
-          <el-form-item label="备注" style="width: 100%; display: block">
+          <el-form-item label="备注" style="display: block; width: 100%">
             <el-input
               v-model="BasicInfoObj.beizhu"
               :rows="2"
@@ -788,11 +788,11 @@
   }
 
   .button-new-tag {
-    margin-left: 10px;
     height: 32px;
-    line-height: 30px;
     padding-top: 0;
     padding-bottom: 0;
+    margin-left: 10px;
+    line-height: 30px;
   }
 
   .input-new-tag {
@@ -828,8 +828,8 @@
   }
 
   .ep0 {
-    margin: 0 !important;
     padding: 0 !important;
+    margin: 0 !important;
   }
 
   .eipt {

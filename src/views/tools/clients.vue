@@ -45,13 +45,13 @@
 
     <el-tabs v-model="activeName" class="normal-tabs" type="card">
       <el-tab-pane :label="$translateTitle('clients.basicInfo')" name="basic">
-        <clients-basic :record="basicRecord" />
+        <vab-clients-basic :record="basicRecord" />
       </el-tab-pane>
       <el-tab-pane
         :label="$translateTitle('clients.subsInfo')"
         name="subscription"
       >
-        <clients-subscriptions
+        <vab-clients-subscriptions
           :client-id="clientId"
           :table-data="subscriptionsData"
           :reload="loadSubscription"
@@ -63,15 +63,9 @@
 </template>
 
 <script>
-  import ClientsBasic from '@/components/ClientsBasic'
-  import ClientsSubscriptions from '@/components/ClientsSubscriptions'
   import { intercept } from '@/utils'
   export default {
     name: 'ClientsView',
-    components: {
-      ClientsBasic,
-      ClientsSubscriptions,
-    },
     data() {
       return {
         activeName: 'basic',
@@ -167,19 +161,19 @@
       margin-top: -32px;
       color: #adafb4;
       .connect-btn {
-        border: 1px solid;
-        background: transparent;
-        margin-left: 20px;
         min-width: 80px;
+        margin-left: 20px;
         font-size: 14px;
         font-weight: normal;
+        background: transparent;
+        border: 1px solid;
         &.disconnected {
-          border-color: #ff6d6d;
           color: #ff6d6d;
+          border-color: #ff6d6d;
         }
         &.connected {
-          border-color: #adafb4;
           color: #adafb4;
+          border-color: #adafb4;
         }
         &:hover {
           background: transparent !important;
@@ -193,8 +187,8 @@
       padding: 10px 36px;
     }
     .card-subtitle {
-      font-size: 16px;
       margin: 24px 0;
+      font-size: 16px;
     }
   }
 </style>

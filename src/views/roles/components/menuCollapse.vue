@@ -48,25 +48,25 @@
 
   code[class*='language-'],
   pre[class*='language-'] {
-    color: #ccc;
-    background: none;
     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
     font-size: 1em;
-    text-align: left;
-    white-space: pre;
-    word-spacing: normal;
-    word-break: normal;
-    word-wrap: normal;
-    line-height: 1.5;
-
-    -moz-tab-size: 4;
-    -o-tab-size: 4;
-    tab-size: 4;
 
     -webkit-hyphens: none;
     -moz-hyphens: none;
     -ms-hyphens: none;
     hyphens: none;
+    line-height: 1.5;
+    color: #ccc;
+    text-align: left;
+    word-break: normal;
+    word-wrap: normal;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+    white-space: pre;
+    background: none;
+    word-spacing: normal;
   }
 
   /* Code blocks */
@@ -84,8 +84,8 @@
   /* Inline code */
   :not(pre) > code[class*='language-'] {
     padding: 0.1em;
-    border-radius: 0.3em;
     white-space: normal;
+    border-radius: 0.3em;
   }
 
   .token.comment,

@@ -3,10 +3,10 @@
     <div class="blockcontent">
       <p
         style="
-          border-bottom: 1px solid #cccccc;
-          color: #409eff;
-          font-size: 14px;
           height: 40px;
+          font-size: 14px;
+          color: #409eff;
+          border-bottom: 1px solid #cccccc;
         "
       >
         实验室基本信息
@@ -88,11 +88,11 @@
                     style="
                       position: relative;
                       top: -100px;
-                      opacity: 0;
                       z-index: 5;
-                      height: 100px;
                       width: 100px;
+                      height: 100px;
                       cursor: pointer;
+                      opacity: 0;
                     "
                     @change="upload($event)"
                   />
@@ -141,10 +141,10 @@
         </el-row>
         <p
           style="
-            border-bottom: 1px solid #cccccc;
-            color: #409eff;
-            font-size: 14px;
             height: 40px;
+            font-size: 14px;
+            color: #409eff;
+            border-bottom: 1px solid #cccccc;
           "
         >
           实验室资质认证
@@ -242,11 +242,11 @@
                     style="
                       position: relative;
                       top: -100px;
-                      opacity: 0;
                       z-index: 5;
-                      height: 100px;
                       width: 100px;
+                      height: 100px;
                       cursor: pointer;
+                      opacity: 0;
                     "
                     @change="upload($event, 'other')"
                   />
@@ -295,9 +295,9 @@
           <el-row>
             <p
               style="
-                border-bottom: 1px solid #cccccc;
-                color: #409eff;
                 font-size: 14px;
+                color: #409eff;
+                border-bottom: 1px solid #cccccc;
               "
             >
               其他证书
@@ -377,11 +377,11 @@
                       style="
                         position: relative;
                         top: -100px;
-                        opacity: 0;
                         z-index: 5;
-                        height: 100px;
                         width: 100px;
+                        height: 100px;
                         cursor: pointer;
+                        opacity: 0;
                       "
                       @change="upload($event, 'otherform')"
                     />
@@ -391,8 +391,8 @@
                     style="
                       position: absolute;
                       top: 90px;
-                      color: #8c939d;
                       left: 50px;
+                      color: #8c939d;
                     "
                   >
                     证书电子文件
@@ -403,8 +403,8 @@
                     type="danger"
                     style="
                       position: absolute;
-                      left: 200px;
                       top: 150px;
+                      left: 200px;
                       margin-left: 0;
                     "
                     @click="addotherform.imgsrc = ''"
@@ -428,7 +428,7 @@
 
 <script>
   export default {
-    name: 'LaboratoryForm',
+    name: 'VablaboratoryForm',
     data() {
       const Registered = function (rule, value, callback) {
         var rules = /^(([^0][0-9]+|0)\.([0-9]{1,2})$)|^(([^0][0-9]+|0)$)|^(([1-9]+)\.([0-9]{1,2})$)|^(([1-9]+)$)/
@@ -801,10 +801,10 @@
 
 <style lang="scss" scoped>
   .laboratory {
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     padding: 20px 60px;
-    box-sizing: border-box;
     background: #ffffff;
     ::v-deep .el-form-item--small {
       margin-bottom: 18px;
@@ -819,37 +819,37 @@
 </style>
 <style>
   .empower .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
   }
   .empower.avatar-uploader .el-upload:hover {
     border-color: #409eff;
   }
   .empower .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
     width: 250px;
     height: 178px;
+    font-size: 28px;
     line-height: 178px;
+    color: #8c939d;
     text-align: center;
     border: 1px dashed #cccccc;
   }
   .empower .avatar {
+    display: block;
     width: 250px;
     height: 178px;
-    display: block;
   }
   .image-slot {
-    font-size: 30px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     width: 250px;
     height: 250px;
-    background: #f5f7fa;
+    font-size: 30px;
     color: #909399;
+    background: #f5f7fa;
   }
 </style>

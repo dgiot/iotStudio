@@ -156,7 +156,7 @@
         <el-col :span="2">
           <div class="content" />
           <div class="m-list">
-            <p style="text-align: center; font-size: 32px">
+            <p style="font-size: 32px; text-align: center">
               <el-tooltip
                 class="item"
                 effect="dark"
@@ -534,18 +534,18 @@
 </script>
 <style lang="scss">
   .view-chart-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     // height: 380px;
     height: 280px;
-    width: 100%;
     text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
   .info-box-item {
-    background: #f2f6fc;
-    margin-top: 0.5%;
     height: 25%;
+    margin-top: 0.5%;
+    background: #f2f6fc;
     .media-box {
       // position: relative;
       width: 100%;
@@ -587,9 +587,9 @@
   }
   .pageSelect-box {
     position: fixed;
-    max-width: 80px;
     top: 150px;
     right: 40px;
     z-index: 10000;
+    max-width: 80px;
   }
 </style>

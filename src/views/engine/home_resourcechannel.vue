@@ -1,7 +1,7 @@
 <template>
   <div class="resourcechannel">
-    <mqtt ref="mqtt" :topic="channeltopic" @mqttMsg="mqttMsg" />
-    <upload ref="uploadFinish" @fileInfo="fileInfo" />
+    <VabMqtt ref="mqtt" :topic="channeltopic" @mqttMsg="mqttMsg" />
+    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="firsttable">
       <el-form
         :inline="true"
@@ -503,19 +503,15 @@
     postChannel,
     putChannel,
   } from '@/api/Channel/index'
-  import Upload from '@/components/UploadFile/input'
   import { queryRole } from '@/api/Role/index'
   import { subupadte } from '@/api/System/index'
   import { resourceTypes } from '@/api/Rules'
   import { mapGetters } from 'vuex'
   var subdialog
   import { Websocket } from '@/utils/wxscoket.js'
-  import mqtt from '@/components/Mqtt'
+  import VabInput from '@/vab/components/VabInput/input'
   export default {
-    components: {
-      Upload,
-      mqtt,
-    },
+    components: { VabInput },
     // inject: ['reload'],
     data() {
       return {

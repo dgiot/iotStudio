@@ -387,28 +387,28 @@
 <style lang="scss">
   .topic-metrics {
     .sub-tip {
+      margin-right: 10px;
       font-size: 14px;
       color: #9e9e9f;
       text-transform: none;
-      margin-right: 10px;
     }
     .el-table {
       margin-top: 24px;
       .expand-header {
         height: 32px;
-        line-height: 32px;
         margin-bottom: 20px;
+        line-height: 32px;
       }
       .topic-qos-radio {
         float: right;
       }
       .message-card {
         height: 112px;
-        border-radius: 4px;
         padding: 6px 12px;
+        border-radius: 4px;
         .message-card--body {
-          font-size: 28px;
           height: 80px;
+          font-size: 28px;
           line-height: 80px;
           text-align: center;
         }

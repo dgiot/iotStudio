@@ -4,7 +4,7 @@
 
 <script>
   export default {
-    name: 'Aliplayer',
+    name: 'VabAliplayer',
     props: {
       playStyle: {
         type: String,

@@ -21,7 +21,7 @@
 
 <script>
   export default {
-    name: 'EmqSelect',
+    name: 'VabEmqSelect',
     components: {},
     props: {
       field: {

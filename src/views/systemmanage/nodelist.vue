@@ -18,10 +18,10 @@
 </script>
 <style scoped>
   .nodelist {
-    background: #ffffff;
-    padding-left: 10px;
     box-sizing: border-box;
     width: 100%;
     min-height: 875px;
+    padding-left: 10px;
+    background: #ffffff;
   }
 </style>

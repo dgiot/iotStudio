@@ -46,7 +46,7 @@
                           <el-button
                             slot="append"
                             type="primary"
-                            style="background: #409eff; color: white"
+                            style="color: white"
                           >
                             扫描
                           </el-button>
@@ -102,7 +102,7 @@
                           <el-button
                             slot="append"
                             type="primary"
-                            style="background: #409eff; color: white"
+                            style="color: white; background: #409eff"
                           >
                             扫描
                           </el-button>
@@ -156,7 +156,7 @@
                           <el-button
                             slot="append"
                             type="primary"
-                            style="background: #971fdc; color: white"
+                            style="color: white; background: #971fdc"
                             @click="openFile()"
                           >
                             更改
@@ -164,9 +164,9 @@
                           <el-button
                             slot="append"
                             style="
-                              background: #409eff;
-                              color: white;
                               margin-left: 40px;
+                              color: white;
+                              background: #409eff;
                             "
                           >
                             查看
@@ -306,8 +306,8 @@
           style="
             margin-left: 50px;
             font-size: 14px;
-            color: #606266;
             font-weight: 700;
+            color: #606266;
           "
         >
           当前指标:转速
@@ -322,13 +322,13 @@
             <el-button
               slot="append"
               type="primary"
-              style="background: #971fdc; color: white"
+              style="color: white; background: #971fdc"
             >
               更改
             </el-button>
             <el-button
               slot="append"
-              style="background: #409eff; color: white; margin-left: 30px"
+              style="margin-left: 30px; color: white; background: #409eff"
             >
               查看
             </el-button>
@@ -491,27 +491,27 @@
 
 <style lang="scss" scoped>
   .forensics {
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     padding: 0 60px 20px 60px;
-    box-sizing: border-box;
     background: #ffffff;
     .fortop1 {
       width: 100%;
       height: auto;
       .header {
-        height: 50px;
-        line-height: 50px;
         width: 100%;
-        border: 1px solid #666666;
+        height: 50px;
         padding-left: 20px;
         font-size: 20px;
         font-weight: bold;
+        line-height: 50px;
+        border: 1px solid #666666;
       }
       .top1content {
+        box-sizing: border-box;
         width: 100%;
         padding: 0 30px;
-        box-sizing: border-box;
         ::v-deep .el-form {
           .inline {
             display: inline-block;
@@ -530,13 +530,13 @@
       width: 100%;
       height: auto;
       .header {
-        height: 50px;
-        line-height: 50px;
         width: 100%;
-        border: 1px solid #666666;
+        height: 50px;
         padding-left: 20px;
         font-size: 16px;
         font-weight: bold;
+        line-height: 50px;
+        border: 1px solid #666666;
       }
     }
     ::v-deep .el-dialog__wrapper {

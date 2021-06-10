@@ -67,7 +67,7 @@
       :visible.sync="dialogTableVisible"
       title="模板详情"
       width="50%"
-      style="padding: 20px; box-sizing: border-box"
+      style="box-sizing: border-box; padding: 20px"
     >
       <el-table :data="gridData" border style="width: 100%; text-align: center">
         <el-table-column label="id" align="center">
@@ -178,11 +178,11 @@
 </script>
 <style scoped>
   .reportmodule {
+    box-sizing: border-box;
     width: 100%;
     min-height: 875px;
     padding: 20px;
     margin-top: 20px;
-    box-sizing: border-box;
     background: #ffffff;
   }
   .reportlist {

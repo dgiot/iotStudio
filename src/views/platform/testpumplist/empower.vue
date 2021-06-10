@@ -337,7 +337,7 @@
           </el-tabs> -->
 
           <!-- 此组件会抛出resultes事件,把数据传递过来 -->
-          <LaboratoryForm ref="laboratoryForm" />
+          <VablaboratoryForm ref="laboratoryForm" />
           <div style="text-align: center">
             <el-row>
               <el-button
@@ -561,13 +561,10 @@
 </template>
 <script>
   import { regionData } from 'element-china-area-data'
-  import LaboratoryForm from '@/components/laboratoryForm'
   var otherEmpowerlist = []
   export default {
     name: 'Empower',
-    components: {
-      LaboratoryForm,
-    },
+    components: {},
     data() {
       const idrules = function (rule, value, callback) {
         var rules = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/

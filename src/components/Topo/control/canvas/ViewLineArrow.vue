@@ -133,17 +133,17 @@
 
 <style lang="scss">
   .view-line-arrow {
-    height: 100%;
-    width: 100%;
     position: relative;
+    width: 100%;
+    height: 100%;
 
     .passby {
       position: absolute;
-      height: 10px;
       width: 10px;
+      height: 10px;
+      cursor: move;
       background-color: white;
       border: 1px solid rgb(34, 14, 223);
-      cursor: move;
     }
   }
 </style>

@@ -1,5 +1,6 @@
 ## 1.0.0 (2021-06-10)
 
+* style(src/vab/components/vablogo/index.vue): icon style ([3dc9b66](https://github.com/dgiot/dgiot_dashboard/commit/3dc9b66))
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
 * feat: 组态 ([033a3ac](https://github.com/dgiot/dgiot_dashboard/commit/033a3ac))
 * feat: action ([314117e](https://github.com/dgiot/dgiot_dashboard/commit/314117e))

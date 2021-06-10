@@ -4,11 +4,11 @@
       v-show="dashboardrul != '' && dashboardrul"
       class="variable"
       style="
-        text-align: left;
-        padding-left: 20px;
-        box-sizing: border-box;
         position: relative;
         top: 20px;
+        box-sizing: border-box;
+        padding-left: 20px;
+        text-align: left;
       "
     >
       <el-button-group>
@@ -40,12 +40,12 @@
     </div>
     <div
       style="
-        text-align: center;
-        margin: 0 auto;
-        height: 100%;
         position: relative;
-        background: rgb(29, 27, 27);
         top: 20px;
+        height: 100%;
+        margin: 0 auto;
+        text-align: center;
+        background: rgb(29, 27, 27);
       "
     >
       <iframe

@@ -399,8 +399,8 @@
 
 <style scoped>
   .ScaleBox {
-    left: 0;
     top: 0;
+    left: 0;
     z-index: 999;
     overflow: hidden;
     user-select: none;
@@ -413,28 +413,28 @@
   .RefDot_h,
   .RefDot_v {
     position: absolute;
-    left: 0;
     top: 0;
-    overflow: hidden;
+    left: 0;
     z-index: 999;
+    overflow: hidden;
   }
 
   .ScaleRuler_h {
+    left: 18px;
     width: 100%;
     height: 18px;
-    left: 18px;
-    opacity: 0.6;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAASCAMAAAAuTX21AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRFMzMzAAAA////BqjYlAAAACNJREFUeNpiYCAdMDKRCka1jGoBA2JZZGshiaCXFpIBQIABAAplBkCmQpujAAAAAElFTkSuQmCC)
       repeat-x; /*./image/ruler_h.png*/
+    opacity: 0.6;
   }
 
   .ScaleRuler_v {
+    top: 18px;
     width: 18px;
     height: 100%;
-    top: 18px;
-    opacity: 0.6;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAyCAMAAABmvHtTAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRFMzMzAAAA////BqjYlAAAACBJREFUeNpiYGBEBwwMTGiAakI0NX7U9aOuHyGuBwgwAH6bBkAR6jkzAAAAAElFTkSuQmCC)
       repeat-y; /*./image/ruler_v.png*/
+    opacity: 0.6;
   }
 
   .ScaleRuler_v .n,
@@ -446,8 +446,8 @@
   }
 
   .ScaleRuler_v .n {
-    width: 8px;
     left: 3px;
+    width: 8px;
     word-wrap: break-word;
   }
 
@@ -465,42 +465,42 @@
   .RefLine_h {
     width: 100%;
     height: 3px;
+    cursor: n-resize; /*url(./image/cur_move_h.cur), move*/
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAABCAMAAADU3h9xAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFSv//AAAAH8VRuAAAAA5JREFUeNpiYIACgAADAAAJAAE0lmO3AAAAAElFTkSuQmCC)
       repeat-x left center; /*./image/line_h.png*/
-    cursor: n-resize; /*url(./image/cur_move_h.cur), move*/
   }
 
   .RefLine_v {
     width: 3px;
     height: 100%;
     _height: 9999px;
+    cursor: w-resize; /*url(./image/cur_move_v.cur), move*/
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAICAMAAAAPxGVzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFSv//AAAAH8VRuAAAAA5JREFUeNpiYEAFAAEGAAAQAAGePof9AAAAAElFTkSuQmCC)
       repeat-y center top; /*./image/line_v.png*/
-    cursor: w-resize; /*url(./image/cur_move_v.cur), move*/
   }
 
   .RefDot_h {
+    top: -10px;
     width: 100%;
     height: 3px;
+    cursor: n-resize; /*url(./image/cur_move_h.cur), move*/
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAMAAABFaP0WAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFf39/////F3PnHQAAAAJ0Uk5T/wDltzBKAAAAEElEQVR42mJgYGRgZAQIMAAADQAExkizYQAAAABJRU5ErkJggg==)
       repeat-x left 1px; /*./image/line_dot.png*/
-    cursor: n-resize; /*url(./image/cur_move_h.cur), move*/
-    top: -10px;
   }
 
   .RefDot_v {
+    left: -10px;
     width: 3px;
     height: 100%;
     _height: 9999px;
+    cursor: w-resize; /*url(./image/cur_move_v.cur), move*/
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAMAAABFaP0WAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFf39/////F3PnHQAAAAJ0Uk5T/wDltzBKAAAAEElEQVR42mJgYGRgZAQIMAAADQAExkizYQAAAABJRU5ErkJggg==)
       repeat-y 1px top; /*./image/line_dot.png*/
-    cursor: w-resize; /*url(./image/cur_move_v.cur), move*/
-    left: -10px;
   }
   #content {
     position: absolute;
-    height: 100%;
     width: 100%;
+    height: 100%;
     overflow: auto;
   }
 </style>

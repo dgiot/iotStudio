@@ -1,14 +1,14 @@
 <!--f27f2683b124-->
 <template>
   <div class="editdevices">
-    <mqtt
+    <VabMqtt
       :client-id="'default'"
       :topic="'test/topic2222222'"
       @mqttMsg="mqttMsg"
     />
     <div class="editheader">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/roles/thing' }">
+        <el-breadcrumb-item :to="{ path: '/dashboard/devicelist' }">
           {{ $translateTitle('route.设备管理') }}
         </el-breadcrumb-item>
         <el-breadcrumb-item>
@@ -26,87 +26,266 @@
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
             <!-- <h4>设备信息</h4> -->
-            <div>
-              <table
-                class="mailtable"
-                style="width: 100%"
-                border="0"
-                cellspacing="0"
-                cellpadding="0"
+            <el-collapse v-model="activeNames">
+              <el-collapse-item
+                :title="$translateTitle('product.Time series data')"
+                name="1"
               >
-                <!-- 设备编号: 所属产品: 安装位置 -->
-                <tr>
-                  <td class="cloumn">
-                    {{ $translateTitle('equipment.devicenumber') + ':' }}
-                  </td>
-                  <td>{{ devicedetail.devaddr }}</td>
-                  <td class="cloumn">
-                    {{ $translateTitle('equipment.product') + ':' }}
-                  </td>
-                  <td>{{ devicedetail.productName }}</td>
-                  <td class="cloumn">
-                    {{ $translateTitle('equipment.installationlocation') }}
-                  </td>
-                  <td>{{ devicedetail.address }}</td>
-                </tr>
+                <div class="chartsinfo">
+                  <div
+                    class="queryHeader"
+                    :style="{ height: Device == 'desktop' ? '50px' : '240px' }"
+                  >
+                    <vab-query-form-top-panel>
+                      <el-form
+                        :inline="true"
+                        :model="queryForm"
+                        :label-width="Device == 'desktop' ? '80px' : '70px'"
+                        @submit.native.prevent
+                      >
+                        <el-form-item
+                          :label="$translateTitle('developer.startTime')"
+                        >
+                          <el-date-picker
+                            v-model="params.startTime"
+                            type="datetime"
+                            align="right"
+                            size="mini"
+                            style="width: 83%"
+                            :placeholder="
+                              $translateTitle('developer.startTime')
+                            "
+                            :picker-options="pickerOptionsDay"
+                          />
+                        </el-form-item>
+                        <el-form-item
+                          :label="$translateTitle('developer.EndTime')"
+                        >
+                          <el-date-picker
+                            v-model="params.endTime"
+                            style="width: 83%"
+                            size="mini"
+                            type="datetime"
+                            align="right"
+                            :clearable="false"
+                            :placeholder="$translateTitle('developer.EndTime')"
+                            :picker-options="pickerOptionsDay"
+                          />
+                        </el-form-item>
+                        <el-form-item
+                          :label="$translateTitle('developer.type')"
+                        >
+                          <el-select
+                            v-model="params.style"
+                            size="mini"
+                            style="width: 90px"
+                            placeholder="请选择"
+                            @change="toggleChart"
+                          >
+                            <el-option
+                              v-for="item in chartType"
+                              :key="item.type"
+                              :label="item.name"
+                              :value="item.type"
+                              :disabled="disabledChart.indexOf(item.type) != -1"
+                            />
+                          </el-select>
+                        </el-form-item>
 
-                <tr>
-                  <td class="cloumn">
-                    {{ $translateTitle('equipment.state') + ':' }}
-                  </td>
-                  <!-- <td  :class="devicedetail.status"  v-if="devicedetail.status=='ACTIVE'">{{$t('product.active')}}</td>
-                   <td  :class="devicedetail.status" v-else-if="devicedetail.status=='UNACTIVE'">{{$t('product.unactive')}}</td>
-                   <td  :class="devicedetail.status" v-else-if="devicedetail.status=='ONLINE'">{{$t('product.online')}}</td>
-                  <td  :class="devicedetail.status"  v-else>{{$t('product.offline')}}</td>-->
-                  <td class="ACTIVE">
-                    {{ $translateTitle('product.active') }}
-                  </td>
-                  <td class="cloumn">ProductId:</td>
-                  <td>{{ devicedetail.productid }}</td>
+                        <el-form-item
+                          :label="$translateTitle('developer.interval')"
+                        >
+                          <el-input-number
+                            v-model="params.number"
+                            size="mini"
+                            style="width: 100px"
+                            :min="1"
+                            placeholder="请输入内容"
+                          />
+                          <el-select
+                            v-model="params.interval"
+                            size="mini"
+                            placeholder="请选择"
+                            style="width: 70px"
+                          >
+                            <el-option
+                              v-for="item in interval"
+                              :key="item.type"
+                              :label="item.name"
+                              :value="item.type"
+                            />
+                          </el-select>
+                        </el-form-item>
 
-                  <td class="cloumn">
-                    {{ $translateTitle('equipment.lastonlinetime') + ':' }}
-                  </td>
-                  <td>{{ devicedetail.lastOnlineTime }}</td>
-                </tr>
-                <tr>
-                  <td class="cloumn">
-                    {{ $translateTitle('equipment.ipaddress') + ':' }}
-                  </td>
-                  <td>{{ devicedetail.ip || '-' }}</td>
-                  <td class="cloumn">
-                    ProductSecret:
-                    <el-tooltip
-                      content="注意保密，如有泄露即使更换"
-                      placement="top"
-                      style="margin-left: 5px; color: #cccccc"
+                        <el-form-item
+                          :label="$translateTitle('developer.function')"
+                        >
+                          <el-select
+                            v-model="params._function"
+                            size="mini"
+                            style="width: 100px"
+                            placeholder="请选择"
+                          >
+                            <el-option
+                              v-for="item in functionarr"
+                              :key="item"
+                              :label="item"
+                              :value="item"
+                            />
+                          </el-select>
+                          <el-button
+                            size="mini"
+                            type="primary"
+                            :disabled="queryFlag"
+                            icon="el-icon-search"
+                            @click="queryChart"
+                          >
+                            {{ $translateTitle('developer.search') }}
+                          </el-button>
+                        </el-form-item>
+                      </el-form>
+                    </vab-query-form-top-panel>
+                  </div>
+                  <div class="chartsmain">
+                    <vabChart
+                      ref="charts"
+                      :type="params.style"
+                      :extend="chartExtend"
+                      :data="chartData"
+                      :set-option-opts="false"
+                      :settings="chartSettings"
+                      :data-zoom="chartDataZoom"
+                      :toolbox="toolbox"
+                      :loading="loading"
+                      :after-config="afterConfig"
+                      :data-empty="dataEmpty"
+                    />
+                  </div>
+                  <div class="chartOther">
+                    <el-row :gutter="20">
+                      <el-col
+                        v-for="(item, index) in chartData.child"
+                        v-show="item.columns[1] != '日期'"
+                        :key="item.columns[1]"
+                        :xs="xs"
+                        :sm="sm"
+                        :md="md"
+                        :xl="xl"
+                      >
+                        <el-card class="box-card">
+                          <div slot="header" class="clearfix">
+                            <span>{{ item.columns[1] }} : {{ item.unit }}</span>
+
+                            <el-button-group
+                              style="float: right; padding: 3px 0"
+                              type="text"
+                            >
+                              <el-button icon="el-icon-warning-outline" />
+                              <el-button
+                                icon="el-icon-full-screen"
+                                @click="toggleCardRow(index, xs, sm, md, xl)"
+                              />
+                            </el-button-group>
+                          </div>
+
+                          <vabChart
+                            ref="charts"
+                            :type="params.style"
+                            height="300px"
+                            :extend="chartExtend"
+                            :legend-visible="false"
+                            :data="chartData.child[index]"
+                            :set-option-opts="false"
+                            :settings="chartSettings"
+                            :data-zoom="chartDataZoom"
+                            :toolbox="toolbox"
+                            :loading="loading"
+                            :after-config="afterConfig"
+                            :data-empty="dataEmpty"
+                          />
+                        </el-card>
+                      </el-col>
+                    </el-row>
+                  </div>
+                </div>
+              </el-collapse-item>
+              <el-collapse-item
+                :title="'Topic' + $translateTitle('product.list')"
+                name="3"
+              >
+                <div
+                  style="
+                    box-sizing: border-box;
+                    padding: 10px;
+                    background: #ffffff;
+                  "
+                >
+                  <!-- <div>
+                                    <h4 style="display:inline">设备TOPIC类 <el-tooltip content="产品下的所有设备都会继承该产品的Topic类" placement="top" style="margin-left:5px;color:#cccccc">
+                                      <i class="el-icon-question"></i>
+                                      </el-tooltip></h4>
+                  </div>-->
+                  <el-table
+                    :data="topicData"
+                    style="width: 100%; text-align: center"
+                  >
+                    <el-table-column label="Topic" align="left">
+                      <template slot-scope="scope">
+                        <span>
+                          {{
+                            scope.row.topic.replace(
+                              '\${ProductId}\/${DevAddr\}',
+                              devicedetail.productid +
+                                '/' +
+                                devicedetail.devaddr
+                            )
+                          }}
+                        </span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      :label="$translateTitle('equipment.operationauthority')"
+                      align="center"
                     >
-                      <i class="el-icon-question" />
-                    </el-tooltip>
-                  </td>
-                  <td>{{ devicedetail.productSecret }}</td>
-                  <td class="cloumn">
-                    {{ $translateTitle('equipment.createdAt') + ':' }}
-                  </td>
-                  <td>{{ devicedetail.createdAt }}</td>
-                </tr>
-                <tr>
-                  <!-- <td class="cloumn">{{$t('equipment.subordinatenode')+':'}}</td>
-                  <td>{{devicedetail.node}}</td>-->
-                  <td class="cloumn">
-                    {{ $translateTitle('equipment.nodetype') + ':' }}
-                  </td>
-                  <td v-if="devicedetail.nodeType == 0">
-                    {{ $translateTitle('product.equipment') }}
-                  </td>
-                  <td v-else>{{ $translateTitle('product.gateway') }}</td>
-                  <td class="cloumn">
-                    {{ $translateTitle('developer.describe') + ':' }}
-                  </td>
-                  <td>{{ devicedetail.desc }}</td>
-                </tr>
-              </table>
-            </div>
+                      <template slot-scope="scope">
+                        <span v-if="scope.row.type == 'pub'">
+                          {{ $translateTitle('product.pub') }}
+                        </span>
+                        <span v-if="scope.row.type == 'sub'">
+                          {{ $translateTitle('product.sub') }}
+                        </span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      :label="$translateTitle('developer.describe')"
+                      prop="desc"
+                      align="center"
+                    />
+                    <el-table-column
+                      :label="$translateTitle('developer.operation')"
+                      align="center"
+                    >
+                      <template slot-scope="scope">
+                        <el-button
+                          v-if="!scope.row.isdef"
+                          type="primary"
+                          size="mini"
+                        >
+                          {{ $translateTitle('developer.edit') }}
+                        </el-button>
+                        <el-button
+                          v-if="!scope.row.isdef"
+                          type="danger"
+                          size="mini"
+                        >
+                          {{ $translateTitle('developer.delete') }}
+                        </el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
           </div>
           <!-- <div class="jiange" style="width:100%;height:20px;background:#f4f4f4">
 
@@ -119,620 +298,184 @@
               margin-top: 20px;
               background: #ffffff;
             "
-          >
-            <h4>
-              {{ $translateTitle('equipment.deviceextensioninformation') }}
-            </h4>
-            <el-input
-              v-model="devicedetail.shadow"
-              :row="10"
-              :cols="5"
-              type="textarea"
-              readonly
-            />
-            <div class="chartsinfo">
-              <div
-                class="queryHeader"
-                :style="{ height: Device == 'desktop' ? '50px' : '240px' }"
-              >
-                <vab-query-form-top-panel>
-                  <el-form
-                    :inline="true"
-                    :model="queryForm"
-                    :label-width="Device == 'desktop' ? '80px' : '70px'"
-                    @submit.native.prevent
-                  >
-                    <el-form-item
-                      :label="$translateTitle('developer.startTime')"
-                    >
-                      <el-date-picker
-                        v-model="params.startTime"
-                        type="datetime"
-                        align="right"
-                        size="mini"
-                        style="width: 83%"
-                        :placeholder="$translateTitle('developer.startTime')"
-                        :picker-options="pickerOptionsDay"
-                      />
-                    </el-form-item>
-                    <el-form-item :label="$translateTitle('developer.EndTime')">
-                      <el-date-picker
-                        v-model="params.endTime"
-                        style="width: 83%"
-                        size="mini"
-                        type="datetime"
-                        align="right"
-                        :clearable="false"
-                        :placeholder="$translateTitle('developer.EndTime')"
-                        :picker-options="pickerOptionsDay"
-                      />
-                    </el-form-item>
-                    <el-form-item :label="$translateTitle('developer.type')">
-                      <el-select
-                        v-model="params.style"
-                        size="mini"
-                        style="width: 90px"
-                        placeholder="请选择"
-                      >
-                        <el-option
-                          v-for="item in chartType"
-                          :key="item.type"
-                          :label="item.name"
-                          :value="item.type"
-                          :disabled="disabledChart.indexOf(item.type) != -1"
-                        />
-                      </el-select>
-                    </el-form-item>
-
-                    <el-form-item
-                      :label="$translateTitle('developer.interval')"
-                    >
-                      <el-input-number
-                        v-model="params.number"
-                        size="mini"
-                        style="width: 100px"
-                        :min="1"
-                        placeholder="请输入内容"
-                      />
-                      <el-select
-                        v-model="params.interval"
-                        size="mini"
-                        placeholder="请选择"
-                        style="width: 70px"
-                      >
-                        <el-option
-                          v-for="item in interval"
-                          :key="item.type"
-                          :label="item.name"
-                          :value="item.type"
-                        />
-                      </el-select>
-                    </el-form-item>
-
-                    <el-form-item
-                      :label="$translateTitle('developer.function')"
-                    >
-                      <el-select
-                        v-model="params._function"
-                        size="mini"
-                        style="width: 100px"
-                        placeholder="请选择"
-                      >
-                        <el-option
-                          v-for="item in functionarr"
-                          :key="item"
-                          :label="item"
-                          :value="item"
-                        />
-                      </el-select>
-                      <el-button
-                        size="mini"
-                        type="primary"
-                        :disabled="queryFlag"
-                        icon="el-icon-search"
-                        @click="queryChart"
-                      >
-                        {{ $translateTitle('developer.search') }}
-                      </el-button>
-                    </el-form-item>
-                  </el-form>
-                </vab-query-form-top-panel>
-              </div>
-              <div class="chartsmain">
-                <ve-line
-                  v-if="params.style == 'line'"
-                  :extend="chartExtend"
-                  :data="chartData"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
-                  :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
-                />
-                <ve-histogram
-                  v-else-if="params.style == 'histogram'"
-                  :height="Device == 'desktop' ? '500px' : '550px'"
-                  :extend="chartExtend"
-                  :data="chartData"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
-                  :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
-                />
-                <ve-bar
-                  v-else-if="params.style == 'bar'"
-                  :extend="chartExtend"
-                  :data="chartData"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
-                  :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
-                />
-                <ve-pie
-                  v-else-if="params.style == 'pie'"
-                  :extend="chartExtend"
-                  :data="chartData"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
-                  :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
-                />
-                <ve-ring
-                  v-else-if="params.style == 'ring'"
-                  :extend="chartExtend"
-                  :data="chartData"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
-                  :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
-                />
-                <ve-waterfall
-                  v-else-if="params.style == 'waterfall'"
-                  :extend="chartExtend"
-                  :data="chartData"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
-                  :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
-                />
-                <ve-funnel
-                  v-else-if="params.style == 'funnel'"
-                  :extend="chartExtend"
-                  :data="chartData"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
-                  :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
-                />
-                <ve-radar
-                  v-else-if="params.style == 'radar'"
-                  :extend="chartExtend"
-                  :data="chartData"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
-                  :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
-                />
-                <ve-heatmap
-                  v-else-if="params.style == 'heatmap'"
-                  :extend="chartExtend"
-                  :data="chartData"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
-                  :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
-                />
-                <ve-scatter
-                  v-else-if="params.style == 'scatter'"
-                  :extend="chartExtend"
-                  :data="chartData"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
-                  :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
-                />
-                <ve-candle
-                  v-else-if="params.style == 'candle'"
-                  :extend="chartExtend"
-                  :data="chartData"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
-                  :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
-                />
-              </div>
-              <div class="chartOther">
-                <el-row :gutter="20">
-                  <el-col
-                    v-for="(item, index) in chartData.child"
-                    v-show="item.columns[1] != '日期'"
-                    :key="item.columns[1]"
-                    :xs="xs"
-                    :sm="sm"
-                    :md="md"
-                    :xl="xl"
-                  >
-                    <el-card class="box-card">
-                      <div slot="header" class="clearfix">
-                        <span>{{ item.columns[1] }} : {{ item.unit }}</span>
-
-                        <el-button-group
-                          style="float: right; padding: 3px 0"
-                          type="text"
-                        >
-                          <el-button icon="el-icon-warning-outline" />
-                          <el-button
-                            icon="el-icon-full-screen"
-                            @click="toggleCardRow(index, xs, sm, md, xl)"
-                          />
-                        </el-button-group>
-                      </div>
-                      <ve-histogram
-                        ref="charts"
-                        height="300px"
-                        :extend="chartExtend"
-                        :legend-visible="false"
-                        :data="chartData.child[index]"
-                        :set-option-opts="false"
-                        :settings="chartSettings"
-                        :data-zoom="chartDataZoom"
-                        :toolbox="toolbox"
-                        :loading="loading"
-                        :after-config="afterConfig"
-                        :data-empty="dataEmpty"
-                      />
-                    </el-card>
-                  </el-col>
-                </el-row>
-              </div>
-            </div>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane
-          :label="'Topic' + $translateTitle('product.list')"
-          name="second"
-        >
-          <div
-            style="box-sizing: border-box; padding: 10px; background: #ffffff"
-          >
-            <!-- <div>
-                              <h4 style="display:inline">设备TOPIC类 <el-tooltip content="产品下的所有设备都会继承该产品的Topic类" placement="top" style="margin-left:5px;color:#cccccc">
-                                <i class="el-icon-question"></i>
-                                </el-tooltip></h4>
-            </div>-->
-            <el-table :data="topicData" style="width: 100%; text-align: center">
-              <el-table-column label="Topic" align="left">
-                <template slot-scope="scope">
-                  <span>
-                    {{
-                      scope.row.topic.replace(
-                        '\${ProductId}\/${DevAddr\}',
-                        devicedetail.productid + '/' + devicedetail.devaddr
-                      )
-                    }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('equipment.operationauthority')"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <span v-if="scope.row.type == 'pub'">
-                    {{ $translateTitle('product.pub') }}
-                  </span>
-                  <span v-if="scope.row.type == 'sub'">
-                    {{ $translateTitle('product.sub') }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.describe')"
-                prop="desc"
-                align="center"
-              />
-              <el-table-column
-                :label="$translateTitle('developer.operation')"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <el-button v-if="!scope.row.isdef" type="primary" size="mini">
-                    {{ $translateTitle('developer.edit') }}
-                  </el-button>
-                  <el-button v-if="!scope.row.isdef" type="danger" size="mini">
-                    {{ $translateTitle('developer.delete') }}
-                  </el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
+          ></div>
         </el-tab-pane>
         <el-tab-pane
           :label="$translateTitle('equipment.runningstate')"
           name="third"
         >
           <div>
-            <el-tabs type="border-card">
-              <el-tab-pane :label="$translateTitle('equipment.real-time')">
-                <div style="text-align: right">
-                  <div style="float: left">
-                    <span>
-                      {{ $translateTitle('equipment.realtimerefresh') }}
+            <div style="text-align: right">
+              <div style="float: left">
+                <span>
+                  {{ $translateTitle('equipment.realtimerefresh') }}
+                </span>
+                <el-switch
+                  v-model="isupdate"
+                  active-color="#13ce66"
+                  inactive-color="#cccccc"
+                  @change="updateTrue($event)"
+                />
+              </div>
+
+              <!-- 右上角(图表,表格)的按钮 -->
+              <el-button-group>
+                <el-button
+                  :class="!isshowtable ? 'buttonactive' : ''"
+                  type="primary"
+                  plain
+                  size="small"
+                  @click="isshowtable = false"
+                >
+                  {{ $translateTitle('equipment.chart') }}
+                </el-button>
+                <el-button
+                  :class="isshowtable ? 'buttonactive' : ''"
+                  type="primary"
+                  plain
+                  size="small"
+                  @click="isshowtable = true"
+                >
+                  {{ $translateTitle('equipment.table') }}
+                </el-button>
+              </el-button-group>
+            </div>
+
+            <div v-if="!isshowtable" class="thirdtb">
+              <!--运行状态卡片-->
+              <ul style="display: flex; flex-wrap: wrap">
+                <li
+                  v-for="(item, index) in properties"
+                  :key="index"
+                  class="updatedtable"
+                >
+                  <div style="height: 70px">
+                    <span style="font-size: 16px">{{ item.name }}</span>
+                    <span style="float: right; margin-right: 10px">
+                      <!-- <svg-icon :icon-class="item.name" /> -->
                     </span>
-                    <el-switch
-                      v-model="isupdate"
-                      active-color="#13ce66"
-                      inactive-color="#cccccc"
-                      @change="updateTrue($event)"
-                    />
+                  </div>
+                  <div
+                    v-if="
+                      item.dataType.type == 'double' ||
+                      item.dataType.type == 'float' ||
+                      item.dataType.type == 'int'
+                    "
+                    :title="item.dataType.type"
+                    class="stla"
+                  >
+                    <span>{{ item.value | filterVal }}</span>
+                    <span v-if="item.dataType.specs.unit">
+                      {{ item.dataType.specs.unit }}
+                    </span>
+                  </div>
+                  <div
+                    v-if="
+                      item.dataType.type == 'enum' ||
+                      item.dataType.type == 'bool'
+                    "
+                    :title="item.dataType.type"
+                    class="stla"
+                  >
+                    <!--                    <span>{{ item.value | filterVal }}</span>-->
+                    <span>{{ item.dataType.specs[item.value] }}</span>
+                  </div>
+                  <div
+                    v-if="item.dataType.type == 'struct'"
+                    :title="item.dataType.type"
+                    class="stla"
+                  >
+                    <i
+                      v-for="(key, indexK) in item.specs"
+                      :key="indexK"
+                      style="display: block; height: 30px; font-style: normal"
+                    >
+                      <div
+                        v-if="
+                          key.dataType.type == 'double' ||
+                          key.dataType.type == 'float' ||
+                          key.dataType.type == 'int'
+                        "
+                        class="stla"
+                      >
+                        <span>{{ key.name + ':' }}ee</span>
+                        <span>{{ key.value }}aa</span>
+                        <span v-if="key.dataType.specs.unit">
+                          {{ key.dataType.specs.unit }}
+                        </span>
+                      </div>
+                      <div
+                        v-if="
+                          key.dataType.type == 'enmu' ||
+                          key.dataType.type == 'bool'
+                        "
+                        class="stla"
+                      >
+                        <span>{{ key.name + ':' }}</span>
+                        <span>{{ key.value }}</span>
+                        <span>{{ key.dataType.specs[key.value] }}</span>
+                      </div>
+                    </i>
                   </div>
 
-                  <!-- 右上角(图表,表格)的按钮 -->
-                  <el-button-group>
-                    <el-button
-                      :class="!isshowtable ? 'buttonactive' : ''"
-                      type="primary"
-                      plain
-                      size="small"
-                      @click="isshowtable = false"
+                  <div class="ta">
+                    <span class="fontSize">
+                      {{ $translateTitle('equipment.updatetime') + ':' }}
+                    </span>
+                    <span
+                      v-if="item.createdat"
+                      class="fontSize"
+                      @click="print(properties)"
                     >
-                      {{ $translateTitle('equipment.chart') }}
-                    </el-button>
-                    <el-button
-                      :class="isshowtable ? 'buttonactive' : ''"
-                      type="primary"
-                      plain
-                      size="small"
-                      @click="isshowtable = true"
-                    >
-                      {{ $translateTitle('equipment.table') }}
-                    </el-button>
-                  </el-button-group>
-                </div>
+                      {{ timestampToTime(item.createdat) }}
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div v-if="isshowtable" class="thirdtable">
+              <!--运行状态表格-->
 
-                <div v-if="!isshowtable" class="thirdtb">
-                  <!--运行状态卡片-->
-                  <ul style="display: flex; flex-wrap: wrap">
-                    <li
-                      v-for="(item, index) in properties"
-                      :key="index"
-                      class="updatedtable"
-                    >
-                      <div style="height: 70px">
-                        <span style="font-size: 16px">{{ item.name }}</span>
-                        <span style="float: right; margin-right: 10px">
-                          <!-- <svg-icon :icon-class="item.name" /> -->
-                        </span>
-                      </div>
-                      <div
-                        v-if="
-                          item.dataType.type == 'double' ||
-                          item.dataType.type == 'float' ||
-                          item.dataType.type == 'int'
-                        "
-                        :title="item.dataType.type"
-                        class="stla"
-                      >
-                        <span>{{ item.value | filterVal }}</span>
-                        <span v-if="item.dataType.specs.unit">
-                          {{ item.dataType.specs.unit }}
-                        </span>
-                      </div>
-                      <div
-                        v-if="
-                          item.dataType.type == 'enum' ||
-                          item.dataType.type == 'bool'
-                        "
-                        :title="item.dataType.type"
-                        class="stla"
-                      >
-                        <!--                    <span>{{ item.value | filterVal }}</span>-->
-                        <span>{{ item.dataType.specs[item.value] }}</span>
-                      </div>
-                      <div
-                        v-if="item.dataType.type == 'struct'"
-                        :title="item.dataType.type"
-                        class="stla"
-                      >
-                        <i
-                          v-for="(key, indexK) in item.specs"
-                          :key="indexK"
-                          style="
-                            display: block;
-                            height: 30px;
-                            font-style: normal;
-                          "
-                        >
-                          <div
-                            v-if="
-                              key.dataType.type == 'double' ||
-                              key.dataType.type == 'float' ||
-                              key.dataType.type == 'int'
-                            "
-                            class="stla"
-                          >
-                            <span>{{ key.name + ':' }}ee</span>
-                            <span>{{ key.value }}aa</span>
-                            <span v-if="key.dataType.specs.unit">
-                              {{ key.dataType.specs.unit }}
-                            </span>
-                          </div>
-                          <div
-                            v-if="
-                              key.dataType.type == 'enmu' ||
-                              key.dataType.type == 'bool'
-                            "
-                            class="stla"
-                          >
-                            <span>{{ key.name + ':' }}</span>
-                            <span>{{ key.value }}</span>
-                            <span>{{ key.dataType.specs[key.value] }}</span>
-                          </div>
-                        </i>
-                      </div>
+              <el-table
+                :data="
+                  thirdData.slice(
+                    (thirdstart - 1) * thirdlength,
+                    thirdstart * thirdlength
+                  )
+                "
+                style="width: 100%; margin-top: 10px; text-align: center"
+              >
+                <el-table-column
+                  :label="$translateTitle('equipment.serialnumber')"
+                  align="center"
+                  type="index"
+                  width="100"
+                />
 
-                      <div class="ta">
-                        <span class="fontSize">
-                          {{ $translateTitle('equipment.updatetime') + ':' }}
-                        </span>
-                        <span
-                          v-if="item.createdat"
-                          class="fontSize"
-                          @click="print(properties)"
-                        >
-                          {{ timestampToTime(item.createdat) }}
-                        </span>
-                      </div>
-                      <div class="ta">
-                        <el-link
-                          :underline="false"
-                          type="primary"
-                          @click="dataDetail(item)"
-                        >
-                          查看数据
-                        </el-link>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-                <div v-if="isshowtable" class="thirdtable">
-                  <!--运行状态表格-->
-
-                  <el-table
-                    :data="
-                      thirdData.slice(
-                        (thirdstart - 1) * thirdlength,
-                        thirdstart * thirdlength
-                      )
-                    "
-                    style="width: 100%; margin-top: 10px; text-align: center"
-                  >
-                    <el-table-column
-                      :label="$translateTitle('equipment.serialnumber')"
-                      align="center"
-                      type="index"
-                      width="100"
-                    />
-
-                    <el-table-column
-                      :label="$translateTitle('equipment.value')"
-                      prop="value"
-                      align="center"
-                      show-overflow-tooltip
-                    />
-                    <el-table-column
-                      :label="$translateTitle('equipment.time')"
-                      prop="time"
-                      align="center"
-                      width="300"
-                    />
-                  </el-table>
-                  <el-pagination
-                    :page-sizes="[10, 25, 50, 100]"
-                    :page-size="thirdlength"
-                    :total="thirdtotal"
-                    background
-                    layout="total, sizes, prev, pager, next, jumper"
-                    style="margin-top: 20px"
-                    @size-change="handleSizeChange1"
-                    @current-change="handleCurrentChange1"
-                  />
-                </div>
-              </el-tab-pane>
-              <el-tab-pane :label="$translateTitle('equipment.historical')">
-                <el-row>
-                  <el-col :lg="20" :md="16" :sm="24" :xl="20" :xs="24">
-                    <vab-query-form>
-                      <vab-query-form-top-panel :span="12">
-                        <el-select
-                          v-model="value"
-                          clearable
-                          placeholder="请选择"
-                        >
-                          <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                          />
-                        </el-select>
-                        <el-select
-                          v-model="value"
-                          clearable
-                          placeholder="请选择"
-                        >
-                          <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                          />
-                        </el-select>
-                        <el-col :span="6">
-                          <el-date-picker
-                            v-model="params.datetimerange"
-                            type="datetimerange"
-                            :picker-options="pickerOptions"
-                            :range-separator="$translateTitle('developer.to')"
-                            :start-placeholder="
-                              $translateTitle('developer.startTime')
-                            "
-                            :end-placeholder="
-                              $translateTitle('developer.EndTime')
-                            "
-                            @change="queryFlag = false"
-                          />
-                        </el-col>
-                      </vab-query-form-top-panel>
-                    </vab-query-form>
-                    <div>
-                      <ve-line
-                        :data="chartData"
-                        :set-option-opts="false"
-                        :settings="chartSettings"
-                        :data-zoom="chartDataZoom"
-                        :toolbox="toolbox"
-                        :loading="loading"
-                        :after-config="afterConfig"
-                        :data-empty="dataEmpty"
-                      />
-                    </div>
-                  </el-col>
-                </el-row>
-              </el-tab-pane>
-            </el-tabs>
+                <el-table-column
+                  :label="$translateTitle('equipment.value')"
+                  prop="value"
+                  align="center"
+                  show-overflow-tooltip
+                />
+                <el-table-column
+                  :label="$translateTitle('equipment.time')"
+                  prop="time"
+                  align="center"
+                  width="300"
+                />
+              </el-table>
+              <el-pagination
+                :page-sizes="[10, 25, 50, 100]"
+                :page-size="thirdlength"
+                :total="thirdtotal"
+                background
+                layout="total, sizes, prev, pager, next, jumper"
+                style="margin-top: 20px"
+                @size-change="handleSizeChange1"
+                @current-change="handleCurrentChange1"
+              />
+            </div>
           </div>
         </el-tab-pane>
         <!--         <el-tab-pane label="事件管理" name="fixth">事件管理</el-tab-pane>
@@ -1041,86 +784,19 @@
           <Instruct :product-id="productid" :devices-id="deviceid" />
         </el-tab-pane>
       </el-tabs>
-      <!--data数据dialog-->
-      <el-dialog
-        :visible.sync="datadialogVisible"
-        :close-on-click-modal="false"
-        title="历史数据"
-        width="40%"
-      >
-        <div class="dialogcontent">
-          <!--数据图表-->
-          <el-tabs type="border-card" @tab-click="handleClick">
-            <el-tab-pane>
-              <span slot="label">
-                <i class="el-icon-date" />
-                表格
-              </span>
-              <el-table
-                :data="
-                  datafordetail.slice(
-                    (dataDeviceStart - 1) * dataDeviceLength,
-                    dataDeviceStart * dataDeviceLength
-                  )
-                "
-                stripe
-                height="300"
-                style="width: 100%; text-align: center"
-              >
-                <el-table-column prop="name" label="名称" align="center" />
-                <el-table-column prop="value" label="数值" align="center" />
-                <el-table-column label="时间" align="center">
-                  <template slot-scope="scope">
-                    <span>{{ timestampToTime(scope.row.time) }}</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <div class="elpagination" style="margin-top: 20px">
-                <el-pagination
-                  :page-sizes="[10, 20, 30, 50]"
-                  :page-size="dataDeviceLength"
-                  :total="dataDeviceTotal.length"
-                  layout="total, sizes, prev, pager, next, jumper"
-                  @size-change="dataDeviceSizeChange"
-                  @current-change="dataDeviceCurrentChange"
-                />
-              </div>
-            </el-tab-pane>
-            <el-tab-pane>
-              <span slot="label">
-                <i class="el-icon-tickets" />
-                图表
-              </span>
-              <div id="echarts" style="width: 100%; height: auto">
-                <line-chart :chart-data="lineChartData" />
-              </div>
-            </el-tab-pane>
-          </el-tabs>
-        </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="datadialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="datadialogVisible = false">
-            确 定
-          </el-button>
-        </span>
-      </el-dialog>
     </div>
   </div>
 </template>
 <script>
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters } from 'vuex'
   import { getTdDevice, getDabDevice } from '@/api/Device/index.js'
   import { utc2beijing, timestampToTime } from '@/utils/index'
-  import LineChart from '../dashboard/admin/components/LineChart'
   import Instruct from '../devicemanage/instruct_manage'
-  import mqtt from '@/components/Mqtt'
   import chartType from '@/api/Mock/Chart'
   var dataobj = {}
   export default {
     components: {
-      LineChart,
       Instruct,
-      mqtt,
     },
     filters: {
       filterVal(val) {
@@ -1160,14 +836,6 @@
         grid: {
           right: 40,
         },
-        yAxis: [
-          {
-            type: 'value',
-            axisLabel: {
-              formatter: '{value} %',
-            },
-          },
-        ],
       }
       this.toolbox = {
         orient: 'vertical',
@@ -1199,6 +867,7 @@
       }
 
       return {
+        activeNames: ['1'],
         queryForm: {
           account: '',
           searchDate: '',
@@ -1455,6 +1124,7 @@
     },
     mounted() {
       this.params.style = this.chartType[1].type
+      console.log(' this.params.style', this.params.style)
       this.getDeviceDetail()
       this.initChart()
       window.addEventListener('resize', this.resizeTheChart)
@@ -1468,11 +1138,37 @@
       window.removeEventListener('resize', this.resizeTheChart)
     },
     methods: {
+      toggleChart(e) {
+        console.log(e)
+        this.chartExtend = {}
+        this.chartDataZoom = []
+        let type = ['funnel', 'radar', 'radar']
+        if (type.indexOf(e) != -1) {
+          this.chartExtend = {}
+          this.chartDataZoom = []
+        } else {
+          this.chartExtend = {
+            grid: {
+              right: 40,
+            },
+            yAxis: [
+              {
+                type: 'value',
+                axisLabel: {
+                  formatter: '{value} %',
+                },
+              },
+            ],
+          }
+          this.chartDataZoom = [{ type: 'slider' }]
+        }
+        this.resizeTheChart()
+      },
       resizeTheChart() {
         let charts = this.$refs[`charts`]
         if (charts) {
           charts.forEach((chart) => {
-            chart.resize()
+            chart.$children[0].resize()
           })
           console.log('重绘完成', charts)
         }
@@ -1665,10 +1361,6 @@
             obj.createdAt = utc2beijing(resultes.createdAt)
             obj.productName = this.$objGet(resultes, 'product.name')
             obj.productid = this.$objGet(resultes, 'product.objectId')
-            obj.address =
-              this.$objGet(resultes, 'location.latitude') +
-              '，' +
-              this.$objGet(resultes, 'location.longitude')
             // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
             // obj.updatedAt = this.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'updatedAt'))
             obj.ip = this.$objGet(resultes, 'ip')
@@ -1680,6 +1372,11 @@
             obj.nodeType = this.$objGet(resultes, 'product.nodeType')
             obj.devType = this.$objGet(resultes, 'product.devType')
             obj.productSecret = this.$objGet(resultes, 'product.productSecret')
+            obj.address =
+              this.$objGet(resultes, 'detail.address') ||
+              this.$objGet(resultes, 'location.latitude') +
+                '，' +
+                this.$objGet(resultes, 'location.longitude')
             const tddata = this.$objGet(resultes, 'tddata')
             // const thingTemp = this.$objGet(resultes, 'product.thing')
             vm.properties = JSON.parse(
@@ -1827,21 +1524,6 @@
             window.clearInterval(vm.timer)
             this.isupdate = false
           })
-      },
-
-      dataDetail(item) {
-        this.datadialogVisible = true
-        var lineChartData = {}
-        for (var key in dataobj) {
-          console.log('dataobj', dataobj)
-          if (item.identifier == key) {
-            this.datafordetail = dataobj[key].data
-            lineChartData = dataobj[key]
-            this.dataDeviceTotal = dataobj[key].data
-          }
-        }
-        console.log('lineChartData===', lineChartData)
-        this.lineChartData = lineChartData
       },
       // 定时器启动
       updateTrue(event) {
@@ -2100,9 +1782,6 @@
             this.devicesTableData[index] = newData
           })
       },
-      // 查看历史数据
-      /**/
-      handleClick(val) {},
     },
   }
 </script>

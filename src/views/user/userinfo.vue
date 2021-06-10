@@ -10,7 +10,7 @@
                 :src="avatar"
                 @click.native="uploadCkick('userinfo.avatar')"
               />
-              <upload ref="uploadFinish" @fileInfo="fileInfo" />
+              <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
               <ul class="personal-center-user-info-list">
                 <li>
                   <vab-icon icon="user-2-line" />
@@ -172,15 +172,12 @@
   </div>
 </template>
 <script>
-  import Upload from '@/components/UploadFile/input'
   import { mapGetters, mapMutations } from 'vuex'
   import { isPhone, isUrl } from '@/utils/validate'
   import { putUser } from '@/api/User'
   export default {
     name: 'Userinfo',
-    components: {
-      Upload,
-    },
+    components: {},
     data() {
       const validatePhone = (rule, value, callback) => {
         if (value && !isPhone(value)) {

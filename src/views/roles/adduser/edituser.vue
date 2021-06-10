@@ -153,15 +153,15 @@
 </script>
 <style scoped>
   .edituser {
+    box-sizing: border-box;
     width: 100%;
     min-height: 875px;
     padding: 20px;
-    box-sizing: border-box;
     background: #ffffff;
   }
   .admin {
-    font-size: 24px;
     margin: 20px 0 10px 20px;
+    font-size: 24px;
   }
   .admin .des {
     padding-left: 5px;
@@ -169,8 +169,8 @@
     color: #777;
   }
   .goodslist {
-    margin-left: 20px;
     margin-bottom: 10px;
+    margin-left: 20px;
   }
   .el-input {
     width: 600px;

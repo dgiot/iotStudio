@@ -54,1018 +54,1169 @@
           <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
         </baidu-map>
       </el-dialog>
+      <el-dialog :visible.sync="InfoDialog" top="5vh" width="80%">
+        <div>
+          <div>
+            <table
+              class="mailtable"
+              style="width: 100%"
+              border="0"
+              cellspacing="0"
+              cellpadding="0"
+            >
+              <!-- 设备编号: 所属产品: 安装位置 -->
+              <tr>
+                <td class="cloumn">
+                  {{ $translateTitle('equipment.devicenumber') + ':' }}
+                </td>
+                <td>{{ devicedetail.devaddr }}</td>
+                <td class="cloumn">
+                  {{ $translateTitle('equipment.installationlocation') }}
+                </td>
+                <td>
+                  {{ devicedetail.detail ? devicedetail.detail.address : '' }}
+                </td>
+                <td class="cloumn">
+                  {{ $translateTitle('equipment.state') + ':' }}
+                </td>
+                <!-- <td  :class="devicedetail.status"  v-if="devicedetail.status=='ACTIVE'">{{$t('product.active')}}</td>
+                 <td  :class="devicedetail.status" v-else-if="devicedetail.status=='UNACTIVE'">{{$t('product.unactive')}}</td>
+                 <td  :class="devicedetail.status" v-else-if="devicedetail.status=='ONLINE'">{{$t('product.online')}}</td>
+                <td  :class="devicedetail.status"  v-else>{{$t('product.offline')}}</td>-->
+                <td class="ACTIVE">
+                  {{ $translateTitle('product.active') }}
+                </td>
+              </tr>
+
+              <tr>
+                <td class="cloumn">
+                  {{ $translateTitle('equipment.ipaddress') + ':' }}
+                </td>
+                <td>{{ devicedetail.ip || '-' }}</td>
+                <td class="cloumn">
+                  {{ $translateTitle('equipment.createdAt') + ':' }}
+                </td>
+                <td>{{ devicedetail.createdAt }}</td>
+                <td class="cloumn">
+                  {{ $translateTitle('equipment.lastonlinetime') + ':' }}
+                </td>
+                <td>{{ devicedetail.lastOnlineTime || '-' }}</td>
+              </tr>
+              <tr>
+                <!-- <td class="cloumn">{{$t('equipment.subordinatenode')+':'}}</td>
+                <td>{{devicedetail.node}}</td>-->
+                <td class="cloumn">
+                  {{ $translateTitle('equipment.nodetype') + ':' }}
+                </td>
+                <td v-if="devicedetail.nodeType == 0">
+                  {{ $translateTitle('product.equipment') }}
+                </td>
+                <td v-else>{{ $translateTitle('product.gateway') }}</td>
+                <td class="cloumn">
+                  {{ $translateTitle('developer.describe') + ':' }}
+                </td>
+                <td>{{ devicedetail.desc }}</td>
+                <td class="cloumn">
+                  {{ $translateTitle('equipment.Failure analysis') + ':' }}
+                </td>
+                <td>{{ devicedetail.lastOnlineTime || '-' }}</td>
+              </tr>
+            </table>
+            <h4>
+              {{ $translateTitle('equipment.deviceextensioninformation') }}
+            </h4>
+            <el-input
+              v-model="devicedetail.shadow"
+              :row="10"
+              :cols="5"
+              type="textarea"
+              readonly
+            />
+          </div>
+        </div>
+      </el-dialog>
     </div>
     <div class="equtabs">
       <!--tabs第一个标签页-->
-      <el-row :gutter="gutter">
-        <el-col :span="leftRow">
-          <div class="leftTree">
-            <el-tree
-              :data="deptTreeData"
-              :props="roleProps"
-              :expand-on-click-node="false"
-              node-key="index"
-              default-expand-all
-            >
-              <!-- @node-click="handleNodeClick" -->
-              <!-- eslint-disable-next-line -->
-              <div slot-scope="{ node, data }" class="custom-tree-node">
-                <span
-                  :class="{ selected: data.objectId == curDepartmentId }"
-                  @click="handleNodeClick(data, node)"
-                >
-                  {{ node.label }}
+      <div class="equ_header">
+        <!--            <ul>-->
+        <!--              <li>-->
+        <!--                <p>-->
+        <!--                  <span class="svg-container">-->
+        <!--                    <vab-icon icon="device-fill" />-->
+        <!--                  </span>-->
+
+        <!--                  <el-tooltip-->
+        <!--                    :content="$translateTitle('equipment.totalequipment')"-->
+        <!--                    placement="top"-->
+        <!--                  >-->
+        <!--                    <i class="el-icon-question" />-->
+        <!--                  </el-tooltip>-->
+        <!--                </p>-->
+        <!--                <span>{{ devicetotal }}</span>-->
+        <!--              </li>-->
+        <!--              <li>-->
+        <!--                <p>-->
+        <!--                  <span class="svg-container">-->
+        <!--                    <vab-icon icon="24-hours-line" />-->
+        <!--                  </span>-->
+        <!--                  {{ $translateTitle('equipment.onlinedevices') }}-->
+        <!--                  <el-tooltip-->
+        <!--                    :content="$translateTitle('equipment.totalonline')"-->
+        <!--                    placement="top"-->
+        <!--                  >-->
+        <!--                    <i class="el-icon-question" />-->
+        <!--                  </el-tooltip>-->
+        <!--                </p>-->
+        <!--                <span>{{ onlineall }}</span>-->
+        <!--              </li>-->
+        <!--            </ul>-->
+        <el-row>
+          <el-col :xs="24" :sm="24" :md="8" :xl="8">
+            <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                <span>
+                  {{ $translateTitle('equipment.Equipment Overview') }}
                 </span>
+                <el-button
+                  icon="el-icon-refresh"
+                  style="float: right; padding: 3px 0"
+                  type="text"
+                />
               </div>
-            </el-tree>
-          </div>
-        </el-col>
-        <el-col :span="gutter - leftRow">
-          <div class="equ_header">
-            <ul>
-              <li>
-                <p>
-                  <span class="svg-container">
-                    <vab-icon icon="device-fill" />
-                  </span>
-                  {{ $translateTitle('equipment.totalequipment') }}
-                  <el-tooltip
-                    :content="$translateTitle('equipment.totalequipment')"
-                    placement="top"
-                  >
-                    <i class="el-icon-question" />
-                  </el-tooltip>
-                </p>
-                <span>{{ devicetotal }}</span>
-              </li>
-              <li>
-                <p>
-                  <span class="svg-container">
-                    <vab-icon icon="24-hours-line" />
-                  </span>
-                  {{ $translateTitle('equipment.onlinedevices') }}
-                  <el-tooltip
-                    :content="$translateTitle('equipment.totalonline')"
-                    placement="top"
-                  >
-                    <i class="el-icon-question" />
-                  </el-tooltip>
-                </p>
-                <span>{{ onlineall }}</span>
-              </li>
-            </ul>
-          </div>
-          <div style="margin-top: 20px" class="equdevices">
-            <!-- 显示影藏 -->
-            <vab-icon
-              style="cursor: pointer"
-              :icon="vabicon"
-              @click="leftRow = leftRow == 3 ? 0 : 3"
-            />
-            <el-select
-              v-model="equvalue"
-              :disabled="!productenable"
-              class="selectdetail"
-              size="small"
-              @change="selectProdChange"
+              <div class="text item">
+                <ve-ring
+                  height="140px"
+                  :data-empty="!chartOnlone.rows"
+                  :data="chartOnlone"
+                  :settings="chartSettings"
+                  :extend="chartExtend"
+                />
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="8" :xl="8">
+            <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                <span>
+                  {{ $translateTitle('equipment.Warning today') }}
+                </span>
+                <el-button
+                  icon="el-icon-refresh"
+                  style="float: right; padding: 3px 0"
+                  type="text"
+                />
+              </div>
+              <div class="text item">
+                <ve-ring
+                  height="140px"
+                  :data-empty="!chartwaring.rows"
+                  :data="chartwaring"
+                />
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="8" :xl="8">
+            <el-card class="box-card">
+              <div slot="header" class="clearfix">
+                <span>{{ $translateTitle('equipment.Products') }}</span>
+                <el-button
+                  icon="el-icon-refresh"
+                  style="float: right; padding: 3px 0"
+                  type="text"
+                />
+              </div>
+              <div class="text item">
+                <ve-ring
+                  height="140px"
+                  :data-empty="!chartProduct.rows"
+                  :data="chartProduct"
+                />
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
+      <div style="margin-top: 20px" class="equdevices">
+        <vab-query-form>
+          <vab-query-form-top-panel>
+            <el-form
+              :inline="true"
+              :model="queryForm"
+              label-width="100px"
+              @submit.native.prevent
             >
-              <el-option
-                v-for="(item, index) in proTableData"
-                :key="index"
-                :label="item.name"
-                :value="item.objectId"
-              />
-            </el-select>
-            <!-- <el-select
+              <el-form-item :label="$translateTitle('equipment.Department')">
+                <el-select
+                  v-model="queryForm.workGroupName"
+                  placeholder="请选择"
+                  clearable
+                  @visible-change="change($event)"
+                >
+                  <el-option
+                    :value="treeDataValue"
+                    style="height: auto; padding: 0"
+                  >
+                    <el-tree
+                      ref="workGroup"
+                      :data="deptTreeData"
+                      :props="roleProps"
+                      :expand-on-click-node="false"
+                      node-key="index"
+                      default-expand-all
+                    >
+                      <div slot-scope="{ node, data }" class="custom-tree-node">
+                        <span
+                          :class="{
+                            selected: data.objectId == curDepartmentId,
+                          }"
+                          @click="handleNodeClick(data, node)"
+                        >
+                          {{ node.label }}
+                        </span>
+                      </div>
+                    </el-tree>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="$translateTitle('equipment.Products')">
+                <el-select
+                  v-model="equvalue"
+                  :disabled="!productenable"
+                  @change="selectProdChange"
+                >
+                  <el-option
+                    v-for="(item, index) in proTableData"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.objectId"
+                  />
+                </el-select>
+              </el-form-item>
+              <!-- <el-select
               v-model="onlinedevices"
               placeholder="请选择状态"
               class="selectdetail"
               size="small"
               clearable
             > -->
-            <el-select
-              v-model="onlinedevices"
-              :placeholder="$translateTitle('equipment.pleaseselectstatus')"
-              class="selectdetail"
-              size="small"
-              clearable
-            >
-              <!-- <el-option value="在线" /> -->
-              <el-option :value="$translateTitle('zetadevices.online')" />
-              <!-- <el-option value="离线" /> -->
-              <el-option :value="$translateTitle('zetadevices.offline')" />
-            </el-select>
-            <el-select
-              v-model="selectdevice"
-              class="selectdetail"
-              size="small"
-              clearable
-            >
-              <el-option :value="$translateTitle('equipment.devicename')" />
-              <el-option :value="$translateTitle('equipment.devicenumber')" />
-            </el-select>
-            <el-input
-              v-if="selectdevice == $translateTitle('equipment.devicename')"
-              v-model="deviceinput"
-              :placeholder="$translateTitle('equipment.enterproductname')"
-              size="small"
-              class="selectdetail"
-            />
-            <el-input
-              v-else
-              v-model="deviceinput"
-              :placeholder="$translateTitle('equipment.enterdevicenumber')"
-              size="small"
-              class="selectdetail"
-            />
-            <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
-            <el-button
-              size="small"
-              type="primary"
-              class="selectdetail"
-              @click="getDevices(0)"
-            >
-              {{ $translateTitle('developer.search') }}
-            </el-button>
-            <el-button
-              :disabled="multipleTable.length == 0"
-              size="small"
-              type="primary"
-              class="selectdetail"
-              @click="deleteDevcie"
-            >
-              {{ $translateTitle('developer.delete') }}
-            </el-button>
-            <el-button
-              :disabled="multipleTable.length == 0"
-              size="small"
-              type="primary"
-              class="selectdetail"
-              @click="unactiveDevice(false)"
-            >
-              {{ $translateTitle('developer.prohibit') }}
-            </el-button>
-            <el-button
-              :disabled="multipleTable.length == 0"
-              size="small"
-              type="primary"
-              class="selectdetail"
-              @click="unactiveDevice(true)"
-            >
-              {{ $translateTitle('developer.enable') }}
-            </el-button>
-            <el-button size="small">
-              {{ $translateTitle('equipment.batchaddition') }}
-            </el-button>
-            <el-button type="primary" size="small" @click="addDeviceForm">
-              {{ $translateTitle('equipment.adddevice') }}
-            </el-button>
-          </div>
-          <el-tabs v-model="activeName">
-            <el-tab-pane
-              :label="$translateTitle('equipment.list')"
-              name="first"
-            >
-              <div class="tabstable">
-                <el-table
-                  v-show="isALL"
-                  ref="filterTable"
-                  v-loading="listLoading"
-                  :data="tableData"
-                  :row-style="rowClass"
-                  style="width: 100%; margin-top: 20px; text-align: center"
-                  @selection-change="handleSelectionChange"
+              <el-form-item :label="$translateTitle('equipment.device status')">
+                <el-select v-model="onlinedevices" style="width: 100px">
+                  <!-- <el-option value="在线" /> -->
+                  <el-option :value="$translateTitle('zetadevices.online')" />
+                  <!-- <el-option value="离线" /> -->
+                  <el-option :value="$translateTitle('zetadevices.offline')" />
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="$translateTitle('equipment.condition')">
+                <el-input
+                  v-if="selectdevice == $translateTitle('equipment.devicename')"
+                  v-model="deviceinput"
+                  :placeholder="$translateTitle('equipment.enterproductname')"
                 >
-                  <el-table-column type="selection" align="center" width="55" />
-                  <el-table-column
-                    :label="$translateTitle('equipment.devicenumber')"
-                    align="center"
+                  <el-select
+                    slot="prepend"
+                    v-model="selectdevice"
+                    style="width: 140px"
                   >
-                    <template slot-scope="scope">
-                      {{ scope.row.devaddr }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('equipment.name')"
-                    align="center"
+                    <el-option
+                      :value="$translateTitle('equipment.devicename')"
+                    />
+                    <el-option
+                      :value="$translateTitle('equipment.devicenumber')"
+                    />
+                  </el-select>
+
+                  <el-button
+                    slot="append"
+                    icon="el-icon-search"
+                    size="mini"
+                    @click="getDevices(0)"
+                  />
+                </el-input>
+                <el-input
+                  v-else
+                  v-model="deviceinput"
+                  :placeholder="$translateTitle('equipment.enterdevicenumber')"
+                >
+                  <el-select
+                    slot="prepend"
+                    v-model="selectdevice"
+                    style="width: 120px"
                   >
-                    <template slot-scope="scope">
-                      <span style="margin: 0; color: green">
-                        {{ scope.row.name }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('equipment.state')"
-                    align="center"
-                    width="80"
+                    <el-option
+                      :value="$translateTitle('equipment.devicename')"
+                    />
+                    <el-option
+                      :value="$translateTitle('equipment.devicenumber')"
+                    />
+                  </el-select>
+
+                  <el-button
+                    slot="append"
+                    size="mini"
+                    icon="el-icon-search"
+                    @click="getDevices(0)"
+                  />
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" size="small" @click="addDeviceForm">
+                  {{ $translateTitle('equipment.adddevice') }}
+                </el-button>
+              </el-form-item>
+              <el-form-item style="display: none">
+                <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
+                <el-button
+                  :disabled="multipleTable.length == 0"
+                  size="small"
+                  type="primary"
+                  class="selectdetail"
+                  @click="deleteDevcie"
+                >
+                  {{ $translateTitle('developer.delete') }}
+                </el-button>
+                <el-button
+                  :disabled="multipleTable.length == 0"
+                  size="small"
+                  type="primary"
+                  class="selectdetail"
+                  @click="unactiveDevice(false)"
+                >
+                  {{ $translateTitle('developer.prohibit') }}
+                </el-button>
+                <el-button
+                  :disabled="multipleTable.length == 0"
+                  size="small"
+                  type="primary"
+                  class="selectdetail"
+                  @click="unactiveDevice(true)"
+                >
+                  {{ $translateTitle('developer.enable') }}
+                </el-button>
+                <el-button size="small">
+                  {{ $translateTitle('equipment.batchaddition') }}
+                </el-button>
+              </el-form-item>
+            </el-form>
+          </vab-query-form-top-panel>
+        </vab-query-form>
+      </div>
+      <el-tabs v-model="activeName">
+        <el-tab-pane :label="$translateTitle('equipment.list')" name="first">
+          <div class="tabstable">
+            <el-table
+              v-show="isALL"
+              ref="filterTable"
+              v-loading="listLoading"
+              :data="tableData"
+              :row-style="rowClass"
+              style="width: 100%; margin-top: 20px; text-align: center"
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column type="selection" align="center" width="55" />
+              <el-table-column
+                :label="$translateTitle('equipment.devicenumber')"
+                align="center"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  {{ scope.row.devaddr }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('equipment.name')"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <span style="margin: 0; color: green">
+                    {{ scope.row.name }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('equipment.state')"
+                align="center"
+                width="80"
+              >
+                <template slot-scope="scope">
+                  <span
+                    v-if="scope.row.status == 'ONLINE'"
+                    :class="scope.row.status"
                   >
-                    <template slot-scope="scope">
-                      <span
-                        v-if="scope.row.status == 'ONLINE'"
-                        :class="scope.row.status"
-                      >
-                        {{ $translateTitle('product.online') }}
-                      </span>
-                      <!-- <el-tooltip
+                    {{ $translateTitle('product.online') }}
+                  </span>
+                  <!-- <el-tooltip
                     v-if="scope.row.status == 'ONLINE'"
                     content="设备已经上线"
                     placement="top"
                   > -->
-                      <el-tooltip
-                        v-if="scope.row.status == 'ONLINE'"
-                        :content="
-                          $translateTitle('equipment.thedeviceisonline')
-                        "
-                        placement="top"
-                      >
-                        <i class="el-icon-question" />
-                      </el-tooltip>
+                  <el-tooltip
+                    v-if="scope.row.status == 'ONLINE'"
+                    :content="$translateTitle('equipment.thedeviceisonline')"
+                    placement="top"
+                  >
+                    <i class="el-icon-question" />
+                  </el-tooltip>
 
-                      <span
-                        v-if="scope.row.status == 'OFFLINE'"
-                        :class="scope.row.status"
-                      >
-                        {{ $translateTitle('product.offline') }}
-                      </span>
-                      <!-- <el-tooltip
+                  <span
+                    v-if="scope.row.status == 'OFFLINE'"
+                    :class="scope.row.status"
+                  >
+                    {{ $translateTitle('product.offline') }}
+                  </span>
+                  <!-- <el-tooltip
                     v-if="scope.row.status == 'OFFLINE'"
                     content="设备已经离线"
                     placement="top"
                   > -->
-                      <el-tooltip
-                        v-if="scope.row.status == 'OFFLINE'"
-                        :content="
-                          $translateTitle('equipment.thedeviceisoffline')
-                        "
-                        placement="top"
-                      >
-                        <i class="el-icon-question" />
-                      </el-tooltip>
-                      <span
-                        v-if="
-                          scope.row.status != 'OFFLINE' &&
-                          scope.row.status != 'ONLINE'
-                        "
-                        :class="scope.row.status"
-                      >
-                        <!-- 未注册 -->
-                        {{ $translateTitle('product.unregistered') }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('equipment.product')"
-                    align="center"
-                    width="200"
+                  <el-tooltip
+                    v-if="scope.row.status == 'OFFLINE'"
+                    :content="$translateTitle('equipment.thedeviceisoffline')"
+                    placement="top"
                   >
-                    <template slot-scope="scope">
-                      <span v-if="scope.row.product && scope.row.product.name">
-                        {{ scope.row.product.name || '' }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    v-if="Company == '云寓智慧公寓平台'"
-                    :label="$translateTitle('developer.authcode')"
-                    align="center"
-                    width="100"
-                  >
-                    <template slot-scope="scope">
-                      <span>
-                        {{
-                          scope.row.basedata && scope.row.basedata.auth
-                            ? scope.row.basedata.auth
-                            : ''
-                        }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('developer.Company')"
-                    align="center"
-                    width="100"
-                  >
-                    <template slot-scope="scope">
-                      <span>
-                        {{ scope.row.Company }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    v-if="Company == '云寓智慧公寓平台'"
-                    :label="$translateTitle('developer.Application')"
-                    align="center"
-                    width="200"
-                  >
-                    <template slot-scope="scope">
-                      <span>
-                        {{ scope.row.basedata.yysId }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="
-                      $translateTitle('developer.enable') +
-                      '/' +
-                      $translateTitle('developer.prohibit')
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                  <span
+                    v-if="
+                      scope.row.status != 'OFFLINE' &&
+                      scope.row.status != 'ONLINE'
                     "
-                    align="center"
-                    width="100"
+                    :class="scope.row.status"
                   >
-                    <template slot-scope="scope">
-                      <el-switch
-                        v-model="scope.row.isEnable"
-                        active-color="#5eb058"
-                        inactive-color="#cccccc"
-                        @change="handelUpdate($event, scope.row, scope.$index)"
-                      />
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('developer.createdAt')"
-                    width="200"
-                  >
-                    <template slot-scope="scope">
-                      <span>{{ utc2beijing(scope.row.createdAt) }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    width="360"
-                    fixed="right"
-                    :label="$translateTitle('developer.operation')"
-                    align="center"
-                  >
-                    <template slot-scope="scope">
-                      <vab-icon
-                        style="color: #1890ff"
-                        icon="file-transfer-line"
-                      />
+                    <!-- 未注册 -->
+                    {{ $translateTitle('product.unregistered') }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('equipment.product')"
+                align="center"
+                width="200"
+              >
+                <template slot-scope="scope">
+                  <span v-if="scope.row.product && scope.row.product.name">
+                    {{ scope.row.product.name || '' }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                v-if="Company == '云寓智慧公寓平台'"
+                :label="$translateTitle('developer.authcode')"
+                align="center"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  <span>
+                    {{
+                      scope.row.basedata && scope.row.basedata.auth
+                        ? scope.row.basedata.auth
+                        : ''
+                    }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('developer.Company')"
+                align="center"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  <span>
+                    {{ scope.row.Company }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                v-if="Company == '云寓智慧公寓平台'"
+                :label="$translateTitle('developer.Application')"
+                align="center"
+                width="200"
+              >
+                <template slot-scope="scope">
+                  <span>
+                    {{ scope.row.basedata.yysId }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="
+                  $translateTitle('developer.enable') +
+                  '/' +
+                  $translateTitle('developer.prohibit')
+                "
+                align="center"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  <el-switch
+                    v-model="scope.row.isEnable"
+                    active-color="#5eb058"
+                    inactive-color="#cccccc"
+                    @change="handelUpdate($event, scope.row, scope.$index)"
+                  />
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                :label="$translateTitle('developer.createdAt')"
+                width="200"
+              >
+                <template slot-scope="scope">
+                  <span>{{ utc2beijing(scope.row.createdAt) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                width="500"
+                :label="$translateTitle('developer.operation')"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <vab-icon style="color: #1890ff" icon="file-transfer-line" />
 
-                      <el-link
-                        :underline="false"
-                        type="primary"
-                        style="margin: 0 10px"
-                        @click="showTree(scope.row.objectId, scope.row.Company)"
-                      >
-                        {{ $translateTitle('equipment.move') }}
-                      </el-link>
-                      <vab-icon
-                        style="color: #1890ff"
-                        icon="map-pin-range-line"
-                      />
-                      <el-link
-                        :underline="false"
-                        type="primary"
-                        :disabled="!scope.row.location"
-                        @click="showMap(scope.row.location, scope.row.objectId)"
-                      >
-                        {{ $translateTitle('equipment.location') }}
-                      </el-link>
-                      <el-link
-                        v-if="Company != '云寓智慧公寓平台'"
-                        :underline="false"
-                        type="primary"
-                        style="margin: 0 10px"
-                        icon="el-icon-view"
-                        @click="deviceToDetail(scope.row)"
-                      >
-                        {{ $translateTitle('equipment.see') }}
-                      </el-link>
-                      <el-link
-                        :underline="false"
-                        type="primary"
-                        style="margin: 0 10px 0 0"
-                        icon="el-icon-edit"
-                        @click="editorDevice(scope.row)"
-                      >
-                        {{ $translateTitle('concentrator.edit') }}
-                      </el-link>
-                      <el-link
-                        :underline="false"
-                        type="primary"
-                        style="margin: 0 10px 0 0"
-                        icon="el-icon-s-flag                    "
-                        @click="konvaDevice(scope.row)"
-                      >
-                        {{ $translateTitle('concentrator.konva') }}
-                      </el-link>
-                      <el-popover
-                        :ref="`popover-${scope.$index}`"
-                        placement="top"
-                        width="300"
-                      >
-                        <!-- <p>确定删除这个{{ scope.row.name }}设备吗？</p> -->
-                        <p>
-                          {{ $translateTitle('product.qdsczg')
-                          }}{{ scope.row.name
-                          }}{{ $translateTitle('equipment.sbm') }}
-                        </p>
-                        <div style="margin: 0; text-align: right">
-                          <el-button
-                            size="mini"
-                            @click="
-                              scope._self.$refs[
-                                `popover-${scope.$index}`
-                              ].doClose()
-                            "
-                          >
-                            {{ $translateTitle('developer.cancel') }}
-                          </el-button>
-                          <el-button
-                            type="primary"
-                            size="mini"
-                            @click="makeSure(scope)"
-                          >
-                            {{ $translateTitle('developer.determine') }}
-                          </el-button>
-                        </div>
-                        <el-link
-                          slot="reference"
-                          :underline="false"
-                          icon="el-icon-delete"
-                          type="danger"
-                        >
-                          {{ $translateTitle('developer.delete') }}
-                        </el-link>
-                      </el-popover>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <el-table
-                  v-show="!isALL"
-                  ref="filterTable"
-                  v-loading="listLoading"
-                  :data="tableData"
-                  :row-style="rowClass"
-                  style="width: 100%"
-                  @selection-change="handleSelectionChange"
-                >
-                  <el-table-column type="selection" align="center" width="55" />
-                  <el-table-column
-                    :label="$translateTitle('equipment.devicenumber')"
-                    align="center"
-                    width="100"
+                  <el-link
+                    :underline="false"
+                    type="primary"
+                    style="margin: 0 10px"
+                    @click="showTree(scope.row.objectId, scope.row.Company)"
                   >
-                    <template slot-scope="scope">
-                      {{ scope.row.devaddr }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('equipment.name')"
-                    align="center"
+                    {{ $translateTitle('equipment.move') }}
+                  </el-link>
+
+                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
+                  <el-link
+                    :underline="false"
+                    type="primary"
+                    @click="showInfo(scope.row)"
                   >
-                    <template slot-scope="scope">
-                      <span style="margin: 0; color: green">
-                        {{ scope.row.name }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('equipment.state')"
-                    align="center"
-                    width="70"
+                    {{ $translateTitle('equipment.info') }}
+                  </el-link>
+
+                  <!--                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />-->
+                  <!--                  <el-link-->
+                  <!--                    :underline="false"-->
+                  <!--                    type="primary"-->
+                  <!--                    :disabled="!scope.row.location"-->
+                  <!--                    @click="showMap(scope.row.location, scope.row.objectId)"-->
+                  <!--                  >-->
+                  <!--                    {{ $translateTitle('equipment.location') }}-->
+                  <!--                  </el-link>-->
+                  <el-link
+                    v-if="Company != '云寓智慧公寓平台'"
+                    :underline="false"
+                    type="primary"
+                    style="margin: 0 10px"
+                    icon="el-icon-view"
+                    @click="deviceToDetail(scope.row)"
                   >
-                    <template slot-scope="scope">
-                      <span
-                        v-if="scope.row.status == 'ONLINE'"
-                        :class="scope.row.status"
-                      >
-                        {{ $translateTitle('product.online') }}
-                      </span>
-                      <el-tooltip
-                        v-if="scope.row.status == 'ONLINE'"
-                        :content="
-                          $translateTitle('equipment.thedeviceisonline')
-                        "
-                        placement="top"
-                      >
-                        <i class="el-icon-question" />
-                      </el-tooltip>
-                      <span
-                        v-if="scope.row.status == 'OFFLINE'"
-                        :class="scope.row.status"
-                      >
-                        {{ $translateTitle('product.offline') }}
-                      </span>
-                      <el-tooltip
-                        v-if="scope.row.status == 'OFFLINE'"
-                        :content="
-                          $translateTitle('equipment.thedeviceisoffline')
-                        "
-                        placement="top"
-                      >
-                        <i class="el-icon-question" />
-                      </el-tooltip>
-                      <span
-                        v-if="
-                          scope.row.status != 'OFFLINE' &&
-                          scope.row.status != 'ONLINE'
-                        "
-                        :class="scope.row.status"
-                      >
-                        <!-- 未注册 -->
-                        {{ $translateTitle('product.unregistered') }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('equipment.product')"
-                    align="center"
+                    {{ $translateTitle('equipment.see') }}
+                  </el-link>
+                  <el-link
+                    :underline="false"
+                    type="primary"
+                    style="margin: 0 10px 0 0"
+                    icon="el-icon-edit"
+                    @click="editorDevice(scope.row)"
                   >
-                    <template slot-scope="scope">
-                      <span v-if="scope.row.product && scope.row.product.name">
-                        {{ scope.row.product.name }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    v-if="Company == '云寓智慧公寓平台'"
-                    :label="$translateTitle('developer.authcode')"
-                    align="center"
+                    {{ $translateTitle('concentrator.edit') }}
+                  </el-link>
+                  <el-link
+                    :underline="false"
+                    type="primary"
+                    style="margin: 0 10px 0 0"
+                    icon="el-icon-s-flag                    "
+                    @click="konvaDevice(scope.row)"
                   >
-                    <template slot-scope="scope">
-                      <span>
-                        {{
-                          scope.row.basedata && scope.row.basedata.auth
-                            ? scope.row.basedata.auth
-                            : ''
-                        }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('developer.Company')"
-                    align="center"
-                  >
-                    <template slot-scope="scope">
-                      <span>
-                        {{ scope.row.Company }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    v-if="Company == '云寓智慧公寓平台'"
-                    :label="$translateTitle('developer.Application')"
-                    align="center"
-                  >
-                    <template slot-scope="scope">
-                      <span>
-                        {{ scope.row.basedata.yysId }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="
-                      $translateTitle('developer.enable') +
-                      '/' +
-                      $translateTitle('developer.prohibit')
-                    "
-                    align="center"
-                    width="80"
-                  >
-                    <template slot-scope="scope">
-                      <el-switch
-                        v-model="scope.row.isEnable"
-                        active-color="#5eb058"
-                        inactive-color="#cccccc"
-                        @change="handelUpdate($event, scope.row, scope.$index)"
-                      />
-                    </template>
-                  </el-table-column>
-                  <template v-for="(item, index) in dialogtempconfig">
-                    <el-table-column
-                      v-if="item.type == 'bool' && item.isshow"
-                      :key="index"
-                      align="center"
-                      :label="item.name"
-                      :prop="item.identifier"
-                    >
-                      <template slot-scope="scope">
-                        <span v-if="scope.row[item.default]">
-                          <!-- 是 -->
-                          {{ $translateTitle('product.yes') }}
-                        </span>
-                        <span v-else>
-                          <!-- 否 -->
-                          {{ $translateTitle('product.no') }}
-                        </span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      v-else-if="item.type == 'enum' && item.isshow"
-                      :key="index"
-                      align="center"
-                      :label="item.name"
-                    >
-                      <template slot-scope="scope">
-                        <span>
-                          {{ item.struct[scope.row[item.identifier]] }}
-                        </span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      v-else-if="item.isshow"
-                      :key="index"
-                      align="center"
-                      :label="item.name"
-                      :prop="item.identifier"
-                    >
-                      <template slot-scope="scope">
-                        <span>
-                          {{ scope.row[item.identifier] }} {{ item.unit }}
-                        </span>
-                      </template>
-                    </el-table-column>
-                  </template>
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('developer.createdAt')"
-                    width="180"
-                  >
-                    <template slot-scope="scope">
-                      <span>{{ utc2beijing(scope.row.createdAt) }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    fixed="right"
-                    :label="$translateTitle('developer.operation')"
-                    align="center"
+                    {{ $translateTitle('concentrator.konva') }}
+                  </el-link>
+                  <el-popover
+                    :ref="`popover-${scope.$index}`"
+                    placement="top"
                     width="300"
                   >
-                    <template slot-scope="scope">
-                      <vab-icon
-                        style="color: #1890ff"
-                        icon="file-transfer-line"
-                      />
-
-                      <el-link
-                        :underline="false"
+                    <!-- <p>确定删除这个{{ scope.row.name }}设备吗？</p> -->
+                    <p>
+                      {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                      }}{{ $translateTitle('equipment.sbm') }}
+                    </p>
+                    <div style="margin: 0; text-align: right">
+                      <el-button
+                        size="mini"
+                        @click="
+                          scope._self.$refs[`popover-${scope.$index}`].doClose()
+                        "
+                      >
+                        {{ $translateTitle('developer.cancel') }}
+                      </el-button>
+                      <el-button
                         type="primary"
-                        @click="showTree(scope.row.objectId, scope.row.Company)"
+                        size="mini"
+                        @click="makeSure(scope)"
                       >
-                        {{ $translateTitle('equipment.move') }}
-                      </el-link>
-                      <vab-icon
-                        style="color: #1890ff"
-                        icon="map-pin-range-line"
-                      />
-                      <el-link
-                        :underline="false"
-                        type="primary"
-                        :disabled="!scope.row.location"
-                        @click="showMap(scope.row.location, scope.row.objectId)"
-                      >
-                        {{ $translateTitle('equipment.location') }}
-                      </el-link>
-                      <el-link
-                        v-if="Company != '云寓智慧公寓平台'"
-                        :underline="false"
-                        type="primary"
-                        style="margin: 0 10px"
-                        icon="el-icon-view"
-                        @click="deviceToDetail(scope.row)"
-                      >
-                        {{ $translateTitle('equipment.see') }}
-                      </el-link>
-                      <el-link
-                        :underline="false"
-                        type="primary"
-                        style="margin: 0 10px 0 0"
-                        icon="el-icon-edit"
-                        @click="editorDevice(scope.row)"
-                      >
-                        {{ $translateTitle('concentrator.edit') }}
-                      </el-link>
-                      <el-popover
-                        :ref="`popover-${scope.$index}`"
-                        placement="top"
-                        width="300"
-                      >
-                        <!-- <p>确定删除这个{{ scope.row.name }}设备吗？</p> -->
-                        <p>
-                          {{ $translateTitle('product.qdsczg')
-                          }}{{ scope.row.name
-                          }}{{ $translateTitle('equipment.sbm') }}
-                        </p>
-                        <div style="margin: 0; text-align: right">
-                          <el-button
-                            size="mini"
-                            @click="
-                              scope._self.$refs[
-                                `popover-${scope.$index}`
-                              ].doClose()
-                            "
-                          >
-                            {{ $translateTitle('developer.cancel') }}
-                          </el-button>
-                          <el-button
-                            type="primary"
-                            size="mini"
-                            @click="makeSure(scope)"
-                          >
-                            {{ $translateTitle('developer.determine') }}
-                          </el-button>
-                        </div>
-                        <el-link
-                          slot="reference"
-                          :underline="false"
-                          icon="el-icon-delete"
-                          type="danger"
-                        >
-                          {{ $translateTitle('developer.delete') }}
-                        </el-link>
-                      </el-popover>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <div class="elpagination" style="margin-top: 30px">
-                  <el-pagination
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="devicelength"
-                    :total="devicetotal"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    @size-change="deviceSizeChange"
-                    @current-change="deviceCurrentChange"
+                        {{ $translateTitle('developer.determine') }}
+                      </el-button>
+                    </div>
+                    <el-link
+                      slot="reference"
+                      :underline="false"
+                      icon="el-icon-delete"
+                      type="danger"
+                    >
+                      {{ $translateTitle('developer.delete') }}
+                    </el-link>
+                  </el-popover>
+                </template>
+              </el-table-column>
+            </el-table>
+            <el-table
+              v-show="!isALL"
+              ref="filterTable"
+              v-loading="listLoading"
+              :data="tableData"
+              :row-style="rowClass"
+              style="width: 100%"
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column type="selection" align="center" width="55" />
+              <el-table-column
+                :label="$translateTitle('equipment.devicenumber')"
+                align="center"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  {{ scope.row.devaddr }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('equipment.name')"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <span style="margin: 0; color: green">
+                    {{ scope.row.name }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('equipment.state')"
+                align="center"
+                width="70"
+              >
+                <template slot-scope="scope">
+                  <span
+                    v-if="scope.row.status == 'ONLINE'"
+                    :class="scope.row.status"
+                  >
+                    {{ $translateTitle('product.online') }}
+                  </span>
+                  <el-tooltip
+                    v-if="scope.row.status == 'ONLINE'"
+                    :content="$translateTitle('equipment.thedeviceisonline')"
+                    placement="top"
+                  >
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                  <span
+                    v-if="scope.row.status == 'OFFLINE'"
+                    :class="scope.row.status"
+                  >
+                    {{ $translateTitle('product.offline') }}
+                  </span>
+                  <el-tooltip
+                    v-if="scope.row.status == 'OFFLINE'"
+                    :content="$translateTitle('equipment.thedeviceisoffline')"
+                    placement="top"
+                  >
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                  <span
+                    v-if="
+                      scope.row.status != 'OFFLINE' &&
+                      scope.row.status != 'ONLINE'
+                    "
+                    :class="scope.row.status"
+                  >
+                    <!-- 未注册 -->
+                    {{ $translateTitle('product.unregistered') }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('equipment.product')"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <span v-if="scope.row.product && scope.row.product.name">
+                    {{ scope.row.product.name }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                v-if="Company == '云寓智慧公寓平台'"
+                :label="$translateTitle('developer.authcode')"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <span>
+                    {{
+                      scope.row.basedata && scope.row.basedata.auth
+                        ? scope.row.basedata.auth
+                        : ''
+                    }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('developer.Company')"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <span>
+                    {{ scope.row.Company }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                v-if="Company == '云寓智慧公寓平台'"
+                :label="$translateTitle('developer.Application')"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <span>
+                    {{ scope.row.basedata.yysId }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="
+                  $translateTitle('developer.enable') +
+                  '/' +
+                  $translateTitle('developer.prohibit')
+                "
+                align="center"
+                width="80"
+              >
+                <template slot-scope="scope">
+                  <el-switch
+                    v-model="scope.row.isEnable"
+                    active-color="#5eb058"
+                    inactive-color="#cccccc"
+                    @change="handelUpdate($event, scope.row, scope.$index)"
                   />
-                </div>
-              </div>
-              <!--添加设备弹窗-->
-              <!-- <el-dialog
+                </template>
+              </el-table-column>
+              <template v-for="(item, index) in dialogtempconfig">
+                <el-table-column
+                  v-if="item.type == 'bool' && item.isshow"
+                  :key="index"
+                  align="center"
+                  :label="item.name"
+                  :prop="item.identifier"
+                >
+                  <template slot-scope="scope">
+                    <span v-if="scope.row[item.default]">
+                      <!-- 是 -->
+                      {{ $translateTitle('product.yes') }}
+                    </span>
+                    <span v-else>
+                      <!-- 否 -->
+                      {{ $translateTitle('product.no') }}
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-else-if="item.type == 'enum' && item.isshow"
+                  :key="index"
+                  align="center"
+                  :label="item.name"
+                >
+                  <template slot-scope="scope">
+                    <span>
+                      {{ item.struct[scope.row[item.identifier]] }}
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  v-else-if="item.isshow"
+                  :key="index"
+                  align="center"
+                  :label="item.name"
+                  :prop="item.identifier"
+                >
+                  <template slot-scope="scope">
+                    <span>
+                      {{ scope.row[item.identifier] }} {{ item.unit }}
+                    </span>
+                  </template>
+                </el-table-column>
+              </template>
+              <el-table-column
+                align="center"
+                :label="$translateTitle('developer.createdAt')"
+                width="180"
+              >
+                <template slot-scope="scope">
+                  <span>{{ utc2beijing(scope.row.createdAt) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                fixed="right"
+                :label="$translateTitle('developer.operation')"
+                align="center"
+                width="400"
+              >
+                <template slot-scope="scope">
+                  <vab-icon style="color: #1890ff" icon="file-transfer-line" />
+
+                  <el-link
+                    :underline="false"
+                    type="primary"
+                    @click="showTree(scope.row.objectId, scope.row.Company)"
+                  >
+                    {{ $translateTitle('equipment.move') }}
+                  </el-link>
+                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
+                  <el-link
+                    :underline="false"
+                    type="primary"
+                    :disabled="!scope.row.location"
+                    @click="showMap(scope.row.location, scope.row.objectId)"
+                  >
+                    {{ $translateTitle('equipment.location') }}
+                  </el-link>
+                  <el-link
+                    v-if="Company != '云寓智慧公寓平台'"
+                    :underline="false"
+                    type="primary"
+                    style="margin: 0 10px"
+                    icon="el-icon-view"
+                    @click="deviceToDetail(scope.row)"
+                  >
+                    {{ $translateTitle('equipment.see') }}
+                  </el-link>
+                  <el-link
+                    :underline="false"
+                    type="primary"
+                    style="margin: 0 10px 0 0"
+                    icon="el-icon-edit"
+                    @click="editorDevice(scope.row)"
+                  >
+                    {{ $translateTitle('concentrator.edit') }}
+                  </el-link>
+                  <el-popover
+                    :ref="`popover-${scope.$index}`"
+                    placement="top"
+                    width="300"
+                  >
+                    <!-- <p>确定删除这个{{ scope.row.name }}设备吗？</p> -->
+                    <p>
+                      {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                      }}{{ $translateTitle('equipment.sbm') }}
+                    </p>
+                    <div style="margin: 0; text-align: right">
+                      <el-button
+                        size="mini"
+                        @click="
+                          scope._self.$refs[`popover-${scope.$index}`].doClose()
+                        "
+                      >
+                        {{ $translateTitle('developer.cancel') }}
+                      </el-button>
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        @click="makeSure(scope)"
+                      >
+                        {{ $translateTitle('developer.determine') }}
+                      </el-button>
+                    </div>
+                    <el-link
+                      slot="reference"
+                      :underline="false"
+                      icon="el-icon-delete"
+                      type="danger"
+                    >
+                      {{ $translateTitle('developer.delete') }}
+                    </el-link>
+                  </el-popover>
+                </template>
+              </el-table-column>
+            </el-table>
+            <div class="elpagination" style="margin-top: 30px">
+              <el-pagination
+                :page-sizes="[10, 20, 30, 50]"
+                :page-size="devicelength"
+                :total="devicetotal"
+                layout="total, sizes, prev, pager, next, jumper"
+                @size-change="deviceSizeChange"
+                @current-change="deviceCurrentChange"
+              />
+            </div>
+          </div>
+          <!--添加设备弹窗-->
+          <!-- <el-dialog
             :title="'设备' + equipmentEditor"
             :visible.sync="devicedialogVisible"
             :close-on-click-modal="false"
             :before-close="handleClose"
             width="50%"
           > -->
-              <!--第一个表格-->
-            </el-tab-pane>
-            <el-tab-pane
-              :label="$translateTitle('equipment.map')"
-              name="second"
-            >
-              <baidu-map
-                ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
-                :scroll-wheel-zoom="true"
-                class="map"
-                :center="{ lng: 116.404, lat: 39.915 }"
-                style="height: 57vh"
-                :zoom="sizeZoom"
-              >
-                <bm-control>
-                  <el-button size="mini" @click="sizeZoom = 19">
-                    缩放至最大
-                  </el-button>
-                  <el-button size="mini" @click="sizeZoom = 10">还原</el-button>
-                  <el-button size="mini" @click="sizeZoom = 3">
-                    缩放至最小
-                  </el-button>
-                  <bm-panorama
-                    anchor="BMAP_ANCHOR_TOP_LEFT"
-                    :offset="{ width: 460, height: 0 }"
-                  />
-                  <bm-overview-map :is-open="true" />
-                  <bm-scale :offset="{ width: 200, height: 0 }" />
-                  <bm-city-list :offset="{ width: 280, height: 0 }" />
-                  <bm-map-type
-                    anchor="BMAP_ANCHOR_TOP_LEFT"
-                    :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
-                    :offset="{ width: 360, height: 0 }"
-                  />
-                </bm-control>
-                <bm-marker
-                  v-for="item in tableData"
-                  :key="item.objectId"
-                  :content="item.name"
-                  :position="{
-                    lng: item.location.longitude,
-                    lat: item.location.latitude,
-                  }"
-                  :dragging="true"
-                  animation="BMAP_ANIMATION_BOUNCE"
-                >
-                  <bm-label
-                    :content="item.name"
-                    :label-style="{ color: 'red', fontSize: '24px' }"
-                    :offset="{ width: -35, height: 30 }"
-                    @click="deviceToDetail(item)"
-                  />
-                </bm-marker>
-                <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
-                <bm-geolocation
-                  :show-address-bar="true"
-                  :auto-location="true"
-                  anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
-                />
-              </baidu-map>
-            </el-tab-pane>
-          </el-tabs>
-          <el-dialog
-            :title="$translateTitle('product.edit') + equipmentEditor"
-            :visible.sync="devicedialogVisible"
-            :close-on-click-modal="false"
-            :before-close="handleClose"
-            width="50%"
+          <!--第一个表格-->
+        </el-tab-pane>
+        <el-tab-pane :label="$translateTitle('equipment.map')" name="second">
+          <baidu-map
+            ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
+            :scroll-wheel-zoom="true"
+            class="map"
+            :center="{ lng: 116.404, lat: 39.915 }"
+            style="height: 57vh"
+            :zoom="sizeZoom"
           >
-            <div slot="title" class="header-title">
-              <span class="title-name">
-                {{ '设备' + equipmentEditor }}
-                <el-tooltip
-                  :content="$translateTitle('equipment.text')"
-                  placement="top"
-                  style="margin-left: 5px"
+            <bm-control>
+              <el-button size="mini" @click="sizeZoom = 19">
+                缩放至最大
+              </el-button>
+              <el-button size="mini" @click="sizeZoom = 10">还原</el-button>
+              <el-button size="mini" @click="sizeZoom = 3">
+                缩放至最小
+              </el-button>
+              <bm-panorama
+                anchor="BMAP_ANCHOR_TOP_LEFT"
+                :offset="{ width: 460, height: 0 }"
+              />
+              <bm-overview-map :is-open="true" />
+              <bm-scale :offset="{ width: 200, height: 0 }" />
+              <bm-city-list :offset="{ width: 280, height: 0 }" />
+              <bm-map-type
+                anchor="BMAP_ANCHOR_TOP_LEFT"
+                :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
+                :offset="{ width: 360, height: 0 }"
+              />
+            </bm-control>
+            <bm-marker
+              v-for="item in tableData"
+              :key="item.objectId"
+              :content="item.name"
+              :position="{
+                lng: item.location.longitude,
+                lat: item.location.latitude,
+              }"
+              :dragging="true"
+              animation="BMAP_ANIMATION_BOUNCE"
+            >
+              <bm-label
+                :content="item.name"
+                :label-style="{ color: 'red', fontSize: '24px' }"
+                :offset="{ width: -35, height: 30 }"
+                @click="deviceToDetail(item)"
+              />
+            </bm-marker>
+            <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
+            <bm-geolocation
+              :show-address-bar="true"
+              :auto-location="true"
+              anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+            />
+          </baidu-map>
+        </el-tab-pane>
+      </el-tabs>
+      <el-dialog
+        :title="$translateTitle('product.edit') + equipmentEditor"
+        :visible.sync="devicedialogVisible"
+        :close-on-click-modal="false"
+        :before-close="handleClose"
+        width="50%"
+      >
+        <div slot="title" class="header-title">
+          <span class="title-name">
+            {{ '设备' + equipmentEditor }}
+            <el-tooltip
+              :content="$translateTitle('equipment.text')"
+              placement="top"
+              style="margin-left: 5px"
+            >
+              <i class="el-icon-question" />
+            </el-tooltip>
+          </span>
+        </div>
+        <div class="devicecontent">
+          <el-form
+            ref="deviceform"
+            :model="deviceform"
+            :rules="rules"
+            label-width="150px"
+          >
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('equipment.devicename')"
+                  prop="name"
                 >
-                  <i class="el-icon-question" />
-                </el-tooltip>
-              </span>
-            </div>
-            <div class="devicecontent">
-              <el-form
-                ref="deviceform"
-                :model="deviceform"
-                :rules="rules"
-                label-width="150px"
-              >
-                <el-row :gutter="20">
-                  <el-col :span="12">
-                    <el-form-item
-                      :label="$translateTitle('equipment.devicename')"
-                      prop="name"
-                    >
-                      <el-input v-model="deviceform.name" />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item
-                      :label="$translateTitle('equipment.devicenumber')"
-                      prop="devaddr"
-                    >
-                      <el-input
-                        v-model="deviceform.devaddr"
-                        :disabled="equipmentEditor == '编辑'"
-                      />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item
-                      :label="$translateTitle('product.productname')"
-                      prop="productName"
-                    >
-                      <el-select
-                        v-model="deviceform.productName"
-                        :disabled="equipmentEditor == '编辑'"
-                        :placeholder="$translateTitle('equipment.entername')"
-                        @change="selectChange"
-                      >
-                        <el-option
-                          v-for="(item, index) in proTableData1"
-                          :key="index"
-                          :label="item.name"
-                          :value="item.objectId"
-                        />
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item
-                      :label="$translateTitle('equipment.assetnumber')"
-                    >
-                      <el-input v-model="deviceform.assetNum" />
-                    </el-form-item>
-                  </el-col>
-
-                  <el-col :span="12">
-                    <el-form-item
-                      :label="$translateTitle('equipment.equipmenttype')"
-                    >
-                      <el-input v-model="deviceform.devModel" />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item
-                      :label="$translateTitle('equipment.equipmentbrand')"
-                    >
-                      <el-input v-model="deviceform.brand" />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item
-                      v-if="Company == '云寓智慧公寓平台'"
-                      :label="$translateTitle('equipment.auth')"
-                    >
-                      <el-input v-model="deviceform.auth" />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item
-                      v-if="Company == '云寓智慧公寓平台'"
-                      :label="$translateTitle('equipment.application')"
-                    >
-                      <el-select
-                        v-model="deviceform.yysId"
-                        :placeholder="$translateTitle('equipment.application')"
-                      >
-                        <el-option
-                          v-for="(item, index) in yysSelect"
-                          :key="index"
-                          :label="item.name"
-                          :value="item.key"
-                        />
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item
-                      :label="$translateTitle('equipment.installationlocation')"
-                    >
-                      <el-input
-                        v-model="deviceform.address"
-                        @focus="updateLocation"
-                      />
-                    </el-form-item>
-                  </el-col>
-                  <el-col
-                    v-for="(item, index) in arrlist"
-                    :key="index"
-                    :span="12"
+                  <el-input v-model="deviceform.name" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('equipment.devicenumber')"
+                  prop="devaddr"
+                >
+                  <el-input
+                    v-model="deviceform.devaddr"
+                    :disabled="equipmentEditor == '编辑'"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('product.productname')"
+                  prop="productName"
+                >
+                  <el-select
+                    v-model="deviceform.productName"
+                    :disabled="equipmentEditor == '编辑'"
+                    :placeholder="$translateTitle('equipment.entername')"
+                    @change="selectChange"
                   >
-                    <el-form-item
+                    <el-option
+                      v-for="(item, index) in proTableData1"
+                      :key="index"
                       :label="item.name"
-                      :prop="item.identifier"
-                      :required="item.required"
-                    >
-                      <el-select
-                        v-if="item.type == 'bool'"
-                        v-model="deviceform[item.identifier]"
-                        style="width: 100%"
-                        class="notauto"
-                        :disabled="item.readonly"
-                      >
-                        <el-option
-                          :value="true"
-                          :label="$translateTitle('product.yes')"
-                        />
-                        <el-option
-                          :value="false"
-                          :label="$translateTitle('product.no')"
-                        />
-                      </el-select>
-                      <el-select
-                        v-else-if="item.type == 'enum'"
-                        v-model="deviceform[item.identifier]"
-                        style="width: 100%"
-                        class="notauto"
-                        :disabled="item.readonly"
-                      >
-                        <el-option
-                          v-for="(spec, index1) in item.specs"
-                          :key="index1"
-                          :label="spec.attributevalue"
-                          :value="spec.attribute"
-                        />
-                      </el-select>
-                      <!--                      <el-input-->
-                      <!--                        v-else-if="item.unit != ''"-->
-                      <!--                        v-model="deviceform[item.identifier]"-->
-                      <!--                        :disabled="item.readonly"-->
-                      <!--                      />-->
-                      <el-input
-                        v-else-if="item.readonly"
-                        :value="deviceform[item.identifier] + item.unit"
-                        :disabled="item.readonly"
-                      />
-                      <el-input
-                        v-else
-                        v-model="deviceform[item.identifier]"
-                        :disabled="item.readonly"
-                      />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="24">
-                    <el-form-item
-                      :label="$translateTitle('developer.describe')"
-                    >
-                      <el-input
-                        v-model="deviceform.desc"
-                        :autosize="{ minRows: 4, maxRows: 4 }"
-                        type="textarea"
-                      />
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-            <span slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="submitForm('deviceform')">
-                {{ $translateTitle('developer.determine') }}
-              </el-button>
-              <el-button @click="handleClose">
-                {{ $translateTitle('developer.cancel') }}
-              </el-button>
-            </span>
-          </el-dialog>
-          <!-- <el-dialog
+                      :value="item.objectId"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item :label="$translateTitle('equipment.assetnumber')">
+                  <el-input v-model="deviceform.assetNum" />
+                </el-form-item>
+              </el-col>
+
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('equipment.equipmenttype')"
+                >
+                  <el-input v-model="deviceform.devModel" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('equipment.equipmentbrand')"
+                >
+                  <el-input v-model="deviceform.brand" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  v-if="Company == '云寓智慧公寓平台'"
+                  :label="$translateTitle('equipment.auth')"
+                >
+                  <el-input v-model="deviceform.auth" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  v-if="Company == '云寓智慧公寓平台'"
+                  :label="$translateTitle('equipment.application')"
+                >
+                  <el-select
+                    v-model="deviceform.yysId"
+                    :placeholder="$translateTitle('equipment.application')"
+                  >
+                    <el-option
+                      v-for="(item, index) in yysSelect"
+                      :key="index"
+                      :label="item.name"
+                      :value="item.key"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('equipment.installationlocation')"
+                >
+                  <el-input
+                    v-model="deviceform.address"
+                    @focus="updateLocation"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
+                <el-form-item
+                  :label="item.name"
+                  :prop="item.identifier"
+                  :required="item.required"
+                >
+                  <el-select
+                    v-if="item.type == 'bool'"
+                    v-model="deviceform[item.identifier]"
+                    style="width: 100%"
+                    class="notauto"
+                    :disabled="item.readonly"
+                  >
+                    <el-option
+                      :value="true"
+                      :label="$translateTitle('product.yes')"
+                    />
+                    <el-option
+                      :value="false"
+                      :label="$translateTitle('product.no')"
+                    />
+                  </el-select>
+                  <el-select
+                    v-else-if="item.type == 'enum'"
+                    v-model="deviceform[item.identifier]"
+                    style="width: 100%"
+                    class="notauto"
+                    :disabled="item.readonly"
+                  >
+                    <el-option
+                      v-for="(spec, index1) in item.specs"
+                      :key="index1"
+                      :label="spec.attributevalue"
+                      :value="spec.attribute"
+                    />
+                  </el-select>
+                  <!--                      <el-input-->
+                  <!--                        v-else-if="item.unit != ''"-->
+                  <!--                        v-model="deviceform[item.identifier]"-->
+                  <!--                        :disabled="item.readonly"-->
+                  <!--                      />-->
+                  <el-input
+                    v-else-if="item.readonly"
+                    :value="deviceform[item.identifier] + item.unit"
+                    :disabled="item.readonly"
+                  />
+                  <el-input
+                    v-else
+                    v-model="deviceform[item.identifier]"
+                    :disabled="item.readonly"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item :label="$translateTitle('developer.describe')">
+                  <el-input
+                    v-model="deviceform.desc"
+                    :autosize="{ minRows: 4, maxRows: 4 }"
+                    type="textarea"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="submitForm('deviceform')">
+            {{ $translateTitle('developer.determine') }}
+          </el-button>
+          <el-button @click="handleClose">
+            {{ $translateTitle('developer.cancel') }}
+          </el-button>
+        </span>
+      </el-dialog>
+      <!-- <el-dialog
             v-drag-dialog
             :visible.sync="bmapdialogVisible"
             :close-on-click-modal="false"
@@ -1073,82 +1224,78 @@
             title="设备安装地址"
             width="50%"
           > -->
-          <el-dialog
-            v-drag-dialog
-            :visible.sync="bmapdialogVisible"
-            :close-on-click-modal="false"
-            :before-close="handleClosebmap"
-            :title="$translateTitle('developer.equipmentinstallationaddress')"
-            width="50%"
-          >
-            <div>
-              <el-form :model="bmapform" :inline="true" size="small">
-                <!-- <el-form-item label="地址">
+      <el-dialog
+        v-drag-dialog
+        :visible.sync="bmapdialogVisible"
+        :close-on-click-modal="false"
+        :before-close="handleClosebmap"
+        :title="$translateTitle('developer.equipmentinstallationaddress')"
+        width="50%"
+      >
+        <div>
+          <el-form :model="bmapform" :inline="true" size="small">
+            <!-- <el-form-item label="地址">
               <el-input v-model="bmapform.location" placeholder="请输入市或者县名称"></el-input>
             </el-form-item>-->
-                <!-- <el-form-item label="地址名称"> -->
-                <el-form-item :label="$translateTitle('developer.addressname')">
-                  <el-input v-model="bmapform.keyword" />
-                </el-form-item>
-                <!-- <el-form-item>
+            <!-- <el-form-item label="地址名称"> -->
+            <el-form-item :label="$translateTitle('developer.addressname')">
+              <el-input v-model="bmapform.keyword" />
+            </el-form-item>
+            <!-- <el-form-item>
               <el-button type="primary" @click="addressSure">搜 索</el-button>
             </el-form-item>-->
-                <!-- <el-form-item label="选中地址"> -->
-                <el-form-item
-                  :label="$translateTitle('developer.selectaddress')"
-                >
-                  <el-input v-model="bmapform.address" readonly />
-                </el-form-item>
-              </el-form>
-              <!-- <label>地址：<input v-model="bmapfrom.keyword"></label> -->
-              <baidu-map
-                ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
-                :center="center"
-                :zoom="zoom"
-                :scroll-wheel-zoom="true"
-                :map-click="false"
-                style="height: 300px"
-                @ready="handler"
-                @click="mapClick"
-              >
-                <!-- 必须给容器指高度，不然地图将显示在一个高度为0的容器中，看不到 -->
-                <!-- <bml-marker-clusterer :averageCenter="true">
+            <!-- <el-form-item label="选中地址"> -->
+            <el-form-item :label="$translateTitle('developer.selectaddress')">
+              <el-input v-model="bmapform.address" readonly />
+            </el-form-item>
+          </el-form>
+          <!-- <label>地址：<input v-model="bmapfrom.keyword"></label> -->
+          <baidu-map
+            ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
+            :center="center"
+            :zoom="zoom"
+            :scroll-wheel-zoom="true"
+            :map-click="false"
+            style="height: 300px"
+            @ready="handler"
+            @click="mapClick"
+          >
+            <!-- 必须给容器指高度，不然地图将显示在一个高度为0的容器中，看不到 -->
+            <!-- <bml-marker-clusterer :averageCenter="true">
             <bm-marker :position="{lng: center.lng, lat: center.lat}"></bm-marker>
             </bml-marker-clusterer>-->
-                <bm-local-search
-                  :keyword="bmapform.keyword"
-                  :auto-viewport="true"
-                  :location="bmapform.location"
-                  zoom="12.8"
-                  style="display: none"
-                />
-                <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
-                <bm-geolocation
-                  :show-address-bar="true"
-                  :auto-location="true"
-                  anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
-                />
-                <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT" />
-                <!-- <bm-marker :position="center" style="display:none">
+            <bm-local-search
+              :keyword="bmapform.keyword"
+              :auto-viewport="true"
+              :location="bmapform.location"
+              zoom="12.8"
+              style="display: none"
+            />
+            <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
+            <bm-geolocation
+              :show-address-bar="true"
+              :auto-location="true"
+              anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+            />
+            <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT" />
+            <!-- <bm-marker :position="center" style="display:none">
               <bm-info-window  @close="infoWindowClose" @open="infoWindowOpen" style="font-size: 14px">
               <p>11111</p>
               </bm-info-window>
             </bm-marker>-->
-              </baidu-map>
-            </div>
-            <span slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="addressSure">
-                <!-- 保存 -->
-                {{ $translateTitle('product.preservation') }}
-              </el-button>
-              <el-button @click="bmapdialogVisible = false">
-                <!-- 取消 -->
-                {{ $translateTitle('developer.cancel') }}
-              </el-button>
-            </span>
-          </el-dialog>
-        </el-col>
-      </el-row>
+          </baidu-map>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="addressSure">
+            <!-- 保存 -->
+            {{ $translateTitle('product.preservation') }}
+          </el-button>
+          <el-button @click="bmapdialogVisible = false">
+            <!-- 取消 -->
+            {{ $translateTitle('developer.cancel') }}
+          </el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -1158,8 +1305,6 @@
   import { queryDict } from '@/api/Direct/index.js'
   import { Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
-  import Cookies from 'js-cookie'
-  import store from '@/store'
   import { getProduct } from '@/api/Product/index'
   import {
     BmNavigation,
@@ -1196,6 +1341,22 @@
       BmMarker,
     },
     data() {
+      this.chartSettings = {
+        radius: [5, 40],
+        offsetY: 70,
+      }
+
+      this.chartExtend = {
+        yAxisType: ['percent'],
+        tooltip: {
+          trigger: 'item',
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+        },
+      }
+
       const CheckDevaddr = function (rule, value, callback) {
         var reg = /[0-9A-Za-z]$/
         if (value == '') {
@@ -1209,6 +1370,27 @@
         }
       }
       return {
+        InfoDialog: false,
+        devicedetail: {},
+        chartOnlone: {
+          columns: ['状态', '数量'],
+          rows: [
+            { 状态: '在线', 数量: 0 },
+            { 状态: '离线', 数量: 0 },
+          ],
+        },
+        chartwaring: {},
+        chartProduct: {},
+        queryForm: {
+          account: '',
+          searchDate: '',
+          pageNo: 1,
+          pageSize: 20,
+          workGroupName: '',
+          workGroupTreeShow: false,
+          access_token: '',
+        },
+        treeDataValue: '',
         isALL: true,
         sizeZoom: 10,
         activeName: 'first',
@@ -1354,12 +1536,20 @@
       this.getMenu()
       this.searchProduct()
       this.queryYysId()
+      console.log(this.language)
+      this.selectdevice = this.language == 'zh' ? '设备名称' : 'devicename'
       // this.$store.dispatch('getUserId', '111')
       // if (this.$route.query.productid) {
       //   this.selectProductid(this.$route.query.productid)
       // }
     },
     methods: {
+      change(e) {
+        console.log(e)
+        if (e) {
+          $('.el-tree').css({ height: '100px', display: 'block' })
+        }
+      },
       async selectProdChange(objectId) {
         if (objectId == '0') {
           this.isALL = true
@@ -1423,6 +1613,7 @@
           })
           this.tableData = results
           this.devicetotal = count
+          this.chartOnlone.rows[1]['数量'] = this.devicetotal
           console.log('tableData', this.tableData)
         }
         this.listLoading = false
@@ -1433,6 +1624,12 @@
         this.deviceId = objectId
         this.deciceCompany = acl
         this.popoverVisible = !this.popoverVisible
+      },
+      showInfo(data) {
+        this.devicedetail = {}
+        this.InfoDialog = true
+
+        this.devicedetail = data
       },
       // 显示设备位置
       showMap(location, objectId) {
@@ -1495,6 +1692,9 @@
         this.handleNodeClick(this.deptTreeData[0], 0)
       },
       async handleNodeClick(data, node) {
+        $('.el-tree').css({ height: '0px', display: 'none' })
+        $('.el-select-dropdown').css({ display: 'none' })
+        this.queryForm.workGroupName = data.label
         if (node.level != 1) {
           // 在这里获取点击厂家的session
           const { access_token = '' } = await getToken(data.name)
@@ -1646,6 +1846,13 @@
       //   this.activeall = res.count
       // },
       async getOnlineDevices() {
+        this.chartOnlone = {
+          columns: ['状态', '数量'],
+          rows: [
+            { 状态: '在线', 数量: 0 },
+            { 状态: '离线', 数量: 0 },
+          ],
+        }
         var params = {
           limit: 1,
           count: 'objectId',
@@ -1655,9 +1862,9 @@
         }
         if (this.deviceinput != '') {
           if (this.selectdevice == '设备名称') {
-            params.where.name = this.deviceinput
+            params.where.name = { $regex: this.deviceinput }
           } else {
-            params.where.devaddr = this.deviceinput
+            params.where.devaddr = { $regex: this.deviceinput }
           }
         }
         if (this.devicenumber != '') {
@@ -1668,7 +1875,9 @@
           this.selectProdChange(this.equvalue)
         }
         var res = await querycompanyDevice(params, this.access_token)
-        this.onlineall = res.count
+
+        this.chartOnlone.rows[1]['数量'] = this.devicetotal - res.count
+        this.chartOnlone.rows[0]['数量'] = res.count
       },
 
       // 查询产品
@@ -1711,9 +1920,9 @@
         }
         if (this.deviceinput != '') {
           if (this.selectdevice == '设备名称') {
-            params.where.name = this.deviceinput
+            params.where.name = { $regex: this.deviceinput }
           } else {
-            params.where.devaddr = this.deviceinput
+            params.where.devaddr = { $regex: this.deviceinput }
           }
         }
         if (this.onlinedevices != '') {
@@ -1724,7 +1933,7 @@
           }
         }
         if (this.devicenumber != '') {
-          params.where.devaddr = this.devicenumber
+          params.where.devaddr = { $regex: this.deviceinput }
         }
         if (this.equvalue != 0) {
           // params.where.product = this.equvalue
@@ -2303,6 +2512,11 @@
   }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
+  ::v-deep {
+    .el-input-group__append {
+      padding: 0;
+    }
+  }
   .equtabs {
     height: calc(100vh - #{$base-top-bar-height} * 4 + 38px);
     margin: 20px;
@@ -2312,42 +2526,27 @@
     .equ_header {
       box-sizing: border-box;
       width: 100%;
-      height: 60px;
+
       margin: 0 auto;
+      .text {
+        font-size: 14px;
+      }
 
-      ul {
-        box-sizing: border-box;
-        display: flex;
-        width: 200px * 4;
-        padding-left: 20px;
+      .item {
+        margin-bottom: 18px;
+      }
 
-        li {
-          width: 200px;
-          height: 60px;
-          text-align: center;
-          list-style: none;
-          border-right: 1px solid #cccccc;
-          // &:first-child {
-          //   width: 15%;
-          //   text-align: left;
-          //   line-height: 60px;
-          // }
-          //&:last-child {
-          //  flex-grow: 2;
-          //  text-align: right;
-          //  border: 0;
-          //}
+      .clearfix:before,
+      .clearfix:after {
+        display: table;
+        content: '';
+      }
+      .clearfix:after {
+        clear: both;
+      }
 
-          &:nth-child(4) {
-            border: 0;
-          }
-
-          p {
-            font-size: 14px;
-            line-height: 0;
-            color: #666666;
-          }
-        }
+      .box-card {
+        margin: 0 20px;
       }
     }
   }
@@ -2356,13 +2555,14 @@
     width: 200px;
     /* height: calc(100vh - #{$base-top-bar-height}* 4 + 38px); */
     overflow-x: scroll;
-    overflow-y: scroll;
+    //overflow-y: scroll;
 
     ::v-deep .el-tree {
       width: 200px;
-      height: calc(100vh - 60px * 4 + 30px);
+      //height: calc(100vh - 60px * 4 + 30px);
+      height: auto;
       overflow-x: scroll;
-      overflow-y: scroll;
+      //overflow-y: scroll;
     }
   }
 
@@ -2464,4 +2664,20 @@
     color: #F56C6C;
     margin-right: 4px;
 } */
+  .mailtable .cloumn {
+    font-weight: bold;
+    color: #74777a;
+    text-align: left;
+    background: #fafafc;
+    border-right: 1px solid #ebecec;
+    border-bottom: 1px solid #ebecec;
+  }
+  .mailtable td {
+    box-sizing: border-box;
+    padding: 15px;
+    font-size: 14px;
+    color: #74777a;
+    text-align: left;
+    border: 1px solid #ebecec;
+  }
 </style>

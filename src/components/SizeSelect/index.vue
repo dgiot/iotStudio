@@ -49,7 +49,7 @@
 <style scoped>
   .size-icon {
     font-size: 20px;
-    cursor: pointer;
     vertical-align: -4px !important;
+    cursor: pointer;
   }
 </style>
