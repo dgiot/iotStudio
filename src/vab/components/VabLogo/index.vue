@@ -6,7 +6,7 @@
     class="logo-container"
   >
     <router-link to="/">
-      <span class="logo">
+      <span class="logoico">
         <!-- 使用内置svg示例 -->
         <!-- <vab-icon v-if="logo" :icon="logo" is-default-svg /> -->
         <!-- 使用自定义svg示例 -->
@@ -71,7 +71,7 @@
     &-common {
       @include container;
 
-      .logo {
+      .logoico {
         svg,
         img {
           @include logo;
@@ -92,7 +92,7 @@
       line-height: $base-logo-height;
       text-align: center;
 
-      .logo {
+      .logoico {
         svg,
         img {
           @include logo;
@@ -108,12 +108,12 @@
     &-column {
       background: $base-column-second-menu-background !important;
 
-      .logo {
+      .logoico {
         position: fixed;
         top: 0;
         display: block;
-        width: $base-left-menu-width-min;
-        height: $base-logo-height;
+        max-width: $base-left-menu-width-min;
+        max-height: $base-logo-height;
         margin: 0;
         background: $base-column-first-menu-background;
       }
