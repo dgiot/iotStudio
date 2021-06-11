@@ -122,6 +122,38 @@
                 <td>{{ devicedetail.lastOnlineTime || '-' }}</td>
               </tr>
             </table>
+            <el-table :data="topicData" style="width: 100%; text-align: center">
+              <el-table-column label="Topic" align="left">
+                <template slot-scope="scope">
+                  <span>
+                    {{
+                      scope.row.topic.replace(
+                        '\${ProductId}\/${DevAddr\}',
+                        devicedetail.productid + '/' + devicedetail.devaddr
+                      )
+                    }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('equipment.operationauthority')"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <span v-if="scope.row.type == 'pub'">
+                    {{ $translateTitle('product.pub') }}
+                  </span>
+                  <span v-if="scope.row.type == 'sub'">
+                    {{ $translateTitle('product.sub') }}
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('developer.describe')"
+                prop="desc"
+                align="center"
+              />
+            </el-table>
             <h4>
               {{ $translateTitle('equipment.deviceextensioninformation') }}
             </h4>
@@ -1370,6 +1402,7 @@
         }
       }
       return {
+        topicData: [],
         InfoDialog: false,
         devicedetail: {},
         chartOnlone: {
@@ -1551,18 +1584,22 @@
         }
       },
       async selectProdChange(objectId) {
+        this.listLoading = true
+        console.log(objectId, this.equvalue, '11111111')
         if (objectId == '0') {
           this.isALL = true
         } else {
-          getProduct(objectId).then((res) => {
-            const { config = { basedate: { params: [] } } } = res
+          await getProduct(objectId).then((res) => {
+            this.listLoading = false
+            const { config = { basedate: {} } } = res
+            const { basedate = { params: [] } } = config
+            console.log(res, basedate)
             this.dialogtempconfig = []
-            if (config.basedate.params && config.basedate.params.length > 0) {
-              this.dialogtempconfig = config.basedate.params
+            if (basedate.params != 'undefined') {
+              this.dialogtempconfig = basedate.params
               console.log('this.dialogtempconfig', this.dialogtempconfig)
             }
           })
-          this.listLoading = true
           this.isALL = false
           this.tableData = []
           const params = {
@@ -1611,6 +1648,7 @@
               }
             }
           })
+          console.log(results)
           this.tableData = results
           this.devicetotal = count
           this.chartOnlone.rows[1]['数量'] = this.devicetotal
@@ -1626,9 +1664,27 @@
         this.popoverVisible = !this.popoverVisible
       },
       showInfo(data) {
+        let _toppic = [
+          {
+            topic: 'thing/${ProductId}/${DevAddr}/post',
+            type: 'pub',
+            desc: '设备上报',
+            isdef: true,
+          },
+          {
+            topic: 'thing/${ProductId}/${DevAddr}',
+            type: 'sub',
+            desc: '消息下发',
+            isdef: true,
+          },
+        ]
         this.devicedetail = {}
         this.InfoDialog = true
-
+        if (data.product.topics) {
+          this.topicData = data.product.topics.concat(_toppic)
+        } else {
+          this.topicData = _toppic
+        }
         this.devicedetail = data
       },
       // 显示设备位置
@@ -1899,6 +1955,18 @@
           objectId: '0',
         })
 
+        if (this.$route.query.product) {
+          this.proTableData.forEach((i, index) => {
+            if (i.objectId == this.$route.query.product) {
+              this.equvalue = this.proTableData[index].objectId
+              this.productenable = true
+              this.access_token = this.token
+              this.$nextTick(() => {
+                this.selectProdChange(this.$route.query.product)
+              })
+            }
+          })
+        }
         this.proTableData1 = results.filter((item) => item.objectId != '0')
 
         if (this.$route.query.productid) {

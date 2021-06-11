@@ -415,7 +415,10 @@
                           </el-image>
                         </el-col>
                         <el-col :span="10">
-                          <el-link type="primary" :underline="false">
+                          <el-link
+                            type="primary"
+                            @click="goDevice(item.objectId)"
+                          >
                             {{ item.name }}
                           </el-link>
                         </el-col>
@@ -852,6 +855,14 @@
           path: '/Topo/VueKonva',
           query: {
             productid: project.objectId,
+          },
+        })
+      },
+      goDevice(name) {
+        this.$router.push({
+          path: '/dashboard/devicelist',
+          query: {
+            product: name,
           },
         })
       },

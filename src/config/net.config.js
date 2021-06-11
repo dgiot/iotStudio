@@ -1,8 +1,8 @@
 /**
  * @description 导出网络配置
  **/
-var group1 = 'https://prod.iotn2n.com:1250'
-var proxyUrl = 'https://prod.iotn2n.com'
+var group1 = 'http://prod.iotn2n.com:1250'
+var proxyUrl = 'http://prod.iotn2n.com'
 if (process.env.NODE_ENV == 'development') {
   const developer = require('./developer.config')
   group1 = developer.group1
@@ -18,7 +18,7 @@ module.exports = {
   // 配后端数据的接收方式application/json;charset=UTF-8 或 application/x-www-form-urlencoded;charset=UTF-8
   contentType: 'application/json',
   // 最长请求时间
-  requestTimeout: 1000 * 10,
+  requestTimeout: 1000 * 1 * 30,
   // 操作正常code，支持String、Array、int多种类型
   successCode: [200, 0, 201, 204, '200', '0', '201', '204'],
   // 操作失败code，支持String、Array、int多种类型

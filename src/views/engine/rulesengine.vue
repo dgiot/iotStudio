@@ -86,6 +86,7 @@
         />
       </div>
     </div>
+    <!--    <vab-baidu-map />-->
   </div>
 </template>
 <script>

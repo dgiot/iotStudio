@@ -26,266 +26,177 @@
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
             <!-- <h4>设备信息</h4> -->
-            <el-collapse v-model="activeNames">
-              <el-collapse-item
-                :title="$translateTitle('product.Time series data')"
-                name="1"
+            <div class="chartsinfo">
+              <div
+                class="queryHeader"
+                :style="{ height: Device == 'desktop' ? '50px' : '240px' }"
               >
-                <div class="chartsinfo">
-                  <div
-                    class="queryHeader"
-                    :style="{ height: Device == 'desktop' ? '50px' : '240px' }"
+                <vab-query-form-top-panel>
+                  <el-form
+                    :inline="true"
+                    :model="queryForm"
+                    :label-width="Device == 'desktop' ? '80px' : '70px'"
+                    @submit.native.prevent
                   >
-                    <vab-query-form-top-panel>
-                      <el-form
-                        :inline="true"
-                        :model="queryForm"
-                        :label-width="Device == 'desktop' ? '80px' : '70px'"
-                        @submit.native.prevent
+                    <el-form-item
+                      :label="$translateTitle('developer.startTime')"
+                    >
+                      <el-date-picker
+                        v-model="params.startTime"
+                        type="datetime"
+                        align="right"
+                        size="mini"
+                        style="width: 83%"
+                        :placeholder="$translateTitle('developer.startTime')"
+                        :picker-options="pickerOptionsDay"
+                      />
+                    </el-form-item>
+                    <el-form-item :label="$translateTitle('developer.EndTime')">
+                      <el-date-picker
+                        v-model="params.endTime"
+                        style="width: 83%"
+                        size="mini"
+                        type="datetime"
+                        align="right"
+                        :clearable="false"
+                        :placeholder="$translateTitle('developer.EndTime')"
+                        :picker-options="pickerOptionsDay"
+                      />
+                    </el-form-item>
+                    <el-form-item :label="$translateTitle('developer.type')">
+                      <el-select
+                        v-model="params.style"
+                        size="mini"
+                        style="width: 90px"
+                        placeholder="请选择"
+                        @change="toggleChart"
                       >
-                        <el-form-item
-                          :label="$translateTitle('developer.startTime')"
-                        >
-                          <el-date-picker
-                            v-model="params.startTime"
-                            type="datetime"
-                            align="right"
-                            size="mini"
-                            style="width: 83%"
-                            :placeholder="
-                              $translateTitle('developer.startTime')
-                            "
-                            :picker-options="pickerOptionsDay"
-                          />
-                        </el-form-item>
-                        <el-form-item
-                          :label="$translateTitle('developer.EndTime')"
-                        >
-                          <el-date-picker
-                            v-model="params.endTime"
-                            style="width: 83%"
-                            size="mini"
-                            type="datetime"
-                            align="right"
-                            :clearable="false"
-                            :placeholder="$translateTitle('developer.EndTime')"
-                            :picker-options="pickerOptionsDay"
-                          />
-                        </el-form-item>
-                        <el-form-item
-                          :label="$translateTitle('developer.type')"
-                        >
-                          <el-select
-                            v-model="params.style"
-                            size="mini"
-                            style="width: 90px"
-                            placeholder="请选择"
-                            @change="toggleChart"
-                          >
-                            <el-option
-                              v-for="item in chartType"
-                              :key="item.type"
-                              :label="item.name"
-                              :value="item.type"
-                              :disabled="disabledChart.indexOf(item.type) != -1"
-                            />
-                          </el-select>
-                        </el-form-item>
+                        <el-option
+                          v-for="item in chartType"
+                          :key="item.type"
+                          :label="item.name"
+                          :value="item.type"
+                          :disabled="disabledChart.indexOf(item.type) != -1"
+                        />
+                      </el-select>
+                    </el-form-item>
 
-                        <el-form-item
-                          :label="$translateTitle('developer.interval')"
-                        >
-                          <el-input-number
-                            v-model="params.number"
-                            size="mini"
-                            style="width: 100px"
-                            :min="1"
-                            placeholder="请输入内容"
-                          />
-                          <el-select
-                            v-model="params.interval"
-                            size="mini"
-                            placeholder="请选择"
-                            style="width: 70px"
-                          >
-                            <el-option
-                              v-for="item in interval"
-                              :key="item.type"
-                              :label="item.name"
-                              :value="item.type"
-                            />
-                          </el-select>
-                        </el-form-item>
+                    <el-form-item
+                      :label="$translateTitle('developer.interval')"
+                    >
+                      <el-input-number
+                        v-model="params.number"
+                        size="mini"
+                        style="width: 100px"
+                        :min="1"
+                        placeholder="请输入内容"
+                      />
+                      <el-select
+                        v-model="params.interval"
+                        size="mini"
+                        placeholder="请选择"
+                        style="width: 70px"
+                      >
+                        <el-option
+                          v-for="item in interval"
+                          :key="item.type"
+                          :label="item.name"
+                          :value="item.type"
+                        />
+                      </el-select>
+                    </el-form-item>
 
-                        <el-form-item
-                          :label="$translateTitle('developer.function')"
+                    <el-form-item
+                      :label="$translateTitle('developer.function')"
+                    >
+                      <el-select
+                        v-model="params._function"
+                        size="mini"
+                        style="width: 100px"
+                        placeholder="请选择"
+                      >
+                        <el-option
+                          v-for="item in functionarr"
+                          :key="item"
+                          :label="item"
+                          :value="item"
+                        />
+                      </el-select>
+                      <el-button
+                        size="mini"
+                        type="primary"
+                        :disabled="queryFlag"
+                        icon="el-icon-search"
+                        @click="queryChart"
+                      >
+                        {{ $translateTitle('developer.search') }}
+                      </el-button>
+                    </el-form-item>
+                  </el-form>
+                </vab-query-form-top-panel>
+              </div>
+              <div class="chartsmain">
+                <vabChart
+                  ref="charts"
+                  :type="params.style"
+                  :extend="chartExtend"
+                  :data="chartData"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :data-zoom="chartDataZoom"
+                  :toolbox="toolbox"
+                  :loading="loading"
+                  :after-config="afterConfig"
+                  :data-empty="dataEmpty"
+                />
+              </div>
+              <div class="chartOther">
+                <el-row :gutter="20">
+                  <el-col
+                    v-for="(item, index) in chartData.child"
+                    v-show="item.columns[1] != '日期'"
+                    :key="item.columns[1]"
+                    :xs="xs"
+                    :sm="sm"
+                    :md="md"
+                    :xl="xl"
+                  >
+                    <el-card class="box-card">
+                      <div slot="header" class="clearfix">
+                        <span>{{ item.columns[1] }} : {{ item.unit }}</span>
+
+                        <el-button-group
+                          style="float: right; padding: 3px 0"
+                          type="text"
                         >
-                          <el-select
-                            v-model="params._function"
-                            size="mini"
-                            style="width: 100px"
-                            placeholder="请选择"
-                          >
-                            <el-option
-                              v-for="item in functionarr"
-                              :key="item"
-                              :label="item"
-                              :value="item"
-                            />
-                          </el-select>
+                          <el-button icon="el-icon-warning-outline" />
                           <el-button
-                            size="mini"
-                            type="primary"
-                            :disabled="queryFlag"
-                            icon="el-icon-search"
-                            @click="queryChart"
-                          >
-                            {{ $translateTitle('developer.search') }}
-                          </el-button>
-                        </el-form-item>
-                      </el-form>
-                    </vab-query-form-top-panel>
-                  </div>
-                  <div class="chartsmain">
-                    <vabChart
-                      ref="charts"
-                      :type="params.style"
-                      :extend="chartExtend"
-                      :data="chartData"
-                      :set-option-opts="false"
-                      :settings="chartSettings"
-                      :data-zoom="chartDataZoom"
-                      :toolbox="toolbox"
-                      :loading="loading"
-                      :after-config="afterConfig"
-                      :data-empty="dataEmpty"
-                    />
-                  </div>
-                  <div class="chartOther">
-                    <el-row :gutter="20">
-                      <el-col
-                        v-for="(item, index) in chartData.child"
-                        v-show="item.columns[1] != '日期'"
-                        :key="item.columns[1]"
-                        :xs="xs"
-                        :sm="sm"
-                        :md="md"
-                        :xl="xl"
-                      >
-                        <el-card class="box-card">
-                          <div slot="header" class="clearfix">
-                            <span>{{ item.columns[1] }} : {{ item.unit }}</span>
-
-                            <el-button-group
-                              style="float: right; padding: 3px 0"
-                              type="text"
-                            >
-                              <el-button icon="el-icon-warning-outline" />
-                              <el-button
-                                icon="el-icon-full-screen"
-                                @click="toggleCardRow(index, xs, sm, md, xl)"
-                              />
-                            </el-button-group>
-                          </div>
-
-                          <vabChart
-                            ref="charts"
-                            :type="params.style"
-                            height="300px"
-                            :extend="chartExtend"
-                            :legend-visible="false"
-                            :data="chartData.child[index]"
-                            :set-option-opts="false"
-                            :settings="chartSettings"
-                            :data-zoom="chartDataZoom"
-                            :toolbox="toolbox"
-                            :loading="loading"
-                            :after-config="afterConfig"
-                            :data-empty="dataEmpty"
+                            icon="el-icon-full-screen"
+                            @click="toggleCardRow(index, xs, sm, md, xl)"
                           />
-                        </el-card>
-                      </el-col>
-                    </el-row>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item
-                :title="'Topic' + $translateTitle('product.list')"
-                name="3"
-              >
-                <div
-                  style="
-                    box-sizing: border-box;
-                    padding: 10px;
-                    background: #ffffff;
-                  "
-                >
-                  <!-- <div>
-                                    <h4 style="display:inline">设备TOPIC类 <el-tooltip content="产品下的所有设备都会继承该产品的Topic类" placement="top" style="margin-left:5px;color:#cccccc">
-                                      <i class="el-icon-question"></i>
-                                      </el-tooltip></h4>
-                  </div>-->
-                  <el-table
-                    :data="topicData"
-                    style="width: 100%; text-align: center"
-                  >
-                    <el-table-column label="Topic" align="left">
-                      <template slot-scope="scope">
-                        <span>
-                          {{
-                            scope.row.topic.replace(
-                              '\${ProductId}\/${DevAddr\}',
-                              devicedetail.productid +
-                                '/' +
-                                devicedetail.devaddr
-                            )
-                          }}
-                        </span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      :label="$translateTitle('equipment.operationauthority')"
-                      align="center"
-                    >
-                      <template slot-scope="scope">
-                        <span v-if="scope.row.type == 'pub'">
-                          {{ $translateTitle('product.pub') }}
-                        </span>
-                        <span v-if="scope.row.type == 'sub'">
-                          {{ $translateTitle('product.sub') }}
-                        </span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      :label="$translateTitle('developer.describe')"
-                      prop="desc"
-                      align="center"
-                    />
-                    <el-table-column
-                      :label="$translateTitle('developer.operation')"
-                      align="center"
-                    >
-                      <template slot-scope="scope">
-                        <el-button
-                          v-if="!scope.row.isdef"
-                          type="primary"
-                          size="mini"
-                        >
-                          {{ $translateTitle('developer.edit') }}
-                        </el-button>
-                        <el-button
-                          v-if="!scope.row.isdef"
-                          type="danger"
-                          size="mini"
-                        >
-                          {{ $translateTitle('developer.delete') }}
-                        </el-button>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                </div>
-              </el-collapse-item>
-            </el-collapse>
+                        </el-button-group>
+                      </div>
+
+                      <vabChart
+                        ref="charts"
+                        :type="params.style"
+                        height="300px"
+                        :extend="chartExtend"
+                        :legend-visible="false"
+                        :data="chartData.child[index]"
+                        :set-option-opts="false"
+                        :settings="chartSettings"
+                        :data-zoom="chartDataZoom"
+                        :toolbox="toolbox"
+                        :loading="loading"
+                        :after-config="afterConfig"
+                        :data-empty="dataEmpty"
+                      />
+                    </el-card>
+                  </el-col>
+                </el-row>
+              </div>
+            </div>
           </div>
           <!-- <div class="jiange" style="width:100%;height:20px;background:#f4f4f4">
 
@@ -959,10 +870,18 @@
             type: 'y',
             name: '年',
           },
-          // {
-          //   type: 'd',
-          //   name: '月',
-          // },
+          {
+            type: 'w',
+            name: '周',
+          },
+          {
+            type: 'd',
+            name: '月',
+          },
+          {
+            type: 'w',
+            name: '周',
+          },
           {
             type: 'd',
             name: '日',
@@ -983,6 +902,10 @@
           {
             type: 'a',
             name: '毫秒',
+          },
+          {
+            type: 'u',
+            name: '微秒',
           },
         ],
         functionarr: [
