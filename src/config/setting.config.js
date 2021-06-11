@@ -35,7 +35,7 @@ module.exports = {
   // token在localStorage、sessionStorage、cookie存储的key的名称
   tokenTableName: 'sessionToken',
   // token 有效期时长
-  expiresTime: 60 * 1000 * 15,
+  expiresTime: 60 * 1000 * 30,
   // token存储位置localStorage sessionStorage cookie
   storage: 'cookie',
   // 退出登录后不清空的cookie列表

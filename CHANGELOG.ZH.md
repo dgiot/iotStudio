@@ -1,5 +1,7 @@
-## 1.0.0 (2021-06-10)
+## 1.0.0 (2021-06-11)
 
+* refactor: component modification for performance improvement ([4aec4c4](https://github.com/dgiot/dgiot_dashboard/commit/4aec4c4))
+* refactor: delete .env ([3d4455a](https://github.com/dgiot/dgiot_dashboard/commit/3d4455a))
 * style(src/vab/components/vablogo/index.vue): icon style ([3dc9b66](https://github.com/dgiot/dgiot_dashboard/commit/3dc9b66))
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
 * feat: 组态 ([033a3ac](https://github.com/dgiot/dgiot_dashboard/commit/033a3ac))
@@ -44,7 +46,6 @@
 * fix(src/views/topo/vuekonva.vue): konva updata ([8a3ddab](https://github.com/dgiot/dgiot_dashboard/commit/8a3ddab))
 * fix(src/views/topo/vuekonva.vue): vuekonva params bug fix ([9888be3](https://github.com/dgiot/dgiot_dashboard/commit/9888be3))
 * perf(vuex): vuex Persistence ([c7292c1](https://github.com/dgiot/dgiot_dashboard/commit/c7292c1))
-* refactor: delete .env ([3d4455a](https://github.com/dgiot/dgiot_dashboard/commit/3d4455a))
 * ci: create a Release action ([1cc3891](https://github.com/dgiot/dgiot_dashboard/commit/1cc3891))
 * ci: deploy static to Tencent Server ([620bf3d](https://github.com/dgiot/dgiot_dashboard/commit/620bf3d))
 * ci: release ([73710e0](https://github.com/dgiot/dgiot_dashboard/commit/73710e0))
