@@ -1,6 +1,7 @@
 import i18n from '@/i18n'
 import { getToken, setToken, removeToken } from './vuex'
 import globalConfig from './globalConfig'
+const { iotMqtt } = MQTTConnect
 import {
   query_object,
   get_object,
@@ -26,6 +27,7 @@ import {
   getDevice,
 } from '@/api/Device/index'
 import { queryProduct } from '@/api/Product/index'
+import MQTTConnect from '@/utils/MQTTConnect'
 
 // https://www.jianshu.com/p/abdee4e7875a
 /**
@@ -167,7 +169,8 @@ export default {
     Vue.prototype.$putDevice = putDevice
     Vue.prototype.$getDevice = getDevice
     Vue.prototype.$deleteDevice = delDevice
-
+    Vue.prototype.$iotMqtt = iotMqtt
+    Vue.prototype.$moment = moment
     Vue.prototype.$queryProduct = queryProduct
   },
 }

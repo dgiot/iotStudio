@@ -1,3 +1,4 @@
+// https://unpkg.com/browse/xhl-mqttx@1.0.2/mqttx.js
 let Paho = require('./mqttws31.js')
 Paho = Paho.default
 const iotMqtt = {
@@ -28,6 +29,7 @@ const iotMqtt = {
   },
   onMessageArrived: function (message) {
     if (iotMqtt.options && iotMqtt.options.onMessage) {
+      // options.onMessage(message)
       iotMqtt.options.onMessage(message)
     }
   },
@@ -50,6 +52,7 @@ const iotMqtt = {
     return false
   },
   unsubscribe: function (topic) {
+    console.log(`unsubscribe mqtt ${topic}`)
     if (iotMqtt.client && iotMqtt.mqttStatus) {
       iotMqtt.client.unsubscribe(topic) //取消订阅主题
       return true
@@ -57,12 +60,13 @@ const iotMqtt = {
     return false
   },
   reconnect: function () {
-    if (iotMqtt.client && options) {
+    console.log(iotMqtt.client, iotMqtt.options, 'options')
+    if (iotMqtt.client && iotMqtt.options) {
       iotMqtt.client.connect({
         onSuccess: this.onConnect,
         onFailure: this.onFailure,
-        userName: options.userName || 'admin',
-        password: options.passWord || 'password',
+        userName: iotMqtt.options.userName || 'admin',
+        password: iotMqtt.options.passWord || 'password',
       })
       return true
     }

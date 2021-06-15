@@ -8,6 +8,8 @@ export default {
       currentConnections: '当前连接数',
     },
     home: {
+      'Last online time': '最后上线时间',
+      'Last offline time': '最后离线时间',
       konva: '进入组态',
       updatedAt: '更新时间',
       preview: '查看产品',

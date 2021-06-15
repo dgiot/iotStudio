@@ -495,6 +495,7 @@
         })
       },
       handleCurrentChange(val) {
+        console.log(val, 'val')
         const { swagger = {} } = val
         this.itemSwagger = swagger
         // this.currentRow = val.code;
@@ -523,7 +524,9 @@
         if (results) {
           this.AllDict = results
           console.log(this.AllDict)
-          this.handleCurrentChange(results[0])
+          if (this.AllDict.length) {
+            this.handleCurrentChange(results[0])
+          }
         }
       },
       async Industry() {

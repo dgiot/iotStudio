@@ -54,118 +54,21 @@
           <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
         </baidu-map>
       </el-dialog>
-      <el-dialog :visible.sync="InfoDialog" top="5vh" width="80%">
-        <div>
-          <div>
-            <table
-              class="mailtable"
-              style="width: 100%"
-              border="0"
-              cellspacing="0"
-              cellpadding="0"
-            >
-              <!-- 设备编号: 所属产品: 安装位置 -->
-              <tr>
-                <td class="cloumn">
-                  {{ $translateTitle('equipment.devicenumber') + ':' }}
-                </td>
-                <td>{{ devicedetail.devaddr }}</td>
-                <td class="cloumn">
-                  {{ $translateTitle('equipment.installationlocation') }}
-                </td>
-                <td>
-                  {{ devicedetail.detail ? devicedetail.detail.address : '' }}
-                </td>
-                <td class="cloumn">
-                  {{ $translateTitle('equipment.state') + ':' }}
-                </td>
-                <!-- <td  :class="devicedetail.status"  v-if="devicedetail.status=='ACTIVE'">{{$t('product.active')}}</td>
-                 <td  :class="devicedetail.status" v-else-if="devicedetail.status=='UNACTIVE'">{{$t('product.unactive')}}</td>
-                 <td  :class="devicedetail.status" v-else-if="devicedetail.status=='ONLINE'">{{$t('product.online')}}</td>
-                <td  :class="devicedetail.status"  v-else>{{$t('product.offline')}}</td>-->
-                <td class="ACTIVE">
-                  {{ $translateTitle('product.active') }}
-                </td>
-              </tr>
-
-              <tr>
-                <td class="cloumn">
-                  {{ $translateTitle('equipment.ipaddress') + ':' }}
-                </td>
-                <td>{{ devicedetail.ip || '-' }}</td>
-                <td class="cloumn">
-                  {{ $translateTitle('equipment.createdAt') + ':' }}
-                </td>
-                <td>{{ devicedetail.createdAt }}</td>
-                <td class="cloumn">
-                  {{ $translateTitle('equipment.lastonlinetime') + ':' }}
-                </td>
-                <td>{{ devicedetail.lastOnlineTime || '-' }}</td>
-              </tr>
-              <tr>
-                <!-- <td class="cloumn">{{$t('equipment.subordinatenode')+':'}}</td>
-                <td>{{devicedetail.node}}</td>-->
-                <td class="cloumn">
-                  {{ $translateTitle('equipment.nodetype') + ':' }}
-                </td>
-                <td v-if="devicedetail.nodeType == 0">
-                  {{ $translateTitle('product.equipment') }}
-                </td>
-                <td v-else>{{ $translateTitle('product.gateway') }}</td>
-                <td class="cloumn">
-                  {{ $translateTitle('developer.describe') + ':' }}
-                </td>
-                <td>{{ devicedetail.desc }}</td>
-                <td class="cloumn">
-                  {{ $translateTitle('equipment.Failure analysis') + ':' }}
-                </td>
-                <td>{{ devicedetail.lastOnlineTime || '-' }}</td>
-              </tr>
-            </table>
-            <el-table :data="topicData" style="width: 100%; text-align: center">
-              <el-table-column label="Topic" align="left">
-                <template slot-scope="scope">
-                  <span>
-                    {{
-                      scope.row.topic.replace(
-                        '\${ProductId}\/${DevAddr\}',
-                        devicedetail.productid + '/' + devicedetail.devaddr
-                      )
-                    }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('equipment.operationauthority')"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <span v-if="scope.row.type == 'pub'">
-                    {{ $translateTitle('product.pub') }}
-                  </span>
-                  <span v-if="scope.row.type == 'sub'">
-                    {{ $translateTitle('product.sub') }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.describe')"
-                prop="desc"
-                align="center"
-              />
-            </el-table>
-            <h4>
-              {{ $translateTitle('equipment.deviceextensioninformation') }}
-            </h4>
-            <el-input
-              v-model="devicedetail.shadow"
-              :row="10"
-              :cols="5"
-              type="textarea"
-              readonly
-            />
-          </div>
-        </div>
+      <el-dialog
+        :visible.sync="InfoDialog"
+        :title="devicedetail.name"
+        top="5vh"
+        width="80%"
+      >
+        <info :devicedetail="devicedetail" />
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="InfoDialog = false">
+            {{ $translateTitle('developer.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="InfoDialog = false">
+            {{ $translateTitle('developer.determine') }}
+          </el-button>
+        </span>
       </el-dialog>
     </div>
     <div class="equtabs">
@@ -1338,6 +1241,7 @@
   import { Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
   import { getProduct } from '@/api/Product/index'
+  import info from '@/components/Device/info'
   import {
     BmNavigation,
     BaiduMap,
@@ -1371,6 +1275,7 @@
       BmGeolocation,
       BmCityList,
       BmMarker,
+      info,
     },
     data() {
       this.chartSettings = {
@@ -1664,27 +1569,27 @@
         this.popoverVisible = !this.popoverVisible
       },
       showInfo(data) {
+        this.devicedetail = {}
+        this.InfoDialog = true
+        let ProductId = data.product.objectId || 'undefined'
+        let DevAddr = data.devaddr || 'undefined'
         let _toppic = [
           {
-            topic: 'thing/${ProductId}/${DevAddr}/post',
+            topic: `thing/${ProductId}/${DevAddr}/post`,
             type: 'pub',
             desc: '设备上报',
             isdef: true,
           },
           {
-            topic: 'thing/${ProductId}/${DevAddr}',
+            topic: `thing/${ProductId}/${DevAddr}`,
             type: 'sub',
             desc: '消息下发',
             isdef: true,
           },
         ]
-        this.devicedetail = {}
-        this.InfoDialog = true
-        if (data.product.topics) {
-          this.topicData = data.product.topics.concat(_toppic)
-        } else {
-          this.topicData = _toppic
-        }
+        data.product.topics
+          ? (data.topicData = data.product.topics.concat(_toppic))
+          : (data.topicData = _toppic)
         this.devicedetail = data
       },
       // 显示设备位置

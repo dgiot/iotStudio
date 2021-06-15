@@ -9,6 +9,7 @@ const getLocalStorage = (key) => {
     return false
   }
 }
+
 import { getUserInfo, login, logout, socialLogin } from '@/api/User/index'
 import { tokenTableName, storage, title, tokenName, i18n } from '@/config'
 import { getToken, removeToken, setToken, clearCookie } from '@/utils/vuex'
@@ -18,6 +19,7 @@ import { queryProduct } from '@/api/Product'
 import { license, SiteDefault } from '@/api/License'
 import { isJson } from '@/utils/validate'
 const { language } = getLocalStorage('language')
+import { clientMqtt } from '@/utils/clientMqtt'
 const state = () => ({
   language: language || i18n,
   roleTree: getToken('roleTree', 'sessionStorage'), // 处理数据类型不匹配
@@ -131,6 +133,7 @@ const actions = {
     const { sessionToken = '' } = data
     let token = sessionToken
     if (token) {
+      clientMqtt()
       commit('_setToken', token)
       const { nick } = data
       if (nick) commit('setUsername', nick)
