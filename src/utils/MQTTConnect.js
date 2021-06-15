@@ -8,14 +8,16 @@ let localHost = [
   '192.168',
 ]
 function globalUrl(hostname = window.location.hostname, localHost) {
-  var result = localHost.some((i) => {
-    return hostname.includes(i) > -1
-  })
-  if (result) {
-    return process.env.VUE_APP_URL.split(':')[1]
+  // var result = localHost.some((i) => {
+  //   return hostname.includes(i) > -1
+  // })
+  let result
+  if (process.env.NODE_ENV !== 'development') {
+    result = hostname
   } else {
-    return ''
+    result = process.env.VUE_APP_URL.split(':')[1]
   }
+  return result
 }
 
 import iotMqtt from '@/utils/iotMqtt'

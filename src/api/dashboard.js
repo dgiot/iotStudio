@@ -11,3 +11,11 @@ export function getEcharts(datetime, di, statistics_time) {
     },
   })
 }
+
+export async function StartDashboard(data) {
+  return request({
+    url: `dashboard`,
+    method: 'post',
+    data: data,
+  })
+}

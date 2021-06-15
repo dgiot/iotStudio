@@ -77,6 +77,7 @@ let staticUrl = {
     'https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js',
     'https://hm.baidu.com/hm.js?a0f8b01930320b849a92a00e0c6da990',
     'https://s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845',
+    'https://unpkg.com/vue-amap/dist/index.js',
   ],
 }
 if (process.env.NODE_ENV !== 'development') {

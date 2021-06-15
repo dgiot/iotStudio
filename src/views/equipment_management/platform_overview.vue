@@ -12,22 +12,37 @@
       ref="mqtt"
       :connect="isConnect"
       :topic="channeltopic"
+      :reconnection="true"
       @mqttMsg="mqttMsg"
+      @mqttError="mqttError"
+      @mqttConnectLost="mqttConnectLost"
+      @mqttSuccess="mqttSuccess"
     />
+    <div class="home_dialog">
+      <el-dialog
+        width="100vh"
+        :title="deviceInfo.name"
+        :visible.sync="deviceFlag"
+      >
+        <info :devicedetail="deviceInfo" />
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="deviceFlag = false">
+            {{ $translateTitle('developer.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="deviceFlag = false">
+            {{ $translateTitle('developer.determine') }}
+          </el-button>
+        </span>
+      </el-dialog>
+    </div>
+
     <div
       :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
       class="map_header"
     >
       <div v-show="cardHeight != '0px'" class="map_card">
         <el-row>
-          <el-col
-            :lg="{ span: '4-8' }"
-            class="card-panel-col"
-            :xs="24"
-            :sm="24"
-            :md="8"
-            :xl="4"
-          >
+          <el-col class="card-panel-col" :xs="24" :sm="24" :md="6" :xl="6">
             <el-card class="box-card">
               <el-col :span="12" class="card-left">
                 <vab-icon icon="projector-2-fill" />
@@ -38,14 +53,7 @@
               </el-col>
             </el-card>
           </el-col>
-          <el-col
-            :lg="{ span: '4-8' }"
-            class="card-panel-col"
-            :xs="24"
-            :sm="24"
-            :md="8"
-            :xl="4"
-          >
+          <el-col class="card-panel-col" :xs="24" :sm="24" :md="6" :xl="6">
             <el-card class="box-card">
               <el-col :span="12">
                 <vab-icon icon="projector-fill" />
@@ -61,8 +69,8 @@
             class="card-panel-col"
             :xs="24"
             :sm="24"
-            :md="8"
-            :xl="4"
+            :md="6"
+            :xl="6"
           >
             <el-card class="box-card">
               <el-col :span="12">
@@ -74,14 +82,7 @@
               </el-col>
             </el-card>
           </el-col>
-          <el-col
-            :xs="24"
-            :sm="24"
-            :md="8"
-            :lg="{ span: '4-8' }"
-            class="card-panel-col"
-            :xl="4"
-          >
+          <el-col :xs="24" :sm="24" :md="6" class="card-panel-col" :xl="6">
             <el-card class="box-card">
               <el-col :span="12">
                 <vab-icon icon="device-recover-fill" />
@@ -92,42 +93,42 @@
               </el-col>
             </el-card>
           </el-col>
-          <el-col
-            :xs="24"
-            :sm="24"
-            :md="8"
-            :lg="{ span: '4-8' }"
-            class="card-panel-col"
-            :xl="4"
-          >
-            <el-card class="box-card">
-              <el-col :span="12">
-                <vab-icon icon="bar-chart-2-line" />
-              </el-col>
-              <el-col :span="12" class="card-right">
-                <p>{{ $translateTitle('home.dev_online') }}</p>
-                <p>{{ dev_online_count }}</p>
-              </el-col>
-            </el-card>
-          </el-col>
-          <el-col
-            :xs="24"
-            :sm="24"
-            :md="8"
-            :lg="{ span: '4-8' }"
-            class="card-panel-col"
-            :xl="4"
-          >
-            <el-card class="box-card">
-              <el-col :span="12">
-                <vab-icon icon="mail-close-fill" />
-              </el-col>
-              <el-col :span="12" class="card-right">
-                <p>{{ $translateTitle('home.dev_unline') }}</p>
-                <p>{{ dev_count - dev_online_count || 0 }}</p>
-              </el-col>
-            </el-card>
-          </el-col>
+          <!--          <el-col-->
+          <!--            :xs="24"-->
+          <!--            :sm="24"-->
+          <!--            :md="8"-->
+          <!--            :lg="{ span: '4-8' }"-->
+          <!--            class="card-panel-col"-->
+          <!--            :xl="4"-->
+          <!--          >-->
+          <!--            <el-card class="box-card">-->
+          <!--              <el-col :span="12">-->
+          <!--                <vab-icon icon="bar-chart-2-line" />-->
+          <!--              </el-col>-->
+          <!--              <el-col :span="12" class="card-right">-->
+          <!--                <p>{{ $translateTitle('home.dev_online') }}</p>-->
+          <!--                <p>{{ dev_online_count }}</p>-->
+          <!--              </el-col>-->
+          <!--            </el-card>-->
+          <!--          </el-col>-->
+          <!--          <el-col-->
+          <!--            :xs="24"-->
+          <!--            :sm="24"-->
+          <!--            :md="8"-->
+          <!--            :lg="{ span: '4-8' }"-->
+          <!--            class="card-panel-col"-->
+          <!--            :xl="4"-->
+          <!--          >-->
+          <!--            <el-card class="box-card">-->
+          <!--              <el-col :span="12">-->
+          <!--                <vab-icon icon="mail-close-fill" />-->
+          <!--              </el-col>-->
+          <!--              <el-col :span="12" class="card-right">-->
+          <!--                <p>{{ $translateTitle('home.dev_unline') }}</p>-->
+          <!--                <p>{{ dev_off_count || 0 }}</p>-->
+          <!--              </el-col>-->
+          <!--            </el-card>-->
+          <!--          </el-col>-->
         </el-row>
         <el-row style="display: none">
           <el-col
@@ -354,28 +355,30 @@
                   :offset="{ width: 360, height: 0 }"
                 />
               </bm-control>
-              <bm-marker
-                v-for="(item, index) in tableData"
-                :key="item.objectId"
-                :dragging="true"
-                :content="item.name"
-                :position="{
-                  lng: item.location.longitude,
-                  lat: item.location.latitude,
-                }"
-                animation="BMAP_ANIMATION_BOUNCE"
-                @click="show = !show"
-              >
-                <bm-label
+              <bml-marker-clusterer :average-center="true">
+                <bm-marker
+                  v-for="item in tableData"
+                  :key="item.objectId"
                   :content="item.name"
-                  :label-style="{ color: 'red', fontSize: '12px' }"
-                  :offset="{
-                    width: -35 * index,
-                    height: 30 * index,
+                  :position="{
+                    lng: item.location.longitude,
+                    lat: item.location.latitude,
                   }"
-                  @click="deviceToDetail(item)"
-                />
-              </bm-marker>
+                  animation="BMAP_ANIMATION_BOUNCE"
+                  @click="item.show = !item.show"
+                >
+                  <bm-label
+                    v-if="item.show"
+                    :content="item.name"
+                    :label-style="{ color: 'red', fontSize: '12px' }"
+                    :offset="{
+                      width: -35,
+                      height: 30,
+                    }"
+                    @click="deviceToDetail(item)"
+                  />
+                </bm-marker>
+              </bml-marker-clusterer>
               <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
               <bm-geolocation
                 :show-address-bar="true"
@@ -388,57 +391,156 @@
       </el-col>
       <el-col :span="24 - leftRow" :xs="24">
         <div class="home_card">
-          <div class="box-card">
-            <el-card>
-              <div slot="header" class="clearfix">
-                <span>{{ $translateTitle('home.info') }}</span>
+          <el-tabs v-model="activeName">
+            <el-tab-pane :label="$translateTitle('home.info')" name="first">
+              <div class="box-card">
+                <el-card>
+                  <div slot="header" class="clearfix">
+                    <el-button>{{ $translateTitle('home.info') }}</el-button>
+                  </div>
+                  <div>
+                    <el-row :gutter="24">
+                      <el-col :span="24">
+                        <div class="grid-content bg-purple">
+                          <el-table
+                            :data="Product"
+                            style="width: 100%"
+                            :header-cell-style="{
+                              background: '#073646',
+                              color: '#00D3E0',
+                            }"
+                            :row-class-name="tableRowClassName"
+                          >
+                            <el-table-column width="60">
+                              <template slot-scope="scope">
+                                <el-image
+                                  style="width: 26px; height: 26px"
+                                  :src="scope.row.icon"
+                                  :preview-src-list="[`${scope.row.icon}`]"
+                                >
+                                  <div slot="error" class="image-slot">
+                                    <i class="el-icon-picture-outline"></i>
+                                  </div>
+                                </el-image>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                              width="120"
+                              prop="name"
+                              :show-overflow-tooltip="true"
+                            />
+                            <el-table-column width="40">
+                              <template slot-scope="scope">
+                                <span @click="goDevice(scope.row.name)">
+                                  {{ scope.row.deviceChild.length }}
+                                </span>
+                              </template>
+                            </el-table-column>
+                          </el-table>
+                        </div>
+                      </el-col>
+                    </el-row>
+                  </div>
+                </el-card>
               </div>
-              <div>
-                <el-row :gutter="24">
-                  <el-col :span="24">
-                    <div class="grid-content bg-purple">
-                      <el-row
-                        v-for="item in Product"
-                        :key="item.objectId"
-                        class="row-bg"
-                        justify="space-around"
-                      >
-                        <el-col :span="6">
-                          <el-image
-                            style="width: 26px; height: 26px"
-                            :src="item.icon"
-                            :preview-src-list="[`${item.icon}`]"
+            </el-tab-pane>
+            <el-tab-pane
+              :label="$translateTitle('home.dev_unline')"
+              name="second"
+            >
+              <div class="box-card">
+                <el-card>
+                  <div slot="header" class="clearfix">
+                    <el-badge :value="dev_off_count" class="item">
+                      <el-button size="small">
+                        {{ $translateTitle('home.dev_unline') }}
+                      </el-button>
+                    </el-badge>
+                  </div>
+                  <div>
+                    <el-row :gutter="24">
+                      <el-col :span="24">
+                        <div class="grid-content bg-purple">
+                          <el-table
+                            :data="offlineData"
+                            style="width: 100%"
+                            :header-cell-style="{
+                              background: '#073646',
+                              color: '#00D3E0',
+                            }"
+                            :row-class-name="tableRowClassName"
                           >
-                            <div slot="error" class="image-slot">
-                              <i class="el-icon-picture-outline"></i>
-                            </div>
-                          </el-image>
-                        </el-col>
-                        <el-col :span="10">
-                          <el-link
-                            type="primary"
-                            @click="goDevice(item.objectId)"
-                          >
-                            {{ item.name }}
-                          </el-link>
-                        </el-col>
-                        <el-col :span="2">
-                          <el-link
-                            type="success"
-                            :underline="false"
-                            :disabled="item.num <= 0"
-                          >
-                            {{ item.devname }}
-                          </el-link>
-                        </el-col>
-                      </el-row>
-                    </div>
-                  </el-col>
-                </el-row>
+                            <el-table-column prop="name">
+                              <template slot-scope="scope">
+                                <span
+                                  :title="
+                                    scope.row.name +
+                                    $translateTitle('home.Last online time') +
+                                    scope.row.updatedAt
+                                  "
+                                  @click="showDeatils(scope.row)"
+                                >
+                                  {{ scope.row.name }}
+                                </span>
+                              </template>
+                            </el-table-column>
+                          </el-table>
+                        </div>
+                      </el-col>
+                    </el-row>
+                  </div>
+                </el-card>
               </div>
-            </el-card>
-          </div>
-          <div class="box-card"></div>
+            </el-tab-pane>
+            <el-tab-pane
+              :label="$translateTitle('home.dev_online')"
+              name="third"
+            >
+              <div class="box-card">
+                <el-card>
+                  <div slot="header" class="clearfix">
+                    <el-badge :value="dev_online_count" class="item">
+                      <el-button size="small">
+                        {{ $translateTitle('home.dev_online') }}
+                      </el-button>
+                    </el-badge>
+                  </div>
+                  <div>
+                    <el-row :gutter="24">
+                      <el-col :span="24">
+                        <div class="grid-content bg-purple">
+                          <el-table
+                            :data="onlineData"
+                            style="width: 100%"
+                            :header-cell-style="{
+                              background: '#073646',
+                              color: '#00D3E0',
+                            }"
+                            :row-class-name="tableRowClassName"
+                          >
+                            <el-table-column prop="name">
+                              <template slot-scope="scope">
+                                <span
+                                  :title="
+                                    scope.row.name +
+                                    $translateTitle('home.Last online time') +
+                                    scope.row.updatedAt
+                                  "
+                                  @click="showDeatils(scope.row)"
+                                >
+                                  {{ scope.row.name }}
+                                </span>
+                              </template>
+                            </el-table-column>
+                          </el-table>
+                        </div>
+                      </el-col>
+                    </el-row>
+                  </div>
+                </el-card>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
         </div>
       </el-col>
     </el-row>
@@ -450,7 +552,10 @@
   import { batch } from '@/api/Batch/index'
   import Category from '@/api/Mock/Category'
   import { Roletree, getToken } from '@/api/Menu'
-  import { uuid } from '@/utils'
+  import { StartDashboard } from '@/api/dashboard'
+  import { isBase64 } from '@/utils'
+  import info from '@/components/Device/info'
+  import queryParams from '@/api/Mock/Dashboard'
   import {
     BmNavigation,
     BaiduMap,
@@ -463,10 +568,12 @@
     BmOverviewMap,
     BmMapType,
     BmScale,
+    BmlMarkerClusterer,
   } from 'vue-baidu-map'
   export default {
     name: 'Index',
     components: {
+      info,
       BmScale,
       BmMapType,
       BmOverviewMap,
@@ -478,9 +585,12 @@
       BmGeolocation,
       BmCityList,
       BmMarker,
+      BmlMarkerClusterer,
     },
     data() {
       return {
+        deviceFlag: false,
+        deviceInfo: [],
         Product: [],
         imgurl:
           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -523,6 +633,8 @@
         show: false,
         sizeZoom: 5,
         tableData: [],
+        offlineData: [],
+        onlineData: [],
         chartSetting: {
           yAxis: {
             type: 'value',
@@ -531,14 +643,15 @@
         },
         NODE_ENV: process.env.NODE_ENV,
         category: Category,
-        activeName: 'devchart',
+        activeName: 'second',
         filterBox: 'filterBox-first',
-        project_count: '-',
-        app_count: '-',
-        product_count: '-',
-        dev_count: '-',
-        dev_active_count: '-',
-        dev_online_count: '-',
+        project_count: 0,
+        app_count: 0,
+        product_count: 0,
+        dev_count: 0,
+        dev_active_count: 0,
+        dev_online_count: 0,
+        dev_off_count: 0,
         projectList: [],
         formInline: {
           starttime: '',
@@ -561,32 +674,46 @@
       this.leftWidth = window.getComputedStyle($('.vab-side-bar')[0])['width']
       this.cardHeight = window.getComputedStyle($('.map_card')[0])['height']
       console.log(this.fixedPaddingTop, this.leftWidth, this.cardHeight)
-      this.getAllAxios({}, this.token, false)
+      // this.getAllAxios({}, this.token, false)
+      this.queryForm.account =
+        this.language == 'zh' ? '全部产品' : 'All Products'
       this.getRoletree()
       this.getProduct()
     },
     activated() {
       console.log('keep-alive生效')
     }, //如果页面有keep-alive缓存功能，这个函数会触发
+    destroyed() {
+      this.$iotMqtt.unsubscribe(this.channeltopic)
+    },
     methods: {
+      tableRowClassName({ row, rowIndex }) {
+        if (rowIndex === 1) {
+          return 'warning-row'
+        } else if (rowIndex === 2) {
+          return 'success-row'
+        }
+        return ''
+      },
       ...mapMutations({
         setRoleTree: 'global/setRoleTree',
         set_Product: 'global/set_Product',
       }),
       // 设备详情
       deviceToDetail(row) {
+        row.show = !row.show
         this.$router.push({
           path: '/roles/editdevices',
           query: {
             deviceid: row.objectId,
-            nodeType: row.nodeType,
+            nodeType: '2',
             ischildren: 'false',
           },
         })
       },
       /*
-     连接webscroket
-     */
+   连接webscroket
+   */
       getCategory(key) {
         console.log(key)
         let name = ''
@@ -597,8 +724,91 @@
         })
         return name
       },
+      mqttError(e) {
+        console.log('mqttError', e)
+      },
+      showDeatils(row) {
+        console.log(row)
+        let ProductId = row.product.objectId || 'undefined'
+        let DevAddr = row.devaddr || 'undefined'
+        let _toppic = [
+          {
+            topic: `thing/${ProductId}/${DevAddr}/post`,
+            type: 'pub',
+            desc: '设备上报',
+            isdef: true,
+          },
+          {
+            topic: `thing/${ProductId}/${DevAddr}`,
+            type: 'sub',
+            desc: '消息下发',
+            isdef: true,
+          },
+        ]
+        row.product.topics
+          ? (row.topicData = row.product.topics.concat(_toppic))
+          : (row.topicData = _toppic)
+        this.deviceFlag = true
+        this.deviceInfo = row
+        // this.$router.push({
+        //   path: '/dashboard/devicelist',
+        //   query: {
+        //     devaddr: row.devaddr,
+        //   },
+        // })
+      },
       mqttMsg(e) {
-        console.log(e)
+        let mqttMsg = isBase64(e) ? Base64.decode(e) : e
+        let mqttMsgValue = JSON.parse(mqttMsg).value
+        let key = JSON.parse(mqttMsg).vuekey
+        console.log(mqttMsgValue, key)
+        this.$baseNotify('', `收到消息${key}`)
+        // console.clear()
+        switch (key) {
+          case 'app_count':
+            this.app_count = mqttMsgValue.count
+            break
+          case 'project_count':
+            this.project_count = mqttMsgValue.count
+            break
+          case 'product_count':
+            this.product_count = mqttMsgValue.count
+            this.Product = mqttMsgValue.results
+            console.log(this.Product, 'this.Product')
+            break
+          case 'dev_online_count':
+            this.dev_online_count = mqttMsgValue.count
+            this.onlineData = mqttMsgValue.results
+            console.log(mqttMsgValue.results, 'dev_online_count')
+            break
+          case 'dev_off_count':
+            this.dev_off_count = mqttMsgValue.count
+            this.offlineData = mqttMsgValue.results
+            console.log(mqttMsgValue.results, 'dev_off_count')
+            break
+          case 'baiduMap':
+            this.tableData = mqttMsgValue
+            console.log(this.tableData, '百度 地图 ')
+            break
+          default:
+            console.log(JSON.parse(mqttMsg))
+            break
+        }
+        this.dev_count = this.dev_online_count + this.dev_off_count
+      },
+      mqttConnectLost(e) {
+        console.log('mqttConnectLost', e)
+      },
+      mqttSuccess(e) {
+        StartDashboard(queryParams)
+          .then((res) => {
+            console.log(res)
+            this.$baseNotify(e, 'mqtt订阅成功')
+          })
+          .catch((e) => {
+            console.log(e)
+            this.$baseNotify(e, '请求错误', 'error')
+          })
       },
       toggleCard(height) {
         console.log('cardHeight', height)
@@ -648,7 +858,7 @@
         console.log(objectId)
       },
       queryData() {
-        this.getAllAxios({}, this.queryForm.access_token, true)
+        // this.getAllAxios({}, this.queryForm.access_token, true)
       },
       async getRoletree() {
         await Roletree()
@@ -702,9 +912,12 @@
         // 点击的公司名
         const { name, objectId } = data
         this.curDepartmentId = objectId
-        console.log('this.queryForm.access_token', this.queryForm.access_token)
-        this.channeltopic = `thing/${this.queryForm.access_token}/${uuid(6)}`
+        // this.channeltopic = `dashboard/${this.queryForm.access_token}/post`
+        this.channeltopic = `dashboard/${this.token}/post`
         // this.isConnect = true
+        console.log(this.channeltopic, 'this.channeltopic')
+        // this.$iotMqtt.subscribe(this.channeltopic)
+        // console.log(this.$iotMqtt, 'this.$iotMqtt.init')
         if (this.$refs.mqtt) {
           this.$refs.mqtt.clientMqtt()
         }
@@ -898,12 +1111,17 @@
       }
       margin: 8px;
     }
-    //.home_card {
-    //  margin: 20px;
-    //  .box-card {
-    //    height: 50%;
-    //  }
-    //}
+    .home_card {
+      ::v-deep {
+        .el-tabs {
+          height: calc(78vh - 20px);
+        }
+      }
+      //margin: 20px;
+      //.box-card {
+      //  height: 50%;
+      //}
+    }
     .box-card {
       //background: red;
       margin: 5px;
@@ -936,7 +1154,14 @@
         background-color: #f9fafc;
       }
     }
-
+    ::v-deep {
+      .has-gutter {
+        display: none;
+      }
+      .el-badge {
+        margin: 0;
+      }
+    }
     .map_card ::v-deep .el-row {
       .card-panel-col:nth-child(1) .el-card {
         background: #673bb7;
