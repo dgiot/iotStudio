@@ -7,6 +7,9 @@
  */
 import { getToken, setToken } from '@/utils/vuex'
 const state = () => ({
+  _pcimg: getToken('_pcimg') || 'https://z3.ax1x.com/2021/06/16/2OxUUJ.png',
+  _mimg:
+    getToken('_mimg') || 'https://i.loli.net/2021/06/16/bPfZ8ejunyUVtQx.png',
   _dev_count: getToken('_dev_count') || 0,
   _project_count: getToken('_project_count') || 0,
   _app_count: getToken('_app_count') || 0,
@@ -26,6 +29,8 @@ const state = () => ({
   _tableData: getToken('_tableData') || [],
 })
 const getters = {
+  _pcimg: (state) => state._pcimg,
+  _mimg: (state) => state._mimg,
   _dev_count: (state) => state._dev_count,
   _project_count: (state) => state._project_count,
   _app_count: (state) => state._app_count,
@@ -39,6 +44,14 @@ const getters = {
   _tableData: (state) => state._tableData,
 }
 const mutations = {
+  set_pcimg(state, img) {
+    state._pcimg = img
+    setToken('_pcimg', img)
+  },
+  set_mimg(state, img) {
+    state._mimg = img
+    setToken('_mimg', img)
+  },
   set_dev_count(state, count) {
     state._dev_count = count
     setToken('_dev_count', count)
@@ -85,6 +98,12 @@ const mutations = {
   },
 }
 const actions = {
+  set_pcimg({ commit }, img) {
+    commit('set_pcimg', img)
+  },
+  set_mimg({ commit }, img) {
+    commit('set_mimg', img)
+  },
   set_dev_count({ commit }, count) {
     commit('set_dev_count', count)
   },

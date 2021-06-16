@@ -155,6 +155,44 @@
                           </template>
                         </el-input>
                       </el-form-item>
+                      <el-form-item label="侧边栏展开图">
+                        <el-input
+                          v-model="companyinfo._pcimg"
+                          readonly
+                          disabled
+                        >
+                          <template slot="prepend">
+                            <vab-icon
+                              icon="bank-card-line"
+                              style="color: #3492ed"
+                            />
+                          </template>
+                          <template slot="append">
+                            <vab-icon
+                              icon="chat-upload-fill"
+                              style="color: #3492ed"
+                              @click="uploadCkick('companyinfo._pcimg')"
+                            />
+                          </template>
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="侧边栏收起图">
+                        <el-input v-model="companyinfo._mimg" readonly disabled>
+                          <template slot="prepend">
+                            <vab-icon
+                              icon="bank-card-line"
+                              style="color: #3492ed"
+                            />
+                          </template>
+                          <template slot="append">
+                            <vab-icon
+                              icon="chat-upload-fill"
+                              style="color: #3492ed"
+                              @click="uploadCkick('companyinfo._mimg')"
+                            />
+                          </template>
+                        </el-input>
+                      </el-form-item>
                       <el-form-item>
                         <el-button type="primary" @click="onSubmit">
                           保存
@@ -223,6 +261,8 @@
       ...mapGetters({
         avatar: 'user/avatar',
         token: 'user/token',
+        _pcimg: 'dashboard/_pcimg',
+        _mimg: 'dashboard/_mimg',
       }),
     },
     mounted() {
@@ -237,6 +277,8 @@
         setBackgroundimage: 'user/setBackgroundimage',
         setname: 'user/setname',
         setcopyright: 'user/setCopyright',
+        set_pcimg: 'dashboard/set_pcimg',
+        set_mimg: 'dashboard/set_mimg',
       }),
       fileInfo(info) {
         console.log('uploadFinish', info)
@@ -247,6 +289,12 @@
           case 'userinfo.avatar':
             this.userinfo.avatar = info.url
             this.setAvatar(info.url)
+            break
+          case 'companyinfo._pcimg':
+            this.set_pcimg(info.url)
+            break
+          case 'companyinfo._mimg':
+            this.set_mimg(info.url)
             break
           case 'companyinfo.logo':
             this.setlogo(info.url)
@@ -330,6 +378,8 @@
               title: '欢迎登录dgiot平台',
               Copyright:
                 '© 2017-2021 数蛙科技 Corporation, All Rights Reserved',
+              _pcimg: 'https://z3.ax1x.com/2021/06/16/2OxUUJ.png',
+              _mimg: 'https://i.loli.net/2021/06/16/bPfZ8ejunyUVtQx.png',
             },
             userinfo: {},
           },
@@ -340,7 +390,16 @@
         this.nick = nick
         this.phone = phone
         this.userinfo.phone = this.phone
-        this.companyinfo = tag.companyinfo
+        this.companyinfo = Object.assign(tag.companyinfo, {
+          backgroundimage:
+            'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
+          name: 'dg_iot',
+          logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
+          title: '欢迎登录dgiot平台',
+          Copyright: '© 2017-2021 数蛙科技 Corporation, All Rights Reserved',
+          _pcimg: 'https://z3.ax1x.com/2021/06/16/2OxUUJ.png',
+          _mimg: 'https://i.loli.net/2021/06/16/bPfZ8ejunyUVtQx.png',
+        })
         console.log('this.companyinfo', tag.companyinfo)
       },
     },

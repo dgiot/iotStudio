@@ -10,7 +10,7 @@
     name: 'VabFooter',
     computed: {
       ...mapGetters({
-        copyright: 'user/Copyright',
+        copyright: 'acl/copyright',
       }),
     },
   }

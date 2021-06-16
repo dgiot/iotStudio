@@ -46,8 +46,8 @@ const state = () => ({
   logo: getToken('logo', 'sessionStorage'),
   title: getToken('title', 'sessionStorage') || '物联网开发平台',
   device: 'desktop',
-  collapse: getToken('collapse') ? getToken('collapse') : false,
-  language: getToken('language') ? getToken('theme') : i18n,
+  collapse: getToken('collapse') || false,
+  language: getToken('language') || i18n,
   theme: getToken('theme') || { ...defaultTheme },
   extra: { first: '', transferRouteName: '' },
 })

@@ -11,7 +11,7 @@
  */
 module.exports = {
   // 标题，此项修改后需要重启项目！！！ (包括初次加载雪花屏的标题 页面的标题 浏览器的标题)
-  title: 'shuwa Admin Pro',
+  title: '物联网开发平台',
   // 标题分隔符
   titleSeparator: ' - ',
   // 标题是否反转
@@ -49,6 +49,8 @@ module.exports = {
     'Copyright',
     'title',
     'name',
+    '_pcimg',
+    '_mimg',
   ],
   // token失效回退到登录页时是否记录本次的路由
   recordRoute: process.env.NODE_ENV == 'development' ? true : false,
