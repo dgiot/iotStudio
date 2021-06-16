@@ -1501,9 +1501,7 @@
           limit: this.length,
           skip: this.start,
           keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon',
-          where: {
-            category: 'IotHub',
-          },
+          where: {},
         }
         if (this.formInline.productname != '') {
           parsms.where.name = this.formInline.productname
