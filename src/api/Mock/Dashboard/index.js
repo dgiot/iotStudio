@@ -49,13 +49,19 @@ const queryParams = [
   },
   {
     dataType: 'card',
-    vuekey: 'dev_count',
-    table: 'Device',
+    vuekey: 'project_count',
+    table: 'Project',
     query: { limit: 1, keys: ['count(*)'], where: {} },
   },
   {
     dataType: 'card',
-    vuekey: 'project_count',
+    vuekey: 'ChartStatus',
+    table: 'ChartStatus',
+    query: { limit: 1, keys: ['count(*)'], where: {} },
+  },
+  {
+    dataType: 'card',
+    vuekey: 'device_count',
     table: 'Device',
     query: { limit: 1, keys: ['count(*)'], where: {} },
   },

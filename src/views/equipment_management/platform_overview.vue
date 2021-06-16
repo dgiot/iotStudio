@@ -35,7 +35,6 @@
         </span>
       </el-dialog>
     </div>
-
     <div
       :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
       class="map_header"
@@ -48,8 +47,8 @@
                 <vab-icon icon="projector-2-fill" />
               </el-col>
               <el-col :span="12" class="card-right">
-                <p>{{ $translateTitle('home.app_count') }}</p>
-                <p>{{ project_count }}</p>
+                <p>{{ $translateTitle('home.cla_count') }}</p>
+                <p>{{ _project_count }}</p>
               </el-col>
             </el-card>
           </el-col>
@@ -60,7 +59,7 @@
               </el-col>
               <el-col :span="12" class="card-right">
                 <p>{{ $translateTitle('home.pro_count') }}</p>
-                <p>{{ product_count }}</p>
+                <p>{{ _product_count }}</p>
               </el-col>
             </el-card>
           </el-col>
@@ -77,8 +76,8 @@
                 <vab-icon icon="apps-fill" />
               </el-col>
               <el-col :span="12" class="card-right">
-                <p>{{ $translateTitle('home.cla_count') }}</p>
-                <p>{{ app_count }}</p>
+                <p>{{ $translateTitle('home.app_count') }}</p>
+                <p>{{ _app_count }}</p>
               </el-col>
             </el-card>
           </el-col>
@@ -89,105 +88,8 @@
               </el-col>
               <el-col :span="12" class="card-right">
                 <p>{{ $translateTitle('home.dev_count') }}</p>
-                <p>{{ dev_count }}</p>
+                <p>{{ _dev_count }}</p>
               </el-col>
-            </el-card>
-          </el-col>
-          <!--          <el-col-->
-          <!--            :xs="24"-->
-          <!--            :sm="24"-->
-          <!--            :md="8"-->
-          <!--            :lg="{ span: '4-8' }"-->
-          <!--            class="card-panel-col"-->
-          <!--            :xl="4"-->
-          <!--          >-->
-          <!--            <el-card class="box-card">-->
-          <!--              <el-col :span="12">-->
-          <!--                <vab-icon icon="bar-chart-2-line" />-->
-          <!--              </el-col>-->
-          <!--              <el-col :span="12" class="card-right">-->
-          <!--                <p>{{ $translateTitle('home.dev_online') }}</p>-->
-          <!--                <p>{{ dev_online_count }}</p>-->
-          <!--              </el-col>-->
-          <!--            </el-card>-->
-          <!--          </el-col>-->
-          <!--          <el-col-->
-          <!--            :xs="24"-->
-          <!--            :sm="24"-->
-          <!--            :md="8"-->
-          <!--            :lg="{ span: '4-8' }"-->
-          <!--            class="card-panel-col"-->
-          <!--            :xl="4"-->
-          <!--          >-->
-          <!--            <el-card class="box-card">-->
-          <!--              <el-col :span="12">-->
-          <!--                <vab-icon icon="mail-close-fill" />-->
-          <!--              </el-col>-->
-          <!--              <el-col :span="12" class="card-right">-->
-          <!--                <p>{{ $translateTitle('home.dev_unline') }}</p>-->
-          <!--                <p>{{ dev_off_count || 0 }}</p>-->
-          <!--              </el-col>-->
-          <!--            </el-card>-->
-          <!--          </el-col>-->
-        </el-row>
-        <el-row style="display: none">
-          <el-col
-            v-for="item in projectList"
-            :key="item.id"
-            :xs="24"
-            :sm="24"
-            :md="8"
-            :lg="{ span: '4-8' }"
-          >
-            <el-card class="box-card" shadow="always">
-              <div slot="header" class="clearfix">
-                <span>
-                  {{ item.name }}
-                </span>
-              </div>
-              <div v-if="item.userUnit" class="text item">
-                <span>{{ $translateTitle('home.unit') }}</span>
-                <span>{{ item.userUnit }}</span>
-              </div>
-              <div v-if="item.scale" class="text item">
-                <span>{{ $translateTitle('home.scale') }}：</span>
-                <span>{{ item.scale }}</span>
-              </div>
-              <div class="text item">
-                <span>{{ $translateTitle('home.category') }}：</span>
-                <span>{{ getCategory(item.category) }}</span>
-              </div>
-              <div class="text item">
-                <span>{{ $translateTitle('home.updatedAt') }}：</span>
-                <span>
-                  {{
-                    new Date(item.updatedAt).toLocaleDateString() +
-                    ' ' +
-                    new Date(item.updatedAt).toLocaleTimeString()
-                  }}
-                </span>
-              </div>
-              <div class="text item" style="text-align: center">
-                <el-button-group>
-                  <el-button
-                    style="margin-right: 3px"
-                    size="mini"
-                    type="success"
-                    @click="Gotoproduct(item.name)"
-                  >
-                    {{ $translateTitle('home.preview') }}
-                  </el-button>
-                  <el-button
-                    v-if="NODE_ENV == 'development'"
-                    size="mini"
-                    type="primary"
-                    target="_blank"
-                    @click="handleClickVisit(item)"
-                  >
-                    {{ $translateTitle('home.konva') }}
-                  </el-button>
-                </el-button-group>
-              </div>
             </el-card>
           </el-col>
         </el-row>
@@ -324,7 +226,7 @@
     <el-row :row="24">
       <el-col :span="leftRow" :xs="24">
         <el-row :span="24">
-          <div v-show="tableData" class="chart_map">
+          <div class="chart_map">
             <baidu-map
               ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
               :scroll-wheel-zoom="true"
@@ -356,28 +258,34 @@
                 />
               </bm-control>
               <bml-marker-clusterer :average-center="true">
-                <bm-marker
-                  v-for="item in tableData"
-                  :key="item.objectId"
-                  :content="item.name"
-                  :position="{
-                    lng: item.location.longitude,
-                    lat: item.location.latitude,
-                  }"
-                  animation="BMAP_ANIMATION_BOUNCE"
-                  @click="item.show = !item.show"
-                >
-                  <bm-label
-                    v-if="item.show"
-                    :content="item.name"
-                    :label-style="{ color: 'red', fontSize: '12px' }"
-                    :offset="{
-                      width: -35,
-                      height: 30,
+                <div v-for="(item, index) in _tableData" :key="index">
+                  <bm-marker
+                    :position="{
+                      lng: item.location.longitude,
+                      lat: item.location.latitude,
                     }"
-                    @click="deviceToDetail(item)"
-                  />
-                </bm-marker>
+                    :icon="{
+                      url: item.iconUrl,
+                      size: { width: 100, height: 100 },
+                    }"
+                    @click="showDeatils(item)"
+                  >
+                    <bm-info-window
+                      :title="item.name"
+                      :position="{
+                        lng: item.location.longitude,
+                        lat: item.location.latitude,
+                      }"
+                      :show="item.show"
+                      @close="closeInfo(item)"
+                      @open="openInfo(item)"
+                    >
+                      <div style="width: 80vh">
+                        <info :devicedetail="deviceInfo" />
+                      </div>
+                    </bm-info-window>
+                  </bm-marker>
+                </div>
               </bml-marker-clusterer>
               <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
               <bm-geolocation
@@ -391,7 +299,7 @@
       </el-col>
       <el-col :span="24 - leftRow" :xs="24">
         <div class="home_card">
-          <el-tabs v-model="activeName">
+          <el-tabs v-model="activeName" @tab-click="resizeTheChart">
             <el-tab-pane :label="$translateTitle('home.info')" name="first">
               <div class="box-card">
                 <el-card>
@@ -428,7 +336,14 @@
                               width="120"
                               prop="name"
                               :show-overflow-tooltip="true"
-                            />
+                            >
+                              <template slot-scope="scope">
+                                <span @click="goDevice(scope.row.name)">
+                                  {{ scope.row.name }}
+                                </span>
+                              </template>
+                            </el-table-column>
+
                             <el-table-column width="40">
                               <template slot-scope="scope">
                                 <span @click="goDevice(scope.row.name)">
@@ -443,6 +358,34 @@
                   </div>
                 </el-card>
               </div>
+
+              <el-col :xs="24" :sm="24" :md="28" :xl="24">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>
+                      {{ $translateTitle('equipment.Equipment Overview') }}
+                    </span>
+                    <el-button
+                      icon="el-icon-refresh"
+                      style="float: right; padding: 3px 0"
+                      type="text"
+                      @click="resizeTheChart()"
+                    />
+                  </div>
+                  <div class="text item">
+                    <vab-chart
+                      ref="charts"
+                      :loading="loading"
+                      height="160px"
+                      type="ring"
+                      :data-empty="!ChartStatus.rows"
+                      :data="_ChartStatus"
+                      :settings="chartSettings"
+                      :extend="chartExtend"
+                    />
+                  </div>
+                </el-card>
+              </el-col>
             </el-tab-pane>
             <el-tab-pane
               :label="$translateTitle('home.dev_unline')"
@@ -451,7 +394,7 @@
               <div class="box-card">
                 <el-card>
                   <div slot="header" class="clearfix">
-                    <el-badge :value="dev_off_count" class="item">
+                    <el-badge :value="_dev_off_count" class="item">
                       <el-button size="small">
                         {{ $translateTitle('home.dev_unline') }}
                       </el-button>
@@ -462,7 +405,7 @@
                       <el-col :span="24">
                         <div class="grid-content bg-purple">
                           <el-table
-                            :data="offlineData"
+                            :data="_offlineData"
                             style="width: 100%"
                             :header-cell-style="{
                               background: '#073646',
@@ -478,7 +421,7 @@
                                     $translateTitle('home.Last online time') +
                                     scope.row.updatedAt
                                   "
-                                  @click="showDeatils(scope.row)"
+                                  @click="showInfo(scope.row.objectId)"
                                 >
                                   {{ scope.row.name }}
                                 </span>
@@ -499,7 +442,7 @@
               <div class="box-card">
                 <el-card>
                   <div slot="header" class="clearfix">
-                    <el-badge :value="dev_online_count" class="item">
+                    <el-badge :value="_dev_online_count" class="item">
                       <el-button size="small">
                         {{ $translateTitle('home.dev_online') }}
                       </el-button>
@@ -510,7 +453,7 @@
                       <el-col :span="24">
                         <div class="grid-content bg-purple">
                           <el-table
-                            :data="onlineData"
+                            :data="_onlineData"
                             style="width: 100%"
                             :header-cell-style="{
                               background: '#073646',
@@ -526,7 +469,7 @@
                                     $translateTitle('home.Last online time') +
                                     scope.row.updatedAt
                                   "
-                                  @click="showDeatils(scope.row)"
+                                  @click="showInfo(scope.row.objectId)"
                                 >
                                   {{ scope.row.name }}
                                 </span>
@@ -548,8 +491,8 @@
 </template>
 <script>
   import { queryProduct } from '@/api/Product'
+  import { getDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
-  import { batch } from '@/api/Batch/index'
   import Category from '@/api/Mock/Category'
   import { Roletree, getToken } from '@/api/Menu'
   import { StartDashboard } from '@/api/dashboard'
@@ -562,24 +505,27 @@
     BmGeolocation,
     BmCityList,
     BmMarker,
-    BmLabel,
+    // BmLabel,
     BmControl,
     BmPanorama,
     BmOverviewMap,
     BmMapType,
     BmScale,
     BmlMarkerClusterer,
+    BmInfoWindow,
   } from 'vue-baidu-map'
+
   export default {
     name: 'Index',
     components: {
+      BmInfoWindow,
       info,
       BmScale,
       BmMapType,
       BmOverviewMap,
       BmPanorama,
       BmControl,
-      BmLabel,
+      // BmLabel,
       BaiduMap,
       BmNavigation,
       BmGeolocation,
@@ -588,9 +534,38 @@
       BmlMarkerClusterer,
     },
     data() {
+      this.chartSettings = {
+        radius: [5, 40],
+        offsetY: 100,
+      }
+      this.chartExtend = {
+        yAxisType: ['percent'],
+        tooltip: {
+          trigger: 'item',
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+        },
+      }
+
       return {
+        ChartStatus: {
+          columns: ['状态', '数量'],
+          rows: [
+            { 状态: '在线', 数量: 0 },
+            { 状态: '离线', 数量: 0 },
+          ],
+        },
+        infoWindow: {
+          show: true,
+          contents:
+            'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        },
+        loading: true,
+        marker: {},
         deviceFlag: false,
-        deviceInfo: [],
+        deviceInfo: {},
         Product: [],
         imgurl:
           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -616,20 +591,6 @@
         leftRow: 20,
         treeDataValue: '',
         deptTreeData: [],
-        chartExtend: {
-          series: {
-            center: ['50%', '50%'],
-          },
-          'yAxis.0.min': 0, // 设置左边最小值
-
-          // 'yAxis.0.max': 20, //设置左边最大值
-
-          'yAxis.0.minInterval': 1, // minInterval设置间隔值，1为整数
-
-          'yAxis.1.splitLine.show': false, // yAxis.1： y轴右侧
-
-          'yAxis.1.minInterval': 10, // minInterval设置间隔值，1为整数
-        },
         show: false,
         sizeZoom: 5,
         tableData: [],
@@ -649,6 +610,7 @@
         app_count: 0,
         product_count: 0,
         dev_count: 0,
+        active: false,
         dev_active_count: 0,
         dev_online_count: 0,
         dev_off_count: 0,
@@ -664,17 +626,29 @@
         roleTree: 'user/roleTree',
         _Product: 'user/_Product',
         language: 'settings/language',
+        _dev_count: 'dashboard/_dev_count',
+        _project_count: 'dashboard/_project_count',
+        _app_count: 'dashboard/_app_count',
+        _product_count: 'dashboard/_product_count',
         token: 'user/token',
+        _dev_online_count: 'dashboard/_dev_online_count',
+        _onlineData: 'dashboard/_onlineData',
+        _dev_off_count: 'dashboard/_dev_off_count',
+        _offlineData: 'dashboard/_offlineData',
+        _ChartStatus: 'dashboard/_ChartStatus',
+        _tableData: 'dashboard/_tableData',
       }),
     },
+    watch: {
+      // ChartStatus: {
+      //   handler(newVal) {
+      //     this.resizeTheChart()
+      //   },
+      //   deep: true,
+      //   immediate: true,
+      // },
+    },
     mounted() {
-      this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
-        'padding-top'
-      ]
-      this.leftWidth = window.getComputedStyle($('.vab-side-bar')[0])['width']
-      this.cardHeight = window.getComputedStyle($('.map_card')[0])['height']
-      console.log(this.fixedPaddingTop, this.leftWidth, this.cardHeight)
-      // this.getAllAxios({}, this.token, false)
       this.queryForm.account =
         this.language == 'zh' ? '全部产品' : 'All Products'
       this.getRoletree()
@@ -682,11 +656,24 @@
     },
     activated() {
       console.log('keep-alive生效')
+      this.resizeTheChart()
     }, //如果页面有keep-alive缓存功能，这个函数会触发
     destroyed() {
       this.$iotMqtt.unsubscribe(this.channeltopic)
+      this.resizeTheChart()
     },
     methods: {
+      resizeTheChart() {
+        this.loading = true
+        let charts = this.$refs[`charts`]
+        if (charts) {
+          charts.$children[0].resize()
+          console.log('重绘完成', charts)
+          setTimeout(() => {
+            this.loading = false
+          }, 2000)
+        }
+      },
       tableRowClassName({ row, rowIndex }) {
         if (rowIndex === 1) {
           return 'warning-row'
@@ -696,12 +683,24 @@
         return ''
       },
       ...mapMutations({
-        setRoleTree: 'global/setRoleTree',
-        set_Product: 'global/set_Product',
+        setRoleTree: 'user/setRoleTree',
+        set_Product: 'user/set_Product',
+        set_dev_count: 'dashboard/set_dev_count',
+        set_project_count: 'dashboard/set_project_count',
+        set_app_count: 'dashboard/set_app_count',
+        set_product_count: 'dashboard/set_product_count',
+        // set_Product: 'dashboard/set_Product',
+        set_dev_online_count: 'dashboard/set_dev_online_count',
+        set_onlineData: 'dashboard/set_onlineData',
+        set_dev_off_count: 'dashboard/set_dev_off_count',
+        set_offlineData: 'dashboard/set_offlineData',
+        set_ChartStatus: 'dashboard/set_ChartStatus',
+        set_tableData: 'dashboard/set_tableData',
       }),
       // 设备详情
       deviceToDetail(row) {
-        row.show = !row.show
+        console.log(row, 'deviceToDetail')
+        // row.show = !row.show
         this.$router.push({
           path: '/roles/editdevices',
           query: {
@@ -727,10 +726,27 @@
       mqttError(e) {
         console.log('mqttError', e)
       },
-      showDeatils(row) {
-        console.log(row)
-        let ProductId = row.product.objectId || 'undefined'
-        let DevAddr = row.devaddr || 'undefined'
+      closeInfo(item) {
+        this.$nextTick(() => {
+          item.show = false
+          this.set_tableData(Object.assign([], this._tableData))
+          this.$forceUpdate()
+        })
+      },
+      openInfo(item) {
+        item.show = true
+        this.set_tableData(Object.assign([], this._tableData))
+        this.$forceUpdate()
+      },
+      async showDeatils(row) {
+        this.deviceInfo = await getDevice(row.objectId)
+        this.openInfo(row)
+        console.log(row, this.deviceInfo)
+      },
+      async showInfo(objectId) {
+        this.deviceInfo = await getDevice(objectId)
+        let ProductId = this.deviceInfo.product.objectId || 'undefined'
+        let DevAddr = this.deviceInfo.devaddr || 'undefined'
         let _toppic = [
           {
             topic: `thing/${ProductId}/${DevAddr}/post`,
@@ -745,56 +761,85 @@
             isdef: true,
           },
         ]
-        row.product.topics
-          ? (row.topicData = row.product.topics.concat(_toppic))
-          : (row.topicData = _toppic)
+        this.deviceInfo.product.topics
+          ? (this.deviceInfo.topicData = this.deviceInfo.product.topics.concat(
+              _toppic
+            ))
+          : (this.deviceInfo.topicData = _toppic)
         this.deviceFlag = true
-        this.deviceInfo = row
-        // this.$router.push({
-        //   path: '/dashboard/devicelist',
-        //   query: {
-        //     devaddr: row.devaddr,
-        //   },
-        // })
       },
       mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
-        console.log(mqttMsgValue, key)
-        this.$baseNotify('', `收到消息${key}`)
+        this.$baseNotify(
+          '',
+          `${this.$translateTitle('websocket.received')}${this.$translateTitle(
+            'websocket.messages'
+          )}${key}`
+        )
+        console.log(key, mqttMsgValue, JSON.parse(mqttMsg))
         // console.clear()
+
         switch (key) {
           case 'app_count':
             this.app_count = mqttMsgValue.count
+            this.set_app_count(this.app_count)
             break
           case 'project_count':
             this.project_count = mqttMsgValue.count
+            this.set_project_count(this.project_count)
             break
           case 'product_count':
             this.product_count = mqttMsgValue.count
+            this.set_product_count(this.product_count)
             this.Product = mqttMsgValue.results
-            console.log(this.Product, 'this.Product')
+            // this.set_dev_online_count(this.set_dev_online_count)
             break
           case 'dev_online_count':
             this.dev_online_count = mqttMsgValue.count
+            this.set_dev_online_count(this.dev_online_count)
             this.onlineData = mqttMsgValue.results
-            console.log(mqttMsgValue.results, 'dev_online_count')
+            this.set_onlineData(this.onlineData)
             break
           case 'dev_off_count':
             this.dev_off_count = mqttMsgValue.count
             this.offlineData = mqttMsgValue.results
-            console.log(mqttMsgValue.results, 'dev_off_count')
+            this.set_dev_off_count(this.dev_off_count)
+            this.set_offlineData(this.offlineData)
+            break
+          case 'ChartStatus':
+            this.ChartStatus = mqttMsgValue.chartData
+            this.set_ChartStatus(this.ChartStatus)
+            this.resizeTheChart()
+            this.$forceUpdate()
             break
           case 'baiduMap':
             this.tableData = mqttMsgValue
-            console.log(this.tableData, '百度 地图 ')
+            this.tableData.forEach((item) => {
+              item.show = false
+              item.color =
+                item.icon === '0'
+                  ? 'yellow'
+                  : item.icon === '1'
+                  ? 'blue'
+                  : 'red'
+              item.iconUrl = `https://dgiot-1253666439.file.myqcloud.com/shuwa_tech/zh/frontend/web/Device/${
+                item.icon
+              }.png?${new Date().getTime()}`
+            })
+            this.set_tableData(this.tableData)
+            this.$forceUpdate()
+            break
+          case 'device_count':
+            this.dev_count = mqttMsgValue.count
+            this.set_dev_count(this.dev_count)
             break
           default:
             console.log(JSON.parse(mqttMsg))
             break
         }
-        this.dev_count = this.dev_online_count + this.dev_off_count
+        this.$forceUpdate()
       },
       mqttConnectLost(e) {
         console.log('mqttConnectLost', e)
@@ -803,11 +848,18 @@
         StartDashboard(queryParams)
           .then((res) => {
             console.log(res)
-            this.$baseNotify(e, 'mqtt订阅成功')
+            this.$baseNotify(
+              e,
+              `mqtt${this.$translateTitle('websocket.subscribeSuccess')}`
+            )
           })
           .catch((e) => {
             console.log(e)
-            this.$baseNotify(e, '请求错误', 'error')
+            this.$baseNotify(
+              e,
+              `mqtt${this.$translateTitle('websocket.subscribeSuccess')}`,
+              'error'
+            )
           })
       },
       toggleCard(height) {
@@ -838,14 +890,15 @@
           $('.fixed').css({ 'padding-top': '0px' })
           $('.fixed-header').css({ height: '0px', display: 'none' })
           $('.vab-tabs').css({ 'nim-height': '0px' })
-          $('.baidu_map').css({ height: 'calc(78vh + 90px + 160px)' })
-
+          $('.baidu_map').css({ height: 'calc(78vh + 90px + 140px)' })
+          $('.el-tabs').css({ height: 'calc(78vh + 90px + 140px)' })
           $('section').css({ height: 'calc(100vh - 60px* 2.7 + 110px)' })
         } else {
           $('.fixed').css({ 'padding-top': '110px' })
           $('.fixed-header').css({ height: '110px', display: 'block' })
           $('.vab-tabs').css({ 'nim-height': '50px' })
           $('.baidu_map').css({ height: 'calc(78vh - 20px)' })
+          $('.el-tabs').css({ height: 'calc(78vh - 20px)' })
           $('section').css({ height: 'calc(100vh - 60px* 2.7)' })
         }
         this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
@@ -857,10 +910,14 @@
       selectProdChange(objectId) {
         console.log(objectId)
       },
-      queryData() {
-        // this.getAllAxios({}, this.queryForm.access_token, true)
-      },
+      queryData() {},
       async getRoletree() {
+        this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
+          'padding-top'
+        ]
+        this.leftWidth = window.getComputedStyle($('.vab-side-bar')[0])['width']
+        this.cardHeight = window.getComputedStyle($('.map_card')[0])['height']
+        console.log(this.fixedPaddingTop, this.leftWidth, this.cardHeight)
         await Roletree()
           .then((res) => {
             console.log(res)
@@ -914,153 +971,16 @@
         this.curDepartmentId = objectId
         // this.channeltopic = `dashboard/${this.queryForm.access_token}/post`
         this.channeltopic = `dashboard/${this.token}/post`
+
         // this.isConnect = true
         console.log(this.channeltopic, 'this.channeltopic')
         // this.$iotMqtt.subscribe(this.channeltopic)
         // console.log(this.$iotMqtt, 'this.$iotMqtt.init')
         if (this.$refs.mqtt) {
           this.$refs.mqtt.clientMqtt()
+          this.resizeTheChart()
         }
         // $('.el-select-dropdown').css({ height: '0px', display: 'none' })
-      },
-      async getAllAxios(data, token, flag) {
-        this.dev_count = 0
-        this.projectList = []
-        this.product_count = 0
-        this.project_count = 0
-        this.dev_count = 0
-        this.app_count = 0
-        this.dev_online_count = 0
-        this.Product = []
-        this.tableData = []
-        let product
-        if (this.queryForm.account != '' || this.queryForm.account != 0) {
-          product = this.queryForm.account
-        } else {
-          this.queryForm.account = '*'
-        }
-        this.$baseColorfullLoading(
-          1,
-          this.$translateTitle('home.messag_loding')
-        )
-        let _queryParams = {
-          count: 'objectId',
-          limit: 1,
-          skip: 0,
-          where: {},
-        }
-        const params = [
-          {
-            method: 'GET',
-            path: '/classes/Project',
-            body: _queryParams,
-          },
-          {
-            method: 'GET',
-            path: '/classes/Product',
-            body: {
-              // 这里查product 是导致整个查询变慢的主要原因
-              count: 'objectId',
-              skip: 0,
-              keys: 'updatedAt,category,desc,icon',
-              where: {
-                category: 'IotHub',
-                // category: 'Evidence',
-                // nodeType: 1,
-              },
-            },
-          },
-          {
-            method: 'GET',
-            path: '/classes/App',
-            body: _queryParams,
-          },
-          {
-            method: 'GET',
-            path: '/classes/Device',
-            body: {
-              count: 'objectId',
-              limit: 1,
-              skip: 0,
-              where: {
-                product: product,
-              },
-            },
-          },
-          {
-            method: 'GET',
-            path: '/classes/Device',
-            body: {
-              count: 'objectId',
-              limit: 1,
-              skip: 0,
-              where: {
-                status: 'ACTIVE',
-                product: product,
-              },
-            },
-          },
-          {
-            method: 'GET',
-            path: '/classes/Device',
-            body: {
-              count: 'objectId',
-              limit: 1,
-              skip: 0,
-              where: {
-                status: 'ONLINE',
-                product: product,
-              },
-            },
-          },
-          {
-            method: 'GET',
-            path: '/classes/Product',
-            body: {
-              count: 'objectId',
-              order: '-updatedAt',
-              keys: 'name,icon',
-              where: {
-                category: 'IotHub',
-              },
-            },
-          },
-          {
-            method: 'GET',
-            path: '/classes/Device',
-            body: {
-              count: 'objectId',
-              order: '-updatedAt',
-            },
-          },
-        ]
-        data = params
-        await batch(data, token, flag)
-          .then((res) => {
-            this.$baseColorfullLoading().close()
-            this.dev_count = res[0].success.count
-            this.projectList = res[1].success.results
-            this.product_count = res[1].success.count
-            this.project_count = res[2].success.count
-            this.dev_count = res[3].success.count
-            this.app_count = res[4].success.count
-            this.dev_online_count = res[5].success.count
-            this.Product = res[6].success.results
-            this.queryForm.account =
-              this.language == 'zh' ? '全部产品' : 'All Products'
-            this.tableData = res[7].success.results
-            this.tableData.forEach((i) => {
-              if (!i.location) {
-                // location 容错处理
-                i.location = { longitude: 0, latitude: 0 }
-              }
-            })
-            console.log(this.tableData)
-          })
-          .catch((error) => {
-            this.$baseColorfullLoading().close()
-            console.log(error)
-          })
       },
       handleChange() {},
       handleClickVisit(project) {
@@ -1114,6 +1034,7 @@
     .home_card {
       ::v-deep {
         .el-tabs {
+          overflow-x: auto;
           height: calc(78vh - 20px);
         }
       }

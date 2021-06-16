@@ -201,7 +201,7 @@
       </div>
     </el-scrollbar>
     <div class="el-drawer__footer">
-      <el-button type="primary" @click="handleSaveTheme">
+      <el-button type="primary" @click="handleSaveTheme(theme)">
         {{ $translateTitle('保存') }}
       </el-button>
       <el-button @click="setDefaultTheme">
@@ -248,8 +248,8 @@
         await this.resetTheme()
         this.drawerVisible = false
       },
-      async handleSaveTheme() {
-        await this.saveTheme()
+      async handleSaveTheme(theme) {
+        await this.saveTheme(theme)
         this.drawerVisible = false
       },
       async randomTheme() {
@@ -283,7 +283,7 @@
           this.theme.layout = _.sample(_.pull(layoutArray, [this.theme.layout]))
         } else this.theme.layout = 'vertical'
         await this.setTheme()
-        await this.saveTheme()
+        await this.saveTheme(this.theme)
         setTimeout(() => {
           loading.close()
         }, 1000)
