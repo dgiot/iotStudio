@@ -41,24 +41,14 @@ const defaultTheme = {
   showFullScreen,
   showThemeSetting,
 }
-const getLocalStorage = (key) => {
-  const value = localStorage.getItem(key)
-  if (isJson(value)) {
-    return JSON.parse(value)
-  } else {
-    return false
-  }
-}
-const { collapse } = getLocalStorage('collapse')
-const { language } = getLocalStorage('language')
 const state = () => ({
   showThemeSetting: showThemeSetting,
   logo: getToken('logo', 'sessionStorage'),
   title: getToken('title', 'sessionStorage') || '物联网开发平台',
   device: 'desktop',
-  collapse: collapse || false,
-  language: language || i18n,
-  theme: getLocalStorage('theme') || { ...defaultTheme },
+  collapse: getToken('collapse') ? getToken('collapse') : false,
+  language: getToken('language') ? getToken('theme') : i18n,
+  theme: getToken('theme') || { ...defaultTheme },
   extra: { first: '', transferRouteName: '' },
 })
 const getters = {
@@ -94,14 +84,15 @@ const mutations = {
   },
   toggleCollapse(state) {
     state.collapse = !state.collapse
-    localStorage.setItem('collapse', `{"collapse":${state.collapse}}`)
+    setToken('collapse', theme)
   },
   changeLanguage(state, language) {
     state.language = language
-    localStorage.setItem('language', `{"language":"${language}"}`)
+    setToken('language', theme)
   },
-  saveTheme(state) {
-    localStorage.setItem('theme', JSON.stringify(state.theme))
+  saveTheme(state, theme) {
+    state.theme = theme
+    setToken('theme', theme)
   },
   resetTheme(state) {
     state.theme = { ...defaultTheme }
@@ -136,8 +127,8 @@ const actions = {
   changeLanguage: ({ commit }, language) => {
     commit('changeLanguage', language)
   },
-  saveTheme({ commit }) {
-    commit('saveTheme')
+  saveTheme({ commit }, theme) {
+    commit('saveTheme', theme)
   },
   resetTheme({ commit }) {
     commit('resetTheme')

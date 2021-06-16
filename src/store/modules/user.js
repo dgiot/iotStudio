@@ -304,7 +304,7 @@ const actions = {
   async resetAll({ commit, dispatch }) {
     commit('setUsername', '')
     commit('setObejectId', '')
-    commit('setAvatar', '')
+    // commit('setAvatar', '')
     commit('routes/setRoutes', [], { root: true })
     await dispatch('_setToken', '')
     await dispatch('acl/setFull', false, { root: true })
@@ -315,11 +315,11 @@ const actions = {
     // await dispatch('acl/setDefault', {}, { root: true })
     // await dispatch('settings/setTitle', '', { root: true })
     // 退出后清理所有的cookie sessionStorage localStorage
-    localStorage.clear()
-    sessionStorage.clear()
+    // localStorage.clear()
+    // sessionStorage.clear()
     clearCookie()
     await resetRouter()
-    removeToken(tokenTableName)
+    removeToken()
   },
   setObejectId({ commit }, objectId) {
     commit('setObejectId', objectId)

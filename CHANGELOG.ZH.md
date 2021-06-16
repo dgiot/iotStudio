@@ -1,4 +1,4 @@
-## 1.0.0 (2021-06-15)
+## 1.0.0 (2021-06-16)
 
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
 * feat: 组态 ([033a3ac](https://github.com/dgiot/dgiot_dashboard/commit/033a3ac))
@@ -15,6 +15,7 @@
 * feat: device table ([ec42525](https://github.com/dgiot/dgiot_dashboard/commit/ec42525))
 * feat: echarts ([81324f3](https://github.com/dgiot/dgiot_dashboard/commit/81324f3))
 * feat: echatrts adaptive ([d79ba5b](https://github.com/dgiot/dgiot_dashboard/commit/d79ba5b))
+* feat: home axios ([7278a79](https://github.com/dgiot/dgiot_dashboard/commit/7278a79))
 * feat: home button ([5ebcb7f](https://github.com/dgiot/dgiot_dashboard/commit/5ebcb7f))
 * feat: konva ([ce9a210](https://github.com/dgiot/dgiot_dashboard/commit/ce9a210))
 * feat: mqtt && webscroket ([c17d533](https://github.com/dgiot/dgiot_dashboard/commit/c17d533))

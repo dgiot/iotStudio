@@ -84,6 +84,7 @@ export default {
       date: '订阅时间',
       oper: '操作',
       // Messages
+      received: '收到',
       messages: '消息',
       retained: '保留',
       send: '发送',

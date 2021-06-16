@@ -10,6 +10,11 @@ import { expiresTime, cookieWhiteList } from '@/config'
 import cookie from 'js-cookie'
 const Base64 = require('js-base64').Base64
 import { isBase64 } from '@/utils'
+const tempToken = {
+  sessionStorage: [],
+  localStorage: [],
+  token: [],
+}
 /**
  * @description 获取token
  * @param tokenName
@@ -59,14 +64,24 @@ export function setToken(tokenName, settoken, storage = 'sessionStorage') {
  * @param storage
  * @returns {void|Promise<void>}
  */
-export function removeToken(tokenName, storage = 'storage') {
-  if ('localStorage' === storage) {
-    return localStorage.removeItem(tokenName)
-  } else if ('sessionStorage' === storage) {
-    return sessionStorage.removeItem(tokenName)
-  } else {
-    return cookie.remove(tokenName)
+export function removeToken() {
+  for (const s in sessionStorage) {
+    cookieWhiteList.indexOf(s) <= -1
+      ? sessionStorage.removeItem(s)
+      : tempToken.sessionStorage.push(s)
   }
+  for (const l in localStorage) {
+    cookieWhiteList.indexOf(l) <= -1
+      ? localStorage.removeItem(l)
+      : tempToken.sessionStorage.push(l)
+  }
+  // if ('localStorage' === storage) {
+  //   return localStorage.removeItem(tokenName)
+  // } else if ('sessionStorage' === storage) {
+  //   return sessionStorage.removeItem(tokenName)
+  // } else {
+  //   return cookie.remove(tokenName)
+  // }
 }
 function foreach() {
   const strCookie = document.cookie
@@ -76,6 +91,7 @@ function foreach() {
     var arr = arrCookie[i].split('=')
     if (arr.length > 0) DelCookie(arr[0])
   }
+  console.log('tempToken', tempToken)
 }
 function GetCookieVal(offset) {
   let endstr = document.cookie.indexOf(';', offset)
@@ -108,9 +124,10 @@ export function clearCookie() {
   const keys = document.cookie.match(/[^ =;]+(?=\=)/g)
   if (keys) {
     for (var i = keys.length; i--; )
-      if (cookieWhiteList.indexOf(keys[i]) < -1)
-        document.cookie =
-          keys[i] + '=0; expire=' + date.toGMTString() + '; path=/'
+      cookieWhiteList.indexOf(keys[i]) < -1
+        ? (document.cookie =
+            keys[i] + '=0; expire=' + date.toGMTString() + '; path=/')
+        : tempToken.token.push(keys[i])
   }
   foreach()
 }
