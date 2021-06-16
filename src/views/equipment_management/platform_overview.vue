@@ -624,6 +624,7 @@
     computed: {
       ...mapGetters({
         roleTree: 'user/roleTree',
+        collapse: 'settings/collapse',
         _Product: 'user/_Product',
         language: 'settings/language',
         _dev_count: 'dashboard/_dev_count',
@@ -637,17 +638,26 @@
         _offlineData: 'dashboard/_offlineData',
         _ChartStatus: 'dashboard/_ChartStatus',
         _tableData: 'dashboard/_tableData',
+        _pcimg: 'dashboard/_pcimg',
+        _mimg: 'dashboard/_mimg',
       }),
     },
-    watch: {
-      // ChartStatus: {
-      //   handler(newVal) {
-      //     this.resizeTheChart()
-      //   },
-      //   deep: true,
-      //   immediate: true,
-      // },
-    },
+    // watch: {
+    //   collapse: {
+    //     handler(_collapse) {
+    //       $('.appendLogo').remove()
+    //       $('.logo-container .router-link-active').css({
+    //         display: 'none',
+    //       })
+    //       let img = this.collapse == true ? this._pcimg : this._mimg
+    //       $('.logo-container').append(
+    //         `<img src=${img} class="appendLogo" style="width: 100%" />`
+    //       )
+    //     },
+    //     deep: true,
+    //     immediate: true,
+    //   },
+    // },
     mounted() {
       this.queryForm.account =
         this.language == 'zh' ? '全部产品' : 'All Products'

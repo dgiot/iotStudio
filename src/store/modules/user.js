@@ -67,7 +67,7 @@ const mutations = {
   },
   setCopyright(state, Copyright) {
     state.Copyright = Copyright
-    setToken('logo', Copyright, 'storagesessionStorage')
+    setToken('copyright', Copyright, 'sessionStorage')
   },
   setlogo(state, url) {
     state.logo = url
