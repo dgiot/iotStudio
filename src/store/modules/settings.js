@@ -84,11 +84,11 @@ const mutations = {
   },
   toggleCollapse(state) {
     state.collapse = !state.collapse
-    setToken('collapse', !state.collapse)
+    setToken('collapse', theme)
   },
   changeLanguage(state, language) {
     state.language = language
-    setToken('language', language)
+    setToken('language', theme)
   },
   saveTheme(state, theme) {
     state.theme = theme
