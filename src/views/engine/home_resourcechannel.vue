@@ -297,13 +297,6 @@
                         "
                         class="image"
                         style="width: 50px; height: 50px"
-                        @click="
-                          uploadCkick(
-                            item.params.ico.default,
-                            index,
-                            'channelregion'
-                          )
-                        "
                       />
                     </el-col>
                     <el-col :span="12">
