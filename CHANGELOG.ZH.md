@@ -1,4 +1,4 @@
-## 1.0.0 (2021-06-17)
+## 4.3.0 (2021-06-17)
 
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
 * feat: 组态 ([033a3ac](https://github.com/dgiot/dgiot_dashboard/commit/033a3ac))
@@ -33,6 +33,7 @@
 * feat(src/views/equipment_management/editdevices.vue): echarts self-adaption ([14679c5](https://github.com/dgiot/dgiot_dashboard/commit/14679c5))
 * feat(src/views/equipment_management/platform_overview.vue): header card style ([574f217](https://github.com/dgiot/dgiot_dashboard/commit/574f217))
 * feat(src/views/equipment_management/platform_overview.vue): home page card style ([a3d8f0c](https://github.com/dgiot/dgiot_dashboard/commit/a3d8f0c))
+* feat(src/views/roles/structure.vue): add user default configuration ([f99734b](https://github.com/dgiot/dgiot_dashboard/commit/f99734b))
 * feat(src/views/topo/vuekonva.vue): konva zindex ([f7cb0a4](https://github.com/dgiot/dgiot_dashboard/commit/f7cb0a4))
 * feat(statistics): statistics ([722a5ff](https://github.com/dgiot/dgiot_dashboard/commit/722a5ff))
 * feat(vuekonva): vueKonva ([102dacd](https://github.com/dgiot/dgiot_dashboard/commit/102dacd))

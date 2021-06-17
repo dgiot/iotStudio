@@ -62,38 +62,25 @@
                 >
                   <!--少个@change=selectStruct-->
                   <el-select v-model="sizeForm.type" style="width: 100%">
-                    <el-option
-                      :label="$translateTitle('product.struct')"
-                      value="struct"
-                    />
-                    <el-option
-                      :label="$translateTitle('product.init')"
-                      value="int"
-                    />
-                    <el-option
-                      :label="$translateTitle('product.float')"
-                      value="float"
-                    />
-                    <el-option
-                      :label="$translateTitle('product.double')"
-                      value="double"
-                    />
-                    <el-option
-                      :label="$translateTitle('product.bool')"
-                      value="bool"
-                    />
-                    <el-option
-                      :label="$translateTitle('product.enum')"
-                      value="enum"
-                    />
-                    <el-option
-                      :label="$translateTitle('product.string')"
-                      value="string"
-                    />
-                    <el-option
-                      :label="$translateTitle('product.date')"
-                      value="date"
-                    />
+                    <el-option-group
+                      v-for="group in dataType"
+                      :key="group.label"
+                      :label="group.label"
+                    >
+                      <el-option
+                        v-for="item in group.options"
+                        :key="item.value"
+                        :label="item.value"
+                        :value="item.value"
+                      >
+                        <span style="float: left">{{ item.label }}</span>
+                        <span
+                          style="float: right; color: #8492a6; font-size: 13px"
+                        >
+                          {{ item.value }}
+                        </span>
+                      </el-option>
+                    </el-option-group>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -188,12 +175,25 @@
                     :placeholder="$translateTitle('product.unit')"
                     filterable
                   >
-                    <el-option
-                      v-for="(item, index) in allunit"
-                      :key="index"
-                      :label="item.data.Name + '/' + item.data.Symbol"
-                      :value="item.data.Symbol"
-                    />
+                    <el-option-group
+                      v-for="group in allunit"
+                      :key="group.label"
+                      :label="group.label"
+                    >
+                      <el-option
+                        v-for="item in group.options"
+                        :key="item.id"
+                        :label="item.symbol"
+                        :value="item.symbol"
+                      >
+                        <span style="float: left">{{ item.name }}</span>
+                        <span
+                          style="float: right; color: #8492a6; font-size: 13px"
+                        >
+                          {{ item.symbol }}
+                        </span>
+                      </el-option>
+                    </el-option-group>
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -747,23 +747,24 @@
                     placeholder="请选择"
                     style="width: 100%"
                   >
-                    <el-option
-                      v-for="(item, index) in [
-                        'int16',
-                        'uint16',
-                        'int32',
-                        'uint32',
-                        'int64',
-                        'uint64',
-                        'float',
-                        'double',
-                        'string',
-                        'customizedData',
-                      ]"
-                      :key="index"
-                      :label="item"
-                      :value="item"
-                    />
+                    <el-option-group
+                      v-for="group in dataType"
+                      :key="group.label"
+                      :label="group.label"
+                    >
+                      <el-option
+                        v-for="item in group.options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-option-group>
+                    <!--                    <el-option-->
+                    <!--                      v-for="(item, index) in dataType"-->
+                    <!--                      :key="index"-->
+                    <!--                      :label="item"-->
+                    <!--                      :value="item"-->
+                    <!--                    />-->
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -806,8 +807,9 @@
 </template>
 
 <script>
+  import mockModules from '@/api/Mock/Modules'
   import { getAllunit } from '@/api/Dict/index'
-  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   export default {
     name: 'Wmxdetail',
     components: {},
@@ -857,13 +859,14 @@
         }
       }
       return {
+        dataType: mockModules.mockModules.dataType,
         options: [
           { value: 'all', label: '全部' },
           { value: 'first', label: '第一轮' },
           { value: 'last', label: '最后一轮' },
         ],
         wmxData: [],
-        allunit: [],
+        allunit: mockModules.mockModules.dataNnit,
         sizerule: {
           step: [
             {
@@ -1001,7 +1004,7 @@
     },
     watch: {},
     mounted() {
-      this.getAllunit()
+      // this.getAllunit()
     },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前

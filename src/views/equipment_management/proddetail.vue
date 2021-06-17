@@ -1808,7 +1808,7 @@
   </div>
 </template>
 <script>
-  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
 
   import { getDeviceCountByProduct } from '@/api/Device/index'
   import { queryProduct } from '@/api/Product/index'

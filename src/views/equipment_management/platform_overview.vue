@@ -783,9 +783,7 @@
         let key = JSON.parse(mqttMsg).vuekey
         this.$baseNotify(
           '',
-          `${this.$translateTitle('websocket.received')}${this.$translateTitle(
-            'websocket.messages'
-          )}${key}`
+          `${this.$translateTitle('websocket.messages')}${key}`
         )
         console.log(key, mqttMsgValue, JSON.parse(mqttMsg))
         // console.clear()
