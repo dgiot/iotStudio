@@ -772,9 +772,8 @@
           },
         ]
         this.deviceInfo.product.topics
-          ? (this.deviceInfo.topicData = this.deviceInfo.product.topics.concat(
-              _toppic
-            ))
+          ? (this.deviceInfo.topicData =
+              this.deviceInfo.product.topics.concat(_toppic))
           : (this.deviceInfo.topicData = _toppic)
         this.deviceFlag = true
       },
@@ -1044,8 +1043,8 @@
     .home_card {
       ::v-deep {
         .el-tabs {
-          overflow-x: auto;
           height: calc(78vh - 20px);
+          overflow-x: auto;
         }
       }
       //margin: 20px;

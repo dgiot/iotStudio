@@ -810,20 +810,20 @@
   .baidu_map {
     height: 500px;
     .sample {
+      position: absolute;
       width: 120px;
       height: 40px;
-      line-height: 40px;
-      background: rgba(0, 0, 0, 0.5);
+      padding: 10px;
       overflow: hidden;
-      box-shadow: 0 0 5px #000;
+      line-height: 40px;
       color: #fff;
       text-align: center;
-      padding: 10px;
-      position: absolute;
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 5px #000;
     }
     .sample.active {
-      background: rgba(0, 0, 0, 0.75);
       color: #fff;
+      background: rgba(0, 0, 0, 0.75);
     }
   }
 </style>

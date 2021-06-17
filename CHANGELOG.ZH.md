@@ -1,5 +1,6 @@
-## 1.0.0 (2021-06-16)
+## 1.0.0 (2021-06-17)
 
+* revert: resume last commit ([0aed524](https://github.com/dgiot/dgiot_dashboard/commit/0aed524))
 * fix: deletx lxd ([5cf6db1](https://github.com/dgiot/dgiot_dashboard/commit/5cf6db1))
 * fix(.github/workflows/deploy.yml): build error ([b59282d](https://github.com/dgiot/dgiot_dashboard/commit/b59282d))
 * fix(.github/workflows/release_changelog.yml): yaml format ([457c7f0](https://github.com/dgiot/dgiot_dashboard/commit/457c7f0))

@@ -404,8 +404,8 @@
           FormulaSetting: this.TestSettingObj.FormulaSetting,
           ParameterSetting: this.TestSettingObj.ParameterSetting,
           StabilitySetting: this.TestSettingObj.StabilitySetting,
-          QualifiedConditionsSetting: this.TestSettingObj
-            .QualifiedConditionsSetting,
+          QualifiedConditionsSetting:
+            this.TestSettingObj.QualifiedConditionsSetting,
         }
       },
     },

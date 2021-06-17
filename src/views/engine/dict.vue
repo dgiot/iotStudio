@@ -441,7 +441,7 @@
                 </el-table>
               </el-tab-pane>
               <el-tab-pane label="Json" name="Json">
-                <vue-json-editor
+                <vab-json-editor
                   v-model="dictTempForm.params"
                   :mode="'code'"
                   lang="zh"
@@ -1052,10 +1052,9 @@
   import { queryDict, postDict, getDict, putDict } from '@/api/Direct/index.js'
   import { mapGetters } from 'vuex'
   import { resourceTypes } from '@/api/Rules'
-  import vueJsonEditor from 'vue-json-editor'
   export default {
     name: 'Dict',
-    components: { vueJsonEditor },
+    components: {},
     data() {
       return {
         queryid: this.$route.query.dictid,

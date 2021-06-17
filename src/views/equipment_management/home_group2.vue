@@ -494,7 +494,7 @@
                 </el-table>
               </el-tab-pane>
               <el-tab-pane label="Json" name="Json">
-                <vue-json-editor
+                <vab-json-editor
                   v-model="dictTempForm.params"
                   :mode="'code'"
                   lang="zh"
@@ -938,10 +938,8 @@
   import { getServer } from '@/api/Role/index'
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
-  import vueJsonEditor from 'vue-json-editor'
   import Category from '@/api/Mock/Category'
   export default {
-    components: { vueJsonEditor },
     data() {
       return {
         moduleTitle: this.$translateTitle('product.createproduct'),

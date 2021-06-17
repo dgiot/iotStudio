@@ -20,35 +20,61 @@
         collapse: 'settings/collapse',
         _pcimg: 'dashboard/_pcimg',
         _mimg: 'dashboard/_mimg',
+        pictureSwitch: 'settings/pictureSwitch',
       }),
     },
     watch: {
       collapse: {
         handler(_collapse) {
-          $('.appendLogo').remove()
-          $('.logo-container .router-link-active').css({
-            display: 'none',
-          })
-          let img = this.collapse == true ? this._pcimg : this._mimg
-          $('.logo-container').append(
-            `<img src=${img} class="appendLogo" style="width: 100%" />`
-          )
+          this.setTabImg(this.pictureSwitch, _collapse, 'collapse')
         },
         deep: true,
-        immediate: true,
+        // immediate: true,
+      },
+      pictureSwitch: {
+        handler(_pictureSwitch) {
+          this.setTabImg(_pictureSwitch, this.collapse, 'pictureSwitch')
+        },
+        deep: true,
+        // immediate: true,
       },
     },
     mounted() {
-      $('.appendLogo').remove()
-      $('.logo-container .router-link-active').css({
-        display: 'none',
-      })
-      let img = this.collapse == true ? this._pcimg : this._mimg
-      $('.logo-container').append(
-        `<img src=${img} class="appendLogo" style="width: 100%" />`
-      )
+      this.setTabImg(this.pictureSwitch, this.collapse, 'mounted')
     },
     methods: {
+      setTabImg(pictureSwitch, collapse, type) {
+        console.log(pictureSwitch, collapse, type, 1111111111111111)
+        let img = collapse == true ? this._pcimg : this._mimg
+        $('.logo-container .appendLogo').remove()
+        if (pictureSwitch == true && collapse == true) {
+          $('.logo-container').append(
+            `<img src=${img} class="appendLogo" style="width: 100%" />`
+          )
+          $('.logo-container .router-link-active').css({
+            display: 'none',
+          })
+        } else {
+          $('.logo-container .appendLogo').remove()
+          $('.logo-container .router-link-active').css({
+            display: 'block',
+          })
+        }
+        if (pictureSwitch == true) {
+          $('.logo-container .appendLogo').remove()
+          $('.logo-container').append(
+            `<img src=${img} class="appendLogo" style="width: 100%" />`
+          )
+          $('.logo-container .router-link-active').css({
+            display: 'none',
+          })
+        } else {
+          $('.logo-container .appendLogo').remove()
+          $('.logo-container .router-link-active').css({
+            display: 'block',
+          })
+        }
+      },
       ...mapActions({
         toggleCollapse: 'settings/toggleCollapse',
       }),

@@ -1,9 +1,7 @@
 /**
  * @description 所有全局配置的状态管理，如无必要请勿修改
  */
-import { isJson } from '@/utils/validate'
 import { getToken, setToken } from '@/utils/vuex'
-import { storage } from '@/config'
 import {
   columnStyle,
   fixedHeader,
@@ -47,6 +45,7 @@ const state = () => ({
   title: getToken('title', 'sessionStorage') || '物联网开发平台',
   device: 'desktop',
   collapse: getToken('collapse') || false,
+  pictureSwitch: getToken('pictureSwitch') || false,
   language: getToken('language') || i18n,
   theme: getToken('theme') || { ...defaultTheme },
   extra: { first: '', transferRouteName: '' },
@@ -56,6 +55,7 @@ const getters = {
   logo: (state) => state.logo,
   title: (state) => state.title,
   device: (state) => state.device,
+  pictureSwitch: (state) => state.pictureSwitch,
   collapse: (state) => state.collapse,
   language: (state) => state.language,
   theme: (state) => state.theme,
@@ -85,6 +85,10 @@ const mutations = {
   toggleCollapse(state) {
     state.collapse = !state.collapse
     setToken('collapse', !state.collapse)
+  },
+  togglePicture(state, flag) {
+    state.pictureSwitch = flag
+    setToken('pictureSwitch', flag)
   },
   changeLanguage(state, language) {
     state.language = language
@@ -120,6 +124,9 @@ const actions = {
   },
   toggleDevice({ commit }, device) {
     commit('toggleDevice', device)
+  },
+  togglePicture({ commit }, flag) {
+    commit('togglePicture', flag)
   },
   toggleCollapse({ commit }) {
     commit('toggleCollapse')

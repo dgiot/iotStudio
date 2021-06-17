@@ -22,7 +22,7 @@
       <el-tab-pane label="配置" name="setting">
         <el-form v-if="Shapeconfig.className">
           <el-form-item>
-            <vue-json-editor
+            <vab-json-editor
               v-if="showJson"
               v-model="Shapeconfig"
               :mode="'code'"
@@ -114,11 +114,10 @@
   import wmxdetail from '@/views/equipment_management/component/wmxdetail'
   import { edit_konva_thing, get_konva_thing } from '@/api/Topo'
   import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
-  import vueJsonEditor from 'vue-json-editor'
 
   export default {
     name: 'Operation',
-    components: { vueJsonEditor, wmxdetail },
+    components: { wmxdetail },
     props: {
       stopMqtt: {
         type: Boolean,
@@ -160,13 +159,11 @@
         fileList: [
           {
             name: 'food.jpeg',
-            url:
-              'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
           },
           {
             name: 'food2.jpeg',
-            url:
-              'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
           },
         ],
         Shapeconfig: {},

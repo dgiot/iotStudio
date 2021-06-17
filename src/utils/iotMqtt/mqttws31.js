@@ -241,15 +241,7 @@ Paho.MQTT = (function (global) {
 
   //MQTT protocol and version          6    M    Q    I    s    d    p    3
   var MqttProtoIdentifierv3 = [
-    0x00,
-    0x06,
-    0x4d,
-    0x51,
-    0x49,
-    0x73,
-    0x64,
-    0x70,
-    0x03,
+    0x00, 0x06, 0x4d, 0x51, 0x49, 0x73, 0x64, 0x70, 0x03,
   ]
   //MQTT proto/version for 311         4    M    Q    T    T    4
   var MqttProtoIdentifierv4 = [0x00, 0x04, 0x4d, 0x51, 0x54, 0x54, 0x04]
@@ -1441,9 +1433,8 @@ Paho.MQTT = (function (global) {
           break
 
         case MESSAGE_TYPE.PUBREL:
-          var receivedMessage = this._receivedMessages[
-            wireMessage.messageIdentifier
-          ]
+          var receivedMessage =
+            this._receivedMessages[wireMessage.messageIdentifier]
           localStorage.removeItem(
             'Received:' + this._localKey + wireMessage.messageIdentifier
           )

@@ -83,6 +83,9 @@
               />
             </el-select>
           </el-form-item>
+          <el-form-item :label="$translateTitle('侧边栏图片切换')">
+            <el-switch v-model="theme.pictureSwitch" @change="togglePic" />
+          </el-form-item>
           <el-form-item :label="$translateTitle('标签')">
             <el-switch v-model="theme.showTabs" />
           </el-form-item>
@@ -213,19 +216,43 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-
+  import { putUser } from '@/api/User'
   export default {
     name: 'VabThemeDrawer',
     data() {
       return {
         drawerVisible: false,
+        tag: {},
       }
     },
     computed: {
       ...mapGetters({
+        pictureSwitch: 'settings/pictureSwitch',
         theme: 'settings/theme',
         device: 'settings/device',
+        _pcimg: 'dashboard/_pcimg',
+        _mimg: 'dashboard/_mimg',
+        objectId: 'user/objectId',
       }),
+    },
+    watch: {
+      // pictureSwitch: {
+      //   handler(pictureSwitch) {
+      //     $('.appendLogo').remove()
+      //     console.log(pictureSwitch, 'this.pictureSwitch')
+      //     if (pictureSwitch) {
+      //       $('.logo-container .router-link-active').css({
+      //         display: 'none',
+      //       })
+      //     } else {
+      //       $('.logo-container .router-link-active').css({
+      //         display: 'block',
+      //       })
+      //     }
+      //   },
+      //   deep: true,
+      //   immediate: true,
+      // },
     },
     created() {
       this.$baseEventBus.$on('theme', () => {
@@ -236,11 +263,25 @@
       })
       this.setTheme()
     },
+    mounted() {
+      this.$nextTick(() => {
+        this.queryUserInfo()
+      })
+    },
     methods: {
       ...mapActions({
         saveTheme: 'settings/saveTheme',
         resetTheme: 'settings/resetTheme',
+        togglePicture: 'settings/togglePicture',
       }),
+      async queryUserInfo() {
+        const { tag } = await this.$get_object('_User', this.objectId)
+        this.tag = tag
+        console.log(tag, 'tag')
+      },
+      togglePic(e) {
+        this.togglePicture(e)
+      },
       handleOpenTheme() {
         this.drawerVisible = true
       },
@@ -249,6 +290,28 @@
         this.drawerVisible = false
       },
       async handleSaveTheme(theme) {
+        this.tag = Object.assign(this.tag, { theme: theme })
+        console.log(this.tag, 'this.tag')
+        const pamams = {
+          tag: this.tag,
+        }
+        await putUser(this.objectId, pamams)
+          .then((res) => {
+            console.log(res)
+            this.$message.success(
+              this.$translateTitle(
+                'title.Theme configuration saved successfully'
+              )
+            )
+          })
+          .catch((e) => {
+            console.log(e)
+            this.$message.success(
+              this.$translateTitle(
+                'title.Theme configuration saved error' + e.error
+              )
+            )
+          })
         await this.saveTheme(theme)
         this.drawerVisible = false
       },
