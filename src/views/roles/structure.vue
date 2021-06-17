@@ -499,6 +499,43 @@
             email: this.userInfoForm.email,
             department: this.userInfoForm.departmentid,
             emailVerified: true,
+            tag: {
+              userinfo: {
+                sex: '保密',
+                phone: '',
+                avatar:
+                  'http://47.105.106.54:1250/group1/default/20210616/15/33/7/pc',
+              },
+              companyinfo: {
+                logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
+                name: '数蛙科技',
+                _mimg: 'http://47.105.106.54:1250/group1/group1/70224.png',
+                title: '欢迎登录数蛙科技物联平台',
+                _pcimg: 'http://47.105.106.54:1250/group1/group1/1_411.png',
+                Copyright:
+                  '© 2010-2021 数蛙科技 Corporation, All Rights Reserved',
+                backgroundimage:
+                  'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
+              },
+              theme: {
+                layout: 'comprehensive',
+                themeName: 'ocean',
+                columnStyle: 'horizontal',
+                fixedHeader: true,
+                showProgressBar: true,
+                showTabs: true,
+                tabsBarStyle: 'card',
+                showTabsBarIcon: true,
+                showLanguage: true,
+                showRefresh: true,
+                showSearch: false,
+                showTheme: true,
+                showNotice: true,
+                showFullScreen: true,
+                showThemeSetting: true,
+                pictureSwitch: false,
+              },
+            },
             // aclId:this.aclId
           }
           const res = await EmployeesHired(params)
