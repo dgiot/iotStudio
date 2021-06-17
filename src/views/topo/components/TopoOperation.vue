@@ -118,6 +118,7 @@
   export default {
     name: 'Operation',
     components: { wmxdetail },
+    /* eslint-disable */
     props: {
       stopMqtt: {
         type: Boolean,

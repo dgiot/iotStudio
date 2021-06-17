@@ -74,13 +74,27 @@
                         :value="item.value"
                       >
                         <span style="float: left">{{ item.label }}</span>
-                        <span
-                          style="float: right; color: #8492a6; font-size: 13px"
-                        >
+                        <span style="float: right; color: #8492a6">
                           {{ item.value }}
                         </span>
                       </el-option>
                     </el-option-group>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col
+                v-if="sizeForm.type == 'float' || sizeForm.type == 'double'"
+                :span="12"
+              >
+                <el-form-item label="小数位数" prop="precision">
+                  <el-select v-model="sizeForm.precision" style="width: 100%">
+                    <el-option :label="0" value="0" />
+                    <el-option :label="1" value="1" />
+                    <el-option :label="2" value="2" />
+                    <el-option :label="3" value="3" />
+                    <el-option :label="4" value="4" />
+                    <el-option :label="5" value="5" />
+                    <el-option :label="6" value="6" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -187,9 +201,7 @@
                         :value="item.symbol"
                       >
                         <span style="float: left">{{ item.name }}</span>
-                        <span
-                          style="float: right; color: #8492a6; font-size: 13px"
-                        >
+                        <span style="float: right; color: #8492a6">
                           {{ item.symbol }}
                         </span>
                       </el-option>
@@ -659,25 +671,6 @@
             <template slot="title">数据来源</template>
             <el-row :gutter="24">
               <el-col :span="12">
-                <el-form-item label="数据地址">
-                  <el-input
-                    v-model="sizeForm.dis"
-                    :disabled="sizeForm.isdis"
-                    placeholder="数据地址"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="数据长度">
-                  <el-input
-                    v-model.number="sizeForm.dinumber"
-                    placeholder="数据长度（字节）"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="12">
                 <el-form-item label="协议类型">
                   <el-select
                     v-model="sizeForm.protocol"
@@ -698,48 +691,8 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col v-show="sizeForm.protocol == 'modbus'" :span="12">
-                <el-form-item label="从机地址">
-                  <el-input
-                    v-model="sizeForm.slaveid"
-                    placeholder="数据地址(10进制)"
-                    auto-complete="off"
-                  />
-                </el-form-item>
-              </el-col>
             </el-row>
             <el-row v-show="sizeForm.protocol == 'modbus'" :gutter="24">
-              <el-col :span="12">
-                <el-form-item label="寄存器状态" prop="byteorder">
-                  <el-select
-                    v-model="sizeForm.operatetype"
-                    style="width: 100%"
-                    placeholder="请选择"
-                  >
-                    <el-option
-                      v-for="item in [
-                        { value: 'coilStatus', label: '线圈状态' },
-                        { value: '输入状态', label: '输入状态' },
-                        {
-                          value: 'holdingRegister',
-                          label: '保持寄存器',
-                        },
-                        {
-                          value: 'inputRegister',
-                          label: '输入寄存器',
-                        },
-                        {
-                          value: 'other',
-                          label: '其他',
-                        },
-                      ]"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
               <el-col :span="12">
                 <el-form-item label="数据类型">
                   <el-select
@@ -759,17 +712,9 @@
                         :value="item.value"
                       />
                     </el-option-group>
-                    <!--                    <el-option-->
-                    <!--                      v-for="(item, index) in dataType"-->
-                    <!--                      :key="index"-->
-                    <!--                      :label="item"-->
-                    <!--                      :value="item"-->
-                    <!--                    />-->
                   </el-select>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row v-show="sizeForm.protocol == 'modbus'" :gutter="24">
               <el-col :span="12">
                 <el-form-item label="字节序" prop="byteorder">
                   <el-select
@@ -787,6 +732,111 @@
                       :value="item.value"
                     />
                   </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-table
+              v-show="sizeForm.protocol == 'modbus'"
+              :data="dataList"
+              border
+              style="width: 100%"
+              size="small"
+            >
+              <el-table-column
+                align="center"
+                label="从机地址(1-254)"
+                min-width="120"
+              >
+                <!--关键代码-->
+                <template slot-scope="scope">
+                  <el-input v-model="sizeForm.slaveid" />
+                  <span v-show="false">{{ scope.row }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="寄存器状态"
+                min-width="120"
+              >
+                <!--关键代码-->
+                <template slot-scope="scope">
+                  <el-select
+                    v-model="sizeForm.operatetype"
+                    style="width: 100%"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      v-for="item in [
+                        { value: 'readCoils', label: '01:读线圈寄存器' },
+                        { value: 'readInputs', label: '02:读离散输入寄存器' },
+                        {
+                          value: 'readHregs',
+                          label: '02:读保持寄存器',
+                        },
+                        {
+                          value: 'readIregs',
+                          label: '04:读输入寄存器',
+                        },
+                        {
+                          value: 'writeCoil',
+                          label: '05:写单个线圈寄存器',
+                        },
+                        {
+                          value: 'writeHreg',
+                          label: '06:写单个保持寄存',
+                        },
+                        {
+                          value: 'writeCoils',
+                          label: '0f:写多个线圈寄存器',
+                        },
+                        {
+                          value: 'writeHregs',
+                          label: '10:写多个保持寄存器',
+                        },
+                      ]"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                  <span v-show="false">{{ scope.row.slaveid }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="数据地址(1-65536)"
+                min-width="120"
+              >
+                <!--关键代码-->
+                <template slot-scope="scope">
+                  <el-input v-model="sizeForm.dis" />
+                  <span v-show="false">{{ scope.row.slaveid }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="数据长度" min-width="120">
+                <!--关键代码-->
+                <template slot-scope="scope">
+                  <el-input v-model="sizeForm.dinumber" />
+                  <span v-show="false">{{ scope.row.slaveid }}</span>
+                </template>
+              </el-table-column>
+            </el-table>
+            <el-row v-show="sizeForm.protocol != 'modbus'" :gutter="24">
+              <el-col :span="12">
+                <el-form-item label="数据地址">
+                  <el-input
+                    v-model="sizeForm.dis"
+                    :disabled="sizeForm.isdis"
+                    placeholder="数据地址"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="数据长度">
+                  <el-input
+                    v-model.number="sizeForm.dinumber"
+                    placeholder="数据长度（字节）"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -808,8 +858,10 @@
 
 <script>
   import mockModules from '@/api/Mock/Modules'
+  console.log('dataType', mockModules)
   import { getAllunit } from '@/api/Dict/index'
   import { mapGetters, mapMutations } from 'vuex'
+
   export default {
     name: 'Wmxdetail',
     components: {},
@@ -859,6 +911,7 @@
         }
       }
       return {
+        dataList: [{}],
         dataType: mockModules.mockModules.dataType,
         options: [
           { value: 'all', label: '全部' },
@@ -1031,6 +1084,7 @@
             startnumber: that.$objGet(item, 'dataType.specs.min'),
             step: that.$objGet(item, 'dataType.specs.step'),
             unit: that.$objGet(item, 'dataType.specs.unit'),
+            precision: this.$objGet(item, 'dataType.specs.precision'),
             // : item.dataForm.
             round: that.$objGet(item, 'dataForm.round'),
             dinumber: that.$objGet(item, 'dataForm.data'),
