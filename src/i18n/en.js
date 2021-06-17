@@ -2,6 +2,9 @@ export default {
   vabI18n: {
     title: {
       acquisitioncentersystem: 'Acquisition system',
+      'Theme configuration saved successfully':
+        'Theme configuration saved successfully',
+      'Theme configuration saved error': 'Theme configuration saved error',
     },
     // listeners
     listeners: {
@@ -264,6 +267,7 @@ export default {
       固定: 'Fixed',
       不固定: 'No fixed',
       标签: 'Tabs',
+      侧边栏图片切换: 'Tabs picture switch',
       标签风格: 'Tabs style',
       标签图标: 'Tabs Icon',
       卡片: 'Card',
@@ -483,8 +487,7 @@ export default {
       appid: 'Application ID ',
       appsecret: 'Application secret',
       fullkey: 'Full key',
-      aaab:
-        'The token when calling the API is used to verify the validity of the request. Please keep it confidential',
+      aaab: 'The token when calling the API is used to verify the validity of the request. Please keep it confidential',
       TheonlyapplicationIDintheSDKcallingprocess:
         'The only application ID in the SDK calling process',
       Wordpreviewserver: 'Word preview server',
@@ -769,8 +772,7 @@ export default {
       installationlocation: 'Install Location',
       createdAt: 'createdAt',
       addbatch: 'Add Batch',
-      text:
-        'After the device is created, you can use the identity information issued by the platform to connect to the platform',
+      text: 'After the device is created, you can use the identity information issued by the platform to connect to the platform',
       ipaddress: 'IP Address',
       macaddress: 'MAC Address',
       subordinatenode: 'Subordinate Node',

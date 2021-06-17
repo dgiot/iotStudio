@@ -750,7 +750,8 @@
   export default {
     data() {
       const validUrl = (rule, value, callback) => {
-        const reg = /^[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/
+        const reg =
+          /^[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/
         if (!reg.test(value)) {
           callback(new Error('需要输入正确的服务器IP'))
         } else {

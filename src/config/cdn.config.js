@@ -8,6 +8,7 @@
  */
 let staticUrl = {
   css: [
+    'https://unpkg.com/jsoneditor@9.5.0/dist/jsoneditor.min.css',
     'https://unpkg.com/normalize.css@8.0.1/normalize.css',
     'https://unpkg.com/nprogress@0.2.0/nprogress.css',
     'https://unpkg.com/v-charts@1.19.0/lib/style.min.css',
@@ -78,6 +79,7 @@ let staticUrl = {
     'https://hm.baidu.com/hm.js?a0f8b01930320b849a92a00e0c6da990',
     'https://s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845',
     'https://unpkg.com/vue-amap/dist/index.js',
+    'https://unpkg.com/jsoneditor@9.5.0/dist/jsoneditor.min.js',
   ],
 }
 if (process.env.NODE_ENV !== 'development') {

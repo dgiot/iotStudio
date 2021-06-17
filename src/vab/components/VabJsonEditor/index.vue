@@ -1,65 +1,177 @@
-<!--codemirror-json格式化-->
 <template>
-  <div class="json-editor">
-    <textarea ref="textarea" />
+  <div>
+    <div class="jsoneditor-vue"></div>
+    <div v-if="showBtns !== false" class="jsoneditor-btns">
+      <button
+        class="json-save-btn"
+        type="button"
+        :disabled="error"
+        @click="onSave()"
+      >
+        {{ locale[lang].save }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
+  // import './assets/jsoneditor.css'
+  // import JsonEditor from './assets/jsoneditor'
   export default {
     name: 'VabJsonEditor',
-    /* eslint-disable vue/require-prop-types */
-    props: ['value'],
+    // props: ['value', 'showBtns', 'mode', 'modes', 'lang'],
+    /* eslint-disable */
+    props: {
+      value: [String, Number, Object, Array],
+      showBtns: [Boolean],
+      expandedOnStart: {
+        type: Boolean,
+        default: false,
+      },
+      mode: {
+        type: String,
+        default: 'tree',
+      },
+      modes: {
+        type: Array,
+        default: function () {
+          return ['tree', 'code', 'form', 'text', 'view']
+        },
+      },
+      lang: {
+        type: String,
+        default: 'en',
+      },
+    },
     data() {
       return {
-        jsonEditor: false,
-        readmeUrl: 'http://doc.iotn2n.com/web/#/66?page_id=779',
+        editor: null,
+        error: false,
+        json: this.value,
+        internalChange: false,
+        expandedModes: ['tree', 'view', 'form'],
+        locale: {
+          it: {
+            save: 'SALVA',
+          },
+          en: {
+            save: 'SAVE',
+          },
+          zh: {
+            save: '保存',
+          },
+        },
       }
     },
     watch: {
-      value(value) {
-        const editor_value = this.jsonEditor.getValue()
-        if (value !== editor_value) {
-          this.jsonEditor.setValue(JSON.stringify(this.value, null, 2))
-        }
+      value: {
+        immediate: true,
+        async handler(val) {
+          if (!this.internalChange) {
+            await this.setEditor(val)
+
+            this.error = false
+            this.expandAll()
+          }
+        },
+        deep: true,
       },
     },
     mounted() {
-      this.jsonEditor = CodeMirror.fromTextArea(this.$refs.textarea, {
-        lineNumbers: true,
-        mode: 'application/json',
-        gutters: ['CodeMirror-lint-markers'],
-        theme: 'rubyblue',
-        lint: true,
-      })
+      let self = this
 
-      this.jsonEditor.setValue(JSON.stringify(this.value, null, 2))
-      this.jsonEditor.on('change', (cm) => {
-        this.$emit('changed', cm.getValue())
-        this.$emit('input', cm.getValue())
-      })
+      let options = {
+        mode: this.mode,
+        modes: this.modes, // allowed modes
+        onChange() {
+          try {
+            let json = self.editor.get()
+            self.json = json
+            self.error = false
+            self.$emit('json-change', json)
+            self.internalChange = true
+            self.$emit('input', json)
+            self.$nextTick(function () {
+              self.internalChange = false
+            })
+          } catch (e) {
+            self.error = true
+            self.$emit('has-error', e)
+          }
+        },
+        onModeChange() {
+          self.expandAll()
+        },
+      }
+
+      this.editor = new JSONEditor(
+        this.$el.querySelector('.jsoneditor-vue'),
+        options,
+        this.json
+      )
     },
     methods: {
-      getValue() {
-        return this.jsonEditor.getValue()
+      expandAll() {
+        if (
+          this.expandedOnStart &&
+          this.expandedModes.includes(this.editor.getMode())
+        ) {
+          this.editor.expandAll()
+        }
+      },
+
+      onSave() {
+        this.$emit('json-save', this.json)
+      },
+
+      async setEditor(value) {
+        if (this.editor) this.editor.set(value)
       },
     },
   }
 </script>
 
 <style scoped>
-  .json-editor {
-    position: relative;
-    height: 100%;
+  .ace_line_group {
+    text-align: left;
   }
-  .json-editor >>> .CodeMirror {
-    height: auto;
-    min-height: 180px;
+  .json-editor-container {
+    display: flex;
+    width: 100%;
   }
-  .json-editor >>> .CodeMirror-scroll {
-    min-height: 180px;
+  .json-editor-container .tree-mode {
+    width: 50%;
   }
-  .json-editor >>> .cm-s-rubyblue span.cm-string {
-    color: #f08047;
+  .json-editor-container .code-mode {
+    flex-grow: 1;
+  }
+  .jsoneditor-btns {
+    margin-top: 10px;
+    text-align: center;
+  }
+  .jsoneditor-vue .jsoneditor-outer {
+    min-height: 150px;
+  }
+  .jsoneditor-vue div.jsoneditor-tree {
+    min-height: 350px;
+  }
+  .json-save-btn {
+    padding: 5px 10px;
+    color: #fff;
+    cursor: pointer;
+    background-color: #20a0ff;
+    border: none;
+    border-radius: 5px;
+  }
+  .json-save-btn:focus {
+    outline: none;
+  }
+  .json-save-btn[disabled] {
+    cursor: not-allowed;
+    background-color: #1d8ce0;
+  }
+  code {
+    background-color: #f5f5f5;
   }
 </style>
+Build: a7ebffa

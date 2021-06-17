@@ -6,8 +6,7 @@
  * @FilePath: \dgiot_dashboard\src\store\modules\acl.js
  * @Description:
  */
-import { getToken, removeToken, setToken } from '@/utils/vuex'
-import { storage } from '@/config'
+import { getToken, setToken } from '@/utils/vuex'
 const state = () => ({
   admin: false,
   role: [],

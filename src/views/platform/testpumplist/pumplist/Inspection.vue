@@ -781,21 +781,18 @@
       changeReport(index) {
         console.log(index)
         this.selectedInsectionItem = this.reportList[index]
-        this.task_form.basedata.info.testContent.name = this.reportList[
-          index
-        ].name
-        this.task_form.basedata.info.testContent.objectId = this.reportList[
-          index
-        ].objectId
+        this.task_form.basedata.info.testContent.name =
+          this.reportList[index].name
+        this.task_form.basedata.info.testContent.objectId =
+          this.reportList[index].objectId
       },
       changeBed(index) {
         this.selectedBedItem = this.testbedlist[index]
         console.log(this.testbedlist[index])
         this.productId = this.testbedlist[index].product.objectId
         this.task_form.basedata.info.devInfo.name = this.testbedlist[index].name
-        this.task_form.basedata.info.devInfo.objectId = this.testbedlist[
-          index
-        ].objectId
+        this.task_form.basedata.info.devInfo.objectId =
+          this.testbedlist[index].objectId
         console.log(
           '  this.productId ',
           this.productId,

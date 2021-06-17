@@ -9,9 +9,49 @@ const getLocalStorage = (key) => {
     return false
   }
 }
-
+import {
+  columnStyle,
+  fixedHeader,
+  i18n,
+  layout,
+  logo,
+  showFullScreen,
+  showLanguage,
+  showNotice,
+  showProgressBar,
+  showRefresh,
+  showSearch,
+  showTabs,
+  showTabsBarIcon,
+  showTheme,
+  showThemeSetting,
+  tabsBarStyle,
+  themeName,
+  tokenTableName,
+  storage,
+  title,
+  tokenName,
+  pictureSwitch,
+} from '@/config'
+const defaultTheme = {
+  layout,
+  themeName,
+  columnStyle,
+  fixedHeader,
+  showProgressBar,
+  showTabs,
+  tabsBarStyle,
+  showTabsBarIcon,
+  showLanguage,
+  showRefresh,
+  showSearch,
+  showTheme,
+  showNotice,
+  showFullScreen,
+  showThemeSetting,
+  pictureSwitch,
+}
 import { getUserInfo, login, logout, socialLogin } from '@/api/User/index'
-import { tokenTableName, storage, title, tokenName, i18n } from '@/config'
 import { getToken, removeToken, setToken, clearCookie } from '@/utils/vuex'
 import { resetRouter } from '@/router'
 import { Roletree } from '@/api/Menu'
@@ -130,37 +170,50 @@ const actions = {
    */
   async login({ commit, dispatch }, userInfo) {
     const data = (await login(userInfo)) || {}
-    const { sessionToken = '' } = data
-    let token = sessionToken
-    if (token) {
-      clientMqtt()
-      commit('_setToken', token)
-      const { nick } = data
-      if (nick) commit('setUsername', nick)
-      const page_title = getToken('title', 'sessionStorage') || title
-      const {
-        objectId,
-        roles,
-        tag = {
+    const {
+      sessionToken = '',
+      nick,
+      objectId,
+      roles,
+      tag = {},
+    } = Object.assign(
+      {
+        tag: {
           companyinfo: {
-            title: `欢迎${nick}您登录${page_title}`,
-            Copyright: '© 2017-2021 数蛙科技 Corporation, All Rights Reserved',
-            name: 'dg-iot',
-            logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
+            title: ``,
+            Copyright: '',
+            name: '',
+            logo: '',
+            _pcimg: '',
+            _mimg: '',
           },
           userinfo: {
-            avatar:
-              'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3290107827,2759304074&fm=26&gp=0.jpg',
+            avatar: '',
           },
+          theme: { ...defaultTheme },
         },
-      } = data
-      console.log(tag.companyinfo.title, 'tag info')
-      const { title, Copyright, name, logo } = tag.companyinfo
+      },
+      data
+    )
+    if (sessionToken) {
+      clientMqtt()
+      commit('_setToken', sessionToken)
+      if (nick) commit('setUsername', nick)
+      const page_title = getToken('title', 'sessionStorage') || title
+      console.log(tag, 'tag info')
+      const { title, Copyright, name, logo, _pcimg, _mimg } = tag.companyinfo
+      console.log(Copyright, 'Copyright')
       const { avatar } = tag.userinfo
       commit('setAvatar', avatar)
       commit('setname', name)
       commit('setlogo', logo)
       dispatch('settings/setTitle', title, { root: true })
+      dispatch('settings/saveTheme', tag.theme, { root: true })
+      dispatch('settings/togglePicture', tag.theme.pictureSwitch, {
+        root: true,
+      })
+      dispatch('dashboard/set_pcimg', _pcimg, { root: true })
+      dispatch('dashboard/set_mimg', _mimg, { root: true })
       dispatch('acl/setRole', roles, { root: true })
       dispatch('settings/setTitle', title, { root: true })
       dispatch('acl/setCopyright', Copyright, { root: true })

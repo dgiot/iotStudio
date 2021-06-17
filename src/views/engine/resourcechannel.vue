@@ -536,7 +536,8 @@
       },
       // 验证
       validUrl(rule, value, callback) {
-        const reg = /^[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/
+        const reg =
+          /^[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/
         if (!reg.test(value)) {
           callback(new Error('需要输入正确的url'))
         } else {
@@ -544,7 +545,8 @@
         }
       },
       validPort(rule, value, callback) {
-        const reg = /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
+        const reg =
+          /^([0-9]|[1-9]\d|[1-9]\d{2}|[1-9]\d{3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/
         if (!reg.test(value)) {
           callback(new Error('需要输入正确的端口号'))
         } else {

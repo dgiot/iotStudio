@@ -105,6 +105,8 @@ export default {
     title: {
       'DG-IOT': 'DG-IOT',
       acquisitioncentersystem: '采集中心系统',
+      'Theme configuration saved successfully': '主题配置保存成功',
+      'Theme configuration saved error': '主题配置保存失败',
     },
     route: {},
     equipment: {

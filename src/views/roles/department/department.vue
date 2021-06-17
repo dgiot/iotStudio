@@ -239,7 +239,8 @@
     components: {},
     data() {
       const validatorUrl = (rule, value, callback) => {
-        var regStr = /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
+        var regStr =
+          /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
         if (value === '' || value === null) {
           callback(new Error('请输入url地址'))
         } else if (!regStr.test(value)) {
