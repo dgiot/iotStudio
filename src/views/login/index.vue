@@ -90,6 +90,7 @@
 <script>
   import { mapActions, mapGetters } from 'vuex'
   import { isPassword } from '@/utils/validate'
+  import { SiteDefault } from '@/api/License'
 
   export default {
     name: 'Login',
@@ -123,8 +124,7 @@
         else callback()
       }
       return {
-        backgroundImage:
-          'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
+        backgroundImage: '',
         nodeEnv: process.env.NODE_ENV,
         form: {
           username: '',
@@ -157,7 +157,7 @@
         Default: 'acl/Default',
         license: 'acl/license',
         logo: 'user/logo',
-        backgroundimage: 'user/backgroundimage',
+        // backgroundimage: 'user/backgroundimage',
       }),
     },
     watch: {
@@ -195,6 +195,12 @@
         }
         await this.getlicense()
         await this.getDefault()
+        const {
+          background = 'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
+          // background = 'https://ps.ssl.qhmsg.com/t02c3f68da0ad0e655a.jpg',
+        } = await SiteDefault()
+        console.log(background)
+        this.backgroundImage = background
       },
       handlePassword() {
         this.passwordType === 'password'

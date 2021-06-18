@@ -213,6 +213,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import { isPhone, isUrl } from '@/utils/validate'
   import { putUser } from '@/api/User'
+  import { putDefault } from '@/api/License'
   export default {
     name: 'Userinfo',
     components: {},
@@ -263,6 +264,7 @@
         token: 'user/token',
         _pcimg: 'dashboard/_pcimg',
         _mimg: 'dashboard/_mimg',
+        Default: 'acl/Default',
       }),
     },
     mounted() {
@@ -303,6 +305,25 @@
             break
           case 'companyinfo.backgroundimage':
             this.setBackgroundimage(info.url)
+            putDefault({ background: info.url })
+              .then((res) => {
+                console.log(res)
+                this.$baseMessage(
+                  this.$translateTitle('保存成功'),
+                  'success',
+                  false,
+                  'vab-hey-message-success'
+                )
+              })
+              .catch((e) => {
+                console.log(e)
+                this.$baseMessage(
+                  this.$translateTitle('保存失败' + e),
+                  'success',
+                  false,
+                  'vab-hey-message-success'
+                )
+              })
             break
           default:
             console.log('type', this.filetype)

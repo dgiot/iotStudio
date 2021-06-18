@@ -1,5 +1,7 @@
-## 4.3.0 (2021-06-17)
+## 4.3.0 (2021-06-18)
 
+* chore(.github/release-drafter.yml): updata release-drafter.ymd ([1b84326](https://github.com/dgiot/dgiot_dashboard/commit/1b84326))
+* chore(package.json): update dependencies ([d3dce6d](https://github.com/dgiot/dgiot_dashboard/commit/d3dce6d))
 * fix: deletx lxd ([5cf6db1](https://github.com/dgiot/dgiot_dashboard/commit/5cf6db1))
 * fix(.github/workflows/deploy.yml): build error ([b59282d](https://github.com/dgiot/dgiot_dashboard/commit/b59282d))
 * fix(.github/workflows/release_changelog.yml): yaml format ([457c7f0](https://github.com/dgiot/dgiot_dashboard/commit/457c7f0))
@@ -73,7 +75,6 @@
 * build: global url ([b1ff8f5](https://github.com/dgiot/dgiot_dashboard/commit/b1ff8f5))
 * build(deploy  static to tencent server): deploy  static to Tencent Server ([8889e0a](https://github.com/dgiot/dgiot_dashboard/commit/8889e0a))
 * build(package.json): swagger ([540c1dc](https://github.com/dgiot/dgiot_dashboard/commit/540c1dc))
-* chore(.github/release-drafter.yml): updata release-drafter.ymd ([1b84326](https://github.com/dgiot/dgiot_dashboard/commit/1b84326))
 
 
 

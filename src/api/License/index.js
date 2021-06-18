@@ -48,6 +48,13 @@ export function SiteDefault() {
     params: {},
   })
 }
+export function putDefault(params) {
+  return request({
+    url: '/classes/Project/default',
+    method: 'PUT',
+    data: params,
+  })
+}
 
 export function iotHub(type, license, addr) {
   return request({
