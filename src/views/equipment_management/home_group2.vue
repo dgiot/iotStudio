@@ -309,7 +309,17 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="产品模型">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <div v-if="imageUrl">
+                  <img :src="imageUrl" class="avatar" />
+                  <el-button
+                    type="danger"
+                    size="mini"
+                    style="vertical-align: text-bottom"
+                    @click.stop="deleteImgsrc"
+                  >
+                    删除
+                  </el-button>
+                </div>
                 <i
                   v-else
                   v-loading="loading"
@@ -335,15 +345,6 @@
                     @change="upload($event)"
                   />
                 </form>
-                <el-button
-                  v-if="imageUrl"
-                  type="danger"
-                  size="mini"
-                  style="vertical-align: text-bottom"
-                  @click="deleteImgsrc"
-                >
-                  删除
-                </el-button>
                 <br />
               </el-form-item>
               <el-form-item
@@ -1414,7 +1415,7 @@
         })
       },
       deleteImgsrc() {
-        event.stopPropagation()
+        // event.stopPropagation()
         this.imageUrl = ''
       },
       dataURItoBlob(dataURI) {

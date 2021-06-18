@@ -739,13 +739,13 @@
       closeInfo(item) {
         this.$nextTick(() => {
           item.show = false
-          this.set_tableData(Object.assign([], this._tableData))
+          this.set_tableData(_.merge([], this._tableData))
           this.$forceUpdate()
         })
       },
       openInfo(item) {
         item.show = true
-        this.set_tableData(Object.assign([], this._tableData))
+        this.set_tableData(_.merge([], this._tableData))
         this.$forceUpdate()
       },
       async showDeatils(row) {

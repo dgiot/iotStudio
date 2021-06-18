@@ -67,7 +67,7 @@ export async function get_object(tabclass, ObjectId) {
     })
   } else {
     return Message({
-      message: 'tabclass 和 ObjectId字段为必传',
+      message: `tabclass${tabclass} 和 ObjectId${ObjectId}字段为必传`,
       type: 'error',
       duration: 1 * 1000,
     })
@@ -92,7 +92,7 @@ export async function del_object(tabclass, ObjectId) {
     })
   } else {
     return Message({
-      message: 'tabclass 和 ObjectId字段为必传',
+      message: `tabclass${tabclass} 和 ObjectId${ObjectId}字段为必传`,
       type: 'error',
       duration: 1 * 1000,
     })

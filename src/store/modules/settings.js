@@ -41,8 +41,8 @@ const defaultTheme = {
 }
 const state = () => ({
   showThemeSetting: showThemeSetting,
-  logo: getToken('logo', 'sessionStorage'),
-  title: getToken('title', 'sessionStorage') || '物联网开发平台',
+  logo: getToken('logo'),
+  title: getToken('title') || '物联网开发平台',
   device: 'desktop',
   collapse: getToken('collapse') || false,
   pictureSwitch: getToken('pictureSwitch') || false,

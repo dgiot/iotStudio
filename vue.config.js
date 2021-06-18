@@ -82,7 +82,7 @@ module.exports = {
     return {
       externals: {
         JSONEditor: 'JSONEditor',
-        AMap: 'AMap',
+        AMap: 'VueAMap',
         'topology-vue': 'topology',
         konva: 'Konva',
         VCharts: 'v-charts',
