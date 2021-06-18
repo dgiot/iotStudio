@@ -169,14 +169,8 @@ const actions = {
    * @param {*} userInfo
    */
   async login({ commit, dispatch }, userInfo) {
-    const data = (await login(userInfo)) || {}
-    const {
-      sessionToken = '',
-      nick,
-      objectId,
-      roles,
-      tag = {},
-    } = Object.assign(
+    const _userInfo = (await login(userInfo)) || {}
+    let data = _.merge(
       {
         tag: {
           companyinfo: {
@@ -193,8 +187,9 @@ const actions = {
           theme: { ...defaultTheme },
         },
       },
-      data
+      _userInfo
     )
+    const { sessionToken = '', nick, objectId, roles, tag = {} } = data
     if (sessionToken) {
       clientMqtt()
       commit('_setToken', sessionToken)
@@ -338,9 +333,8 @@ const actions = {
     // console.log(copyright, dashboard, logo, objectId, title)
     const { copyright, logo, objectId, title } = Default
     if (title) dispatch('settings/setTitle', title, { root: true })
-    const res = { copyright, logo, objectId, title }
     if (copyright) dispatch('acl/setCopyright', copyright, { root: true })
-    if (Default) dispatch('acl/setDefault', res, { root: true })
+    if (Default) dispatch('acl/setDefault', Default, { root: true })
   },
   /**
    * @description 退出登录
