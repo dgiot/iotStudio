@@ -213,7 +213,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import { isPhone, isUrl } from '@/utils/validate'
   import { putUser } from '@/api/User'
-  import { putDefault } from '@/api/License'
+  import { putProject } from '@/api/Project'
   export default {
     name: 'Userinfo',
     components: {},
@@ -305,7 +305,7 @@
             break
           case 'companyinfo.backgroundimage':
             this.setBackgroundimage(info.url)
-            putDefault({ background: info.url })
+            putProject(this.Default.objectId, { background: info.url })
               .then((res) => {
                 console.log(res)
                 this.$baseMessage(

@@ -62,22 +62,20 @@ const { language } = getLocalStorage('language')
 import { clientMqtt } from '@/utils/clientMqtt'
 const state = () => ({
   language: language || i18n,
-  roleTree: getToken('roleTree', 'sessionStorage'), // 处理数据类型不匹配
-  _Product: getToken('Product', 'sessionStorage'),
+  roleTree: getToken('roleTree'), // 处理数据类型不匹配
+  _Product: getToken('Product'),
   token: getToken(tokenTableName, storage),
-  name: getToken('name', 'sessionStorage'),
-  username: getToken('username', 'sessionStorage'),
-  setlogo: getToken('logo', 'sessionStorage'),
-  setBackgroundimage: getToken('backgroundimage', 'sessionStorage'),
-  avatar: getToken('avatar', 'sessionStorage'),
-  Copyright: getToken('Copyright', 'sessionStorage'),
-  logo:
-    getToken('logo', 'sessionStorage') ||
-    'http://www.iotn2n.com/favicon.ico?1558342112',
+  name: getToken('name'),
+  username: getToken('username'),
+  setlogo: getToken('logo'),
+  setBackgroundimage: getToken('backgroundimage'),
+  avatar: getToken('avatar'),
+  Copyright: getToken('Copyright'),
+  logo: getToken('logo') || 'http://www.iotn2n.com/favicon.ico?1558342112',
   backgroundimage:
-    getToken('backgroundimage', 'sessionStorage') ||
+    getToken('backgroundimage') ||
     'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
-  objectId: getToken('objectId', 'sessionStorage'),
+  objectId: getToken('objectId', storage),
 })
 const getters = {
   language: (state) => state.language,
@@ -95,27 +93,27 @@ const getters = {
 const mutations = {
   setRoleTree(state, tree) {
     state.roleTree = tree
-    setToken('roleTree', tree, 'sessionStorage') // 解决数据持久化问题
+    setToken('roleTree', tree) // 解决数据持久化问题
   },
   set_Product(state, Product) {
     state._Product = Product
-    setToken('Product', Product, 'sessionStorage') // 解决数据持久化问题
+    setToken('Product', Product) // 解决数据持久化问题
   },
   setname(state, name) {
     state.name = name
-    setToken('name', name, 'sessionStorage')
+    setToken('name', name)
   },
   setCopyright(state, Copyright) {
     state.Copyright = Copyright
-    setToken('copyright', Copyright, 'sessionStorage')
+    setToken('copyright', Copyright)
   },
   setlogo(state, url) {
     state.logo = url
-    setToken('logo', url, 'sessionStorage')
+    setToken('logo', url)
   },
   setBackgroundimage(state, url) {
     state.backgroundimage = url
-    setToken('backgroundimage', url, 'sessionStorage')
+    setToken('backgroundimage', url)
   },
   /**
    * @description 设置用户登录Id
@@ -124,7 +122,7 @@ const mutations = {
    */
   setObejectId(state, objectId) {
     state.objectId = objectId
-    setToken('objectId', objectId, 'sessionStorage')
+    setToken('objectId', objectId, storage)
   },
   /**
    * @description 设置token
@@ -142,7 +140,7 @@ const mutations = {
    */
   setUsername(state, username) {
     state.username = username
-    setToken('username', username, 'sessionStorage')
+    setToken('username', username)
   },
   /**
    * @description 设置头像
@@ -151,7 +149,7 @@ const mutations = {
    */
   setAvatar(state, avatar) {
     state.avatar = avatar
-    setToken('avatar', avatar, 'sessionStorage')
+    setToken('avatar', avatar)
   },
 }
 const actions = {

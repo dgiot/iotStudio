@@ -38,7 +38,14 @@
         mapStyle: 'amap://styles/dark',
       }
     },
-    mounted() {},
+    mounted() {
+      VueAMap.initAMapApiLoader({
+        // 高德key
+        key: 'd7bb98e7185300250dd5f918c12f484b',
+        // 插件集合 （插件按需引入）
+        plugin: ['AMap.Geolocation'],
+      })
+    },
     methods: {
       onSearchResult(pois) {
         let latSum = 0

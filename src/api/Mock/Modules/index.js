@@ -663,6 +663,14 @@ const dataNnit = [
         type: 'pressure',
       },
       {
+        symbol: 'W·h',
+        typeText: '其他',
+        name: '瓦·时',
+        description: '能单位:瓦·时(kW·h)',
+        id: 'WattsHour',
+        type: 'pressure',
+      },
+      {
         symbol: 'cal',
         typeText: '其他',
         name: '卡',

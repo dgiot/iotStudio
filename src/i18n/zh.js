@@ -565,6 +565,7 @@ export default {
       Pleaseinputproduct: '请输入产品',
     },
     application: {
+      submit: '提交',
       upload: '上传',
       applicationmanagement: '应用（项目）服务',
       myapplication: '我的应用',
@@ -709,6 +710,7 @@ export default {
       meter: '电表',
     },
     rule: {
+      'rule Id': '规则ID',
       testnewequipment: '调测',
       rule: '规则',
       TriggerEvent: '触发事件',

@@ -61,6 +61,9 @@
                 ><el-input v-model="formInline.enginesql" class="ace_text-input" type="textarea"/></pre>
               </el-form-item>
               <!--备注-->
+              <el-form-item :label="$translateTitle('rule.rule Id')">
+                <el-input v-model="formInline.ruleId" type="text" />
+              </el-form-item>
               <el-form-item :label="$translateTitle('rule.Remarks')">
                 <el-input v-model="formInline.remarks" type="text" />
               </el-form-item>
@@ -86,6 +89,30 @@
                 </el-popover>
               </el-form-item>
               <!--其他信息-->
+            </el-col>
+            <el-col :span="12">
+              <div class="sql-tips el-col el-col-8 el-col-offset-1">
+                <div>
+                  <p>
+                    规则引擎是标准 MQTT 之上基于 SQL
+                    的核心数据处理与分发组件，可以方便的筛选并处理 MQTT
+                    消息与设备生命周期事件，并将数据分发移动到 HTTP
+                    Server、数据库、消息队列甚至是另一个 MQTT Broker 中。
+                  </p>
+                  <p>1. 选择 't/#' 主题的消息，提取全部字段：</p>
+                  <div class="code"><code>SELECT * FROM "t/#"</code></div>
+                </div>
+                <p>
+                  2. 通过事件主题选择客户端连接事件，筛选 Username 为 'emqx'
+                  的设备并获取连接信息：
+                </p>
+                <div class="code">
+                  <code>
+                    SELECT clientid, connected_at FROM
+                    "$events/client_connected" WHERE username = 'emqx'
+                  </code>
+                </div>
+              </div>
             </el-col>
             <!--中间间隔-->
             <el-col :span="4" />
@@ -197,8 +224,8 @@
                   />
                   <el-table-column :label="$translateTitle('rule.Parameter')">
                     <template slot-scope="scope">
-                      <span v-if="scope.row.args.$resource">
-                        {{ '关联资源:' + scope.row.args.$resource }}
+                      <span v-if="scope.row.params.$resource">
+                        {{ '关联资源:' + scope.row.params.$resource }}
                       </span>
                       <span v-else />
                     </template>
@@ -326,7 +353,7 @@
             { required: true, message: '请填写通道描述', trigger: 'blur' },
           ],
         },
-        row1: 24,
+        row1: 12,
         row2: 0,
         dialogFormVisible: false,
         title: '',
@@ -341,7 +368,7 @@
           qos: 1,
           topic: 't/a',
           payload: '',
-
+          ruleId: 'rule:929035',
           result: '',
         },
         formlinerule: {
@@ -354,7 +381,7 @@
         },
         actionData: [],
         form: {
-          action: 'data_to_resource',
+          action: 'dgiot_resource',
           resource: '',
         },
         formrule: {
@@ -443,11 +470,15 @@
       },
       relationChannel(row) {
         this.actionData.push({
-          name: 'data_to_resource',
-          args: {
+          name: 'dgiot',
+          params: {
             $resource: 'resource:' + row.objectId,
+            target_topic: 'thing/${productid}/${clientid}/post',
+            target_qos: 0,
+            payload_tmpl: '${payload}',
             // type: this.ctype
           },
+          fallbacks: [],
         })
       },
       allChannelSizeChange(val) {
@@ -517,14 +548,41 @@
               username: this.formInline.username,
             }
             var regex = /from[^"]+?"([^"]+)"/im
-            addRule(
-              this.actionData,
-              ctx,
-              this.formInline.remarks,
-              // editor1.getValue().match(regex)[1],
-              editor1.getValue()
-            )
+            const params = {
+              actions: this.actionData,
+              ctx: ctx,
+              description: this.formInline.remarks,
+              for: '["t/#"]',
+              rawsql: editor1.getValue(),
+            }
+            // const params = {
+            //   rawsql:
+            //     'SELECT\n  payload.msg as msg\nFROM\n  "t/#"\nWHERE\n  msg = \'hello\'',
+            //   actions: [
+            //     {
+            //       name: 'dgiot',
+            //       params: {
+            //         target_topic: 'thing/${productid}/${clientid}/post',
+            //         target_qos: 0,
+            //         payload_tmpl: '${payload}',
+            //         $resource: 'resource:057108',
+            //       },
+            //       fallbacks: [],
+            //     },
+            //   ],
+            //   description: '',
+            //   ctx: {
+            //     clientid: 'c_emqx',
+            //     username: 'u_emqx',
+            //     topic: 't/a',
+            //     qos: 1,
+            //     payload: '{"msg":"hello"}',
+            //   },
+            //   id: 'rule:955894',
+            // }
+            addRule(params)
               .then((resultes) => {
+                console.log(resultes)
                 if (resultes) {
                   this.$message('创建成功')
                   this.$router.push({
@@ -536,8 +594,9 @@
                   })
                 }
               })
-              .catch((error) => {
-                this.$message(error)
+              .catch((e) => {
+                console.log(e)
+                this.$message.error(e.error)
               })
           } else {
             this.$message('有必填项未填写')
@@ -646,6 +705,23 @@
     ::v-deep .el-dialog__footer {
       padding-bottom: 40px;
     }
+    .sql-tips {
+      border: 4px dashed #d8d8d8;
+      color: #71737d;
+      padding: 20px;
+      border-radius: 4px;
+      font-size: 15px;
+      max-height: 480px;
+      width: 100vh;
+    }
+    .code {
+      background: hsla(0, 0%, 87.5%, 0.8);
+      line-height: 1.4;
+      padding: 6px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
     // ::v-deep .el-dialog__body{
     //   ::v-deep .el-input{
     //     width:200px;

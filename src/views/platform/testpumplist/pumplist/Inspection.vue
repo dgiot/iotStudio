@@ -565,10 +565,9 @@
     getDevice,
     editDevice,
     postDevice,
-    delDecice,
+    delDevice,
   } from '@/api/Device'
   import { queryProduct } from '@/api/Product'
-  import { eventBus } from '@/api/eventBus'
   import { aclObj } from '@/utils/acl'
   export default {
     name: 'Insection',
@@ -690,7 +689,9 @@
       }
     },
     computed: {
-      ...mapGetters(['treeState']),
+      ...mapGetters({
+        role: 'acl/role',
+      }),
       fileDomain: function () {
         return this.$getUrlPrefix(this.$Cookies.get('fileserver'))
       },
@@ -703,7 +704,7 @@
       },
     },
     mounted() {
-      this.userRoles = Cookies.get('roles')
+      this.userRoles = this.role
       this.getTestBedDevices()
       this.getTasktable()
       this.getStandard()
@@ -1364,16 +1365,12 @@
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
-        }).then(() => {
-          this.$axiosWen.delete('/report/' + reportId).then((res) => {
-            console.log(res)
-            this.$message({
-              type: 'warning',
-              message: '已删除这条数据',
-            })
+        }).then(async () => {
+          const res = await delDevice(reportId)
+          this.$message({
+            type: 'warning',
+            message: '已删除这条数据',
           })
-
-          // 延时1秒
           setTimeout(() => {
             this.getTasktable()
           }, 1000)
