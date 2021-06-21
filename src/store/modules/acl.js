@@ -9,11 +9,11 @@
 import { getToken, setToken } from '@/utils/vuex'
 const state = () => ({
   admin: false,
-  role: [],
-  copyright: getToken('copyright', 'sessionStorage'),
-  license: getToken('license', 'sessionStorage'),
-  Default: getToken('Default', 'sessionStorage'),
-  logo: getToken('logo', 'sessionStorage'),
+  role: getToken('role') || [],
+  copyright: getToken('copyright'),
+  license: getToken('license'),
+  Default: getToken('Default'),
+  logo: getToken('logo'),
 })
 const getters = {
   copyright: (state) => state.copyright,
@@ -27,28 +27,29 @@ const getters = {
 const mutations = {
   setCopyright(state, copyright) {
     state.copyright = copyright
-    setToken('copyright', copyright, 'sessionStorage')
+    setToken('copyright', copyright)
   },
   setLogo(state, logo) {
     state.logo = logo
-    setToken('logo', logo, 'sessionStorage')
+    setToken('logo', logo)
   },
   setFull(state, admin) {
     state.admin = admin
   },
   setRole(state, role) {
     state.role = role
+    setToken('role', role)
   },
   setAbility(state, ability) {
     state.ability = ability
   },
   setLicense(state, license) {
     state.license = license
-    setToken('license', false, 'sessionStorage')
+    setToken('license', false)
   },
   setDefault(state, Default) {
     state.Default = Default
-    setToken('Default', JSON.stringify(Default), 'sessionStorage')
+    setToken('Default', JSON.stringify(Default))
   },
 }
 const actions = {

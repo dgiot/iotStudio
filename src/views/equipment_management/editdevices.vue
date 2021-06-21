@@ -1513,6 +1513,7 @@
         })
       },
       deviceToDetail(row) {
+        console.log('row', row)
         this.$router.push({
           path: '/roles/editdevices',
           query: {

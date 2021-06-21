@@ -656,6 +656,7 @@ export default {
       Pleaseinputproduct: 'Please input product',
     },
     application: {
+      submit: 'submit',
       Configurationresources: 'Configuration resources',
       upload: 'Upload',
       applicationmanagement: 'Application Service',

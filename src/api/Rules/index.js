@@ -16,16 +16,20 @@ export function putResourceTypes(data) {
   })
 }
 
-export function addRule(actions, ctx, description, rawsql) {
+export function addRule(data) {
+  // actions, ctx, description, _for, name, rawsql
   return request({
     url: 'rules',
     method: 'post',
-    data: {
-      actions: actions,
-      ctx: ctx,
-      description: description,
-      rawsql: rawsql,
-    },
+    // data: {
+    //   actions: actions,
+    //   ctx: ctx,
+    //   description: description,
+    //   for: _for,
+    //   name: name,
+    //   rawsql: rawsql,
+    // },
+    data: data,
   })
 }
 export function getRule() {

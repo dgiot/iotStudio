@@ -470,14 +470,6 @@
             if (this.instructid != '') {
               res = await updateIndustry(this.instructid, params)
             } else {
-              let roles = JSON.parse(Cookies.get('roles'))
-              const aclKey1 = 'role' + ':' + roles[0].name
-              const aclObj = {}
-              aclObj[aclKey1] = {
-                read: true,
-                write: true,
-              }
-
               params.ACL = aclObj
               res = await postIndustry(params)
             }

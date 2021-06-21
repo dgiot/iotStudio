@@ -1052,6 +1052,7 @@
   import { queryDict, postDict, getDict, putDict } from '@/api/Direct/index.js'
   import { mapGetters } from 'vuex'
   import { resourceTypes } from '@/api/Rules'
+  import { aclObj } from '@/utils/acl'
   export default {
     name: 'Dict',
     components: {},
@@ -1436,15 +1437,9 @@
       },
 
       async addDict_temp(form) {
-        const aclKey = 'role' + ':' + JSON.parse(Cookies.get('roles'))[0].name
-        const set_acl = {}
-        set_acl[aclKey] = {
-          read: true,
-          write: true,
-        }
         const params = {
           data: form,
-          ACL: set_acl,
+          ACL: aclObj,
           key: form.name,
           type: 'dict_template',
         }

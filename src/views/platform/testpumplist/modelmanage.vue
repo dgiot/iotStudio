@@ -316,6 +316,15 @@
             </el-form>
           </div>
           <span slot="footer" class="dialog-footer">
+            <span
+              v-if="dictoptions.length == 0"
+              class="left"
+              style="float: left"
+            >
+              <el-link type="primary" @click="createDict()">
+                暂无报告模板字典,点击前去新建报告模板字典
+              </el-link>
+            </span>
             <el-button @click="dialogVisible = false">
               <!-- 取消 -->
               {{ $translateTitle('developer.cancel') }}
@@ -654,6 +663,15 @@
       this.getReport()
     },
     methods: {
+      createDict() {
+        this.$router.push({
+          path: '/dashboard/dict',
+          query: {
+            dictid: '',
+            type: 'report_type',
+          },
+        })
+      },
       goDict(id) {
         this.$router.push({
           path: '/dashboard/dict',
@@ -702,8 +720,8 @@
           skip: this.start,
           limit: this.pagesize,
           where: {
-            'config.identifier': 'inspectionReportTemp',
-            desc: '0',
+            'config.temp.identifier': 'inspectionReportTemp',
+            // desc: '0',
             // category: 'Evidence',
             // nodeType: 1,
           },
@@ -775,8 +793,42 @@
       // 添加报告模板
       addReporttemp(type) {
         var config = JSON.stringify({
-          identifier: 'inspectionReportTemp',
-          dictid: this.arrlist.objectId,
+          konva: {
+            Stage: {
+              attrs: {
+                x: 14,
+                y: 29,
+                id: 'container',
+                width: 1868,
+                height: 469,
+                draggable: true,
+              },
+              children: [
+                {
+                  attrs: {
+                    id: 'Layer_FiO[E',
+                  },
+                  children: [
+                    {
+                      attrs: {
+                        id: 'Group_Pv]A6',
+                        width: 2000,
+                        height: 2000,
+                      },
+                      children: [],
+                      className: 'Group',
+                    },
+                  ],
+                  className: 'Layer',
+                },
+              ],
+              className: 'Stage',
+            },
+          },
+          temp: {
+            identifier: 'inspectionReportTemp',
+            dictid: this.arrlist.objectId,
+          },
         })
         var formdata = new FormData()
         formdata.append('name', this.reportForm.name)

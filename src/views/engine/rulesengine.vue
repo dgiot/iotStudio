@@ -109,7 +109,7 @@
         getRule()
           .then((response) => {
             if (response) {
-              this.engineData = response
+              this.engineData = response.data
               this.total = this.engineData.length
             }
           })

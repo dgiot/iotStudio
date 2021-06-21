@@ -3,9 +3,10 @@
  *
  * @return  {[type]}  [return description]
  */
-import { getToken } from '@/utils/vuex'
+import store from '@/store'
+
 export function aclObj() {
-  let roles = getToken('roles', 'sessionStorage')
+  let roles = store.getters['user/role']
   const aclKey1 = 'role' + ':' + roles[0].name
   const aclObj = {}
   aclObj[aclKey1] = {

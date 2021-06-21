@@ -111,12 +111,12 @@
         this.ruleid = this.$route.query.id
         getRuleDetail(this.ruleid)
           .then((response) => {
-            if (response) {
-              this.engineform.region = response.for.join(',')
-              this.engineform.remarks = response.description
-              this.engineform.sql = response.rawsql
-              this.engineData = response.metrics
-              this.rulesdata = response.actions
+            if (response.data) {
+              this.engineform.region = response.data.for.join(',')
+              this.engineform.remarks = response.data.description
+              this.engineform.sql = response.data.rawsql
+              this.engineData = response.data.metrics
+              this.rulesdata = response.data.actions
             }
           })
           .catch((error) => {

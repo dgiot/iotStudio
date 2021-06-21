@@ -718,6 +718,7 @@
   </div>
 </template>
 <script>
+  import { aclObj } from '@/utils/acl'
   import { Promise } from 'q'
   import { Batchdelete } from '@/api/Batch'
   import { queryDict } from '@/api/Direct/index.js'
@@ -1495,19 +1496,12 @@
           if (valid) {
             if (this.batchid === '') {
               // 这里是创建批次
-              const aclKey =
-                'role' + ':' + JSON.parse(this.$Cookies.get('roles'))[0].name
-              const set_acl = {}
-              set_acl[aclKey] = {
-                read: true,
-                write: true,
-              }
               const params = {
                 data: {
                   batch_name: this.pcformInline.pcname,
                   createdtime: Math.ceil(this.pcformInline.createdtime / 1000),
                 },
-                ACL: set_acl,
+                ACL: aclObj,
                 key: this.pcformInline.pcname,
                 type: 'batch_number',
               }
@@ -1527,20 +1521,13 @@
                 }
               })
             } else {
-              const aclKey =
-                'role' + ':' + JSON.parse(this.$Cookies.get('roles'))[0].name
-              const set_acl = {}
-              set_acl[aclKey] = {
-                read: true,
-                write: true,
-              }
               const params = {
                 objectId: this.batchid,
                 data: {
                   batch_name: this.pcformInline.pcname,
                   createdtime: Math.ceil(this.pcformInline.createdtime / 1000),
                 },
-                ACL: set_acl,
+                ACL: aclObj,
                 type: 'batch_number',
               }
               // 更新批次
