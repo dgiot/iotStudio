@@ -470,11 +470,15 @@
       },
       relationChannel(row) {
         this.actionData.push({
-          name: 'dgiot_resource',
+          name: 'dgiot',
           params: {
             $resource: 'resource:' + row.objectId,
+            target_topic: 'thing/${productid}/${clientid}/post',
+            target_qos: 0,
+            payload_tmpl: '${payload}',
             // type: this.ctype
           },
+          fallbacks: [],
         })
       },
       allChannelSizeChange(val) {
