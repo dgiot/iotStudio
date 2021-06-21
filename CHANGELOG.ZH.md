@@ -30,6 +30,7 @@
 * feat: vueKonva ([685c77a](https://github.com/dgiot/dgiot_dashboard/commit/685c77a))
 * feat: vuex fix ([3b873cc](https://github.com/dgiot/dgiot_dashboard/commit/3b873cc))
 * feat(.github/release-drafter.yml): update release-drafter.yml ([4afc7f5](https://github.com/dgiot/dgiot_dashboard/commit/4afc7f5))
+* feat(src/views/engine/addengine.vue): new rule interface ([f525bc7](https://github.com/dgiot/dgiot_dashboard/commit/f525bc7))
 * feat(src/views/engine/rulesengine.vue): rules_engine ([54725e3](https://github.com/dgiot/dgiot_dashboard/commit/54725e3))
 * feat(src/views/equipment_management/editdevices.vue): echarts self-adaption ([14679c5](https://github.com/dgiot/dgiot_dashboard/commit/14679c5))
 * feat(src/views/equipment_management/platform_overview.vue): header card style ([574f217](https://github.com/dgiot/dgiot_dashboard/commit/574f217))

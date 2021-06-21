@@ -267,56 +267,27 @@
                 width="60%"
                 top="1vh"
               >
-                <el-table :data="channellist" height="400" style="width: 100%">
-                  <el-table-column
-                    :label="$translateTitle('developer.channelnumber')"
-                    align="center"
+                <el-select
+                  v-model="params.name"
+                  placeholder="请选择"
+                  @change="changeChanel"
+                >
+                  <el-option
+                    v-for="item in channellist"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.name"
                   >
-                    <template slot-scope="scope">
-                      <span>{{ scope.row.objectId }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('developer.channelname')"
-                    align="center"
-                  >
-                    <template slot-scope="scope">
-                      <span>{{ scope.row.name }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('developer.servicetype')"
-                    align="center"
-                  >
-                    <template slot-scope="scope">
-                      <span>{{ scope.row.cType }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('developer.operation')"
-                    align="center"
-                  >
-                    <template slot-scope="scope">
-                      <el-button
-                        size="mini"
-                        type="primary"
-                        @click="relationChannel(scope.row)"
-                      >
-                        {{ $translateTitle('developer.add') }}
-                      </el-button>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <div class="elpagination" style="margin-top: 20px">
-                  <el-pagination
-                    :page-sizes="[10, 20, 30, 50]"
-                    :page-size="allChannellength"
-                    :total="allChanneltotal"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    @size-change="allChannelSizeChange"
-                    @current-change="allChannelCurrentChange"
-                  />
-                </div>
+                    <span style="float: left">
+                      <i v-if="item.title">
+                        {{ item.title.zh }}
+                      </i>
+                    </span>
+                    <span style="float: right; color: #8492a6">
+                      {{ item.description.zh }}
+                    </span>
+                  </el-option>
+                </el-select>
               </el-dialog>
             </div>
           </div>
@@ -334,11 +305,25 @@
 <script>
   var editor1
   var editor2
-  import { addRule, ruleTest, postResource } from '@/api/Rules'
+  import {
+    addRule,
+    ruleTest,
+    postResource,
+    get_actions,
+    get_resources,
+  } from '@/api/Rules'
 
   export default {
     data() {
       return {
+        resources: [],
+        params: {
+          name: '',
+          payload_tmpl: '${payload}',
+          target_qos: 0,
+          target_topic: 'thing/${productid}/${clientid}/post',
+          $resource: '',
+        },
         dialogVisible: false,
         resourceform: {
           objectId: '',
@@ -403,8 +388,6 @@
         msg = 'hello'`,
         actionslist: [],
         allChannelstart: 0,
-        allChannellength: 10,
-        allChanneltotal: 0,
       }
     },
     mounted() {
@@ -470,36 +453,39 @@
       },
       relationChannel(row) {
         this.actionData.push({
-          name: 'dgiot',
+          name: this.params.name,
           params: {
             $resource: 'resource:' + row.objectId,
-            target_topic: 'thing/${productid}/${clientid}/post',
-            target_qos: 0,
-            payload_tmpl: '${payload}',
+            target_topic: this.params.target_topic,
+            target_qos: this.params.target_qos,
+            payload_tmpl: this.params.payload_tmpl,
             // type: this.ctype
           },
           fallbacks: [],
         })
       },
-      allChannelSizeChange(val) {
-        this.allChannellength = val
-        this.showAllChannel()
+      async _get_actions() {
+        const { data } = await get_actions()
+        this.channellist = data
       },
-      allChannelCurrentChange(val) {
-        this.allChannelstart = (val - 1) * this.allChannellength
-        this.showAllChannel()
+      changeChanel(v) {
+        console.log(v, 'changeChanel')
       },
-      showAllChannel() {
-        const params = {
-          count: 'objectId',
-          limit: this.allChannelstart,
-          where: {},
-        }
-        this.$query_object('Channel', params).then((res) => {
-          this.allChanneltotal = res.count
-          this.channellist = res.results
-        })
+      async _get_resources() {
+        const { data } = await get_resources()
+        this.resources = data
       },
+      // showAllChannel() {
+      //   const params = {
+      //     count: 'objectId',
+      //     limit: this.allChannelstart,
+      //     where: {},
+      //   }
+      //   this.$query_object('Channel', params).then((res) => {
+      //     this.allChanneltotal = res.count
+      //     this.channellist = res.results
+      //   })
+      // },
       testRule(forName) {
         this.formInline.result = ''
         this.formInline.payload = editor2.getValue()
@@ -606,7 +592,8 @@
       // 初始化resource通道
       addresouce() {
         this.dialogFormVisible = true
-        this.showAllChannel()
+        this._get_actions()
+        this._get_resources()
       },
       addRes(formName) {
         this.$refs[formName].validate((valid) => {
