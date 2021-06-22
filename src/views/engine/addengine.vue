@@ -339,6 +339,18 @@
   export default {
     data() {
       return {
+        ruleId: this.$route.query.id || '',
+        resources: [],
+        params: {
+          name: '',
+          payload_tmpl: '${payload}',
+          target_qos: 0,
+          target_qosSelect: [-1, 0, 1, 2],
+          target_topic: 'thing/${productid}/${clientid}/post',
+          $resource: '',
+          resources: '',
+          channel: '',
+        },
         dialogVisible: false,
         resourceform: {
           objectId: '',
@@ -408,6 +420,10 @@
       }
     },
     mounted() {
+      if (this.ruleId) {
+        console.log('1111')
+        this.queryRule(this.ruleId)
+      }
       this.title = this.$route.query.title
       this.productid = this.$route.query.productid
       editor1 = ace.edit('editor1')
