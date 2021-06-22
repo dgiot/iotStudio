@@ -470,7 +470,7 @@
   export default {
     data() {
       return {
-        ruleId: this.$route.query.id,
+        ruleId: this.$route.query.id || '',
         resources: [],
         params: {
           name: '',
@@ -558,6 +558,7 @@
     },
     mounted() {
       if (this.ruleId) {
+        console.log('1111')
         this.queryRule(this.ruleId)
       }
       this.title = this.$route.query.title
