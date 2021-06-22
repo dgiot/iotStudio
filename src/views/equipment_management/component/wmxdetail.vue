@@ -694,25 +694,38 @@
             </el-row>
             <el-row v-show="sizeForm.protocol == 'modbus'" :gutter="24">
               <el-col :span="12">
-                <el-form-item label="数据格式">
+                <el-form-item label="数据类型">
                   <el-select
                     v-model="sizeForm.originaltype"
                     placeholder="请选择"
                     style="width: 100%"
                   >
+                    <el-option-group
+                      v-for="group in dataType"
+                      :key="group.label"
+                      :label="group.label"
+                    >
+                      <el-option
+                        v-for="item in group.options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-option-group>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="字节序" prop="byteorder">
+                  <el-select
+                    v-model="sizeForm.byteorder"
+                    placeholder="请选择"
+                    style="width: 100%"
+                  >
                     <el-option
                       v-for="item in [
-                        { value: 'bit', label: '位' },
-                        { value: 'short16_AB', label: '16位 有符号(AB)' },
-                        { value: 'short16_BA', label: '16位 有符号(BA)' },
-                        { value: 'ushort16_AB', label: '16位 无符号(AB)' },
-                        { value: 'ushort16_BA', label: '16位 无符号(BA)' },
-                        { value: 'long32_ABCD', label: '32位 有符号(ABCD)' },
-                        { value: 'long32_CDAB', label: '32位 有符号(CDAB)' },
-                        { value: 'ulong32_ABCD', label: '32位 无符号(ABCD)' },
-                        { value: 'ulong32_CDAB', label: '32位 无符号(CDAB)' },
-                        { value: 'float32_ABCD', label: '32位 浮点数(ABCD)' },
-                        { value: 'float32_CDAB', label: '32位 浮点数(CDAB)' },
+                        { value: 'big', label: '大端' },
+                        { value: 'little', label: '小端' },
                       ]"
                       :key="item.value"
                       :label="item.label"
@@ -731,7 +744,7 @@
             >
               <el-table-column
                 align="center"
-                label="从机地址(16进制加0X,例:0X10,否则是十进制)"
+                label="从机地址(1-254)"
                 min-width="120"
               >
                 <!--关键代码-->
@@ -754,31 +767,31 @@
                   >
                     <el-option
                       v-for="item in [
-                        { value: 'readCoils', label: '0X01:读线圈寄存器' },
-                        { value: 'readInputs', label: '0X02:读离散输入寄存器' },
+                        { value: 'readCoils', label: '01:读线圈寄存器' },
+                        { value: 'readInputs', label: '02:读离散输入寄存器' },
                         {
                           value: 'readHregs',
-                          label: '0X03:读保持寄存器',
+                          label: '02:读保持寄存器',
                         },
                         {
                           value: 'readIregs',
-                          label: '0X04:读输入寄存器',
+                          label: '04:读输入寄存器',
                         },
                         {
                           value: 'writeCoil',
-                          label: '0X05:写单个线圈寄存器',
+                          label: '05:写单个线圈寄存器',
                         },
                         {
                           value: 'writeHreg',
-                          label: '0X06:写单个保持寄存',
+                          label: '06:写单个保持寄存',
                         },
                         {
                           value: 'writeCoils',
-                          label: '0X0f:写多个线圈寄存器',
+                          label: '0f:写多个线圈寄存器',
                         },
                         {
                           value: 'writeHregs',
-                          label: '0X10:写多个保持寄存器',
+                          label: '10:写多个保持寄存器',
                         },
                       ]"
                       :key="item.value"
@@ -791,7 +804,7 @@
               </el-table-column>
               <el-table-column
                 align="center"
-                label="数据地址(16进制加0X,例:0X10,否则是十进制)"
+                label="数据地址(1-65536)"
                 min-width="120"
               >
                 <!--关键代码-->
@@ -800,11 +813,7 @@
                   <span v-show="false">{{ scope.row.slaveid }}</span>
                 </template>
               </el-table-column>
-              <el-table-column
-                align="center"
-                label="数据长度(字节)"
-                min-width="120"
-              >
+              <el-table-column align="center" label="数据长度" min-width="120">
                 <!--关键代码-->
                 <template slot-scope="scope">
                   <el-input v-model="sizeForm.dinumber" />
