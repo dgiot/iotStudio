@@ -1,4 +1,4 @@
-## 4.3.0 (2021-06-21)
+## 4.3.0 (2021-06-22)
 
 * feat: 解决不能查询product的bug ([e3c980d](https://github.com/dgiot/dgiot_dashboard/commit/e3c980d))
 * feat: 组态 ([033a3ac](https://github.com/dgiot/dgiot_dashboard/commit/033a3ac))
@@ -7,6 +7,7 @@
 * feat: api bug fix ([487dd3e](https://github.com/dgiot/dgiot_dashboard/commit/487dd3e))
 * feat: api https ([284dca2](https://github.com/dgiot/dgiot_dashboard/commit/284dca2))
 * feat: button visible ([fc3cb99](https://github.com/dgiot/dgiot_dashboard/commit/fc3cb99))
+* feat: changeChanel ([17d456a](https://github.com/dgiot/dgiot_dashboard/commit/17d456a))
 * feat: changelog ([781eff1](https://github.com/dgiot/dgiot_dashboard/commit/781eff1))
 * feat: cli ([eaad820](https://github.com/dgiot/dgiot_dashboard/commit/eaad820))
 * feat: cli ([3c6e3fb](https://github.com/dgiot/dgiot_dashboard/commit/3c6e3fb))

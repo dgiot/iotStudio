@@ -29,6 +29,13 @@ export function get_resources() {
   })
 }
 
+export function get_rule_id(id) {
+  return request({
+    url: `rule/${id}`,
+    method: 'get',
+  })
+}
+
 export function addRule(data) {
   // actions, ctx, description, _for, name, rawsql
   return request({
