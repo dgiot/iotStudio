@@ -25,7 +25,6 @@
     "use:github": "npm run copy:config && rimraf .git/config && rimraf .git && mkdir .git && cp -r github/* .git && npm run remoteinfo && yarn changelog:zh && yarn changelog:en && git add . && git cz",
     "use:gitbit": "rimraf .git/config && rimraf .git && mkdir .git && cp -r gitbit/* .git && npm run remoteinfo && git pull origin master  && yarn changelog:zh && yarn changelog:en  && git add . && git cz",
     "remoteinfo": "git remote -v",
-    "genSwagger": "node src/utils/genSwagger.js",
     "set:github": "npm run remoteinfo && git push origin main && rimraf github && mkdir github && cp -r .git/* github && if exist github echo 'github'",
     "set:gitbit": "npm run remoteinfo && git push origin master && rimraf gitbit && mkdir gitbit && cp -r .git/* gitbit && if exist gitbit echo 'gitbit'",
     "copy:config": "rimraf src/config/developer.config.js && cp src/config/developer.lock.js src/config/developer.config.js && echo 'copy config done'"

@@ -217,31 +217,17 @@
             <div class="bottomtable" style="padding-left: 20px">
               <div class="tableaction">
                 <el-table :data="actionData" style="width: 100%">
-                  <el-table-column :label="$translateTitle('rule.channel')">
+                  <el-table-column
+                    :label="$translateTitle('rule.Type')"
+                    prop="name"
+                    width="180"
+                  />
+                  <el-table-column :label="$translateTitle('rule.Parameter')">
                     <template slot-scope="scope">
                       <span v-if="scope.row.params.$resource">
                         {{ '关联资源:' + scope.row.params.$resource }}
                       </span>
                       <span v-else />
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('rule.target_topic')"
-                  >
-                    <template slot-scope="scope">
-                      {{ scope.row.params.target_topic }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column :label="$translateTitle('rule.target_qos')">
-                    <template slot-scope="scope">
-                      {{ scope.row.params.target_qos }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    :label="$translateTitle('rule.payload_tmpl')"
-                  >
-                    <template slot-scope="scope">
-                      {{ scope.row.params.payload_tmpl }}
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -278,174 +264,64 @@
                 :title="$translateTitle('rule.ResponseAction')"
                 :visible.sync="dialogFormVisible"
                 :close-on-click-modal="false"
-                width="40%"
-                top="10%"
-                @close="resetForm('params')"
+                width="60%"
+                top="1vh"
               >
-                <el-form
-                  ref="params"
-                  :rules="paramsrules"
-                  label-position="left"
-                  label-width="140px"
-                  :model="params"
-                >
-                  <el-form-item prop="channel">
-                    <span slot="label">
-                      <span class="span-box">
-                        <i class="icon-dd-schetit" />
-                        <span>通道</span>
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          content="重新发布消息到物联网通道"
-                          placement="top-start"
-                        >
-                          <i class="el-icon-question"></i>
-                        </el-tooltip>
-                      </span>
-                    </span>
-
-                    <el-select
-                      v-model="params.channel"
-                      placeholder="请选择"
-                      @change="changeChanel"
-                    >
-                      <el-option
-                        v-for="item in channellist"
-                        :key="item.name"
-                        :label="item.name"
-                        :value="item.name"
+                <el-table :data="channellist" height="400" style="width: 100%">
+                  <el-table-column
+                    :label="$translateTitle('developer.channelnumber')"
+                    align="center"
+                  >
+                    <template slot-scope="scope">
+                      <span>{{ scope.row.objectId }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    :label="$translateTitle('developer.channelname')"
+                    align="center"
+                  >
+                    <template slot-scope="scope">
+                      <span>{{ scope.row.name }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    :label="$translateTitle('developer.servicetype')"
+                    align="center"
+                  >
+                    <template slot-scope="scope">
+                      <span>{{ scope.row.cType }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    :label="$translateTitle('developer.operation')"
+                    align="center"
+                  >
+                    <template slot-scope="scope">
+                      <el-button
+                        size="mini"
+                        type="primary"
+                        @click="relationChannel(scope.row)"
                       >
-                        <span style="float: left">
-                          <i v-if="item.title">
-                            {{ item.title.zh }}
-                          </i>
-                        </span>
-                        <span style="float: right; color: #8492a6">
-                          {{ item.description.zh }}
-                        </span>
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item prop="resources" label="关联资源">
-                    <span slot="label">
-                      <span class="span-box">
-                        <i class="icon-dd-schetit" />
-                        <span>关联资源</span>
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          content="关联资源"
-                          placement="top-start"
-                        >
-                          <i class="el-icon-question"></i>
-                        </el-tooltip>
-                      </span>
-                    </span>
-                    <el-select
-                      v-model="params.resources"
-                      placeholder="请选择"
-                      @change="changeChanel"
-                    >
-                      <el-option
-                        v-for="item in resources"
-                        :key="item.id"
-                        :label="item.id"
-                        :value="item.id"
-                      >
-                        <span style="float: left">
-                          <i v-if="item.description">
-                            {{ item.description }}
-                          </i>
-                        </span>
-                        <span style="float: right; color: #8492a6">
-                          {{ item.id }}
-                        </span>
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="目的 QoS ">
-                    <span slot="label">
-                      <span class="span-box">
-                        <i class="icon-dd-schetit" />
-                        <span>目的 QoS</span>
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          content="重新发布消息时用的 QoS 级别, 设置为 -1 以使用原消息中的 QoS"
-                          placement="top-start"
-                        >
-                          <i class="el-icon-question"></i>
-                        </el-tooltip>
-                      </span>
-                    </span>
-                    <el-select v-model="params.target_qos" placeholder="请选择">
-                      <el-option
-                        v-for="item in params.target_qosSelect"
-                        :key="item"
-                        :label="item"
-                        :value="item"
-                      />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item label="目的主题 ">
-                    <span slot="label">
-                      <span class="span-box">
-                        <i class="icon-dd-schetit" />
-                        <span>目的主题</span>
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          content="重新发布消息到哪个主题"
-                          placement="top-start"
-                        >
-                          <i class="el-icon-question"></i>
-                        </el-tooltip>
-                      </span>
-                    </span>
-                    <el-input v-model="params.target_topic" />
-                  </el-form-item>
-                  <el-form-item label="消息内容模板">
-                    <span slot="label">
-                      <span class="span-box">
-                        <i class="icon-dd-schetit" />
-                        <span>消息内容模板</span>
-                        <el-tooltip
-                          class="item"
-                          effect="dark"
-                          content="消息内容模板，支持变量"
-                          placement="top-start"
-                        >
-                          <i class="el-icon-question"></i>
-                        </el-tooltip>
-                      </span>
-                    </span>
-                    <el-input
-                      v-model="params.payload_tmpl"
-                      type="textarea"
-                      :rows="2"
-                    />
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary" @click="submitForm('params')">
-                      创建
-                    </el-button>
-                    <el-button @click="dialogFormVisible = !dialogFormVisible">
-                      取消
-                    </el-button>
-                  </el-form-item>
-                </el-form>
+                        {{ $translateTitle('developer.add') }}
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div class="elpagination" style="margin-top: 20px">
+                  <el-pagination
+                    :page-sizes="[10, 20, 30, 50]"
+                    :page-size="allChannellength"
+                    :total="allChanneltotal"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    @size-change="allChannelSizeChange"
+                    @current-change="allChannelCurrentChange"
+                  />
+                </div>
               </el-dialog>
             </div>
           </div>
           <el-form-item label-width="0">
-            <el-button
-              v-if="ruleId.length"
-              @click="editrules(ruleId, 'formInline')"
-            >
-              修改
-            </el-button>
-            <el-button v-else type="success" @click="addrules('formInline')">
+            <el-button type="success" @click="addrules('formInline')">
               新建
             </el-button>
             <el-button>取消</el-button>
@@ -458,30 +334,11 @@
 <script>
   var editor1
   var editor2
-  import {
-    addRule,
-    ruleTest,
-    postResource,
-    get_actions,
-    get_resources,
-    get_rule_id,
-  } from '@/api/Rules'
+  import { addRule, ruleTest, postResource } from '@/api/Rules'
 
   export default {
     data() {
       return {
-        ruleId: this.$route.query.id,
-        resources: [],
-        params: {
-          name: '',
-          payload_tmpl: '${payload}',
-          target_qos: 0,
-          target_qosSelect: [-1, 0, 1, 2],
-          target_topic: 'thing/${productid}/${clientid}/post',
-          $resource: '',
-          resources: '',
-          channel: '',
-        },
         dialogVisible: false,
         resourceform: {
           objectId: '',
@@ -527,14 +384,6 @@
           action: 'dgiot_resource',
           resource: '',
         },
-        paramsrules: {
-          channel: [
-            { required: true, message: '请选择通道', trigger: 'change' },
-          ],
-          resources: [
-            { required: true, message: '请选择关联资源', trigger: 'change' },
-          ],
-        },
         formrule: {
           action: [
             { required: true, message: '请选择动作', trigger: 'change' },
@@ -554,12 +403,11 @@
         msg = 'hello'`,
         actionslist: [],
         allChannelstart: 0,
+        allChannellength: 10,
+        allChanneltotal: 0,
       }
     },
     mounted() {
-      if (this.ruleId) {
-        this.queryRule(this.ruleId)
-      }
       this.title = this.$route.query.title
       this.productid = this.$route.query.productid
       editor1 = ace.edit('editor1')
@@ -620,65 +468,38 @@
       openDialog() {
         this.dialogVisible = true
       },
-      async queryRule(ruleId) {
-        const { data } = await get_rule_id(ruleId)
-        console.log(data)
-        this.actionData = data.actions
-        this.formInline.enginesql = data.rawsql
-        this.formInline.ruleId = data.id
-        this.formInline.remarks = data.description
-        editor1.setValue(data.rawsql)
-      },
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.relationChannel(this.params)
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields()
-      },
       relationChannel(row) {
-        console.log(row)
         this.actionData.push({
           name: 'dgiot',
           params: {
-            $resource: row.resources,
-            target_topic: row.target_topic,
-            target_qos: row.target_qos,
-            payload_tmpl: row.payload_tmpl,
+            $resource: 'resource:' + row.objectId,
+            target_topic: 'thing/${productid}/${clientid}/post',
+            target_qos: 0,
+            payload_tmpl: '${payload}',
             // type: this.ctype
           },
           fallbacks: [],
         })
-        this.dialogFormVisible = !this.dialogFormVisible
       },
-      async _get_actions() {
-        const { data } = await get_actions()
-        this.channellist = data
+      allChannelSizeChange(val) {
+        this.allChannellength = val
+        this.showAllChannel()
       },
-      changeChanel(v) {
-        console.log(v, 'changeChanel')
+      allChannelCurrentChange(val) {
+        this.allChannelstart = (val - 1) * this.allChannellength
+        this.showAllChannel()
       },
-      async _get_resources() {
-        const { data } = await get_resources()
-        this.resources = data
+      showAllChannel() {
+        const params = {
+          count: 'objectId',
+          limit: this.allChannelstart,
+          where: {},
+        }
+        this.$query_object('Channel', params).then((res) => {
+          this.allChanneltotal = res.count
+          this.channellist = res.results
+        })
       },
-      // showAllChannel() {
-      //   const params = {
-      //     count: 'objectId',
-      //     limit: this.allChannelstart,
-      //     where: {},
-      //   }
-      //   this.$query_object('Channel', params).then((res) => {
-      //     this.allChanneltotal = res.count
-      //     this.channellist = res.results
-      //   })
-      // },
       testRule(forName) {
         this.formInline.result = ''
         this.formInline.payload = editor2.getValue()
@@ -709,9 +530,6 @@
               })
           }
         })
-      },
-      editrules(ruleid, forName) {
-        console.log(ruleid, forName)
       },
       addrules(forName) {
         this.formInline.payload = editor2.getValue()
@@ -788,8 +606,7 @@
       // 初始化resource通道
       addresouce() {
         this.dialogFormVisible = true
-        this._get_actions()
-        this._get_resources()
+        this.showAllChannel()
       },
       addRes(formName) {
         this.$refs[formName].validate((valid) => {
@@ -833,23 +650,18 @@
     height: 100%;
     padding: 20px;
     background-color: #f6f7fb;
-
     .addenheader {
       padding-bottom: 10px;
-
       ::v-deep .el-breadcrumb {
         font-size: 20px;
       }
     }
-
     .addcontent {
       color: #71737d !important;
-
       ::v-deep .form-block__title {
         padding-left: 10px;
         margin-bottom: 30px;
         border-left: 4px solid #34c388;
-
         .form-block__title-tips {
           display: inline-block;
           margin-left: 4px;
@@ -857,27 +669,22 @@
           color: #71737d;
         }
       }
-
       ::v-deep .el-row {
         margin-bottom: 20px;
         border-bottom: 1px solid #666666;
       }
-
       ::v-deep .tablebottom {
         box-sizing: border-box;
         padding-bottom: 20px;
         margin-bottom: 20px;
         border-bottom: 1px solid #666666;
       }
-
       ::v-deep .el-select {
         width: 100%;
       }
-
       ::v-deep .show-guess {
         margin-top: 4px;
         line-height: 1.4;
-
         p {
           margin-top: 6px;
           margin-bottom: 4px;
@@ -885,7 +692,6 @@
           font-weight: 400;
           color: #71737d;
         }
-
         .code {
           padding: 6px;
           margin-bottom: 12px;
@@ -896,27 +702,24 @@
         }
       }
     }
-
     ::v-deep .el-dialog__footer {
       padding-bottom: 40px;
     }
-
     .sql-tips {
-      width: 100vh;
-      max-height: 480px;
-      padding: 20px;
-      font-size: 15px;
-      color: #71737d;
       border: 4px dashed #d8d8d8;
+      color: #71737d;
+      padding: 20px;
       border-radius: 4px;
+      font-size: 15px;
+      max-height: 480px;
+      width: 100vh;
     }
-
     .code {
-      padding: 6px;
-      margin-bottom: 12px;
-      line-height: 1.4;
       background: hsla(0, 0%, 87.5%, 0.8);
+      line-height: 1.4;
+      padding: 6px;
       border-radius: 4px;
+      margin-bottom: 12px;
     }
 
     // ::v-deep .el-dialog__body{
