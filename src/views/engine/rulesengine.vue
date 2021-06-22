@@ -67,15 +67,6 @@
               type="info"
               size="mini"
               plain
-              @click="editRule(scope.row.id)"
-            >
-              <!-- 编辑 -->
-              {{ $translateTitle('task.Edit') }}
-            </el-button>
-            <el-button
-              type="info"
-              size="mini"
-              plain
               @click="deleteRule(scope.row.id)"
             >
               <!-- 删除 -->
@@ -162,12 +153,6 @@
         this.$router.push({
           path: '/rules_engine/checkengine',
           query: { id: id },
-        })
-      },
-      editRule(id) {
-        this.$router.push({
-          path: '/rules_engine/addengine',
-          query: { id: id, title: '编辑' },
         })
       },
       deleteRule(id) {
