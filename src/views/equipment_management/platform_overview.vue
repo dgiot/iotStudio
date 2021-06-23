@@ -395,7 +395,7 @@
                 <el-card>
                   <div slot="header" class="clearfix">
                     <el-badge :value="_dev_off_count" class="item">
-                      <el-button size="small">
+                      <el-button size="small" @click="_goDevice('dev_unline')">
                         {{ $translateTitle('home.dev_unline') }}
                       </el-button>
                     </el-badge>
@@ -406,6 +406,7 @@
                         <div class="grid-content bg-purple">
                           <el-table
                             :data="_offlineData"
+                            class="_el-table"
                             style="width: 100%"
                             :header-cell-style="{
                               background: '#073646',
@@ -443,7 +444,7 @@
                 <el-card>
                   <div slot="header" class="clearfix">
                     <el-badge :value="_dev_online_count" class="item">
-                      <el-button size="small">
+                      <el-button size="small" @click="_goDevice('dev_online')">
                         {{ $translateTitle('home.dev_online') }}
                       </el-button>
                     </el-badge>
@@ -455,6 +456,7 @@
                           <el-table
                             :data="_onlineData"
                             style="width: 100%"
+                            class="_el-table"
                             :header-cell-style="{
                               background: '#073646',
                               color: '#00D3E0',
@@ -898,6 +900,7 @@
           $('.fixed-header').css({ height: '0px', display: 'none' })
           $('.vab-tabs').css({ 'nim-height': '0px' })
           $('.baidu_map').css({ height: 'calc(78vh + 90px + 140px)' })
+          $('_el-table').css({ height: 'calc(78vh + 90px + 140px)' })
           $('.el-tabs').css({ height: 'calc(78vh + 90px + 140px)' })
           $('section').css({ height: 'calc(100vh - 60px* 2.7 + 110px)' })
         } else {
@@ -905,6 +908,7 @@
           $('.fixed-header').css({ height: '110px', display: 'block' })
           $('.vab-tabs').css({ 'nim-height': '50px' })
           $('.baidu_map').css({ height: 'calc(78vh - 20px)' })
+          $('_el-table').css({ height: 'calc(78vh)' })
           $('.el-tabs').css({ height: 'calc(78vh - 20px)' })
           $('section').css({ height: 'calc(100vh - 60px* 2.7)' })
         }
@@ -955,11 +959,19 @@
       change(e) {
         console.log(e)
         if (e) {
-          $('.el-tree').css({ height: '100px', display: 'block' })
+          $('.el-tree').css({
+            height: '100px',
+            display: 'block',
+            'overflow-x': 'auto',
+          })
         }
       },
       async handleNodeClick(data, node) {
-        $('.el-tree').css({ height: '0px', display: 'none' })
+        $('.el-tree').css({
+          height: '0px',
+          display: 'none',
+          'overflow-x': 'auto',
+        })
         $('.el-select-dropdown').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
         this.treeDataValue = data.label
@@ -1006,6 +1018,14 @@
           },
         })
       },
+      _goDevice(type) {
+        this.$router.push({
+          path: '/dashboard/devicelist',
+          query: {
+            deciceType: type,
+          },
+        })
+      },
       Gotoproduct(name) {
         this.$router.push({
           path: '/dashboard/productlist',
@@ -1040,6 +1060,9 @@
     }
     .home_card {
       ::v-deep {
+        ._el-table {
+          height: calc(78vh - 60px);
+        }
         .el-tabs {
           height: calc(78vh - 20px);
           overflow-x: auto;
