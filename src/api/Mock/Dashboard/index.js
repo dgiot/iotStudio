@@ -31,7 +31,7 @@ const queryParams = [
     table: 'Device',
     query: {
       order: '-updatedAt',
-      limit: 5,
+      limit: 15,
       keys: ['count(*)'],
       where: { status: 'ONLINE' },
     },
@@ -41,7 +41,7 @@ const queryParams = [
     vuekey: 'dev_off_count',
     table: 'Device',
     query: {
-      limit: 5,
+      limit: 15,
       order: '-updatedAt',
       keys: ['count(*)'],
       where: { status: 'OFFLINE' },

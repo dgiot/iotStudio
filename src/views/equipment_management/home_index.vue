@@ -1471,6 +1471,8 @@
       },
     },
     mounted() {
+      this.onlinedevices =
+        this.$route.query.deciceType == 'dev_online' ? '在线' : '离线'
       this.getMenu()
       this.searchProduct()
       this.queryYysId()
