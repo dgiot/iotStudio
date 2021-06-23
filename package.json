@@ -5,7 +5,7 @@
   "license": "Mozilla Public License Version 2.0",
   "private": true,
   "homepage": "https://github.com/dgiot/dgiot_dashboard.git",
-  "scripts": {
+  "scripts":{
     "dev": "vue-cli-service serve",
     "start": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
@@ -67,6 +67,7 @@
     "husky": "^6.0.0",
     "image-webpack-loader": "git+https://hub.fastgit.org/tcoopman/image-webpack-loader.git",
     "lint-staged": "^10.5.4",
+    "monaco-editor": "^0.25.2",
     "prettier": "^2.2.1",
     "raw-loader": "^4.0.2",
     "sass": "~1.32.13",
