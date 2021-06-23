@@ -161,6 +161,14 @@
       }),
     },
     watch: {
+      'Default.background': {
+        handler(e) {
+          console.log(e)
+          this.backgroundImage = e
+        },
+        immediate: true,
+      },
+
       $route: {
         handler(route) {
           this.redirect = (route.query && route.query.redirect) || '/'
@@ -170,10 +178,6 @@
     },
     mounted() {
       this.initShuwa()
-      console.log(this.Default)
-      if (this.Default.background) {
-        this.backgroundImage = this.Default.background
-      }
     },
     methods: {
       ...mapActions({
