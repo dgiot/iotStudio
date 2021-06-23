@@ -466,7 +466,7 @@
     get_resources,
     get_rule_id,
   } from '@/api/Rules'
-
+  import provider from '@/api/Ace/index'
   export default {
     data() {
       return {
@@ -569,6 +569,12 @@
         enableBasicAutocompletion: true,
         enableSnippets: true,
         enableLiveAutocompletion: true, // 设置自动提示
+      })
+      var languageTools = ace.require('ace/ext/language_tools')
+      languageTools.addCompleter({
+        getCompletions: function (editor, session, pos, prefix, callback) {
+          callback(null, provider)
+        },
       })
       editor1.setValue(`SELECT
         payload.msg as msg
