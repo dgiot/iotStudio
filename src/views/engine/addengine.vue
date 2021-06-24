@@ -290,8 +290,9 @@
                       <el-option
                         v-for="item in channellist"
                         :key="item.name"
-                        :label="item.name"
-                        :value="item.name"
+                        :label="item.title.zh"
+                        :value="item.title.zh"
+                        :disabled="item.name != 'dgiot'"
                       >
                         <span style="float: left">
                           <i v-if="item.title">
@@ -327,8 +328,8 @@
                       <el-option
                         v-for="item in resources"
                         :key="item.description"
-                        :label="item.id"
-                        :value="item.id"
+                        :label="item.description"
+                        :value="item.description"
                       >
                         <span style="float: left">
                           <i v-if="item.description">
@@ -437,7 +438,6 @@
   var editor2
   import {
     addRule,
-    ruleTest,
     postResource,
     get_actions,
     get_resources,
@@ -482,12 +482,14 @@
           user: '',
           region: '',
           enginesql:
-            '`SELECT\n' +
-            '        payload.msg as msg\n' +
-            '      FROM\n' +
-            '        "t/#"\n' +
-            '      WHERE\n' +
-            "        msg = 'hello'`",
+            'SELECT\n' +
+            '      payload.msg as msg,\n' +
+            '      clientid,\n' +
+            "      'productid' as productid\n" +
+            '    FROM\n' +
+            '      "t/#"\n' +
+            '    WHERE\n' +
+            "      msg = 'hello'",
           remarks: '',
           sqltest: false,
           clientid: 'c_swqx',
@@ -680,19 +682,33 @@
               topic: this.formInline.topic,
               username: this.formInline.username,
             }
-            ruleTest(
-              this.actionData,
-              ctx,
-              this.formInline.remarks,
-              editor1.getValue().match(regex)[1],
-              '',
-              editor1.getValue()
-            )
+            const params = {
+              actions: this.actionData,
+              ctx: ctx,
+              description: this.formInline.remarks,
+              for: editor1.getValue().match(regex)[1],
+              name: this.formInline.username,
+              rawsql: editor1.getValue(),
+              test: 'true',
+            }
+            addRule(params)
               .then((response) => {
-                this.formInline.result = JSON.stringify(response, null, 4)
+                console.log('response', response)
+                const { code } = response
+                if (code == 0) {
+                  this.formInline.result = response.data.msg
+                  console.log(
+                    '     this.formInline.result ',
+                    this.formInline.result
+                  )
+                } else {
+                  this.$message.error('SQL Not Match')
+                  console.log('error response', response)
+                }
               })
               .catch((error) => {
-                this.$message(error.error)
+                console.log(error)
+                this.$message.error(error)
               })
           }
         })

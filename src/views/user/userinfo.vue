@@ -301,6 +301,7 @@
             this.set_mimg(info.url)
             break
           case 'companyinfo.logo':
+            this.companyinfo.logo = info.url
             this.setlogo(info.url)
             break
           case 'companyinfo.backgroundimage':
