@@ -482,12 +482,14 @@
           user: '',
           region: '',
           enginesql:
-            '`SELECT\n' +
-            '        payload.msg as msg\n' +
-            '      FROM\n' +
-            '        "t/#"\n' +
-            '      WHERE\n' +
-            "        msg = 'hello'`",
+            'SELECT\n' +
+            '      payload.msg as msg,\n' +
+            '      clientid,\n' +
+            "      'productid' as productid\n" +
+            '    FROM\n' +
+            '      "t/#"\n' +
+            '    WHERE\n' +
+            "      msg = 'hello'",
           remarks: '',
           sqltest: false,
           clientid: 'c_swqx',
