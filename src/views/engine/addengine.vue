@@ -90,30 +90,7 @@
               </el-form-item>
               <!--其他信息-->
             </el-col>
-            <el-col :span="12">
-              <div class="sql-tips el-col el-col-8 el-col-offset-1">
-                <div>
-                  <p>
-                    规则引擎是标准 MQTT 之上基于 SQL
-                    的核心数据处理与分发组件，可以方便的筛选并处理 MQTT
-                    消息与设备生命周期事件，并将数据分发移动到 HTTP
-                    Server、数据库、消息队列甚至是另一个 MQTT Broker 中。
-                  </p>
-                  <p>1. 选择 't/#' 主题的消息，提取全部字段：</p>
-                  <div class="code"><code>SELECT * FROM "t/#"</code></div>
-                </div>
-                <p>
-                  2. 通过事件主题选择客户端连接事件，筛选 Username 为 'emqx'
-                  的设备并获取连接信息：
-                </p>
-                <div class="code">
-                  <code>
-                    SELECT clientid, connected_at FROM
-                    "$events/client_connected" WHERE username = 'emqx'
-                  </code>
-                </div>
-              </div>
-            </el-col>
+
             <!--中间间隔-->
             <el-col :span="4" />
             <el-col :span="row2" class="animated fadeInRightBig">
@@ -465,6 +442,7 @@
     get_actions,
     get_resources,
     get_rule_id,
+    put_rule_id,
   } from '@/api/Rules'
   import provider from '@/api/Ace/index'
   export default {
@@ -496,14 +474,20 @@
             { required: true, message: '请填写通道描述', trigger: 'blur' },
           ],
         },
-        row1: 12,
+        row1: 24,
         row2: 0,
         dialogFormVisible: false,
         title: '',
         formInline: {
           user: '',
           region: '',
-          enginesql: '',
+          enginesql:
+            '`SELECT\n' +
+            '        payload.msg as msg\n' +
+            '      FROM\n' +
+            '        "t/#"\n' +
+            '      WHERE\n' +
+            "        msg = 'hello'`",
           remarks: '',
           sqltest: false,
           clientid: 'c_swqx',
@@ -576,12 +560,7 @@
           callback(null, provider)
         },
       })
-      editor1.setValue(`SELECT
-        payload.msg as msg
-      FROM
-        "t/#"
-      WHERE
-        msg = 'hello'`)
+      editor1.setValue(this.formInline.enginesql)
       editor2 = ace.edit('editor2')
       editor2.session.setMode('ace/mode/json') // 设置语言
       editor2.setTheme('ace/theme/eclipse') // 设置主题
@@ -629,8 +608,10 @@
       async queryRule(ruleId) {
         const { data } = await get_rule_id(ruleId)
         console.log(data)
+        this.formInline.username = data.ctx
         this.actionData = data.actions
         this.formInline.enginesql = data.rawsql
+        editor1.setValue(this.formInline.enginesql)
         this.formInline.ruleId = data.id
         this.formInline.remarks = data.description
         editor1.setValue(data.rawsql)
@@ -716,8 +697,27 @@
           }
         })
       },
-      editrules(ruleid, forName) {
-        console.log(ruleid, forName)
+      async editrules(ruleid, forName) {
+        var ctx = {
+          clientid: this.formInline.clientid,
+          payload: editor2.getValue(),
+          qos: this.formInline.qos,
+          topic: this.formInline.topic,
+          username: this.formInline.username,
+        }
+        const params = {
+          actions: this.actionData,
+          ctx: ctx,
+          description: this.formInline.remarks,
+          for: '["t/#"]',
+          rawsql: editor1.getValue(),
+        }
+        const res = await put_rule_id(ruleid, params)
+        console.log(ruleid, forName, res)
+        this.$message('修改成功')
+        this.$router.push({
+          path: '/dashboard/engine',
+        })
       },
       addrules(forName) {
         this.formInline.payload = editor2.getValue()
@@ -735,7 +735,6 @@
               topic: this.formInline.topic,
               username: this.formInline.username,
             }
-            var regex = /from[^"]+?"([^"]+)"/im
             const params = {
               actions: this.actionData,
               ctx: ctx,
@@ -775,10 +774,6 @@
                   this.$message('创建成功')
                   this.$router.push({
                     path: '/dashboard/engine',
-                    // query: {
-                    //   id: this.productid,
-                    //   activeName: "sixeth"
-                    // }
                   })
                 }
               })

@@ -36,6 +36,14 @@ export function get_rule_id(id) {
   })
 }
 
+export function put_rule_id(id, data) {
+  return request({
+    url: `rule/${id}`,
+    method: 'put',
+    data: data,
+  })
+}
+
 export function addRule(data) {
   // actions, ctx, description, _for, name, rawsql
   return request({
