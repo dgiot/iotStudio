@@ -50,6 +50,19 @@
           </template>
         </el-table-column>
         <el-table-column
+          align="center"
+          :label="$translateTitle('equipment.state')"
+        >
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.enabled"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              @change="changeRule(scope.row.id, scope.row.enabled)"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
           :label="$translateTitle('developer.operation')"
           align="center"
         >
@@ -99,7 +112,7 @@
   </div>
 </template>
 <script>
-  import { getRule, ruleDelete } from '@/api/Rules'
+  import { getRule, ruleDelete, put_rule_id } from '@/api/Rules'
   export default {
     data() {
       return {
@@ -143,6 +156,12 @@
           matched += metrics[i].matched
         }
         return matched
+      },
+      async changeRule(ruleid, status) {
+        const params = { enabled: status }
+        const res = await put_rule_id(ruleid, params)
+        console.log(res)
+        this.$message('状态修改成功')
       },
       actions(row) {
         // var string = []
