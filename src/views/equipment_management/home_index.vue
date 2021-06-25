@@ -1241,6 +1241,7 @@
   import { Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
   import { getProduct } from '@/api/Product/index'
+  import { tableDict } from '@/api/Global/device'
   import info from '@/components/Device/info'
   import {
     BmNavigation,
@@ -1482,12 +1483,13 @@
       this.queryYysId()
       console.log(this.language)
       this.selectdevice = this.language == 'zh' ? '设备名称' : 'devicename'
-      // this.$store.dispatch('getUserId', '111')
-      // if (this.$route.query.productid) {
-      //   this.selectProductid(this.$route.query.productid)
-      // }
+      this.queryTableDict()
     },
     methods: {
+      async queryTableDict() {
+        const res = await tableDict('sinmahe_PeriodicInformation')
+        console.log('sinmahe_PeriodicInformation', res)
+      },
       change(e) {
         console.log(e)
         if (e) {
@@ -1496,7 +1498,6 @@
       },
       async selectProdChange(objectId) {
         this.listLoading = true
-        console.log(objectId, this.equvalue, '11111111')
         if (objectId == '0') {
           this.isALL = true
         } else {
