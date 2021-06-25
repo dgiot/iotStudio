@@ -70,6 +70,22 @@
           </el-button>
         </span>
       </el-dialog>
+      <el-dialog
+        :visible.sync="stateDialog"
+        :title="stateDialog.name"
+        top="5vh"
+        width="80%"
+      >
+        <deviceState :devicedetail="stateDetail" />
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="stateDialog = false">
+            {{ $translateTitle('developer.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="stateDialog = false">
+            {{ $translateTitle('developer.determine') }}
+          </el-button>
+        </span>
+      </el-dialog>
     </div>
     <div class="equtabs">
       <!--tabs第一个标签页-->
@@ -436,22 +452,6 @@
                 </template>
               </el-table-column>
               <el-table-column
-                v-if="Company == '云寓智慧公寓平台'"
-                :label="$translateTitle('developer.authcode')"
-                align="center"
-                width="100"
-              >
-                <template slot-scope="scope">
-                  <span>
-                    {{
-                      scope.row.basedata && scope.row.basedata.auth
-                        ? scope.row.basedata.auth
-                        : ''
-                    }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
                 :label="$translateTitle('developer.Company')"
                 align="center"
                 width="100"
@@ -459,18 +459,6 @@
                 <template slot-scope="scope">
                   <span>
                     {{ scope.row.Company }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                v-if="Company == '云寓智慧公寓平台'"
-                :label="$translateTitle('developer.Application')"
-                align="center"
-                width="200"
-              >
-                <template slot-scope="scope">
-                  <span>
-                    {{ scope.row.basedata.yysId }}
                   </span>
                 </template>
               </el-table-column>
@@ -527,17 +515,15 @@
                     {{ $translateTitle('equipment.info') }}
                   </el-link>
 
-                  <!--                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />-->
-                  <!--                  <el-link-->
-                  <!--                    :underline="false"-->
-                  <!--                    type="primary"-->
-                  <!--                    :disabled="!scope.row.location"-->
-                  <!--                    @click="showMap(scope.row.location, scope.row.objectId)"-->
-                  <!--                  >-->
-                  <!--                    {{ $translateTitle('equipment.location') }}-->
-                  <!--                  </el-link>-->
+                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
                   <el-link
-                    v-if="Company != '云寓智慧公寓平台'"
+                    :underline="false"
+                    type="primary"
+                    @click="showState(scope.row, scope.row.objectId)"
+                  >
+                    {{ $translateTitle('equipment.state') }}
+                  </el-link>
+                  <el-link
                     :underline="false"
                     type="primary"
                     style="margin: 0 10px"
@@ -687,21 +673,6 @@
                 </template>
               </el-table-column>
               <el-table-column
-                v-if="Company == '云寓智慧公寓平台'"
-                :label="$translateTitle('developer.authcode')"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <span>
-                    {{
-                      scope.row.basedata && scope.row.basedata.auth
-                        ? scope.row.basedata.auth
-                        : ''
-                    }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
                 :label="$translateTitle('developer.Company')"
                 align="center"
               >
@@ -711,17 +682,7 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column
-                v-if="Company == '云寓智慧公寓平台'"
-                :label="$translateTitle('developer.Application')"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <span>
-                    {{ scope.row.basedata.yysId }}
-                  </span>
-                </template>
-              </el-table-column>
+
               <el-table-column
                 :label="
                   $translateTitle('developer.enable') +
@@ -820,7 +781,6 @@
                     {{ $translateTitle('equipment.location') }}
                   </el-link>
                   <el-link
-                    v-if="Company != '云寓智慧公寓平台'"
                     :underline="false"
                     type="primary"
                     style="margin: 0 10px"
@@ -1043,32 +1003,6 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item
-                  v-if="Company == '云寓智慧公寓平台'"
-                  :label="$translateTitle('equipment.auth')"
-                >
-                  <el-input v-model="deviceform.auth" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item
-                  v-if="Company == '云寓智慧公寓平台'"
-                  :label="$translateTitle('equipment.application')"
-                >
-                  <el-select
-                    v-model="deviceform.yysId"
-                    :placeholder="$translateTitle('equipment.application')"
-                  >
-                    <el-option
-                      v-for="(item, index) in yysSelect"
-                      :key="index"
-                      :label="item.name"
-                      :value="item.key"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item
                   :label="$translateTitle('equipment.installationlocation')"
                 >
                   <el-input
@@ -1235,14 +1169,15 @@
   </div>
 </template>
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import { get_object } from '@/api/shuwa_parse'
   import { queryDict } from '@/api/Direct/index.js'
   import { Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
   import { getProduct } from '@/api/Product/index'
-  import { tableDict } from '@/api/Global/device'
+  import { tableDict, RunData } from '@/api/Global/device'
   import info from '@/components/Device/info'
+  import deviceState from '@/components/Device/deviceState'
   import {
     BmNavigation,
     BaiduMap,
@@ -1277,6 +1212,7 @@
       BmCityList,
       BmMarker,
       info,
+      deviceState,
     },
     data() {
       this.chartSettings = {
@@ -1311,6 +1247,8 @@
         topicData: [],
         InfoDialog: false,
         devicedetail: {},
+        stateDialog: false,
+        stateDetail: {},
         chartOnlone: {
           columns: ['状态', '数量'],
           rows: [
@@ -1387,7 +1325,6 @@
           isEnable: '',
           brand: '',
         },
-        yysSelect: [],
         rules: {
           name: [
             { required: true, message: '请输入设备名称', trigger: 'blur' },
@@ -1456,6 +1393,7 @@
     },
     computed: {
       ...mapGetters({
+        _tableDict: 'global/_tableDict',
         token: 'user/token',
         roleTree: 'user/roleTree',
         language: 'settings/language',
@@ -1479,16 +1417,57 @@
           ? '离线'
           : ''
       this.getMenu()
-      this.searchProduct()
-      this.queryYysId()
-      console.log(this.language)
       this.selectdevice = this.language == 'zh' ? '设备名称' : 'devicename'
       this.queryTableDict()
     },
     methods: {
+      ...mapMutations({
+        set_tableDict: 'user/set_tableDict',
+      }),
       async queryTableDict() {
-        const res = await tableDict('sinmahe_PeriodicInformation')
-        console.log('sinmahe_PeriodicInformation', res)
+        // 查询表单字典
+        const { results } = await tableDict('sinmahe_PeriodicInformation')
+        console.log('set_tableDict', results[0].config.basedate.params)
+        this.set_tableDict(results[0].config.basedate.params)
+        // 查询产品
+        this.proTableData = []
+        this.proTableData1 = []
+        const parsms1 = {
+          count: 'objectId',
+          order: '-updatedAt',
+          keys: 'name',
+          where: {
+            category: 'IotHub',
+          },
+        }
+        const { results: _proTableData } = await this.$query_object(
+          'Product',
+          parsms1
+        ) // es6 结构赋值重命名
+        this.proTableData = _proTableData
+        this.proTableData.unshift({
+          name: this.language == 'zh' ? '全部产品' : 'All Products',
+          objectId: '0',
+        })
+
+        if (this.$route.query.product) {
+          this.proTableData.forEach((i, index) => {
+            if (i.objectId == this.$route.query.product) {
+              this.equvalue = this.proTableData[index].objectId
+              this.productenable = true
+              this.access_token = this.token
+              this.$nextTick(() => {
+                this.selectProdChange(this.$route.query.product)
+              })
+            }
+          })
+        }
+        this.proTableData1 = results.filter((item) => item.objectId != '0')
+
+        if (this.$route.query.productid) {
+          this.equvalue = this.$route.query.productid
+          this.productenable = false
+        }
       },
       change(e) {
         console.log(e)
@@ -1575,6 +1554,14 @@
         this.deciceCompany = acl
         this.popoverVisible = !this.popoverVisible
       },
+      async showState(data, objectId) {
+        this.stateDetail = {}
+        const _stateDetail = await RunData(objectId)
+        console.log(_stateDetail)
+        this.stateDetail = _stateDetail
+        this.stateDialog = true
+        console.log(data, objectId)
+      },
       showInfo(data) {
         this.devicedetail = {}
         this.InfoDialog = true
@@ -1655,11 +1642,13 @@
         console.log(data.name)
       },
       getMenu() {
+        console.log('this.roleTree', this.roleTree)
         this.deptTreeData = this.roleTree
         console.log(this.deptTreeData)
         this.handleNodeClick(this.deptTreeData[0], 0)
       },
       async handleNodeClick(data, node) {
+        console.log(data, 'handleNodeClick')
         $('.el-tree').css({ height: '0px', display: 'none' })
         $('.el-select-dropdown').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
@@ -1675,22 +1664,6 @@
         this.curDepartmentId = objectId
         // this.Company = name
         this.getDevices(0)
-      },
-      async queryYysId() {
-        const parsms = {
-          order: '-createdAt',
-          limit: 100,
-          skip: 0,
-          where: {
-            type: 'b83b5d9fc0',
-          },
-        }
-        queryDict(parsms).then((res) => {
-          this.yysSelect = [{ name: '空', key: '' }]
-          res.results.map((item) => {
-            this.yysSelect.push(item.data)
-          })
-        })
       },
       async rolesSelect(val) {
         this.productroleslist = []
@@ -1846,46 +1819,6 @@
 
         this.chartOnlone.rows[1]['数量'] = this.devicetotal - res.count
         this.chartOnlone.rows[0]['数量'] = res.count
-      },
-
-      // 查询产品
-      async searchProduct() {
-        this.proTableData = []
-        this.proTableData1 = []
-        const parsms = {
-          count: 'objectId',
-          order: '-updatedAt',
-          keys: 'name',
-          where: {
-            category: 'IotHub',
-          },
-        }
-        const { results } = await this.$query_object('Product', parsms)
-        this.proTableData = results
-        this.proTableData.unshift({
-          name: this.language == 'zh' ? '全部产品' : 'All Products',
-          objectId: '0',
-        })
-
-        if (this.$route.query.product) {
-          this.proTableData.forEach((i, index) => {
-            if (i.objectId == this.$route.query.product) {
-              this.equvalue = this.proTableData[index].objectId
-              this.productenable = true
-              this.access_token = this.token
-              this.$nextTick(() => {
-                this.selectProdChange(this.$route.query.product)
-              })
-            }
-          })
-        }
-        this.proTableData1 = results.filter((item) => item.objectId != '0')
-
-        if (this.$route.query.productid) {
-          this.equvalue = this.$route.query.productid
-          this.productenable = false
-        }
-        // this.getDevices()
       },
       async getDevices(start) {
         this.listLoading = true

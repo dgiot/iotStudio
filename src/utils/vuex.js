@@ -19,7 +19,7 @@ const tempToken = {
  * @description 获取token
  * @param tokenName
  * @param storage
- * @type token type ['Number','String','Boolean','Number','Undefined','Object','Function']
+ * @type token type ['Number','String','Boolean','Number','Undefined','Object','Function'] type 是为了解决数据类型问题
  * @returns {void|*}
  */
 export function getToken(tokenName, storage = 'sessionStorage', type = '') {
@@ -31,9 +31,6 @@ export function getToken(tokenName, storage = 'sessionStorage', type = '') {
       : cookie.get(tokenName)
   if (res && isBase64(res)) {
     let Base64Decode = JSON.parse(Base64.decode(res))
-    if (tokenName == 'avatar') {
-      console.log(tokenName, Base64Decode.vuexinfo)
-    }
     return Base64Decode.vuexinfo
   } else {
     return type
@@ -54,6 +51,7 @@ export function setToken(tokenName, settoken, storage = 'sessionStorage') {
   } else if ('sessionStorage' === storage) {
     return sessionStorage.setItem(tokenName, Base64.encode(token))
   } else {
+    // 只有存在token里，才有expires 字段
     return cookie.set(tokenName, Base64.encode(token), { expires: expiresTime })
   }
 }

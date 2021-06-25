@@ -327,9 +327,9 @@
                     >
                       <el-option
                         v-for="item in resources"
-                        :key="item.description"
+                        :key="item.id"
                         :label="item.description"
-                        :value="item.description"
+                        :value="item.id"
                       >
                         <span style="float: left">
                           <i v-if="item.description">
