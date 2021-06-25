@@ -8,7 +8,7 @@
 import { getToken, setToken } from '@/utils/vuex'
 import { storage } from '@/config'
 const state = () => ({
-  _tableDict: getToken('_tableDict') || {},
+  _tableDict: getToken('_tableDict', 'sessionStorage', {}),
 })
 const getters = {
   _tableDict: (state) => state._tableDict,

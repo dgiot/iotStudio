@@ -14,3 +14,10 @@ export function tableDict(devType = 'sinmahe_PeriodicInformation') {
   })
   return res
 }
+
+export function RunData(objectId) {
+  return request({
+    url: `app/${objectId}`,
+    method: 'get',
+  })
+}

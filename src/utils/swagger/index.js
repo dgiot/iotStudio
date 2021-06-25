@@ -1,3 +1,7 @@
+/**
+ * 自动构建执行,其他情况禁止执行
+ * @type {module:fs}
+ */
 const fs = require('fs')
 const path = require('path')
 const { proxyUrl } = require('../../config/net.config')

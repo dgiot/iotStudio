@@ -141,6 +141,7 @@ export function translateTitle(title) {
 
 export default {
   install(Vue, options) {
+    Vue.prototype.$axios = axios
     Vue.prototype.$moreHttp = moreHttp
     Vue.prototype.$globalConfig = globalConfig
     Vue.prototype.$getToken = getToken
