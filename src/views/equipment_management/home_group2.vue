@@ -1,5 +1,23 @@
 <template>
   <div class="devproduct">
+    <el-dialog
+      :visible.sync="dialogVisible"
+      width="90%"
+      top="1vh"
+      style="margin: 0 auto"
+    >
+      <VabParser
+        :productid="productid"
+        :form-config="formConfig"
+        @ParserSave="ParserSave"
+      />
+      <!--      <span slot="footer" class="dialog-footer">-->
+      <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
+      <!--        <el-button type="primary" @click="dialogVisible = false">-->
+      <!--          确 定-->
+      <!--        </el-button>-->
+      <!--      </span>-->
+    </el-dialog>
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <el-tabs v-model="activeName">
       <el-tab-pane
@@ -105,6 +123,14 @@
                     @click="editorDict(scope.row.objectId)"
                   >
                     {{ $translateTitle('product.dict') }}
+                  </el-button>
+                  <el-button
+                    :underline="false"
+                    icon="el-icon-s-grid"
+                    type="info"
+                    @click="editorParser(scope.row.objectId)"
+                  >
+                    {{ $translateTitle('product.parser') }}
                   </el-button>
                   <el-button
                     :underline="false"
@@ -943,9 +969,11 @@
   export default {
     data() {
       return {
+        dialogVisible: false,
         moduleTitle: this.$translateTitle('product.createproduct'),
         allunit: [],
         productInfo: {},
+        ParserConfig: {},
         category: Category,
         edit_dict_temp_dialog: false,
         title_dict_edit_dialog: '新增字典数据',
@@ -1114,6 +1142,7 @@
         ],
         imageUrl: '',
         productid: '',
+        formConfig: {},
         loading: false,
         allApps: [],
         categoryList: [],
@@ -1191,7 +1220,7 @@
         })
       },
       getCategory(key) {
-        console.log(key)
+        // console.log(key)
         let name = ''
         this.category.filter((item) => {
           if (item.type == key) {
@@ -1576,6 +1605,27 @@
           }
         })
       },
+      async editorParser(ObjectId) {
+        const { config = {} } = await getProduct(ObjectId)
+        this.productid = ObjectId
+        this.ParserConfig = config
+        this.formConfig = JSON.parse(config.parser)
+        this.dialogVisible = true
+      },
+      async ParserSave(parse, ObjectId) {
+        this.ParserConfig.parser = parse
+        const params = {
+          config: this.ParserConfig,
+        }
+        try {
+          let { updatedAt } = await putProduct(ObjectId, params)
+          console.log(updatedAt)
+          this.$message.success('表单保存成功')
+        } catch (e) {
+          this.$message.error(`保存失败${e}`)
+        }
+        this.dialogVisible = false
+      },
       async editorDict(ObjectId) {
         this.getAllunit()
         const row = await getProduct(ObjectId)
@@ -1940,7 +1990,7 @@
     },
   }
 </script>
-<style scoped>
+<style scoped lang="scss">
   .devproduct {
     box-sizing: border-box;
     width: 100%;
@@ -1948,6 +1998,13 @@
     padding: 20px;
   }
 
+  .devproduct ::v-deep .el-dialog__wrapper .el-dialog__header,
+  .devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
+    display: none;
+  }
+  .devproduct ::v-deep .el-dialog {
+    margin: 0 auto;
+  }
   .devproduct .el-tabs__header {
     margin: 0;
   }

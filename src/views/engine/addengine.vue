@@ -919,21 +919,21 @@
     }
 
     .sql-tips {
-      border: 4px dashed #d8d8d8;
-      color: #71737d;
-      padding: 20px;
-      border-radius: 4px;
-      font-size: 15px;
-      max-height: 480px;
       width: 100vh;
+      max-height: 480px;
+      padding: 20px;
+      font-size: 15px;
+      color: #71737d;
+      border: 4px dashed #d8d8d8;
+      border-radius: 4px;
     }
 
     .code {
-      background: hsla(0, 0%, 87.5%, 0.8);
-      line-height: 1.4;
       padding: 6px;
-      border-radius: 4px;
       margin-bottom: 12px;
+      line-height: 1.4;
+      background: hsla(0, 0%, 87.5%, 0.8);
+      border-radius: 4px;
     }
 
     // ::v-deep .el-dialog__body{

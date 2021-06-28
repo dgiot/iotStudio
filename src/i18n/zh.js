@@ -471,6 +471,7 @@ export default {
       addingtime: '添加时间',
       equipment: '设备',
       details: '详情',
+      parser: '表单',
       productinformation: '产品信息',
       productidentification: '产品标识',
       gateway: '网关',
