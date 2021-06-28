@@ -24,7 +24,13 @@
           </el-card>
         </el-col>
       </el-row>
-      <f-render v-model="_tableParser" :config="_tableParser" pure />
+      <f-render
+        v-if="_tableParser.formDesc"
+        v-model="_tableParser"
+        :config="_tableParser"
+        pure
+      />
+      <vab-empty v-else />
     </div>
     <vab-empty v-else />
   </div>
@@ -48,6 +54,7 @@
       }),
       _tableParser: {
         get: function () {
+          console.log(this.$store.state.global._tableParser)
           return this.$store.state.global._tableParser
         },
         set: function (val) {
@@ -61,7 +68,6 @@
         set_tableParser: 'global/set_tableParser',
       }),
     },
-    created() {},
   }
 </script>
 <style scoped lang="scss">

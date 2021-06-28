@@ -1688,7 +1688,11 @@
       },
       async handleNodeClick(data, node) {
         console.log(data, 'handleNodeClick')
-        $('.el-tree').css({ height: '0px', display: 'none' })
+        $('.el-tree').css({
+          height: '0px',
+          display: 'none',
+          'overflow-x': 'auto',
+        })
         $('.el-select-dropdown').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
         if (node.level != 1) {
