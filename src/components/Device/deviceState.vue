@@ -1,37 +1,36 @@
 <template>
   <div class="runData">
-    <div v-if="devicedetail.data" class="devicedetail">
-      <el-row>
+    <div v-if="_tableDict" class="devicedetail">
+      <el-row class="runData_row">
         <el-col
-          v-for="(item, index) in devicedetail.data"
+          v-for="(item, index) in _tableDict"
           :key="index"
-          :span="6"
-          :offset="2"
+          class="runData_col"
+          :span="4"
         >
-          <el-card :body-style="{ padding: '0px' }">
+          <el-card class="box-card" shadow="hover">
             <div slot="header" class="clearfix">
               <span>{{ item.name }}</span>
-              <el-button style="float: right; padding: 3px 0" type="text">
-                {{ item.unit }}
-              </el-button>
+              <el-button
+                icon="el-icon-refresh"
+                style="float: right; padding: 3px 0"
+                type="text"
+              />
             </div>
-            <img :src="item.imgurl" class="image" />
-            <div style="padding: 14px">
-              <div class="bottom clearfix">
-                <time class="time">{{ item.time }}</time>
-                <el-button type="text" class="button">
-                  {{ item.number }}
-                </el-button>
-              </div>
+            <div class="text item">
+              {{ item.identifier }}
+              {{ devicedetail[`${item.identifier}`] }}
             </div>
           </el-card>
         </el-col>
       </el-row>
+      <f-render v-model="_tableParser" :config="_tableParser" pure />
     </div>
     <vab-empty v-else />
   </div>
 </template>
 <script>
+  import { mapGetters, mapMutations } from 'vuex'
   export default {
     name: 'DeviceState',
     props: {
@@ -43,12 +42,31 @@
     data() {
       return {}
     },
+    computed: {
+      ...mapGetters({
+        _tableDict: 'global/_tableDict',
+      }),
+      _tableParser: {
+        get: function () {
+          return this.$store.state.global._tableParser
+        },
+        set: function (val) {
+          this.$emit('ParserSave', val)
+        },
+      },
+    },
+    methods: {
+      ...mapMutations({
+        set_tableDict: 'global/set_tableDict',
+        set_tableParser: 'global/set_tableParser',
+      }),
+    },
     created() {},
   }
 </script>
 <style scoped lang="scss">
   .runData {
-    height: 80vh;
+    height: 50%;
     overflow-y: auto;
     .devicedetail {
       width: 100%;
@@ -57,7 +75,8 @@
       .runData_row {
         width: 100%;
         .runData_col {
-          font-size: 18px;
+          margin: 10px;
+          font-size: 14px;
         }
       }
     }

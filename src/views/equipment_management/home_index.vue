@@ -75,8 +75,9 @@
         :title="stateDialog.name"
         top="5vh"
         width="80%"
+        :before-close="CloseState"
       >
-        <deviceState :devicedetail="stateDetail" />
+        <deviceState :devicedetail="stateDetail" @ParserSave="ParserSave" />
         <span slot="footer" class="dialog-footer">
           <el-button @click="stateDialog = false">
             {{ $translateTitle('developer.cancel') }}
@@ -1174,7 +1175,7 @@
   import { queryDict } from '@/api/Direct/index.js'
   import { Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
-  import { getProduct } from '@/api/Product/index'
+  import { getProduct, putProduct } from '@/api/Product/index'
   import { tableDict, RunData } from '@/api/Global/device'
   import info from '@/components/Device/info'
   import deviceState from '@/components/Device/deviceState'
@@ -1418,17 +1419,44 @@
           : ''
       this.getMenu()
       this.selectdevice = this.language == 'zh' ? '设备名称' : 'devicename'
+      this.queryProduct()
       this.queryTableDict()
     },
     methods: {
       ...mapMutations({
-        set_tableDict: 'user/set_tableDict',
+        set_tableDict: 'global/set_tableDict',
+        set_tableParser: 'global/set_tableParser',
       }),
+      ParserSave(e) {
+        console.log(
+          `如果监听到有修改,则更新vuex 并 存入到数据库 ${JSON.stringify(e)}`
+        )
+      },
       async queryTableDict() {
+        let config = {
+          Parser: {},
+          Dict: {},
+        }
         // 查询表单字典
-        const { results } = await tableDict('sinmahe_PeriodicInformation')
-        console.log('set_tableDict', results[0].config.basedate.params)
-        this.set_tableDict(results[0].config.basedate.params)
+        try {
+          const { results } = await tableDict('sinmahe_PeriodicInformation')
+          const { parser = {}, basedate = {} } = results[0].config
+          console.log(basedate)
+          console.log('set_tableDict', basedate.params)
+          config = {
+            Parser: JSON.parse(parser),
+            Dict: basedate.params,
+          }
+        } catch (e) {
+          config = {
+            Parser: {},
+            Dict: {},
+          }
+          console.log(`${e} queryTableDict`)
+        }
+        return config
+      },
+      async queryProduct() {
         // 查询产品
         this.proTableData = []
         this.proTableData1 = []
@@ -1462,7 +1490,9 @@
             }
           })
         }
-        this.proTableData1 = results.filter((item) => item.objectId != '0')
+        this.proTableData1 = _proTableData.filter(
+          (item) => item.objectId != '0'
+        )
 
         if (this.$route.query.productid) {
           this.equvalue = this.$route.query.productid
@@ -1555,12 +1585,21 @@
         this.popoverVisible = !this.popoverVisible
       },
       async showState(data, objectId) {
-        this.stateDetail = {}
-        const _stateDetail = await RunData(objectId)
-        console.log(_stateDetail)
-        this.stateDetail = _stateDetail
-        this.stateDialog = true
+        // this.set_tableDict({})
+        // this.set_tableParser({})
+        const Loading = this.$baseColorfullLoading(3)
+        const { Dict, Parser } = await this.queryTableDict()
+        this.set_tableDict(Dict)
+        this.set_tableParser(Parser)
+        this.stateDetail = data
         console.log(data, objectId)
+        setTimeout(() => {
+          Loading.close()
+          this.stateDialog = true
+        }, 1000)
+      },
+      CloseState() {
+        this.stateDialog = false
       },
       showInfo(data) {
         this.devicedetail = {}

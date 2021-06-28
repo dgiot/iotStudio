@@ -108,12 +108,14 @@
         />
       </div>
     </div>
-    <!--    <vab-a-map />-->
+    <!--    <vab-parser />-->
   </div>
 </template>
 <script>
   import { getRule, ruleDelete, put_rule_id } from '@/api/Rules'
+  // import VabParser from '@/vab/components/VabParser'
   export default {
+    // components: { VabParser },
     data() {
       return {
         engineData: [],

@@ -8,13 +8,13 @@ jobs:
   Create_Release:
     runs-on: ubuntu-latest
     steps:
-#      - uses: actions/checkout@master
-#      - name: Create a Release
-#        uses: elgohr/Github-Release-Action@master
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.token }}
-#        with:
-#          args: ${{ secrets.args }}
+      - uses: actions/checkout@master
+      - name: Create a Release
+        uses: elgohr/Github-Release-Action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.token }}
+        with:
+          args: ${{ secrets.args }}
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
         id: create_release
