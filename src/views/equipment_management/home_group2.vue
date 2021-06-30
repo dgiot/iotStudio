@@ -1610,7 +1610,7 @@
         this.productid = ObjectId
         this.ParserConfig = config
         this.formConfig = this.ParserConfig.parser
-          ? JSON.parse(this.ParserConfig.parser)
+          ? this.ParserConfig.parser
           : {}
         this.dialogVisible = true
       },

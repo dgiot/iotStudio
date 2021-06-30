@@ -49,7 +49,7 @@
     },
     methods: {
       handleSave(res) {
-        this.$emit('ParserSave', res, this.productid)
+        this.$emit('ParserSave', JSON.parse(res), this.productid)
       },
     },
   }
