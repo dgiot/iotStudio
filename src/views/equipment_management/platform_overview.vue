@@ -178,20 +178,20 @@
                 }}
                 {{ $translateTitle('konva.left') }}
               </el-button>
-              <el-button
-                :icon="
-                  fixedPaddingTop != '0px' ? 'el-icon-top' : 'el-icon-bottom'
-                "
-                type="primary"
-                @click="setPadding(fixedPaddingTop)"
-              >
-                {{
-                  fixedPaddingTop != '0px'
-                    ? $translateTitle('konva.hide')
-                    : $translateTitle('konva.show')
-                }}
-                {{ $translateTitle('konva.top') }}
-              </el-button>
+              <!--              <el-button-->
+              <!--                :icon="-->
+              <!--                  fixedPaddingTop != '0px' ? 'el-icon-top' : 'el-icon-bottom'-->
+              <!--                "-->
+              <!--                type="primary"-->
+              <!--                @click="setPadding(fixedPaddingTop)"-->
+              <!--              >-->
+              <!--                {{-->
+              <!--                  fixedPaddingTop != '0px'-->
+              <!--                    ? $translateTitle('konva.hide')-->
+              <!--                    : $translateTitle('konva.show')-->
+              <!--                }}-->
+              <!--                {{ $translateTitle('konva.top') }}-->
+              <!--              </el-button>-->
               <el-button
                 :icon="leftRow == 20 ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
                 type="primary"

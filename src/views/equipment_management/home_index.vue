@@ -1444,7 +1444,7 @@
           console.log(basedate)
           console.log('set_tableDict', basedate.params)
           config = {
-            Parser: JSON.parse(parser),
+            Parser: parser,
             Dict: basedate.params,
           }
         } catch (e) {
@@ -1660,7 +1660,7 @@
         )
           .then(async () => {
             await putDevice(this.deviceId, parmas).then((res) => {
-              if (res.ACL || res.detail) {
+              if (res.updatedAt) {
                 this.popoverVisible = false
                 this.getMenu()
                 this.$message({
@@ -1688,7 +1688,11 @@
       },
       async handleNodeClick(data, node) {
         console.log(data, 'handleNodeClick')
-        $('.el-tree').css({ height: '0px', display: 'none' })
+        $('.el-tree').css({
+          height: '0px',
+          display: 'none',
+          'overflow-x': 'auto',
+        })
         $('.el-select-dropdown').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
         if (node.level != 1) {

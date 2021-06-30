@@ -18,7 +18,7 @@ const state = () => ({
   _dev_online_count: getToken('_dev_online_count') || 0,
   _onlineData: getToken('_onlineData') || [],
   _dev_off_count: getToken('_dev_off_count') || 0,
-  _offlineData: getToken('_offlineData') || 0,
+  _offlineData: getToken('_offlineData') || [],
   _ChartStatus: getToken('_ChartStatus') || {
     columns: ['状态', '数量'],
     rows: [

@@ -1609,7 +1609,9 @@
         const { config = {} } = await getProduct(ObjectId)
         this.productid = ObjectId
         this.ParserConfig = config
-        this.formConfig = JSON.parse(config.parser)
+        this.formConfig = this.ParserConfig.parser
+          ? this.ParserConfig.parser
+          : {}
         this.dialogVisible = true
       },
       async ParserSave(parse, ObjectId) {
