@@ -41,6 +41,7 @@
     "core-js": "^3.9.1",
     "element-ui": "^2.15.1",
     "f-render": "^4.12.3",
+    "h7utils": "^1.0.1",
     "resize-detector": "^0.3.0",
     "vab-icons": "git+https://hub.fastgit.org/zxcasvw/vab-icons.git",
     "vue-ele-form": "^0.8.56"

@@ -5727,6 +5727,11 @@ gzip-size@^5.0.0:
     duplexer "^0.1.1"
     pify "^4.0.1"
 
+h7utils@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/h7utils/-/h7utils-1.0.1.tgz#20f4c7c39dc8790acf463ff367e44cc3be0308c5"
+  integrity sha512-/aoRUf7kJz+YQLEc2EvUm7LfowkUjIEpXW0x7IEImsAHW5hTGLT+iEDrFS+JmruEkZCO2n+ECjenaoZstdHtWA==
+
 handle-thing@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.1.tgz#857f79ce359580c340d43081cc648970d0bb234e"

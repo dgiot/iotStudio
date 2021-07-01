@@ -52,6 +52,8 @@ const defaultTheme = {
   pictureSwitch,
 }
 import { getUserInfo, login, logout, socialLogin } from '@/api/User/index'
+import { queryMenu } from '@/api/Menu/index'
+import { Permission } from '@/api/Permission/index'
 import { getToken, removeToken, setToken, clearCookie } from '@/utils/vuex'
 import { resetRouter } from '@/router'
 import { Roletree } from '@/api/Menu'
@@ -61,6 +63,8 @@ import { isJson } from '@/utils/validate'
 const { language } = getLocalStorage('language')
 import { clientMqtt } from '@/utils/clientMqtt'
 const state = () => ({
+  Menu: getToken('Menu', 'sessionStorage', []),
+  Permission: getToken('Permission', 'sessionStorage', []),
   language: language || i18n,
   roleTree: getToken('roleTree'), // 处理数据类型不匹配
   _Product: getToken('Product'),
@@ -78,6 +82,8 @@ const state = () => ({
   objectId: getToken('objectId', storage),
 })
 const getters = {
+  Menu: (state) => state.Menu,
+  Permission: (state) => state.Permission,
   language: (state) => state.language,
   roleTree: (state) => state.roleTree,
   _Product: (state) => state._Product,
@@ -91,6 +97,14 @@ const getters = {
   name: (state) => state.name,
 }
 const mutations = {
+  setMenu(state, Menu) {
+    state.Menu = Menu
+    setToken('Menu', Menu)
+  },
+  setPermission(state, Permission) {
+    state.Permission = Permission
+    setToken('Permission', Permission)
+  },
   setRoleTree(state, tree) {
     state.roleTree = tree
     setToken('roleTree', tree) // 解决数据持久化问题
@@ -255,6 +269,20 @@ const actions = {
           console.log(`query role error ${e}`)
           commit('set_Product', [])
         })
+      queryMenu({})
+        .then((res) => {
+          commit('setMenu', res.results)
+        })
+        .catch((e) => {
+          commit('setMenu', [])
+        })
+      Permission()
+        .then((res) => {
+          commit('setPermission', res.results)
+        })
+        .catch((e) => {
+          commit('setPermission', [])
+        })
     } else {
       Vue.prototype.$baseMessage(
         `登录接口异常，未正确返回${tokenName}...`,
@@ -380,8 +408,11 @@ const actions = {
   setAvatar({ commit }, avatar) {
     commit('setAvatar', avatar)
   },
-  setname({ commit }, name) {
-    commit('setname', name)
+  seMenu({ commit }, Menu) {
+    commit('seMenu', Menu)
+  },
+  setPermission({ commit }, Permission) {
+    commit('setPermission', Permission)
   },
 }
 export default { state, getters, mutations, actions }

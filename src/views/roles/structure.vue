@@ -114,92 +114,59 @@
         <!--表格渲染-->
         <div class="tabContent">
           <el-row :gutter="24">
-            <el-col :span="7">
-              <div class="elTree">
-                <div v-show="false" class="setting">
-                  <el-input
-                    v-model="query.value"
-                    :placeholder="$translateTitle('user.name')"
-                    clearable
-                    style="width: 200px"
-                    class="filter-item"
-                    size="small"
-                  />
-                  <el-button
-                    class="filter-item"
-                    type="primary"
-                    icon="el-icon-search"
-                    size="small"
-                    :disabled="query.value == ''"
-                    @click="userFordepartment(0)"
+            <el-col :span="24">
+              <vab-query-form style="margin-top: 20px">
+                <vab-query-form-top-panel>
+                  <el-form
+                    :inline="true"
+                    label-width="auto"
+                    :model="queryForm"
+                    @submit.native.prevent
                   >
-                    {{ $translateTitle('developer.search') }}
-                  </el-button>
-                  <!--               <el-button
-                    class="filter-item"
-                    type="primary"
-                    icon="el-icon-circle-plus"
-                    @click="adduser"
-                    size="small"
-                    >{{  $translateTitle("user.newusers") }}</el-button
-                  >-->
-                  <el-button
-                    class="filter-item"
-                    type="primary"
-                    size="small"
-                    @click="userFordepartment()"
-                  >
-                    <!-- 所有用户 -->
-                    {{ $translateTitle('user.allusers') }}
-                  </el-button>
-                </div>
-                <!-- <el-tree
-              :data="treeData"
-              :props="elTreedefaultProps"
-              @node-click="handleNodeClick"
-                ></el-tree>-->
-                <div class="leftTree">
-                  <el-tree
-                    :data="deptTreeData"
-                    :props="elTreedefaultProps"
-                    :expand-on-click-node="false"
-                    node-key="id"
-                    default-expand-all
-                  >
-                    <!-- eslint-disable-next-line -->
-                    <span slot-scope="{ node, data }" class="custom-tree-node">
-                      <span
-                        :class="{ selected: data.objectId == curDepartmentId }"
-                        @click="handleNodeClick(data)"
+                    <el-form-item :label="$translateTitle('user.department')">
+                      <el-select
+                        v-model="queryForm.workGroupName"
+                        placeholder="请选择"
+                        clearable
+                        @visible-change="change($event)"
                       >
-                        {{ node.label }}
-                      </span>
-                      <span>
-                        <!-- <el-button
-                          type="text"
-                          size="mini"
-                          @click="() => appendChildTree(data)"
-                          title="添加子节点"
+                        <el-option
+                          :value="treeDataValue"
+                          style="height: auto; padding: 0"
                         >
-                          <i class="el-icon-plus"></i>
-                        </el-button>-->
-                        <i
-                          class="el-icon-circle-plus-outline"
-                          :title="$translateTitle('developer.adduser')"
-                          @click="addItemUser(data)"
-                        />
-                      </span>
-                    </span>
-                  </el-tree>
-                </div>
-              </div>
-            </el-col>
-            <el-col :span="17">
+                          <el-tree
+                            ref="workGroup"
+                            :data="deptTreeData"
+                            :props="roleProps"
+                            node-key="index"
+                            default-expand-all
+                            :expand-on-click-node="false"
+                          >
+                            <div
+                              slot-scope="{ node, data }"
+                              class="custom-tree-node"
+                            >
+                              <span
+                                :class="{
+                                  selected: data.objectId == curDepartmentId,
+                                }"
+                                @click="handleNodeClick(data, node)"
+                              >
+                                {{ node.label }}
+                              </span>
+                            </div>
+                          </el-tree>
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-form>
+                </vab-query-form-top-panel>
+              </vab-query-form>
               <div class="elTable">
                 <el-table
                   v-loading="pictLoading"
                   :data="tableFilterData"
-                  style="width: 90%; margin-top: 20px"
+                  style="width: 100%; margin-top: 20px"
                 >
                   <el-table-column :label="$translateTitle('user.username')">
                     <template slot-scope="scope">
@@ -267,6 +234,41 @@
                       > -->
                     </template>
                   </el-table-column>
+
+                  <el-table-column
+                    :label="
+                      $translateTitle('user.Disable') +
+                      $translateTitle('user.account')
+                    "
+                    align="center"
+                    width="140px"
+                  >
+                    <template slot-scope="scope">
+                      <el-tooltip
+                        :content="
+                          $translateTitle('user.Current state') +
+                          scope.row.emailVerified
+                            ? $translateTitle('user.Enable')
+                            : $translateTitle('user.Disable')
+                        "
+                        placement="top"
+                      >
+                        <el-switch
+                          v-model="scope.row.emailVerified"
+                          active-color="#13ce66"
+                          inactive-color="#ff4949"
+                          :active-text="$translateTitle('user.Enable')"
+                          :inactive-text="$translateTitle('user.Disable')"
+                          @change="
+                            disableRow(
+                              scope.row.objectId,
+                              scope.row.emailVerified
+                            )
+                          "
+                        />
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
                 </el-table>
                 <!--分页组件-->
               </div>
@@ -322,7 +324,12 @@
 <script>
   import { Promise } from 'q'
   import { mapGetters } from 'vuex'
-  import { queryUser, EmployeesHired, EmployeeTurnover } from '@/api/User/index'
+  import {
+    queryUser,
+    EmployeesHired,
+    EmployeeTurnover,
+    putUser,
+  } from '@/api/User/index'
   import { queryRoledepartment } from '@/api/Role/index'
   var arr = []
   export default {
@@ -348,6 +355,20 @@
         }
       }
       return {
+        roleProps: {
+          children: 'children',
+          label: 'name',
+        },
+        treeDataValue: '',
+        queryForm: {
+          account: '',
+          searchDate: '',
+          pageNo: 1,
+          pageSize: 20,
+          workGroupName: '',
+          workGroupTreeShow: false,
+          access_token: '',
+        },
         departmentObj: [],
         departmentname: '',
         curDepartmentId: '',
@@ -472,6 +493,16 @@
         this.deptOption.push(item)
         this.adduserDiadlog = true
         this.userInfoForm.departmentid = item.objectId
+      },
+      change(e) {
+        console.log(e)
+        if (e) {
+          $('.el-tree').css({
+            height: '300px',
+            display: 'block',
+            'overflow-x': 'auto',
+          })
+        }
       },
       // 添加用户
       addUser() {
@@ -697,6 +728,23 @@
           },
         })
       },
+      disableRow(objectId, emailVerified) {
+        putUser(objectId, { emailVerified: !emailVerified })
+          .then((res) => {
+            if (res) {
+              this.userFordepartment()
+            } else {
+              this.$message.error(
+                `${this.$translateTitle(
+                  'user.Customers are not allowed to manually update email verification'
+                )}`
+              )
+            }
+          })
+          .catch((e) => {
+            this.$message.error(e)
+          })
+      },
       // 删除
       handleDetele(row) {
         this.$confirm('此操作将永久删除此用户, 是否继续?', '提示', {
@@ -767,6 +815,15 @@
       //   // });
       // },
       async handleNodeClick(data) {
+        this.treeDataValue = data.label
+        this.queryForm.workGroupName = data.label
+        $('.el-tree').css({
+          height: '0px',
+          display: 'none',
+          'overflow-x': 'auto',
+        })
+        $('.el-select-dropdown').css({ display: 'none' })
+        console.log(this.treeDataValue)
         this.departmentname = data.name
         this.curDepartmentId = data.objectId
         this.tempData = []
@@ -812,9 +869,14 @@
         margin-left: 20px;
       }
       .leftTree {
+        width: 100%;
         height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
-        overflow-x: hidden;
-        overflow-y: scroll;
+        overflow: scroll;
+        overflow: scroll;
+        ::v-deep .el-tree {
+          width: 100%;
+          overflow: scroll;
+        }
       }
 
       .elTable {

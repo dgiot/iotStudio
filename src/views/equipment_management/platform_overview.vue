@@ -18,6 +18,8 @@
       @mqttConnectLost="mqttConnectLost"
       @mqttSuccess="mqttSuccess"
     />
+    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+
     <div class="home_dialog">
       <el-dialog
         width="100vh"
@@ -260,6 +262,7 @@
               <bml-marker-clusterer :average-center="true">
                 <div v-for="(item, index) in _tableData" :key="index">
                   <bm-marker
+                    :ref="'bm_info' + index"
                     :position="{
                       lng: item.location.longitude,
                       lat: item.location.latitude,
@@ -268,20 +271,112 @@
                       url: item.iconUrl,
                       size: { width: 100, height: 100 },
                     }"
-                    @click="showDeatils(item)"
+                    @click="showDeatils(item, index)"
                   >
                     <bm-info-window
-                      :title="item.name"
+                      :key="index"
+                      style="display: none"
                       :position="{
                         lng: item.location.longitude,
                         lat: item.location.latitude,
                       }"
                       :show="item.show"
-                      @close="closeInfo(item)"
-                      @open="openInfo(item)"
+                      @close="closeInfo(item, index)"
                     >
-                      <div style="width: 80vh">
-                        <info :devicedetail="deviceInfo" />
+                      <div
+                        v-show="deviceInfo"
+                        style="width: 400px"
+                        class="deviceInfo"
+                      >
+                        <el-row :gutter="24">
+                          <el-col :span="8">
+                            <el-image
+                              style="width: 120px; height: 120px"
+                              :src="productIco"
+                              :preview-src-list="[`${productIco}`]"
+                            >
+                              <div slot="error" class="image-slot">
+                                <i
+                                  class="el-icon-picture-outline empty"
+                                  style="width: 100px; height: 100px"
+                                ></i>
+                              </div>
+                            </el-image>
+                          </el-col>
+                          <el-col :span="14">
+                            <p :title="deviceInfo.name">
+                              <el-link type="primary">
+                                {{ $translateTitle('equipment.devicename') }}
+                              </el-link>
+                              :{{ deviceInfo.name }}
+                            </p>
+                            <p>
+                              <el-link type="primary">
+                                {{ $translateTitle('equipment.address') }}
+                              </el-link>
+                              :
+                              {{
+                                deviceInfo.detail && deviceInfo.detail.address
+                                  ? deviceInfo.detail.address
+                                  : ''
+                              }}
+                            </p>
+                            <p>
+                              <el-link type="primary">
+                                {{
+                                  $translateTitle('zetadevices.devicestatus')
+                                }}
+                              </el-link>
+                              ：
+                              <el-link
+                                :underline="false"
+                                :type="
+                                  item.icon === '0'
+                                    ? 'success'
+                                    : item.icon === '1'
+                                    ? 'warning'
+                                    : 'danger'
+                                "
+                              >
+                                {{
+                                  item.icon === '0'
+                                    ? $translateTitle('zetadevices.在线')
+                                    : item.icon === '1'
+                                    ? $translateTitle('zetadevices.offline')
+                                    : $translateTitle('zetadevices.malfunction')
+                                }}
+                              </el-link>
+                            </p>
+                            <el-divider />
+                            <el-row :gutter="24">
+                              <el-col :span="8">
+                                <el-link
+                                  type="primary"
+                                  @click="goLink('real-time', item)"
+                                >
+                                  {{ $translateTitle('equipment.real-time') }}
+                                </el-link>
+                              </el-col>
+                              <el-col :span="6">
+                                <el-link
+                                  type="primary"
+                                  @click="goLink('konva', item)"
+                                >
+                                  {{ $translateTitle('concentrator.konva') }}
+                                </el-link>
+                              </el-col>
+                              <el-col :span="6">
+                                <el-link
+                                  type="primary"
+                                  @click="goLink('video', item)"
+                                >
+                                  {{ $translateTitle('concentrator.video') }}
+                                </el-link>
+                              </el-col>
+                            </el-row>
+                          </el-col>
+                        </el-row>
+                        <!--                        <info :devicedetail="deviceInfo" />-->
                       </div>
                     </bm-info-window>
                   </bm-marker>
@@ -493,7 +588,7 @@
 </template>
 <script>
   import { queryProduct } from '@/api/Product'
-  import { getDevice } from '@/api/Device'
+  import { getDevice, putDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import Category from '@/api/Mock/Category'
   import { Roletree, getToken } from '@/api/Menu'
@@ -552,6 +647,7 @@
       }
 
       return {
+        productIco: '',
         ChartStatus: {
           columns: ['状态', '数量'],
           rows: [
@@ -567,7 +663,7 @@
         loading: true,
         marker: {},
         deviceFlag: false,
-        deviceInfo: {},
+        deviceInfo: { detail: {} },
         Product: [],
         imgurl:
           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -722,6 +818,21 @@
           },
         })
       },
+      uploadCkick(item) {
+        this.deviceId = item.objectId
+        // 触发子组件的点击事件
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
+      },
+      async fileInfo(info) {
+        this.deviceInfo.detail.deviceIco = info.url
+        const params = {
+          detail: this.deviceInfo.detail,
+        }
+        this.deviceInfo = await putDevice(this.deviceId, params)
+        info.url
+      },
       /*
    连接webscroket
    */
@@ -738,22 +849,35 @@
       mqttError(e) {
         console.log('mqttError', e)
       },
-      closeInfo(item) {
-        this.$nextTick(() => {
-          item.show = false
-          this.set_tableData(_.merge([], this._tableData))
-          this.$forceUpdate()
-        })
+      closeInfo(item, index) {
+        // item.show = false
+        // this.$refs[`bm_info${index}`][0].$children[0].show = false
+        // this.set_tableData(_.merge([], this._tableData))
+        // this.$forceUpdate()
       },
-      openInfo(item) {
-        item.show = true
-        this.set_tableData(_.merge([], this._tableData))
-        this.$forceUpdate()
-      },
-      async showDeatils(row) {
+      async showDeatils(row, index) {
+        // const loading = this.$baseColorfullLoading(0)
+        this.productIco = ''
         this.deviceInfo = await getDevice(row.objectId)
-        this.openInfo(row)
-        console.log(row, this.deviceInfo)
+        const { results = [{ icon: '' }] } = await queryProduct({
+          count: 'objectId',
+          order: '-updatedAt',
+          keys: 'icon',
+          where: {
+            objectId: this.deviceInfo.product.objectId,
+          },
+        })
+        this.productIco = results[0].icon
+        row.show = true
+        // loading.close()
+        console.log(this.productIco, row, row.show, index, this.deviceInfo)
+        // 延时加载
+        setTimeout(() => {
+          console.info(this.$refs[`bm_info${index}`])
+          this.$refs[`bm_info${index}`][0].$children[0].show = true
+          // this.set_tableData(_.merge([], this._tableData))
+          // this.$forceUpdate()
+        }, 1000)
       },
       async showInfo(objectId) {
         this.deviceInfo = await getDevice(objectId)
@@ -1026,6 +1150,42 @@
           },
         })
       },
+      goLink(type, item) {
+        switch (type) {
+          case 'real-time':
+            this.$router.push({
+              path: '/roles/editdevices',
+              query: {
+                deviceid: this.deviceInfo.objectId,
+                nodeType: 2,
+                ischildren: 'false',
+              },
+            })
+            break
+          case 'konva':
+            this.$router.push({
+              path: '/Topo/VueKonva',
+              query: {
+                productid: this.deviceInfo.product.objectId,
+                devaddr: this.deviceInfo.devaddr,
+                deviceid: this.deviceInfo.objectId,
+                type: 'device',
+              },
+            })
+            break
+          case 'video':
+            this.$router.push({
+              path: '/Topo/VueKonva',
+              query: {
+                productid: this.deviceInfo.product.objectId,
+                devaddr: this.deviceInfo.devaddr,
+                deviceid: this.deviceInfo.objectId,
+                type: 'device',
+              },
+            })
+            break
+        }
+      },
       Gotoproduct(name) {
         this.$router.push({
           path: '/dashboard/productlist',
@@ -1045,6 +1205,26 @@
         height: 100px;
         overflow: auto;
         overflow-y: scroll;
+      }
+    }
+    .deviceInfo {
+      p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .empty {
+        display: block;
+        width: 100px;
+        height: 100px;
+        margin: 20px 7px;
+        text-align: center;
+      }
+      .upload {
+        margin: 0 auto;
+        font-size: 24px !important;
+        text-align: center;
+        cursor: pointer;
       }
     }
     box-sizing: border-box;
