@@ -76,6 +76,7 @@ let staticUrl = {
     'https://unpkg.com/codemirror@5.58.3/addon/lint/json-lint.js',
     'https://unpkg.com/vue-codemirror@4.0.6/dist/vue-codemirror.js',
     'https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js',
+    'https://map.qq.com/api/js?v=2.exp&key=OXUBZ-TOX3S-HIXO7-6ITJZ-I7X6F-PTF3T',
     'https://hm.baidu.com/hm.js?a0f8b01930320b849a92a00e0c6da990',
     'https://s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845',
     'https://unpkg.com/vue-amap/dist/index.js',

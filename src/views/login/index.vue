@@ -17,13 +17,13 @@
           label-position="left"
         >
           <div v-if="Default.title" class="title-tips">
-            {{ $translateTitle('登录') }}
+            {{ $translateTitle('home.login') }}
           </div>
           <el-form-item prop="username" style="margin-top: 40px">
             <el-input
               v-model.trim="form.username"
               v-focus
-              :placeholder="$translateTitle('请输入用户名')"
+              :placeholder="$translateTitle('home.Please enter user name')"
               tabindex="1"
               type="text"
             >
@@ -35,15 +35,27 @@
               :key="passwordType"
               ref="password"
               v-model.trim="form.password"
-              :placeholder="$translateTitle('请输入密码')"
+              :placeholder="$translateTitle('home.Please enter the password')"
               :type="passwordType"
               tabindex="2"
               @keyup.enter.native="handleLogin"
             >
+              <el-link
+                v-if="!form.password.length"
+                slot="append"
+                type="primary"
+                @click="forgotPwd()"
+              >
+                {{ $translateTitle('home.Forgot password') }}
+              </el-link>
               <template #prefix>
-                <vab-icon icon="lock-line" />
+                <vab-icon v-if="form.password.length" icon="lock-line" />
               </template>
-              <template v-if="passwordType === 'password'" #suffix>
+
+              <template
+                v-if="passwordType === 'password' && form.password.length"
+                #suffix
+              >
                 <vab-icon
                   class="show-password"
                   icon="eye-off-line"
@@ -52,6 +64,7 @@
               </template>
               <template v-else #suffix>
                 <vab-icon
+                  v-if="form.password.length"
                   class="show-password"
                   icon="eye-line"
                   @click="handlePassword"
@@ -65,13 +78,13 @@
             type="primary"
             @click="handleLogin"
           >
-            {{ $translateTitle('登录') }}
+            {{ $translateTitle('home.login') }}
           </el-button>
 
           <span>
             <router-link style="float: left" to="/register">
               <div style="margin-top: 20px">
-                {{ $translateTitle('注册') }}
+                {{ $translateTitle('home.registered') }}
               </div>
             </router-link>
             <vab-language
@@ -106,23 +119,21 @@
     },
     data() {
       const validateUsername = (rule, value, callback) => {
-        if ('' === value)
-          callback(new Error(this.$translateTitle('用户名不能为空')))
+        if ('' === value) callback(new Error(this.info.empty))
         else callback()
       }
       const validatePassword = (rule, value, callback) => {
         let pwdlength = 4
         if (!isPassword(value, pwdlength))
-          callback(
-            new Error(
-              this.$translateTitle('密码不能少于') +
-                pwdlength +
-                this.$translateTitle('位')
-            )
-          )
+          callback(new Error(this.info.than + pwdlength + this.info.Bit))
         else callback()
       }
       return {
+        info: {
+          empty: this.$translateTitle('home.Username can not be empty'),
+          than: this.$translateTitle('home.Password cannot be less than'),
+          Bit: this.$translateTitle('home.Bit'),
+        },
         backgroundImage:
           'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
         nodeEnv: process.env.NODE_ENV,
@@ -154,6 +165,7 @@
     },
     computed: {
       ...mapGetters({
+        language: 'settings/language',
         Default: 'acl/Default',
         license: 'acl/license',
         logo: 'user/logo',
@@ -161,6 +173,16 @@
       }),
     },
     watch: {
+      language: {
+        handler(e) {
+          this.changeInfo(e)
+          this.$nextTick(() => {
+            this.$refs.form.resetFields()
+          })
+        },
+        deep: true,
+        immediate: true,
+      },
       'Default.background': {
         handler(e) {
           console.log(e)
@@ -180,13 +202,30 @@
       this.initShuwa()
     },
     methods: {
+      changeInfo(e) {
+        this.$set(
+          this.info,
+          'empty',
+          this.$translateTitle('home.Username can not be empty')
+        )
+        this.$set(
+          this.info,
+          'than',
+          this.$translateTitle('home.Password cannot be less than')
+        )
+        this.$set(this.info, 'Bit', this.$translateTitle('home.Bit'))
+        this.$forceUpdate()
+        console.log(this.info)
+      },
+      forgotPwd() {
+        this.$message(this.$translateTitle('home.Forgot password'))
+      },
       ...mapActions({
         login: 'user/login',
         getlicense: 'user/getlicense',
         getDefault: 'user/getDefault',
       }),
       getCategory(key) {
-        console.log(key)
         let name = ''
         this.category.filter((item) => {
           if (item.type == key) {
@@ -249,8 +288,10 @@
     padding: 4.5vh;
     margin: calc((100vh - 475px) / 2) 5vw 5vw;
     overflow: hidden;
-    background: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/login_form.png');
+    background: #fff;
+    //background: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/login_form.png');
     background-size: 100% 100%;
+    border: 8px solid #3cb2fb;
 
     .title {
       font-size: 54px;
@@ -262,7 +303,7 @@
       margin: 0 auto;
       font-size: 26px;
       font-weight: 400;
-      color: $base-color-white;
+      color: #096dd9;
       text-align: center;
     }
 
@@ -371,7 +412,7 @@
           font-size: $base-font-size-default;
           line-height: 58px;
           background: #f6f4fc;
-          border: 0;
+          border: 1px solid #3cb2fb;
         }
       }
     }

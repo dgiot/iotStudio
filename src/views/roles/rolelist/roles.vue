@@ -3,64 +3,99 @@
 <template>
   <div class="roles">
     <el-row :gutter="20">
-      <el-col :span="5">
-        <div class="leftTree">
-          <el-tree
-            :data="deptTreeData"
-            :props="roleProps"
-            :expand-on-click-node="false"
-            node-key="index"
-            default-expand-all
-          >
-            <!-- @node-click="handleNodeClick" -->
-            <!-- eslint-disable-next-line -->
-            <div slot-scope="{ node, data }" class="custom-tree-node">
-              <span
-                :class="{ selected: data.objectId == curDepartmentId }"
-                @click="handleNodeClick(data)"
-              >
-                {{ node.label }}
-              </span>
-              <span>
-                <i
-                  class="el-icon-circle-plus-outline"
-                  :title="$translateTitle('product.addrole')"
-                  @click="setDialogRole(data)"
-                />
-              </span>
-            </div>
-          </el-tree>
-        </div>
-      </el-col>
-      <el-col :span="9">
+      <el-col :span="14">
         <div class="rightTable">
           <div class="search">
-            <el-input
-              v-model="search"
-              :placeholder="$translateTitle('user.rolename')"
-              size="mini"
-              clearable
-            />
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-search"
-              style="margin-left: 20px"
-              @click="getRolesList(0)"
-            >
-              {{ $translateTitle('developer.search') }}
-            </el-button>
-            <!-- icon="el-icon-plus" -->
-            <!--           <el-button type="primary" size="mini" @click="add">
+            <vab-query-form style="margin-top: 20px">
+              <vab-query-form-top-panel>
+                <el-form
+                  :inline="true"
+                  label-width="100px"
+                  :model="queryForm"
+                  @submit.native.prevent
+                >
+                  <el-form-item :label="$translateTitle('user.department')">
+                    <el-select
+                      v-model="queryForm.workGroupName"
+                      placeholder="请选择"
+                      clearable
+                      @visible-change="change($event)"
+                    >
+                      <el-option
+                        :value="treeDataValue"
+                        style="height: auto; padding: 0"
+                      >
+                        <el-tree
+                          ref="workGroup"
+                          class="workGroup"
+                          :data="roleTree"
+                          :props="roleProps"
+                          node-key="index"
+                          default-expand-all
+                          :expand-on-click-node="false"
+                        >
+                          <div
+                            slot-scope="{ node, data }"
+                            class="custom-tree-node"
+                          >
+                            <span
+                              :class="{
+                                selected: data.objectId == curDepartmentId,
+                              }"
+                              @click="handleNodeClick(data)"
+                            >
+                              {{ node.label }}
+                            </span>
+                            <span>
+                              <i
+                                class="el-icon-circle-plus-outline"
+                                :title="$translateTitle('product.addrole')"
+                                @click="setDialogRole(data)"
+                              />
+                            </span>
+                          </div>
+                        </el-tree>
+                      </el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item :label="$translateTitle('user.rolename')">
+                    <el-input
+                      v-model="search"
+                      :placeholder="$translateTitle('user.rolename')"
+                      size="mini"
+                      clearable
+                    />
+                  </el-form-item>
+
+                  <el-form-item>
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      icon="el-icon-search"
+                      style="margin-left: 20px"
+                      @click="getRolesList(0)"
+                    >
+                      {{ $translateTitle('developer.search') }}
+                    </el-button>
+                    <!-- icon="el-icon-plus" -->
+                    <!--           <el-button type="primary" size="mini" @click="add">
               {{
                $translateTitle("developer.add")
               }}
             </el-button>-->
-            <!-- icon="el-icon-search" -->
-            <el-button type="primary" size="mini" @click="getRolesList()">
-              <!-- 所有角色 -->
-              {{ $translateTitle('product.allroles') }}
-            </el-button>
+                    <!-- icon="el-icon-search" -->
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="getRolesList()"
+                    >
+                      <!-- 所有角色 -->
+                      {{ $translateTitle('product.allroles') }}
+                    </el-button>
+                  </el-form-item>
+                </el-form>
+              </vab-query-form-top-panel>
+            </vab-query-form>
           </div>
           <div class="tableroles" style="margin-top: 20px">
             <el-table
@@ -177,6 +212,13 @@
               >
                 <span slot-scope="{ node }" class="custom-tree-node">
                   <span>{{ node.label }}</span>
+                </span>
+                <span>
+                  <i
+                    class="el-icon-circle-plus-outline"
+                    :title="$translateTitle('product.addrole')"
+                    @click="setDialogRole(data)"
+                  />
                 </span>
               </el-tree>
             </div>
@@ -324,14 +366,12 @@
     saveRole,
   } from '@/api/Role/index'
   import { mapGetters } from 'vuex'
-  import { queryMenu } from '@/api/Menu/index'
-  import { Permission } from '@/api/Permission/index'
   import addroles from '@/views/roles/rolelist/addroles'
+
   export default {
     name: 'Role',
     data() {
       return {
-        deptTreeData: [],
         curDepartmentId: '',
         formLabelWidth: '120px',
         roleEdit: false,
@@ -356,9 +396,21 @@
           children: 'children',
           label: 'name',
         },
+        treeDataValue: '',
+        queryForm: {
+          account: '',
+          searchDate: '',
+          pageNo: 1,
+          pageSize: 20,
+          workGroupName: '',
+          workGroupTreeShow: false,
+          access_token: '',
+        },
         checkMenus: [], // 选中菜单
         checkRoles: [], // 选中权限
         dataMenus: [],
+        menusTreeloading: false,
+        permissionTreeloading: false,
         roleMenuList: [],
         dataPermissions: [],
         rolePermissonList: [],
@@ -370,404 +422,432 @@
     computed: {
       ...mapGetters({
         roleTree: 'user/roleTree',
+        Menu: 'user/Menu',
+        Permission: 'user/Permission',
       }),
       permissionTreeData() {
         const cloneData = JSON.parse(JSON.stringify(this.dataPermissions))
         return cloneData.filter((father) => {
           /* eslint-disable */
-          const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parentId
-          ) // 返回每一项的子级数组
-          branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
-          return father.parentId == 0 // 返回第一层
-          /* eslint-disable */
-        })
-      },
-      menuTreeData() {
-        const cloneData = JSON.parse(JSON.stringify(this.dataMenus))
-        return cloneData.filter((father) => {
-          father.title =
-            father.meta && father.meta.title ? father.meta.title : ''
-          /* eslint-disable */
-          const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parentId
-          )
-          branchArr.length > 0 ? (father.children = branchArr) : ''
-          return father.parentId == 0
-          /* eslint-disable */
-        })
-      },
-    },
-    components: {
-      addroles,
-    },
-    mounted() {
-      this.getRolesList()
-      this.getMenu()
-      this.getRoleschema()
-      this.$baseEventBus.$on('dialogHide', () => {
-        this.centerDialogRole = false
-        this.getMenu()
+        const branchArr = cloneData.filter(
+          (child) => father.objectId == child.parentId
+        ) // 返回每一项的子级数组
+        branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
+        return father.parentId == 0 // 返回第一层
+        /* eslint-disable */
       })
     },
+    menuTreeData() {
+      const cloneData = JSON.parse(JSON.stringify(this.dataMenus))
 
-    methods: {
-      async getMenu() {
-
-        this.deptTreeData = this.roleTree
-        this.handleNodeClick(this.deptTreeData[0])
-        this.data = []
-        this.dataMenus = []
-        const { results } = await queryMenu({})
-        if (results) {
-          this.menuListRes = results
-          results.map((items) => {
-            var obj = {}
-            obj.label = items.name
-            obj.meta = items.meta
-            obj.objectId = items.objectId
-            obj.parentId = items.parent.objectId
-            obj.createtime = new Date(items.createdAt).toLocaleDateString()
-            this.data.push(obj)
-            this.dataMenus.push(obj)
-          })
-        }
-      },
-      diguiquchu(datas, arr, v, needdelarr) {
-        // 递归找出半选中的数据
-        arr.map((item) => {
-          // console.log(item.key, v, "----------");
-          if (item.key == v && item.children.length > 0) {
-            // datas.splice(i, 1);//因为每次截取会改变原数组，所以不能这样
-            needdelarr.push(v)
-            this.diguiquchu(datas, item.children, v, needdelarr)
-          } else if (item.key != v && item.children.length > 0) {
-            this.diguiquchu(datas, item.children, v, needdelarr)
-          }
-        })
-      },
-      add() {
-        this.$router.push({
-          path: 'roles/editroles',
-          query: {
-            insert: 0,
-          },
-        })
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val
-      },
-      //给role添加acl权限
-      addacl() {
-        this.$get_object('_Role', this.objectId).then((object) => {})
-      },
-      //关闭菜单弹窗
-      handleClose() {
-        this.dialogVisible = false
-      },
-      //删除角色
-      handleDelete(row) {
-        this.$confirm('此操作将永久删除此角色, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        })
-          .then(() => {
-            this.delConfirm(row.objectId)
-          })
-          .catch(() => {})
-      },
-      // 二次确认删除
-      async delConfirm(objectId) {
-        let res = await delRole(objectId)
-        if (res) {
-          this.$message({
-            type: 'success',
-            message: '删除成功!',
-          })
-          this.getRolesList()
-          this.getMenu()
-        }
-      },
-      //增加菜单
-      addmenu(row) {
-        // console.log(row)
-        this.rolename = row.attributes.name
-
-        // this.dialogVisible = true;
-        this.getMenu()
-      },
-      tableRowClassName({ row, rowIndex }) {
-        //把每一行的索引放进row
-
-        row.index = rowIndex
-      },
-      selectedHighlight({ row, rowIndex }) {
-        if (this.currentSelectIndex === rowIndex) {
-          return {
-            // "background-color": "#409EFF",
-            color: '#409EFF',
-            'font-weight': 'bold',
-            // border: "5px solid black"
-          }
-        }
-      },
-      async getDetailmenu(row, column, event, cell) {
-        if (column && column.label == '操作') {
-          return
-        }
-
-        this.loadingService = this.$loading({
-          lock: true,
-          text: '数据加载中...',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.6)',
-        })
-
-        this.currentSelectIndex = row.index
-        const { menus, rules, roles, users, objectId } = await roleMenu(
-          row.name
+      const res = cloneData.filter((father) => {
+        father.title =
+          father.meta && father.meta.title ? father.meta.title : ''
+        /* eslint-disable */
+        const branchArr = cloneData.filter(
+          (child) => father.objectId == child.parentId
         )
-        this.roleItem = {
-          menus: menus,
-          rules: rules,
-          users: users,
-          roles: roles,
-          objectId: objectId,
-        }
-        this.loadingService.close()
-        if (menus && rules) {
-          this.checkMenus = menus
-          this.checkRoles = rules
-          this.doSetChecked()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '获取角色菜单失败',
-          })
-        }
-      },
-      doSetChecked() {
-        this.roleMenuList = []
-        this.rolePermissonList = []
+        branchArr.length > 0 ? (father.children = branchArr) : ''
+        return father.parentId == 0
+        /* eslint-disable */
+      })
+      return res
+    },
+  },
+  components: {
+    addroles,
+  },
+  mounted() {
+    this.getRoleschema()
+    this.getMenu()
+    this.getRolesList()
+    this.$baseEventBus.$on('dialogHide', () => {
+      this.centerDialogRole = false
+      this.getMenu()
+    })
+  },
 
-        this.menuListRes.map((items) => {
-          this.checkMenus.map((mentItem) => {
-            if (items.name == mentItem.name) {
-              this.roleMenuList.push(items.objectId)
-            }
-          })
+  methods: {
+    change(e) {
+      console.log(e)
+      if (e) {
+        $('.el-tree').css({
+          height: '300px',
+          display: 'block',
+          'overflow-x': 'auto',
         })
-        console.log("this.menuListRes",this.menuListRes)
-        console.log("this.checkMenus",this.checkMenus)
-        console.log("this.roleMenuList",this.roleMenuList)
-        // set ###
-        this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
-
-        this.permissionListRes.map((items) => {
-          this.checkRoles.map((mentItem) => {
-            if (items.name === mentItem.name) {
-              this.rolePermissonList.push(items.objectId)
-            }
-          })
+      }
+    },
+    getMenu() {
+      console.log('this.Menu', this.Menu)
+      this.menusTreeloading = true
+      this.data = []
+      this.dataMenus = []
+      if (this.Menu) {
+        const results = this.Menu
+        results.map((items) => {
+          var obj = {}
+          obj.label = items.name
+          obj.meta = items.meta
+          obj.objectId = items.objectId
+          obj.parentId = items.parent.objectId
+          obj.createtime = new Date(items.createdAt).toLocaleDateString()
+          this.data.push(obj)
+          this.dataMenus.push(obj)
         })
-        // set ###
-        this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
-      },
-
-      //初始化权限列表
-      async getRolesList(start, dataR) {
-        if (start == 0) {
-          this.start = 0
+        console.log('this.dataMenus', this.dataMenus)
+        this.handleNodeClick(this.roleTree[0])
+      }
+      this.menusTreeloading = false
+    },
+    diguiquchu(datas, arr, v, needdelarr) {
+      // 递归找出半选中的数据
+      arr.map((item) => {
+        // console.log(item.key, v, "----------");
+        if (item.key == v && item.children.length > 0) {
+          // datas.splice(i, 1);//因为每次截取会改变原数组，所以不能这样
+          needdelarr.push(v)
+          this.diguiquchu(datas, item.children, v, needdelarr)
+        } else if (item.key != v && item.children.length > 0) {
+          this.diguiquchu(datas, item.children, v, needdelarr)
         }
+      })
+    },
+    add() {
+      this.$router.push({
+        path: 'roles/editroles',
+        query: {
+          insert: 0,
+        },
+      })
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    //给role添加acl权限
+    addacl() {
+      this.$get_object('_Role', this.objectId).then((object) => {
+      })
+    },
+    //关闭菜单弹窗
+    handleClose() {
+      this.dialogVisible = false
+    },
+    //删除角色
+    handleDelete(row) {
 
-        let where = {}
-
-        if (dataR && dataR.name != 'admin') {
-          where.objectId = dataR.objectId
-        }
-        const loading = this.$loading({
-          background: 'rgba(0, 0, 0, 0.5)',
+      this.$confirm(this.$translateTitle('user.This operation will permanently delete this role, do you want to continue?'), this.$translateTitle('user.prompt'), {
+        confirmButtonText: this.$translateTitle('developer.determine'),
+        cancelButtonText: this.$translateTitle('developer.cancel'),
+        type: 'warning',
+      })
+        .then(() => {
+          this.delConfirm(row.objectId)
         })
-        let params = {
-          skip: this.start,
-          limit: this.pagesize,
-          order: '-createdAt',
-          where: where,
-          count: 'objectId',
-        }
-        let { results, count } = await queryRole(params)
-        if (results) {
-          loading.close()
-          this.roleList = results
-          this.total = count
-        }
-      },
-      handleSizeChange(val) {
-        this.pagesize = val
+        .catch(() => {
+        })
+    },
+    // 二次确认删除
+    async delConfirm(objectId) {
+      let res = await delRole(objectId)
+      if (res) {
+        this.$message.success(`${this.$translateTitle('user.successfully deleted')}`)
+
         this.getRolesList()
-      },
-      handleCurrentChange(val) {
-        this.start = Number(val - 1) * Number(this.pagesize)
-        this.getRolesList()
-      },
-      handleCheckChange(data, checked) {
-        console.log(data, checked)
-      },
-      // 获取权限
-      async getRoleschema() {
-        this.dataPermissions = []
-        const { results } = await Permission()
-        if (results) {
-          this.permissionListRes = results
-          results.map((items) => {
-            var obj = {}
-            obj.label = items.alias
-            obj.alias = items.name
-            obj.objectId = items.objectId
-            obj.parentId = items.parent.objectId
-            obj.createtime = new Date(items.createdAt).toLocaleDateString()
-            this.dataPermissions.push(obj)
-          })
+        this.getMenu()
+      }
+    },
+    //增加菜单
+    addmenu(row) {
+      // console.log(row)
+      this.rolename = row.attributes.name
+
+      // this.dialogVisible = true;
+      this.getMenu()
+    },
+    tableRowClassName({row, rowIndex}) {
+      //把每一行的索引放进row
+
+      row.index = rowIndex
+    },
+    selectedHighlight({row, rowIndex}) {
+      if (this.currentSelectIndex === rowIndex) {
+        return {
+          // "background-color": "#409EFF",
+          color: '#409EFF',
+          'font-weight': 'bold',
+          // border: "5px solid black"
         }
-      },
-      getCheckedKeys(data, keys, key) {
-        var res = []
-        recursion(data, false)
-        return res
+      }
+    },
+    async getDetailmenu(row, column, event, cell) {
+      if (column && column.label == '操作') {
+        return
+      }
 
-        // arr -> 树形总数据
-        // keys -> getCheckedKeys获取到的选中key值
-        // isChild -> 用来判断是否是子节点
-        function recursion(arr, isChild) {
-          var aCheck = []
-          for (var i = 0; i < arr.length; i++) {
-            var obj = arr[i]
-            aCheck[i] = false
+      this.loadingService = this.$loading({
+        lock: true,
+        text: this.$translateTitle('developer.Data is loading') + '...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.6)',
+      })
 
-            if (obj.children) {
-              aCheck[i] = recursion(obj.children, true) ? true : aCheck[i]
-              if (aCheck[i]) {
+      this.currentSelectIndex = row.index
+      const {menus, rules, roles, users, objectId} = await roleMenu(
+        row.name
+      )
+      this.roleItem = {
+        menus: menus,
+        rules: rules,
+        users: users,
+        roles: roles,
+        objectId: objectId,
+      }
+      console.log(" this.roleItem", this.roleItem)
+      this.loadingService.close()
+      if (menus && rules) {
+        this.checkMenus = menus
+        this.checkRoles = rules
+        this.doSetChecked()
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '获取角色菜单失败',
+        })
+      }
+    },
+    doSetChecked() {
+      this.roleMenuList = []
+      this.rolePermissonList = []
+
+      this.Menu.map((items) => {
+        this.checkMenus.map((mentItem) => {
+          if (items.name == mentItem.name) {
+            this.roleMenuList.push(items.objectId)
+          }
+        })
+      })
+      // console.log("this.Menu", this.Menu)
+      // console.log("this.checkMenus", this.checkMenus)
+      // console.log("this.roleMenuList", this.roleMenuList)
+      // set ###
+      this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
+
+      this.Permission.map((items) => {
+        this.checkRoles.map((mentItem) => {
+          if (items.name === mentItem.name) {
+            this.rolePermissonList.push(items.objectId)
+          }
+        })
+      })
+      // set ###
+      this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
+    },
+
+    //初始化权限列表
+    async getRolesList(start, dataR) {
+      if (start == 0) {
+        this.start = 0
+      }
+
+      let where = {}
+
+      if (dataR && dataR.name != 'admin') {
+        where.objectId = dataR.objectId
+      }
+      const loading = this.$loading({
+        background: 'rgba(0, 0, 0, 0.5)',
+      })
+      let params = {
+        skip: this.start,
+        limit: this.pagesize,
+        order: '-createdAt',
+        where: where,
+        count: 'objectId',
+      }
+      let {results, count} = await queryRole(params)
+      if (results) {
+        loading.close()
+        this.roleList = results
+        this.total = count
+      }
+    },
+    handleSizeChange(val) {
+      this.pagesize = val
+      this.getRolesList()
+    },
+    handleCurrentChange(val) {
+      this.start = Number(val - 1) * Number(this.pagesize)
+      this.getRolesList()
+    },
+    handleCheckChange(data, checked) {
+      console.log(data, checked)
+    },
+    // 获取权限
+    getRoleschema() {
+      console.log("this.Permission", this.Permission)
+      this.permissionTreeloading = true
+      this.dataPermissions = []
+      if (this.Permission) {
+        const results = this.Permission
+        results.map((items) => {
+          var obj = {}
+          obj.label = items.alias
+          obj.alias = items.name
+          obj.objectId = items.objectId
+          obj.parentId = items.parent.objectId
+          obj.createtime = new Date(items.createdAt).toLocaleDateString()
+          this.dataPermissions.push(obj)
+        })
+      }
+      this.permissionTreeloading = false
+    },
+    getCheckedKeys(data, keys, key) {
+      var res = []
+      recursion(data, false)
+      return res
+
+      // arr -> 树形总数据
+      // keys -> getCheckedKeys获取到的选中key值
+      // isChild -> 用来判断是否是子节点
+      function recursion(arr, isChild) {
+        var aCheck = []
+        for (var i = 0; i < arr.length; i++) {
+          var obj = arr[i]
+          aCheck[i] = false
+
+          if (obj.children) {
+            aCheck[i] = recursion(obj.children, true) ? true : aCheck[i]
+            if (aCheck[i]) {
+              res.push(obj)
+            }
+          }
+
+          for (var j = 0; j < keys.length; j++) {
+            if (obj[key] == keys[j]) {
+              aCheck[i] = true
+              if (res.indexOf(obj[key]) == -1) {
                 res.push(obj)
               }
-            }
-
-            for (var j = 0; j < keys.length; j++) {
-              if (obj[key] == keys[j]) {
-                aCheck[i] = true
-                if (res.indexOf(obj[key]) == -1) {
-                  res.push(obj)
-                }
-                break
-              }
+              break
             }
           }
-          if (isChild) {
-            return aCheck.indexOf(true) != -1
+        }
+        if (isChild) {
+          return aCheck.indexOf(true) != -1
+        }
+      }
+    },
+    // 修改角色权限
+    async exportRolerole(row) {
+      let checkmenu = []
+      let selectMenu = this.getCheckedKeys(
+        this.menuTreeData,
+        this.$refs.menusTree.getCheckedKeys(),
+        'objectId'
+      ) // 选中子级时选中父级
+      // let selectMenu = this.$refs.menusTree.getCheckedNodes()  // 只选中子级
+      let usersList = []
+      let rolesList = []
+      let checkrole = []
+      let selectRermission = this.$refs.permissionTree.getCheckedNodes()
+      let rolesData = this.roleItem.roles
+      let usersData = this.roleItem.users
+
+      if (!usersData || !rolesData) {
+        this.$message.error(`${this.$translateTitle('user.The correct role permissions and menus are not selected')}`,
+        )
+
+        return false
+      }
+      usersData.forEach((item) => {
+        usersList.push(item.username)
+      })
+      rolesData.forEach((item) => {
+        console.log('loadsh', _.assign(...rolesData))
+        console.log("item", item)
+        rolesList.push(item.name)
+      })
+      if (selectMenu && selectRermission) {
+        selectMenu.forEach((item) => {
+          checkmenu.push(item.label)
+        })
+        console.log('selectMenu', checkmenu)
+        selectRermission.forEach((item) => {
+          checkrole.push(item.alias)
+        })
+        console.log('selectRermission', checkrole)
+        console.log(row, 'row', row)
+        // loadsh uniq 去重，否则则报错 https://blog.csdn.net/qq_38519358/article/details/103330249
+        await saveRole({
+          objectId: this.roleItem.objectId,
+          name: row.name,
+          alias: row.alias,
+          desc: row.desc,
+          rules: _.uniq(checkrole),
+          menus: _.uniq(checkmenu),
+          roles: _.uniq(rolesList),
+          users: _.uniq(usersList),
+        }).then(res => {
+
+          if (res) {
+            this.$message.success(`${this.$translateTitle('user.Role information updated successfully')}`)
+          } else {
+            this.$message.error(`${this.$translateTitle('user.Role information updated failed')}`)
           }
-        }
-      },
-      // 修改角色权限
-      async exportRolerole(row) {
-        let checkmenu = []
-        let selectMenu = this.getCheckedKeys(
-          this.menuTreeData,
-          this.$refs.menusTree.getCheckedKeys(),
-          'objectId'
-        ) // 选中子级时选中父级
-        // let selectMenu = this.$refs.menusTree.getCheckedNodes()  // 只选中子级
-        let usersList = []
-        let rolesList = []
-        let checkrole = []
-        let selectRermission = this.$refs.permissionTree.getCheckedNodes()
-        let rolesData = this.roleItem.roles
-        let usersData = this.roleItem.users
-
-        if (!usersData || !rolesData) {
-          this.$message({
-            message: '未选择正确的角色',
-          })
-
-          return false
-        }
-        usersData.forEach((item) => {
-          usersList.push(item.username)
+        }).catch(e => {
+          this.$message.error(`${this.$translateTitle('user.Role information updated successfully')}` + `${e}`)
         })
-        rolesData.forEach((item) => {
-          rolesList.push(item.name)
-        })
-        if (selectMenu && selectRermission) {
-          selectMenu.forEach((item) => {
-            console.log('selectMenu', item)
-            checkmenu.push(item.label)
-          })
-          selectRermission.forEach((item) => {
-            console.log('selectRermission', item)
-            checkrole.push(item.alias)
-          })
-          console.log(row, 'row', row)
-          const res = await saveRole({
-            objectId: this.roleItem.objectId,
-            name: row.name,
-            alias: row.alias,
-            desc: row.desc,
-            rules: checkrole,
-            menus: checkmenu,
-            roles: rolesList,
-            users: usersList,
-          })
-          if (res) this.$message('角色信息更新成功')
-          else
-            this.$message({
-              message: '更新失败!',
-            })
-        } else {
-          this.$message('请选择菜单列表和权限列表')
-        }
-      },
-      // 保存模板
-      async exportRoletemp(row) {
-        const res = await saveRoletemp(row.name)
-        if (res)
-          this.$message({
-            type: 'success',
-            message: '保存模板成功',
-          })
-      },
-      updaterole() {
-        const params = {
-          alias: this.form.alias,
-          desc: this.form.desc,
-        }
-        this.$update_object(this.editroleid, params).then((res) => {
-          this.$message({
-            type: 'success',
-            message: '更新成功',
-          })
-          this.roleEdit = false
-          this.getRolesList()
-        })
-      },
-      handleNodeClick(data) {
-        this.getRolesList(0, data)
 
-        this.curDepartmentId = data.objectId
 
-        // 清除选中的角色
+      } else {
+        this.$message.info(`${this.$translateTitle('user.Please select the menu list and permission list')}`)
+      }
+    },
+    // 保存模板
+    async exportRoletemp(row) {
+      const res = await saveRoletemp(row.name)
+      if (res)
+        this.$message.success(`${this.$translateTitle('user.Save the template successfully')}`)
+    },
+    updaterole() {
+      const params = {
+        alias: this.form.alias,
+        desc: this.form.desc,
+      }
+      this.$update_object(this.editroleid, params).then((res) => {
+        this.$message.success(`${this.$translateTitle('user.update completed')}`)
 
-        this.currentSelectIndex = null
+        this.roleEdit = false
+        this.getRolesList()
+      })
+    },
+    handleNodeClick(data) {
+      this.treeDataValue = data.label
+      this.queryForm.workGroupName = data.label
+      $('.workGroup').css({
+        height: '0px',
+        display: 'none',
+        'overflow-x': 'auto',
+      })
+      $('.el-select-dropdown').css({display: 'none'})
+      this.curDepartmentId = data.objectId
 
-        //清除菜单树
+      // 清除选中的角色
 
-        // this.dataMenus = []
-      },
-      // 添加子节点
-      appendChildTree(data) {
-        console.log(data, '添加子节点')
-      },
-      renderContent(h, { node, data, store }) {
-        return (
-          <span class="custom-tree-node">
+      this.currentSelectIndex = null
+      this.getRolesList(0, data)
+      // 清除菜单树
+
+      // this.dataMenus = []
+    },
+    // 添加子节点
+    appendChildTree(data) {
+      console.log(data, '添加子节点')
+    },
+    renderContent(h, {node, data, store}) {
+      return (
+        <span class="custom-tree-node">
             <span>{node.label}</span>
             <span>
               <el-button
@@ -775,102 +855,114 @@
                 type="text"
                 on-click={() => this.appendChildTree(data)}
               >
-                <i class="el-icon-plus" />
+                <i class="el-icon-plus"/>
               </el-button>
             </span>
           </span>
-        )
-      },
-      // 显示弹窗
-      setDialogRole(data) {
-        // this.$store.commit("set_DeptObj", data);
-        // eventBus.$emit("set_DeptObj", data)
-        this.centerDialogRole = true
-
-        this.$nextTick(() => {
-          this.$refs['addRoleRef'].getData(data)
-        })
-      },
-      closeDialogRole() {
-        this.centerDialogRole = false
-      },
+      )
     },
-  }
+    // 显示弹窗
+    setDialogRole(data) {
+      // this.$store.commit("set_DeptObj", data);
+      // eventBus.$emit("set_DeptObj", data)
+      this.centerDialogRole = true
+
+      this.$nextTick(() => {
+        this.$refs['addRoleRef'].getData(data)
+      })
+    },
+    closeDialogRole() {
+      this.centerDialogRole = false
+    },
+  },
+}
 </script>
 <style scoped lang="scss">
-  .roles {
-    background: #ffffff;
-    ::v-deep .el-table__body tr.current-row > td {
-      color: #f19944;
-      background-color: #fdf3ea;
-    }
-    .rightTable {
-      height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
-      overflow-x: hidden;
-      overflow-y: scroll;
-      .search {
-        margin: 20px;
-        text-align: center;
-      }
-      .rightPagination {
-        margin: 10px;
-        text-align: center;
-      }
-    }
+.roles {
+  background: #ffffff;
+
+  ::v-deep .el-table__body tr.current-row > td {
+    color: #f19944;
+    background-color: #fdf3ea;
   }
-  .rolefooter {
-    display: flex;
-    width: 100%;
-    height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
-    //height: auto;
-    margin-top: 10px;
+
+  .rightTable {
+    height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
     overflow-x: hidden;
     overflow-y: scroll;
+
+    .search {
+      margin: 20px;
+      text-align: center;
+    }
+
+    .rightPagination {
+      margin: 10px;
+      text-align: center;
+    }
   }
-  .footerleft,
-  .footerright {
-    box-sizing: border-box;
-    width: 45%;
-    height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
-    padding: 20px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    border: 1px solid #cccccc;
-  }
-  .footerright {
-    margin-left: 5%;
-  }
-  .rolefooter .top {
-    height: 50px;
-    border-bottom: 1px solid #cccccc;
-  }
-  .rolefooter .top span {
-    float: left;
-    line-height: 50px;
-  }
-  .rolefooter .top button {
-    float: right;
-  }
+}
+
+.rolefooter {
+  display: flex;
+  width: 100%;
+  height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
+  //height: auto;
+  margin-top: 10px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.footerleft,
+.footerright {
+  box-sizing: border-box;
+  width: 45%;
+  height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  border: 1px solid #cccccc;
+}
+
+.footerright {
+  margin-left: 5%;
+}
+
+.rolefooter .top {
+  height: 50px;
+  border-bottom: 1px solid #cccccc;
+}
+
+.rolefooter .top span {
+  float: left;
+  line-height: 50px;
+}
+
+.rolefooter .top button {
+  float: right;
+}
 </style>
 <style lang="scss">
-  .roles .search .el-input {
-    width: 200px;
+.roles .search .el-input {
+  width: 200px;
+}
+
+.leftTree {
+  height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  span.selected {
+    font-weight: bold;
+    color: #409eff;
   }
 
-  .leftTree {
-    height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
-    overflow-x: hidden;
-    overflow-y: scroll;
-    span.selected {
-      font-weight: bold;
-      color: #409eff;
-    }
-    .el-tree-node {
-      margin-top: 5px;
-    }
-
-    .custom-tree-node .el-icon-circle-plus-outline:hover {
-      color: #409eff;
-    }
+  .el-tree-node {
+    margin-top: 5px;
   }
+
+  .custom-tree-node .el-icon-circle-plus-outline:hover {
+    color: #409eff;
+  }
+}
 </style>

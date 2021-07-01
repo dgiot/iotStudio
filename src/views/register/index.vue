@@ -235,7 +235,7 @@
       padding: 4.5vh;
       margin: calc((100vh - 590px) / 2) 5vw 5vw;
       overflow: hidden;
-      background: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/login_form.png');
+      //background: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/login_form.png');
       background-size: 100% 100%;
 
       .title-tips {
