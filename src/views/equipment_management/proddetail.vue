@@ -3062,6 +3062,7 @@
             control: sizeForm.control,
             strategy: sizeForm.strategy,
           },
+          ico: sizeForm.ico,
           required: true,
           accessMode: sizeForm.isread,
           identifier: sizeForm.identifier,
@@ -3205,6 +3206,7 @@
             control: '',
             strategy: '',
             required: true,
+            ico: rowData.ico,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
           }
@@ -3235,6 +3237,7 @@
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
             slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
             required: false,
+            ico: rowData.ico,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
             collection:
@@ -3272,6 +3275,7 @@
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
             slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
             required: true,
+            ico: rowData.ico,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
             collection:
@@ -3301,6 +3305,7 @@
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
             slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
             required: true,
+            ico: rowData.ico,
             isread: rowData.accessMode,
             collection:
               rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
@@ -3334,6 +3339,7 @@
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
             slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
             required: true,
+            ico: rowData.ico,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
             strategy:
@@ -3364,6 +3370,7 @@
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
             slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
             required: true,
+            ico: rowData.ico,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
           }

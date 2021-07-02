@@ -146,25 +146,42 @@
         >
           <el-form-item :label="$translateTitle('Maintenance.Ticket number')">
             <el-input
-              v-model.trim="queryForm.account"
+              v-model.trim="queryForm.number"
               clearable
               :placeholder="$translateTitle('Maintenance.Ticket number')"
             />
           </el-form-item>
           <el-form-item :label="$translateTitle('Maintenance.project')">
-            <el-input
-              v-model.trim="queryForm.account"
-              clearable
-              :placeholder="$translateTitle('Maintenance.project')"
-            />
+            <el-select
+              v-model="queryForm.product"
+              :placeholder="
+                $translateTitle('Maintenance.Please choose the product')
+              "
+            >
+              <el-option
+                v-for="(item, index) in _Product"
+                v-show="item.objectId != 0"
+                :key="index"
+                :label="item.name"
+                :value="item.objectId"
+              />
+            </el-select>
           </el-form-item>
 
           <el-form-item :label="$translateTitle('Maintenance.Ticket type')">
-            <el-input
-              v-model.trim="queryForm.account"
-              clearable
-              :placeholder="$translateTitle('Maintenance.Ticket type')"
-            />
+            <el-select
+              v-model="queryForm.type"
+              :placeholder="
+                $translateTitle('Maintenance.Please choose the product')
+              "
+            >
+              <el-option
+                v-for="item in types"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
           </el-form-item>
           <!--          <el-form-item label="账号">-->
           <!--            <el-input-->
@@ -186,7 +203,7 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button icon="el-icon-search" type="primary" @click="queryData">
+            <el-button icon="el-icon-search" type="primary" @click="fetchData">
               {{ $translateTitle('Maintenance.search') }}
             </el-button>
             <el-button
@@ -199,7 +216,7 @@
             <el-button
               icon="el-icon-folder-checked"
               type="primary"
-              @click="queryData"
+              @click="fetchData"
             >
               {{ $translateTitle('Maintenance.Export') }}
             </el-button>
@@ -208,47 +225,61 @@
       </vab-query-form-top-panel>
     </vab-query-form>
 
-    <el-table v-loading="listLoading" :data="list">
+    <el-table v-loading="listLoading" :data="list" :height="height">
       <el-table-column
+        sortablesortable
+        align="center"
+        label="objectId"
+        prop="objectId"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        sortablesortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
-        prop="name"
+        prop="number"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket type')"
-        prop="name"
+        prop="type"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket status')"
-        prop="name"
+        prop="status"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.project')"
-        prop="name"
+        prop="product.objectId"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.Equipment name')"
-        prop="name"
+        prop="device.objectId"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.Initiator')"
-        prop="name"
+        prop="user"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.the starting time')"
-        prop="name"
+        prop="createdAt"
         show-overflow-tooltip
       />
       <el-table-column
@@ -256,16 +287,35 @@
         :label="$translateTitle('Maintenance.operating')"
         prop="name"
         show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          <el-button type="text" @click="handleDetail(row)">
+            {{ $translateTitle('Maintenance.View') }}
+          </el-button>
+          <el-button type="text" @click="handleEdit(row)">
+            {{ $translateTitle('Maintenance.Dispatch') }}
+          </el-button>
+          <el-button type="text" @click="handleDelete(row)">
+            {{ $translateTitle('Maintenance.Evaluation') }}
+          </el-button>
+          <el-button type="text" @click="handleEdit(row)">
+            {{ $translateTitle('Maintenance.deal with') }}
+          </el-button>
+          <el-button type="text" @click="handleDelete(row)">
+            {{ $translateTitle('Maintenance.delete') }}
+          </el-button>
+        </template>
+      </el-table-column>
       <template #empty>
         <vab-empty />
       </template>
     </el-table>
     <el-pagination
       background
-      :current-page="queryForm.pageNo"
+      :page-sizes="[10, 20, 30, 50]"
+      :current-page="queryForm.skip"
       :layout="layout"
-      :page-size="queryForm.pageSize"
+      :page-size="queryForm.limit"
       :total="total"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
@@ -284,11 +334,11 @@
   import { queryDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import { UploadImg } from '@/api/File'
-  import { aclObj } from '@/utils/acl'
   export default {
     name: 'MyWork',
     data() {
       return {
+        height: this.$baseTableHeight(0),
         dialogFormVisible: false,
         form: {
           name: '',
@@ -316,14 +366,19 @@
           ],
         },
         list: [],
+        // aclObj: {},
         listLoading: false,
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         queryForm: {
-          account: '',
-          searchDate: '',
-          pageNo: 1,
-          pageSize: 20,
+          number: '',
+          product: '',
+          type: '',
+          searchDate: [],
+          limit: 20,
+          skip: 0,
+          order: '-createdAt',
+          keys: 'count(*)',
         },
       }
     },
@@ -331,39 +386,63 @@
       ...mapGetters({
         _Product: 'user/_Product',
         objectId: 'user/objectId',
+        role: 'acl/role',
       }),
+      aclObj() {
+        let aclObj = {}
+        this.role.map((e) => {
+          console.log(e.name, '')
+          aclObj[`${'role' + ':' + e.name}`] = {
+            read: true,
+            write: true,
+          }
+        })
+        return aclObj
+      },
     },
+
     created() {
       console.log(this._Product, '_Product')
+      console.log('role', this.role)
+
+      console.log('this.height', this.height)
     },
     mounted() {
       this.fetchData()
     },
     methods: {
       async fetchData() {
+        console.log(this.queryForm, 'queryForm')
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
-        // const { results = [] } = await query_object('Maintenance', {})
-        // setTimeout(() => {
-        //   this.list = results
-        //   loading.close()
-        // }, 1000)
         await query_object('Maintenance', {
-          limit: 10,
-          order: '-createdAt',
-          skip: 0,
-          keys: 'count(*)',
-          where: {},
+          limit: this.queryForm.limit,
+          order: this.queryForm.order,
+          skip: this.queryForm.skip,
+          keys: this.queryForm.keys,
+          // where: {
+          //   number: '',
+          //   product: '',
+          //   type: '',
+          // },
         })
           .then((res) => {
-            this.list = res.results
-            this.total = total
+            console.log(res, 'res')
+            const { results = [], count = 0 } = res
+            this.list = results
+            this.list.forEach((e) => {
+              for (var key in e.ACL) {
+                e.user = console.log(key.substr(5))
+              }
+            })
+            this.total = count
             loading.close()
           })
           .catch((e) => {
             this.$message.error(`${e}`)
             loading.close()
           })
+        console.log(this.list, 'this.list')
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -379,7 +458,7 @@
         const params = {
           number: from.name,
           type: from.type,
-          status: '1',
+          status: 0,
           product: {
             objectId: from.product,
             __type: 'Pointer',
@@ -391,16 +470,18 @@
             __type: 'Pointer',
             className: '_User',
           },
-          ACL: aclObj,
+          ACL: this.aclObj,
           device: {
             objectId: from.name,
             __type: 'Pointer',
             className: 'Device',
           },
         }
-
+        const loading = this.$baseColorfullLoading()
         const res = await create_object('Maintenance', params)
+        loading.close()
         console.log('res', res)
+        this.fetchData()
         this.dialogFormVisible = false
       },
       resetForm(formName) {
@@ -454,15 +535,11 @@
         console.log(file)
       },
       handleSizeChange(val) {
-        this.queryForm.pageSize = val
+        this.queryForm.limit = val
         this.fetchData()
       },
       handleCurrentChange(val) {
-        this.queryForm.pageNo = val
-        this.fetchData()
-      },
-      queryData() {
-        this.queryForm.pageNo = 1
+        this.queryForm.skip = (val - 1) * this.queryForm.limit
         this.fetchData()
       },
     },

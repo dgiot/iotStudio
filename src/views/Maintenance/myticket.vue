@@ -146,25 +146,42 @@
         >
           <el-form-item :label="$translateTitle('Maintenance.Ticket number')">
             <el-input
-              v-model.trim="queryForm.account"
+              v-model.trim="queryForm.number"
               clearable
               :placeholder="$translateTitle('Maintenance.Ticket number')"
             />
           </el-form-item>
           <el-form-item :label="$translateTitle('Maintenance.project')">
-            <el-input
-              v-model.trim="queryForm.account"
-              clearable
-              :placeholder="$translateTitle('Maintenance.project')"
-            />
+            <el-select
+              v-model="queryForm.product"
+              :placeholder="
+                $translateTitle('Maintenance.Please choose the product')
+              "
+            >
+              <el-option
+                v-for="(item, index) in _Product"
+                v-show="item.objectId != 0"
+                :key="index"
+                :label="item.name"
+                :value="item.objectId"
+              />
+            </el-select>
           </el-form-item>
 
           <el-form-item :label="$translateTitle('Maintenance.Ticket type')">
-            <el-input
-              v-model.trim="queryForm.account"
-              clearable
-              :placeholder="$translateTitle('Maintenance.Ticket type')"
-            />
+            <el-select
+              v-model="queryForm.type"
+              :placeholder="
+                $translateTitle('Maintenance.Please choose the product')
+              "
+            >
+              <el-option
+                v-for="item in types"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
           </el-form-item>
           <!--          <el-form-item label="账号">-->
           <!--            <el-input-->
@@ -210,45 +227,52 @@
 
     <el-table v-loading="listLoading" :data="list">
       <el-table-column
+        sortablesortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
-        prop="name"
+        prop="number"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket type')"
-        prop="name"
+        prop="type"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket status')"
-        prop="name"
+        prop="status"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.project')"
-        prop="name"
+        prop="product.objectId"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.Equipment name')"
-        prop="name"
+        prop="device.objectId"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.Initiator')"
-        prop="name"
+        prop="ACL"
         show-overflow-tooltip
       />
       <el-table-column
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.the starting time')"
-        prop="name"
+        prop="createdAt"
         show-overflow-tooltip
       />
       <el-table-column
@@ -256,7 +280,25 @@
         :label="$translateTitle('Maintenance.operating')"
         prop="name"
         show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          <el-button type="text" @click="handleDetail(row)">
+            {{ $translateTitle('Maintenance.View') }}
+          </el-button>
+          <el-button type="text" @click="handleEdit(row)">
+            {{ $translateTitle('Maintenance.Dispatch') }}
+          </el-button>
+          <el-button type="text" @click="handleDelete(row)">
+            {{ $translateTitle('Maintenance.Evaluation') }}
+          </el-button>
+          <el-button type="text" @click="handleEdit(row)">
+            {{ $translateTitle('Maintenance.deal with') }}
+          </el-button>
+          <el-button type="text" @click="handleDelete(row)">
+            {{ $translateTitle('Maintenance.delete') }}
+          </el-button>
+        </template>
+      </el-table-column>
       <template #empty>
         <vab-empty />
       </template>
@@ -284,7 +326,6 @@
   import { queryDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import { UploadImg } from '@/api/File'
-  import { aclObj } from '@/utils/acl'
   export default {
     name: 'MyWork',
     data() {
@@ -316,14 +357,21 @@
           ],
         },
         list: [],
+        // aclObj: {},
         listLoading: false,
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         queryForm: {
-          account: '',
-          searchDate: '',
+          number: '',
+          product: '',
+          type: '',
           pageNo: 1,
           pageSize: 20,
+          searchDate: [],
+          limt: 10,
+          skip: 0,
+          order: '-createdAt',
+          keys: 'count(*)',
         },
       }
     },
@@ -331,16 +379,32 @@
       ...mapGetters({
         _Product: 'user/_Product',
         objectId: 'user/objectId',
+        role: 'acl/role',
       }),
+      aclObj() {
+        let aclObj = {}
+        this.role.map((e) => {
+          console.log(e.name, '')
+          aclObj[`${'role' + ':' + e.name}`] = {
+            read: true,
+            write: true,
+          }
+        })
+        return aclObj
+      },
     },
     created() {
       console.log(this._Product, '_Product')
+      console.log('role', this.role)
+
+      console.log('this.aclObj', this.aclObj)
     },
     mounted() {
       this.fetchData()
     },
     methods: {
       async fetchData() {
+        console.log(this.queryForm, 'queryForm')
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
         // const { results = [] } = await query_object('Maintenance', {})
@@ -356,8 +420,9 @@
           where: {},
         })
           .then((res) => {
+            console.log(res, 'res')
             this.list = res.results
-            this.total = total
+            this.total = res.count
             loading.close()
           })
           .catch((e) => {
@@ -379,7 +444,7 @@
         const params = {
           number: from.name,
           type: from.type,
-          status: '1',
+          status: 0,
           product: {
             objectId: from.product,
             __type: 'Pointer',
@@ -391,16 +456,18 @@
             __type: 'Pointer',
             className: '_User',
           },
-          ACL: aclObj,
+          ACL: this.aclObj,
           device: {
             objectId: from.name,
             __type: 'Pointer',
             className: 'Device',
           },
         }
-
+        const loading = this.$baseColorfullLoading()
         const res = await create_object('Maintenance', params)
+        loading.close()
         console.log('res', res)
+        this.fetchData()
         this.dialogFormVisible = false
       },
       resetForm(formName) {
