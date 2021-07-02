@@ -229,15 +229,9 @@
       <el-table-column
         sortablesortable
         align="center"
-        label="objectId"
-        prop="objectId"
-        show-overflow-tooltip
-      />
-      <el-table-column
-        sortablesortable
-        align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
-        prop="number"
+        prop="objectId"
+        width="120"
         show-overflow-tooltip
       />
       <el-table-column
@@ -245,29 +239,41 @@
         align="center"
         :label="$translateTitle('Maintenance.Ticket type')"
         prop="type"
+        width="140"
         show-overflow-tooltip
       />
       <el-table-column
         sortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket status')"
-        prop="status"
         show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          {{ getStatus(row.status) }}
+        </template>
+      </el-table-column>
+
       <el-table-column
         sortable
         align="center"
         :label="$translateTitle('Maintenance.project')"
-        prop="product.objectId"
         show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          {{ getProductName(row.product.objectId) }}
+        </template>
+      </el-table-column>
+
       <el-table-column
         sortable
         align="center"
         :label="$translateTitle('Maintenance.Equipment name')"
-        prop="device.objectId"
         show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          {{ getDeviceName(row.device.objectId) }}
+        </template>
+      </el-table-column>
       <el-table-column
         sortable
         align="center"
@@ -279,9 +285,12 @@
         sortable
         align="center"
         :label="$translateTitle('Maintenance.the starting time')"
-        prop="createdAt"
         show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.operating')"
@@ -289,19 +298,19 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <el-button type="text" @click="handleDetail(row)">
+          <el-button size="mini" type="primary">
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
-          <el-button type="text" @click="handleEdit(row)">
+          <el-button v-show="row.status == 0" type="success">
             {{ $translateTitle('Maintenance.Dispatch') }}
           </el-button>
-          <el-button type="text" @click="handleDelete(row)">
+          <el-button v-show="row.status == 1" type="success">
             {{ $translateTitle('Maintenance.Evaluation') }}
           </el-button>
-          <el-button type="text" @click="handleEdit(row)">
+          <el-button v-show="row.status == 3" type="info">
             {{ $translateTitle('Maintenance.deal with') }}
           </el-button>
-          <el-button type="text" @click="handleDelete(row)">
+          <el-button type="danger" @click="handleDelete(row.objectId)">
             {{ $translateTitle('Maintenance.delete') }}
           </el-button>
         </template>
@@ -338,6 +347,7 @@
     name: 'MyWork',
     data() {
       return {
+        AllDevice: [],
         height: this.$baseTableHeight(0),
         dialogFormVisible: false,
         form: {
@@ -409,30 +419,96 @@
     },
     mounted() {
       this.fetchData()
+      this.fetchDevice()
     },
     methods: {
+      async fetchDevice() {
+        const { results = [] } = await queryDevice({})
+        this.AllDevice = results
+      },
+      getProductName(_objectId) {
+        let _product = _objectId
+        this._Product.some((i) => {
+          if (i.objectId == _objectId) {
+            _product = i.name
+          }
+        })
+        return _product
+      },
+      getStatus(type) {
+        // type == 0 ? '' : ''
+        switch (type) {
+          case 0:
+            return '待分配'
+            break
+          case 1:
+            return '已分配'
+            break
+          case 2:
+            return '已处理'
+            break
+          case 3:
+            return '已结单'
+            break
+          default:
+            return type
+            console.log('other', type)
+        }
+      },
+      async handleDelete(objectId) {
+        const res = await del_object('Maintenance', objectId)
+        this.$message.success('删除成功')
+        this.fetchData()
+      },
+      getDeviceName(_objectId) {
+        let _device = _objectId
+        this.AllDevice.some((i) => {
+          if (i.objectId == _objectId) {
+            _device = i.name
+          }
+        })
+        return _device
+      },
       async fetchData() {
         console.log(this.queryForm, 'queryForm')
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
-        await query_object('Maintenance', {
+        let params = {
           limit: this.queryForm.limit,
           order: this.queryForm.order,
           skip: this.queryForm.skip,
           keys: this.queryForm.keys,
-          // where: {
-          //   number: '',
-          //   product: '',
-          //   type: '',
-          // },
-        })
+          where: {
+            number: this.queryForm.number.length
+              ? { $regex: this.queryForm.number }
+              : { $ne: '' },
+            product: this.queryForm.product.length
+              ? this.queryForm.product
+              : { $ne: '' },
+            type: this.queryForm.type.length
+              ? this.queryForm.type
+              : { $ne: '' },
+          },
+        }
+        if (this.queryForm.searchDate.length) {
+          params.where['createdAt'] = {
+            $gt: { __type: 'Date', iso: this.queryForm.searchDate[0] },
+          }
+          params.where['updatedAt'] = {
+            $lt: { __type: 'Date', iso: this.queryForm.searchDate[1] },
+          }
+        }
+        await query_object('Maintenance', params)
           .then((res) => {
             console.log(res, 'res')
             const { results = [], count = 0 } = res
             this.list = results
             this.list.forEach((e) => {
-              for (var key in e.ACL) {
-                e.user = console.log(key.substr(5))
+              e.user = '暂无'
+              if (e.ACL) {
+                for (var key in e.ACL) {
+                  e.user = key.substr(5)
+                }
               }
             })
             this.total = count
