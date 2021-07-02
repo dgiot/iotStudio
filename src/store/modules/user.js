@@ -63,8 +63,8 @@ import { isJson } from '@/utils/validate'
 const { language } = getLocalStorage('language')
 import { clientMqtt } from '@/utils/clientMqtt'
 const state = () => ({
-  Menu: getToken('Menu', 'sessionStorage', []),
-  Permission: getToken('Permission', 'sessionStorage', []),
+  Menu: getToken('Menu'),
+  Permission: getToken('Permission'),
   language: language || i18n,
   roleTree: getToken('roleTree'), // 处理数据类型不匹配
   _Product: getToken('Product'),
@@ -206,7 +206,7 @@ const actions = {
       clientMqtt()
       commit('_setToken', sessionToken)
       if (nick) commit('setUsername', nick)
-      const page_title = getToken('title', 'sessionStorage') || title
+      const page_title = getToken('title') || title
       console.log(tag, 'tag info')
       const { title, Copyright, name, logo, _pcimg, _mimg } = tag.companyinfo
       console.log(Copyright, 'Copyright')

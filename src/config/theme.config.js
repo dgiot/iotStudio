@@ -33,7 +33,7 @@ module.exports = {
   // 是否开启右侧悬浮窗
   showThemeSetting: true,
   // 是否开启侧边栏图片切换
-  pictureSwitch: false,
+  pictureSwitch: true,
 }
 
 // {"layout":"comprehensive","themeName":"green","columnStyle":"horizontal","fixedHeader":true,"showProgressBar":true,"showTabs":true,"tabsBarStyle":"card","showTabsBarIcon":true,"showLanguage":true,"showRefresh":true,"showSearch":false,"showTheme":true,"showNotice":false,"showFullScreen":true,"showThemeSetting":false}

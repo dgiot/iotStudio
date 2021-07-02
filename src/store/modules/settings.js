@@ -45,7 +45,7 @@ const state = () => ({
   title: getToken('title') || '物联网开发平台',
   device: 'desktop',
   collapse: getToken('collapse') || false,
-  pictureSwitch: getToken('pictureSwitch') || false,
+  pictureSwitch: getToken('pictureSwitch') || true,
   language: getToken('language') || i18n,
   theme: getToken('theme') || { ...defaultTheme },
   extra: { first: '', transferRouteName: '' },
@@ -67,11 +67,11 @@ const mutations = {
   },
   setTitle(state, title) {
     state.title = title
-    setToken('title', title, 'sessionStorage')
+    setToken('title', title)
   },
   setLogo(state, logo) {
     state.logo = logo
-    setToken('logo', logo, 'sessionStorage')
+    setToken('logo', logo)
   },
   openSideBar(state) {
     state.collapse = false

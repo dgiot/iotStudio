@@ -65,6 +65,7 @@ export async function getDeviceCountByProduct(productId) {
   const { count = -1 } = await query_object('Device', params)
   return count
 }
+
 export async function getTdDevice(objectId) {
   var initData = {
     include: 'product',
@@ -79,11 +80,20 @@ export async function getTdDevice(objectId) {
     data: initData,
   })
 }
+
 // 获取设备时序数据
 export async function getDabDevice(objectId, params) {
   return request({
     url: `echart/${objectId}`,
     method: 'get',
     params,
+  })
+}
+
+// 获取卡片实时数据
+export async function getCardDevice(objectId) {
+  return request({
+    url: `app/${objectId}`,
+    method: 'get',
   })
 }

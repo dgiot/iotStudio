@@ -539,12 +539,12 @@
               },
               companyinfo: {
                 logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
-                name: '数蛙科技',
+                name: '树蛙科技',
                 _mimg: 'http://47.105.106.54:1250/group1/group1/70224.png',
-                title: '欢迎登录数蛙科技物联平台',
+                title: '欢迎登录树蛙科技',
                 _pcimg: 'http://47.105.106.54:1250/group1/group1/1_411.png',
                 Copyright:
-                  '© 2010-2021 数蛙科技 Corporation, All Rights Reserved',
+                  '© 2010-2021 树蛙科技 Corporation, All Rights Reserved',
                 backgroundimage:
                   'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
               },
@@ -564,7 +564,7 @@
                 showNotice: true,
                 showFullScreen: true,
                 showThemeSetting: true,
-                pictureSwitch: false,
+                pictureSwitch: true,
               },
             },
             // aclId:this.aclId

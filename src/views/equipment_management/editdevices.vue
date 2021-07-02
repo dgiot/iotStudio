@@ -262,83 +262,24 @@
                 >
                   <div style="height: 70px">
                     <span style="font-size: 16px">{{ item.name }}</span>
-                    <span style="float: right; margin-right: 10px">
-                      <!-- <svg-icon :icon-class="item.name" /> -->
-                    </span>
-                  </div>
-                  <div
-                    v-if="
-                      item.dataType.type == 'double' ||
-                      item.dataType.type == 'float' ||
-                      item.dataType.type == 'int'
-                    "
-                    :title="item.dataType.type"
-                    class="stla"
-                  >
-                    <span>{{ item.value | filterVal }}</span>
-                    <span v-if="item.dataType.specs.unit">
-                      {{ item.dataType.specs.unit }}
-                    </span>
-                  </div>
-                  <div
-                    v-if="
-                      item.dataType.type == 'enum' ||
-                      item.dataType.type == 'bool'
-                    "
-                    :title="item.dataType.type"
-                    class="stla"
-                  >
-                    <!--                    <span>{{ item.value | filterVal }}</span>-->
-                    <span>{{ item.dataType.specs[item.value] }}</span>
-                  </div>
-                  <div
-                    v-if="item.dataType.type == 'struct'"
-                    :title="item.dataType.type"
-                    class="stla"
-                  >
-                    <i
-                      v-for="(key, indexK) in item.specs"
-                      :key="indexK"
-                      style="display: block; height: 30px; font-style: normal"
+                    <span
+                      style="float: right; margin-right: 10px; margin-top: 10px"
                     >
-                      <div
-                        v-if="
-                          key.dataType.type == 'double' ||
-                          key.dataType.type == 'float' ||
-                          key.dataType.type == 'int'
-                        "
-                        class="stla"
-                      >
-                        <span>{{ key.name + ':' }}ee</span>
-                        <span>{{ key.value }}aa</span>
-                        <span v-if="key.dataType.specs.unit">
-                          {{ key.dataType.specs.unit }}
-                        </span>
-                      </div>
-                      <div
-                        v-if="
-                          key.dataType.type == 'enmu' ||
-                          key.dataType.type == 'bool'
-                        "
-                        class="stla"
-                      >
-                        <span>{{ key.name + ':' }}</span>
-                        <span>{{ key.value }}</span>
-                        <span>{{ key.dataType.specs[key.value] }}</span>
-                      </div>
-                    </i>
+                      <el-avatar :size="60" :src="item.imgurl" />
+                    </span>
                   </div>
-
+                  <div class="stla">
+                    <span>{{ item.number | filterVal }}</span>
+                    <span v-if="item.unit">
+                      {{ item.unit }}
+                    </span>
+                  </div>
                   <div class="ta">
                     <span class="fontSize">
                       {{ $translateTitle('equipment.updatetime') + ':' }}
                     </span>
-                    <span
-                      v-if="item.createdat"
-                      class="fontSize"
-                      @click="print(properties)"
-                    >
-                      {{ timestampToTime(item.createdat) }}
+                    <span class="fontSize" @click="print(properties)">
+                      {{ item.time }}
                     </span>
                   </div>
                 </li>
@@ -700,10 +641,15 @@
 </template>
 <script>
   import { mapGetters } from 'vuex'
-  import { getTdDevice, getDabDevice } from '@/api/Device/index.js'
+  import {
+    getTdDevice,
+    getDabDevice,
+    getCardDevice,
+  } from '@/api/Device/index.js'
   import { utc2beijing, timestampToTime } from '@/utils/index'
   import Instruct from '../devicemanage/instruct_manage'
   import chartType from '@/api/Mock/Chart'
+
   var dataobj = {}
   export default {
     components: {
@@ -1382,64 +1328,25 @@
           // uniques = uniques;
           return uniques
         }
-
         var vm = this
-
         // console.log('实时刷新')
-
-        // this.deviceid 李宏杰修改
-        getTdDevice(this.deviceid) // 此方法数据渲染还需调整 todo
+        getCardDevice(this.deviceid)
           .then((response) => {
-            // console.log(response, "response")
             if (response) {
-              if (response.results && response.results.length != 0) {
+              if (response.data) {
+                let third = []
+                response.data.forEach((res) => {
+                  let data = {}
+                  data[res.name] = res.number + res.unit
+                  third.push(data)
+                })
                 vm.thirdData.unshift({
-                  time: timestampToTime(Math.ceil(new Date().getTime() / 1000)),
-                  value: JSON.stringify(response.results[0].tddata[0].data),
+                  time: response.data[0].time,
+                  value: JSON.stringify(third),
                 })
               }
-              // console.log('vm.properties1',vm.properties)
               vm.thirdtotal = vm.$objGet(vm, 'thirdData.length')
-              // 动态$set,数据更新试图也一样更新，如果只是遍历的话试图回更新过慢
-              if (vm.properties && response.results) {
-                vm.properties.map((item, index) => {
-                  for (var key in response.results[0].tddata[0].data) {
-                    if (item.identifier.toLowerCase() == key.toLowerCase()) {
-                      item.createdat = response.results[0].lasttime
-                      //    console.log(key,vm.properties[index], response.results[0][key])
-                      vm.$set(
-                        vm.properties[index],
-                        'value',
-                        response.results[0].tddata[0].data[key]
-                      )
-                    }
-                  }
-                })
-
-                // console.log("dataobj", dataobj)
-                for (var key in dataobj) {
-                  for (var item in response.results[0].tddata[0].data) {
-                    if (key.toLowerCase() == item.toLowerCase()) {
-                      // dataobj[key].expectedData = Array.from(new Set(dataobj[key].expectedData.push(response.results[0].tddata[0].data[item])))
-                      dataobj[key].expectedData.push(
-                        response.results[0].tddata[0].data[item]
-                      )
-                      // dataobj[key].actualData = Array.from(new Set(dataobj[key].actualData.push(response.results[0].createdAt.substring(0, 19))))
-                      dataobj[key].actualData.push(
-                        response.results[0].createdAt.substring(0, 19)
-                      )
-                      if (
-                        dataobj[key].results &&
-                        dataobj[key].results.length > 0
-                      ) {
-                        dataobj[key].results = Array.from(
-                          new Set(dataobj[key].results.unshift(item))
-                        )
-                      }
-                    }
-                  }
-                }
-              }
+              vm.properties = response.data
             }
           })
           .catch((error) => {
@@ -1714,18 +1621,22 @@
     .el-icon-time {
       display: none;
     }
+
     .el-date-editor--datetime {
       input {
         padding: 0 10px;
       }
     }
   }
+
   .chartsinfo {
     margin-top: 15px;
+
     .chartsmain {
       margin: 30px 0;
     }
   }
+
   .editdevices {
     box-sizing: border-box;
     width: 100%;

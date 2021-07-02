@@ -13,6 +13,7 @@ module.exports = {
     },
   },
   rules: {
+    'vue/no-template-shadow': 'off',
     'no-console': 'off',
     'no-debugger': 'off',
     'vue/no-v-html': 'off',
