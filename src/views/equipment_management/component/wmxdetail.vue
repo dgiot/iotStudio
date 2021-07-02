@@ -1070,6 +1070,7 @@
     methods: {
       fileInfo(info) {
         console.log('uploadFinish', info)
+        this.sizeForm.ico = info.url
       },
       uploadCkick(type) {
         this.upNodeType = type
@@ -1090,6 +1091,7 @@
         if (['float', 'double', 'int'].indexOf(item.dataType.type) != -1) {
           obj = {
             name: item.name,
+            ico: item.ico,
             // item.dataType
             type: item.dataType.type,
             endnumber: that.$objGet(item, 'dataType.specs.max'),
@@ -1122,6 +1124,7 @@
         } else if (item.dataType.type == 'bool') {
           obj = {
             name: item.name,
+            ico: item.ico,
             type: item.dataType.type,
             true: item.dataType.specs[1],
             false: item.dataType.specs[0],
@@ -1156,6 +1159,7 @@
           }
           obj = {
             name: item.name,
+            ico: item.ico,
             type: item.dataType.type,
             specs: item.dataType.specs,
             struct: structArray,
@@ -1182,6 +1186,7 @@
         } else if (item.dataType.type == 'struct') {
           obj = {
             name: item.name,
+            ico: item.ico,
             type: item.dataType.type,
             struct: item.dataType.specs,
             startnumber: that.$objGet(item, 'dataType.specs.min'),
@@ -1207,6 +1212,7 @@
         } else if (item.dataType.type == 'string') {
           obj = {
             name: item.name,
+            ico: item.ico,
             type: item.dataType.type,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
@@ -1232,6 +1238,7 @@
         } else if (item.dataType.type == 'date') {
           obj = {
             name: item.name,
+            ico: item.ico,
             type: item.dataType.type,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,

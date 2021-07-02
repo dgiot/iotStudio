@@ -6,12 +6,14 @@
 import store from '@/store'
 
 export function aclObj() {
-  let roles = store.getters['user/role']
-  const aclKey1 = 'role' + ':' + roles[0].name
-  const aclObj = {}
-  aclObj[aclKey1] = {
-    read: true,
-    write: true,
-  }
+  let roles = store.getters['acl/role']
+  let aclObj = {}
+  roles.map((e) => {
+    console.log(e.name, '')
+    aclObj[`${'role' + ':' + e.name}`] = {
+      read: true,
+      write: true,
+    }
+  })
   return aclObj
 }
