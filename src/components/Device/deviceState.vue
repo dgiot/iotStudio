@@ -36,7 +36,9 @@
   </div>
 </template>
 <script>
-  import { mapGetters, mapMutations } from 'vuex'
+/* eslint-disable */
+/* eslint-disable */
+import { mapGetters, mapMutations } from 'vuex'
   export default {
     name: 'DeviceState',
     props: {

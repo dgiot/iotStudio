@@ -22,7 +22,7 @@ const tempToken = {
  * @type token type ['Number','String','Boolean','Number','Undefined','Object','Function'] type 是为了解决数据类型问题
  * @returns {void|*}
  */
-export function getToken(tokenName, storage = 'sessionStorage', type = '') {
+export function getToken(tokenName, storage = 'localStorage', type = '') {
   let res =
     'localStorage' === storage
       ? localStorage.getItem(tokenName)
@@ -44,7 +44,7 @@ export function getToken(tokenName, storage = 'sessionStorage', type = '') {
  * @param storage
  * @returns {void|*}
  */
-export function setToken(tokenName, settoken, storage = 'sessionStorage') {
+export function setToken(tokenName, settoken, storage = 'localStorage') {
   let token = JSON.stringify({ vuexinfo: settoken })
   if ('localStorage' === storage) {
     return localStorage.setItem(tokenName, Base64.encode(token))

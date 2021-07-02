@@ -99,6 +99,16 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
+                <el-form-item label="图标" prop="precision">
+                  <el-avatar
+                    :size="100"
+                    :src="sizeForm.ico"
+                    @click.native="uploadCkick('userinfo.avatar')"
+                  />
+                  <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
                 <el-form-item
                   :label="$translateTitle('product.readandwritetype')"
                   prop="isread"
@@ -852,6 +862,7 @@
   console.log('dataType', mockModules)
   import { getAllunit } from '@/api/Dict/index'
   import { mapGetters, mapMutations } from 'vuex'
+  import { putProject } from '@/api/Project'
 
   export default {
     name: 'Wmxdetail',
@@ -1057,6 +1068,16 @@
     beforeDestroy() {}, //生命周期 - 销毁之前
     activated() {},
     methods: {
+      fileInfo(info) {
+        console.log('uploadFinish', info)
+      },
+      uploadCkick(type) {
+        this.upNodeType = type
+        // 触发子组件的点击事件
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
+      },
       ...mapMutations({
         setSizeForm: 'konva/setSizeForm',
       }),
