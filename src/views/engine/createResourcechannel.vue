@@ -8,7 +8,31 @@
       :model="addchannel"
       size="mini"
     >
+      <div class="dialog-footer" style="margin: 15px">
+        <el-button @click="handleClose">
+          {{ $translateTitle('developer.back') }}
+        </el-button>
+        <el-button type="primary" @click="addchannelForm('addchannel')">
+          {{ $translateTitle('developer.create') }}
+        </el-button>
+      </div>
       <el-row>
+        <el-form-item label="通道类型" prop="region">
+          <el-select
+            v-model="addchannel.region"
+            style="display: block"
+            placeholder="通道类型"
+            @change="removeauto"
+          >
+            <el-option
+              v-for="(item, index) in channelregion"
+              :key="index"
+              style="display: block"
+              :label="item.title.zh"
+              :value="item.cType"
+            />
+          </el-select>
+        </el-form-item>
         <el-col :span="12">
           <el-form-item
             :label="$translateTitle('developer.channelname')"
@@ -38,87 +62,6 @@
               />
             </div>
           </el-form-item>
-        </el-col>
-
-        <el-col :span="24">
-          <el-form-item label="通道类型" prop="region">
-            <el-select
-              v-model="addchannel.region"
-              style="display: block"
-              placeholder="通道类型"
-              @change="removeauto"
-            >
-              <el-option
-                v-for="(item, index) in channelregion"
-                :key="index"
-                style="display: block"
-                :label="item.title.zh"
-                :value="item.cType"
-              />
-            </el-select>
-          </el-form-item>
-          <el-row
-            :gutter="24"
-            style="
-              width: 100%;
-              max-height: 500px;
-              margin: 0;
-              overflow-x: hidden;
-              overflow-y: scroll;
-              line-height: 30px;
-              text-align: center;
-            "
-          >
-            <el-col
-              v-for="(item, index) in channelregion"
-              :key="index"
-              :span="4"
-              style="padding: 0; margin: 20px; cursor: pointer"
-            >
-              <el-card
-                :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
-                :style="{
-                  color:
-                    addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
-                }"
-                size="mini"
-                class="box-card"
-              >
-                <div slot="header" class="clearfix">
-                  <el-button
-                    :disabled="resourceid != ''"
-                    :type="
-                      addchannel.region == item.cType ? 'success' : 'primary'
-                    "
-                    size="mini"
-                    style="text-align: center"
-                    @click="setCard(item.cType)"
-                  >
-                    {{ addchannel.region == item.cType ? '已选' : '选择' }}
-                  </el-button>
-                  <p>{{ item.title.zh }}</p>
-                </div>
-                <div class="text item">
-                  <el-row :gutter="24">
-                    <el-col :span="12">
-                      <img
-                        :src="
-                          item.params.ico.default
-                            ? item.params.ico.default
-                            : 'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/logo/logo.png'
-                        "
-                        class="image"
-                        style="width: 50px; height: 50px"
-                      />
-                    </el-col>
-                    <el-col :span="12">
-                      <el-tag>{{ item.cType }}</el-tag>
-                    </el-col>
-                  </el-row>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
         </el-col>
         <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
           <el-form-item
@@ -183,16 +126,88 @@
             />
           </el-form-item>
         </el-col>
+        <el-col :span="24">
+          <el-row
+            :gutter="24"
+            style="
+              width: 100%;
+              max-height: 500px;
+              margin: 0;
+              overflow-x: hidden;
+              overflow-y: scroll;
+              line-height: 30px;
+              text-align: center;
+            "
+          >
+            <el-col
+              v-for="(item, index) in channelregion"
+              :key="index"
+              :span="4"
+              style="padding: 10px; margin: 0px; cursor: pointer"
+            >
+              <el-card
+                :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
+                :style="{
+                  color:
+                    addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
+                }"
+                size="mini"
+                class="box-card"
+              >
+                <!--                <div slot="header" class="clearfix">-->
+                <!--                  <el-button-->
+                <!--                    :disabled="resourceid != ''"-->
+                <!--                    :type="-->
+                <!--                      addchannel.region == item.cType ? 'success' : 'primary'-->
+                <!--                    "-->
+                <!--                    size="mini"-->
+                <!--                    style="text-align: center"-->
+                <!--                    @click="setCard(item.cType)"-->
+                <!--                  >-->
+                <!--                    {{ addchannel.region == item.cType ? '已选' : '选择' }}-->
+                <!--                  </el-button>-->
+                <!--                  <p>{{ item.title.zh }}</p>-->
+                <!--                </div>-->
+                <div class="text item" @click="setCard(item.cType)">
+                  <el-row :gutter="24">
+                    <el-col :span="6">
+                      <img
+                        :src="
+                          item.params.ico.default
+                            ? item.params.ico.default
+                            : 'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/logo/logo.png'
+                        "
+                        class="image"
+                        style="width: 50px; height: 50px"
+                      />
+                    </el-col>
+                    <el-col :span="18">
+                      <span>
+                        <p>
+                          <el-tag
+                            style="
+                              text-align: left;
+                              float: left;
+                              color: black;
+                              background: #fff;
+                            "
+                          >
+                            {{ item.cType }}
+                          </el-tag>
+                        </p>
+                        <p :title="item.title.zh">
+                          {{ item.title.zh }}
+                        </p>
+                      </span>
+                    </el-col>
+                  </el-row>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+        </el-col>
       </el-row>
     </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="handleClose">
-        {{ $translateTitle('developer.cancel') }}
-      </el-button>
-      <el-button type="primary" @click="addchannelForm('addchannel')">
-        {{ $translateTitle('developer.determine') }}
-      </el-button>
-    </div>
   </div>
 </template>
 
@@ -325,6 +340,7 @@
         return arr.sort(this.arrSort)
       },
       removeauto(val) {
+        console.log(val)
         var obj = {}
         var obj1 = {
           applicationtText: [
@@ -473,6 +489,30 @@
 </script>
 
 <style lang="scss" scoped>
+  .el-card {
+    margin-bottom: 0 !important;
+  }
+  .box-card {
+    ::v-deep {
+      .el-card__body {
+        border: 1px solid #252528 !important;
+      }
+      //span {
+      //  float: left;
+      //}
+      p {
+        margin-bottom: 4px;
+        text-align: left;
+        color: black;
+        overflow: hidden;
+        flex: auto;
+        text-align: left;
+        //white-space: nowrap;
+        //text-overflow: ellipsis;
+        //font-size: 14px;
+      }
+    }
+  }
   /* @import url() */
   .createResourcechannel {
     margin: 20px;
@@ -489,7 +529,6 @@
         .clearfix {
           margin: 0;
         }
-
         .el-tree > .el-tree-node {
           display: inline-block;
           min-width: 100%;
