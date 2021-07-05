@@ -8,7 +8,25 @@
 -->
 <template>
   <div class="mycontainer">
-    <div class="ticker-dialog"></div>
+    <div class="ticker-dialog">
+      <div class="home_dialog">
+        <el-dialog
+          width="100vh"
+          :title="detail.name"
+          :visible.sync="deviceFlag"
+        >
+          <change-info :detail="detail" :step="step" :show-hard="ishard" />
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="deviceFlag = false">
+              {{ $translateTitle('developer.cancel') }}
+            </el-button>
+            <el-button type="primary" @click="deviceFlag = false">
+              {{ $translateTitle('developer.determine') }}
+            </el-button>
+          </span>
+        </el-dialog>
+      </div>
+    </div>
     <vab-query-form class="query-form">
       <vab-query-form-top-panel>
         <el-form
@@ -27,9 +45,7 @@
           <el-form-item :label="$translateTitle('Maintenance.project')">
             <el-select
               v-model="queryForm.product"
-              :placeholder="
-                $translateTitle('Maintenance.Please choose the product')
-              "
+              :placeholder="$translateTitle('Maintenance.project')"
             >
               <el-option
                 v-for="(item, index) in _Product"
@@ -44,9 +60,7 @@
           <el-form-item :label="$translateTitle('Maintenance.Ticket type')">
             <el-select
               v-model="queryForm.type"
-              :placeholder="
-                $translateTitle('Maintenance.Please choose the product')
-              "
+              :placeholder="$translateTitle('Maintenance.Ticket type')"
             >
               <el-option
                 v-for="item in types"
@@ -68,9 +82,9 @@
           >
             <el-date-picker
               v-model="queryForm.searchDate"
-              end-placeholder="结束日期"
+              :end-placeholder="$translateTitle('Maintenance.end time')"
               format="yyyy-MM-dd"
-              start-placeholder="开始日期"
+              :start-placeholder="$translateTitle('Maintenance.start time')"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -114,7 +128,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ getStatus(row.status) }}
+          {{ getStatus(row.status, row) }}
         </template>
       </el-table-column>
 
@@ -125,7 +139,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ getProductName(row.product.objectId) }}
+          {{ getProductName(row.product.objectId, row) }}
         </template>
       </el-table-column>
 
@@ -136,7 +150,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ getDeviceName(row.device.objectId) }}
+          {{ getDeviceName(row.device.objectId, row) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -163,18 +177,37 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <el-button size="mini" type="primary">
+          <el-button size="mini" type="primary" @click="showInfo(row, true)">
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
-          <el-button v-show="row.status == 0" type="success">
+          <el-button
+            v-show="row.status == 0"
+            type="success"
+            @click="showInfo(row)"
+          >
             {{ $translateTitle('Maintenance.Dispatch') }}
           </el-button>
-          <el-button v-show="row.status == 1" type="success">
+          <el-button
+            v-show="row.status == 1"
+            type="success"
+            @click="showInfo(row)"
+          >
             {{ $translateTitle('Maintenance.Evaluation') }}
           </el-button>
-          <el-button v-show="row.status == 3" type="info">
+          <el-button
+            v-show="row.status == 2"
+            type="info"
+            @click="showInfo(row)"
+          >
             {{ $translateTitle('Maintenance.deal with') }}
           </el-button>
+          <!--          <el-button-->
+          <!--            v-show="row.status == 3"-->
+          <!--            type="info"-->
+          <!--            @click="showInfo(row, 3)"-->
+          <!--          >-->
+          <!--            {{ $translateTitle('Maintenance.deal with') }}-->
+          <!--          </el-button>-->
           <el-button type="danger" @click="handleDelete(row.objectId)">
             {{ $translateTitle('Maintenance.delete') }}
           </el-button>
@@ -207,10 +240,18 @@
   import { queryDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import { UploadImg } from '@/api/File'
+  import ChangeInfo from '@/views/Maintenance/ChangeInfo'
   export default {
     name: 'MyWork',
+    components: {
+      ChangeInfo,
+    },
     data() {
       return {
+        step: 1,
+        ishard: false,
+        detail: {},
+        deviceFlag: false,
         AllDevice: [],
         types: ['故障维修'],
         Device: [],
@@ -281,34 +322,56 @@
         const { results = [] } = await queryDevice({})
         this.AllDevice = results
       },
-      getProductName(_objectId) {
+      getProductName(_objectId, row) {
         let _product = _objectId
         this._Product.some((i) => {
           if (i.objectId == _objectId) {
             _product = i.name
+            row._product = i.name
           }
         })
         return _product
       },
-      getStatus(type) {
+      getStatus(type = 0) {
         // type == 0 ? '' : ''
         switch (type) {
           case 0:
-            return '待分配'
+            return this.$translateTitle('Maintenance.To be assigned')
             break
           case 1:
-            return '已分配'
+            return this.$translateTitle('Maintenance.Assigned')
             break
           case 2:
-            return '已处理'
+            return this.$translateTitle('Maintenance.Processed')
             break
           case 3:
-            return '已结单'
+            return this.$translateTitle('Maintenance.Statement')
             break
           default:
             return type
             console.log('other', type)
         }
+      },
+      showInfo(row, ishard = false) {
+        this.ishard = ishard
+        let { status = 0 } = row
+        this.detail = row
+        this.step = status + 1
+        this.deviceFlag = true
+        // switch (step) {
+        //   case -1:
+        //     alert(-1)
+        //     break
+        //   case 0:
+        //     alert(0)
+        //     break
+        //   case 1:
+        //     alert(1)
+        //     break
+        //   case 2:
+        //     alert(2)
+        //     break
+        // }
       },
       async handleDelete(objectId) {
         const res = await del_object('Maintenance', objectId)
@@ -316,11 +379,12 @@
         this.$message.success('删除成功')
         this.fetchData()
       },
-      getDeviceName(_objectId) {
+      getDeviceName(_objectId, row) {
         let _device = _objectId
         this.AllDevice.some((i) => {
           if (i.objectId == _objectId) {
             _device = i.name
+            row._device = i.name
           }
         })
         return _device

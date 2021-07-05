@@ -9,6 +9,17 @@
 <template>
   <div class="mycontainer">
     <div class="ticker-dialog">
+      <el-dialog width="100vh" :title="detail.name" :visible.sync="deviceFlag">
+        <change-info :detail="detail" :step="step" :show-hard="ishard" />
+        <!--        <span slot="footer" class="dialog-footer">-->
+        <!--          <el-button @click="deviceFlag = false">-->
+        <!--            {{ $translateTitle('developer.cancel') }}-->
+        <!--          </el-button>-->
+        <!--          <el-button type="primary" @click="deviceFlag = false">-->
+        <!--            {{ $translateTitle('developer.determine') }}-->
+        <!--          </el-button>-->
+        <!--        </span>-->
+      </el-dialog>
       <el-dialog
         :title="$translateTitle('Maintenance.create Ticket')"
         :visible.sync="dialogFormVisible"
@@ -91,34 +102,12 @@
               :http-request="myUpload"
             >
               <i slot="default" class="el-icon-plus"></i>
-              <div slot="file" slot-scope="{ file }">
+              <div v-for="(item, index) in form.photo" :key="index">
                 <img
                   class="el-upload-list__item-thumbnail"
-                  :src="file.url"
+                  :src="item.url"
                   alt=""
                 />
-                <span class="el-upload-list__item-actions">
-                  <span
-                    class="el-upload-list__item-preview"
-                    @click="handlePictureCardPreview(file)"
-                  >
-                    <i class="el-icon-zoom-in"></i>
-                  </span>
-                  <span
-                    v-if="!disabled"
-                    class="el-upload-list__item-delete"
-                    @click="handleDownload(file)"
-                  >
-                    <i class="el-icon-download"></i>
-                  </span>
-                  <span
-                    v-if="!disabled"
-                    class="el-upload-list__item-delete"
-                    @click="handleRemove(file)"
-                  >
-                    <i class="el-icon-delete"></i>
-                  </span>
-                </span>
               </div>
             </el-upload>
             <el-dialog :visible.sync="dialogVisible">
@@ -154,9 +143,7 @@
           <el-form-item :label="$translateTitle('Maintenance.project')">
             <el-select
               v-model="queryForm.product"
-              :placeholder="
-                $translateTitle('Maintenance.Please choose the product')
-              "
+              :placeholder="$translateTitle('Maintenance.project')"
             >
               <el-option
                 v-for="(item, index) in _Product"
@@ -171,9 +158,7 @@
           <el-form-item :label="$translateTitle('Maintenance.Ticket type')">
             <el-select
               v-model="queryForm.type"
-              :placeholder="
-                $translateTitle('Maintenance.Please choose the product')
-              "
+              :placeholder="$translateTitle('Maintenance.Ticket type')"
             >
               <el-option
                 v-for="item in types"
@@ -195,9 +180,9 @@
           >
             <el-date-picker
               v-model="queryForm.searchDate"
-              end-placeholder="结束日期"
+              :end-placeholder="$translateTitle('Maintenance.end time')"
               format="yyyy-MM-dd"
-              start-placeholder="开始日期"
+              :start-placeholder="$translateTitle('Maintenance.start time')"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -260,7 +245,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ getProductName(row.product.objectId) }}
+          {{ getProductName(row.product.objectId, row) }}
         </template>
       </el-table-column>
 
@@ -271,7 +256,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ getDeviceName(row.device.objectId) }}
+          {{ getDeviceName(row.device.objectId, row) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -298,18 +283,18 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <el-button size="mini" type="primary">
+          <el-button size="mini" type="primary" @click="showInfo(row)">
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
-          <el-button v-show="row.status == 0" type="success">
-            {{ $translateTitle('Maintenance.Dispatch') }}
-          </el-button>
-          <el-button v-show="row.status == 1" type="success">
-            {{ $translateTitle('Maintenance.Evaluation') }}
-          </el-button>
-          <el-button v-show="row.status == 3" type="info">
-            {{ $translateTitle('Maintenance.deal with') }}
-          </el-button>
+          <!--          <el-button v-show="row.status == 0" type="success">-->
+          <!--            {{ $translateTitle('Maintenance.Dispatch') }}-->
+          <!--          </el-button>-->
+          <!--          <el-button v-show="row.status == 1" type="success">-->
+          <!--            {{ $translateTitle('Maintenance.Evaluation') }}-->
+          <!--          </el-button>-->
+          <!--          <el-button v-show="row.status == 3" type="info">-->
+          <!--            {{ $translateTitle('Maintenance.deal with') }}-->
+          <!--          </el-button>-->
           <el-button type="danger" @click="handleDelete(row.objectId)">
             {{ $translateTitle('Maintenance.delete') }}
           </el-button>
@@ -341,12 +326,21 @@
     create_object,
   } from '@/api/shuwa_parse'
   import { queryDevice } from '@/api/Device'
+  import ChangeInfo from '@/views/Maintenance/ChangeInfo'
+
   import { mapGetters, mapMutations } from 'vuex'
   import { UploadImg } from '@/api/File'
   export default {
-    name: 'MyWork',
+    name: 'Index',
+    components: {
+      ChangeInfo,
+    },
     data() {
       return {
+        ishard: true,
+        step: 1,
+        detail: {},
+        deviceFlag: false,
         AllDevice: [],
         height: this.$baseTableHeight(0),
         dialogFormVisible: false,
@@ -422,15 +416,24 @@
       this.fetchDevice()
     },
     methods: {
+      showInfo(row) {
+        this.ishard = true
+        let { status = 0 } = row
+        console.log('row', row)
+        this.detail = row
+        this.step = status + 1
+        this.deviceFlag = true
+      },
       async fetchDevice() {
         const { results = [] } = await queryDevice({})
         this.AllDevice = results
       },
-      getProductName(_objectId) {
+      getProductName(_objectId, row) {
         let _product = _objectId
         this._Product.some((i) => {
           if (i.objectId == _objectId) {
             _product = i.name
+            row._product = i.name
           }
         })
         return _product
@@ -460,11 +463,12 @@
         this.$message.success('删除成功')
         this.fetchData()
       },
-      getDeviceName(_objectId) {
+      getDeviceName(_objectId, row) {
         let _device = _objectId
         this.AllDevice.some((i) => {
           if (i.objectId == _objectId) {
             _device = i.name
+            row._device = i.name
           }
         })
         return _device
@@ -547,6 +551,15 @@
             className: '_User',
           },
           ACL: this.aclObj,
+          info: {
+            photo: from.photo,
+            timeline: [{ timestamp: new Date(), h4: '生成工单', p: '' }],
+            description: from.description,
+            step1: {},
+            step2: {},
+            step3: {},
+            step4: {},
+          },
           device: {
             objectId: from.name,
             __type: 'Pointer',
@@ -574,10 +587,7 @@
         }
         UploadImg(content.file, config)
           .then((res) => {
-            this.form.photo.push({
-              url: res.url,
-              name: res.path.split('/group1/group1/')[1],
-            })
+            this.form.photo.push(res.url)
             console.log('上传成功的回调', res.url, this.form.photo)
           })
           .catch((e) => {
@@ -595,20 +605,19 @@
       },
       handleRemove(file) {
         this.form.photo.forEach((i, index) => {
-          if (i.name == file.name) {
+          // console.log(
+          //   i,
+          //   index,
+          //   file.name,
+          //   i.split('/')[`${i.split('/').length - 1}`]
+          // )
+          if (i.split('/')[`${i.split('/').length - 1}`] == file.name) {
             // delete this.form.photo[index]
+            this.form.photo.splice(index, 1)
             // console.log(this.form.photo, index)
           }
         })
         console.log(this.form.photo)
-      },
-      handlePictureCardPreview(file) {
-        console.log('file', file)
-        this.dialogImageUrl = file.url
-        this.dialogVisible = true
-      },
-      handleDownload(file) {
-        console.log(file)
       },
       handleSizeChange(val) {
         this.queryForm.limit = val

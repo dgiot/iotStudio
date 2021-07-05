@@ -72,6 +72,7 @@
     "image-webpack-loader": "git+https://hub.fastgit.org/tcoopman/image-webpack-loader.git",
     "lint-staged": "^10.5.4",
     "monaco-editor": "^0.25.2",
+    "nodemon": "^2.0.9",
     "prettier": "^2.2.1",
     "raw-loader": "^4.0.2",
     "sass": "~1.32.13",
@@ -83,6 +84,7 @@
     "svg-sprite-loader": "^6.0.2",
     "vue-eslint-parser": "^7.6.0",
     "vue-template-compiler": "^2.6.12",
+    "vab-player": "^0.0.5",
     "webpackbar": "^5.0.0-3"
   },
   "config": {

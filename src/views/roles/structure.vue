@@ -154,6 +154,13 @@
                               >
                                 {{ node.label }}
                               </span>
+                              <span>
+                                <i
+                                  class="el-icon-circle-plus-outline"
+                                  :title="$translateTitle('developer.adduser')"
+                                  @click="addItemUser(data)"
+                                />
+                              </span>
                             </div>
                           </el-tree>
                         </el-option>
