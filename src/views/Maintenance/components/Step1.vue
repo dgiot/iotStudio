@@ -64,6 +64,7 @@
         </el-form>
 
         <el-form
+          v-if="showFooter"
           ref="step1"
           class="create-ticker"
           :model="from"
@@ -87,12 +88,18 @@
             <el-form-item
               :label="$translateTitle('Maintenance.Maintenance staff')"
             >
-              <el-input
-                v-model="from.info.description"
-                readonly
-                type="textarea"
-              />
-              <el-cascader :props="props" />
+              <el-select
+                v-model="from.info.user"
+                style="width: 100%"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in user"
+                  :key="item.objectId"
+                  :label="item.nick"
+                  :value="item.nick"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-form>
@@ -116,6 +123,7 @@
 
 <script>
   let id = 0
+  import { queryUser } from '@/api/User'
   export default {
     props: {
       detail: {
@@ -126,32 +134,32 @@
         type: Number,
         default: 1,
       },
+      showFooter: {
+        type: Boolean,
+        default: false,
+      },
+      showHard: {
+        type: Boolean,
+        default: false,
+      },
     },
     data() {
       return {
-        props: {
-          lazy: true,
-          lazyLoad(node, resolve) {
-            const { level } = node
-            setTimeout(() => {
-              const nodes = Array.from({ length: level + 1 }).map((item) => ({
-                value: ++id,
-                label: `选项${id}`,
-                leaf: level >= 2,
-              }))
-              // 通过调用resolve将子节点数据返回，通知组件数据加载完成
-              resolve(nodes)
-            }, 1000)
-          },
-        },
+        user: [],
         activeName: 'first',
         from: '',
       }
     },
     mounted() {
+      this.featUser()
       this.from = this.detail
     },
-    methods: {},
+    methods: {
+      async featUser() {
+        const { results } = await queryUser({})
+        this.user = results
+      },
+    },
   }
 </script>
 

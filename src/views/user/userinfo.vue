@@ -72,6 +72,9 @@
                         type="textarea"
                       />
                     </el-form-item>
+                    <el-form-item label="重置密码">
+                      <el-input v-model="userinfo.password" />
+                    </el-form-item>
                     <el-form-item>
                       <el-button type="primary" @click="onSubmit">
                         保存
@@ -370,6 +373,9 @@
           nick: this.nick,
           username: this.username,
           phone: this.userinfo.phone,
+        }
+        if (this.userinfo.password) {
+          pamams['password'] = this.userinfo.password
         }
         const res = await putUser(this.objectId, pamams)
         if (res)

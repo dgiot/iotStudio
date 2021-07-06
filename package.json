@@ -45,7 +45,8 @@
     "resize-detector": "^0.3.0",
     "typescript": "^4.3.5",
     "vab-icons": "git+https://hub.fastgit.org/zxcasvw/vab-icons.git",
-    "vue-ele-form": "^0.8.56"
+    "vue-ele-form": "^0.8.56",
+    "vue-flv-player": "^1.0.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",
@@ -84,7 +85,6 @@
     "svg-sprite-loader": "^6.0.2",
     "vue-eslint-parser": "^7.6.0",
     "vue-template-compiler": "^2.6.12",
-    "vab-player": "^0.0.5",
     "webpackbar": "^5.0.0-3"
   },
   "config": {
