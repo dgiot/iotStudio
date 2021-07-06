@@ -10,7 +10,12 @@
   <div class="mycontainer">
     <div class="ticker-dialog">
       <el-dialog width="100vh" :title="detail.name" :visible.sync="deviceFlag">
-        <change-info :detail="detail" :step="step" :show-hard="ishard" />
+        <change-info
+          :detail="detail"
+          :step="step"
+          :show-hard="ishard"
+          :show-footer="isfooter"
+        />
         <!--        <span slot="footer" class="dialog-footer">-->
         <!--          <el-button @click="deviceFlag = false">-->
         <!--            {{ $translateTitle('developer.cancel') }}-->
@@ -338,6 +343,7 @@
     data() {
       return {
         ishard: true,
+        isfooter: false,
         step: 1,
         detail: {},
         deviceFlag: false,
@@ -418,6 +424,7 @@
     methods: {
       showInfo(row) {
         this.ishard = true
+        this.isfooter = false
         let { status = 0 } = row
         console.log('row', row)
         this.detail = row

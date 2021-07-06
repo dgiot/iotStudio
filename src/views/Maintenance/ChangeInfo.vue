@@ -35,23 +35,31 @@
       v-if="step === 1"
       :detail="detail"
       :step="step"
+      show-hard="showHard"
+      :show-footer="showFooter"
       @change-step="handleSetStep"
     />
     <step2
       v-if="step === 2"
       :detail="detail"
       :step="step"
+      show-hard="showHard"
+      :show-footer="showFooter"
       @change-step="handleSetStep"
     />
     <step3
       v-if="step === 3"
       :detail="detail"
       :step="step"
+      show-hard="showHard"
+      :show-footer="showFooter"
       @change-step="handleSetStep"
     />
     <Step4
       v-if="step === 4"
       :detail="detail"
+      :show-footer="showFooter"
+      show-hard="showHard"
       :step="step"
       @change-step="handleSetStep"
     />
@@ -73,6 +81,10 @@
       detail: {
         type: Object,
         default: () => {},
+      },
+      showFooter: {
+        type: Boolean,
+        default: false,
       },
       showHard: {
         type: Boolean,

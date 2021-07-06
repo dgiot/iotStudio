@@ -15,12 +15,25 @@
           :title="detail.name"
           :visible.sync="deviceFlag"
         >
-          <change-info :detail="detail" :step="step" :show-hard="ishard" />
+          <change-info
+            :detail="detail"
+            :step="step"
+            :show-footer="isfooter"
+            :show-hard="ishard"
+          />
           <span slot="footer" class="dialog-footer">
             <el-button @click="deviceFlag = false">
               {{ $translateTitle('developer.cancel') }}
             </el-button>
-            <el-button type="primary" @click="deviceFlag = false">
+
+            <el-button
+              v-if="detail.status == 0 && isfooter"
+              type="primary"
+              @click="deviceFlag = false"
+            >
+              {{ $translateTitle('Maintenance.Dispatch') }}
+            </el-button>
+            <el-button v-else type="primary" @click="deviceFlag = false">
               {{ $translateTitle('developer.determine') }}
             </el-button>
           </span>
@@ -177,7 +190,11 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <el-button size="mini" type="primary" @click="showInfo(row, true)">
+          <el-button
+            size="mini"
+            type="primary"
+            @click="showInfo(row, true, false)"
+          >
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
           <el-button
@@ -250,6 +267,7 @@
       return {
         step: 1,
         ishard: false,
+        isfooter: true,
         detail: {},
         deviceFlag: false,
         AllDevice: [],
@@ -352,8 +370,9 @@
             console.log('other', type)
         }
       },
-      showInfo(row, ishard = false) {
+      showInfo(row, ishard = false, isfooter = true) {
         this.ishard = ishard
+        this.isfooter = isfooter
         let { status = 0 } = row
         this.detail = row
         this.step = status + 1
