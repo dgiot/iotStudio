@@ -118,6 +118,7 @@ module.exports = {
         'vue-codemirror': 'vueCodemirror',
         vuedraggable: 'vuedraggable',
         'element-china-area-data': 'elementChinaAreaData',
+        'vue-flv-player': 'vueFlvPlayer',
       },
       resolve: {
         alias: {

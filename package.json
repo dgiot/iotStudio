@@ -42,11 +42,11 @@
     "element-ui": "^2.15.1",
     "f-render": "^4.12.3",
     "h7utils": "^1.0.1",
+    "hrm-player": "^1.0.4",
     "resize-detector": "^0.3.0",
     "typescript": "^4.3.5",
     "vab-icons": "git+https://hub.fastgit.org/zxcasvw/vab-icons.git",
-    "vue-ele-form": "^0.8.56",
-    "vue-flv-player": "^1.0.3"
+    "vue-ele-form": "^0.8.56"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",
