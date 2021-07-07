@@ -75,6 +75,7 @@
     methods: {
       //http-request的钩子
       FileRequest(file) {
+        console.log('file', file)
         let config = {
           onUploadProgress: (progressEvent) => {
             //progressEvent.loaded:已上传文件大小
@@ -105,9 +106,15 @@
       },
       handleExceed() {},
       submitUpload() {
-        this.loading = true
-        this.tips = '正在上传中。。。'
-        this.$refs.upload.submit()
+        const fileList = this.$refs.upload.fileList
+        if (fileList.length) {
+          this.loading = true
+          this.tips = '正在上传中。。。'
+          this.$refs.upload.submit()
+        } else {
+          this.$message.error('请先上传图片')
+          return
+        }
       },
       ensure() {
         this.dialogVisible = false

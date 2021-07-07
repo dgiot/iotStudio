@@ -17,6 +17,7 @@ let staticUrl = {
     'https://unpkg.com/codemirror@5.58.3/theme/rubyblue.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/topology-vue/topology-vue.css',
     'https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css"',
+    'https://unpkg.com/hrm-player/dist/hrm-player.css',
   ],
   js: [
     'https://unpkg.com/vue@2.6.12/dist/vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
@@ -81,6 +82,8 @@ let staticUrl = {
     'https://s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845',
     'https://unpkg.com/vue-amap/dist/index.js',
     'https://unpkg.com/jsoneditor@9.5.0/dist/jsoneditor.min.js',
+    'https://unpkg.com/vue-flv-player/dist/vue-flv-player.umd.min.js',
+    'https://unpkg.com/ezuikit-js',
   ],
 }
 if (process.env.NODE_ENV !== 'development') {
