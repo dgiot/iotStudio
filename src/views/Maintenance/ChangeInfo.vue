@@ -1,6 +1,11 @@
 <template>
   <div v-if="detail" class="changeInfo">
-    <el-row v-show="showHard" type="flex" class="row-bg" justify="space-around">
+    <el-row
+      v-show="showHard == true"
+      type="flex"
+      class="row-bg"
+      justify="space-around"
+    >
       <el-col :span="6">
         <div class="grid-content bg-purple">
           {{ $translateTitle('Maintenance.Ticket number') }} :
@@ -20,7 +25,7 @@
       </el-col>
     </el-row>
     <el-steps
-      v-show="showHard"
+      v-show="showHard == true"
       class="steps"
       :active="step"
       simple
@@ -33,14 +38,16 @@
     </el-steps>
     <step1
       v-if="step === 1"
+      ref="step1"
       :detail="detail"
       :step="step"
-      show-hard="showHard"
+      :show-hard="showHard"
       :show-footer="showFooter"
       @change-step="handleSetStep"
     />
     <step2
       v-if="step === 2"
+      ref="step2"
       :detail="detail"
       :step="step"
       show-hard="showHard"
@@ -49,6 +56,7 @@
     />
     <step3
       v-if="step === 3"
+      ref="step3"
       :detail="detail"
       :step="step"
       show-hard="showHard"
@@ -57,6 +65,7 @@
     />
     <Step4
       v-if="step === 4"
+      ref="step4"
       :detail="detail"
       :show-footer="showFooter"
       show-hard="showHard"

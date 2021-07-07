@@ -26,16 +26,12 @@
             </el-input>
           </el-col>
           <el-col :span="1">
-            <el-button type="primary" plain @click="mp4Play = true">
-              播放
-            </el-button>
+            <el-button type="primary" plain @click="Play()">播放</el-button>
           </el-col>
         </el-row>
         <el-card shadow="hover" class="player_card">
           <vab-player
             :autoplay="mp4Play"
-            :controls="true"
-            :muted="true"
             :source="flvsrc"
             :type="type"
             :width="width"
@@ -53,9 +49,9 @@
     data() {
       return {
         height: this.$baseTableHeight(0),
-        type: 'application/x-mpegURL',
-        width: '',
-        flvsrc: 'http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8',
+        type: 'mp4',
+        width: 1600,
+        flvsrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
         mp4Play: false,
         videoType: [
           {
@@ -75,21 +71,25 @@
         ],
       }
     },
-    created() {
-      this.$nextTick(() => {
-        this.width =
-          document.getElementsByClassName('player-container')[0].offsetWidth
-      })
-    },
+    computed: {},
     methods: {
       // https://github.com/wangdaodao/vue-flv-player/blob/main/README-zh.md
       // https://github.com/bilibili/flv.js/blob/master/docs/api.md
       changeType(e) {
+        // this.mp4Play = false
         let res = this.videoType.filter((i) => {
           if (i.type == e) return i
         })
+        // this.width = Number(
+        //   document.getElementsByTagName('section')[0].offsetWidth
+        // )
         console.log(e, res[0].url)
         this.flvsrc = res[0].url
+        // setTimeout(() => {
+        //   this.mp4Play = true
+        // }, 1500)
+      },
+      Play() {
         this.mp4Play = true
       },
     },

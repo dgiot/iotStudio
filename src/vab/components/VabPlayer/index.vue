@@ -1,7 +1,18 @@
 <template>
   <div ref="flvPlayer" class="player">
+    <!--    判断type 共用一个组件 会出错  原因是无法销毁上一个组件,所有判断多个type-->
     <vue-flv-player
-      v-if="type == 'mp4' || type == 'flv'"
+      v-if="type == 'mp4'"
+      :width="width"
+      :height="height"
+      :autoplay="autoplay"
+      :controls="controls"
+      :muted="muted"
+      :source="source"
+      :type="type"
+    />
+    <vue-flv-player
+      v-else-if="type == 'flv'"
       :width="width"
       :height="height"
       :autoplay="autoplay"
@@ -11,11 +22,7 @@
       :type="type"
     />
     <hrm-player
-      v-else-if="
-        type == 'video/mp4' ||
-        type == 'rtmp/flv' ||
-        type == 'application/x-mpegURL'
-      "
+      v-else-if="type == 'video/mp4'"
       ref="hrmPlayer"
       :width="width"
       :height="height"
@@ -25,7 +32,31 @@
       :source="source"
       :type="type"
     />
-    <span v-else>...</span>
+    <hrm-player
+      v-else-if="type == 'rtmp/flv'"
+      ref="hrmPlayer"
+      :width="width"
+      :height="height"
+      :autoplay="autoplay"
+      :controls="controls"
+      :muted="muted"
+      :source="source"
+      :type="type"
+    />
+    <hrm-player
+      v-else-if="type == 'application/x-mpegURL'"
+      ref="hrmPlayer"
+      :width="width"
+      :height="height"
+      :autoplay="autoplay"
+      :controls="controls"
+      :muted="muted"
+      :source="source"
+      :type="type"
+    />
+    <div v-else>
+      {{ type }}
+    </div>
   </div>
 </template>
 
@@ -141,7 +172,10 @@
       },
     },
     data() {
-      return {}
+      return {
+        flvType: ['mp4', 'flv'],
+        hrmType: ['video/mp4', 'rtmp/flv', 'application/x-mpegURL'],
+      }
     },
     mounted() {},
     methods: {},

@@ -119,6 +119,7 @@ module.exports = {
         vuedraggable: 'vuedraggable',
         'element-china-area-data': 'elementChinaAreaData',
         'vue-flv-player': 'vueFlvPlayer',
+        'ezuikit-js': 'EZUIKit',
       },
       resolve: {
         alias: {

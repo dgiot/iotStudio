@@ -300,7 +300,11 @@
           <!--          <el-button v-show="row.status == 3" type="info">-->
           <!--            {{ $translateTitle('Maintenance.deal with') }}-->
           <!--          </el-button>-->
-          <el-button type="danger" @click="handleDelete(row.objectId)">
+          <el-button
+            v-show="row.status != 3"
+            type="danger"
+            @click="handleDelete(row.objectId)"
+          >
             {{ $translateTitle('Maintenance.delete') }}
           </el-button>
         </template>
@@ -397,6 +401,7 @@
         _Product: 'user/_Product',
         objectId: 'user/objectId',
         role: 'acl/role',
+        username: 'user/username',
       }),
       aclObj() {
         let aclObj = {}
@@ -560,7 +565,14 @@
           ACL: this.aclObj,
           info: {
             photo: from.photo,
-            timeline: [{ timestamp: new Date(), h4: '生成工单', p: '' }],
+
+            timeline: [
+              {
+                timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                h4: '生成工单',
+                p: `${this.username}新建工单`,
+              },
+            ],
             description: from.description,
             step1: {},
             step2: {},

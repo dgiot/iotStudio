@@ -8,14 +8,20 @@
 import { getToken, setToken } from '@/utils/vuex'
 import { storage } from '@/config'
 const state = () => ({
-  _tableDict: getToken('_tableDict', {}),
-  _tableParser: getToken('_tableParser', {}),
+  _tableDict: getToken('_tableDict', storage, {}),
+  _tableParser: getToken('_tableParser', storage, {}),
+  _deviceFlag: getToken('_deviceFlag', storage, false),
 })
 const getters = {
   _tableDict: (state) => state._tableDict,
   _tableParser: (state) => state._tableParser,
+  _deviceFlag: (state) => state._deviceFlag,
 }
 const mutations = {
+  set_deviceFlag(state, flag) {
+    state._deviceFlag = flag
+    setToken('_tableDict', flag)
+  },
   set_tableDict(state, dict) {
     state._tableDict = dict
     setToken('_tableDict', dict)
@@ -26,6 +32,9 @@ const mutations = {
   },
 }
 const actions = {
+  set_deviceFlag({ commit, flag }) {
+    commit('set_deviceFlag', flag)
+  },
   set_tableDict({ commit, dict }) {
     commit('set_tableDict', dict)
   },

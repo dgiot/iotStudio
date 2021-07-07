@@ -83,6 +83,7 @@ let staticUrl = {
     'https://unpkg.com/vue-amap/dist/index.js',
     'https://unpkg.com/jsoneditor@9.5.0/dist/jsoneditor.min.js',
     'https://unpkg.com/vue-flv-player/dist/vue-flv-player.umd.min.js',
+    'https://unpkg.com/ezuikit-js',
   ],
 }
 if (process.env.NODE_ENV !== 'development') {
