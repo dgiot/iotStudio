@@ -73,7 +73,7 @@
                       />
                     </el-form-item>
                     <el-form-item label="重置密码">
-                      <el-input v-model="userinfo.password" />
+                      <el-input v-model="password" />
                     </el-form-item>
                     <el-form-item>
                       <el-button type="primary" @click="onSubmit">
@@ -230,6 +230,7 @@
       }
       return {
         channeindex: 0,
+        password: '',
         registerRules: {
           phone: [
             {
@@ -374,8 +375,8 @@
           username: this.username,
           phone: this.userinfo.phone,
         }
-        if (this.userinfo.password) {
-          pamams['password'] = this.userinfo.password
+        if (this.password) {
+          pamams['password'] = this.password
         }
         const res = await putUser(this.objectId, pamams)
         if (res)

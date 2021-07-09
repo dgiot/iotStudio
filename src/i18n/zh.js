@@ -176,6 +176,9 @@ export default {
       equipmenttype: '设备型号',
       equipmentbrand: '设备品牌',
       installationlocation: '安装位置',
+      videoSrc: '视频地址',
+      'The device is not bound to the video address yet':
+        '该设备暂未绑定视频地址',
       createdAt: '创建时间',
       addbatch: '批次添加',
       text: '创建设备后可以使用平台颁发的身份信息连接到平台',
@@ -365,6 +368,10 @@ export default {
       Reporttemplate: '报告模板',
     },
     product: {
+      order: '顺序',
+      Rounds: '轮次',
+      Strategy: '策略',
+      protocol: '协议',
       'Device Information': '设备信息',
       'Time series data': '时序数据',
       enterthelicensecode: '请输入license授权码',

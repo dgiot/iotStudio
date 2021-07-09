@@ -1174,15 +1174,23 @@
             })
             break
           case 'video':
-            this.$router.push({
-              path: '/Topo/VueKonva',
-              query: {
-                productid: this.deviceInfo.product.objectId,
-                devaddr: this.deviceInfo.devaddr,
-                deviceid: this.deviceInfo.objectId,
-                type: 'device',
-              },
-            })
+            const { basedata = { videoSrc: '' } } = this.deviceInfo
+            if (basedata.videoSrc != '') {
+              this.$router.push({
+                path: '/tools/player',
+                query: {
+                  type: 'flv',
+                  url: basedata.videoSrc,
+                },
+              })
+            } else {
+              this.$message.info(
+                this.$translateTitle(
+                  'equipment.The device is not bound to the video address yet'
+                )
+              )
+              return false
+            }
             break
         }
       },

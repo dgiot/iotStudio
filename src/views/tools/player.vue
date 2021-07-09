@@ -2,16 +2,18 @@
   <div class="player-container">
     <el-row :gutter="24">
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
-        <el-row :gutter="24">
+        <el-row v-show="!$route.query.url" :gutter="24">
           <el-col :span="23">
             <el-input
               v-model="flvsrc"
+              :disabled="$route.query.url"
               placeholder="请输入内容"
               class="input-with-select"
             >
               <el-select
                 slot="append"
                 v-model="type"
+                :disabled="$route.query.type"
                 style="width: 200px"
                 placeholder="请选择視頻流格式"
                 @change="changeType"
@@ -49,9 +51,11 @@
     data() {
       return {
         height: this.$baseTableHeight(0),
-        type: 'mp4',
+        type: this.$route.query ? this.$route.query.type : 'mp4',
         width: 1600,
-        flvsrc: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+        flvsrc: this.$route.query
+          ? this.$route.query.url
+          : 'https://media.w3.org/2010/05/sintel/trailer.mp4',
         mp4Play: false,
         videoType: [
           {
@@ -72,6 +76,13 @@
       }
     },
     computed: {},
+    mounted() {
+      if (this.$route.query.type && this.$route.query.url) {
+        setTimeout(() => {
+          this.mp4Play = true
+        }, 1500)
+      }
+    },
     methods: {
       // https://github.com/wangdaodao/vue-flv-player/blob/main/README-zh.md
       // https://github.com/bilibili/flv.js/blob/master/docs/api.md

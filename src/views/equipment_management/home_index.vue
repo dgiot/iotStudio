@@ -516,14 +516,6 @@
                     {{ $translateTitle('equipment.info') }}
                   </el-link>
 
-                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    @click="showState(scope.row, scope.row.objectId)"
-                  >
-                    {{ $translateTitle('equipment.state') }}
-                  </el-link>
                   <el-link
                     :underline="false"
                     type="primary"
@@ -1012,6 +1004,11 @@
                   />
                 </el-form-item>
               </el-col>
+              <el-col :span="12">
+                <el-form-item :label="$translateTitle('equipment.videoSrc')">
+                  <el-input v-model="deviceform.videoSrc" />
+                </el-form-item>
+              </el-col>
               <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
                 <el-form-item
                   :label="item.name"
@@ -1311,6 +1308,7 @@
         devicetotal: 0,
         visible2: false,
         deviceform: {
+          videoSrc: '',
           name: '',
           devaddr: '',
           batchId: '',
@@ -2150,6 +2148,7 @@
           assetNum: '',
           devModel: '',
           address: '',
+          videoSrc: '',
           productName: '',
           status: '',
           isEnable: '',
@@ -2223,6 +2222,7 @@
           productName: row.product.objectId,
           status: row.status,
           isEnable: row.isEnable,
+          videoSrc: row.detail.videoSrc,
           address: row.detail.address,
         }
         for (var key in row.basedata) {
@@ -2353,6 +2353,7 @@
               brand: this.deviceform.brand,
               address: this.bmapform.address,
               desc: this.deviceform.desc,
+              videoSrc: this.deviceform.videoSrc,
             }
             var obj = {}
             for (var key in this.deviceform) {

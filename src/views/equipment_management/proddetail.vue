@@ -403,6 +403,7 @@
           </div>
           <div>
             <el-table
+              :default-sort="{ prop: 'date', order: 'descending' }"
               :data="
                 wmxData.slice(
                   (wmxstart - 1) * wmxPageSize,
@@ -460,25 +461,83 @@
                   </el-table>
                 </template>
               </el-table-column>
+
               <el-table-column
-                :label="$translateTitle('product.identifier')"
-                prop="identifier"
-              />
+                :label="$translateTitle('product.order')"
+                width="80"
+                align="center"
+                sortable
+              >
+                <template #default="{ row }">
+                  {{ row.dataForm.order }}
+                </template>
+              </el-table-column>
+
               <el-table-column
+                :label="$translateTitle('product.Rounds')"
+                width="80"
+                align="center"
+                sortable
+              >
+                <template #default="{ row }">
+                  {{ row.dataForm.round }}
+                </template>
+              </el-table-column>
+
+              <el-table-column
+                :label="$translateTitle('product.Strategy')"
+                width="80"
+                align="center"
+                sortable
+              >
+                <template #default="{ row }">
+                  {{ row.dataForm.strategy }}
+                </template>
+              </el-table-column>
+
+              <el-table-column
+                :label="$translateTitle('product.protocol')"
+                width="80"
+                align="center"
+                sortable
+              >
+                <template #default="{ row }">
+                  {{ row.dataForm.protocol }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                width="120"
+                sortable
                 :label="$translateTitle('product.functionaltypes')"
               >
                 <span>{{ $translateTitle('product.attribute') }}</span>
               </el-table-column>
+
               <el-table-column
+                align="center"
+                sortable
+                :label="$translateTitle('product.identifier')"
+                prop="identifier"
+              />
+              <el-table-column
+                align="center"
+                sortable
                 :label="$translateTitle('product.functionname')"
                 prop="name"
               />
-              <el-table-column :label="$translateTitle('product.datatype')">
+              <el-table-column
+                :label="$translateTitle('product.datatype')"
+                align="center"
+                sortable
+              >
                 <template slot-scope="scope">
                   <span>{{ scope.row.dataType.type }}</span>
                 </template>
               </el-table-column>
               <el-table-column
+                align="center"
+                sortable
                 :label="$translateTitle('product.datadefinition')"
               >
                 <template slot-scope="scope">
@@ -2249,7 +2308,7 @@
           dinumber: 'null',
         },
         tableData: [],
-        activeName: 'first',
+        activeName: 'third',
         form: {
           Productname: '',
           ProductKey: '',
