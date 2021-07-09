@@ -727,6 +727,7 @@
       }
 
       return {
+        productId: this.$route.query.productid,
         activeNames: ['1'],
         queryForm: {
           account: '',

@@ -698,6 +698,7 @@ export default {
       'Please select the menu list and permission list':
         '请选择菜单列表和权限列表',
       'Save the template successfully': '保存模板成功',
+      'Save the template error': '保存模板失败',
       'update completed': '更新成功',
       'successfully deleted': '删除成功',
       'This operation will permanently delete this role, do you want to continue?':
@@ -903,6 +904,8 @@ export default {
       'Evaluation description': '评价描述',
       'Upload up to 5 photos, and the size of a single photo is controlled within 5M!':
         '至多上传5张照片，单张照片的大小控制在5M以内！',
+      'Click on the name, identifier, default value on the left to copy automatically Can be associated with component property configuration filling':
+        '点击左侧名称，标识符，默认值，可自动复制。可与组件属性配置填充关联',
     },
   },
 }

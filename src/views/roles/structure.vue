@@ -335,9 +335,10 @@
     queryUser,
     EmployeesHired,
     EmployeeTurnover,
-    putUser,
+    disableuser,
   } from '@/api/User/index'
   import { queryRoledepartment } from '@/api/Role/index'
+
   var arr = []
   export default {
     data() {
@@ -736,21 +737,45 @@
         })
       },
       disableRow(objectId, emailVerified) {
-        putUser(objectId, { emailVerified: !emailVerified })
-          .then((res) => {
-            if (res) {
-              this.userFordepartment()
+        let action = 'enable'
+        if (emailVerified) {
+          action = 'enable'
+        } else {
+          action = 'disable'
+        }
+        const params = {
+          userid: objectId,
+          action: action,
+        }
+        disableuser(params).then((res) => {
+          console.log(res)
+          if (res != undefined) {
+            if (emailVerified) {
+              this.$message({
+                type: 'success',
+                message: '启用成功!',
+              })
             } else {
-              this.$message.error(
-                `${this.$translateTitle(
-                  'user.Customers are not allowed to manually update email verification'
-                )}`
-              )
+              this.$message({
+                type: 'success',
+                message: '禁用成功!',
+              })
             }
-          })
-          .catch((e) => {
-            this.$message.error(e)
-          })
+          } else {
+            this.userFordepartment()
+            if (emailVerified) {
+              this.$message({
+                type: 'error',
+                message: '权限不足,启用失败!',
+              })
+            } else {
+              this.$message({
+                type: 'error',
+                message: '权限不足,禁用失败!',
+              })
+            }
+          }
+        })
       },
       // 删除
       handleDetele(row) {
@@ -875,11 +900,13 @@
         margin-top: 30px;
         margin-left: 20px;
       }
+
       .leftTree {
         width: 100%;
-        height: calc(100vh - #{$base-top-bar-height}* 4 - 25px);
+        height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
         overflow: scroll;
         overflow: scroll;
+
         ::v-deep .el-tree {
           width: 100%;
           overflow: scroll;
@@ -910,6 +937,7 @@
   .structure .el-switch__label--right {
     color: rgb(19, 206, 102) !important;
   }
+
   .custom-tree-node .el-icon-circle-plus-outline:hover {
     color: #409eff;
   }

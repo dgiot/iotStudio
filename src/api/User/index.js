@@ -160,3 +160,11 @@ export function getRouterList(params) {
     params: params,
   })
 }
+
+export function disableuser(params) {
+  return request({
+    url: '/disableuser',
+    method: 'get',
+    params: params,
+  })
+}
