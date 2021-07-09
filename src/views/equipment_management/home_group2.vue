@@ -9,6 +9,7 @@
       <VabParser
         :productid="productid"
         :form-config="formConfig"
+        :dict="parserDict"
         @ParserSave="ParserSave"
       />
       <!--      <span slot="footer" class="dialog-footer">-->
@@ -1142,6 +1143,7 @@
         ],
         imageUrl: '',
         productid: '',
+        parserDict: [],
         formConfig: {},
         loading: false,
         allApps: [],
@@ -1606,9 +1608,10 @@
         })
       },
       async editorParser(ObjectId) {
-        const { config = {} } = await getProduct(ObjectId)
+        const { config = {}, thing = {} } = await getProduct(ObjectId)
         this.productid = ObjectId
         this.ParserConfig = config
+        this.parserDict = _.merge(thing, config)
         this.formConfig = this.ParserConfig.parser
           ? this.ParserConfig.parser
           : {}
@@ -1633,6 +1636,7 @@
         const row = await getProduct(ObjectId)
         const { config = { basedate: {} } } = row
         this.productInfo = row
+        console.log(' this.parserDict', this.parserDict)
         this.editDictTempId = ObjectId
         this.dictTempForm = {
           name: '',

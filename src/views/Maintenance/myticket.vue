@@ -200,7 +200,7 @@
         width="55"
       />
       <el-table-column
-        sortablesortable
+        sortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
         prop="objectId"

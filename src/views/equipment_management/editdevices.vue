@@ -194,6 +194,9 @@
                       />
                     </el-card>
                   </el-col>
+                  <el-col v-show="!chartData.child" :span="24">
+                    <vab-empty />
+                  </el-col>
                 </el-row>
               </div>
             </div>
@@ -804,7 +807,7 @@
           _function: 'last',
           style: '',
           number: 1,
-          interval: 'd',
+          interval: 'm',
           datetimerange: '',
           keys: '*',
           limit: 10,
@@ -992,7 +995,7 @@
       },
     },
     mounted() {
-      this.params.style = this.chartType[1].type
+      this.params.style = this.chartType[0].type
       console.log(' this.params.style', this.params.style)
       this.getDeviceDetail()
       this.initChart()
@@ -1105,8 +1108,8 @@
           getDabDevice(deviceid, params)
             .then((res) => {
               this.$baseColorfullLoading().close()
-              console.log(res)
-              this.chartData = res.chartData
+              const { chartData = [] } = res
+              this.chartData = chartData
               this.loading = false
               this.dataEmpty = false
             })

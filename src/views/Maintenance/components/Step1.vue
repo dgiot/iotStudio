@@ -15,38 +15,42 @@
         >
           <el-row :gutter="24">
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-              <el-form-item :label="$translateTitle('Maintenance.project')">
+              <el-form-item
+                :label="$translateTitle('Maintenance.project') + ': '"
+              >
                 <!--                <el-input v-model="detail._product" readonly disabled />-->
-                <span>: {{ form._product }}</span>
+                <span>{{ form._product }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
               <el-form-item
-                :label="$translateTitle('Maintenance.Equipment name')"
+                :label="$translateTitle('Maintenance.Equipment name') + ': '"
               >
                 <!--                <el-input v-model="detail._device" readonly disabled />-->
-                <span>: {{ form._device }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-              <el-form-item :label="$translateTitle('Maintenance.Initiator')">
-                <!--                <el-input v-model="detail.user" readonly disabled />-->
-                <span>: {{ form.user }}</span>
+                <span>{{ form._device }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
               <el-form-item
-                :label="$translateTitle('Maintenance.Ticket description')"
+                :label="$translateTitle('Maintenance.Initiator') + ': '"
               >
-                <el-input
-                  v-model="form.info.description"
-                  readonly
-                  type="textarea"
-                />
+                <!--                <el-input v-model="detail.user" readonly disabled />-->
+                <span>{{ form.user }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
-              <el-form-item :label="$translateTitle('Maintenance.photo')">
+              <el-form-item
+                :label="
+                  $translateTitle('Maintenance.Ticket description') + ': '
+                "
+              >
+                {{ form.info.description }}
+              </el-form-item>
+            </el-col>
+            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+              <el-form-item
+                :label="$translateTitle('Maintenance.photo') + ': '"
+              >
                 <div
                   v-for="(item, index) in form.info.photo"
                   :key="index"
@@ -160,6 +164,7 @@
     data() {
       return {
         user: [],
+        reverse: true,
         rules: {
           reverse: true,
           user: [
@@ -223,6 +228,12 @@
 
 <style lang="scss" scoped>
   ::v-deep {
+    .el-form-item {
+      margin-bottom: 0;
+    }
+    .el-form-item__label {
+      font-weight: 700;
+    }
     .el-card__body {
       h3 {
         float: left;
