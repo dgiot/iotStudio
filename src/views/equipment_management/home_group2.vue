@@ -9,8 +9,9 @@
       <VabParser
         :productid="productid"
         :form-config="formConfig"
+        :parserindex="editIndex"
         :dict="parserDict"
-        @ParserSave="ParserSave"
+        @ParserSave="saveParse"
       />
       <!--      <span slot="footer" class="dialog-footer">-->
       <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
@@ -19,6 +20,65 @@
       <!--        </el-button>-->
       <!--      </span>-->
     </el-dialog>
+    <el-dialog :visible.sync="parserView">
+      <f-render v-model="formConfig" :config="formConfig" pure />
+    </el-dialog>
+    <el-dialog :visible.sync="parserTable" class="parserTable">
+      <div slot="title" class="header-title parserTable">
+        <el-button
+          type="primary"
+          @click.native.prevent="addParse(parserTableList)"
+        >
+          {{ $translateTitle('product.newlyadded') }}
+        </el-button>
+        <el-button
+          type="success"
+          @click.native.prevent="saveParse(parserTableList)"
+        >
+          {{ $translateTitle('product.preservation') }}
+        </el-button>
+      </div>
+      <el-table :data="parserTableList.parser">
+        <el-table-column
+          sortable
+          align="center"
+          prop="name"
+          :label="$translateTitle('product.chinesetitle')"
+        />
+        <el-table-column
+          sortable
+          align="center"
+          prop="enname"
+          :label="$translateTitle('product.englishtitle')"
+        />
+        <el-table-column
+          sortable
+          align="center"
+          :label="$translateTitle('leftbar.settings')"
+          show-overflow-tooltip
+        >
+          <template #default="{ row }">
+            <el-button type="primary" plain @click="editParse(row.$index, row)">
+              {{ $translateTitle('concentrator.edit') }}
+            </el-button>
+            <el-button type="success" plain @click="previewParse(row.config)">
+              {{ $translateTitle('application.preview') }}
+            </el-button>
+            <el-button
+              type="danger"
+              plain
+              size="small"
+              @click.native.prevent="
+                deleteParse(row.$index, parserTableList.parser)
+              "
+            >
+              {{ $translateTitle('task.Delete') }}
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <el-tabs v-model="activeName">
       <el-tab-pane
@@ -958,6 +1018,7 @@
   </div>
 </template>
 <script>
+  import { uuid } from '@/utils'
   import { mapGetters } from 'vuex'
   import { delProduct, getProduct, putProduct } from '@/api/Product'
   import { getAllunit } from '@/api/Dict/index'
@@ -970,11 +1031,14 @@
   export default {
     data() {
       return {
+        parserView: false,
+        parserTable: false,
+        parserTableList: { parser: [] },
+        parserFromId: '',
         dialogVisible: false,
         moduleTitle: this.$translateTitle('product.createproduct'),
         allunit: [],
         productInfo: {},
-        ParserConfig: {},
         category: Category,
         edit_dict_temp_dialog: false,
         title_dict_edit_dialog: '新增字典数据',
@@ -1145,6 +1209,9 @@
         productid: '',
         parserDict: [],
         formConfig: {},
+        editIndex: 0,
+        Parserzh: '',
+        parseren: '',
         loading: false,
         allApps: [],
         categoryList: [],
@@ -1608,29 +1675,92 @@
         })
       },
       async editorParser(ObjectId) {
-        const { config = {}, thing = {} } = await getProduct(ObjectId)
-        this.productid = ObjectId
-        this.ParserConfig = config
-        this.parserDict = _.merge(thing, config)
-        this.formConfig = this.ParserConfig.parser
-          ? this.ParserConfig.parser
-          : {}
+        this.parserFromId = ObjectId
+        try {
+          const {
+            config = {
+              parser: [],
+            },
+            thing = {},
+          } = await getProduct(ObjectId)
+          this.parserTableList = config
+          console.log(this.parserTableList)
+          this.parserDict = _.merge(thing, config)
+        } catch (e) {
+          this.parserTableList = { parser: [] }
+          console.log('eeeeeeeeeeeee', e)
+        }
+        this.parserTable = true
+      },
+      editParse(index, row) {
+        this.formConfig = row
+        this.editIndex = index
         this.dialogVisible = true
       },
-      async ParserSave(parse, ObjectId) {
-        this.ParserConfig.parser = parse
-        const params = {
-          config: this.ParserConfig,
+      async saveParse(list, type = -1) {
+        if (type + 2 > 0) {
+          this.parserTableList.parser[type] = _.merge({}, list)
         }
         try {
-          let { updatedAt } = await putProduct(ObjectId, params)
-          console.log(updatedAt)
-          this.$message.success('表单保存成功')
+          const res = await putProduct(this.parserFromId, {
+            config: type + 2 > 0 ? this.parserTableList : list,
+          })
+          this.$message.success(
+            this.$translateTitle('user.Save the template successfully')
+          )
+          this.dialogVisible = false
+          this.parserTable = false
         } catch (e) {
-          this.$message.error(`保存失败${e}`)
+          this.$message.error(
+            this.$translateTitle('user.Save the template error') + `${e}`
+          )
+          console.log(e, 'eeee')
         }
-        this.dialogVisible = false
+        console.log(list)
       },
+      previewParse(row) {
+        this.parserView = true
+        this.formConfig = row
+        console.log('previewParse', row)
+      },
+      addParse(row) {
+        row['parser'].push({
+          name: uuid(6),
+          enname: uuid(6),
+          config: {},
+        })
+      },
+      deleteParse(index, rows) {
+        rows.splice(index, 1)
+      },
+      // async editorParser(ObjectId) {
+      //   const { config = {}, thing = {} } = await getProduct(ObjectId)
+      //   this.productid = ObjectId
+      //   this.ParserConfig = config
+      //   this.parserDict = _.merge(thing, config)
+      //   this.formConfig = this.ParserConfig.parser
+      //     ? this.ParserConfig.parser
+      //     : {}
+      //   this.dialogVisible = true
+      // },
+      // async ParserSave(parse, ObjectId) {
+      //   this.ParserConfig.parser = parse
+      //   const params = {
+      //     config: this.ParserConfig,
+      //   }
+      //   try {
+      //     let { updatedAt } = await putProduct(ObjectId, params)
+      //     console.log(updatedAt)
+      //     this.$message.success(
+      //       this.$translateTitle('user.Save the template successfully')
+      //     )
+      //   } catch (e) {
+      //     this.$message.error(
+      //       this.$translateTitle('user.Save the template error') + `${e}`
+      //     )
+      //   }
+      //   this.dialogVisible = false
+      // },
       async editorDict(ObjectId) {
         this.getAllunit()
         const row = await getProduct(ObjectId)
@@ -2005,8 +2135,11 @@
   }
 
   .devproduct ::v-deep .el-dialog__wrapper .el-dialog__header,
-  .devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
-    display: none;
+  //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
+  //  display: none;
+  //}
+  .devproduct .parserTable {
+    display: block;
   }
   .devproduct ::v-deep .el-dialog {
     margin: 0 auto;
