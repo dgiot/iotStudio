@@ -130,10 +130,11 @@
       }
     },
     mounted() {
-      this.featchData()
+      this.featchData({})
     },
     methods: {
-      featchData() {
+      featchData(args) {
+        console.log(args)
         if (this.productid && this.uid) {
           this.alarmsRuleId = 'rule:' + this.productid + this.uid
           this.getalarmsRule(this.alarmsRuleId)

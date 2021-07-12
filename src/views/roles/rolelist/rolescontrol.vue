@@ -7,16 +7,27 @@
         style="width: 200px"
         clearable
       />
-      <el-button type="primary" icon="el-icon-search" style="margin-left: 20px">
+      <el-button
+        type="primary"
+        icon="el-icon-search"
+        style="margin-left: 20px"
+        @click="getcontrolrole({ name: search })"
+      >
         {{ $translateTitle('developer.search') }}
       </el-button>
-      <el-button type="primary" icon="el-icon-plus" @click="addcontrol">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        disabled
+        @click="addcontrol"
+      >
         {{ $translateTitle('developer.add') }}
       </el-button>
     </div>
     <el-table
       v-loading="listLoading"
       size="mini"
+      height="600"
       :data="treeData"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       border
@@ -80,6 +91,13 @@
         </template>
       </el-table-column>
     </el-table>
+    <vab-Pagination
+      v-show="count"
+      :total="count"
+      :page.sync="queryForm.pageNo"
+      :limit.sync="queryForm.pageSize"
+      @pagination="getcontrolrole"
+    />
     <!--编辑权限弹窗-->
     <el-dialog
       :title="$translateTitle('developer.edit')"
@@ -143,6 +161,17 @@
     components: {},
     data() {
       return {
+        count: 0,
+        queryForm: {
+          number: '',
+          product: '',
+          type: '',
+          searchDate: [],
+          limit: 20,
+          skip: 0,
+          order: '-createdAt',
+          keys: 'count(*)',
+        },
         listLoading: false,
         formLabelWidth: '120px',
         roleEdit: false,
@@ -193,7 +222,7 @@
       },
     },
     mounted() {
-      this.getcontrolrole()
+      this.getcontrolrole({})
     },
     methods: {
       async handleEdit(row) {
@@ -208,10 +237,19 @@
       },
       handleDelete(row) {},
       addcontrol() {},
-      async getcontrolrole() {
+      async getcontrolrole(args) {
+        console.log(args)
         this.listLoading = true
         this.data = []
-        const { results } = await queryPermission({ limit: 1000 })
+        const { results, count } = await queryPermission({
+          count: '*',
+          limit: args.limit ? args.limit : this.queryForm.limit,
+          order: this.queryForm.order,
+          skip: args.skip ? args.skip : this.queryForm.skip,
+          where: {
+            name: args.name ? { $regex: args.name } : { $ne: '' },
+          },
+        })
         this.listLoading = false
         if (results) {
           results.map((items) => {
@@ -222,6 +260,7 @@
             obj.parent = items.parent.objectId
             obj.createtime = utc2beijing(items.createdAt)
             this.data.push(obj)
+            this.count = count
           })
         } else {
           this.data = []

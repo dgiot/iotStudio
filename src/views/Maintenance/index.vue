@@ -313,7 +313,7 @@
         <vab-empty />
       </template>
     </el-table>
-    <vab-Pagination
+    <VabPagination
       v-show="total"
       :total="total"
       :page.sync="queryForm.pageNo"
@@ -482,15 +482,18 @@
         })
         return _device
       },
-      async fetchData() {
-        console.log(this.queryForm, 'queryForm')
+      async fetchData(args = {}) {
+        if (!args.limit) {
+          args = this.queryForm
+        }
+        console.log(this.queryForm, 'queryForm', args)
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
         let params = {
-          limit: this.queryForm.limit,
-          order: this.queryForm.order,
-          skip: this.queryForm.skip,
-          keys: this.queryForm.keys,
+          limit: args.limit,
+          order: args.order,
+          skip: args.skip,
+          keys: args.keys,
           where: {
             number: this.queryForm.number.length
               ? { $regex: this.queryForm.number }

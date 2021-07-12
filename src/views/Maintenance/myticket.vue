@@ -143,7 +143,7 @@
                 :value="item.key"
               />
             </el-select>
-            <el-button icon="el-icon-search" type="primary" @click="queryData">
+            <el-button icon="el-icon-search" type="primary" @click="fetchData">
               {{ $translateTitle('Maintenance.search') }}
             </el-button>
           </el-form-item>
@@ -587,15 +587,18 @@
         return _device
       },
 
-      async fetchData() {
-        console.log(this.queryForm, 'queryForm')
+      async fetchData(args = {}) {
+        if (!args.limit) {
+          args = this.queryForm
+        }
+        console.log(this.queryForm, 'queryForm', args)
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
         let params = {
-          limit: this.queryForm.limit,
-          order: this.queryForm.order,
-          skip: this.queryForm.skip,
-          keys: this.queryForm.keys,
+          limit: args.limit,
+          order: args.order,
+          skip: args.skip,
+          keys: args.keys,
           where: {
             number: this.queryForm.number.length
               ? { $regex: this.queryForm.number }
@@ -649,18 +652,6 @@
         const { results } = await queryDevice(params)
         console.log(results, '设备')
         this.Device = results
-      },
-      handleSizeChange(val) {
-        this.queryForm.pageSize = val
-        this.fetchData()
-      },
-      handleCurrentChange(val) {
-        this.queryForm.pageNo = val
-        this.fetchData()
-      },
-      queryData() {
-        this.queryForm.pageNo = 1
-        this.fetchData()
       },
       dispatch() {
         this.$refs.changeinfo.$refs.step1.dispatchUser()

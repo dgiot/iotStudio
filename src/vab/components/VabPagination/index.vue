@@ -73,10 +73,22 @@
     },
     methods: {
       handleSizeChange(val) {
-        this.$emit('pagination', { page: this.currentPage, limit: val })
+        this.$emit('pagination', {
+          skip: this.currentPage,
+          limit: val,
+          count: '*',
+          order: '-createdAt',
+          keys: 'count(*)',
+        })
       },
       handleCurrentChange(val) {
-        this.$emit('pagination', { page: val, limit: this.pageSize })
+        this.$emit('pagination', {
+          skip: (val - 1) * this.currentPage,
+          limit: this.pageSize,
+          count: '*',
+          order: '-createdAt',
+          keys: 'count(*)',
+        })
       },
     },
   }
