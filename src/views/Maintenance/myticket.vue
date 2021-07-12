@@ -203,7 +203,7 @@
         sortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
-        prop="objectId"
+        prop="number"
         width="120"
         show-overflow-tooltip
       />
@@ -318,14 +318,12 @@
         <vab-empty />
       </template>
     </el-table>
-    <el-pagination
-      background
-      :current-page="queryForm.pageNo"
-      :layout="layout"
-      :page-size="queryForm.pageSize"
+    <vab-Pagination
+      v-show="total > 0"
       :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
+      :page.sync="queryForm.pageNo"
+      :limit.sync="queryForm.pageSize"
+      @pagination="fetchData"
     />
   </div>
 </template>

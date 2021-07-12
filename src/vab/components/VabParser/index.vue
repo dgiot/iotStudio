@@ -10,48 +10,6 @@
 <template>
   <div class="center">
     <el-row>
-      <el-col :span="jsonData.length ? 24 - rendeRow : 0">
-        <div class="left">
-          <!--          <VabJsonEditor ref="jsonEdit" v-model="jsonData" />-->
-          <el-table size="mini" :data="jsonData">
-            <el-table-column
-              size="40"
-              :label="$translateTitle('equipment.name')"
-              align="center"
-            >
-              <template #default="{ row }">
-                <el-button v-copy="row.name" type="text">
-                  {{ row.name }}
-                </el-button>
-              </template>
-            </el-table-column>
-
-            <el-table-column
-              size="40"
-              :label="$translateTitle('product.identifier')"
-              align="center"
-            >
-              <template #default="{ row }">
-                <el-button v-copy="row.identifier" type="text">
-                  {{ row.identifier }}
-                </el-button>
-              </template>
-            </el-table-column>
-            <el-table-column
-              size="40"
-              :label="$translateTitle('equipment.defaultvalue')"
-              align="center"
-            >
-              <template #default="{ row }">
-                <el-button v-copy="row.defaultvalue" type="text">
-                  {{ row.defaultvalue }}
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-        <!--        <div class="left">{{ dict.properties }}</div>-->
-      </el-col>
       <el-col :span="jsonData.length ? rendeRow : rendeRow + 5">
         <vab-query-form-top-panel>
           <el-form
@@ -71,10 +29,10 @@
               type="info"
             />
             <el-form-item>
-              <el-button
-                icon="el-icon-setting"
-                @click="rendeRow == 19 ? (rendeRow = 24) : (rendeRow = 19)"
-              />
+              <!--              <el-button-->
+              <!--                icon="el-icon-setting"-->
+              <!--                @click="rendeRow == 19 ? (rendeRow = 24) : (rendeRow = 19)"-->
+              <!--              />-->
             </el-form-item>
             <el-form-item :label="$translateTitle('product.chinesetitle')">
               <el-input
@@ -87,6 +45,23 @@
                 v-model="headerInfo.enname"
                 :placeholder="$translateTitle('product.englishtitle')"
               />
+            </el-form-item>
+            <el-form-item :label="$translateTitle('rule.Type')">
+              <el-input
+                v-model="headerInfo.type"
+                readonly
+                disabled
+                :placeholder="$translateTitle('product.type')"
+              />
+            </el-form-item>
+            <el-form-item :label="$translateTitle('product.description')">
+              <el-input
+                v-model="headerInfo.description"
+                :placeholder="$translateTitle('product.description')"
+              />
+            </el-form-item>
+            <el-form-item label="uid">
+              <el-input v-model="headerInfo.uid" readonly disabled />
             </el-form-item>
           </el-form>
         </vab-query-form-top-panel>
@@ -111,10 +86,6 @@
         default: 'calc(100vh - 70px)',
       },
       formConfig: {
-        type: Object,
-        default: () => {},
-      },
-      dict: {
         type: Object,
         default: () => {},
       },
@@ -143,14 +114,12 @@
       return {
         rendeRow: 19,
         jsonData: [],
-        headerInfo: [],
+        headerInfo: {},
         loading: false,
       }
     },
     mounted() {
-      this.jsonData = this.dict.basedate.params
       this.headerInfo = this.formConfig
-      console.log('this.jsonData', this.jsonData)
       console.log('this.formConfig', this.formConfig)
       // 模拟异步加载
       this.loading = true

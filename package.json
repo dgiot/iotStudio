@@ -38,6 +38,7 @@
     "@babel/helper-plugin-utils": "^7.13.0",
     "@logicflow/core": "^0.2.9",
     "@logicflow/extension": "^0.2.9",
+    "be-full": "^0.0.5",
     "core-js": "^3.9.1",
     "element-ui": "^2.15.1",
     "f-render": "^4.12.3",

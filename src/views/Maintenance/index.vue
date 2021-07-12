@@ -220,7 +220,7 @@
         sortablesortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
-        prop="objectId"
+        prop="number"
         width="120"
         show-overflow-tooltip
       />
@@ -313,15 +313,12 @@
         <vab-empty />
       </template>
     </el-table>
-    <el-pagination
-      background
-      :page-sizes="[10, 20, 30, 50]"
-      :current-page="queryForm.skip"
-      :layout="layout"
-      :page-size="queryForm.limit"
+    <vab-Pagination
+      v-show="total"
       :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
+      :page.sync="queryForm.pageNo"
+      :limit.sync="queryForm.pageSize"
+      @pagination="fetchData"
     />
   </div>
 </template>
@@ -548,7 +545,7 @@
       },
       async createdTicket(from) {
         const params = {
-          number: from.name,
+          number: moment(new Date()).unix(),
           type: from.type,
           status: 0,
           product: {

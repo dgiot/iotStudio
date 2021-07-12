@@ -1,6 +1,7 @@
 <template>
   <div class="devproduct">
     <el-dialog
+      v-drag
       :visible.sync="dialogVisible"
       width="90%"
       top="1vh"
@@ -20,10 +21,10 @@
       <!--        </el-button>-->
       <!--      </span>-->
     </el-dialog>
-    <el-dialog :visible.sync="parserView">
+    <el-dialog v-drag-dialog :visible.sync="parserView">
       <f-render v-model="formConfig" :config="formConfig" pure />
     </el-dialog>
-    <el-dialog :visible.sync="parserTable" class="parserTable">
+    <el-dialog v-drag-dialog :visible.sync="parserTable" class="parserTable">
       <div slot="title" class="header-title parserTable">
         <el-button
           type="primary"
@@ -38,7 +39,7 @@
           {{ $translateTitle('product.preservation') }}
         </el-button>
       </div>
-      <el-table :data="parserTableList.parser">
+      <el-table size="mini" :data="parserTableList">
         <el-table-column
           sortable
           align="center"
@@ -54,23 +55,38 @@
         <el-table-column
           sortable
           align="center"
-          :label="$translateTitle('leftbar.settings')"
+          prop="type"
+          :label="$translateTitle('product.functionaltypes')"
+        />
+        <el-table-column
+          sortable
+          align="center"
+          prop="description"
+          :label="$translateTitle('developer.describe')"
+        />
+        <el-table-column
+          align="center"
+          :label="$translateTitle('developer.operation')"
           show-overflow-tooltip
         >
           <template #default="{ row }">
-            <el-button type="primary" plain @click="editParse(row.$index, row)">
+            <el-button type="text" @click="editParse(row.$index, row)">
               {{ $translateTitle('concentrator.edit') }}
             </el-button>
-            <el-button type="success" plain @click="previewParse(row.config)">
+            <el-button
+              v-if="parserType == 'parser'"
+              type="text"
+              @click.native.prevent="goRule(row.uid)"
+            >
+              {{ $translateTitle('leftbar.alarms') }}
+            </el-button>
+            <el-button type="text" @click="previewParse(row.config)">
               {{ $translateTitle('application.preview') }}
             </el-button>
             <el-button
-              type="danger"
-              plain
+              type="text"
               size="small"
-              @click.native.prevent="
-                deleteParse(row.$index, parserTableList.parser)
-              "
+              @click.native.prevent="deleteParse(row.$index, parserTableList)"
             >
               {{ $translateTitle('task.Delete') }}
             </el-button>
@@ -78,923 +94,139 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
-    <el-tabs v-model="activeName">
-      <el-tab-pane
-        :label="$translateTitle('product.myproduct') + '(' + total + ')'"
-        name="first"
+    <div class="prosecond">
+      <el-form
+        :inline="true"
+        :model="formInline"
+        class="demo-form-inline"
+        size="small"
       >
-        <div class="prosecond">
-          <el-form
-            :inline="true"
-            :model="formInline"
-            class="demo-form-inline"
-            size="small"
-          >
-            <el-form-item>
-              <el-input
-                v-model="formInline.productname"
-                clearable
-                :placeholder="$translateTitle('product.searchproductname')"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="searchProduct(0)">
-                {{ $translateTitle('developer.search') }}
-              </el-button>
-            </el-form-item>
-            <el-form-item style="float: right; text-align: right">
-              <el-button type="primary" @click="addproduct">
-                {{ $translateTitle('product.createproduct') }}
-              </el-button>
-              <el-button type="primary" @click="exportpro">
-                {{ $translateTitle('product.exportpro') }}
-              </el-button>
-              <el-button type="primary" @click="importDialogShow = true">
-                {{ $translateTitle('product.importpro') }}
-              </el-button>
-            </el-form-item>
-          </el-form>
-          <div class="protable">
-            <el-table
-              v-loading="listLoading"
-              height="60vh"
-              :header-cell-style="{ 'text-align': 'center' }"
-              :cell-style="{ 'text-align': 'center' }"
-              :data="proTableData"
-              style="width: 100%"
-            >
-              <el-table-column prop="objectId" label="ProductID" width="160" />
-              <el-table-column :label="$translateTitle('product.productname')">
-                <template slot-scope="scope">
-                  <span>{{ scope.row.name }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('product.productgrouping')"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.devType }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                width="120"
-                :label="$translateTitle('product.nodetype')"
-              >
-                <template slot-scope="scope">
-                  <span v-if="scope.row.nodeType == 1">
-                    {{ $translateTitle('product.gateway') }}
-                  </span>
-                  <span v-if="scope.row.nodeType == 0">
-                    {{ $translateTitle('product.equipment') }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$translateTitle('home.category')">
-                <template slot-scope="scope">
-                  <span>
-                    {{ getCategory(scope.row.category) }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                width="180"
-                :label="$translateTitle('product.addingtime')"
-              >
-                <template slot-scope="scope">
-                  <span>{{ utc2beijing(scope.row.createdAt) }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                fixed="right"
-                :label="$translateTitle('developer.operation')"
-              >
-                <template slot-scope="scope">
-                  <el-button
-                    :underline="false"
-                    type="primary"
-                    size="mini"
-                    @click="deviceToDetail(scope.row)"
-                  >
-                    {{ $translateTitle('product.config') }}
-                  </el-button>
-                  <el-button
-                    :underline="false"
-                    size="mini"
-                    type="warning"
-                    @click="editorDict(scope.row.objectId)"
-                  >
-                    {{ $translateTitle('product.dict') }}
-                  </el-button>
-                  <el-button
-                    :underline="false"
-                    size="mini"
-                    type="success"
-                    @click="editorProduct(scope.row)"
-                  >
-                    {{ $translateTitle('concentrator.edit') }}
-                  </el-button>
-                  <el-popover
-                    :ref="`popover-${scope.$index}`"
-                    style="margin-left: 10px"
-                    placement="top"
-                    width="300"
-                  >
-                    <p>确定删除这个{{ scope.row.name }}产品吗？</p>
-                    <div style="margin: 0; text-align: right">
-                      <el-button
-                        size="mini"
-                        @click="
-                          scope._self.$refs[`popover-${scope.$index}`].doClose()
-                        "
-                      >
-                        {{ $translateTitle('developer.cancel') }}
-                      </el-button>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="makeSure(scope)"
-                      >
-                        {{ $translateTitle('developer.determine') }}
-                      </el-button>
-                    </div>
-                    <el-button slot="reference" size="mini" type="danger">
-                      {{ $translateTitle('developer.delete') }}
-                    </el-button>
-                  </el-popover>
-                  <!--                  <el-button-->
-                  <!--                    :underline="false"-->
-                  <!--                    icon="el-icon-s-promotion"-->
-                  <!--                    type="primary"-->
-                  <!--                    @click="proudctView(scope.row)"-->
-                  <!--                  >-->
-                  <!--                    运行组态-->
-                  <!--                  </el-button>-->
-                  <!--                  <el-button-->
-                  <!--                    :underline="false"-->
-                  <!--                    icon="el-icon-link"-->
-                  <!--                    type="primary"-->
-                  <!--                    @click="proudctEdit(scope.row)"-->
-                  <!--                  >-->
-                  <!--                    编辑组态-->
-                  <!--                  </el-button>-->
-                  <!-- <el-button
-                    :disabled="scope.row.config.config.cloneState == true"
-                    :underline="false"
-                    icon="el-icon-link"
-                    type="primary"
-                    @click="proudctClone(scope.row)"
-                  >备份</el-button> -->
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-          <div class="elpagination" style="margin-top: 20px">
-            <el-pagination
-              :page-sizes="[10, 20, 30, 50]"
-              :page-size="length"
-              :total="total"
-              layout="total, sizes, prev, pager, next, jumper"
-              @size-change="productSizeChange"
-              @current-change="productCurrentChange"
-            />
-          </div>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
-    <div class="prodialog">
-      <!-- 创建产品对话框 ###-->
-      <el-dialog
-        :title="moduleTitle"
-        :visible.sync="dialogFormVisible"
-        :close-on-click-modal="false"
-        :before-close="handleClose"
-        width="40%"
-        top="5vh"
-      >
-        <div class="content">
-          <!--产品信息-->
-          <div class="contentone">
-            <div style="display: flex">
-              <span>{{ $translateTitle('product.productinformation') }}</span>
-              <p
-                style="
-                  flex-grow: 2;
-                  width: auto;
-                  height: 1px;
-                  margin: 10px;
-                  border-top: 1px dashed #dddddd;
-                "
-              />
-            </div>
-
-            <el-form ref="form" :model="form" :rules="rules">
-              <el-form-item
-                :label="$translateTitle('product.productname')"
-                prop="name"
-              >
-                <el-input v-model="form.name" autocomplete="off" />
-              </el-form-item>
-              <el-form-item label="产品分组" prop="devType">
-                <!-- <el-form-item :label=" $translateTitle('product.productidentification')" prop="devType"> -->
-                <el-input v-model="form.devType" autocomplete="off" />
-              </el-form-item>
-
-              <!--        <el-form-item :label=" $translateTitle('product.classification')" prop="category">
-                <el-cascader v-model="form.category" :options="treeData"></el-cascader>
-              </el-form-item>-->
-
-              <el-form-item :label="$translateTitle('product.classification')">
-                <el-cascader
-                  v-model="form.category"
-                  :options="categoryListOptions"
-                />
-              </el-form-item>
-
-              <!--  :label="item.attributes.desc"
-              :value="item.attributes.name"-->
-              <el-form-item label="所属应用" prop="relationApp">
-                <el-input
-                  v-model="form.relationApp"
-                  placeholder="请选择所属应用"
-                  readonly
-                  :disabled="custom_status == 'edit' && form.relationApp != ''"
-                  @focus="showTree = !showTree"
-                />
-                <div v-if="showTree">
-                  <el-tree
-                    :data="allApps"
-                    :props="defaultProps"
-                    @node-click="handleNodeClick"
-                  />
-                </div>
-                <!-- <el-select v-model="form.relationApp" @change="selectApp">
-                  <el-option v-for="(item,index) in allApps" :key="index" :label="item.attributes.title"
-                    :value="item.attributes.title" />
-                </el-select> -->
-              </el-form-item>
-              <el-form-item
-                :label="$translateTitle('product.nodetype')"
-                prop="nodeType"
-              >
-                <el-radio-group v-model="form.nodeType" @change="changeNode">
-                  <el-radio :label="0">
-                    {{ $translateTitle('product.equipment') }}
-                  </el-radio>
-                  <el-radio :label="1">
-                    {{ $translateTitle('product.gateway') }}
-                  </el-radio>
-                </el-radio-group>
-              </el-form-item>
-              <!-- <el-form-item label="是否接入网关" v-show="form.resource=='网关'">
-                   <el-radio-group v-model="form.isshow">
-                        <el-radio label="是"></el-radio>
-                        <el-radio label="否"></el-radio>
-                    </el-radio-group>
-              </el-form-item>-->
-
-              <el-form-item
-                :label="
-                  $translateTitle('product.networking') +
-                  '(共' +
-                  channel.length +
-                  '项)'
-                "
-                prop="netType"
-              >
-                <el-select
-                  v-model="form.netType"
-                  :placeholder="$translateTitle('product.selectgateway')"
-                >
-                  <el-option
-                    v-for="(item, index) in channel"
-                    :key="index"
-                    :label="index + 1 + ':' + item.label"
-                    :value="item.value"
-                    :title="'当前第' + (index + 1) + '项'"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="产品模型">
-                <div v-if="imageUrl">
-                  <img :src="imageUrl" class="avatar" />
-                  <el-button
-                    type="danger"
-                    size="mini"
-                    style="vertical-align: text-bottom"
-                    @click.stop="deleteImgsrc"
-                  >
-                    删除
-                  </el-button>
-                </div>
-                <i
-                  v-else
-                  v-loading="loading"
-                  class="el-icon-plus avatar-uploader-icon"
-                  @click="uploadCkick"
-                />
-                <form
-                  ref="uploadform"
-                  method="POST"
-                  enctype="multipart/form-data"
-                  style="position: absolute"
-                >
-                  <input
-                    type="file"
-                    style="
-                      position: relative;
-                      z-index: 5;
-                      width: 100px;
-                      height: 100px;
-                      cursor: pointer;
-                      opacity: 0;
-                    "
-                    @change="upload($event)"
-                  />
-                </form>
-                <br />
-              </el-form-item>
-              <el-form-item
-                :label="$translateTitle('developer.describe')"
-                prop="desc"
-              >
-                <el-input v-model="form.desc" type="textarea" />
-              </el-form-item>
-            </el-form>
-          </div>
-          <!--节点类型-->
-          <div class="contenttwo" style="margin-top: 20px">
-            <div style="display: flex">
-              <span>{{ $translateTitle('product.nodetype') }}</span>
-              <p
-                style="
-                  flex-grow: 2;
-                  width: auto;
-                  height: 1px;
-                  margin: 10px;
-                  border-top: 1px dashed #dddddd;
-                "
-              />
-            </div>
-          </div>
-        </div>
-
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm()">
-            {{ $translateTitle('developer.determine') }}
+        <el-form-item>
+          <el-input
+            v-model="formInline.productname"
+            clearable
+            :placeholder="$translateTitle('product.searchproductname')"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="searchProduct(0)">
+            {{ $translateTitle('developer.search') }}
           </el-button>
-          <el-button @click="handleCloseDialogForm()">
-            {{ $translateTitle('developer.cancel') }}
-          </el-button>
-        </div>
-      </el-dialog>
-      <!--新增字典-->
-      <el-dialog
-        v-if="dictVisible"
-        :close-on-click-modal="false"
-        :title="title_temp_dialog"
-        :visible.sync="dictVisible"
-        width="80%"
-      >
-        <el-form
-          ref="dictTempForm"
-          :model="dictTempForm"
-          :rules="rule"
-          size="mini"
+        </el-form-item>
+      </el-form>
+      <div class="protable">
+        <el-table
+          v-loading="listLoading"
+          height="60vh"
+          size="medium"
+          :header-cell-style="{ 'text-align': 'center' }"
+          :cell-style="{ 'text-align': 'center' }"
+          :data="proTableData"
+          style="width: 100%"
         >
-          <el-row :gutter="20">
-            <el-col :span="8">
-              <el-form-item
-                :label-width="formLabelWidth"
-                label="字典模板名称"
-                prop="name"
-              >
-                <el-input v-model="dictTempForm.name" autocomplete="off" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item
-                :label-width="formLabelWidth"
-                label="字典模板类型"
-                prop="cType"
-              >
-                <el-input v-model="dictTempForm.cType" autocomplete="off" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item
-                :label-width="formLabelWidth"
-                label="字典模板状态"
-                prop="enable"
-              >
-                <el-radio v-model="dictTempForm.enable" label="1" border>
-                  启用
-                </el-radio>
-                <el-radio v-model="dictTempForm.enable" label="0" border>
-                  禁用
-                </el-radio>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-form-item :label-width="formLabelWidth" label="字典模板数据">
-            <el-tabs v-model="elactiveName">
-              <el-tab-pane label="Table" name="Table">
-                <el-button
-                  type="primary"
-                  class="mt-3"
-                  size="small"
-                  icon="el-icon-plus"
-                  @click.native="addRow(dictTempForm.params)"
-                >
-                  新 增
-                </el-button>
-
-                <el-table
-                  :data="dictTempForm.params"
-                  height="300"
-                  style="width: 100%; text-align: center"
-                >
-                  <el-table-column prop="order" label="序号" />
-                  <el-table-column prop="identifier" label="标识符" />
-                  <el-table-column prop="name" label="功能名称" />
-                  <el-table-column prop="type" label="数据类型" />
-                  <el-table-column prop="address" label="数据地址" />
-                  <el-table-column prop="bytes" label="数据长度" />
-                  <el-table-column prop="required" label="是否必填">
-                    <template slot-scope="scope">
-                      <span v-if="scope.row.required">是</span>
-                      <span v-else>否</span>
-                    </template>
-                  </el-table-column>
-                  <!--                  <el-table-column prop="readonly" label="是否只读">-->
-                  <!--                    <template slot-scope="scope">-->
-                  <!--                      <span v-if="scope.row.readonly">是</span>-->
-                  <!--                      <span v-else>否</span>-->
-                  <!--                    </template>-->
-                  <!--                  </el-table-column>-->
-                  <el-table-column label="操作" width="160" align="center">
-                    <template slot-scope="scope">
-                      <el-button
-                        size="mini"
-                        type="danger"
-                        plain
-                        title="删除"
-                        @click.native="
-                          delRow(scope.$index, dictTempForm.params)
-                        "
-                      >
-                        删除
-                      </el-button>
-                      <el-button
-                        size="mini"
-                        type="info"
-                        plain
-                        title="编辑"
-                        @click.native="
-                          editRow(scope.row, scope.$index, dictTempForm.params)
-                        "
-                      >
-                        编辑
-                      </el-button>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </el-tab-pane>
-              <el-tab-pane label="Json" name="Json">
-                <vab-json-editor
-                  v-model="dictTempForm.params"
-                  :mode="'code'"
-                  lang="zh"
-                  @has-error="onError"
-                />
-              </el-tab-pane>
-            </el-tabs>
-          </el-form-item>
-          <el-form-item :label-width="formLabelWidth" label="描述">
-            <el-input
-              v-model="dictTempForm.description"
-              :autosize="{ minRows: 2, maxRows: 4 }"
-              type="textarea"
-              placeholder="请输入描述"
-            />
-          </el-form-item>
-
-          <el-form-item size="mini" style="text-align: center">
-            <el-button type="primary" @click="onJsonSave('dictTempForm')">
-              提交
-            </el-button>
-            <el-button @click="dictVisible = false">取消</el-button>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-      <!--新增字典数据-->
-      <el-dialog
-        :visible.sync="edit_dict_temp_dialog"
-        :title="title_dict_edit_dialog"
-        :close-on-click-modal="false"
-        :before-close="closeDict"
-        width="60%"
-        top="5vh"
-        @open="opendialog('tempparams')"
-      >
-        <el-form
-          ref="tempparams"
-          :model="tempparams"
-          size="mini"
-          label-position="left"
-          label-width="100px"
-        >
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item label="序号" prop="order">
-                <el-input v-model.number="tempparams.order" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item
-                :label="$translateTitle('product.identifier')"
-                prop="identifier"
-              >
-                <el-input v-model="tempparams.identifier" />
-              </el-form-item>
-              <!--type-->
-            </el-col>
-          </el-row>
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-form-item
-                :label="$translateTitle('product.functionname')"
-                prop="name"
-              >
-                <el-input v-model="tempparams.name" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item
-                :label="$translateTitle('product.datatype')"
-                prop="type"
-              >
-                <el-select
-                  v-model="tempparams.type"
-                  placeholder="请选择"
-                  style="width: 100%"
-                  @change="tempTypeChange"
-                >
-                  <!--                  <el-option-->
-                  <!--                    :label="$translateTitle('product.struct')"-->
-                  <!--                    value="struct"-->
-                  <!--                  />-->
-                  <el-option
-                    :label="$translateTitle('product.init')"
-                    value="int"
-                  />
-                  <el-option
-                    :label="$translateTitle('product.float')"
-                    value="float"
-                  />
-                  <el-option
-                    :label="$translateTitle('product.double')"
-                    value="double"
-                  />
-                  <el-option
-                    :label="$translateTitle('product.bool')"
-                    value="bool"
-                  />
-                  <el-option
-                    :label="$translateTitle('product.enum')"
-                    value="enum"
-                  />
-                  <el-option
-                    :label="$translateTitle('product.string')"
-                    value="string"
-                  />
-                  <!--                  <el-option-->
-                  <!--                    :label="$translateTitle('product.date')"-->
-                  <!--                    value="date"-->
-                  <!--                  />-->
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <!-- 单位 -->
-              <el-form-item :label="$translateTitle('product.unit')">
-                <el-select
-                  v-model="tempparams.unit"
-                  style="width: 100%"
-                  :placeholder="$translateTitle('product.unit')"
-                  filterable
-                >
-                  <el-option
-                    v-for="(item, index) in allunit"
-                    :key="index"
-                    :label="item.data.Name + '/' + item.data.Symbol"
-                    :value="item.data.Symbol"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="协议类型">
-                <el-select
-                  v-model="tempparams.protocol"
-                  placeholder="请选择"
-                  style="width: 100%"
-                >
-                  <el-option
-                    v-for="(item, index) in ['normal', 'modbus', 'mingcheng']"
-                    :key="index"
-                    :label="item"
-                    :value="item"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="24">
-            <el-col v-show="tempparams.protocol == 'modbus'" :span="12">
-              <el-form-item label="从机地址">
-                <el-input v-model="tempparams.slaveid" placeholder="从机地址" />
-              </el-form-item>
-            </el-col>
-            <el-col
-              v-show="
-                tempparams.protocol == 'modbus' ||
-                tempparams.protocol == 'mingcheng'
-              "
-              :span="12"
-            >
-              <el-form-item label="数据地址" prop="address">
-                <el-input v-model="tempparams.address" placeholder="数据地址" />
-              </el-form-item>
-            </el-col>
-            <el-col
-              v-show="
-                tempparams.protocol == 'modbus' ||
-                tempparams.protocol == 'mingcheng'
-              "
-              :span="12"
-            >
-              <el-form-item label="数据长度">
-                <el-input
-                  v-model.number="tempparams.bytes"
-                  placeholder="数据长度(字节)"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col v-show="tempparams.protocol == 'modbus'" :span="12">
-              <el-form-item label="字节序" prop="byteorder">
-                <el-select v-model="tempparams.byteorder" placeholder="请选择">
-                  <el-option
-                    v-for="item in [
-                      { value: 'big', label: '大端' },
-                      { value: 'little', label: '小端' },
-                    ]"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="24">
-            <el-col :span="12">
-              <el-tooltip
-                style="float: left"
-                effect="dark"
-                placement="right-start"
-              >
-                <div slot="content">
-                  1. 采集值 设备上行数据经采集公式计算后显示 。
-                  <br />
-
-                  公式中的%s为占位符，是固定字段。
-                  <br />
-
-                  如：
-                  <br />
-
-                  加：%s+10
-                  <br />
-
-                  减：%s-10
-                  <br />
-
-                  乘：%s*10
-                  <br />
-
-                  除：%s/10
-                  <br />
-
-                  余数：%s%10
-                  <br />
-                </div>
-                <i class="el-icon-question" />
-              </el-tooltip>
-              <el-form-item label="采集公式">
-                <el-input
-                  v-model="tempparams.collection"
-                  style="width: 100%"
-                  :rows="1"
-                  type="textarea"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-tooltip
-                style="float: left"
-                effect="dark"
-                placement="right-start"
-              >
-                <div slot="content">
-                  1. 设置值 平台下行数据经设置公式计算后设置 。
-                  <br />
-                  公式中的%s为占位符，是固定字段。
-                  <br />
-
-                  如：
-                  <br />
-
-                  加：%s+10
-                  <br />
-
-                  减：%s-10
-                  <br />
-
-                  乘：%s*10
-                  <br />
-
-                  除：%s/10
-                  <br />
-
-                  余数：%s%10
-                  <br />
-                </div>
-                <i class="el-icon-question" />
-              </el-tooltip>
-              <el-form-item label="设置公式">
-                <el-input
-                  v-model="tempparams.setting"
-                  :rows="1"
-                  type="textarea"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="必填">
-                <el-radio v-model="tempparams.required" :label="true" border>
-                  是
-                </el-radio>
-                <el-radio v-model="tempparams.required" :label="false" border>
-                  否
-                </el-radio>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="只读">
-                <el-radio v-model="tempparams.readonly" :label="true" border>
-                  是
-                </el-radio>
-                <el-radio v-model="tempparams.readonly" :label="false" border>
-                  否
-                </el-radio>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="列表显示">
-                <el-radio v-model="tempparams.isshow" :label="true" border>
-                  是
-                </el-radio>
-                <el-radio v-model="tempparams.isshow" :label="false" border>
-                  否
-                </el-radio>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-form-item
-            v-if="tempparams.type != 'enum'"
-            label="默认值"
-            prop="default"
+          <el-table-column label="ProductID">
+            <template slot-scope="scope">
+              <el-link type="primary" @click="konvaDevice(scope.row)">
+                {{ scope.row.objectId }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$translateTitle('product.productname')">
+            <template slot-scope="scope">
+              <span>{{ scope.row.name }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            width="180"
+            :label="$translateTitle('product.profile')"
           >
-            <el-select
-              v-if="tempparams.type == 'bool'"
-              v-model="tempparams.default"
-              class="notauto"
-              readonly
-            >
-              <el-option :value="true" label="是" />
-              <el-option :value="false" label="否" />
-            </el-select>
-            <el-input
-              v-else-if="tempparams.type == 'int'"
-              v-model.number="tempparams.default"
-            />
-            <el-input v-else v-model="tempparams.default" />
-          </el-form-item>
-          <el-form-item v-if="tempparams.type == 'enum'" label="Enum数据">
-            <el-tabs v-model="elactiveName1">
-              <el-tab-pane label="Table" name="Table1">
-                <!--枚举型添加格式-->
-                <el-button
-                  type="primary"
-                  class="mt-3"
-                  size="mini"
-                  icon="el-icon-plus"
-                  @click.native="addDomain"
-                >
-                  新 增
-                </el-button>
-                <el-table
-                  :data="tempparams.specs"
-                  style="width: 100%; text-align: center"
-                >
-                  <el-table-column label="属性" align="center">
-                    <template slot-scope="scope">
-                      <el-input v-model="scope.row.attribute" />
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="属性值" align="center">
-                    <template slot-scope="scope">
-                      <el-input v-model="scope.row.attributevalue" />
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="操作" align="center">
-                    <template slot-scope="scope">
-                      <el-button
-                        size="mini"
-                        type="danger"
-                        plain
-                        title="删除"
-                        @click.native="removeDomain(scope.row)"
-                      >
-                        删除
-                      </el-button>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </el-tab-pane>
-            </el-tabs>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="submitFormTempDict()">
-              提交
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-dialog>
-    </div>
-
-    <div class="import-dialog">
-      <el-dialog :visible.sync="importDialogShow" title="导入产品" width="25%">
-        <el-form ref="uploadProForm" :model="formPro">
-          <el-upload
-            ref="fileUpload"
-            :action="uploadAction"
-            :data="uploadData"
-            :headers="uploadHeaders"
-            :file-list="fileList"
-            :on-change="handleChange"
-            :with-credentials="true"
-            :auto-upload="false"
-            :on-success="handleUploadSuccess"
-            :on-error="handleUploadError"
-            class="upload-demo"
-            accept=".xls, .xlsx, .zip"
+            <template slot-scope="scope">
+              <el-link
+                type="primary"
+                @click="
+                  editorParser(scope.row.objectId, scope.row.config, 'profile')
+                "
+              >
+                {{
+                  scope.row.config.profile ? scope.row.config.profile.length : 0
+                }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column
+            width="180"
+            :label="$translateTitle('product.parser')"
           >
-            <el-button slot="trigger" size="small" type="primary">
-              选泽文件
-            </el-button>
-          </el-upload>
+            <template slot-scope="scope">
+              <el-link
+                type="primary"
+                @click="
+                  editorParser(scope.row.objectId, scope.row.config, 'parser')
+                "
+              >
+                {{
+                  scope.row.config.parser ? scope.row.config.parser.length : 0
+                }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$translateTitle('product.productgrouping')">
+            <template slot-scope="scope">
+              <span>{{ scope.row.devType }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$translateTitle('product.nodetype')">
+            <template slot-scope="scope">
+              <span v-if="scope.row.nodeType == 1">
+                {{ $translateTitle('product.gateway') }}
+              </span>
+              <span v-if="scope.row.nodeType == 0">
+                {{ $translateTitle('product.equipment') }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$translateTitle('home.category')">
+            <template slot-scope="scope">
+              <span>
+                {{ getCategory(scope.row.category) }}
+              </span>
+            </template>
+          </el-table-column>
+          <!--          <el-table-column-->
+          <!--            width="180"-->
+          <!--            :label="$translateTitle('product.addingtime')"-->
+          <!--          >-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <span>{{ utc2beijing(scope.row.createdAt) }}</span>-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
 
-          <!-- </el-row> -->
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button
-            size="small"
-            class="btn-left"
-            type="primary"
-            @click="submitUpload"
-          >
-            上 传
-          </el-button>
-
-          <el-button
-            size="small"
-            class="btn-right"
-            @click="importDialogShow = false"
-          >
-            取 消
-          </el-button>
-        </div>
-      </el-dialog>
+          <!--          <el-table-column-->
+          <!--            fixed="right"-->
+          <!--            :label="$translateTitle('developer.operation')"-->
+          <!--          >-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <el-button-->
+          <!--                type="text"-->
+          <!--                size="mini"-->
+          <!--                @click="konvaDevice(scope.row)"-->
+          <!--              >-->
+          <!--                {{ $translateTitle('concentrator.konva') }}-->
+          <!--              </el-button>-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
+        </el-table>
+      </div>
+      <div class="elpagination" style="margin-top: 20px">
+        <el-pagination
+          :page-sizes="[10, 20, 30, 50]"
+          :page-size="length"
+          :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="productSizeChange"
+          @current-change="productCurrentChange"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -1014,7 +246,9 @@
       return {
         parserView: false,
         parserTable: false,
-        parserTableList: { parser: [] },
+        parserType: '',
+        parserTableList: {},
+        productConfig: {},
         parserFromId: '',
         dialogVisible: false,
         moduleTitle: this.$translateTitle('product.createproduct'),
@@ -1259,6 +493,25 @@
         if (index !== -1) {
           this.tempparams.specs.splice(index, 1)
         }
+      },
+      // 组态
+      konvaDevice(row) {
+        this.$router.push({
+          path: '/Topo/VueKonva',
+          query: {
+            productid: row.objectId,
+          },
+        })
+      },
+      // 规则引擎
+      goRule(uid) {
+        this.$router.push({
+          path: '/dashboard/engine',
+          query: {
+            productid: this.parserFromId,
+            uuid: uid,
+          },
+        })
       },
       getCategory(key) {
         // console.log(key)
@@ -1569,7 +822,7 @@
           order: '-updatedAt',
           limit: this.length,
           skip: this.start,
-          keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon',
+          keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon,config',
           where: {},
         }
         if (this.formInline.productname != '') {
@@ -1646,22 +899,12 @@
           }
         })
       },
-      async editorParser(ObjectId) {
-        this.parserFromId = ObjectId
-        try {
-          const {
-            config = {
-              parser: [],
-            },
-            thing = {},
-          } = await getProduct(ObjectId)
-          this.parserTableList = config
-          console.log(this.parserTableList)
-          this.parserDict = _.merge(thing, config)
-        } catch (e) {
-          this.parserTableList = { parser: [] }
-          console.log('eeeeeeeeeeeee', e)
-        }
+      editorParser(objectId, config, type) {
+        this.parserFromId = objectId
+        this.parserType = type
+        this.productConfig = config
+        console.log('config[`${type}`]', type, config[`${type}`])
+        this.parserTableList = config[`${type}`] ? config[`${type}`] : []
         this.parserTable = true
       },
       editParse(index, row) {
@@ -1669,19 +912,27 @@
         this.editIndex = index
         this.dialogVisible = true
       },
-      async saveParse(list, type = -1) {
-        if (type + 2 > 0) {
-          this.parserTableList.parser[type] = _.merge({}, list)
+      async saveParse(list, type = -1, mark = true) {
+        console.log('this.productConfig', this.productConfig)
+        const parserType = this.productConfig[`${this.parserType}`]
+        if (type + 1 > 0) {
+          parserType[type] = _.merge({}, list)
+        } else {
+          this.productConfig[`${this.parserType}`] = list
         }
+        console.log('this.productConfig', this.productConfig, parserType)
         try {
           const res = await putProduct(this.parserFromId, {
-            config: type + 2 > 0 ? this.parserTableList : list,
+            config: this.productConfig,
           })
           this.$message.success(
             this.$translateTitle('user.Save the template successfully')
           )
           this.dialogVisible = false
-          this.parserTable = false
+          if (mark) {
+            this.parserTable = false
+            this.searchProduct(0)
+          }
         } catch (e) {
           this.$message.error(
             this.$translateTitle('user.Save the template error') + `${e}`
@@ -1696,14 +947,19 @@
         console.log('previewParse', row)
       },
       addParse(row) {
-        row['parser'].push({
-          name: uuid(6),
-          enname: uuid(6),
+        row.push({
+          name: this.parserType + 'name',
+          enname: this.parserType + 'English Name',
+          uid: uuid(6),
           config: {},
+          type: this.parserType,
+          description: this.parserType + 'description',
         })
+        this.saveParse(row, -1, false)
       },
       deleteParse(index, rows) {
         rows.splice(index, 1)
+        this.saveParse(rows, -1, false)
       },
       // async editorParser(ObjectId) {
       //   const { config = {}, thing = {} } = await getProduct(ObjectId)
@@ -2107,9 +1363,9 @@
   }
 
   .devproduct ::v-deep .el-dialog__wrapper .el-dialog__header,
-  //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
-  //  display: none;
-  //}
+    //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
+    //  display: none;
+    //}
   .devproduct .parserTable {
     display: block;
   }
