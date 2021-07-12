@@ -4,6 +4,7 @@
       <div class="engineheader">
         <h3>{{ $translateTitle('rule.rule') }}</h3>
         <el-button
+          :disabled="alarmsRuleId.length > 0 && engineData.length > 0"
           type="primary"
           icon="el-icon-plus"
           style="float: right; margin: 19px 0"
@@ -112,8 +113,9 @@
   </div>
 </template>
 <script>
-  import { getRule, ruleDelete, put_rule_id } from '@/api/Rules'
+  import { getRule, getRuleDetail, ruleDelete, put_rule_id } from '@/api/Rules'
   // import VabParser from '@/vab/components/VabParser'
+  import { getHashClass } from '@/api/Hash/index'
   export default {
     // components: { VabParser },
     data() {
@@ -122,15 +124,36 @@
         pagesize: 10,
         start: 0,
         total: 0,
+        productid: this.$route.query.productid,
+        uid: this.$route.query.uuid,
+        alarmsRuleId: '',
       }
     },
     mounted() {
-      this.orginRule()
+      this.featchData()
     },
     methods: {
+      featchData() {
+        if (this.productid && this.uid) {
+          this.alarmsRuleId = 'rule:' + this.productid + this.uid
+          this.getalarmsRule(this.alarmsRuleId)
+          // this.orginRule()
+        } else {
+          this.orginRule()
+        }
+      },
+      async getalarmsRule(ruleId) {
+        const response = await getRuleDetail(ruleId)
+        console.log(response, 'response')
+        let res = []
+        res.push(response.data)
+        this.engineData = res
+        console.log(this.engineData, '  this.engineData')
+        this.total = this.engineData.length
+      },
       // 初始化数据
       orginRule() {
-        getRule()
+        getRule({})
           .then((response) => {
             if (response) {
               this.engineData = response.data
@@ -145,11 +168,14 @@
       handleSizeChange(val) {},
       handleCurrentChange(val) {},
       addEngine() {
+        var query = {
+          title: '新增',
+        }
+        if (this.productid.length) query['productid'] = this.productid
+        if (this.uid.length) query['uid'] = this.uid
         this.$router.push({
           path: '/rules_engine/addengine',
-          query: {
-            title: '新增',
-          },
+          query: query,
         })
       },
       matched(metrics) {

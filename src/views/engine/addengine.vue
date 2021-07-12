@@ -449,6 +449,7 @@
     data() {
       return {
         ruleId: this.$route.query.id || '',
+        uid: this.$route.query.uid || '',
         resources: [],
         params: {
           name: '',
@@ -610,7 +611,7 @@
       async queryRule(ruleId) {
         const { data } = await get_rule_id(ruleId)
         console.log(data)
-        this.formInline.username = data.ctx
+        // this.formInline.username = data.ctx
         this.actionData = data.actions
         this.formInline.enginesql = data.rawsql
         editor1.setValue(this.formInline.enginesql)
@@ -758,6 +759,8 @@
               for: '["t/#"]',
               rawsql: editor1.getValue(),
             }
+            if (this.uid && this.productid)
+              params['id'] = 'rule:' + this.productid + this.uid
             // const params = {
             //   rawsql:
             //     'SELECT\n  payload.msg as msg\nFROM\n  "t/#"\nWHERE\n  msg = \'hello\'',

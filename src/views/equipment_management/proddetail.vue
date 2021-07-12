@@ -77,7 +77,7 @@
       </div>
     </div>
     <div>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs ref="_tabs" v-model="activeName" @tab-click="handleClick">
         <!--产品信息-->
         <el-tab-pane
           :label="$translateTitle('product.productinformation')"
@@ -1005,6 +1005,8 @@
         <!-- <div> -->
         <!-- <el-tab-pane label="物解析" name="fourth"> -->
         <el-tab-pane
+          :disabled="true"
+          style="diaplay: none"
           :label="$translateTitle('product.matteranalysis')"
           name="fourth"
         >
@@ -1567,6 +1569,14 @@
             </pre>
         </div>-->
         <!-- </el-tab-pane> -->
+
+        <!--   告警模板     -->
+        <el-tab-pane
+          :label="$translateTitle('product.matteranalysis')"
+          name="alarm"
+        >
+          222222
+        </el-tab-pane>
       </el-tabs>
     </div>
 
@@ -2308,7 +2318,7 @@
           dinumber: 'null',
         },
         tableData: [],
-        activeName: 'third',
+        activeName: 'first',
         form: {
           Productname: '',
           ProductKey: '',
@@ -2435,6 +2445,13 @@
       },
     },
     mounted() {
+      this.$nextTick(() => {
+        this.$refs._tabs.$children[0].$refs.tabs[3].style.display = 'none'
+        console.log(this.$refs._tabs.$children[0].$refs)
+        console.log(this.$refs._tabs.$children[0].$refs.tabs)
+      })
+      this.Industry()
+      this.getAllunit()
       // editor编辑器使用
       editor2 = ace.edit('editor2')
       editor2.session.setMode('ace/mode/text') // 设置语言
@@ -2445,9 +2462,6 @@
         enableSnippets: true,
         enableLiveAutocompletion: true, // 设置自动提示
       })
-
-      this.Industry()
-      this.getAllunit()
 
       if (this.$route.query.activeName) {
         this.activeName = this.$route.query.activeName
