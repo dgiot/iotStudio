@@ -228,8 +228,9 @@
     <el-row :row="24">
       <el-col :span="leftRow" :xs="24">
         <el-row :span="24">
-          <div id="baidu_map" class="chart_map">
+          <div class="chart_map">
             <baidu-map
+              id="baidu_map"
               ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
               :scroll-wheel-zoom="true"
               class="baidu_map"
