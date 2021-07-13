@@ -722,6 +722,7 @@
   import { Promise } from 'q'
   import { Batchdelete } from '@/api/Batch'
   import { queryDict } from '@/api/Direct/index.js'
+  import { delDict } from '@/api/Dict'
   import {
     BmNavigation,
     BaiduMap,
@@ -1318,7 +1319,9 @@
           this.pcdialogVisible = true
         }
         const { results } = await getBatchNumer()
-        this.pctableData = results
+        this.pctableData = results.filter((e) => {
+          return e.data.batch_name
+        })
       },
       /* device添加表单提交*/
       editorDevice(row) {
@@ -1559,21 +1562,34 @@
         this.batchid = id
       },
       // 删除批次
-      deletebatch(id) {
-        this.$deleteDict(id).then((res) => {
-          if (res.error == undefined) {
-            this.$message({
-              message: '删除成功',
-              type: 'success',
-            })
-            this.addDeviceBatch()
-          } else {
-            this.$message({
-              message: `删除失败${res.error}`,
-              type: 'error',
-            })
-          }
-        })
+      async deletebatch(id) {
+        try {
+          const res = await delDict(id)
+          console.log(res)
+          this.queryDict()
+          this.addDeviceBatch()
+        } catch (error) {
+          console.log(error)
+          this.$message({
+            message: `{error}`,
+            type: 'error',
+          })
+        }
+
+        // this.$deleteDict(id).then((res) => {
+        //   if (res.error == undefined) {
+        //     this.$message({
+        //       message: '删除成功',
+        //       type: 'success',
+        //     })
+        //     this.addDeviceBatch()
+        //   } else {
+        //     this.$message({
+        //       message: `删除失败${res.error}`,
+        //       type: 'error',
+        //     })
+        //   }
+        // })
       },
       // 选择批次
       selectbatch(row, id) {
@@ -1600,7 +1616,9 @@
       },
       async queryDict() {
         const { results } = await this.$getBatchNumer()
-        this.pctableData = results
+        this.pctableData = results.filter((e) => {
+          return e.data.batch_name
+        })
       },
       // 前往子设备
       deviceToChildren(row) {
