@@ -1325,6 +1325,7 @@
       },
       /* device添加表单提交*/
       editorDevice(row) {
+        console.log('row', row)
         this.deviceid = row.objectId
         this.devicedialogVisible = true
         this.deviceform = {
@@ -1339,11 +1340,11 @@
           status: row.status,
           isEnable: row.isEnable,
           address: row.detail == undefined ? '' : row.detail.address,
-          auth: row.basedata.auth == undefined ? '' : row.basedata.auth,
-          yysId: row.basedata.yysId == undefined ? '' : row.basedata.yysId,
+          auth: row.basedata && row.basedata.auth ? row.basedata.auth : '',
+          yysId: row.basedata && row.basedata.yysId ? row.basedata.yysId : '',
         }
         this.bmapform.address = row.address
-        this.batchid = row.batchid
+        this.batchid = row.detail.batchid
         this.center.lat = row.latitude
         this.center.lng = row.longitude
         this.addresspointer = row.latitude + ',' + row.longitude
@@ -1597,6 +1598,8 @@
         this.deviceform.pc = row.data.batch_name
         this.deviceform.batchId = row.data.batch_name
         this.pcdialogVisible = false
+
+        console.log(this.batchid, 'this.batchid ')
       },
       // 设备详情
       deviceToDetail(row) {
