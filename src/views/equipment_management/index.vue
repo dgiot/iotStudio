@@ -1099,6 +1099,7 @@
       },
       // 状态设备编辑
       handelUpdate(event, row, index) {
+        console.log('row', row)
         var newData1 = {}
         for (var key in row) {
           newData1[key] = row[key]
@@ -1120,7 +1121,8 @@
             var params = {
               isEnable: newData2.isEnable,
             }
-            this.$putDevice(row.id, params).then((respone) => {
+            console.log('row', row)
+            this.$putDevice(row.objectId, params).then((respone) => {
               if (!respone.error) {
                 this.initQuery('状态修改成功', 'success')
                 this.getDevices()
