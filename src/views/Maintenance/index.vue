@@ -548,7 +548,7 @@
       },
       async createdTicket(from) {
         const params = {
-          number: moment(new Date()).unix(),
+          number: moment(new Date()).unix() + '',
           type: from.type,
           status: 0,
           product: {
