@@ -1564,36 +1564,24 @@
         this.pcformInline.createdtime = row.data.createdtime * 1000
         this.batchid = id
       },
-      // 删除批次
+      /**
+       *
+       * @param
+       * @returns
+       */
       async deletebatch(id) {
         try {
           const res = await delDict(id)
           console.log(res)
           this.queryDict()
           this.addDeviceBatch()
+          // this.$message.success(`${error}`)
         } catch (error) {
           console.log(error)
-          this.$message({
-            message: `{error}`,
-            type: 'error',
-          })
+          this.$message.error(`${error}`)
         }
-
-        // this.$deleteDict(id).then((res) => {
-        //   if (res.error == undefined) {
-        //     this.$message({
-        //       message: '删除成功',
-        //       type: 'success',
-        //     })
-        //     this.addDeviceBatch()
-        //   } else {
-        //     this.$message({
-        //       message: `删除失败${res.error}`,
-        //       type: 'error',
-        //     })
-        //   }
-        // })
       },
+
       // 选择批次
       selectbatch(row, id) {
         this.batchid = id

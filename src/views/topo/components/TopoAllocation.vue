@@ -2,9 +2,7 @@
 <template>
   <div class="icon-selector-popper">
     <div class="dialog">
-      <el-dialog title="" :visible.sync="dialogVisible" width="400px">
-        <vab-upload-file :accept="accept" @fileInfo="fileInfo" />
-      </el-dialog>
+      <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     </div>
     <el-collapse v-model="activeNames" accordion>
       <el-collapse-item title="图标" name="1">
@@ -26,7 +24,7 @@
                         slot="prepend"
                         type="success"
                         icon="el-icon-upload"
-                        @click="dialogVisible = !dialogVisible"
+                        @click="uploadCkick()"
                       />
                     </el-input>
                   </el-form-item>
@@ -67,7 +65,6 @@
     data() {
       return {
         accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF',
-        dialogVisible: false,
         imgHost:
           'https://dgiot-1253666439.file.myqcloud.com/dgiot_release/topo/',
         icon: '24-hours-fill',
@@ -100,6 +97,11 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      uploadCkick() {
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
+      },
       ...mapMutations({
         setFlag: 'konva/setFlag',
         setDrawParams: 'konva/setDrawParams',

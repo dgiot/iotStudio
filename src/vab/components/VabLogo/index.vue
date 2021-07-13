@@ -115,6 +115,7 @@
         max-width: $base-left-menu-width-min;
         max-height: $base-logo-height;
         margin: 0;
+        width: $base-left-menu-width-min * 1.3 !important;
         background: $base-column-first-menu-background;
       }
 

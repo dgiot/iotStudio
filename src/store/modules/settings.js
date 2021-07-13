@@ -45,7 +45,8 @@ const state = () => ({
   title: getToken('title') || '物联网开发平台',
   device: 'desktop',
   collapse: getToken('collapse') || false,
-  pictureSwitch: getToken('pictureSwitch') || true,
+  pictureSwitch:
+    getToken('title') == 'DG-IOT' ? false : getToken('pictureSwitch'),
   language: getToken('language') || i18n,
   theme: getToken('theme') || { ...defaultTheme },
   extra: { first: '', transferRouteName: '' },
