@@ -228,7 +228,7 @@
     <el-row :row="24">
       <el-col :span="leftRow" :xs="24">
         <el-row :span="24">
-          <div class="chart_map">
+          <div id="baidu_map" class="chart_map">
             <baidu-map
               ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
               :scroll-wheel-zoom="true"
@@ -246,17 +246,22 @@
                 <el-button size="mini" @click="sizeZoom = 3">
                   {{ $translateTitle('home.min') }}
                 </el-button>
+                <el-button
+                  size="mini"
+                  class="ri-fullscreen-fill"
+                  @click="toggleFull()"
+                />
                 <bm-panorama
                   anchor="BMAP_ANCHOR_TOP_LEFT"
-                  :offset="{ width: 460, height: 0 }"
+                  :offset="{ width: 500, height: 0 }"
                 />
                 <bm-overview-map :is-open="true" />
-                <bm-scale :offset="{ width: 200, height: 0 }" />
-                <bm-city-list :offset="{ width: 280, height: 0 }" />
+                <bm-scale :offset="{ width: 260, height: 0 }" />
+                <bm-city-list :offset="{ width: 330, height: 0 }" />
                 <bm-map-type
                   anchor="BMAP_ANCHOR_TOP_LEFT"
                   :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
-                  :offset="{ width: 360, height: 0 }"
+                  :offset="{ width: 400, height: 0 }"
                 />
               </bm-control>
               <bml-marker-clusterer :average-center="true">
@@ -771,6 +776,9 @@
       this.resizeTheChart()
     },
     methods: {
+      toggleFull(e) {
+        this.$toggleFull(document.getElementById('baidu_map'))
+      },
       resizeTheChart() {
         this.loading = true
         let charts = this.$refs[`charts`]
