@@ -112,11 +112,10 @@
         position: fixed;
         top: 0;
         display: block;
-        max-width: $base-left-menu-width-min;
+        width: $base-left-menu-width-min * 1 !important;
         max-height: $base-logo-height;
         margin: 0;
-        width: $base-left-menu-width-min * 1.3 !important;
-        background: $base-column-first-menu-background;
+        //background: $base-column-first-menu-background;
       }
 
       .title {
