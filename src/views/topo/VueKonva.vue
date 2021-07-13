@@ -712,10 +712,27 @@
           console.log('img node ', node)
           const img = new Image()
           img.src = node.getAttr('source')
-          img.onload = () => {
-            node.image(img)
-            _this.stage.batchDraw()
-          }
+
+          var img_url = node.getAttr('source') + Date.parse(new Date())
+          // var _img = new Image()
+          //
+          // _img.src = img_url
+          //
+          // _img.onload = function () {
+          //   // 打印
+          //   img.with = _img.width ? _img.width:$('#current1').width()
+          //   img.height =  _img.width ? _img.width:$('#current1').height()
+          // }
+          img.with = $('#current1').width()
+          img.height = $('#current1').height()
+          console.log('img', img, "$('#current1')", $('#current1'))
+          $('#current1').css('background-image', `url(${img_url})`)
+
+          // img.onload = () => {
+          //   node.image(img)
+          //   console.log(node.image(img), 'node.image(img)')
+          //   _this.stage.batchDraw()
+          // }
         })
         if (!_this.isDevice) {
           Group.each(function (_G) {
