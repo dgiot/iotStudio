@@ -628,6 +628,10 @@ export default {
       detail: '详情',
     },
     node: {
+      'export success': '导出成功',
+      'export error': '导出失败',
+      success: '成功',
+      error: '失败',
       nodename: '节点名称',
       OTPversion: 'OTP版本',
       process: '进程',

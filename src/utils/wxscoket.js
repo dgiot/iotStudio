@@ -13,7 +13,7 @@ var info = {
   qos: 2,
 }
 import { tokenTableName, storage } from '@/config'
-import globalUrl from '@/utils/globalUrl'
+import { globalUrl } from './utilwen'
 import { getToken } from '@/utils/vuex'
 const { hostname } = window.location
 function getsession(session) {

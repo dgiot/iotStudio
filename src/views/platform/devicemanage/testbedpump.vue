@@ -636,7 +636,7 @@
 <script>
   // import Parse from 'parse'
   import Pumpdepartment from '@/components/resource/pumpdepartment'
-  import { returnLogin } from '@/utils/return'
+  import { returnLogin } from '@/utils/utilwen'
   export default {
     components: {
       Pumpdepartment,

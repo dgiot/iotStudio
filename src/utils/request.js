@@ -8,7 +8,7 @@ import {
   errorCode,
   tokenName,
 } from '@/config'
-import globalUrl from '@/utils/globalUrl'
+import { globalUrl } from './utilwen'
 import store from '@/store'
 
 import router from '@/router'
@@ -83,6 +83,8 @@ const instance = axios.create({
   timeout: requestTimeout,
   headers: {
     'Content-Type': contentType,
+    Auth: 'h7ml',
+    Timestamp: moment(new Date()).unix() + '',
   },
 })
 
@@ -96,13 +98,10 @@ instance.interceptors.request.use(
     const { path = '/' } = router.history.current
     let { headers = {}, baseURL, url } = config
     if (headers['proxy'] == true) {
-      if (NODE_ENV == 'production') {
-        config.baseURL = headers.url
-        console.log(config, 'proxy')
-      } else {
-        config.baseURL = 'group1/'
-        console.log(config, 'proxy')
-      }
+      console.log(config, 'config')
+      NODE_ENV == 'production'
+        ? (config.baseURL = headers.produrl)
+        : (config.baseURL = headers.devurl)
     }
     // 不规范写法 可根据setting.config.js tokenName配置随意自定义headers
     // if (token) config.headers[tokenName] = token

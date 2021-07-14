@@ -250,7 +250,7 @@
         sortable
         align="center"
         :label="$translateTitle('Maintenance.Initiator')"
-        prop="user"
+        prop="_user"
         show-overflow-tooltip
       />
       <el-table-column
@@ -334,6 +334,7 @@
   import { queryDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import ChangeInfo from '@/views/Maintenance/ChangeInfo'
+  import { exlout } from '@/api/File'
   export default {
     name: 'MyWork',
     components: {
@@ -470,8 +471,27 @@
         this.fold = !this.fold
         this.handleHeight()
       },
-      batchExport(row) {
-        this.$message.success('导出excel')
+      /**
+       *
+       * @param row
+       * @return {Promise<void>}
+       */
+      async batchExport(row) {
+        console.log(row)
+        try {
+          const params = {
+            results: [],
+          }
+          params['results'] = row
+          const res = await exlout(params)
+          this.$convertRes2Blob(res)
+          this.$message.success(this.$translateTitle('node.export success'))
+        } catch (error) {
+          console.log(error)
+          this.$message.error(
+            this.$translateTitle('node.export error') + `${error}`
+          )
+        }
       },
       handleDelete(row, type) {
         let batchParams = []
@@ -628,10 +648,10 @@
             const { results = [], count = 0 } = res
             this.list = results
             this.list.forEach((e) => {
-              e.user = '暂无'
+              e._user = '暂无'
               if (e.ACL) {
                 for (var key in e.ACL) {
-                  e.user = key.substr(5)
+                  e._user = key.substr(5)
                 }
               }
             })

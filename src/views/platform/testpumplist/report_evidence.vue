@@ -209,7 +209,7 @@
 </template>
 <script>
   import Pumpdepartment from '@/components/resource/pumpdepartment'
-  import { returnLogin } from '@/utils/return'
+  import { returnLogin } from '@/utils/utilwen'
   import PanelGroup from './PanelGroup'
   export default {
     components: {

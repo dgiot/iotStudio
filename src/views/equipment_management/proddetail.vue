@@ -1900,7 +1900,7 @@
   import { setTimeout } from 'timers'
   import { Websocket } from '@/utils/wxscoket.js'
   import wmxdetail from './component/wmxdetail'
-  import { returnLogin } from '@/utils/return'
+  import { returnLogin } from '@/utils/utilwen'
   export default {
     components: {
       wmxdetail,

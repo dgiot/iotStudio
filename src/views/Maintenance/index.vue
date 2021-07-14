@@ -206,7 +206,8 @@
             <el-button
               icon="el-icon-folder-checked"
               type="primary"
-              @click="fetchData"
+              :disabled="!selectedList.length"
+              @click="Export(selectedList)"
             >
               {{ $translateTitle('Maintenance.Export') }}
             </el-button>
@@ -215,7 +216,19 @@
       </vab-query-form-top-panel>
     </vab-query-form>
 
-    <el-table v-loading="listLoading" :data="list" :height="height">
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+      :height="height"
+      @selection-change="changeBox"
+    >
+      <el-table-column
+        align="center"
+        show-overflow-tooltip
+        class-name="isCheck"
+        type="selection"
+        width="55"
+      />
       <el-table-column
         sortablesortable
         align="center"
@@ -268,7 +281,7 @@
         sortable
         align="center"
         :label="$translateTitle('Maintenance.Initiator')"
-        prop="user"
+        prop="_user"
         show-overflow-tooltip
       />
       <el-table-column
@@ -331,6 +344,7 @@
     update_object,
     create_object,
   } from '@/api/shuwa_parse'
+  import { exlout } from '@/api/File'
   import { queryDevice } from '@/api/Device'
   import ChangeInfo from '@/views/Maintenance/ChangeInfo'
 
@@ -343,6 +357,7 @@
     },
     data() {
       return {
+        selectedList: [],
         ishard: true,
         isfooter: false,
         step: 1,
@@ -424,6 +439,30 @@
       this.fetchDevice()
     },
     methods: {
+      changeBox(val) {
+        this.selectedList = []
+        val.forEach((item) => {
+          this.selectedList.push(item)
+        })
+        console.log(this.selectedList)
+      },
+      async Export(row) {
+        console.log(row)
+        try {
+          const params = {
+            results: [],
+          }
+          params['results'] = row
+          const res = await exlout(params)
+          this.$convertRes2Blob(res)
+          this.$message.success(this.$translateTitle('node.export success'))
+        } catch (error) {
+          console.log(error)
+          this.$message.error(
+            this.$translateTitle('node.export error') + `${error}`
+          )
+        }
+      },
       showInfo(row) {
         this.ishard = true
         this.isfooter = false
@@ -520,10 +559,10 @@
             const { results = [], count = 0 } = res
             this.list = results
             this.list.forEach((e) => {
-              e.user = '暂无'
+              e._user = '暂无'
               if (e.ACL) {
                 for (var key in e.ACL) {
-                  e.user = key.substr(5)
+                  e._user = key.substr(5)
                 }
               }
             })
@@ -600,7 +639,8 @@
         let config = {
           headers: {
             proxy: true, // 是否开启代理
-            url: '/dgiotproxy/shuwa_file/', // 开启代理后的真实上传路径
+            produrl: '/dgiotproxy/shuwa_file/', // 开启代理后的真实上传路径
+            devurl: 'group1/',
             'Content-Type': 'multipart/form-data',
           },
         }

@@ -568,7 +568,6 @@
     delDevice,
   } from '@/api/Device'
   import { queryProduct } from '@/api/Product'
-  import { aclObj } from '@/utils/acl'
   export default {
     name: 'Insection',
     components: {},
@@ -712,12 +711,12 @@
     methods: {
       // 提交任务报告
       submiTask(form) {
-        console.log(form, aclObj)
+        console.log(form, this.$aclObj)
         console.log(this.task_form)
 
         // const {} = this.task_form
         const paramsObj = {
-          ACL: aclObj,
+          ACL: this.$aclObj,
           basedata: this.task_form.basedata,
           detail: this.task_form.detail,
           route: this.task_form.route,

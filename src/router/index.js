@@ -27,11 +27,6 @@ export const constantRoutes = [
     hidden: true,
   },
   {
-    path: '/callback',
-    component: () => import('@/views/callback'),
-    hidden: true,
-  },
-  {
     path: '/403',
     name: '403',
     component: () => import('@/views/403'),

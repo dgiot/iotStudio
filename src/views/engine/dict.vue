@@ -1052,7 +1052,6 @@
   import { queryDict, postDict, getDict, putDict } from '@/api/Direct/index.js'
   import { mapGetters } from 'vuex'
   import { resourceTypes } from '@/api/Rules'
-  import { aclObj } from '@/utils/acl'
   export default {
     name: 'Dict',
     components: {},
@@ -1439,7 +1438,7 @@
       async addDict_temp(form) {
         const params = {
           data: form,
-          ACL: aclObj,
+          ACL: this.$aclObj,
           key: form.name,
           type: 'dict_template',
         }
