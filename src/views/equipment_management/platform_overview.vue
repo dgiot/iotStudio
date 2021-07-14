@@ -653,6 +653,7 @@
       }
 
       return {
+        count: 0,
         productIco: '',
         ChartStatus: {
           columns: ['状态', '数量'],
@@ -778,7 +779,11 @@
     },
     methods: {
       toggleFull(e) {
-        this.$toggleFull(document.getElementById('baidu_map'))
+        this.count++
+        this.count % 2 == 0
+          ? this.$exitFull('baidu_map')
+          : this.$beFull('baidu_map')
+        console.log(this.count, this.count % 2)
       },
       resizeTheChart() {
         this.loading = true
