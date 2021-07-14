@@ -598,7 +598,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import Category from '@/api/Mock/Category'
   import { Roletree, getToken } from '@/api/Menu'
-  import { StartDashboard } from '@/api/dashboard'
+  import { StartDashboard } from '@/api/Dashboard'
   import { isBase64 } from '@/utils'
   import info from '@/components/Device/info'
   import queryParams from '@/api/Mock/Dashboard'

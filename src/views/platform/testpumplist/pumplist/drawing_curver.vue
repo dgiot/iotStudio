@@ -82,7 +82,7 @@
 </template>
 <script>
   import { Pumpcurverdata, getaveragedata } from '@/api/devicescontrol/index'
-  import { Supporttask } from '@/api/historytask'
+  import { Supporttask } from '@/api/Historytask'
   //   import { Parse } from 'parse'
   import { clearInterval } from 'timers'
   var origindata = []

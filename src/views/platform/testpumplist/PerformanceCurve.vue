@@ -7,7 +7,6 @@
   import echarts from 'echarts'
 
   import { mapGetters, mapState } from 'vuex'
-  import { eventBus } from '@/api/eventBus'
   /*     var flowArray = []
     var headArray = []
     var effectArray = []
@@ -62,7 +61,7 @@
       this.mqttClient.connect({ onSuccess: this.onConnect })
     },
     mounted() {
-      eventBus.$on('childPageChange', (pageId) => {
+      this.$baseEventBus.$on('childPageChange', (pageId) => {
         this.resetOption()
         this.pageId = pageId
         setTimeout(() => {
@@ -81,7 +80,7 @@
     },
     beforeDestroy() {
       // eventBus.$off("chartClick", this.chartClickHnadle);
-      eventBus.$off('childPageChange')
+      this.$baseEventBus.$off('childPageChange')
 
       console.log(' brfore destroy ### ')
       // this.chartTop.dispose()
@@ -207,7 +206,7 @@
           case 'click':
             const dataObj = this.evidenceDataBackUp[param.dataIndex]
 
-            eventBus.$emit('chartClick', dataObj)
+            this.$baseEventBus.$emit('chartClick', dataObj)
 
             break
           case 'datazoom':

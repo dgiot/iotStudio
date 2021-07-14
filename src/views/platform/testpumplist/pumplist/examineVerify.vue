@@ -153,7 +153,6 @@
 </template>
 <script>
   import { mapGetters, mapState } from 'vuex'
-  import { eventBus } from '@/api/eventBus'
 
   import SouthBasicInfoView from '@/views/platform/testpumplist/view/south/BasicInfo'
   import SouthPrescribedPointView from '@/views/platform/testpumplist/view/south/PrescribedPoint'
@@ -228,13 +227,13 @@
           basedataTemp.xssdtable ||
           basedataTemp.qssdtable
 
-        eventBus.$emit('testData', testDataTable)
+        this.$baseEventBus.$emit('testData', testDataTable)
       }, 200)
 
       this.fillAllTabFormFromRow(this.currentTask)
     },
     beforeDestroy() {
-      // eventBus.$off("chartClick", this.chartClickHnadle);
+      // this.$baseEventBus.$off("chartClick", this.chartClickHnadle);
     },
     methods: {
       headClass() {

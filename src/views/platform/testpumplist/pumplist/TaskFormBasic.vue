@@ -123,7 +123,6 @@
 </template>
 <script>
   import { mapGetters, mapState } from 'vuex'
-  import { eventBus } from '@/api/eventBus'
 
   // import PerformanceCurve from "@/views/platform/testpumplist/PerformanceCurve";
 
@@ -226,11 +225,11 @@
       // 台体
       this.getTestBedDevices()
 
-      eventBus.$on('taskdialog', this.resetForm)
-      eventBus.$on('edit', this.fillEditData)
+      this.$baseEventBus.$on('taskdialog', this.resetForm)
+      this.$baseEventBus.$on('edit', this.fillEditData)
     },
     beforeDestroy() {
-      eventBus.$off('taskdialog')
+      this.$baseEventBus.$off('taskdialog')
     },
     methods: {
       getTestBedDevices() {

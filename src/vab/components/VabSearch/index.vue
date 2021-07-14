@@ -21,7 +21,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { getList } from '@/api/search'
+  import { getList } from '@/api/Search'
 
   export default {
     name: 'VabSearch',

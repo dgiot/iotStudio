@@ -6,7 +6,6 @@ import {
   create_object,
 } from '@/api/shuwa_parse'
 import request from '@/utils/request'
-import { encryptedData } from '@/utils/encrypt'
 import { loginRSA } from '@/config'
 export async function queryUser(params) {
   return query_object('_User', params)

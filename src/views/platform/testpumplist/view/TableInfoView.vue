@@ -300,7 +300,6 @@
 </template>
 <script>
   import { mapGetters, mapState } from 'vuex'
-  import { eventBus } from '@/api/eventBus'
 
   export default {
     name: 'BasicInfo',
@@ -771,10 +770,10 @@
     },
     created() {},
     mounted() {
-      eventBus.$on('taskdialog', this.resetForm)
+      this.$basethis.$baseEventBus.$on('taskdialog', this.resetForm)
     },
     beforeDestroy() {
-      eventBus.$off('taskdialog')
+      this.$basethis.$baseEventBus.$off('taskdialog')
     },
     methods: {
       resetForm(data) {

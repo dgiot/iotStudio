@@ -347,8 +347,6 @@
 
   import RoleTree from '@/views/platform/testpumplist/pumplist/RoleTree'
 
-  import { eventBus } from '@/api/eventBus'
-
   export default {
     name: 'ExamineList',
     components: {

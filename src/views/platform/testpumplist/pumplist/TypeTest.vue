@@ -95,7 +95,6 @@
 </template>
 <script>
   import { mapGetters, mapState } from 'vuex'
-  import { eventBus } from '@/api/eventBus'
 
   export default {
     name: 'TypeTest',
@@ -116,13 +115,13 @@
       }),
     },
     created() {
-      eventBus.$on('typeTestDialog', this.init)
+      this.$baseEventBus.$on('typeTestDialog', this.init)
     },
     mounted() {
       this.init()
     },
     beforeDestroy() {
-      eventBus.$off('typeTestDialog')
+      this.$baseEventBus.$off('typeTestDialog')
     },
     methods: {
       init() {
