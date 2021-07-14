@@ -168,18 +168,18 @@
               >
                 {{ $translateTitle('concentrator.search') }}
               </el-button>
-              <el-button
-                :icon="leftWidth != '0px' ? 'el-icon-back' : 'el-icon-right'"
-                type="primary"
-                @click="toggleLeftWidth(leftWidth)"
-              >
-                {{
-                  leftWidth != '0px'
-                    ? $translateTitle('konva.hide')
-                    : $translateTitle('konva.show')
-                }}
-                {{ $translateTitle('konva.left') }}
-              </el-button>
+              <!--              <el-button-->
+              <!--                :icon="leftWidth != '0px' ? 'el-icon-back' : 'el-icon-right'"-->
+              <!--                type="primary"-->
+              <!--                @click="toggleLeftWidth(leftWidth)"-->
+              <!--              >-->
+              <!--                {{-->
+              <!--                  leftWidth != '0px'-->
+              <!--                    ? $translateTitle('konva.hide')-->
+              <!--                    : $translateTitle('konva.show')-->
+              <!--                }}-->
+              <!--                {{ $translateTitle('konva.left') }}-->
+              <!--              </el-button>-->
               <!--              <el-button-->
               <!--                :icon="-->
               <!--                  fixedPaddingTop != '0px' ? 'el-icon-top' : 'el-icon-bottom'-->

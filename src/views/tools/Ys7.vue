@@ -74,8 +74,8 @@
 <style lang="scss" scoped>
   $base: '.player';
   #{$base}-container {
-    margin-top: 20px;
     padding: 0 !important;
+    margin-top: 20px;
     background: $base-color-background !important;
     .player_card {
       width: 100%;

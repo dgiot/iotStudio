@@ -1,3 +1,13 @@
+<!--
+* @Author: h7ml
+* @Date: 2021-07-14 10:23:01
+* @LastEditors:
+* @LastEditTime: 2021-07-14 10:23:01
+* @Description:
+* @FilePath: src\vab\components\VabChart\index.vue
+* @DocumentLink: https://v-charts.js.org/#/line
+-->
+
 <template>
   <div id="vabChart">
     <ve-line
@@ -233,6 +243,15 @@
       extend: {
         type: Object,
         default: () => ({
+          // 可滚动属性
+          series: {
+            barMaxWidth: 35,
+          },
+          dataZoom: [
+            {
+              type: 'inside',
+            },
+          ],
           grid: {
             right: 40,
           },
