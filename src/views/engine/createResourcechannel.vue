@@ -186,9 +186,9 @@
                         <p>
                           <el-tag
                             style="
-                              text-align: left;
                               float: left;
                               color: black;
+                              text-align: left;
                               background: #fff;
                             "
                           >
@@ -501,11 +501,11 @@
       //  float: left;
       //}
       p {
-        margin-bottom: 4px;
-        text-align: left;
-        color: black;
-        overflow: hidden;
         flex: auto;
+        margin-bottom: 4px;
+        overflow: hidden;
+        color: black;
+        text-align: left;
         text-align: left;
         //white-space: nowrap;
         //text-overflow: ellipsis;

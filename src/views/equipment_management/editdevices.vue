@@ -266,7 +266,7 @@
                   <div style="height: 70px">
                     <span style="font-size: 16px">{{ item.name }}</span>
                     <span
-                      style="float: right; margin-right: 10px; margin-top: 10px"
+                      style="float: right; margin-top: 10px; margin-right: 10px"
                     >
                       <el-avatar :size="60" :src="item.imgurl" />
                     </span>
@@ -693,6 +693,25 @@
     },
     data() {
       this.chartExtend = {
+        series: {
+          barMaxWidth: 35,
+        },
+        dataZoom: [
+          // 鼠标滚轮滚动
+          // {
+          //   type: 'inside',
+          // },
+          // 坐标轴滚动
+          {
+            type: 'slider',
+            show: true,
+            xAxisIndex: [0],
+            left: '9%',
+            bottom: -5,
+            start: 10,
+            end: 90, //初始化滚动条
+          },
+        ],
         grid: {
           right: 40,
         },
@@ -1021,6 +1040,25 @@
           this.chartDataZoom = []
         } else {
           this.chartExtend = {
+            series: {
+              barMaxWidth: 35,
+            },
+            dataZoom: [
+              // 鼠标滚轮滚动
+              // {
+              //   type: 'inside',
+              // },
+              // 坐标轴滚动
+              {
+                type: 'slider',
+                show: true,
+                xAxisIndex: [0],
+                left: '9%',
+                bottom: -5,
+                start: 10,
+                end: 90, //初始化滚动条
+              },
+            ],
             grid: {
               right: 40,
             },

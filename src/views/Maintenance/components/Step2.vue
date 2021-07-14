@@ -86,7 +86,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane
-        style="height: 90%; overflow-y: auto; overflow-x: hidden"
+        style="height: 90%; overflow-x: hidden; overflow-y: auto"
         :label="$translateTitle('Maintenance.work process')"
         name="second"
       >
@@ -206,8 +206,8 @@
         margin: 10px 0;
       }
       span {
-        font-size: 16px;
         margin: 10px 0;
+        font-size: 16px;
       }
     }
   }

@@ -503,9 +503,10 @@
                 </template>
               </el-table-column>
               <el-table-column
-                width="500"
+                width="400"
                 :label="$translateTitle('developer.operation')"
                 align="center"
+                fixed="right"
               >
                 <template slot-scope="scope">
                   <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
@@ -764,7 +765,7 @@
                 fixed="right"
                 :label="$translateTitle('developer.operation')"
                 align="center"
-                width="400"
+                width="300"
               >
                 <template slot-scope="scope">
                   <vab-icon style="color: #1890ff" icon="map-pin-range-line" />

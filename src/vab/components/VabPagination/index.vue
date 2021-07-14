@@ -96,8 +96,8 @@
 
 <style>
   .pagination-container {
-    background: #fff;
     padding: 32px 16px;
+    background: #fff;
   }
   .pagination-container.hidden {
     display: none;
