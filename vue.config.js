@@ -89,6 +89,10 @@ module.exports = {
     // https://blog.csdn.net/weixin_43972992/article/details/105159723
     return {
       externals: {
+        // 'hrm-player': 'HrmPlayer',
+        // 'f-render': 'FRender',
+        // 'vue-ele-form': 'VueEleForm',
+        'be-full': 'BeFull',
         JSONEditor: 'JSONEditor',
         AMap: 'VueAMap',
         'topology-vue': 'topology',

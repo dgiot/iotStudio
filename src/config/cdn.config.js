@@ -84,6 +84,10 @@ let staticUrl = {
     'https://unpkg.com/jsoneditor@9.5.0/dist/jsoneditor.min.js',
     'https://unpkg.com/vue-flv-player/dist/vue-flv-player.umd.min.js',
     'https://unpkg.com/ezuikit-js',
+    'https://unpkg.com/hrm-player',
+    'https://unpkg.com/f-render',
+    'https://unpkg.com/vue-ele-form',
+    'https://unpkg.com/be-full@0.0.5/dist/main.js',
   ],
 }
 if (process.env.NODE_ENV !== 'development') {
