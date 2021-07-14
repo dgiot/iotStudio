@@ -4,7 +4,6 @@ COPY ./ /dashboard
 WORKDIR /dashboard
 
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
-RUN $HOME/.yarn/bin/yarn install
 RUN yarn install && yarn build
 
 FROM nginx
