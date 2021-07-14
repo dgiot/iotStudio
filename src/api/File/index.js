@@ -30,3 +30,37 @@ export function UploadImg(file, config) {
     data: formData,
   })
 }
+
+// 需要返回整体 所以不能用该方法
+
+// export function exlout(config) {
+//   return request({
+//     url: 'excelController/exlout',
+//     method: 'post',
+//     data: config,
+//     headers: {
+//       withCredentials: true,
+//       responseType: 'blob',
+//       produrl: '/dgiotproxy/shuwa_report/',
+//       devurl: 'group2/',
+//       proxy: true,
+//     },
+//     // responseType: 'blob',
+//   })
+// }
+
+/*
+ * @params {string} url 请求地址
+ * @params {object} resOpts 请求配置参数
+ */
+export function exlout(params) {
+  // tips: 这里直接返回的是response整体!
+  params.sessionToken = store.getters['user/token']
+  return axios
+    .post('/dgiotproxy/shuwa_report/excelController/exlout', params, {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      responseType: 'blob',
+    })
+    .catch((err) => console.log(err))
+}

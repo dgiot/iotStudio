@@ -718,7 +718,6 @@
   </div>
 </template>
 <script>
-  import { aclObj } from '@/utils/acl'
   import { Promise } from 'q'
   import { Batchdelete } from '@/api/Batch'
   import { queryDict } from '@/api/Direct/index.js'
@@ -731,7 +730,7 @@
     BmCityList,
   } from 'vue-baidu-map'
   import { getProduct } from '@/api/Product/index.js'
-  import { returnLogin } from '@/utils/return'
+  import { returnLogin } from '@/utils/utilwen'
   import { getBatchNumer } from '@/api/Dict'
   var pcdata
   export default {
@@ -1507,7 +1506,7 @@
                   batch_name: this.pcformInline.pcname,
                   createdtime: Math.ceil(this.pcformInline.createdtime / 1000),
                 },
-                ACL: aclObj,
+                ACL: this.$aclObj,
                 key: this.pcformInline.pcname,
                 type: 'batch_number',
               }

@@ -75,6 +75,14 @@ module.exports = {
           '^/group1': '',
         },
       },
+      '/group2': {
+        target: 'http://prod.iotn2n.com:8012',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/group2': '',
+        },
+      },
     },
   },
   configureWebpack() {

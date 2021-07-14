@@ -272,8 +272,7 @@
   </div>
 </template>
 <script>
-  import { returnLogin } from '@/utils/return'
-  import { aclObj } from '@/utils/acl'
+  import { returnLogin } from '@/utils/utilwen'
   import {
     queryIndustry,
     delIndustry,
@@ -470,7 +469,7 @@
             if (this.instructid != '') {
               res = await updateIndustry(this.instructid, params)
             } else {
-              params.ACL = aclObj
+              params.ACL = this.$aclObj
               res = await postIndustry(params)
             }
             if (res.objectId) {

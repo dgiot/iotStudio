@@ -35,10 +35,10 @@
                 :label="$translateTitle('Maintenance.Initiator') + ': '"
               >
                 <!--                <el-input v-model="detail.user" readonly disabled />-->
-                <span>{{ form.user }}</span>
+                <span>{{ form._user }}</span>
               </el-form-item>
             </el-col>
-            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
               <el-form-item
                 :label="
                   $translateTitle('Maintenance.Ticket description') + ': '
@@ -47,22 +47,23 @@
                 {{ form.info.description }}
               </el-form-item>
             </el-col>
-            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
               <el-form-item
                 :label="$translateTitle('Maintenance.photo') + ': '"
               >
-                <div
-                  v-for="(item, index) in form.info.photo"
-                  :key="index"
-                  style="float: left; margin-right: 3px"
-                  class="block"
-                >
-                  <el-image
-                    style="width: 100px; height: 100px"
-                    :src="item"
-                    :preview-src-list="[`${item}`]"
-                  />
-                </div>
+                <el-carousel :interval="2000" type="card" height="200px">
+                  <el-carousel-item
+                    v-for="(item, index) in form.info.photo"
+                    :key="index"
+                  >
+                    <img
+                      :src="item"
+                      style="height: 100%; width: 100%"
+                      :alt="item"
+                      :title="item"
+                    />
+                  </el-carousel-item>
+                </el-carousel>
               </el-form-item>
             </el-col>
 
@@ -71,6 +72,7 @@
                 <el-input
                   v-model="form.info.step1.Remarks"
                   type="textarea"
+                  style="margin-bottom: 20px"
                   :placeholder="
                     $translateTitle(
                       'Maintenance.Please record the processing content in detail!'
@@ -94,8 +96,13 @@
                     v-for="item in user"
                     :key="item.objectId"
                     :label="item.nick"
-                    :value="item.nick"
-                  />
+                    :value="item.objectId"
+                  >
+                    <span style="float: left">{{ item.nick }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 14px">
+                      {{ item.objectId }}
+                    </span>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-col>

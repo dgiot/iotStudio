@@ -238,7 +238,7 @@
   var setdata = ''
   var isallchannel = false
   import { Compile, subupadte } from '@/api/System/index.js'
-  import { returnLogin } from '@/utils/return'
+  import { returnLogin } from '@/utils/utilwen'
   export default {
     name: 'ThingsParse',
     components: {},

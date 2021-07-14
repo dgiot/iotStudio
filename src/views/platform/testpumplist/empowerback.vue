@@ -721,7 +721,7 @@
 <script>
   import { regionData, CodeToText } from 'element-china-area-data'
   // import Parse from 'parse'
-  import { returnLogin } from '@/utils/return'
+  import { returnLogin } from '@/utils/utilwen'
   import LaboratoryForm from '@/components/laboratoryForm'
   import Cookies from 'js-cookie'
   import Preview from '@/components/laboratoryForm/preview'

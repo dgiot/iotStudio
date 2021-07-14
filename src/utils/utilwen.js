@@ -1,7 +1,12 @@
 import i18n from '@/i18n'
 import { getToken, setToken, removeToken } from './vuex'
 import globalConfig from './globalConfig'
+import store from '@/store'
+import { Message } from 'element-ui'
 const { iotMqtt } = MQTTConnect
+const Headers = {
+  sessionToken: store ? store.getters['user/token'] : '',
+}
 import {
   query_object,
   get_object,
@@ -139,6 +144,135 @@ export function translateTitle(title) {
   return pageTitle
 }
 
+export function aclObj() {
+  let roles = store.getters['acl/role']
+  let aclObj = {}
+  roles.map((e) => {
+    console.log(e.name, '')
+    aclObj[`${'role' + ':' + e.name}`] = {
+      read: true,
+      write: true,
+    }
+  })
+  return aclObj
+}
+// 针对数组、对象的深拷贝
+export function deepClone(originObject) {
+  var deepObject = Array.isArray(originObject) ? [] : {}
+  if (originObject && typeof originObject === 'object') {
+    for (var key in originObject) {
+      // 如果子属性为引用数据类型，递归复制
+      if (originObject.hasOwnProperty(key)) {
+        if (originObject[key] && typeof originObject[key] === 'object') {
+          deepObject[key] = deepClone(originObject[key])
+        } else {
+          deepObject[key] = originObject[key]
+        }
+      }
+    }
+  }
+  return deepObject
+}
+
+export function returnLogin(error) {
+  if (error.code == '209') {
+    Message({
+      message: '您权限过期,请重新登录',
+      type: 'error',
+      duration: 2 * 1000,
+    })
+    sessionStorage.removeItem('roles')
+    sessionStorage.removeItem('username')
+    sessionStorage.removeItem('token')
+    localStorage.removeItem('list')
+    setToken('username', '-1', 'sessionStorage')
+    setToken('sessionToken', '-1', 'sessionStorage')
+    location.href = '/#/login'
+  } else if (error.code == 119) {
+    Message({
+      message: '没有操作权限 e',
+      type: 'warning',
+      duration: 2 * 1000,
+    })
+  } else {
+    Message({
+      message: error.message,
+      type: 'error',
+    })
+  }
+}
+
+/**
+ *
+ * @param response
+ * @return
+ * @description export file
+ * @document https://zhuanlan.zhihu.com/p/77672133
+ */
+function convertRes2Blob(response) {
+  // 提取文件名
+  const filename =
+    response.headers['content-disposition'].match(/filename=(.*)/)[1]
+  console.log('fileName', filename)
+  // 将二进制流转为blob
+  const blob = new Blob([response.data], {
+    type: 'application/octet-stream',
+  })
+  if (typeof window.navigator.msSaveBlob !== 'undefined') {
+    // 兼容IE，window.navigator.msSaveBlob：以本地方式保存文件
+    window.navigator.msSaveBlob(blob, decodeURI(filename))
+  } else {
+    // 创建新的URL并指向File对象或者Blob对象的地址
+    const blobURL = window.URL.createObjectURL(blob)
+    // 创建a标签，用于跳转至下载链接
+    const tempLink = document.createElement('a')
+    tempLink.style.display = 'none'
+    tempLink.href = blobURL
+    tempLink.setAttribute('download', decodeURI(filename))
+    // 兼容：某些浏览器不支持HTML5的download属性
+    if (typeof tempLink.download === 'undefined') {
+      tempLink.setAttribute('target', '_blank')
+    }
+    // 挂载a标签
+    document.body.appendChild(tempLink)
+    tempLink.click()
+    document.body.removeChild(tempLink)
+    // 释放blob URL地址
+    window.URL.revokeObjectURL(blobURL)
+  }
+}
+
+// 针对数组、对象的深拷贝
+export function ajax(url, method, datas) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: method,
+      contentType: 'application/json',
+      dataType: 'json',
+      headers: Headers,
+      data: datas,
+      url: Cookies.get('apiserver') + url,
+      success: (response) => {
+        if (response) {
+          resolve(response)
+        }
+      },
+      fail: (error) => {
+        reject(error)
+      },
+    })
+  })
+}
+export function globalUrl(hostname = window.location.hostname, localHost) {
+  var result = localHost.some((i) => {
+    return hostname.indexOf(i) > -1
+  })
+  if (result) {
+    return process.env.VUE_APP_URL.split(':')[1]
+  } else {
+    return ''
+  }
+}
 export default {
   install(Vue, options) {
     Vue.prototype.$axios = axios
@@ -173,5 +307,9 @@ export default {
     Vue.prototype.$iotMqtt = iotMqtt
     Vue.prototype.$moment = moment
     Vue.prototype.$queryProduct = queryProduct
+    Vue.prototype.$aclObj = aclObj
+    Vue.prototype.$deepClone = deepClone
+    Vue.prototype.$ajax = ajax
+    Vue.prototype.$convertRes2Blob = convertRes2Blob
   },
 }

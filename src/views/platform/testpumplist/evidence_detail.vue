@@ -421,10 +421,8 @@
   </div>
 </template>
 <script>
-  import { returnLogin } from '@/utils/return'
+  import { returnLogin } from '@/utils/utilwen'
   // import Parse from 'parse'
-  import deepClone from '@/utils/deepClone'
-  import ajax from '@/utils/$ajax'
   export default {
     data() {
       return {
@@ -455,7 +453,7 @@
         reportTask.get(taskid).then(
           (resultes) => {
             if (resultes) {
-              this.taskform = deepClone(resultes.attributes)
+              this.taskform = this.$deepClone(resultes.attributes)
               this.evidenceDevice()
             }
           },
@@ -470,7 +468,7 @@
         var devicesQuery = {
           where: JSON.stringify(where),
         }
-        ajax('iotapi/classes/Device', 'GET', devicesQuery)
+        this.$ajax('iotapi/classes/Device', 'GET', devicesQuery)
           .then((resDevice) => {
             if (resDevice) {
               this.tableData = deepClone(resDevice.results)

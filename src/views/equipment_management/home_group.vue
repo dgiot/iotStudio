@@ -538,7 +538,7 @@
   import { getHashClass } from '@/api/Hash/index'
   import { queryDict, postDict } from '@/api/Dict/index'
   // const Base64 = require('js-base64').Base64
-  import { returnLogin } from '@/utils/return'
+  import { returnLogin } from '@/utils/utilwen'
   import { export_txt_to_zip } from '@/utils/Export2Zip.js'
   import Cookies from 'js-cookie'
   import { getRole } from '@/api/Role/index'
