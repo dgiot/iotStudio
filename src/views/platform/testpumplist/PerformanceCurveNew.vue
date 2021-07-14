@@ -7,7 +7,6 @@
   import echarts from 'echarts'
 
   import { mapGetters, mapState } from 'vuex'
-  import { eventBus } from '@/api/eventBus'
 
   export default {
     name: 'PerformanceCurve',

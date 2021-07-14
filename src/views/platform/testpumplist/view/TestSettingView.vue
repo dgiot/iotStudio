@@ -253,8 +253,6 @@
   </div>
 </template>
 <script>
-  import { eventBus } from '@/api/eventBus'
-
   export default {
     name: 'TestSetting',
     data() {
@@ -367,10 +365,10 @@
     created() {},
     mounted() {
       this.curentConditonObj = this.toleranceList['2U']
-      eventBus.$on('taskdialog', this.resetForm)
+      this.$baseEventBus.$on('taskdialog', this.resetForm)
     },
     beforeDestroy() {
-      eventBus.$off('taskdialog')
+      this.$baseEventBus.$off('taskdialog')
     },
     methods: {
       toleranceChange(val) {

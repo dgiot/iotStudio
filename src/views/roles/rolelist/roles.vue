@@ -864,7 +864,7 @@
     // 显示弹窗
     setDialogRole(data) {
       // this.$store.commit("set_DeptObj", data);
-      // eventBus.$emit("set_DeptObj", data)
+      // this.$baseEventBus.$emit("set_DeptObj", data)
       this.centerDialogRole = true
 
       this.$nextTick(() => {

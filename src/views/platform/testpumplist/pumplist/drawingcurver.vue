@@ -87,7 +87,6 @@
     getaveragedata,
     CloundFile,
   } from '@/api/devicescontrol/index'
-  import { Supporttask } from '@/api/historytask'
   //   import { Parse } from 'parse'
   var origindata = []
   var selectdata = []

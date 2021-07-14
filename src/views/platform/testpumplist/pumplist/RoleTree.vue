@@ -40,7 +40,6 @@
 </template>
 
 <script>
-  import { eventBus } from '@/api/eventBus'
   import { mapGetters } from 'vuex'
   import { getToken } from '@/api/Menu'
   export default {
@@ -73,7 +72,7 @@
     mounted() {
       this.getRoletree()
 
-      eventBus.$on('addCustomerEvent', () => {
+      this.$baseEventBus.$on('addCustomerEvent', () => {
         console.log('addCustomerEvent ###')
         this.getRoletree()
       })
@@ -119,7 +118,7 @@
                 },
               })
 
-              eventBus.$emit('switchCompany')
+              this.$baseEventBus.$emit('switchCompany')
 
               this.$store.commit('SET_FactoryId', item.objectId)
             }

@@ -58,7 +58,7 @@
 </template>
 
 <script>
-  import { getMaterial } from '@/api/material'
+  import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
   export default {
     name: 'Allocation',

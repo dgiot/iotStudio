@@ -10,7 +10,6 @@
   import echarts from 'echarts'
 
   import { mapGetters, mapState } from 'vuex'
-  import { eventBus } from '@/api/eventBus'
 
   export default {
     name: 'PerformanceDataCurve',
@@ -36,7 +35,7 @@
     },
     created() {},
     mounted() {
-      eventBus.$on('itemChange', (testData) => {
+      this.$baseEventBus.$on('itemChange', (testData) => {
         this.resetOption()
         this.testData = testData
 
@@ -55,7 +54,7 @@
       })
     },
     beforeDestroy() {
-      // eventBus.$off("childPageChange");
+      // this.$baseEventBus.$off("childPageChange");
 
       console.log(' brfore destroy ### ')
       this.resetOption()

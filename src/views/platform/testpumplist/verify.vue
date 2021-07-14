@@ -233,7 +233,6 @@
   // smooth
 
   import { mapGetters, mapState } from 'vuex'
-  import { eventBus } from '@/api/eventBus'
 
   import PerformanceCurve from '@/views/platform/testpumplist/PerformanceCurve'
   import PerformanceCurveNew from '@/views/platform/testpumplist/PerformanceCurveNew'
@@ -342,7 +341,7 @@
       this.getHeight()
     },
     mounted() {
-      eventBus.$on('chartClick', this.chartClickHnadle)
+      this.$baseEventBus.$on('chartClick', this.chartClickHnadle)
 
       this.getChildDevice(this.taskid)
 
@@ -360,7 +359,7 @@
     },
     beforeDestroy() {
       this.wavesurfer.empty()
-      eventBus.$off('chartClick', this.chartClickHnadle)
+      this.$baseEventBus.$off('chartClick', this.chartClickHnadle)
     },
     methods: {
       showCurve() {
@@ -463,7 +462,7 @@
           this.currentChildPageData
         )
 
-        eventBus.$emit('childPageChange', this.currentPageId)
+        this.$baseEventBus.$emit('childPageChange', this.currentPageId)
       },
       resetOptionData(val) {
         // 重置数据

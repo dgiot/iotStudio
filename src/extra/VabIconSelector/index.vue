@@ -37,7 +37,7 @@
 </template>
 
 <script>
-  import { getIconList } from '@/api/remixIcon'
+  import { getIconList } from '@/api/RemixIcon'
 
   export default {
     name: 'VabIconSelector',

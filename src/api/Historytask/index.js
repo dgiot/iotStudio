@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function HistoryTask(start, length, di, datetime, searchvalue) {
+export function Historytask(start, length, di, datetime, searchvalue) {
   return request({
     url: '/shuwa_task/historyVcaddr',
     method: 'get',

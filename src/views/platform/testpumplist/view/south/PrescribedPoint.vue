@@ -337,7 +337,6 @@
 </template>
 <script>
   import { mapGetters, mapState } from 'vuex'
-  import { eventBus } from '@/api/eventBus'
 
   export default {
     name: 'SouthPrescribedPoint',
@@ -427,10 +426,10 @@
     },
     created() {},
     mounted() {
-      eventBus.$on('taskdialog', this.resetForm)
+      this.$baseEventBus.$on('taskdialog', this.resetForm)
     },
     beforeDestroy() {
-      eventBus.$off('taskdialog')
+      this.$baseEventBus.$off('taskdialog')
     },
     methods: {
       resetForm(data) {
