@@ -148,7 +148,9 @@
                 "
               >
                 {{
-                  scope.row.config.profile ? scope.row.config.profile.length : 0
+                  scope.row.config && scope.row.config.profile
+                    ? scope.row.config.profile.length
+                    : 0
                 }}
               </el-link>
             </template>
@@ -165,7 +167,9 @@
                 "
               >
                 {{
-                  scope.row.config.parser ? scope.row.config.parser.length : 0
+                  scope.row.config && scope.row.config.parser
+                    ? scope.row.config.parser.length
+                    : 0
                 }}
               </el-link>
             </template>

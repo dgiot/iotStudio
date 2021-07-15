@@ -364,7 +364,8 @@ export default {
       Reporttemplatedictionary: '报告模版字典',
       Reporttemplatename: '报告模版名称',
       Reporttemplatetype: '报告模版类型',
-      datafile: '数据文件',
+      ReporttemplateFrom: '报告模板表单',
+      datafile: '报告模板文件',
       Reporttemplate: '报告模板',
     },
     product: {

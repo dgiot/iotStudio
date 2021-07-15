@@ -1,14 +1,10 @@
-FROM node:12-alpine
+FROM node:12-alpine as build-server
 MAINTAINER h7ml@qq.com
 COPY ./ /dashboard
 WORKDIR /dashboard
 
-RUN apk add --update --no-cache git curl python2 && \
-  curl --compressed -o- -L https://yarnpkg.com/install.sh | sh && \
-  cd /usr/local/bin && \
-  rm yarn && \
-  ln -s /root/.yarn/bin/yarn && \
-  yarn install && yarn build
+# Install packages
+RUN npm install && npm run build
 
 FROM nginx
 RUN mkdir /dashboard
