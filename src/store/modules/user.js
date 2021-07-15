@@ -354,14 +354,14 @@ const actions = {
     const { result } = await license()
     if (result) dispatch('acl/setLicense', result, { root: true })
   },
-  async getDefault({ commit, dispatch }) {
-    const Default = await SiteDefault()
-    // console.log(copyright, dashboard, logo, objectId, title)
-    const { copyright, logo, objectId, title } = Default
-    if (title) dispatch('settings/setTitle', title, { root: true })
-    if (copyright) dispatch('acl/setCopyright', copyright, { root: true })
-    if (Default) dispatch('acl/setDefault', Default, { root: true })
-  },
+  // async getDefault({ commit, dispatch }) {
+  //   const Default = await SiteDefault()
+  //   // // console.log(copyright, dashboard, logo, objectId, title)
+  //   // const { copyright, logo, objectId, title } = Default
+  //   // if (title) dispatch('settings/setTitle', title, { root: true })
+  //   // if (copyright) dispatch('acl/setCopyright', copyright, { root: true })
+  //   // if (Default) dispatch('acl/setDefault', Default, { root: true })
+  // },
   /**
    * @description 退出登录
    * @param {*} { dispatch }

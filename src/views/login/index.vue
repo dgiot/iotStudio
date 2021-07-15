@@ -101,9 +101,9 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/validate'
-
+  import { SiteDefault } from '@/api/License'
   export default {
     name: 'Login',
     directives: {
@@ -202,6 +202,11 @@
       this.initShuwa()
     },
     methods: {
+      ...mapMutations({
+        setTitle: 'settings/setTitle',
+        setCopyright: 'acl/setCopyright',
+        setDefault: 'acl/setDefault',
+      }),
       changeInfo(e) {
         this.$set(
           this.info,
@@ -222,8 +227,8 @@
       },
       ...mapActions({
         login: 'user/login',
-        getlicense: 'user/getlicense',
-        getDefault: 'user/getDefault',
+        // getlicense: 'user/getlicense',
+        // getDefault: 'user/getDefault',
       }),
       getCategory(key) {
         let name = ''
@@ -240,8 +245,12 @@
         if (this.backgroundimage) {
           this.backgroundImage = this.backgroundimage
         }
-        await this.getlicense()
-        await this.getDefault()
+        // await this.getlicense()
+        const Default = await SiteDefault()
+        const { copyright, logo, objectId, title } = Default
+        this.setDefault(Default)
+        this.setTitle(title)
+        this.setCopyright(copyright)
       },
       handlePassword() {
         this.passwordType === 'password'

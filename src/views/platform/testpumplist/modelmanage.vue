@@ -176,6 +176,26 @@
             <el-form ref="reportForm" :rules="rules" :model="reportForm">
               <el-row :gutter="12">
                 <el-col :span="12">
+                  <el-form-item
+                    prop="devTypeProduct"
+                    :label-width="formLabelWidth"
+                    :label="$translateTitle('task.productname')"
+                  >
+                    <el-select
+                      v-model="reportForm.devTypeProduct"
+                      :placeholder="$translateTitle('task.Select')"
+                      @change="changeProduct"
+                    >
+                      <el-option
+                        v-for="item in fromOptions"
+                        :key="item.name"
+                        :label="item.name"
+                        :value="item.objectId"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
                   <!-- <el-form-item
                     prop="name"
                     :label-width="formLabelWidth"
@@ -230,11 +250,63 @@
                   <el-form-item
                     prop="devTypeText"
                     :label-width="formLabelWidth"
-                    :label="$translateTitle('developer.Reporttemplatename')"
+                    :label="$translateTitle('developer.Reporttemplatetype')"
                   >
                     <el-input v-model="reportForm.devTypeText" placeholder="" />
                   </el-form-item>
                 </el-col>
+                <el-col :span="12">
+                  <el-form-item
+                    prop="devTypeFrom"
+                    :label-width="formLabelWidth"
+                    :label="$translateTitle('developer.ReporttemplateFrom')"
+                  >
+                    <el-select
+                      v-model="reportForm.devTypeFrom"
+                      :placeholder="$translateTitle('task.Select')"
+                      @change="changeFrom"
+                    >
+                      <el-option
+                        v-for="item in fromOptions"
+                        :key="item.key"
+                        :label="item.key"
+                        :value="item.objectId"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+
+                <el-col :span="24">
+                  <el-form-item
+                    prop="devTypeFile"
+                    :label-width="formLabelWidth"
+                    :label="$translateTitle('developer.datafile')"
+                  >
+                    <el-col :span="4">
+                      <p
+                        v-if="selected_file && selected_file.src"
+                        style="font-weight: bold; text-align: center"
+                      >
+                        {{ selected_file.name }}
+                      </p>
+                    </el-col>
+
+                    <el-col :span="4">
+                      <div>
+                        <label for="inputId" class="img-uploader-label" />
+                        <input
+                          id="inputId"
+                          ref="input"
+                          style="display: none"
+                          type="file"
+                          accept="*.pdf, *.doc"
+                          @change="file_selected($event)"
+                        />
+                      </div>
+                    </el-col>
+                  </el-form-item>
+                </el-col>
+
                 <!-- <el-col :span="12">
                   <el-form-item
                     :label-width="formLabelWidth"
@@ -279,39 +351,6 @@
                     <el-input v-else v-model="reportForm[item.name]" />
                   </el-form-item>
                 </el-col> -->
-              </el-row>
-
-              <el-row>
-                <el-col :span="1">&nbsp;</el-col>
-                <el-col :span="2">
-                  <span style="font-weight: bold">
-                    <!-- 数据文件 -->
-                    {{ $translateTitle('developer.datafile') }}
-                  </span>
-                </el-col>
-
-                <el-col :span="4">
-                  <p
-                    v-if="selected_file && selected_file.src"
-                    style="font-weight: bold; text-align: center"
-                  >
-                    {{ selected_file.name }}
-                  </p>
-                </el-col>
-
-                <el-col :span="4">
-                  <div>
-                    <label for="inputId" class="img-uploader-label" />
-                    <input
-                      id="inputId"
-                      ref="input"
-                      style="display: none"
-                      type="file"
-                      accept="*.pdf, *.doc"
-                      @change="file_selected($event)"
-                    />
-                  </div>
-                </el-col>
               </el-row>
             </el-form>
           </div>
@@ -582,9 +621,16 @@
           devTypeText: [
             { required: true, message: '请填写报告模版类型', trigger: 'blur' },
           ],
+          devTypeFrom: [
+            { required: true, message: '请选择报告模版表单', trigger: 'blur' },
+          ],
+          devTypeFile: [
+            { required: true, message: '请上传报告模板文件', trigger: 'blur' },
+          ],
         },
         arrlist: {},
         dictoptions: [],
+        fromOptions: [],
         value: '',
         action: 'http://file.iotn2n.com/shapes/upload',
         pumpmodel: [
@@ -691,6 +737,8 @@
         }
         const { results = [] } = await getDictCount(params)
         this.dictoptions = results
+        const { results: fromOptions = [] } = await queryProduct({})
+        this.fromOptions = fromOptions
       },
       changev(v) {
         console.log(v)
@@ -699,6 +747,20 @@
         })
         this.arrlist = result[0]
         console.log(JSON.stringify(this.arrlist))
+      },
+      changeProduct(v) {
+        let r = this.fromOptions.filter((i) => {
+          return i.objectId == v
+        })
+        console.log(r, 'changeFrom')
+        // var result = this.dictoptions.filter((i) => {
+        //   return i.objectId == v
+        // })
+        // this.arrlist = result[0]
+        // console.log(JSON.stringify(this.arrlist))
+      },
+      changeFrom(v) {
+        console.log(v)
       },
       async getIotHubProduct() {
         const loading = this.$loading({

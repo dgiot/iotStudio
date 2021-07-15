@@ -78,7 +78,6 @@ let staticUrl = {
     'https://unpkg.com/vue-codemirror@4.0.6/dist/vue-codemirror.js',
     'https://unpkg.com/file-saver@2.0.5/dist/FileSaver.min.js',
     'https://map.qq.com/api/js?v=2.exp&key=OXUBZ-TOX3S-HIXO7-6ITJZ-I7X6F-PTF3T',
-    'https://hm.baidu.com/hm.js?a0f8b01930320b849a92a00e0c6da990',
     'https://s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845',
     'https://unpkg.com/vue-amap/dist/index.js',
     'https://unpkg.com/jsoneditor@9.5.0/dist/jsoneditor.min.js',
@@ -87,7 +86,6 @@ let staticUrl = {
     'https://unpkg.com/hrm-player',
     'https://unpkg.com/f-render',
     'https://unpkg.com/vue-ele-form',
-    'https://unpkg.com/be-full@0.0.5/dist/main.js',
   ],
 }
 if (process.env.NODE_ENV !== 'development') {

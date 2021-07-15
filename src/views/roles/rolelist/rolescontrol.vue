@@ -36,6 +36,13 @@
     >
       <el-table-column
         align="center"
+        show-overflow-tooltip
+        class-name="isCheck"
+        type="index"
+        width="55"
+      />
+      <el-table-column
+        align="center"
         :label="$translateTitle('equipment.name')"
         show-overflow-tooltip
       >
