@@ -1,10 +1,14 @@
-FROM node:10
+FROM node:12-alpine
 MAINTAINER h7ml@qq.com
 COPY ./ /dashboard
 WORKDIR /dashboard
 
-#RUN curl -o- -L https://yarnpkg.com/install.sh | bash
-RUN yarn install && yarn build
+RUN apk add --update --no-cache git curl python2 && \
+  curl --compressed -o- -L https://yarnpkg.com/install.sh | sh && \
+  cd /usr/local/bin && \
+  rm yarn && \
+  ln -s /root/.yarn/bin/yarn && \
+  yarn install && yarn build
 
 FROM nginx
 RUN mkdir /dashboard
