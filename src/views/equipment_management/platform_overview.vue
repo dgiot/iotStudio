@@ -108,7 +108,6 @@
               <el-select
                 v-model="queryForm.workGroupName"
                 placeholder="请选择"
-                clearable
                 @visible-change="change($event)"
               >
                 <el-option
