@@ -25,110 +25,6 @@
         <!--          </el-button>-->
         <!--        </span>-->
       </el-dialog>
-      <el-dialog
-        :title="$translateTitle('Maintenance.create Ticket')"
-        :visible.sync="dialogFormVisible"
-        width="90vh"
-      >
-        <el-form
-          ref="form"
-          class="create-ticker"
-          :model="form"
-          size="medium "
-          :rules="rules"
-          label-width="auto"
-        >
-          <el-form-item
-            prop="product"
-            :label="$translateTitle('Maintenance.project')"
-          >
-            <el-select
-              v-model="form.product"
-              :placeholder="
-                $translateTitle('Maintenance.Please choose the product')
-              "
-              @change="prodChange"
-            >
-              <el-option
-                v-for="(item, index) in _Product"
-                v-show="item.objectId != 0"
-                :key="index"
-                :label="item.name"
-                :value="item.objectId"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            prop="name"
-            :label="$translateTitle('Maintenance.Equipment name')"
-          >
-            <el-select
-              v-model="form.name"
-              :disabled="!Device.length"
-              :placeholder="
-                Device.length == 0
-                  ? $translateTitle('Maintenance.Please choose the product')
-                  : $translateTitle('Maintenance.Please select a device')
-              "
-            >
-              <el-option
-                v-for="(item, index) in Device"
-                v-show="item.objectId"
-                :key="index"
-                :label="item.name"
-                :value="item.objectId"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            prop="type"
-            :label="$translateTitle('Maintenance.Ticket type')"
-          >
-            <el-radio-group v-model="form.type">
-              <el-radio
-                v-for="item in types"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
-            </el-radio-group>
-          </el-form-item>
-
-          <el-form-item
-            :label="$translateTitle('Maintenance.Ticket description')"
-          >
-            <el-input v-model="form.description" type="textarea" />
-          </el-form-item>
-          <el-form-item :label="$translateTitle('Maintenance.photo')">
-            <el-upload
-              action="#"
-              list-type="picture-card"
-              :auto-upload="true"
-              :http-request="myUpload"
-            >
-              <i slot="default" class="el-icon-plus"></i>
-              <div v-for="(item, index) in form.photo" :key="index">
-                <img
-                  class="el-upload-list__item-thumbnail"
-                  :src="item.url"
-                  alt=""
-                />
-              </div>
-            </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="" />
-            </el-dialog>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('form')">
-            {{ $translateTitle('Maintenance.Create now') }}
-          </el-button>
-          <el-button @click="resetForm('form')">
-            {{ $translateTitle('Maintenance.Reset') }}
-          </el-button>
-        </div>
-      </el-dialog>
     </div>
     <vab-query-form class="query-form">
       <vab-query-form-top-panel>
@@ -195,13 +91,6 @@
           <el-form-item>
             <el-button icon="el-icon-search" type="primary" @click="fetchData">
               {{ $translateTitle('Maintenance.search') }}
-            </el-button>
-            <el-button
-              icon="el-icon-circle-plus-outline"
-              type="primary"
-              @click="dialogFormVisible = true"
-            >
-              {{ $translateTitle('Maintenance.create Ticket') }}
             </el-button>
             <el-button
               icon="el-icon-folder-checked"
@@ -313,13 +202,13 @@
           <!--          <el-button v-show="row.status == 3" type="info">-->
           <!--            {{ $translateTitle('Maintenance.deal with') }}-->
           <!--          </el-button>-->
-          <el-button
-            v-show="row.status != 3"
-            type="danger"
-            @click="handleDelete(row.objectId)"
-          >
-            {{ $translateTitle('Maintenance.delete') }}
-          </el-button>
+          <!--          <el-button-->
+          <!--            v-show="row.status != 3"-->
+          <!--            type="danger"-->
+          <!--            @click="handleDelete(row.objectId)"-->
+          <!--          >-->
+          <!--            {{ $translateTitle('Maintenance.delete') }}-->
+          <!--          </el-button>-->
         </template>
       </el-table-column>
       <template #empty>
@@ -366,14 +255,6 @@
         AllDevice: [],
         height: this.$baseTableHeight(0),
         dialogFormVisible: false,
-        form: {
-          name: '',
-          product: '',
-          type: [],
-          description: '',
-          photo: [],
-          objectId: '',
-        },
         types: ['故障维修'],
         Device: [],
         dialogImageUrl: '',
@@ -506,11 +387,11 @@
             console.log('other', type)
         }
       },
-      async handleDelete(objectId) {
-        const res = await del_object('Maintenance', objectId)
-        this.$message.success('删除成功')
-        this.fetchData()
-      },
+      // async handleDelete(objectId) {
+      //   const res = await del_object('Maintenance', objectId)
+      //   this.$message.success('删除成功')
+      //   this.fetchData()
+      // },
       getDeviceName(_objectId, row) {
         let _device = _objectId
         this.AllDevice.some((i) => {
@@ -574,84 +455,6 @@
             loading.close()
           })
         console.log(this.list, 'this.list')
-      },
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.createdTicket(this.form)
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
-      },
-      async createdTicket(from) {
-        const params = {
-          number: moment(new Date()).unix() + '',
-          type: from.type,
-          status: 0,
-          product: {
-            objectId: from.product,
-            __type: 'Pointer',
-            className: 'Product',
-          },
-
-          user: {
-            objectId: this.objectId,
-            __type: 'Pointer',
-            className: '_User',
-          },
-          ACL: this.aclObj,
-          info: {
-            photo: from.photo,
-
-            timeline: [
-              {
-                timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-                h4: '生成工单',
-                p: `${this.username}新建工单`,
-              },
-            ],
-            description: from.description,
-            step1: {},
-            step2: {},
-            step3: {},
-            step4: {},
-          },
-          device: {
-            objectId: from.name,
-            __type: 'Pointer',
-            className: 'Device',
-          },
-        }
-        const loading = this.$baseColorfullLoading()
-        const res = await create_object('Maintenance', params)
-        loading.close()
-        console.log('res', res)
-        this.fetchData()
-        this.dialogFormVisible = false
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields()
-      },
-      myUpload(content) {
-        console.log('e', content.file)
-        let config = {
-          headers: {
-            proxy: true, // 是否开启代理
-            produrl: '/dgiotproxy/shuwa_file/', // 开启代理后的真实上传路径
-            devurl: 'group1/',
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-        UploadImg(content.file, config)
-          .then((res) => {
-            this.form.photo.push(res.url)
-            console.log('上传成功的回调', res.url, this.form.photo)
-          })
-          .catch((e) => {
-            console.log('出错了', e)
-          })
       },
       async prodChange(e) {
         this.Device = []

@@ -87,10 +87,35 @@
                 required
                 :label="$translateTitle('Maintenance.Maintenance staff')"
               >
+                <el-tree
+                  ref="workGroup"
+                  style="width: 50%; float: left"
+                  :data="deptTreeData"
+                  :props="roleProps"
+                  node-key="index"
+                  default-expand-all
+                  :expand-on-click-node="false"
+                >
+                  <div slot-scope="{ node, data }" class="custom-tree-node">
+                    <span
+                      :class="{ selected: data.objectId == curDepartmentId }"
+                      @click="handleNodeClick(data, node)"
+                    >
+                      {{ node.label }}
+                    </span>
+                  </div>
+                </el-tree>
                 <el-select
                   v-model="form.info.user"
-                  style="width: 100%"
-                  placeholder="请选择"
+                  v-loading="loading"
+                  :disabled="!user.length"
+                  :element-loading-text="
+                    $translateTitle('developer.Data is loading')
+                  "
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-background="rgba(0, 0, 0, 0.8)"
+                  style="width: 50%"
+                  :placeholder="$translateTitle('product.selectdepartment')"
                 >
                   <el-option
                     v-for="item in user"
@@ -147,7 +172,9 @@
 
 <script>
   import { update_object } from '@/api/shuwa_parse'
+  import { queryRoledepartment } from '@/api/Role/index'
   import { queryUser } from '@/api/User'
+  import { Roletree, getToken } from '@/api/Menu'
   import { mapGetters, mapMutations } from 'vuex'
   export default {
     props: {
@@ -170,14 +197,21 @@
     },
     data() {
       return {
+        loading: false,
         user: [],
+        deptTreeData: [],
         reverse: true,
+        roleProps: {
+          children: 'children',
+          label: 'name',
+        },
         rules: {
           reverse: true,
           user: [
             { required: true, message: '请选择分配人员', trigger: 'change' },
           ],
         },
+        curDepartmentId: '',
         activeName: 'first',
         form: this.detail,
       }
@@ -185,27 +219,49 @@
     computed: {
       ...mapGetters({
         username: 'user/username',
+        token: 'user/token',
       }),
     },
     mounted() {
-      this.featUser()
+      this.getRoletree()
     },
     methods: {
       ...mapMutations({
         set_deviceFlag: 'global/set_deviceFlag',
       }),
-      async featUser() {
-        const { results } = await queryUser({})
-        this.user = results
+      async getRoletree() {
+        await Roletree()
+          .then((res) => {
+            this.deptTreeData = res.results
+            // this.setRoleTree(res.results)
+            this.handleNodeClick(res.results[0], 0)
+            // this.queryForm.workGroupTreeShow = false
+          })
+          .catch((e) => {
+            console.log(e)
+          })
+      },
+      async handleNodeClick(data, node) {
+        this.loading = true
+        // this.form.info.user = ''
+        this.curDepartmentId = data.objectId
+        this.user = []
+        const { users } = await queryRoledepartment({ name: data.name })
+        console.log('res', users)
+        this.user = users
+        this.loading = false
       },
       dispatchUser() {
         this.$refs['form'].validate(async (valid) => {
+          let _user = this.user.filter((e) => {
+            return e.objectId == this.form.info.user
+          })
           if (valid && this.form.info.user) {
             const { objectId, info, ACL } = this.form
             info.timeline.push({
               timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
               h4: '已分配',
-              p: `${this.username} 分配给 ${this.form.info.user}`,
+              p: `${this.username} 分配给 ${_user[0].nick}`,
             })
 
             ACL[`${'role' + ':' + this.form.info.user}`] = {

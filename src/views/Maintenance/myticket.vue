@@ -64,6 +64,110 @@
             </el-button>
           </span>
         </el-dialog>
+        <el-dialog
+          :title="$translateTitle('Maintenance.create Ticket')"
+          :visible.sync="dialogFormVisible"
+          width="90vh"
+        >
+          <el-form
+            ref="form"
+            class="create-ticker"
+            :model="form"
+            size="medium "
+            :rules="rules"
+            label-width="auto"
+          >
+            <el-form-item
+              prop="product"
+              :label="$translateTitle('Maintenance.project')"
+            >
+              <el-select
+                v-model="form.product"
+                :placeholder="
+                  $translateTitle('Maintenance.Please choose the product')
+                "
+                @change="prodChange"
+              >
+                <el-option
+                  v-for="(item, index) in _Product"
+                  v-show="item.objectId != 0"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.objectId"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              prop="name"
+              :label="$translateTitle('Maintenance.Equipment name')"
+            >
+              <el-select
+                v-model="form.name"
+                :disabled="!Device.length"
+                :placeholder="
+                  Device.length == 0
+                    ? $translateTitle('Maintenance.Please choose the product')
+                    : $translateTitle('Maintenance.Please select a device')
+                "
+              >
+                <el-option
+                  v-for="(item, index) in Device"
+                  v-show="item.objectId"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.objectId"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              prop="type"
+              :label="$translateTitle('Maintenance.Ticket type')"
+            >
+              <el-radio-group v-model="form.type">
+                <el-radio
+                  v-for="item in types"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+              </el-radio-group>
+            </el-form-item>
+
+            <el-form-item
+              :label="$translateTitle('Maintenance.Ticket description')"
+            >
+              <el-input v-model="form.description" type="textarea" />
+            </el-form-item>
+            <el-form-item :label="$translateTitle('Maintenance.photo')">
+              <el-upload
+                action="#"
+                list-type="picture-card"
+                :auto-upload="true"
+                :http-request="myUpload"
+              >
+                <i slot="default" class="el-icon-plus"></i>
+                <div v-for="(item, index) in form.photo" :key="index">
+                  <img
+                    class="el-upload-list__item-thumbnail"
+                    :src="item.url"
+                    alt=""
+                  />
+                </div>
+              </el-upload>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="" />
+              </el-dialog>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="submitForm('form')">
+              {{ $translateTitle('Maintenance.Create now') }}
+            </el-button>
+            <el-button @click="resetForm('form')">
+              {{ $translateTitle('Maintenance.Reset') }}
+            </el-button>
+          </div>
+        </el-dialog>
       </div>
     </div>
     <vab-query-form class="query-form">
@@ -74,14 +178,14 @@
           :model="queryForm"
           @submit.native.prevent
         >
-          <el-form-item :label="$translateTitle('Maintenance.Ticket number')">
+          <el-form-item :label="$translateTitle('Maintenance.number')">
             <el-input
               v-model.trim="queryForm.number"
               clearable
               :placeholder="$translateTitle('Maintenance.Ticket number')"
             />
           </el-form-item>
-          <el-form-item :label="$translateTitle('Maintenance.project')">
+          <el-form-item :label="$translateTitle('Maintenance.projects')">
             <el-select
               v-model="queryForm.product"
               clearable
@@ -97,7 +201,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item :label="$translateTitle('Maintenance.Ticket type')">
+          <el-form-item :label="$translateTitle('Maintenance.type')">
             <el-select
               v-model="queryForm.type"
               clearable
@@ -118,9 +222,7 @@
           <!--              placeholder="请输入账号"-->
           <!--            />-->
           <!--          </el-form-item>-->
-          <el-form-item
-            :label="$translateTitle('Maintenance.the starting time')"
-          >
+          <el-form-item :label="$translateTitle('Maintenance.times')">
             <el-date-picker
               v-model="queryForm.searchDate"
               :end-placeholder="$translateTitle('Maintenance.end time')"
@@ -130,7 +232,7 @@
               value-format="yyyy-MM-dd"
             />
           </el-form-item>
-          <el-form-item :label="$translateTitle('Maintenance.Ticket status')">
+          <el-form-item :label="$translateTitle('Maintenance.status')">
             <el-select
               v-model="queryForm.status"
               clearable
@@ -145,6 +247,23 @@
             </el-select>
             <el-button icon="el-icon-search" type="primary" @click="fetchData">
               {{ $translateTitle('Maintenance.search') }}
+            </el-button>
+            <el-button
+              icon="el-icon-user"
+              type="info"
+              disabled
+              :size="created % 2 == 0 ? 'small' : 'medium'"
+              @click="handleCreated('created')"
+            >
+              {{ $translateTitle('Maintenance.I created') }}
+            </el-button>
+            <el-button
+              icon="el-icon-user-solid"
+              type="success"
+              :size="Assigned % 2 == 0 ? 'small' : 'medium'"
+              @click="handleCreated('Assigned')"
+            >
+              {{ $translateTitle('Maintenance.Assigned to me') }}
             </el-button>
           </el-form-item>
           <el-form-item>
@@ -162,6 +281,13 @@
           </el-form-item>
 
           <el-form-item v-show="!fold">
+            <el-button
+              icon="el-icon-circle-plus-outline"
+              type="primary"
+              @click="dialogFormVisible = true"
+            >
+              {{ $translateTitle('Maintenance.create Ticket') }}
+            </el-button>
             <el-button
               icon="el-icon-s-promotion"
               type="primary"
@@ -265,9 +391,8 @@
       </el-table-column>
       <el-table-column
         align="center"
+        fixed="right"
         :label="$translateTitle('Maintenance.operating')"
-        prop="name"
-        show-overflow-tooltip
       >
         <template #default="{ row }">
           <el-button
@@ -329,12 +454,12 @@
 </template>
 
 <script>
-  import { query_object, update_object } from '@/api/shuwa_parse'
+  import { create_object, query_object, update_object } from '@/api/shuwa_parse'
   import { batch } from '@/api/Batch'
   import { queryDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import ChangeInfo from '@/views/Maintenance/ChangeInfo'
-  import { exlout } from '@/api/File'
+  import { exlout, UploadImg } from '@/api/File'
   export default {
     name: 'MyWork',
     components: {
@@ -342,6 +467,17 @@
     },
     data() {
       return {
+        created: 0,
+        Assigned: 0,
+        form: {
+          name: '',
+          product: '',
+          type: [],
+          description: '',
+          photo: [],
+          objectId: '',
+        },
+        dialogFormVisible: false,
         fold: false,
         step: 1,
         ishard: false,
@@ -453,10 +589,89 @@
       console.log('this.aclObj', this.aclObj)
     },
     mounted() {
-      this.fetchData()
+      // this.fetchData()
+      this.handleCreated('created')
       this.fetchDevice()
     },
     methods: {
+      myUpload(content) {
+        console.log('e', content.file)
+        let config = {
+          headers: {
+            proxy: true, // 是否开启代理
+            produrl: '/dgiotproxy/shuwa_file/', // 开启代理后的真实上传路径
+            devurl: 'group1/',
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+        UploadImg(content.file, config)
+          .then((res) => {
+            this.form.photo.push(res.url)
+            console.log('上传成功的回调', res.url, this.form.photo)
+          })
+          .catch((e) => {
+            console.log('出错了', e)
+          })
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.createdTicket(this.form)
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      async createdTicket(from) {
+        const params = {
+          number: moment(new Date()).unix() + '',
+          type: from.type,
+          status: 0,
+          product: {
+            objectId: from.product,
+            __type: 'Pointer',
+            className: 'Product',
+          },
+
+          user: {
+            objectId: this.objectId,
+            __type: 'Pointer',
+            className: '_User',
+          },
+          ACL: this.aclObj,
+          info: {
+            photo: from.photo,
+
+            timeline: [
+              {
+                timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                h4: '生成工单',
+                p: `${this.username}新建工单`,
+              },
+            ],
+            description: from.description,
+            step1: {},
+            step2: {},
+            step3: {},
+            step4: {},
+          },
+          device: {
+            objectId: from.name,
+            __type: 'Pointer',
+            className: 'Device',
+          },
+        }
+        const loading = this.$baseColorfullLoading()
+        const res = await create_object('Maintenance', params)
+        loading.close()
+        console.log('res', res)
+        this.fetchData()
+        this.dialogFormVisible = false
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields()
+      },
       changeBox(val) {
         this.selectedList = []
         val.forEach((item) => {
@@ -531,7 +746,7 @@
         )
       },
       handleHeight() {
-        if (this.fold) this.height = this.$baseTableHeight(0) - 47
+        if (this.fold) this.height = this.$baseTableHeight(0) - 20
         else this.height = this.$baseTableHeight(0) - 30
       },
       async fetchDevice() {
@@ -606,8 +821,12 @@
         })
         return _device
       },
-
+      handleCreated(type) {
+        type == 'created' ? this.created++ : this.Assigned++
+        this.fetchData()
+      },
       async fetchData(args = {}) {
+        console.log(this.created % 2, this.created, 'this.created')
         if (!args.limit) {
           args = this.queryForm
         }
@@ -620,6 +839,8 @@
           skip: args.skip,
           keys: args.keys,
           where: {
+            'info.user': this.Assigned % 2 == 0 ? { $ne: '' } : this.objectId,
+            user: this.created % 2 == 0 ? { $ne: '' } : this.objectId,
             number: this.queryForm.number.length
               ? { $regex: this.queryForm.number }
               : { $ne: '' },
