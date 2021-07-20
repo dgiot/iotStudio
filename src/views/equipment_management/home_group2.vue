@@ -1854,6 +1854,7 @@
                 productSecret: productSecret,
                 ACL: setAcl,
                 topics: [],
+                thing: {},
                 dynamicReg: false,
                 config: {
                   konva: {

@@ -254,7 +254,7 @@
           order: this.queryForm.order,
           skip: args.skip ? args.skip : this.queryForm.skip,
           where: {
-            name: args.name ? { $regex: args.name } : { $ne: '' },
+            name: args.name ? { $regex: args.name } : { $ne: null },
           },
         })
         this.listLoading = false

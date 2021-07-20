@@ -295,7 +295,7 @@
                     slot="append"
                     icon="el-icon-search"
                     size="mini"
-                    @click="getDevices(0)"
+                    @click="getDevices({ start: 0 })"
                   />
                 </el-input>
                 <el-input
@@ -320,7 +320,7 @@
                     slot="append"
                     size="mini"
                     icon="el-icon-search"
-                    @click="getDevices(0)"
+                    @click="getDevices({ start: 0 })"
                   />
                 </el-input>
               </el-form-item>
@@ -373,6 +373,7 @@
               v-show="isALL"
               ref="filterTable"
               v-loading="listLoading"
+              :height="height"
               :data="tableData"
               :row-style="rowClass"
               style="width: 100%; margin-top: 20px; text-align: center"
@@ -382,7 +383,7 @@
               <el-table-column
                 :label="$translateTitle('equipment.devicenumber')"
                 align="center"
-                width="100"
+                width="120"
               >
                 <template slot-scope="scope">
                   {{ scope.row.devaddr }}
@@ -467,7 +468,7 @@
               <el-table-column
                 :label="$translateTitle('developer.Company')"
                 align="center"
-                width="100"
+                width="120"
               >
                 <template slot-scope="scope">
                   <span>
@@ -482,7 +483,7 @@
                   $translateTitle('developer.prohibit')
                 "
                 align="center"
-                width="100"
+                width="120"
               >
                 <template slot-scope="scope">
                   <el-switch
@@ -599,6 +600,7 @@
               v-show="!isALL"
               ref="filterTable"
               v-loading="listLoading"
+              :height="height"
               :data="tableData"
               :row-style="rowClass"
               style="width: 100%"
@@ -608,7 +610,7 @@
               <el-table-column
                 :label="$translateTitle('equipment.devicenumber')"
                 align="center"
-                width="100"
+                width="120"
               >
                 <template slot-scope="scope">
                   {{ scope.row.devaddr }}
@@ -844,13 +846,20 @@
               </el-table-column>
             </el-table>
             <div class="elpagination" style="margin-top: 30px">
-              <el-pagination
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="devicelength"
+              <!--              <el-pagination-->
+              <!--                :page-sizes="[10, 20, 30, 50]"-->
+              <!--                :page-size="devicelength"-->
+              <!--                :total="devicetotal"-->
+              <!--                layout="total, sizes, prev, pager, next, jumper"-->
+              <!--                @size-change="deviceSizeChange"-->
+              <!--                @current-change="deviceCurrentChange"-->
+              <!--              />-->
+              <vab-Pagination
+                v-show="devicetotal > 0"
                 :total="devicetotal"
-                layout="total, sizes, prev, pager, next, jumper"
-                @size-change="deviceSizeChange"
-                @current-change="deviceCurrentChange"
+                :page.sync="queryForm.pageNo"
+                :limit.sync="queryForm.pageSize"
+                @pagination="getDevices"
               />
             </div>
           </div>
@@ -1256,6 +1265,7 @@
       }
       return {
         formData: {},
+        height: this.$baseTableHeight(0) - 200,
         topicData: [],
         InfoDialog: false,
         devicedetail: {},
@@ -1280,6 +1290,15 @@
           workGroupName: '',
           workGroupTreeShow: false,
           access_token: '',
+          statusFlag: false,
+          status: '',
+          number: '',
+          product: '',
+          type: '',
+          limit: 10,
+          skip: 0,
+          order: '-createdAt',
+          keys: 'count(*)',
         },
         treeDataValue: '',
         isALL: true,
@@ -1516,7 +1535,7 @@
       change(e) {
         console.log(e)
         if (e) {
-          $('.el-tree').css({ height: '100px', display: 'block' })
+          $('.el-tree').css({ height: '120px', display: 'block' })
         }
       },
       async selectProdChange(objectId) {
@@ -1542,9 +1561,10 @@
             skip: this.devicestart,
             order: '-createdAt',
             count: 'objectId',
-            include: 'product',
+            include: 'product,name',
             where: {
-              product: { $ne: '' },
+              product: { $ne: null },
+              name: { $ne: null, $exists: true },
             },
           }
           if (this.deviceinput != '') {
@@ -1612,7 +1632,7 @@
         setTimeout(() => {
           Loading.close()
           this.stateDialog = true
-        }, 1000)
+        }, 1200)
       },
       CloseState() {
         this.stateDialog = false
@@ -1744,7 +1764,7 @@
         const { name, objectId } = data
         this.curDepartmentId = objectId
         // this.Company = name
-        this.getDevices(0)
+        this.getDevices({ start: 0 })
       },
       async rolesSelect(val) {
         this.productroleslist = []
@@ -1878,9 +1898,11 @@
         var params = {
           limit: 1,
           count: 'objectId',
+          include: 'product,name',
           where: {
             status: 'ONLINE',
-            product: { $ne: '' },
+            product: { $ne: null },
+            name: { $ne: null, $exists: true },
           },
         }
         if (this.deviceinput != '') {
@@ -1902,17 +1924,21 @@
         this.chartOnlone.rows[1]['数量'] = this.devicetotal - res.count
         this.chartOnlone.rows[0]['数量'] = res.count
       },
-      async getDevices(start) {
+      async getDevices(args = {}) {
+        if (!args.limit) {
+          args = this.queryForm
+        }
         this.listLoading = true
         this.tableData = []
         const params = {
-          limit: this.devicelength,
-          skip: this.devicestart,
-          order: '-createdAt',
+          limit: args.limit,
+          skip: args.skip,
+          order: args.order,
           count: 'objectId',
-          include: 'product',
+          include: 'product,name',
           where: {
-            product: { $ne: '' },
+            product: { $ne: null },
+            name: { $ne: null, $exists: true },
           },
         }
         if (this.deviceinput != '') {
@@ -1936,7 +1962,7 @@
           // params.where.product = this.equvalue
           this.selectProdChange(this.equvalue)
         }
-        if (start == 0) {
+        if (args.start == 0) {
           this.devicestart = 0
         }
         const { results = [], count = 0 } = await querycompanyDevice(
@@ -2025,7 +2051,7 @@
           })
       },
       timestampToTime(timestamp) {
-        var date = new Date(timestamp * 1000)
+        var date = new Date(timestamp * 1200)
         var Y = date.getFullYear() + '-'
         var M =
           (date.getMonth() + 1 < 10
@@ -2050,7 +2076,7 @@
       },
       utc2beijing(utc_datetime) {
         // 转为正常的时间格式 年-月-日 时:分:秒
-        var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1000)
+        var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1200)
           .toISOString()
           .replace(/T/g, ' ')
           .replace(/\.[\d]{3}Z/, '')
@@ -2519,7 +2545,7 @@
     }
   }
   .equtabs {
-    height: calc(100vh - #{$base-top-bar-height} * 4 + 38px);
+    height: calc(120vh - #{$base-top-bar-height} * 4 + 38px);
     margin: 20px;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -2554,13 +2580,13 @@
 
   .leftTree {
     width: 200px;
-    /* height: calc(100vh - #{$base-top-bar-height}* 4 + 38px); */
+    /* height: calc(120vh - #{$base-top-bar-height}* 4 + 38px); */
     overflow-x: scroll;
     //overflow-y: scroll;
 
     ::v-deep .el-tree {
       width: 200px;
-      //height: calc(100vh - 60px * 4 + 30px);
+      //height: calc(120vh - 60px * 4 + 30px);
       height: auto;
       overflow-x: scroll;
       //overflow-y: scroll;

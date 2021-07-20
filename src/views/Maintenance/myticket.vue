@@ -358,7 +358,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ getProductName(row.product.objectId, row) }}
+          {{ row.product.name }}
         </template>
       </el-table-column>
 
@@ -369,7 +369,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ getDeviceName(row.device.objectId, row) }}
+          {{ row.device.name }}
         </template>
       </el-table-column>
       <el-table-column
@@ -591,7 +591,6 @@
     mounted() {
       // this.fetchData()
       this.handleCreated('created')
-      this.fetchDevice()
     },
     methods: {
       myUpload(content) {
@@ -749,20 +748,6 @@
         if (this.fold) this.height = this.$baseTableHeight(0) - 20
         else this.height = this.$baseTableHeight(0) - 30
       },
-      async fetchDevice() {
-        const { results = [] } = await queryDevice({})
-        this.AllDevice = results
-      },
-      getProductName(_objectId, row) {
-        let _product = _objectId
-        this._Product.some((i) => {
-          if (i.objectId == _objectId) {
-            _product = i.name
-            row._product = i.name
-          }
-        })
-        return _product
-      },
       getStatus(type = 0) {
         // type == 0 ? '' : ''
         switch (type) {
@@ -811,16 +796,6 @@
       //   this.$message.success('删除成功')
       //   this.fetchData()
       // },
-      getDeviceName(_objectId, row) {
-        let _device = _objectId
-        this.AllDevice.some((i) => {
-          if (i.objectId == _objectId) {
-            _device = i.name
-            row._device = i.name
-          }
-        })
-        return _device
-      },
       handleCreated(type) {
         type == 'created' ? this.created++ : this.Assigned++
         this.fetchData()
@@ -838,21 +813,22 @@
           order: args.order,
           skip: args.skip,
           keys: args.keys,
+          include: 'product,device',
           where: {
-            'info.user': this.Assigned % 2 == 0 ? { $ne: '' } : this.objectId,
-            user: this.created % 2 == 0 ? { $ne: '' } : this.objectId,
+            'info.user': this.Assigned % 2 == 0 ? { $ne: null } : this.objectId,
+            user: this.created % 2 == 0 ? { $ne: null } : this.objectId,
             number: this.queryForm.number.length
               ? { $regex: this.queryForm.number }
-              : { $ne: '' },
+              : { $ne: null },
             status: this.queryForm.statusFlag
               ? this.queryForm.status
               : { $ne: 9 },
             product: this.queryForm.product.length
               ? this.queryForm.product
-              : { $ne: '' },
+              : { $ne: null },
             type: this.queryForm.type.length
               ? this.queryForm.type
-              : { $ne: '' },
+              : { $ne: null },
           },
         }
         if (this.queryForm.searchDate.length) {
