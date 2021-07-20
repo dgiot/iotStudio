@@ -46,7 +46,7 @@
     "register-service-worker": "^1.7.2",
     "resize-detector": "^0.3.0",
     "typescript": "^4.3.5",
-    "vab-icons": "git+https://hub.fastgit.org/zxcasvw/vab-icons.git"
+    "vab-icons": "git+https://github.com/zxcasvw/vab-icons.git"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
@@ -70,7 +70,7 @@
     "eslint-plugin-vue": "^7.13.0",
     "filemanager-webpack-plugin": "^6.1.4",
     "husky": "^7.0.1",
-    "image-webpack-loader": "git+https://hub.fastgit.org/tcoopman/image-webpack-loader.git",
+    "image-webpack-loader": "git+https://github.com/tcoopman/image-webpack-loader.git",
     "lint-staged": "^11.0.1",
     "monaco-editor": "^0.25.2",
     "nodemon": "^2.0.12",

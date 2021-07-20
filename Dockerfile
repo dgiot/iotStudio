@@ -3,8 +3,11 @@ MAINTAINER h7ml@qq.com
 COPY ./ /dashboard
 WORKDIR /dashboard
 
-# Install packages
-RUN npm install && npm run build
+# global install & update
+RUN npm i -g npm && npm i -g yarn
+RUN rm yarn.lock
+RUN yarn
+RUN yarn build
 
 FROM nginx
 RUN mkdir /dashboard

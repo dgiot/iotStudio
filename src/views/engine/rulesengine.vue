@@ -124,8 +124,8 @@
         pagesize: 10,
         start: 0,
         total: 0,
-        productid: this.$route.query.productid,
-        uid: this.$route.query.uuid,
+        productid: this.$route.query.productid || '',
+        uid: this.$route.query.uuid || '',
         alarmsRuleId: '',
       }
     },
