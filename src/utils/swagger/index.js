@@ -4,11 +4,11 @@
  */
 const fs = require('fs')
 const path = require('path')
-const { proxyUrl } = require('../../config/net.config')
+const { proxy } = require('../../config/net.config')
 const http = require('http')
 const swaggerFile = path.join(__dirname, '../../../swagger.json')
 http
-  .get(`${proxyUrl}/swagger.json`, (resp) => {
+  .get(`${proxy[0].target}/swagger.json`, (resp) => {
     let data = ''
     resp.on('data', (chunk) => {
       data += chunk
