@@ -327,11 +327,11 @@
       />
       <el-table-column
         sortable
+        show-overflow-tooltip
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
         prop="number"
         width="120"
-        show-overflow-tooltip
       />
       <el-table-column
         sortable

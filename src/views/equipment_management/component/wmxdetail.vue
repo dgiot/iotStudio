@@ -355,7 +355,7 @@
               </el-form-item>
             </div>
             <!--字符串添加格式-->
-            <div v-if="sizeForm.type == 'string'">
+            <div v-if="sizeForm.type == 'text'">
               <el-form-item
                 :label="$translateTitle('product.datalength')"
                 prop="string"
@@ -1209,7 +1209,7 @@
             identifier: item.dataForm == undefined ? '' : item.identifier,
             strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
           }
-        } else if (item.dataType.type == 'string') {
+        } else if (item.dataType.type == 'text') {
           obj = {
             name: item.name,
             ico: item.ico,

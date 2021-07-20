@@ -3197,7 +3197,7 @@
             },
           }
           Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'string') {
+        } else if (sizeForm.type == 'text') {
           var obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
@@ -3388,7 +3388,7 @@
             strategy:
               rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
           }
-        } else if (rowData.dataType.type == 'string') {
+        } else if (rowData.dataType.type == 'text') {
           obj = {
             name: rowData.name,
             type: rowData.dataType.type,
@@ -3520,7 +3520,7 @@
                 accessMode: this.structform.isread,
                 identifier: this.structform.identifier,
               }
-            } else if (this.structform.type == 'string') {
+            } else if (this.structform.type == 'text') {
               obj = {
                 name: this.structform.name,
                 dataType: {
@@ -3611,7 +3611,7 @@
             obj.attributevalue = item.dataType.specs[value]
             this.structform.specs.push(obj)
           })
-        } else if (item.dataType.type == 'string') {
+        } else if (item.dataType.type == 'text') {
           this.structform.string = item.dataType.size
         }
       },
