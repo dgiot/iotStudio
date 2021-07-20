@@ -16,6 +16,7 @@ let staticUrl = {
     'https://unpkg.com/codemirror@5.58.3/addon/lint/lint.css',
     'https://unpkg.com/codemirror@5.58.3/theme/rubyblue.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/topology-vue/topology-vue.css',
+    'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading.css',
     'https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css"',
     'https://unpkg.com/hrm-player/dist/hrm-player.css',
   ],

@@ -3,7 +3,6 @@
  */
 const path = require('path')
 const {
-  baseURL,
   publicPath,
   assetsDir,
   outputDir,
@@ -23,7 +22,7 @@ const {
   Keywords,
   Description,
   dateTime,
-  group1,
+  proxy,
 } = require('./src/config')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
@@ -37,61 +36,61 @@ process.env.VUE_APP_UPDATE_TIME = dateTime
 process.env.VUE_APP_VERSION = version
 process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
-process.env.VUE_APP_URL = proxyUrl
-process.env.group1 = group1
+process.env.VUE_APP_URL = proxy[0].target
+process.env.proxy = proxy
 const resolve = (dir) => {
   return path.join(__dirname, dir)
 }
-
+const proxyStatic = {}
+proxy.forEach((url) => {
+  proxyStatic[`${url.path}`] = {
+    target: url.target,
+    ws: true,
+    changeOrigin: true,
+    pathRewrite: {
+      ['^' + `${url.path}`]: '',
+    },
+  }
+})
+const devServer = {
+  hot: true,
+  port: devPort,
+  open: true,
+  noInfo: false,
+  overlay: {
+    warnings: true,
+    errors: true,
+  },
+  proxy: proxyStatic,
+}
+if (process.env.NODE_ENV === 'production') {
+  devServer.pwa = {
+    workboxOptions: {
+      skipWaiting: true,
+      clientsClaim: true,
+    },
+    themeColor: '#ffffff',
+    msTileColor: '#ffffff',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
+    manifestOptions: {
+      name: '物联网开发平台———杭州数蛙科技',
+      short_name: '物联网开发平台',
+      background_color: '#ffffff',
+    },
+  }
+}
 module.exports = {
   publicPath,
   assetsDir,
   outputDir,
   lintOnSave,
   transpileDependencies,
-  devServer: {
-    hot: true,
-    port: devPort,
-    open: true,
-    noInfo: false,
-    overlay: {
-      warnings: true,
-      errors: true,
-    },
-    proxy: {
-      [baseURL]: {
-        target: process.env.VUE_APP_URL,
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          ['^' + baseURL]: '',
-        },
-      },
-      '/group1': {
-        target: process.env.group1,
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/group1': '',
-        },
-      },
-      '/group2': {
-        target: 'http://prod.iotn2n.com:8012',
-        ws: true,
-        changeOrigin: true,
-        pathRewrite: {
-          '^/group2': '',
-        },
-      },
-    },
-  },
+  devServer,
   configureWebpack() {
     // https://blog.csdn.net/weixin_43972992/article/details/105159723
     return {
       externals: {
-        // 'hrm-player': 'HrmPlayer',
-        // 'f-render': 'FRender',
-        // 'vue-ele-form': 'VueEleForm',
         'be-full': 'BeFull',
         JSONEditor: 'JSONEditor',
         AMap: 'VueAMap',
@@ -168,6 +167,7 @@ module.exports = {
     // https://blog.csdn.net/weixin_34294049/article/details/97278751
     config.when(process.env.NODE_ENV === 'production', (config) => {
       config.performance.set('hints', false)
+      config.plugins.delete('prefetch')
       config.devtool('none')
       config.optimization.splitChunks({
         chunks: 'all',

@@ -40,14 +40,14 @@
               tabindex="2"
               @keyup.enter.native="handleLogin"
             >
-              <el-link
-                v-if="!form.password.length"
-                slot="append"
-                type="primary"
-                @click="forgotPwd()"
-              >
-                {{ $translateTitle('home.Forgot password') }}
-              </el-link>
+              <!--              <el-link-->
+              <!--                v-if="!form.password.length"-->
+              <!--                slot="append"-->
+              <!--                type="primary"-->
+              <!--                @click="forgotPwd()"-->
+              <!--              >-->
+              <!--                {{ $translateTitle('home.Forgot password') }}-->
+              <!--              </el-link>-->
               <template #prefix>
                 <vab-icon v-if="form.password.length" icon="lock-line" />
               </template>
@@ -93,9 +93,9 @@
           </span>
         </el-form>
       </el-col>
-      <el-col :lg="1" :md="1" :sm="24" :xl="1" :xs="24">
-        <div style="color: transparent">占位符</div>
-      </el-col>
+      <!--      <el-col :lg="1" :md="1" :sm="24" :xl="1" :xs="24">-->
+      <!--        <div style="color: transparent">占位符</div>-->
+      <!--      </el-col>-->
     </el-row>
   </div>
 </template>

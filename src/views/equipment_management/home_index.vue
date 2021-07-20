@@ -1543,7 +1543,9 @@
             order: '-createdAt',
             count: 'objectId',
             include: 'product',
-            where: {},
+            where: {
+              product: { $ne: '' },
+            },
           }
           if (this.deviceinput != '') {
             if (this.selectdevice == '设备名称') {
@@ -1616,41 +1618,48 @@
         this.stateDialog = false
       },
       showInfo(data) {
+        let parseTbas = []
         this.devicedetail = {}
-        let ProductId = data.product.objectId || 'undefined'
-        if (ProductId) {
+        console.log(data)
+        if (data.product && data.product.objectId) {
+          let ProductId = data.product.objectId
+          let _toppic = [
+            {
+              topic: `thing/${ProductId}/${DevAddr}/post`,
+              type: 'pub',
+              desc: '设备上报',
+              isdef: true,
+            },
+            {
+              topic: `thing/${ProductId}/${DevAddr}`,
+              type: 'sub',
+              desc: '消息下发',
+              isdef: true,
+            },
+          ]
+          data.product.topics
+            ? (data.topicData = data.product.topics.concat(_toppic))
+            : (data.topicData = _toppic)
           getProduct(ProductId)
             .then((res) => {
               const { config } = res
               console.log('config', config)
               if (config.parser) {
                 console.log(config.parser)
-                this.parseTbas = res.config.parser
-                this.activeparseTbas = this.parseTbas[0].name
+                parseTbas.push(...res.config.parser)
               }
+              if (config.profile) {
+                parseTbas.push(...res.config.profile)
+              }
+              this.parseTbas = parseTbas
+              console.log(this.parseTbas)
+              this.activeparseTbas = this.parseTbas[0].name
             })
             .catch((err) => {
               console.log(error, 'query product error')
             })
         }
         let DevAddr = data.devaddr || 'undefined'
-        let _toppic = [
-          {
-            topic: `thing/${ProductId}/${DevAddr}/post`,
-            type: 'pub',
-            desc: '设备上报',
-            isdef: true,
-          },
-          {
-            topic: `thing/${ProductId}/${DevAddr}`,
-            type: 'sub',
-            desc: '消息下发',
-            isdef: true,
-          },
-        ]
-        data.product.topics
-          ? (data.topicData = data.product.topics.concat(_toppic))
-          : (data.topicData = _toppic)
         this.InfoDialog = true
         this.devicedetail = data
       },
@@ -1871,6 +1880,7 @@
           count: 'objectId',
           where: {
             status: 'ONLINE',
+            product: { $ne: '' },
           },
         }
         if (this.deviceinput != '') {
@@ -1901,7 +1911,9 @@
           order: '-createdAt',
           count: 'objectId',
           include: 'product',
-          where: {},
+          where: {
+            product: { $ne: '' },
+          },
         }
         if (this.deviceinput != '') {
           if (this.selectdevice == '设备名称') {
