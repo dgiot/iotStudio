@@ -29,21 +29,38 @@
       <!----------------------------------------------------资源通道表格------------------>
       <el-table
         v-loading="listLoading"
+        :header-cell-style="{ 'text-align': 'center' }"
+        :cell-style="{ 'text-align': 'center' }"
         :data="tableData"
         :row-class-name="getChannelEnable"
         style="width: 100%"
       >
-        <el-table-column :label="$translateTitle('developer.channelnumber')">
+        <el-table-column
+          sortable
+          show-overflow-tooltip
+          width="150"
+          :label="$translateTitle('developer.channelnumber')"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.objectId }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$translateTitle('developer.channelname')">
+        <el-table-column
+          sortable
+          show-overflow-tooltip
+          width="160"
+          :label="$translateTitle('developer.channelname')"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column :label="$translateTitle('developer.channeltype')">
+        <el-table-column
+          sortable
+          show-overflow-tooltip
+          width="180"
+          :label="$translateTitle('developer.channeltype')"
+        >
           <template slot-scope="scope">
             <span v-if="scope.row.type == 1">
               {{ $translateTitle('developer.collectionchannel') }}
@@ -57,13 +74,23 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column :label="$translateTitle('developer.servicetype')">
+        <el-table-column
+          sortable
+          show-overflow-tooltip
+          width="140"
+          :label="$translateTitle('developer.servicetype')"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.cType }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column :label="$translateTitle('developer.channelstatus')">
+        <el-table-column
+          sortable
+          show-overflow-tooltip
+          width="100"
+          :label="$translateTitle('developer.channelstatus')"
+        >
           <template slot-scope="scope">
             <span v-if="scope.row.status == 'ONLINE'" style="color: green">
               <!-- 在线 -->
@@ -76,6 +103,8 @@
           </template>
         </el-table-column>
         <el-table-column
+          show-overflow-tooltip
+          sortable
           :label="$translateTitle('developer.channeladdr')"
           width="200"
         >
@@ -84,14 +113,18 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$translateTitle('developer.describe')">
+        <el-table-column
+          show-overflow-tooltip
+          :label="$translateTitle('developer.describe')"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.desc }}</span>
           </template>
         </el-table-column>
         <el-table-column
           :label="$translateTitle('developer.operation')"
-          width="350"
+          fixed="right"
+          width="440"
         >
           <template slot-scope="scope">
             <el-button
@@ -105,7 +138,7 @@
             </el-button>
             <el-button
               v-if="scope.row.isEnable == false"
-              type="success"
+              type="warning"
               size="mini"
               @click="qyChannel(scope.row, 'enable')"
             >
@@ -114,14 +147,14 @@
 
             <el-button
               v-else
-              type="danger"
+              type="warning"
               size="mini"
               @click="qyChannel(scope.row, 'disable')"
             >
               {{ $translateTitle('developer.prohibit') }}
             </el-button>
             <el-button
-              type="primary"
+              type="success"
               size="mini"
               @click="updateChannel(scope.row)"
             >
@@ -132,15 +165,17 @@
               :ref="`popover-${scope.$index}`"
               placement="top"
               width="300"
+              style="margin-left: 10px"
             >
               <!-- <p>确定删除这个{{ scope.row.name }}通道吗？</p> -->
               <p>
                 {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
                 }}{{ $translateTitle('equipment.channel') }}
               </p>
-              <div style="margin: 0; text-align: right">
+              <div>
                 <el-button
                   size="mini"
+                  type="text"
                   @click="
                     scope._self.$refs[`popover-${scope.$index}`].doClose()
                   "
@@ -148,8 +183,8 @@
                   {{ $translateTitle('developer.cancel') }}
                 </el-button>
                 <el-button
-                  type="primary"
                   size="mini"
+                  type="text"
                   @click="deleteChannel(scope)"
                 >
                   {{ $translateTitle('developer.determine') }}
@@ -188,7 +223,7 @@
             </el-tooltip>
             <el-button
               :disabled="scope.row.status == 'OFFLINE'"
-              type="primary"
+              type="info"
               size="mini"
               @click="subProTopic(scope.row)"
             >
@@ -1076,9 +1111,9 @@
       color: red;
     }
 
-    ::v-deep .el-button + .el-button {
-      margin-left: 0;
-    }
+    //::v-deep .el-button + .el-button {
+    //  margin-left: 0;
+    //}
 
     ::v-deep .el-tabs__item {
       height: 50px;
@@ -1119,9 +1154,9 @@
       }
     }
 
-    ::v-deep .el-button--mini {
-      margin: 2px 0;
-    }
+    //::v-deep .el-button--mini {
+    //  margin: 2px 0;
+    //}
 
     ::v-deep .row-bg {
       .el-form-item__content {

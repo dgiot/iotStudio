@@ -6293,9 +6293,10 @@ image-size@^0.5.1:
   resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.5.5.tgz#09dfd4ab9d20e29eb1c3e80b8990378df9e3cb9c"
   integrity sha1-Cd/Uq50g4p6xw+gLiZA3jfnjy5w=
 
-"image-webpack-loader@git+https://hub.fastgit.org/tcoopman/image-webpack-loader.git":
-  version "8.0.0"
-  resolved "git+https://hub.fastgit.org/tcoopman/image-webpack-loader.git#7ff0abea18a91385ebc8ddfd3eac6ee752d402a4"
+image-webpack-loader@^v7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/image-webpack-loader/-/image-webpack-loader-7.0.1.tgz#5e5118e36a6ce17d40a0b835fe2bb39fc80eb9c7"
+  integrity sha512-Y6/lRqMGMhZayIx4AONjU1FIljNb9AfiA2SUZ2o65bN4xPcfHmI3MmhrcmphxK/hiwShK/Q7/9/JkPqQMX8HPw==
   dependencies:
     imagemin "^7.0.1"
     loader-utils "^2.0.0"
@@ -6305,7 +6306,7 @@ image-size@^0.5.1:
     imagemin-gifsicle "^7.0.0"
     imagemin-mozjpeg "^9.0.0"
     imagemin-optipng "^8.0.0"
-    imagemin-pngquant "^9.0.2"
+    imagemin-pngquant "^9.0.1"
     imagemin-svgo "^8.0.0"
     imagemin-webp "^6.0.0"
 
@@ -6336,7 +6337,7 @@ imagemin-optipng@^8.0.0:
     is-png "^2.0.0"
     optipng-bin "^7.0.0"
 
-imagemin-pngquant@^9.0.2:
+imagemin-pngquant@^9.0.1:
   version "9.0.2"
   resolved "https://registry.yarnpkg.com/imagemin-pngquant/-/imagemin-pngquant-9.0.2.tgz#38155702b0cc4f60f671ba7c2b086ea3805d9567"
   integrity sha512-cj//bKo8+Frd/DM8l6Pg9pws1pnDUjgb7ae++sUX1kUVdv2nrngPykhiUOgFeE0LGY/LmUbCf4egCHC4YUcZSg==
