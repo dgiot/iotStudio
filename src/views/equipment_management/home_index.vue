@@ -214,7 +214,6 @@
                 <el-select
                   v-model="queryForm.workGroupName"
                   placeholder="请选择"
-                  clearable
                   @visible-change="change($event)"
                 >
                   <el-option
@@ -247,10 +246,12 @@
                 <el-select
                   v-model="equvalue"
                   :disabled="!productenable"
+                  clearable
                   @change="selectProdChange"
                 >
                   <el-option
                     v-for="(item, index) in proTableData"
+                    v-show="item.objectId != 0"
                     :key="index"
                     :label="item.name"
                     :value="item.objectId"
@@ -328,6 +329,14 @@
                 <el-button type="primary" size="small" @click="addDeviceForm">
                   {{ $translateTitle('equipment.adddevice') }}
                 </el-button>
+                <el-button
+                  type="danger"
+                  size="small"
+                  :disabled="!selectedList.length"
+                  @click="handleDelete(selectedList, 1)"
+                >
+                  {{ $translateTitle('Maintenance.batch deletion') }}
+                </el-button>
               </el-form-item>
               <el-form-item style="display: none">
                 <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
@@ -377,19 +386,30 @@
               :data="tableData"
               :row-style="rowClass"
               style="width: 100%; margin-top: 20px; text-align: center"
-              @selection-change="handleSelectionChange"
+              @selection-change="changeBox"
             >
-              <el-table-column type="selection" align="center" width="55" />
+              <el-table-column
+                sortable
+                show-overflow-tooltip
+                align="center"
+                class-name="isCheck"
+                type="selection"
+                width="55"
+              />
               <el-table-column
                 :label="$translateTitle('equipment.devicenumber')"
                 align="center"
                 width="120"
+                sortable
+                show-overflow-tooltip
               >
                 <template slot-scope="scope">
                   {{ scope.row.devaddr }}
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.name')"
                 align="center"
               >
@@ -400,6 +420,8 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.state')"
                 align="center"
                 width="80"
@@ -455,6 +477,8 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.product')"
                 align="center"
                 width="200"
@@ -466,9 +490,11 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('developer.Company')"
                 align="center"
-                width="120"
+                width="200"
               >
                 <template slot-scope="scope">
                   <span>
@@ -495,6 +521,8 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 align="center"
                 :label="$translateTitle('developer.createdAt')"
                 width="200"
@@ -557,42 +585,14 @@
                   >
                     {{ $translateTitle('concentrator.konva') }}
                   </el-link>
-                  <el-popover
-                    :ref="`popover-${scope.$index}`"
-                    placement="top"
-                    width="300"
+                  <el-link
+                    :underline="false"
+                    icon="el-icon-delete"
+                    type="danger"
+                    @click="handleDelete(scope.row, 2)"
                   >
-                    <!-- <p>确定删除这个{{ scope.row.name }}设备吗？</p> -->
-                    <p>
-                      {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
-                      }}{{ $translateTitle('equipment.sbm') }}
-                    </p>
-                    <div style="margin: 0; text-align: right">
-                      <el-button
-                        size="mini"
-                        @click="
-                          scope._self.$refs[`popover-${scope.$index}`].doClose()
-                        "
-                      >
-                        {{ $translateTitle('developer.cancel') }}
-                      </el-button>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="makeSure(scope)"
-                      >
-                        {{ $translateTitle('developer.determine') }}
-                      </el-button>
-                    </div>
-                    <el-link
-                      slot="reference"
-                      :underline="false"
-                      icon="el-icon-delete"
-                      type="danger"
-                    >
-                      {{ $translateTitle('developer.delete') }}
-                    </el-link>
-                  </el-popover>
+                    {{ $translateTitle('developer.delete') }}
+                  </el-link>
                 </template>
               </el-table-column>
             </el-table>
@@ -604,10 +604,19 @@
               :data="tableData"
               :row-style="rowClass"
               style="width: 100%"
-              @selection-change="handleSelectionChange"
+              @selection-change="changeBox"
             >
-              <el-table-column type="selection" align="center" width="55" />
               <el-table-column
+                align="center"
+                sortable
+                show-overflow-tooltip
+                class-name="isCheck"
+                type="selection"
+                width="55"
+              />
+              <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.devicenumber')"
                 align="center"
                 width="120"
@@ -617,6 +626,8 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.name')"
                 align="center"
               >
@@ -627,9 +638,11 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.state')"
                 align="center"
-                width="70"
+                width="100"
               >
                 <template slot-scope="scope">
                   <span
@@ -671,8 +684,11 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.product')"
                 align="center"
+                width="200"
               >
                 <template slot-scope="scope">
                   <span v-if="scope.row.product && scope.row.product.name">
@@ -681,8 +697,11 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('developer.Company')"
                 align="center"
+                width="200"
               >
                 <template slot-scope="scope">
                   <span>
@@ -692,13 +711,15 @@
               </el-table-column>
 
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="
                   $translateTitle('developer.enable') +
                   '/' +
                   $translateTitle('developer.prohibit')
                 "
                 align="center"
-                width="80"
+                width="120"
               >
                 <template slot-scope="scope">
                   <el-switch
@@ -806,42 +827,14 @@
                   >
                     {{ $translateTitle('concentrator.edit') }}
                   </el-link>
-                  <el-popover
-                    :ref="`popover-${scope.$index}`"
-                    placement="top"
-                    width="300"
+                  <el-link
+                    :underline="false"
+                    icon="el-icon-delete"
+                    type="danger"
+                    @click="handleDelete(scope.row, 2)"
                   >
-                    <!-- <p>确定删除这个{{ scope.row.name }}设备吗？</p> -->
-                    <p>
-                      {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
-                      }}{{ $translateTitle('equipment.sbm') }}
-                    </p>
-                    <div style="margin: 0; text-align: right">
-                      <el-button
-                        size="mini"
-                        @click="
-                          scope._self.$refs[`popover-${scope.$index}`].doClose()
-                        "
-                      >
-                        {{ $translateTitle('developer.cancel') }}
-                      </el-button>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="makeSure(scope)"
-                      >
-                        {{ $translateTitle('developer.determine') }}
-                      </el-button>
-                    </div>
-                    <el-link
-                      slot="reference"
-                      :underline="false"
-                      icon="el-icon-delete"
-                      type="danger"
-                    >
-                      {{ $translateTitle('developer.delete') }}
-                    </el-link>
-                  </el-popover>
+                    {{ $translateTitle('developer.delete') }}
+                  </el-link>
                 </template>
               </el-table-column>
             </el-table>
@@ -1192,9 +1185,9 @@
   import { mapGetters, mapMutations } from 'vuex'
   import { get_object } from '@/api/shuwa_parse'
   import { queryDict } from '@/api/Direct/index.js'
-  import { Batchdelete } from '@/api/Batch'
+  import { batch, Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
-  import { getProduct, putProduct } from '@/api/Product/index'
+  import { getProduct, putProduct, queryProduct } from '@/api/Product/index'
   import { tableDict, RunData } from '@/api/Global/device'
   import info from '@/components/Device/info'
   import deviceState from '@/components/Device/deviceState'
@@ -1264,6 +1257,9 @@
         }
       }
       return {
+        aclObj: {},
+        editRow: {},
+        selectedList: [],
         formData: {},
         height: this.$baseTableHeight(0) - 200,
         topicData: [],
@@ -1330,7 +1326,7 @@
         batchid: '',
         pcdialogVisible: true,
         devicedialogVisible: false,
-        equvalue: '0',
+        equvalue: '',
         cities: [],
         selectdevice: '',
         onlinedevices: '',
@@ -1431,6 +1427,8 @@
         token: 'user/token',
         roleTree: 'user/roleTree',
         language: 'settings/language',
+        _product: 'user/_Product',
+        _role: 'acl/role',
       }),
     },
     watch: {
@@ -1453,63 +1451,78 @@
       this.getMenu()
       this.selectdevice = this.language == 'zh' ? '设备名称' : 'devicename'
       this.queryProduct()
-      this.queryTableDict()
+      this.aclObj = this.$aclObj(this._role)
+      console.log('this.aclObj', this.aclObj)
     },
     methods: {
       ...mapMutations({
         set_tableDict: 'global/set_tableDict',
         set_tableParser: 'global/set_tableParser',
       }),
+      changeBox(val) {
+        this.selectedList = []
+        val.forEach((item) => {
+          this.selectedList.push(item)
+        })
+        console.log(this.selectedList)
+      },
+      handleDelete(row, type) {
+        let batchParams = []
+
+        if (type == 2) {
+          batchParams.push({
+            method: 'DELETE',
+            path: `/classes/Device/${row.objectId}`,
+            body: {},
+          })
+        } else {
+          row.forEach((item) => {
+            batchParams.push({
+              method: 'DELETE',
+              path: `/classes/Device/${item.objectId}`,
+              body: {},
+            })
+          })
+        }
+        console.log(batchParams, 'batchParams')
+        this.$baseConfirm(
+          this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ),
+          null,
+          async () => {
+            const res = await batch(batchParams)
+            this.$baseMessage(
+              this.$translateTitle('Maintenance.successfully deleted'),
+              'success',
+              'vab-hey-message-success'
+            )
+            setTimeout(() => {
+              this.getDevices({ start: 0 })
+            }, 1500)
+          }
+        )
+      },
       ParserSave(e) {
         console.log(
           `如果监听到有修改,则更新vuex 并 存入到数据库 ${JSON.stringify(e)}`
         )
       },
-      async queryTableDict() {
-        let config = {
-          Parser: {},
-          Dict: {},
-        }
-        // 查询表单字典
-        try {
-          const { results } = await tableDict('sinmahe_PeriodicInformation')
-          const { parser = {}, basedate = {} } = results[0].config
-          console.log(basedate)
-          console.log('set_tableDict', basedate.params)
-          config = {
-            Parser: parser,
-            Dict: basedate.params,
-          }
-        } catch (e) {
-          config = {
-            Parser: {},
-            Dict: {},
-          }
-          console.log(`${e} queryTableDict`)
-        }
-        return config
-      },
       async queryProduct() {
         // 查询产品
         this.proTableData = []
         this.proTableData1 = []
-        const parsms1 = {
+        const { results = [] } = await queryProduct({
           count: 'objectId',
           order: '-updatedAt',
-          keys: 'name',
+          // keys: 'name',
           where: {
             category: 'IotHub',
           },
-        }
-        const { results: _proTableData } = await this.$query_object(
-          'Product',
-          parsms1
-        ) // es6 结构赋值重命名
-        this.proTableData = _proTableData
-        this.proTableData.unshift({
-          name: this.language == 'zh' ? '全部产品' : 'All Products',
-          objectId: '0',
         })
+        this.proTableData = results
+
+        console.log(this.proTableData, '  this.proTableData')
 
         if (this.$route.query.product) {
           this.proTableData.forEach((i, index) => {
@@ -1523,14 +1536,13 @@
             }
           })
         }
-        this.proTableData1 = _proTableData.filter(
-          (item) => item.objectId != '0'
-        )
+        this.proTableData1 = results.filter((item) => item.objectId != '0')
 
         if (this.$route.query.productid) {
           this.equvalue = this.$route.query.productid
           this.productenable = false
         }
+        console.log('this.equvalue', this.equvalue)
       },
       change(e) {
         console.log(e)
@@ -1539,6 +1551,7 @@
         }
       },
       async selectProdChange(objectId) {
+        if (!objectId) return
         this.listLoading = true
         if (objectId == '0') {
           this.isALL = true
@@ -1619,20 +1632,6 @@
         this.deviceId = objectId
         this.deciceCompany = acl
         this.popoverVisible = !this.popoverVisible
-      },
-      async showState(data, objectId) {
-        // this.set_tableDict({})
-        // this.set_tableParser({})
-        const Loading = this.$baseColorfullLoading(3)
-        const { Dict, Parser } = await this.queryTableDict()
-        this.set_tableDict(Dict)
-        this.set_tableParser(Parser)
-        this.stateDetail = data
-        console.log(data, objectId)
-        setTimeout(() => {
-          Loading.close()
-          this.stateDialog = true
-        }, 1200)
       },
       CloseState() {
         this.stateDialog = false
@@ -1745,7 +1744,9 @@
         this.handleNodeClick(this.deptTreeData[0], 0)
       },
       async handleNodeClick(data, node) {
-        console.log(data, 'handleNodeClick')
+        const aclRole = this._role.map((r) => {
+          return r.name
+        })
         $('.el-tree').css({
           height: '0px',
           display: 'none',
@@ -1753,17 +1754,19 @@
         })
         $('.el-select-dropdown').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
-        if (node.level != 1) {
+        // 点击的公司名
+        const { name, objectId } = data
+        this.curDepartmentId = objectId
+        // this.Company = name
+        if (aclRole.includes(data.name)) {
+          this.access_token = this.token
+        } else if (node.level != 1) {
           // 在这里获取点击厂家的session
           const { access_token = '' } = await getToken(data.name)
           this.access_token = access_token
         } else {
           this.access_token = this.token
         }
-        // 点击的公司名
-        const { name, objectId } = data
-        this.curDepartmentId = objectId
-        // this.Company = name
         this.getDevices({ start: 0 })
       },
       async rolesSelect(val) {
@@ -2086,9 +2089,9 @@
         return row.tag === value
       },
       /* 设备列表选中 */
-      handleSelectionChange(val) {
-        this.multipleTable = val
-      },
+      // handleSelectionChange(val) {
+      //   this.multipleTable = val
+      // },
 
       // 批量删除设备
       async deleteDevcie(val) {
@@ -2274,10 +2277,12 @@
       },
       /* device表单修改*/
       async editorDevice(row) {
+        this.editRow = {}
         this.selectChange(row.product.objectId, 'edit')
         this.deviceform = {}
         // 这里再去查询tag
         console.log('row', row)
+        this.editRow = row
         this.deviceid = row.objectId
         this.devicedialogVisible = true
         this.deviceform = {
@@ -2336,7 +2341,7 @@
         this.dialogFormVisible = false
         // this.resetProductForm()
         // this.$refs['ruleForm'].resetFields()
-        this.getDevices()
+        this.getDevices({ start: 0 })
       },
       async updateDevice(params) {
         const res = await this.$update_object('Device', this.deviceid, params)
@@ -2352,11 +2357,13 @@
       async createDevice(params) {
         const res = await this.$create_object('Device', params)
         if (res.objectId) {
+          this.deviceform = {}
+          this.handleClose()
           this.initQuery('设备创建成功', 'success')
         } else {
           this.$message({
             type: 'error',
-            message: res.error,
+            message: res,
           })
         }
       },
@@ -2364,7 +2371,7 @@
         this.arrlist = []
         getProduct(objectId).then((res) => {
           const { config = { basedate: {} } } = res
-          if (config.basedate.params.length > 0) {
+          if (config.basedate && config.basedate.params.length > 0) {
             this.arrlist = config.basedate.params
             if (flag == 'add') {
               this.arrlist.map((item) => {
@@ -2443,65 +2450,61 @@
             this.$delete(obj, 'productName')
             this.$delete(obj, 'status')
             this.$delete(obj, 'productid')
-            getProduct(this.deviceform.productName).then((response) => {
-              if (response) {
-                if (this.deviceid != '') {
-                  // 编辑
+            // getProduct(this.deviceform.productName).then((response) => {
+            //   if (response) {
+            if (this.deviceid != '') {
+              // 编辑
+              var devicesParmas = {
+                name: this.deviceform.name,
+                devaddr: this.deviceform.devaddr,
+                product: {
+                  __type: 'Pointer',
+                  className: 'Product',
+                  objectId: this.editRow.product.objectId,
+                },
+                detail: detail,
+                location: location,
+                basedata: obj,
+              }
+              this.updateDevice(devicesParmas)
+              this.handleClose()
+              this.getDevices({ start: 0 })
+            } else {
+              var params = {
+                count: 'objectId',
+                where: {
+                  name: { $in: [this.deviceform.name] },
+                  devaddr: { $in: [this.deviceform.devaddr] },
+                },
+              }
+              this.$query_object('Device', params).then((result) => {
+                if (result.count > 0) {
+                  this.$message('此设备已被创建')
+                } else {
                   var devicesParmas = {
-                    name: this.deviceform.name,
-                    devaddr: this.deviceform.devaddr,
                     product: {
                       __type: 'Pointer',
                       className: 'Product',
-                      objectId: response.objectId,
+                      objectId: this.deviceform.productName,
                     },
+                    status: 'OFFLINE',
+                    isEnable: false,
+                    ACL: this.aclObj,
+                    name: this.deviceform.name,
+                    devaddr: this.deviceform.devaddr,
+                    objectId: this.deviceform.devaddr,
+                    lastOnlineTime: 0,
                     detail: detail,
                     location: location,
                     basedata: obj,
                   }
-                  this.updateDevice(devicesParmas)
-                  this.handleClose()
-                  this.getDevices()
-                } else {
-                  var params = {
-                    count: 'objectId',
-                    where: {
-                      name: { $in: [this.deviceform.name] },
-                      devaddr: { $in: [this.deviceform.devaddr] },
-                    },
-                  }
-                  this.$query_object('Device', params).then((result) => {
-                    if (result.count > 0) {
-                      this.$message('此设备已被创建')
-                      return
-                    } else {
-                      var devicesParmas = {
-                        product: {
-                          __type: 'Pointer',
-                          className: 'Product',
-                          objectId: this.deviceform.productName,
-                        },
-                        status: 'OFFLINE',
-                        isEnable: false,
-                        ACL: response.ACL,
-                        name: this.deviceform.name,
-                        devaddr: this.deviceform.devaddr,
-                        objectId: this.deviceform.devaddr,
-                        lastOnlineTime: 0,
-                        detail: detail,
-                        location: location,
-                        basedata: obj,
-                      }
-                      // console.log(devicesParmas)
-                      this.createDevice(devicesParmas)
-                      this.deviceform = {}
-                      this.handleClose()
-                      this.getDevices()
-                    }
-                  })
+                  // console.log(devicesParmas)
+                  this.createDevice(devicesParmas)
                 }
-              }
-            })
+              })
+            }
+            //   }
+            // })
           } else {
             this.$message({
               type: 'error',
