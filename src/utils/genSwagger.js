@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const http = require('http')
 const network = require('../config/net.config')
-const baseURL = network.proxyUrl
+const baseURL = network.proxy[0].target
 function mkdirsSync(dirname) {
   if (fs.existsSync(dirname)) {
     return true

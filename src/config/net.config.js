@@ -1,12 +1,23 @@
 /**
  * @description 导出网络配置
  **/
-var group1 = 'http://prod.iotn2n.com:1250'
-var proxyUrl = 'http://prod.iotn2n.com'
+var proxy = [
+  {
+    path: 'iotapi',
+    target: 'http://prod.iotn2n.com',
+  },
+  {
+    path: 'group1',
+    target: 'http://prod.iotn2n.com:1250',
+  },
+  {
+    path: 'group2',
+    target: 'http://prod.iotn2n.com:8012',
+  },
+]
 if (process.env.NODE_ENV == 'development') {
   const developer = require('./developer.config')
-  group1 = developer.group1
-  proxyUrl = developer.proxyUrl
+  proxy = developer.proxy
 }
 module.exports = {
   // 默认的接口地址，开发环境和生产环境走/mock-server
@@ -14,7 +25,9 @@ module.exports = {
   // 问号后边代表开发环境，冒号后边代表生产环境
   // baseURL:
   //   process.env.NODE_ENV === 'development' ? '/mock-server' : '/mock-server',
-  baseURL: 'iotapi',
+  // 多个代理
+  proxy,
+  baseURL: proxy[0].path,
   // 配后端数据的接收方式application/json;charset=UTF-8 或 application/x-www-form-urlencoded;charset=UTF-8
   contentType: 'application/json',
   // 最长请求时间
@@ -44,7 +57,4 @@ module.exports = {
     503: '服务不可用，服务器暂时过载或维护',
     504: '网关超时',
   },
-  // 服务器代理地址
-  group1,
-  proxyUrl,
 }

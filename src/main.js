@@ -8,6 +8,7 @@ import router from './router'
 import utilwen from './utils/utilwen'
 // import hrmPlayer from 'hrm-player'
 import '@/vab'
+import './registerServiceWorker'
 
 /**
  * use

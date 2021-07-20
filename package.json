@@ -38,9 +38,12 @@
     "@babel/helper-plugin-utils": "^7.14.5",
     "@logicflow/core": "^0.6.0",
     "@logicflow/extension": "^0.6.0",
+    "@vue/cli-plugin-pwa": "^4.5.13",
     "core-js": "^3.15.2",
     "element-ui": "^2.15.3",
     "h7utils": "^1.0.2",
+    "mini-css-extract-plugin": "^2.1.0",
+    "register-service-worker": "^1.7.2",
     "resize-detector": "^0.3.0",
     "typescript": "^4.3.5",
     "vab-icons": "git+https://hub.fastgit.org/zxcasvw/vab-icons.git"
