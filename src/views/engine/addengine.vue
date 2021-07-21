@@ -62,7 +62,11 @@
               </el-form-item>
               <!--备注-->
               <el-form-item :label="$translateTitle('rule.rule Id')">
-                <el-input v-model="formInline.ruleId" type="text" />
+                <el-input
+                  v-model="formInline.ruleId"
+                  :readonly="title == '编辑'"
+                  type="text"
+                />
               </el-form-item>
               <el-form-item :label="$translateTitle('rule.Remarks')">
                 <el-input v-model="formInline.remarks" type="text" />
@@ -450,6 +454,7 @@
       return {
         ruleId: this.$route.query.id || '',
         uid: this.$route.query.uid || '',
+        ruleType: this.$route.query.type || '',
         resources: [],
         params: {
           name: '',
@@ -760,7 +765,9 @@
               rawsql: editor1.getValue(),
             }
             if (this.uid && this.productid)
-              params['id'] = 'rule:' + this.productid + this.uid
+              params[
+                'id'
+              ] = `rule:${this.ruleType}_${this.productid}_${this.uid}`
             // const params = {
             //   rawsql:
             //     'SELECT\n  payload.msg as msg\nFROM\n  "t/#"\nWHERE\n  msg = \'hello\'',
@@ -786,7 +793,7 @@
             //   },
             //   id: 'rule:955894',
             // }
-            addRule(params)
+            addRule(JSON.parse(JSON.stringify(params)))
               .then((resultes) => {
                 console.log(resultes)
                 if (resultes) {

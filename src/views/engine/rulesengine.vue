@@ -125,6 +125,7 @@
         start: 0,
         total: 0,
         productid: this.$route.query.productid || '',
+        ruleType: this.$route.query.type || '',
         uid: this.$route.query.uuid || '',
         alarmsRuleId: '',
       }
@@ -135,8 +136,8 @@
     methods: {
       featchData(args) {
         console.log(args)
-        if (this.productid && this.uid) {
-          this.alarmsRuleId = 'rule:' + this.productid + this.uid
+        if (this.productid && this.uid && this.ruleType) {
+          this.alarmsRuleId = `rule:${this.ruleType}_${this.productid}_${this.uid}`
           this.getalarmsRule(this.alarmsRuleId)
           // this.orginRule()
         } else {
@@ -174,6 +175,7 @@
         }
         if (this.productid.length) query['productid'] = this.productid
         if (this.uid.length) query['uid'] = this.uid
+        if (this.ruleType.length) query['type'] = this.ruleType
         this.$router.push({
           path: '/rules_engine/addengine',
           query: query,
