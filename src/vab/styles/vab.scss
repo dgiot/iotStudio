@@ -104,7 +104,18 @@ html {
         transform: rotateZ(180deg);
       }
     }
-
+    /* vab-fullscreen全屏 */
+    .vab-fullscreen {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: $base-z-index + 3 !important;
+      box-sizing: border-box !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      padding-bottom: 15px !important;
+      overflow: auto !important;
+    }
     /* vab-dot圆点动画 */
     .vab-dot {
       position: relative;

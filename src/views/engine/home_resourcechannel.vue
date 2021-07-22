@@ -228,7 +228,7 @@
               @click="subProTopic(scope.row)"
             >
               <!-- 订阅日志 -->
-              {{ $translateTitle('product.subscriptionlog') }}
+              {{ $translateTitle('product.log') }}
             </el-button>
           </template>
         </el-table-column>

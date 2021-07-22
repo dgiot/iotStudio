@@ -68,30 +68,15 @@
           align="center"
         >
           <template slot-scope="scope">
-            <el-button
-              type="info"
-              size="mini"
-              plain
-              @click="detailRules(scope.row.id)"
-            >
+            <el-button type="success" @click="detailRules(scope.row.id)">
               <!-- 查看 -->
               {{ $translateTitle('equipment.see') }}
             </el-button>
-            <el-button
-              type="info"
-              size="mini"
-              plain
-              @click="editRule(scope.row.id)"
-            >
+            <el-button type="primary" @click="editRule(scope.row.id)">
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
             </el-button>
-            <el-button
-              type="info"
-              size="mini"
-              plain
-              @click="deleteRule(scope.row.id)"
-            >
+            <el-button type="danger" @click="deleteRule(scope.row.id)">
               <!-- 删除 -->
               {{ $translateTitle('developer.delete') }}
             </el-button>
@@ -125,6 +110,7 @@
         start: 0,
         total: 0,
         productid: this.$route.query.productid || '',
+        ruleType: this.$route.query.type || '',
         uid: this.$route.query.uuid || '',
         alarmsRuleId: '',
       }
@@ -135,8 +121,8 @@
     methods: {
       featchData(args) {
         console.log(args)
-        if (this.productid && this.uid) {
-          this.alarmsRuleId = 'rule:' + this.productid + this.uid
+        if (this.productid && this.uid && this.ruleType) {
+          this.alarmsRuleId = `rule:${this.ruleType}_${this.productid}_${this.uid}`
           this.getalarmsRule(this.alarmsRuleId)
           // this.orginRule()
         } else {
@@ -174,6 +160,7 @@
         }
         if (this.productid.length) query['productid'] = this.productid
         if (this.uid.length) query['uid'] = this.uid
+        if (this.ruleType.length) query['type'] = this.ruleType
         this.$router.push({
           path: '/rules_engine/addengine',
           query: query,

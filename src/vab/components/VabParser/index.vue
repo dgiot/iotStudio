@@ -19,15 +19,6 @@
             :model="headerInfo"
             @submit.native.prevent
           >
-            <el-alert
-              :closable="false"
-              :title="
-                $translateTitle(
-                  'Maintenance.Click on the name, identifier, default value on the left to copy automatically Can be associated with component property configuration filling'
-                )
-              "
-              type="info"
-            />
             <el-form-item>
               <!--              <el-button-->
               <!--                icon="el-icon-setting"-->
@@ -47,12 +38,21 @@
               />
             </el-form-item>
             <el-form-item :label="$translateTitle('rule.Type')">
-              <el-input
+              <el-select
                 v-model="headerInfo.type"
-                readonly
-                disabled
+                filterable
+                allow-create
+                default-first-option
                 :placeholder="$translateTitle('product.type')"
-              />
+                @change="changeTable"
+              >
+                <el-option
+                  v-for="item in dbaType"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item :label="$translateTitle('product.description')">
               <el-input
@@ -61,7 +61,47 @@
               />
             </el-form-item>
             <el-form-item label="uid">
-              <el-input v-model="headerInfo.uid" readonly disabled />
+              <el-input v-model="headerInfo.uid" readonly />
+            </el-form-item>
+            <el-form-item :label="$translateTitle('product.identifier')">
+              <el-input v-model="headerInfo.identifier" />
+            </el-form-item>
+            <el-form-item :label="$translateTitle('product.visible')">
+              <el-switch
+                v-model="headerInfo.visible"
+                :active-text="$translateTitle('konva.show')"
+                :inactive-text="$translateTitle('konva.hide')"
+              />
+            </el-form-item>
+            <el-form-item :label="$translateTitle('product.Table Name')">
+              <el-select
+                v-model="headerInfo.table"
+                placeholder="请选择"
+                @change="changeTable"
+              >
+                <el-option
+                  v-for="item in dbaTable"
+                  :key="item.className"
+                  :label="item.className"
+                  :value="item.className"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$translateTitle('product.class')">
+              <el-select
+                v-model="headerInfo.class"
+                filterable
+                allow-create
+                default-first-option
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="(item, index) in dbaClass"
+                  :key="item + index"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
             </el-form-item>
           </el-form>
         </vab-query-form-top-panel>
@@ -78,6 +118,8 @@
 </template>
 
 <script>
+  import { uuid } from '@/utils'
+
   export default {
     name: 'VabParser',
     props: {
@@ -89,11 +131,11 @@
         type: Object,
         default: () => {},
       },
-      // parserzh: {
-      //   type: String,
-      //   default: '',
-      //   require: false,
-      // },
+      dbaTable: {
+        type: Array,
+        default: () => [],
+        require: false,
+      },
       parserindex: {
         type: Number,
         default: 0,
@@ -115,8 +157,15 @@
         rendeRow: 19,
         jsonData: [],
         headerInfo: {},
+        dbaClass: [],
         loading: false,
+        dbaType: ['alert', 'profile'],
       }
+    },
+    watch: {
+      // headerInfo(data, headerInfo) {
+      //   console.log(data, 'headerInfo')
+      // },
     },
     mounted() {
       this.headerInfo = this.formConfig
@@ -132,16 +181,27 @@
         const { name, identifier, defaultvalue } = row
         console.log(name, identifier, defaultvalue, 'row')
       },
+      // changeClass(_class) {
+      //   this.headerInfo.class = _class
+      //   this.$emit('headerInfo:class', _class)
+      // },
       handleSave(res) {
-        this.$emit(
-          'ParserSave',
-          {
-            name: this.headerInfo.name,
-            enname: this.headerInfo.enname,
-            config: JSON.parse(res),
-          },
-          this.parserindex
-        )
+        this.headerInfo.config = JSON.parse(res)
+        console.log('this.headerInfo', this.headerInfo)
+        this.$emit('ParserSave', this.headerInfo, this.parserindex)
+      },
+      changeTable(e) {
+        let tempClass = []
+        this.dbaClass = []
+        tempClass = this.dbaTable.filter((c) => {
+          return c.className == e
+        })
+        if (tempClass.length) {
+          for (t in tempClass[0].fields) {
+            this.dbaClass.push(t)
+          }
+        }
+        // this.headerInfo.class = this.dbaClass[0]
       },
     },
   }

@@ -62,7 +62,11 @@
               </el-form-item>
               <!--备注-->
               <el-form-item :label="$translateTitle('rule.rule Id')">
-                <el-input v-model="formInline.ruleId" type="text" />
+                <el-input
+                  v-model="formInline.ruleId"
+                  :readonly="title == '编辑'"
+                  type="text"
+                />
               </el-form-item>
               <el-form-item :label="$translateTitle('rule.Remarks')">
                 <el-input v-model="formInline.remarks" type="text" />
@@ -193,7 +197,12 @@
             </div>
             <div class="bottomtable" style="padding-left: 20px">
               <div class="tableaction">
-                <el-table :data="actionData" style="width: 100%">
+                <el-table
+                  :header-cell-style="{ 'text-align': 'center' }"
+                  :cell-style="{ 'text-align': 'center' }"
+                  :data="actionData"
+                  style="width: 100%"
+                >
                   <el-table-column :label="$translateTitle('rule.channel')">
                     <template slot-scope="scope">
                       <span v-if="scope.row.params.$resource">
@@ -227,11 +236,18 @@
                   >
                     <template slot-scope="scope">
                       <el-button
+                        type="warning"
+                        size="mini"
+                        @click="editAisle(scope.row)"
+                      >
+                        {{ $translateTitle('button.edit') }}
+                      </el-button>
+                      <el-button
                         type="danger"
                         size="mini"
                         @click="deleteOneData(scope.$index)"
                       >
-                        删除
+                        {{ $translateTitle('button.delete') }}
                       </el-button>
                     </template>
                   </el-table-column>
@@ -270,7 +286,7 @@
                     <span slot="label">
                       <span class="span-box">
                         <i class="icon-dd-schetit" />
-                        <span>通道</span>
+                        <span>{{ $translateTitle('rule.channel') }}</span>
                         <el-tooltip
                           class="item"
                           effect="dark"
@@ -282,11 +298,7 @@
                       </span>
                     </span>
 
-                    <el-select
-                      v-model="params.channel"
-                      placeholder="请选择"
-                      @change="changeChanel"
-                    >
+                    <el-select v-model="params.channel">
                       <el-option
                         v-for="item in channellist"
                         :key="item.name"
@@ -305,26 +317,25 @@
                       </el-option>
                     </el-select>
                   </el-form-item>
-                  <el-form-item prop="resources" label="关联资源">
+                  <el-form-item
+                    prop="resources"
+                    :label="$translateTitle('rule.resource')"
+                  >
                     <span slot="label">
                       <span class="span-box">
                         <i class="icon-dd-schetit" />
-                        <span>关联资源</span>
+                        <span>{{ $translateTitle('rule.resource') }}</span>
                         <el-tooltip
                           class="item"
                           effect="dark"
-                          content="关联资源"
+                          :content="$translateTitle('rule.resource')"
                           placement="top-start"
                         >
                           <i class="el-icon-question"></i>
                         </el-tooltip>
                       </span>
                     </span>
-                    <el-select
-                      v-model="params.resources"
-                      placeholder="请选择"
-                      @change="changeChanel"
-                    >
+                    <el-select v-model="params.resources">
                       <el-option
                         v-for="item in resources"
                         :key="item.id"
@@ -342,11 +353,11 @@
                       </el-option>
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="目的 QoS ">
+                  <el-form-item :label="$translateTitle('rule.target_qos')">
                     <span slot="label">
                       <span class="span-box">
                         <i class="icon-dd-schetit" />
-                        <span>目的 QoS</span>
+                        <span>{{ $translateTitle('rule.target_qos') }}</span>
                         <el-tooltip
                           class="item"
                           effect="dark"
@@ -357,7 +368,7 @@
                         </el-tooltip>
                       </span>
                     </span>
-                    <el-select v-model="params.target_qos" placeholder="请选择">
+                    <el-select v-model="params.target_qos">
                       <el-option
                         v-for="item in params.target_qosSelect"
                         :key="item"
@@ -366,11 +377,11 @@
                       />
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="目的主题 ">
+                  <el-form-item :label="$translateTitle('rule.target_topic')">
                     <span slot="label">
                       <span class="span-box">
                         <i class="icon-dd-schetit" />
-                        <span>目的主题</span>
+                        <span>{{ $translateTitle('rule.target_topic') }}</span>
                         <el-tooltip
                           class="item"
                           effect="dark"
@@ -383,11 +394,11 @@
                     </span>
                     <el-input v-model="params.target_topic" />
                   </el-form-item>
-                  <el-form-item label="消息内容模板">
+                  <el-form-item :label="$translateTitle('rule.payload_tmpl')">
                     <span slot="label">
                       <span class="span-box">
                         <i class="icon-dd-schetit" />
-                        <span>消息内容模板</span>
+                        <span>{{ $translateTitle('rule.payload_tmpl') }}</span>
                         <el-tooltip
                           class="item"
                           effect="dark"
@@ -405,28 +416,36 @@
                     />
                   </el-form-item>
                   <el-form-item>
-                    <el-button type="primary" @click="submitForm('params')">
-                      创建
+                    <el-button
+                      v-if="aisleRow.name"
+                      @click="editFom('formInline')"
+                    >
+                      {{ $translateTitle('button.modify') }}
+                    </el-button>
+                    <el-button
+                      v-else
+                      type="primary"
+                      @click="submitForm('params')"
+                    >
+                      {{ $translateTitle('button.create') }}
                     </el-button>
                     <el-button @click="dialogFormVisible = !dialogFormVisible">
-                      取消
+                      {{ $translateTitle('button.cancel') }}
                     </el-button>
                   </el-form-item>
                 </el-form>
               </el-dialog>
             </div>
           </div>
-          <el-form-item label-width="0">
-            <el-button
-              v-if="ruleId.length"
-              @click="editrules(ruleId, 'formInline')"
-            >
-              修改
+          <el-form-item label-width="90">
+            <el-button type="success" @click="addrules('formInline')">
+              {{
+                ruleId.length
+                  ? $translateTitle('button.modify')
+                  : $translateTitle('button.create')
+              }}
             </el-button>
-            <el-button v-else type="success" @click="addrules('formInline')">
-              新建
-            </el-button>
-            <el-button>取消</el-button>
+            <el-button>{{ $translateTitle('button.cancel') }}</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -450,7 +469,9 @@
       return {
         ruleId: this.$route.query.id || '',
         uid: this.$route.query.uid || '',
+        ruleType: this.$route.query.type || '',
         resources: [],
+        aisleRow: {},
         params: {
           name: '',
           payload_tmpl: '${payload}',
@@ -498,7 +519,7 @@
           qos: 1,
           topic: 't/a',
           payload: '',
-          ruleId: 'rule:929035',
+          // ruleId: 'rule:929035',
           result: '',
         },
         formlinerule: {
@@ -597,17 +618,6 @@
           this.row2 = 0
         }
       },
-      // 资源通道选择
-      selectResource(val) {
-        // this.resourcelist.map(item => {
-        //   if (val == item.id) {
-        //     this.ctype = item.attributes.cType;
-        //   }
-        // });
-      },
-      openDialog() {
-        this.dialogVisible = true
-      },
       async queryRule(ruleId) {
         const { data } = await get_rule_id(ruleId)
         console.log(data)
@@ -629,8 +639,21 @@
           }
         })
       },
+      editFom(formName) {
+        console.log(this.params)
+        this.aisleRow.name = this.params.name
+        this.aisleRow.params.payload_tmpl = this.params.payload_tmpl
+        this.aisleRow.params.target_qos = this.params.target_qos
+        this.aisleRow.params.target_topic = this.params.target_topic
+        this.aisleRow.params.$resource = this.params.$resource
+        this.aisleRow.params.resources = this.params.resources
+        this.aisleRow.params.channel = this.params.channel
+        this.dialogFormVisible = !this.dialogFormVisible
+        this.aisleRow = {}
+      },
       resetForm(formName) {
         this.$refs[formName].resetFields()
+        this.aisleRow = {}
       },
       relationChannel(row) {
         console.log(row)
@@ -641,18 +664,16 @@
             target_topic: row.target_topic,
             target_qos: row.target_qos,
             payload_tmpl: row.payload_tmpl,
-            // type: this.ctype
+            channel: this.params.channel,
           },
           fallbacks: [],
         })
+        console.log(this.actionData, 'this.actionData')
         this.dialogFormVisible = !this.dialogFormVisible
       },
       async _get_actions() {
         const { data } = await get_actions()
         this.channellist = data
-      },
-      changeChanel(v) {
-        console.log(v, 'changeChanel')
       },
       async _get_resources() {
         const { data } = await get_resources()
@@ -760,7 +781,9 @@
               rawsql: editor1.getValue(),
             }
             if (this.uid && this.productid)
-              params['id'] = 'rule:' + this.productid + this.uid
+              params[
+                'id'
+              ] = `rule:${this.ruleType}_${this.productid}_${this.uid}`
             // const params = {
             //   rawsql:
             //     'SELECT\n  payload.msg as msg\nFROM\n  "t/#"\nWHERE\n  msg = \'hello\'',
@@ -807,9 +830,21 @@
       },
       // 初始化resource通道
       addresouce() {
-        this.dialogFormVisible = true
+        console.log(this.aisleRow)
         this._get_actions()
         this._get_resources()
+        if (this.aisleRow.name)
+          this.params = {
+            name: this.aisleRow.name,
+            payload_tmpl: this.aisleRow.params.payload_tmpl,
+            target_qos: this.aisleRow.params.target_qos,
+            target_qosSelect: [-1, 0, 1, 2],
+            target_topic: this.aisleRow.params.target_topic,
+            $resource: this.aisleRow.params.$resource,
+            resources: this.aisleRow.params.$resource,
+            channel: this.aisleRow.params.channel,
+          }
+        this.dialogFormVisible = true
       },
       addRes(formName) {
         this.$refs[formName].validate((valid) => {
@@ -842,6 +877,11 @@
       // 删除通道关联
       deleteOneData(index) {
         this.actionData.splice(index, 1)
+      },
+      // 编辑通道关联
+      editAisle(row) {
+        this.aisleRow = row
+        this.addresouce()
       },
     },
   }
