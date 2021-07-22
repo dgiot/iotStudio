@@ -68,30 +68,15 @@
           align="center"
         >
           <template slot-scope="scope">
-            <el-button
-              type="info"
-              size="mini"
-              plain
-              @click="detailRules(scope.row.id)"
-            >
+            <el-button type="success" @click="detailRules(scope.row.id)">
               <!-- 查看 -->
               {{ $translateTitle('equipment.see') }}
             </el-button>
-            <el-button
-              type="info"
-              size="mini"
-              plain
-              @click="editRule(scope.row.id)"
-            >
+            <el-button type="primary" @click="editRule(scope.row.id)">
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
             </el-button>
-            <el-button
-              type="info"
-              size="mini"
-              plain
-              @click="deleteRule(scope.row.id)"
-            >
+            <el-button type="danger" @click="deleteRule(scope.row.id)">
               <!-- 删除 -->
               {{ $translateTitle('developer.delete') }}
             </el-button>

@@ -1219,7 +1219,7 @@
           </el-dialog>
           <div>
             <div style="background: #ffffff">
-              <label id="plug-name" />
+              <label id="plug-name1" />
             </div>
             <pre
               id="editor"
@@ -1227,7 +1227,7 @@
               style="min-height: 600px; margin-bottom: 0"
             ><textarea class="ace_text-input"/></pre>
             <div style="background: #ffffff">
-              <label id="plug-name" />
+              <label id="plug-name2" />
             </div>
             <div
               style="
@@ -2316,7 +2316,7 @@
           date: 'String类型的UTC时间戳 (毫秒)',
           string: '',
           specs: [],
-          dis: '0010',
+          dis: '0X10',
           dinumber: 'null',
         },
         tableData: [],
@@ -2490,7 +2490,7 @@
           strategy: '20',
           resource: 1,
           identifier: '',
-          dis: '0010',
+          dis: '0X10',
           dinumber: 'null',
           type: 'int',
           startnumber: '',
@@ -2519,7 +2519,7 @@
           protocol: 'normal',
           operatetype: 'readCoils',
           originaltype: 'int',
-          slaveid: '0010',
+          slaveid: '0X10',
           collection: '%s',
           control: '%d',
           nobound: [],
@@ -3128,7 +3128,6 @@
           name: sizeForm.name,
           dataForm: {
             round: sizeForm.round,
-            order: sizeForm.order,
             data: sizeForm.dinumber,
             address: sizeForm.dis,
             rate: sizeForm.rate,
@@ -3157,7 +3156,7 @@
           sizeForm.type == 'double' ||
           sizeForm.type == 'int'
         ) {
-          var obj1 = {
+          let obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
               specs: {
@@ -3276,7 +3275,6 @@
             precision: this.$objGet(rowData, 'dataType.specs.precision'),
             // : rowData.dataForm.
             dis: this.$objGet(rowData, 'dataForm.address'),
-            order: this.$objGet(rowData, 'dataForm.order'),
             round: this.$objGet(rowData, 'dataForm.round'),
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
@@ -3316,7 +3314,6 @@
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
-            order: this.$objGet(rowData, 'dataForm.order'),
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
@@ -3359,7 +3356,6 @@
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
-            order: this.$objGet(rowData, 'dataForm.order'),
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
@@ -3394,7 +3390,6 @@
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
-            order: this.$objGet(rowData, 'dataForm.order'),
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
@@ -3433,7 +3428,6 @@
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
-            order: this.$objGet(rowData, 'dataForm.order'),
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
@@ -3473,7 +3467,6 @@
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
-            order: this.$objGet(rowData, 'dataForm.order'),
             protocol: this.$objGet(rowData, 'dataForm.protocol'),
             operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),

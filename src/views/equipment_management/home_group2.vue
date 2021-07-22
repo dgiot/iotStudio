@@ -1655,10 +1655,11 @@
           limit: this.length,
           skip: this.start,
           keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon',
-          where: {},
-        }
-        if (this.formInline.productname != '') {
-          parsms.where.name = this.formInline.productname
+          where: {
+            name: this.formInline.productname.length
+              ? { $regex: this.formInline.productname }
+              : { $ne: null },
+          },
         }
         const { results, count } = await this.$query_object('Product', parsms)
         // console.log("results", results)

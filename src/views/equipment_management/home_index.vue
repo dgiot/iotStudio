@@ -540,67 +540,57 @@
                 </template>
               </el-table-column>
               <el-table-column
-                width="400"
                 :label="$translateTitle('developer.operation')"
                 align="center"
                 fixed="right"
+                width="300"
               >
                 <template slot-scope="scope">
-                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
-                  <el-link
-                    :underline="false"
+                  <el-button
                     type="primary"
-                    @click="showInfo(scope.row)"
-                  >
-                    {{ $translateTitle('equipment.info') }}
-                  </el-link>
-
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px"
-                    icon="el-icon-view"
+                    size="mini"
                     @click="deviceToDetail(scope.row)"
                   >
                     {{ $translateTitle('equipment.see') }}
-                  </el-link>
-                  <vab-icon style="color: #1890ff" icon="file-transfer-line" />
-
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px"
-                    @click="showTree(scope.row.objectId, scope.row.Company)"
-                  >
-                    {{ $translateTitle('equipment.move') }}
-                  </el-link>
-
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px 0 0"
-                    icon="el-icon-edit"
+                  </el-button>
+                  <el-button
+                    size="mini"
+                    type="warning"
                     @click="editorDevice(scope.row)"
                   >
                     {{ $translateTitle('concentrator.edit') }}
-                  </el-link>
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px 0 0"
-                    icon="el-icon-s-flag                    "
-                    @click="konvaDevice(scope.row)"
-                  >
-                    {{ $translateTitle('concentrator.konva') }}
-                  </el-link>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-delete"
+                  </el-button>
+                  <el-button
+                    size="mini"
                     type="danger"
                     @click="handleDelete(scope.row, 2)"
                   >
                     {{ $translateTitle('developer.delete') }}
-                  </el-link>
+                  </el-button>
+                  <el-popover
+                    placement="left"
+                    style="margin: 0 10px"
+                    trigger="click"
+                  >
+                    <el-button type="primary" @click="showInfo(scope.row)">
+                      {{ $translateTitle('equipment.info') }}
+                    </el-button>
+
+                    <el-button
+                      type="success"
+                      @click="showTree(scope.row.objectId, scope.row.Company)"
+                    >
+                      {{ $translateTitle('equipment.move') }}
+                    </el-button>
+
+                    <el-button type="info" @click="konvaDevice(scope.row)">
+                      {{ $translateTitle('concentrator.konva') }}
+                    </el-button>
+
+                    <el-button slot="reference" size="mini" type="info">
+                      {{ $translateTitle('developer.operation') }}
+                    </el-button>
+                  </el-popover>
                 </template>
               </el-table-column>
             </el-table>
@@ -799,50 +789,70 @@
                 width="300"
               >
                 <template slot-scope="scope">
-                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
-                  <el-link
-                    :underline="false"
+                  <el-button
                     type="primary"
-                    :disabled="!scope.row.location"
-                    @click="showMap(scope.row.location, scope.row.objectId)"
-                  >
-                    {{ $translateTitle('equipment.location') }}
-                  </el-link>
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px"
-                    icon="el-icon-view"
+                    size="mini"
                     @click="deviceToDetail(scope.row)"
                   >
                     {{ $translateTitle('equipment.see') }}
-                  </el-link>
-                  <vab-icon style="color: #1890ff" icon="file-transfer-line" />
+                  </el-button>
 
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    @click="showTree(scope.row.objectId, scope.row.Company)"
-                  >
-                    {{ $translateTitle('equipment.move') }}
-                  </el-link>
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px 0 0"
-                    icon="el-icon-edit"
+                  <el-button
+                    type="warning"
+                    size="mini"
                     @click="editorDevice(scope.row)"
                   >
                     {{ $translateTitle('concentrator.edit') }}
-                  </el-link>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-delete"
+                  </el-button>
+                  <el-button
                     type="danger"
+                    size="mini"
                     @click="handleDelete(scope.row, 2)"
                   >
                     {{ $translateTitle('developer.delete') }}
-                  </el-link>
+                  </el-button>
+
+                  <el-popover
+                    placement="left"
+                    style="margin: 0 10px"
+                    trigger="click"
+                  >
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      :disabled="!scope.row.location"
+                      @click="showMap(scope.row.location, scope.row.objectId)"
+                    >
+                      {{ $translateTitle('equipment.location') }}
+                    </el-button>
+                    <el-button
+                      size="mini"
+                      type="warning"
+                      @click="showInfo(scope.row)"
+                    >
+                      {{ $translateTitle('equipment.info') }}
+                    </el-button>
+
+                    <el-button
+                      type="success"
+                      size="mini"
+                      @click="showTree(scope.row.objectId, scope.row.Company)"
+                    >
+                      {{ $translateTitle('equipment.move') }}
+                    </el-button>
+
+                    <el-button
+                      type="info"
+                      size="mini"
+                      @click="konvaDevice(scope.row)"
+                    >
+                      {{ $translateTitle('concentrator.konva') }}
+                    </el-button>
+
+                    <el-button slot="reference" size="mini" type="info">
+                      {{ $translateTitle('developer.operation') }}
+                    </el-button>
+                  </el-popover>
                 </template>
               </el-table-column>
             </el-table>

@@ -10,6 +10,7 @@
         <el-form-item>
           <el-input
             v-model="formInline.productname"
+            clearable
             :placeholder="$translateTitle('product.searchproductname')"
           />
         </el-form-item>
@@ -42,7 +43,12 @@
         </el-form-item>
       </el-form>
       <div class="protable">
-        <el-table :data="groupData" style="width: 100%">
+        <el-table
+          :header-cell-style="{ 'text-align': 'center' }"
+          :cell-style="{ 'text-align': 'center' }"
+          :data="groupData"
+          style="width: 100%"
+        >
           <el-table-column prop="objectId" label="ProductID" />
           <el-table-column :label="$translateTitle('product.productname')">
             <template slot-scope="scope">
@@ -70,7 +76,7 @@
           </el-table-column>
           <el-table-column :label="$translateTitle('product.classification')">
             <template slot-scope="scope">
-              <span>{{ scope.row.CategoryKey }}</span>
+              <span>{{ getCategory(scope.row.category) }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$translateTitle('product.addingtime')">
@@ -81,34 +87,32 @@
           <el-table-column
             :label="$translateTitle('developer.operation')"
             width="420"
+            fixed="right"
           >
             <template slot-scope="scope">
-              <el-link
-                :underline="false"
-                icon="el-icon-office-building"
-                type="primary"
+              <el-button
+                size="mini"
+                type="success"
                 @click="proudctView(scope.row)"
               >
                 <!-- 运行组态 -->
                 {{ $translateTitle('product.monitorconfiguration') }}
-              </el-link>
-              <el-link
-                :underline="false"
-                icon="el-icon-link"
+              </el-button>
+              <el-button
+                size="mini"
                 type="primary"
                 @click="proudctEdit(scope.row)"
               >
                 <!-- 编辑组态 -->
                 {{ $translateTitle('product.editconfiguration') }}
-              </el-link>
-              <el-link
-                :underline="false"
-                icon="el-icon-attract"
-                type="primary"
+              </el-button>
+              <el-button
+                size="mini"
+                type="info"
                 @click="GoTodevices(scope.row)"
               >
                 {{ $translateTitle('product.equipment') }}
-              </el-link>
+              </el-button>
               <!-- <el-link
                 :underline="false"
                 :disabled="scope.row.config.config.cloneState == true"
@@ -116,19 +120,18 @@
                 type="primary"
                 @click="proudctClone(scope.row)"
               >备份</el-link> -->
-              <el-link
-                :underline="false"
-                type="primary"
-                icon="el-icon-view"
+              <el-button
+                size="mini"
+                type="warning"
                 @click="deviceToDetail(scope.row)"
               >
                 <!-- 配置 -->
                 {{ $translateTitle('product.config') }}
-              </el-link>
+              </el-button>
               <el-popover
                 :ref="`popover-${scope.$index}`"
+                style="margin-left: 10px"
                 placement="top"
-                width="300"
               >
                 <!-- <p>确定删除这个{{ scope.row.name }}产品吗？</p> -->
                 <p>
@@ -152,14 +155,9 @@
                     {{ $translateTitle('developer.determine') }}
                   </el-button>
                 </div>
-                <el-link
-                  slot="reference"
-                  :underline="false"
-                  icon="el-icon-delete"
-                  type="danger"
-                >
+                <el-button slot="reference" size="mini" type="danger">
                   {{ $translateTitle('developer.delete') }}
-                </el-link>
+                </el-button>
               </el-popover>
             </template>
           </el-table-column>
@@ -444,7 +442,6 @@
                 ]"
                 :label="$translateTitle('developer.groupname')"
                 prop="name"
-                :label-width="100"
               />
             </el-col>
             <el-col :span="18">
@@ -544,10 +541,12 @@
   import { getRole } from '@/api/Role/index'
   import { addGroup } from '@/api/Group/index'
   import { delProduct, getProduct, putProduct } from '@/api/Product/index'
+  import Category from '@/api/Mock/Category'
 
   export default {
     data() {
       return {
+        category: Category,
         hashkey: '',
         addGroup: {
           name: '',
@@ -653,6 +652,16 @@
       this.projectName = ''
     },
     methods: {
+      getCategory(key) {
+        // console.log(key)
+        let name = ''
+        this.category.filter((item) => {
+          if (item.type == key) {
+            name = item.data.CategoryName
+          }
+        })
+        return name
+      },
       // 新增虚拟设备
       addDeviceGroup() {
         this.$refs['addGroup'].validate((valid) => {
@@ -879,6 +888,9 @@
           limit: this.length,
           where: {
             nodeType: '2',
+            name: this.formInline.productname.length
+              ? { $regex: this.formInline.productname }
+              : { $ne: null },
           },
         }
         const { results } = await queryProduct(params)
