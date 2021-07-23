@@ -15,6 +15,7 @@
           <el-form
             ref="form"
             :inline="true"
+            style="float: left"
             label-width="100px"
             :model="headerInfo"
             @submit.native.prevent
@@ -37,34 +38,11 @@
                 :placeholder="$translateTitle('product.englishtitle')"
               />
             </el-form-item>
-            <el-form-item :label="$translateTitle('rule.Type')">
-              <el-select
-                v-model="headerInfo.type"
-                filterable
-                allow-create
-                default-first-option
-                :placeholder="$translateTitle('product.type')"
-                @change="changeTable"
-              >
-                <el-option
-                  v-for="item in dbaType"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
-              </el-select>
-            </el-form-item>
             <el-form-item :label="$translateTitle('product.description')">
               <el-input
                 v-model="headerInfo.description"
                 :placeholder="$translateTitle('product.description')"
               />
-            </el-form-item>
-            <el-form-item label="uid">
-              <el-input v-model="headerInfo.uid" readonly />
-            </el-form-item>
-            <el-form-item :label="$translateTitle('product.identifier')">
-              <el-input v-model="headerInfo.identifier" />
             </el-form-item>
             <el-form-item :label="$translateTitle('product.visible')">
               <el-switch
@@ -87,9 +65,9 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item :label="$translateTitle('product.class')">
+            <el-form-item :label="$translateTitle('product.field')">
               <el-select
-                v-model="headerInfo.class"
+                v-model="headerInfo.field"
                 filterable
                 allow-create
                 default-first-option
@@ -102,6 +80,56 @@
                   :value="item"
                 />
               </el-select>
+            </el-form-item>
+            <el-form-item
+              :label="
+                $translateTitle('rule.rule') +
+                $translateTitle('product.identifier')
+              "
+            >
+              <el-select
+                v-model="headerInfo.type"
+                filterable
+                allow-create
+                default-first-option
+                :placeholder="$translateTitle('product.type')"
+                @change="changeTable"
+              >
+                <el-option
+                  v-for="item in dbaType"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                v-show="headerInfo && headerInfo.table != 'Notification'"
+                type="text"
+                :disabled="!headerInfo.uid"
+                @click.native.prevent="goRule(headerInfo)"
+              >
+                {{ $translateTitle('rule.rule') }}
+              </el-button>
+
+              <el-button
+                v-show="headerInfo.table == 'Notification'"
+                type="text"
+                :disabled="!headerInfo.uid"
+                @click.native.prevent="goRule(headerInfo, '_start')"
+              >
+                {{ $translateTitle('alert._start') }}
+              </el-button>
+
+              <el-button
+                v-show="headerInfo && headerInfo.table == 'Notification'"
+                type="text"
+                :disabled="!headerInfo.uid"
+                @click.native.prevent="goRule(headerInfo, '_stop')"
+              >
+                {{ $translateTitle('alert._stop') }}
+              </el-button>
             </el-form-item>
           </el-form>
         </vab-query-form-top-panel>
@@ -202,6 +230,18 @@
           }
         }
         // this.headerInfo.class = this.dbaClass[0]
+      },
+      // 规则引擎
+      goRule(row, type = '') {
+        if (row?.table && row?.field)
+          this.$router.push({
+            path: '/dashboard/engine',
+            query: {
+              productid: this.productid,
+              uuid: row.uid,
+              type: type == '' ? row.table : row.table + type,
+            },
+          })
       },
     },
   }

@@ -4,6 +4,7 @@
       :visible.sync="dialogVisible"
       width="90%"
       top="1vh"
+      :title="formConfig.uid"
       style="margin: 0 auto"
     >
       <VabParser
@@ -84,7 +85,7 @@
               </p>
               <p>
                 {{ $translateTitle('product.class') }}:
-                {{ row.class }}
+                {{ row.field }}
               </p>
               <div slot="reference" class="name-wrapper">
                 <el-tag size="medium">{{ row.name }}</el-tag>
@@ -119,13 +120,6 @@
           <template #default="{ row }">
             <el-button type="text" @click="editParse(row.$index, row)">
               {{ $translateTitle('concentrator.edit') }}
-            </el-button>
-            <el-button
-              type="text"
-              :disabled="!row.uid"
-              @click.native.prevent="goRule(row)"
-            >
-              {{ $translateTitle('rule.rule') }}
             </el-button>
             <el-button
               type="text"
@@ -177,20 +171,26 @@
           :data="proTableData"
           style="width: 100%"
         >
-          <el-table-column label="ProductID">
+          <el-table-column label="ProductID" sortable show-overflow-tooltip>
             <template slot-scope="scope">
               <el-link type="primary" @click="konvaDevice(scope.row)">
                 {{ scope.row.objectId }}
               </el-link>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('product.productname')">
+          <el-table-column
+            sortable
+            show-overflow-tooltip
+            :label="$translateTitle('product.productname')"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            width="180"
+            sortable
+            show-overflow-tooltip
+            width="100"
             :label="$translateTitle('product.profile')"
           >
             <template slot-scope="scope">
@@ -209,7 +209,9 @@
             </template>
           </el-table-column>
           <el-table-column
-            width="180"
+            sortable
+            show-overflow-tooltip
+            width="100"
             :label="$translateTitle('product.parser')"
           >
             <template slot-scope="scope">
@@ -227,12 +229,20 @@
               </el-link>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('product.productgrouping')">
+          <el-table-column
+            sortable
+            show-overflow-tooltip
+            :label="$translateTitle('product.productgrouping')"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.devType }}</span>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('product.nodetype')">
+          <el-table-column
+            sortable
+            show-overflow-tooltip
+            :label="$translateTitle('product.nodetype')"
+          >
             <template slot-scope="scope">
               <span v-if="scope.row.nodeType == 1">
                 {{ $translateTitle('product.gateway') }}
@@ -242,7 +252,11 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('home.category')">
+          <el-table-column
+            sortable
+            show-overflow-tooltip
+            :label="$translateTitle('home.category')"
+          >
             <template slot-scope="scope">
               <span>
                 {{ getCategory(scope.row.category) }}
@@ -570,17 +584,6 @@
           path: '/Topo/VueKonva',
           query: {
             productid: row.objectId,
-          },
-        })
-      },
-      // 规则引擎
-      goRule(row) {
-        this.$router.push({
-          path: '/dashboard/engine',
-          query: {
-            productid: this.parserFromId,
-            uuid: row.uid,
-            type: row.table,
           },
         })
       },

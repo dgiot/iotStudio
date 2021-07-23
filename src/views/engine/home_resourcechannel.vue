@@ -124,7 +124,7 @@
         <el-table-column
           :label="$translateTitle('developer.operation')"
           fixed="right"
-          width="440"
+          width="340"
         >
           <template slot-scope="scope">
             <el-button

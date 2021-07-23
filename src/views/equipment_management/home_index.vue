@@ -60,7 +60,11 @@
         top="5vh"
         width="80%"
       >
-        <el-tabs v-model="activeparseTbas" type="card">
+        <el-tabs
+          v-model="activeparseTbas"
+          type="card"
+          @tab-click="handleTabClick"
+        >
           <el-tab-pane
             v-for="item in parseTbas"
             :key="item.name"
@@ -106,106 +110,41 @@
     </div>
     <div class="equtabs">
       <!--tabs第一个标签页-->
-      <div class="equ_header">
-        <!--            <ul>-->
-        <!--              <li>-->
-        <!--                <p>-->
-        <!--                  <span class="svg-container">-->
-        <!--                    <vab-icon icon="device-fill" />-->
-        <!--                  </span>-->
+      <!--      <div class="equ_header">-->
+      <!--        <ul>-->
+      <!--          <li>-->
+      <!--            <p>-->
+      <!--              <span class="svg-container">-->
+      <!--                <vab-icon icon="device-fill" />-->
+      <!--              </span>-->
 
-        <!--                  <el-tooltip-->
-        <!--                    :content="$translateTitle('equipment.totalequipment')"-->
-        <!--                    placement="top"-->
-        <!--                  >-->
-        <!--                    <i class="el-icon-question" />-->
-        <!--                  </el-tooltip>-->
-        <!--                </p>-->
-        <!--                <span>{{ devicetotal }}</span>-->
-        <!--              </li>-->
-        <!--              <li>-->
-        <!--                <p>-->
-        <!--                  <span class="svg-container">-->
-        <!--                    <vab-icon icon="24-hours-line" />-->
-        <!--                  </span>-->
-        <!--                  {{ $translateTitle('equipment.onlinedevices') }}-->
-        <!--                  <el-tooltip-->
-        <!--                    :content="$translateTitle('equipment.totalonline')"-->
-        <!--                    placement="top"-->
-        <!--                  >-->
-        <!--                    <i class="el-icon-question" />-->
-        <!--                  </el-tooltip>-->
-        <!--                </p>-->
-        <!--                <span>{{ onlineall }}</span>-->
-        <!--              </li>-->
-        <!--            </ul>-->
-        <el-row>
-          <el-col :xs="24" :sm="24" :md="8" :xl="8">
-            <el-card class="box-card">
-              <div slot="header" class="clearfix">
-                <span>
-                  {{ $translateTitle('equipment.Equipment Overview') }}
-                </span>
-                <el-button
-                  icon="el-icon-refresh"
-                  style="float: right; padding: 3px 0"
-                  type="text"
-                />
-              </div>
-              <div class="text item">
-                <ve-ring
-                  height="140px"
-                  :data-empty="!chartOnlone.rows"
-                  :data="chartOnlone"
-                  :settings="chartSettings"
-                  :extend="chartExtend"
-                />
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :xl="8">
-            <el-card class="box-card">
-              <div slot="header" class="clearfix">
-                <span>
-                  {{ $translateTitle('equipment.Warning today') }}
-                </span>
-                <el-button
-                  icon="el-icon-refresh"
-                  style="float: right; padding: 3px 0"
-                  type="text"
-                />
-              </div>
-              <div class="text item">
-                <ve-ring
-                  height="140px"
-                  :data-empty="!chartwaring.rows"
-                  :data="chartwaring"
-                />
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :xl="8">
-            <el-card class="box-card">
-              <div slot="header" class="clearfix">
-                <span>{{ $translateTitle('equipment.Products') }}</span>
-                <el-button
-                  icon="el-icon-refresh"
-                  style="float: right; padding: 3px 0"
-                  type="text"
-                />
-              </div>
-              <div class="text item">
-                <ve-ring
-                  height="140px"
-                  :data-empty="!chartProduct.rows"
-                  :data="chartProduct"
-                />
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </div>
-      <div style="margin-top: 20px" class="equdevices">
+      <!--              <el-tooltip-->
+      <!--                :content="$translateTitle('equipment.totalequipment')"-->
+      <!--                placement="top"-->
+      <!--              >-->
+      <!--                <i class="el-icon-question" />-->
+      <!--              </el-tooltip>-->
+      <!--            </p>-->
+      <!--            <span>{{ devicetotal }}</span>-->
+      <!--          </li>-->
+      <!--          <li>-->
+      <!--            <p>-->
+      <!--              <span class="svg-container">-->
+      <!--                <vab-icon icon="24-hours-line" />-->
+      <!--              </span>-->
+      <!--              {{ $translateTitle('equipment.onlinedevices') }}-->
+      <!--              <el-tooltip-->
+      <!--                :content="$translateTitle('equipment.totalonline')"-->
+      <!--                placement="top"-->
+      <!--              >-->
+      <!--                <i class="el-icon-question" />-->
+      <!--              </el-tooltip>-->
+      <!--            </p>-->
+      <!--            <span>{{ onlineall }}</span>-->
+      <!--          </li>-->
+      <!--        </ul>-->
+      <!--      </div>-->
+      <div class="equdevices">
         <vab-query-form>
           <vab-query-form-top-panel>
             <el-form
@@ -391,6 +330,9 @@
               ref="filterTable"
               v-loading="listLoading"
               :height="height"
+              :border="border"
+              :stripe="stripe"
+              :size="lineHeight"
               :data="tableData"
               :row-style="rowClass"
               style="width: 100%; margin-top: 20px; text-align: center"
@@ -572,22 +514,36 @@
                     style="margin: 0 10px"
                     trigger="click"
                   >
-                    <el-button type="primary" @click="showInfo(scope.row)">
-                      {{ $translateTitle('equipment.info') }}
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="showInfo(scope.row)"
+                    >
+                      {{ $translateTitle('product.parser') }}
                     </el-button>
 
                     <el-button
                       type="success"
+                      size="mini"
                       @click="showTree(scope.row.objectId, scope.row.Company)"
                     >
                       {{ $translateTitle('equipment.move') }}
                     </el-button>
 
-                    <el-button type="info" @click="konvaDevice(scope.row)">
+                    <el-button
+                      type="info"
+                      size="mini"
+                      @click="konvaDevice(scope.row)"
+                    >
                       {{ $translateTitle('concentrator.konva') }}
                     </el-button>
 
-                    <el-button slot="reference" size="mini" type="info">
+                    <el-button
+                      slot="reference"
+                      size="mini"
+                      type="info"
+                      @click="isFullscreen = !isFullscreen"
+                    >
                       {{ $translateTitle('developer.operation') }}
                     </el-button>
                   </el-popover>
@@ -856,7 +812,7 @@
                 </template>
               </el-table-column>
             </el-table>
-            <div class="elpagination" style="margin-top: 30px">
+            <div class="elpagination">
               <!--              <el-pagination-->
               <!--                :page-sizes="[10, 20, 30, 50]"-->
               <!--                :page-size="devicelength"-->
@@ -939,6 +895,79 @@
               anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
             />
           </baidu-map>
+        </el-tab-pane>
+
+        <el-tab-pane
+          :label="$translateTitle('leftbar.analysis')"
+          name="analysis"
+        >
+          <div class="equ_header">
+            <el-row>
+              <el-col :xs="24" :sm="24" :md="8" :xl="8">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>
+                      {{ $translateTitle('equipment.Equipment Overview') }}
+                    </span>
+                    <el-button
+                      icon="el-icon-refresh"
+                      style="float: right; padding: 3px 0"
+                      type="text"
+                    />
+                  </div>
+                  <div class="text item">
+                    <ve-ring
+                      height="140px"
+                      :data-empty="!chartOnlone.rows"
+                      :data="chartOnlone"
+                      :settings="chartSettings"
+                      :extend="chartExtend"
+                    />
+                  </div>
+                </el-card>
+              </el-col>
+              <el-col :xs="24" :sm="24" :md="8" :xl="8">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>
+                      {{ $translateTitle('equipment.Warning today') }}
+                    </span>
+                    <el-button
+                      icon="el-icon-refresh"
+                      style="float: right; padding: 3px 0"
+                      type="text"
+                    />
+                  </div>
+                  <div class="text item">
+                    <ve-ring
+                      height="140px"
+                      :data-empty="!chartwaring.rows"
+                      :data="chartwaring"
+                    />
+                  </div>
+                </el-card>
+              </el-col>
+              <el-col :xs="24" :sm="24" :md="8" :xl="8">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>{{ $translateTitle('equipment.Products') }}</span>
+                    <el-button
+                      icon="el-icon-refresh"
+                      style="float: right; padding: 3px 0"
+                      type="text"
+                    />
+                  </div>
+                  <div class="text item">
+                    <ve-ring
+                      height="140px"
+                      :data-empty="!chartProduct.rows"
+                      :data="chartProduct"
+                    />
+                  </div>
+                </el-card>
+              </el-col>
+            </el-row>
+          </div>
         </el-tab-pane>
       </el-tabs>
       <el-dialog
@@ -1273,11 +1302,17 @@
         }
       }
       return {
+        queryInfo: {},
+        isFullscreen: false,
+        border: true,
+        // height: this.$baseTableHeight(1),
+        stripe: true,
+        lineHeight: 'medium',
         aclObj: {},
         editRow: {},
         selectedList: [],
         formData: {},
-        height: this.$baseTableHeight(0) - 200,
+        height: this.$baseTableHeight(0) - 90,
         topicData: [],
         InfoDialog: false,
         devicedetail: {},
@@ -1307,7 +1342,7 @@
           number: '',
           product: '',
           type: '',
-          limit: 10,
+          limit: 20,
           skip: 0,
           order: '-createdAt',
           keys: 'count(*)',
@@ -1471,18 +1506,79 @@
       console.log('this.aclObj', this.aclObj)
     },
     methods: {
+      handleTabClick(tab, event) {
+        console.log(this.activeparseTbas)
+        console.log(this.parseTbas)
+      },
+      async updateParse(table, field, deviceId, item, params = {}) {
+        console.clear()
+        console.log('字段', field)
+        params[`${field}`] = {}
+        let isField = [] // parse表中存在字段
+        let noField = [] // parse表中不存在的字段
+        console.log(this.queryInfo)
+        console.log('frender ', item)
+        for (let v in item.config) {
+          if (this.queryInfo[`${v}`]) {
+            //字段存在去做一下判斷 更新数据
+            console.log(item.config[`${v}`], v)
+            params[`${field}`][`${v}`] = item.config[`${v}`]
+          } else {
+            console.log(item.config[`${v}`], '字段不存在')
+            noField.push[item.config[`${v}`]]
+            // 字段不存在的话，从 formDesc 中找
+            // if (typeof item.config.formDesc[`${v}`] == 'object') {
+            //   console.log(' item.config', item.config)
+            //   console.log(' item.config', `${item.config.formDesc[`${v}`]}`)
+            //   params.field[`${item.config.formDesc[`${v}`]}`] =
+            //     item.config.formDesc[`${v}`].default
+            // } else {
+            // }
+          }
+        }
+
+        console.log('isField', isField)
+        console.log('noField', noField)
+        console.log('params', params.field)
+        // 对数据进行合并处理
+        let mergerInfo = {}
+        mergerInfo[`${field}`] = this.queryInfo
+        const _mergeparams = _.merge(mergerInfo, params)
+        console.log(_mergeparams, '合并后的數據')
+        console.log({ field: _mergeparams[`${field}`] })
+        try {
+          const res = await this.$update_object(table, deviceId, _mergeparams)
+          console.log(res)
+          this.$message.success(this.$translateTitle('user.update completed'))
+        } catch (error) {
+          console.log(error)
+          this.$message.error(`${error}`)
+        }
+      },
       ...mapMutations({
         set_tableDict: 'global/set_tableDict',
         set_tableParser: 'global/set_tableParser',
       }),
       handleSubmit(data) {
+        console.log('data', data)
         // eslint-disable-next-line no-console
-        console.log(data)
         return Promise.resolve()
       },
       handleSuccess(item) {
-        console.log('data', item)
-        this.$message.success('创建成功')
+        if (item.table && item.field && item.config.order) {
+          // 首先查一下这个表中对应的字段
+          this.$get_object(item.table, this.deviceId).then((res) => {
+            console.log(res)
+            this.queryInfo = res[`${item.field}`]
+            if (this.queryInfo) {
+              this.updateParse(item.table, item.field, this.deviceId, item)
+            } else {
+              this.$message.error(`${item.table} no field ${item.field}`)
+            }
+          })
+        } else {
+          this.$message.error(`${item.table} no field ${item.field}`)
+        }
       },
       changeBox(val) {
         this.selectedList = []
@@ -1662,6 +1758,7 @@
         this.stateDialog = false
       },
       showInfo(data) {
+        this.deviceId = data.objectId
         let _from = {
           isArr: [],
           obj: [],
@@ -1677,7 +1774,8 @@
         }
         this.devicedetail = {}
         parseTbas = parseTbas.filter((e) => {
-          return e.visible && e.identifier == 'Device'
+          return e.visible
+          // && e.field == 'Device'
         })
         console.log(this.parseTbas)
         if (this.devicedetail && parseTbas.length) {
@@ -2625,7 +2723,7 @@
     }
   }
   .equtabs {
-    height: calc(120vh - #{$base-top-bar-height} * 4 + 38px);
+    //height: calc(120vh - #{$base-top-bar-height} * 4);
     margin: 20px;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -2694,7 +2792,7 @@
 
   .equipment #pane-first {
     box-sizing: border-box;
-    padding: 10px;
+    //padding: 10px;
     background: #ffffff;
   }
 
