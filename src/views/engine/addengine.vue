@@ -438,12 +438,15 @@
             </div>
           </div>
           <el-form-item label-width="90">
-            <el-button type="success" @click="addrules('formInline')">
-              {{
-                ruleId.length
-                  ? $translateTitle('button.modify')
-                  : $translateTitle('button.create')
-              }}
+            <el-button
+              v-if="ruleId.length"
+              type="success"
+              @click="editrules(ruleId, 'formInline')"
+            >
+              {{ $translateTitle('button.modify') }}
+            </el-button>
+            <el-button v-else type="success" @click="addrules('formInline')">
+              {{ $translateTitle('button.create') }}
             </el-button>
             <el-button>{{ $translateTitle('button.cancel') }}</el-button>
           </el-form-item>

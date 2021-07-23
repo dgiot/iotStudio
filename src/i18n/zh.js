@@ -369,6 +369,7 @@ export default {
       Reporttemplate: '报告模板',
     },
     product: {
+      field: '字段',
       'No device template configured yet': '暂未配置设备模板',
       order: '顺序',
       Rounds: '轮次',
@@ -951,6 +952,10 @@ export default {
       error: '出错',
       existed: '已存在',
       'Loading desperately': '加载中',
+    },
+    alert: {
+      _start: '告警产生',
+      _stop: '告警恢复',
     },
   },
 }

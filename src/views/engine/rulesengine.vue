@@ -2,7 +2,6 @@
   <div class="rulesengine">
     <div class="engintable">
       <div class="engineheader">
-        <h3>{{ $translateTitle('rule.rule') }}</h3>
         <el-button
           :disabled="alarmsRuleId.length > 0 && engineData.length > 0"
           type="primary"
@@ -19,7 +18,12 @@
         :cell-class-name="getRowindex"
         style="width: 100%; text-align: center"
       >
-        <el-table-column label="ID" align="center" width="180">
+        <el-table-column
+          label="ID"
+          align="center"
+          show-overflow-tooltip
+          width="180"
+        >
           <template slot-scope="scope">
             <span @click="detailRules(scope.row.id)">{{ scope.row.id }}</span>
           </template>
@@ -28,12 +32,20 @@
         <el-table-column
           :label="$translateTitle('leftbar.topics')"
           align="center"
+          show-overflow-tooltip
+          width="200"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.for.join(',') }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="rawsql" align="center" label="SQL" />
+        <el-table-column
+          show-overflow-tooltip
+          width="200"
+          prop="rawsql"
+          align="center"
+          label="SQL"
+        />
         <el-table-column
           :label="$translateTitle('rule.ResponseAction')"
           align="center"
@@ -66,17 +78,31 @@
         <el-table-column
           :label="$translateTitle('developer.operation')"
           align="center"
+          fixed="right"
+          width="210"
         >
           <template slot-scope="scope">
-            <el-button type="success" @click="detailRules(scope.row.id)">
+            <el-button
+              type="success"
+              size="mini"
+              @click="detailRules(scope.row.id)"
+            >
               <!-- 查看 -->
               {{ $translateTitle('equipment.see') }}
             </el-button>
-            <el-button type="primary" @click="editRule(scope.row.id)">
+            <el-button
+              type="primary"
+              size="mini"
+              @click="editRule(scope.row.id)"
+            >
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
             </el-button>
-            <el-button type="danger" @click="deleteRule(scope.row.id)">
+            <el-button
+              type="danger"
+              size="mini"
+              @click="deleteRule(scope.row.id)"
+            >
               <!-- 删除 -->
               {{ $translateTitle('developer.delete') }}
             </el-button>

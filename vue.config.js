@@ -131,6 +131,7 @@ module.exports = {
         'element-china-area-data': 'elementChinaAreaData',
         'vue-flv-player': 'vueFlvPlayer',
         'ezuikit-js': 'EZUIKit',
+        fuzzy: 'fuzzy',
       },
       resolve: {
         alias: {

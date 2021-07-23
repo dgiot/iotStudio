@@ -113,6 +113,7 @@
       <el-table-column
         align="center"
         label="序号"
+        sortable
         show-overflow-tooltip
         width="95"
       >
@@ -125,7 +126,7 @@
         :key="index"
         align="center"
         :label="item.label"
-        :sortable="item.sortable"
+        sortable
         :width="item.width"
       >
         <template #default="{ row }">
@@ -139,6 +140,7 @@
       <el-table-column
         align="center"
         label="操作"
+        sortable
         show-overflow-tooltip
         width="85"
       >

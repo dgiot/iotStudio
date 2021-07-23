@@ -87,6 +87,9 @@ let staticUrl = {
     'https://unpkg.com/hrm-player',
     'https://unpkg.com/f-render',
     'https://unpkg.com/vue-ele-form',
+    'https://unpkg.com/vue-multipane',
+    'https://unpkg.com/fuzzy',
+    'https://unpkg.com/vue-prism-editor',
   ],
 }
 if (process.env.NODE_ENV !== 'development') {

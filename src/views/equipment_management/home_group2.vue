@@ -168,6 +168,7 @@
               </el-table-column>
               <el-table-column
                 fixed="right"
+                width="280"
                 :label="$translateTitle('developer.operation')"
               >
                 <template slot-scope="scope">
@@ -270,7 +271,7 @@
         :visible.sync="dialogFormVisible"
         :close-on-click-modal="false"
         :before-close="handleClose"
-        width="40%"
+        size="60%"
         top="5vh"
       >
         <div class="content">
@@ -450,12 +451,12 @@
         </div>
       </el-dialog>
       <!--新增字典-->
-      <el-dialog
+      <el-drawer
         v-if="dictVisible"
         :close-on-click-modal="false"
         :title="title_temp_dialog"
         :visible.sync="dictVisible"
-        width="80%"
+        size="60%"
       >
         <el-form
           ref="dictTempForm"
@@ -588,7 +589,7 @@
             <el-button @click="dictVisible = false">取消</el-button>
           </el-form-item>
         </el-form>
-      </el-dialog>
+      </el-drawer>
       <!--新增字典数据-->
       <el-dialog
         :visible.sync="edit_dict_temp_dialog"
@@ -1080,6 +1081,7 @@
         </div>
       </el-dialog>
     </div>
+    <VabRender v-show="false" :config="config" :loading="true" />
   </div>
 </template>
 <script>
@@ -1096,6 +1098,7 @@
   export default {
     data() {
       return {
+        config: {},
         dataList: [{}],
         parserView: false,
         parserTable: false,
