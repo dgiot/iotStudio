@@ -14,14 +14,7 @@ export default {
       type: (data) => (data.source == '手动输入' ? 'input' : 'select'),
       label: '字段名',
       tip: '字段名不可重复',
-      options: (data) =>
-        data.source == '手动输入'
-          ? JSON.parse(localStorage.getItem('_sourceDict')).map((e) => {
-              return e.field
-            })
-          : JSON.parse(localStorage.getItem('_sourceModule')).map((e) => {
-              return e.field
-            }),
+      options: ['both', 'horizontal', 'vertical'],
       rules: {
         type: 'string',
       },
@@ -29,7 +22,6 @@ export default {
     label: {
       type: 'input',
       label: '标签',
-      default: (data) => (data.field == 'input' ? '标签' : data.field),
     },
     layout: {
       type: 'slider',
@@ -45,7 +37,6 @@ export default {
     default: {
       type: 'input',
       label: '默认值',
-      default: (data) => (data.field == 'input' ? 'input' : data.default),
     },
     required: {
       type: 'yesno',

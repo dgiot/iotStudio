@@ -1,39 +1,48 @@
 <!--eslint-disable-->
 <template>
   <!-- 1.设计阶段 -->
-  <multipane v-if="!pure" :style="{ height }" class="f-render">
+  <multipane v-if="!pure" :style="{ height }" class="vab-render">
     <!-- 左侧 -->
     <slot name="left" :comps="sortedComps" :frender="this">
-      <f-render-left />
-    </slot>
-    <multipane-resizer />
-    <!-- 中间 -->
-    <slot name="main" :frender="this">
-      <f-render-main
+      <vab-render-left />
+      <multipane-resizer></multipane-resizer>
+      <vab-render-main
+        name="main" :frender="this"
         :loading="loading"
-        class="f-render-main"
         @save="handleSave"
+        class="vab-render-main"
       />
+      <multipane-resizer></multipane-resizer>
+      <vab-render-right  v-if="isShowRight && rightTabs.length" name="right" :frender="this" class="vab-render-right" />
     </slot>
-    <template v-if="isShowRight && rightTabs.length">
-      <multipane-resizer />
-      <!-- 右侧 -->
-      <slot name="right" :frender="this">
-        <f-render-right class="f-render-right" />
-      </slot>
-    </template>
+    <multipane-resizer></multipane-resizer>
+<!--    &lt;!&ndash; 中间 &ndash;&gt;-->
+<!--    <slot name="main" :frender="this">-->
+<!--      <vab-render-main-->
+<!--        :loading="loading"-->
+<!--        @save="handleSave"-->
+<!--        class="vab-render-main"-->
+<!--      />-->
+<!--    </slot>-->
+<!--    <template v-if="isShowRight && rightTabs.length">-->
+<!--      <multipane-resizer></multipane-resizer>-->
+<!--      &lt;!&ndash; 右侧 &ndash;&gt;-->
+<!--      <slot name="right" :frender="this">-->
+<!--        <vab-render-right class="vab-render-right" />-->
+<!--      </slot>-->
+<!--    </template>-->
   </multipane>
 
   <!-- 2.使用 -->
   <ele-form
-    v-else
+    :formDesc="formDesc"
+    :formData="value"
     v-bind="formBindProps"
     ref="form"
-    :form-desc="formDesc"
-    :form-data="value"
-    :class="{ 'pure-form--loading': loading }"
     v-on="$listeners"
+    :class="{ 'pure-form--loading': loading }"
     @input="$emit('input', value)"
+    v-else
   >
     <form-skeleton v-if="loading" />
   </ele-form>
@@ -45,9 +54,9 @@
 
   // 组件
   import FormSkeleton from './form-skeleton'
-  import FRenderLeft from './components/left/index'
-  import FRenderMain from './components/main/index'
-  import FRenderRight from './components/right/index'
+  import VabRenderLeft from './components/left/index'
+  import VabRenderMain from './components/main/index'
+  import VabRenderRight from './components/right/index'
   import { Multipane, MultipaneResizer } from 'vue-multipane'
 
   // 工具函数
@@ -70,13 +79,13 @@
       FormSkeleton,
       Multipane,
       MultipaneResizer,
-      FRenderLeft,
-      FRenderRight,
-      FRenderMain,
+      VabRenderLeft,
+      VabRenderRight,
+      VabRenderMain,
     },
     provide() {
       return {
-        frender: this,
+        VabRender: this,
       }
     },
     inheritAttrs: false,
@@ -89,7 +98,7 @@
       // 设计器整体高度
       height: {
         type: [String, Number],
-        default: '400px',
+        default: '100vh',
       },
       // 保存格式
       saveFormat: {
@@ -214,7 +223,7 @@
 
           if (!_.isPlainObject(formConfig)) {
             // 如果不是对象，则也抛出异常
-            console.error('[f-render]: config 不是对象', formConfig)
+            console.error('[vab-render]: config 不是对象', formConfig)
             return
           }
 
@@ -323,44 +332,46 @@
 </script>
 
 <style lang="css">
-  /* f-render 整体样式 */
-  .f-render {
+  /* vab-render 整体样式 */
+  .vab-render {
     overflow: hidden;
+    width: 100%;
+    width: 100%;
     border: 1px solid #ebeef5;
   }
 
   /* 左侧 */
-  .f-render-left {
+  .vab-render-left {
     width: 260px;
     min-width: 130px;
   }
 
   /* 中部 */
-  .f-render-main {
+  .vab-render-main {
     flex-grow: 1;
     width: 750px;
   }
 
   /* 右侧 */
-  .f-render-right {
+  .vab-render-right {
     width: 315px;
   }
 
   /* 头部区域 */
-  .f-render-header {
+  .vab-render-header {
     height: 60px;
     line-height: 60px;
     border-bottom: 1px solid #eeeeee;
   }
 
   /* 滚动区域 */
-  .f-render-scrollarea {
+  .vab-render-scrollarea {
     /* 减去头部的高度 */
     height: calc(100% - 60px);
   }
 
   /* 左右面板拖动的抓手 */
-  .f-render > .multipane-resizer {
+  .vab-render > .multipane-resizer {
     position: relative;
     left: 0;
     box-sizing: border-box;
@@ -369,7 +380,19 @@
     border-right: 1px solid #ebeef5;
     border-left: 1px solid #ebeef5;
   }
-  .f-render > .multipane-resizer::before {
+
+  /* 左右面板拖动的抓手 */
+  .vab-render > .pane {
+    text-align: left;
+    padding: 15px;
+    overflow: hidden;
+    background: #eee;
+  }
+  .vab-render > .pane ~ .pane {
+    border-left: 1px solid #ccc;
+  }
+
+  .vab-render > .multipane-resizer::before {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -383,7 +406,7 @@
     border-right: 1px solid #dcdfe6;
     border-left: 1px solid #dcdfe6;
   }
-  .f-render > .multipane-resizer::before::before {
+  .vab-render > .multipane-resizer::before::before {
     border-color: #999;
   }
 

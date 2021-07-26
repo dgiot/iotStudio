@@ -17,7 +17,7 @@
 
 <script>
   export default {
-    inject: ['frender'],
+    inject: ['VabRender'],
     props: {
       visible: {
         type: Boolean,
@@ -35,7 +35,7 @@
     computed: {
       // 字段出现的次数
       fieldCountObj() {
-        return _.countBy(this.frender.formItemList, (o) =>
+        return _.countBy(this.VabRender.formItemList, (o) =>
           String(o.field).trim()
         )
       },
@@ -47,6 +47,14 @@
             default: 'dynamic',
             options: [
               { text: '逐个新增', value: 'dynamic' },
+              {
+                text: '产品字典',
+                value: 'dict',
+              },
+              {
+                text: '产品模型',
+                value: 'module',
+              },
               {
                 text: '数据库导入(待开发)',
                 value: 'mysql',
@@ -79,7 +87,7 @@
                   valueKey: 'type',
                   slots: {
                     default: (h) => {
-                      return this.frender.sortedComps.map((item) =>
+                      return this.VabRender.sortedComps.map((item) =>
                         h('el-option', {
                           attrs: {
                             label: `${item.type} - ${item.label}`,
@@ -165,13 +173,13 @@
       handleAdd({ formItems }) {
         try {
           const newFormItems = formItems.map(({ field, label, type }) => ({
-            ...this.frender.getFormItemByType(type),
+            ...this.VabRender.getFormItemByType(type),
             field: String(field).trim(),
             label: String(label).trim(),
           }))
 
-          this.frender.formItemList = [
-            ...this.frender.formItemList,
+          this.VabRender.formItemList = [
+            ...this.VabRender.formItemList,
             ...newFormItems,
           ]
 

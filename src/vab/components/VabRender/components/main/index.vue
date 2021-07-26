@@ -1,6 +1,5 @@
 <template>
   <div>
-    main-contentmain-contentmain-contentmain-contentmain-contentmain-contentmain-content
     <main-header />
     <main-content />
   </div>
@@ -14,12 +13,12 @@
       MainHeader,
       MainContent,
     },
-    inject: ['frender'],
+    inject: ['VabRender'],
     props: {
       loading: Boolean,
     },
     render() {
-      const slots = this.frender.$scopedSlots
+      const slots = this.VabRender.$scopedSlots
       const directives = [
         {
           name: 'loading',
@@ -29,13 +28,13 @@
       return (
         <div>
           {slots['main-header'] ? (
-            slots['main-header']({ frender: this.frender })
+            slots['main-header']({ VabRender: this.VabRender })
           ) : (
             <main-header onSave={() => this.$emit('save')} />
           )}
 
           {slots['main-content'] ? (
-            slots['main-content']({ frender: this.frender })
+            slots['main-content']({ VabRender: this.VabRender })
           ) : (
             <main-content {...{ directives }} />
           )}

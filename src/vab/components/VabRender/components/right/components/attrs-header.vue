@@ -1,14 +1,13 @@
 <!--eslint-disable-->
 <template>
   <div>
-    <div class="f-render-right-link">
+    <div class="vab-render-right-link">
       <el-link type="primary" target="_blank" :href="url">
         点击查看 {{ title }}
       </el-link>
       &nbsp;
-      <span style="vertical-align: middle">属性详细解释</span>
     </div>
-    <div class="f-render-right-search">
+    <div class="vab-render-right-search">
       <el-input
         v-model.trim="keyword"
         clearable
@@ -41,15 +40,16 @@
 </script>
 
 <style>
-  .f-render-right-link {
+  .vab-render-right-link {
     padding-left: 10px;
     margin-bottom: 10px;
     margin-left: 24px;
     font-size: 14px;
     color: #666;
+    text-align: center;
     border-left: 3px solid #eee;
   }
-  .f-render-right-search {
+  .vab-render-right-search {
     box-sizing: border-box;
     padding: 20px;
   }

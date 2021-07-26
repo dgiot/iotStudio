@@ -6,11 +6,11 @@
     @update:visible="$emit('change', $event)"
   >
     <el-radio-group v-model="showType">
-      <el-radio label="f-render">f-render方式</el-radio>
+      <el-radio label="vab-render">vab-render方式</el-radio>
       <el-radio label="vue-ele-form">vue-ele-form方式</el-radio>
     </el-radio-group>
     <prism-editor
-      class="f-render-code"
+      class="vab-render-code"
       :value="code"
       :highlight="highlighter"
       line-numbers
@@ -38,7 +38,7 @@
   // import { PrismEditor } from "vue-prism-editor";
   import { highlight, languages } from 'prismjs/components/prism-core'
 
-  import FRenderTpl from './tpl/f-render'
+  import VabRenderTpl from './tpl/vab-render'
   import EleFormTpl from './tpl/vue-ele-form'
 
   const indentString = require('indent-string')
@@ -48,7 +48,7 @@
     components: {
       PrismEditor,
     },
-    inject: ['frender'],
+    inject: ['VabRender'],
     props: {
       visible: {
         type: Boolean,
@@ -59,7 +59,7 @@
       return {
         code: '',
         fileURL: '',
-        showType: 'f-render',
+        showType: 'vab-render',
       }
     },
     watch: {
@@ -90,9 +90,12 @@
     methods: {
       // 设置代码
       setCode() {
-        const tpl = this.showType === 'f-render' ? FRenderTpl : EleFormTpl
+        const tpl = this.showType === 'vab-render' ? VabRenderTpl : EleFormTpl
         this.code = tpl(
-          indentString(reomveQuotes(this.frender.getFormConfigStr()), 6).trim()
+          indentString(
+            reomveQuotes(this.VabRender.getFormConfigStr()),
+            6
+          ).trim()
         )
       },
       // 高亮代码

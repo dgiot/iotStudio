@@ -215,13 +215,15 @@ module.exports = {
       if (build7z)
         config.plugin('fileManager').use(FileManagerPlugin, [
           {
-            onEnd: {
-              archive: [
-                {
-                  source: `./${outputDir}`,
-                  destination: `./${outputDir}/${abbreviation}_${dateTime}.7z`,
-                },
-              ],
+            events: {
+              onEnd: {
+                archive: [
+                  {
+                    source: `./${outputDir}`,
+                    destination: `./${outputDir}/${abbreviation}_${dateTime}.zip`,
+                  },
+                ],
+              },
             },
           },
         ])

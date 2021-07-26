@@ -133,7 +133,7 @@
             </el-form-item>
           </el-form>
         </vab-query-form-top-panel>
-        <f-render
+        <VabRender
           :loading="loading"
           :height="parseheight"
           :config="formConfig.config"

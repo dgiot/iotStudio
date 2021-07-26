@@ -11,8 +11,8 @@
     <ele-form
       v-if="isShowContent"
       v-model="formData"
-      v-bind="frender.formBindProps"
-      :form-desc="frender.formDesc"
+      v-bind="VabRender.formBindProps"
+      :form-desc="VabRender.formDesc"
       :visible="visible"
       :request-fn="handleRequest"
       @update:visible="$emit('change', $event)"
@@ -23,7 +23,7 @@
 
 <script>
   export default {
-    inject: ['frender'],
+    inject: ['VabRender'],
     props: {
       visible: {
         type: Boolean,
