@@ -197,7 +197,12 @@
               <el-link
                 type="primary"
                 @click="
-                  editorParser(scope.row.objectId, scope.row.config, 'profile')
+                  editorParser(
+                    scope.row.objectId,
+                    scope.row.config,
+                    scope.row.thing,
+                    'profile'
+                  )
                 "
               >
                 {{
@@ -218,7 +223,12 @@
               <el-link
                 type="primary"
                 @click="
-                  editorParser(scope.row.objectId, scope.row.config, 'parser')
+                  editorParser(
+                    scope.row.objectId,
+                    scope.row.config,
+                    scope.row.thing,
+                    'parser'
+                  )
                 "
               >
                 {{
@@ -973,12 +983,39 @@
           }
         })
       },
-      editorParser(objectId, config, type) {
+      editorParser(objectId, config = {}, thing = {}, type) {
+        var _sourceDict = []
+        var _sourceModule = []
+        var _sourceField = []
+        var arrStr = ''
         this.parserFromId = objectId
         this.parserType = type
         this.productConfig = config
         console.log('config[`${type}`]', type, config[`${type}`])
+        // 将字典数据存在localStorage 中
+        console.log('config', config)
         this.parserTableList = config[`${type}`] ? config[`${type}`] : []
+        if (config?.basedate?.params?.length) {
+          config.basedate.params.forEach((_dict) => {
+            _sourceDict.push({
+              field: _dict.identifier,
+              label: _dict.name,
+              default: _dict.default,
+            })
+          })
+        }
+        if (thing?.properties?.length) {
+          thing.properties.forEach((_thing) => {
+            _sourceModule.push({
+              field: _thing.identifier,
+              label: _thing.name,
+              default: _thing.default || '',
+            })
+          })
+        }
+        localStorage.setItem('_sourceDict', JSON.stringify(_sourceDict))
+        localStorage.setItem('_sourceModule', _sourceModule)
+        localStorage.setItem('_sourceField', _sourceField)
         this.parserTable = true
       },
       editParse(index, row) {

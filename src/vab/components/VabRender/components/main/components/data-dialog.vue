@@ -14,7 +14,7 @@
     />
     <prism-editor
       v-model="code"
-      class="f-render-code"
+      class="vab-render-code"
       :highlight="highlighter"
       line-numbers
     />
@@ -44,7 +44,7 @@
   import { reomveQuotes, objectToArr } from '../../../utils'
 
   export default {
-    inject: ['frender'],
+    inject: ['VabRender'],
     props: {
       visible: {
         type: Boolean,
@@ -60,7 +60,7 @@
     watch: {
       visible(val) {
         if (val) {
-          this.code = reomveQuotes(this.frender.getFormConfigStr())
+          this.code = reomveQuotes(this.VabRender.getFormConfigStr())
         }
       },
       code: {
@@ -92,12 +92,12 @@
           if (_.isPlainObject(res)) {
             // 1. 通过解构符合的方式分离出 formDesc 和 formPropsData
             const { formDesc = {}, order = [], ...formPropsData } = res
-            // 2. 赋值 frender.formPropsData
-            this.frender.formPropsData = Object.assign(formPropsData, {
+            // 2. 赋值 VabRender.formPropsData
+            this.VabRender.formPropsData = Object.assign(formPropsData, {
               order: order || Object.keys(formDesc),
             })
-            // 3. 将 formDesc 转为数组，并赋值给 frender.formItemList
-            this.frender.formItemList = objectToArr(formDesc, 'field').map(
+            // 3. 将 formDesc 转为数组，并赋值给 VabRender.formItemList
+            this.VabRender.formItemList = objectToArr(formDesc, 'field').map(
               (item) => Object.assign({ attrs: {} }, item)
             )
 

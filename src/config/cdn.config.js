@@ -8,6 +8,10 @@
  */
 let staticUrl = {
   css: [
+    'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading/dots.css',
+    'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading/gauge.css',
+    'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading/inner-circles.css',
+    'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading/plus.css',
     'https://unpkg.com/jsoneditor@9.5.0/dist/jsoneditor.min.css',
     'https://unpkg.com/normalize.css@8.0.1/normalize.css',
     'https://unpkg.com/nprogress@0.2.0/nprogress.css',
@@ -82,12 +86,12 @@ let staticUrl = {
     'https://s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845',
     'https://unpkg.com/vue-amap/dist/index.js',
     'https://unpkg.com/jsoneditor@9.5.0/dist/jsoneditor.min.js',
+    'https://dn-bts.bugtags.cn/sdk/bugtags-2.0.2.js',
     'https://unpkg.com/vue-flv-player/dist/vue-flv-player.umd.min.js',
     'https://unpkg.com/ezuikit-js',
     'https://unpkg.com/hrm-player',
     'https://unpkg.com/f-render',
     'https://unpkg.com/vue-ele-form',
-    'https://unpkg.com/vue-multipane',
     'https://unpkg.com/fuzzy',
     'https://unpkg.com/vue-prism-editor',
   ],

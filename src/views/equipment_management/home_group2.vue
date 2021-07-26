@@ -789,7 +789,7 @@
                       },
                       {
                         value: 'writeHreg',
-                        label: '0X06:写单个保持寄存',
+                        label: '0X06:写单个保持寄存器',
                       },
                       {
                         value: 'writeCoils',

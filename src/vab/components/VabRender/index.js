@@ -1,6 +1,6 @@
-// import FRender from "index'
+// import VabRender from "index'
 // if (window !== undefined && window.Vue) {
-//   window.Vue.component("Vab-render", FRender);
+//   window.Vue.component("Vab-render", VabRender);
 // }
 //
 // export default VabRender;

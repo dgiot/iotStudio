@@ -1,6 +1,6 @@
 export default function (code) {
   return `<template>
-  <f-render
+  <vab-render
     v-model="formData"
     :request-fn="handleSubmit"
     @request-success="handleSuccess"

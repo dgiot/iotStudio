@@ -1,18 +1,18 @@
 <template>
-  <perfect-scrollbar class="f-render-scrollarea main-content">
+  <perfect-scrollbar class="vab-render-scrollarea main-content">
     <ele-form
       ref="ele-form"
       v-model="formData"
-      :form-desc="frender.formDesc"
-      :order="Object.keys(frender.formDesc)"
-      v-bind="frender.formBindProps"
+      :form-desc="VabRender.formDesc"
+      :order="Object.keys(VabRender.formDesc)"
+      v-bind="VabRender.formBindProps"
     >
       <template #form-content="{ props, formDesc, formErrorObj }">
         <vue-draggable
           v-if="isRenderFinish"
           :animation="200"
           :disabled="false"
-          :list="frender.formItemList"
+          :list="VabRender.formItemList"
           group="form"
           tag="el-row"
           style="padding-bottom: 80px"
@@ -22,7 +22,7 @@
         >
           <!-- 当为空时 -->
           <div
-            v-if="frender.formItemList.length === 0"
+            v-if="VabRender.formItemList.length === 0"
             class="form-area-placeholder"
           >
             从左侧拖拽来添加表单项
@@ -36,7 +36,7 @@
                 class="form-item"
                 :class="{
                   'ele-form-col--break': formItem.break,
-                  'form-item-active': frender.currentIndex === index,
+                  'form-item-active': VabRender.currentIndex === index,
                 }"
                 @click.native="handleFormItemClick(index)"
               >
@@ -68,7 +68,7 @@
 
                 <!-- 删除按钮 -->
                 <i
-                  v-if="frender.currentIndex === index"
+                  v-if="VabRender.currentIndex === index"
                   class="el-icon-delete form-item-delete-btn"
                   @click.stop="handleDelete(index)"
                 ></i>
@@ -83,7 +83,7 @@
 
 <script>
   export default {
-    inject: ['frender'],
+    inject: ['VabRender'],
     data() {
       return {
         formData: {},
@@ -99,11 +99,11 @@
     methods: {
       // 通过index删除
       deleteItemByIndex(index) {
-        this.frender.formItemList.splice(index, 1)
+        this.VabRender.formItemList.splice(index, 1)
       },
       // 通过index更新
       updateSelectIndex(index) {
-        this.frender.currentIndex = index
+        this.VabRender.currentIndex = index
       },
 
       // 删除
@@ -112,8 +112,8 @@
 
         // 因为如果删除最后一个, 界面则无选中效果
         // 所以这里删除最后一个后, 重新选择最后一个
-        if (index >= this.frender.formItemList.length) {
-          this.updateSelectIndex(this.frender.formItemList.length - 1)
+        if (index >= this.VabRender.formItemList.length) {
+          this.updateSelectIndex(this.VabRender.formItemList.length - 1)
         }
       },
 

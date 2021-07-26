@@ -2,8 +2,6 @@
  * 此文件用于注册全局组件
  */
 
-import Vue from 'vue'
-
 // 滚动
 import PerfectScrollbar from 'vue2-perfect-scrollbar'
 import 'vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css'

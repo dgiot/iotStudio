@@ -6,7 +6,7 @@
       title="表单配置"
     />
     <ele-form
-      v-model="frender.formPropsData"
+      v-model="VabRender.formPropsData"
       :form-desc="filteredFormDesc"
       :form-attrs="{ size: 'small' }"
       :is-show-back-btn="false"
@@ -24,10 +24,10 @@
   export default {
     components: { AttrsHeader },
     mixins: [searchMixin],
-    inject: ['frender'],
+    inject: ['VabRender'],
     computed: {
       formDesc() {
-        return changeFormDescLabel(this.frender.formProps.config)
+        return changeFormDescLabel(this.VabRender.formProps.config)
       },
     },
   }

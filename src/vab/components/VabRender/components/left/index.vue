@@ -1,7 +1,7 @@
 <template>
-  <div class="f-render-left">
+  <div class="vab-render-left">
     <!-- 搜索 -->
-    <div class="f-render-header f-render-comp-searcher">
+    <div class="vab-render-header vab-render-comp-searcher">
       <el-input
         v-model.trim="keyword"
         clearable
@@ -10,22 +10,22 @@
     </div>
 
     <!-- 组件列表 -->
-    <perfect-scrollbar class="f-render-scrollarea">
+    <perfect-scrollbar class="vab-render-scrollarea">
       <vue-draggable
         :clone="handleAddFormItem"
         :group="{ name: 'form', pull: 'clone', put: false }"
         :list="filteredComps"
-        class="f-render-comps"
+        class="vab-render-comps"
         :sort="false"
         tag="ul"
       >
         <li
           v-for="item of filteredComps"
           :key="item.type"
-          class="f-render-comp"
+          class="vab-render-comp"
           @click="handleDoubleClick(item)"
         >
-          <div class="f-render-comp-title">{{ item.type }}</div>
+          <div class="vab-render-comp-title">{{ item.type }}</div>
           <div>{{ item.label }}</div>
         </li>
       </vue-draggable>
@@ -35,7 +35,7 @@
 
 <script>
   export default {
-    inject: ['frender'],
+    inject: ['VabRender'],
     data() {
       return {
         keyword: '',
@@ -44,7 +44,7 @@
     computed: {
       // 支持模糊搜索
       filteredComps() {
-        const results = fuzzy.filter(this.keyword, this.frender.sortedComps, {
+        const results = fuzzy.filter(this.keyword, this.VabRender.sortedComps, {
           extract: (comp) => comp.label + comp.type,
         })
         return results.map((el) => el.original)
@@ -52,7 +52,7 @@
     },
     methods: {
       getFormItemByConfig({ type, label }) {
-        const formItemData = this.frender.getFormItemByType(type)
+        const formItemData = this.VabRender.getFormItemByType(type)
         return {
           label,
           field: 'key_' + Date.now(),
@@ -62,7 +62,10 @@
       // 双击添加表单
       handleDoubleClick(config) {
         const formItemData = this.getFormItemByConfig(config)
-        this.frender.formItemList = [...this.frender.formItemList, formItemData]
+        this.VabRender.formItemList = [
+          ...this.VabRender.formItemList,
+          formItemData,
+        ]
       },
       // 拖拽后新增表单项
       handleAddFormItem(config) {
@@ -74,18 +77,18 @@
 
 <style lang="css">
   /* 搜索框 */
-  .f-render-comp-searcher {
+  .vab-render-comp-searcher {
     padding: 0 10px;
   }
 
   /* 组件列表 */
-  .f-render-comps {
+  .vab-render-comps {
     padding: 0;
     margin-top: 10px;
   }
 
   /* 单个组件 */
-  .f-render-comps .f-render-comp {
+  .vab-render-comps .vab-render-comp {
     box-sizing: border-box;
     display: inline-block;
     width: 115px;
@@ -103,7 +106,7 @@
   }
 
   /* 组件标题 */
-  .f-render-comps .f-render-comp-title {
+  .vab-render-comps .vab-render-comp-title {
     font-weight: bold;
     color: #222;
   }

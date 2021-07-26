@@ -19,7 +19,7 @@
   import { changeFormDescLabel } from '../../../utils'
 
   export default {
-    inject: ['frender'],
+    inject: ['VabRender'],
     props: {
       visible: {
         type: Boolean,
@@ -176,9 +176,10 @@
         if (Object.keys(filteredData).length === 0) return
 
         // 更改 formItemList 中当前正在编辑的表单项的 rules
-        const currentItem = this.frender.formItemList[this.frender.currentIndex]
+        const currentItem =
+          this.VabRender.formItemList[this.VabRender.currentIndex]
         this.$set(
-          this.frender.formItemList[this.frender.currentIndex],
+          this.VabRender.formItemList[this.VabRender.currentIndex],
           'rules',
           (currentItem.rules || []).concat(filteredData)
         )

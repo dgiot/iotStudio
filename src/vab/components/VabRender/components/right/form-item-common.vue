@@ -1,21 +1,21 @@
 <template>
   <div>
-    <template v-if="frender.formItemList[frender.currentIndex]">
+    <template v-if="VabRender.formItemList[VabRender.currentIndex]">
       <attrs-header
         v-model="keyword"
         url="https://www.yuque.com/chaojie-vjiel/vbwzgu/iw5dzf"
         title="表单项配置"
       />
       <ele-form
-        v-model="frender.formItemList[frender.currentIndex]"
+        v-model="VabRender.formItemList[VabRender.currentIndex]"
         :form-desc="filteredFormDesc"
         :form-attrs="{ size: 'small' }"
         :is-show-back-btn="false"
         :is-show-submit-btn="false"
         :rules="rules"
         :options-fn="
-          frender.formBindProps['options-fn'] ||
-          frender.formBindProps['optionsFn']
+          VabRender.formBindProps['options-fn'] ||
+          VabRender.formBindProps['optionsFn']
         "
         :span="20"
         label-position="top"
@@ -53,7 +53,7 @@
       FormItemRules,
     },
     mixins: [searchMixin],
-    inject: ['frender'],
+    inject: ['VabRender'],
     data() {
       return {
         formDesc: {},
@@ -82,17 +82,17 @@
     computed: {
       // 自定义的配置
       customConfig() {
-        const currentCompConfig = this.frender.currentCompConfig
+        const currentCompConfig = this.VabRender.currentCompConfig
         return currentCompConfig?.config?.common?.config || {}
       },
       // 字段出现的次数
       fieldCountObj() {
-        return _.countBy(this.frender.formItemList, (o) => o.field)
+        return _.countBy(this.VabRender.formItemList, (o) => o.field)
       },
     },
     watch: {
       // 检测当前表单项类型变化
-      'frender.currentFormItemType': {
+      'VabRender.currentFormItemType': {
         handler(currentFormItemType) {
           // 如果并没有选择表单项类型，则为空
           if (!currentFormItemType) {
@@ -102,7 +102,7 @@
 
           // 当前组件信息
           this.formDesc = changeFormDescLabel({
-            ...this.frender.formItemCommon.config,
+            ...this.VabRender.formItemCommon.config,
             ...this.customConfig,
           })
         },

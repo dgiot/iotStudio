@@ -1,8 +1,8 @@
 <template>
   <div class="main-header">
-    <div class="f-render-header main-header-btns">
+    <div class="vab-render-header main-header-btns">
       <div>
-        <template v-for="key of frender.operations">
+        <template v-for="key of VabRender.operations">
           <!-- 根据 key 获取对应的 operationBtns 内容 -->
           <el-button
             v-if="operationBtns[key]"
@@ -15,7 +15,7 @@
           </el-button>
         </template>
       </div>
-      <div v-if="frender.operations.includes('save')">
+      <div v-if="VabRender.operations.includes('save')">
         <el-button icon="el-icon-upload2" type="text" @click="$emit('save')">
           保存数据
         </el-button>
@@ -23,7 +23,7 @@
     </div>
 
     <!-- 预览弹窗 -->
-    <template v-for="key of frender.operations">
+    <template v-for="key of VabRender.operations">
       <component
         :is="`${key}-dialog`"
         v-if="operationBtns[key] && operationBtns[key].isComponent !== false"
@@ -48,7 +48,7 @@
       CodeDialog,
       BatchDialog,
     },
-    inject: ['frender'],
+    inject: ['VabRender'],
     data() {
       // 切换 visible
       const createToggleVisibleFn = (key) => {
@@ -63,7 +63,7 @@
       return {
         // 左侧按钮列表
         operationBtns: {
-          // 按钮的 key 和 frender 中 operationBtns 一一对应
+          // 按钮的 key 和 VabRender 中 operationBtns 一一对应
           preview: {
             // 按钮的 icon
             icon: 'el-icon-view',
@@ -106,9 +106,9 @@
             // 增加 click
             click: () => {
               // 将表单项置为空数组
-              this.frender.formItemList = []
+              this.VabRender.formItemList = []
               // 将表单属性置为原默认值
-              this.frender.initFormPropsData()
+              this.VabRender.initFormPropsData()
             },
           },
         },
@@ -126,7 +126,7 @@
   }
 
   /* 代码编辑区 */
-  .f-render-code {
+  .vab-render-code {
     height: 350px;
     min-height: 350px;
     padding: 5px;
@@ -139,7 +139,7 @@
   }
 
   /* 去除默认边框 */
-  .f-render-code .prism-editor__textarea:focus {
+  .vab-render-code .prism-editor__textarea:focus {
     outline: none;
   }
 </style>
