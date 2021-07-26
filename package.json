@@ -28,7 +28,8 @@
     "genSwagger": "node src/utils/genSwagger.js",
     "set:github": "npm run remoteinfo && git push origin main && rimraf github && mkdir github && cp -r .git/* github && if exist github echo 'github'",
     "set:gitbit": "npm run remoteinfo && git push origin master && rimraf gitbit && mkdir gitbit && cp -r .git/* gitbit && if exist gitbit echo 'gitbit'",
-    "copy:config": "rimraf src/config/developer.config.js && cp src/config/developer.lock.js src/config/developer.config.js && echo 'copy config done'"
+    "copy:config": "rimraf src/config/developer.config.js && cp src/config/developer.lock.js src/config/developer.config.js && echo 'copy config done'",
+    "replace-version": "node scripts/replaceVersion.js"
   },
   "repository": {
     "type": "git",
