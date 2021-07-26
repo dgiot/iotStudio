@@ -10,9 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Replace Version
-        run: yarn install
-             yarn build
-             yarn replace-version
+        run: |
+          yarn install
+          yarn build
+          yarn replace-version
       - name: Commit Version
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
