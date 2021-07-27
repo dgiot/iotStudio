@@ -81,9 +81,10 @@ var Websocket = {
   connState: false,
   cInfo: {
     host: _scokethost,
-    port: 8083,
+    port: window.location.protocol === 'https:' ? 8084 : 8083,
     clientId: 'C_' + new Date().getTime(),
     userName: userName,
+    isSSL: window.location.protocol === 'https:' ? true : false,
     password: 'test123',
     keepAlive: null,
     keepAliveInterval: 10,
@@ -118,12 +119,7 @@ var Websocket = {
   },
   sslPort: function () {
     var _this = this
-    var useSSL = _this.cInfo.useSSL
-    if (useSSL) {
-      _this.cInfo.port = 8084
-    } else {
-      _this.cInfo.port = 5080
-    }
+    _this.cInfo.useSSL ? (_this.cInfo.port = 8084) : (_this.cInfo.port = 8083)
   },
   recive: function (msg) {
     console.log(msg)
@@ -206,7 +202,7 @@ var Websocket = {
     var password = _this.cInfo.password
     var keepAlive = _this.cInfo.keepAlive
     var cleanSession = _this.cInfo.cleanSession
-    // var useSSL = _this.cInfo.useSSL
+    var useSSL = window.location.protocol === 'https:' ? true : false
     if (userName) {
       options.userName = userName
     }
@@ -217,7 +213,7 @@ var Websocket = {
       options.keepAliveInterval = Number(keepAlive)
     }
     options.cleanSession = cleanSession
-    // options.useSSL = useSSL
+    window.location.protocol === 'https' ? (options.useSSL = useSSL) : ''
     _this.client.connect(options)
   },
 

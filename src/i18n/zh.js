@@ -594,6 +594,7 @@ export default {
       Pleaseinputproduct: '请输入产品',
     },
     application: {
+      locking: '锁定',
       submit: '提交',
       upload: '上传',
       applicationmanagement: '应用（项目）服务',
@@ -907,6 +908,7 @@ export default {
       'To be assigned': '待分配',
       Assigned: '已分配',
       Processed: '已处理',
+      Untreated: '未处理',
       Statement: '已结单',
       search: '查询',
       'create Ticket': '创建工单',
@@ -956,6 +958,12 @@ export default {
     alert: {
       _start: '告警产生',
       _stop: '告警恢复',
+      start: '告警产生',
+      stop: '告警恢复',
+      'alert number': '告警编号',
+      'the starting time': '告警时间',
+      'Alarm handling': '告警处理',
+      'Alarm status': '告警状态',
     },
   },
 }
