@@ -117,14 +117,14 @@
           width="200"
           :label="$translateTitle('developer.operation')"
         >
-          <template #default="{ row }">
-            <el-button type="text" @click="editParse(row.$index, row)">
+          <template slot-scope="scope">
+            <el-button type="text" @click="editParse(scope.$index, scope.row)">
               {{ $translateTitle('concentrator.edit') }}
             </el-button>
             <el-button
               type="text"
-              :disabled="!row.config.order"
-              @click="previewParse(row.config)"
+              :disabled="!scope.row.config.order"
+              @click="previewParse(scope.row.config)"
             >
               {{ $translateTitle('application.preview') }}
             </el-button>
@@ -132,7 +132,17 @@
               type="text"
               size="small"
               @click.native.prevent="
-                deleteParse(row.uid, row.$index, parserTableList)
+                lockingParse(scope.row.uid, scope.$index, parserTableList)
+              "
+            >
+              {{ $translateTitle('application.locking') }}
+            </el-button>
+            <el-button
+              type="text"
+              size="small"
+              :disabled="scope.row.disable"
+              @click.native.prevent="
+                deleteParse(scope.row.uid, scope.$index, parserTableList)
               "
             >
               {{ $translateTitle('task.Delete') }}
@@ -1081,6 +1091,11 @@
           console.log('rows', rows)
         })
         // rows.splice(index, 1)
+        this.saveParse(rows, -1, false)
+      },
+      lockingParse(uid, index, rows) {
+        const { disable = false } = rows[`${index}`]
+        rows[`${index}`].disable = !disable
         this.saveParse(rows, -1, false)
       },
       // async editorParser(ObjectId) {

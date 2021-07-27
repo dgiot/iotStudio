@@ -149,7 +149,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item :label="$translateTitle('user.createdtime')">
+            <el-form-item :label="$translateTitle('home.updatedAt')">
               <el-date-picker
                 v-model="queryForm.searchDate"
                 end-placeholder="结束日期"

@@ -21,7 +21,7 @@ module.exports = {
   // npm run build时是否自动生成7z压缩包
   build7z: false,
   // npm run build时是否生成gzip
-  buildGzip: false,
+  buildGzip: true,
   // npm run build时是否开启图片压缩，由于国内网路原因image-webpack-loader必须使用cnpm安装，如无法使用cnpm，请配置false
   imageCompression: true,
 }

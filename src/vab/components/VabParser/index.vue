@@ -20,12 +20,6 @@
             :model="headerInfo"
             @submit.native.prevent
           >
-            <el-form-item>
-              <!--              <el-button-->
-              <!--                icon="el-icon-setting"-->
-              <!--                @click="rendeRow == 19 ? (rendeRow = 24) : (rendeRow = 19)"-->
-              <!--              />-->
-            </el-form-item>
             <el-form-item :label="$translateTitle('product.chinesetitle')">
               <el-input
                 v-model="headerInfo.name"
@@ -131,9 +125,25 @@
                 {{ $translateTitle('alert._stop') }}
               </el-button>
             </el-form-item>
+            <el-form-item>
+              <el-switch
+                v-model="activeName"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+              />
+            </el-form-item>
           </el-form>
         </vab-query-form-top-panel>
-        <VabRender
+        <f-render
+          v-show="activeName == true"
+          :loading="loading"
+          :height="parseheight"
+          :config="formConfig.config"
+          :productid="productid"
+          @save="handleSave"
+        />
+        <vab-render
+          v-show="activeName == false"
           :loading="loading"
           :height="parseheight"
           :config="formConfig.config"
@@ -146,8 +156,6 @@
 </template>
 
 <script>
-  import { uuid } from '@/utils'
-
   export default {
     name: 'VabParser',
     props: {
@@ -182,6 +190,7 @@
     },
     data() {
       return {
+        activeName: true,
         rendeRow: 19,
         jsonData: [],
         headerInfo: {},
