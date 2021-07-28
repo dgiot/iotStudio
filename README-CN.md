@@ -28,7 +28,7 @@ git clone https://github.com.cnpmjs.org/dgiot/dgiot_dashboard.git
 ```bash
 cd dgiot_dashboard
 
-yarn install
+yarn dgiot:install
 ```
 
 - 运行
