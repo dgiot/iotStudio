@@ -23,7 +23,6 @@
 </template>
 
 <script>
-  import flvjs from 'flv.js'
   export default {
     name: 'VabPlayer',
     components: {},

@@ -852,6 +852,7 @@
           location: '',
           address: '',
         },
+        productName: '',
         deviceid: '',
         map: null,
         addresspointer: '',
@@ -1064,6 +1065,7 @@
       async searchProduct() {
         getProduct(this.equvalue).then((res) => {
           this.deviceform.productName = res.name
+          this.productName = res.name
         })
       },
       // 查询设备
@@ -1280,7 +1282,6 @@
           assetNum: '',
           devModel: '',
           address: '',
-          productName: '',
           status: '',
           isEnable: '',
           brand: '',
@@ -1288,6 +1289,7 @@
           yysId: '',
         }
         this.$refs['deviceform'].resetFields()
+        this.deviceform.productName = this.productName
         this.devicedialogVisible = false
         this.equipmentEditor = '添加'
       },
@@ -1427,6 +1429,7 @@
                       this.devicedialogVisible = false
                       this.getDevices()
                       this.deviceform = {}
+                      this.deviceform.productName = this.productName
                     } else {
                       this.initQuery('修改失败', 'error')
                     }
@@ -1462,7 +1465,7 @@
                     product: {
                       __type: 'Pointer',
                       className: 'Product',
-                      objectId: this.deviceform.productName,
+                      objectId: this.$route.query.productid,
                     },
                     basedata: {
                       auth: this.deviceform.auth,
@@ -1476,6 +1479,7 @@
                       this.devicedialogVisible = false
                       this.getDevices()
                       this.deviceform = {}
+                      this.deviceform.productName = this.productName
                     } else {
                       this.initQuery('创建失败', 'error')
                     }
