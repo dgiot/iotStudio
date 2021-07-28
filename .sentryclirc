@@ -1,7 +1,0 @@
-[defaults]
-url=https://sentry.io/
-org=h7ml
-project=5882059
-
-[auth]
-token=b73e57cb3c9a45799e7fce6827ac56729c544d28c9684ac2bc17a0ea48049de1
