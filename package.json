@@ -43,6 +43,7 @@
     "@sentry/vue": "^6.10.0",
     "@sentry/webpack-plugin": "^1.16.0",
     "@vue/cli-plugin-pwa": "^4.5.13",
+    "axios": "^0.21.1",
     "clipboard-copy": "^4.0.1",
     "core-js": "^3.15.2",
     "element-ui": "^2.15.3",
