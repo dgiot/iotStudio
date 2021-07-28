@@ -22,7 +22,6 @@ let staticUrl = {
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/topology-vue/topology-vue.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading.css',
     'https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css"',
-    'https://unpkg.com/hrm-player/dist/hrm-player.css',
   ],
   js: [
     'https://unpkg.com/vue@2.6.12/dist/vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
@@ -89,7 +88,6 @@ let staticUrl = {
     'https://dn-bts.bugtags.cn/sdk/bugtags-2.0.2.js',
     'https://unpkg.com/vue-flv-player/dist/vue-flv-player.umd.min.js',
     'https://unpkg.com/ezuikit-js',
-    'https://unpkg.com/hrm-player',
     'https://unpkg.com/f-render',
     'https://unpkg.com/vue-ele-form',
     'https://unpkg.com/fuzzy',

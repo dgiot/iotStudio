@@ -27,6 +27,7 @@ const {
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
+const SentryPlugin = require('@sentry/webpack-plugin')
 const FileManagerPlugin = require('filemanager-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
@@ -200,6 +201,26 @@ module.exports = {
             bypassOnDebug: true,
           })
           .end()
+      config.plugin('sentry').use(SentryPlugin, [
+        {
+          baseSentryURL: 'https://prod.iotn2n.com/api/0', // 需要加/api/0
+          organization: 'h7ml', // 组织名同上
+          project: '5882059', // 项目名同上
+          apiKey:
+            ' b73e57cb3c9a45799e7fce6827ac56729c544d28c9684ac2bc17a0ea48049de1', // 右下角或者设置里获取到的 Sentry Web API auth tokens
+          include: /.*\.js/, //  获取文件的正则
+          release: 'dgiot', // release 名
+          filenameTransform: (filename) => {
+            // 修改 filename 的方法
+            if (filename.split('js/')[1]) {
+              return '~/' + filename.split('js/')[1]
+            } else {
+              return filename
+            }
+          },
+          deleteAfterCompile: true, // 上传后删除 sourcemap 文件
+        },
+      ])
       if (buildGzip)
         config.plugin('compression').use(CompressionWebpackPlugin, [
           {
