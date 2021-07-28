@@ -722,6 +722,7 @@
   import { Batchdelete } from '@/api/Batch'
   import { queryDict } from '@/api/Direct/index.js'
   import { delDict } from '@/api/Dict'
+  import { mapGetters } from 'vuex'
   import {
     BmNavigation,
     BaiduMap,
@@ -818,6 +819,7 @@
             { required: true, message: '请选择产品名称', trigger: 'change' },
           ],
         },
+        aclObj: {},
         pcformrule: {
           pcname: [
             { required: true, message: '请输入批次名称', trigger: 'blur' },
@@ -850,6 +852,7 @@
           location: '',
           address: '',
         },
+        productName: '',
         deviceid: '',
         map: null,
         addresspointer: '',
@@ -858,6 +861,11 @@
         tagsid: '',
         productroleslist: [],
       }
+    },
+    computed: {
+      ...mapGetters({
+        _role: 'acl/role',
+      }),
     },
     watch: {
       multipleTable(data) {
@@ -882,6 +890,7 @@
         this.equvalue = this.$route.query.productid
         this.searchProduct(this.equvalue)
       }
+      this.aclObj = this.$aclObj(this._role)
     },
     methods: {
       async queryYysId() {
@@ -1056,6 +1065,7 @@
       async searchProduct() {
         getProduct(this.equvalue).then((res) => {
           this.deviceform.productName = res.name
+          this.productName = res.name
         })
       },
       // 查询设备
@@ -1272,7 +1282,6 @@
           assetNum: '',
           devModel: '',
           address: '',
-          productName: '',
           status: '',
           isEnable: '',
           brand: '',
@@ -1280,6 +1289,7 @@
           yysId: '',
         }
         this.$refs['deviceform'].resetFields()
+        this.deviceform.productName = this.productName
         this.devicedialogVisible = false
         this.equipmentEditor = '添加'
       },
@@ -1392,14 +1402,8 @@
               }
               this.$queryDevice(params).then((respone) => {
                 if (respone.results.length == 0) {
-                  const aclKey = 'role' + ':' + this.productroleslist[0]
-                  const set_acl = {}
-                  set_acl[aclKey] = {
-                    read: true,
-                    write: true,
-                  }
                   var editParams = {
-                    ACL: set_acl,
+                    ACL: this.aclObj,
                     detail: {
                       assetNum: this.deviceform.assetNum,
                       devModel: this.deviceform.devModel,
@@ -1410,7 +1414,7 @@
                     product: {
                       __type: 'Pointer',
                       className: 'Product',
-                      objectId: this.equvalue,
+                      objectId: this.$route.query.productid,
                     },
                     basedata: {
                       auth: this.deviceform.auth,
@@ -1425,6 +1429,7 @@
                       this.devicedialogVisible = false
                       this.getDevices()
                       this.deviceform = {}
+                      this.deviceform.productName = this.productName
                     } else {
                       this.initQuery('修改失败', 'error')
                     }
@@ -1441,14 +1446,8 @@
               }
               this.$queryDevice(params).then((respone) => {
                 if (respone.results.length == 0) {
-                  const aclKey = 'role' + ':' + this.productroleslist[0]
-                  const set_acl = {}
-                  set_acl[aclKey] = {
-                    read: true,
-                    write: true,
-                  }
                   var createParams = {
-                    ACL: set_acl,
+                    ACL: this.aclObj,
                     detail: {
                       assetNum: this.deviceform.assetNum,
                       devModel: this.deviceform.devModel,
@@ -1466,7 +1465,7 @@
                     product: {
                       __type: 'Pointer',
                       className: 'Product',
-                      objectId: this.deviceform.productName,
+                      objectId: this.$route.query.productid,
                     },
                     basedata: {
                       auth: this.deviceform.auth,
@@ -1480,6 +1479,7 @@
                       this.devicedialogVisible = false
                       this.getDevices()
                       this.deviceform = {}
+                      this.deviceform.productName = this.productName
                     } else {
                       this.initQuery('创建失败', 'error')
                     }
@@ -1506,7 +1506,7 @@
                   batch_name: this.pcformInline.pcname,
                   createdtime: Math.ceil(this.pcformInline.createdtime / 1000),
                 },
-                ACL: this.$aclObj,
+                ACL: this.aclObj,
                 key: this.pcformInline.pcname,
                 type: 'batch_number',
               }
@@ -1532,7 +1532,7 @@
                   batch_name: this.pcformInline.pcname,
                   createdtime: Math.ceil(this.pcformInline.createdtime / 1000),
                 },
-                ACL: aclObj,
+                ACL: this.aclObj,
                 type: 'batch_number',
               }
               // 更新批次
@@ -1741,16 +1741,16 @@
     margin: 10px 0;
   }
   /* .equipment .devicecontent .el-form .el-form-item .is-required:not(.is-no-asterisk):after{
-    content: '*';
-    color: #F56C6C;
-    margin-right: 4px;
+  content: '*';
+  color: #F56C6C;
+  margin-right: 4px;
 } */
   /* .equipment .devicecontent .el-form .el-form-item__label:before{
-    content:''
+  content:''
 }
 .equipment .devicecontent .el-form .el-form-item__label:after{
-    content: '*';
-    color: #F56C6C;
-    margin-right: 4px;
+  content: '*';
+  color: #F56C6C;
+  margin-right: 4px;
 } */
 </style>
