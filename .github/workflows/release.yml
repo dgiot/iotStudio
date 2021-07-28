@@ -13,7 +13,6 @@ jobs:
         run: |
           yarn install
           yarn build
-          yarn replace-version
       - name: Commit Version
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
