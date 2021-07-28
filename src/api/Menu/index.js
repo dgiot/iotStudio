@@ -38,23 +38,23 @@ export async function postMenu(params) {
 }
 
 // 获取所有的菜单树
-export function getmenuTree() {
+export function getMenusTree() {
   return request({
-    url: 'menu/tree',
+    url: 'menus/tree',
     method: 'get',
   })
 }
 
-export function buildmenu() {
+export function buildMenus() {
   return request({
-    url: 'menu/build',
+    url: 'menus/build',
     method: 'get',
   })
 }
 
 export function add(data) {
   return request({
-    url: 'menu',
+    url: 'menus',
     method: 'post',
     data,
   })
@@ -62,14 +62,14 @@ export function add(data) {
 
 export function del(id) {
   return request({
-    url: 'api/menu/' + id,
+    url: 'api/menus/' + id,
     method: 'delete',
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'menu',
+    url: 'menus',
     method: 'put',
     data,
   })

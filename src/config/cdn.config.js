@@ -22,6 +22,9 @@ let staticUrl = {
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/topology-vue/topology-vue.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading.css',
     'https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css"',
+    'https://unpkg.com/prismjs@1.24.1/themes/prism-tomorrow.css',
+    'https://unpkg.com/vue-prism-editor@1.2.2/dist/prismeditor.min.css',
+    'https://unpkg.com/vue2-perfect-scrollbar@1.5.0/dist/vue2-perfect-scrollbar.min.css',
   ],
   js: [
     'https://unpkg.com/vue@2.6.12/dist/vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
@@ -92,6 +95,14 @@ let staticUrl = {
     'https://unpkg.com/vue-ele-form',
     'https://unpkg.com/fuzzy',
     'https://unpkg.com/vue-prism-editor',
+    'https://unpkg.com/flv.js@1.6.0/dist/flv.min.js',
+    'https://unpkg.com/prismjs@1.24.1/components/prism-clike.min.js',
+    'https://unpkg.com/prismjs@1.24.1/components/prism-core.min.js',
+    // 'https://unpkg.com/prismjs@1.24.1/components/prism-javascript.min.js',
+    'https://unpkg.com/vue-ele-form-dynamic@0.4.3/src/index.js',
+    'https://unpkg.com/vue-ele-form-data-editor@0.1.6/src/index.js',
+    'https://unpkg.com/vue2-perfect-scrollbar',
+    'https://unpkg.com/vue-multipane',
   ],
 }
 if (process.env.NODE_ENV !== 'development') {

@@ -8,38 +8,23 @@
               <el-button
                 icon="el-icon-s-tools"
                 type="primary"
-                size="mini"
                 @click="toggleExpandAll(isdefaultExpandAll)"
               >
                 <!-- 展开/收起菜单 -->
                 {{ $translateTitle('product.Expandcollapsemenu') }}
               </el-button>
               <el-button
-                size="mini"
                 icon="el-icon-plus"
-                type="info"
+                type="primary"
                 @click="handleEdit({}, 'one')"
               >
                 <!-- 新增一级菜单 -->
                 {{ $translateTitle('product.Newfirstlevelmenu') }}
               </el-button>
-              <el-button
-                size="mini"
-                icon="el-icon-upload"
-                type="success"
-                @click="centerUploadBox('Importmenu')"
-              >
+              <el-button type="primary" @click="centerUploadBox">
                 <!-- 导入菜单 -->
                 {{ $translateTitle('product.Importmenu') }}
-              </el-button>
-              <el-button
-                size="mini"
-                icon="el-icon-upload"
-                type="warning"
-                @click="centerUploadBox('Export')"
-              >
-                <!-- 导出菜单 -->
-                {{ $translateTitle('product.Export menu') }}
+                <i class="el-icon-upload el-icon--right" />
               </el-button>
               <input
                 v-show="false"
@@ -49,6 +34,7 @@
                 type="file"
                 @change="handleFileChange"
               />
+
               <!-- <el-button type="primary" icon="el-icon-plus" @click="dialogVisible=true">新增一级菜单</el-button> -->
             </div>
           </vab-query-form-top-panel>
@@ -232,7 +218,6 @@
   import Edit from './components/MenuManagementEdit'
   import { utc2beijing } from '@/utils'
   import { queryMenu, add } from '@/api/Menu/index'
-  import { ExportMenu, ImportMenu } from '@/api/Export/index'
   export default {
     name: 'TreeTableDemo',
     components: { Edit },
@@ -421,16 +406,8 @@
         })
       },
       // 调用input file
-      centerUploadBox(type) {
-        if (type == 'Importmenu') {
-          this.$refs.inputer.click()
-        } else {
-          this.exportMenu()
-        }
-      },
-      async exportMenu() {
-        const res = await ExportMenu({ name: 'Menu' })
-        console.log(res, 'res')
+      centerUploadBox() {
+        this.$refs.inputer.click()
       },
       // 真正的文件上传
       async handleFileChange(e) {

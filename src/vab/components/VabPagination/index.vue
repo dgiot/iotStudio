@@ -96,7 +96,7 @@
 
 <style>
   .pagination-container {
-    /*padding: 32px 16px;*/
+    padding: 32px 16px;
     background: #fff;
   }
   .pagination-container.hidden {

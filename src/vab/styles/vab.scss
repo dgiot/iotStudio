@@ -1,5 +1,10 @@
 /** @description 全局样式 */
 @import './transition.scss';
+@import 'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading/dots.css';
+@import 'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading/gauge.css';
+@import 'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading/inner-circles.css';
+@import 'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading/plus.css';
+
 @mixin base-scrollbar {
   &::-webkit-scrollbar {
     width: 8px;
@@ -99,18 +104,7 @@ html {
         transform: rotateZ(180deg);
       }
     }
-    /* vab-fullscreen全屏 */
-    .vab-fullscreen {
-      position: fixed !important;
-      top: 0 !important;
-      left: 0 !important;
-      z-index: $base-z-index + 3 !important;
-      box-sizing: border-box !important;
-      width: 100vw !important;
-      height: 100vh !important;
-      padding-bottom: 15px !important;
-      overflow: auto !important;
-    }
+
     /* vab-dot圆点动画 */
     .vab-dot {
       position: relative;

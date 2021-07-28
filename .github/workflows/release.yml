@@ -9,16 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Replace Version
-        run: |
-          yarn install
-          yarn build
-          yarn replace-version
-      - name: Commit Version
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          branch: master
-          commit_message: "chore(ci): change package.json version"
       - name: Create a Release
         uses: elgohr/Github-Release-Action@master
         env:

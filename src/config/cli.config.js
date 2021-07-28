@@ -23,5 +23,5 @@ module.exports = {
   // npm run build时是否生成gzip
   buildGzip: true,
   // npm run build时是否开启图片压缩，由于国内网路原因image-webpack-loader必须使用cnpm安装，如无法使用cnpm，请配置false
-  imageCompression: true,
+  imageCompression: false,
 }

@@ -64,8 +64,8 @@
             url: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
           },
           {
-            type: 'flv',
-            url: 'https://rtmp01open.ys7.com:9188/v3/openlive/C45644828_1_2.flv?expire=1656812988&id=333182878081585152&t=9d9c1b3187ff62633be8573281bff2ae7318ae200908c388bb6c092f54f29c52&ev=100',
+            type: 'application/x-mpegURL',
+            url: 'http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8',
           },
           // {
           //   type: 'video/mp4',

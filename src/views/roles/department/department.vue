@@ -181,7 +181,7 @@
               <el-input
                 v-model="form.file"
                 style="width: 80%"
-                :placheholder="$translateTitle('product.enter1') + 'url'"
+                :placheholder="$translateTitle('product.enter1') + url"
               />
             </el-form-item>
 
@@ -192,7 +192,7 @@
               <el-input
                 v-model="form.topo"
                 style="width: 80%"
-                :placheholder="$translateTitle('product.enter1') + 'url'"
+                :placheholder="$translateTitle('product.enter1') + url"
               />
             </el-form-item>
 
@@ -200,7 +200,7 @@
               <el-input
                 v-model="form.graphql"
                 style="width: 80%"
-                :placheholder="$translateTitle('product.enter1') + 'url'"
+                :placheholder="$translateTitle('product.enter1') + url"
               />
             </el-form-item>
 
@@ -208,7 +208,7 @@
               <el-input
                 v-model="form.rest"
                 style="width: 80%"
-                :placheholder="$translateTitle('product.enter1') + 'url'"
+                :placheholder="$translateTitle('product.enter1') + url"
               />
             </el-form-item>
 

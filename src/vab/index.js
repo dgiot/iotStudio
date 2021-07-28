@@ -30,6 +30,5 @@ const requireComponent = require.context('./components', true, /\.vue$/)
 requireComponent.keys().forEach((fileName) => {
   const componentConfig = requireComponent(fileName)
   const componentName = componentConfig.default.name
-  if (componentName)
-    Vue.component(componentName, componentConfig.default || componentConfig)
+  Vue.component(componentName, componentConfig.default || componentConfig)
 })

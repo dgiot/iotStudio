@@ -152,7 +152,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.product && row.product.name ? row.product.name : '' }}
+          {{ row.product.name }}
         </template>
       </el-table-column>
 
@@ -163,7 +163,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.device && row.device.name ? row.device.name : '' }}
+          {{ row.device.name }}
         </template>
       </el-table-column>
       <el-table-column
@@ -352,7 +352,7 @@
         this.step = status + 1
         this.deviceFlag = true
       },
-      getStatus(type = 0) {
+      getStatus(type) {
         // type == 0 ? '' : ''
         switch (type) {
           case 0:

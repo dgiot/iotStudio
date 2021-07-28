@@ -722,7 +722,6 @@
   import { Batchdelete } from '@/api/Batch'
   import { queryDict } from '@/api/Direct/index.js'
   import { delDict } from '@/api/Dict'
-  import { mapGetters } from 'vuex'
   import {
     BmNavigation,
     BaiduMap,
@@ -819,7 +818,6 @@
             { required: true, message: '请选择产品名称', trigger: 'change' },
           ],
         },
-        aclObj: {},
         pcformrule: {
           pcname: [
             { required: true, message: '请输入批次名称', trigger: 'blur' },
@@ -861,11 +859,6 @@
         productroleslist: [],
       }
     },
-    computed: {
-      ...mapGetters({
-        _role: 'acl/role',
-      }),
-    },
     watch: {
       multipleTable(data) {
         this.selectRow = []
@@ -889,7 +882,6 @@
         this.equvalue = this.$route.query.productid
         this.searchProduct(this.equvalue)
       }
-      this.aclObj = this.$aclObj(this._role)
     },
     methods: {
       async queryYysId() {
@@ -1400,8 +1392,14 @@
               }
               this.$queryDevice(params).then((respone) => {
                 if (respone.results.length == 0) {
+                  const aclKey = 'role' + ':' + this.productroleslist[0]
+                  const set_acl = {}
+                  set_acl[aclKey] = {
+                    read: true,
+                    write: true,
+                  }
                   var editParams = {
-                    ACL: this.aclObj,
+                    ACL: set_acl,
                     detail: {
                       assetNum: this.deviceform.assetNum,
                       devModel: this.deviceform.devModel,
@@ -1412,7 +1410,7 @@
                     product: {
                       __type: 'Pointer',
                       className: 'Product',
-                      objectId: this.$route.query.productid,
+                      objectId: this.equvalue,
                     },
                     basedata: {
                       auth: this.deviceform.auth,
@@ -1443,8 +1441,14 @@
               }
               this.$queryDevice(params).then((respone) => {
                 if (respone.results.length == 0) {
+                  const aclKey = 'role' + ':' + this.productroleslist[0]
+                  const set_acl = {}
+                  set_acl[aclKey] = {
+                    read: true,
+                    write: true,
+                  }
                   var createParams = {
-                    ACL: this.aclObj,
+                    ACL: set_acl,
                     detail: {
                       assetNum: this.deviceform.assetNum,
                       devModel: this.deviceform.devModel,
@@ -1502,7 +1506,7 @@
                   batch_name: this.pcformInline.pcname,
                   createdtime: Math.ceil(this.pcformInline.createdtime / 1000),
                 },
-                ACL: this.aclObj,
+                ACL: this.$aclObj,
                 key: this.pcformInline.pcname,
                 type: 'batch_number',
               }
@@ -1528,7 +1532,7 @@
                   batch_name: this.pcformInline.pcname,
                   createdtime: Math.ceil(this.pcformInline.createdtime / 1000),
                 },
-                ACL: this.aclObj,
+                ACL: aclObj,
                 type: 'batch_number',
               }
               // 更新批次

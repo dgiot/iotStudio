@@ -245,34 +245,29 @@
                 :value="item.key"
               />
             </el-select>
-            <el-button
-              size="mini"
-              icon="el-icon-search"
-              type="primary"
-              @click="fetchData"
-            >
+            <el-button icon="el-icon-search" type="primary" @click="fetchData">
               {{ $translateTitle('Maintenance.search') }}
             </el-button>
-            <!--            <el-button-->
-            <!--              icon="el-icon-user"-->
-            <!--              type="info"-->
-            <!--              disabled-->
-            <!--              :size="created % 2 == 0 ? 'small' : 'medium'"-->
-            <!--              @click="handleCreated('created')"-->
-            <!--            >-->
-            <!--              {{ $translateTitle('Maintenance.I created') }}-->
-            <!--            </el-button>-->
+            <el-button
+              icon="el-icon-user"
+              type="info"
+              disabled
+              :size="created % 2 == 0 ? 'small' : 'medium'"
+              @click="handleCreated('created')"
+            >
+              {{ $translateTitle('Maintenance.I created') }}
+            </el-button>
             <el-button
               icon="el-icon-user-solid"
               type="success"
-              :size="Assigned % 2 == 0 ? 'mini' : 'small'"
+              :size="Assigned % 2 == 0 ? 'small' : 'medium'"
               @click="handleCreated('Assigned')"
             >
               {{ $translateTitle('Maintenance.Assigned to me') }}
             </el-button>
           </el-form-item>
           <el-form-item>
-            <el-button size="mini" type="text" @click="handleFold">
+            <el-button type="text" @click="handleFold">
               <span v-if="fold">
                 {{ $translateTitle('Maintenance.Unfold') }}
               </span>
@@ -287,7 +282,6 @@
 
           <el-form-item v-show="!fold">
             <el-button
-              size="mini"
               icon="el-icon-circle-plus-outline"
               type="primary"
               @click="dialogFormVisible = true"
@@ -295,7 +289,6 @@
               {{ $translateTitle('Maintenance.create Ticket') }}
             </el-button>
             <el-button
-              size="mini"
               icon="el-icon-s-promotion"
               type="primary"
               :disabled="!selectedList.length"
@@ -304,7 +297,6 @@
               {{ $translateTitle('Maintenance.Export') }}
             </el-button>
             <el-button
-              size="mini"
               icon="el-icon-delete"
               type="danger"
               :disabled="!selectedList.length"
@@ -335,11 +327,11 @@
       />
       <el-table-column
         sortable
-        show-overflow-tooltip
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
         prop="number"
         width="120"
+        show-overflow-tooltip
       />
       <el-table-column
         sortable
@@ -366,7 +358,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.product && row.product.name ? row.product.name : '' }}
+          {{ row.product.name }}
         </template>
       </el-table-column>
 
@@ -377,7 +369,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.device && row.device.name ? row.device.name : '' }}
+          {{ row.device.name }}
         </template>
       </el-table-column>
       <el-table-column
@@ -400,7 +392,6 @@
       <el-table-column
         align="center"
         fixed="right"
-        width="220"
         :label="$translateTitle('Maintenance.operating')"
       >
         <template #default="{ row }">
@@ -413,7 +404,6 @@
           </el-button>
           <el-button
             v-show="row.status == 0"
-            size="mini"
             type="success"
             @click="showInfo(row)"
           >
@@ -421,7 +411,6 @@
           </el-button>
           <el-button
             v-show="row.status == 1"
-            size="mini"
             type="success"
             @click="showInfo(row)"
           >
@@ -429,7 +418,6 @@
           </el-button>
           <el-button
             v-show="row.status == 2"
-            size="mini"
             type="info"
             @click="showInfo(row)"
           >
@@ -444,7 +432,6 @@
           <!--          </el-button>-->
           <el-button
             v-show="row.status != 3"
-            size="mini"
             type="danger"
             @click="handleDelete(row, 2)"
           >
@@ -828,7 +815,7 @@
           keys: args.keys,
           include: 'product,device',
           where: {
-            'info.user': this.Assigned % 2 == 0 ? { $ne: '' } : this.objectId,
+            'info.user': this.Assigned % 2 == 0 ? { $ne: null } : this.objectId,
             user: this.created % 2 == 0 ? { $ne: null } : this.objectId,
             number: this.queryForm.number.length
               ? { $regex: this.queryForm.number }
