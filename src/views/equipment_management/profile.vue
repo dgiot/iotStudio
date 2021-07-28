@@ -998,6 +998,7 @@
         var _sourceModule = []
         var _sourceField = []
         var arrStr = ''
+        this.productid = objectId
         this.parserFromId = objectId
         this.parserType = type
         this.productConfig = config

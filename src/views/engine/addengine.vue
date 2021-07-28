@@ -784,9 +784,7 @@
               rawsql: editor1.getValue(),
             }
             if (this.uid && this.productid)
-              params[
-                'id'
-              ] = `rule:${this.ruleType}_${this.productid}_${this.uid}`
+              params.id = `rule:${this.ruleType}_${this.productid}_${this.uid}`
             // const params = {
             //   rawsql:
             //     'SELECT\n  payload.msg as msg\nFROM\n  "t/#"\nWHERE\n  msg = \'hello\'',
