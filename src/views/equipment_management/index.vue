@@ -1412,7 +1412,7 @@
                     product: {
                       __type: 'Pointer',
                       className: 'Product',
-                      objectId: this.equvalue,
+                      objectId: this.$route.query.productid,
                     },
                     basedata: {
                       auth: this.deviceform.auth,
