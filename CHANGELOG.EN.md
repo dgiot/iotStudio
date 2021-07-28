@@ -1,4 +1,4 @@
-# [](https://github.com/dgiot/dgiot_dashboard/compare/v4.3.0...v) (2021-07-28)
+# [4.4.0](https://github.com/dgiot/dgiot_dashboard/compare/v4.3.0...v4.4.0) (2021-07-28)
 
 
 ### Bug Fixes
