@@ -28,6 +28,31 @@ export async function ImportMenu(params) {
   return request({
     url: 'menu',
     method: 'post',
+    data: params,
+  })
+}
+
+/**
+ * @description 导出parse数据
+ * @param params
+ * @return {Promise<*|ElMessageComponent>}
+ */
+export async function ExportParse(params) {
+  return request({
+    url: 'export_data',
+    method: 'get',
     params: params,
+  })
+}
+/**
+ * @description 导入parse数据
+ * @param params
+ * @return {Promise<*|ElMessageComponent>}
+ */
+export async function ImportParse(params) {
+  return request({
+    url: 'import_data',
+    method: 'post',
+    data: params,
   })
 }

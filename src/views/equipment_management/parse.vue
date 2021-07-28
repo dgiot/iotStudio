@@ -69,8 +69,8 @@
 </template>
 
 <script>
-  import { doDelete, getList } from '@/api/Mock/table'
   import { getTable } from '@/api/Dba'
+  import { ExportParse, ImportParse } from '@/api/Export'
   export default {
     name: 'Parse',
     components: {},
@@ -98,8 +98,17 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
-      handleExport(type, row) {
-        console.log(type, row)
+      async handleExport(type, row) {
+        if (type == 'export') {
+          try {
+            const res = await ExportParse({ className: row.className })
+            console.log(res)
+            // this.$message.success(`${res}`)
+          } catch (error) {
+            console.log(error)
+            this.$message.error(`${error}`)
+          }
+        }
       },
       async fetchData() {
         this.listLoading = true

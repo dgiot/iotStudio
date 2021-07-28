@@ -30,7 +30,7 @@
     "set:gitbit": "npm run remoteinfo && git push origin master && rimraf gitbit && mkdir gitbit && cp -r .git/* gitbit && if exist gitbit echo 'gitbit'",
     "copy:config": "rimraf src/config/developer.config.js && cp src/config/developer.lock.js src/config/developer.config.js && echo 'copy config done'",
     "replace-version": "node scripts/replaceVersion.js",
-    "dgiot:install": "yarn add rimraf && rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf node_modules/.yarn-integrity  && rimraf node_modules && rimraf yarn.lock && yarn"
+    "dgiot:install": "yarn global add rimraf && rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf node_modules/.yarn-integrity  && rimraf node_modules && rimraf yarn.lock && yarn"
   },
   "repository": {
     "type": "git",
