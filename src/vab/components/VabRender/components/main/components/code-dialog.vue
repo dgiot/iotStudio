@@ -35,9 +35,6 @@
 </template>
 
 <script>
-  // import { PrismEditor } from "vue-prism-editor";
-  import { highlight, languages } from 'prismjs/components/prism-core'
-
   import VabRenderTpl from './tpl/vab-render'
   import EleFormTpl from './tpl/vue-ele-form'
 

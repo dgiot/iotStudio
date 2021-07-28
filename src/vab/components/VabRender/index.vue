@@ -57,12 +57,10 @@
   import VabRenderLeft from './components/left/index'
   import VabRenderMain from './components/main/index'
   import VabRenderRight from './components/right/index'
-  import { Multipane, MultipaneResizer } from 'vue-multipane'
 
   // 工具函数
 
   const cloneDeep = require('clone')
-  import serialize from 'serialize-javascript'
   import { objectToArr, arrToObject, removeEmptyProps } from './utils'
 
   // 默认配置
@@ -77,8 +75,6 @@
     name: 'VabRender',
     components: {
       FormSkeleton,
-      Multipane,
-      MultipaneResizer,
       VabRenderLeft,
       VabRenderRight,
       VabRenderMain,
