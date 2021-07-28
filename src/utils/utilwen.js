@@ -144,8 +144,8 @@ export function translateTitle(title) {
   return pageTitle
 }
 
-export function aclObj(roles) {
-  if (!roles) return
+export function aclObj() {
+  let roles = store.getters['acl/role']
   let aclObj = {}
   roles.map((e) => {
     console.log(e.name, '')

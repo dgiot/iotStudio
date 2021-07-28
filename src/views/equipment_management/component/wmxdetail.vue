@@ -61,11 +61,7 @@
                   prop="type"
                 >
                   <!--少个@change=selectStruct-->
-                  <el-select
-                    v-model="sizeForm.type"
-                    style="width: 100%"
-                    :disabled="sizeForm.editdatatype"
-                  >
+                  <el-select v-model="sizeForm.type" style="width: 100%">
                     <el-option-group
                       v-for="group in dataType"
                       :key="group.label"
@@ -359,7 +355,7 @@
               </el-form-item>
             </div>
             <!--字符串添加格式-->
-            <div v-if="sizeForm.type == 'text'">
+            <div v-if="sizeForm.type == 'string'">
               <el-form-item
                 :label="$translateTitle('product.datalength')"
                 prop="string"
@@ -432,14 +428,14 @@
                       @size-change="wmxSizeChange"
                       @current-change="wmxCurrentChange"
                     />
-                    <!--                    <el-button-->
-                    <!--                      slot="reference"-->
-                    <!--                      style="text-align: center"-->
-                    <!--                      size="mini"-->
-                    <!--                    >-->
-                    <!--                      &lt;!&ndash; 添加变量 &ndash;&gt;-->
-                    <!--                      {{ $translateTitle('product.addvariable') }}-->
-                    <!--                    </el-button>-->
+                    <el-button
+                      slot="reference"
+                      style="text-align: center"
+                      size="mini"
+                    >
+                      <!-- 添加变量 -->
+                      {{ $translateTitle('product.addvariable') }}
+                    </el-button>
                   </el-popover>
                 </el-col>
               </el-row>
@@ -682,181 +678,6 @@
               </el-col> -->
           </el-collapse-item>
           <el-collapse-item name="3">
-            <template slot="title">
-              {{ $translateTitle('task.datacount') }}
-            </template>
-            <el-row :gutter="24">
-              <el-col :span="12">
-                <el-form-item label="是否统计">
-                  <el-select
-                    v-model="sizeForm.iscount"
-                    style="width: 100%"
-                    size="mini"
-                    filterable
-                    allow-create
-                    default-first-option
-                    placeholder="请选择"
-                  >
-                    <el-option label="否" value="0" />
-                    <el-option label="是" value="1" />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-tooltip
-                  style="float: left"
-                  effect="dark"
-                  placement="right-start"
-                >
-                  <div slot="content">
-                    统计策略表达式 。
-                    <br />
-
-                    如：
-                    <br />
-
-                    5分钟 = 5 * 60
-                    <br />
-
-                    1小时 = 60 * 60
-                    <br />
-
-                    5小时 = 5 * 60 * 60
-                    <br />
-
-                    1天 = 24 * 60 * 60
-                    <br />
-                  </div>
-                  <i class="el-icon-question" />
-                </el-tooltip>
-                <el-form-item label="统计策略(单位：秒)">
-                  <!-- <el-input v-model="sizeForm.rate" auto-complete="off">   <template slot="append">秒</template>
-                  </el-input> -->
-                  <el-select
-                    v-model="sizeForm.countstrategy"
-                    style="width: 95%"
-                    size="mini"
-                    filterable
-                    allow-create
-                    default-first-option
-                    placeholder="请选择"
-                  >
-                    <el-option
-                      v-for="item in countsizeOption"
-                      :key="item.val"
-                      :label="item.label"
-                      :value="item.val"
-                      size="mini"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="12">
-                <el-form-item label="统计轮次">
-                  <!-- <el-input v-model="sizeForm.rate" auto-complete="off">   <template slot="append">秒</template>
-                  </el-input> -->
-                  <el-select
-                    v-model="sizeForm.countround"
-                    style="width: 100%"
-                    size="mini"
-                    filterable
-                    allow-create
-                    default-first-option
-                    placeholder="请选择生效轮次"
-                  >
-                    <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                  <p
-                    style="
-                      position: absolute;
-                      top: 26px;
-                      margin: 0;
-                      font-size: 12px;
-                      color: black;
-                    "
-                  >
-                    例如:1,3,5,8;(可选可自主填写)(注意:逗号为英文逗号)
-                  </p>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-tooltip
-                  style="float: left"
-                  effect="dark"
-                  placement="right-start"
-                >
-                  <div slot="content">
-                    1. 采集值 设备上行数据经采集公式计算后显示 。
-                    <br />
-
-                    公式中的%s为占位符，是固定字段。
-                    <br />
-
-                    如：
-                    <br />
-
-                    加：%s+10
-                    <br />
-
-                    减：%s-10
-                    <br />
-
-                    乘：%s*10
-                    <br />
-
-                    除：%s/10
-                    <br />
-
-                    余数：%s%10
-                    <br />
-
-                    2. 计算值 添加变量按钮,
-                    <br />
-                    复制对应的标识符
-                    <br />
-
-                    例：pressure_out
-                    <br />
-                    加：pressure_out+10
-                    <br />
-
-                    减：pressure_out-10
-                    <br />
-
-                    乘：pressure_out*10
-                    <br />
-
-                    除：pressure_out/10
-                    <br />
-
-                    余数：pressure_out%10
-                    <br />
-
-                    3. 复杂值 ：关闭本弹窗后使用物解析处理
-                    <br />
-                  </div>
-                  <i class="el-icon-question" />
-                </el-tooltip>
-                <el-form-item label="统计公式">
-                  <el-input
-                    v-model="sizeForm.countcollection"
-                    style="width: 95%"
-                    :rows="1"
-                    type="textarea"
-                    placeholder="%s"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-collapse-item>
-          <el-collapse-item name="4">
             <template slot="title">数据来源</template>
             <el-row :gutter="24">
               <el-col :span="12">
@@ -1038,7 +859,6 @@
 
 <script>
   import mockModules from '@/api/Mock/Modules'
-
   console.log('dataType', mockModules)
   import { getAllunit } from '@/api/Dict/index'
   import { mapGetters, mapMutations } from 'vuex'
@@ -1223,20 +1043,6 @@
             val: '主动上报',
           },
         ],
-        countsizeOption: [
-          {
-            label: '10',
-            val: '10',
-          },
-          {
-            label: '20',
-            val: '20',
-          },
-          {
-            label: '30',
-            val: '30',
-          },
-        ],
       }
     },
     computed: {
@@ -1298,15 +1104,11 @@
             dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
-            order: that.$objGet(item, 'dataForm.order'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
             protocol: that.$objGet(item, 'dataForm.protocol'),
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
-            iscount: this.$objGet(item, 'dataForm.iscount'),
-            countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
-            countround: this.$objGet(item, 'dataForm.countround'),
-            countcollection: this.$objGet(item, 'dataForm.countcollection'),
             collection: '',
             control: '',
             strategy: '',
@@ -1334,15 +1136,11 @@
             dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
-            order: that.$objGet(item, 'dataForm.order'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
             protocol: that.$objGet(item, 'dataForm.protocol'),
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
-            iscount: this.$objGet(item, 'dataForm.iscount'),
-            countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
-            countround: this.$objGet(item, 'dataForm.countround'),
-            countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: false,
             isread: item.accessMode,
             identifier: item.identifier,
@@ -1372,15 +1170,11 @@
             dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
-            order: that.$objGet(item, 'dataForm.order'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
             protocol: that.$objGet(item, 'dataForm.protocol'),
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: this.$objGet(item, 'dataForm.slaveid'),
-            iscount: this.$objGet(item, 'dataForm.iscount'),
-            countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
-            countround: this.$objGet(item, 'dataForm.countround'),
-            countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
             identifier: item.identifier,
@@ -1402,15 +1196,11 @@
             dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
-            order: that.$objGet(item, 'dataForm.order'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
             protocol: that.$objGet(item, 'dataForm.protocol'),
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
-            iscount: this.$objGet(item, 'dataForm.iscount'),
-            countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
-            countround: this.$objGet(item, 'dataForm.countround'),
-            countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
             collection:
@@ -1419,7 +1209,7 @@
             identifier: item.dataForm == undefined ? '' : item.identifier,
             strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
           }
-        } else if (item.dataType.type == 'text') {
+        } else if (item.dataType.type == 'string') {
           obj = {
             name: item.name,
             ico: item.ico,
@@ -1435,15 +1225,11 @@
             dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
-            order: that.$objGet(item, 'dataForm.order'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
             protocol: that.$objGet(item, 'dataForm.protocol'),
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
-            iscount: this.$objGet(item, 'dataForm.iscount'),
-            countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
-            countround: this.$objGet(item, 'dataForm.countround'),
-            countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
             identifier: item.identifier,
@@ -1465,15 +1251,11 @@
             dinumber: that.$objGet(item, 'dataForm.data'),
             rate: that.$objGet(item, 'dataForm.rate'),
             offset: that.$objGet(item, 'dataForm.offset'),
-            order: that.$objGet(item, 'dataForm.order'),
+            byteorder: that.$objGet(item, 'dataForm.byteorder'),
             protocol: that.$objGet(item, 'dataForm.protocol'),
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
-            iscount: this.$objGet(item, 'dataForm.iscount'),
-            countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
-            countround: this.$objGet(item, 'dataForm.countround'),
-            countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
             identifier: item.identifier,

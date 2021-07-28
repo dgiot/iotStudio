@@ -1,68 +1,31 @@
 <template>
   <div ref="flvPlayer" class="player">
-    <!--    判断type 共用一个组件 会出错  原因是无法销毁上一个组件,所有判断多个type-->
-    <vue-flv-player
-      v-if="type == 'mp4'"
-      :width="width"
-      :height="height"
-      :autoplay="autoplay"
-      :controls="controls"
-      :muted="muted"
-      :source="source"
-      :type="type"
-    />
-    <vue-flv-player
-      v-else-if="type == 'flv'"
-      :width="width"
-      :height="height"
-      :autoplay="autoplay"
-      :controls="controls"
-      :muted="muted"
-      :source="source"
-      :type="type"
-    />
-    <hrm-player
-      v-else-if="type == 'video/mp4'"
-      ref="hrmPlayer"
-      :width="width"
-      :height="height"
-      :autoplay="autoplay"
-      :controls="controls"
-      :muted="muted"
-      :source="source"
-      :type="type"
-    />
-    <hrm-player
-      v-else-if="type == 'rtmp/flv'"
-      ref="hrmPlayer"
-      :width="width"
-      :height="height"
-      :autoplay="autoplay"
-      :controls="controls"
-      :muted="muted"
-      :source="source"
-      :type="type"
-    />
-    <hrm-player
-      v-else-if="type == 'application/x-mpegURL'"
-      ref="hrmPlayer"
-      :width="width"
-      :height="height"
-      :autoplay="autoplay"
-      :controls="controls"
-      :muted="muted"
-      :source="source"
-      :type="type"
-    />
-    <div v-else>
-      {{ type }}
+    <div>
+      <video
+        id="videoElement"
+        :key="source + new Date()"
+        autoplay
+        controls
+        :width="width"
+        :height="height"
+      ></video>
     </div>
+    <!--    <hrm-player-->
+    <!--      :width="900"-->
+    <!--      :height="500"-->
+    <!--      :muted="true"-->
+    <!--      :autoplay="true"-->
+    <!--      :controls="true"-->
+    <!--      :source="src"-->
+    <!--      :type="type"-->
+    <!--    />-->
   </div>
 </template>
 
 <script>
   export default {
     name: 'VabPlayer',
+    components: {},
     props: {
       // https://github.com/wangdaodao/hrm-player#attributes
       /**
@@ -103,7 +66,7 @@
       type: {
         required: false,
         type: String,
-        default: 'application/x-mpegURL',
+        default: 'flv',
       },
       /**
        * @param {*} fluid 播放器是否按比例缩放以适应其容器，为true时，height不起作用
@@ -177,8 +140,25 @@
         hrmType: ['video/mp4', 'rtmp/flv', 'application/x-mpegURL'],
       }
     },
-    mounted() {},
-    methods: {},
+    mounted() {
+      this.$nextTick(() => {
+        this.createVideo()
+      })
+    },
+    methods: {
+      createVideo() {
+        if (flvjs.isSupported()) {
+          var videoElement = document.getElementById('videoElement')
+          var flvPlayer = flvjs.createPlayer({
+            type: this.type,
+            url: this.source,
+          })
+          flvPlayer.attachMediaElement(videoElement)
+          flvPlayer.load()
+          flvPlayer.play()
+        }
+      },
+    },
   }
 </script>
 

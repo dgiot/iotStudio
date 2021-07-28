@@ -2,6 +2,7 @@
   <div class="rulesengine">
     <div class="engintable">
       <div class="engineheader">
+        <h3>{{ $translateTitle('rule.rule') }}</h3>
         <el-button
           :disabled="alarmsRuleId.length > 0 && engineData.length > 0"
           type="primary"
@@ -18,12 +19,7 @@
         :cell-class-name="getRowindex"
         style="width: 100%; text-align: center"
       >
-        <el-table-column
-          label="ID"
-          align="center"
-          show-overflow-tooltip
-          width="180"
-        >
+        <el-table-column label="ID" align="center" width="180">
           <template slot-scope="scope">
             <span @click="detailRules(scope.row.id)">{{ scope.row.id }}</span>
           </template>
@@ -32,20 +28,12 @@
         <el-table-column
           :label="$translateTitle('leftbar.topics')"
           align="center"
-          show-overflow-tooltip
-          width="200"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.for.join(',') }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          width="200"
-          prop="rawsql"
-          align="center"
-          label="SQL"
-        />
+        <el-table-column prop="rawsql" align="center" label="SQL" />
         <el-table-column
           :label="$translateTitle('rule.ResponseAction')"
           align="center"
@@ -78,29 +66,30 @@
         <el-table-column
           :label="$translateTitle('developer.operation')"
           align="center"
-          fixed="right"
-          width="210"
         >
           <template slot-scope="scope">
             <el-button
-              type="success"
+              type="info"
               size="mini"
+              plain
               @click="detailRules(scope.row.id)"
             >
               <!-- 查看 -->
               {{ $translateTitle('equipment.see') }}
             </el-button>
             <el-button
-              type="primary"
+              type="info"
               size="mini"
+              plain
               @click="editRule(scope.row.id)"
             >
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
             </el-button>
             <el-button
-              type="danger"
+              type="info"
               size="mini"
+              plain
               @click="deleteRule(scope.row.id)"
             >
               <!-- 删除 -->
@@ -136,7 +125,6 @@
         start: 0,
         total: 0,
         productid: this.$route.query.productid || '',
-        ruleType: this.$route.query.type || '',
         uid: this.$route.query.uuid || '',
         alarmsRuleId: '',
       }
@@ -147,8 +135,8 @@
     methods: {
       featchData(args) {
         console.log(args)
-        if (this.productid && this.uid && this.ruleType) {
-          this.alarmsRuleId = `rule:${this.ruleType}_${this.productid}_${this.uid}`
+        if (this.productid && this.uid) {
+          this.alarmsRuleId = 'rule:' + this.productid + this.uid
           this.getalarmsRule(this.alarmsRuleId)
           // this.orginRule()
         } else {
@@ -186,7 +174,6 @@
         }
         if (this.productid.length) query['productid'] = this.productid
         if (this.uid.length) query['uid'] = this.uid
-        if (this.ruleType.length) query['type'] = this.ruleType
         this.$router.push({
           path: '/rules_engine/addengine',
           query: query,

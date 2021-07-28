@@ -58,7 +58,7 @@
                   >
                     <img
                       :src="item"
-                      style="width: 100%; height: 100%"
+                      style="height: 100%; width: 100%"
                       :alt="item"
                       :title="item"
                     />
@@ -89,7 +89,7 @@
               >
                 <el-tree
                   ref="workGroup"
-                  style="float: left; width: 50%"
+                  style="width: 50%; float: left"
                   :data="deptTreeData"
                   :props="roleProps"
                   node-key="index"
@@ -124,7 +124,7 @@
                     :value="item.objectId"
                   >
                     <span style="float: left">{{ item.nick }}</span>
-                    <span style="float: right; font-size: 14px; color: #8492a6">
+                    <span style="float: right; color: #8492a6; font-size: 14px">
                       {{ item.objectId }}
                     </span>
                   </el-option>

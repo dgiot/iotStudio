@@ -49,7 +49,6 @@ const state = () => ({
     getToken('title') == 'DG-IOT' ? false : getToken('pictureSwitch'),
   language: getToken('language') || i18n,
   theme: getToken('theme') || { ...defaultTheme },
-  tag: getToken('tag') || {},
   extra: { first: '', transferRouteName: '' },
 })
 const getters = {
@@ -61,7 +60,6 @@ const getters = {
   collapse: (state) => state.collapse,
   language: (state) => state.language,
   theme: (state) => state.theme,
-  tag: (state) => state.tag,
   extra: (state) => state.extra,
 }
 const mutations = {
@@ -96,10 +94,6 @@ const mutations = {
   changeLanguage(state, language) {
     state.language = language
     setToken('language', language)
-  },
-  setTag(state, tag) {
-    state.tag = tag
-    setToken('tag', tag)
   },
   saveTheme(state, theme) {
     state.theme = theme
@@ -143,9 +137,6 @@ const actions = {
   },
   saveTheme({ commit }, theme) {
     commit('saveTheme', theme)
-  },
-  setTag({ commit }, tag) {
-    commit('setTag', tag)
   },
   resetTheme({ commit }) {
     commit('resetTheme')

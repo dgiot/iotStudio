@@ -33,6 +33,7 @@
         </el-row>
         <el-card shadow="hover" class="player_card">
           <vab-player
+            ref="vabPlayer"
             :autoplay="mp4Play"
             :source="flvsrc"
             :type="type"
@@ -62,16 +63,19 @@
             type: 'mp4',
             url: 'https://media.w3.org/2010/05/sintel/trailer.mp4',
           },
-          { type: 'flv', url: 'http://ivi.bupt.edu.cn/hls/cctv6hd.m3u8' },
-          {
-            type: 'video/mp4',
-            url: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',
-          },
-          { type: 'rtmp/flv', url: 'rtmp://58.200.131.2:1935/livetv/btv4' },
           {
             type: 'application/x-mpegURL',
             url: 'http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8',
           },
+          // {
+          //   type: 'video/mp4',
+          //   url: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4',
+          // },
+          // { type: 'rtmp/flv', url: 'rtmp://58.200.131.2:1935/livetv/btv4' },
+          // {
+          //   type: 'application/x-mpegURL',
+          //   url: 'http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8',
+          // },
         ],
       }
     },
@@ -101,7 +105,7 @@
         // }, 1500)
       },
       Play() {
-        this.mp4Play = true
+        this.$refs.vabPlayer.createVideo()
       },
     },
   }

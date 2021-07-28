@@ -222,6 +222,7 @@
     data() {
       return {
         drawerVisible: false,
+        tag: {},
       }
     },
     computed: {
@@ -232,7 +233,6 @@
         _pcimg: 'dashboard/_pcimg',
         _mimg: 'dashboard/_mimg',
         objectId: 'user/objectId',
-        tag: 'settings/tag',
       }),
     },
     watch: {
@@ -263,13 +263,22 @@
       })
       this.setTheme()
     },
-    mounted() {},
+    mounted() {
+      this.$nextTick(() => {
+        this.queryUserInfo()
+      })
+    },
     methods: {
       ...mapActions({
         saveTheme: 'settings/saveTheme',
         resetTheme: 'settings/resetTheme',
         togglePicture: 'settings/togglePicture',
       }),
+      async queryUserInfo() {
+        const { tag } = await this.$get_object('_User', this.objectId)
+        this.tag = tag
+        console.log(tag, 'tag')
+      },
       togglePic(e) {
         this.togglePicture(e)
       },
