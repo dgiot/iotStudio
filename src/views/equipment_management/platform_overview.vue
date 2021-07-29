@@ -149,7 +149,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item :label="$translateTitle('user.createdtime')">
+            <el-form-item :label="$translateTitle('home.updatedAt')">
               <el-date-picker
                 v-model="queryForm.searchDate"
                 end-placeholder="结束日期"
@@ -743,6 +743,7 @@
         _ChartStatus: 'dashboard/_ChartStatus',
         _tableData: 'dashboard/_tableData',
         _pcimg: 'dashboard/_pcimg',
+        _role: 'acl/role',
         _mimg: 'dashboard/_mimg',
       }),
     },
@@ -1104,6 +1105,9 @@
         }
       },
       async handleNodeClick(data, node) {
+        const aclRole = this._role.map((r) => {
+          return r.name
+        })
         $('.el-tree').css({
           height: '0px',
           display: 'none',
@@ -1113,8 +1117,9 @@
         this.queryForm.workGroupName = data.label
         this.treeDataValue = data.label
         console.log(this.treeDataValue)
-        this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
-        if (node.level != 1) {
+        if (aclRole.includes(data.name)) {
+          this.queryForm.access_token = this.token
+        } else if (node.level != 1) {
           // 在这里获取点击厂家的session
           const { access_token = '' } = await getToken(data.name)
           this.queryForm.access_token = access_token
@@ -1122,6 +1127,8 @@
           console.log(node.level, '登录的token', this.token)
           this.queryForm.access_token = this.token
         }
+        this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
+
         // 点击的公司名
         const { name, objectId } = data
         this.curDepartmentId = objectId

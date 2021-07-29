@@ -727,9 +727,6 @@
           img.height = $('#current1').height()
           console.log('img', img, "$('#current1')", $('#current1'))
           $('#current1').css('background-image', `url(${img_url})`)
-          $('#current1').css('background-size', '100%')
-          $('#current1').css('width', $('.konvajs-content')[0].style.width)
-          $('#current1').css('height', $('.konvajs-content')[0].style.height)
 
           // img.onload = () => {
           //   node.image(img)

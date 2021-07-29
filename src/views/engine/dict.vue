@@ -196,11 +196,11 @@
         </el-form>
       </el-dialog>
 
-      <el-dialog
+      <el-drawer
         :visible.sync="dict_temp_dialog"
         :close-on-click-modal="false"
         :title="title_temp_dialog"
-        width="80%"
+        size="60%"
         @open="opendialog('dictTempForm')"
       >
         <el-form
@@ -483,7 +483,7 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </el-dialog>
+      </el-drawer>
 
       <el-dialog
         :visible.sync="edit_dict_temp_dialog"

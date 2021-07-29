@@ -26,10 +26,10 @@ export default {
   iotMqtt: iotMqtt,
   options: {
     host: globalUrl(hostname, localHost),
-    // port: window.location.protocol === 'https:' ? 8084 : 8083,
-    port: 8083,
+    port: window.location.protocol === 'https:' ? 8084 : 8083,
+    // port: 8083,
     username: '_test',
-    isSSL: false,
+    isSSL: window.location.protocol === 'https:' ? true : false,
     password: '_iotn2n',
     keepalive: 60,
     clean: true,

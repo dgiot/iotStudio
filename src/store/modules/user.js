@@ -224,6 +224,7 @@ const actions = {
       dispatch('acl/setRole', roles, { root: true })
       dispatch('settings/setTitle', title, { root: true })
       dispatch('acl/setCopyright', Copyright, { root: true })
+      dispatch('settings/setTag', tag, { root: true })
       commit('setObejectId', objectId)
       // 登录成功后,需要将以下参数存入vuex
 
@@ -251,7 +252,7 @@ const actions = {
       const params = {
         count: 'objectId',
         order: '-updatedAt',
-        keys: 'name',
+        // keys: 'name',
         where: {
           category: 'IotHub',
         },
