@@ -4,6 +4,13 @@
     class="custom-table-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
   >
+    <input
+      ref="uploader"
+      type="file"
+      style="display: none"
+      accept="zip"
+      @change="doUpload($event)"
+    />
     <el-table
       ref="tableSort"
       v-loading="listLoading"
@@ -50,7 +57,7 @@
             {{ $translateTitle('product.export') }}
           </el-button>
           <el-button
-            tsize="mini"
+            size="mini"
             type="primary"
             @click="handleExport('import', row)"
           >
@@ -83,13 +90,15 @@
         lineHeight: 'medium',
         list: [],
         listLoading: true,
+        parseFile: '',
+        parseClass: '',
       }
     },
     computed: {},
-    mounted() {},
-    created() {
+    mounted() {
       this.fetchData()
     },
+    created() {},
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前
@@ -99,15 +108,36 @@
     activated() {},
     methods: {
       async handleExport(type, row) {
+        const { className } = row
+        this.parseClass = className
         if (type == 'export') {
+          const loading = this.$baseColorfullLoading(2)
           try {
-            const res = await ExportParse({ className: row.className })
-            console.log(res)
+            const res = await ExportParse(this.parseClass, {})
+            loading.close()
+            this.$convertRes2Blob(res)
             // this.$message.success(`${res}`)
           } catch (error) {
-            console.log(error)
+            loading.close()
             this.$message.error(`${error}`)
           }
+        } else {
+          this.$refs.uploader.click()
+        }
+        console.log(type, row)
+      },
+      async doUpload(event) {
+        this.parseFile = event.target.files[0]
+        const loading = this.$baseColorfullLoading(3)
+        try {
+          const res = await ImportParse(this.parseClass, this.parseFile)
+          loading.close()
+          console.log('eresresrror', res)
+          this.$message.success(``)
+        } catch (error) {
+          loading.close()
+          console.log('error', error)
+          this.$message.error(`${error}`)
         }
       },
       async fetchData() {

@@ -123,14 +123,7 @@
               prop="type"
               :label="$translateTitle('Maintenance.Ticket type')"
             >
-              <el-radio-group v-model="form.type">
-                <el-radio
-                  v-for="item in types"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
-              </el-radio-group>
+              <el-input v-model="form.type" />
             </el-form-item>
 
             <el-form-item
@@ -202,18 +195,11 @@
           </el-form-item>
 
           <el-form-item :label="$translateTitle('Maintenance.type')">
-            <el-select
+            <el-input
               v-model="queryForm.type"
               clearable
               :placeholder="$translateTitle('Maintenance.Ticket type')"
-            >
-              <el-option
-                v-for="item in types"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
+            />
           </el-form-item>
           <!--          <el-form-item label="账号">-->
           <!--            <el-input-->
@@ -290,7 +276,7 @@
               size="mini"
               icon="el-icon-circle-plus-outline"
               type="primary"
-              @click="dialogFormVisible = true"
+              @click="dialogFormVisible = !dialogFormVisible"
             >
               {{ $translateTitle('Maintenance.create Ticket') }}
             </el-button>
@@ -485,7 +471,7 @@
         form: {
           name: '',
           product: '',
-          type: [],
+          type: '',
           description: '',
           photo: [],
           objectId: '',
@@ -507,13 +493,11 @@
         formLabelWidth: '140px',
         rules: {
           product: [
-            { required: true, message: '请选择活动区域', trigger: 'change' },
+            { required: true, message: '请选择所属项目', trigger: 'change' },
           ],
-          name: [
-            { required: true, message: '请选择活动区域', trigger: 'change' },
-          ],
+          name: [{ required: true, message: '请选择设备', trigger: 'change' }],
           type: [
-            { required: true, message: '请选择活动资源', trigger: 'change' },
+            { required: true, message: '请输入工单类型', trigger: 'change' },
           ],
         },
         list: [],
@@ -840,7 +824,7 @@
               ? this.queryForm.product
               : { $ne: null },
             type: this.queryForm.type.length
-              ? this.queryForm.type
+              ? { $regex: this.queryForm.type }
               : { $ne: null },
           },
         }
@@ -876,6 +860,7 @@
       },
       async prodChange(e) {
         this.Device = []
+        this.form.name = ''
         const params = {
           where: { product: e },
         }

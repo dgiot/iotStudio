@@ -57,17 +57,10 @@
           </el-form-item>
 
           <el-form-item :label="$translateTitle('Maintenance.Ticket type')">
-            <el-select
+            <el-input
               v-model="queryForm.type"
               :placeholder="$translateTitle('Maintenance.Ticket type')"
-            >
-              <el-option
-                v-for="item in types"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
+            />
           </el-form-item>
           <!--          <el-form-item label="账号">-->
           <!--            <el-input-->
@@ -398,7 +391,7 @@
               ? this.queryForm.product
               : { $ne: null },
             type: this.queryForm.type.length
-              ? this.queryForm.type
+              ? { $regex: this.queryForm.type }
               : { $ne: null },
           },
         }

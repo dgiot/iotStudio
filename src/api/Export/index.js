@@ -1,10 +1,4 @@
-import {
-  query_object,
-  get_object,
-  del_object,
-  update_object,
-  create_object,
-} from '@/api/shuwa_parse'
+import store from '@/store'
 import request from '@/utils/request'
 
 /**
@@ -17,6 +11,9 @@ export async function ExportMenu(params) {
     url: 'menu',
     method: 'get',
     params: params,
+    headers: {
+      responseType: 'blob',
+    },
   })
 }
 /**
@@ -33,26 +30,49 @@ export async function ImportMenu(params) {
 }
 
 /**
- * @description 导出parse数据
+ * @description 导出Parse
  * @param params
  * @return {Promise<*|ElMessageComponent>}
  */
-export async function ExportParse(params) {
-  return request({
-    url: 'export_data',
-    method: 'get',
-    params: params,
-  })
+export async function ExportParse(className, params) {
+  // return request({
+  //   url: `export_data?classname=${className}`,
+  //   method: 'post',
+  //   data: params,
+  //   headers: {
+  //     responseType: 'blob',
+  //   },
+  // })
+  const _token = store.getters['user/token']
+  console.log('_token', _token)
+  return axios
+    .post(`iotapi/export_data?classname=${className}`, params, {
+      responseType: 'blob',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        sessionToken: _token,
+      },
+    })
+    .catch((err) => console.log(err))
 }
 /**
- * @description 导入parse数据
+ * @description 导入Parse
  * @param params
  * @return {Promise<*|ElMessageComponent>}
  */
-export async function ImportParse(params) {
+export async function ImportParse(className, file) {
+  let formData = new FormData()
+  formData.append('className', className)
+  formData.append('file', file)
+  console.log('formdata', formData, className, file)
   return request({
     url: 'import_data',
     method: 'post',
-    data: params,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      accept: 'application/json',
+    },
+    data: formData,
   })
 }
