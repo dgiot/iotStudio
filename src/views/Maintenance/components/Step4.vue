@@ -18,7 +18,7 @@
                 :label="$translateTitle('Maintenance.project') + ': '"
               >
                 <!--                <el-input v-model="detail._product" readonly disabled />-->
-                <span>{{ form._product }}</span>
+                <span>{{ form.product.name || '' }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -26,7 +26,7 @@
                 :label="$translateTitle('Maintenance.Equipment name') + ': '"
               >
                 <!--                <el-input v-model="detail._device" readonly disabled />-->
-                <span>{{ form._device }}</span>
+                <span>{{ form.device.name || '' }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -43,7 +43,16 @@
                   $translateTitle('Maintenance.Ticket description') + ': '
                 "
               >
-                {{ form.info.description }}
+                <el-input
+                  v-model="form.info.description"
+                  type="textarea"
+                  readonly
+                  :placeholder="
+                    $translateTitle(
+                      'Maintenance.Please record the processing content in detail!'
+                    )
+                  "
+                />
               </el-form-item>
             </el-col>
             <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
@@ -63,6 +72,44 @@
                     />
                   </el-carousel-item>
                 </el-carousel>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+              <el-form-item
+                :label="
+                  $translateTitle('Maintenance.Processing records') + ': '
+                "
+              >
+                <el-input
+                  v-model="form.info.step2.Remarks"
+                  size="1"
+                  type="textarea"
+                  readonly
+                  style="margin: 0 0 10px"
+                  :placeholder="
+                    $translateTitle(
+                      'Maintenance.Please record the processing content in detail!'
+                    )
+                  "
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+              <el-form-item
+                :label="
+                  $translateTitle('Maintenance.Evaluation description') + ': '
+                "
+              >
+                <el-input
+                  v-model="form.info.step3.Remarks"
+                  type="textarea"
+                  readonly
+                  :placeholder="
+                    $translateTitle(
+                      'Maintenance.Please record the processing content in detail!'
+                    )
+                  "
+                />
               </el-form-item>
             </el-col>
           </el-row>

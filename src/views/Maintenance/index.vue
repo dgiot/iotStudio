@@ -163,9 +163,12 @@
         sortable
         align="center"
         :label="$translateTitle('Maintenance.Initiator')"
-        prop="_user"
         show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          {{ row.user ? row.user.nick : '' }}
+        </template>
+      </el-table-column>
       <el-table-column
         sortable
         align="center"
@@ -382,7 +385,7 @@
           order: args.order,
           skip: args.skip,
           keys: args.keys,
-          include: 'product,device',
+          include: 'product,device,user',
           where: {
             number: this.queryForm.number.length
               ? { $regex: this.queryForm.number }
@@ -395,7 +398,7 @@
               : { $ne: null },
           },
         }
-        if (this.queryForm.searchDate.length) {
+        if (this.queryForm.searchDate?.length) {
           params.where['createdAt'] = {
             $gt: { __type: 'Date', iso: this.queryForm.searchDate[0] },
           }

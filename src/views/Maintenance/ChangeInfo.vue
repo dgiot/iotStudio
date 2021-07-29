@@ -104,7 +104,22 @@
         default: 1,
       },
     },
+    data() {
+      return {
+        isStep: 0,
+      }
+    },
+    mounted() {
+      if (this.step == 4) {
+        // this.step = 0
+        this.isStep = 4
+      }
+      console.log(this.step)
+    },
     methods: {
+      next() {
+        if (this.isStep++ > 5) this.isStep = 0
+      },
       handleSetStep(step, detail) {
         if (detail) this.form = Object.assign(this.form, detail)
       },

@@ -706,7 +706,12 @@
                   style="width: 100%"
                 >
                   <el-option
-                    v-for="(item, index) in ['normal', 'modbus', 'mingcheng']"
+                    v-for="(item, index) in [
+                      'normal',
+                      'modbus',
+                      'mingcheng',
+                      'hex',
+                    ]"
                     :key="index"
                     :label="item"
                     :value="item"
