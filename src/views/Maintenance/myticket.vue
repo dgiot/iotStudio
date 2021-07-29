@@ -650,7 +650,6 @@
           ACL: setAcl,
           info: {
             photo: from.photo,
-
             timeline: [
               {
                 timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
