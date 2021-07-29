@@ -21,6 +21,41 @@
           @request-success="handleSuccess(alertConfig)"
         />
       </el-dialog>
+      <el-dialog v-drag width="50vh" :visible.sync="dynamicformView">
+        <el-form
+          v-for="item in dynamicformInfo"
+          ref="dynamicformInfo"
+          :key="item.key"
+        >
+          <el-form-item :label="item.key">
+            <el-link type="success">{{ item.value }}</el-link>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-form>
+            <el-form-item
+              label-width="200"
+              :label="$translateTitle('alert.Alarm handling')"
+            >
+              <el-input
+                v-model="process"
+                type="textarea"
+                :readonly="isDisable"
+              />
+            </el-form-item>
+          </el-form>
+          <el-button @click="dynamicformView = false">
+            {{ $translateTitle('button.cancel') }}
+          </el-button>
+          <el-button
+            type="primary"
+            :disabled="isDisable"
+            @click="submitAlert(alertId)"
+          >
+            {{ $translateTitle('Maintenance.deal with') }}
+          </el-button>
+        </span>
+      </el-dialog>
     </div>
     <vab-query-form class="query-form">
       <vab-query-form-top-panel>
@@ -30,30 +65,33 @@
           :model="queryForm"
           @submit.native.prevent
         >
-          <el-form-item :label="$translateTitle('alert.alert number')">
-            <el-input
-              v-model.trim="queryForm.number"
+          <el-form-item :label="$translateTitle('alert.productname')">
+            <el-select
+              v-model="queryForm.productName"
               clearable
-              :placeholder="$translateTitle('Maintenance.Ticket number')"
-            />
+              :placeholder="$translateTitle('equipment.entername')"
+            >
+              <el-option
+                v-for="(item, index) in _Product"
+                :key="index"
+                :label="item.name"
+                :value="item.objectId"
+              />
+            </el-select>
           </el-form-item>
-
-          <!--          <el-form-item label="账号">-->
-          <!--            <el-input-->
-          <!--              v-model.trim="queryForm.account"-->
-          <!--              clearable-->
-          <!--              placeholder="请输入账号"-->
-          <!--            />-->
-          <!--          </el-form-item>-->
-          <el-form-item :label="$translateTitle('alert.the starting time')">
-            <el-date-picker
-              v-model="queryForm.searchDate"
-              :end-placeholder="$translateTitle('Maintenance.end time')"
-              format="yyyy-MM-dd"
-              :start-placeholder="$translateTitle('Maintenance.start time')"
-              type="daterange"
-              value-format="yyyy-MM-dd"
-            />
+          <el-form-item :label="$translateTitle('alert.isprocess')">
+            <el-select
+              v-model="queryForm.isprocess"
+              clearable
+              :placeholder="$translateTitle('alert.isprocess')"
+            >
+              <el-option
+                v-for="(item, index) in processAll"
+                :key="index"
+                :label="item.key"
+                :value="item.value"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button icon="el-icon-search" type="primary" @click="fetchData">
@@ -89,6 +127,21 @@
       <el-table-column
         sortable
         align="center"
+        prop="productname"
+        :label="$translateTitle('alert.productname')"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        sortable
+        align="center"
+        prop="process"
+        :label="$translateTitle('alert.process')"
+        show-overflow-tooltip
+      />
+
+      <el-table-column
+        sortable
+        align="center"
         :label="$translateTitle('equipment.createdAt')"
         show-overflow-tooltip
       >
@@ -104,12 +157,9 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <el-tag
-            :type="row.content.alertstatus ? 'danger' : 'success'"
-            effect="dark"
-          >
+          <el-tag :type="row.alertstatus ? 'danger' : 'success'" effect="dark">
             {{
-              row.content.alertstatus
+              row.alertstatus
                 ? $translateTitle('alert.start')
                 : $translateTitle('alert.stop')
             }}
@@ -123,9 +173,9 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <el-link :type="row.public ? 'success' : 'info'" effect="dark">
+          <el-link :type="row.Public ? 'success' : 'info'" effect="dark">
             {{
-              row.public
+              row.Public
                 ? $translateTitle('Maintenance.Processed')
                 : $translateTitle('Maintenance.Untreated')
             }}
@@ -142,10 +192,24 @@
           <el-button
             size="mini"
             type="primary"
-            @click="showInfo(row.type, row.content, row.objectId)"
+            @click="
+              showdynamicform(
+                row.objectId,
+                row.Public,
+                row.dynamicform,
+                row.process
+              )
+            "
           >
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
+          <!--          <el-button-->
+          <!--            size="mini"-->
+          <!--            type="primary"-->
+          <!--            @click="showInfo(row.type, row.content, row.objectId)"-->
+          <!--          >-->
+          <!--            {{ $translateTitle('Maintenance.View') }}-->
+          <!--          </el-button>-->
           <!--          <el-button v-show="row.status == 0" type="success">-->
           <!--            {{ $translateTitle('Maintenance.Dispatch') }}-->
           <!--          </el-button>-->
@@ -179,11 +243,7 @@
 </template>
 
 <script>
-  import {
-    queryNotification,
-    getNotification,
-    delNotification,
-  } from '@/api/Notification'
+  import { queryNotification, putNotification } from '@/api/Notification'
   import { getProduct } from '@/api/Product'
   import { mapGetters, mapMutations } from 'vuex'
   import { Promise } from 'q'
@@ -193,9 +253,12 @@
     data() {
       return {
         selectedList: [],
+        isDisable: false,
         parserView: false,
+        dynamicformView: false,
         formConfig: {},
         alertConfig: {},
+        dynamicformInfo: {},
         alertId: '',
         step: 1,
         detail: {},
@@ -209,6 +272,7 @@
         dialogVisible: false,
         disabled: false,
         formLabelWidth: '140px',
+        process: '',
         rules: {
           product: [
             { required: true, message: '请选择活动区域', trigger: 'change' },
@@ -220,12 +284,24 @@
             { required: true, message: '请选择活动资源', trigger: 'change' },
           ],
         },
+        processAll: [
+          {
+            key: '是',
+            value: 1,
+          },
+          {
+            key: '否',
+            value: 2,
+          },
+        ],
         list: [],
         // aclObj: {},
         listLoading: false,
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         queryForm: {
+          productName: '',
+          isprocess: '',
           number: '',
           product: '',
           type: '',
@@ -244,17 +320,6 @@
         role: 'acl/role',
         username: 'user/username',
       }),
-      aclObj() {
-        let aclObj = {}
-        this.role.map((e) => {
-          console.log(e.name, '')
-          aclObj[`${'role' + ':' + e.name}`] = {
-            read: true,
-            write: true,
-          }
-        })
-        return aclObj
-      },
     },
 
     created() {
@@ -306,6 +371,44 @@
         })
         console.log(this.selectedList)
       },
+      async submitAlert(alertId) {
+        const Loading = this.$baseColorfullLoading(4)
+        Loading.close()
+        let alertParams = {
+          process: this.process,
+          public: true,
+        }
+        try {
+          const res = await putNotification(alertId, alertParams)
+          console.log(res)
+          this.$message.success(`${res}`)
+        } catch (error) {
+          console.log(error)
+          this.$message.error(`${error}`)
+        }
+        this.fetchData()
+        this.dynamicformView = false
+      },
+      showdynamicform(alertId, flag, dynamicform, process) {
+        this.alertId = alertId
+        this.isDisable = flag
+        this.process = process
+        let dFrom = []
+        console.log(dynamicform)
+        for (let d in dynamicform) {
+          for (let j in dynamicform[d]) {
+            console.log(j, dynamicform[d][j])
+            let arr = {
+              key: j,
+              value: dynamicform[d][j],
+            }
+            dFrom.push(arr)
+          }
+        }
+        this.dynamicformInfo = dFrom
+        console.log(this.dynamicformInfo)
+        this.dynamicformView = true
+      },
       async showInfo(type, content, alertId) {
         const Loading = this.$baseColorfullLoading(4)
         console.log(type, content)
@@ -340,26 +443,6 @@
           this.parserView = true
         })
       },
-      getStatus(type = 0) {
-        // type == 0 ? '' : ''
-        switch (type) {
-          case 0:
-            return '待分配'
-            break
-          case 1:
-            return '已分配'
-            break
-          case 2:
-            return '已处理'
-            break
-          case 3:
-            return '已结单'
-            break
-          default:
-            return type
-            console.log('other', type)
-        }
-      },
       // async handleDelete(objectId) {
       //   const res = await del_object('Maintenance', objectId)
       //   this.$message.success('删除成功')
@@ -377,6 +460,15 @@
           order: args.order,
           skip: args.skip,
           keys: args.keys,
+          productid: this.queryForm.productName
+            ? this.queryForm.productName
+            : 'all',
+          isprocess:
+            this.queryForm.isprocess == 1
+              ? true
+              : this.queryForm.isprocess == 2
+              ? 'false'
+              : 'all',
           include: '',
           where: {
             objectId: this.queryForm.number.length

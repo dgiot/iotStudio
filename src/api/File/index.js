@@ -57,7 +57,7 @@ export function exlout(params) {
   // tips: 这里直接返回的是response整体!
   params.sessionToken = store.getters['user/token']
   return axios
-    .post('/dgiotproxy/shuwa_report/excelController/exlout', params, {
+    .post('excelController/exlout', params, {
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
       responseType: 'blob',
