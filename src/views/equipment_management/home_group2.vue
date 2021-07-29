@@ -168,6 +168,7 @@
               </el-table-column>
               <el-table-column
                 fixed="right"
+                width="280"
                 :label="$translateTitle('developer.operation')"
               >
                 <template slot-scope="scope">
@@ -270,7 +271,7 @@
         :visible.sync="dialogFormVisible"
         :close-on-click-modal="false"
         :before-close="handleClose"
-        width="40%"
+        size="60%"
         top="5vh"
       >
         <div class="content">
@@ -450,12 +451,12 @@
         </div>
       </el-dialog>
       <!--新增字典-->
-      <el-dialog
+      <el-drawer
         v-if="dictVisible"
         :close-on-click-modal="false"
         :title="title_temp_dialog"
         :visible.sync="dictVisible"
-        width="80%"
+        size="60%"
       >
         <el-form
           ref="dictTempForm"
@@ -588,7 +589,7 @@
             <el-button @click="dictVisible = false">取消</el-button>
           </el-form-item>
         </el-form>
-      </el-dialog>
+      </el-drawer>
       <!--新增字典数据-->
       <el-dialog
         :visible.sync="edit_dict_temp_dialog"
@@ -714,50 +715,134 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="24">
-            <el-col v-show="tempparams.protocol == 'modbus'" :span="12">
-              <el-form-item label="从机地址">
-                <el-input v-model="tempparams.slaveid" placeholder="从机地址" />
-              </el-form-item>
-            </el-col>
-            <el-col
-              v-show="
-                tempparams.protocol == 'modbus' ||
-                tempparams.protocol == 'mingcheng'
-              "
-              :span="12"
-            >
-              <el-form-item label="数据地址" prop="address">
-                <el-input v-model="tempparams.address" placeholder="数据地址" />
-              </el-form-item>
-            </el-col>
-            <el-col
-              v-show="
-                tempparams.protocol == 'modbus' ||
-                tempparams.protocol == 'mingcheng'
-              "
-              :span="12"
-            >
-              <el-form-item label="数据长度">
-                <el-input
-                  v-model.number="tempparams.bytes"
-                  placeholder="数据长度(字节)"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col v-show="tempparams.protocol == 'modbus'" :span="12">
-              <el-form-item label="字节序" prop="byteorder">
-                <el-select v-model="tempparams.byteorder" placeholder="请选择">
+          <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="数据格式">
+                <el-select
+                  v-model="tempparams.originaltype"
+                  placeholder="请选择"
+                  style="width: 100%"
+                >
                   <el-option
                     v-for="item in [
-                      { value: 'big', label: '大端' },
-                      { value: 'little', label: '小端' },
+                      { value: 'bit', label: '位' },
+                      { value: 'short16_AB', label: '16位 有符号(AB)' },
+                      { value: 'short16_BA', label: '16位 有符号(BA)' },
+                      { value: 'ushort16_AB', label: '16位 无符号(AB)' },
+                      { value: 'ushort16_BA', label: '16位 无符号(BA)' },
+                      { value: 'long32_ABCD', label: '32位 有符号(ABCD)' },
+                      { value: 'long32_CDAB', label: '32位 有符号(CDAB)' },
+                      { value: 'ulong32_ABCD', label: '32位 无符号(ABCD)' },
+                      { value: 'ulong32_CDAB', label: '32位 无符号(CDAB)' },
+                      { value: 'float32_ABCD', label: '32位 浮点数(ABCD)' },
+                      { value: 'float32_CDAB', label: '32位 浮点数(CDAB)' },
                     ]"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
                   />
                 </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-table
+            v-show="tempparams.protocol == 'modbus'"
+            :data="dataList"
+            border
+            style="width: 100%"
+            size="small"
+          >
+            <el-table-column
+              align="center"
+              label="从机地址(16进制加0X,例:0X10,否则是十进制)"
+              min-width="120"
+            >
+              <!--关键代码-->
+              <template slot-scope="scope">
+                <el-input v-model="tempparams.slaveid" />
+                <span v-show="false">{{ scope.row }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="寄存器状态" min-width="120">
+              <!--关键代码-->
+              <template slot-scope="scope">
+                <el-select
+                  v-model="tempparams.operatetype"
+                  style="width: 100%"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in [
+                      { value: 'readCoils', label: '0X01:读线圈寄存器' },
+                      { value: 'readInputs', label: '0X02:读离散输入寄存器' },
+                      {
+                        value: 'readHregs',
+                        label: '0X03:读保持寄存器',
+                      },
+                      {
+                        value: 'readIregs',
+                        label: '0X04:读输入寄存器',
+                      },
+                      {
+                        value: 'writeCoil',
+                        label: '0X05:写单个线圈寄存器',
+                      },
+                      {
+                        value: 'writeHreg',
+                        label: '0X06:写单个保持寄存器',
+                      },
+                      {
+                        value: 'writeCoils',
+                        label: '0X0f:写多个线圈寄存器',
+                      },
+                      {
+                        value: 'writeHregs',
+                        label: '0X10:写多个保持寄存器',
+                      },
+                    ]"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+                <span v-show="false">{{ scope.row.slaveid }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="数据地址(16进制加0X,例:0X10,否则是十进制)"
+              min-width="120"
+            >
+              <!--关键代码-->
+              <template slot-scope="scope">
+                <el-input v-model="tempparams.address" />
+                <span v-show="false">{{ scope.row.slaveid }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="数据长度(字节)"
+              min-width="120"
+            >
+              <!--关键代码-->
+              <template slot-scope="scope">
+                <el-input v-model="tempparams.bytes" />
+                <span v-show="false">{{ scope.row.slaveid }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-row v-show="tempparams.protocol != 'modbus'" :gutter="24">
+            <el-col :span="12">
+              <el-form-item label="数据地址">
+                <el-input v-model="tempparams.address" placeholder="数据地址" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="数据长度">
+                <el-input
+                  v-model.number="tempparams.bytes"
+                  placeholder="数据长度（字节）"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -996,6 +1081,7 @@
         </div>
       </el-dialog>
     </div>
+    <VabRender v-show="false" :config="config" :loading="true" />
   </div>
 </template>
 <script>
@@ -1012,6 +1098,8 @@
   export default {
     data() {
       return {
+        config: {},
+        dataList: [{}],
         parserView: false,
         parserTable: false,
         parserTableList: { parser: [] },
@@ -1570,10 +1658,11 @@
           limit: this.length,
           skip: this.start,
           keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon',
-          where: {},
-        }
-        if (this.formInline.productname != '') {
-          parsms.where.name = this.formInline.productname
+          where: {
+            name: this.formInline.productname.length
+              ? { $regex: this.formInline.productname }
+              : { $ne: null },
+          },
         }
         const { results, count } = await this.$query_object('Product', parsms)
         // console.log("results", results)

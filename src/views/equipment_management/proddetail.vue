@@ -1219,15 +1219,15 @@
           </el-dialog>
           <div>
             <div style="background: #ffffff">
-              <label id="plug-name" />
+              <label id="plug-name1" />
             </div>
             <pre
               id="editor"
               class="ace_editor ace-monokai ace_dark"
               style="min-height: 600px; margin-bottom: 0"
-            ><textarea class="ace_text-input" /></pre>
+            ><textarea class="ace_text-input"/></pre>
             <div style="background: #ffffff">
-              <label id="plug-name" />
+              <label id="plug-name2" />
             </div>
             <div
               style="
@@ -1243,7 +1243,7 @@
               id="editor2"
               class="ace_editor"
               style="min-height: 300px; margin-top: 0; margin-bottom: 0"
-            ><textarea class="ace_text-input" /></pre>
+            ><textarea class="ace_text-input"/></pre>
           </div>
         </el-tab-pane>
         <!-- </div> -->
@@ -1376,7 +1376,7 @@
                 id="editorinsert"
                 class="ace_editor"
                 style="min-height: 400px"
-              ><el-input class="ace_text-input" type="textarea" /></pre>
+              ><el-input class="ace_text-input" type="textarea"/></pre>
               <el-button
                 slot="reference"
                 type="primary"
@@ -1594,7 +1594,7 @@
           id="editor1"
           class="ace_editor"
           style="min-height: 400px"
-        ><textarea class="ace_text-input" style="overflow:scroll" /></pre>
+        ><textarea class="ace_text-input" style="overflow:scroll"/></pre>
       </div>
       <span slot="footer" class="dialog-footer" style="height: 30px">
         <el-button type="primary" @click="preserve">
@@ -1690,7 +1690,7 @@
           class="ace_editor"
           style="width: 100%; min-height: 300px"
         >
-                      <textarea class="ace_text-input" style="overflow:scroll" />
+                      <textarea class="ace_text-input" style="overflow:scroll"/>
         </pre>
       </div>
 
@@ -1728,7 +1728,7 @@
                     id="editormodel"
                     class="ace_editor"
                     style="min-height: 600px"
-                  ><el-input class="ace_text-input" type="textarea" /></pre>
+                  ><el-input class="ace_text-input" type="textarea"/></pre>
                 </el-form-item>
               </div>
             </el-col>
@@ -1742,7 +1742,7 @@
                     id="editorcreate"
                     class="ace_editor"
                     style="min-height: 600px"
-                  ><el-input class="ace_text-input" type="textarea" /></pre>
+                  ><el-input class="ace_text-input" type="textarea"/></pre>
                 </el-form-item>
               </div>
             </el-col>
@@ -1867,7 +1867,7 @@
                   :id="item.name"
                   class="ace_editor3"
                   style="min-height: 300px; margin-top: 0; margin-bottom: 0"
-                ><textarea class="ace_text-input" /></pre>
+                ><textarea class="ace_text-input"/></pre>
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -1884,6 +1884,7 @@
   import { getAllunit, getDictCount } from '@/api/Dict/index'
   import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
   import { getRule } from '@/api/Rules'
+
   var editor
   var editor1
   var editor2
@@ -1901,6 +1902,7 @@
   import { Websocket } from '@/utils/wxscoket.js'
   import wmxdetail from './component/wmxdetail'
   import { returnLogin } from '@/utils/utilwen'
+
   export default {
     components: {
       wmxdetail,
@@ -2314,7 +2316,7 @@
           date: 'String类型的UTC时间戳 (毫秒)',
           string: '',
           specs: [],
-          dis: '0010',
+          dis: '0X10',
           dinumber: 'null',
         },
         tableData: [],
@@ -2488,7 +2490,7 @@
           strategy: '20',
           resource: 1,
           identifier: '',
-          dis: '0010',
+          dis: '0X10',
           dinumber: 'null',
           type: 'int',
           startnumber: '',
@@ -2513,14 +2515,19 @@
           ],
           rate: 1,
           offset: 0,
-          byteorder: 'big',
+          order: 0,
           protocol: 'normal',
           operatetype: 'readCoils',
           originaltype: 'int',
-          slaveid: '0010',
+          slaveid: '0X10',
           collection: '%s',
           control: '%d',
           nobound: [],
+          editdatatype: false,
+          iscount: '0',
+          countstrategy: 20,
+          countround: 'all',
+          countcollection: '%s',
         }
       },
       changeValue(formName) {
@@ -3121,12 +3128,11 @@
           name: sizeForm.name,
           dataForm: {
             round: sizeForm.round,
-            order: sizeForm.order,
             data: sizeForm.dinumber,
             address: sizeForm.dis,
             rate: sizeForm.rate,
             offset: sizeForm.offset,
-            byteorder: sizeForm.byteorder,
+            order: sizeForm.order,
             protocol: sizeForm.protocol,
             operatetype: sizeForm.operatetype,
             originaltype: sizeForm.originaltype,
@@ -3134,6 +3140,10 @@
             collection: sizeForm.collection,
             control: sizeForm.control,
             strategy: sizeForm.strategy,
+            iscount: sizeForm.iscount,
+            countstrategy: sizeForm.countstrategy,
+            countround: sizeForm.countround,
+            countcollection: sizeForm.countcollection,
           },
           ico: sizeForm.ico,
           required: true,
@@ -3146,7 +3156,7 @@
           sizeForm.type == 'double' ||
           sizeForm.type == 'int'
         ) {
-          var obj1 = {
+          let obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
               specs: {
@@ -3197,7 +3207,7 @@
             },
           }
           Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'string') {
+        } else if (sizeForm.type == 'text') {
           var obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
@@ -3265,15 +3275,18 @@
             precision: this.$objGet(rowData, 'dataType.specs.precision'),
             // : rowData.dataForm.
             dis: this.$objGet(rowData, 'dataForm.address'),
-            order: this.$objGet(rowData, 'dataForm.order'),
             round: this.$objGet(rowData, 'dataForm.round'),
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
-            byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+            order: this.$objGet(rowData, 'dataForm.order'),
             protocol: this.$objGet(rowData, 'dataForm.protocol'),
             operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
+            iscount: this.$objGet(rowData, 'dataForm.iscount'),
+            countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
+            countround: this.$objGet(rowData, 'dataForm.countround'),
+            countcollection: this.$objGet(rowData, 'dataForm.countcollection'),
             slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
             collection: '',
             control: '',
@@ -3282,6 +3295,7 @@
             ico: rowData.ico,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
+            editdatatype: true,
           }
           if (rowData.dataForm) {
             obj.collection = rowData.dataForm.collection
@@ -3300,15 +3314,18 @@
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
-            order: this.$objGet(rowData, 'dataForm.order'),
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
-            byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+            order: this.$objGet(rowData, 'dataForm.order'),
             protocol: this.$objGet(rowData, 'dataForm.protocol'),
             operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
             slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+            iscount: this.$objGet(rowData, 'dataForm.iscount'),
+            countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
+            countround: this.$objGet(rowData, 'dataForm.countround'),
+            countcollection: this.$objGet(rowData, 'dataForm.countcollection'),
             required: false,
             ico: rowData.ico,
             isread: rowData.accessMode,
@@ -3319,6 +3336,7 @@
               rowData.dataForm == undefined ? '' : rowData.dataForm.control,
             strategy:
               rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
+            editdatatype: true,
           }
         } else if (rowData.dataType.type == 'enum') {
           var structArray = []
@@ -3338,15 +3356,18 @@
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
-            order: this.$objGet(rowData, 'dataForm.order'),
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
-            byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+            order: this.$objGet(rowData, 'dataForm.order'),
             protocol: this.$objGet(rowData, 'dataForm.protocol'),
             operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
             slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+            iscount: this.$objGet(rowData, 'dataForm.iscount'),
+            countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
+            countround: this.$objGet(rowData, 'dataForm.countround'),
+            countcollection: this.$objGet(rowData, 'dataForm.countcollection'),
             required: true,
             ico: rowData.ico,
             isread: rowData.accessMode,
@@ -3357,6 +3378,7 @@
               rowData.dataForm == undefined ? '' : rowData.dataForm.control,
             strategy:
               rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
+            editdatatype: true,
           }
         } else if (rowData.dataType.type == 'struct') {
           obj = {
@@ -3368,15 +3390,18 @@
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
-            order: this.$objGet(rowData, 'dataForm.order'),
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
-            byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+            order: this.$objGet(rowData, 'dataForm.order'),
             protocol: this.$objGet(rowData, 'dataForm.protocol'),
             operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
             slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+            iscount: this.$objGet(rowData, 'dataForm.iscount'),
+            countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
+            countround: this.$objGet(rowData, 'dataForm.countround'),
+            countcollection: this.$objGet(rowData, 'dataForm.countcollection'),
             required: true,
             ico: rowData.ico,
             isread: rowData.accessMode,
@@ -3387,8 +3412,9 @@
             identifier: rowData.dataForm == undefined ? '' : rowData.identifier,
             strategy:
               rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
+            editdatatype: true,
           }
-        } else if (rowData.dataType.type == 'string') {
+        } else if (rowData.dataType.type == 'text') {
           obj = {
             name: rowData.name,
             type: rowData.dataType.type,
@@ -3402,21 +3428,25 @@
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
             round: this.$objGet(rowData, 'dataForm.round'),
             dis: this.$objGet(rowData, 'dataForm.address'),
-            order: this.$objGet(rowData, 'dataForm.order'),
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
-            byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
+            order: this.$objGet(rowData, 'dataForm.order'),
             protocol: this.$objGet(rowData, 'dataForm.protocol'),
             operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
             slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+            iscount: this.$objGet(rowData, 'dataForm.iscount'),
+            countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
+            countround: this.$objGet(rowData, 'dataForm.countround'),
+            countcollection: this.$objGet(rowData, 'dataForm.countcollection'),
             required: true,
             ico: rowData.ico,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
             strategy:
               rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
+            editdatatype: true,
           }
         } else if (rowData.dataType.type == 'date') {
           obj = {
@@ -3437,15 +3467,19 @@
             dinumber: this.$objGet(rowData, 'dataForm.data'),
             rate: this.$objGet(rowData, 'dataForm.rate'),
             offset: this.$objGet(rowData, 'dataForm.offset'),
-            byteorder: this.$objGet(rowData, 'dataForm.byteorder'),
             protocol: this.$objGet(rowData, 'dataForm.protocol'),
             operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
             originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
             slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+            iscount: this.$objGet(rowData, 'dataForm.iscount'),
+            countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
+            countround: this.$objGet(rowData, 'dataForm.countround'),
+            countcollection: this.$objGet(rowData, 'dataForm.countcollection'),
             required: true,
             ico: rowData.ico,
             isread: rowData.accessMode,
             identifier: rowData.identifier,
+            editdatatype: true,
           }
         }
         this.setSizeForm(obj)
@@ -3520,7 +3554,7 @@
                 accessMode: this.structform.isread,
                 identifier: this.structform.identifier,
               }
-            } else if (this.structform.type == 'string') {
+            } else if (this.structform.type == 'text') {
               obj = {
                 name: this.structform.name,
                 dataType: {
@@ -3611,7 +3645,7 @@
             obj.attributevalue = item.dataType.specs[value]
             this.structform.specs.push(obj)
           })
-        } else if (item.dataType.type == 'string') {
+        } else if (item.dataType.type == 'text') {
           this.structform.string = item.dataType.size
         }
       },
@@ -4629,13 +4663,16 @@
     width: 100%;
     height: calc(100vh - 100px);
   }
+
   .ace_editor3 {
     height: calc(100vh - 100px);
   }
+
   .diaCollRightCls {
     width: 100%;
     height: calc(100vh - 100px);
   }
+
   .editproduct {
     box-sizing: border-box;
     width: 100%;
@@ -4684,22 +4721,22 @@
 
   /* .editheader .product ul li:first-child,
 .editheader .product ul li:last-child {
-  width: 25%;
-  list-style: none;
-  color: #74777a;
-  font-size: 16px;
-  line-height: 50px;
-  float: left;
-  text-align: left;
+width: 25%;
+list-style: none;
+color: #74777a;
+font-size: 16px;
+line-height: 50px;
+float: left;
+text-align: left;
 }
 .editheader .product ul li:nth-child(2) {
-  width: 50%;
-  list-style: none;
-  color: #74777a;
-  font-size: 16px;
-  line-height: 50px;
-  float: left;
-  text-align: left;
+width: 50%;
+list-style: none;
+color: #74777a;
+font-size: 16px;
+line-height: 50px;
+float: left;
+text-align: left;
 } */
 </style>
 <style scoped>
@@ -4765,13 +4802,16 @@
     /*margin-top: -25px !important;*/
     /*color: pink;*/
   }
+
   ::v-deep .el-form-item__label {
     height: 48px;
     line-height: 30px;
   }
+
   ::v-deep .el-form-item--mini .el-form-item__error {
     margin-top: -13px;
   }
+
   .editproduct .el-dialog__header {
     border-bottom: 1px solid #dddddd;
   }
@@ -4798,7 +4838,7 @@
   }
 
   /* .editproduct .row-expand-cover + tr {
-  display: none;
+display: none;
 } */
   .editproduct .el-table__expanded-cell {
     left: 100px;
@@ -4813,7 +4853,7 @@
   }
 
   /* .editproduct #pane-sixeth {
-  display: flex;
+display: flex;
 } */
   .editproduct .el-col-2 {
     text-align: center;

@@ -1,13 +1,14 @@
 <template>
   <div class="devproduct">
     <el-dialog
-      v-drag
       :visible.sync="dialogVisible"
       width="90%"
       top="1vh"
+      :title="formConfig.uid"
       style="margin: 0 auto"
     >
       <VabParser
+        :dba-table="DbaTable"
         :productid="productid"
         :form-config="formConfig"
         :parserindex="editIndex"
@@ -24,7 +25,12 @@
     <el-dialog v-drag-dialog :visible.sync="parserView">
       <f-render v-model="formConfig" :config="formConfig" pure />
     </el-dialog>
-    <el-dialog v-drag-dialog :visible.sync="parserTable" class="parserTable">
+    <el-drawer
+      size="40%"
+      direction="rtl"
+      :visible.sync="parserTable"
+      class="parserTable"
+    >
       <div slot="title" class="header-title parserTable">
         <el-button
           type="primary"
@@ -41,18 +47,54 @@
       </div>
       <el-table size="mini" :data="parserTableList">
         <el-table-column
+          width="100"
+          show-overflow-tooltip
+          sortable
+          align="center"
+          prop="uid"
+          label="uid"
+        />
+        <el-table-column
+          show-overflow-tooltip
           sortable
           align="center"
           prop="name"
+          width="140"
           :label="$translateTitle('product.chinesetitle')"
-        />
+        >
+          <template #default="{ row }">
+            <el-popover trigger="hover" placement="top">
+              <p>
+                {{ $translateTitle('product.englishtitle') }}: {{ row.enname }}
+              </p>
+              <p>
+                {{ $translateTitle('developer.describe') }}:
+                {{ row.description }}
+              </p>
+              <p>
+                {{ $translateTitle('product.identifier') }}:
+                {{ row.identifier }}
+              </p>
+              <p>
+                {{ $translateTitle('developer.describe') }}:
+                {{ row.description }}
+              </p>
+              <p>
+                {{ $translateTitle('product.Table Name') }}:
+                {{ row.table }}
+              </p>
+              <p>
+                {{ $translateTitle('product.class') }}:
+                {{ row.field }}
+              </p>
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">{{ row.name }}</el-tag>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column
-          sortable
-          align="center"
-          prop="enname"
-          :label="$translateTitle('product.englishtitle')"
-        />
-        <el-table-column
+          show-overflow-tooltip
           sortable
           align="center"
           prop="type"
@@ -61,39 +103,54 @@
         <el-table-column
           sortable
           align="center"
-          prop="description"
-          :label="$translateTitle('developer.describe')"
-        />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('developer.operation')"
-          show-overflow-tooltip
+          prop="visible"
+          width="100"
+          :label="$translateTitle('product.visible')"
         >
           <template #default="{ row }">
-            <el-button type="text" @click="editParse(row.$index, row)">
+            <el-switch v-model="row.visible" disabled />
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          fixed="right"
+          width="200"
+          :label="$translateTitle('developer.operation')"
+        >
+          <template slot-scope="scope">
+            <el-button type="text" @click="editParse(scope.$index, scope.row)">
               {{ $translateTitle('concentrator.edit') }}
             </el-button>
             <el-button
-              v-if="parserType == 'parser'"
               type="text"
-              @click.native.prevent="goRule(row.uid)"
+              :disabled="!scope.row.config.order"
+              @click="previewParse(scope.row.config)"
             >
-              {{ $translateTitle('leftbar.alarms') }}
-            </el-button>
-            <el-button type="text" @click="previewParse(row.config)">
               {{ $translateTitle('application.preview') }}
             </el-button>
             <el-button
               type="text"
               size="small"
-              @click.native.prevent="deleteParse(row.$index, parserTableList)"
+              @click.native.prevent="
+                lockingParse(scope.row.uid, scope.$index, parserTableList)
+              "
+            >
+              {{ $translateTitle('application.locking') }}
+            </el-button>
+            <el-button
+              type="text"
+              size="small"
+              :disabled="scope.row.disable"
+              @click.native.prevent="
+                deleteParse(scope.row.uid, scope.$index, parserTableList)
+              "
             >
               {{ $translateTitle('task.Delete') }}
             </el-button>
           </template>
         </el-table-column>
       </el-table>
-    </el-dialog>
+    </el-drawer>
     <div class="prosecond">
       <el-form
         :inline="true"
@@ -124,27 +181,38 @@
           :data="proTableData"
           style="width: 100%"
         >
-          <el-table-column label="ProductID">
+          <el-table-column label="ProductID" sortable show-overflow-tooltip>
             <template slot-scope="scope">
               <el-link type="primary" @click="konvaDevice(scope.row)">
                 {{ scope.row.objectId }}
               </el-link>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('product.productname')">
+          <el-table-column
+            sortable
+            show-overflow-tooltip
+            :label="$translateTitle('product.productname')"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            width="180"
+            sortable
+            show-overflow-tooltip
+            width="100"
             :label="$translateTitle('product.profile')"
           >
             <template slot-scope="scope">
               <el-link
                 type="primary"
                 @click="
-                  editorParser(scope.row.objectId, scope.row.config, 'profile')
+                  editorParser(
+                    scope.row.objectId,
+                    scope.row.config,
+                    scope.row.thing,
+                    'profile'
+                  )
                 "
               >
                 {{
@@ -156,14 +224,21 @@
             </template>
           </el-table-column>
           <el-table-column
-            width="180"
+            sortable
+            show-overflow-tooltip
+            width="100"
             :label="$translateTitle('product.parser')"
           >
             <template slot-scope="scope">
               <el-link
                 type="primary"
                 @click="
-                  editorParser(scope.row.objectId, scope.row.config, 'parser')
+                  editorParser(
+                    scope.row.objectId,
+                    scope.row.config,
+                    scope.row.thing,
+                    'parser'
+                  )
                 "
               >
                 {{
@@ -174,12 +249,20 @@
               </el-link>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('product.productgrouping')">
+          <el-table-column
+            sortable
+            show-overflow-tooltip
+            :label="$translateTitle('product.productgrouping')"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.devType }}</span>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('product.nodetype')">
+          <el-table-column
+            sortable
+            show-overflow-tooltip
+            :label="$translateTitle('product.nodetype')"
+          >
             <template slot-scope="scope">
               <span v-if="scope.row.nodeType == 1">
                 {{ $translateTitle('product.gateway') }}
@@ -189,7 +272,11 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('home.category')">
+          <el-table-column
+            sortable
+            show-overflow-tooltip
+            :label="$translateTitle('home.category')"
+          >
             <template slot-scope="scope">
               <span>
                 {{ getCategory(scope.row.category) }}
@@ -245,9 +332,11 @@
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
   import Category from '@/api/Mock/Category'
+  import { getTable } from '@/api/Dba'
   export default {
     data() {
       return {
+        DbaTable: [],
         parserView: false,
         parserTable: false,
         parserType: '',
@@ -453,12 +542,23 @@
       const { project = '' } = this.$route.query
       this.formInline.productname = project
       this.Industry()
+      this.featchTable()
       this.searchProduct(0)
     },
     beforeDestroy() {
       this.projectName = ''
     },
     methods: {
+      async featchTable() {
+        try {
+          const { results: table = [] } = await getTable()
+          this.DbaTable = table
+        } catch (error) {
+          console.log(error)
+          this.$message.error(`${error}`)
+        }
+        console.log(this.DbaTable)
+      },
       uploadCkick() {
         this.loading = true
         // 触发子组件的点击事件
@@ -504,16 +604,6 @@
           path: '/Topo/VueKonva',
           query: {
             productid: row.objectId,
-          },
-        })
-      },
-      // 规则引擎
-      goRule(uid) {
-        this.$router.push({
-          path: '/dashboard/engine',
-          query: {
-            productid: this.parserFromId,
-            uuid: uid,
           },
         })
       },
@@ -903,12 +993,40 @@
           }
         })
       },
-      editorParser(objectId, config, type) {
+      editorParser(objectId, config = {}, thing = {}, type) {
+        var _sourceDict = []
+        var _sourceModule = []
+        var _sourceField = []
+        var arrStr = ''
+        this.productid = objectId
         this.parserFromId = objectId
         this.parserType = type
         this.productConfig = config
         console.log('config[`${type}`]', type, config[`${type}`])
+        // 将字典数据存在localStorage 中
+        console.log('config', config)
         this.parserTableList = config[`${type}`] ? config[`${type}`] : []
+        if (config?.basedate?.params?.length) {
+          config.basedate.params.forEach((_dict) => {
+            _sourceDict.push({
+              field: _dict.identifier,
+              label: _dict.name,
+              default: _dict.default,
+            })
+          })
+        }
+        if (thing?.properties?.length) {
+          thing.properties.forEach((_thing) => {
+            _sourceModule.push({
+              field: _thing.identifier,
+              label: _thing.name,
+              default: _thing.default || '',
+            })
+          })
+        }
+        localStorage.setItem('_sourceDict', JSON.stringify(_sourceDict))
+        localStorage.setItem('_sourceModule', _sourceModule)
+        localStorage.setItem('_sourceField', _sourceField)
         this.parserTable = true
       },
       editParse(index, row) {
@@ -957,12 +1075,28 @@
           uid: uuid(6),
           config: {},
           type: this.parserType,
+          identifier: 'identifier',
+          visible: true,
+          table: 'Device',
+          class: 'profile',
           description: this.parserType + 'description',
         })
         this.saveParse(row, -1, false)
       },
-      deleteParse(index, rows) {
-        rows.splice(index, 1)
+      deleteParse(uid, index, rows) {
+        console.log('uid', uid)
+        rows.forEach((e, i) => {
+          if (e.uid == uid) {
+            rows.splice(i, 1)
+          }
+          console.log('rows', rows)
+        })
+        // rows.splice(index, 1)
+        this.saveParse(rows, -1, false)
+      },
+      lockingParse(uid, index, rows) {
+        const { disable = false } = rows[`${index}`]
+        rows[`${index}`].disable = !disable
         this.saveParse(rows, -1, false)
       },
       // async editorParser(ObjectId) {
@@ -1372,6 +1506,7 @@
     //}
   .devproduct .parserTable {
     display: block;
+    text-align: center;
   }
   .devproduct ::v-deep .el-dialog {
     margin: 0 auto;

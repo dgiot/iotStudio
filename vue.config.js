@@ -63,6 +63,23 @@ const devServer = {
   },
   proxy: proxyStatic,
 }
+if (process.env.NODE_ENV === 'production') {
+  devServer.pwa = {
+    workboxOptions: {
+      skipWaiting: true,
+      clientsClaim: true,
+    },
+    themeColor: '#ffffff',
+    msTileColor: '#ffffff',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
+    manifestOptions: {
+      name: '物联网开发平台———杭州数蛙科技',
+      short_name: '物联网开发平台',
+      background_color: '#ffffff',
+    },
+  }
+}
 module.exports = {
   publicPath,
   assetsDir,
@@ -174,15 +191,15 @@ module.exports = {
       config
         .plugin('banner')
         .use(Webpack.BannerPlugin, [`${webpackBanner}${dateTime}`])
-      // if (imageCompression)
-      //   config.module
-      //     .rule('images')
-      //     .use('image-webpack-loader')
-      //     .loader('image-webpack-loader')
-      //     .options({
-      //       bypassOnDebug: true,
-      //     })
-      //     .end()
+      if (imageCompression)
+        config.module
+          .rule('images')
+          .use('image-webpack-loader')
+          .loader('image-webpack-loader')
+          .options({
+            bypassOnDebug: true,
+          })
+          .end()
       if (buildGzip)
         config.plugin('compression').use(CompressionWebpackPlugin, [
           {

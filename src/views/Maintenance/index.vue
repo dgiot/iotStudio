@@ -57,17 +57,10 @@
           </el-form-item>
 
           <el-form-item :label="$translateTitle('Maintenance.Ticket type')">
-            <el-select
+            <el-input
               v-model="queryForm.type"
               :placeholder="$translateTitle('Maintenance.Ticket type')"
-            >
-              <el-option
-                v-for="item in types"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
+            />
           </el-form-item>
           <!--          <el-form-item label="账号">-->
           <!--            <el-input-->
@@ -152,7 +145,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.product.name }}
+          {{ row.product && row.product.name ? row.product.name : '' }}
         </template>
       </el-table-column>
 
@@ -163,7 +156,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.device.name }}
+          {{ row.device && row.device.name ? row.device.name : '' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -352,7 +345,7 @@
         this.step = status + 1
         this.deviceFlag = true
       },
-      getStatus(type) {
+      getStatus(type = 0) {
         // type == 0 ? '' : ''
         switch (type) {
           case 0:
@@ -398,7 +391,7 @@
               ? this.queryForm.product
               : { $ne: null },
             type: this.queryForm.type.length
-              ? this.queryForm.type
+              ? { $regex: this.queryForm.type }
               : { $ne: null },
           },
         }

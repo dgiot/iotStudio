@@ -1741,16 +1741,16 @@
     margin: 10px 0;
   }
   /* .equipment .devicecontent .el-form .el-form-item .is-required:not(.is-no-asterisk):after{
-  content: '*';
-  color: #F56C6C;
-  margin-right: 4px;
+    content: '*';
+    color: #F56C6C;
+    margin-right: 4px;
 } */
   /* .equipment .devicecontent .el-form .el-form-item__label:before{
-  content:''
+    content:''
 }
 .equipment .devicecontent .el-form .el-form-item__label:after{
-  content: '*';
-  color: #F56C6C;
-  margin-right: 4px;
+    content: '*';
+    color: #F56C6C;
+    margin-right: 4px;
 } */
 </style>

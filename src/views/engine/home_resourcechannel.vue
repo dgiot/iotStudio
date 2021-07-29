@@ -124,7 +124,7 @@
         <el-table-column
           :label="$translateTitle('developer.operation')"
           fixed="right"
-          width="440"
+          width="340"
         >
           <template slot-scope="scope">
             <el-button
@@ -228,7 +228,7 @@
               @click="subProTopic(scope.row)"
             >
               <!-- 订阅日志 -->
-              {{ $translateTitle('product.subscriptionlog') }}
+              {{ $translateTitle('product.log') }}
             </el-button>
           </template>
         </el-table-column>

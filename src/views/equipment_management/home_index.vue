@@ -60,15 +60,23 @@
         top="5vh"
         width="80%"
       >
-        <info :devicedetail="devicedetail" />
-        <el-tabs v-model="activeparseTbas" type="card">
+        <el-tabs
+          v-model="activeparseTbas"
+          type="card"
+          @tab-click="handleTabClick"
+        >
           <el-tab-pane
             v-for="item in parseTbas"
             :key="item.name"
             :label="item.name"
             :name="item.name"
           >
-            <ele-form v-model="item.config" v-bind="item.config" />
+            <ele-form
+              v-model="item.config"
+              v-bind="item.config"
+              :request-fn="handleSubmit"
+              @request-success="handleSuccess(item)"
+            />
             <!--            <f-render v-model="item.config" :config="item.config" pure />-->
             <!--            <f-render :config="item.config" />-->
           </el-tab-pane>
@@ -102,106 +110,41 @@
     </div>
     <div class="equtabs">
       <!--tabs第一个标签页-->
-      <div class="equ_header">
-        <!--            <ul>-->
-        <!--              <li>-->
-        <!--                <p>-->
-        <!--                  <span class="svg-container">-->
-        <!--                    <vab-icon icon="device-fill" />-->
-        <!--                  </span>-->
+      <!--      <div class="equ_header">-->
+      <!--        <ul>-->
+      <!--          <li>-->
+      <!--            <p>-->
+      <!--              <span class="svg-container">-->
+      <!--                <vab-icon icon="device-fill" />-->
+      <!--              </span>-->
 
-        <!--                  <el-tooltip-->
-        <!--                    :content="$translateTitle('equipment.totalequipment')"-->
-        <!--                    placement="top"-->
-        <!--                  >-->
-        <!--                    <i class="el-icon-question" />-->
-        <!--                  </el-tooltip>-->
-        <!--                </p>-->
-        <!--                <span>{{ devicetotal }}</span>-->
-        <!--              </li>-->
-        <!--              <li>-->
-        <!--                <p>-->
-        <!--                  <span class="svg-container">-->
-        <!--                    <vab-icon icon="24-hours-line" />-->
-        <!--                  </span>-->
-        <!--                  {{ $translateTitle('equipment.onlinedevices') }}-->
-        <!--                  <el-tooltip-->
-        <!--                    :content="$translateTitle('equipment.totalonline')"-->
-        <!--                    placement="top"-->
-        <!--                  >-->
-        <!--                    <i class="el-icon-question" />-->
-        <!--                  </el-tooltip>-->
-        <!--                </p>-->
-        <!--                <span>{{ onlineall }}</span>-->
-        <!--              </li>-->
-        <!--            </ul>-->
-        <el-row>
-          <el-col :xs="24" :sm="24" :md="8" :xl="8">
-            <el-card class="box-card">
-              <div slot="header" class="clearfix">
-                <span>
-                  {{ $translateTitle('equipment.Equipment Overview') }}
-                </span>
-                <el-button
-                  icon="el-icon-refresh"
-                  style="float: right; padding: 3px 0"
-                  type="text"
-                />
-              </div>
-              <div class="text item">
-                <ve-ring
-                  height="140px"
-                  :data-empty="!chartOnlone.rows"
-                  :data="chartOnlone"
-                  :settings="chartSettings"
-                  :extend="chartExtend"
-                />
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :xl="8">
-            <el-card class="box-card">
-              <div slot="header" class="clearfix">
-                <span>
-                  {{ $translateTitle('equipment.Warning today') }}
-                </span>
-                <el-button
-                  icon="el-icon-refresh"
-                  style="float: right; padding: 3px 0"
-                  type="text"
-                />
-              </div>
-              <div class="text item">
-                <ve-ring
-                  height="140px"
-                  :data-empty="!chartwaring.rows"
-                  :data="chartwaring"
-                />
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :xl="8">
-            <el-card class="box-card">
-              <div slot="header" class="clearfix">
-                <span>{{ $translateTitle('equipment.Products') }}</span>
-                <el-button
-                  icon="el-icon-refresh"
-                  style="float: right; padding: 3px 0"
-                  type="text"
-                />
-              </div>
-              <div class="text item">
-                <ve-ring
-                  height="140px"
-                  :data-empty="!chartProduct.rows"
-                  :data="chartProduct"
-                />
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </div>
-      <div style="margin-top: 20px" class="equdevices">
+      <!--              <el-tooltip-->
+      <!--                :content="$translateTitle('equipment.totalequipment')"-->
+      <!--                placement="top"-->
+      <!--              >-->
+      <!--                <i class="el-icon-question" />-->
+      <!--              </el-tooltip>-->
+      <!--            </p>-->
+      <!--            <span>{{ devicetotal }}</span>-->
+      <!--          </li>-->
+      <!--          <li>-->
+      <!--            <p>-->
+      <!--              <span class="svg-container">-->
+      <!--                <vab-icon icon="24-hours-line" />-->
+      <!--              </span>-->
+      <!--              {{ $translateTitle('equipment.onlinedevices') }}-->
+      <!--              <el-tooltip-->
+      <!--                :content="$translateTitle('equipment.totalonline')"-->
+      <!--                placement="top"-->
+      <!--              >-->
+      <!--                <i class="el-icon-question" />-->
+      <!--              </el-tooltip>-->
+      <!--            </p>-->
+      <!--            <span>{{ onlineall }}</span>-->
+      <!--          </li>-->
+      <!--        </ul>-->
+      <!--      </div>-->
+      <div class="equdevices">
         <vab-query-form>
           <vab-query-form-top-panel>
             <el-form
@@ -214,7 +157,6 @@
                 <el-select
                   v-model="queryForm.workGroupName"
                   placeholder="请选择"
-                  clearable
                   @visible-change="change($event)"
                 >
                   <el-option
@@ -247,10 +189,12 @@
                 <el-select
                   v-model="equvalue"
                   :disabled="!productenable"
+                  clearable
                   @change="selectProdChange"
                 >
                   <el-option
                     v-for="(item, index) in proTableData"
+                    v-show="item.objectId != 0"
                     :key="index"
                     :label="item.name"
                     :value="item.objectId"
@@ -265,7 +209,11 @@
               clearable
             > -->
               <el-form-item :label="$translateTitle('equipment.device status')">
-                <el-select v-model="onlinedevices" style="width: 100px">
+                <el-select
+                  v-model="onlinedevices"
+                  clearable
+                  style="width: 100px"
+                >
                   <!-- <el-option value="在线" /> -->
                   <el-option :value="$translateTitle('zetadevices.online')" />
                   <!-- <el-option value="离线" /> -->
@@ -328,6 +276,14 @@
                 <el-button type="primary" size="small" @click="addDeviceForm">
                   {{ $translateTitle('equipment.adddevice') }}
                 </el-button>
+                <el-button
+                  type="danger"
+                  size="small"
+                  :disabled="!selectedList.length"
+                  @click="handleDelete(selectedList, 1)"
+                >
+                  {{ $translateTitle('Maintenance.batch deletion') }}
+                </el-button>
               </el-form-item>
               <el-form-item style="display: none">
                 <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
@@ -374,22 +330,36 @@
               ref="filterTable"
               v-loading="listLoading"
               :height="height"
+              :border="border"
+              :stripe="stripe"
+              :size="lineHeight"
               :data="tableData"
               :row-style="rowClass"
               style="width: 100%; margin-top: 20px; text-align: center"
-              @selection-change="handleSelectionChange"
+              @selection-change="changeBox"
             >
-              <el-table-column type="selection" align="center" width="55" />
+              <el-table-column
+                sortable
+                show-overflow-tooltip
+                align="center"
+                class-name="isCheck"
+                type="selection"
+                width="55"
+              />
               <el-table-column
                 :label="$translateTitle('equipment.devicenumber')"
                 align="center"
                 width="120"
+                sortable
+                show-overflow-tooltip
               >
                 <template slot-scope="scope">
                   {{ scope.row.devaddr }}
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.name')"
                 align="center"
               >
@@ -400,6 +370,8 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.state')"
                 align="center"
                 width="80"
@@ -455,6 +427,8 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.product')"
                 align="center"
                 width="200"
@@ -466,9 +440,11 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('developer.Company')"
                 align="center"
-                width="120"
+                width="200"
               >
                 <template slot-scope="scope">
                   <span>
@@ -495,6 +471,8 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 align="center"
                 :label="$translateTitle('developer.createdAt')"
                 width="200"
@@ -504,94 +482,70 @@
                 </template>
               </el-table-column>
               <el-table-column
-                width="400"
                 :label="$translateTitle('developer.operation')"
                 align="center"
                 fixed="right"
+                width="300"
               >
                 <template slot-scope="scope">
-                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
-                  <el-link
-                    :underline="false"
+                  <el-button
                     type="primary"
-                    @click="showInfo(scope.row)"
-                  >
-                    {{ $translateTitle('equipment.info') }}
-                  </el-link>
-
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px"
-                    icon="el-icon-view"
+                    size="mini"
                     @click="deviceToDetail(scope.row)"
                   >
                     {{ $translateTitle('equipment.see') }}
-                  </el-link>
-                  <vab-icon style="color: #1890ff" icon="file-transfer-line" />
-
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px"
-                    @click="showTree(scope.row.objectId, scope.row.Company)"
-                  >
-                    {{ $translateTitle('equipment.move') }}
-                  </el-link>
-
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px 0 0"
-                    icon="el-icon-edit"
+                  </el-button>
+                  <el-button
+                    size="mini"
+                    type="warning"
                     @click="editorDevice(scope.row)"
                   >
                     {{ $translateTitle('concentrator.edit') }}
-                  </el-link>
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px 0 0"
-                    icon="el-icon-s-flag                    "
-                    @click="konvaDevice(scope.row)"
+                  </el-button>
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="handleDelete(scope.row, 2)"
                   >
-                    {{ $translateTitle('concentrator.konva') }}
-                  </el-link>
+                    {{ $translateTitle('developer.delete') }}
+                  </el-button>
                   <el-popover
-                    :ref="`popover-${scope.$index}`"
-                    placement="top"
-                    width="300"
+                    placement="left"
+                    style="margin: 0 10px"
+                    trigger="click"
                   >
-                    <!-- <p>确定删除这个{{ scope.row.name }}设备吗？</p> -->
-                    <p>
-                      {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
-                      }}{{ $translateTitle('equipment.sbm') }}
-                    </p>
-                    <div style="margin: 0; text-align: right">
-                      <el-button
-                        size="mini"
-                        @click="
-                          scope._self.$refs[`popover-${scope.$index}`].doClose()
-                        "
-                      >
-                        {{ $translateTitle('developer.cancel') }}
-                      </el-button>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="makeSure(scope)"
-                      >
-                        {{ $translateTitle('developer.determine') }}
-                      </el-button>
-                    </div>
-                    <el-link
-                      slot="reference"
-                      :underline="false"
-                      icon="el-icon-delete"
-                      type="danger"
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      @click="showInfo(scope.row)"
                     >
-                      {{ $translateTitle('developer.delete') }}
-                    </el-link>
+                      {{ $translateTitle('product.parser') }}
+                    </el-button>
+
+                    <el-button
+                      type="success"
+                      size="mini"
+                      @click="showTree(scope.row.objectId, scope.row.Company)"
+                    >
+                      {{ $translateTitle('equipment.move') }}
+                    </el-button>
+
+                    <el-button
+                      type="info"
+                      size="mini"
+                      @click="konvaDevice(scope.row)"
+                    >
+                      {{ $translateTitle('concentrator.konva') }}
+                    </el-button>
+
+                    <el-button
+                      slot="reference"
+                      size="mini"
+                      type="info"
+                      @click="isFullscreen = !isFullscreen"
+                    >
+                      {{ $translateTitle('developer.operation') }}
+                    </el-button>
                   </el-popover>
                 </template>
               </el-table-column>
@@ -604,10 +558,19 @@
               :data="tableData"
               :row-style="rowClass"
               style="width: 100%"
-              @selection-change="handleSelectionChange"
+              @selection-change="changeBox"
             >
-              <el-table-column type="selection" align="center" width="55" />
               <el-table-column
+                align="center"
+                sortable
+                show-overflow-tooltip
+                class-name="isCheck"
+                type="selection"
+                width="55"
+              />
+              <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.devicenumber')"
                 align="center"
                 width="120"
@@ -617,6 +580,8 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.name')"
                 align="center"
               >
@@ -627,9 +592,11 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.state')"
                 align="center"
-                width="70"
+                width="100"
               >
                 <template slot-scope="scope">
                   <span
@@ -671,8 +638,11 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.product')"
                 align="center"
+                width="200"
               >
                 <template slot-scope="scope">
                   <span v-if="scope.row.product && scope.row.product.name">
@@ -681,8 +651,11 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="$translateTitle('developer.Company')"
                 align="center"
+                width="200"
               >
                 <template slot-scope="scope">
                   <span>
@@ -692,13 +665,15 @@
               </el-table-column>
 
               <el-table-column
+                sortable
+                show-overflow-tooltip
                 :label="
                   $translateTitle('developer.enable') +
                   '/' +
                   $translateTitle('developer.prohibit')
                 "
                 align="center"
-                width="80"
+                width="120"
               >
                 <template slot-scope="scope">
                   <el-switch
@@ -770,82 +745,74 @@
                 width="300"
               >
                 <template slot-scope="scope">
-                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
-                  <el-link
-                    :underline="false"
+                  <el-button
                     type="primary"
-                    :disabled="!scope.row.location"
-                    @click="showMap(scope.row.location, scope.row.objectId)"
-                  >
-                    {{ $translateTitle('equipment.location') }}
-                  </el-link>
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px"
-                    icon="el-icon-view"
+                    size="mini"
                     @click="deviceToDetail(scope.row)"
                   >
                     {{ $translateTitle('equipment.see') }}
-                  </el-link>
-                  <vab-icon style="color: #1890ff" icon="file-transfer-line" />
+                  </el-button>
 
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    @click="showTree(scope.row.objectId, scope.row.Company)"
-                  >
-                    {{ $translateTitle('equipment.move') }}
-                  </el-link>
-                  <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px 0 0"
-                    icon="el-icon-edit"
+                  <el-button
+                    type="warning"
+                    size="mini"
                     @click="editorDevice(scope.row)"
                   >
                     {{ $translateTitle('concentrator.edit') }}
-                  </el-link>
-                  <el-popover
-                    :ref="`popover-${scope.$index}`"
-                    placement="top"
-                    width="300"
+                  </el-button>
+                  <el-button
+                    type="danger"
+                    size="mini"
+                    @click="handleDelete(scope.row, 2)"
                   >
-                    <!-- <p>确定删除这个{{ scope.row.name }}设备吗？</p> -->
-                    <p>
-                      {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
-                      }}{{ $translateTitle('equipment.sbm') }}
-                    </p>
-                    <div style="margin: 0; text-align: right">
-                      <el-button
-                        size="mini"
-                        @click="
-                          scope._self.$refs[`popover-${scope.$index}`].doClose()
-                        "
-                      >
-                        {{ $translateTitle('developer.cancel') }}
-                      </el-button>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="makeSure(scope)"
-                      >
-                        {{ $translateTitle('developer.determine') }}
-                      </el-button>
-                    </div>
-                    <el-link
-                      slot="reference"
-                      :underline="false"
-                      icon="el-icon-delete"
-                      type="danger"
+                    {{ $translateTitle('developer.delete') }}
+                  </el-button>
+
+                  <el-popover
+                    placement="left"
+                    style="margin: 0 10px"
+                    trigger="click"
+                  >
+                    <el-button
+                      type="primary"
+                      size="mini"
+                      :disabled="!scope.row.location"
+                      @click="showMap(scope.row.location, scope.row.objectId)"
                     >
-                      {{ $translateTitle('developer.delete') }}
-                    </el-link>
+                      {{ $translateTitle('equipment.location') }}
+                    </el-button>
+                    <el-button
+                      size="mini"
+                      type="warning"
+                      @click="showInfo(scope.row)"
+                    >
+                      {{ $translateTitle('equipment.info') }}
+                    </el-button>
+
+                    <el-button
+                      type="success"
+                      size="mini"
+                      @click="showTree(scope.row.objectId, scope.row.Company)"
+                    >
+                      {{ $translateTitle('equipment.move') }}
+                    </el-button>
+
+                    <el-button
+                      type="info"
+                      size="mini"
+                      @click="konvaDevice(scope.row)"
+                    >
+                      {{ $translateTitle('concentrator.konva') }}
+                    </el-button>
+
+                    <el-button slot="reference" size="mini" type="info">
+                      {{ $translateTitle('developer.operation') }}
+                    </el-button>
                   </el-popover>
                 </template>
               </el-table-column>
             </el-table>
-            <div class="elpagination" style="margin-top: 30px">
+            <div class="elpagination">
               <!--              <el-pagination-->
               <!--                :page-sizes="[10, 20, 30, 50]"-->
               <!--                :page-size="devicelength"-->
@@ -928,6 +895,79 @@
               anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
             />
           </baidu-map>
+        </el-tab-pane>
+
+        <el-tab-pane
+          :label="$translateTitle('leftbar.analysis')"
+          name="analysis"
+        >
+          <div class="equ_header">
+            <el-row>
+              <el-col :xs="24" :sm="24" :md="8" :xl="8">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>
+                      {{ $translateTitle('equipment.Equipment Overview') }}
+                    </span>
+                    <el-button
+                      icon="el-icon-refresh"
+                      style="float: right; padding: 3px 0"
+                      type="text"
+                    />
+                  </div>
+                  <div class="text item">
+                    <ve-ring
+                      height="140px"
+                      :data-empty="!chartOnlone.rows"
+                      :data="chartOnlone"
+                      :settings="chartSettings"
+                      :extend="chartExtend"
+                    />
+                  </div>
+                </el-card>
+              </el-col>
+              <el-col :xs="24" :sm="24" :md="8" :xl="8">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>
+                      {{ $translateTitle('equipment.Warning today') }}
+                    </span>
+                    <el-button
+                      icon="el-icon-refresh"
+                      style="float: right; padding: 3px 0"
+                      type="text"
+                    />
+                  </div>
+                  <div class="text item">
+                    <ve-ring
+                      height="140px"
+                      :data-empty="!chartwaring.rows"
+                      :data="chartwaring"
+                    />
+                  </div>
+                </el-card>
+              </el-col>
+              <el-col :xs="24" :sm="24" :md="8" :xl="8">
+                <el-card class="box-card">
+                  <div slot="header" class="clearfix">
+                    <span>{{ $translateTitle('equipment.Products') }}</span>
+                    <el-button
+                      icon="el-icon-refresh"
+                      style="float: right; padding: 3px 0"
+                      type="text"
+                    />
+                  </div>
+                  <div class="text item">
+                    <ve-ring
+                      height="140px"
+                      :data-empty="!chartProduct.rows"
+                      :data="chartProduct"
+                    />
+                  </div>
+                </el-card>
+              </el-col>
+            </el-row>
+          </div>
         </el-tab-pane>
       </el-tabs>
       <el-dialog
@@ -1192,11 +1232,10 @@
   import { mapGetters, mapMutations } from 'vuex'
   import { get_object } from '@/api/shuwa_parse'
   import { queryDict } from '@/api/Direct/index.js'
-  import { Batchdelete } from '@/api/Batch'
+  import { batch, Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
-  import { getProduct, putProduct } from '@/api/Product/index'
+  import { getProduct, putProduct, queryProduct } from '@/api/Product/index'
   import { tableDict, RunData } from '@/api/Global/device'
-  import info from '@/components/Device/info'
   import deviceState from '@/components/Device/deviceState'
   import {
     BmNavigation,
@@ -1231,7 +1270,6 @@
       BmGeolocation,
       BmCityList,
       BmMarker,
-      info,
       deviceState,
     },
     data() {
@@ -1264,8 +1302,17 @@
         }
       }
       return {
+        queryInfo: {},
+        isFullscreen: false,
+        border: true,
+        // height: this.$baseTableHeight(1),
+        stripe: true,
+        lineHeight: 'medium',
+        aclObj: {},
+        editRow: {},
+        selectedList: [],
         formData: {},
-        height: this.$baseTableHeight(0) - 200,
+        height: this.$baseTableHeight(0) - 90,
         topicData: [],
         InfoDialog: false,
         devicedetail: {},
@@ -1295,7 +1342,7 @@
           number: '',
           product: '',
           type: '',
-          limit: 10,
+          limit: 20,
           skip: 0,
           order: '-createdAt',
           keys: 'count(*)',
@@ -1330,7 +1377,7 @@
         batchid: '',
         pcdialogVisible: true,
         devicedialogVisible: false,
-        equvalue: '0',
+        equvalue: '',
         cities: [],
         selectdevice: '',
         onlinedevices: '',
@@ -1431,6 +1478,8 @@
         token: 'user/token',
         roleTree: 'user/roleTree',
         language: 'settings/language',
+        _product: 'user/_Product',
+        _role: 'acl/role',
       }),
     },
     watch: {
@@ -1453,63 +1502,148 @@
       this.getMenu()
       this.selectdevice = this.language == 'zh' ? '设备名称' : 'devicename'
       this.queryProduct()
-      this.queryTableDict()
+      this.aclObj = this.$aclObj(this._role)
+      console.log('this.aclObj', this.aclObj)
     },
     methods: {
+      handleTabClick(tab, event) {
+        console.log(this.activeparseTbas)
+        console.log(this.parseTbas)
+      },
+      async updateParse(table, field, deviceId, item, params = {}) {
+        console.clear()
+        console.log('字段', field)
+        params[`${field}`] = {}
+        let isField = [] // parse表中存在字段
+        let noField = [] // parse表中不存在的字段
+        console.log(this.queryInfo)
+        console.log('frender ', item)
+        for (let v in item.config) {
+          if (this.queryInfo[`${v}`]) {
+            //字段存在去做一下判斷 更新数据
+            console.log(item.config[`${v}`], v)
+            params[`${field}`][`${v}`] = item.config[`${v}`]
+          } else {
+            console.log(item.config[`${v}`], '字段不存在')
+            noField.push[item.config[`${v}`]]
+            // 字段不存在的话，从 formDesc 中找
+            // if (typeof item.config.formDesc[`${v}`] == 'object') {
+            //   console.log(' item.config', item.config)
+            //   console.log(' item.config', `${item.config.formDesc[`${v}`]}`)
+            //   params.field[`${item.config.formDesc[`${v}`]}`] =
+            //     item.config.formDesc[`${v}`].default
+            // } else {
+            // }
+          }
+        }
+
+        console.log('isField', isField)
+        console.log('noField', noField)
+        console.log('params', params.field)
+        // 对数据进行合并处理
+        let mergerInfo = {}
+        mergerInfo[`${field}`] = this.queryInfo
+        const _mergeparams = _.merge(mergerInfo, params)
+        console.log(_mergeparams, '合并后的數據')
+        console.log({ field: _mergeparams[`${field}`] })
+        try {
+          const res = await this.$update_object(table, deviceId, _mergeparams)
+          console.log(res)
+          this.$message.success(this.$translateTitle('user.update completed'))
+        } catch (error) {
+          console.log(error)
+          this.$message.error(`${error}`)
+        }
+      },
       ...mapMutations({
         set_tableDict: 'global/set_tableDict',
         set_tableParser: 'global/set_tableParser',
       }),
+      handleSubmit(data) {
+        console.log('data', data)
+        // eslint-disable-next-line no-console
+        return Promise.resolve()
+      },
+      handleSuccess(item) {
+        if (item.table && item.field && item.config.order) {
+          // 首先查一下这个表中对应的字段
+          this.$get_object(item.table, this.deviceId).then((res) => {
+            console.log(res)
+            this.queryInfo = res[`${item.field}`]
+            if (this.queryInfo) {
+              this.updateParse(item.table, item.field, this.deviceId, item)
+            } else {
+              this.$message.error(`${item.table} no field ${item.field}`)
+            }
+          })
+        } else {
+          this.$message.error(`${item.table} no field ${item.field}`)
+        }
+      },
+      changeBox(val) {
+        this.selectedList = []
+        val.forEach((item) => {
+          this.selectedList.push(item)
+        })
+        console.log(this.selectedList)
+      },
+      handleDelete(row, type) {
+        let batchParams = []
+
+        if (type == 2) {
+          batchParams.push({
+            method: 'DELETE',
+            path: `/classes/Device/${row.objectId}`,
+            body: {},
+          })
+        } else {
+          row.forEach((item) => {
+            batchParams.push({
+              method: 'DELETE',
+              path: `/classes/Device/${item.objectId}`,
+              body: {},
+            })
+          })
+        }
+        console.log(batchParams, 'batchParams')
+        this.$baseConfirm(
+          this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ),
+          null,
+          async () => {
+            const res = await batch(batchParams)
+            this.$baseMessage(
+              this.$translateTitle('Maintenance.successfully deleted'),
+              'success',
+              'vab-hey-message-success'
+            )
+            setTimeout(() => {
+              this.getDevices({ start: 0 })
+            }, 1500)
+          }
+        )
+      },
       ParserSave(e) {
         console.log(
           `如果监听到有修改,则更新vuex 并 存入到数据库 ${JSON.stringify(e)}`
         )
       },
-      async queryTableDict() {
-        let config = {
-          Parser: {},
-          Dict: {},
-        }
-        // 查询表单字典
-        try {
-          const { results } = await tableDict('sinmahe_PeriodicInformation')
-          const { parser = {}, basedate = {} } = results[0].config
-          console.log(basedate)
-          console.log('set_tableDict', basedate.params)
-          config = {
-            Parser: parser,
-            Dict: basedate.params,
-          }
-        } catch (e) {
-          config = {
-            Parser: {},
-            Dict: {},
-          }
-          console.log(`${e} queryTableDict`)
-        }
-        return config
-      },
       async queryProduct() {
         // 查询产品
         this.proTableData = []
         this.proTableData1 = []
-        const parsms1 = {
+        const { results = [] } = await queryProduct({
           count: 'objectId',
           order: '-updatedAt',
-          keys: 'name',
+          // keys: 'name',
           where: {
             category: 'IotHub',
           },
-        }
-        const { results: _proTableData } = await this.$query_object(
-          'Product',
-          parsms1
-        ) // es6 结构赋值重命名
-        this.proTableData = _proTableData
-        this.proTableData.unshift({
-          name: this.language == 'zh' ? '全部产品' : 'All Products',
-          objectId: '0',
         })
+        this.proTableData = results
+
+        console.log(this.proTableData, '  this.proTableData')
 
         if (this.$route.query.product) {
           this.proTableData.forEach((i, index) => {
@@ -1523,14 +1657,13 @@
             }
           })
         }
-        this.proTableData1 = _proTableData.filter(
-          (item) => item.objectId != '0'
-        )
+        this.proTableData1 = results.filter((item) => item.objectId != '0')
 
         if (this.$route.query.productid) {
           this.equvalue = this.$route.query.productid
           this.productenable = false
         }
+        console.log('this.equvalue', this.equvalue)
       },
       change(e) {
         console.log(e)
@@ -1539,6 +1672,7 @@
         }
       },
       async selectProdChange(objectId) {
+        if (!objectId) return
         this.listLoading = true
         if (objectId == '0') {
           this.isALL = true
@@ -1620,68 +1754,107 @@
         this.deciceCompany = acl
         this.popoverVisible = !this.popoverVisible
       },
-      async showState(data, objectId) {
-        // this.set_tableDict({})
-        // this.set_tableParser({})
-        const Loading = this.$baseColorfullLoading(3)
-        const { Dict, Parser } = await this.queryTableDict()
-        this.set_tableDict(Dict)
-        this.set_tableParser(Parser)
-        this.stateDetail = data
-        console.log(data, objectId)
-        setTimeout(() => {
-          Loading.close()
-          this.stateDialog = true
-        }, 1200)
-      },
       CloseState() {
         this.stateDialog = false
       },
       showInfo(data) {
-        let parseTbas = []
-        this.devicedetail = {}
-        console.log(data)
-        if (data.product && data.product.objectId) {
-          let ProductId = data.product.objectId
-          let _toppic = [
-            {
-              topic: `thing/${ProductId}/${DevAddr}/post`,
-              type: 'pub',
-              desc: '设备上报',
-              isdef: true,
-            },
-            {
-              topic: `thing/${ProductId}/${DevAddr}`,
-              type: 'sub',
-              desc: '消息下发',
-              isdef: true,
-            },
-          ]
-          data.product.topics
-            ? (data.topicData = data.product.topics.concat(_toppic))
-            : (data.topicData = _toppic)
-          getProduct(ProductId)
-            .then((res) => {
-              const { config } = res
-              console.log('config', config)
-              if (config.parser) {
-                console.log(config.parser)
-                parseTbas.push(...res.config.parser)
-              }
-              if (config.profile) {
-                parseTbas.push(...res.config.profile)
-              }
-              this.parseTbas = parseTbas
-              console.log(this.parseTbas)
-              this.activeparseTbas = this.parseTbas[0].name
-            })
-            .catch((err) => {
-              console.log(error, 'query product error')
-            })
+        this.deviceId = data.objectId
+        let _from = {
+          isArr: [],
+          obj: [],
         }
-        let DevAddr = data.devaddr || 'undefined'
-        this.InfoDialog = true
+        let parseTbas = []
+        console.log(data)
         this.devicedetail = data
+        if (data.product.config.parser) {
+          parseTbas.push(...data.product.config.parser)
+        }
+        if (data.product.config.profile) {
+          parseTbas.push(...data.product.config.profile)
+        }
+        this.devicedetail = {}
+        parseTbas = parseTbas.filter((e) => {
+          return e.visible
+          // && e.field == 'Device'
+        })
+        console.log(this.parseTbas)
+        if (this.devicedetail && parseTbas.length) {
+          // 拿到设备数据中对应的class
+          parseTbas.forEach((from) => {
+            console.log(from.class)
+            console.info(
+              '%c%s',
+              'color: #fff; background: #20B2AA; font-size: 16px;',
+              `原始关联${from.table}表中${from.class}字段的值为`
+            )
+            console.info(
+              '%c%s',
+              'color: #fff; background: #20B2AA; font-size: 16px;',
+              `${JSON.stringify(from.config)}`
+            )
+            if (data[`${from.class}`]) {
+              for (let f in data[`${from.class}`]) {
+                for (let v in from.config) {
+                  if (f == v) {
+                    if (typeof from.config.formDesc[`${f}`] == 'object') {
+                      console.log(
+                        f,
+                        v,
+                        'f ==== v object',
+                        from.config.formDesc[`${f}`].label,
+                        from.config.formDesc[`${f}`].default,
+                        'data[`${from.class}`][`${v}`] 为 ' +
+                          data[`${from.class}`][`${v}`]
+                      )
+                      _from.obj.push(f)
+                      from.config.formDesc[`${f}`]['default'] =
+                        data[`${from.class}`][`${v}`]
+                      console.log(
+                        from.config.formDesc[`${f}`].label,
+                        data[`${from.class}`],
+                        from.config.formDesc[`${f}`].default
+                      )
+                    } else {
+                      _from.isArr.push(v)
+                      from.config[`${f}`] = data[`${from.class}`][`${v}`]
+                    }
+                  } else {
+                    for (let i in from.config.formDesc) {
+                      if (f == i) {
+                        _from.obj.push(f)
+                        from.config.formDesc[`${i}`]['default'] =
+                          data[`${from.class}`][`${f}`]
+                      }
+                    }
+                  }
+                }
+              }
+              console.log(`对象数据${_from.obj}`)
+              console.log(`数组数据${_from.isArr}`)
+              console.info(
+                '%c%s',
+                'color: #fff; background: #20B2AA; font-size: 16px;',
+                `修改后${from.table}表中${from.class}字段的值为`
+              )
+              console.info(
+                '%c%s',
+                'color: #fff; background: #20B2AA; font-size: 16px;',
+                `${JSON.stringify(from.config)}`
+              )
+            }
+          })
+          this.parseTbas = parseTbas
+          this.$nextTick(() => {
+            this.activeparseTbas = this.parseTbas[0].name
+            this.InfoDialog = true
+          })
+        } else {
+          this.$baseMessage(
+            this.$translateTitle('product.No device template configured yet'),
+            'error',
+            'vab-hey-message-error'
+          )
+        }
       },
       // 显示设备位置
       showMap(location, objectId) {
@@ -1745,7 +1918,9 @@
         this.handleNodeClick(this.deptTreeData[0], 0)
       },
       async handleNodeClick(data, node) {
-        console.log(data, 'handleNodeClick')
+        const aclRole = this._role.map((r) => {
+          return r.name
+        })
         $('.el-tree').css({
           height: '0px',
           display: 'none',
@@ -1753,17 +1928,19 @@
         })
         $('.el-select-dropdown').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
-        if (node.level != 1) {
+        // 点击的公司名
+        const { name, objectId } = data
+        this.curDepartmentId = objectId
+        // this.Company = name
+        if (aclRole.includes(data.name)) {
+          this.access_token = this.token
+        } else if (node.level != 1) {
           // 在这里获取点击厂家的session
           const { access_token = '' } = await getToken(data.name)
           this.access_token = access_token
         } else {
           this.access_token = this.token
         }
-        // 点击的公司名
-        const { name, objectId } = data
-        this.curDepartmentId = objectId
-        // this.Company = name
         this.getDevices({ start: 0 })
       },
       async rolesSelect(val) {
@@ -1899,6 +2076,7 @@
           limit: 1,
           count: 'objectId',
           include: 'product,name',
+          keys: 'name',
           where: {
             status: 'ONLINE',
             product: { $ne: null },
@@ -2086,9 +2264,9 @@
         return row.tag === value
       },
       /* 设备列表选中 */
-      handleSelectionChange(val) {
-        this.multipleTable = val
-      },
+      // handleSelectionChange(val) {
+      //   this.multipleTable = val
+      // },
 
       // 批量删除设备
       async deleteDevcie(val) {
@@ -2274,10 +2452,12 @@
       },
       /* device表单修改*/
       async editorDevice(row) {
+        this.editRow = {}
         this.selectChange(row.product.objectId, 'edit')
         this.deviceform = {}
         // 这里再去查询tag
         console.log('row', row)
+        this.editRow = row
         this.deviceid = row.objectId
         this.devicedialogVisible = true
         this.deviceform = {
@@ -2336,7 +2516,7 @@
         this.dialogFormVisible = false
         // this.resetProductForm()
         // this.$refs['ruleForm'].resetFields()
-        this.getDevices()
+        this.getDevices({ start: 0 })
       },
       async updateDevice(params) {
         const res = await this.$update_object('Device', this.deviceid, params)
@@ -2352,11 +2532,13 @@
       async createDevice(params) {
         const res = await this.$create_object('Device', params)
         if (res.objectId) {
+          this.deviceform = {}
+          this.handleClose()
           this.initQuery('设备创建成功', 'success')
         } else {
           this.$message({
             type: 'error',
-            message: res.error,
+            message: res,
           })
         }
       },
@@ -2364,7 +2546,7 @@
         this.arrlist = []
         getProduct(objectId).then((res) => {
           const { config = { basedate: {} } } = res
-          if (config.basedate.params.length > 0) {
+          if (config.basedate && config.basedate.params.length > 0) {
             this.arrlist = config.basedate.params
             if (flag == 'add') {
               this.arrlist.map((item) => {
@@ -2443,65 +2625,61 @@
             this.$delete(obj, 'productName')
             this.$delete(obj, 'status')
             this.$delete(obj, 'productid')
-            getProduct(this.deviceform.productName).then((response) => {
-              if (response) {
-                if (this.deviceid != '') {
-                  // 编辑
+            // getProduct(this.deviceform.productName).then((response) => {
+            //   if (response) {
+            if (this.deviceid != '') {
+              // 编辑
+              var devicesParmas = {
+                name: this.deviceform.name,
+                devaddr: this.deviceform.devaddr,
+                product: {
+                  __type: 'Pointer',
+                  className: 'Product',
+                  objectId: this.editRow.product.objectId,
+                },
+                detail: detail,
+                location: location,
+                basedata: obj,
+              }
+              this.updateDevice(devicesParmas)
+              this.handleClose()
+              this.getDevices({ start: 0 })
+            } else {
+              var params = {
+                count: 'objectId',
+                where: {
+                  name: { $in: [this.deviceform.name] },
+                  devaddr: { $in: [this.deviceform.devaddr] },
+                },
+              }
+              this.$query_object('Device', params).then((result) => {
+                if (result.count > 0) {
+                  this.$message('此设备已被创建')
+                } else {
                   var devicesParmas = {
-                    name: this.deviceform.name,
-                    devaddr: this.deviceform.devaddr,
                     product: {
                       __type: 'Pointer',
                       className: 'Product',
-                      objectId: response.objectId,
+                      objectId: this.deviceform.productName,
                     },
+                    status: 'OFFLINE',
+                    isEnable: false,
+                    ACL: this.aclObj,
+                    name: this.deviceform.name,
+                    devaddr: this.deviceform.devaddr,
+                    objectId: this.deviceform.devaddr,
+                    lastOnlineTime: 0,
                     detail: detail,
                     location: location,
                     basedata: obj,
                   }
-                  this.updateDevice(devicesParmas)
-                  this.handleClose()
-                  this.getDevices()
-                } else {
-                  var params = {
-                    count: 'objectId',
-                    where: {
-                      name: { $in: [this.deviceform.name] },
-                      devaddr: { $in: [this.deviceform.devaddr] },
-                    },
-                  }
-                  this.$query_object('Device', params).then((result) => {
-                    if (result.count > 0) {
-                      this.$message('此设备已被创建')
-                      return
-                    } else {
-                      var devicesParmas = {
-                        product: {
-                          __type: 'Pointer',
-                          className: 'Product',
-                          objectId: this.deviceform.productName,
-                        },
-                        status: 'OFFLINE',
-                        isEnable: false,
-                        ACL: response.ACL,
-                        name: this.deviceform.name,
-                        devaddr: this.deviceform.devaddr,
-                        objectId: this.deviceform.devaddr,
-                        lastOnlineTime: 0,
-                        detail: detail,
-                        location: location,
-                        basedata: obj,
-                      }
-                      // console.log(devicesParmas)
-                      this.createDevice(devicesParmas)
-                      this.deviceform = {}
-                      this.handleClose()
-                      this.getDevices()
-                    }
-                  })
+                  // console.log(devicesParmas)
+                  this.createDevice(devicesParmas)
                 }
-              }
-            })
+              })
+            }
+            //   }
+            // })
           } else {
             this.$message({
               type: 'error',
@@ -2545,7 +2723,7 @@
     }
   }
   .equtabs {
-    height: calc(120vh - #{$base-top-bar-height} * 4 + 38px);
+    //height: calc(120vh - #{$base-top-bar-height} * 4);
     margin: 20px;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -2614,7 +2792,7 @@
 
   .equipment #pane-first {
     box-sizing: border-box;
-    padding: 10px;
+    //padding: 10px;
     background: #ffffff;
   }
 
