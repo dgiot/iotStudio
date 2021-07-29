@@ -369,9 +369,12 @@
         sortable
         align="center"
         :label="$translateTitle('Maintenance.Initiator')"
-        prop="_user"
         show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          {{ row.user ? row.user.nick : '' }}
+        </template>
+      </el-table-column>
       <el-table-column
         sortable
         align="center"
@@ -819,7 +822,7 @@
           order: args.order,
           skip: args.skip,
           keys: args.keys,
-          include: 'product,device',
+          include: 'product,device,user',
           where: {
             'info.user': this.Assigned % 2 == 0 ? { $ne: '' } : this.objectId,
             user: this.created % 2 == 0 ? { $ne: null } : this.objectId,
@@ -854,7 +857,7 @@
               e._user = '暂无'
               if (e.ACL) {
                 for (var key in e.ACL) {
-                  e._user = key.substr(5)
+                  e._user = key.substr(0)
                 }
               }
             })
