@@ -18,7 +18,7 @@
                 :label="$translateTitle('Maintenance.project') + ': '"
               >
                 <!--                <el-input v-model="detail._product" readonly disabled />-->
-                <span>{{ form._product }}</span>
+                <span>{{ form.product.name || '' }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -26,7 +26,7 @@
                 :label="$translateTitle('Maintenance.Equipment name') + ': '"
               >
                 <!--                <el-input v-model="detail._device" readonly disabled />-->
-                <span>{{ form._device }}</span>
+                <span>{{ form.device.name || '' }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">

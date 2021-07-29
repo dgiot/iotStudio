@@ -28,6 +28,7 @@
 
 ### Features
 
+* **src/views/maintenance/alert.vue:** alert page ([d45ed61](https://github.com/dgiot/dgiot_dashboard/commit/d45ed61805b0233ca50484ecddbbdedf65fa3abc))
 * tick ([ec6cfd4](https://github.com/dgiot/dgiot_dashboard/commit/ec6cfd4e0487d64cb2b18f12a1a32000d7ee1121))
 * **package.json:** dependencies ([c55a4bf](https://github.com/dgiot/dgiot_dashboard/commit/c55a4bfec61e90eaff9397efcabe1488c271d237))
 * **parse:** introducing Japanese menu ([dc228a7](https://github.com/dgiot/dgiot_dashboard/commit/dc228a75d8a1ee3bc2ea252c6180861e1a4529d9))

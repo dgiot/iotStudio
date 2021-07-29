@@ -8,7 +8,6 @@ import router from './router'
 import utilwen from './utils/utilwen'
 import '@/vab'
 Vue.use(utilwen)
-// Vue.use(hrmPlayer)
 
 process.env.NODE_ENV !== 'development'
   ? (Vue.config.productionTip = true)

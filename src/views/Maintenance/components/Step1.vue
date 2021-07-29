@@ -19,7 +19,7 @@
                 :label="$translateTitle('Maintenance.project') + ': '"
               >
                 <!--                <el-input v-model="detail._product" readonly disabled />-->
-                <span>{{ form._product }}</span>
+                <span>{{ form.product.name || '' }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -27,7 +27,7 @@
                 :label="$translateTitle('Maintenance.Equipment name') + ': '"
               >
                 <!--                <el-input v-model="detail._device" readonly disabled />-->
-                <span>{{ form._device }}</span>
+                <span>{{ form.device.name || '' }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -173,8 +173,7 @@
 <script>
   import { update_object } from '@/api/shuwa_parse'
   import { queryRoledepartment } from '@/api/Role/index'
-  import { queryUser } from '@/api/User'
-  import { Roletree, getToken } from '@/api/Menu'
+  import { Roletree } from '@/api/Menu'
   import { mapGetters, mapMutations } from 'vuex'
   export default {
     props: {
@@ -220,6 +219,7 @@
       ...mapGetters({
         username: 'user/username',
         token: 'user/token',
+        objectId: 'user/objectId',
       }),
     },
     mounted() {
@@ -253,27 +253,35 @@
       },
       dispatchUser() {
         this.$refs['form'].validate(async (valid) => {
+          const setAcl = {}
           let _user = this.user.filter((e) => {
             return e.objectId == this.form.info.user
           })
           if (valid && this.form.info.user) {
-            const { objectId, info, ACL } = this.form
-            info.timeline.push({
+            const { objectId, info, ACL } = this.info.timeline.push({
               timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
               h4: '已分配',
               p: `${this.username} 分配给 ${_user[0].nick}`,
             })
-
-            ACL[`${'role' + ':' + this.form.info.user}`] = {
+            console.log('_user', _user)
+            // ACL[`${'role' + ':' + this.form.info.user}`] = {
+            //   read: true,
+            //   write: true,
+            // }
+            setAcl[`${_user[0].objectId}`] = {
+              read: true,
+              write: true,
+            }
+            setAcl[`${this.objectId}`] = {
               read: true,
               write: true,
             }
             const params = {
               status: 1,
               info: info,
-              ACL: ACL,
+              ACL: setAcl,
             }
-            console.log(objectId, params, ACL)
+            console.log(objectId, params, setACL)
             const res = await update_object('Maintenance', objectId, params)
             if (res.updatedAt) {
               this.set_deviceFlag(false)

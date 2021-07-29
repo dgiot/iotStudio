@@ -395,7 +395,7 @@
               : { $ne: null },
           },
         }
-        if (this.queryForm.searchDate.length) {
+        if (this.queryForm.searchDate?.length) {
           params.where['createdAt'] = {
             $gt: { __type: 'Date', iso: this.queryForm.searchDate[0] },
           }

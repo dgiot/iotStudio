@@ -97,7 +97,7 @@
         UploadImg(file, config)
           .then((res) => {
             this.loading = false
-            this.$emit('fileInfo', res)
+            this.$emit('fileInfo', res.data)
             console.log('上传成功的回调', res)
           })
           .catch((e) => {

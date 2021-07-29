@@ -125,7 +125,6 @@
             >
               <el-input v-model="form.type" />
             </el-form-item>
-
             <el-form-item
               :label="$translateTitle('Maintenance.Ticket description')"
             >
@@ -512,6 +511,7 @@
           { key: 3, text: 'Maintenance.Statement' },
         ],
         queryForm: {
+          devicename: '',
           statusFlag: false,
           status: '',
           number: '',
@@ -595,15 +595,18 @@
         let config = {
           headers: {
             proxy: true, // 是否开启代理
-            produrl: '/dgiotproxy/shuwa_file/', // 开启代理后的真实上传路径
-            devurl: 'group1/',
-            'Content-Type': 'multipart/form-data',
+            produrl: '/', // 开启代理后的真实上传路径
+            devurl: 'iotapi/',
           },
         }
         UploadImg(content.file, config)
           .then((res) => {
-            this.form.photo.push(res.url)
-            console.log('上传成功的回调', res.url, this.form.photo)
+            if (res.data.url) {
+              this.form.photo.push(res.data.url)
+              console.log('上传成功的回调', res.data.url, this.form.photo)
+            } else {
+              console.log('no up url ', res)
+            }
           })
           .catch((e) => {
             console.log('出错了', e)
@@ -620,6 +623,11 @@
         })
       },
       async createdTicket(from) {
+        const setAcl = {}
+        setAcl[`${this.objectId}`] = {
+          read: true,
+          write: true,
+        }
         const params = {
           number: moment(new Date()).unix() + '',
           type: from.type,
@@ -635,7 +643,8 @@
             __type: 'Pointer',
             className: '_User',
           },
-          ACL: this.aclObj,
+          // ACL: this.aclObj,
+          ACL: setAcl,
           info: {
             photo: from.photo,
 
@@ -828,7 +837,7 @@
               : { $ne: null },
           },
         }
-        if (this.queryForm.searchDate.length) {
+        if (this.queryForm.searchDate?.length) {
           params.where['createdAt'] = {
             $gt: { __type: 'Date', iso: this.queryForm.searchDate[0] },
           }

@@ -68,7 +68,7 @@
         UploadImg(file, config)
           .then((res) => {
             //将生成的url传递给父组件
-            this.$emit('fileInfo', res)
+            this.$emit('fileInfo', res.data)
             console.log('上传成功的回调', res)
           })
           .catch((e) => {
