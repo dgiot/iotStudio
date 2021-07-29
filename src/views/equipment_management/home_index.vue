@@ -493,7 +493,7 @@
                     size="mini"
                     @click="deviceToDetail(scope.row)"
                   >
-                    {{ $translateTitle('equipment.see') }}
+                    {{ $translateTitle('product.details') }}
                   </el-button>
                   <el-button
                     size="mini"
@@ -509,44 +509,48 @@
                   >
                     {{ $translateTitle('developer.delete') }}
                   </el-button>
-                  <el-popover
-                    placement="left"
-                    style="margin: 0 10px"
-                    trigger="click"
-                  >
+                  <el-dropdown style="margin: 0 10px">
                     <el-button
-                      type="primary"
-                      size="mini"
-                      @click="showInfo(scope.row)"
-                    >
-                      {{ $translateTitle('product.parser') }}
-                    </el-button>
-
-                    <el-button
-                      type="success"
-                      size="mini"
-                      @click="showTree(scope.row.objectId, scope.row.Company)"
-                    >
-                      {{ $translateTitle('equipment.move') }}
-                    </el-button>
-
-                    <el-button
-                      type="info"
-                      size="mini"
-                      @click="konvaDevice(scope.row)"
-                    >
-                      {{ $translateTitle('concentrator.konva') }}
-                    </el-button>
-
-                    <el-button
-                      slot="reference"
                       size="mini"
                       type="info"
                       @click="isFullscreen = !isFullscreen"
                     >
-                      {{ $translateTitle('developer.operation') }}
+                      {{ $translateTitle('concentrator.more') }}
                     </el-button>
-                  </el-popover>
+
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item>
+                        <el-link
+                          type="primary"
+                          size="mini"
+                          style="text-align: center"
+                          @click="showInfo(scope.row)"
+                        >
+                          {{ $translateTitle('product.parser') }}
+                        </el-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-link
+                          type="info"
+                          size="mini"
+                          @click="konvaDevice(scope.row)"
+                        >
+                          {{ $translateTitle('concentrator.konva') }}
+                        </el-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-link
+                          type="success"
+                          size="mini"
+                          @click="
+                            showTree(scope.row.objectId, scope.row.Company)
+                          "
+                        >
+                          {{ $translateTitle('equipment.move') }}
+                        </el-link>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                 </template>
               </el-table-column>
             </el-table>
@@ -1900,8 +1904,8 @@
                 })
               } else {
                 this.$message({
-                  type: 'error',
-                  message: this.$translateTitle(`迁移失败`),
+                  type: 'success',
+                  message: this.$translateTitle(`迁移成功`),
                 })
               }
             })

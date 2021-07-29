@@ -19,7 +19,11 @@ import {
 } from '@/api/shuwa_parse'
 
 export async function queryNotification(params) {
-  return query_object('Notification', params)
+  return request({
+    url: `notification`,
+    method: 'get',
+    params: params,
+  })
 }
 
 export async function getNotification(ObjectId) {

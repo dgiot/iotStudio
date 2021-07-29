@@ -547,12 +547,11 @@
               },
               companyinfo: {
                 logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
-                name: '树蛙科技',
+                name: 'dgiot',
                 _mimg: 'http://47.105.106.54:1250/group1/group1/70224.png',
-                title: '欢迎登录树蛙科技',
+                title: '欢迎登录dgiot',
                 _pcimg: 'http://47.105.106.54:1250/group1/group1/1_411.png',
-                Copyright:
-                  '© 2010-2021 树蛙科技 Corporation, All Rights Reserved',
+                Copyright: '© 2010-2021 dgiot Corporation, All Rights Reserved',
                 backgroundimage:
                   'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
               },
