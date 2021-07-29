@@ -35,7 +35,7 @@
                 :label="$translateTitle('Maintenance.Initiator') + ': '"
               >
                 <!--                <el-input v-model="detail.user" readonly disabled />-->
-                <span>{{ form._user }}</span>
+                <span>{{ form.user.nick }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
@@ -253,12 +253,13 @@
       },
       dispatchUser() {
         this.$refs['form'].validate(async (valid) => {
-          const setAcl = {}
           let _user = this.user.filter((e) => {
             return e.objectId == this.form.info.user
           })
           if (valid && this.form.info.user) {
-            const { objectId, info, ACL } = this.info.timeline.push({
+            const setAcl = {}
+            const { objectId, info, ACL, user } = this.form
+            info.timeline.push({
               timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
               h4: '已分配',
               p: `${this.username} 分配给 ${_user[0].nick}`,
@@ -268,20 +269,23 @@
             //   read: true,
             //   write: true,
             // }
-            setAcl[`${_user[0].objectId}`] = {
+            if (_user[0].objectId !== this.objectId) {
+              setAcl[`${_user[0].objectId}`] = {
+                read: true,
+                write: true,
+              }
+            }
+            setAcl[`${user.objectId}`] = {
               read: true,
               write: true,
             }
-            setAcl[`${this.objectId}`] = {
-              read: true,
-              write: true,
-            }
+            console.log('setAcl', setAcl)
             const params = {
               status: 1,
               info: info,
               ACL: setAcl,
             }
-            console.log(objectId, params, setACL)
+            console.log(objectId, params, setAcl)
             const res = await update_object('Maintenance', objectId, params)
             if (res.updatedAt) {
               this.set_deviceFlag(false)
