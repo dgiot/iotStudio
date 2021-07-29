@@ -274,6 +274,11 @@
                 read: true,
                 write: true,
               }
+              // setUser.push({
+              //   objectId: _user[0].objectId,
+              //   __type: 'Pointer',
+              //   className: '_User',
+              // })
             }
             setAcl[`${user.objectId}`] = {
               read: true,
@@ -284,6 +289,11 @@
               status: 1,
               info: info,
               ACL: setAcl,
+              user: {
+                objectId: _user[0].objectId,
+                __type: 'Pointer',
+                className: '_User',
+              },
             }
             console.log(objectId, params, setAcl)
             const res = await update_object('Maintenance', objectId, params)
