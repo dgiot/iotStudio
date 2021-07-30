@@ -72,17 +72,22 @@
               </template>
             </el-input>
           </el-form-item>
-          <el-button
-            :loading="loading"
-            class="login-btn"
-            type="primary"
-            @click="handleLogin"
-          >
-            {{ $translateTitle('home.login') }}
-          </el-button>
+          <el-form-item>
+            <el-input class="sbMc">
+              <el-button
+                slot="append"
+                :loading="loading"
+                class="login-btn"
+                type="primary"
+                @click="handleLogin"
+              >
+                {{ $translateTitle('home.login') }}
+              </el-button>
+            </el-input>
+          </el-form-item>
 
           <span>
-            <router-link style="float: left" to="/register">
+            <router-link v-show="false" style="float: left" to="/register">
               <div style="margin-top: 20px">
                 {{ $translateTitle('home.registered') }}
               </div>
@@ -315,10 +320,22 @@
       color: #096dd9;
       text-align: center;
     }
-
+    .sbMc {
+      ::v-deep {
+        .el-input__inner {
+          display: none;
+        }
+        .el-input-group__append {
+          color: #fff;
+          background-color: #409eff;
+          border-color: #409eff;
+        }
+      }
+    }
     .login-btn {
+      text-align: center;
       display: inherit;
-      width: 220px;
+      width: 100%;
       height: 50px;
       margin: 0 auto;
       margin-top: 5px;
