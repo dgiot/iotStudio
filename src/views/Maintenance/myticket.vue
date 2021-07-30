@@ -634,7 +634,7 @@
       },
       async createdTicket(from) {
         const setAcl = {}
-        setAcl[`${this.objectId}`] = {
+        setAcl['*'] = {
           read: true,
           write: true,
         }
@@ -839,6 +839,7 @@
           where: {
             'info.receiveuseid':
               this.Assigned % 2 == 0 ? { $ne: '99' } : this.objectId,
+            'info.createdname': this.username,
             number: this.queryForm.number.length
               ? { $regex: this.queryForm.number }
               : { $ne: null },
