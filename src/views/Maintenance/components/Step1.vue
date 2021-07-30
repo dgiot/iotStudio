@@ -19,7 +19,7 @@
                 :label="$translateTitle('Maintenance.project') + ': '"
               >
                 <!--                <el-input v-model="detail._product" readonly disabled />-->
-                <span>{{ form.product.name || '' }}</span>
+                <span>{{ form.info.productname }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -27,7 +27,7 @@
                 :label="$translateTitle('Maintenance.Equipment name') + ': '"
               >
                 <!--                <el-input v-model="detail._device" readonly disabled />-->
-                <span>{{ form.device.name || '' }}</span>
+                <span>{{ form.info.devicename }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -35,7 +35,7 @@
                 :label="$translateTitle('Maintenance.Initiator') + ': '"
               >
                 <!--                <el-input v-model="detail.user" readonly disabled />-->
-                <span>{{ form.user.nick }}</span>
+                <span>{{ form.info.createdname }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
@@ -83,7 +83,7 @@
             </el-col>
             <el-col v-if="showFooter" :span="24">
               <el-form-item
-                prop="user"
+                prop="info.receiveusername"
                 required
                 :label="$translateTitle('Maintenance.Maintenance staff')"
               >
@@ -106,7 +106,7 @@
                   </div>
                 </el-tree>
                 <el-select
-                  v-model="form.info.user"
+                  v-model="form.info.receiveusername"
                   v-loading="loading"
                   :disabled="!user.length"
                   :element-loading-text="
@@ -206,7 +206,7 @@
         },
         rules: {
           reverse: true,
-          user: [
+          'info.receiveusername': [
             { required: true, message: '请选择分配人员', trigger: 'change' },
           ],
         },
@@ -254,9 +254,9 @@
       dispatchUser() {
         this.$refs['form'].validate(async (valid) => {
           let _user = this.user.filter((e) => {
-            return e.objectId == this.form.info.user
+            return e.objectId == this.form.info.receiveusername
           })
-          if (valid && this.form.info.user) {
+          if (valid && this.form.info.receiveusername) {
             const setAcl = {}
             const { objectId, info, ACL, user } = this.form
             info.timeline.push({
@@ -269,21 +269,33 @@
             //   read: true,
             //   write: true,
             // }
+            info.receiveusername = _user[0].nick
+            info.receiveuseid = _user[0].objectId
+            info.receiveuserphone = _user[0].phone
             if (_user[0].objectId !== this.objectId) {
               setAcl[`${_user[0].objectId}`] = {
                 read: true,
                 write: true,
               }
+              // setUser.push({
+              //   objectId: _user[0].objectId,
+              //   __type: 'Pointer',
+              //   className: '_User',
+              // })
             }
-            setAcl[`${user.objectId}`] = {
+            setAcl[`${info.receiveuseid}`] = {
               read: true,
               write: true,
             }
-            console.log('setAcl', setAcl)
             const params = {
               status: 1,
               info: info,
-              ACL: setAcl,
+              ACL: _.merge(ACL, setAcl),
+              user: {
+                objectId: _user[0].objectId,
+                __type: 'Pointer',
+                className: '_User',
+              },
             }
             console.log(objectId, params, setAcl)
             const res = await update_object('Maintenance', objectId, params)

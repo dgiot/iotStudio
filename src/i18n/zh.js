@@ -117,6 +117,7 @@ export default {
     },
     route: {},
     equipment: {
+      lists: '列表',
       info: '信息',
       address: '设备地址',
       Department: '所属部门',

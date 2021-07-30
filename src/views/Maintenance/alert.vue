@@ -37,21 +37,13 @@
               label-width="200"
               :label="$translateTitle('alert.Alarm handling')"
             >
-              <el-input
-                v-model="process"
-                type="textarea"
-                :readonly="isDisable"
-              />
+              <el-input v-model="process" type="textarea" />
             </el-form-item>
           </el-form>
           <el-button @click="dynamicformView = false">
             {{ $translateTitle('button.cancel') }}
           </el-button>
-          <el-button
-            type="primary"
-            :disabled="isDisable"
-            @click="submitAlert(alertId)"
-          >
+          <el-button type="primary" @click="submitAlert(alertId)">
             {{ $translateTitle('Maintenance.deal with') }}
           </el-button>
         </span>
@@ -92,6 +84,16 @@
                 :value="item.value"
               />
             </el-select>
+          </el-form-item>
+          <el-form-item :label="$translateTitle('Maintenance.times')">
+            <el-date-picker
+              v-model="queryForm.searchDate"
+              :end-placeholder="$translateTitle('Maintenance.end time')"
+              format="yyyy-MM-dd"
+              :start-placeholder="$translateTitle('Maintenance.start time')"
+              type="daterange"
+              value-format="yyyy-MM-dd"
+            />
           </el-form-item>
           <el-form-item>
             <el-button icon="el-icon-search" type="primary" @click="fetchData">
@@ -219,13 +221,13 @@
           <!--          <el-button v-show="row.status == 3" type="info">-->
           <!--            {{ $translateTitle('Maintenance.deal with') }}-->
           <!--          </el-button>-->
-          <!--          <el-button-->
-          <!--            v-show="row.status != 3"-->
-          <!--            type="danger"-->
-          <!--            @click="handleDelete(row.objectId)"-->
-          <!--          >-->
-          <!--            {{ $translateTitle('Maintenance.delete') }}-->
-          <!--          </el-button>-->
+          <el-button
+            type="danger"
+            size="mini"
+            @click="handleDelete(row.objectId)"
+          >
+            {{ $translateTitle('Maintenance.delete') }}
+          </el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -243,7 +245,11 @@
 </template>
 
 <script>
-  import { queryNotification, putNotification } from '@/api/Notification'
+  import {
+    queryNotification,
+    putNotification,
+    delNotification,
+  } from '@/api/Notification'
   import { getProduct } from '@/api/Product'
   import { mapGetters, mapMutations } from 'vuex'
   import { Promise } from 'q'
@@ -443,11 +449,16 @@
           this.parserView = true
         })
       },
-      // async handleDelete(objectId) {
-      //   const res = await del_object('Maintenance', objectId)
-      //   this.$message.success('删除成功')
-      //   this.fetchData()
-      // },
+      async handleDelete(objectId) {
+        const res = await delNotification(objectId)
+        if (res == {}) {
+          this.$message.success(
+            this.$translateTitle('Maintenance.delete') +
+              $translateTitle('message.success')
+          )
+        }
+        this.fetchData()
+      },
       async fetchData(args = {}) {
         if (!args.limit) {
           args = this.queryForm

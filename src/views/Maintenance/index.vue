@@ -145,7 +145,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.product && row.product.name ? row.product.name : '' }}
+          {{ row.info && row.info.productname ? row.info.productname : '' }}
         </template>
       </el-table-column>
 
@@ -156,7 +156,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.device && row.device.name ? row.device.name : '' }}
+          {{ row.info && row.info.devicename ? row.info.devicename : '' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -166,7 +166,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.user ? row.user.nick : '' }}
+          {{ row.info && row.info.createdname ? row.info.createdname : '' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -385,14 +385,13 @@
           order: args.order,
           skip: args.skip,
           keys: args.keys,
-          include: 'product,device,user',
           where: {
             number: this.queryForm.number.length
               ? { $regex: this.queryForm.number }
               : { $ne: null },
-            product: this.queryForm.product.length
+            'info.productid': this.queryForm.product.length
               ? this.queryForm.product
-              : { $ne: null },
+              : { $ne: '98' },
             type: this.queryForm.type.length
               ? { $regex: this.queryForm.type }
               : { $ne: null },

@@ -549,6 +549,15 @@
                           {{ $translateTitle('equipment.move') }}
                         </el-link>
                       </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-link
+                          type="warning"
+                          size="mini"
+                          @click="goLink('video', scope.row)"
+                        >
+                          {{ $translateTitle('concentrator.video') }}
+                        </el-link>
+                      </el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
                 </template>
@@ -901,78 +910,78 @@
           </baidu-map>
         </el-tab-pane>
 
-        <el-tab-pane
-          :label="$translateTitle('leftbar.analysis')"
-          name="analysis"
-        >
-          <div class="equ_header">
-            <el-row>
-              <el-col :xs="24" :sm="24" :md="8" :xl="8">
-                <el-card class="box-card">
-                  <div slot="header" class="clearfix">
-                    <span>
-                      {{ $translateTitle('equipment.Equipment Overview') }}
-                    </span>
-                    <el-button
-                      icon="el-icon-refresh"
-                      style="float: right; padding: 3px 0"
-                      type="text"
-                    />
-                  </div>
-                  <div class="text item">
-                    <ve-ring
-                      height="140px"
-                      :data-empty="!chartOnlone.rows"
-                      :data="chartOnlone"
-                      :settings="chartSettings"
-                      :extend="chartExtend"
-                    />
-                  </div>
-                </el-card>
-              </el-col>
-              <el-col :xs="24" :sm="24" :md="8" :xl="8">
-                <el-card class="box-card">
-                  <div slot="header" class="clearfix">
-                    <span>
-                      {{ $translateTitle('equipment.Warning today') }}
-                    </span>
-                    <el-button
-                      icon="el-icon-refresh"
-                      style="float: right; padding: 3px 0"
-                      type="text"
-                    />
-                  </div>
-                  <div class="text item">
-                    <ve-ring
-                      height="140px"
-                      :data-empty="!chartwaring.rows"
-                      :data="chartwaring"
-                    />
-                  </div>
-                </el-card>
-              </el-col>
-              <el-col :xs="24" :sm="24" :md="8" :xl="8">
-                <el-card class="box-card">
-                  <div slot="header" class="clearfix">
-                    <span>{{ $translateTitle('equipment.Products') }}</span>
-                    <el-button
-                      icon="el-icon-refresh"
-                      style="float: right; padding: 3px 0"
-                      type="text"
-                    />
-                  </div>
-                  <div class="text item">
-                    <ve-ring
-                      height="140px"
-                      :data-empty="!chartProduct.rows"
-                      :data="chartProduct"
-                    />
-                  </div>
-                </el-card>
-              </el-col>
-            </el-row>
-          </div>
-        </el-tab-pane>
+        <!--        <el-tab-pane-->
+        <!--          :label="$translateTitle('leftbar.analysis')"-->
+        <!--          name="analysis"-->
+        <!--        >-->
+        <!--          <div class="equ_header">-->
+        <!--            <el-row>-->
+        <!--              <el-col :xs="24" :sm="24" :md="8" :xl="8">-->
+        <!--                <el-card class="box-card">-->
+        <!--                  <div slot="header" class="clearfix">-->
+        <!--                    <span>-->
+        <!--                      {{ $translateTitle('equipment.Equipment Overview') }}-->
+        <!--                    </span>-->
+        <!--                    <el-button-->
+        <!--                      icon="el-icon-refresh"-->
+        <!--                      style="float: right; padding: 3px 0"-->
+        <!--                      type="text"-->
+        <!--                    />-->
+        <!--                  </div>-->
+        <!--                  <div class="text item">-->
+        <!--                    <ve-ring-->
+        <!--                      height="140px"-->
+        <!--                      :data-empty="!chartOnlone.rows"-->
+        <!--                      :data="chartOnlone"-->
+        <!--                      :settings="chartSettings"-->
+        <!--                      :extend="chartExtend"-->
+        <!--                    />-->
+        <!--                  </div>-->
+        <!--                </el-card>-->
+        <!--              </el-col>-->
+        <!--              <el-col :xs="24" :sm="24" :md="8" :xl="8">-->
+        <!--                <el-card class="box-card">-->
+        <!--                  <div slot="header" class="clearfix">-->
+        <!--                    <span>-->
+        <!--                      {{ $translateTitle('equipment.Warning today') }}-->
+        <!--                    </span>-->
+        <!--                    <el-button-->
+        <!--                      icon="el-icon-refresh"-->
+        <!--                      style="float: right; padding: 3px 0"-->
+        <!--                      type="text"-->
+        <!--                    />-->
+        <!--                  </div>-->
+        <!--                  <div class="text item">-->
+        <!--                    <ve-ring-->
+        <!--                      height="140px"-->
+        <!--                      :data-empty="!chartwaring.rows"-->
+        <!--                      :data="chartwaring"-->
+        <!--                    />-->
+        <!--                  </div>-->
+        <!--                </el-card>-->
+        <!--              </el-col>-->
+        <!--              <el-col :xs="24" :sm="24" :md="8" :xl="8">-->
+        <!--                <el-card class="box-card">-->
+        <!--                  <div slot="header" class="clearfix">-->
+        <!--                    <span>{{ $translateTitle('equipment.Products') }}</span>-->
+        <!--                    <el-button-->
+        <!--                      icon="el-icon-refresh"-->
+        <!--                      style="float: right; padding: 3px 0"-->
+        <!--                      type="text"-->
+        <!--                    />-->
+        <!--                  </div>-->
+        <!--                  <div class="text item">-->
+        <!--                    <ve-ring-->
+        <!--                      height="140px"-->
+        <!--                      :data-empty="!chartProduct.rows"-->
+        <!--                      :data="chartProduct"-->
+        <!--                    />-->
+        <!--                  </div>-->
+        <!--                </el-card>-->
+        <!--              </el-col>-->
+        <!--            </el-row>-->
+        <!--          </div>-->
+        <!--        </el-tab-pane>-->
       </el-tabs>
       <el-dialog
         :title="$translateTitle('product.edit') + equipmentEditor"
@@ -1510,6 +1519,25 @@
       console.log('this.aclObj', this.aclObj)
     },
     methods: {
+      goLink(type, item) {
+        const { basedata } = item
+        if (basedata?.videoSrc?.length) {
+          this.$router.push({
+            path: '/tools/player',
+            query: {
+              type: 'flv',
+              url: basedata.videoSrc,
+            },
+          })
+        } else {
+          this.$message.info(
+            this.$translateTitle(
+              'equipment.The device is not bound to the video address yet'
+            )
+          )
+          return false
+        }
+      },
       handleTabClick(tab, event) {
         console.log(this.activeparseTbas)
         console.log(this.parseTbas)

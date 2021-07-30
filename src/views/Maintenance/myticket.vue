@@ -109,6 +109,7 @@
                     ? $translateTitle('Maintenance.Please choose the product')
                     : $translateTitle('Maintenance.Please select a device')
                 "
+                @change="deviceChange"
               >
                 <el-option
                   v-for="(item, index) in Device"
@@ -351,7 +352,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.product && row.product.name ? row.product.name : '' }}
+          {{ row.info && row.info.productname ? row.info.productname : '' }}
         </template>
       </el-table-column>
 
@@ -362,7 +363,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.device && row.device.name ? row.device.name : '' }}
+          {{ row.info && row.info.devicename ? row.info.devicename : '' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -372,7 +373,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          {{ row.user ? row.user.nick : '' }}
+          {{ row.info && row.info.createdname ? row.info.createdname : '' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -471,6 +472,12 @@
         created: 0,
         Assigned: 0,
         form: {
+          receiveuseid: '',
+          productname: '',
+          devicename: '',
+          createdname: '',
+          receiveusername: '',
+          receiveuserphone: '',
           name: '',
           product: '',
           type: '',
@@ -634,18 +641,18 @@
         const params = {
           number: moment(new Date()).unix() + '',
           type: from.type,
-          status: 0,
-          product: {
-            objectId: from.product,
-            __type: 'Pointer',
-            className: 'Product',
-          },
+          // status: 0,
+          // product: {
+          //   objectId: from.product,
+          //   __type: 'Pointer',
+          //   className: 'Product',
+          // },
 
-          user: {
-            objectId: this.objectId,
-            __type: 'Pointer',
-            className: '_User',
-          },
+          // user: {
+          //   objectId: this.objectId,
+          //   __type: 'Pointer',
+          //   className: '_User',
+          // },
           // ACL: this.aclObj,
           ACL: setAcl,
           info: {
@@ -662,6 +669,14 @@
             step2: {},
             step3: {},
             step4: {},
+            productid: from.product,
+            productname: from.productname,
+            devicename: from.devicename,
+            deviceid: from.name,
+            createdname: this.username,
+            receiveusername: from.receiveusername,
+            receiveuseid: from.receiveuseid,
+            receiveuserphone: from.receiveuserphone,
           },
           device: {
             objectId: from.name,
@@ -821,19 +836,18 @@
           order: args.order,
           skip: args.skip,
           keys: args.keys,
-          include: 'product,device,user',
           where: {
-            'info.user': this.Assigned % 2 == 0 ? { $ne: '' } : this.objectId,
-            user: this.created % 2 == 0 ? { $ne: null } : this.objectId,
+            'info.receiveuseid':
+              this.Assigned % 2 == 0 ? { $ne: '99' } : this.objectId,
             number: this.queryForm.number.length
               ? { $regex: this.queryForm.number }
               : { $ne: null },
             status: this.queryForm.statusFlag
               ? this.queryForm.status
               : { $ne: 9 },
-            product: this.queryForm.product.length
+            'info.productid': this.queryForm.product.length
               ? this.queryForm.product
-              : { $ne: null },
+              : { $ne: '99' },
             type: this.queryForm.type.length
               ? { $regex: this.queryForm.type }
               : { $ne: null },
@@ -870,7 +884,13 @@
         console.log(this.list, 'this.list')
       },
       async prodChange(e) {
+        console.log(e)
         this.Device = []
+        this._Product.map((p) => {
+          if (p.objectId == e) {
+            this.form.productname = p.name
+          }
+        })
         this.form.name = ''
         const params = {
           where: { product: e },
@@ -878,6 +898,14 @@
         const { results } = await queryDevice(params)
         console.log(results, '设备')
         this.Device = results
+      },
+      deviceChange(e) {
+        this.Device.map((p) => {
+          if (p.objectId == e) {
+            this.form.devicename = p.name
+          }
+        })
+        console.log(this.form.productname, this.form.devicename)
       },
       dispatch() {
         this.$refs.changeinfo.$refs.step1.dispatchUser()

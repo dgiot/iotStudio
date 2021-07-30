@@ -235,27 +235,33 @@
               <!-- 右上角(图表,表格)的按钮 -->
               <el-button-group>
                 <el-button
-                  :class="!isshowtable ? 'buttonactive' : ''"
                   type="primary"
                   plain
                   size="small"
-                  @click="isshowtable = false"
+                  @click="buttonactive = 1"
                 >
                   {{ $translateTitle('equipment.chart') }}
                 </el-button>
                 <el-button
-                  :class="isshowtable ? 'buttonactive' : ''"
                   type="primary"
                   plain
                   size="small"
-                  @click="isshowtable = true"
+                  @click="buttonactive = 2"
                 >
                   {{ $translateTitle('equipment.table') }}
+                </el-button>
+                <el-button
+                  type="primary"
+                  plain
+                  size="small"
+                  @click="buttonactive = 3"
+                >
+                  {{ $translateTitle('equipment.lists') }}
                 </el-button>
               </el-button-group>
             </div>
 
-            <div v-if="!isshowtable" class="thirdtb">
+            <div v-if="buttonactive == 1" class="thirdtb">
               <!--运行状态卡片-->
               <ul style="display: flex; flex-wrap: wrap">
                 <li
@@ -288,7 +294,7 @@
                 </li>
               </ul>
             </div>
-            <div v-if="isshowtable" class="thirdtable">
+            <div v-else-if="buttonactive == 2" class="thirdtable">
               <!--运行状态表格-->
 
               <el-table
@@ -331,13 +337,33 @@
                 @current-change="handleCurrentChange1"
               />
             </div>
+            <div v-else>
+              <a-table
+                size="middle"
+                align="center"
+                :columns="columns"
+                :data-source="thirdDatas"
+                bordered
+              >
+                <img
+                  slot="imgurl"
+                  slot-scope="imgurl"
+                  style="width: 100px; heigth: 100px"
+                  :src="
+                    imgurl
+                      ? imgurl
+                      : 'https://i.loli.net/2021/07/30/J5byW634csj7okH.png'
+                  "
+                />
+              </a-table>
+            </div>
           </div>
         </el-tab-pane>
         <!--         <el-tab-pane label="事件管理" name="fixth">事件管理</el-tab-pane>
                 <el-tab-pane label="服务调用" name="sixth">服务调用</el-tab-pane>
                 <el-tab-pane label="设备影子" name="seventh">设备影子</el-tab-pane>
         <el-tab-pane label="日志服务" name="eighth">日志服务</el-tab-pane>-->
-        <el-tab-pane :label="$translateTitle('route.在线调试')" name="ninth" />
+        <!--        <el-tab-pane :label="$translateTitle('route.在线调试')" name="ninth" />-->
         <!--子设备管理-->
         <el-tab-pane
           v-if="$route.query.nodeType != '0'"
@@ -643,6 +669,24 @@
   </div>
 </template>
 <script>
+  const columns = [
+    {
+      title: '图片',
+      width: 120,
+      dataIndex: 'imgurl',
+      fixed: 'left',
+      key: 'imgurl',
+      scopedSlots: { customRender: 'imgurl' },
+    },
+    { title: '时间', dataIndex: 'time', key: 'time' },
+    { title: '名称', dataIndex: 'name', key: 'name' },
+    { title: '值', dataIndex: 'number', key: 'number' },
+    {
+      title: '单位',
+      dataIndex: 'unit',
+      key: 'unit',
+    },
+  ]
   import { mapGetters } from 'vuex'
   import {
     getTdDevice,
@@ -746,6 +790,7 @@
       }
 
       return {
+        columns,
         productId: this.$route.query.productid,
         activeNames: ['1'],
         queryForm: {
@@ -754,6 +799,7 @@
           pageNo: 1,
           pageSize: 20,
         },
+        buttonactive: 1,
         loading: true,
         xl: 6,
         xs: 24,
@@ -959,6 +1005,7 @@
           },
         ],
         thirdData: [],
+        thirdDatas: [],
         isupdate: false,
         ispushdata: true,
         timer: null,
@@ -1386,9 +1433,11 @@
                   time: response.data[0].time,
                   value: JSON.stringify(third),
                 })
+                vm.thirdDatas.unshift(...response.data)
               }
               vm.thirdtotal = vm.$objGet(vm, 'thirdData.length')
               vm.properties = response.data
+              console.log('vm.thirdDatas', vm.thirdDatas)
             }
           })
           .catch((error) => {

@@ -45,23 +45,14 @@
         <el-row>
           <el-col class="card-panel-col" :xs="24" :sm="24" :md="6" :xl="6">
             <el-card class="box-card">
-              <el-col :span="12" class="card-left">
-                <vab-icon icon="projector-2-fill" />
-              </el-col>
-              <el-col :span="12" class="card-right">
-                <p>{{ $translateTitle('home.cla_count') }}</p>
-                <p>{{ _project_count }}</p>
-              </el-col>
-            </el-card>
-          </el-col>
-          <el-col class="card-panel-col" :xs="24" :sm="24" :md="6" :xl="6">
-            <el-card class="box-card">
               <el-col :span="12">
                 <vab-icon icon="projector-fill" />
               </el-col>
               <el-col :span="12" class="card-right">
-                <p>{{ $translateTitle('home.pro_count') }}</p>
-                <p>{{ _product_count }}</p>
+                <router-link to="/roles/product">
+                  <p>{{ $translateTitle('home.pro_count') }}</p>
+                  <p>{{ _product_count }}</p>
+                </router-link>
               </el-col>
             </el-card>
           </el-col>
@@ -78,8 +69,10 @@
                 <vab-icon icon="apps-fill" />
               </el-col>
               <el-col :span="12" class="card-right">
-                <p>{{ $translateTitle('home.app_count') }}</p>
-                <p>{{ _app_count }}</p>
+                <router-link to="/roles/applicationManagement">
+                  <p>{{ $translateTitle('home.app_count') }}</p>
+                  <p>{{ _app_count }}</p>
+                </router-link>
               </el-col>
             </el-card>
           </el-col>
@@ -89,8 +82,23 @@
                 <vab-icon icon="device-recover-fill" />
               </el-col>
               <el-col :span="12" class="card-right">
-                <p>{{ $translateTitle('home.dev_count') }}</p>
-                <p>{{ _dev_count }}</p>
+                <router-link to="/dashboard/devicelist">
+                  <p>{{ $translateTitle('home.dev_count') }}</p>
+                  <p>{{ _dev_count }}</p>
+                </router-link>
+              </el-col>
+            </el-card>
+          </el-col>
+          <el-col class="card-panel-col" :xs="24" :sm="24" :md="6" :xl="6">
+            <el-card class="box-card">
+              <el-col :span="12" class="card-left">
+                <vab-icon icon="projector-2-fill" />
+              </el-col>
+              <el-col :span="12" class="card-right">
+                <router-link to="/CloudOt/alarm">
+                  <p>{{ $translateTitle('equipment.Warning today') }}</p>
+                  <p>{{ warnCount }}</p>
+                </router-link>
               </el-col>
             </el-card>
           </el-col>
@@ -616,6 +624,7 @@
     BmlMarkerClusterer,
     BmInfoWindow,
   } from 'vue-baidu-map'
+  import { query_object } from '@/api/shuwa_parse'
 
   export default {
     name: 'Index',
@@ -652,6 +661,7 @@
       }
 
       return {
+        warnCount: 0,
         count: 0,
         productIco: '',
         ChartStatus: {
@@ -768,6 +778,7 @@
         this.language == 'zh' ? '全部产品' : 'All Products'
       this.getRoletree()
       this.getProduct()
+      this.getWarnCount()
     },
     activated() {
       console.log('keep-alive生效')
@@ -778,6 +789,30 @@
       this.resizeTheChart()
     },
     methods: {
+      /**
+       *
+       * @param
+       * @returns
+       */
+      async getWarnCount(params = { count: '*', where: {} }) {
+        params.where['createdAt'] = {
+          $gt: {
+            __type: 'Date',
+            iso: moment().subtract(1, 'days').format('YYYY-MM-DD'),
+          },
+        }
+        params.where['updatedAt'] = {
+          $lt: { __type: 'Date', iso: moment(new Date()).format('YYYY-MM-DD') },
+        }
+        try {
+          const { count = 0 } = await this.$query_object('Maintenance', params)
+          this.warnCount = count
+          // this.$message.success(`${res}`)
+        } catch (error) {
+          console.log(error)
+          this.$message.error(`${error}`)
+        }
+      },
       toggleFull(e) {
         this.count++
         this.count % 2 == 0
@@ -1194,8 +1229,8 @@
             })
             break
           case 'video':
-            const { basedata = { videoSrc: '' } } = this.deviceInfo
-            if (basedata.videoSrc != '') {
+            const { basedata } = this.deviceInfo
+            if (basedata?.videoSrc?.length) {
               this.$router.push({
                 path: '/tools/player',
                 query: {
