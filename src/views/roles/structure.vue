@@ -220,6 +220,7 @@
                     <template slot-scope="scope">
                       <el-button
                         type="success"
+                        :disabled="scope.row.objectId !== ObjectId"
                         size="small"
                         @click="handleEditor(scope.row)"
                       >
@@ -482,6 +483,7 @@
     },
     computed: {
       ...mapGetters({
+        ObjectId: 'user/objectId',
         roleTree: 'user/roleTree',
       }),
       tableFilterData() {

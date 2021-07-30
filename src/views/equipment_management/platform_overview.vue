@@ -235,7 +235,64 @@
     <el-row :row="24">
       <el-col :span="leftRow" :xs="24">
         <el-row :span="24">
-          <div class="chart_map">
+          <div class="chart_map" style="position: relative">
+            <div
+              class="card"
+              style="position: absolute; z-index: 10086; right: 100px"
+            >
+              <Card
+                style="
+                  width: 100px;
+                  height: 100px;
+                  border-radius: 50%;
+                  color: #fff;
+                  background-color: #ffad33;
+                  border-color: #ffad33;
+                "
+              >
+                <div style="text-align: center">
+                  <Tag checkable color="warning">
+                    {{ $translateTitle('zetadevices.offline') }}
+                  </Tag>
+                  <p>{{ offlineData.length || 0 }}</p>
+                </div>
+              </Card>
+              <Card
+                style="
+                  width: 100px;
+                  height: 100px;
+                  border-radius: 50%;
+                  margin: 20px 0;
+                  color: #fff;
+                  background-color: #19be6b;
+                  border-color: #19be6b;
+                "
+              >
+                <div style="text-align: center">
+                  <Tag checkable color="success">
+                    {{ $translateTitle('zetadevices.online') }}
+                  </Tag>
+                  <p>{{ dev_online_count || 0 }}</p>
+                </div>
+              </Card>
+              <Card
+                style="
+                  width: 100px;
+                  height: 100px;
+                  color: #fff;
+                  border-radius: 50%;
+                  background-color: #f16643;
+                  border-color: #f16643;
+                "
+              >
+                <div style="text-align: center">
+                  <Tag checkable color="error">
+                    {{ $translateTitle('leftbar.alarms') }}
+                  </Tag>
+                  <p>{{ warnCount }}</p>
+                </div>
+              </Card>
+            </div>
             <baidu-map
               id="baidu_map"
               ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
@@ -737,6 +794,7 @@
     },
     computed: {
       ...mapGetters({
+        objectId: 'user/objectId',
         roleTree: 'user/roleTree',
         collapse: 'settings/collapse',
         _Product: 'user/_Product',
@@ -905,7 +963,7 @@
         // this.$forceUpdate()
       },
       async showDeatils(row, index) {
-        // const loading = this.$baseColorfullLoading(0)
+        const loading = this.$baseColorfullLoading(0)
         this.productIco = ''
         this.deviceInfo = await getDevice(row.objectId)
         const { results = [{ icon: '' }] } = await queryProduct({
@@ -918,10 +976,11 @@
         })
         this.productIco = results[0].icon
         row.show = true
-        // loading.close()
+
         console.log(this.productIco, row, row.show, index, this.deviceInfo)
         // 延时加载
         setTimeout(() => {
+          loading.close()
           console.info(this.$refs[`bm_info${index}`])
           this.$refs[`bm_info${index}`][0].$children[0].show = true
           // this.set_tableData(_.merge([], this._tableData))
