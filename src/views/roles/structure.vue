@@ -3,100 +3,95 @@
 <template>
   <div class="structure">
     <div class="adduserDiadlog">
-      <el-dialog
+      <a-drawer
         :visible.sync="adduserDiadlog"
         :title="$translateTitle('user.newusers')"
         width="600px"
+        @close="adduserDiadlog = !adduserDiadlog"
       >
-        <div>
-          <el-form
-            ref="userInfoFormRef"
-            :model="userInfoForm"
-            :rules="userFormRules"
-            status-icon
-            label-width="100px"
-            class="demo-ruleForm"
+        <el-form
+          ref="userInfoFormRef"
+          :model="userInfoForm"
+          :rules="userFormRules"
+          status-icon
+          label-width="100px"
+          class="demo-ruleForm"
+        >
+          <el-form-item
+            :label="$translateTitle('developer.departmentselection')"
+            prop="departmentid"
           >
-            <el-form-item :label="$translateTitle('user.name1')" prop="nick">
-              <el-input
-                v-model="userInfoForm.nick"
-                :placeholder="$translateTitle('product.eqwords')"
-                auto-complete="off"
+            <el-select
+              v-model="userInfoForm.departmentid"
+              style="width: 100%"
+              :placeholder="$translateTitle('product.selectdepartment')"
+            >
+              <el-option
+                v-for="item in deptOption"
+                :key="item.objectId"
+                :value="item.objectId"
+                :label="item.name + ':' + item.desc"
               />
-            </el-form-item>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$translateTitle('user.name1')" prop="nick">
+            <el-input
+              v-model="userInfoForm.nick"
+              :placeholder="$translateTitle('product.eqwords')"
+              auto-complete="off"
+            />
+          </el-form-item>
 
-            <el-form-item
-              :label="$translateTitle('product.phone')"
-              prop="phone"
-              :width="85"
-            >
-              <el-input
-                v-model="userInfoForm.phone"
-                :maxlength="11"
-                :placeholder="$translateTitle('product.enterphonenumber')"
-                auto-complete="off"
-              />
-            </el-form-item>
-            <el-form-item :label="$translateTitle('user.email')" prop="email">
-              <el-input
-                v-model="userInfoForm.email"
-                :placeholder="$translateTitle('product.enteremail')"
-                auto-complete="off"
-              />
-            </el-form-item>
-            <el-form-item
-              :label="$translateTitle('user.account')"
-              prop="account"
-            >
-              <el-input
-                v-model="userInfoForm.account"
-                :placeholder="$translateTitle('product.enteraccount')"
-                auto-complete="off"
-              />
-            </el-form-item>
+          <el-form-item
+            :label="$translateTitle('product.phone')"
+            prop="phone"
+            :width="85"
+          >
+            <el-input
+              v-model="userInfoForm.phone"
+              :maxlength="11"
+              :placeholder="$translateTitle('product.enterphonenumber')"
+              auto-complete="off"
+            />
+          </el-form-item>
+          <el-form-item :label="$translateTitle('user.email')" prop="email">
+            <el-input
+              v-model="userInfoForm.email"
+              :placeholder="$translateTitle('product.enteremail')"
+              auto-complete="off"
+            />
+          </el-form-item>
+          <el-form-item :label="$translateTitle('user.account')" prop="account">
+            <el-input
+              v-model="userInfoForm.account"
+              :placeholder="$translateTitle('product.enteraccount')"
+              auto-complete="off"
+            />
+          </el-form-item>
 
-            <el-form-item
-              :label="$translateTitle('developer.password')"
-              prop="password"
-            >
-              <el-input
-                v-model="userInfoForm.password"
-                type="password"
-                auto-complete="off"
-                :placeholder="$translateTitle('product.entermmzh')"
-              />
-            </el-form-item>
-            <!-- <el-form-item label="确认密码" prop="checkPass"> -->
-            <el-form-item
-              :label="$translateTitle('developer.confirmpassword')"
-              prop="checkPass"
-            >
-              <el-input
-                v-model="userInfoForm.checkPass"
-                type="password"
-                auto-complete="off"
-                :placeholder="$translateTitle('product.enterpwa')"
-              />
-            </el-form-item>
-            <!-- <el-form-item label="部门选择" prop="departmentid"> -->
-            <el-form-item
-              :label="$translateTitle('developer.departmentselection')"
-              prop="departmentid"
-            >
-              <el-select
-                v-model="userInfoForm.departmentid"
-                :placeholder="$translateTitle('product.selectdepartment')"
-              >
-                <el-option
-                  v-for="item in deptOption"
-                  :key="item.objectId"
-                  :value="item.objectId"
-                  :label="item.name + ':' + item.desc"
-                />
-              </el-select>
-            </el-form-item>
-          </el-form>
-        </div>
+          <el-form-item
+            :label="$translateTitle('developer.password')"
+            prop="password"
+          >
+            <el-input
+              v-model="userInfoForm.password"
+              auto-complete="off"
+              :placeholder="$translateTitle('product.entermmzh')"
+            />
+          </el-form-item>
+          <!-- <el-form-item label="确认密码" prop="checkPass"> -->
+          <el-form-item
+            :label="$translateTitle('developer.confirmpassword')"
+            prop="checkPass"
+          >
+            <el-input
+              v-model="userInfoForm.checkPass"
+              auto-complete="off"
+              :placeholder="$translateTitle('product.enterpwa')"
+            />
+          </el-form-item>
+          <!-- <el-form-item label="部门选择" prop="departmentid"> -->
+        </el-form>
         <div slot="footer">
           <el-button @click="adduserDiadlog = false">
             <!-- 取消 -->
@@ -107,7 +102,7 @@
             {{ $translateTitle('developer.determine') }}
           </el-button>
         </div>
-      </el-dialog>
+      </a-drawer>
     </div>
     <el-row :gutter="20">
       <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -850,12 +845,12 @@
       async handleNodeClick(data) {
         this.treeDataValue = data.label
         this.queryForm.workGroupName = data.label
-        $('.el-tree').css({
-          height: '0px',
-          display: 'none',
-          'overflow-x': 'auto',
-        })
-        $('.el-select-dropdown').css({ display: 'none' })
+        // $('.el-tree').css({
+        //   height: '0px',
+        //   display: 'none',
+        //   'overflow-x': 'auto',
+        // })
+        // $('.el-select-dropdown').css({ display: 'none' })
         console.log(this.treeDataValue)
         this.departmentname = data.name
         this.curDepartmentId = data.objectId
@@ -889,7 +884,6 @@
   .elTable ::v-deep .el-table--enable-row-transition .el-table__body td {
     text-align: center;
   }
-
   .structure {
     box-sizing: border-box;
     width: 100%;

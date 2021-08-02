@@ -2,28 +2,39 @@
   <div class="app-container">
     <!-- <h2>添加角色</h2> -->
     <div class="role-box">
-      <el-form :model="roleFormObj" :rules="roleFormRules" label-width="80px">
-        <el-form-item label="parent" prop="parent">
-          <el-select v-model="roleFormObj.ParentId" placeholder="请选择Parent">
+      <el-form
+        ref="roleFormObj"
+        :loading="isloading"
+        :model="roleFormObj"
+        :rules="roleFormRules"
+        label-width="80px"
+      >
+        <el-form-item label="父及部门" prop="ParentId">
+          <el-select
+            v-model="roleFormObj.ParentId"
+            placeholder="请选择Parent"
+            @change="handleChangeDeptId($event)"
+          >
             <el-option
               v-for="(item, index) in roleList"
               :key="index"
               :value="item.objectId"
-              :label="item.name + ':' + item.desc"
+              :title="item.name + ':' + item.desc"
+              :label="item.name"
             />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="角色名" prop="name">
-          <el-input v-model="roleFormObj.name" />
-        </el-form-item>
-        <el-form-item label="部门" prop="departmentid">
+        <!--        <el-form-item label="角色名" prop="name">-->
+        <!--          <el-input v-model="roleFormObj.name" />-->
+        <!--        </el-form-item>-->
+        <el-form-item label="部门" prop="depname">
           <el-input
             v-model="roleFormObj.depname"
             placeholder="请输入部门名称"
           />
         </el-form-item>
-        <el-form-item label="岗位" prop="role">
+        <el-form-item label="岗位" prop="dictvalue">
           <el-select
             v-model="roleFormObj.dictvalue"
             :clearable="clearFlag"
@@ -37,12 +48,8 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="备注" prop="description">
-          <el-input
-            v-model="roleFormObj.description"
-            placeholder="备注项为必填项"
-            type="textarea"
-          />
+        <el-form-item label="备注">
+          <el-input v-model="roleFormObj.description" type="textarea" />
         </el-form-item>
         <el-form-item class="el_btn">
           <el-button type="warning" @click="resetFrom()">重置</el-button>
@@ -50,7 +57,7 @@
           <el-button
             v-if="insert == 0 || insert == 1"
             type="success"
-            @click="addroles()"
+            @click="addroles('roleFormObj')"
           >
             确定
           </el-button>
@@ -65,8 +72,17 @@
   import { Roletree } from '@/api/Menu'
 
   export default {
+    props: {
+      deptData: {
+        type: Object,
+        default: () => {},
+        required: true,
+      },
+    },
+
     data() {
       return {
+        isloading: '',
         treeModu: [],
         treeprops: {
           value: 'name',
@@ -79,6 +95,7 @@
         originrole: [],
         needdelarr: [],
         parentrole: [],
+        deptLevel: 0,
         userid: '',
         roleId: '',
         insert: '',
@@ -118,9 +135,12 @@
               trigger: 'blur',
             },
           ],
-          description: [
-            { required: true, message: '请输入权限描述', trigger: 'blur' },
-            { min: 3, message: '最少三个字符', trigger: 'blur' },
+          depname: [{ required: true, message: '请选择部门', trigger: 'blur' }],
+          dictvalue: [
+            { required: true, message: '请选择岗位', trigger: 'change' },
+          ],
+          ParentId: [
+            { required: true, message: '请选择部门父级', trigger: 'blur' },
           ],
         },
         roleList: [],
@@ -130,14 +150,32 @@
     computed: {},
     mounted() {
       this.searchAllOption()
+      if (this.deptData?.objectId) {
+        console.log(this.deptData)
+        this.isloading = this.$baseLoading(3)
+        this.getData(this.deptData)
+      }
+      setTimeout(() => {
+        this.isloading.close()
+      }, 1500)
     },
     methods: {
+      handleChangeDeptId(e) {
+        this.roleList.forEach((r) => {
+          if (r.objectId == e) {
+            console.log(r)
+            this.deptLevel = r.level
+            this.searchAllOption()
+          }
+        })
+        console.log(this.deptLevel, 'deptLevel')
+      },
       getData(departData) {
         this.deptInfo = departData
-
+        this.deptLevel = departData.level
         this.roleFormObj.ParentId = this.deptInfo.objectId // this.$store.state.user.departmentObj.objectId
 
-        console.log('this.deptInfo', this.deptInfo.objectId)
+        console.log('this.deptInfo', this.deptLevel, this.deptInfo.objectId)
 
         // 这里有点多余,但不加的话,parent select在视图上无法选中
         this.searchAllOption()
@@ -162,30 +200,37 @@
       },
       // 查询部门  角色
       async searchAllOption() {
+        console.log(this.deptInfo, 'deptInfo')
         const { results } = await queryDict({
           where: {
+            'data.level': { $gt: this.deptLevel },
             type: 'roletemp',
           },
         })
-        if (results) this.Option.dictOption = results
-        let res = await queryRole({})
-
+        if (results) {
+          this.Option.dictOption = results
+          this.roleFormObj.dictvalue = results[0].key
+          console.log(this.roleFormObj.dictvalue, results[0].key)
+        }
+        const { results: roleresults = [] } = await queryRole({})
+        console.log(roleresults, 'roleresults')
         const tempResults = []
 
-        if (res.results) {
-          res.results.forEach((item, key) => {
+        if (roleresults?.length) {
+          roleresults.forEach((item, key) => {
             const obj = {}
             obj.ParentId = item.ParentId
             obj.name = item.name
             obj.objectId = item.objectId
             obj.org_type = item.org_type
             obj.desc = item.desc
+            obj.level = item.level
             obj.createdAt = item.createdAt
             tempResults.push(obj)
           })
 
           this.roleList = tempResults
-          this.Option.deptOption = res.results
+          this.Option.deptOption = roleresults
         } else {
           this.roleList = []
           this.$message('部门列表获取失败')
@@ -194,7 +239,7 @@
       },
       // 重置
       resetFrom() {
-        ;(this.roleFormObj = {
+        this.roleFormObj = {
           name: '',
           phoneNum: '',
           duty: '',
@@ -202,8 +247,8 @@
           role: '',
           description: '',
           alias: '',
-        }),
-          (this.Option.deptvalue = '')
+        }
+        this.Option.deptvalue = ''
         this.Option.dictvalue = ''
         this.Option.objectId = 0
         this.Option.ParentId = 0
@@ -225,21 +270,47 @@
           }
         })
       },
-      async addroles() {
-        const params = {
-          depname: this.roleFormObj.depname,
-          desc: this.roleFormObj.description,
-          name: this.roleFormObj.name,
-          parent: this.roleFormObj.ParentId,
-          tempname: this.roleFormObj.dictvalue,
-        }
-        const { results } = await addRoles(params)
-        if (results)
-          this.$message({
-            message: '新增成功',
-            type: 'success',
-          })
-        this.$baseEventBus.$emit('dialogHide')
+      addroles(formName) {
+        this.$refs[formName].validate(async (valid) => {
+          console.log(this.$refs[formName], this.roleFormObj)
+          if (valid) {
+            const params = {
+              depname: this.roleFormObj.depname,
+              desc: this.roleFormObj.description?.length
+                ? this.roleFormObj.description
+                : this.roleFormObj.depname + this.roleFormObj.name,
+              name: this.roleFormObj.name?.length
+                ? this.roleFormObj.name
+                : this.roleFormObj.depname,
+              parent: this.roleFormObj.ParentId,
+              tempname: this.roleFormObj.dictvalue,
+            }
+            try {
+              const res = await addRoles(params)
+              if (res?.createdAt?.length) {
+                this.$message({
+                  message: '新增成功',
+                  type: 'success',
+                })
+                this.$baseEventBus.$emit('dialogHide')
+              } else {
+                console.log(res)
+                this.$message({
+                  message: `角色添加出錯${res}`,
+                  type: 'error',
+                })
+              }
+            } catch (_error) {
+              this.$message({
+                message: `角色添加出錯${_error}`,
+                type: 'error',
+              })
+              console.log(_error, '_error')
+            }
+          } else {
+            return false
+          }
+        })
       },
       getdetail() {
         this.insert = this.$route.query.insert

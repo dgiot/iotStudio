@@ -72,6 +72,7 @@
 
       &.is-collapse-main {
         &.vab-main-horizontal {
+          z-index: 99;
           margin-left: $base-left-menu-width-min * 1.3;
 
           ::v-deep {
