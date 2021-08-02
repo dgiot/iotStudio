@@ -82,6 +82,7 @@
 
       ::v-deep {
         .vab-layout-header {
+          z-index: 99;
           box-shadow: $base-box-shadow;
         }
       }
@@ -126,6 +127,7 @@
     &.mobile {
       ::v-deep {
         .vab-layout-vertical {
+          z-index: 99;
           .el-scrollbar.vab-side-bar.is-collapse {
             width: 0;
           }

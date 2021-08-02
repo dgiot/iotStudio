@@ -1349,7 +1349,6 @@
           pageSize: 20,
           workGroupName: '',
           workGroupTreeShow: false,
-          access_token: '',
           statusFlag: false,
           status: '',
           number: '',
@@ -1682,7 +1681,7 @@
             if (i.objectId == this.$route.query.product) {
               this.equvalue = this.proTableData[index].objectId
               this.productenable = true
-              this.access_token = this.token
+              this.queryForm.access_token = this.token
               this.$nextTick(() => {
                 this.selectProdChange(this.$route.query.product)
               })
@@ -1755,7 +1754,7 @@
 
           const { results = [], count = 0 } = await querycompanyDevice(
             params,
-            this.access_token
+            this.queryForm.access_token
           )
           results.forEach((item) => {
             if (item.ACL) {
@@ -1965,13 +1964,13 @@
         this.curDepartmentId = objectId
         // this.Company = name
         if (aclRole.includes(data.name)) {
-          this.access_token = this.token
+          this.queryForm.access_token = this.token
         } else if (node.level != 1) {
           // 在这里获取点击厂家的session
           const { access_token = '' } = await getToken(data.name)
-          this.access_token = access_token
+          this.queryForm.access_token = access_token
         } else {
-          this.access_token = this.token
+          this.queryForm.access_token = this.token
         }
         this.getDevices({ start: 0 })
       },
@@ -2129,15 +2128,26 @@
           // params.where.product = this.equvalue
           this.selectProdChange(this.equvalue)
         }
-        var res = await querycompanyDevice(params, this.access_token)
 
-        this.chartOnlone.rows[1]['数量'] = this.devicetotal - res.count
-        this.chartOnlone.rows[0]['数量'] = res.count
+        try {
+          const { count = 0 } = await querycompanyDevice(
+            params,
+            this.queryForm.access_token
+          )
+
+          this.chartOnlone.rows[1]['数量'] = this.devicetotal - count
+          this.chartOnlone.rows[0]['数量'] = count
+          // this.$message.success(`${res}`)
+        } catch (error) {
+          console.log(error)
+          this.$message.error(`${error}`)
+        }
       },
       async getDevices(args = {}) {
         if (!args.limit) {
           args = this.queryForm
         }
+        console.log('args', args)
         this.listLoading = true
         this.tableData = []
         const params = {
@@ -2175,32 +2185,35 @@
         if (args.start == 0) {
           this.devicestart = 0
         }
-        const { results = [], count = 0 } = await querycompanyDevice(
-          params,
-          this.access_token
-        )
-        results.forEach((item) => {
-          if (item.ACL) {
-            for (var key in item.ACL) {
-              item.Company = key.substr(5)
-              // obj.applicationtText = key ? key.substr(5) : ''
+        try {
+          const { results = [], count = 0 } = await querycompanyDevice(
+            params,
+            this.queryForm.access_token
+          )
+          if (!results?.length) return
+          results.forEach((item) => {
+            if (!item.location) i.location = { longitude: 0, latitude: 0 }
+            if (item.ACL) {
+              for (var key in item.ACL) {
+                item.Company = key.substr(5)
+                // obj.applicationtText = key ? key.substr(5) : ''
+              }
+            } else {
+              item.Company = ''
             }
-          } else {
-            item.Company = ''
-          }
-        })
-        this.listLoading = false
-        console.log(results)
-        results.forEach((i) => {
-          if (!i.location) {
-            // location 容错处理
-            i.location = { longitude: 0, latitude: 0 }
-          }
-        })
-        this.tableData = results
-        this.devicetotal = count
-        // 查询在线设备
-        this.getOnlineDevices()
+          })
+          this.listLoading = false
+          this.tableData = results
+          this.devicetotal = count
+          // 查询在线设备
+          this.getOnlineDevices()
+        } catch (error) {
+          console.log(error)
+          this.listLoading = false
+          this.tableData = []
+          this.devicetotal = 0
+          this.$message.error(`${error}`)
+        }
       },
 
       // 状态设备编辑

@@ -836,7 +836,6 @@
         this.language == 'zh' ? '全部产品' : 'All Products'
       this.getRoletree()
       this.getProduct()
-      this.getWarnCount()
     },
     activated() {
       console.log('keep-alive生效')
@@ -1049,6 +1048,9 @@
             this.set_dev_off_count(this.dev_off_count)
             this.set_offlineData(this.offlineData)
             break
+          case 'warn_count':
+            this.warnCount = mqttMsgValue.count
+            break
           case 'ChartStatus':
             this.ChartStatus = mqttMsgValue.chartData
             this.set_ChartStatus(this.ChartStatus)
@@ -1080,6 +1082,7 @@
             console.log(JSON.parse(mqttMsg))
             break
         }
+        console.info('today warning', this.warnCount)
         this.$forceUpdate()
       },
       mqttConnectLost(e) {
@@ -1153,7 +1156,12 @@
       selectProdChange(objectId) {
         console.log(objectId)
       },
-      queryData() {},
+      queryData() {
+        const loading = this.$baseColorfullLoading(3)
+        setTimeout(() => {
+          loading.close()
+        }, 3000)
+      },
       async getRoletree() {
         this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
           'padding-top'

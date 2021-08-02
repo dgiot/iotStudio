@@ -3,7 +3,7 @@
 <template>
   <div class="roles">
     <el-row :gutter="20">
-      <el-col :span="14">
+      <el-col :span="14" :xs="24">
         <div class="rightTable">
           <div class="search">
             <vab-query-form style="margin-top: 20px">
@@ -145,7 +145,7 @@
                   <el-dropdown
                     split-button
                     type="primary"
-                    size="medium"
+                    size="mini"
                     @click="exportRolerole(scope.row)"
                   >
                     <span class="el-dropdown-link">
@@ -162,6 +162,7 @@
                       </el-dropdown-item>
                       <!-- <el-dropdown-item icon="el-icon-document" @click.native="handleEditrole(scope.row)" >编辑</el-dropdown-item> -->
                       <el-dropdown-item
+                        size="mini"
                         icon="el-icon-delete"
                         @click.native="handleDelete(scope.row)"
                       >
@@ -186,7 +187,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="10">
+      <el-col :span="10" :xs="24">
         <!--菜单-->
         <div class="rolefooter">
           <div class="footerleft">
@@ -260,9 +261,14 @@
       :title="$translateTitle('product.addrole')"
       width="20%"
       center
+      style="z-index: 999"
       @close="closeDialogRole"
     >
-      <addroles ref="addRoleRef" />
+      <addroles
+        ref="addRoleRef"
+        :key="deptData.objectId ? deptData.objectId : Date.parse(new Date())"
+        :dept-data="deptData"
+      />
     </el-dialog>
 
     <el-dialog
@@ -365,13 +371,14 @@
     roleMenu,
     saveRole,
   } from '@/api/Role/index'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import addroles from '@/views/roles/rolelist/addroles'
-
+  import { Roletree } from '@/api/Menu'
   export default {
     name: 'Role',
     data() {
       return {
+        deptData: [],
         curDepartmentId: '',
         formLabelWidth: '120px',
         roleEdit: false,
@@ -420,8 +427,16 @@
       }
     },
     computed: {
+      roleTree: {
+        get: function () {
+          return this.$store.state.user.roleTree
+        },
+        set: function (v) {
+          return this.setRoleTree(v)
+        },
+      },
       ...mapGetters({
-        roleTree: 'user/roleTree',
+        // roleTree: 'user/roleTree',
         Menu: 'user/Menu',
         Permission: 'user/Permission',
       }),
@@ -458,6 +473,7 @@
     addroles,
   },
   mounted() {
+    this.getRoletree()
     this.getRoleschema()
     this.getMenu()
     this.getRolesList()
@@ -468,6 +484,14 @@
   },
 
   methods: {
+    ...mapMutations({
+      setRoleTree: 'user/setRoleTree'
+    }),
+    async getRoletree(){
+      const {results = []} = await Roletree()
+      console.log(results,'results')
+      this.setRoleTree(results)
+    },
     change(e) {
       console.log(e)
       if (e) {
@@ -554,6 +578,7 @@
         this.$message.success(`${this.$translateTitle('user.successfully deleted')}`)
 
         this.getRolesList()
+        this.getRoletree()
         this.getMenu()
       }
     },
@@ -564,6 +589,7 @@
 
       // this.dialogVisible = true;
       this.getMenu()
+      this.getRoletree()
     },
     tableRowClassName({row, rowIndex}) {
       //把每一行的索引放进row
@@ -863,16 +889,18 @@
     },
     // 显示弹窗
     setDialogRole(data) {
+      this.deptData = data
       // this.$store.commit("set_DeptObj", data);
       // this.$baseEventBus.$emit("set_DeptObj", data)
       this.centerDialogRole = true
+      // this.$nextTick(() => {
+      //   this.$refs['addRoleRef'].getData(data)
+      // })
 
-      this.$nextTick(() => {
-        this.$refs['addRoleRef'].getData(data)
-      })
     },
     closeDialogRole() {
       this.centerDialogRole = false
+      this.getRoletree()
     },
   },
 }
