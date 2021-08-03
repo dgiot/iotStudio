@@ -78,12 +78,14 @@
         </div>
         <!--通道热加载-->
         <!-- <el-dialog
+  :append-to-body="true"
           :visible.sync="protoldialog"
           :close-on-click-modal="false"
           title="通道热加载"
           width="50%"
         > -->
         <el-dialog
+          :append-to-body="true"
           :visible.sync="protoldialog"
           :close-on-click-modal="false"
           :title="$translateTitle('product.tdthermalloading')"
@@ -140,6 +142,7 @@
         </el-dialog>
         <!--公共协议库弹窗-->
         <el-dialog
+          :append-to-body="true"
           :title="$translateTitle('product.publicagreementlibrary')"
           :visible.sync="dialogTableVisible"
           :close-on-click-modal="false"

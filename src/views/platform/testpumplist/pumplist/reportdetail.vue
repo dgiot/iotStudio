@@ -192,7 +192,12 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog :visible.sync="dialogVisible" title="提示" width="40%">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="dialogVisible"
+      title="提示"
+      width="40%"
+    >
       <div style="margin-top: 10px">
         <el-upload
           ref="upload"

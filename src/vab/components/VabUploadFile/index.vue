@@ -40,10 +40,10 @@
     </div>
     <!--上传完成提示对话框-->
     <el-dialog
+      :append-to-body="true"
       title="提示"
       :visible="dialogVisible"
       width="30%"
-      :append-to-body="true"
     >
       <span>文件上传成功</span>
       <span slot="footer" class="dialog-footer">

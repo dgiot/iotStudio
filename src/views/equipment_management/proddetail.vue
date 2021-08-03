@@ -311,6 +311,7 @@
           </div>
           <!--topic弹窗-->
           <el-dialog
+            :append-to-body="true"
             :title="$translateTitle('product.definetopicclass')"
             :visible.sync="topicdialogVisible"
             :close-on-click-modal="false"
@@ -605,6 +606,7 @@
           </div>
           <!--取物模型模板-->
           <el-dialog
+            :append-to-body="true"
             :title="$translateTitle('product.addfunction')"
             :visible.sync="originwmx"
             :close-on-click-modal="false"
@@ -691,6 +693,7 @@
           </el-dialog>
           <!--添加物模型弹窗-->
           <el-dialog
+            :append-to-body="true"
             :title="wmxSituation + '自定义属性'"
             :visible.sync="wmxdialogVisible"
             :before-close="wmxhandleClose"
@@ -709,6 +712,7 @@
           </el-dialog>
           <!--物模型结构体-->
           <el-dialog
+            :append-to-body="true"
             :title="$translateTitle('product.addparameter')"
             :visible.sync="structdialog"
             :close-on-click-modal="false"
@@ -1072,12 +1076,14 @@
           </div>
           <!--通道热加载-->
           <!-- <el-dialog
+  :append-to-body="true"
             :visible.sync="protoldialog"
             :close-on-click-modal="false"
             title="通道热加载"
             width="50%"
           > -->
           <el-dialog
+            :append-to-body="true"
             :visible.sync="protoldialog"
             :close-on-click-modal="false"
             :title="$translateTitle('product.tdthermalloading')"
@@ -1141,6 +1147,7 @@
           </el-dialog>
           <!--公共协议库弹窗-->
           <el-dialog
+            :append-to-body="true"
             :title="$translateTitle('product.publicagreementlibrary')"
             :visible.sync="dialogTableVisible"
             :close-on-click-modal="false"
@@ -1582,6 +1589,7 @@
 
     <!--物模型-->
     <el-dialog
+      :append-to-body="true"
       :title="$translateTitle('product.viewobjectmodel')"
       :visible.sync="schemadialogVisible"
       :close-on-click-modal="false"
@@ -1605,16 +1613,17 @@
     </el-dialog>
     <!--通道弹窗-->
     <!-- <el-dialog
+  :append-to-body="true"
       :visible.sync="innerVisible"
       :close-on-click-modal="false"
       title="添加通道"
       append-to-body
     > -->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="innerVisible"
       :close-on-click-modal="false"
       :title="$translateTitle('equipment.addchannel')"
-      append-to-body
     >
       <div class="addchannel">
         <el-table :data="allchannelData" height="400" style="width: 100%">
@@ -1678,6 +1687,7 @@
     </el-dialog>
     <!---日志订阅弹窗-->
     <el-dialog
+      :append-to-body="true"
       :title="channelname + '日志'"
       :visible.sync="subdialog"
       :before-close="handleCloseSubdialog"
@@ -1710,6 +1720,7 @@
     </el-dialog>
     <!--资源通道关联模型-->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="resourcedialogFormVisible"
       :close-on-click-modal="false"
       :show-close="false"
@@ -1761,8 +1772,10 @@
       </div>
     </el-dialog>
 
-    <!-- <el-dialog :visible.sync="exportDialogShow" title="导出" width="25%"> -->
+    <!-- <el-dialog
+  :append-to-body="true" :visible.sync="exportDialogShow" title="导出" width="25%"> -->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="exportDialogShow"
       :title="$translateTitle('product.export')"
       width="25%"
@@ -1783,6 +1796,7 @@
 
     <!--物模型采集公式按钮-->
     <!-- <el-dialog
+  :append-to-body="true"
       :fullscreen="true"
       :before-close="handleCloseCollecttion"
       :visible.sync="collectionDialogVisible"
@@ -1791,6 +1805,7 @@
       width="100%"
     > -->
     <el-dialog
+      :append-to-body="true"
       :fullscreen="true"
       :before-close="handleCloseCollecttion"
       :visible.sync="collectionDialogVisible"

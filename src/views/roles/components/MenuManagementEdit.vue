@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    :append-to-body="true"
     :close-on-click-modal="false"
     :title="title"
     :visible.sync="dialogFormVisible"

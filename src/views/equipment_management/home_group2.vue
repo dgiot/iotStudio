@@ -1,6 +1,7 @@
 <template>
   <div class="devproduct">
     <el-dialog
+      :append-to-body="true"
       :visible.sync="dialogVisible"
       width="90%"
       top="1vh"
@@ -20,10 +21,14 @@
       <!--        </el-button>-->
       <!--      </span>-->
     </el-dialog>
-    <el-dialog :visible.sync="parserView">
+    <el-dialog :append-to-body="true" :visible.sync="parserView">
       <f-render v-model="formConfig" :config="formConfig" pure />
     </el-dialog>
-    <el-dialog :visible.sync="parserTable" class="parserTable">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="parserTable"
+      class="parserTable"
+    >
       <div slot="title" class="header-title parserTable">
         <el-button
           type="primary"
@@ -267,6 +272,7 @@
     <div class="prodialog">
       <!-- 创建产品对话框 ###-->
       <el-dialog
+        :append-to-body="true"
         :title="moduleTitle"
         :visible.sync="dialogFormVisible"
         :close-on-click-modal="false"
@@ -451,12 +457,15 @@
         </div>
       </el-dialog>
       <!--新增字典-->
-      <el-drawer
+      <a-drawer
         v-if="dictVisible"
+        style="z-index: 999"
+        :append-to-body="true"
         :close-on-click-modal="false"
         :title="title_temp_dialog"
-        :visible.sync="dictVisible"
-        size="60%"
+        :visible="dictVisible"
+        width="60%"
+        @close="dictVisible = !dictVisible"
       >
         <el-form
           ref="dictTempForm"
@@ -589,9 +598,10 @@
             <el-button @click="dictVisible = false">取消</el-button>
           </el-form-item>
         </el-form>
-      </el-drawer>
+      </a-drawer>
       <!--新增字典数据-->
       <el-dialog
+        :append-to-body="true"
         :visible.sync="edit_dict_temp_dialog"
         :title="title_dict_edit_dialog"
         :close-on-click-modal="false"
@@ -710,6 +720,7 @@
                       'normal',
                       'modbus',
                       'mingcheng',
+                      'xinchuangwei',
                       'hex',
                     ]"
                     :key="index"
@@ -1043,7 +1054,12 @@
     </div>
 
     <div class="import-dialog">
-      <el-dialog :visible.sync="importDialogShow" title="导入产品" width="25%">
+      <el-dialog
+        :append-to-body="true"
+        :visible.sync="importDialogShow"
+        title="导入产品"
+        width="25%"
+      >
         <el-form ref="uploadProForm" :model="formPro">
           <el-upload
             ref="fileUpload"

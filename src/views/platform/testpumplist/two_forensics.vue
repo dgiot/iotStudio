@@ -300,7 +300,12 @@
       </div>
     </div>
     <!--编辑弹窗-->
-    <el-dialog :visible.sync="dialogFormVisible" title="参数编辑" width="30%">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="dialogFormVisible"
+      title="参数编辑"
+      width="30%"
+    >
       <el-form :model="form">
         <p
           style="

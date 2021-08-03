@@ -734,6 +734,7 @@ export default {
       account: '账号',
       name1: '姓名',
       newusers: '新增用户',
+      'new group': '新增部门',
       username: '用户名',
       email: '邮箱',
       rolename: '角色名',

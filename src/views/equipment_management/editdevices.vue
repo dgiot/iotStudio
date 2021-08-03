@@ -580,6 +580,7 @@
           </div>
           <!--添加子设备弹窗-->
           <el-dialog
+            :append-to-body="true"
             :title="$t('equipment.addchilddevice')"
             :visible.sync="childDialog"
             :close-on-click-modal="false"

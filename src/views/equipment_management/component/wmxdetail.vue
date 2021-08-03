@@ -871,6 +871,7 @@
                         'normal',
                         'modbus',
                         'DLT645',
+                        'xinchuangwei',
                         'mingcheng',
                       ]"
                       :key="index"

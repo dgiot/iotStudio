@@ -446,6 +446,7 @@
       </el-tabs>
       <!--添加设备弹窗-->
       <el-dialog
+        :append-to-body="true"
         :title="'设备' + equipmentEditor"
         :visible.sync="devicedialogVisible"
         :close-on-click-modal="false"
@@ -553,6 +554,7 @@
       </el-dialog>
       <!--第二个个弹窗批次添加-->
       <el-dialog
+        :append-to-body="true"
         :visible.sync="pcdialogVisible"
         :close-on-click-modal="false"
         :before-close="handleClose1"
@@ -652,6 +654,7 @@
       </el-dialog>
       <el-dialog
         v-drag-dialog
+        :append-to-body="true"
         :visible.sync="bmapdialogVisible"
         :close-on-click-modal="false"
         :before-close="handleClosebmap"

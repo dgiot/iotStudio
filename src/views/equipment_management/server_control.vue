@@ -345,6 +345,7 @@
     <!--新增编辑弹窗-->
     <!-- 服务部署 -->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="dialogFormVisible"
       :close-on-click-modal="false"
       :title="$translateTitle('developer.Servicedeployment')"
@@ -492,6 +493,7 @@
     <!--详情信息dialog-->
     <!-- 详情 -->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       :title="$translateTitle('product.details')"
@@ -508,6 +510,7 @@
     <!--新增dialog-->
     <!-- 服务器配置 -->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="serverdialogVisible"
       :close-on-click-modal="false"
       :title="$translateTitle('product.Serverconfiguration')"
@@ -703,6 +706,7 @@
     <!--在线升级弹窗-->
     <!-- 在线升级 -->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="dialogOnline"
       :title="$translateTitle('zetadevices.Onlineupgrade')"
     >

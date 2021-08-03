@@ -9,7 +9,12 @@
 <template>
   <div class="mycontainer">
     <div class="ticker-dialog">
-      <el-dialog width="100vh" :title="detail.name" :visible.sync="deviceFlag">
+      <el-dialog
+        :append-to-body="true"
+        width="100vh"
+        :title="detail.name"
+        :visible.sync="deviceFlag"
+      >
         <change-info
           :detail="detail"
           :step="step"

@@ -64,6 +64,7 @@
     </div>
     <!--弹窗-->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="dialogTableVisible"
       title="模板详情"
       width="50%"

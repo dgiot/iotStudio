@@ -11,6 +11,7 @@
     <div class="ticker-dialog">
       <div class="home_dialog">
         <el-dialog
+          :append-to-body="true"
           width="100vh"
           :title="detail.name"
           :visible.sync="_deviceFlag"
@@ -65,6 +66,7 @@
           </span>
         </el-dialog>
         <el-dialog
+          :append-to-body="true"
           :title="$translateTitle('Maintenance.create Ticket')"
           :visible.sync="dialogFormVisible"
           width="90vh"
@@ -147,7 +149,7 @@
                   />
                 </div>
               </el-upload>
-              <el-dialog :visible.sync="dialogVisible">
+              <el-dialog :append-to-body="true" :visible.sync="dialogVisible">
                 <img width="100%" :src="dialogImageUrl" alt="" />
               </el-dialog>
             </el-form-item>

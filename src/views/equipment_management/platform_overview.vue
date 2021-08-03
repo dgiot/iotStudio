@@ -22,6 +22,7 @@
 
     <div class="home_dialog">
       <el-dialog
+        :append-to-body="true"
         width="100vh"
         :title="deviceInfo.name"
         :visible.sync="deviceFlag"
@@ -44,7 +45,15 @@
       <div v-show="cardHeight != '0px'" class="map_card">
         <el-row>
           <el-col class="card-panel-col" :xs="24" :sm="24" :md="6" :xl="6">
-            <el-card class="box-card">
+            <el-card
+              v-loading="loadingConfig['product_count'] == false"
+              :element-loading-text="
+                $translateTitle('developer.Waitingtoreturn')
+              "
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(0, 0, 0, 0.8)"
+              class="box-card"
+            >
               <el-col :span="12">
                 <vab-icon icon="projector-fill" />
               </el-col>
@@ -64,7 +73,13 @@
             :md="6"
             :xl="6"
           >
-            <el-card class="box-card">
+            <el-card
+              v-loading="loadingConfig['app_count'] == false"
+              :element-loading-text="
+                $translateTitle('developer.Waitingtoreturn')
+              "
+              class="box-card"
+            >
               <el-col :span="12">
                 <vab-icon icon="apps-fill" />
               </el-col>
@@ -77,7 +92,13 @@
             </el-card>
           </el-col>
           <el-col :xs="24" :sm="24" :md="6" class="card-panel-col" :xl="6">
-            <el-card class="box-card">
+            <el-card
+              v-loading="loadingConfig['device_count'] == false"
+              :element-loading-text="
+                $translateTitle('developer.Waitingtoreturn')
+              "
+              class="box-card"
+            >
               <el-col :span="12">
                 <vab-icon icon="device-recover-fill" />
               </el-col>
@@ -90,7 +111,13 @@
             </el-card>
           </el-col>
           <el-col class="card-panel-col" :xs="24" :sm="24" :md="6" :xl="6">
-            <el-card class="box-card">
+            <el-card
+              v-loading="loadingConfig['warn_count'] == false"
+              :element-loading-text="
+                $translateTitle('developer.Waitingtoreturn')
+              "
+              class="box-card"
+            >
               <el-col :span="12" class="card-left">
                 <vab-icon icon="projector-2-fill" />
               </el-col>
@@ -238,16 +265,16 @@
           <div class="chart_map" style="position: relative">
             <div
               class="card"
-              style="position: absolute; z-index: 10086; right: 100px"
+              style="position: absolute; right: 100px; z-index: 10086"
             >
               <Card
                 style="
                   width: 100px;
                   height: 100px;
-                  border-radius: 50%;
                   color: #fff;
                   background-color: #ffad33;
                   border-color: #ffad33;
+                  border-radius: 50%;
                 "
               >
                 <div style="text-align: center">
@@ -261,11 +288,11 @@
                 style="
                   width: 100px;
                   height: 100px;
-                  border-radius: 50%;
                   margin: 20px 0;
                   color: #fff;
                   background-color: #19be6b;
                   border-color: #19be6b;
+                  border-radius: 50%;
                 "
               >
                 <div style="text-align: center">
@@ -280,9 +307,9 @@
                   width: 100px;
                   height: 100px;
                   color: #fff;
-                  border-radius: 50%;
                   background-color: #f16643;
                   border-color: #f16643;
+                  border-radius: 50%;
                 "
               >
                 <div style="text-align: center">
@@ -469,22 +496,26 @@
               <div class="box-card">
                 <el-card>
                   <div slot="header" class="clearfix">
-                    <el-button>{{ $translateTitle('home.info') }}</el-button>
+                    <el-button>
+                      {{ $translateTitle('home.info') }}
+                    </el-button>
                   </div>
                   <div>
                     <el-row :gutter="24">
                       <el-col :span="24">
                         <div class="grid-content bg-purple">
                           <el-table
+                            v-if="Product"
                             :data="Product"
                             style="width: 100%"
-                            :header-cell-style="{
-                              background: '#073646',
-                              color: '#00D3E0',
-                            }"
+                            :header-cell-style="{ 'text-align': 'center' }"
+                            :cell-style="{ 'text-align': 'center' }"
                             :row-class-name="tableRowClassName"
                           >
-                            <el-table-column width="60">
+                            <el-table-column
+                              width="60"
+                              :label="$translateTitle('menu.icon')"
+                            >
                               <template slot-scope="scope">
                                 <el-image
                                   style="width: 26px; height: 26px"
@@ -500,6 +531,7 @@
                             <el-table-column
                               width="120"
                               prop="name"
+                              :label="$translateTitle('task.productname')"
                               :show-overflow-tooltip="true"
                             >
                               <template slot-scope="scope">
@@ -509,7 +541,9 @@
                               </template>
                             </el-table-column>
 
-                            <el-table-column width="40">
+                            <el-table-column
+                              :label="$translateTitle('home.dev_count')"
+                            >
                               <template slot-scope="scope">
                                 <span @click="goDevice(scope.row.name)">
                                   {{ scope.row.deviceChild.length }}
@@ -573,13 +607,14 @@
                             :data="_offlineData"
                             class="_el-table"
                             style="width: 100%"
-                            :header-cell-style="{
-                              background: '#073646',
-                              color: '#00D3E0',
-                            }"
+                            :header-cell-style="{ 'text-align': 'center' }"
+                            :cell-style="{ 'text-align': 'center' }"
                             :row-class-name="tableRowClassName"
                           >
-                            <el-table-column prop="name">
+                            <el-table-column
+                              prop="name"
+                              :label="$translateTitle('equipment.devicename')"
+                            >
                               <template slot-scope="scope">
                                 <span
                                   :title="
@@ -622,13 +657,14 @@
                             :data="_onlineData"
                             style="width: 100%"
                             class="_el-table"
-                            :header-cell-style="{
-                              background: '#073646',
-                              color: '#00D3E0',
-                            }"
+                            :header-cell-style="{ 'text-align': 'center' }"
+                            :cell-style="{ 'text-align': 'center' }"
                             :row-class-name="tableRowClassName"
                           >
-                            <el-table-column prop="name">
+                            <el-table-column
+                              prop="name"
+                              :label="$translateTitle('equipment.devicename')"
+                            >
                               <template slot-scope="scope">
                                 <span
                                   :title="
@@ -718,6 +754,12 @@
       }
 
       return {
+        loadingConfig: {
+          product_count: false,
+          app_count: false,
+          device_count: false,
+          warn_count: false,
+        },
         warnCount: 0,
         count: 0,
         productIco: '',
@@ -1014,6 +1056,7 @@
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
+        this.loadingConfig[`${key}`] = true
         this.$baseNotify(
           '',
           `${this.$translateTitle('websocket.messages')}${key}`
@@ -1417,7 +1460,7 @@
     }
     ::v-deep {
       .has-gutter {
-        display: none;
+        //display: none;
       }
       .el-badge {
         margin: 0;

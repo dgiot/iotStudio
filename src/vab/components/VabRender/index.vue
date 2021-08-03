@@ -330,9 +330,9 @@
 <style lang="css">
   /* vab-render 整体样式 */
   .vab-render {
+    width: 100%;
+    width: 100%;
     overflow: hidden;
-    width: 100%;
-    width: 100%;
     border: 1px solid #ebeef5;
   }
 
@@ -379,9 +379,9 @@
 
   /* 左右面板拖动的抓手 */
   .vab-render > .pane {
-    text-align: left;
     padding: 15px;
     overflow: hidden;
+    text-align: left;
     background: #eee;
   }
   .vab-render > .pane ~ .pane {

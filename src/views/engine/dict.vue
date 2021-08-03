@@ -3,6 +3,7 @@
   <div class="dict">
     <div class="dialog">
       <el-dialog
+        :append-to-body="true"
         :visible.sync="add_dict_dialog"
         :close-on-click-modal="false"
         :title="title_dict_dialog"
@@ -196,11 +197,12 @@
         </el-form>
       </el-dialog>
 
-      <el-drawer
-        :visible.sync="dict_temp_dialog"
+      <a-drawer
+        :visible="dict_temp_dialog"
         :close-on-click-modal="false"
         :title="title_temp_dialog"
-        size="60%"
+        width="60%"
+        @close="dict_temp_dialog = !dict_temp_dialog"
         @open="opendialog('dictTempForm')"
       >
         <el-form
@@ -483,9 +485,10 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </el-drawer>
+      </a-drawer>
 
       <el-dialog
+        :append-to-body="true"
         :visible.sync="edit_dict_temp_dialog"
         :title="title_dict_edit_dialog"
         :close-on-click-modal="false"

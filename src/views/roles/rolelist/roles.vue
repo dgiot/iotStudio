@@ -256,22 +256,21 @@
       </el-col>
     </el-row>
 
-    <el-dialog
+    <a-modal
+      :footer="null"
       :visible="centerDialogRole"
       :title="$translateTitle('product.addrole')"
-      width="20%"
-      center
-      style="z-index: 999"
-      @close="closeDialogRole"
+      @cancel="closeDialogRole"
     >
       <addroles
         ref="addRoleRef"
-        :key="deptData.objectId ? deptData.objectId : Date.parse(new Date())"
+        :key="$moment().unix()"
         :dept-data="deptData"
       />
-    </el-dialog>
+    </a-modal>
 
     <el-dialog
+      :append-to-body="true"
       :title="$translateTitle('developer.add')"
       :visible.sync="dialogVisible"
       width="50%"
@@ -314,6 +313,7 @@
 
     <!--编辑权限弹窗-->
     <el-dialog
+      :append-to-body="true"
       :title="$translateTitle('developer.edit')"
       :visible.sync="roleEdit"
     >
@@ -378,7 +378,6 @@
     name: 'Role',
     data() {
       return {
-        deptData: [],
         curDepartmentId: '',
         formLabelWidth: '120px',
         roleEdit: false,
@@ -424,6 +423,7 @@
         loadingService: {},
         roleItem: [],
         centerDialogRole: false,
+        deptData: {},
       }
     },
     computed: {

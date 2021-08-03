@@ -134,7 +134,12 @@
       </div>
     </div>
     <!--审核弹窗-->
-    <el-dialog :visible.sync="dialogVisible" title="认证审核" width="40%">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="dialogVisible"
+      title="认证审核"
+      width="40%"
+    >
       <div>
         <el-form
           ref="verifyFormRef"
@@ -168,6 +173,7 @@
     <!--查看弹窗-->
     <el-dialog
       v-if="dialogFormVisible"
+      :append-to-body="true"
       :visible.sync="dialogFormVisible"
       title="企业资质审核"
       width="80%"

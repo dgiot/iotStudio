@@ -159,6 +159,7 @@
       <!--新增，编辑测试台体弹窗 old -->
       <div class="addbeddialog">
         <el-dialog
+          :append-to-body="true"
           :title="'测试台体' + actionTypeMap[actionType]"
           :visible.sync="beddialog"
         >
@@ -254,6 +255,7 @@
       </div>
     </div>
     <el-dialog
+      :append-to-body="true"
       :title="testbedname + '的设备'"
       :visible.sync="bedDevicedialog"
       width="80%"
@@ -379,6 +381,7 @@
     <!--新增/修改 检测台体弹窗 form -->
 
     <el-dialog
+      :append-to-body="true"
       :title="'检测台' + actionTypeMap[actionType]"
       :visible.sync="addbeddialogNew"
       width="50%"
@@ -535,7 +538,12 @@
       </span>
     </el-dialog>
     <!--检测台配置-->
-    <el-dialog :visible.sync="disposeVisible" title="提示" width="50%">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="disposeVisible"
+      title="提示"
+      width="50%"
+    >
       <div>
         <el-form
           :inline="true"

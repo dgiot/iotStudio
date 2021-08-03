@@ -307,6 +307,7 @@
         </el-tabs>
 
         <el-dialog
+          :append-to-body="true"
           :visible.sync="testReportDialog"
           :close-on-click-modal="false"
           title="测试报告生成"

@@ -1,6 +1,7 @@
 <template>
   <div class="things-parse">
     <el-dialog
+      :append-to-body="true"
       :visible.sync="apiDialog"
       :title="$translateTitle('product.newapi')"
       width="30%"

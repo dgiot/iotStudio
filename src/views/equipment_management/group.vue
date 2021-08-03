@@ -90,6 +90,7 @@
       </el-container>
     </el-container>
     <el-dialog
+      :append-to-body="true"
       :visible="centerDialogRole"
       title="添加角色"
       width="35%"

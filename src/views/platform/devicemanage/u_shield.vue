@@ -102,7 +102,11 @@
       </div>
     </div>
     <!--U盾弹窗-->
-    <el-dialog :visible.sync="dialogFormVisible" title="U盾设备赋权">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="dialogFormVisible"
+      title="U盾设备赋权"
+    >
       <el-form
         ref="ushieldform"
         :model="ushieldform"

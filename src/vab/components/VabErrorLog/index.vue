@@ -8,8 +8,8 @@
     </el-badge>
 
     <el-dialog
+      :append-to-body="true"
       :visible.sync="dialogTableVisible"
-      append-to-body
       title="dgiot_dashboard异常捕获(温馨提示：错误必须解决)"
       width="70%"
     >

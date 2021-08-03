@@ -2,6 +2,7 @@
 <template>
   <div class="TopoArom">
     <el-dialog
+      :append-to-body="true"
       :title="wmxSituation + '自定义属性'"
       :visible.sync="wmxdialogVisible"
       :before-close="wmxhandleClose"

@@ -107,6 +107,7 @@
     />
     <!--编辑权限弹窗-->
     <el-dialog
+      :append-to-body="true"
       :title="$translateTitle('developer.edit')"
       :visible.sync="roleEdit"
       width="28%"
