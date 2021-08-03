@@ -1,7 +1,12 @@
 <template>
   <div class="_vuekonva">
     <div class="_dialog">
-      <el-dialog :visible.sync="ShapeVisible" width="100vh" class="_shape">
+      <el-dialog
+        :append-to-body="true"
+        :visible.sync="ShapeVisible"
+        width="100vh"
+        class="_shape"
+      >
         <span v-if="tabsName == 'ShapeJson'" slot="footer"></span>
       </el-dialog>
     </div>

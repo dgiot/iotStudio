@@ -4,6 +4,10 @@
   <div class="structure">
     <div class="adduserDiadlog">
       <a-drawer
+        v-loading="isloading"
+        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
         :visible.sync="adduserDiadlog"
         :title="$translateTitle('user.newusers')"
         width="600px"
@@ -14,7 +18,7 @@
           :model="userInfoForm"
           :rules="userFormRules"
           status-icon
-          label-width="100px"
+          label-width="160px"
           class="demo-ruleForm"
         >
           <el-form-item
@@ -23,16 +27,32 @@
           >
             <el-select
               v-model="userInfoForm.departmentid"
-              style="width: 100%"
+              style="width: 75%"
               :placeholder="$translateTitle('product.selectdepartment')"
             >
               <el-option
                 v-for="item in deptOption"
                 :key="item.objectId"
                 :value="item.objectId"
-                :label="item.name + ':' + item.desc"
+                :title="item.name + ':' + item.desc"
+                :label="item.name"
               />
             </el-select>
+            <span style="float: right; font-size: 14px; color: #8492a6">
+              <a-button
+                type="danger"
+                @click="centerDialogRole = !centerDialogRole"
+              >
+                {{ $translateTitle('user.new group') }}
+              </a-button>
+            </span>
+          </el-form-item>
+          <el-form-item v-if="centerDialogRole" label-width="78px">
+            <addroles
+              ref="addRoleRef"
+              :is-structures="isStructures"
+              :dept-data="deptOption[0]"
+            />
           </el-form-item>
           <el-form-item :label="$translateTitle('user.name1')" prop="nick">
             <el-input
@@ -92,7 +112,19 @@
           </el-form-item>
           <!-- <el-form-item label="部门选择" prop="departmentid"> -->
         </el-form>
-        <div slot="footer">
+        <div
+          :style="{
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            borderTop: '1px solid #e8e8e8',
+            padding: '10px 16px',
+            left: 40,
+            textAlign: 'center',
+            background: '#fff',
+            borderRadius: '0 0 4px 4px',
+          }"
+        >
           <el-button @click="adduserDiadlog = false">
             <!-- 取消 -->
             {{ $translateTitle('developer.cancel') }}
@@ -130,6 +162,7 @@
                           style="height: auto; padding: 0"
                         >
                           <el-tree
+                            :key="upKey"
                             ref="workGroup"
                             :data="deptTreeData"
                             :props="roleProps"
@@ -281,6 +314,7 @@
       </el-col>
       <!--分配角色-->
       <el-dialog
+        :append-to-body="true"
         :title="$translateTitle('user.assignroles')"
         :visible.sync="roleacl"
         :close-on-click-modal="false"
@@ -325,8 +359,9 @@
   </div>
 </template>
 <script>
+  import addroles from '@/views/roles/rolelist/addroles'
   import { Promise } from 'q'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import {
     queryUser,
     EmployeesHired,
@@ -334,9 +369,12 @@
     disableuser,
   } from '@/api/User/index'
   import { queryRoledepartment } from '@/api/Role/index'
-
+  import { Roletree } from '@/api/Menu'
   var arr = []
   export default {
+    components: {
+      addroles,
+    },
     data() {
       var validatePass = (rule, value, callback) => {
         if (value === '') {
@@ -359,6 +397,13 @@
         }
       }
       return {
+        isloading: false,
+        isStructures: true,
+        upKey: Number(moment().unix()),
+        isEvent: false,
+        depobjectId: '',
+        centerDialogRole: false,
+        deptData: {},
         roleProps: {
           children: 'children',
           label: 'name',
@@ -477,19 +522,79 @@
       }
     },
     computed: {
+      roleTree: {
+        get: function () {
+          return this.$store.state.user.roleTree
+        },
+        set: function (v) {
+          return this.setRoleTree(v)
+        },
+      },
       ...mapGetters({
         ObjectId: 'user/objectId',
-        roleTree: 'user/roleTree',
       }),
       tableFilterData() {
         return this.tempData
       },
     },
     mounted() {
-      this.userFordepartment()
+      this.isEvent = false
       this.searchAllOption()
+      this.userFordepartment()
+      this.$baseEventBus.$on('dialogHide2', (depobjectId) => {
+        console.log(depobjectId)
+        if (depobjectId?.length) {
+          this.depobjectId = depobjectId
+          this.isEvent = true
+        }
+        this.$nextTick(() => {
+          this.centerDialogRole = false
+          // this.dialogVisible = false
+          this.getRoletree()
+        })
+      })
     },
     methods: {
+      ...mapMutations({
+        setRoleTree: 'user/setRoleTree',
+      }),
+      async getRoletree() {
+        this.upKey++
+        const { results = [] } = await Roletree()
+        console.log(results, 'results')
+        this.setRoleTree(results)
+        this.deptTreeData = results
+        this.isloading = true
+        setTimeout(() => {
+          if (this.isEvent) {
+            this.$query_object('_Role', {
+              limit: 1,
+              where: {
+                objectId: this.depobjectId,
+              },
+            })
+              .then((res) => {
+                if (res.results?.length) {
+                  this.addItemUser(res.results[0])
+                  this.departmentname = res.results[0].name
+                  this.curDepartmentId = res.results[0].objectId
+                  this.treeDataValue = res.results[0].label
+                  this.queryForm.workGroupName = res.results[0].label
+                }
+              })
+              .catch((e) => {
+                console.log(e)
+              })
+          }
+          this.isloading = false
+        }, 1500)
+      },
+      closeDialogRole() {
+        this.centerDialogRole = false
+      },
+      addGroup(item) {
+        console.log(item)
+      },
       // addItemUser
       addItemUser(item) {
         this.deptOption = []

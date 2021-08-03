@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    append-to-body
+    :append-to-body="true"
     :visible="visible"
     title="预览"
     width="90%"

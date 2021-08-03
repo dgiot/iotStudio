@@ -1,7 +1,7 @@
 <template>
   <el-dialog
+    :append-to-body="true"
     :visible="visible"
-    append-to-body
     title="数据编辑"
     :close-on-click-modal="false"
     @update:visible="$emit('change', $event)"

@@ -1,7 +1,12 @@
 <!-- 组件说明 -->
 <template>
   <div class="modules">
-    <el-dialog :visible.sync="edit_module" title="修改物模型" width="17%">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="edit_module"
+      title="修改物模型"
+      width="17%"
+    >
       <el-form
         ref="editForm"
         :model="editForm"
@@ -30,7 +35,12 @@
       </span>
     </el-dialog>
 
-    <el-dialog :visible.sync="add_module" title="新增物模型" width="17%">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="add_module"
+      title="新增物模型"
+      width="17%"
+    >
       <el-form
         ref="moduleForm"
         :model="moduleForm"

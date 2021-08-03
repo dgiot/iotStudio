@@ -52,6 +52,7 @@
     </el-card>
 
     <el-dialog
+      :append-to-body="true"
       :title="$t('clients.addSubs')"
       width="400px"
       :visible.sync="addVisible"

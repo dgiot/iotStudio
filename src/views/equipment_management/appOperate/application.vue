@@ -122,6 +122,7 @@
 
     <!--新建弹框-->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       :title="$translateTitle('developer.addapp')"
@@ -254,12 +255,14 @@
 
     <!--修改应用信息-->
     <!-- <el-dialog
+  :append-to-body="true"
       :visible.sync="update"
       :close-on-click-modal="false"
       title="修改应用信息"
       width="55%"
     > -->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="update"
       :close-on-click-modal="false"
       :title="

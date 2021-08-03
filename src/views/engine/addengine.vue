@@ -268,6 +268,7 @@
             </div>
             <div>
               <el-dialog
+                :append-to-body="true"
                 :title="$translateTitle('rule.ResponseAction')"
                 :visible.sync="dialogFormVisible"
                 :close-on-click-modal="false"

@@ -181,6 +181,7 @@
     <div class="prodialog">
       <!-- 创建产品对话框 ###-->
       <el-dialog
+        :append-to-body="true"
         :title="$translateTitle('product.createproduct')"
         :visible.sync="dialogFormVisible"
         :close-on-click-modal="false"
@@ -405,8 +406,10 @@
     </div>
 
     <div class="import-dialog">
-      <!-- <el-dialog :visible.sync="importDialogShow" title="导入产品" width="25%"> -->
+      <!-- <el-dialog
+  :append-to-body="true" :visible.sync="importDialogShow" title="导入产品" width="25%"> -->
       <el-dialog
+        :append-to-body="true"
         :visible.sync="importDialogShow"
         :title="$translateTitle('product.importpro')"
         width="25%"

@@ -161,11 +161,13 @@
           />
         </div>
         <!-- <el-dialog
+  :append-to-body="true"
           :visible.sync="dialogVisible"
           title="检验质检项目"
           width="60%"
         > -->
         <el-dialog
+          :append-to-body="true"
           :visible.sync="dialogVisible"
           :title="
             $translateTitle('developer.Inspectionandqualityinspectionitems')
@@ -377,6 +379,7 @@
         </el-dialog>
         <!--标准模版添加-->
         <el-dialog
+          :append-to-body="true"
           :visible.sync="dialogChildrenForm"
           :title="$translateTitle('developer.Newstandardtemplate')"
           width="30%"
@@ -447,8 +450,10 @@
           </div>
         </el-dialog>
         <!--模版管理-->
-        <!-- <el-dialog :visible.sync="dialogTableVisible" title="模版" top="5vh"> -->
+        <!-- <el-dialog
+  :append-to-body="true" :visible.sync="dialogTableVisible" title="模版" top="5vh"> -->
         <el-dialog
+          :append-to-body="true"
           :visible.sync="dialogTableVisible"
           :title="$translateTitle('product.Template')"
           top="5vh"
@@ -535,8 +540,10 @@
         </el-dialog>
 
         <!--台体查看弹窗-->
-        <!-- <el-dialog :visible.sync="iotHubDialogShow" title="台体列表" top="5vh"> -->
+        <!-- <el-dialog
+  :append-to-body="true" :visible.sync="iotHubDialogShow" title="台体列表" top="5vh"> -->
         <el-dialog
+          :append-to-body="true"
           :visible.sync="iotHubDialogShow"
           :title="$translateTitle('product.platformlist')"
           top="5vh"

@@ -88,6 +88,7 @@
       <el-tab-pane label="行为" name="function">行为</el-tab-pane>
       <div class="TopoArom">
         <el-dialog
+          :append-to-body="true"
           :title="wmxSituation + '自定义属性'"
           :visible.sync="wmxdialogVisible"
           :before-close="wmxhandleClose"

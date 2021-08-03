@@ -1,7 +1,12 @@
 <template>
   <div class="equipment">
     <div class="dialog">
-      <el-dialog :visible.sync="popoverVisible" top="5vh" width="40vh">
+      <el-dialog
+        :append-to-body="true"
+        :visible.sync="popoverVisible"
+        top="5vh"
+        width="40vh"
+      >
         <div class="leftTree">
           <p style="text-align: center">
             {{ $translateTitle('developer.Company') }} :
@@ -29,7 +34,12 @@
           </el-tree>
         </div>
       </el-dialog>
-      <el-dialog :visible.sync="mapDialog" top="5vh" width="80vh">
+      <el-dialog
+        :append-to-body="true"
+        :visible.sync="mapDialog"
+        top="5vh"
+        width="80vh"
+      >
         <baidu-map
           ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
           :center="center"
@@ -55,6 +65,7 @@
         </baidu-map>
       </el-dialog>
       <el-dialog
+        :append-to-body="true"
         :visible.sync="InfoDialog"
         :title="devicedetail.name"
         top="5vh"
@@ -83,6 +94,7 @@
         </span>
       </el-dialog>
       <el-dialog
+        :append-to-body="true"
         :visible.sync="stateDialog"
         :title="stateDialog.name"
         top="5vh"
@@ -855,6 +867,7 @@
           </div>
           <!--添加设备弹窗-->
           <!-- <el-dialog
+  :append-to-body="true"
             :title="'设备' + equipmentEditor"
             :visible.sync="devicedialogVisible"
             :close-on-click-modal="false"
@@ -921,6 +934,7 @@
         </el-tab-pane>
       </el-tabs>
       <el-dialog
+        :append-to-body="true"
         :title="$translateTitle('product.edit') + equipmentEditor"
         :visible.sync="devicedialogVisible"
         :close-on-click-modal="false"
@@ -1096,6 +1110,7 @@
         </span>
       </el-dialog>
       <!-- <el-dialog
+  :append-to-body="true"
             v-drag-dialog
             :visible.sync="bmapdialogVisible"
             :close-on-click-modal="false"
@@ -1105,6 +1120,7 @@
           > -->
       <el-dialog
         v-drag-dialog
+        :append-to-body="true"
         :visible.sync="bmapdialogVisible"
         :close-on-click-modal="false"
         :before-close="handleClosebmap"

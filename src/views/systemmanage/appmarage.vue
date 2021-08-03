@@ -108,6 +108,7 @@
       />
     </div>
     <el-dialog
+      :append-to-body="true"
       :title="$translateTitle('plugins.modulelist')"
       :visible.sync="dialogVisible"
       :before-close="handleClose"

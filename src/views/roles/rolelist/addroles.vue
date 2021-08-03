@@ -9,9 +9,10 @@
         :rules="roleFormRules"
         label-width="80px"
       >
-        <el-form-item label="父及部门" prop="ParentId">
+        <el-form-item v-if="!isStructures" label="父及部门" prop="ParentId">
           <el-select
             v-model="roleFormObj.ParentId"
+            style="width: 100%"
             placeholder="请选择Parent"
             @change="handleChangeDeptId($event)"
           >
@@ -31,13 +32,24 @@
         <el-form-item label="部门" prop="depname">
           <el-input
             v-model="roleFormObj.depname"
+            style="width: 75%"
             placeholder="请输入部门名称"
           />
+          <span style="float: right; font-size: 14px; color: #8492a6">
+            <el-button
+              v-if="insert == 0 || insert == 1"
+              type="success"
+              @click="addroles('roleFormObj')"
+            >
+              {{ $translateTitle('developer.determine') }}
+            </el-button>
+          </span>
         </el-form-item>
-        <el-form-item label="岗位" prop="dictvalue">
+        <el-form-item v-if="!isStructures" label="岗位" prop="dictvalue">
           <el-select
             v-model="roleFormObj.dictvalue"
             :clearable="clearFlag"
+            style="width: 100%"
             placeholder="请选择角色模版"
           >
             <el-option
@@ -48,10 +60,10 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item v-if="!isStructures" label="备注">
           <el-input v-model="roleFormObj.description" type="textarea" />
         </el-form-item>
-        <el-form-item class="el_btn">
+        <el-form-item v-if="!isStructures" class="el_btn">
           <el-button type="warning" @click="resetFrom()">重置</el-button>
 
           <el-button
@@ -77,6 +89,11 @@
         type: Object,
         default: () => {},
         required: true,
+      },
+      isStructures: {
+        type: Boolean,
+        required: false,
+        default: false,
       },
     },
 
@@ -154,10 +171,10 @@
         console.log(this.deptData)
         this.isloading = this.$baseLoading(3)
         this.getData(this.deptData)
+        setTimeout(() => {
+          this.isloading.close()
+        }, 1500)
       }
-      setTimeout(() => {
-        this.isloading.close()
-      }, 1500)
     },
     methods: {
       handleChangeDeptId(e) {
@@ -207,7 +224,7 @@
             type: 'roletemp',
           },
         })
-        if (results) {
+        if (results?.length) {
           this.Option.dictOption = results
           this.roleFormObj.dictvalue = results[0].key
           console.log(this.roleFormObj.dictvalue, results[0].key)
@@ -293,6 +310,7 @@
                   type: 'success',
                 })
                 this.$baseEventBus.$emit('dialogHide')
+                this.$baseEventBus.$emit('dialogHide2', res.objectId)
               } else {
                 console.log(res)
                 this.$message({
@@ -322,18 +340,18 @@
 </script>
 <style scoped lang="scss">
   .app-container {
-    box-sizing: border-box;
-    width: 100%;
-    min-height: 320px;
-    padding: 20px;
-    background: #ffffff;
-    h2 {
-      width: 200px;
-      // background: DarkCyan;
-      height: 40px;
-      margin: 20px auto;
-      line-height: 40px;
-      cursor: pointer;
-    }
+    //box-sizing: border-box;
+    //width: 100%;
+    //min-height: 320px;
+    //padding: 20px;
+    //background: #ffffff;
+    //h2 {
+    //  width: 200px;
+    //  // background: DarkCyan;
+    //  height: 40px;
+    //  margin: 20px auto;
+    //  line-height: 40px;
+    //  cursor: pointer;
+    //}
   }
 </style>

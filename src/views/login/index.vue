@@ -333,12 +333,12 @@
       }
     }
     .login-btn {
-      text-align: center;
       display: inherit;
       width: 100%;
       height: 50px;
       margin: 0 auto;
       margin-top: 5px;
+      text-align: center;
       border: 0;
 
       &:hover {

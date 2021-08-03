@@ -11,7 +11,7 @@
 <template>
   <div class="mycontainer">
     <div class="ticker-dialog">
-      <el-dialog v-drag :visible.sync="parserView">
+      <el-dialog v-drag :append-to-body="true" :visible.sync="parserView">
         <ele-form
           v-model="alertConfig.config"
           v-bind="alertConfig.config"
@@ -21,7 +21,12 @@
           @request-success="handleSuccess(alertConfig)"
         />
       </el-dialog>
-      <el-dialog v-drag width="50vh" :visible.sync="dynamicformView">
+      <el-dialog
+        v-drag
+        :append-to-body="true"
+        width="50vh"
+        :visible.sync="dynamicformView"
+      >
         <el-form
           v-for="item in dynamicformInfo"
           ref="dynamicformInfo"

@@ -160,6 +160,7 @@
     </el-table>
 
     <el-dialog
+      :append-to-body="true"
       :title="$t('analysis.addTopic')"
       width="400px"
       :visible.sync="addVisible"

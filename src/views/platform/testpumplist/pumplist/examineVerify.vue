@@ -124,7 +124,12 @@
     </el-tabs> -->
 
     <!--审核弹窗-->
-    <el-dialog :visible.sync="verifyDialogVisible" title="审核" width="40%">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="verifyDialogVisible"
+      title="审核"
+      width="40%"
+    >
       <div>
         <el-form
           ref="verifyFormRef"

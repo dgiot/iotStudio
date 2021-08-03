@@ -88,6 +88,7 @@
       />
     </div>
     <el-dialog
+      :append-to-body="true"
       :title="$translateTitle('node.joincluster')"
       :visible.sync="dialogVisible"
       :before-close="handleClose"

@@ -139,6 +139,7 @@
 
     <!--新增检验标准弹窗-->
     <el-dialog
+      :append-to-body="true"
       :title="actionTypeTxt + '检验标准'"
       :visible.sync="dialogVisible"
       width="60%"
@@ -300,7 +301,12 @@
     </el-dialog>
 
     <!--标准子项新增弹窗-->
-    <el-dialog :visible.sync="dialogReport" title="标准子项新增" width="50%">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="dialogReport"
+      title="标准子项新增"
+      width="50%"
+    >
       <el-form
         ref="dynamicValidateForm"
         :model="dynamicValidateForm"
@@ -365,6 +371,7 @@
     </el-dialog>
     <!--子项管理弹窗-->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="dialogTableVisible"
       title="标准子项管理"
       width="50%"

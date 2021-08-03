@@ -283,7 +283,12 @@
         <!-- <el-button type="primary" @click="addLaboratory('laboratoryForm')">确定,添加实验室</el-button> -->
       </div>
     </div>
-    <el-dialog :visible.sync="dialogVisible" title="其他资质添加" width="60%">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="dialogVisible"
+      title="其他资质添加"
+      width="60%"
+    >
       <div class="dialogform">
         <el-form
           ref="addotherform"

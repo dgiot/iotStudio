@@ -185,6 +185,7 @@
     </div>
 
     <el-dialog
+      :append-to-body="true"
       :visible.sync="pdfDialogVisible"
       title="取证文件查看"
       width="60%"
@@ -210,6 +211,7 @@
     </el-dialog>
 
     <el-dialog
+      :append-to-body="true"
       :visible.sync="curveDialogVisible"
       :close-on-click-modal="false"
       title="性能曲线"

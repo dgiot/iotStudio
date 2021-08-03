@@ -354,6 +354,7 @@
       </el-tabs>
     </div>
     <el-dialog
+      :append-to-body="true"
       :visible.sync="messageDialogVisible"
       :close-on-click-modal="false"
       title="新建功能"

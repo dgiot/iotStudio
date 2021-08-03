@@ -423,6 +423,7 @@
     </div>
     <!--其他资质弹窗-->
     <el-dialog
+      :append-to-body="true"
       :visible.sync="dialogVisible"
       :before-close="handleClose"
       title="其他资质添加"

@@ -20,7 +20,7 @@ const queryParams = [
     vuekey: 'product_count',
     table: 'Product',
     query: {
-      limit: 1,
+      // limit: 1,
       keys: ['count(*)'],
       where: { category: 'IotHub' },
     },

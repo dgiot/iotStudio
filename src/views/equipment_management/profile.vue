@@ -1,6 +1,7 @@
 <template>
   <div class="devproduct">
     <el-dialog
+      :append-to-body="true"
       :visible.sync="dialogVisible"
       width="90%"
       top="1vh"
@@ -22,14 +23,15 @@
       <!--        </el-button>-->
       <!--      </span>-->
     </el-dialog>
-    <el-dialog v-drag-dialog :visible.sync="parserView">
+    <el-dialog v-drag-dialog :append-to-body="true" :visible.sync="parserView">
       <f-render v-model="formConfig" :config="formConfig" pure />
     </el-dialog>
-    <el-drawer
-      size="40%"
+    <a-drawer
+      width="40%"
       direction="rtl"
-      :visible.sync="parserTable"
+      :visible="parserTable"
       class="parserTable"
+      @close="parserTable = !parserTable"
     >
       <div slot="title" class="header-title parserTable">
         <el-button
@@ -150,7 +152,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-drawer>
+    </a-drawer>
     <div class="prosecond">
       <el-form
         :inline="true"

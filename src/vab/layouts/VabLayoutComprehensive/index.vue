@@ -63,8 +63,8 @@
 <style lang="scss" scoped>
   .vab-layout-comprehensive {
     .fixed-header {
-      z-index: 99;
       left: $base-left-menu-width;
+      z-index: 99;
       width: $base-right-content-width;
     }
   }

@@ -153,6 +153,7 @@
     </div>
 
     <el-dialog
+      :append-to-body="true"
       :visible.sync="dialogFormVisible"
       title="个人资质审核"
       width="80%"
@@ -243,7 +244,12 @@
     </el-dialog>
 
     <!--审核弹窗-->
-    <el-dialog :visible.sync="dialogVisible" title="认证审核" width="40%">
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="dialogVisible"
+      title="认证审核"
+      width="40%"
+    >
       <div>
         <el-form
           ref="verifyFormRef"

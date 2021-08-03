@@ -2,7 +2,11 @@
   <!-- dialog -->
   <div>
     <div class="dialog-mian">
-      <el-dialog :visible.sync="add_taskdialog" width="40%">
+      <el-dialog
+        :append-to-body="true"
+        :visible.sync="add_taskdialog"
+        width="40%"
+      >
         <el-form
           ref="task_form"
           :model="task_form"

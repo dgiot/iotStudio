@@ -116,6 +116,7 @@
     </div>
     <!--指令弹窗-->
     <el-dialog
+      :append-to-body="true"
       :title="dialogTitle + '指令'"
       :visible.sync="dialogFormVisible"
       @open="openDialog"

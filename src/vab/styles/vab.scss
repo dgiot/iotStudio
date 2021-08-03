@@ -25,9 +25,6 @@
 }
 
 html {
-  //.v-modal{
-  //  display: none;
-  //}
   body,
   body[class*='vab-theme-'] {
     position: relative;
@@ -211,6 +208,22 @@ html {
       opacity: 0.6;
       backdrop-filter: blur(10px);
     }
+    //.el-dialog{
+    //  position:absolute;
+    //  top:50%;
+    //  left:50%;
+    //  display: flex;
+    //  flex-direction: column;
+    //  max-width:calc(100% - 30px);
+    //  /*height:600px;*/
+    //  max-height:calc(100% - 30px);
+    //  margin:0 !important;
+    //  transform:translate(-50%,-50%);
+    //}
+    //.el-dialog .el-dialog__body{
+    //  flex:1;
+    //  overflow: auto;
+    //}
     .el-notification {
       max-width: 330px !important;
     }

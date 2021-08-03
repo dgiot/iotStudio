@@ -202,6 +202,7 @@
       </el-tab-pane>
       <!--弹窗--->
       <el-dialog
+        :append-to-body="true"
         :title="channelupdated + '通道'"
         :visible.sync="channelForm"
         :close-on-click-modal="false"
@@ -389,7 +390,12 @@
         </div>
       </el-dialog>
       <!--详情展示-->
-      <el-dialog :visible.sync="dialogVisible" title="通道详情" width="50%">
+      <el-dialog
+        :append-to-body="true"
+        :visible.sync="dialogVisible"
+        title="通道详情"
+        width="50%"
+      >
         <div>
           <el-row>
             <el-col :span="12">ID:</el-col>
@@ -417,6 +423,7 @@
       </el-dialog>
       <!--订阅日志-->
       <el-dialog
+        :append-to-body="true"
         :title="channelname + '日志'"
         :visible.sync="subdialog"
         :before-close="handleCloseSubdialog"
