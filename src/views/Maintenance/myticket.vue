@@ -85,6 +85,7 @@
             >
               <el-select
                 v-model="form.product"
+                style="width: 100%"
                 :placeholder="
                   $translateTitle('Maintenance.Please choose the product')
                 "
@@ -105,6 +106,7 @@
             >
               <el-select
                 v-model="form.name"
+                style="width: 100%"
                 :disabled="!Device.length"
                 :placeholder="
                   Device.length == 0
@@ -542,7 +544,7 @@
     computed: {
       ...mapGetters({
         _Product: 'user/_Product',
-        objectId: 'user/objectId',
+        objectid: 'user/objectId',
         role: 'acl/role',
         username: 'user/username',
       }),
@@ -636,7 +638,11 @@
       },
       async createdTicket(from) {
         const setAcl = {}
-        setAcl['*'] = {
+        // setAcl['*'] = {
+        //   read: true,
+        //   write: true,
+        // }
+        setAcl[this.objectid] = {
           read: true,
           write: true,
         }
@@ -656,7 +662,7 @@
           //   className: '_User',
           // },
           // ACL: this.aclObj,
-          ACL: setAcl,
+          ACL: _.merge(setAcl, this.aclObj),
           info: {
             photo: from.photo,
             timeline: [
@@ -840,8 +846,8 @@
           keys: args.keys,
           where: {
             'info.receiveuseid':
-              this.Assigned % 2 == 0 ? { $ne: '99' } : this.objectId,
-            'info.createdname': this.username,
+              this.Assigned % 2 == 0 ? { $ne: '99' } : this.objectid,
+            // 'info.createdname': this.username,
             number: this.queryForm.number.length
               ? { $regex: this.queryForm.number }
               : { $ne: null },

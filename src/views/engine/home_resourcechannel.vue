@@ -112,7 +112,33 @@
             <span>{{ 'channel/' + scope.row.objectId }}</span>
           </template>
         </el-table-column>
-
+        <el-table-column
+          width="120"
+          show-overflow-tooltip
+          :label="
+            $translateTitle('developer.enable') +
+            '/' +
+            $translateTitle('developer.disable')
+          "
+        >
+          <template slot-scope="scope">
+            <el-tooltip
+              :content="
+                scope.row.isEnable
+                  ? $translateTitle('developer.enable')
+                  : $translateTitle('developer.disable')
+              "
+              placement="top"
+            >
+              <el-switch
+                v-model="scope.row.isEnable"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                @change="switchEnable(scope.row.objectId, scope.row.isEnable)"
+              />
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column
           show-overflow-tooltip
           :label="$translateTitle('developer.describe')"
@@ -135,23 +161,6 @@
             >
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
-            </el-button>
-            <el-button
-              v-if="scope.row.isEnable == false"
-              type="warning"
-              size="mini"
-              @click="qyChannel(scope.row, 'enable')"
-            >
-              {{ $translateTitle('developer.enable') }}
-            </el-button>
-
-            <el-button
-              v-else
-              type="warning"
-              size="mini"
-              @click="qyChannel(scope.row, 'disable')"
-            >
-              {{ $translateTitle('developer.prohibit') }}
             </el-button>
             <el-button
               type="success"
@@ -758,20 +767,26 @@
         this.channelregion = res
       },
       // 更新状态
-      qyChannel(row, action) {
-        subupadte(row.objectId, action)
-          .then((resultes) => {
-            if (resultes) {
-              this.$message({
-                type: 'success',
-                message: `${action == 'enable' ? '启用成功' : '禁用成功'}`,
-              })
-            }
+      async switchEnable(objectId, action) {
+        action = action ? 'enable' : 'disable'
+        try {
+          const { updatedAt } = await subupadte(objectId, action)
+          console.log(updatedAt)
+          if (updatedAt) {
+            this.$message.success(
+              this.$translateTitle(`developer.${action}`) +
+                '' +
+                this.$translateTitle('node.success')
+            )
             this.Get_Re_Channel(0)
-          })
-          .catch((error) => {
-            this.$message(error.error)
-          })
+          }
+
+          // this.$message.success(`${res}`)
+        } catch (error) {
+          console.log(error)
+          this.$message.error(`${error}`)
+        }
+        // this.$message(error.error)
       },
       // 编辑设备
       updateChannel(row) {

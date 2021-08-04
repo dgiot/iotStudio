@@ -1050,6 +1050,7 @@
                 >
                   <el-select
                     v-model="deviceform.productName"
+                    style="width: 100%"
                     :disabled="equipmentEditor == '编辑'"
                     :placeholder="$translateTitle('equipment.entername')"
                     @change="selectChange"
@@ -1131,9 +1132,17 @@
                       v-for="(spec, index1) in item.specs"
                       :key="index1"
                       :label="spec.attributevalue"
-                      :value="spec.attribute"
+                      :value="spec.attribute ? spec.attribute : ''"
                     />
                   </el-select>
+                  <el-switch
+                    v-else-if="item.type == 'switch'"
+                    v-model="deviceform[item.identifier]"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    :active-value="item.activevalue"
+                    :inactive-value="item.inactivevalue"
+                  />
                   <!--                      <el-input-->
                   <!--                        v-else-if="item.unit != ''"-->
                   <!--                        v-model="deviceform[item.identifier]"-->
@@ -1141,9 +1150,17 @@
                   <!--                      />-->
                   <el-input
                     v-else-if="item.readonly"
-                    :value="deviceform[item.identifier] + item.unit"
+                    :value="
+                      deviceform[item.identifier]
+                        ? deviceform[item.identifier]
+                        : ''
+                    "
                     :disabled="item.readonly"
-                  />
+                  >
+                    <el-button slot="append">
+                      {{ item.unit ? item.unit : '' }}
+                    </el-button>
+                  </el-input>
                   <el-input
                     v-else
                     v-model="deviceform[item.identifier]"
@@ -2538,6 +2555,8 @@
           videoSrc: row.detail.videoSrc,
           address: row.detail.address,
         }
+        console.log('this.deviceform12131', this.deviceform)
+        console.log('row.basedata', row.basedata)
         for (var key in row.basedata) {
           this.$set(this.deviceform, key, row.basedata[key])
         }
@@ -2606,7 +2625,7 @@
           })
         }
       },
-      selectChange(objectId, flag) {
+      selectChange(objectId, flag = 'edit') {
         this.arrlist = []
         getProduct(objectId).then((res) => {
           const { config = { basedate: {} } } = res
@@ -2615,19 +2634,25 @@
             if (flag == 'add') {
               this.arrlist.map((item) => {
                 if (item.type == 'bool') {
-                  this.$set(this.deviceform, item.identifier, item.default)
+                  this.$set(
+                    this.deviceform,
+                    item?.identifier ? item.identifier : '',
+                    item.default?.length ? item.default : ''
+                  )
                 } else if (item.type == 'enum') {
                   this.$set(
                     this.deviceform,
-                    item.identifier,
-                    item.specs[0].attribute
+                    item?.identifier ? item.identifier : '',
+                    item?.item.specs?.[0]?.attribute?.length
+                      ? item.specs[0].attribute
+                      : ''
                   )
                 } else {
-                  if (item.default) {
-                    this.$set(this.deviceform, item.identifier, item.default)
-                  } else {
-                    this.$set(this.deviceform, item.identifier, '')
-                  }
+                  this.$set(
+                    this.deviceform,
+                    item?.identifier ? item.identifier : '',
+                    item?.item.default?.length ? item.default : ''
+                  )
                 }
                 if (item.required) {
                   if (item.type == 'bool') {
@@ -2783,7 +2808,7 @@
 <style lang="scss" rel="stylesheet/scss" scoped>
   ::v-deep {
     .el-input-group__append {
-      padding: 0;
+      //padding: 0;
     }
   }
   .equtabs {
@@ -2902,7 +2927,7 @@
   }
 
   .equipment .devicecontent .el-form .el-select {
-    width: 100%;
+    width: 100% !important;
   }
 
   .equipment .ACTIVE,

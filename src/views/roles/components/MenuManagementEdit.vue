@@ -56,20 +56,22 @@
         </el-input>
       </el-form-item>
       <el-form-item label="图标" prop="meta.icon">
-        <el-popover
-          popper-class="icon-selector-popper"
-          trigger="click"
-          width="292"
-        >
-          <template #reference>
-            <el-input v-model="form.meta.icon">
-              <template slot="prepend">
-                <vab-icon :icon="form.meta.icon" />
-              </template>
-            </el-input>
+        <el-input v-model="form.meta.icon" size="mini">
+          <template slot="prepend">
+            <vab-icon :icon="form.meta.icon" />
           </template>
-          <vab-icon-selector @handle-icon="handleIcon" />
-        </el-popover>
+          <el-popover
+            slot="append"
+            popper-class="icon-selector-popper"
+            trigger="click"
+            width="292"
+          >
+            <template #reference>
+              <el-button size="mini" icon="el-icon-search" />
+            </template>
+            <vab-icon-selector @handle-icon="handleIcon" />
+          </el-popover>
+        </el-input>
       </el-form-item>
       <el-form-item label="badge" prop="badge">
         <el-input v-model="form.meta.badge">
@@ -117,7 +119,7 @@
 </template>
 
 <script>
-  import VabIconSelector from '@/extra/VabIconSelector'
+  import VabIconSelector from '@/vab/components/VabIconSelector'
   import { putMenu, postMenu } from '@/api/Menu'
   import menuCollapse from './menuCollapse.vue'
   export default {
