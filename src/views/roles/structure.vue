@@ -125,11 +125,18 @@
             borderRadius: '0 0 4px 4px',
           }"
         >
-          <el-button @click="adduserDiadlog = false">
+          <el-button
+            :disabled="centerDialogRole"
+            @click="adduserDiadlog = false"
+          >
             <!-- 取消 -->
             {{ $translateTitle('developer.cancel') }}
           </el-button>
-          <el-button type="primary" @click="addUser">
+          <el-button
+            :disabled="centerDialogRole"
+            type="primary"
+            @click="addUser"
+          >
             <!-- 确定 -->
             {{ $translateTitle('developer.determine') }}
           </el-button>
@@ -649,11 +656,12 @@
               },
               companyinfo: {
                 logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
-                name: 'dgiot',
+                name: '明诚物联云平台',
                 _mimg: 'http://47.105.106.54:1250/group1/group1/70224.png',
-                title: '欢迎登录dgiot',
+                title: '欢迎登录 明诚物联云平台',
                 _pcimg: 'http://47.105.106.54:1250/group1/group1/1_411.png',
-                Copyright: '© 2010-2021 dgiot Corporation, All Rights Reserved',
+                Copyright:
+                  '© 2010-2021  明诚物联云平台 Corporation, All Rights Reserved',
                 backgroundimage:
                   'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
               },

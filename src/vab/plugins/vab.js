@@ -1,10 +1,15 @@
-import { loadingText, messageDuration } from '@/config'
+import { messageDuration } from '@/config'
 import { Loading, Message, MessageBox, Notification } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/token'
+import i18n from '@/i18n'
 
 const token = store.getters['user/token']
 
+const language = store.getters['settings/language']
+
+console.info(`language is ${language}`, i18n)
+const loadingText = i18n.t(`vabI18n.${'developer.Data is loading'}`)
 /**
  * @description 全局token
  */
