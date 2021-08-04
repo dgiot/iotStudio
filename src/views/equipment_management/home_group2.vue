@@ -681,10 +681,7 @@
                     :label="$translateTitle('product.string')"
                     value="string"
                   />
-                  <!--                  <el-option-->
-                  <!--                    :label="$translateTitle('product.date')"-->
-                  <!--                    value="date"-->
-                  <!--                  />-->
+                  <el-option label="switch" value="switch" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -946,7 +943,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item label="必填">
                 <el-radio v-model="tempparams.required" :label="true" border>
@@ -968,7 +965,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item label="列表显示">
                 <el-radio v-model="tempparams.isshow" :label="true" border>
@@ -980,8 +977,20 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row :gutter="24">
+            <el-col :span="12">
+              <el-form-item v-if="tempparams.type == 'switch'" label="开">
+                <el-input v-model="tempparams.activevalue" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item v-if="tempparams.type == 'switch'" label="关">
+                <el-input v-model="tempparams.inactivevalue" />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-form-item
-            v-if="tempparams.type != 'enum'"
+            v-if="tempparams.type != 'enum' && tempparams.type != 'switch'"
             label="默认值"
             prop="default"
           >
@@ -1116,6 +1125,7 @@
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
   import Category from '@/api/Mock/Category'
+
   export default {
     data() {
       return {
@@ -1150,6 +1160,8 @@
           ],
           struct: {},
           unit: '',
+          inactivevalue: '',
+          activevalue: '',
         },
         elactiveName: 'Table',
         elactiveName1: 'Table1',
@@ -1959,6 +1971,9 @@
                 read: true,
                 write: true,
               }
+              setAcl['*'] = {
+                read: true,
+              }
               var addparams = {
                 category: this.form.category[this.form.category.length - 1],
                 productSecret: productSecret,
@@ -2221,17 +2236,19 @@
   //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
   //  display: none;
   //}
-  .devproduct .parserTable {
+.devproduct .parserTable {
     display: block;
   }
+
   .devproduct ::v-deep .el-dialog {
     margin: 0 auto;
   }
+
   .devproduct .el-tabs__header {
     margin: 0;
   }
 
-  .devproduct .el-tabs__item {
+  .devproduct ::v-deep .el-tabs__item {
     height: 50px;
     margin: 0;
     margin-top: 20px;
@@ -2240,24 +2257,24 @@
     line-height: 50px;
   }
 
-  .devproduct .el-tabs__content {
+  .devproduct ::v-deep .el-tabs__content {
     box-sizing: border-box;
     padding: 20px;
     background: #f4f4f4;
   }
 
-  .devproduct .el-tab-pane {
+  .devproduct ::v-deep .el-tab-pane {
     background: #ffffff;
   }
 
-  .devproduct .procontent,
-  .devproduct .prosecond {
+  .devproduct ::v-deep .procontent,
+  .devproduct ::v-deep .prosecond {
     box-sizing: border-box;
     width: 100%;
     padding: 20px 10px;
   }
 
-  .devproduct .el-dialog {
+  .devproduct ::v-deep .el-dialog {
     margin-top: 5vh;
   }
 
@@ -2317,7 +2334,7 @@
   }
 
   /* .devproduct .el-icon-close{
-    position:absolute;
-    right:0;
-  } */
+position:absolute;
+right:0;
+} */
 </style>

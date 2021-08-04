@@ -128,7 +128,7 @@
               <el-popover trigger="hover" placement="top">
                 <p>
                   <!-- 是否隐藏： -->
-                  {{ $translateTitle('product.Hideornot' + ':') }}
+                  {{ $translateTitle('product.Hideornot') + ':' }}
                   <el-tag
                     type="success"
                     :title="$translateTitle('product.Hideornot')"
@@ -144,8 +144,8 @@
                   <!-- 当前路由是否可关闭多标签页： -->
                   {{
                     $translateTitle(
-                      'product.Whetherthecurrentroutecanclosemultipletabs' + ':'
-                    )
+                      'product.Whetherthecurrentroutecanclosemultipletabs'
+                    ) + ':'
                   }}
                   <el-tag
                     v-if="row.meta"
@@ -165,7 +165,7 @@
                 </p>
                 <p>
                   <!-- 是否无缓存： -->
-                  {{ $translateTitle('product.Nocache' + ':') }}
+                  {{ $translateTitle('product.Nocache') + ':' }}
                   <el-tag
                     v-if="row.meta"
                     :title="$translateTitle('product.Nocache')"
