@@ -45,7 +45,7 @@
             </el-button>
           </span>
         </el-form-item>
-        <el-form-item v-if="!isStructures" label="岗位" prop="dictvalue">
+        <el-form-item label="岗位" prop="dictvalue">
           <el-select
             v-model="roleFormObj.dictvalue"
             :clearable="clearFlag"

@@ -2165,6 +2165,7 @@
         }
         console.log('args', args)
         this.listLoading = true
+        const loading = this.$baseColorfullLoading(3)
         this.tableData = []
         const params = {
           limit: args.limit,
@@ -2206,6 +2207,8 @@
             params,
             this.queryForm.access_token
           )
+          this.listLoading = false
+          loading.close()
           if (!results?.length) return
           results.forEach((item) => {
             if (!item.location) i.location = { longitude: 0, latitude: 0 }
@@ -2218,7 +2221,6 @@
               item.Company = ''
             }
           })
-          this.listLoading = false
           this.tableData = results
           this.devicetotal = count
           // 查询在线设备
@@ -2226,6 +2228,7 @@
         } catch (error) {
           console.log(error)
           this.listLoading = false
+          loading.close()
           this.tableData = []
           this.devicetotal = 0
           this.$message.error(`${error}`)

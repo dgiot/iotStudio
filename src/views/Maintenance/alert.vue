@@ -27,6 +27,11 @@
         width="50vh"
         :visible.sync="dynamicformView"
       >
+        <el-form>
+          <el-form-item label-width="200" label="设备名称">
+            <span>{{ devicename }}</span>
+          </el-form-item>
+        </el-form>
         <el-form
           v-for="item in dynamicformInfo"
           ref="dynamicformInfo"
@@ -141,11 +146,10 @@
       <el-table-column
         sortable
         align="center"
-        prop="process"
-        :label="$translateTitle('alert.process')"
+        prop="devicename"
+        :label="$translateTitle('alert.devicename')"
         show-overflow-tooltip
       />
-
       <el-table-column
         sortable
         align="center"
@@ -190,6 +194,13 @@
         </template>
       </el-table-column>
       <el-table-column
+        sortable
+        align="center"
+        prop="process"
+        :label="$translateTitle('alert.process')"
+        show-overflow-tooltip
+      />
+      <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.operating')"
         prop="name"
@@ -204,7 +215,8 @@
                 row.objectId,
                 row.Public,
                 row.dynamicform,
-                row.process
+                row.process,
+                row.devicename
               )
             "
           >
@@ -258,6 +270,7 @@
   import { getProduct } from '@/api/Product'
   import { mapGetters, mapMutations } from 'vuex'
   import { Promise } from 'q'
+
   export default {
     name: 'Index',
     components: {},
@@ -284,6 +297,7 @@
         disabled: false,
         formLabelWidth: '140px',
         process: '',
+        devicename: '',
         rules: {
           product: [
             { required: true, message: '请选择活动区域', trigger: 'change' },
@@ -400,10 +414,11 @@
         this.fetchData()
         this.dynamicformView = false
       },
-      showdynamicform(alertId, flag, dynamicform, process) {
+      showdynamicform(alertId, flag, dynamicform, process, devicename) {
         this.alertId = alertId
         this.isDisable = flag
         this.process = process
+        this.devicename = devicename
         let dFrom = []
         console.log(dynamicform)
         for (let d in dynamicform) {
@@ -559,12 +574,15 @@
         }
       }
     }
+
     .query-form {
       margin-top: 10px;
+
       ::v-deep {
         .el-form-item__label-wrap {
           margin-left: 10px;
         }
+
         .dialog-footer {
           text-align: center;
         }

@@ -269,11 +269,12 @@
         _pcimg: 'dashboard/_pcimg',
         _mimg: 'dashboard/_mimg',
         Default: 'acl/Default',
+        ObjectId: 'user/objectId',
       }),
     },
     mounted() {
       this.$nextTick(() => {
-        this.queryUserInfo()
+        if (this.ObjectId) this.queryUserInfo(this.ObjectId)
       })
     },
     methods: {
@@ -395,7 +396,7 @@
         )
       },
 
-      async queryUserInfo() {
+      async queryUserInfo(ObjectId) {
         const {
           username,
           nick,
@@ -412,7 +413,7 @@
             userinfo: {},
             theme: {},
           },
-        } = await this.$get_object('_User', this.$route.params.userid)
+        } = await this.$get_object('_User', ObjectId)
         this.userinfo = tag.userinfo
         this.objectId = objectId
         this.username = username

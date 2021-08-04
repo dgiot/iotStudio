@@ -966,6 +966,7 @@ export default {
       start: '告警产生',
       stop: '告警恢复',
       productname: '产品名称',
+      devicename: '设备名称',
       process: '过程',
       'alert number': '告警编号',
       'the starting time': '告警时间',
