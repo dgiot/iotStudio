@@ -11,6 +11,7 @@
 * **home/index.vue && package.json:** monitor background image cache Install necessary dependency ([dcb32dc](https://github.com/dgiot/dgiot_dashboard/commit/dcb32dcdaadbf663bce8ad51eae644a8fe13b750))
 * **package.json && src/utils/swagger/index.js:** swagger global url ([0cbd106](https://github.com/dgiot/dgiot_dashboard/commit/0cbd1067159cecbc93ced36c05a4b9976851eea1))
 * **src/views/engine/addengine.vue:** resources bind key ([a4052c6](https://github.com/dgiot/dgiot_dashboard/commit/a4052c6ffea1d115e8ef6dc15e3d18100e61424a))
+* **src/views/engine/home_resourcechannel.vue:** channel list refresh bug fix ([4d38afd](https://github.com/dgiot/dgiot_dashboard/commit/4d38afd0180dcba71a6f505eb3bccca386049b00))
 * **src/views/equipment_management/home_group2.vue:** repair delete uploaded pictures ([2a5427b](https://github.com/dgiot/dgiot_dashboard/commit/2a5427b0d48c7165665c2c55d9a63899f3a19bb3))
 * **src/views/equipment_management/home_group2.vue:** upload components ([e84c400](https://github.com/dgiot/dgiot_dashboard/commit/e84c400597c8ae9f23ade44e7dcf802baeba192b))
 * **src/views/equipment_management/index.vue:** device status enable disable ([86669f7](https://github.com/dgiot/dgiot_dashboard/commit/86669f7fff8a9a51bcadeac3735ecaa29cb0ca43))

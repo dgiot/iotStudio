@@ -9,8 +9,8 @@
 let staticUrl = {
   css: [
     'https://unpkg.com/ant-design-vue/dist/antd.min.css',
-    'https://unpkg.com/iview/dist/styles/iview.css',
-    'https://unpkg.com/vuetify/dist/vuetify.min.css',
+    // 'https://unpkg.com/iview/dist/styles/iview.css',
+    // 'https://unpkg.com/vuetify/dist/vuetify.min.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/styles/google.css',
     'https://unpkg.com/mdi/css/materialdesignicons.min.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading/dots.css',
@@ -24,7 +24,7 @@ let staticUrl = {
     'https://unpkg.com/codemirror/lib/codemirror.css',
     'https://unpkg.com/codemirror/addon/lint/lint.css',
     'https://unpkg.com/codemirror/theme/rubyblue.css',
-    'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/topology-vue/topology-vue.css',
+    // 'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/topology-vue/topology-vue.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading.css',
     'https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css"',
     'https://unpkg.com/prismjs/themes/prism-tomorrow.css',

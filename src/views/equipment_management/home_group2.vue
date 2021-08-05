@@ -130,7 +130,18 @@
               :data="proTableData"
               style="width: 100%"
             >
-              <el-table-column prop="objectId" label="ProductID" width="160" />
+              <el-table-column label="ProductID" sortable show-overflow-tooltip>
+                <template slot-scope="scope">
+                  <router-link
+                    :to="{
+                      path: '/Topo/VueKonva?productid',
+                      query: { productid: scope.row.objectId },
+                    }"
+                  >
+                    {{ scope.row.objectId }}
+                  </router-link>
+                </template>
+              </el-table-column>
               <el-table-column :label="$translateTitle('product.productname')">
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>

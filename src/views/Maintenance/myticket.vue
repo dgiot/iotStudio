@@ -252,14 +252,14 @@
             <!--            >-->
             <!--              {{ $translateTitle('Maintenance.I created') }}-->
             <!--            </el-button>-->
-            <el-button
-              icon="el-icon-user-solid"
-              type="success"
-              :size="Assigned % 2 == 0 ? 'mini' : 'small'"
-              @click="handleCreated('Assigned')"
-            >
-              {{ $translateTitle('Maintenance.Assigned to me') }}
-            </el-button>
+            <!--            <el-button-->
+            <!--              icon="el-icon-user-solid"-->
+            <!--              type="success"-->
+            <!--              :size="Assigned % 2 == 0 ? 'mini' : 'small'"-->
+            <!--              @click="handleCreated('Assigned')"-->
+            <!--            >-->
+            <!--              {{ $translateTitle('Maintenance.Assigned to me') }}-->
+            <!--            </el-button>-->
           </el-form-item>
           <el-form-item>
             <el-button size="mini" type="text" @click="handleFold">

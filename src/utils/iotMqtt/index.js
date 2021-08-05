@@ -1,6 +1,7 @@
 // https://unpkg.com/browse/xhl-mqttx@1.0.2/mqttx.js
 let Paho = require('./mqttws31.js')
 Paho = Paho.default
+var isUseSSL = window.location.protocol === 'https:' ? true : false
 const iotMqtt = {
   client: null,
   mqttStatus: false,
@@ -60,10 +61,14 @@ const iotMqtt = {
     return false
   },
   reconnect: function () {
+    window.location.protocol === 'https:'
+      ? (iotMqtt.options.useSSL = isUseSSL)
+      : ''
     console.log(iotMqtt.client, iotMqtt.options, 'options')
     if (iotMqtt.client && iotMqtt.options) {
       iotMqtt.client.connect({
         onSuccess: this.onConnect,
+        useSSL: isUseSSL,
         onFailure: this.onFailure,
         userName: iotMqtt.options.userName || 'admin',
         password: iotMqtt.options.passWord || 'password',
@@ -73,6 +78,7 @@ const iotMqtt = {
     return false
   },
   init: function (options1) {
+    window.location.protocol === 'https:' ? (options1.useSSL = isUseSSL) : ''
     if (options1) {
       iotMqtt.options = options1
       iotMqtt.client = new Paho.MQTT.Client(
@@ -83,6 +89,7 @@ const iotMqtt = {
       iotMqtt.client.connect({
         onSuccess: this.onConnect,
         onFailure: this.onFailure,
+        useSSL: isUseSSL,
         userName: iotMqtt.options.userName || 'admin',
         password: iotMqtt.options.passWord || 'password',
       })
