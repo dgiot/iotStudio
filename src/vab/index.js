@@ -1,7 +1,9 @@
 import '@/icon'
 import VabIcon from 'vab-icons'
 import 'vab-icons/lib/vab-icons.css'
+import Directives from './directives/index.js'
 Vue.component('VabIcon', VabIcon)
+Vue.use(Directives)
 // 加载主题
 const requireTheme = require.context('./styles/themes', false, /\.scss$/)
 requireTheme.keys().forEach((fileName) => {

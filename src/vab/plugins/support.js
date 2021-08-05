@@ -1,6 +1,5 @@
 import { MessageBox } from 'element-ui'
 import { title } from '@/config'
-import { dependencies } from '../../../package.json'
 
 if (!!window.ActiveXObject || 'ActiveXObject' in window) {
   MessageBox({

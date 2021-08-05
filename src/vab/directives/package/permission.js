@@ -1,6 +1,6 @@
 import store from '@/store'
-
-export default {
+console.log('store', store)
+const permission = {
   inserted(el, binding, vnode) {
     const { value } = binding
     const roles = store.getters && store.getters.roles
@@ -20,3 +20,4 @@ export default {
     }
   },
 }
+export default permission
