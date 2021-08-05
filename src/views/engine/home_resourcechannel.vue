@@ -721,11 +721,11 @@
           callback()
         }
       },
-      async Get_Re_Channel(start) {
+      async Get_Re_Channel(start = 0) {
         this.listLoading = true
-        if (start == 0) {
-          this.start = 0
-        }
+        this.tableData = []
+        this.total = 0
+        this.start = start == 0 ? 0 : this.start
         const params = {
           skip: this.start,
           limit: this.length,
@@ -872,11 +872,11 @@
       // 分页
       channelSizeChange(val) {
         this.length = val
-        this.Get_Re_Channel()
+        this.Get_Re_Channel(1)
       },
       channelCurrentChange(val) {
         this.start = (val - 1) * this.length
-        this.Get_Re_Channel()
+        this.Get_Re_Channel(1)
       },
       arrSort(a, b) {
         var val1 = a.order

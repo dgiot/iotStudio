@@ -1,4 +1,4 @@
-# [4.4.0](https://github.com/dgiot/dgiot_dashboard/compare/v4.3.0...v4.4.0) (2021-08-04)
+# [4.4.0](https://github.com/dgiot/dgiot_dashboard/compare/v4.3.0...v4.4.0) (2021-08-05)
 
 
 ### Bug Fixes
@@ -42,6 +42,7 @@
 * **src/vab/plugins/vab.js && src/views/equipment_management/home_index.vue:** loading text ([3e510cb](https://github.com/dgiot/dgiot_dashboard/commit/3e510cbcd98453434c3021e34be8c97a7da59d36))
 * changeChanel ([17d456a](https://github.com/dgiot/dgiot_dashboard/commit/17d456ad0d4eec6f15d4d45206ae9299bba578f4))
 * **src/views/engine/addengine.vue:** new rule interface ([f525bc7](https://github.com/dgiot/dgiot_dashboard/commit/f525bc796fd9f83f7b5993547394e1c90152767d))
+* **src/views/engine/home_resourcechannel.vue:** channel state style modification ([5945848](https://github.com/dgiot/dgiot_dashboard/commit/5945848b71a407afbb4cd687005208a970112192)), closes [#103](https://github.com/dgiot/dgiot_dashboard/issues/103)
 * **src/views/engine/rulesengine.vue:** rules_engine ([54725e3](https://github.com/dgiot/dgiot_dashboard/commit/54725e30779ad546b8aaa51f9e82e3dc2458b729))
 * **src/views/equipment_management/home_group2.vue:** new default values of channel parameters ([7f95b4f](https://github.com/dgiot/dgiot_dashboard/commit/7f95b4fc402c774cfb9fd352df765647a1c15d78))
 * **src/views/equipment_management/parse.vue:** parse page ([d526da7](https://github.com/dgiot/dgiot_dashboard/commit/d526da7f83d97b26e0aa5781ae25776003aa89e5))
