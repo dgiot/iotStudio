@@ -151,7 +151,7 @@ Paho.MQTT = (function (global) {
       return f.apply(scope, arguments)
     }
   }
-
+  var isuseSSL = window.location.protocol === 'https:' ? 'wss' : 'ws'
   /**
    * Unique message type identifiers, with associated
    * associated integer values.
@@ -1788,7 +1788,7 @@ Paho.MQTT = (function (global) {
         host.slice(0, 1) != '[' &&
         host.slice(-1) != ']'
       uri =
-        'ws://' +
+        `${isuseSSL}://` +
         (ipv6AddSBracket ? '[' + host + ']' : host) +
         ':' +
         port +
@@ -2102,7 +2102,12 @@ Paho.MQTT = (function (global) {
             var port = connectOptions.ports[i]
 
             var ipv6 = host.indexOf(':') != -1
-            uri = 'ws://' + (ipv6 ? '[' + host + ']' : host) + ':' + port + path
+            uri =
+              `${isuseSSL}://` +
+              (ipv6 ? '[' + host + ']' : host) +
+              ':' +
+              port +
+              path
             connectOptions.uris.push(uri)
           }
         } else {

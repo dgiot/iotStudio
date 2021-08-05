@@ -97,3 +97,11 @@ export async function getCardDevice(objectId) {
     method: 'get',
   })
 }
+
+export async function addimeidevice(params) {
+  return request({
+    url: `adddevice`,
+    method: 'post',
+    data: params,
+  })
+}

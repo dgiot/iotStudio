@@ -68,21 +68,11 @@ const queryParams = [
   {
     dataType: 'card',
     vuekey: 'warn_count',
-    table: 'Maintenance',
+    table: 'Notification',
     query: {
       limit: 1,
       keys: ['count(*)'],
-      where: {
-        createdAt: {
-          $gt: {
-            __type: 'Date',
-            iso: moment().subtract(1, 'days').format('YYYY-MM-DD'),
-          },
-        },
-        updatedAt: {
-          $lt: { __type: 'Date', iso: moment(new Date()).format('YYYY-MM-DD') },
-        },
-      },
+      where: {},
     },
   },
 ]

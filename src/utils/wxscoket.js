@@ -49,7 +49,6 @@ function formatDate(date, fmt) {
   }
   return fmt
 }
-const didata = []
 function padLeftZero(str) {
   return ('00' + str).substr(str.length)
 }
@@ -62,8 +61,8 @@ var sendInfo = {
 // if (process.env.NODE_ENV == 'development') {
 //   localHost.push('localhost', '127.0.0.1')
 // }
-let _scokethost = ''
-_scokethost = globalUrl(hostname, localHost).split('//')[1] || location.hostname
+let _scokethost =
+  globalUrl(hostname, localHost).split('//')[1] || location.hostname
 // var result = localHost.some((i) => {
 //   return hostname.indexOf(i) > -1
 // })
@@ -73,7 +72,7 @@ _scokethost = globalUrl(hostname, localHost).split('//')[1] || location.hostname
 // } else {
 //   _scokethost = ''
 // }
-console.log(_scokethost)
+console.info(`%_scokethost is : ${_scokethost}`, 'color: green;')
 // eslint-disable-next-line no-unused-vars
 var Websocket = {
   modName: 'websocket',
@@ -213,7 +212,7 @@ var Websocket = {
       options.keepAliveInterval = Number(keepAlive)
     }
     options.cleanSession = cleanSession
-    window.location.protocol === 'https' ? (options.useSSL = useSSL) : ''
+    window.location.protocol === 'https:' ? (options.useSSL = useSSL) : ''
     _this.client.connect(options)
   },
 
@@ -325,7 +324,6 @@ export {
   TOPIC_EMPTY,
   MSG_EMPTY,
   DISCONNECT_MSG,
-  didata,
   getsession,
   _scokethost,
 }

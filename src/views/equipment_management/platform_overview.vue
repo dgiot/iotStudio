@@ -18,7 +18,6 @@
       @mqttConnectLost="mqttConnectLost"
       @mqttSuccess="mqttSuccess"
     />
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
 
     <div class="home_dialog">
       <el-dialog
@@ -123,7 +122,9 @@
               </el-col>
               <el-col :span="12" class="card-right">
                 <router-link to="/CloudOt/alarm">
-                  <p>{{ $translateTitle('equipment.Warning today') }}</p>
+                  <p>
+                    {{ $translateTitle('equipment.Total number of alarms') }}
+                  </p>
                   <p>{{ warnCount }}</p>
                 </router-link>
               </el-col>
@@ -428,19 +429,15 @@
                               <el-link
                                 :underline="false"
                                 :type="
-                                  item.icon === '0'
+                                  deviceInfo.status === 'ONLINE'
                                     ? 'success'
-                                    : item.icon === '1'
-                                    ? 'warning'
-                                    : 'danger'
+                                    : 'warning'
                                 "
                               >
                                 {{
-                                  item.icon === '0'
-                                    ? $translateTitle('zetadevices.在线')
-                                    : item.icon === '1'
-                                    ? $translateTitle('zetadevices.offline')
-                                    : $translateTitle('zetadevices.malfunction')
+                                  deviceInfo.status === 'ONLINE'
+                                    ? $translateTitle('zetadevices.online')
+                                    : $translateTitle('zetadevices.offline')
                                 }}
                               </el-link>
                             </p>
@@ -558,7 +555,7 @@
                 </el-card>
               </div>
 
-              <el-col :xs="24" :sm="24" :md="28" :xl="24">
+              <el-col :xs="24" :sm="24" :md="24" :xl="24">
                 <el-card class="box-card">
                   <div slot="header" class="clearfix">
                     <span>
@@ -965,21 +962,6 @@
             ischildren: 'false',
           },
         })
-      },
-      uploadCkick(item) {
-        this.deviceId = item.objectId
-        // 触发子组件的点击事件
-        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
-        )
-      },
-      async fileInfo(info) {
-        this.deviceInfo.detail.deviceIco = info.url
-        const params = {
-          detail: this.deviceInfo.detail,
-        }
-        this.deviceInfo = await putDevice(this.deviceId, params)
-        info.url
       },
       /*
    连接webscroket

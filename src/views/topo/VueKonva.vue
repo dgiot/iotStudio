@@ -584,8 +584,8 @@
         const Text = _this.stage.find('Text')
         // console.clear()
         console.log(Text, 'Text')
-        if (!_this.isDevice) {
-          Text.each(function (_G) {
+        if (!_this.isDevice && Text?.length) {
+          Text.each((_G) => {
             _G.on('mouseenter', function () {
               _this.stage.container().style.cursor = 'move'
             })
@@ -669,6 +669,7 @@
           // _this.leftrow = 3
           _this.rightrow = 6
         }
+        console.log(Group, 'Group')
         if (!_this.isDevice) {
           Group.each(function (_G) {
             _G.on('dblclick', (e) => {

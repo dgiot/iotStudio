@@ -1017,177 +1017,254 @@
           </span>
         </div>
         <div class="devicecontent">
-          <el-form
-            ref="deviceform"
-            :model="deviceform"
-            :rules="rules"
-            label-width="150px"
-          >
-            <el-row :gutter="20">
-              <el-col :span="12">
-                <el-form-item
-                  :label="$translateTitle('equipment.devicename')"
-                  prop="name"
-                >
-                  <el-input v-model="deviceform.name" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item
-                  :label="$translateTitle('equipment.devicenumber')"
-                  prop="devaddr"
-                >
-                  <el-input
-                    v-model="deviceform.devaddr"
-                    :disabled="equipmentEditor == '编辑'"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item
-                  :label="$translateTitle('product.productname')"
-                  prop="productName"
-                >
-                  <el-select
-                    v-model="deviceform.productName"
-                    style="width: 100%"
-                    :disabled="equipmentEditor == '编辑'"
-                    :placeholder="$translateTitle('equipment.entername')"
-                    @change="selectChange"
-                  >
-                    <el-option
-                      v-for="(item, index) in proTableData1"
-                      :key="index"
-                      :label="item.name"
-                      :value="item.objectId"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item :label="$translateTitle('equipment.assetnumber')">
-                  <el-input v-model="deviceform.assetNum" />
-                </el-form-item>
-              </el-col>
+          <el-tabs v-model="imeideviceName">
+            <el-tab-pane
+              :label="$translateTitle('equipment.commdevice')"
+              name="first"
+            >
+              <el-form
+                ref="deviceform"
+                :model="deviceform"
+                :rules="rules"
+                label-width="150px"
+              >
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.devicename')"
+                      prop="name"
+                    >
+                      <el-input v-model="deviceform.name" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.devicenumber')"
+                      prop="devaddr"
+                    >
+                      <el-input
+                        v-model="deviceform.devaddr"
+                        :disabled="equipmentEditor == '编辑'"
+                      />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('product.productname')"
+                      prop="productName"
+                    >
+                      <el-select
+                        v-model="deviceform.productName"
+                        style="width: 100%"
+                        :disabled="equipmentEditor == '编辑'"
+                        :placeholder="$translateTitle('equipment.entername')"
+                        @change="selectChange"
+                      >
+                        <el-option
+                          v-for="(item, index) in proTableData1"
+                          :key="index"
+                          :label="item.name"
+                          :value="item.objectId"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.assetnumber')"
+                    >
+                      <el-input v-model="deviceform.assetNum" />
+                    </el-form-item>
+                  </el-col>
 
-              <el-col :span="12">
-                <el-form-item
-                  :label="$translateTitle('equipment.equipmenttype')"
-                >
-                  <el-input v-model="deviceform.devModel" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item
-                  :label="$translateTitle('equipment.equipmentbrand')"
-                >
-                  <el-input v-model="deviceform.brand" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item
-                  :label="$translateTitle('equipment.installationlocation')"
-                >
-                  <el-input
-                    v-model="deviceform.address"
-                    @focus="updateLocation"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item :label="$translateTitle('equipment.videoSrc')">
-                  <el-input v-model="deviceform.videoSrc" />
-                </el-form-item>
-              </el-col>
-              <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
-                <el-form-item
-                  :label="item.name"
-                  :prop="item.identifier"
-                  :required="item.required"
-                >
-                  <el-select
-                    v-if="item.type == 'bool'"
-                    v-model="deviceform[item.identifier]"
-                    style="width: 100%"
-                    class="notauto"
-                    :disabled="item.readonly"
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.equipmenttype')"
+                    >
+                      <el-input v-model="deviceform.devModel" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.equipmentbrand')"
+                    >
+                      <el-input v-model="deviceform.brand" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.installationlocation')"
+                    >
+                      <el-input
+                        v-model="deviceform.address"
+                        @focus="updateLocation"
+                      />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.videoSrc')"
+                    >
+                      <el-input v-model="deviceform.videoSrc" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col
+                    v-for="(item, index) in arrlist"
+                    :key="index"
+                    :span="12"
                   >
-                    <el-option
-                      :value="true"
-                      :label="$translateTitle('product.yes')"
-                    />
-                    <el-option
-                      :value="false"
-                      :label="$translateTitle('product.no')"
-                    />
-                  </el-select>
-                  <el-select
-                    v-else-if="item.type == 'enum'"
-                    v-model="deviceform[item.identifier]"
-                    style="width: 100%"
-                    class="notauto"
-                    :disabled="item.readonly"
-                  >
-                    <el-option
-                      v-for="(spec, index1) in item.specs"
-                      :key="index1"
-                      :label="spec.attributevalue"
-                      :value="spec.attribute ? spec.attribute : ''"
-                    />
-                  </el-select>
-                  <el-switch
-                    v-else-if="item.type == 'switch'"
-                    v-model="deviceform[item.identifier]"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949"
-                    :active-value="item.activevalue"
-                    :inactive-value="item.inactivevalue"
-                  />
-                  <!--                      <el-input-->
-                  <!--                        v-else-if="item.unit != ''"-->
-                  <!--                        v-model="deviceform[item.identifier]"-->
-                  <!--                        :disabled="item.readonly"-->
-                  <!--                      />-->
-                  <el-input
-                    v-else-if="item.readonly"
-                    :value="
-                      deviceform[item.identifier]
-                        ? deviceform[item.identifier]
-                        : ''
-                    "
-                    :disabled="item.readonly"
-                  >
-                    <el-button slot="append">
-                      {{ item.unit ? item.unit : '' }}
-                    </el-button>
-                  </el-input>
-                  <el-input
-                    v-else
-                    v-model="deviceform[item.identifier]"
-                    :disabled="item.readonly"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="24">
-                <el-form-item :label="$translateTitle('developer.describe')">
-                  <el-input
-                    v-model="deviceform.desc"
-                    :autosize="{ minRows: 4, maxRows: 4 }"
-                    type="textarea"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-form>
+                    <el-form-item
+                      :label="item.name"
+                      :prop="item.identifier"
+                      :required="item.required"
+                    >
+                      <el-select
+                        v-if="item.type == 'bool'"
+                        v-model="deviceform[item.identifier]"
+                        style="width: 100%"
+                        class="notauto"
+                        :disabled="item.readonly"
+                      >
+                        <el-option
+                          :value="true"
+                          :label="$translateTitle('product.yes')"
+                        />
+                        <el-option
+                          :value="false"
+                          :label="$translateTitle('product.no')"
+                        />
+                      </el-select>
+                      <el-select
+                        v-else-if="item.type == 'enum'"
+                        v-model="deviceform[item.identifier]"
+                        style="width: 100%"
+                        class="notauto"
+                        :disabled="item.readonly"
+                      >
+                        <el-option
+                          v-for="(spec, index1) in item.specs"
+                          :key="index1"
+                          :label="spec.attributevalue"
+                          :value="spec.attribute ? spec.attribute : ''"
+                        />
+                      </el-select>
+                      <el-switch
+                        v-else-if="item.type == 'switch'"
+                        v-model="deviceform[item.identifier]"
+                        active-color="#13ce66"
+                        inactive-color="#ff4949"
+                        :active-value="item.activevalue"
+                        :inactive-value="item.inactivevalue"
+                      />
+                      <!--                      <el-input-->
+                      <!--                        v-else-if="item.unit != ''"-->
+                      <!--                        v-model="deviceform[item.identifier]"-->
+                      <!--                        :disabled="item.readonly"-->
+                      <!--                      />-->
+                      <el-input
+                        v-else-if="item.readonly"
+                        :value="
+                          deviceform[item.identifier]
+                            ? deviceform[item.identifier]
+                            : ''
+                        "
+                        :disabled="item.readonly"
+                      >
+                        <el-button slot="append">
+                          {{ item.unit ? item.unit : '' }}
+                        </el-button>
+                      </el-input>
+                      <el-input
+                        v-else
+                        v-model="deviceform[item.identifier]"
+                        :disabled="item.readonly"
+                      />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="24">
+                    <el-form-item
+                      :label="$translateTitle('developer.describe')"
+                    >
+                      <el-input
+                        v-model="deviceform.desc"
+                        :autosize="{ minRows: 4, maxRows: 4 }"
+                        type="textarea"
+                      />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+              <div style="text-align: right">
+                <el-button type="primary" @click="submitForm('deviceform')">
+                  {{ $translateTitle('developer.determine') }}
+                </el-button>
+                <el-button @click="handleClose">
+                  {{ $translateTitle('developer.cancel') }}
+                </el-button>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane
+              v-if="equipmentEditor != '编辑'"
+              :label="$translateTitle('equipment.imeidevice')"
+              name="second"
+            >
+              <el-form
+                ref="imeiform"
+                :model="imeiform"
+                :rules="rules"
+                label-width="150px"
+              >
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item label="IMEI" prop="devimei">
+                      <el-input v-model="imeiform.devimei" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('product.productname')"
+                      prop="productName"
+                    >
+                      <el-select
+                        v-model="imeiform.productName"
+                        style="width: 100%"
+                        :placeholder="$translateTitle('equipment.entername')"
+                        @change="selectChange"
+                      >
+                        <el-option
+                          v-for="(item, index) in proTableData1"
+                          :key="index"
+                          :label="item.name"
+                          :value="item.objectId"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.installationlocation')"
+                    >
+                      <el-input
+                        v-model="imeiform.address"
+                        @focus="updateLocation"
+                      />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+              <div style="text-align: right">
+                <el-button type="primary" @click="submitimeiForm('imeiform')">
+                  {{ $translateTitle('developer.determine') }}
+                </el-button>
+                <el-button @click="handleClose">
+                  {{ $translateTitle('developer.cancel') }}
+                </el-button>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
         </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('deviceform')">
-            {{ $translateTitle('developer.determine') }}
-          </el-button>
-          <el-button @click="handleClose">
-            {{ $translateTitle('developer.cancel') }}
-          </el-button>
-        </span>
       </el-dialog>
       <!-- <el-dialog
   :append-to-body="true"
@@ -1298,7 +1375,7 @@
     BmScale,
   } from 'vue-baidu-map'
   import { returnLogin } from '@/utils/utilwen'
-  import { querycompanyDevice, putDevice } from '@/api/Device'
+  import { querycompanyDevice, putDevice, addimeidevice } from '@/api/Device'
   import { getToken } from '@/api/Menu'
 
   var pcdata
@@ -1319,6 +1396,14 @@
       deviceState,
     },
     data() {
+      let imei = /^[0-9]{15}$/
+      let isimei = (rule, value, callback) => {
+        if (!imei.test(value)) {
+          return callback(new Error('请输入15位IMEI'))
+        } else {
+          callback()
+        }
+      }
       this.chartSettings = {
         radius: [5, 40],
         offsetY: 70,
@@ -1396,6 +1481,7 @@
         isALL: true,
         sizeZoom: 10,
         activeName: 'first',
+        imeideviceName: 'first',
         mapDialog: false,
         dialogtempconfig: [],
         arrlist: [],
@@ -1434,6 +1520,11 @@
         devicestart: 0,
         devicetotal: 0,
         visible2: false,
+        imeiform: {
+          devimei: '',
+          productName: '',
+          address: '',
+        },
         deviceform: {
           videoSrc: '',
           name: '',
@@ -1458,6 +1549,10 @@
           devaddr: [
             { required: true, message: '请输入设备编号', trigger: 'blur' },
             { validator: CheckDevaddr },
+          ],
+          devimei: [
+            { required: true, message: '请输入设备IMEI', trigger: 'blur' },
+            { validator: isimei },
           ],
           batchId: [
             { required: true, message: '请输入设备批次', trigger: 'blur' },
@@ -2058,6 +2153,7 @@
         // 　　});
         if (this.bmapform.address == '') {
           this.deviceform.address = this.bmapform.keyword
+          this.imeiform.address = this.bmapform.keyword
         }
         localSearch.search(this.bmapform.keyword)
         this.bmapdialogVisible = false
@@ -2081,6 +2177,7 @@
           //   console.log(rs)
           this.bmapform.address = rs.address
           this.deviceform.address = rs.address
+          this.imeiform.address = rs.address
           // 地址描述(string)=
           // console.log(rs.address);    //这里打印可以看到里面的详细地址信息，可以根据需求选择想要的
           // console.log(rs.addressComponents);//结构化的地址描述(object)
@@ -2541,6 +2638,7 @@
         this.editRow = row
         this.deviceid = row.objectId
         this.devicedialogVisible = true
+        this.imeideviceName = 'first'
         this.deviceform = {
           devaddr: row.devaddr,
           name: row.name,
@@ -2769,6 +2867,37 @@
             }
             //   }
             // })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '请按照要求填写参数',
+            })
+            return false
+          }
+        })
+      },
+      //imei添加设备
+      async submitimeiForm(formName) {
+        this.$refs[formName].validate(async (valid) => {
+          if (valid) {
+            var devicesParmas = {
+              productid: this.imeiform.productName,
+              devaddr: this.imeiform.devimei,
+              latitude: this.center.lat ? this.center.lat : 0,
+              longitude: this.center.lng ? this.center.lng : 0,
+            }
+            addimeidevice(devicesParmas).then((res) => {
+              if (res.objectId) {
+                this.deviceform = {}
+                this.handleClose()
+                this.initQuery('设备创建成功', 'success')
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: res,
+                })
+              }
+            })
           } else {
             this.$message({
               type: 'error',
