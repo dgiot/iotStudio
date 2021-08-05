@@ -199,7 +199,58 @@
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
-
+          <el-table-column
+            sortable
+            show-overflow-tooltip
+            width="100"
+            :label="$translateTitle('product.profile')"
+          >
+            <template slot-scope="scope">
+              <el-link
+                type="primary"
+                @click="
+                  editorParser(
+                    scope.row.objectId,
+                    scope.row.config,
+                    scope.row.thing,
+                    'profile'
+                  )
+                "
+              >
+                {{
+                  scope.row.config && scope.row.config.profile
+                    ? scope.row.config.profile.length
+                    : 0
+                }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column
+            sortable
+            show-overflow-tooltip
+            width="100"
+            :label="$translateTitle('product.parser')"
+          >
+            <template slot-scope="scope">
+              <el-link
+                type="primary"
+                @click="
+                  editorParser(
+                    scope.row.objectId,
+                    scope.row.config,
+                    scope.row.thing,
+                    'parser'
+                  )
+                "
+              >
+                {{
+                  scope.row.config && scope.row.config.parser
+                    ? scope.row.config.parser.length
+                    : 0
+                }}
+              </el-link>
+            </template>
+          </el-table-column>
           <el-table-column
             sortable
             show-overflow-tooltip

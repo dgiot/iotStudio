@@ -15,7 +15,6 @@ const {
   build7z,
   buildGzip,
   imageCompression,
-  proxyUrl,
   webpackBanner,
   webpackBarName,
   staticUrl,

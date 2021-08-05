@@ -1,6 +1,6 @@
-import './waves.css'
+import './assets/waves.css'
 
-export default {
+const waves = {
   bind(el, binding) {
     el.addEventListener(
       'click',
@@ -58,3 +58,4 @@ export default {
     )
   },
 }
+export default waves
