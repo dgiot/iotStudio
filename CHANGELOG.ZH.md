@@ -1,4 +1,4 @@
-# [4.4.0](https://github.com/dgiot/dgiot_dashboard/compare/v4.3.0...v4.4.0) (2021-08-05)
+# [4.4.0](https://github.com/dgiot/dgiot_dashboard/compare/v4.3.0...v4.4.0) (2021-08-06)
 
 
 ### Bug Fixes
@@ -161,6 +161,7 @@
 
 * api query ([a00d409](https://github.com/dgiot/dgiot_dashboard/commit/a00d409dd442b4942fe8c132536346191f0877c9))
 * **package.json:** version ([c678506](https://github.com/dgiot/dgiot_dashboard/commit/c678506ac67ef28b5b66a70772a9d933ecf94a1b))
+* **src/vab/directives/*:** encapsulate vue custom instructions ([073b588](https://github.com/dgiot/dgiot_dashboard/commit/073b5882de4433faa56c60f7e4683c2218b20e51))
 * **vuex:** vuex Persistence ([c7292c1](https://github.com/dgiot/dgiot_dashboard/commit/c7292c1b300af6ffe40744fbe37ad02ea618fa0b))
 
 

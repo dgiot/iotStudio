@@ -3,11 +3,20 @@ const fullScreenID = 'clickID'
 let index = 1
 let nowClickID = ''
 //屏幕全屏按esc 更改svg的状态
+/**
+ *
+ * @param el
+ * @param dom
+ */
 const changeFullScreen = (el, dom) => {
   if (!dom) {
     el.fullScreen.isFullScreen = false
   }
 }
+/**
+ *
+ * @param el
+ */
 //进入屏幕全屏
 const intoScreenMode = (el) => {
   if (el.requestFullscreen) {
@@ -33,6 +42,11 @@ const exitScreenMode = () => {
     document.msExitFullscreen()
   }
 }
+/**
+ *
+ * @param el
+ * @param binding
+ */
 //update中处理屏幕全屏的函数
 const toggleFullScreen = (el, binding) => {
   let isFullScreen, index
@@ -92,6 +106,11 @@ const toggleFullScreen = (el, binding) => {
   }
 }
 
+/**
+ *
+ * @type {{bind: fullScreen.bind, inserted: fullScreen.inserted, unbind: fullScreen.unbind, update: fullScreen.update}}
+ * @url https://github.com/lxjjjjjj/fullScreen/blob/master/index.js
+ */
 const fullScreen = {
   bind: (el, binding) => {
     const type = (binding.value && binding.value.type) || 'window'

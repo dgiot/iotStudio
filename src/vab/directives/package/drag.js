@@ -1,3 +1,7 @@
+/**
+ *
+ * @type {{bind(*, *, *): void}}
+ */
 const drag = {
   bind(el, binding, vnode) {
     const dialogHeaderEl = el.querySelector('.el-dialog__header')

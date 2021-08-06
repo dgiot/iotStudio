@@ -1,5 +1,9 @@
 let listenAction
-
+/**
+ *
+ * @type {{inserted(*=, *): void, unbind(): void}}
+ * @url https://github.com/Tamamoran/v-sticky/blob/master/src/lib/sticky/index.js
+ */
 const sticky = {
   inserted(el, binding) {
     const params = binding.value || {}

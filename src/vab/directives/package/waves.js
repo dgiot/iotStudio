@@ -1,5 +1,10 @@
 import './assets/waves.css'
 
+/**
+ *
+ * @type {{bind(*=, *): void}}
+ * @url https://gitee.com/sfyblack/vue-waves/blob/master/src/v-waves.js
+ */
 const waves = {
   bind(el, binding) {
     el.addEventListener(
