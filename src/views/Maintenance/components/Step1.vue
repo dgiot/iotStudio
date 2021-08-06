@@ -196,6 +196,7 @@
     },
     data() {
       return {
+        roleName: '',
         loading: false,
         user: [],
         deptTreeData: [],
@@ -228,6 +229,7 @@
     methods: {
       ...mapMutations({
         set_deviceFlag: 'global/set_deviceFlag',
+        set_deviceStep: 'global/set_deviceStep',
       }),
       async getRoletree() {
         await Roletree()
@@ -246,6 +248,7 @@
         // this.form.info.user = ''
         this.curDepartmentId = data.objectId
         this.user = []
+        this.roleName = data.name
         const { users } = await queryRoledepartment({ name: data.name })
         console.log('res', users)
         this.user = users
@@ -277,20 +280,24 @@
                 read: true,
                 write: true,
               }
+              setAcl[`role:${this.roleName}`] = {
+                read: true,
+                write: true,
+              }
               // setUser.push({
               //   objectId: _user[0].objectId,
               //   __type: 'Pointer',
               //   className: '_User',
               // })
             }
-            setAcl[`${info.receiveuseid}`] = {
-              read: true,
-              write: true,
-            }
+            // setAcl[`${info.receiveuseid}`] = {
+            //   read: true,
+            //   write: true,
+            // }
             const params = {
               status: 1,
               info: info,
-              ACL: _.merge(ACL, setAcl),
+              ACL: setAcl,
               user: {
                 objectId: _user[0].objectId,
                 __type: 'Pointer',
@@ -301,6 +308,7 @@
             const res = await update_object('Maintenance', objectId, params)
             if (res.updatedAt) {
               this.set_deviceFlag(false)
+              this.set_deviceStep(-1)
             }
           } else {
             this.$message.error('请选择分配人员')

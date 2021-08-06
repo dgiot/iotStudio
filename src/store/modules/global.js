@@ -11,16 +11,22 @@ const state = () => ({
   _tableDict: getToken('_tableDict', storage, {}),
   _tableParser: getToken('_tableParser', storage, {}),
   _deviceFlag: getToken('_deviceFlag', storage, false),
+  _deviceStep: getToken('_deviceFlag', storage, -1),
 })
 const getters = {
   _tableDict: (state) => state._tableDict,
   _tableParser: (state) => state._tableParser,
   _deviceFlag: (state) => state._deviceFlag,
+  _deviceStep: (state) => state._deviceStep,
 }
 const mutations = {
   set_deviceFlag(state, flag) {
     state._deviceFlag = flag
-    setToken('_tableDict', flag)
+    setToken('_deviceFlag', flag)
+  },
+  set_deviceStep(state, step) {
+    state._deviceStep = step
+    setToken('_deviceStep', step)
   },
   set_tableDict(state, dict) {
     state._tableDict = dict
@@ -32,6 +38,9 @@ const mutations = {
   },
 }
 const actions = {
+  set_deviceStep({ commit, step }) {
+    commit('set_deviceStep', step)
+  },
   set_deviceFlag({ commit, flag }) {
     commit('set_deviceFlag', flag)
   },

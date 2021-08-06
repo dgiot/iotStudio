@@ -18,7 +18,7 @@
                 :label="$translateTitle('Maintenance.project') + ': '"
               >
                 <!--                <el-input v-model="detail._product" readonly disabled />-->
-                <span v-if="form.product">{{ form.product.name }}</span>
+                <span>{{ form.info.productname }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -26,7 +26,7 @@
                 :label="$translateTitle('Maintenance.Equipment name') + ': '"
               >
                 <!--                <el-input v-model="detail._device" readonly disabled />-->
-                <span v-if="form.device">{{ form.device.name }}</span>
+                <span>{{ form.info.createdname }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -34,7 +34,7 @@
                 :label="$translateTitle('Maintenance.Initiator') + ': '"
               >
                 <!--                <el-input v-model="detail.user" readonly disabled />-->
-                <span v-if="form.user">{{ form.user.nick }}</span>
+                <span>{{ form.info.createdname }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
