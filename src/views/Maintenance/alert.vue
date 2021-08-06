@@ -43,6 +43,10 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-form>
+            <el-form-item :label="$translateTitle('alert.Alarm status')">
+              <el-radio v-model="status" label="1">已处理</el-radio>
+              <el-radio v-model="status" label="2">误报</el-radio>
+            </el-form-item>
             <el-form-item
               label-width="200"
               :label="$translateTitle('alert.Alarm handling')"
@@ -54,7 +58,7 @@
             {{ $translateTitle('button.cancel') }}
           </el-button>
           <el-button type="primary" @click="submitAlert(alertId)">
-            {{ $translateTitle('Maintenance.deal with') }}
+            {{ $translateTitle('button.submit') }}
           </el-button>
         </span>
       </el-dialog>
@@ -184,11 +188,13 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <el-link :type="row.Public ? 'success' : 'info'" effect="dark">
+          <el-link :type="row.status == 1 ? 'success' : 'info'" effect="dark">
             {{
-              row.Public
+              row.status == 1
                 ? $translateTitle('Maintenance.Processed')
-                : $translateTitle('Maintenance.Untreated')
+                : row.status == 0
+                ? $translateTitle('Maintenance.Untreated')
+                : $translateTitle('Maintenance.Distort')
             }}
           </el-link>
         </template>
@@ -216,6 +222,7 @@
                 row.Public,
                 row.dynamicform,
                 row.process,
+                row.status,
                 row.devicename
               )
             "
@@ -297,6 +304,7 @@
         disabled: false,
         formLabelWidth: '140px',
         process: '',
+        status: '',
         devicename: '',
         rules: {
           product: [
@@ -311,11 +319,15 @@
         },
         processAll: [
           {
-            key: '是',
+            key: '未处理',
+            value: 0,
+          },
+          {
+            key: '已处理',
             value: 1,
           },
           {
-            key: '否',
+            key: '误报',
             value: 2,
           },
         ],
@@ -401,23 +413,24 @@
         Loading.close()
         let alertParams = {
           process: this.process,
-          public: true,
+          status: Number(this.status),
         }
         try {
           const res = await putNotification(alertId, alertParams)
           console.log(res)
-          this.$message.success(`${res}`)
+          this.$message.success('处理成功')
         } catch (error) {
           console.log(error)
-          this.$message.error(`${error}`)
+          this.$message.error('处理失败')
         }
         this.fetchData()
         this.dynamicformView = false
       },
-      showdynamicform(alertId, flag, dynamicform, process, devicename) {
+      showdynamicform(alertId, flag, dynamicform, process, status, devicename) {
         this.alertId = alertId
         this.isDisable = flag
         this.process = process
+        this.status = String(status)
         this.devicename = devicename
         let dFrom = []
         console.log(dynamicform)
@@ -494,12 +507,7 @@
           productid: this.queryForm.productName
             ? this.queryForm.productName
             : 'all',
-          isprocess:
-            this.queryForm.isprocess == 1
-              ? true
-              : this.queryForm.isprocess == 2
-              ? 'false'
-              : 'all',
+          isprocess: this.queryForm.isprocess,
           include: '',
           where: {
             objectId: this.queryForm.number.length

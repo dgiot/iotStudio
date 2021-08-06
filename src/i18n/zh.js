@@ -917,6 +917,7 @@ export default {
       Assigned: '已分配',
       Processed: '已处理',
       Untreated: '未处理',
+      Distort: '误报',
       Statement: '已结单',
       search: '查询',
       'create Ticket': '创建工单',
