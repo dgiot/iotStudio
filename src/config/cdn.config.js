@@ -9,7 +9,7 @@
 let staticUrl = {
   css: [
     'https://unpkg.com/ant-design-vue/dist/antd.min.css',
-    // 'https://unpkg.com/iview/dist/styles/iview.css',
+    'https://unpkg.com/iview/dist/styles/iview.css',
     // 'https://unpkg.com/vuetify/dist/vuetify.min.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/styles/google.css',
     'https://unpkg.com/mdi/css/materialdesignicons.min.css',

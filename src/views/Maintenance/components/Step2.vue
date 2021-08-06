@@ -159,6 +159,7 @@
     methods: {
       ...mapMutations({
         set_deviceFlag: 'global/set_deviceFlag',
+        set_deviceStep: 'global/set_deviceStep',
       }),
       async featUser() {
         const { results } = await queryUser({})
@@ -180,6 +181,7 @@
             const res = await update_object('Maintenance', objectId, params)
             if (res.updatedAt) {
               this.set_deviceFlag(false)
+              this.set_deviceStep(-1)
             }
           } else {
             this.$message.error('请选择分配人员')
