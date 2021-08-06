@@ -1,5 +1,9 @@
 import store from '@/store'
-console.log('store', store)
+console.log('glolab store', store)
+/**
+ *
+ * @type {{inserted(*=, *, *): void}}
+ */
 const permission = {
   inserted(el, binding, vnode) {
     const { value } = binding

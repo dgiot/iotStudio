@@ -18,6 +18,7 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 const directives = {
   ...modules,
 }
+
 export default {
   install(Vue) {
     Vue.prototype.$clipboard = $clipboard

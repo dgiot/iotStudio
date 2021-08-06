@@ -1,3 +1,8 @@
+/**
+ *
+ * @type {{init(*, *=, *=): void, throttle(*, *=): function(...[*]=): void, load(*): void, install(*, *): void, listenerScroll(*=): void, observe(*=): void}}
+ * @url https://juejin.cn/post/6906028995133833230#heading-4
+ */
 const LazyLoad = {
   // install方法
   install(Vue, options) {

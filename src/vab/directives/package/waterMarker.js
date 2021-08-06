@@ -1,3 +1,10 @@
+/**
+ *
+ * @param str
+ * @param parentNode
+ * @param font
+ * @param textColor
+ */
 function addWaterMarker(str, parentNode, font, textColor) {
   // 水印文字，父元素，字体，文字颜色
   var can = document.createElement('canvas')
@@ -15,6 +22,11 @@ function addWaterMarker(str, parentNode, font, textColor) {
   parentNode.style.backgroundImage = 'url(' + can.toDataURL('image/png') + ')'
 }
 
+/**
+ *
+ * @type {{bind: waterMarker.bind}}
+ * @url https://juejin.cn/post/6963840401899782175#heading-1
+ */
 const waterMarker = {
   bind: function (el, binding) {
     addWaterMarker(

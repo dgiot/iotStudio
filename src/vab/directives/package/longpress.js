@@ -1,3 +1,8 @@
+/**
+ *
+ * @type {{bind: longpress.bind, unbind(*): void, componentUpdated(*, {value: *}): void}}
+ * @url https://juejin.cn/post/6906028995133833230#heading-1
+ */
 const longpress = {
   bind: function (el, binding, vNode) {
     if (typeof binding.value !== 'function') {

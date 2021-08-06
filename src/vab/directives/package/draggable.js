@@ -1,3 +1,8 @@
+/**
+ *
+ * @type {{inserted: draggable.inserted}}
+ * @url https://juejin.cn/post/6906028995133833230#heading-7
+ */
 const draggable = {
   inserted: function (el) {
     el.style.cursor = 'move'

@@ -23,6 +23,11 @@ const eventUtil = {
   },
 }
 
+/**
+ *
+ * @param text
+ * @return {Promise<unknown>}
+ */
 function clipboard(text) {
   return new Promise((reslove, reject) => {
     const input = document.createElement('input')
@@ -43,7 +48,12 @@ function clipboard(text) {
 const $clipboard = clipboard
 
 export { $clipboard }
-
+/**
+ *
+ * @param el
+ * @param binding
+ * @param vnode
+ */
 export default {
   bind: function (el, binding, vnode) {
     if (binding.arg === 'success') {
