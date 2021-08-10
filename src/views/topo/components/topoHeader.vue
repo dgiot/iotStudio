@@ -6,11 +6,13 @@
         :with-header="false"
         size="40%"
         :visible.sync="drawer"
+        append-to-body
         direction="rtl"
       >
         <websocket :topic="topic" />
       </el-drawer>
     </div>
+    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div>
       <el-row :gutter="24">
         <el-col :span="8">
@@ -45,12 +47,12 @@
         <el-col :span="16">
           <div class="tools">
             <div id="btnList">
-              <el-button @click="flagFn('pencil')">铅笔</el-button>
-              <el-button @click="flagFn('ellipse')">椭圆-空心</el-button>
-              <el-button @click="flagFn('rect')">矩形</el-button>
-              <el-button @click="flagFn('rectH')">矩形-空心</el-button>
+              <!--              <el-button @click="flagFn('pencil')">铅笔</el-button>-->
+              <!--              <el-button @click="flagFn('ellipse')">椭圆-空心</el-button>-->
+              <!--              <el-button @click="flagFn('rect')">矩形</el-button>-->
+              <!--              <el-button @click="flagFn('rectH')">矩形-空心</el-button>-->
               <el-button @click="flagFn('text')">文字</el-button>
-              <el-button @click="showImageTable(isshow)">图片</el-button>
+              <el-button @click="showImageTable()">底图</el-button>
               <el-button @click="removeFn()">删除</el-button>
               <el-color-picker
                 v-model="pickerColor"
@@ -176,12 +178,18 @@
         }
       },
       showImageTable(type) {
-        this.isshow = !this.isshow
-        this.$emit('ImageTable', type)
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
+        // this.isshow = !this.isshow
+        // this.$emit('ImageTable', type)
       },
       destroyed() {
         console.log('取消订阅mqtt')
         this.handleCloseSub()
+      },
+      fileInfo(info) {
+        info?.url?.length ? this.$emit('uploadFinish', info.url) : ''
       },
       CloseSub() {
         this.stop_Mqtt = true
