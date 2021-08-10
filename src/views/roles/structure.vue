@@ -374,9 +374,11 @@
     EmployeesHired,
     EmployeeTurnover,
     disableuser,
+    getUser,
   } from '@/api/User/index'
   import { queryRoledepartment } from '@/api/Role/index'
   import { Roletree } from '@/api/Menu'
+
   var arr = []
   export default {
     components: {
@@ -539,6 +541,7 @@
       },
       ...mapGetters({
         ObjectId: 'user/objectId',
+        title: 'settings/title',
       }),
       tableFilterData() {
         return this.tempData
@@ -639,6 +642,9 @@
           // } else {
           //   var departmentStr = "";
           // }
+          const { tag } = await getUser('Klht7ERlYn')
+          this.$delete(tag, 'wechat')
+          console.log('tag', tag)
           const params = {
             username: this.userInfoForm.account,
             nick: this.userInfoForm.nick,
@@ -647,45 +653,48 @@
             email: this.userInfoForm.email,
             department: this.userInfoForm.departmentid,
             emailVerified: true,
-            tag: {
-              userinfo: {
-                sex: '保密',
-                phone: '',
-                avatar:
-                  'http://47.105.106.54:1250/group1/default/20210616/15/33/7/pc',
-              },
-              companyinfo: {
-                logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
-                name: '明诚物联云平台',
-                _mimg: 'http://47.105.106.54:1250/group1/group1/70224.png',
-                title: '欢迎登录 明诚物联云平台',
-                _pcimg: 'http://47.105.106.54:1250/group1/group1/1_411.png',
-                Copyright:
-                  '© 2010-2021  明诚物联云平台 Corporation, All Rights Reserved',
-                backgroundimage:
-                  'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
-              },
-              theme: {
-                layout: 'comprehensive',
-                themeName: 'ocean',
-                columnStyle: 'horizontal',
-                fixedHeader: true,
-                showProgressBar: true,
-                showTabs: true,
-                tabsBarStyle: 'card',
-                showTabsBarIcon: true,
-                showLanguage: true,
-                showRefresh: true,
-                showSearch: false,
-                showTheme: true,
-                showNotice: true,
-                showFullScreen: true,
-                showThemeSetting: true,
-                pictureSwitch: true,
-              },
-            },
+            tag: tag,
             // aclId:this.aclId
           }
+          // {
+          //   userinfo: {
+          //     sex: '保密',
+          //       phone: '',
+          //       avatar:
+          //     'http://47.105.106.54:1250/group1/default/20210616/15/33/7/pc',
+          //   },
+          //   companyinfo: {
+          //     logo: 'http://www.iotn2n.com/favicon.ico?1558342112',
+          //       name: this.title,
+          //       _mimg: 'http://47.105.106.54:1250/group1/group1/70224.png',
+          //       title: '欢迎登录' + this.title,
+          //       _pcimg: 'http://47.105.106.54:1250/group1/group1/1_411.png',
+          //       Copyright:
+          //     '© 2010-2021' +
+          //     this.title +
+          //     ' Corporation, All Rights Reserved',
+          //       backgroundimage:
+          //     'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
+          //   },
+          //   theme: {
+          //     layout: 'comprehensive',
+          //       themeName: 'ocean',
+          //       columnStyle: 'horizontal',
+          //       fixedHeader: true,
+          //       showProgressBar: true,
+          //       showTabs: true,
+          //       tabsBarStyle: 'card',
+          //       showTabsBarIcon: true,
+          //       showLanguage: true,
+          //       showRefresh: true,
+          //       showSearch: false,
+          //       showTheme: true,
+          //       showNotice: true,
+          //       showFullScreen: true,
+          //       showThemeSetting: true,
+          //       pictureSwitch: true,
+          //   },
+          // },
           const res = await EmployeesHired(params)
           if (res) {
             this.$message({
@@ -997,6 +1006,7 @@
   .elTable ::v-deep .el-table--enable-row-transition .el-table__body td {
     text-align: center;
   }
+
   .structure {
     box-sizing: border-box;
     width: 100%;

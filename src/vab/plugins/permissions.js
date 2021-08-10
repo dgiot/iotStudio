@@ -29,6 +29,9 @@ VabProgress.configure({
   showSpinner: false,
 })
 router.beforeEach(async (to, from, next) => {
+  if (to.name == '404') {
+    return false
+  }
   const { showProgressBar } = store.getters['settings/theme']
   if (showProgressBar) VabProgress.start()
   let hasToken = store.getters['user/token']

@@ -652,7 +652,7 @@
         //   read: true,
         //   write: true,
         // }
-        setAcl[this.objectid] = {
+        setAcl[`${this.objectid}`] = {
           read: true,
           write: true,
         }

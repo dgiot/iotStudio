@@ -25,44 +25,16 @@
           />
           <span slot="footer" class="dialog-footer">
             <el-button
-              v-show="detail.status == 0"
-              @click="set_deviceStep(detail.status)"
-            >
-              {{ $translateTitle('developer.cancel') }}
-            </el-button>
-            <el-button
-              v-show="detail.status == 0 && isfooter"
-              type="primary"
-              @click="dispatch()"
-            >
-              {{ $translateTitle('Maintenance.Dispatch') }}
-            </el-button>
-            <el-button v-show="detail.status == 1" @click="backChange(detail)">
-              {{ $translateTitle('Maintenance.back') }}
-            </el-button>
-
-            <el-button
-              v-show="detail.status == 2 && isfooter"
-              type="primary"
-              @click="Reassign(detail)"
-            >
-              {{ $translateTitle('Maintenance.Reassign') }}
-            </el-button>
-            <el-button
-              v-show="detail.status == 2 && isfooter"
+              v-show="detail.status != 3"
               type="primary"
               @click="check()"
             >
               {{ $translateTitle('Maintenance.check') }}
             </el-button>
 
-            <el-button
-              v-show="detail.status == 1 && isfooter"
-              type="primary"
-              @click="dealwith()"
-            >
-              {{ $translateTitle('Maintenance.deal with') }}
-            </el-button>
+            <!--            <el-button type="primary" @click="dealwith()">-->
+            <!--              {{ $translateTitle('Maintenance.deal with') }}-->
+            <!--            </el-button>-->
           </span>
         </el-dialog>
         <el-dialog
@@ -359,9 +331,14 @@
           >
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
-          <!--          <el-button size="mini" type="info" @click="showInfo(row, true)">-->
-          <!--            {{ $translateTitle('Maintenance.Evaluation') }}-->
-          <!--          </el-button>-->
+          <el-button
+            v-show="row.status == 2"
+            size="mini"
+            type="info"
+            @click="showInfo(row, true)"
+          >
+            {{ $translateTitle('Maintenance.Evaluation') }}
+          </el-button>
         </template>
       </el-table-column>
       <template #empty>

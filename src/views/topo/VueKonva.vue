@@ -25,6 +25,7 @@
         @messageData="set_mqttflag"
         @removeShape="removeShape"
         @ImageTable="ImageTable"
+        @uploadFinish="uploadFinishs"
       />
     </div>
     <div class="_mian">
@@ -36,8 +37,8 @@
             </div>
           </el-col>
         </transition>
-        <el-col :span="gutter - leftrow - rightrow" class="_konvarow">
-          <div ref="konva" :class="konvaClass"></div>
+        <el-col :span="24 - rightrow" class="_konvarow">
+          <div id="konva" ref="konva" :class="konvaClass"></div>
 
           <div
             v-show="!isDevice && productid"
@@ -84,34 +85,30 @@
                   }}{{ $translateTitle('konva.right') }}
                 </el-button>
 
-                <el-button
-                  type="success"
-                  icon="el-icon-arrow-left"
-                  plain
-                  @click="regulate('left')"
-                >
-                  {{
-                    leftrow
-                      ? $translateTitle('konva.hide')
-                      : $translateTitle('konva.show')
-                  }}{{ $translateTitle('konva.left') }}
-                </el-button>
+                <!--                <el-button-->
+                <!--                  type="success"-->
+                <!--                  icon="el-icon-arrow-left"-->
+                <!--                  plain-->
+                <!--                  @click="regulate('left')"-->
+                <!--                >-->
+                <!--                  {{-->
+                <!--                    leftrow-->
+                <!--                      ? $translateTitle('konva.hide')-->
+                <!--                      : $translateTitle('konva.show')-->
+                <!--                  }}{{ $translateTitle('konva.left') }}-->
+                <!--                </el-button>-->
               </el-col>
             </el-row>
           </div>
         </el-col>
         <el-col :span="rightrow">
-          <transition name="fade">
-            <div class="_right">
-              <topo-operation
-                ref="operation"
-                @upImg="upProduct"
-                @upconfig="saveKonvaitem"
-                @handleCloseSub="handleCloseSub"
-                @clearImg="clearImg"
-              />
-            </div>
-          </transition>
+          <topo-operation
+            ref="operation"
+            @upImg="upProduct"
+            @upconfig="saveKonvaitem"
+            @handleCloseSub="handleCloseSub"
+            @clearImg="clearImg"
+          />
         </el-col>
       </el-row>
     </div>
@@ -139,6 +136,7 @@
     data() {
       return {
         per: '100',
+        rightFlag: false,
         paramsconfig: {},
         productconfig: {},
         backgroundImage: '',
@@ -183,7 +181,14 @@
         }
       },
     },
-    watch: {},
+    watch: {
+      rightrow: {
+        deep: true,
+        handler(val) {
+          this.rightFlag = val !== 0 ? true : false
+        },
+      },
+    },
     mounted() {
       if (this.productid) {
         this.handleCloseSub()
@@ -204,6 +209,24 @@
         setGraphColor: 'konva/setGraphColor',
         setDrawParams: 'konva/setDrawParams',
       }),
+      uploadFinishs(url) {
+        var Imgage = this.stage.find('Image')
+        Imgage.forEach((node) => {
+          node.setAttrs({ source: url })
+          console.log('img node ', node)
+          node.draw()
+          // $('#current1').css('background-image', `url(${url})`)
+        })
+        // Imgage.draw()
+        // Imgage.batchDraw()
+        console.log('this.stage', this.stage, JSON.parse(this.stage.toJSON()))
+        this.updataProduct(this.productid)
+        // this.createKonva(
+        //   JSON.parse(this.stage.toJSON()),
+        //   this.globalStageid,
+        //   ''
+        // )
+      },
       _initCreate() {
         let background =
           'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png'
@@ -223,10 +246,10 @@
         for (var n = 0; n < tweens.length; n++) {
           tweens[n].destroy()
         }
-        if (node.attrs.image) {
+        if (node?.attrs?.image) {
           console.log('is img', node.attrs.id)
           console.log(node.target, 'node.target')
-          Image.each((shape) => {
+          Image.forEach((shape) => {
             console.log('图片相关', shape)
             if (shape.attrs.id == node.attrs.id) {
               console.log(shape, 'shape.target 找到了这个node 节点')
@@ -270,7 +293,7 @@
           tweens[n].destroy()
           tweens[n].remove()
         }
-        Image.each((shape) => {
+        Image.forEach((shape) => {
           if (shape.attrs.id == config.attrs.id) {
             console.log('updata type is image', shape, config)
             upshape = shape
@@ -289,7 +312,7 @@
             )
           }
         })
-        Group.each((shape) => {
+        Group.forEach((shape) => {
           if (shape.attrs.id == config.attrs.id) {
             _this.kovaUpType = 'Group'
             upshape = shape
@@ -303,7 +326,7 @@
             )
           }
         })
-        Text.each((shape) => {
+        Text.forEach((shape) => {
           if (shape.attrs.id == config.attrs.id) {
             _this.kovaUpType = 'Text'
             upshape = shape
@@ -348,9 +371,9 @@
           case 'right':
             this.toggleClass('rightrow')
             break
-          case 'left':
-            this.toggleClass('leftrow')
-            break
+          // case 'left':
+          //   this.toggleClass('leftrow')
+          //   break
           case 'search':
             this.$message.success('开发中')
             break
@@ -437,7 +460,7 @@
           console.log(decodeMqtt.konva)
           const Shape = decodeMqtt.konva
           // apply transition to all nodes in the array
-          // Text.each(function (shape) {
+          // Text.forEach(function (shape) {
           const Text = this.stage.find('Text')
           console.log(Text)
           const tweens = []
@@ -446,7 +469,7 @@
           }
 
           Shape.forEach((i) => {
-            Text.each((shape) => {
+            Text.forEach((shape) => {
               if (i.id == shape.attrs.id) {
                 console.log('更新节点', i)
                 console.log(shape)
@@ -504,7 +527,10 @@
         _this.productconfig = results[0]
         console.log(_this.productconfig)
         if (message == 'SUCCESS') {
-          _this.$refs['operation'].productconfig = results[0]
+          // console.log(this.$refs['edrawer'].$refs, 'edrawer')
+          _this.$refs['operation']
+            ? (_this.$refs['operation'].productconfig = results[0])
+            : console.log(" _this.$refs['operation']", _this.$refs['operation'])
           console.log(data.Stage.attrs.id)
           _this.globalStageid = data.Stage.attrs.id
           _this.createKonva(data, _this.globalStageid, 'create')
@@ -547,7 +573,12 @@
           // 如果点击空白处 移除图形选择框
           // 移除图形选择框
           if (node == _this.stage) {
-            _this.stage.find('Transformer').destroy()
+            _this.stage.find('Transformer')?.length
+              ? _this.stage.find('Transformer').destroy()
+              : console.log(
+                  " _this.stage.find('Transformer')",
+                  _this.stage.find('Transformer')
+                )
             Layer.draw()
           }
           console.log(node.toJSON())
@@ -584,8 +615,9 @@
         const Text = _this.stage.find('Text')
         // console.clear()
         console.log(Text, 'Text')
+        // if (!_this.isDevice && Text?.length) {
         if (!_this.isDevice && Text?.length) {
-          Text.each((_G) => {
+          Text.forEach((_G) => {
             _G.on('mouseenter', function () {
               _this.stage.container().style.cursor = 'move'
             })
@@ -594,7 +626,12 @@
               _this.stage.container().style.cursor = 'default'
             })
             _G.on('dblclick', function (e) {
-              _this.stage.find('Transformer').destroy()
+              _this.stage.find('Transformer')?.length
+                ? _this.stage.find('Transformer').destroy()
+                : console.log(
+                    "_this.stage.find('Transformer')",
+                    _this.stage.find('Transformer')
+                  )
               // 在画布上创建具有绝对位置的textarea
 
               // 首先，我们需要为textarea找到位置
@@ -661,17 +698,18 @@
             })
           })
         }
-        // 设置页面是从设备界面进入 则不添加以下事件
+        // // 设置页面是从设备界面进入 则不添加以下事件
         if (_this.isDevice && _this.productconfig) {
           _this.konvaClass.push('isDevice')
-          _this.leftrow = _this.rightrow = 0
-        } else {
-          // _this.leftrow = 3
-          _this.rightrow = 6
         }
+        //   _this.leftrow = _this.rightrow = 0
+        // } else {
+        //   // _this.leftrow = 3
+        //   _this.rightrow = 6
+        // }
         console.log(Group, 'Group')
-        if (!_this.isDevice) {
-          Group.each(function (_G) {
+        if (!_this.isDevice && Group?.length) {
+          Group.forEach(function (_G) {
             _G.on('dblclick', (e) => {
               // 创建图形选框事件
               const tr = new Konva.Transformer({
@@ -719,7 +757,7 @@
           const img = new Image()
           img.src = node.getAttr('source')
 
-          var img_url = node.getAttr('source') + Date.parse(new Date())
+          var img_url = node.getAttr('source') + '?' + Date.parse(new Date())
           // var _img = new Image()
           //
           // _img.src = img_url
@@ -729,19 +767,20 @@
           //   img.with = _img.width ? _img.width:$('#current1').width()
           //   img.height =  _img.width ? _img.width:$('#current1').height()
           // }
-          img.with = $('#current1').width()
-          img.height = $('#current1').height()
-          console.log('img', img, "$('#current1')", $('#current1'))
+          // img.with = $('#konva').width()
+          // img.height = $('#konva').height()
+          console.log('img', img, "$('#konva')", $('#current1'))
           $('#current1').css('background-image', `url(${img_url})`)
-
+          $('#current1').css('background-repeat', 'no-repeat')
+          $('#current1').css('background-size', '100%,100%')
           // img.onload = () => {
           //   node.image(img)
           //   console.log(node.image(img), 'node.image(img)')
           //   _this.stage.batchDraw()
           // }
         })
-        if (!_this.isDevice) {
-          Group.each(function (_G) {
+        if (!_this.isDevice && Group?.length) {
+          Group.forEach(function (_G) {
             _G.on('dblclick', (e) => {
               // 创建图形选框事件
               const tr = new Konva.Transformer({
@@ -846,11 +885,14 @@
           box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
           .konva {
             position: relative;
-            min-width: 100vh;
-            min-height: calc(100vh - 163px);
+            width: 1200px;
+            padding: 2%;
+            height: calc(100vh - 240px);
+            overflow-y: auto;
+            overflow-x: auto;
             // background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png');
             background-size: 100% 100%;
-            border-bottom: 1px solid #ebeef5;
+            border: 1px solid #ebeef5;
           }
           .isDevice {
             min-height: calc(100vh - 163px);

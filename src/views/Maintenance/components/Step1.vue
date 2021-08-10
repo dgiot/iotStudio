@@ -261,7 +261,7 @@
           })
           if (valid && this.form.info.receiveusername) {
             const setAcl = {}
-            const { objectId, info, ACL, user } = this.form
+            const { objectId, info, ACL: InitAcl, user } = this.form
             info.timeline.push({
               timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
               h4: '已分配',
@@ -275,21 +275,21 @@
             info.receiveusername = _user[0].nick
             info.receiveuseid = _user[0].objectId
             info.receiveuserphone = _user[0].phone
-            if (_user[0].objectId !== this.objectId) {
-              setAcl[`${_user[0].objectId}`] = {
-                read: true,
-                write: true,
-              }
-              setAcl[`role:${this.roleName}`] = {
-                read: true,
-                write: true,
-              }
-              // setUser.push({
-              //   objectId: _user[0].objectId,
-              //   __type: 'Pointer',
-              //   className: '_User',
-              // })
+            // if (_user[0].objectId !== this.objectId) {
+            setAcl[`${_user[0].objectId}`] = {
+              read: true,
+              write: true,
             }
+            setAcl[`role:${this.roleName}`] = {
+              read: true,
+              write: true,
+            }
+            // setUser.push({
+            //   objectId: _user[0].objectId,
+            //   __type: 'Pointer',
+            //   className: '_User',
+            // })
+            // }
             // setAcl[`${info.receiveuseid}`] = {
             //   read: true,
             //   write: true,
@@ -297,7 +297,7 @@
             const params = {
               status: 1,
               info: info,
-              ACL: setAcl,
+              ACL: _.merge(setAcl, InitAcl),
               user: {
                 objectId: _user[0].objectId,
                 __type: 'Pointer',

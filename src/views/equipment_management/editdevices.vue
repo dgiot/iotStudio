@@ -22,6 +22,158 @@
           :label="$translateTitle('equipment.deviceinformation')"
           name="first"
         >
+          <info :devicedetail="deviceInfo" />
+        </el-tab-pane>
+        <el-tab-pane
+          :label="$translateTitle('equipment.real time data')"
+          name="first1"
+        >
+          <div>
+            <div style="text-align: right">
+              <div style="float: left">
+                <span>
+                  {{ $translateTitle('equipment.realtimerefresh') }}
+                </span>
+                <el-switch
+                  v-model="isupdate"
+                  active-color="#13ce66"
+                  inactive-color="#cccccc"
+                  @change="updateTrue($event)"
+                />
+              </div>
+
+              <!-- 右上角(图表,表格)的按钮 -->
+              <el-button-group>
+                <el-button
+                  type="primary"
+                  plain
+                  size="small"
+                  @click="buttonactive = 1"
+                >
+                  {{ $translateTitle('equipment.chart') }}
+                </el-button>
+                <el-button
+                  type="primary"
+                  plain
+                  size="small"
+                  @click="buttonactive = 2"
+                >
+                  {{ $translateTitle('equipment.table') }}
+                </el-button>
+                <el-button
+                  type="primary"
+                  plain
+                  size="small"
+                  @click="buttonactive = 3"
+                >
+                  {{ $translateTitle('equipment.lists') }}
+                </el-button>
+              </el-button-group>
+            </div>
+
+            <div v-if="buttonactive == 1" class="thirdtb">
+              <!--运行状态卡片-->
+              <ul style="display: flex; flex-wrap: wrap">
+                <li
+                  v-for="(item, index) in properties"
+                  :key="index"
+                  class="updatedtable"
+                >
+                  <div style="height: 70px">
+                    <span style="font-size: 16px">{{ item.name }}</span>
+                    <span
+                      style="float: right; margin-top: 10px; margin-right: 10px"
+                    >
+                      <el-avatar :size="60" :src="item.imgurl" />
+                    </span>
+                  </div>
+                  <div class="stla">
+                    <span>{{ item.number | filterVal }}</span>
+                    <span v-if="item.unit">
+                      {{ item.unit }}
+                    </span>
+                  </div>
+                  <div class="ta">
+                    <span class="fontSize">
+                      {{ $translateTitle('equipment.updatetime') + ':' }}
+                    </span>
+                    <span class="fontSize" @click="print(properties)">
+                      {{ item.time }}
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div v-else-if="buttonactive == 2" class="thirdtable">
+              <!--运行状态表格-->
+
+              <el-table
+                :data="
+                  thirdData.slice(
+                    (thirdstart - 1) * thirdlength,
+                    thirdstart * thirdlength
+                  )
+                "
+                style="width: 100%; margin-top: 10px; text-align: center"
+              >
+                <el-table-column
+                  :label="$translateTitle('equipment.serialnumber')"
+                  align="center"
+                  type="index"
+                  width="100"
+                />
+
+                <el-table-column
+                  :label="$translateTitle('equipment.value')"
+                  prop="value"
+                  align="center"
+                  show-overflow-tooltip
+                />
+                <el-table-column
+                  :label="$translateTitle('equipment.time')"
+                  prop="time"
+                  align="center"
+                  width="300"
+                />
+              </el-table>
+              <el-pagination
+                :page-sizes="[10, 25, 50, 100]"
+                :page-size="thirdlength"
+                :total="thirdtotal"
+                background
+                layout="total, sizes, prev, pager, next, jumper"
+                style="margin-top: 20px"
+                @size-change="handleSizeChange1"
+                @current-change="handleCurrentChange1"
+              />
+            </div>
+            <div v-else>
+              <a-table
+                size="middle"
+                align="center"
+                :columns="columns"
+                :data-source="thirdDatas"
+                bordered
+              >
+                <img
+                  slot="imgurl"
+                  slot-scope="imgurl"
+                  style="width: 100px; heigth: 100px"
+                  :src="
+                    imgurl
+                      ? imgurl
+                      : 'https://i.loli.net/2021/07/30/J5byW634csj7okH.png'
+                  "
+                />
+              </a-table>
+            </div>
+          </div>
+        </el-tab-pane>
+
+        <el-tab-pane
+          :label="$translateTitle('equipment.historical data')"
+          name="third"
+        >
           <div
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
@@ -214,151 +366,7 @@
             "
           ></div>
         </el-tab-pane>
-        <el-tab-pane
-          :label="$translateTitle('equipment.runningstate')"
-          name="third"
-        >
-          <div>
-            <div style="text-align: right">
-              <div style="float: left">
-                <span>
-                  {{ $translateTitle('equipment.realtimerefresh') }}
-                </span>
-                <el-switch
-                  v-model="isupdate"
-                  active-color="#13ce66"
-                  inactive-color="#cccccc"
-                  @change="updateTrue($event)"
-                />
-              </div>
 
-              <!-- 右上角(图表,表格)的按钮 -->
-              <el-button-group>
-                <el-button
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="buttonactive = 1"
-                >
-                  {{ $translateTitle('equipment.chart') }}
-                </el-button>
-                <el-button
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="buttonactive = 2"
-                >
-                  {{ $translateTitle('equipment.table') }}
-                </el-button>
-                <el-button
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="buttonactive = 3"
-                >
-                  {{ $translateTitle('equipment.lists') }}
-                </el-button>
-              </el-button-group>
-            </div>
-
-            <div v-if="buttonactive == 1" class="thirdtb">
-              <!--运行状态卡片-->
-              <ul style="display: flex; flex-wrap: wrap">
-                <li
-                  v-for="(item, index) in properties"
-                  :key="index"
-                  class="updatedtable"
-                >
-                  <div style="height: 70px">
-                    <span style="font-size: 16px">{{ item.name }}</span>
-                    <span
-                      style="float: right; margin-top: 10px; margin-right: 10px"
-                    >
-                      <el-avatar :size="60" :src="item.imgurl" />
-                    </span>
-                  </div>
-                  <div class="stla">
-                    <span>{{ item.number | filterVal }}</span>
-                    <span v-if="item.unit">
-                      {{ item.unit }}
-                    </span>
-                  </div>
-                  <div class="ta">
-                    <span class="fontSize">
-                      {{ $translateTitle('equipment.updatetime') + ':' }}
-                    </span>
-                    <span class="fontSize" @click="print(properties)">
-                      {{ item.time }}
-                    </span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div v-else-if="buttonactive == 2" class="thirdtable">
-              <!--运行状态表格-->
-
-              <el-table
-                :data="
-                  thirdData.slice(
-                    (thirdstart - 1) * thirdlength,
-                    thirdstart * thirdlength
-                  )
-                "
-                style="width: 100%; margin-top: 10px; text-align: center"
-              >
-                <el-table-column
-                  :label="$translateTitle('equipment.serialnumber')"
-                  align="center"
-                  type="index"
-                  width="100"
-                />
-
-                <el-table-column
-                  :label="$translateTitle('equipment.value')"
-                  prop="value"
-                  align="center"
-                  show-overflow-tooltip
-                />
-                <el-table-column
-                  :label="$translateTitle('equipment.time')"
-                  prop="time"
-                  align="center"
-                  width="300"
-                />
-              </el-table>
-              <el-pagination
-                :page-sizes="[10, 25, 50, 100]"
-                :page-size="thirdlength"
-                :total="thirdtotal"
-                background
-                layout="total, sizes, prev, pager, next, jumper"
-                style="margin-top: 20px"
-                @size-change="handleSizeChange1"
-                @current-change="handleCurrentChange1"
-              />
-            </div>
-            <div v-else>
-              <a-table
-                size="middle"
-                align="center"
-                :columns="columns"
-                :data-source="thirdDatas"
-                bordered
-              >
-                <img
-                  slot="imgurl"
-                  slot-scope="imgurl"
-                  style="width: 100px; heigth: 100px"
-                  :src="
-                    imgurl
-                      ? imgurl
-                      : 'https://i.loli.net/2021/07/30/J5byW634csj7okH.png'
-                  "
-                />
-              </a-table>
-            </div>
-          </div>
-        </el-tab-pane>
         <!--         <el-tab-pane label="事件管理" name="fixth">事件管理</el-tab-pane>
                 <el-tab-pane label="服务调用" name="sixth">服务调用</el-tab-pane>
                 <el-tab-pane label="设备影子" name="seventh">设备影子</el-tab-pane>
@@ -670,6 +678,7 @@
   </div>
 </template>
 <script>
+  import info from '@/components/Device/info'
   const columns = [
     {
       title: '图片',
@@ -702,6 +711,7 @@
   export default {
     components: {
       Instruct,
+      info,
     },
     filters: {
       filterVal(val) {
@@ -791,6 +801,7 @@
       }
 
       return {
+        deviceInfo: {},
         columns,
         productId: this.$route.query.productid,
         activeNames: ['1'],
@@ -1125,11 +1136,14 @@
       },
       resizeTheChart() {
         let charts = this.$refs[`charts`]
-        if (charts) {
+        console.log('charts', charts)
+        if (charts instanceof Array) {
           charts.forEach((chart) => {
             chart.$children[0].resize()
           })
           console.log('重绘完成', charts)
+        } else {
+          charts.$children[0].resize()
         }
       },
       toggleCardRow(index, xs, sm, md, xl) {
@@ -1195,8 +1209,11 @@
           getDabDevice(deviceid, params)
             .then((res) => {
               this.$baseColorfullLoading().close()
-              const { chartData = [] } = res
-              this.chartData = chartData
+              console.log(res, 'res charts')
+              if (res?.chartData?.length) {
+                const { chartData = [] } = res
+                this.chartData = chartData
+              }
               this.loading = false
               this.dataEmpty = false
             })
@@ -1311,6 +1328,32 @@
           console.log(res, 'res')
           if (res.results.length > 0) {
             var resultes = res.results[0]
+            var ProductId = ''
+            resultes?.product?.objectId
+              ? (ProductId = resultes.product.objectId)
+              : (ProductId = '')
+            const DevAddr = resultes.devaddr
+            console.log('ProductId', ProductId)
+            let _toppic = [
+              {
+                topic: `thing/${ProductId}/${DevAddr}/post`,
+                type: 'pub',
+                desc: '设备上报',
+                isdef: true,
+              },
+              {
+                topic: `thing/${ProductId}/${DevAddr}`,
+                type: 'sub',
+                desc: '消息下发',
+                isdef: true,
+              },
+            ]
+            if (resultes.product.topics) {
+              resultes.topicData = resultes.product.topics.concat(_toppic)
+            } else {
+              resultes.topicData = _toppic
+            }
+            this.deviceInfo = resultes
             // console.log(resultes, 'resproduct')
             // 产品
             var obj = {}
