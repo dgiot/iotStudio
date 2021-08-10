@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-show="path == 'Userinfo'">
     <el-button
       type="success"
       icon="el-icon-setting"
@@ -43,13 +43,23 @@
   export default {
     name: 'VabThemeSetting',
     data() {
-      return {}
+      return {
+        path: this.$route.name,
+      }
     },
     computed: {
       ...mapGetters({
         device: 'settings/device',
         showThemeSetting: 'settings/showThemeSetting',
       }),
+    },
+    watch: {
+      $route: {
+        handler: function (val) {
+          this.path = val.name
+        },
+        deep: true,
+      },
     },
     methods: {
       changeThemeSetting(flag) {
