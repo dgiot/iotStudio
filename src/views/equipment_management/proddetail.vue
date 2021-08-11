@@ -3169,7 +3169,8 @@
         if (
           sizeForm.type == 'float' ||
           sizeForm.type == 'double' ||
-          sizeForm.type == 'int'
+          sizeForm.type == 'int' ||
+          sizeForm.type == 'long'
         ) {
           let obj1 = {
             dataType: {
@@ -3278,7 +3279,10 @@
         this.wmxSituation = '编辑'
         var obj = {}
         // 提交之前需要先判断类型
-        if (['float', 'double', 'int'].indexOf(rowData.dataType.type) != -1) {
+        if (
+          ['float', 'double', 'int', 'long'].indexOf(rowData.dataType.type) !=
+          -1
+        ) {
           obj = {
             name: rowData.name,
             // rowData.dataType

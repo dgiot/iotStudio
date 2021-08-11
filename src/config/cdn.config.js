@@ -8,8 +8,8 @@
  */
 let cdnUrl = {
   css: [
-    'https://unpkg.com/ant-design-vue/dist/antd.min.css',
     'https://unpkg.com/iview/dist/styles/iview.css',
+    'https://unpkg.com/ant-design-vue/dist/antd.min.css',
     // 'https://unpkg.com/vuetify/dist/vuetify.min.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/styles/google.css',
     'https://unpkg.com/mdi/css/materialdesignicons.min.css',
@@ -89,8 +89,8 @@ let cdnUrl = {
     'https://unpkg.com/codemirror/addon/lint/json-lint.js',
     'https://unpkg.com/vue-codemirror/dist/vue-codemirror.js',
     'https://unpkg.com/file-saver/dist/FileSaver.min.js',
-    // 'https://map.qq.com/api/js?v=2.exp&key=OXUBZ-TOX3S-HIXO7-6ITJZ-I7X6F-PTF3T',
-    // 'https://s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845',
+    'https://map.qq.com/api/js?v=2.exp&key=OXUBZ-TOX3S-HIXO7-6ITJZ-I7X6F-PTF3T',
+    'https://s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845',
     'https://unpkg.com/vue-amap/dist/index.js',
     'https://unpkg.com/jsoneditor/dist/jsoneditor.min.js',
     'https://dn-bts.bugtags.cn/sdk/bugtags-2.0.2.js',

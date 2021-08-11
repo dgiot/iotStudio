@@ -22,6 +22,7 @@
 * **src/views/topo/vuekonva.vue:** vuekonva params bug fix ([9888be3](https://github.com/dgiot/dgiot_dashboard/commit/9888be313d830157e21f99a0ad927c1e91b19678))
 * **thingsparse.vue:** thingsParse bug fix ([0ddaf68](https://github.com/dgiot/dgiot_dashboard/commit/0ddaf6899953eaaceeef4c01a3f52e93cec36b32))
 * **ticket:** repair ticket cannot be created successfully ([ccb142c](https://github.com/dgiot/dgiot_dashboard/commit/ccb142c364c9b2c490d4a60745ee0fe3567b5354))
+* **utils/downcdn.js:** download cdn resources to the local ([03c66cc](https://github.com/dgiot/dgiot_dashboard/commit/03c66cc2dfbb204c44c1057effc2d9464f661a05))
 * **views:** toggle token ([70833ff](https://github.com/dgiot/dgiot_dashboard/commit/70833ff61a5922f982edb474bec8d92ce410bc4b))
 * **vuex:** vuex buf ffix ([56daac2](https://github.com/dgiot/dgiot_dashboard/commit/56daac2be12283c81a14f0d1a53ec6614d5c4b15))
 * deletx lxd ([5cf6db1](https://github.com/dgiot/dgiot_dashboard/commit/5cf6db11f9f4250e58f5198c19c9b47db97acd2e))

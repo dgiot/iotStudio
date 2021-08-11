@@ -18,6 +18,16 @@
             <template slot="title">
               {{ $translateTitle('task.datastorage') }}
             </template>
+            <!--            <el-row :gutter="24">-->
+            <!--              <el-col :span="12">-->
+            <!--                <el-form-item-->
+            <!--                  :label="$translateTitle('product.devicetype')"-->
+            <!--                  prop="devicetype"-->
+            <!--                >-->
+            <!--                  <el-input v-model="sizeForm.devicetype" />-->
+            <!--                </el-form-item>-->
+            <!--              </el-col>-->
+            <!--            </el-row>-->
             <el-row :gutter="24">
               <el-col :span="12">
                 <el-form-item
@@ -135,6 +145,7 @@
             <el-row
               v-if="
                 sizeForm.type == 'int' ||
+                sizeForm.type == 'long' ||
                 sizeForm.type == 'float' ||
                 sizeForm.type == 'double'
               "
@@ -177,6 +188,7 @@
             <el-row
               v-if="
                 sizeForm.type == 'int' ||
+                sizeForm.type == 'long' ||
                 sizeForm.type == 'float' ||
                 sizeForm.type == 'double'
               "
@@ -1283,7 +1295,9 @@
         console.log('item', item)
         var obj = {}
         // 提交之前需要先判断类型
-        if (['float', 'double', 'int'].indexOf(item.dataType.type) != -1) {
+        if (
+          ['float', 'double', 'int', 'long'].indexOf(item.dataType.type) != -1
+        ) {
           obj = {
             name: item.name,
             ico: item.ico,
