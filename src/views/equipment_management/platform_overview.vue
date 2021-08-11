@@ -1188,6 +1188,15 @@
         }, 3000)
       },
       async getRoletree() {
+        // mqtt 未返回时的容错处理
+        setTimeout((_) => {
+          this.loadingConfig = {
+            product_count: true,
+            app_count: true,
+            device_count: true,
+            warn_count: true,
+          }
+        }, 3000)
         this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
           'padding-top'
         ]

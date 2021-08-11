@@ -270,6 +270,7 @@
         _mimg: 'dashboard/_mimg',
         Default: 'acl/Default',
         ObjectId: 'user/objectId',
+        theme: 'settings/theme',
       }),
     },
     mounted() {
@@ -371,7 +372,11 @@
         }
 
         let pamams = {
-          tag: { companyinfo: this.companyinfo, userinfo: this.userinfo },
+          tag: {
+            companyinfo: this.companyinfo,
+            userinfo: this.userinfo,
+            theme: this.theme,
+          },
           nick: this.nick,
           username: this.username,
           phone: this.userinfo.phone,

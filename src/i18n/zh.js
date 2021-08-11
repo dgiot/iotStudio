@@ -541,6 +541,7 @@ export default {
       newstandardattribute: '新增标准属性',
       functionaltypes: '功能类型',
       functionname: '功能名称',
+      devicetype: '设备类型',
       attribute: '属性值',
       datatype: '数据类型',
       datadefinition: '数据定义',
