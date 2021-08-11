@@ -21,7 +21,11 @@
       label-width="100px"
     >
       <el-form-item label="name" prop="name">
-        <el-input v-model="form.name">
+        <el-input
+          v-model="form.name"
+          :readonly="title == '编辑菜单'"
+          :disabled="title == '编辑菜单'"
+        >
           <template slot="prepend">
             <vab-icon icon="pages-line" />
           </template>
