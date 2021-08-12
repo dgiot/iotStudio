@@ -231,8 +231,8 @@
 <script>
   import Edit from './components/MenuManagementEdit'
   import { utc2beijing } from '@/utils'
-  import { queryMenu, add } from '@/api/Menu/index'
-  import { ExportMenu, ImportMenu } from '@/api/Export/index'
+  import { queryMenu } from '@/api/Menu/index'
+  import { ExportParse, ImportParse } from '@/api/Export'
   export default {
     name: 'TreeTableDemo',
     components: { Edit },
@@ -429,8 +429,18 @@
         }
       },
       async exportMenu() {
-        const res = await ExportMenu({ name: 'Menu' })
-        console.log(res, 'res')
+        const loading = this.$baseColorfullLoading(2)
+        try {
+          const res = await ExportParse('Menu', {})
+          console.log(res, 'res')
+          loading.close()
+          this.$convertRes2Blob(res)
+          // this.$message.success(`${res}`)
+        } catch (error) {
+          loading.close()
+          this.$message.error(`${error}`)
+        }
+        loading.close()
       },
       // 真正的文件上传
       async handleFileChange(e) {
@@ -443,11 +453,12 @@
           return false
         } else {
           this.file = this.inputDOM.files[0] // 通过DOM取文件数据
-          this.size = Math.floor(this.file.size / 1024) // 计算文件的大小
-          this.formData = new FormData() // new一个formData事件
-          this.formData.append('file', this.file) // 将file属性添加到formData里
-          const res = await add(this.formData)
-          if (res) {
+          const loading = this.$baseColorfullLoading(3)
+          try {
+            const res = await ImportParse('Menu', this.file)
+            loading.close()
+            console.log('eresresrror', res)
+            this.$message.success(``)
             this.$message({
               type: 'success',
               message: '菜单导入成功',
@@ -459,12 +470,16 @@
               this.formData = ''
               this.fetchData()
             }, 1500)
-          } else {
+          } catch (error) {
+            loading.close()
             this.$message({
               type: 'error',
-              message: '菜单导入失败',
+              message: '菜单导入失败' + error,
             })
+            console.log('error', error)
+            this.$message.error(`${error}`)
           }
+          loading.close()
         }
       },
 

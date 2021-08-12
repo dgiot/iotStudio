@@ -87,6 +87,7 @@ function createState(type, offsetX, offsetY, color, params) {
     default:
       break
   }
+  console.log(state, 'konva  state')
   return state
 }
 export default createState

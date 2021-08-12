@@ -121,6 +121,7 @@
             loading.close()
             this.$message.error(`${error}`)
           }
+          loading.close()
         } else {
           this.$refs.uploader.click()
         }
