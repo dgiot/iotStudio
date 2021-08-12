@@ -248,8 +248,7 @@
         }
         if (node?.attrs?.image) {
           console.log('is img', node.attrs.id)
-          console.log(node.target, 'node.target')
-          Image.forEach((shape) => {
+          Image.each((shape) => {
             console.log('图片相关', shape)
             if (shape.attrs.id == node.attrs.id) {
               console.log(shape, 'shape.target 找到了这个node 节点')
@@ -263,7 +262,11 @@
           })
         }
         console.log('删除的节点', node.remove())
-        _this.stage.find('Transformer').destroy()
+        _this.stage.find('Transformer').map((_Transformer) => {
+          console.log(_Transformer, '_Transformer')
+        })
+        console.log(_this.stage.find('Transformer'), _this.stage.find())
+        // _this.stage.find('Transformer').destroy()
         node.remove()
         Layer.draw()
         _this.setGraphNow('')
@@ -293,7 +296,7 @@
           tweens[n].destroy()
           tweens[n].remove()
         }
-        Image.forEach((shape) => {
+        Image.each((shape) => {
           if (shape.attrs.id == config.attrs.id) {
             console.log('updata type is image', shape, config)
             upshape = shape
@@ -312,7 +315,7 @@
             )
           }
         })
-        Group.forEach((shape) => {
+        Group.each((shape) => {
           if (shape.attrs.id == config.attrs.id) {
             _this.kovaUpType = 'Group'
             upshape = shape
@@ -326,7 +329,7 @@
             )
           }
         })
-        Text.forEach((shape) => {
+        Text.each((shape) => {
           if (shape.attrs.id == config.attrs.id) {
             _this.kovaUpType = 'Text'
             upshape = shape
@@ -460,7 +463,7 @@
           console.log(decodeMqtt.konva)
           const Shape = decodeMqtt.konva
           // apply transition to all nodes in the array
-          // Text.forEach(function (shape) {
+          // Text.each(function (shape) {
           const Text = this.stage.find('Text')
           console.log(Text)
           const tweens = []
@@ -468,8 +471,8 @@
             tweens[n].destroy()
           }
 
-          Shape.forEach((i) => {
-            Text.forEach((shape) => {
+          Shape.each((i) => {
+            Text.each((shape) => {
               if (i.id == shape.attrs.id) {
                 console.log('更新节点', i)
                 console.log(shape)
@@ -565,6 +568,8 @@
         var Layer = _this.stage.find('Layer')[0]
         _this.stage.on('click', (e) => {
           var node = e.target
+          console.log(e, 'stage node')
+          console.log(node, 'stage target')
           // 判断是否为产品界面
           if (_this.isDevice) {
             node.attrs.draggable = false
@@ -573,12 +578,12 @@
           // 如果点击空白处 移除图形选择框
           // 移除图形选择框
           if (node == _this.stage) {
-            _this.stage.find('Transformer')?.length
-              ? _this.stage.find('Transformer').destroy()
-              : console.log(
-                  " _this.stage.find('Transformer')",
-                  _this.stage.find('Transformer')
-                )
+            // _this.stage.find('Transformer')?.length
+            //   ? _this.stage.find('Transformer').destroy()
+            //   : console.log(
+            //       " _this.stage.find('Transformer')",
+            //       _this.stage.find('Transformer')
+            //     )
             Layer.draw()
           }
           console.log(node.toJSON())
@@ -605,6 +610,7 @@
             color,
             _this.drawParams
           )
+          console.log('createState', state)
           _group.add(state)
           Layer.draw()
           Layer.batchDraw()
@@ -618,14 +624,18 @@
         // if (!_this.isDevice && Text?.length) {
         if (!_this.isDevice && Text?.length) {
           Text.forEach((_G) => {
-            _G.on('mouseenter', function () {
+            _G.on('mouseenter', function (e) {
+              console.log(e, 'Text mouseenter')
               _this.stage.container().style.cursor = 'move'
             })
 
-            _G.on('mouseleave', function () {
+            _G.on('mouseleave', function (e) {
+              console.log(e, 'Text mouseleave')
               _this.stage.container().style.cursor = 'default'
             })
             _G.on('dblclick', function (e) {
+              console.log(e, 'Text dblclick')
+              console.log(_this.stage.find('Transformer'), _this.stage.find())
               _this.stage.find('Transformer')?.length
                 ? _this.stage.find('Transformer').destroy()
                 : console.log(
@@ -708,9 +718,11 @@
         //   _this.rightrow = 6
         // }
         console.log(Group, 'Group')
+        // https://github.com/xiongshuang/konva-palette/blob/master/palette/index.html
         if (!_this.isDevice && Group?.length) {
           Group.forEach(function (_G) {
             _G.on('dblclick', (e) => {
+              console.log(e, 'Group dblclick')
               // 创建图形选框事件
               const tr = new Konva.Transformer({
                 borderStroke: '#000', // 虚线颜色
@@ -733,15 +745,17 @@
               // _this.$refs['operation'].Shapeconfig = node.toJSON()
             })
             _G.on('mouseup', (e) => {
-              console.log(e, 'mouseup')
+              console.log(e, '_G mouseup')
               if (!_this.isDevice && _this.productid) _this.headevisible = true
 
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseover', (e) => {
+              console.log(e, '_G mouseover')
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseout', (e) => {
+              console.log(e, '_G mouseout')
               // _this.stage.find('Transformer').destroy() // 禁用后 无法拖动
               const id = e.target.id()
               const item = _this.stage.find((i) => i.id === id)
@@ -782,6 +796,7 @@
         if (!_this.isDevice && Group?.length) {
           Group.forEach(function (_G) {
             _G.on('dblclick', (e) => {
+              console.log(e, 'Group dblclick')
               // 创建图形选框事件
               const tr = new Konva.Transformer({
                 borderStroke: '#000', // 虚线颜色
@@ -804,15 +819,17 @@
               // _this.$refs['operation'].Shapeconfig = node.toJSON()
             })
             _G.on('mouseup', (e) => {
-              console.log(e, 'mouseup')
+              console.log(e, 'Group mouseup')
               if (!_this.isDevice && _this.productid) _this.headevisible = true
 
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseover', (e) => {
+              console.log(e, 'Group mouseover')
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseout', (e) => {
+              console.log(e, 'Group mouseout')
               // _this.stage.find('Transformer').destroy() // 禁用后 无法拖动
               const id = e.target.id()
               const item = _this.stage.find((i) => i.id === id)

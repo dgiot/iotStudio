@@ -20,6 +20,17 @@
       :rules="rules"
       label-width="100px"
     >
+      <el-form-item v-show="title != '编辑菜单'" label="菜单选择">
+        <vab-icon class="el-input-group__prepend" icon="pages-line" />
+        <el-cascader
+          ref="menuCascader"
+          v-model="cascadervalue"
+          :options="router"
+          :props="{ checkStrictly: true, label: 'title', value: 'title' }"
+          clearable
+          @change="handleChange"
+        />
+      </el-form-item>
       <el-form-item label="name" prop="name">
         <el-input
           v-model="form.name"
@@ -126,6 +137,7 @@
   import VabIconSelector from '@/vab/components/VabIconSelector'
   import { putMenu, postMenu } from '@/api/Menu'
   import menuCollapse from './menuCollapse.vue'
+  import router from '@/router/router'
   export default {
     name: 'MenuManagementEdit',
     components: {
@@ -134,6 +146,8 @@
     },
     data() {
       return {
+        router,
+        cascadervalue: [],
         jsonModel: {
           hidden: true, //是否显示在菜单中显示隐藏路由（默认值：false）
           menuHidden: false, //是否显示在菜单中显示隐藏一级路由（默认值：false，除分栏布局有效）
@@ -162,7 +176,6 @@
           },
           children: [],
         },
-
         activeNames: ['0'],
         menuid: '',
         form: {
@@ -242,7 +255,24 @@
       }
     },
     created() {},
+    mounted() {
+      router.forEach((r) => {
+        r.title = r.meta.title
+        if (r?.children?.length) {
+          r.children.forEach((c) => {
+            c.title = c.meta.title
+          })
+        }
+      })
+      console.log('router', router)
+    },
     methods: {
+      handleChange(value) {
+        const obj = this.$refs['menuCascader'].getCheckedNodes()
+        console.log(obj[0].data)
+        console.log(value, this.cascadervalue)
+        this.form = obj[0].data
+      },
       handleIcon(item) {
         this.form.meta.icon = item
       },
