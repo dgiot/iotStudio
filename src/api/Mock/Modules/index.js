@@ -51,6 +51,14 @@ const dataType = [
         value: 'geoPoint',
         label: '地理位置',
       },
+      // {
+      //   value: 'file',
+      //   label: '文件',
+      // },
+      {
+        value: 'image',
+        label: '图片',
+      },
     ],
   },
 ]
@@ -73,6 +81,14 @@ const dataNnit = [
         name: '次',
         description: '次',
         id: 'count',
+        type: 'common',
+      },
+      {
+        symbol: '次',
+        typeText: '常用单位',
+        name: '每次',
+        description: '每次',
+        id: '次',
         type: 'common',
       },
       {

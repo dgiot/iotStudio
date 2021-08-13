@@ -73,7 +73,10 @@
 
             <div v-if="buttonactive == 1" class="thirdtb">
               <!--运行状态卡片-->
-              <ul style="display: flex; flex-wrap: wrap">
+              <ul
+                v-if="properties.length"
+                style="display: flex; flex-wrap: wrap"
+              >
                 <li
                   v-for="(item, index) in properties"
                   :key="index"
@@ -149,6 +152,7 @@
             </div>
             <div v-else>
               <a-table
+                v-if="thirdDatas.length"
                 size="middle"
                 align="center"
                 :columns="columns"
@@ -169,7 +173,7 @@
             </div>
           </div>
         </el-tab-pane>
-
+        <!-- 历史数据 -->
         <el-tab-pane
           :label="$translateTitle('equipment.historical data')"
           name="third"
@@ -307,7 +311,7 @@
                   <el-col
                     v-for="(item, index) in chartData.child"
                     v-show="item.columns[1] != '日期'"
-                    :key="item.columns[1]"
+                    :key="index"
                     :xs="xs"
                     :sm="sm"
                     :md="md"
@@ -678,6 +682,7 @@
   </div>
 </template>
 <script>
+  import { uuid } from '@/utils'
   import info from '@/components/Device/info'
   const columns = [
     {
@@ -702,6 +707,7 @@
     getTdDevice,
     getDabDevice,
     getCardDevice,
+    getDevice,
   } from '@/api/Device/index.js'
   import { utc2beijing, timestampToTime } from '@/utils/index'
   import Instruct from '../devicemanage/instruct_manage'
@@ -1076,9 +1082,13 @@
     mounted() {
       this.params.style = this.chartType[0].type
       console.log(' this.params.style', this.params.style)
-      this.getDeviceDetail()
-      this.initChart()
-      window.addEventListener('resize', this.resizeTheChart)
+      if (this.$route.query.deviceid) {
+        const deviceid = this.$route.query.deviceid
+        this.getDeviceDetail(deviceid)
+        this.initChart()
+        this.getDeviceInfo(deviceid)
+        window.addEventListener('resize', this.resizeTheChart)
+      }
     },
     // 清除定时器
     destroyed() {
@@ -1089,6 +1099,35 @@
       window.removeEventListener('resize', this.resizeTheChart)
     },
     methods: {
+      async getDeviceInfo(deviceid) {
+        const resultes = await getDevice(deviceid)
+        var ProductId = ''
+        resultes?.product?.objectId
+          ? (ProductId = resultes.product.objectId)
+          : (ProductId = '')
+        const DevAddr = resultes.devaddr
+        console.log('ProductId', ProductId)
+        let _toppic = [
+          {
+            topic: `thing/${ProductId}/${DevAddr}/post`,
+            type: 'pub',
+            desc: '设备上报',
+            isdef: true,
+          },
+          {
+            topic: `thing/${ProductId}/${DevAddr}`,
+            type: 'sub',
+            desc: '消息下发',
+            isdef: true,
+          },
+        ]
+        if (resultes.product.topics) {
+          resultes.topicData = resultes.product.topics.concat(_toppic)
+        } else {
+          resultes.topicData = _toppic
+        }
+        this.deviceInfo = resultes
+      },
       toggleChart(e) {
         console.log(e)
         this.chartExtend = {}
@@ -1165,9 +1204,8 @@
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
         this.params.datetimerange = [start, end]
         this.queryFlag = false
-        this.$nextTick(() => {
-          // 当页面加载完后 去请求时序数据
-          this.queryChart()
+        this.$queryProduct({}).then((res) => {
+          this.allProudct = res.results
         })
       },
       queryChart() {
@@ -1210,10 +1248,11 @@
             .then((res) => {
               this.$baseColorfullLoading().close()
               console.log(res, 'res charts')
-              if (res?.chartData?.length) {
-                const { chartData = [] } = res
+              if (res?.chartData) {
+                const { chartData = {} } = res
                 this.chartData = chartData
               }
+              console.log('this.chartData', this.chartData)
               this.loading = false
               this.dataEmpty = false
             })
@@ -1240,9 +1279,10 @@
               productid: this.productid,
             },
           })
-        }
-        if (tab.name == 'children') {
+        } else if (tab.name == 'children') {
           this.getDevices()
+        } else if (tab.name == 'third') {
+          this.queryChart()
         }
       },
       timestampToTime(timestamp) {
@@ -1320,69 +1360,43 @@
       },
 
       // 详情
-      async getDeviceDetail() {
+      async getDeviceDetail(deviceid) {
         var vm = this
-        this.deviceid = this.$route.query.deviceid
-        this.ischildren = this.$route.query.ischildren
-        getTdDevice(this.deviceid).then((res) => {
+        vm.deviceid = deviceid
+        vm.ischildren = vm.$route.query.ischildren
+        getTdDevice(deviceid).then((res) => {
           console.log(res, 'res')
           if (res.results.length > 0) {
-            var resultes = res.results[0]
-            var ProductId = ''
-            resultes?.product?.objectId
-              ? (ProductId = resultes.product.objectId)
-              : (ProductId = '')
-            const DevAddr = resultes.devaddr
-            console.log('ProductId', ProductId)
-            let _toppic = [
-              {
-                topic: `thing/${ProductId}/${DevAddr}/post`,
-                type: 'pub',
-                desc: '设备上报',
-                isdef: true,
-              },
-              {
-                topic: `thing/${ProductId}/${DevAddr}`,
-                type: 'sub',
-                desc: '消息下发',
-                isdef: true,
-              },
-            ]
-            if (resultes.product.topics) {
-              resultes.topicData = resultes.product.topics.concat(_toppic)
-            } else {
-              resultes.topicData = _toppic
-            }
-            this.deviceInfo = resultes
             // console.log(resultes, 'resproduct')
             // 产品
+            const resultes = res.results[0]
             var obj = {}
-            this.productid = this.$objGet(resultes, 'product.objectId')
-            this.devicedevaddr = this.$objGet(resultes, 'devaddr')
+            vm.productid = vm.$objGet(resultes, 'product.objectId')
+            vm.devicedevaddr = vm.$objGet(resultes, 'devaddr')
             obj.id = resultes.objectId
             obj.createdAt = utc2beijing(resultes.createdAt)
-            obj.productName = this.$objGet(resultes, 'product.name')
-            obj.productid = this.$objGet(resultes, 'product.objectId')
+            obj.productName = vm.$objGet(resultes, 'product.name')
+            obj.productid = vm.$objGet(resultes, 'product.objectId')
             // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
             // obj.updatedAt = this.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'updatedAt'))
-            obj.ip = this.$objGet(resultes, 'ip')
+            obj.ip = vm.$objGet(resultes, 'ip')
             obj.basedata = JSON.stringify(resultes.basedata)
             obj.DeviceName = resultes.name
             obj.status = resultes.status
-            obj.desc = this.$objGet(resultes, 'desc')
-            obj.devaddr = this.$objGet(resultes, 'devaddr')
-            obj.nodeType = this.$objGet(resultes, 'product.nodeType')
-            obj.devType = this.$objGet(resultes, 'product.devType')
-            obj.productSecret = this.$objGet(resultes, 'product.productSecret')
+            obj.desc = vm.$objGet(resultes, 'desc')
+            obj.devaddr = vm.$objGet(resultes, 'devaddr')
+            obj.nodeType = vm.$objGet(resultes, 'product.nodeType')
+            obj.devType = vm.$objGet(resultes, 'product.devType')
+            obj.productSecret = vm.$objGet(resultes, 'product.productSecret')
             obj.address =
-              this.$objGet(resultes, 'detail.address') ||
-              this.$objGet(resultes, 'location.latitude') +
+              vm.$objGet(resultes, 'detail.address') ||
+              vm.$objGet(resultes, 'location.latitude') +
                 '，' +
-                this.$objGet(resultes, 'location.longitude')
-            const tddata = this.$objGet(resultes, 'tddata')
+                vm.$objGet(resultes, 'location.longitude')
+            const tddata = vm.$objGet(resultes, 'tddata')
             // const thingTemp = this.$objGet(resultes, 'product.thing')
             vm.properties = JSON.parse(
-              JSON.stringify(this.$objGet(resultes, 'product.thing.properties'))
+              JSON.stringify(vm.$objGet(resultes, 'product.thing.properties'))
             )
             console.log(vm.properties, ' vm.properties ')
             // console.log('vm.properties', vm.properties)
@@ -1408,34 +1422,27 @@
             } else {
               console.log('product resultes none')
             }
-            this.devicedetail = obj
-
-            if (this.$route.query.nodeType != 0 && this.ischildren == 'true') {
-              this.activeName = 'children'
-              this.isshowchild = true
-              this.getDevices()
+            vm.devicedetail = obj
+            if (vm.$route.query.nodeType != 0 && vm.ischildren == 'true') {
+              vm.activeName = 'children'
+              vm.isshowchild = true
+              vm.getDevices()
               const params = {}
-              this.$queryProduct(params).then((res) => {
-                this.allProudct = res.results
-              })
             } else {
-              this.ischildren = false
-              this.isshowchild = true
-              this.$queryProduct({}).then((res) => {
-                this.allProudct = res.results
-              })
+              vm.ischildren = false
+              vm.isshowchild = true
             }
             // 初始化物模型数据
-            this.isupdate = true
+            vm.isupdate = true
             // this.Update()
-            this.updateTrue(true)
+            vm.updateTrue(true)
             if (resultes.product.topics) {
-              this.topicData = resultes.product.topics.concat(this.topic)
+              vm.topicData = resultes.product.topics.concat(vm.topic)
             } else {
-              this.topicData = this.topic
+              vm.topicData = vm.topic
             }
           } else {
-            this.$message('objectId 未返回')
+            vm.$message('objectId 未返回')
           }
         })
       },
@@ -1465,22 +1472,22 @@
         // console.log('实时刷新')
         getCardDevice(this.deviceid)
           .then((response) => {
-            if (response) {
-              if (response.data) {
-                let third = []
-                response.data.forEach((res) => {
-                  let data = {}
-                  data[res.name] = res.number + res.unit
-                  third.push(data)
-                })
-                vm.thirdData.unshift({
-                  time: response.data[0].time,
-                  value: JSON.stringify(third),
-                })
-                vm.thirdDatas.unshift(...response.data)
-              }
+            if (response?.data) {
+              let third = []
+              const resData = response.data
+              resData.forEach((res) => {
+                let data = {}
+                data[res.name] = res.number + res.unit
+                third.push(data)
+              })
+              vm.thirdData.unshift({
+                time: resData[0].time,
+                value: JSON.stringify(third),
+              })
+              vm.thirdDatas.unshift(...resData)
               vm.thirdtotal = vm.$objGet(vm, 'thirdData.length')
-              vm.properties = response.data
+              console.log('resData', resData)
+              vm.properties = resData
               console.log('vm.thirdDatas', vm.thirdDatas)
             }
           })

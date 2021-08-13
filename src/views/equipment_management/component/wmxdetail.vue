@@ -75,6 +75,7 @@
                     v-model="sizeForm.type"
                     style="width: 100%"
                     :disabled="sizeForm.editdatatype"
+                    @change="changeGroup"
                   >
                     <el-option-group
                       v-for="group in dataType"
@@ -294,16 +295,22 @@
                   >
                     {{ $translateTitle('product.add') }}
                   </el-link>
+                  <el-alert
+                    title="参数提示"
+                    :closable="false"
+                    type="success"
+                    description="存库值必须是int类型，界面值是字符串类型,设备值与存库值转化请使用采集公式"
+                  />
                   <el-table
                     :data="sizeForm.struct"
                     style="width: 100%; text-align: center"
                   >
-                    <el-table-column label="属性" align="center">
+                    <el-table-column label="存库值" align="center">
                       <template slot-scope="scope">
                         <el-input v-model="scope.row.attribute" />
                       </template>
                     </el-table-column>
-                    <el-table-column label="属性值" align="center">
+                    <el-table-column label="界面值" align="center">
                       <template slot-scope="scope">
                         <el-input v-model="scope.row.attributevalue" />
                       </template>
@@ -388,6 +395,93 @@
               <el-form-item :label="$translateTitle('product.timeformat')">
                 <el-input v-model="sizeForm.date" readonly />
               </el-form-item>
+            </div>
+            <!--            地理位置-->
+            <div v-if="sizeForm.type == 'geoPoint'">
+              <!--百度地图-->
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item
+                    class="is-required"
+                    :label="$translateTitle('product.file type')"
+                  >
+                    <el-select
+                      v-model="options.value"
+                      style="width: 100%"
+                      clearable
+                    >
+                      <el-option
+                        v-for="item in ['二进制', 'Base64']"
+                        :key="item"
+                        :label="item"
+                        :value="item"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <!--              谷歌地图-->
+              <!--              高德地图-->
+            </div>
+            <!--           文件类型 -->
+            <div v-if="sizeForm.type == 'file'">
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item
+                    class="is-required"
+                    :label="$translateTitle('product.image type')"
+                  >
+                    <el-select
+                      v-model="options.value"
+                      style="width: 100%"
+                      clearable
+                    >
+                      <el-option
+                        v-for="item in ['二进制', 'Base64']"
+                        :key="item"
+                        :label="item"
+                        :value="item"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item
+                    :label="$translateTitle('product.File parameters')"
+                  >
+                    <el-input v-model="sizeForm.file" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </div>
+            <!--           图片类型 -->
+            <div v-if="sizeForm.type == 'image'">
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item
+                    class="is-required"
+                    :label="$translateTitle('product.image type')"
+                  >
+                    <el-select
+                      v-model="sizeForm.imagevalue"
+                      style="width: 100%"
+                      clearable
+                    >
+                      <el-option
+                        v-for="item in ['jpg', 'png', 'ico']"
+                        :key="item"
+                        :label="item"
+                        :value="item"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <!--                <el-col :span="12">-->
+                <!--                  <el-form-item :label="$translateTitle('product.Link')">-->
+                <!--                    <el-input v-model="sizeForm.Link"/>-->
+                <!--                  </el-form-item>-->
+                <!--                </el-col>-->
+              </el-row>
             </div>
           </el-collapse-item>
           <el-collapse-item name="2">
@@ -1051,6 +1145,7 @@
 
 <script>
   import mockModules from '@/api/Mock/Modules'
+  import * as colors from 'colors'
 
   console.log('dataType', mockModules)
   import { getAllunit } from '@/api/Dict/index'
@@ -1275,6 +1370,10 @@
     beforeDestroy() {}, //生命周期 - 销毁之前
     activated() {},
     methods: {
+      // 数据类型
+      changeGroup(type) {
+        console.log(type)
+      },
       fileInfo(info) {
         console.log('uploadFinish', info)
         this.sizeForm.ico = info.url
@@ -1333,6 +1432,39 @@
             obj.collection = item.dataForm.collection
             obj.control = item.dataForm.control
             obj.strategy = item.dataForm.strategy
+          }
+        } else if (item.dataType.type == 'image') {
+          obj = {
+            name: item.name,
+            ico: item.ico,
+            type: item.dataType.type,
+            imagevalue: item.dataType.imagevalue,
+            true: item.dataType.specs[1],
+            false: item.dataType.specs[0],
+            // item.dataForm.
+            startnumber: that.$objGet(item, 'dataType.specs.min'),
+            step: that.$objGet(item, 'dataType.specs.step'),
+            unit: that.$objGet(item, 'dataType.specs.unit'),
+            round: that.$objGet(item, 'dataForm.round'),
+            dinumber: that.$objGet(item, 'dataForm.data'),
+            rate: that.$objGet(item, 'dataForm.rate'),
+            offset: that.$objGet(item, 'dataForm.offset'),
+            order: that.$objGet(item, 'dataForm.order'),
+            protocol: that.$objGet(item, 'dataForm.protocol'),
+            operatetype: that.$objGet(item, 'dataForm.operatetype'),
+            originaltype: that.$objGet(item, 'dataForm.originaltype'),
+            slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            iscount: this.$objGet(item, 'dataForm.iscount'),
+            countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
+            countround: this.$objGet(item, 'dataForm.countround'),
+            countcollection: this.$objGet(item, 'dataForm.countcollection'),
+            required: false,
+            isread: item.accessMode,
+            identifier: item.identifier,
+            collection:
+              item.dataForm == undefined ? '' : item.dataForm.collection,
+            control: item.dataForm == undefined ? '' : item.dataForm.control,
+            strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
           }
         } else if (item.dataType.type == 'bool') {
           obj = {
@@ -1465,6 +1597,64 @@
             strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
           }
         } else if (item.dataType.type == 'date') {
+          obj = {
+            name: item.name,
+            ico: item.ico,
+            type: item.dataType.type,
+            collection:
+              item.dataForm == undefined ? '' : item.dataForm.collection,
+            control: item.dataForm == undefined ? '' : item.dataForm.control,
+            strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
+            startnumber: that.$objGet(item, 'dataType.specs.min'),
+            step: that.$objGet(item, 'dataType.specs.step'),
+            unit: that.$objGet(item, 'dataType.specs.unit'),
+            round: that.$objGet(item, 'dataForm.round'),
+            dinumber: that.$objGet(item, 'dataForm.data'),
+            rate: that.$objGet(item, 'dataForm.rate'),
+            offset: that.$objGet(item, 'dataForm.offset'),
+            order: that.$objGet(item, 'dataForm.order'),
+            protocol: that.$objGet(item, 'dataForm.protocol'),
+            operatetype: that.$objGet(item, 'dataForm.operatetype'),
+            originaltype: that.$objGet(item, 'dataForm.originaltype'),
+            slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            iscount: this.$objGet(item, 'dataForm.iscount'),
+            countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
+            countround: this.$objGet(item, 'dataForm.countround'),
+            countcollection: this.$objGet(item, 'dataForm.countcollection'),
+            required: true,
+            isread: item.accessMode,
+            identifier: item.identifier,
+          }
+        } else if (item.dataType.type == 'file') {
+          obj = {
+            name: item.name,
+            ico: item.ico,
+            type: item.dataType.type,
+            collection:
+              item.dataForm == undefined ? '' : item.dataForm.collection,
+            control: item.dataForm == undefined ? '' : item.dataForm.control,
+            strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
+            startnumber: that.$objGet(item, 'dataType.specs.min'),
+            step: that.$objGet(item, 'dataType.specs.step'),
+            unit: that.$objGet(item, 'dataType.specs.unit'),
+            round: that.$objGet(item, 'dataForm.round'),
+            dinumber: that.$objGet(item, 'dataForm.data'),
+            rate: that.$objGet(item, 'dataForm.rate'),
+            offset: that.$objGet(item, 'dataForm.offset'),
+            order: that.$objGet(item, 'dataForm.order'),
+            protocol: that.$objGet(item, 'dataForm.protocol'),
+            operatetype: that.$objGet(item, 'dataForm.operatetype'),
+            originaltype: that.$objGet(item, 'dataForm.originaltype'),
+            slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            iscount: this.$objGet(item, 'dataForm.iscount'),
+            countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
+            countround: this.$objGet(item, 'dataForm.countround'),
+            countcollection: this.$objGet(item, 'dataForm.countcollection'),
+            required: true,
+            isread: item.accessMode,
+            identifier: item.identifier,
+          }
+        } else if (item.dataType.type == 'url') {
           obj = {
             name: item.name,
             ico: item.ico,
