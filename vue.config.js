@@ -99,6 +99,7 @@ module.exports = {
         lodash: 'lodash',
         'vue-i18n': 'VueI18n',
         XLSX: 'xlsx',
+        colors: 'colors',
         FileSaver: 'file-saver',
         'js-cookie': 'Cookies',
         'vue-baidu-map': 'VueBaiduMap',

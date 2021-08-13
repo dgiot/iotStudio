@@ -110,6 +110,8 @@ let cdnUrl = {
     'https://unpkg.com/ant-design-vue/dist/antd.min.js',
     'https://unpkg.com/iview/dist/iview.min.js',
     'https://unpkg.com/vuetify/dist/vuetify.min.js',
+    'https://unpkg.com/colors.js/colors.min.js',
+    'https://unpkg.com/colors/lib/index.js',
   ],
 }
 if (process.env.NODE_ENV !== 'development') {

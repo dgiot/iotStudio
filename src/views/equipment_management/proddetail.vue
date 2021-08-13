@@ -3191,6 +3191,14 @@
             delete obj.dataForm.originaltype
             delete obj.dataForm.slaveid
           }
+        } else if (sizeForm.type == 'image') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              imagevalue: sizeForm.imagevalue,
+            },
+          }
+          Object.assign(obj, obj1)
         } else if (sizeForm.type == 'bool') {
           var obj1 = {
             dataType: {

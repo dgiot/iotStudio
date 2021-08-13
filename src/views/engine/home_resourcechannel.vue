@@ -258,7 +258,6 @@
       :append-to-body="true"
       :title="channelupdated + '通道'"
       :visible.sync="channelForm"
-      :close-on-click-modal="false"
       :before-close="handleClose"
       width="50%"
       top="10vh"
@@ -452,16 +451,18 @@
           </el-form-item>
         </el-col>
         <!---------------------统一的配置描述---------------------------->
-        <el-form-item :label="$translateTitle('developer.describe')">
-          <el-input
-            v-model="addchannel.desc"
-            :rows="3"
-            :placeholder="$translateTitle('developer.describe')"
-            autocomplete="off"
-            type="textarea"
-            @change="inputChange"
-          />
-        </el-form-item>
+        <div class="row-bg">
+          <el-form-item :label="$translateTitle('developer.describe')">
+            <el-input
+              v-model="addchannel.desc"
+              :rows="3"
+              :placeholder="$translateTitle('developer.describe')"
+              autocomplete="off"
+              type="textarea"
+              @change="inputChange"
+            />
+          </el-form-item>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button style="margin-right: 20px" @click="handleClose">
@@ -1110,6 +1111,18 @@
   }
 </script>
 <style lang="scss" scoped>
+  ::v-deep .row-bg {
+    .el-form-item {
+      .el-form-item__content {
+        position: revert;
+        //width: 100%;
+      }
+    }
+  }
+
+  ::v-deep .el-dialog__wrapper {
+    margin-bottom: 20px;
+  }
   .resourcechannel {
     box-sizing: border-box;
     width: 100%;
@@ -1176,15 +1189,5 @@
     //::v-deep .el-button--mini {
     //  margin: 2px 0;
     //}
-
-    ::v-deep .row-bg {
-      .el-form-item__content {
-        width: 100%;
-      }
-    }
-
-    ::v-deep .el-dialog__wrapper {
-      margin-bottom: 20px;
-    }
   }
 </style>
