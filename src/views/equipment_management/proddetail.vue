@@ -384,226 +384,328 @@
           :label="$translateTitle('product.physicalmodel')"
           name="third"
         >
-          <div style="text-align: right">
-            <el-button type="primary" size="small" @click="checkAddTest">
-              <!-- 物模型采集公式 -->
-              {{ $translateTitle('product.collectionformulaofobjectmodel') }}
-            </el-button>
-            <el-button type="primary" size="small" @click="checkschema">
-              {{ $translateTitle('product.viewobjectmodel') }}
-            </el-button>
-
-            <!-- 新增自定义属性 -->
-            <el-button type="primary" size="small" @click="createProperty">
-              {{ $translateTitle('product.newcustomattribute') }}
-            </el-button>
-            <!-- 新建标准属性 -->
-            <el-button type="primary" size="small" @click="addcategory">
-              {{ $translateTitle('product.newstandardattribute') }}
-            </el-button>
-          </div>
+          <el-dialog
+            :append-to-body="true"
+            :title="$translateTitle('product.addMachine')"
+            :visible.sync="machine"
+            :close-on-click-modal="false"
+            width="30%"
+          >
+            <div>
+              <el-form
+                ref="sizeForm"
+                :model="machineForm"
+                size="mini"
+                label-position="left"
+                label-width="80px"
+              >
+                <el-row :gutter="24">
+                  <el-col :span="24">
+                    <el-form-item
+                      :label="$translateTitle('product.devicetype')"
+                      prop="devicetype"
+                    >
+                      <el-input v-model="machineForm.name" />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button type="primary" size="mini" @click="machine = false">
+                {{ $translateTitle('developer.cancel') }}
+              </el-button>
+              <el-button size="mini" @click="savemachine(machineForm)">
+                {{ $translateTitle('developer.determine') }}
+              </el-button>
+            </span>
+          </el-dialog>
           <div>
-            <el-table
-              :default-sort="{ prop: 'date', order: 'descending' }"
-              :data="
-                wmxData.slice(
-                  (wmxstart - 1) * wmxPageSize,
-                  wmxstart * wmxPageSize
-                )
-              "
-              :default-expand-all="false"
-              :row-class-name="getRowClass"
-              border
-              row-key="identifier"
-              style="width: 100%; margin-top: 10px"
-            >
-              <el-table-column type="expand">
-                <template
-                  v-if="scope.row.dataType.type == 'struct'"
-                  slot-scope="scope"
-                  class="opentable"
+            <el-row :gutter="24">
+              <el-col :xs="24" :sm="6" :md="5" :lg="4" :xl="3">
+                <vab-query-form class="query-form">
+                  <vab-query-form-top-panel>
+                    <el-button type="primary" @click="addMachine">
+                      添加类型
+                    </el-button>
+                  </vab-query-form-top-panel>
+                </vab-query-form>
+                <el-table
+                  :data="FromMachine"
+                  style="width: 60vh; overflow: auto"
+                  border
+                  :row-class-name="tableRowClassName"
+                  @row-click="clickmachine"
                 >
-                  <el-table
-                    :data="scope.row.dataType.specs"
-                    style="
-                      box-sizing: border-box;
-                      width: 60%;
-                      text-align: center;
-                    "
+                  <el-table-column
+                    prop="sort"
+                    label="序号"
+                    width="50"
+                    align="center"
                   >
-                    <el-table-column
-                      :label="$translateTitle('product.identifier')"
-                      align="center"
+                    <template slot-scope="scope">
+                      <span>
+                        {{ scope.$index + 1 }}
+                      </span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    prop="name"
+                    label="设备类型"
+                    align="center"
+                  />
+                </el-table>
+              </el-col>
+              <el-col :xs="24" :sm="18" :md="19" :lg="20" :xl="21">
+                <vab-query-form class="query-form">
+                  <vab-query-form-right-panel style="width: 100%">
+                    <div class="stripe-panel">
+                      <el-button
+                        type="primary"
+                        size="small"
+                        @click="checkAddTest"
+                      >
+                        <!-- 物模型采集公式 -->
+                        {{
+                          $translateTitle(
+                            'product.collectionformulaofobjectmodel'
+                          )
+                        }}
+                      </el-button>
+                      <el-button
+                        type="primary"
+                        size="small"
+                        @click="checkschema"
+                      >
+                        {{ $translateTitle('product.viewobjectmodel') }}
+                      </el-button>
+
+                      <!-- 新增自定义属性 -->
+                      <el-button
+                        type="primary"
+                        size="small"
+                        @click="createProperty"
+                      >
+                        {{ $translateTitle('product.newcustomattribute') }}
+                      </el-button>
+                      <!-- 新建标准属性 -->
+                      <el-button
+                        type="primary"
+                        size="small"
+                        @click="addcategory"
+                      >
+                        {{ $translateTitle('product.newstandardattribute') }}
+                      </el-button>
+                    </div>
+                  </vab-query-form-right-panel>
+                </vab-query-form>
+                <el-table
+                  :default-sort="{ prop: 'date', order: 'descending' }"
+                  :data="
+                    wmxData.slice(
+                      (wmxstart - 1) * wmxPageSize,
+                      wmxstart * wmxPageSize
+                    )
+                  "
+                  :default-expand-all="false"
+                  :row-class-name="getRowClass"
+                  border
+                  row-key="identifier"
+                  style="width: 100%; margin-top: 10px"
+                >
+                  <el-table-column type="expand">
+                    <template
+                      v-if="scope.row.dataType.type == 'struct'"
+                      slot-scope="scope"
+                      class="opentable"
                     >
-                      <template slot-scope="scope1">
-                        <span>{{ scope1.row.identifier }}</span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      :label="$translateTitle('product.functionaltypes')"
-                      align="center"
-                    >
-                      <span>{{ $translateTitle('product.attribute') }}</span>
-                    </el-table-column>
+                      <el-table
+                        :data="scope.row.dataType.specs"
+                        style="
+                          box-sizing: border-box;
+                          width: 60%;
+                          text-align: center;
+                        "
+                      >
+                        <el-table-column
+                          :label="$translateTitle('product.identifier')"
+                          align="center"
+                        >
+                          <template slot-scope="scope1">
+                            <span>{{ scope1.row.identifier }}</span>
+                          </template>
+                        </el-table-column>
+                        <el-table-column
+                          :label="$translateTitle('product.functionaltypes')"
+                          align="center"
+                        >
+                          <span>
+                            {{ $translateTitle('product.attribute') }}
+                          </span>
+                        </el-table-column>
 
-                    <el-table-column
-                      :label="$translateTitle('product.functionname')"
-                      prop="name"
-                      align="center"
-                    />
-                    <el-table-column
-                      :label="$translateTitle('product.datadefinition')"
-                      align="center"
-                    >
-                      <template slot-scope="scope2">
-                        <span>{{ scope2.row.dataType.type }}</span>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                </template>
-              </el-table-column>
+                        <el-table-column
+                          :label="$translateTitle('product.functionname')"
+                          prop="name"
+                          align="center"
+                        />
+                        <el-table-column
+                          :label="$translateTitle('product.datadefinition')"
+                          align="center"
+                        >
+                          <template slot-scope="scope2">
+                            <span>{{ scope2.row.dataType.type }}</span>
+                          </template>
+                        </el-table-column>
+                      </el-table>
+                    </template>
+                  </el-table-column>
 
-              <el-table-column
-                :label="$translateTitle('product.order')"
-                width="80"
-                align="center"
-                sortable
-              >
-                <template #default="{ row }">
-                  {{ row.dataForm.order }}
-                </template>
-              </el-table-column>
-
-              <el-table-column
-                :label="$translateTitle('product.Rounds')"
-                width="80"
-                align="center"
-                sortable
-              >
-                <template #default="{ row }">
-                  {{ row.dataForm.round }}
-                </template>
-              </el-table-column>
-
-              <el-table-column
-                :label="$translateTitle('product.Strategy')"
-                width="80"
-                align="center"
-                sortable
-              >
-                <template #default="{ row }">
-                  {{ row.dataForm.strategy }}
-                </template>
-              </el-table-column>
-
-              <el-table-column
-                :label="$translateTitle('product.protocol')"
-                width="80"
-                align="center"
-                sortable
-              >
-                <template #default="{ row }">
-                  {{ row.dataForm.protocol }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                width="120"
-                sortable
-                :label="$translateTitle('product.functionaltypes')"
-              >
-                <span>{{ $translateTitle('product.attribute') }}</span>
-              </el-table-column>
-
-              <el-table-column
-                align="center"
-                sortable
-                :label="$translateTitle('product.identifier')"
-                prop="identifier"
-              />
-              <el-table-column
-                align="center"
-                sortable
-                :label="$translateTitle('product.functionname')"
-                prop="name"
-              />
-              <el-table-column
-                :label="$translateTitle('product.datatype')"
-                align="center"
-                sortable
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.dataType.type }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                sortable
-                :label="$translateTitle('product.datadefinition')"
-              >
-                <template slot-scope="scope">
-                  <span
-                    v-if="
-                      scope.row.dataType.specs &&
-                      (scope.row.dataType.type == 'double' ||
-                        scope.row.dataType.type == 'float' ||
-                        scope.row.dataType.type == 'int')
-                    "
+                  <el-table-column
+                    :label="$translateTitle('product.order')"
+                    width="60"
+                    align="center"
                   >
-                    {{
-                      $translateTitle('product.rangeofvalues') +
-                      scope.row.dataType.specs.min +
-                      '~' +
-                      scope.row.dataType.specs.max
-                    }}
-                  </span>
-                  <span v-else-if="scope.row.dataType.type == 'string'">
-                    {{
-                      $translateTitle('product.datalength') +
-                      ':' +
-                      scope.row.dataType.size +
-                      $translateTitle('product.byte')
-                    }}
-                  </span>
-                  <span v-else-if="scope.row.dataType.type == 'date'" />
-                  <span v-else-if="scope.row.dataType.type != 'struct'">
-                    {{ scope.row.dataType.specs }}
-                  </span>
-                  <span v-else />
-                </template>
-              </el-table-column>
-              <el-table-column :label="$translateTitle('developer.operation')">
-                <template slot-scope="scope">
-                  <el-button
-                    type="danger"
-                    size="mini"
-                    @click="deletewmx(scope.$index)"
+                    <template #default="{ row }">
+                      {{ row.dataForm.order }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    :label="$translateTitle('product.devicetype')"
+                    width="80"
+                    prop="devicetype"
+                    align="center"
+                  />
+                  <el-table-column
+                    :label="$translateTitle('product.Rounds')"
+                    width="60"
+                    align="center"
                   >
-                    {{ $translateTitle('developer.delete') }}
-                  </el-button>
+                    <template #default="{ row }">
+                      {{ row.dataForm.round }}
+                    </template>
+                  </el-table-column>
 
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="wmxDataFill(scope.row, scope.$index)"
+                  <el-table-column
+                    :label="$translateTitle('product.Strategy')"
+                    width="80"
+                    align="center"
                   >
-                    <!-- 编辑 -->
-                    {{ $translateTitle('task.Edit') }}
-                  </el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <!--功能定义分页-->
-            <el-pagination
-              :page-sizes="[10, 20, 30, 50]"
-              :page-size="wmxPageSize"
-              :total="wmxData.length"
-              style="margin-top: 10px"
-              layout="total, sizes, prev, pager, next, jumper"
-              @size-change="wmxSizeChange"
-              @current-change="wmxCurrentChange"
-            />
+                    <template #default="{ row }">
+                      {{ row.dataForm.strategy }}
+                    </template>
+                  </el-table-column>
+
+                  <el-table-column
+                    :label="$translateTitle('product.protocol')"
+                    width="80"
+                    align="center"
+                  >
+                    <template #default="{ row }">
+                      {{ row.dataForm.protocol }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    align="center"
+                    width="90"
+                    :label="$translateTitle('product.functionaltypes')"
+                  >
+                    <span>{{ $translateTitle('product.attribute') }}</span>
+                  </el-table-column>
+
+                  <el-table-column
+                    align="center"
+                    width="100"
+                    :label="$translateTitle('product.identifier')"
+                    prop="identifier"
+                  />
+                  <el-table-column
+                    align="center"
+                    :label="$translateTitle('product.functionname')"
+                    prop="name"
+                  />
+                  <el-table-column
+                    width="90"
+                    :label="$translateTitle('product.datatype')"
+                    align="center"
+                  >
+                    <template slot-scope="scope">
+                      <span>{{ scope.row.dataType.type }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    align="center"
+                    :label="$translateTitle('product.datadefinition')"
+                  >
+                    <template slot-scope="scope">
+                      <span
+                        v-if="
+                          scope.row.dataType.specs &&
+                          (scope.row.dataType.type == 'double' ||
+                            scope.row.dataType.type == 'float' ||
+                            scope.row.dataType.type == 'int')
+                        "
+                      >
+                        {{
+                          $translateTitle('product.rangeofvalues') +
+                          scope.row.dataType.specs.min +
+                          '~' +
+                          scope.row.dataType.specs.max
+                        }}
+                      </span>
+                      <span v-else-if="scope.row.dataType.type == 'string'">
+                        {{
+                          $translateTitle('product.datalength') +
+                          ':' +
+                          scope.row.dataType.size +
+                          $translateTitle('product.byte')
+                        }}
+                      </span>
+                      <span v-else-if="scope.row.dataType.type == 'date'" />
+                      <span v-else-if="scope.row.dataType.type != 'struct'">
+                        {{ scope.row.dataType.specs }}
+                      </span>
+                      <span v-else />
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    align="center"
+                    width="160"
+                    :label="$translateTitle('developer.operation')"
+                  >
+                    <template slot-scope="scope">
+                      <el-button
+                        type="danger"
+                        size="mini"
+                        @click="deletewmx(scope.$index)"
+                      >
+                        {{ $translateTitle('developer.delete') }}
+                      </el-button>
+                      <el-button
+                        type="primary"
+                        size="mini"
+                        @click="wmxDataFill(scope.row, scope.$index)"
+                      >
+                        <!-- 编辑 -->
+                        {{ $translateTitle('task.Edit') }}
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <!--功能定义分页-->
+                <el-pagination
+                  :page-sizes="[10, 20, 30, 50]"
+                  :page-size="wmxPageSize"
+                  :total="wmxData.length"
+                  style="margin-top: 10px"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  @size-change="wmxSizeChange"
+                  @current-change="wmxCurrentChange"
+                />
+              </el-col>
+            </el-row>
           </div>
+
           <!--取物模型模板-->
           <el-dialog
             :append-to-body="true"
@@ -2022,6 +2124,12 @@
         }
       }
       return {
+        FromMachine: [{ name: 'ALL' }],
+        machineForm: {},
+        machine: false,
+        devicetype: '',
+        machinestatus: 'add',
+        machineindex: 0,
         options: [
           { value: 'first', label: '第一轮' },
           { value: 'last', label: '最后一轮' },
@@ -2393,6 +2501,7 @@
         wmxPageSize: 10,
         wmxtotal: 20,
         wmxData: [],
+        wmxDataBk: [],
         editorList: [],
 
         warningeditror: [],
@@ -2494,6 +2603,14 @@
       ...mapMutations({
         setSizeForm: 'konva/setSizeForm',
       }),
+      tableRowClassName({ row, rowIndex }) {
+        if (rowIndex === 1) {
+          return 'warning-row'
+        } else if (rowIndex === 3) {
+          return 'success-row'
+        }
+        return ''
+      },
       selectStruct(v) {
         // console.log(v);
       },
@@ -2502,6 +2619,7 @@
       },
       getFormOrginalData() {
         return {
+          devicetype: this.devicetype,
           strategy: '20',
           resource: 1,
           identifier: '',
@@ -3141,6 +3259,7 @@
       submitForm(sizeForm) {
         var obj = {
           name: sizeForm.name,
+          devicetype: sizeForm.devicetype,
           dataForm: {
             round: sizeForm.round,
             data: sizeForm.dinumber,
@@ -3293,7 +3412,7 @@
         ) {
           obj = {
             name: rowData.name,
-            // rowData.dataType
+            devicetype: rowData.devicetype,
             type: rowData.dataType.type,
             endnumber: this.$objGet(rowData, 'dataType.specs.max'),
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
@@ -3332,9 +3451,46 @@
         } else if (rowData.dataType.type == 'bool') {
           obj = {
             name: rowData.name,
+            devicetype: rowData.devicetype,
             type: rowData.dataType.type,
             true: rowData.dataType.specs[1],
             false: rowData.dataType.specs[0],
+            // rowData.dataForm.
+            startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+            step: this.$objGet(rowData, 'dataType.specs.step'),
+            unit: this.$objGet(rowData, 'dataType.specs.unit'),
+            round: this.$objGet(rowData, 'dataForm.round'),
+            dis: this.$objGet(rowData, 'dataForm.address'),
+            dinumber: this.$objGet(rowData, 'dataForm.data'),
+            rate: this.$objGet(rowData, 'dataForm.rate'),
+            offset: this.$objGet(rowData, 'dataForm.offset'),
+            order: this.$objGet(rowData, 'dataForm.order'),
+            protocol: this.$objGet(rowData, 'dataForm.protocol'),
+            operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+            originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
+            slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+            iscount: this.$objGet(rowData, 'dataForm.iscount'),
+            countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
+            countround: this.$objGet(rowData, 'dataForm.countround'),
+            countcollection: this.$objGet(rowData, 'dataForm.countcollection'),
+            required: false,
+            ico: rowData.ico,
+            isread: rowData.accessMode,
+            identifier: rowData.identifier,
+            collection:
+              rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
+            control:
+              rowData.dataForm == undefined ? '' : rowData.dataForm.control,
+            strategy:
+              rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
+            editdatatype: true,
+          }
+        } else if (rowData.dataType.type == 'image') {
+          obj = {
+            name: rowData.name,
+            devicetype: rowData.devicetype,
+            type: rowData.dataType.type,
+            imagevalue: rowData.dataType.imagevalue,
             // rowData.dataForm.
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
@@ -3375,6 +3531,7 @@
           }
           obj = {
             name: rowData.name,
+            devicetype: rowData.devicetype,
             type: rowData.dataType.type,
             specs: rowData.dataType.specs,
             struct: structArray,
@@ -3410,6 +3567,7 @@
         } else if (rowData.dataType.type == 'struct') {
           obj = {
             name: rowData.name,
+            devicetype: rowData.devicetype,
             type: rowData.dataType.type,
             struct: rowData.dataType.specs,
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
@@ -3444,6 +3602,7 @@
         } else if (rowData.dataType.type == 'text') {
           obj = {
             name: rowData.name,
+            devicetype: rowData.devicetype,
             type: rowData.dataType.type,
             collection:
               rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
@@ -3478,6 +3637,7 @@
         } else if (rowData.dataType.type == 'date') {
           obj = {
             name: rowData.name,
+            devicetype: rowData.devicetype,
             type: rowData.dataType.type,
             collection:
               rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
@@ -3993,12 +4153,24 @@
               }
               // console.log('=====', this.wmxData)
               this.wmxData = []
+              this.wmxDataBk = []
               this.wmxData = this.productdetail.thing.properties.filter(
                 (item) => {
                   return item.name && item.dataType
                 }
               )
-              // console.log('----------', this.wmxData)
+              this.wmxDataBk = this.wmxData
+              // let array = []
+              this.wmxDataBk.forEach((item) => {
+                if (item.devicetype) {
+                  let arr = {
+                    name: item.devicetype,
+                  }
+                  this.FromMachine.push(arr)
+                }
+              })
+              this.FromMachine = _.uniqBy(this.FromMachine, 'name')
+              // Object.assign(this.FromMachine, _.uniqBy(array, 'name'))
               editor.setValue(Base64.decode(setdata))
               editor.gotoLine(editor.session.getLength())
             }
@@ -4008,6 +4180,7 @@
             this.$baseMessage('请求出错', err.error, 3000)
           })
       },
+
       // 查询设备总数
       async queryDeviceCount(productId) {
         this.form.ProductAll = await getDeviceCountByProduct(productId)
@@ -4246,6 +4419,30 @@
       addcategory() {
         this.originwmx = true
         this.getPropData()
+      },
+      addMachine() {
+        this.machineForm = {}
+        this.machine = true
+        this.machinestatus = 'add'
+        // this.getPropData()
+      },
+      savemachine(form) {
+        if (this.machinestatus == 'edit') {
+          this.FromMachine[this.machineindex] = form
+        } else {
+          this.FromMachine.push(form)
+        }
+        this.machine = false
+      },
+      clickmachine(row, _event, _column) {
+        if (row.name == 'ALL') {
+          this.wmxData = this.wmxDataBk
+        } else {
+          this.devicetype = row.name
+          this.wmxData = this.wmxDataBk.filter(
+            (item) => item.devicetype == row.name
+          )
+        }
       },
       handleChange(value, direction, movedKeys) {
         // console.log(value, direction, movedKeys);

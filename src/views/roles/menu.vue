@@ -60,7 +60,7 @@
           size="mini"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           border
-          :default-sort="{ prop: 'orderBy', order: 'ascending' }"
+          :default-sort="{ prop: 'order', order: 'ascending' }"
           :default-expand-all="isdefaultExpandAll"
           row-key="objectId"
         >

@@ -43,134 +43,153 @@
               </div>
 
               <!-- 右上角(图表,表格)的按钮 -->
-              <el-button-group>
-                <el-button
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="buttonactive = 1"
-                >
-                  {{ $translateTitle('equipment.chart') }}
-                </el-button>
-                <el-button
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="buttonactive = 2"
-                >
-                  {{ $translateTitle('equipment.table') }}
-                </el-button>
-                <el-button
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="buttonactive = 3"
-                >
-                  {{ $translateTitle('equipment.lists') }}
-                </el-button>
-              </el-button-group>
+              <!--              <el-button-group>-->
+              <!--                <el-button-->
+              <!--                  type="primary"-->
+              <!--                  plain-->
+              <!--                  size="small"-->
+              <!--                  @click="buttonactive = 1"-->
+              <!--                >-->
+              <!--                  {{ $translateTitle('equipment.chart') }}-->
+              <!--                </el-button>-->
+              <!--                <el-button-->
+              <!--                  type="primary"-->
+              <!--                  plain-->
+              <!--                  size="small"-->
+              <!--                  @click="buttonactive = 2"-->
+              <!--                >-->
+              <!--                  {{ $translateTitle('equipment.table') }}-->
+              <!--                </el-button>-->
+              <!--                <el-button-->
+              <!--                  type="primary"-->
+              <!--                  plain-->
+              <!--                  size="small"-->
+              <!--                  @click="buttonactive = 3"-->
+              <!--                >-->
+              <!--                  {{ $translateTitle('equipment.lists') }}-->
+              <!--                </el-button>-->
+              <!--              </el-button-group>-->
             </div>
 
-            <div v-if="buttonactive == 1" class="thirdtb">
+            <div class="thirdtb">
               <!--运行状态卡片-->
-              <ul
-                v-if="properties.length"
-                style="display: flex; flex-wrap: wrap"
-              >
-                <li
-                  v-for="(item, index) in properties"
-                  :key="index"
-                  class="updatedtable"
+              <el-row>
+                <el-col
+                  v-for="(value, key) in machinelist"
+                  :key="key"
+                  :span="24"
                 >
-                  <div style="height: 70px">
-                    <span style="font-size: 16px">{{ item.name }}</span>
-                    <span
-                      style="float: right; margin-top: 10px; margin-right: 10px"
-                    >
-                      <el-avatar :size="60" :src="item.imgurl" />
-                    </span>
-                  </div>
-                  <div class="stla">
-                    <span>{{ item.number | filterVal }}</span>
-                    <span v-if="item.unit">
-                      {{ item.unit }}
-                    </span>
-                  </div>
-                  <div class="ta">
-                    <span class="fontSize">
-                      {{ $translateTitle('equipment.updatetime') + ':' }}
-                    </span>
-                    <span class="fontSize" @click="print(properties)">
-                      {{ item.time }}
-                    </span>
-                  </div>
-                </li>
-              </ul>
+                  <el-card :body-style="{ padding: '0px' }" shadow="never">
+                    <div style="padding: 14px">
+                      <span style="font-size: 30px">{{ key }}</span>
+                      <ul
+                        v-if="value.length"
+                        style="display: flex; flex-wrap: wrap"
+                      >
+                        <li
+                          v-for="(item, index) in value"
+                          :key="index"
+                          class="updatedtable"
+                        >
+                          <div style="height: 70px">
+                            <span style="font-size: 16px">{{ item.name }}</span>
+                            <span
+                              style="
+                                float: right;
+                                margin-top: 10px;
+                                margin-right: 10px;
+                              "
+                            >
+                              <el-avatar :size="60" :src="item.imgurl" />
+                            </span>
+                          </div>
+                          <div class="stla">
+                            <span>{{ item.number | filterVal }}</span>
+                            <span v-if="item.unit">
+                              {{ item.unit }}
+                            </span>
+                          </div>
+                          <div class="ta">
+                            <span class="fontSize">
+                              {{
+                                $translateTitle('equipment.updatetime') + ':'
+                              }}
+                            </span>
+                            <span class="fontSize" @click="print(properties)">
+                              {{ item.time }}
+                            </span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </el-card>
+                </el-col>
+              </el-row>
             </div>
-            <div v-else-if="buttonactive == 2" class="thirdtable">
-              <!--运行状态表格-->
+            <!--            <div v-else>-->
+            <!--              <a-table-->
+            <!--                v-if="properties.length"-->
+            <!--                size="middle"-->
+            <!--                align="center"-->
+            <!--                :columns="columns"-->
+            <!--                :data-source="properties"-->
+            <!--                bordered-->
+            <!--              >-->
+            <!--                <img-->
+            <!--                  slot="imgurl"-->
+            <!--                  slot-scope="imgurl"-->
+            <!--                  style="width: 100px; heigth: 100px"-->
+            <!--                  :src="-->
+            <!--                    imgurl-->
+            <!--                      ? imgurl-->
+            <!--                      : 'https://i.loli.net/2021/07/30/J5byW634csj7okH.png'-->
+            <!--                  "-->
+            <!--                />-->
+            <!--              </a-table>-->
+            <!--            </div>-->
+            <!--            <div v-else-if="buttonactive == 2" class="thirdtable">-->
+            <!--              &lt;!&ndash;运行状态表格&ndash;&gt;-->
 
-              <el-table
-                :data="
-                  thirdData.slice(
-                    (thirdstart - 1) * thirdlength,
-                    thirdstart * thirdlength
-                  )
-                "
-                style="width: 100%; margin-top: 10px; text-align: center"
-              >
-                <el-table-column
-                  :label="$translateTitle('equipment.serialnumber')"
-                  align="center"
-                  type="index"
-                  width="100"
-                />
+            <!--              <el-table-->
+            <!--                :data="-->
+            <!--                  thirdData.slice(-->
+            <!--                    (thirdstart - 1) * thirdlength,-->
+            <!--                    thirdstart * thirdlength-->
+            <!--                  )-->
+            <!--                "-->
+            <!--                style="width: 100%; margin-top: 10px; text-align: center"-->
+            <!--              >-->
+            <!--                <el-table-column-->
+            <!--                  :label="$translateTitle('equipment.serialnumber')"-->
+            <!--                  align="center"-->
+            <!--                  type="index"-->
+            <!--                  width="100"-->
+            <!--                />-->
 
-                <el-table-column
-                  :label="$translateTitle('equipment.value')"
-                  prop="value"
-                  align="center"
-                  show-overflow-tooltip
-                />
-                <el-table-column
-                  :label="$translateTitle('equipment.time')"
-                  prop="time"
-                  align="center"
-                  width="300"
-                />
-              </el-table>
-              <el-pagination
-                :page-sizes="[10, 25, 50, 100]"
-                :page-size="thirdlength"
-                :total="thirdtotal"
-                background
-                layout="total, sizes, prev, pager, next, jumper"
-                style="margin-top: 20px"
-                @size-change="handleSizeChange1"
-                @current-change="handleCurrentChange1"
-              />
-            </div>
-            <div v-else>
-              <a-table
-                v-if="thirdDatas.length"
-                size="middle"
-                align="center"
-                :columns="columns"
-                :data-source="thirdDatas"
-                bordered
-              >
-                <img
-                  slot="imgurl"
-                  slot-scope="imgurl"
-                  style="width: 100px; heigth: 100px"
-                  :src="
-                    imgurl
-                      ? imgurl
-                      : 'https://i.loli.net/2021/07/30/J5byW634csj7okH.png'
-                  "
-                />
-              </a-table>
-            </div>
+            <!--                <el-table-column-->
+            <!--                  :label="$translateTitle('equipment.value')"-->
+            <!--                  prop="value"-->
+            <!--                  align="center"-->
+            <!--                  show-overflow-tooltip-->
+            <!--                />-->
+            <!--                <el-table-column-->
+            <!--                  :label="$translateTitle('equipment.time')"-->
+            <!--                  prop="time"-->
+            <!--                  align="center"-->
+            <!--                  width="300"-->
+            <!--                />-->
+            <!--              </el-table>-->
+            <!--              <el-pagination-->
+            <!--                :page-sizes="[10, 25, 50, 100]"-->
+            <!--                :page-size="thirdlength"-->
+            <!--                :total="thirdtotal"-->
+            <!--                background-->
+            <!--                layout="total, sizes, prev, pager, next, jumper"-->
+            <!--                style="margin-top: 20px"-->
+            <!--                @size-change="handleSizeChange1"-->
+            <!--                @current-change="handleCurrentChange1"-->
+            <!--              />-->
+            <!--            </div>-->
           </div>
         </el-tab-pane>
         <!-- 历史数据 -->
@@ -674,16 +693,26 @@
             </span>
           </el-dialog>
         </el-tab-pane>
-        <el-tab-pane v-if="isshowchild" label="设备指令" name="instruct">
+        <el-tab-pane
+          v-if="isshowchild"
+          :label="$translateTitle('device.Equipment Directive')"
+          name="instruct"
+        >
           <Instruct :product-id="productid" :devices-id="deviceid" />
+        </el-tab-pane>
+        <el-tab-pane
+          :label="$translateTitle('device.Equipment task')"
+          name="task"
+        >
+          <Empty />
         </el-tab-pane>
       </el-tabs>
     </div>
   </div>
 </template>
 <script>
-  import { uuid } from '@/utils'
   import info from '@/components/Device/info'
+  import Empty from '@/views/Empty/index'
   const columns = [
     {
       title: '图片',
@@ -718,6 +747,7 @@
     components: {
       Instruct,
       info,
+      Empty,
     },
     filters: {
       filterVal(val) {
@@ -807,6 +837,7 @@
       }
 
       return {
+        machinelist: {},
         deviceInfo: {},
         columns,
         productId: this.$route.query.productid,
@@ -1480,15 +1511,31 @@
                 data[res.name] = res.number + res.unit
                 third.push(data)
               })
-              vm.thirdData.unshift({
-                time: resData[0].time,
-                value: JSON.stringify(third),
-              })
-              vm.thirdDatas.unshift(...resData)
-              vm.thirdtotal = vm.$objGet(vm, 'thirdData.length')
-              console.log('resData', resData)
               vm.properties = resData
-              console.log('vm.thirdDatas', vm.thirdDatas)
+              console.log('properties', vm.properties)
+
+              let array = []
+              vm.properties.forEach((item) => {
+                if (item.devicetype) {
+                  array.push(item.devicetype)
+                }
+              })
+              array = _.uniqBy(array)
+              let machine = {}
+              array.forEach((item) => {
+                let arr = []
+                vm.properties.forEach((item1) => {
+                  if (item == item1.devicetype) {
+                    arr.push(item1)
+                  }
+                })
+                machine[item] = arr
+              })
+              this.machinelist = machine
+              console.log(
+                'this.machinelist-------------------',
+                this.machinelist
+              )
             }
           })
           .catch((error) => {

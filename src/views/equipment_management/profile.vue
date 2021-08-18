@@ -1,5 +1,9 @@
 <template>
-  <div class="devproduct">
+  <div
+    ref="custom-table"
+    class="devproduct"
+    :class="{ 'vab-fullscreen': isFullscreen }"
+  >
     <el-dialog
       :append-to-body="true"
       :visible.sync="dialogVisible"
@@ -154,176 +158,658 @@
       </el-table>
     </a-drawer>
     <div class="prosecond">
-      <el-form
-        :inline="true"
-        :model="formInline"
-        class="demo-form-inline"
-        size="small"
-      >
-        <el-form-item>
-          <el-input
-            v-model="formInline.productname"
-            clearable
-            :placeholder="$translateTitle('product.searchproductname')"
-          />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="searchProduct(0)">
-            {{ $translateTitle('developer.search') }}
-          </el-button>
-        </el-form-item>
-      </el-form>
-      <div class="protable">
-        <el-table
-          v-loading="listLoading"
-          height="60vh"
-          size="medium"
-          :header-cell-style="{ 'text-align': 'center' }"
-          :cell-style="{ 'text-align': 'center' }"
-          :data="proTableData"
-          style="width: 100%"
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-form
+            label-width="100px"
+            :inline="true"
+            :model="formInline"
+            class="demo-form-inline"
+            @submit.native.prevent
+          >
+            <el-form-item :label="$translateTitle('resource.Servicetype')">
+              <div class="border-panel">
+                <el-select
+                  v-model="formInline.category"
+                  clearable
+                  placeholder="请选择"
+                  @clear="clearCategory"
+                >
+                  <el-option
+                    v-for="(item, index) in category"
+                    :key="index"
+                    :label="item.data.CategoryName"
+                    :value="item.type"
+                    @click.native="categoryChange(item, index)"
+                  />
+                </el-select>
+              </div>
+            </el-form-item>
+            <el-form-item :label="$translateTitle('alert.product name')">
+              <el-input
+                v-model="formInline.productname"
+                clearable
+                :placeholder="$translateTitle('product.searchproductname')"
+              >
+                <el-button
+                  slot="append"
+                  size="mini"
+                  icon="el-icon-search"
+                  style="margin: 0 !important; padding: 0 !important"
+                  @click="searchProduct(0)"
+                />
+              </el-input>
+            </el-form-item>
+          </el-form>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
+          <div class="stripe-panel">
+            <el-button
+              type="primary"
+              size="mini"
+              @click="$refs['edit'].showEdit()"
+            >
+              {{ $translateTitle('product.Product template') }}
+            </el-button>
+            <el-button
+              v-show="!$loadsh.isEmpty(productDetail)"
+              size="mini"
+              type="primary"
+              @click="isFullscreen = !isFullscreen"
+            >
+              <vab-icon
+                :icon="
+                  isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'
+                "
+              />
+              {{
+                isFullscreen
+                  ? $translateTitle('alert.Exit Full Screen')
+                  : $translateTitle('alert.full screen')
+              }}
+            </el-button>
+          </div>
+        </vab-query-form-right-panel>
+      </vab-query-form>
+      <el-row :gutter="24">
+        <el-col :xs="24" :sm="6" :md="5" :lg="4" :xl="3">
+          <ul class="infinite-list" style="overflow: auto">
+            <li
+              v-for="(item, index) in category"
+              :key="index"
+              disabled
+              class="infinite-list-item"
+              @click="categoryChange(item, index)"
+            >
+              <el-link :type="linkType == index ? 'success' : ''">
+                {{ item.data.CategoryName }}
+              </el-link>
+            </li>
+          </ul>
+        </el-col>
+        <el-col
+          :xs="$loadsh.isEmpty(productDetail) ? 24 : 12"
+          :sm="$loadsh.isEmpty(productDetail) ? 18 : 6"
+          :md="$loadsh.isEmpty(productDetail) ? 19 : 6"
+          :lg="$loadsh.isEmpty(productDetail) ? 20 : 6"
+          :xl="$loadsh.isEmpty(productDetail) ? 21 : 6"
         >
-          <el-table-column label="ProductID" sortable show-overflow-tooltip>
-            <template slot-scope="scope">
-              <el-link type="primary" @click="konvaDevice(scope.row)">
-                {{ scope.row.objectId }}
-              </el-link>
-            </template>
-          </el-table-column>
-          <el-table-column
-            sortable
-            show-overflow-tooltip
-            :label="$translateTitle('product.productname')"
-          >
-            <template slot-scope="scope">
-              <span>{{ scope.row.name }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            sortable
-            show-overflow-tooltip
-            width="100"
-            :label="$translateTitle('product.profile')"
-          >
-            <template slot-scope="scope">
-              <el-link
-                type="primary"
-                @click="
-                  editorParser(
-                    scope.row.objectId,
-                    scope.row.config,
-                    scope.row.thing,
-                    'profile'
-                  )
-                "
+          <div class="protable">
+            <el-table
+              ref="multipleTable"
+              v-loading="listLoading"
+              highlight-current-row
+              height="60vh"
+              size="medium"
+              :header-cell-style="{ 'text-align': 'center' }"
+              :cell-style="{ 'text-align': 'center' }"
+              :data="proTableData"
+              style="width: 100%"
+              @row-click="StepsListRowClick"
+            >
+              <el-table-column
+                sortable
+                show-overflow-tooltip
+                :label="$translateTitle('product.productname')"
               >
-                {{
-                  scope.row.config && scope.row.config.profile
-                    ? scope.row.config.profile.length
-                    : 0
-                }}
-              </el-link>
-            </template>
-          </el-table-column>
-          <el-table-column
-            sortable
-            show-overflow-tooltip
-            width="100"
-            :label="$translateTitle('product.parser')"
-          >
-            <template slot-scope="scope">
-              <el-link
-                type="primary"
-                @click="
-                  editorParser(
-                    scope.row.objectId,
-                    scope.row.config,
-                    scope.row.thing,
-                    'parser'
-                  )
-                "
+                <template slot-scope="scope">
+                  <span>{{ scope.row.name }}</span>
+                </template>
+              </el-table-column>
+              <!--              <el-table-column-->
+              <!--                sortable-->
+              <!--                show-overflow-tooltip-->
+              <!--                width="100"-->
+              <!--                :label="$translateTitle('product.profile')"-->
+              <!--              >-->
+              <!--                <template slot-scope="scope">-->
+              <!--                  <el-link-->
+              <!--                    type="primary"-->
+              <!--                    @click="-->
+              <!--                      editorParser(-->
+              <!--                        scope.row.objectId,-->
+              <!--                        scope.row.config,-->
+              <!--                        scope.row.thing,-->
+              <!--                        'profile'-->
+              <!--                      )-->
+              <!--                    "-->
+              <!--                  >-->
+              <!--                    {{-->
+              <!--                      scope.row.config && scope.row.config.profile-->
+              <!--                        ? scope.row.config.profile.length-->
+              <!--                        : 0-->
+              <!--                    }}-->
+              <!--                  </el-link>-->
+              <!--                </template>-->
+              <!--              </el-table-column>-->
+              <!--              <el-table-column-->
+              <!--                sortable-->
+              <!--                show-overflow-tooltip-->
+              <!--                width="100"-->
+              <!--                :label="$translateTitle('product.parser')"-->
+              <!--              >-->
+              <!--                <template slot-scope="scope">-->
+              <!--                  <el-link-->
+              <!--                    type="primary"-->
+              <!--                    @click="-->
+              <!--                      editorParser(-->
+              <!--                        scope.row.objectId,-->
+              <!--                        scope.row.config,-->
+              <!--                        scope.row.thing,-->
+              <!--                        'parser'-->
+              <!--                      )-->
+              <!--                    "-->
+              <!--                  >-->
+              <!--                    {{-->
+              <!--                      scope.row.config && scope.row.config.parser-->
+              <!--                        ? scope.row.config.parser.length-->
+              <!--                        : 0-->
+              <!--                    }}-->
+              <!--                  </el-link>-->
+              <!--                </template>-->
+              <!--              </el-table-column>-->
+              <el-table-column
+                width="160"
+                :label="$translateTitle('task.Operation')"
               >
-                {{
-                  scope.row.config && scope.row.config.parser
-                    ? scope.row.config.parser.length
-                    : 0
-                }}
-              </el-link>
-            </template>
-          </el-table-column>
-          <el-table-column
-            sortable
-            show-overflow-tooltip
-            :label="$translateTitle('product.productgrouping')"
-          >
-            <template slot-scope="scope">
-              <span>{{ scope.row.devType }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            sortable
-            show-overflow-tooltip
-            :label="$translateTitle('product.nodetype')"
-          >
-            <template slot-scope="scope">
-              <span v-if="scope.row.nodeType == 1">
-                {{ $translateTitle('product.gateway') }}
-              </span>
-              <span v-if="scope.row.nodeType == 0">
-                {{ $translateTitle('product.equipment') }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            sortable
-            show-overflow-tooltip
-            :label="$translateTitle('home.category')"
-          >
-            <template slot-scope="scope">
-              <span>
-                {{ getCategory(scope.row.category) }}
-              </span>
-            </template>
-          </el-table-column>
-          <!--          <el-table-column-->
-          <!--            width="180"-->
-          <!--            :label="$translateTitle('product.addingtime')"-->
-          <!--          >-->
-          <!--            <template slot-scope="scope">-->
-          <!--              <span>{{ utc2beijing(scope.row.createdAt) }}</span>-->
-          <!--            </template>-->
-          <!--          </el-table-column>-->
+                <template slot-scope="scope">
+                  <el-link
+                    type="success"
+                    @click="moveTemplate('set', scope.row)"
+                  >
+                    {{ $translateTitle('product.Set as template') }}
+                  </el-link>
+                </template>
+              </el-table-column>
+              <!--                        <el-table-column-->
+              <!--            width="180"-->
+              <!--            :label="$translateTitle('product.addingtime')"-->
+              <!--          >-->
+              <!--            <template slot-scope="scope">-->
+              <!--              <span>{{ utc2beijing(scope.row.createdAt) }}</span>-->
+              <!--            </template>-->
+              <!--          </el-table-column>-->
+            </el-table>
+          </div>
+          <div class="elpagination" style="margin-top: 20px">
+            <el-pagination
+              :page-sizes="[10, 20, 30, 50]"
+              :page-size="length"
+              :total="total"
+              layout="total, sizes, prev, pager, next, jumper"
+              @size-change="productSizeChange"
+              @current-change="productCurrentChange"
+            />
+          </div>
+        </el-col>
+        <el-col
+          :xs="$loadsh.isEmpty(productDetail) ? 24 : 12"
+          :sm="$loadsh.isEmpty(productDetail) ? 0 : 12"
+          :md="$loadsh.isEmpty(productDetail) ? 0 : 13"
+          :lg="$loadsh.isEmpty(productDetail) ? 0 : 14"
+          :xl="$loadsh.isEmpty(productDetail) ? 0 : 15"
+        >
+          <div>
+            <el-descriptions
+              :label-style="{ 'text-align': 'center' }"
+              :content-style="{ 'text-align': 'left' }"
+              class="margin-top"
+              :column="2"
+              border
+            >
+              <el-descriptions-item :label="$translateTitle('home.category')">
+                {{ getCategory(productDetail.category) }}
+              </el-descriptions-item>
+              <el-descriptions-item
+                :label="$translateTitle('product.nodetype')"
+              >
+                <span v-if="productDetail.nodeType == 1">
+                  {{ $translateTitle('product.gateway') }}
+                </span>
+                <span v-if="productDetail.nodeType == 0">
+                  {{ $translateTitle('product.equipment') }}
+                </span>
+              </el-descriptions-item>
+              <el-descriptions-item
+                :label="$translateTitle('product.productgrouping')"
+              >
+                <span>{{ productDetail.devType }}</span>
+              </el-descriptions-item>
+              <el-descriptions-item
+                :label="$translateTitle('product.physicalmodel')"
+              >
+                <el-link
+                  type="primary"
+                  @click="properties(productDetail.thing.properties)"
+                >
+                  {{
+                    productDetail.thing &&
+                    productDetail.thing.properties &&
+                    productDetail.thing.properties.length
+                      ? productDetail.thing.properties.length
+                      : 0
+                  }}
+                </el-link>
+              </el-descriptions-item>
+              <el-descriptions-item :label="$translateTitle('product.parser')">
+                <template slot="label">
+                  <el-link
+                    type="success"
+                    @click="
+                      editorParser(
+                        productDetail.objectId,
+                        productDetail.config,
+                        productDetail.thing,
+                        'parser',
+                        true
+                      )
+                    "
+                  >
+                    {{ $translateTitle('product.parser') }}
+                  </el-link>
+                </template>
+                <el-link
+                  type="primary"
+                  @click="
+                    editorParser(
+                      productDetail.objectId,
+                      productDetail.config,
+                      productDetail.thing,
+                      'parser'
+                    )
+                  "
+                >
+                  {{
+                    productDetail.config && productDetail.config.parser
+                      ? productDetail.config.parser.length
+                      : 0
+                  }}
+                </el-link>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <el-link
+                    type="success"
+                    @click="
+                      editorParser(
+                        productDetail.objectId,
+                        productDetail.config,
+                        productDetail.thing,
+                        'profile',
+                        true
+                      )
+                    "
+                  >
+                    {{ $translateTitle('product.profile') }}
+                  </el-link>
+                </template>
+                <el-link
+                  type="primary"
+                  @click="
+                    editorParser(
+                      productDetail.objectId,
+                      productDetail.config,
+                      productDetail.thing,
+                      'profile'
+                    )
+                  "
+                >
+                  {{
+                    productDetail.config && productDetail.config.profile
+                      ? productDetail.config.profile.length
+                      : 0
+                  }}
+                </el-link>
+              </el-descriptions-item>
 
-          <!--          <el-table-column-->
-          <!--            fixed="right"-->
-          <!--            :label="$translateTitle('developer.operation')"-->
-          <!--          >-->
-          <!--            <template slot-scope="scope">-->
-          <!--              <el-button-->
-          <!--                type="text"-->
-          <!--                size="mini"-->
-          <!--                @click="konvaDevice(scope.row)"-->
-          <!--              >-->
-          <!--                {{ $translateTitle('concentrator.konva') }}-->
-          <!--              </el-button>-->
-          <!--            </template>-->
-          <!--          </el-table-column>-->
-        </el-table>
-      </div>
-      <div class="elpagination" style="margin-top: 20px">
-        <el-pagination
-          :page-sizes="[10, 20, 30, 50]"
-          :page-size="length"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="productSizeChange"
-          @current-change="productCurrentChange"
-        />
-      </div>
+              <el-descriptions-item :label="$translateTitle('product.dict')">
+                <el-link
+                  type="primary"
+                  @click="
+                    editorParser(
+                      productDetail.objectId,
+                      productDetail.config,
+                      productDetail.thing,
+                      'dict'
+                    )
+                  "
+                >
+                  {{
+                    productDetail.config &&
+                    productDetail.config.basedate &&
+                    productDetail.config.basedate.params
+                      ? productDetail.config.basedate.params.length
+                      : 0
+                  }}
+                </el-link>
+              </el-descriptions-item>
+
+              <el-descriptions-item :label="$translateTitle('product.decoder')">
+                <el-link
+                  disabled
+                  type="primary"
+                  @click="
+                    editorParser(
+                      productDetail.objectId,
+                      productDetail.config,
+                      productDetail.thing,
+                      'profile'
+                    )
+                  "
+                >
+                  {{
+                    productDetail.decoder && productDetail.decoder
+                      ? productDetail.decoder.length
+                      : 0
+                  }}
+                </el-link>
+              </el-descriptions-item>
+              <!--            <el-descriptions-item :label="$translateTitle('product.profile')">-->
+              <!--              <el-link-->
+              <!--                type="primary"-->
+              <!--                @click="-->
+              <!--                  editorParser(-->
+              <!--                    productDetail.objectId,-->
+              <!--                    productDetail.config,-->
+              <!--                    productDetail.thing,-->
+              <!--                    'profile'-->
+              <!--                  )-->
+              <!--                "-->
+              <!--              >-->
+              <!--                {{-->
+              <!--                  productDetail.config && productDetail.config.profile-->
+              <!--                    ? productDetail.profile.length-->
+              <!--                    : 0-->
+              <!--                }}-->
+              <!--              </el-link>-->
+              <!--            </el-descriptions-item>-->
+            </el-descriptions>
+            <el-table
+              v-if="$loadsh.isEmpty(productDetail) != true"
+              :key="tableType"
+              v-loading="tableLoading"
+              highlight-current-row
+              height="60vh"
+              size="medium"
+              :header-cell-style="{ 'text-align': 'center' }"
+              :cell-style="{ 'text-align': 'center' }"
+              :data="
+                tableType == 'things'
+                  ? things
+                  : tableType == 'profile' || tableType == 'parser'
+                  ? parserTableList
+                  : tableType == 'dict'
+                  ? dictTableList
+                  : decoderTableList
+              "
+              style="width: 100%"
+            >
+              <div v-if="tableType == 'things'">
+                <el-table-column type="expand">
+                  <template
+                    v-if="scope.row.dataType.type == 'struct'"
+                    slot-scope="scope"
+                    class="opentable"
+                  >
+                    <el-table
+                      :data="scope.row.dataType.specs"
+                      style="
+                        box-sizing: border-box;
+                        width: 60%;
+                        text-align: center;
+                      "
+                    >
+                      <el-table-column
+                        :label="$translateTitle('product.identifier')"
+                        align="center"
+                      >
+                        <template slot-scope="scope1">
+                          <span>{{ scope1.row.identifier }}</span>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        :label="$translateTitle('product.functionaltypes')"
+                        align="center"
+                      >
+                        <span>
+                          {{ $translateTitle('product.attribute') }}
+                        </span>
+                      </el-table-column>
+
+                      <el-table-column
+                        :label="$translateTitle('product.functionname')"
+                        prop="name"
+                        align="center"
+                      />
+                      <el-table-column
+                        :label="$translateTitle('product.datadefinition')"
+                        align="center"
+                      >
+                        <template slot-scope="scope2">
+                          <span>{{ scope2.row.dataType.type }}</span>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  :label="$translateTitle('product.order')"
+                  width="80"
+                  align="center"
+                  sortable
+                >
+                  <template #default="{ row }">
+                    {{ row.dataForm.order }}
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  :label="$translateTitle('product.Rounds')"
+                  width="80"
+                  align="center"
+                  sortable
+                >
+                  <template #default="{ row }">
+                    {{ row.dataForm.round }}
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  :label="$translateTitle('product.Strategy')"
+                  width="80"
+                  align="center"
+                  sortable
+                >
+                  <template #default="{ row }">
+                    {{ row.dataForm.strategy }}
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  :label="$translateTitle('product.protocol')"
+                  width="80"
+                  align="center"
+                  sortable
+                >
+                  <template #default="{ row }">
+                    {{
+                      row.dataForm && row.dataForm.protocol
+                        ? row.dataForm.protocol
+                        : ''
+                    }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="120"
+                  sortable
+                  :label="$translateTitle('product.functionaltypes')"
+                >
+                  <span>{{ $translateTitle('product.attribute') }}</span>
+                </el-table-column>
+
+                <el-table-column
+                  align="center"
+                  sortable
+                  :label="$translateTitle('product.identifier')"
+                  prop="identifier"
+                />
+                <el-table-column
+                  align="center"
+                  sortable
+                  :label="$translateTitle('product.functionname')"
+                  prop="name"
+                />
+                <el-table-column
+                  :label="$translateTitle('product.datatype')"
+                  align="center"
+                  sortable
+                >
+                  <template slot-scope="scope">
+                    <span>{{ scope.row.dataType.type }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  sortable
+                  :label="$translateTitle('product.datadefinition')"
+                >
+                  <template slot-scope="scope">
+                    <span
+                      v-if="
+                        scope.row.dataType.specs &&
+                        (scope.row.dataType.type == 'double' ||
+                          scope.row.dataType.type == 'float' ||
+                          scope.row.dataType.type == 'int')
+                      "
+                    >
+                      {{
+                        $translateTitle('product.rangeofvalues') +
+                        scope.row.dataType.specs.min +
+                        '~' +
+                        scope.row.dataType.specs.max
+                      }}
+                    </span>
+                    <span v-else-if="scope.row.dataType.type == 'string'">
+                      {{
+                        $translateTitle('product.datalength') +
+                        ':' +
+                        scope.row.dataType.size +
+                        $translateTitle('product.byte')
+                      }}
+                    </span>
+                    <span v-else-if="scope.row.dataType.type == 'date'" />
+                    <span v-else-if="scope.row.dataType.type != 'struct'">
+                      {{ scope.row.dataType.specs }}
+                    </span>
+                    <span v-else />
+                  </template>
+                </el-table-column>
+              </div>
+              <div v-else-if="tableType == 'profile' || tableType == 'parser'">
+                <el-table-column
+                  show-overflow-tooltip
+                  sortable
+                  align="center"
+                  prop="uid"
+                  label="uid"
+                />
+                <el-table-column
+                  show-overflow-tooltip
+                  sortable
+                  align="center"
+                  prop="name"
+                  :label="$translateTitle('product.chinesetitle')"
+                >
+                  <template #default="{ row }">
+                    <el-popover trigger="hover" placement="top">
+                      <p>
+                        {{ $translateTitle('product.englishtitle') }}:
+                        {{ row.enname }}
+                      </p>
+                      <p>
+                        {{ $translateTitle('developer.describe') }}:
+                        {{ row.description }}
+                      </p>
+                      <p>
+                        {{ $translateTitle('product.identifier') }}:
+                        {{ row.identifier }}
+                      </p>
+                      <p>
+                        {{ $translateTitle('developer.describe') }}:
+                        {{ row.description }}
+                      </p>
+                      <p>
+                        {{ $translateTitle('product.Table Name') }}:
+                        {{ row.table }}
+                      </p>
+                      <p>
+                        {{ $translateTitle('product.class') }}:
+                        {{ row.field }}
+                      </p>
+                      <div slot="reference" class="name-wrapper">
+                        <el-tag size="medium">{{ row.name }}</el-tag>
+                      </div>
+                    </el-popover>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  show-overflow-tooltip
+                  sortable
+                  align="center"
+                  prop="type"
+                  :label="$translateTitle('product.functionaltypes')"
+                />
+              </div>
+              <div v-else-if="tableType == 'dict'">
+                <el-table-column prop="order" label="序号" />
+                <el-table-column prop="identifier" label="标识符" />
+                <el-table-column prop="name" label="功能名称" />
+                <el-table-column prop="type" label="数据类型" />
+                <el-table-column prop="address" label="数据地址" />
+                <el-table-column prop="bytes" label="数据长度" />
+                <el-table-column prop="required" label="是否必填">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.required">是</span>
+                    <span v-else>否</span>
+                  </template>
+                </el-table-column>
+              </div>
+              <div v-else>
+                <el-empty :image-size="200" />
+              </div>
+            </el-table>
+            <el-empty v-else :image-size="200" />
+          </div>
+        </el-col>
+      </el-row>
     </div>
+    <ProductTemplet ref="edit" @fetch-data="searchProduct(0)" />
   </div>
 </template>
 <script>
+  import ProductTemplet from './ProductTemplet'
   import { uuid } from '@/utils'
   import { mapGetters } from 'vuex'
   import { delProduct, getProduct, putProduct } from '@/api/Product'
@@ -335,14 +821,32 @@
   import { getHashClass } from '@/api/Hash'
   import Category from '@/api/Mock/Category'
   import { getTable } from '@/api/Dba'
+  import categoryEdit from '@/views/devicemanage/categoryEdit'
+  import {
+    queryProductTemplet,
+    getProductTemplet,
+    delProductTemplet,
+    putProductTemplet,
+    postProductTemplet,
+  } from '@/api/ProductTemplet'
   export default {
+    components: { ProductTemplet },
     data() {
       return {
+        isFullscreen: false,
+        things: [],
+        tableType: 'things',
+        multipleTable: [],
+        productDetail: {},
+        linkType: 0,
+        productOptions: [],
         DbaTable: [],
         parserView: false,
         parserTable: false,
         parserType: '',
         parserTableList: {},
+        dictTableList: {},
+        decoderTableList: {},
         productConfig: {},
         parserFromId: '',
         dialogVisible: false,
@@ -379,6 +883,7 @@
         rule: [],
         dictVisible: false,
         listLoading: false,
+        tableLoading: false,
         custom_row: {},
         custom_status: 'add',
         hashkey: '',
@@ -392,6 +897,7 @@
         activeName: 'first',
         formInline: {
           productname: '',
+          category: '',
         },
         uploadHeaders: {
           sessionToken: Cookies.get('access_token'),
@@ -529,7 +1035,6 @@
         fileServer: '',
         access_token: '',
         projectid: '',
-        projectName: '',
         allTableDate: [],
         showTree: false,
       }
@@ -540,17 +1045,117 @@
         roleTree: 'user/roleTree',
       }),
     },
+    watch: {
+      productDetail: {
+        handler(productDetail) {
+          this.$nextTick(function () {
+            productDetail?.thing?.properties
+              ? this.properties(productDetail.thing.properties)
+              : ''
+          })
+        },
+        immediate: true,
+        deep: true,
+      },
+    },
     mounted() {
       const { project = '' } = this.$route.query
       this.formInline.productname = project
       this.Industry()
       this.featchTable()
-      this.searchProduct(0)
-    },
-    beforeDestroy() {
-      this.projectName = ''
+      // this.searchProduct(0)
+      this.categoryChange(this.category[0], 0)
     },
     methods: {
+      async StepsListRowClick(params) {
+        console.log(this.$refs.multipleTable)
+        try {
+          const loading = this.$baseColorfullLoading()
+          const res = await getProduct(params.objectId)
+          this.productDetail = res
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request successfully'),
+            'success',
+            'vab-hey-message-success'
+          )
+          loading.close()
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
+      },
+      async moveTemplate(type, params) {
+        switch (type) {
+          case 'set':
+            this.setTemplate(params)
+            break
+          case 'update':
+            // this.closeLeftTabs()
+            break
+          case 'view':
+            // this.closeRightTabs()
+            break
+          case 'delete':
+            // this.closeAllTabs()
+            break
+        }
+      },
+      async setTemplate(params) {
+        const {
+          config = {},
+          decoder = {},
+          ACL,
+          name,
+          thing = {},
+          netType,
+          icon,
+          nodeType,
+          category,
+        } = params
+        const setParams = {
+          config,
+          decoder,
+          ACL,
+          name,
+          thing,
+          netType,
+          icon,
+          nodeType,
+          category,
+        }
+        console.log(params, setParams)
+        try {
+          const loading = this.$baseColorfullLoading()
+          const res = await postProductTemplet(setParams)
+          console.log(res)
+          loading.close()
+          this.$message.success(
+            this.$translateTitle('user.Save the template successfully')
+          )
+        } catch (error) {
+          console.log(error)
+          this.$message.error(
+            this.$translateTitle('user.Save the template error') + `${error}`
+          )
+        }
+      },
+      clearCategory() {
+        this.linkType = -1
+        this.searchProduct(0)
+      },
+      categoryChange(v, index) {
+        console.log(this.formInline.category)
+        this.linkType = index
+        console.log(v.type)
+        this.proTableData = []
+        this.productDetail = {}
+        this.formInline.category = v.type
+        this.searchProduct(0)
+      },
       async featchTable() {
         try {
           const { results: table = [] } = await getTable()
@@ -907,6 +1512,13 @@
         // console.log(Dictres, 'results category')
         this.allTableDate = Dictres.results
       },
+      properties(things, type = 'things') {
+        this.tableLoading = true
+        console.log(things)
+        this.things = things
+        this.tableType = type
+        setTimeout(() => (this.tableLoading = false), 1200)
+      },
       async searchProduct(start) {
         this.listLoading = true
         if (start == 0) {
@@ -918,8 +1530,13 @@
           order: '-updatedAt',
           limit: this.length,
           skip: this.start,
-          keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon,config',
-          where: {},
+          // keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon,config,thing',
+          keys: 'name',
+          where: {
+            category: this.formInline.category
+              ? { $regex: this.formInline.category }
+              : { $ne: null },
+          },
         }
         if (this.formInline.productname != '') {
           parsms.where.name = this.formInline.productname
@@ -939,6 +1556,12 @@
           this.listLoading = false
           this.proTableData = results
           this.total = count
+          this.$nextTick(() => {
+            if (this.proTableData?.length) {
+              this.StepsListRowClick(this.proTableData[0])
+              this.$refs.multipleTable.setCurrentRow(this.proTableData[0], true)
+            }
+          })
         }
         this.getApps()
       },
@@ -995,7 +1618,12 @@
           }
         })
       },
-      editorParser(objectId, config = {}, thing = {}, type) {
+      editorParser(objectId, config = {}, thing = {}, type, flag = false) {
+        console.log('flag', flag)
+        if (!flag) {
+          this.tableLoading = true
+          setTimeout(() => (this.tableLoading = false), 800)
+        }
         var _sourceDict = []
         var _sourceModule = []
         var _sourceField = []
@@ -1003,6 +1631,7 @@
         this.productid = objectId
         this.parserFromId = objectId
         this.parserType = type
+        this.tableType = type
         this.productConfig = config
         console.log('config[`${type}`]', type, config[`${type}`])
         // 将字典数据存在localStorage 中
@@ -1029,7 +1658,10 @@
         localStorage.setItem('_sourceDict', JSON.stringify(_sourceDict))
         localStorage.setItem('_sourceModule', _sourceModule)
         localStorage.setItem('_sourceField', _sourceField)
-        this.parserTable = true
+        this.parserTable = flag
+        this.dictTableList = config.basedate.params
+        this.decoderTableList = {}
+        console.log(' this.tableType ', this.tableType)
       },
       editParse(index, row) {
         this.formConfig = row
@@ -1496,10 +2128,30 @@
 </script>
 <style scoped lang="scss">
   .devproduct {
+    ::v-deep .el-table--enable-row-hover .el-table__body tr:hover > td {
+      background-color: #fdf3ea;
+      color: #f19944;
+    }
     box-sizing: border-box;
     width: 100%;
     height: 100%;
     padding: 20px;
+    .infinite-list {
+      height: 60vh;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      .infinite-list-item {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        background: #e8f3fe;
+        margin: 10px;
+        color: #7dbcfc;
+      }
+    }
   }
 
   .devproduct ::v-deep .el-dialog__wrapper .el-dialog__header,

@@ -14,7 +14,7 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <el-input v-model="queryForm.title" placeholder="标题" />
+            <el-input v-model="queryForm.name" />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -23,130 +23,83 @@
               type="primary"
               @click="handleQuery"
             >
-              查询
+              {{ $translateTitle('button.search') }}
             </el-button>
             <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
-              添加
-            </el-button>
-            <el-button
-              icon="el-icon-delete"
-              type="danger"
-              @click="handleDelete"
-            >
-              删除
+              {{ $translateTitle('button.add') }}
             </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
-        <div class="stripe-panel">
-          <el-checkbox v-model="stripe">斑马纹</el-checkbox>
-        </div>
-        <div class="border-panel">
-          <el-checkbox v-model="border">边框（可拉伸列）</el-checkbox>
-        </div>
-        <el-button
-          style="margin: 0 10px 10px 0 !important"
-          type="primary"
-          @click="clickFullScreen"
-        >
-          <vab-icon
-            :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
-          />
-          表格全屏
-        </el-button>
-        <el-popover
-          ref="popover"
-          popper-class="custom-table-checkbox"
-          trigger="hover"
-        >
-          <el-radio-group v-model="lineHeight">
-            <el-radio label="medium">大</el-radio>
-            <el-radio label="small">中</el-radio>
-            <el-radio label="mini">小</el-radio>
-          </el-radio-group>
-          <template #reference>
-            <el-button style="margin: 0 10px 10px 0 !important" type="primary">
-              <vab-icon icon="line-height" />
-              表格尺寸
-            </el-button>
-          </template>
-        </el-popover>
-        <el-popover popper-class="custom-table-checkbox" trigger="hover">
-          <el-checkbox-group v-model="checkList">
-            <vab-draggable v-bind="dragOptions" :list="columns">
-              <div v-for="(item, index) in columns" :key="item + index">
-                <vab-icon icon="drag-drop-line" />
-                <el-checkbox
-                  :disabled="item.disableCheck === true"
-                  :label="item.label"
-                >
-                  {{ item.label }}
-                </el-checkbox>
-              </div>
-            </vab-draggable>
-          </el-checkbox-group>
-          <template #reference>
-            <el-button
-              icon="el-icon-setting"
-              style="margin: 0 0 10px 0 !important"
-              type="primary"
-            >
-              可拖拽列设置
-            </el-button>
-          </template>
-        </el-popover>
-      </vab-query-form-right-panel>
     </vab-query-form>
 
     <el-table
       ref="tableSort"
       v-loading="listLoading"
       :border="border"
-      :data="list"
+      :data="treeData"
       :height="height"
       :size="lineHeight"
       :stripe="stripe"
+      row-key="objectId"
+      :default-sort="{ prop: 'order', order: 'ascending' }"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       @selection-change="setSelectRows"
     >
-      <el-table-column align="center" type="selection" width="55" />
       <el-table-column
         align="center"
-        label="序号"
+        :label="$translateTitle('equipment.serialnumber')"
         sortable
         show-overflow-tooltip
-        width="95"
-      >
-        <template #default="{ $index }">
-          {{ $index + 1 }}
-        </template>
-      </el-table-column>
+        width="180"
+        prop="objectId"
+      />
       <el-table-column
-        v-for="(item, index) in finallyColumns"
-        :key="index"
         align="center"
-        :label="item.label"
+        :label="$translateTitle('product.name')"
         sortable
-        :width="item.width"
-      >
-        <template #default="{ row }">
-          <span v-if="item.label === '评级'">
-            <el-rate v-model="row.rate" disabled />
-          </span>
-          <span v-else>{{ row[item.prop] }}</span>
-        </template>
-      </el-table-column>
+        prop="name"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        align="center"
+        :label="$translateTitle('developer.type')"
+        sortable
+        show-overflow-tooltip
+        prop="type"
+      />
+      <!--      <el-table-column-->
+      <!--        v-for="(item, index) in finallyColumns"-->
+      <!--        :key="index"-->
+      <!--        align="center"-->
+      <!--        :label="item.label"-->
+      <!--        sortable-->
+      <!--        :width="item.width"-->
+      <!--      >-->
+      <!--        <template #default="{ row }">-->
+      <!--          <span v-if="item.label === '评级'">-->
+      <!--            <el-rate v-model="row.rate" disabled />-->
+      <!--          </span>-->
+      <!--          <span v-else>{{ row[item.prop] }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
 
       <el-table-column
         align="center"
-        label="操作"
+        :label="$translateTitle('developer.operation')"
         sortable
         show-overflow-tooltip
-        width="85"
       >
         <template #default="{ row }">
-          <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-          <el-button type="text" @click="handleDelete(row)">删除</el-button>
+          <el-button type="text" @click="handleEdit(row)">
+            {{ $translateTitle('button.edit') }}
+          </el-button>
+          <el-button type="text" @click="handleAddChild(row)">
+            {{ $translateTitle('category.Add subcategory') }}
+          </el-button>
+          <el-button type="text" @click="handleDelete(row.objectId)">
+            {{ $translateTitle('button.delete') }}
+          </el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -158,92 +111,65 @@
         />
       </template>
     </el-table>
-    <el-pagination
-      background
-      :current-page="queryForm.pageNo"
-      :layout="layout"
-      :page-size="queryForm.pageSize"
+    <vab-Pagination
+      v-show="total > 0"
       :total="total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
+      :page.sync="queryForm.pageNo"
+      :limit.sync="queryForm.pageSize"
+      @pagination="fetchData"
     />
-    <table-edit ref="edit" @fetch-data="fetchData" />
+    <categoryEdit ref="edit" @fetch-data="fetchData" />
   </div>
 </template>
 
 <script>
-  import { doDelete, getList } from '@/api/Mock/table'
-  import TableEdit from '@/views/Empty/tableEdit'
-  import VabDraggable from 'vuedraggable'
+  import categoryEdit from './categoryEdit'
+  import { queryCategory, delCategory } from '@/api/Category'
   export default {
     name: 'Empty',
-    components: { TableEdit, VabDraggable },
+    components: { categoryEdit },
     data() {
       return {
-        infoData: 'Empty',
+        infoData: 'Category',
         isFullscreen: false,
         border: true,
         height: this.$baseTableHeight(1),
         stripe: false,
         lineHeight: 'medium',
-        checkList: ['标题', '作者', '评级', '点击量', '时间'],
-        columns: [
-          {
-            label: '标题',
-            width: 'auto',
-            prop: 'title',
-            sortable: true,
-            disableCheck: true,
-          },
-          {
-            label: '作者',
-            width: 'auto',
-            prop: 'author',
-            sortable: true,
-          },
-          {
-            label: '评级',
-            width: '200',
-            prop: 'rate',
-            sortable: true,
-          },
-          {
-            label: '点击量',
-            width: 'auto',
-            prop: 'pageViews',
-            sortable: true,
-          },
-          {
-            label: '时间',
-            width: 'auto',
-            prop: 'datetime',
-            sortable: true,
-          },
-        ],
-        list: [],
-        imageList: [],
+        categoryList: [],
         listLoading: true,
-        layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         selectRows: '',
         queryForm: {
           pageNo: 1,
           pageSize: 20,
-          title: '',
+          name: '',
+          limt: 10,
+          skip: 0,
+          order: '-createdAt',
+          keys: 'count(*)',
         },
       }
     },
     computed: {
+      treeData() {
+        const cloneData = JSON.parse(JSON.stringify(this.categoryList))
+        var Tree = [] // 对源数据深度克隆
+        Tree = cloneData.filter((father) => {
+          const branchArr = cloneData.filter(
+            (child) => father.objectId == child.parent.objectId
+          ) // 返回每一项的子级数组
+          branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
+          father.parent.objectId == 0 ? (father.parent.objectId = '0') : ''
+          return father.parent.objectId == 0 // 返回第一层
+        })
+        return Tree
+      },
       dragOptions() {
         return {
           animation: 600,
           group: 'description',
         }
-      },
-      finallyColumns() {
-        return this.columns.filter((item) =>
-          this.checkList.includes(item.label)
-        )
       },
     },
     mounted() {},
@@ -270,30 +196,39 @@
         this.selectRows = val
       },
       handleAdd() {
-        this.$refs['edit'].showEdit()
+        this.$refs['edit'].showEdit({}, 'top')
+      },
+      handleAddChild(row) {
+        this.$refs['edit'].showEdit(row, 'child')
       },
       handleEdit(row) {
-        this.$refs['edit'].showEdit(row)
+        this.$refs['edit'].showEdit(row, 'edit')
       },
-      handleDelete(row) {
-        if (row.id) {
-          this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ ids: row.id })
-            this.$baseMessage(msg, 'success', 'vab-hey-message-success')
-            await this.fetchData()
-          })
-        } else {
-          if (this.selectRows.length > 0) {
-            const ids = this.selectRows.map((item) => item.id).join()
-            this.$baseConfirm('你确定要删除选中项吗', null, async () => {
-              const { msg } = await doDelete({ ids: ids })
-              this.$baseMessage(msg, 'success', 'vab-hey-message-success')
+      handleDelete(CategoryId) {
+        this.$baseConfirm(
+          this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ),
+          this.$translateTitle('Maintenance.Delete reminder'),
+          async () => {
+            const res = await delCategory(CategoryId)
+            console.log(res, 'res')
+            if (_.isEmpty(res)) {
+              this.$baseMessage(
+                this.$translateTitle('user.successfully deleted'),
+                'success',
+                'vab-hey-message-success'
+              )
               await this.fetchData()
-            })
-          } else {
-            this.$baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
+            } else {
+              this.$baseMessage(
+                this.$translateTitle('user.error deleted') + res,
+                'error',
+                'vab-hey-message-error'
+              )
+            }
           }
-        }
+        )
       },
       handleSizeChange(val) {
         this.queryForm.pageSize = val
@@ -307,18 +242,26 @@
         this.queryForm.pageNo = 1
         this.fetchData()
       },
-      async fetchData() {
+      async fetchData(args = {}) {
+        if (!args.limit) {
+          args = this.queryForm
+        }
         this.listLoading = true
-        const {
-          data: { list, total },
-        } = await getList(this.queryForm)
-        this.list = list
-        const imageList = []
-        list.forEach((item) => {
-          imageList.push(item.img)
-        })
-        this.imageList = imageList
-        this.total = total
+        let params = {
+          limit: args.limit,
+          order: args.order,
+          skip: args.skip,
+          keys: args.keys,
+          // include: 'Category',
+          where: {
+            name: this.queryForm.name.length
+              ? { $regex: this.queryForm.name }
+              : { $ne: null },
+          },
+        }
+        const { results, count } = await queryCategory(params)
+        this.categoryList = results
+        this.total = count
         this.listLoading = false
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发

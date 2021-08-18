@@ -104,20 +104,20 @@
 </script>
 <style>
   .full-screen-icon {
-    height: 20px;
     width: 20px;
-    text-align: center;
+    height: 20px;
     line-height: 20px;
+    text-align: center;
   }
   .full-screen-iconCover {
     position: absolute;
     top: 0;
     left: 0;
-    height: 20px;
+    z-index: 100;
     width: 20px;
+    height: 20px;
     background-color: #fff;
     opacity: 0;
-    z-index: 100;
   }
   .window-relative {
     position: relative;
@@ -126,19 +126,19 @@
     z-index: 120000 !important;
   }
   .full-screen {
-    padding: 10px;
     position: fixed;
-    left: 0px;
     top: 0px;
-    height: 100%;
-    width: 100%;
+    left: 0px;
     z-index: 124400;
+    width: 100%;
     height: 100%;
+    height: 100%;
+    padding: 10px;
     overflow: hidden;
     background-color: #fff;
     opacity: 1;
-    transition-property: all;
-    transition-duration: 2s;
     transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+    transition-duration: 2s;
+    transition-property: all;
   }
 </style>
