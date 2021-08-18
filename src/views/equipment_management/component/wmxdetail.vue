@@ -18,16 +18,16 @@
             <template slot="title">
               {{ $translateTitle('task.datastorage') }}
             </template>
-            <!--            <el-row :gutter="24">-->
-            <!--              <el-col :span="12">-->
-            <!--                <el-form-item-->
-            <!--                  :label="$translateTitle('product.devicetype')"-->
-            <!--                  prop="devicetype"-->
-            <!--                >-->
-            <!--                  <el-input v-model="sizeForm.devicetype" />-->
-            <!--                </el-form-item>-->
-            <!--              </el-col>-->
-            <!--            </el-row>-->
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('product.devicetype')"
+                  prop="devicetype"
+                >
+                  <el-input v-model="sizeForm.devicetype" />
+                </el-form-item>
+              </el-col>
+            </el-row>
             <el-row :gutter="24">
               <el-col :span="12">
                 <el-form-item
@@ -1145,7 +1145,6 @@
 
 <script>
   import mockModules from '@/api/Mock/Modules'
-  import * as colors from 'colors'
 
   console.log('dataType', mockModules)
   import { getAllunit } from '@/api/Dict/index'
@@ -1399,6 +1398,7 @@
         ) {
           obj = {
             name: item.name,
+            devicetype: item.devicetype,
             ico: item.ico,
             // item.dataType
             type: item.dataType.type,
@@ -1436,6 +1436,7 @@
         } else if (item.dataType.type == 'image') {
           obj = {
             name: item.name,
+            devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
             imagevalue: item.dataType.imagevalue,
@@ -1469,6 +1470,7 @@
         } else if (item.dataType.type == 'bool') {
           obj = {
             name: item.name,
+            devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
             true: item.dataType.specs[1],
@@ -1508,6 +1510,7 @@
           }
           obj = {
             name: item.name,
+            devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
             specs: item.dataType.specs,
@@ -1539,6 +1542,7 @@
         } else if (item.dataType.type == 'struct') {
           obj = {
             name: item.name,
+            devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
             struct: item.dataType.specs,
@@ -1569,6 +1573,7 @@
         } else if (item.dataType.type == 'text') {
           obj = {
             name: item.name,
+            devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
             collection:
@@ -1599,6 +1604,7 @@
         } else if (item.dataType.type == 'date') {
           obj = {
             name: item.name,
+            devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
             collection:
@@ -1628,6 +1634,7 @@
         } else if (item.dataType.type == 'file') {
           obj = {
             name: item.name,
+            devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
             collection:
@@ -1657,6 +1664,7 @@
         } else if (item.dataType.type == 'url') {
           obj = {
             name: item.name,
+            devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
             collection:

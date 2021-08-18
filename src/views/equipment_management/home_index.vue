@@ -508,23 +508,24 @@
                     {{ $translateTitle('product.details') }}
                   </el-button>
                   <el-button
-                    size="mini"
                     type="warning"
-                    @click="editorDevice(scope.row)"
+                    size="mini"
+                    style="text-align: center"
+                    @click="showInfo(scope.row)"
                   >
-                    {{ $translateTitle('concentrator.edit') }}
+                    {{ $translateTitle('product.parser') }}
                   </el-button>
                   <el-button
+                    type="info"
                     size="mini"
-                    type="danger"
-                    @click="handleDelete(scope.row, 2)"
+                    @click="konvaDevice(scope.row)"
                   >
-                    {{ $translateTitle('developer.delete') }}
+                    {{ $translateTitle('concentrator.konva') }}
                   </el-button>
                   <el-dropdown style="margin: 0 10px">
                     <el-button
                       size="mini"
-                      type="info"
+                      type="danger"
                       @click="isFullscreen = !isFullscreen"
                     >
                       {{ $translateTitle('concentrator.more') }}
@@ -533,26 +534,16 @@
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item>
                         <el-link
-                          type="primary"
-                          size="mini"
-                          style="text-align: center"
-                          @click="showInfo(scope.row)"
-                        >
-                          {{ $translateTitle('product.parser') }}
-                        </el-link>
-                      </el-dropdown-item>
-                      <el-dropdown-item>
-                        <el-link
-                          type="info"
-                          size="mini"
-                          @click="konvaDevice(scope.row)"
-                        >
-                          {{ $translateTitle('concentrator.konva') }}
-                        </el-link>
-                      </el-dropdown-item>
-                      <el-dropdown-item>
-                        <el-link
                           type="success"
+                          size="info"
+                          @click="editorDevice(scope.row)"
+                        >
+                          {{ $translateTitle('concentrator.edit') }}
+                        </el-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-link
+                          type="primary"
                           size="mini"
                           @click="
                             showTree(scope.row.objectId, scope.row.Company)
@@ -568,6 +559,15 @@
                           @click="goLink('video', scope.row)"
                         >
                           {{ $translateTitle('concentrator.video') }}
+                        </el-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-link
+                          type="danger"
+                          size="mini"
+                          @click="handleDelete(scope.row, 2)"
+                        >
+                          {{ $translateTitle('developer.delete') }}
                         </el-link>
                       </el-dropdown-item>
                     </el-dropdown-menu>
