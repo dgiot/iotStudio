@@ -588,7 +588,10 @@ export default {
       timeformat: '时间格式',
       readandwrite: '读写',
       onlyread: '只读',
+      show: '显示',
+      noshow: '不显示',
       readandwritetype: '读写类型',
+      isshow: '是否显示',
       init: '整型',
       float: '浮点型',
       double: '双精度型',
@@ -982,6 +985,7 @@ export default {
       cancel: '取消',
       refresh: '刷新',
       search: '查询',
+      determine: '确定',
     },
     category: {
       'Add subcategory': '新增子分类',
@@ -1022,6 +1026,8 @@ export default {
       'Data request error': '数据请求出错',
       'full screen': '全屏',
       'Exit Full Screen': '退出全屏',
+      'For details, please refer to': '详细请参考',
+      Documentation: '文档',
     },
   },
 }

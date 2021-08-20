@@ -1892,9 +1892,9 @@
             } else {
               item.Company = ''
             }
-            if (item.basedata) {
-              for (var key in item.basedata) {
-                item[key] = item.basedata[key]
+            if (item.profile) {
+              for (var key in item.profile) {
+                item[key] = item.profile[key]
               }
             }
           })
@@ -2812,8 +2812,6 @@
             this.$delete(obj, 'productName')
             this.$delete(obj, 'status')
             this.$delete(obj, 'productid')
-            // getProduct(this.deviceform.productName).then((response) => {
-            //   if (response) {
             if (this.deviceid != '') {
               // 编辑
               var devicesParmas = {
@@ -2827,6 +2825,7 @@
                 detail: detail,
                 location: location,
                 basedata: obj,
+                profile: obj,
               }
               this.updateDevice(devicesParmas)
               this.handleClose()
@@ -2860,13 +2859,10 @@
                     location: location,
                     basedata: obj,
                   }
-                  // console.log(devicesParmas)
                   this.createDevice(devicesParmas)
                 }
               })
             }
-            //   }
-            // })
           } else {
             this.$message({
               type: 'error',

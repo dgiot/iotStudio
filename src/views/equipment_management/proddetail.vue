@@ -87,15 +87,22 @@
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
             <!-- 导出 -->
-            <div
-              class="addtopic"
-              style="margin-bottom: 10px; text-align: right"
-            >
-              <el-button type="primary" size="small" @click="exportProduct">
-                {{ $translateTitle('product.exportpro') }}
-              </el-button>
-            </div>
-
+            <vab-query-form>
+              <vab-query-form-left-panel>
+                <div class="addtopic">
+                  <el-button type="primary" size="small" @click="exportProduct">
+                    {{ $translateTitle('product.exportpro') }}
+                  </el-button>
+                </div>
+              </vab-query-form-left-panel>
+              <vab-query-form-right-panel>
+                <vab-help
+                  trigger="click"
+                  src="https://tech.iotn2n.com/w/docs/details?id=6"
+                  title="产品下的所有设备都会继承该产品的 Topic 类"
+                />
+              </vab-query-form-right-panel>
+            </vab-query-form>
             <div>
               <table
                 class="mailtable"
@@ -202,18 +209,26 @@
           <div
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
-            <div
-              class="addtopic"
-              style="margin-bottom: 10px; text-align: right"
-            >
-              <el-button
-                type="primary"
-                size="small"
-                @click="topicdialogVisible = true"
-              >
-                {{ $translateTitle('product.customtopicclass') }}
-              </el-button>
-            </div>
+            <vab-query-form>
+              <vab-query-form-left-panel>
+                <div class="addtopic">
+                  <el-button
+                    type="primary"
+                    size="small"
+                    @click="topicdialogVisible = true"
+                  >
+                    {{ $translateTitle('product.customtopicclass') }}
+                  </el-button>
+                </div>
+              </vab-query-form-left-panel>
+              <vab-query-form-right-panel>
+                <vab-help
+                  trigger="click"
+                  src="https://tech.iotn2n.com/w/docs/details?id=6"
+                  title="产品下的所有设备都会继承该产品的 Topic 类"
+                />
+              </vab-query-form-right-panel>
+            </vab-query-form>
             <el-table
               :data="
                 topicData.slice(
@@ -684,7 +699,7 @@
                       <el-button
                         type="primary"
                         size="mini"
-                        @click="wmxDataFill(scope.row, scope.$index)"
+                        @click="wmxDataFill(scope.row, scope.row.index)"
                       >
                         <!-- 编辑 -->
                         {{ $translateTitle('task.Edit') }}
@@ -1361,11 +1376,25 @@
           :label="$translateTitle('product.physicalaccess')"
           name="fiveth"
         >
-          <div class="productchannel" style="padding: 10px; text-align: right">
-            <el-button type="primary" size="small" @click="showAllChannel">
-              {{ $translateTitle('developer.createchannel') }}
-            </el-button>
-          </div>
+          <vab-query-form>
+            <vab-query-form-left-panel>
+              <div
+                class="productchannel"
+                style="padding: 10px; text-align: right"
+              >
+                <el-button type="primary" size="small" @click="showAllChannel">
+                  {{ $translateTitle('developer.createchannel') }}
+                </el-button>
+              </div>
+            </vab-query-form-left-panel>
+            <vab-query-form-right-panel>
+              <vab-help
+                trigger="click"
+                src="https://tech.iotn2n.com/w/docs/details?id=6"
+                title="产品下的所有设备都会继承该产品的 Topic 类"
+              />
+            </vab-query-form-right-panel>
+          </vab-query-form>
           <div>
             <el-table
               :data="channelData"
@@ -1466,44 +1495,60 @@
           :label="$translateTitle('product.materialstorage')"
           name="seven"
         >
-          <div class="productchannel" style="padding: 10px; text-align: right">
-            <!-- <el-popover
-              title="自定义数据模型提示"
-              placement="right"
-              width="600"
-              trigger="hover"
-              @show="questionModel"
-            > -->
-            <el-popover
-              :title="$translateTitle('developer.tipsforcustomdatamodel')"
-              placement="right"
-              width="600"
-              trigger="hover"
-              @show="questionModel"
-            >
-              <pre
-                id="editorinsert"
-                class="ace_editor"
-                style="min-height: 400px"
-              ><el-input class="ace_text-input" type="textarea"/></pre>
-              <el-button
-                slot="reference"
-                type="primary"
-                size="mini"
-                icon="el-icon-question"
+          <vab-query-form>
+            <vab-query-form-left-panel>
+              <div
+                class="productchannel"
+                style="padding: 10px; text-align: right"
               >
-                <!-- 自定义数据模型帮助 -->
-                {{ $translateTitle('developer.customizedatamodelhelp') }}
-              </el-button>
-            </el-popover>
-            <el-button
-              type="primary"
-              size="small"
-              @click="resourceShowAllChannel"
-            >
-              {{ $translateTitle('developer.createchannel') }}
-            </el-button>
-          </div>
+                <!-- <el-popover
+                  title="自定义数据模型提示"
+                  placement="right"
+                  width="600"
+                  trigger="hover"
+                  @show="questionModel"
+                > -->
+                <el-popover
+                  :title="$translateTitle('developer.tipsforcustomdatamodel')"
+                  placement="right"
+                  width="600"
+                  trigger="hover"
+                  @show="questionModel"
+                >
+                  <pre
+                    id="editorinsert"
+                    class="ace_editor"
+                    style="min-height: 400px"
+                  ><el-input class="ace_text-input" type="textarea"/></pre>
+                  <el-button
+                    slot="reference"
+                    type="primary"
+                    size="mini"
+                    icon="el-icon-question"
+                  >
+                    <!-- 自定义数据模型帮助 -->
+                    {{ $translateTitle('developer.customizedatamodelhelp') }}
+                  </el-button>
+                </el-popover>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  style="margin-left: 20px"
+                  @click="resourceShowAllChannel"
+                >
+                  {{ $translateTitle('developer.createchannel') }}
+                </el-button>
+              </div>
+            </vab-query-form-left-panel>
+            <vab-query-form-right-panel>
+              <vab-help
+                trigger="manual"
+                src="https://tech.iotn2n.com/w/docs/details?id=6"
+                title="产品下的所有设备都会继承该产品的 Topic 类"
+              />
+            </vab-query-form-right-panel>
+          </vab-query-form>
+
           <div>
             <el-table
               :data="resourcechannelData"
@@ -2428,6 +2473,7 @@
           identifier: '',
           type: 'INT',
           startnumber: '',
+          startnumber: '',
           endnumber: '',
           step: '',
           true: '',
@@ -2535,6 +2581,7 @@
         resourcechannelid: '',
         isreload: 1,
         modifyIndex: -1,
+        iframeShow: false,
       }
     },
     computed: {
@@ -2634,6 +2681,7 @@
           false: '',
           falsevalue: 0,
           isread: 'r',
+          isshow: true,
           unit: '',
           string: '',
           date: 'String类型的UTC时间戳 (毫秒)',
@@ -3282,6 +3330,7 @@
           ico: sizeForm.ico,
           required: true,
           accessMode: sizeForm.isread,
+          isshow: sizeForm.isshow,
           identifier: sizeForm.identifier,
         }
         // 提交之前需要先判断类型
@@ -3366,6 +3415,7 @@
           }
           Object.assign(obj, obj1)
         }
+        delete obj.index
 
         // 检测到
         if (this.wmxSituation == '新增') {
@@ -3400,7 +3450,7 @@
       },
       // 物模型修改submitForm
       wmxDataFill(rowData, index) {
-        this.modifyIndex = (this.wmxstart - 1) * this.wmxPageSize + index
+        this.modifyIndex = index
         // console.log("rowData ", rowData);
         this.wmxdialogVisible = true
         this.wmxSituation = '编辑'
@@ -3440,6 +3490,7 @@
             required: true,
             ico: rowData.ico,
             isread: rowData.accessMode,
+            isshow: rowData.isshow,
             identifier: rowData.identifier,
             editdatatype: true,
           }
@@ -3476,6 +3527,7 @@
             required: false,
             ico: rowData.ico,
             isread: rowData.accessMode,
+            isshow: rowData.isshow,
             identifier: rowData.identifier,
             collection:
               rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
@@ -3512,6 +3564,7 @@
             required: false,
             ico: rowData.ico,
             isread: rowData.accessMode,
+            isshow: rowData.isshow,
             identifier: rowData.identifier,
             collection:
               rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
@@ -3555,6 +3608,7 @@
             required: true,
             ico: rowData.ico,
             isread: rowData.accessMode,
+            isshow: rowData.isshow,
             identifier: rowData.identifier,
             collection:
               rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
@@ -3590,6 +3644,7 @@
             required: true,
             ico: rowData.ico,
             isread: rowData.accessMode,
+            isshow: rowData.isshow,
             collection:
               rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
             control:
@@ -3629,6 +3684,7 @@
             required: true,
             ico: rowData.ico,
             isread: rowData.accessMode,
+            isshow: rowData.isshow,
             identifier: rowData.identifier,
             strategy:
               rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
@@ -3665,6 +3721,7 @@
             required: true,
             ico: rowData.ico,
             isread: rowData.accessMode,
+            isshow: rowData.isshow,
             identifier: rowData.identifier,
             editdatatype: true,
           }
@@ -4155,11 +4212,13 @@
               this.wmxData = []
               this.wmxDataBk = []
               this.wmxData = this.productdetail.thing.properties.filter(
-                (item) => {
+                (item, index) => {
+                  item.index = index
                   return item.name && item.dataType
                 }
               )
               this.wmxDataBk = this.wmxData
+              console.log('=====', this.wmxData)
               // let array = []
               this.wmxDataBk.forEach((item) => {
                 if (item.devicetype) {

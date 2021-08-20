@@ -28,55 +28,75 @@
           :label="$translateTitle('equipment.real time data')"
           name="first1"
         >
+          <vab-query-form>
+            <vab-query-form-left-panel>
+              <span>
+                {{ $translateTitle('equipment.realtimerefresh') }}
+              </span>
+              <el-switch
+                v-model="isupdate"
+                active-color="#13ce66"
+                inactive-color="#cccccc"
+                @change="updateTrue($event)"
+              />
+            </vab-query-form-left-panel>
+            <vab-query-form-right-panel>
+              <vab-help
+                trigger="click"
+                src="https://tech.iotn2n.com/w/docs/details?id=6"
+                title="产品下的所有设备都会继承该产品的 Topic 类"
+              />
+            </vab-query-form-right-panel>
+          </vab-query-form>
           <div>
-            <div style="text-align: right">
-              <div style="float: left">
-                <span>
-                  {{ $translateTitle('equipment.realtimerefresh') }}
-                </span>
-                <el-switch
-                  v-model="isupdate"
-                  active-color="#13ce66"
-                  inactive-color="#cccccc"
-                  @change="updateTrue($event)"
-                />
-              </div>
+            <!--            <div style="text-align: right">-->
+            <!--              <div style="float: left">-->
+            <!--                <span>-->
+            <!--                  {{ $translateTitle('equipment.realtimerefresh') }}-->
+            <!--                </span>-->
+            <!--                <el-switch-->
+            <!--                  v-model="isupdate"-->
+            <!--                  active-color="#13ce66"-->
+            <!--                  inactive-color="#cccccc"-->
+            <!--                  @change="updateTrue($event)"-->
+            <!--                />-->
+            <!--              </div>-->
 
-              <!-- 右上角(图表,表格)的按钮 -->
-              <!--              <el-button-group>-->
-              <!--                <el-button-->
-              <!--                  type="primary"-->
-              <!--                  plain-->
-              <!--                  size="small"-->
-              <!--                  @click="buttonactive = 1"-->
-              <!--                >-->
-              <!--                  {{ $translateTitle('equipment.chart') }}-->
-              <!--                </el-button>-->
-              <!--                <el-button-->
-              <!--                  type="primary"-->
-              <!--                  plain-->
-              <!--                  size="small"-->
-              <!--                  @click="buttonactive = 2"-->
-              <!--                >-->
-              <!--                  {{ $translateTitle('equipment.table') }}-->
-              <!--                </el-button>-->
-              <!--                <el-button-->
-              <!--                  type="primary"-->
-              <!--                  plain-->
-              <!--                  size="small"-->
-              <!--                  @click="buttonactive = 3"-->
-              <!--                >-->
-              <!--                  {{ $translateTitle('equipment.lists') }}-->
-              <!--                </el-button>-->
-              <!--              </el-button-group>-->
-            </div>
+            <!--              &lt;!&ndash; 右上角(图表,表格)的按钮 &ndash;&gt;-->
+            <!--              &lt;!&ndash;              <el-button-group>&ndash;&gt;-->
+            <!--              &lt;!&ndash;                <el-button&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  type="primary"&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  plain&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  size="small"&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  @click="buttonactive = 1"&ndash;&gt;-->
+            <!--              &lt;!&ndash;                >&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  {{ $translateTitle('equipment.chart') }}&ndash;&gt;-->
+            <!--              &lt;!&ndash;                </el-button>&ndash;&gt;-->
+            <!--              &lt;!&ndash;                <el-button&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  type="primary"&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  plain&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  size="small"&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  @click="buttonactive = 2"&ndash;&gt;-->
+            <!--              &lt;!&ndash;                >&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  {{ $translateTitle('equipment.table') }}&ndash;&gt;-->
+            <!--              &lt;!&ndash;                </el-button>&ndash;&gt;-->
+            <!--              &lt;!&ndash;                <el-button&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  type="primary"&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  plain&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  size="small"&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  @click="buttonactive = 3"&ndash;&gt;-->
+            <!--              &lt;!&ndash;                >&ndash;&gt;-->
+            <!--              &lt;!&ndash;                  {{ $translateTitle('equipment.lists') }}&ndash;&gt;-->
+            <!--              &lt;!&ndash;                </el-button>&ndash;&gt;-->
+            <!--              &lt;!&ndash;              </el-button-group>&ndash;&gt;-->
+            <!--            </div>-->
 
             <div class="thirdtb">
               <!--运行状态卡片-->
-              <el-row>
+              <el-row :key="thirdtbKey">
                 <el-col
-                  v-for="(value, key) in machinelist"
-                  :key="key"
+                  v-for="(value, key, index) in machinelist"
+                  :key="index"
                   :span="24"
                 >
                   <el-card :body-style="{ padding: '0px' }" shadow="never">
@@ -97,10 +117,21 @@
                               style="
                                 float: right;
                                 margin-top: 10px;
-                                margin-right: 10px;
+                                margin-right: 15px;
                               "
                             >
-                              <el-avatar :size="60" :src="item.imgurl" />
+                              <el-image
+                                style="width: 60px; height: 60px"
+                                :src="item.imgurl"
+                              >
+                                <div
+                                  slot="error"
+                                  class="image-slot"
+                                  style="width: 60px; height: 60px"
+                                >
+                                  <i class="el-icon-picture-outline"></i>
+                                </div>
+                              </el-image>
                             </span>
                           </div>
                           <div class="stla">
@@ -115,7 +146,7 @@
                                 $translateTitle('equipment.updatetime') + ':'
                               }}
                             </span>
-                            <span class="fontSize" @click="print(properties)">
+                            <span class="fontSize" @click="print(machinelist)">
                               {{ item.time }}
                             </span>
                           </div>
@@ -247,8 +278,8 @@
                         @change="toggleChart"
                       >
                         <el-option
-                          v-for="item in chartType"
-                          :key="item.type"
+                          v-for="(item, index) in chartType"
+                          :key="index"
                           :label="item.name"
                           :value="item.type"
                           :disabled="disabledChart.indexOf(item.type) != -1"
@@ -273,8 +304,8 @@
                         style="width: 70px"
                       >
                         <el-option
-                          v-for="item in interval"
-                          :key="item.type"
+                          v-for="(item, index) in interval"
+                          :key="index"
                           :label="item.name"
                           :value="item.type"
                         />
@@ -291,8 +322,8 @@
                         placeholder="请选择"
                       >
                         <el-option
-                          v-for="item in functionarr"
-                          :key="item"
+                          v-for="(item, index) in functionarr"
+                          :key="index"
                           :label="item"
                           :value="item"
                         />
@@ -310,7 +341,7 @@
                   </el-form>
                 </vab-query-form-top-panel>
               </div>
-              <div class="chartsmain">
+              <div :key="chartKey" class="chartsmain">
                 <vabChart
                   ref="charts"
                   :type="params.style"
@@ -783,7 +814,7 @@
       },
     },
     data() {
-      this.chartExtend = {
+      ;(this.chartExtend = {
         series: {
           barMaxWidth: 35,
         },
@@ -806,38 +837,40 @@
         grid: {
           right: 40,
         },
-      }
-      this.toolbox = {
-        orient: 'vertical',
-        right: -5,
-        feature: {
-          dataZoom: {
-            yAxisIndex: 'none',
+      }),
+        (this.toolbox = {
+          orient: 'vertical',
+          right: -5,
+          feature: {
+            dataZoom: {
+              yAxisIndex: 'none',
+            },
+            magicType: {
+              type: [
+                'line',
+                'bar',
+                'histogram',
+                'pie',
+                'ring',
+                'waterfall',
+                'funnel',
+                'radar',
+                'heatmap',
+                'scatter',
+                'candle',
+                'stack',
+              ],
+            },
+            dataView: { show: true, readOnly: false },
+            saveAsImage: { show: true },
+            restore: { show: true },
           },
-          magicType: {
-            type: [
-              'line',
-              'bar',
-              'histogram',
-              'pie',
-              'ring',
-              'waterfall',
-              'funnel',
-              'radar',
-              'heatmap',
-              'scatter',
-              'candle',
-              'stack',
-            ],
-          },
-          dataView: { show: true, readOnly: false },
-          saveAsImage: { show: true },
-          restore: { show: true },
-        },
-      }
+        })
 
       return {
+        chartKey: moment(new Date()).valueOf(),
         machinelist: {},
+        thirdtbKey: moment(new Date()).valueOf(),
         deviceInfo: {},
         columns,
         productId: this.$route.query.productid,
@@ -922,10 +955,10 @@
           _function: 'last',
           style: '',
           number: 1,
-          interval: 'm',
+          interval: 'h',
           datetimerange: '',
           keys: '*',
-          limit: 10,
+          limit: 100,
           endTime: new Date(),
           startTime: new Date().getTime() - 3600 * 1000 * 24 * 7,
         },
@@ -1058,9 +1091,7 @@
         isupdate: false,
         ispushdata: true,
         timer: null,
-        properties: [],
         isshowtable: false,
-        productProperties: [],
         // 子设备数据
         childrendevices: {
           devicesname: '',
@@ -1097,7 +1128,7 @@
       }),
     },
     watch: {
-      properties: {
+      machinelist: {
         deep: true,
         handler(val) {},
       },
@@ -1160,6 +1191,8 @@
         this.deviceInfo = resultes
       },
       toggleChart(e) {
+        this.chartKey = moment(new Date()).valueOf()
+        this.loading = false
         console.log(e)
         this.chartExtend = {}
         this.chartDataZoom = []
@@ -1239,7 +1272,7 @@
           this.allProudct = res.results
         })
       },
-      queryChart() {
+      async queryChart() {
         this.chartData = {
           identifier: [],
           columns: [],
@@ -1275,13 +1308,19 @@
             function: _function,
             style: style,
           }
-          getDabDevice(deviceid, params)
+          await getDabDevice(deviceid, params)
             .then((res) => {
               this.$baseColorfullLoading().close()
               console.log(res, 'res charts')
               if (res?.chartData) {
                 const { chartData = {} } = res
                 this.chartData = chartData
+                this.$nextTick(() => {
+                  setTimeout(() => {
+                    this.loading = true
+                    this.toggleChart('line')
+                  }, 1000)
+                })
               }
               console.log('this.chartData', this.chartData)
               this.loading = false
@@ -1426,33 +1465,31 @@
                 vm.$objGet(resultes, 'location.longitude')
             const tddata = vm.$objGet(resultes, 'tddata')
             // const thingTemp = this.$objGet(resultes, 'product.thing')
-            vm.properties = JSON.parse(
+            let resData = JSON.parse(
               JSON.stringify(vm.$objGet(resultes, 'product.thing.properties'))
             )
-            console.log(vm.properties, ' vm.properties ')
-            // console.log('vm.properties', vm.properties)
-            if (vm.properties) {
-              vm.properties.map((items) => {
-                dataobj[items['identifier']] = {
-                  expectedData: [],
-                  actualData: [],
-                  results: [],
-                  title:
-                    items['dataType']['type'] === 'int' ||
-                    items['dataType']['type'] === 'float' ||
-                    items['dataType']['type'] === 'double'
-                      ? items['name'] +
-                        '(' +
-                        items['dataType']['specs']['unit'] +
-                        ')'
-                      : items['name'],
-                  data: [],
-                  max: 0,
+            this.Update()
+            let array = []
+            resData.forEach((item) => {
+              if (item.devicetype) {
+                array.push(item.devicetype)
+              }
+            })
+            array = _.uniqBy(array)
+            let machine = {}
+            array.forEach((item) => {
+              let arr = []
+              resData.forEach((item1) => {
+                if (item == item1.devicetype) {
+                  arr.push(item1)
                 }
               })
-            } else {
-              console.log('product resultes none')
-            }
+              machine[item] = arr
+            })
+            vm.machinelist = machine
+            vm.thirdtbKey = moment(new Date()).valueOf()
+            console.log('this.machinelist', vm.machinelist)
+
             vm.devicedetail = obj
             if (vm.$route.query.nodeType != 0 && vm.ischildren == 'true') {
               vm.activeName = 'children'
@@ -1478,44 +1515,15 @@
         })
       },
       Update() {
-        function deteleObject(obj) {
-          var uniques = []
-          var stringify = {}
-          for (var i = 0; i < obj.length; i++) {
-            var keys = Object.keys(obj[i])
-            keys.sort(function (a, b) {
-              return Number(a) - Number(b)
-            })
-            var str = ''
-            for (var j = 0; j < keys.length; j++) {
-              str += JSON.stringify(keys[j])
-              str += JSON.stringify(obj[i][keys[j]])
-            }
-            if (!stringify.hasOwnProperty(str)) {
-              uniques.push(obj[i])
-              stringify[str] = true
-            }
-          }
-          // uniques = uniques;
-          return uniques
-        }
         var vm = this
-        // console.log('实时刷新')
-        getCardDevice(this.deviceid)
+        console.log('实时刷新')
+        getCardDevice(vm.deviceid)
           .then((response) => {
+            vm.machinelist = {}
             if (response?.data) {
-              let third = []
-              const resData = response.data
-              resData.forEach((res) => {
-                let data = {}
-                data[res.name] = res.number + res.unit
-                third.push(data)
-              })
-              vm.properties = resData
-              console.log('properties', vm.properties)
-
               let array = []
-              vm.properties.forEach((item) => {
+              const resData = response.data
+              resData.forEach((item) => {
                 if (item.devicetype) {
                   array.push(item.devicetype)
                 }
@@ -1524,18 +1532,16 @@
               let machine = {}
               array.forEach((item) => {
                 let arr = []
-                vm.properties.forEach((item1) => {
+                resData.forEach((item1) => {
                   if (item == item1.devicetype) {
                     arr.push(item1)
                   }
                 })
                 machine[item] = arr
               })
-              this.machinelist = machine
-              console.log(
-                'this.machinelist-------------------',
-                this.machinelist
-              )
+              vm.machinelist = machine
+              vm.thirdtbKey = moment(new Date()).valueOf()
+              console.log('this.machinelist', vm.machinelist)
             }
           })
           .catch((error) => {
@@ -1550,7 +1556,7 @@
         if (event == true) {
           this.timer = window.setInterval(() => {
             this.Update()
-          }, 5000)
+          }, 10000)
         } else {
           window.clearInterval(this.timer)
           this.timer = null
@@ -1816,6 +1822,15 @@
         padding: 0 10px;
       }
     }
+
+    .el-card {
+      overflow: hidden;
+      color: #303133;
+      background-color: #f4f4f4 !important;
+      border: 0px solid #ebeef5;
+      border-radius: 0px;
+      transition: 0.3s;
+    }
   }
 
   .chartsinfo {
@@ -1853,18 +1868,18 @@
 
   .editdevices .updatedtable {
     box-sizing: border-box;
-    width: 300px;
-    height: 190px;
+    width: 280px;
+    height: 180px;
     /* letter-spacing: 1px; */
     padding-left: 20px;
     margin: 20px 20px 0 0;
-    font-size: 14px;
+    font-size: 50px;
     line-height: 40px;
     list-style: none;
-    border: 1px solid #cccccc;
+    border: 1px solid #c0c4cc;
     /* text-align: center; */
     border-radius: 5px;
-    box-shadow: 10px 10px 10px 5px grey;
+    box-shadow: 10px 10px 10px 5px #f4f4f4;
   }
 
   .editdevices .buttonactive {

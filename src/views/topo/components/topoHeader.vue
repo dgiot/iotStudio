@@ -1,7 +1,7 @@
 <!-- 组件说明 -->
 <template>
-  <div class="topoHeader">
-    <div class="_drawer">
+  <div class="topo-header">
+    <div class="topo-header-drawer">
       <el-drawer
         :with-header="false"
         size="40%"
@@ -13,56 +13,100 @@
       </el-drawer>
     </div>
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
-    <div>
-      <el-row :gutter="24">
-        <el-col :span="8">
-          <el-button type="success" icon="el-icon-setting" @click="drawerFlag">
-            websocket
-          </el-button>
-          <el-button
-            icon="el-icon-document-add"
-            :disabled="productid.length < 0"
-            @click="subscribe(productid)"
-          >
-            {{ $translateTitle('leftbar.subscriptions') }} mqtt
-          </el-button>
-          <el-button
-            icon="el-icon-document-add"
-            :disabled="stopMqtt"
-            @click="CloseSub()"
-          >
-            {{ $translateTitle('leftbar. cancel') }} mqtt
-          </el-button>
-          {{ $translateTitle('tagsView.refresh') }}
-          <el-switch
-            v-model="switchvalue"
-            :disabled="productid.length < 0"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            :active-text="$translateTitle('tagsView.close')"
-            :inactive-text="$translateTitle('tagsView.open')"
-            @change="stopsub"
+    <div class="topo-header-top">
+      <vab-query-form class="topo-header-top-query">
+        <vab-query-form-left-panel class="topo-header-top-query-left-panel">
+          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
+              <a-icon type="tool" />
+              <p>socket</p>
+            </a>
+            <a-menu slot="overlay">
+              <a-sub-menu key="websocket" title="websocket">
+                <a-menu-item @click="drawerFlag">websocket</a-menu-item>
+              </a-sub-menu>
+
+              <a-sub-menu key="mqtt" title="mqtt">
+                <a-menu-item
+                  :disabled="productid.length < 0"
+                  @click="subscribe(productid)"
+                >
+                  {{ $translateTitle('leftbar.subscriptions') }} mqtt
+                </a-menu-item>
+                <a-menu-item :disabled="stopMqtt" @click="CloseSub()">
+                  {{ $translateTitle('leftbar. cancel') }} mqtt
+                </a-menu-item>
+              </a-sub-menu>
+
+              <a-menu-item key="test" title="sub menu">
+                <el-switch
+                  v-model="switchvalue"
+                  :disabled="productid.length < 0"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                  :active-text="$translateTitle('tagsView.close')"
+                  :inactive-text="$translateTitle('tagsView.open')"
+                  @change="stopsub"
+                />
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+
+          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
+              <a-icon type="edit" />
+              <p>edit</p>
+            </a>
+            <a-menu slot="overlay">
+              <a-menu-item @click="flagFn('pencil')">铅笔</a-menu-item>
+              <a-menu-item>
+                <el-link @click="flagFn('ellipse')">椭圆-空心</el-link>
+              </a-menu-item>
+              <a-menu-item>
+                <el-link @click="flagFn('rect')">矩形</el-link>
+              </a-menu-item>
+              <a-menu-item>
+                <el-link @click="flagFn('rectH')">矩形-空心</el-link>
+              </a-menu-item>
+              <a-menu-item>
+                <el-link @click="flagFn('text')">文字</el-link>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+
+          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+            <a class="ant-dropdown-link" @click="removeFn()">
+              <a-icon type="delete" />
+              <p>delete</p>
+            </a>
+          </a-dropdown>
+          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+            <a class="ant-dropdown-link" @click="$message.success('开发中')">
+              <a-icon type="save" theme="filled" />
+              <p>save</p>
+            </a>
+          </a-dropdown>
+          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+            <a class="ant-dropdown-link" @click="$message.success('开发中')">
+              <a-icon type="share-alt" />
+              <p>shaer</p>
+            </a>
+          </a-dropdown>
+
+          <el-color-picker
+            v-model="pickerColor"
+            size="medium"
+            @change="setColor"
           />
-        </el-col>
-        <el-col :span="16">
-          <div class="tools">
-            <div id="btnList">
-              <!--              <el-button @click="flagFn('pencil')">铅笔</el-button>-->
-              <!--              <el-button @click="flagFn('ellipse')">椭圆-空心</el-button>-->
-              <!--              <el-button @click="flagFn('rect')">矩形</el-button>-->
-              <!--              <el-button @click="flagFn('rectH')">矩形-空心</el-button>-->
-              <el-button @click="flagFn('text')">文字</el-button>
-              <el-button @click="showImageTable()">底图</el-button>
-              <el-button @click="removeFn()">删除</el-button>
-              <el-color-picker
-                v-model="pickerColor"
-                size="medium"
-                @change="setColor"
-              />
-            </div>
-          </div>
-        </el-col>
-      </el-row>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
+          <vab-help
+            trigger="click"
+            src="https://tech.iotn2n.com/w/docs/details?id=6"
+            title="组态文档"
+          />
+        </vab-query-form-right-panel>
+      </vab-query-form>
     </div>
   </div>
 </template>
@@ -230,3 +274,21 @@
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }
 </script>
+<style scoped lang="scss">
+  .topo-header {
+    &-top {
+      &-query {
+        &-left-panel {
+          &-dropdown {
+            padding: 6px 8px;
+            color: rgb(89, 89, 89);
+            text-align: center;
+            i {
+              font-size: 18px !important;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>

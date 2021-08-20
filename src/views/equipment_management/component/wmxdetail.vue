@@ -143,6 +143,27 @@
                 </el-form-item>
               </el-col>
             </el-row>
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('product.isshow')"
+                  prop="isshow"
+                >
+                  <el-radio-group
+                    v-model="sizeForm.isshow"
+                    style="width: 100%"
+                    size="medium"
+                  >
+                    <el-radio :label="true">
+                      {{ $translateTitle('product.show') }}
+                    </el-radio>
+                    <el-radio :label="false">
+                      {{ $translateTitle('product.noshow') }}
+                    </el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+            </el-row>
             <el-row
               v-if="
                 sizeForm.type == 'int' ||
@@ -1155,6 +1176,14 @@
     name: 'Wmxdetail',
     components: {},
     data() {
+      let identifier = /^[a-z][a-z0-9]*$/
+      let isidentifier = (rule, value, callback) => {
+        if (!identifier.test(value)) {
+          return callback(new Error('请以小写字母开头，只能输入小写字母或数字'))
+        } else {
+          callback()
+        }
+      }
       var validminnumber = (rule, value, callback) => {
         // console.log(value);
         if (value === '') {
@@ -1276,6 +1305,7 @@
               message: '请输入标识符',
               trigger: 'blur',
             },
+            { validator: isidentifier },
           ],
           dis: [
             {
@@ -1309,6 +1339,13 @@
             {
               required: true,
               message: '请选择读写类型',
+              trigger: 'change',
+            },
+          ],
+          isshow: [
+            {
+              required: true,
+              message: '请选择是否显示',
               trigger: 'change',
             },
           ],
@@ -1426,6 +1463,7 @@
             strategy: '',
             required: true,
             isread: item.accessMode,
+            isshow: item.isshow,
             identifier: item.identifier,
           }
           if (item.dataForm) {
@@ -1461,6 +1499,7 @@
             countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: false,
             isread: item.accessMode,
+            isshow: item.isshow,
             identifier: item.identifier,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
@@ -1494,6 +1533,7 @@
             countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: false,
             isread: item.accessMode,
+            isshow: item.isshow,
             identifier: item.identifier,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
@@ -1533,6 +1573,7 @@
             countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
+            isshow: item.isshow,
             identifier: item.identifier,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
@@ -1564,6 +1605,7 @@
             countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
+            isshow: item.isshow,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
             control: item.dataForm == undefined ? '' : item.dataForm.control,
@@ -1598,6 +1640,7 @@
             countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
+            isshow: item.isshow,
             identifier: item.identifier,
             strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
           }
@@ -1629,6 +1672,7 @@
             countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
+            isshow: item.isshow,
             identifier: item.identifier,
           }
         } else if (item.dataType.type == 'file') {
@@ -1659,6 +1703,7 @@
             countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
+            isshow: item.isshow,
             identifier: item.identifier,
           }
         } else if (item.dataType.type == 'url') {
@@ -1689,6 +1734,7 @@
             countcollection: this.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
+            isshow: item.isshow,
             identifier: item.identifier,
           }
         }

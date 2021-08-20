@@ -871,6 +871,7 @@
     //   },
     // },
     mounted() {
+      console.log(`global static url ${this._role}`)
       this.queryForm.account =
         this.language == 'zh' ? '全部产品' : 'All Products'
       this.getRoletree()
@@ -1172,11 +1173,11 @@
           $('.el-tabs').css({ height: 'calc(78vh - 20px)' })
           $('section').css({ height: 'calc(100vh - 60px* 2.7)' })
         }
-        this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
-          'padding-top'
-        ]
+        // this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
+        //   'padding-top'
+        // ]
         console.log($('.fixed')[0].style)
-        console.log(this.fixedPaddingTop)
+        // console.log(this.fixedPaddingTop)
       },
       selectProdChange(objectId) {
         console.log(objectId)
@@ -1197,10 +1198,10 @@
             warn_count: true,
           }
         }, 3000)
-        this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
-          'padding-top'
-        ]
-        this.leftWidth = window.getComputedStyle($('.vab-side-bar')[0])['width']
+        // this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
+        //   'padding-top'
+        // ]
+        // this.leftWidth = window.getComputedStyle($('.vab-side-bar')[0])['width']
         this.cardHeight = window.getComputedStyle($('.map_card')[0])['height']
         console.log(this.fixedPaddingTop, this.leftWidth, this.cardHeight)
         await Roletree()

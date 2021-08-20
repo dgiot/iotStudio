@@ -722,15 +722,16 @@
 </script>
 <style lang="scss" scoped>
   .operation {
-    height: calc(100vh - #{$base-top-bar-height} * 4 - -25px);
-    margin-left: 10px;
+    height: calc(100vh - #{$base-top-bar-height}* 2.7 - 100px) !important;
+    overflow: auto;
     overflow-x: hidden;
     overflow-y: scroll;
     color: wheat;
   }
 
   ::v-deep .jsoneditor-vue {
-    height: calc(100vh - #{$base-top-bar-height} * 5 - 10px);
+    height: calc(100vh - #{$base-top-bar-height}* 2.7 - 100px) !important;
+    overflow: auto;
   }
 
   ::v-deep .json-save-btn {
