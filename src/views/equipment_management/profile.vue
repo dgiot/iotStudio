@@ -30,133 +30,7 @@
     <el-dialog v-drag-dialog :append-to-body="true" :visible.sync="parserView">
       <f-render v-model="formConfig" :config="formConfig" pure />
     </el-dialog>
-    <a-drawer
-      width="40%"
-      direction="rtl"
-      :visible="parserTable"
-      class="parserTable"
-      @close="parserTable = !parserTable"
-    >
-      <div slot="title" class="header-title parserTable">
-        <el-button
-          type="primary"
-          @click.native.prevent="addParse(parserTableList)"
-        >
-          {{ $translateTitle('product.newlyadded') }}
-        </el-button>
-        <el-button
-          type="success"
-          @click.native.prevent="saveParse(parserTableList)"
-        >
-          {{ $translateTitle('product.preservation') }}
-        </el-button>
-      </div>
-      <el-table size="mini" :data="parserTableList">
-        <el-table-column
-          width="100"
-          show-overflow-tooltip
-          sortable
-          align="center"
-          prop="uid"
-          label="uid"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          sortable
-          align="center"
-          prop="name"
-          width="140"
-          :label="$translateTitle('product.chinesetitle')"
-        >
-          <template #default="{ row }">
-            <el-popover trigger="hover" placement="top">
-              <p>
-                {{ $translateTitle('product.englishtitle') }}: {{ row.enname }}
-              </p>
-              <p>
-                {{ $translateTitle('developer.describe') }}:
-                {{ row.description }}
-              </p>
-              <p>
-                {{ $translateTitle('product.identifier') }}:
-                {{ row.identifier }}
-              </p>
-              <p>
-                {{ $translateTitle('developer.describe') }}:
-                {{ row.description }}
-              </p>
-              <p>
-                {{ $translateTitle('product.Table Name') }}:
-                {{ row.table }}
-              </p>
-              <p>
-                {{ $translateTitle('product.class') }}:
-                {{ row.field }}
-              </p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ row.name }}</el-tag>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          sortable
-          align="center"
-          prop="type"
-          :label="$translateTitle('product.functionaltypes')"
-        />
-        <el-table-column
-          sortable
-          align="center"
-          prop="visible"
-          width="100"
-          :label="$translateTitle('product.visible')"
-        >
-          <template #default="{ row }">
-            <el-switch v-model="row.visible" disabled />
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          fixed="right"
-          width="200"
-          :label="$translateTitle('developer.operation')"
-        >
-          <template slot-scope="scope">
-            <el-button type="text" @click="editParse(scope.$index, scope.row)">
-              {{ $translateTitle('concentrator.edit') }}
-            </el-button>
-            <el-button
-              type="text"
-              :disabled="!scope.row.config.order"
-              @click="previewParse(scope.row.config)"
-            >
-              {{ $translateTitle('application.preview') }}
-            </el-button>
-            <el-button
-              type="text"
-              size="small"
-              @click.native.prevent="
-                lockingParse(scope.row.uid, scope.$index, parserTableList)
-              "
-            >
-              {{ $translateTitle('application.locking') }}
-            </el-button>
-            <el-button
-              type="text"
-              size="small"
-              :disabled="scope.row.disable"
-              @click.native.prevent="
-                deleteParse(scope.row.uid, scope.$index, parserTableList)
-              "
-            >
-              {{ $translateTitle('task.Delete') }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </a-drawer>
+
     <div class="prosecond">
       <vab-query-form>
         <vab-query-form-left-panel>
@@ -207,7 +81,7 @@
             <el-button
               type="primary"
               size="mini"
-              @click="$refs['edit'].showEdit()"
+              @click="$refs['templet'].showEdit()"
             >
               {{ $translateTitle('product.Product template') }}
             </el-button>
@@ -232,7 +106,7 @@
         </vab-query-form-right-panel>
       </vab-query-form>
       <el-row :gutter="24">
-        <el-col :xs="24" :sm="6" :md="5" :lg="4" :xl="3">
+        <el-col :xs="12" :sm="6" :md="5" :lg="4" :xl="3">
           <ul class="infinite-list" style="overflow: auto">
             <li
               v-for="(item, index) in category"
@@ -251,8 +125,8 @@
           :xs="$loadsh.isEmpty(productDetail) ? 24 : 12"
           :sm="$loadsh.isEmpty(productDetail) ? 18 : 6"
           :md="$loadsh.isEmpty(productDetail) ? 19 : 6"
-          :lg="$loadsh.isEmpty(productDetail) ? 20 : 6"
-          :xl="$loadsh.isEmpty(productDetail) ? 21 : 6"
+          :lg="$loadsh.isEmpty(productDetail) ? 20 : 4"
+          :xl="$loadsh.isEmpty(productDetail) ? 21 : 3"
         >
           <div class="protable">
             <el-table
@@ -276,79 +150,6 @@
                   <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
-              <!--              <el-table-column-->
-              <!--                sortable-->
-              <!--                show-overflow-tooltip-->
-              <!--                width="100"-->
-              <!--                :label="$translateTitle('product.profile')"-->
-              <!--              >-->
-              <!--                <template slot-scope="scope">-->
-              <!--                  <el-link-->
-              <!--                    type="primary"-->
-              <!--                    @click="-->
-              <!--                      editorParser(-->
-              <!--                        scope.row.objectId,-->
-              <!--                        scope.row.config,-->
-              <!--                        scope.row.thing,-->
-              <!--                        'profile'-->
-              <!--                      )-->
-              <!--                    "-->
-              <!--                  >-->
-              <!--                    {{-->
-              <!--                      scope.row.config && scope.row.config.profile-->
-              <!--                        ? scope.row.config.profile.length-->
-              <!--                        : 0-->
-              <!--                    }}-->
-              <!--                  </el-link>-->
-              <!--                </template>-->
-              <!--              </el-table-column>-->
-              <!--              <el-table-column-->
-              <!--                sortable-->
-              <!--                show-overflow-tooltip-->
-              <!--                width="100"-->
-              <!--                :label="$translateTitle('product.parser')"-->
-              <!--              >-->
-              <!--                <template slot-scope="scope">-->
-              <!--                  <el-link-->
-              <!--                    type="primary"-->
-              <!--                    @click="-->
-              <!--                      editorParser(-->
-              <!--                        scope.row.objectId,-->
-              <!--                        scope.row.config,-->
-              <!--                        scope.row.thing,-->
-              <!--                        'parser'-->
-              <!--                      )-->
-              <!--                    "-->
-              <!--                  >-->
-              <!--                    {{-->
-              <!--                      scope.row.config && scope.row.config.parser-->
-              <!--                        ? scope.row.config.parser.length-->
-              <!--                        : 0-->
-              <!--                    }}-->
-              <!--                  </el-link>-->
-              <!--                </template>-->
-              <!--              </el-table-column>-->
-              <el-table-column
-                width="160"
-                :label="$translateTitle('task.Operation')"
-              >
-                <template slot-scope="scope">
-                  <el-link
-                    type="success"
-                    @click="moveTemplate('set', scope.row)"
-                  >
-                    {{ $translateTitle('product.Set as template') }}
-                  </el-link>
-                </template>
-              </el-table-column>
-              <!--                        <el-table-column-->
-              <!--            width="180"-->
-              <!--            :label="$translateTitle('product.addingtime')"-->
-              <!--          >-->
-              <!--            <template slot-scope="scope">-->
-              <!--              <span>{{ utc2beijing(scope.row.createdAt) }}</span>-->
-              <!--            </template>-->
-              <!--          </el-table-column>-->
             </el-table>
           </div>
           <div class="elpagination" style="margin-top: 20px">
@@ -363,453 +164,56 @@
           </div>
         </el-col>
         <el-col
-          :xs="$loadsh.isEmpty(productDetail) ? 24 : 12"
+          :xs="$loadsh.isEmpty(productDetail) ? 24 : 24"
           :sm="$loadsh.isEmpty(productDetail) ? 0 : 12"
           :md="$loadsh.isEmpty(productDetail) ? 0 : 13"
-          :lg="$loadsh.isEmpty(productDetail) ? 0 : 14"
-          :xl="$loadsh.isEmpty(productDetail) ? 0 : 15"
+          :lg="$loadsh.isEmpty(productDetail) ? 0 : 16"
+          :xl="$loadsh.isEmpty(productDetail) ? 0 : 18"
         >
-          <div>
-            <el-descriptions
-              :label-style="{ 'text-align': 'center' }"
-              :content-style="{ 'text-align': 'left' }"
-              class="margin-top"
-              :column="2"
-              border
-            >
-              <el-descriptions-item :label="$translateTitle('home.category')">
-                {{ getCategory(productDetail.category) }}
-              </el-descriptions-item>
-              <el-descriptions-item
-                :label="$translateTitle('product.nodetype')"
-              >
-                <span v-if="productDetail.nodeType == 1">
-                  {{ $translateTitle('product.gateway') }}
-                </span>
-                <span v-if="productDetail.nodeType == 0">
-                  {{ $translateTitle('product.equipment') }}
-                </span>
-              </el-descriptions-item>
-              <el-descriptions-item
-                :label="$translateTitle('product.productgrouping')"
-              >
-                <span>{{ productDetail.devType }}</span>
-              </el-descriptions-item>
-              <el-descriptions-item
-                :label="$translateTitle('product.physicalmodel')"
-              >
-                <el-link
-                  type="primary"
-                  @click="properties(productDetail.thing.properties)"
-                >
-                  {{
-                    productDetail.thing &&
-                    productDetail.thing.properties &&
-                    productDetail.thing.properties.length
-                      ? productDetail.thing.properties.length
-                      : 0
-                  }}
-                </el-link>
-              </el-descriptions-item>
-              <el-descriptions-item :label="$translateTitle('product.parser')">
-                <template slot="label">
-                  <el-link
-                    type="success"
-                    @click="
-                      editorParser(
-                        productDetail.objectId,
-                        productDetail.config,
-                        productDetail.thing,
-                        'parser',
-                        true
-                      )
-                    "
-                  >
-                    {{ $translateTitle('product.parser') }}
-                  </el-link>
-                </template>
-                <el-link
-                  type="primary"
-                  @click="
-                    editorParser(
-                      productDetail.objectId,
-                      productDetail.config,
-                      productDetail.thing,
-                      'parser'
-                    )
-                  "
-                >
-                  {{
-                    productDetail.config && productDetail.config.parser
-                      ? productDetail.config.parser.length
-                      : 0
-                  }}
-                </el-link>
-              </el-descriptions-item>
-              <el-descriptions-item>
-                <template slot="label">
-                  <el-link
-                    type="success"
-                    @click="
-                      editorParser(
-                        productDetail.objectId,
-                        productDetail.config,
-                        productDetail.thing,
-                        'profile',
-                        true
-                      )
-                    "
-                  >
-                    {{ $translateTitle('product.profile') }}
-                  </el-link>
-                </template>
-                <el-link
-                  type="primary"
-                  @click="
-                    editorParser(
-                      productDetail.objectId,
-                      productDetail.config,
-                      productDetail.thing,
-                      'profile'
-                    )
-                  "
-                >
-                  {{
-                    productDetail.config && productDetail.config.profile
-                      ? productDetail.config.profile.length
-                      : 0
-                  }}
-                </el-link>
-              </el-descriptions-item>
-
-              <el-descriptions-item :label="$translateTitle('product.dict')">
-                <el-link
-                  type="primary"
-                  @click="
-                    editorParser(
-                      productDetail.objectId,
-                      productDetail.config,
-                      productDetail.thing,
-                      'dict'
-                    )
-                  "
-                >
-                  {{
-                    productDetail.config &&
-                    productDetail.config.basedate &&
-                    productDetail.config.basedate.params
-                      ? productDetail.config.basedate.params.length
-                      : 0
-                  }}
-                </el-link>
-              </el-descriptions-item>
-
-              <el-descriptions-item :label="$translateTitle('product.decoder')">
-                <el-link
-                  disabled
-                  type="primary"
-                  @click="
-                    editorParser(
-                      productDetail.objectId,
-                      productDetail.config,
-                      productDetail.thing,
-                      'profile'
-                    )
-                  "
-                >
-                  {{
-                    productDetail.decoder && productDetail.decoder
-                      ? productDetail.decoder.length
-                      : 0
-                  }}
-                </el-link>
-              </el-descriptions-item>
-              <!--            <el-descriptions-item :label="$translateTitle('product.profile')">-->
-              <!--              <el-link-->
-              <!--                type="primary"-->
-              <!--                @click="-->
-              <!--                  editorParser(-->
-              <!--                    productDetail.objectId,-->
-              <!--                    productDetail.config,-->
-              <!--                    productDetail.thing,-->
-              <!--                    'profile'-->
-              <!--                  )-->
-              <!--                "-->
-              <!--              >-->
-              <!--                {{-->
-              <!--                  productDetail.config && productDetail.config.profile-->
-              <!--                    ? productDetail.profile.length-->
-              <!--                    : 0-->
-              <!--                }}-->
-              <!--              </el-link>-->
-              <!--            </el-descriptions-item>-->
-            </el-descriptions>
-            <el-table
-              v-if="$loadsh.isEmpty(productDetail) != true"
-              :key="tableType"
-              v-loading="tableLoading"
-              highlight-current-row
-              height="60vh"
-              size="medium"
-              :header-cell-style="{ 'text-align': 'center' }"
-              :cell-style="{ 'text-align': 'center' }"
-              :data="
-                tableType == 'things'
-                  ? things
-                  : tableType == 'profile' || tableType == 'parser'
-                  ? parserTableList
-                  : tableType == 'dict'
-                  ? dictTableList
-                  : decoderTableList
-              "
-              style="width: 100%"
-            >
-              <div v-if="tableType == 'things'">
-                <el-table-column type="expand">
-                  <template
-                    v-if="scope.row.dataType.type == 'struct'"
-                    slot-scope="scope"
-                    class="opentable"
-                  >
-                    <el-table
-                      :data="scope.row.dataType.specs"
-                      style="
-                        box-sizing: border-box;
-                        width: 60%;
-                        text-align: center;
-                      "
-                    >
-                      <el-table-column
-                        :label="$translateTitle('product.identifier')"
-                        align="center"
-                      >
-                        <template slot-scope="scope1">
-                          <span>{{ scope1.row.identifier }}</span>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        :label="$translateTitle('product.functionaltypes')"
-                        align="center"
-                      >
-                        <span>
-                          {{ $translateTitle('product.attribute') }}
-                        </span>
-                      </el-table-column>
-
-                      <el-table-column
-                        :label="$translateTitle('product.functionname')"
-                        prop="name"
-                        align="center"
-                      />
-                      <el-table-column
-                        :label="$translateTitle('product.datadefinition')"
-                        align="center"
-                      >
-                        <template slot-scope="scope2">
-                          <span>{{ scope2.row.dataType.type }}</span>
-                        </template>
-                      </el-table-column>
-                    </el-table>
-                  </template>
-                </el-table-column>
-
-                <el-table-column
-                  :label="$translateTitle('product.order')"
-                  width="80"
-                  align="center"
-                  sortable
-                >
-                  <template #default="{ row }">
-                    {{ row.dataForm.order }}
-                  </template>
-                </el-table-column>
-
-                <el-table-column
-                  :label="$translateTitle('product.Rounds')"
-                  width="80"
-                  align="center"
-                  sortable
-                >
-                  <template #default="{ row }">
-                    {{ row.dataForm.round }}
-                  </template>
-                </el-table-column>
-
-                <el-table-column
-                  :label="$translateTitle('product.Strategy')"
-                  width="80"
-                  align="center"
-                  sortable
-                >
-                  <template #default="{ row }">
-                    {{ row.dataForm.strategy }}
-                  </template>
-                </el-table-column>
-
-                <el-table-column
-                  :label="$translateTitle('product.protocol')"
-                  width="80"
-                  align="center"
-                  sortable
-                >
-                  <template #default="{ row }">
-                    {{
-                      row.dataForm && row.dataForm.protocol
-                        ? row.dataForm.protocol
-                        : ''
-                    }}
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  width="120"
-                  sortable
-                  :label="$translateTitle('product.functionaltypes')"
-                >
-                  <span>{{ $translateTitle('product.attribute') }}</span>
-                </el-table-column>
-
-                <el-table-column
-                  align="center"
-                  sortable
-                  :label="$translateTitle('product.identifier')"
-                  prop="identifier"
-                />
-                <el-table-column
-                  align="center"
-                  sortable
-                  :label="$translateTitle('product.functionname')"
-                  prop="name"
-                />
-                <el-table-column
-                  :label="$translateTitle('product.datatype')"
-                  align="center"
-                  sortable
-                >
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.dataType.type }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  sortable
-                  :label="$translateTitle('product.datadefinition')"
-                >
-                  <template slot-scope="scope">
-                    <span
-                      v-if="
-                        scope.row.dataType.specs &&
-                        (scope.row.dataType.type == 'double' ||
-                          scope.row.dataType.type == 'float' ||
-                          scope.row.dataType.type == 'int')
-                      "
-                    >
-                      {{
-                        $translateTitle('product.rangeofvalues') +
-                        scope.row.dataType.specs.min +
-                        '~' +
-                        scope.row.dataType.specs.max
-                      }}
-                    </span>
-                    <span v-else-if="scope.row.dataType.type == 'string'">
-                      {{
-                        $translateTitle('product.datalength') +
-                        ':' +
-                        scope.row.dataType.size +
-                        $translateTitle('product.byte')
-                      }}
-                    </span>
-                    <span v-else-if="scope.row.dataType.type == 'date'" />
-                    <span v-else-if="scope.row.dataType.type != 'struct'">
-                      {{ scope.row.dataType.specs }}
-                    </span>
-                    <span v-else />
-                  </template>
-                </el-table-column>
-              </div>
-              <div v-else-if="tableType == 'profile' || tableType == 'parser'">
-                <el-table-column
-                  show-overflow-tooltip
-                  sortable
-                  align="center"
-                  prop="uid"
-                  label="uid"
-                />
-                <el-table-column
-                  show-overflow-tooltip
-                  sortable
-                  align="center"
-                  prop="name"
-                  :label="$translateTitle('product.chinesetitle')"
-                >
-                  <template #default="{ row }">
-                    <el-popover trigger="hover" placement="top">
-                      <p>
-                        {{ $translateTitle('product.englishtitle') }}:
-                        {{ row.enname }}
-                      </p>
-                      <p>
-                        {{ $translateTitle('developer.describe') }}:
-                        {{ row.description }}
-                      </p>
-                      <p>
-                        {{ $translateTitle('product.identifier') }}:
-                        {{ row.identifier }}
-                      </p>
-                      <p>
-                        {{ $translateTitle('developer.describe') }}:
-                        {{ row.description }}
-                      </p>
-                      <p>
-                        {{ $translateTitle('product.Table Name') }}:
-                        {{ row.table }}
-                      </p>
-                      <p>
-                        {{ $translateTitle('product.class') }}:
-                        {{ row.field }}
-                      </p>
-                      <div slot="reference" class="name-wrapper">
-                        <el-tag size="medium">{{ row.name }}</el-tag>
-                      </div>
-                    </el-popover>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  show-overflow-tooltip
-                  sortable
-                  align="center"
-                  prop="type"
-                  :label="$translateTitle('product.functionaltypes')"
-                />
-              </div>
-              <div v-else-if="tableType == 'dict'">
-                <el-table-column prop="order" label="序号" />
-                <el-table-column prop="identifier" label="标识符" />
-                <el-table-column prop="name" label="功能名称" />
-                <el-table-column prop="type" label="数据类型" />
-                <el-table-column prop="address" label="数据地址" />
-                <el-table-column prop="bytes" label="数据长度" />
-                <el-table-column prop="required" label="是否必填">
-                  <template slot-scope="scope">
-                    <span v-if="scope.row.required">是</span>
-                    <span v-else>否</span>
-                  </template>
-                </el-table-column>
-              </div>
-              <div v-else>
-                <el-empty :image-size="200" />
-              </div>
-            </el-table>
-            <el-empty v-else :image-size="200" />
-          </div>
+          <profile-descriptions
+            ref="ProfileDescription"
+            :table-type="tableType"
+            :product-id="productId"
+            :things="things"
+            :dict-table-list="dictTableList"
+            :decoder-table-list="decoderTableList"
+            :product-detail="productDetail"
+            :parser-table-list="parserTableList"
+            :table-loading="tableLoading"
+          />
         </el-col>
       </el-row>
     </div>
-    <ProductTemplet ref="edit" @fetch-data="searchProduct(0)" />
+    <profile-drawer
+      ref="drawer"
+      :parser-tables="parserTables"
+      :parser-table="parserTable"
+    />
+    <profile-dict
+      ref="dict"
+      :data-list="dataList"
+      :allunit="allunit"
+      :tempparam="tempparams"
+      :title-dict="title_dict_edit_dialog"
+      :edit-flag="edit_dict_temp_dialog"
+      :rules="dictrules"
+      :title-temp-dialog="title_temp_dialog"
+      :dict-visible="dictVisible"
+      :parser-table="parserTable"
+    />
+    <product-templet ref="templet" @fetch-data="searchProduct(0)" />
   </div>
 </template>
 <script>
-  import ProductTemplet from './ProductTemplet'
+  // import ProductTemplet from '@/views/equipment_management/component/profile/ProductTemplet'
+  // import description from '@/views/equipment_management/component/profile/descriptions'
+  const context = require.context('./component/profile', true, /\.vue$/)
+  let res_components = {}
+  context.keys().forEach((fileName) => {
+    let comp = context(fileName)
+    res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
+  })
+
   import { uuid } from '@/utils'
   import { mapGetters } from 'vuex'
   import { delProduct, getProduct, putProduct } from '@/api/Product'
@@ -821,7 +225,6 @@
   import { getHashClass } from '@/api/Hash'
   import Category from '@/api/Mock/Category'
   import { getTable } from '@/api/Dba'
-  import categoryEdit from '@/views/devicemanage/categoryEdit'
   import {
     queryProductTemplet,
     getProductTemplet,
@@ -830,22 +233,29 @@
     postProductTemplet,
   } from '@/api/ProductTemplet'
   export default {
-    components: { ProductTemplet },
+    components: { ...res_components },
     data() {
       return {
+        dataList: [{}],
+        dictrules: {},
         isFullscreen: false,
         things: [],
         tableType: 'things',
         multipleTable: [],
-        productDetail: {},
+        productDetail: {
+          decoder: { code: '' },
+          thing: { properties: [] },
+          config: { parser: [], profile: [], basedate: { params: [] } },
+        },
         linkType: 0,
         productOptions: [],
         DbaTable: [],
         parserView: false,
         parserTable: false,
         parserType: '',
-        parserTableList: {},
-        dictTableList: {},
+        parserTables: [],
+        parserTableList: [],
+        dictTableList: [],
         decoderTableList: {},
         productConfig: {},
         parserFromId: '',
@@ -879,7 +289,7 @@
         elactiveName1: 'Table1',
         editDictTempId: '',
         title_temp_dialog: '',
-        dictTempForm: '',
+        dictTempForm: {},
         rule: [],
         dictVisible: false,
         listLoading: false,
@@ -905,6 +315,7 @@
         uploadAction: '',
         uploadData: {},
         fileList: [],
+        productId: '',
         productIdentifier: '',
         proTableData: [],
         formLabelWidth: '120px',
@@ -1048,6 +459,7 @@
     watch: {
       productDetail: {
         handler(productDetail) {
+          console.log(productDetail, 'watch')
           this.$nextTick(function () {
             productDetail?.thing?.properties
               ? this.properties(productDetail.thing.properties)
@@ -1059,6 +471,7 @@
       },
     },
     mounted() {
+      // alert('father')
       const { project = '' } = this.$route.query
       this.formInline.productname = project
       this.Industry()
@@ -1069,10 +482,16 @@
     methods: {
       async StepsListRowClick(params) {
         console.log(this.$refs.multipleTable)
+        var productDetail = {}
+        // this.$refs.ProfileDescription.featDetail(params.objectId)
         try {
           const loading = this.$baseColorfullLoading()
           const res = await getProduct(params.objectId)
-          this.productDetail = res
+          productDetail = _.merge(res, {
+            decoder: { code: '' },
+            thing: { properties: [] },
+            config: { parser: [], profile: [], basedate: { params: [] } },
+          })
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
@@ -1087,6 +506,12 @@
             'vab-hey-message-error'
           )
         }
+        console.clear()
+        console.log('productDetail', productDetail)
+        this.productId = params.objectId
+        this.productDetail = productDetail
+        this.$refs.ProfileDescription.productDetail = productDetail
+        console.log(this.$refs.ProfileDescription.productDetail)
       },
       async moveTemplate(type, params) {
         switch (type) {
@@ -1238,14 +663,13 @@
         this.edit_dict_temp_dialog = !this.edit_dict_temp_dialog
         // this.$refs.tempparams.resetFields()
       },
-      onJsonSave(formName) {
+      onJsonSave(formName, dictTempForm) {
+        console.log('this.$refs', this.$refs.dict)
         // 点击保存触发
         // console.log("onJsonSave", this.dictTempForm.params);
-        this.$refs[formName].validate((valid) => {
+        this.$refs.dict.$refs[formName].validate((valid) => {
           console.log(this.editDictTempId)
-          if (valid) {
-            this.put_Dict_temp(this.editDictTempId, this.dictTempForm)
-          }
+          if (valid) this.put_Dict_temp(this.editDictTempId, dictTempForm)
         })
       },
       async put_Dict_temp(editDictId, row) {
@@ -1280,7 +704,7 @@
       },
       opendialog(name) {
         this.$nextTick(() => {
-          this.$refs[name].clearValidate()
+          this.$refs.dict.$refs[name].clearValidate()
         })
       },
       tempTypeChange(value) {
@@ -1618,27 +1042,41 @@
           }
         })
       },
-      editorParser(objectId, config = {}, thing = {}, type, flag = false) {
+      editorParser(config, type, flag) {
+        const { objectId, thing = {} } = this.productDetail
         console.log('flag', flag)
-        if (!flag) {
-          this.tableLoading = true
-          setTimeout(() => (this.tableLoading = false), 800)
-        }
+        this.tableLoading = true
+        setTimeout(() => (this.tableLoading = false), 800)
         var _sourceDict = []
         var _sourceModule = []
         var _sourceField = []
-        var arrStr = ''
         this.productid = objectId
         this.parserFromId = objectId
+        this.editDictTempId = objectId
         this.parserType = type
         this.tableType = type
         this.productConfig = config
-        console.log('config[`${type}`]', type, config[`${type}`])
-        // 将字典数据存在localStorage 中
-        console.log('config', config)
-        this.parserTableList = config[`${type}`] ? config[`${type}`] : []
-        if (config?.basedate?.params?.length) {
-          config.basedate.params.forEach((_dict) => {
+        var isArr = ['parser', 'profile', 'basedate.params']
+        if (isArr.includes(type)) {
+          console.log('type', type)
+          this.parserTable = flag
+          this.parserTables = this.productDetail.config[`${this.tableType}`]
+          this.parserTableList = this.productDetail.config[`${this.tableType}`]
+          this.dictTableList = this.productConfig.config.basedate.params || []
+        }
+        if (type == 'basedate.params') {
+          this.parserTable = false
+          this.editorDict(config)
+          this.dictVisible = flag ? true : false
+        }
+        console.log(
+          'this.parserTableList',
+          this.parserTableList,
+          this.parserTables,
+          this.tableType
+        )
+        if (this.productDetail?.basedate?.params?.length) {
+          this.productDetail.basedate.params.forEach((_dict) => {
             _sourceDict.push({
               field: _dict.identifier,
               label: _dict.name,
@@ -1658,8 +1096,6 @@
         localStorage.setItem('_sourceDict', JSON.stringify(_sourceDict))
         localStorage.setItem('_sourceModule', _sourceModule)
         localStorage.setItem('_sourceField', _sourceField)
-        this.parserTable = flag
-        this.dictTableList = config.basedate.params
         this.decoderTableList = {}
         console.log(' this.tableType ', this.tableType)
       },
@@ -1679,7 +1115,7 @@
         console.log('this.productConfig', this.productConfig, parserType)
         try {
           const res = await putProduct(this.parserFromId, {
-            config: this.productConfig,
+            config: this.productConfig.config,
           })
           this.$message.success(
             this.$translateTitle('user.Save the template successfully')
@@ -1733,41 +1169,12 @@
         rows[`${index}`].disable = !disable
         this.saveParse(rows, -1, false)
       },
-      // async editorParser(ObjectId) {
-      //   const { config = {}, thing = {} } = await getProduct(ObjectId)
-      //   this.productid = ObjectId
-      //   this.ParserConfig = config
-      //   this.parserDict = _.merge(thing, config)
-      //   this.formConfig = this.ParserConfig.parser
-      //     ? this.ParserConfig.parser
-      //     : {}
-      //   this.dialogVisible = true
-      // },
-      // async ParserSave(parse, ObjectId) {
-      //   this.ParserConfig.parser = parse
-      //   const params = {
-      //     config: this.ParserConfig,
-      //   }
-      //   try {
-      //     let { updatedAt } = await putProduct(ObjectId, params)
-      //     console.log(updatedAt)
-      //     this.$message.success(
-      //       this.$translateTitle('user.Save the template successfully')
-      //     )
-      //   } catch (e) {
-      //     this.$message.error(
-      //       this.$translateTitle('user.Save the template error') + `${e}`
-      //     )
-      //   }
-      //   this.dialogVisible = false
-      // },
-      async editorDict(ObjectId) {
+      async editorDict(config) {
+        // this.parserTable = flag
+        // this.parserType = type
+        // this.tableType = type
         this.getAllunit()
-        const row = await getProduct(ObjectId)
-        const { config = { basedate: {} } } = row
-        this.productInfo = row
-        console.log(' this.parserDict', this.parserDict)
-        this.editDictTempId = ObjectId
+        this.productInfo = config
         this.dictTempForm = {
           name: '',
           cType: '',
@@ -1776,12 +1183,12 @@
           params: [],
         }
         this.title_temp_dialog = '创建字典模板'
-        console.log(config)
+        console.log(config, 'editorDict')
         if (config.basedate && config.basedate.name) {
           this.title_temp_dialog = '修改字典模板'
           this.dictTempForm = config.basedate
         }
-        this.rule = {
+        this.dictrules = {
           name: [
             { required: true, message: '请输入字典模板名称', trigger: 'blur' },
           ],
@@ -1793,6 +1200,7 @@
           ],
         }
         console.log(this.dictTempForm, 'config')
+        this.$refs.dict.dictTempForm = this.dictTempForm
         this.dictVisible = true
       },
       editorProduct(row) {

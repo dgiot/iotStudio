@@ -40,6 +40,7 @@ module.exports = {
   storage: 'cookie',
   // 退出登录后不清空的cookie列表
   cookieWhiteList: [
+    'cdnResource',
     'language',
     'theme',
     'collapse',

@@ -1122,6 +1122,7 @@
         </div>
       </el-dialog>
     </div>
+
     <VabRender v-show="false" :config="config" :loading="true" />
   </div>
 </template>
@@ -1136,7 +1137,6 @@
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
   import Category from '@/api/Mock/Category'
-
   export default {
     data() {
       return {

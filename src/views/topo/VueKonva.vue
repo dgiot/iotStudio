@@ -38,6 +38,7 @@
           </el-col>
         </transition>
         <el-col :span="24 - rightrow" class="_konvarow">
+          <topo-base ref="topobase" />
           <div id="konva" ref="konva" :class="konvaClass"></div>
 
           <div
@@ -114,15 +115,9 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="js">
   import { uuid } from '@/utils'
-  const context = require.context('./components', true, /\.vue$/)
-  let res_components = {}
-  context.keys().forEach((fileName) => {
-    let comp = context(fileName)
-    res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
-  })
-
+  import { requireModule } from '@/utils/file'
   import { createState } from '@/utils/konva'
   import { mapGetters, mapMutations } from 'vuex'
   import { isBase64, isImage } from '@/utils'
@@ -131,7 +126,7 @@
   import { putProduct, queryProduct } from '@/api/Product'
   export default {
     components: {
-      ...res_components,
+      ...requireModule(require.context('./components', true, /\.vue$/)),
     },
     data() {
       return {
@@ -564,6 +559,11 @@
         console.log('globalStageid', globalStageid)
         console.log(JSON.stringify(Stage), 'Stage')
         _this.stage = Konva.Node.create(Stage, globalStageid)
+        _this.$refs.topobase.createTopo(
+          _this.stage.toJSON(),
+          moment(new Date()).valueOf()
+        )
+        console.log('_this.$refs.topobase', _this.$refs.topobase)
         console.log('data', data)
         var Layer = _this.stage.find('Layer')[0]
         _this.stage.on('click', (e) => {
@@ -903,10 +903,10 @@
           .konva {
             position: relative;
             width: 1200px;
-            height: calc(100vh - 240px);
             padding: 2%;
-            overflow-x: auto;
+            height: calc(100vh - 240px);
             overflow-y: auto;
+            overflow-x: auto;
             // background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png');
             background-size: 100% 100%;
             border: 1px solid #ebeef5;

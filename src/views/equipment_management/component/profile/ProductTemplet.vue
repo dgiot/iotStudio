@@ -100,17 +100,11 @@
 </template>
 
 <script>
-  import {
-    queryProductTemplet,
-    getProductTemplet,
-    delProductTemplet,
-    putProductTemplet,
-    postProductTemplet,
-  } from '@/api/ProductTemplet'
+  import { queryProductTemplet, delProductTemplet } from '@/api/ProductTemplet'
   import { queryProduct } from '@/api/Product'
   import { mapGetters } from 'vuex'
   export default {
-    name: 'TableEdit',
+    name: 'ProductTemplet',
     data() {
       return {
         form: {},

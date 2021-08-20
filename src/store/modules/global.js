@@ -12,14 +12,20 @@ const state = () => ({
   _tableParser: getToken('_tableParser', storage, {}),
   _deviceFlag: getToken('_deviceFlag', storage, false),
   _deviceStep: getToken('_deviceFlag', storage, -1),
+  cdnResource: getToken('cdnResource', storage, ''),
 })
 const getters = {
   _tableDict: (state) => state._tableDict,
   _tableParser: (state) => state._tableParser,
   _deviceFlag: (state) => state._deviceFlag,
   _deviceStep: (state) => state._deviceStep,
+  cdnResource: (state) => state.cdnResource,
 }
 const mutations = {
+  setCdnResource(state, resource) {
+    state._deviceFlag = resource
+    setToken('cdnResource', resource)
+  },
   set_deviceFlag(state, flag) {
     state._deviceFlag = flag
     setToken('_deviceFlag', flag)
@@ -38,6 +44,9 @@ const mutations = {
   },
 }
 const actions = {
+  setCdnResource({ commit, resource }) {
+    commit('setCdnResource', resource)
+  },
   set_deviceStep({ commit, step }) {
     commit('set_deviceStep', step)
   },
