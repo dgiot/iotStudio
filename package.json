@@ -6,14 +6,14 @@
   "private": true,
   "homepage": "https://github.com/dgiot/dgiot_dashboard.git",
   "scripts": {
-    "dev": "vue-cli-service serve",
-    "dev:cdn": "yarn downCdn && vue-cli-service serve",
-    "start": "vue-cli-service serve",
-    "start:cdn": "yarn downCdn && vue-cli-service serve",
+    "dev": "yarn downIconfront && vue-cli-service serve",
+    "dev:cdn": "yarn downCdn && yarn downIconfront && vue-cli-service serve",
+    "start": "yarn downIconfront && vue-cli-service serve",
+    "start:cdn": "yarn downCdn && yarn downIconfront &&  vue-cli-service serve",
     "serve": "vue-cli-service serve",
-    "serve:cdn": "yarn downCdn && vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "build:cdn": "yarn downCdn && vue-cli-service build",
+    "serve:cdn": "yarn downCdn && yarn downIconfront && vue-cli-service serve",
+    "build": "yarn downIconfront && vue-cli-service build",
+    "build:cdn": "yarn downCdn && yarn downIconfront &&  vue-cli-service build",
     "build:report": "vue-cli-service build --report",
     "lint": "vue-cli-service lint",
     "lint:style": "stylelint **/*.{vue,scss} --fix",
@@ -34,7 +34,8 @@
     "set:gitbit": "npm run remoteinfo && git push origin master && rimraf gitbit && mkdir gitbit && cp -r .git/* gitbit && if exist gitbit echo 'gitbit'",
     "copy:config": "rimraf src/config/developer.config.js && cp src/config/developer.lock.js src/config/developer.config.js && echo 'copy config done'",
     "dgiot:install": "yarn global add rimraf && rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf node_modules/.yarn-integrity  && rimraf node_modules && rimraf yarn.lock && yarn",
-    "downCdn": "node utils/downCdn.js"
+    "downCdn": "node utils/downCdn.js",
+    "downIconfront": "node utils/downIconfront.js"
   },
   "repository": {
     "type": "git",

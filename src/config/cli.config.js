@@ -28,4 +28,6 @@ module.exports = {
   useCdn: false,
   // 忽略cdn下载的文件关键字
   ignoreCdn: ['php', 'bugtags', '1279876845'],
+  // iconfront 的id //
+  iconfontId: ['font_2759556_r8d9wroaw8'],
 }

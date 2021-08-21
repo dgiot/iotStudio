@@ -30,6 +30,7 @@ let cdnUrl = {
     'https://unpkg.com/prismjs/themes/prism-tomorrow.css',
     'https://unpkg.com/vue-prism-editor/dist/prismeditor.min.css',
     'https://unpkg.com/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.min.css',
+    //  https://at.alicdn.com/t/font_2759556_18gyfqayutt.json
   ],
   js: [
     'https://unpkg.com/vue/dist/vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
@@ -112,7 +113,6 @@ let cdnUrl = {
     'https://unpkg.com/vuetify/dist/vuetify.min.js',
     'https://unpkg.com/ace-builds',
     'https://unpkg.com/resize-observer-polyfill',
-    'https://unpkg.com/ant-design-vue/lib/icon/index.js',
     // 'https://unpkg.com/v-ace-editor/index.js',
     // 'https://unpkg.com/colors.js/colors.min.js',
     // 'https://unpkg.com/colors/lib/index.js',

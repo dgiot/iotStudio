@@ -394,7 +394,7 @@
             </span>
           </el-dialog>
         </el-tab-pane>
-        <!--功能定义-->
+        <!--物模型-->
         <el-tab-pane
           :label="$translateTitle('product.physicalmodel')"
           name="third"
@@ -692,7 +692,7 @@
                       <el-button
                         type="danger"
                         size="mini"
-                        @click="deletewmx(scope.$index)"
+                        @click="deletewmx(scope.row)"
                       >
                         {{ $translateTitle('developer.delete') }}
                       </el-button>
@@ -2042,7 +2042,12 @@
   import { mapGetters, mapMutations } from 'vuex'
 
   import { getDeviceCountByProduct } from '@/api/Device/index'
-  import { queryProduct } from '@/api/Product/index'
+  import {
+    queryProduct,
+    postThing,
+    putThing,
+    deleteThing,
+  } from '@/api/Product/index'
   import { getAllunit, getDictCount } from '@/api/Dict/index'
   import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
   import { getRule } from '@/api/Rules'
@@ -3417,31 +3422,67 @@
         }
         delete obj.index
 
+        console.log('obj', obj)
+        let data = {
+          item: obj,
+          productid: this.productId,
+        }
+
         // 检测到
         if (this.wmxSituation == '新增') {
           // console.log("新增");
-          this.productdetail.thing.properties.unshift(obj)
-        } else if (this.wmxSituation == '编辑') {
-          // console.log("编辑" + obj);
-          this.productdetail.thing.properties[this.modifyIndex] = obj
-        }
-        const params = {
-          thing: this.productdetail.thing,
-        }
-        this.$update_object('Product', this.productId, params)
-          .then((resultes) => {
-            if (resultes) {
+          // this.productdetail.thing.properties.unshift(obj)
+          postThing(data).then((res) => {
+            console.log('新增', res)
+            if (res.code == 200) {
               this.$message({
                 type: 'success',
-                message: '添加成功',
+                message: '新增成功',
               })
-              this.getProDetail()
-              this.wmxdialogVisible = false
+            } else {
+              this.$message({
+                type: 'warning',
+                message: '新增失败' + res.msg,
+              })
             }
           })
-          .catch((e) => {
-            console.log(e)
+        } else if (this.wmxSituation == '编辑') {
+          // console.log("编辑" + obj);
+          // this.productdetail.thing.properties[this.modifyIndex] = obj
+          putThing(data).then((res) => {
+            console.log('编辑', res)
+            if (res.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '编辑成功',
+              })
+            } else {
+              this.$message({
+                type: 'warning',
+                message: '编辑失败' + res.msg,
+              })
+            }
           })
+        }
+        this.getProDetail()
+        this.wmxdialogVisible = false
+        // const params = {
+        //   thing: this.productdetail.thing,
+        // }
+        // this.$update_object('Product', this.productId, params)
+        //   .then((resultes) => {
+        //     if (resultes) {
+        //       this.$message({
+        //         type: 'success',
+        //         message: '添加成功',
+        //       })
+        //       this.getProDetail()
+        //       this.wmxdialogVisible = false
+        //     }
+        //   })
+        //   .catch((e) => {
+        //     console.log(e)
+        //   })
       },
       createProperty() {
         this.setSizeForm(this.getFormOrginalData())
@@ -4657,27 +4698,30 @@
         })
       },
       /* 删除物模型*/
-      deletewmx(index) {
-        this.productdetail.thing.properties.splice(
-          (this.wmxstart - 1) * this.wmxPageSize + index,
-          1
-        )
+      deletewmx(row) {
+        // this.productdetail.thing.properties.splice(
+        //   (this.wmxstart - 1) * this.wmxPageSize + index,
+        //   1
+        // )
         const params = {
-          thing: this.productdetail.thing,
+          productid: this.productId,
+          item: row,
         }
-        this.$update_object('Product', this.productId, params)
-          .then((resultes) => {
-            if (resultes) {
-              this.$message({
-                type: 'success',
-                message: '删除成功',
-              })
-              this.wmxData = this.productdetail.thing.properties.concat([])
-            }
-          })
-          .catch((e) => {
-            console.log(e)
-          })
+        deleteThing(params).then((res) => {
+          console.log('删除', res)
+          if (res.code == 200) {
+            this.$message({
+              type: 'success',
+              message: '删除成功',
+            })
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '删除失败 ' + res.msg,
+            })
+          }
+          this.getProDetail()
+        })
       },
       wmxSizeChange(val) {
         this.wmxstart = 1
