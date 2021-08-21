@@ -5,6 +5,19 @@
       <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     </div>
     <el-collapse v-model="activeNames" accordion>
+      <el-collapse-item title="iconfont" name="icon">
+        <el-row :gutter="20">
+          <el-col v-for="item in iconfont.glyphs" :key="item.icon_id" :span="8">
+            <i v-svg-drag @mousedown="moveSvg(item)">
+              <VabIconfont
+                type="svg"
+                :title="item.name"
+                :name="item.font_class"
+              />
+            </i>
+          </el-col>
+        </el-row>
+      </el-collapse-item>
       <el-collapse-item title="图标" name="1">
         <el-row :gutter="20">
           <el-col :span="24">
@@ -34,11 +47,13 @@
           </el-col>
 
           <el-col v-for="(item, index) in queryIcon" :key="index" :span="8">
-            <el-image
-              style="width: 100%; height: 40px; cursor: pointer"
-              :src="imgHost + item"
-              @click.native="handleIcon(imgHost + item)"
-            />
+            <i @click="$message.info(`you click ${item}`)">
+              <el-image
+                style="width: 100%; height: 40px; cursor: pointer"
+                :src="imgHost + item"
+                @click.native="handleIcon(imgHost + item)"
+              />
+            </i>
           </el-col>
           <el-col :span="24">
             <el-pagination
@@ -60,10 +75,16 @@
 <script>
   import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
+  import { getSvgPath } from '@/utils/konva'
+  //   20210821112723
+  //   https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json
+  // const iconfont = require('https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json')
+  const iconfont = require('./iconfont.json')
   export default {
     name: 'Allocation',
     data() {
       return {
+        iconfont,
         accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF',
         imgHost:
           'https://dgiot-1253666439.file.myqcloud.com/dgiot_release/topo/',
@@ -81,7 +102,7 @@
         },
         images: [],
         imgParams: {},
-        activeNames: '1',
+        activeNames: 'icon',
       }
     },
     computed: {},
@@ -97,6 +118,10 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      moveSvg(item) {
+        // let el = getSvgPath(item, 'path')
+        // console.log(JSON.stringify(el.topo))
+      },
       uploadCkick() {
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
           new MouseEvent('click')

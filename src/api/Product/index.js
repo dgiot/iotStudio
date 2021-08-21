@@ -13,6 +13,7 @@ import {
   update_object,
   create_object,
 } from '@/api/shuwa_parse'
+import request from '@/utils/request'
 
 export async function queryProduct(params) {
   return query_object('Product', params)
@@ -32,4 +33,28 @@ export async function putProduct(ObjectId, params) {
 
 export async function postProduct(params) {
   return create_object('Product', params)
+}
+
+export function postThing(data) {
+  return request({
+    url: 'thing',
+    method: 'post',
+    data,
+  })
+}
+
+export function putThing(data) {
+  return request({
+    url: 'thing',
+    method: 'put',
+    data,
+  })
+}
+
+export function deleteThing(data) {
+  return request({
+    url: 'thing',
+    method: 'delete',
+    data,
+  })
 }

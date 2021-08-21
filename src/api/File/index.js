@@ -12,18 +12,35 @@ export function Upload({ file }) {
 
 /**
  *
- * @param {*} param 上传参数
- * @param {*} type  上传类型
- * @returns 上传后的信息
+ * @param file
+ * @param scene
+ * @param filename
+ * @param output
+ * @param code
+ * @param submit
+ * @param auth_token
+ * @return {*}
+ * @constructor
  */
-export function UploadImg(file, config) {
+export function UploadImg(
+  file,
+  scene = 'default',
+  filename,
+  output = 'json',
+  code,
+  submit = 'json',
+  auth_token = store.getters['user/token']
+) {
   let formData = new FormData()
   let url = ''
   const { NODE_ENV = 'development' } = process.env
   formData.append('file', file)
-  formData.append('output', 'json')
-  formData.append('path', 'group1')
-  formData.append('auth_token', store.getters['user/token'])
+  formData.append('scene', scene)
+  formData.append('filename', filename)
+  formData.append('output', output)
+  formData.append('code', code)
+  formData.append('submit', submit)
+  formData.append('auth_token', auth_token)
   NODE_ENV == 'development'
     ? (url = 'http://flow.hzmctech.com/group1/upload')
     : (url = 'group1/upload')

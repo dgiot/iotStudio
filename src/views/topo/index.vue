@@ -4,6 +4,7 @@
       <el-header class="konva-container-header hidden-xs-only">
         <topo-header />
       </el-header>
+
       <el-main class="konva-container-main">
         <el-row :gutter="24">
           <el-col

@@ -58,7 +58,10 @@
                   :label="$translateTitle('product.identifier')"
                   prop="identifier"
                 >
-                  <el-input v-model="sizeForm.identifier" />
+                  <el-input
+                    v-model="sizeForm.identifier"
+                    :disabled="sizeForm.editdatatype"
+                  />
                 </el-form-item>
                 <!--type-->
               </el-col>
@@ -1176,10 +1179,12 @@
     name: 'Wmxdetail',
     components: {},
     data() {
-      let identifier = /^[a-z][a-z0-9]*$/
+      let identifier = /^[a-z][a-z0-9_]*$/
       let isidentifier = (rule, value, callback) => {
         if (!identifier.test(value)) {
-          return callback(new Error('请以小写字母开头，只能输入小写字母或数字'))
+          return callback(
+            new Error('请以小写字母开头，只能输入小写字母,数字,_')
+          )
         } else {
           callback()
         }
