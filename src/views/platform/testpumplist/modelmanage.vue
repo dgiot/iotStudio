@@ -1088,7 +1088,7 @@
       productView(id) {
         // #topoUrl
         this.$router.push({
-          path: '/Topo/VueKonva',
+          path: '/Topo',
           query: {
             productid: id,
             type: 'product',

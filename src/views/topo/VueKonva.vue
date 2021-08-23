@@ -38,7 +38,7 @@
           </el-col>
         </transition>
         <el-col :span="24 - rightrow" class="_konvarow">
-          <topo-base ref="topobase" />
+          <!--          <topo-base ref="topobase" />-->
           <div id="konva" ref="konva" :class="konvaClass"></div>
 
           <div

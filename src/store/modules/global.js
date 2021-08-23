@@ -13,6 +13,8 @@ const state = () => ({
   _deviceFlag: getToken('_deviceFlag', storage, false),
   _deviceStep: getToken('_deviceFlag', storage, -1),
   cdnResource: getToken('cdnResource', storage, ''),
+  selectedKeys: getToken('selectedKeys', storage, []),
+  docDetails: getToken('docDetails', storage, {}),
 })
 const getters = {
   _tableDict: (state) => state._tableDict,
@@ -20,8 +22,18 @@ const getters = {
   _deviceFlag: (state) => state._deviceFlag,
   _deviceStep: (state) => state._deviceStep,
   cdnResource: (state) => state.cdnResource,
+  selectedKeys: (state) => state.selectedKeys,
+  docDetails: (state) => state.docDetails,
 }
 const mutations = {
+  set_docDetails(state, details) {
+    state.docDetails = details
+    setToken('docDetails', details)
+  },
+  setSelectedKeys(state, keys) {
+    state.selectedKeys = keys
+    setToken('selectedKeys', keys)
+  },
   setCdnResource(state, resource) {
     state._deviceFlag = resource
     setToken('cdnResource', resource)
@@ -44,6 +56,12 @@ const mutations = {
   },
 }
 const actions = {
+  set_docDetails({ commit, details }) {
+    commit('set_docDetails', details)
+  },
+  setSelectedKeys({ commit, keys }) {
+    commit('setSelectedKeys', keys)
+  },
   setCdnResource({ commit, resource }) {
     commit('setCdnResource', resource)
   },

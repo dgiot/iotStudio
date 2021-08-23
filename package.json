@@ -6,7 +6,7 @@
   "private": true,
   "homepage": "https://github.com/dgiot/dgiot_dashboard.git",
   "scripts": {
-    "dev": "yarn downIconfront && vue-cli-service serve",
+    "dev": "vue-cli-service serve",
     "dev:cdn": "yarn downCdn && yarn downIconfront && vue-cli-service serve",
     "start": "yarn downIconfront && vue-cli-service serve",
     "start:cdn": "yarn downCdn && yarn downIconfront &&  vue-cli-service serve",

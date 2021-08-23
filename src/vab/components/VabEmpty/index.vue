@@ -4,8 +4,8 @@
       <img v-if="image" :alt="description" :src="image" :style="imageStyle" />
       <svg
         v-else
-        width="184"
-        height="152"
+        :width="width"
+        :height="height"
         viewBox="0 0 184 152"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -60,6 +60,16 @@
         required: false,
         type: String,
         default: '暂无数据',
+      },
+      width: {
+        required: false,
+        type: String,
+        default: '100',
+      },
+      height: {
+        required: false,
+        type: String,
+        default: '100',
       },
       image: {
         required: false,

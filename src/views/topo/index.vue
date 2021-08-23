@@ -1,43 +1,52 @@
 <template>
   <div class="konva">
     <el-container class="konva-container">
-      <el-header class="konva-container-header hidden-xs-only">
+      <el-header
+        v-show="!isDevice"
+        class="konva-container-header hidden-xs-only"
+      >
         <topo-header />
       </el-header>
 
       <el-main class="konva-container-main">
-        <el-row :gutter="24">
+        <el-row :gutter="gutter.gutter">
           <el-col
             class="hidden-xs-only konva-container-main-allocation"
             :xs="0"
-            :sm="6"
-            :md="6"
-            :lg="4"
-            :xl="3"
+            :sm="isDevice ? 0 : 6"
+            :md="isDevice ? 0 : 6"
+            :lg="isDevice ? 0 : 4"
+            :xl="isDevice ? 0 : 3"
           >
             <Topo-allocation />
           </el-col>
 
           <el-col
-            :xs="24"
-            :sm="12"
-            :md="12"
-            :lg="15"
-            :xl="18"
+            :xs="isDevice ? 24 : gutter.xs"
+            :sm="isDevice ? 24 : gutter.sm"
+            :md="isDevice ? 24 : gutter.md"
+            :lg="isDevice ? 24 : gutter.lg"
+            :xl="isDevice ? 24 : gutter.xl"
             class="konva-container-main-baseCol"
           >
             <el-container class="konva-container-main-baseContainer">
-              <TopoBase />
+              <Topo-base ref="topobase" />
+              <div
+                id="konva"
+                ref="konva"
+                style="display: none"
+                class="konva, _center"
+              ></div>
             </el-container>
           </el-col>
           <el-col
             class="hidden-xs-only"
             hidden-xs-only
             :xs="0"
-            :sm="6"
-            :md="6"
-            :lg="5"
-            :xl="3"
+            :sm="isDevice ? 0 : 6"
+            :md="isDevice ? 0 : 6"
+            :lg="isDevice ? 0 : 5"
+            :xl="isDevice ? 0 : 3"
           >
             <el-aside class="konva-container-main-operationsSide">
               <TopoOperation />
@@ -51,18 +60,473 @@
 <script>
   import 'element-ui/lib/theme-chalk/display.css'
   import { requireModule } from '@/utils/file'
+  import { mapGetters, mapMutations } from 'vuex'
+  import { uuid } from '@/utils'
+  import { createState } from '@/utils/konva'
+  import { isBase64, isImage } from '@/utils'
+  import { Websocket } from '@/utils/wxscoket.js'
+  import { _getTopo } from '@/api/Topo'
+  import { putProduct, queryProduct } from '@/api/Product'
   export default {
     components: {
       ...requireModule(require.context('./components', true, /\.vue$/)),
     },
     data() {
-      return {}
+      return {
+        gutter: {
+          gutter: 24,
+          xs: 24,
+          sm: 12,
+          md: 12,
+          lg: 15,
+          xl: 18,
+        },
+        productid: this.$route.query.productid || '',
+      }
     },
-    computed: {},
+    computed: {
+      ...mapGetters({
+        graphColor: 'konva/graphColor',
+        drawing: 'konva/drawing',
+        graphNow: 'konva/graphNow',
+        pointStart: 'konva/pointStart',
+        draw: 'konva/draw',
+        flag: 'konva/flag',
+        drawParams: 'konva/drawParams',
+      }),
+      stageConfig() {
+        let el = document.getElementsByClassName('konva')
+        return {
+          width: el[0].clientWidth,
+          height: el[0].clientHeight,
+          container: 'container',
+          id: 'container',
+        }
+      },
+      isDevice: function () {
+        return this.$route.query.type == 'device' ? true : false
+      },
+    },
     watch: {},
-    mounted() {},
+    mounted() {
+      if (this.productid) {
+        this.handleCloseSub()
+      } else {
+        this._initCreate()
+      }
+    },
     destroyed() {},
-    methods: {},
+    methods: {
+      // 取消订阅mqtt
+      async handleCloseSub() {
+        let _this = this
+        if (_this.$route.query.type == 'device') {
+          _this.productid = _this.$route.query.deviceid
+        }
+        _this.handleMqttMsg(_this.productid)
+        _this.stop_Mqtt = true
+        var text0 = JSON.stringify({ action: 'stop_logger' })
+        var sendInfo = {
+          topic: 'thing/' + _this.productid + '/post',
+          text: text0,
+          retained: true,
+          qos: 2,
+        }
+        console.log('sendInfo', sendInfo)
+        if (_this.$refs.topoheader) {
+          console.log('订阅mqtt')
+          _this.$refs.topoheader.handleCloseSub(sendInfo)
+        }
+        const { productid, devaddr = undefined } = _this.$route.query
+        let params = {
+          productid: productid,
+          devaddr: devaddr,
+        }
+        const { message = '', data } = await _getTopo(params)
+        // 绘制前不光需要获取到组态数据，还需要获取产品数据
+        const { results = [] } = await queryProduct({
+          where: { objectId: _this.$route.query.productid },
+        })
+        _this.productconfig = results[0]
+        console.log(_this.productconfig)
+        if (message == 'SUCCESS') {
+          // console.log(this.$refs['edrawer'].$refs, 'edrawer')
+          _this.$refs['operation']
+            ? (_this.$refs['operation'].productconfig = results[0])
+            : console.log(" _this.$refs['operation']", _this.$refs['operation'])
+          console.log(data.Stage.attrs.id)
+          _this.globalStageid = data.Stage.attrs.id
+          _this.createKonva(data, _this.globalStageid, 'create')
+          _this.paramsconfig = { konva: data }
+          //
+          // set backgroundImage
+        }
+      },
+      // 处理mqtt信息
+      handleMqttMsg(subdialogid) {
+        let _this = this
+
+        var channeltopic = new RegExp('thing/' + subdialogid + '/post')
+        Websocket.add_hook(channeltopic, (Msg) => {
+          let decodeMqtt
+          let updataId = []
+          console.log('收到消息', Msg)
+          if (!isBase64(Msg)) {
+            console.log('非base64数据类型')
+            return
+          } else {
+            decodeMqtt = JSON.parse(Base64.decode(Msg))
+            console.log('消息解密消息', decodeMqtt)
+          }
+
+          console.log(decodeMqtt.konva)
+          const Shape = decodeMqtt.konva
+          // apply transition to all nodes in the array
+          // Text.each(function (shape) {
+          const Text = this.stage.find('Text')
+          console.log(Text)
+          const tweens = []
+          for (var n = 0; n < tweens.length; n++) {
+            tweens[n].destroy()
+          }
+
+          Shape.each((i) => {
+            Text.each((shape) => {
+              if (i.id == shape.attrs.id) {
+                console.log('更新节点', i)
+                console.log(shape)
+                shape.text(i.text)
+                tweens.push(
+                  new Konva.Tween({
+                    node: shape,
+                    duration: 1,
+                    easing: Konva.Easings.ElasticEaseOut,
+                  }).play()
+                )
+              } else {
+                updataId.push(i.id)
+              }
+            })
+          })
+          if (updataId) {
+            console.log('以下组态id未更新', updataId)
+          }
+          _this.stage.batchDraw()
+          console.log('konva数据更新成功')
+          // _this.updataProduct(this.productid)
+        })
+      },
+      createKonva(data, globalStageid, type) {
+        console.log('type', type)
+        let Stage
+        let _this = this
+        if (type != 'create') {
+          Stage = data
+        } else {
+          Stage = data.Stage
+        }
+        console.log(data)
+        console.log(Stage.attrs.height, Stage.attrs.width, '450')
+        Stage.attrs.height = _this.stageConfig.height
+        Stage.attrs.width = _this.stageConfig.width
+        console.log(Stage.attrs.height, Stage.attrs.width, '453')
+        var _konvarow = document.querySelectorAll('._center')[0]
+        console.log(_konvarow)
+        const div = document.createElement('div')
+        _konvarow.appendChild(div)
+        div.setAttribute('id', globalStageid)
+        console.log('globalStageid', globalStageid)
+        console.log(JSON.stringify(Stage), 'Stage')
+        _this.stage = Konva.Node.create(Stage, globalStageid)
+
+        console.log('_this.$refs.topobase', _this.$refs.topobase)
+        console.log('data', data)
+        var Layer = _this.stage.find('Layer')[0]
+        _this.stage.on('click', (e) => {
+          var node = e.target
+          console.log(e, 'stage node')
+          console.log(node, 'stage target')
+          // 判断是否为产品界面
+          if (_this.isDevice) {
+            node.attrs.draggable = false
+            console.log('isDevice', node)
+          }
+          // 如果点击空白处 移除图形选择框
+          // 移除图形选择框
+          if (node == _this.stage) {
+            // _this.stage.find('Transformer')?.length
+            //   ? _this.stage.find('Transformer').destroy()
+            //   : console.log(
+            //       " _this.stage.find('Transformer')",
+            //       _this.stage.find('Transformer')
+            //     )
+            Layer.draw()
+          }
+          console.log(node.toJSON())
+          if (_this.isDevice) return
+          _this.setGraphNow(e.target)
+
+          _this.$refs['operation'].Shapeconfig = JSON.parse(node.toJSON())
+          if (!_this.flag) {
+            return
+          }
+          console.log('类型', _this.flag)
+          console.log('this.draw', _this.draw)
+          console.log('color', _this.graphColor)
+          console.log('drawParams', _this.drawParams)
+          const color = _this.graphColor
+          const type = _this.flag
+          console.log('params', _this.drawParams)
+          const _group = _this.stage.find('Group')[0]
+          const { offsetX, offsetY } = e.evt
+          var state = createState(
+            type,
+            offsetX,
+            offsetY,
+            color,
+            _this.drawParams
+          )
+          console.log('createState', state)
+          _group.add(state)
+          Layer.draw()
+          Layer.batchDraw()
+          _this.setFlag('')
+          _this.setDraw(false)
+        })
+        const Group = _this.stage.find('Group')
+        const Text = _this.stage.find('Text')
+        // console.clear()
+        console.log(Text, 'Text')
+        // if (!_this.isDevice && Text?.length) {
+        if (!_this.isDevice && Text?.length) {
+          Text.forEach((_G) => {
+            _G.on('mouseenter', function (e) {
+              console.log(e, 'Text mouseenter')
+              _this.stage.container().style.cursor = 'move'
+            })
+
+            _G.on('mouseleave', function (e) {
+              console.log(e, 'Text mouseleave')
+              _this.stage.container().style.cursor = 'default'
+            })
+            _G.on('dblclick', function (e) {
+              console.log(e, 'Text dblclick')
+              console.log(_this.stage.find('Transformer'), _this.stage.find())
+              _this.stage.find('Transformer')?.length
+                ? _this.stage.find('Transformer').destroy()
+                : console.log(
+                    "_this.stage.find('Transformer')",
+                    _this.stage.find('Transformer')
+                  )
+              // 在画布上创建具有绝对位置的textarea
+
+              // 首先，我们需要为textarea找到位置
+
+              // 首先，让我们找到文本节点相对于舞台的位置:
+              let textPosition = this.getAbsolutePosition()
+
+              // 然后让我们在页面上找到stage容器的位置
+              let stageBox = _this.stage.container().getBoundingClientRect()
+
+              // 因此textarea的位置将是上面位置的和
+              console.log('eeeeeeeeeeeeeeeee', e)
+              let areaPosition = {
+                x: stageBox.left + textPosition.x,
+                y: stageBox.top + textPosition.y,
+                color: e.target.attrs.fill,
+                text: e.target.attrs.text,
+              }
+
+              // 创建textarea并设置它的样式
+              let textarea = document.createElement('textarea')
+              document.body.appendChild(textarea)
+              let T = this.text()
+              if (T === '双击编辑文字') {
+                textarea.value = ''
+                textarea.setAttribute('placeholder', '请输入文字')
+              } else {
+                textarea.value = T
+              }
+              textarea.style.position = 'absolute'
+              textarea.style.top = areaPosition.y + 'px'
+              textarea.style.left = areaPosition.x + 'px'
+              textarea.style.background = 'none'
+              textarea.style.border = '1px dashed #000'
+              textarea.style.outline = 'none'
+              textarea.style.color = areaPosition.color
+              textarea.focus()
+
+              this.setAttr('text', '')
+              Layer.draw()
+
+              // 确定输入的文字
+              let confirm = (val) => {
+                this.text(val ? val : '双击编辑文字')
+                Layer.draw()
+                // 隐藏在输入
+                if (textarea) document.body.removeChild(textarea)
+              }
+              // 回车键
+              let keydown = (e) => {
+                if (e.keyCode === 13) {
+                  textarea.removeEventListener('blur', blur)
+                  confirm(textarea.value)
+                }
+              }
+              // 鼠标失去焦点
+              let blur = () => {
+                textarea.removeEventListener('keydown', keydown)
+                confirm(textarea.value)
+              }
+
+              textarea.addEventListener('keydown', keydown)
+              textarea.addEventListener('blur', blur)
+            })
+          })
+        }
+        // // 设置页面是从设备界面进入 则不添加以下事件
+        if (_this.isDevice && _this.productconfig) {
+          _this.konvaClass.push('isDevice')
+        }
+        //   _this.leftrow = _this.rightrow = 0
+        // } else {
+        //   // _this.leftrow = 3
+        //   _this.rightrow = 6
+        // }
+        console.log(Group, 'Group')
+        // https://github.com/xiongshuang/konva-palette/blob/master/palette/index.html
+        if (!_this.isDevice && Group?.length) {
+          Group.forEach(function (_G) {
+            _G.on('dblclick', (e) => {
+              console.log(e, 'Group dblclick')
+              // 创建图形选框事件
+              const tr = new Konva.Transformer({
+                borderStroke: '#000', // 虚线颜色
+                borderStrokeWidth: 1, //虚线大小
+                borderDash: [5], // 虚线间距
+                keepRatio: false, // 不等比缩放
+                id: `Transformer_${uuid(6)}`,
+              })
+              Layer.add(tr)
+              tr.attachTo(e.target)
+              Layer.draw()
+              // _this.ShapeVisible = true
+              console.log(`#${e.target.attrs.id}`)
+              var node = e.target
+              console.log('当前图层层级', Number(node.zIndex()))
+              _this.setGraphNow(e.target)
+              _this.$refs['operation'].ShapeIndex = Number(node.zIndex())
+              _this.$refs['operation'].ShapeOpacity = node.opacity()
+              if (!_this.rightrow && !_this.isDevice) _this.rightrow = 6
+              // _this.$refs['operation'].Shapeconfig = node.toJSON()
+            })
+            _G.on('mouseup', (e) => {
+              console.log(e, '_G mouseup')
+              if (!_this.isDevice && _this.productid) _this.headevisible = true
+
+              document.body.style.cursor = 'pointer'
+            })
+            _G.on('mouseover', (e) => {
+              console.log(e, '_G mouseover')
+              document.body.style.cursor = 'pointer'
+            })
+            _G.on('mouseout', (e) => {
+              console.log(e, '_G mouseout')
+              // _this.stage.find('Transformer').destroy() // 禁用后 无法拖动
+              const id = e.target.id()
+              const item = _this.stage.find((i) => i.id === id)
+              item.x = e.target.x()
+              item.y = e.target.y()
+              document.body.style.cursor = 'default'
+            })
+          })
+        }
+        var Imgage = _this.stage.find('Image')
+        Imgage.forEach((node) => {
+          console.log('img node ', node)
+          const img = new Image()
+          img.src = node.getAttr('source')
+
+          var img_url = node.getAttr('source') + '?' + Date.parse(new Date())
+          // var _img = new Image()
+          //
+          // _img.src = img_url
+          //
+          // _img.onload = function () {
+          //   // 打印
+          //   img.with = _img.width ? _img.width:$('#current1').width()
+          //   img.height =  _img.width ? _img.width:$('#current1').height()
+          // }
+          // img.with = $('#konva').width()
+          // img.height = $('#konva').height()
+          console.log('img', img, "$('#konva')", $('#current1'))
+          $('#current1').css('background-image', `url(${img_url})`)
+          $('#current1').css('background-repeat', 'no-repeat')
+          $('#current1').css('background-size', '100%,100%')
+          // img.onload = () => {
+          //   node.image(img)
+          //   console.log(node.image(img), 'node.image(img)')
+          //   _this.stage.batchDraw()
+          // }
+        })
+        if (!_this.isDevice && Group?.length) {
+          Group.forEach(function (_G) {
+            _G.on('dblclick', (e) => {
+              console.log(e, 'Group dblclick')
+              // 创建图形选框事件
+              const tr = new Konva.Transformer({
+                borderStroke: '#000', // 虚线颜色
+                borderStrokeWidth: 1, //虚线大小
+                borderDash: [5], // 虚线间距
+                keepRatio: false, // 不等比缩放
+                id: `Transformer_${uuid(6)}`,
+              })
+              Layer.add(tr)
+              tr.attachTo(e.target)
+              Layer.draw()
+              // _this.ShapeVisible = true
+              console.log(`#${e.target.attrs.id}`)
+              var node = e.target
+              console.log('当前图层层级', Number(node.zIndex()))
+              _this.setGraphNow(e.target)
+              _this.$refs['operation'].ShapeIndex = Number(node.zIndex())
+              _this.$refs['operation'].ShapeOpacity = node.opacity()
+              if (!_this.rightrow && !_this.isDevice) _this.rightrow = 6
+              // _this.$refs['operation'].Shapeconfig = node.toJSON()
+            })
+            _G.on('mouseup', (e) => {
+              console.log(e, 'Group mouseup')
+              if (!_this.isDevice && _this.productid) _this.headevisible = true
+
+              document.body.style.cursor = 'pointer'
+            })
+            _G.on('mouseover', (e) => {
+              console.log(e, 'Group mouseover')
+              document.body.style.cursor = 'pointer'
+            })
+            _G.on('mouseout', (e) => {
+              console.log(e, 'Group mouseout')
+              // _this.stage.find('Transformer').destroy() // 禁用后 无法拖动
+              const id = e.target.id()
+              const item = _this.stage.find((i) => i.id === id)
+              item.x = e.target.x()
+              item.y = e.target.y()
+              document.body.style.cursor = 'default'
+            })
+          })
+        }
+        Layer.draw()
+        Layer.batchDraw()
+        console.log('绘制完成')
+        console.clear()
+        _this.$refs.topobase.createTopo(
+          _this.stage.toJSON(),
+          moment(new Date()).valueOf()
+        )
+        if (_this.$refs.topoheader)
+          _this.$refs.topoheader.subscribe(_this.productid)
+      },
+    },
   }
 </script>
 <style lang="scss" scoped>
@@ -102,10 +566,10 @@
           height: 50px !important;
         }
         .el-row {
-          //padding: 0 !important;
+          padding: 0 !important;
           margin: 0 !important;
           .el-col {
-            //padding: 0 !important;
+            padding: 0 !important;
             margin: 0 !important;
           }
         }

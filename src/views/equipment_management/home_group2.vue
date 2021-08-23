@@ -134,7 +134,7 @@
                 <template slot-scope="scope">
                   <router-link
                     :to="{
-                      path: '/Topo/VueKonva?productid',
+                      path: '/Topo?productid',
                       query: { productid: scope.row.objectId },
                     }"
                   >

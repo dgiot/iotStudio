@@ -1029,5 +1029,15 @@ export default {
       'For details, please refer to': '详细请参考',
       Documentation: '文档',
     },
+    article: {
+      'New category': '新建分类',
+      'edit category': '修改分类',
+      parent: '父级',
+      order: '排序',
+      category: '类别',
+      name: '名称',
+      Icon: '图标',
+      view: '查看',
+    },
   },
 }
