@@ -2918,7 +2918,7 @@
       // 组态
       konvaDevice(row) {
         this.$router.push({
-          path: '/Topo/VueKonva',
+          path: '/Topo',
           query: {
             productid: row.product.objectId,
             devaddr: row.devaddr,

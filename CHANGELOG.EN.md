@@ -1,4 +1,4 @@
-# [4.4.0](https://github.com/dgiot/dgiot_dashboard/compare/v4.3.0...v4.4.0) (2021-08-21)
+# [4.4.0](https://github.com/dgiot/dgiot_dashboard/compare/v4.3.0...v4.4.0) (2021-08-23)
 
 
 ### Bug Fixes
@@ -173,6 +173,7 @@
 * api query ([a00d409](https://github.com/dgiot/dgiot_dashboard/commit/a00d409dd442b4942fe8c132536346191f0877c9))
 * **package.json:** version ([c678506](https://github.com/dgiot/dgiot_dashboard/commit/c678506ac67ef28b5b66a70772a9d933ecf94a1b))
 * **src/vab/directives/*:** encapsulate vue custom instructions ([073b588](https://github.com/dgiot/dgiot_dashboard/commit/073b5882de4433faa56c60f7e4683c2218b20e51))
+* **src/views/logs/* && src/views/topo/*:** 1. topo iconfont ([48a3da5](https://github.com/dgiot/dgiot_dashboard/commit/48a3da52959ba4707bfb9e066afb7c7288ad1fff))
 * **src/views/topo/components/*:** 1. Rewrite konva 2. bem style ([06523ea](https://github.com/dgiot/dgiot_dashboard/commit/06523eaeadb70c0dcaf0ba78d33ecc7f54bce34c))
 * **vuex:** vuex Persistence ([c7292c1](https://github.com/dgiot/dgiot_dashboard/commit/c7292c1b300af6ffe40744fbe37ad02ea618fa0b))
 

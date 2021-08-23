@@ -1,7 +1,7 @@
 <template>
   <div class="topoBase">
     <div id="kevCurrent" :key="konvaKey" class="konvaTest"></div>
-    <div id="container" :key="konvaKey + '_t'"></div>
+    <div id="current1"></div>
   </div>
 </template>
 
@@ -32,203 +32,206 @@
       }
     },
     mounted() {
-      const json = {
-        attrs: {
-          width: 2382,
-          height: 1200,
-          draggable: true,
-        },
-        className: 'Stage',
-        children: [
-          {
-            attrs: {
-              hitGraphEnabled: false,
-            },
-            className: 'Layer',
-            children: [
-              {
-                attrs: {},
-                className: 'Image',
-              },
-              {
-                attrs: {
-                  source: 'https://konvajs.org/assets/yoda.jpg',
-                },
-                className: 'Image',
-              },
-            ],
-          },
-          {
-            attrs: {},
-            className: 'Layer',
-            children: [
-              {
-                attrs: {
-                  data: 'M358.4 307.2h307.2v61.44H358.4z',
-                  originX: 'center',
-                  originY: 'bottom',
-                  id: '#icon-biaoqian-0',
-                  x: 10,
-                  y: 15,
-                  angle: -30,
-                  fill: '#FFDA00',
-                  scaleX: 0.15,
-                  scaleY: 0.15,
-                  rotation: 0,
-                },
-                className: 'Path',
-              },
-              {
-                attrs: {
-                  data: 'M798.72 153.6H184.32v716.8l61.44-35.47136 266.24-153.71264 266.24 153.71264L839.68 870.4V153.6h-40.96zM573.44 645.74464l-61.44-35.47136-61.44 35.47136-204.8 118.24128V215.04h532.48v548.94592L573.44 645.74464z',
-                  originX: 'center',
-                  originY: 'bottom',
-                  id: '#icon-biaoqian-1',
-                  x: 10,
-                  y: 15,
-                  angle: -30,
-                  fill: '#4DC400',
-                  scaleX: 0.15,
-                  scaleY: 0.15,
-                  rotation: 0,
-                },
-                className: 'Path',
-              },
-              {
-                attrs: {
-                  draggable: true,
-                  x: 306,
-                  y: 303,
-                  transformsEnabled: 'position',
-                },
-                className: 'Group',
-                children: [
-                  {
-                    attrs: {
-                      data: 'M317.44 291.84h389.12v61.44H317.44zM317.44 404.48h389.12v61.44H317.44zM317.44 517.12h245.76v61.44H317.44z',
-                      originX: 'center',
-                      originY: 'bottom',
-                      id: '#icon-bianjixiugai-0',
-                      x: 10,
-                      y: 15,
-                      angle: -30,
-                      fill: '#FFDA00',
-                      scaleX: 0.15,
-                      scaleY: 0.15,
-                      rotation: 0,
-                    },
-                    className: 'Path',
-                  },
-                  {
-                    attrs: {
-                      data: 'M184.32 153.6v716.8h307.2v-61.44H245.76V215.04h532.48v179.2h61.44V153.6z',
-                      originX: 'center',
-                      originY: 'bottom',
-                      id: '#icon-bianjixiugai-1',
-                      x: 10,
-                      y: 15,
-                      angle: -30,
-                      fill: '#4DC400',
-                      scaleX: 0.15,
-                      scaleY: 0.15,
-                      rotation: 0,
-                    },
-                    className: 'Path',
-                  },
-                  {
-                    attrs: {
-                      data: 'M591.90272 787.4048l194.56-336.97792 53.20704 30.72-194.56 336.97792zM637.06112 832.55296l-53.20704-30.72L559.2576 870.4h40.96z',
-                      originX: 'center',
-                      originY: 'bottom',
-                      id: '#icon-bianjixiugai-2',
-                      x: 10,
-                      y: 15,
-                      angle: -30,
-                      fill: '#FFDA00',
-                      scaleX: 0.15,
-                      scaleY: 0.15,
-                      rotation: 0,
-                    },
-                    className: 'Path',
-                  },
-                ],
-              },
-              {
-                attrs: {
-                  draggable: true,
-                  x: 490,
-                  y: 557,
-                  transformsEnabled: 'position',
-                },
-                className: 'Group',
-                children: [
-                  {
-                    attrs: {
-                      radius: 20,
-                      stroke: '#231fff',
-                      strokeWidth: 4,
-                      fill: '#ffffff',
-                    },
-                    className: 'Circle',
-                  },
-                  {
-                    attrs: {
-                      text: '2',
-                      fontSize: 14,
-                      originX: 'center',
-                      originY: 'center',
-                      fill: '#231fff',
-                      x: -5,
-                      y: -5,
-                    },
-                    className: 'Text',
-                  },
-                  {
-                    attrs: {
-                      data: '',
-                      originX: 'center',
-                      originY: 'bottom',
-                      x: 10,
-                      y: 15,
-                      angle: -30,
-                      fill: '#231fff',
-                      scaleX: 0.15,
-                      scaleY: 0.15,
-                      rotation: -30,
-                    },
-                    className: 'Path',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      }
-      const stage = Konva.Node.create(json, 'container')
-
-      stage.find('Image').forEach((node) => {
-        const img = new Image()
-        img.src = node.getAttr('source')
-        img.onload = () => {
-          node.image(img)
-          stage.batchDraw()
-        }
-      })
+      // const json = {
+      //   attrs: {
+      //     width: 2382,
+      //     height: 1200,
+      //     draggable: true,
+      //   },
+      //   className: 'Stage',
+      //   children: [
+      //     {
+      //       attrs: {
+      //         hitGraphEnabled: false,
+      //       },
+      //       className: 'Layer',
+      //       children: [
+      //         {
+      //           attrs: {},
+      //           className: 'Image',
+      //         },
+      //         {
+      //           attrs: {
+      //             source: 'https://konvajs.org/assets/yoda.jpg',
+      //           },
+      //           className: 'Image',
+      //         },
+      //       ],
+      //     },
+      //     {
+      //       attrs: {},
+      //       className: 'Layer',
+      //       children: [
+      //         {
+      //           attrs: {
+      //             data: 'M358.4 307.2h307.2v61.44H358.4z',
+      //             originX: 'center',
+      //             originY: 'bottom',
+      //             id: '#icon-biaoqian-0',
+      //             x: 10,
+      //             y: 15,
+      //             angle: -30,
+      //             fill: '#FFDA00',
+      //             scaleX: 0.15,
+      //             scaleY: 0.15,
+      //             rotation: 0,
+      //           },
+      //           className: 'Path',
+      //         },
+      //         {
+      //           attrs: {
+      //             data: 'M798.72 153.6H184.32v716.8l61.44-35.47136 266.24-153.71264 266.24 153.71264L839.68 870.4V153.6h-40.96zM573.44 645.74464l-61.44-35.47136-61.44 35.47136-204.8 118.24128V215.04h532.48v548.94592L573.44 645.74464z',
+      //             originX: 'center',
+      //             originY: 'bottom',
+      //             id: '#icon-biaoqian-1',
+      //             x: 10,
+      //             y: 15,
+      //             angle: -30,
+      //             fill: '#4DC400',
+      //             scaleX: 0.15,
+      //             scaleY: 0.15,
+      //             rotation: 0,
+      //           },
+      //           className: 'Path',
+      //         },
+      //         {
+      //           attrs: {
+      //             draggable: true,
+      //             x: 306,
+      //             y: 303,
+      //             transformsEnabled: 'position',
+      //           },
+      //           className: 'Group',
+      //           children: [
+      //             {
+      //               attrs: {
+      //                 data: 'M317.44 291.84h389.12v61.44H317.44zM317.44 404.48h389.12v61.44H317.44zM317.44 517.12h245.76v61.44H317.44z',
+      //                 originX: 'center',
+      //                 originY: 'bottom',
+      //                 id: '#icon-bianjixiugai-0',
+      //                 x: 10,
+      //                 y: 15,
+      //                 angle: -30,
+      //                 fill: '#FFDA00',
+      //                 scaleX: 0.15,
+      //                 scaleY: 0.15,
+      //                 rotation: 0,
+      //               },
+      //               className: 'Path',
+      //             },
+      //             {
+      //               attrs: {
+      //                 data: 'M184.32 153.6v716.8h307.2v-61.44H245.76V215.04h532.48v179.2h61.44V153.6z',
+      //                 originX: 'center',
+      //                 originY: 'bottom',
+      //                 id: '#icon-bianjixiugai-1',
+      //                 x: 10,
+      //                 y: 15,
+      //                 angle: -30,
+      //                 fill: '#4DC400',
+      //                 scaleX: 0.15,
+      //                 scaleY: 0.15,
+      //                 rotation: 0,
+      //               },
+      //               className: 'Path',
+      //             },
+      //             {
+      //               attrs: {
+      //                 data: 'M591.90272 787.4048l194.56-336.97792 53.20704 30.72-194.56 336.97792zM637.06112 832.55296l-53.20704-30.72L559.2576 870.4h40.96z',
+      //                 originX: 'center',
+      //                 originY: 'bottom',
+      //                 id: '#icon-bianjixiugai-2',
+      //                 x: 10,
+      //                 y: 15,
+      //                 angle: -30,
+      //                 fill: '#FFDA00',
+      //                 scaleX: 0.15,
+      //                 scaleY: 0.15,
+      //                 rotation: 0,
+      //               },
+      //               className: 'Path',
+      //             },
+      //           ],
+      //         },
+      //         {
+      //           attrs: {
+      //             draggable: true,
+      //             x: 490,
+      //             y: 557,
+      //             transformsEnabled: 'position',
+      //           },
+      //           className: 'Group',
+      //           children: [
+      //             {
+      //               attrs: {
+      //                 radius: 20,
+      //                 stroke: '#231fff',
+      //                 strokeWidth: 4,
+      //                 fill: '#ffffff',
+      //               },
+      //               className: 'Circle',
+      //             },
+      //             {
+      //               attrs: {
+      //                 text: '2',
+      //                 fontSize: 14,
+      //                 originX: 'center',
+      //                 originY: 'center',
+      //                 fill: '#231fff',
+      //                 x: -5,
+      //                 y: -5,
+      //               },
+      //               className: 'Text',
+      //             },
+      //             {
+      //               attrs: {
+      //                 data: '',
+      //                 originX: 'center',
+      //                 originY: 'bottom',
+      //                 x: 10,
+      //                 y: 15,
+      //                 angle: -30,
+      //                 fill: '#231fff',
+      //                 scaleX: 0.15,
+      //                 scaleY: 0.15,
+      //                 rotation: -30,
+      //               },
+      //               className: 'Path',
+      //             },
+      //           ],
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // }
+      // const stage = Konva.Node.create(json, 'container')
+      //
+      // stage.find('Image').forEach((node) => {
+      //   const img = new Image()
+      //   img.src = node.getAttr('source')
+      //   img.onload = () => {
+      //     node.image(img)
+      //     stage.batchDraw()
+      //   }
+      // })
     },
     methods: {
       createTopo(json, key) {
+        console.clear()
         this.konvaKey = key
         this.konvajson = json
+        console.log(json, 'json')
         console.log(this.konvaKey, 'konvaKey')
+        console.log(this.konvajson, 'this.konvajson')
         const stage = Konva.Node.create(json, 'kevCurrent')
-        // stage.find('Image').forEach((node) => {
-        //   const img = new Image()
-        //   img.src = node.getAttr('source')
-        //   img.onload = () => {
-        //     node.image(img)
-        //     stage.batchDraw()
-        //   }
-        // })
+        stage.find('Image').forEach((node) => {
+          const img = new Image()
+          img.src = node.getAttr('source')
+          img.onload = () => {
+            node.image(img)
+            stage.batchDraw()
+          }
+        })
         console.log(stage.toJSON())
         this.$message.success('successfully')
         this.konvaKey = moment(new Date()).valueOf()

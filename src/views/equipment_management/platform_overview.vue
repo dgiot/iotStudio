@@ -1285,7 +1285,7 @@
       handleChange() {},
       handleClickVisit(project) {
         this.$router.push({
-          path: '/Topo/VueKonva',
+          path: '/Topo',
           query: {
             productid: project.objectId,
           },
@@ -1321,7 +1321,7 @@
             break
           case 'konva':
             this.$router.push({
-              path: '/Topo/VueKonva',
+              path: '/Topo',
               query: {
                 productid: this.deviceInfo.product.objectId,
                 devaddr: this.deviceInfo.devaddr,

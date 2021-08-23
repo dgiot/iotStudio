@@ -113,6 +113,7 @@ let cdnUrl = {
     'https://unpkg.com/vuetify/dist/vuetify.min.js',
     'https://unpkg.com/ace-builds',
     'https://unpkg.com/resize-observer-polyfill',
+    'https://unpkg.com/vditor',
     // 'https://unpkg.com/v-ace-editor/index.js',
     // 'https://unpkg.com/colors.js/colors.min.js',
     // 'https://unpkg.com/colors/lib/index.js',
