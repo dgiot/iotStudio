@@ -1,6 +1,7 @@
 <template>
   <div class="doc-dialog">
     <el-dialog
+      :key="key"
       append-to-body
       width="400px"
       :title="
@@ -19,6 +20,7 @@
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
         <el-form-item
+          v-show="form.parent.objectId.includes('article')"
           prop="category"
           :label="$translateTitle('article.category')"
           :label-width="formLabelWidth"
@@ -26,6 +28,7 @@
           <el-input v-model="form.category" autocomplete="off" />
         </el-form-item>
         <el-form-item
+          v-show="form.parent.objectId.includes('article')"
           prop="ico"
           :label="$translateTitle('article.Icon')"
           :label-width="formLabelWidth"
@@ -46,6 +49,7 @@
           />
         </el-form-item>
         <el-form-item
+          v-show="false"
           prop="parent.objectId"
           :label="$translateTitle('article.parent')"
           :label-width="formLabelWidth"
@@ -57,7 +61,10 @@
         <el-button @click="dialogFormVisible = false">
           {{ $translateTitle('button.cancel') }}
         </el-button>
-        <el-button type="primary" @click="$parent.createDoc('form', form)">
+        <el-button
+          type="primary"
+          @click="$parent.createDoc('form', form, form.type)"
+        >
           {{
             form.type == 'add'
               ? $translateTitle('button.create')
@@ -82,12 +89,13 @@
     name: 'DocDialog',
     data() {
       return {
+        key: moment(new Date()).valueOf(),
         dialogFormVisible: false,
         form: {
           type: '',
           name: '',
           parent: {
-            objectId: 0,
+            objectId: 'article',
             __type: 'Pointer',
             className: 'Article',
           },

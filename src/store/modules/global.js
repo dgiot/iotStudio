@@ -14,7 +14,7 @@ const state = () => ({
   _deviceStep: getToken('_deviceFlag', storage, -1),
   cdnResource: getToken('cdnResource', storage, ''),
   selectedKeys: getToken('selectedKeys', storage, []),
-  docDetails: getToken('docDetails', storage, {}),
+  docDetails: getToken('docDetails', storage, []),
 })
 const getters = {
   _tableDict: (state) => state._tableDict,
