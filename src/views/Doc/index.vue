@@ -95,6 +95,7 @@
 </template>
 
 <script>
+  import { uuid } from '@/utils'
   import { requireModule } from '@/utils/file'
   import {
     createArticle,
@@ -161,7 +162,9 @@
         this.HomePageForDetails = []
         try {
           const loading = this.$baseColorfullLoading()
-          const { results = [] } = await queryArticle({})
+          const { results = [] } = await queryArticle({
+            where: { parent: 'article' },
+          })
           this.HomePageForDetails = results
           loading.close()
         } catch (error) {
@@ -174,6 +177,10 @@
         }
       },
       createDoc(formName, form) {
+        delete form.type
+        form.parent.objectId.includes('article')
+          ? (form.projectId = `pid_${uuid(6)}`)
+          : ''
         this.$refs.DocDialog.$refs[`${formName}`].validate(async (valid) => {
           if (valid) {
             const loading = this.$baseColorfullLoading()
@@ -188,11 +195,11 @@
         })
       },
       goChild(itme) {
-        console.log(itme.id)
+        console.log(itme)
         this.$router.push({
           path: '/doc/details',
           query: {
-            details: itme.id,
+            details: itme.projectId,
             // article: '',
           },
         })
