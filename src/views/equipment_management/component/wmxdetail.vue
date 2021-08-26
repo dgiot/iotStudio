@@ -106,7 +106,6 @@
               >
                 <el-form-item label="小数位数" prop="precision">
                   <el-select v-model="sizeForm.precision" style="width: 100%">
-                    <el-option :label="0" value="0" />
                     <el-option :label="1" value="1" />
                     <el-option :label="2" value="2" />
                     <el-option :label="3" value="3" />

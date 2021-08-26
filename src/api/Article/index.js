@@ -1,6 +1,6 @@
 // * @Author: h7ml
 // * @Date: 2021-08-23 18:12:12
-// * @LastEditors: vivi
+// * @LastEditors: h7ml
 // * @LastEditTime: 2021-08-23 18:12:12
 // * @Description: dgiot doc api
 // * @FilePath: src\api\Article\index.js
@@ -14,7 +14,10 @@ import {
 } from '@/api/shuwa_parse'
 
 export async function createArticle(params) {
-  return create_object('Article', params)
+  return create_object(
+    'Article',
+    _.merge(params, { timestamp: moment(new Date()).valueOf() })
+  )
 }
 export async function getArticle(ObjectId) {
   return get_object('Article', ObjectId)

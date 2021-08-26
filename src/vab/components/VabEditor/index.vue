@@ -1,8 +1,13 @@
 <template>
-  <div class="VabEditor"></div>
+  <div class="VabEditor" :style="styleObject"></div>
 </template>
 
 <script>
+  /**
+   * @document https://unpkg.com/v-ace-editor
+   * @api https://ace.c9.io/#nav=api
+   * @type {string[]}
+   */
   const Events = [
     'blur',
     'input',
@@ -24,6 +29,11 @@
         required: false,
         type: String,
         default: '',
+      },
+      height: {
+        required: false,
+        type: Number,
+        default: 500,
       },
       lang: {
         type: String,
@@ -71,6 +81,16 @@
         editor: null,
         contentBackup: '',
       }
+    },
+    computed: {
+      styleObject: function () {
+        const height = this.height || Number(this.$baseTableHeight(0))
+        const style = {
+          height: height + 'px !important',
+        }
+        console.log('height', height, style)
+        return style
+      },
     },
     watch: {
       value(val) {
@@ -218,11 +238,7 @@
   }
 </script>
 
-<style scoped>
-  .VabIframe {
-    margin: 0 8px;
-    font-size: 14px;
-    line-height: 22px;
-    text-align: center;
+<style scoped lang="scss">
+  .VabEditor {
   }
 </style>
