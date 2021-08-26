@@ -3,13 +3,16 @@
     <div class="dialog">
       <doc-dialog ref="DocDialog" />
     </div>
+
     <a-row>
       <a-col :span="4">
         <div class="dgiot-doc-tree">
           <a-tree
-            :auto-expand-parent="true"
-            show-line
+            :show-icon="true"
+            :block-node="true"
+            :show-line="true"
             :default-expand-all="true"
+            :auto-expand-parent="true"
             :default-expanded-keys="selectedKeys"
             :default-selected-keys="selectedKeys"
             :tree-data="docDetails"

@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import store from '@/store'
+import { Message } from 'element-ui'
 export function Upload({ file }) {
   return request({
     url: 'upload',
@@ -22,25 +23,44 @@ export function Upload({ file }) {
  * @return {*}
  * @constructor
  */
-export function UploadImg(
-  file,
-  scene = 'default',
-  filename,
-  output = 'json',
-  code,
-  submit = 'json',
-  auth_token = store.getters['user/token']
-) {
-  let formData = new FormData()
+export function UploadImg(params) {
+  if (!_.isObject(params)) Message.error('上传参数必须为对象')
+  // const p = {
+  //   file,
+  //   scene = 'default',
+  //   filename,
+  //   output = 'json',
+  //   code,
+  //   submit = 'json',
+  //   auth_token = store.getters['user/token'],
+  // }
+  params = _.merge(params, {
+    auth_token: store.getters['user/token'],
+    scene: 'default',
+    code: '',
+    output: 'json',
+    submit: 'upload',
+  })
+  console.log(params, 'params', result)
+  var formData = new FormData()
+  for (let key in params) {
+    formData.append(key, params[key])
+  }
+  const isParamsKey = [
+    'file',
+    'scene',
+    'filename',
+    'output',
+    'code',
+    'submit',
+    'auth_token',
+  ]
+  var result = isParamsKey.every((e) => {
+    return params.hasOwnProperty(`${e}`)
+  })
   let url = ''
   const { NODE_ENV = 'development' } = process.env
-  formData.append('file', file)
-  formData.append('scene', scene)
-  formData.append('filename', filename)
-  formData.append('output', output)
-  formData.append('code', code)
-  formData.append('submit', submit)
-  formData.append('auth_token', auth_token)
+  console.log('formData', formData)
   NODE_ENV == 'development'
     ? (url = 'http://flow.hzmctech.com/group1/upload')
     : (url = 'group1/upload')
@@ -51,13 +71,17 @@ export function UploadImg(
   //   method: 'post',
   //   data: formData,
   // })
-
-  return axios
-    .post(url, formData, {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-    })
-    .catch((err) => console.log(err))
+  if (result) {
+    return axios
+      .post(url, formData, {
+        Accept: 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
+      })
+      .catch((err) => console.log(err))
+  } else {
+    Message.error('上传参数不正确')
+    return false
+  }
 }
 
 // 需要返回整体 所以不能用该方法

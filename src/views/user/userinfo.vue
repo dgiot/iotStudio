@@ -10,7 +10,12 @@
                 :src="avatar"
                 @click.native="uploadCkick('userinfo.avatar')"
               />
-              <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+              <vab-input
+                ref="uploadFinish"
+                :params="inputParams"
+                @fileInfo="fileInfo"
+                @files="files"
+              />
               <ul class="personal-center-user-info-list">
                 <li>
                   <vab-icon icon="user-2-line" />
@@ -229,6 +234,7 @@
         }
       }
       return {
+        inputParams: {},
         channeindex: 0,
         password: '',
         registerRules: {
@@ -399,8 +405,16 @@
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
           new MouseEvent('click')
         )
+        this.inputParams = {
+          file: '',
+          path: 'user/profile/',
+          filename: `${this.ObjectId}.${type}`,
+        }
       },
-
+      files(file, type) {
+        this.inputParams.filename = `${this.ObjectId}.${type}`
+        this.inputParams.file = file
+      },
       async queryUserInfo(ObjectId) {
         const {
           username,

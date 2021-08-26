@@ -1178,7 +1178,11 @@
                         v-else
                         v-model="deviceform[item.identifier]"
                         :disabled="item.readonly"
-                      />
+                      >
+                        <el-button slot="append">
+                          {{ item.unit ? item.unit : '' }}
+                        </el-button>
+                      </el-input>
                     </el-form-item>
                   </el-col>
                   <el-col :span="24">

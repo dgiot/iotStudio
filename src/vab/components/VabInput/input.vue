@@ -28,6 +28,13 @@
         type: String,
         default: 'image/*',
       },
+      params: {
+        type: Object,
+        required: false,
+        default: function () {
+          return {}
+        },
+      },
     },
     data() {
       return {
@@ -47,6 +54,10 @@
     methods: {
       doUpload(event) {
         let file = event.target.files[0]
+        const name = event.target.files[0].name
+        console.log('file', file, event.target, event, name)
+        const type = name.split('.').pop().toLowerCase()
+        console.log('type', type)
         let config = {
           onUploadProgress: (progressEvent) => {
             //progressEvent.loaded:已上传文件大小
@@ -65,7 +76,8 @@
             'Content-Type': 'multipart/form-data',
           },
         }
-        UploadImg(file, config)
+        this.$emit('files', file, type)
+        UploadImg(this.params, config)
           .then((res) => {
             //将生成的url传递给父组件
             this.$emit('fileInfo', res.data)

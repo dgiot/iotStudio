@@ -1039,5 +1039,10 @@ export default {
       Icon: '图标',
       view: '查看',
     },
+    Logs: {
+      'log lever': '日志级别',
+      'Real-time log': '实时日志',
+      'History log': '历史日志',
+    },
   },
 }
