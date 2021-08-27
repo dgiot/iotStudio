@@ -797,16 +797,6 @@
                 >
                   <el-option
                     v-for="item in [
-                      { value: 'readCoils', label: '0X01:读线圈寄存器' },
-                      { value: 'readInputs', label: '0X02:读离散输入寄存器' },
-                      {
-                        value: 'readHregs',
-                        label: '0X03:读保持寄存器',
-                      },
-                      {
-                        value: 'readIregs',
-                        label: '0X04:读输入寄存器',
-                      },
                       {
                         value: 'writeCoil',
                         label: '0X05:写单个线圈寄存器',
@@ -844,10 +834,21 @@
               </template>
             </el-table-column>
             <el-table-column
+              v-if="
+                tempparams.operatetype == 'writeCoils' ||
+                tempparams.operatetype == 'writeHregs'
+              "
               align="center"
-              label="数据长度(字节)"
+              label="寄存器个数"
               min-width="120"
             >
+              <!--关键代码-->
+              <template slot-scope="scope">
+                <el-input v-model="tempparams.registersnumber" />
+                <span v-show="false">{{ scope.row.slaveid }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="写入字节数" min-width="120">
               <!--关键代码-->
               <template slot-scope="scope">
                 <el-input v-model="tempparams.bytes" />
@@ -1160,6 +1161,7 @@
           order: 0,
           address: '',
           bytes: '',
+          registersnumber: '',
           default: 0,
           required: false,
           readonly: true,
@@ -1482,6 +1484,7 @@
           order: 0,
           address: '',
           bytes: '',
+          registersnumber: '',
           default: 0,
           required: false,
           readonly: true,

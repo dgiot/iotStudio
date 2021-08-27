@@ -426,7 +426,7 @@
                 <el-col :span="12">
                   <el-form-item
                     class="is-required"
-                    :label="$translateTitle('product.file type')"
+                    :label="$translateTitle('product.gps type')"
                   >
                     <el-select
                       v-model="options.value"
@@ -434,7 +434,7 @@
                       clearable
                     >
                       <el-option
-                        v-for="item in ['二进制', 'Base64']"
+                        v-for="item in [' NMEA0183']"
                         :key="item"
                         :label="item"
                         :value="item"
@@ -1082,22 +1082,6 @@
                         {
                           value: 'readIregs',
                           label: '0X04:读输入寄存器',
-                        },
-                        {
-                          value: 'writeCoil',
-                          label: '0X05:写单个线圈寄存器',
-                        },
-                        {
-                          value: 'writeHreg',
-                          label: '0X06:写单个保持寄存',
-                        },
-                        {
-                          value: 'writeCoils',
-                          label: '0X0f:写多个线圈寄存器',
-                        },
-                        {
-                          value: 'writeHregs',
-                          label: '0X10:写多个保持寄存器',
                         },
                       ]"
                       :key="item.value"

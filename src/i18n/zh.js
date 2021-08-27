@@ -381,6 +381,7 @@ export default {
     },
     product: {
       'file type': '文件类型',
+      'gps type': 'GPS类型',
       'File parameters': '文件参数',
       Binary: '二进制',
       Base64: 'Base64',
@@ -1040,9 +1041,13 @@ export default {
       view: '查看',
     },
     Logs: {
+      console: '控制台',
+      table: '列表',
+      'Source code': '本页源码',
       'log lever': '日志级别',
       'Real-time log': '实时日志',
       'History log': '历史日志',
+      'Draggable column settings': '可拖拽列设置',
     },
   },
 }

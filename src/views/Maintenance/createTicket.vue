@@ -540,7 +540,7 @@
           type: '',
           pageNo: 1,
           pageSize: 20,
-          searchDate: [],
+          searchDate: ['1577808000', '1609430400'],
           limt: 10,
           skip: 0,
           order: '-createdAt',
@@ -653,6 +653,7 @@
           read: true,
           write: true,
         }
+
         const params = {
           number: moment(new Date()).unix() + '',
           type: from.type,
