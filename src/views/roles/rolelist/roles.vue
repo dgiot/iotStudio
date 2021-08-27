@@ -3,7 +3,7 @@
 <template>
   <div class="roles">
     <el-row :gutter="20">
-      <el-col :span="14" :xs="24">
+      <el-col :span="14" :xs="8">
         <div class="rightTable">
           <div class="search">
             <vab-query-form style="margin-top: 20px">
@@ -187,7 +187,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="10" :xs="24">
+      <el-col :span="10" :xs="16">
         <!--菜单-->
         <div class="rolefooter">
           <div class="footerleft">
@@ -915,7 +915,7 @@
   }
 
   .rightTable {
-    height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
+    max-height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
     overflow-x: hidden;
     overflow-y: scroll;
 

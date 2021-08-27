@@ -3439,6 +3439,7 @@
                 type: 'success',
                 message: '新增成功',
               })
+              this.getProDetail()
             } else {
               this.$message({
                 type: 'warning',
@@ -3456,6 +3457,7 @@
                 type: 'success',
                 message: '编辑成功',
               })
+              this.getProDetail()
             } else {
               this.$message({
                 type: 'warning',
@@ -3464,7 +3466,6 @@
             }
           })
         }
-        this.getProDetail()
         this.wmxdialogVisible = false
         // const params = {
         //   thing: this.productdetail.thing,
@@ -4542,6 +4543,7 @@
           this.wmxData = this.wmxDataBk.filter(
             (item) => item.devicetype == row.name
           )
+          this.wmxstart = 1
         }
       },
       handleChange(value, direction, movedKeys) {
@@ -4714,13 +4716,13 @@
               type: 'success',
               message: '删除成功',
             })
+            this.getProDetail()
           } else {
             this.$message({
               type: 'warning',
               message: '删除失败 ' + res.msg,
             })
           }
-          this.getProDetail()
         })
       },
       wmxSizeChange(val) {
