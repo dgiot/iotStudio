@@ -1,5 +1,5 @@
 <template>
-  <div class="resourcechannel">
+  <div class="resourcechannel resourcechannel-container">
     <VabMqtt ref="mqtt" :topic="channeltopic" @mqttMsg="mqttMsg" />
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="firsttable">
@@ -32,6 +32,7 @@
         :header-cell-style="{ 'text-align': 'center' }"
         :cell-style="{ 'text-align': 'center' }"
         :data="tableData"
+        :height="height"
         :row-class-name="getChannelEnable"
         style="width: 100%"
       >
@@ -242,7 +243,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="elpagination" style="margin-top: 20px">
+      <div class="elpagination">
         <el-pagination
           :page-sizes="[10, 20, 30, 50]"
           :page-size="length"
@@ -573,6 +574,7 @@
         channelformsearch: {
           name: '',
         },
+        height: this.$baseTableHeight(0),
         channelregion: [],
         addchannel: {
           region: '',
@@ -1126,9 +1128,8 @@
   .resourcechannel {
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
-    padding: 20px;
-
+    //height: 100%;
+    height: calc(100vh - #{$base-top-bar-height}* 3 - 25px);
     ::v-deep {
       .green_active {
         color: green;

@@ -1,5 +1,5 @@
 <template>
-  <div class="rolescontrol">
+  <div class="rolescontrol dgiot-container">
     <div class="search">
       <el-input
         v-model="search"
@@ -27,7 +27,7 @@
     <el-table
       v-loading="listLoading"
       size="mini"
-      height="600"
+      :height="tableHeight"
       :data="treeData"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       border
@@ -183,6 +183,7 @@
         listLoading: false,
         formLabelWidth: '120px',
         roleEdit: false,
+        tableHeight: this.$baseTableHeight(0),
         form: {
           name: '',
           alias: '',
@@ -293,7 +294,6 @@
   .rolescontrol {
     box-sizing: border-box;
     width: 100%;
-    padding: 20px;
     background: #ffffff;
   }
 </style>

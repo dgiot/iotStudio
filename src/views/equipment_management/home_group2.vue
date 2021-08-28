@@ -1,5 +1,5 @@
 <template>
-  <div class="devproduct">
+  <div class="devproduct devproduct-container">
     <el-dialog
       :append-to-body="true"
       :visible.sync="dialogVisible"
@@ -43,7 +43,7 @@
           {{ $translateTitle('product.preservation') }}
         </el-button>
       </div>
-      <el-table :data="parserTableList.parser">
+      <el-table :height="height" :data="parserTableList.parser">
         <el-table-column
           sortable
           align="center"
@@ -85,201 +85,199 @@
     </el-dialog>
 
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
-    <el-tabs v-model="activeName">
-      <el-tab-pane
-        :label="$translateTitle('product.myproduct') + '(' + total + ')'"
-        name="first"
+    <!--    <el-tabs v-model="activeName">-->
+    <!--      <el-tab-pane-->
+    <!--        :label="$translateTitle('product.myproduct') + '(' + total + ')'"-->
+    <!--        name="first"-->
+    <!--      >-->
+    <div class="prosecond">
+      <el-form
+        :inline="true"
+        :model="formInline"
+        class="demo-form-inline"
+        size="small"
       >
-        <div class="prosecond">
-          <el-form
-            :inline="true"
-            :model="formInline"
-            class="demo-form-inline"
-            size="small"
+        <el-form-item>
+          <el-input
+            v-model="formInline.productname"
+            clearable
+            :placeholder="$translateTitle('product.searchproductname')"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="searchProduct(0)">
+            {{ $translateTitle('developer.search') }}
+          </el-button>
+        </el-form-item>
+        <el-form-item style="float: right; text-align: right">
+          <el-button type="primary" @click="addproduct">
+            {{ $translateTitle('product.createproduct') }}
+          </el-button>
+          <el-button type="primary" @click="exportpro">
+            {{ $translateTitle('product.exportpro') }}
+          </el-button>
+          <el-button type="primary" @click="importDialogShow = true">
+            {{ $translateTitle('product.importpro') }}
+          </el-button>
+        </el-form-item>
+      </el-form>
+      <div class="protable">
+        <el-table
+          v-loading="listLoading"
+          :height="height"
+          :header-cell-style="{ 'text-align': 'center' }"
+          :cell-style="{ 'text-align': 'center' }"
+          :data="proTableData"
+          style="width: 100%"
+        >
+          <el-table-column label="ProductID" sortable show-overflow-tooltip>
+            <template slot-scope="scope">
+              <router-link
+                :to="{
+                  path: '/Topo?productid',
+                  query: { productid: scope.row.objectId },
+                }"
+              >
+                {{ scope.row.objectId }}
+              </router-link>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$translateTitle('product.productname')">
+            <template slot-scope="scope">
+              <span>{{ scope.row.name }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$translateTitle('product.productgrouping')">
+            <template slot-scope="scope">
+              <span>{{ scope.row.devType }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            width="120"
+            :label="$translateTitle('product.nodetype')"
           >
-            <el-form-item>
-              <el-input
-                v-model="formInline.productname"
-                clearable
-                :placeholder="$translateTitle('product.searchproductname')"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="searchProduct(0)">
-                {{ $translateTitle('developer.search') }}
-              </el-button>
-            </el-form-item>
-            <el-form-item style="float: right; text-align: right">
-              <el-button type="primary" @click="addproduct">
-                {{ $translateTitle('product.createproduct') }}
-              </el-button>
-              <el-button type="primary" @click="exportpro">
-                {{ $translateTitle('product.exportpro') }}
-              </el-button>
-              <el-button type="primary" @click="importDialogShow = true">
-                {{ $translateTitle('product.importpro') }}
-              </el-button>
-            </el-form-item>
-          </el-form>
-          <div class="protable">
-            <el-table
-              v-loading="listLoading"
-              height="60vh"
-              :header-cell-style="{ 'text-align': 'center' }"
-              :cell-style="{ 'text-align': 'center' }"
-              :data="proTableData"
-              style="width: 100%"
-            >
-              <el-table-column label="ProductID" sortable show-overflow-tooltip>
-                <template slot-scope="scope">
-                  <router-link
-                    :to="{
-                      path: '/Topo?productid',
-                      query: { productid: scope.row.objectId },
-                    }"
-                  >
-                    {{ scope.row.objectId }}
-                  </router-link>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$translateTitle('product.productname')">
-                <template slot-scope="scope">
-                  <span>{{ scope.row.name }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('product.productgrouping')"
+            <template slot-scope="scope">
+              <span v-if="scope.row.nodeType == 1">
+                {{ $translateTitle('product.gateway') }}
+              </span>
+              <span v-if="scope.row.nodeType == 0">
+                {{ $translateTitle('product.equipment') }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$translateTitle('home.category')">
+            <template slot-scope="scope">
+              <span>
+                {{ getCategory(scope.row.category) }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            width="180"
+            :label="$translateTitle('product.addingtime')"
+          >
+            <template slot-scope="scope">
+              <span>{{ utc2beijing(scope.row.createdAt) }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            width="280"
+            :label="$translateTitle('developer.operation')"
+          >
+            <template slot-scope="scope">
+              <el-button
+                :underline="false"
+                type="primary"
+                size="mini"
+                @click="deviceToDetail(scope.row)"
               >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.devType }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                width="120"
-                :label="$translateTitle('product.nodetype')"
+                {{ $translateTitle('product.config') }}
+              </el-button>
+              <el-button
+                :underline="false"
+                size="mini"
+                type="warning"
+                @click="editorDict(scope.row.objectId)"
               >
-                <template slot-scope="scope">
-                  <span v-if="scope.row.nodeType == 1">
-                    {{ $translateTitle('product.gateway') }}
-                  </span>
-                  <span v-if="scope.row.nodeType == 0">
-                    {{ $translateTitle('product.equipment') }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="$translateTitle('home.category')">
-                <template slot-scope="scope">
-                  <span>
-                    {{ getCategory(scope.row.category) }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                width="180"
-                :label="$translateTitle('product.addingtime')"
+                {{ $translateTitle('product.dict') }}
+              </el-button>
+              <el-button
+                :underline="false"
+                size="mini"
+                type="success"
+                @click="editorProduct(scope.row)"
               >
-                <template slot-scope="scope">
-                  <span>{{ utc2beijing(scope.row.createdAt) }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                fixed="right"
-                width="280"
-                :label="$translateTitle('developer.operation')"
+                {{ $translateTitle('concentrator.edit') }}
+              </el-button>
+              <el-popover
+                :ref="`popover-${scope.$index}`"
+                style="margin-left: 10px"
+                placement="top"
+                width="300"
               >
-                <template slot-scope="scope">
+                <p>确定删除这个{{ scope.row.name }}产品吗？</p>
+                <div style="margin: 0; text-align: right">
                   <el-button
-                    :underline="false"
+                    size="mini"
+                    @click="
+                      scope._self.$refs[`popover-${scope.$index}`].doClose()
+                    "
+                  >
+                    {{ $translateTitle('developer.cancel') }}
+                  </el-button>
+                  <el-button
                     type="primary"
                     size="mini"
-                    @click="deviceToDetail(scope.row)"
+                    @click="makeSure(scope)"
                   >
-                    {{ $translateTitle('product.config') }}
+                    {{ $translateTitle('developer.determine') }}
                   </el-button>
-                  <el-button
-                    :underline="false"
-                    size="mini"
-                    type="warning"
-                    @click="editorDict(scope.row.objectId)"
-                  >
-                    {{ $translateTitle('product.dict') }}
-                  </el-button>
-                  <el-button
-                    :underline="false"
-                    size="mini"
-                    type="success"
-                    @click="editorProduct(scope.row)"
-                  >
-                    {{ $translateTitle('concentrator.edit') }}
-                  </el-button>
-                  <el-popover
-                    :ref="`popover-${scope.$index}`"
-                    style="margin-left: 10px"
-                    placement="top"
-                    width="300"
-                  >
-                    <p>确定删除这个{{ scope.row.name }}产品吗？</p>
-                    <div style="margin: 0; text-align: right">
-                      <el-button
-                        size="mini"
-                        @click="
-                          scope._self.$refs[`popover-${scope.$index}`].doClose()
-                        "
-                      >
-                        {{ $translateTitle('developer.cancel') }}
-                      </el-button>
-                      <el-button
-                        type="primary"
-                        size="mini"
-                        @click="makeSure(scope)"
-                      >
-                        {{ $translateTitle('developer.determine') }}
-                      </el-button>
-                    </div>
-                    <el-button slot="reference" size="mini" type="danger">
-                      {{ $translateTitle('developer.delete') }}
-                    </el-button>
-                  </el-popover>
-                  <!--                  <el-button-->
-                  <!--                    :underline="false"-->
-                  <!--                    icon="el-icon-s-promotion"-->
-                  <!--                    type="primary"-->
-                  <!--                    @click="proudctView(scope.row)"-->
-                  <!--                  >-->
-                  <!--                    运行组态-->
-                  <!--                  </el-button>-->
-                  <!--                  <el-button-->
-                  <!--                    :underline="false"-->
-                  <!--                    icon="el-icon-link"-->
-                  <!--                    type="primary"-->
-                  <!--                    @click="proudctEdit(scope.row)"-->
-                  <!--                  >-->
-                  <!--                    编辑组态-->
-                  <!--                  </el-button>-->
-                  <!-- <el-button
+                </div>
+                <el-button slot="reference" size="mini" type="danger">
+                  {{ $translateTitle('developer.delete') }}
+                </el-button>
+              </el-popover>
+              <!--                  <el-button-->
+              <!--                    :underline="false"-->
+              <!--                    icon="el-icon-s-promotion"-->
+              <!--                    type="primary"-->
+              <!--                    @click="proudctView(scope.row)"-->
+              <!--                  >-->
+              <!--                    运行组态-->
+              <!--                  </el-button>-->
+              <!--                  <el-button-->
+              <!--                    :underline="false"-->
+              <!--                    icon="el-icon-link"-->
+              <!--                    type="primary"-->
+              <!--                    @click="proudctEdit(scope.row)"-->
+              <!--                  >-->
+              <!--                    编辑组态-->
+              <!--                  </el-button>-->
+              <!-- <el-button
                     :disabled="scope.row.config.config.cloneState == true"
                     :underline="false"
                     icon="el-icon-link"
                     type="primary"
                     @click="proudctClone(scope.row)"
                   >备份</el-button> -->
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-          <div class="elpagination" style="margin-top: 20px">
-            <el-pagination
-              :page-sizes="[10, 20, 30, 50]"
-              :page-size="length"
-              :total="total"
-              layout="total, sizes, prev, pager, next, jumper"
-              @size-change="productSizeChange"
-              @current-change="productCurrentChange"
-            />
-          </div>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="elpagination" style="margin-top: 20px">
+        <el-pagination
+          :page-sizes="[10, 20, 30, 50]"
+          :page-size="length"
+          :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="productSizeChange"
+          @current-change="productCurrentChange"
+        />
+      </div>
+    </div>
+    <!--      </el-tab-pane>-->
+    <!--    </el-tabs>-->
     <div class="prodialog">
       <!-- 创建产品对话框 ###-->
       <el-dialog
@@ -534,7 +532,7 @@
 
                 <el-table
                   :data="dictTempForm.params"
-                  height="300"
+                  :height="height"
                   style="width: 100%; text-align: center"
                 >
                   <el-table-column prop="order" label="序号" />
@@ -773,6 +771,7 @@
             v-show="tempparams.protocol == 'modbus'"
             :data="dataList"
             border
+            :height="height"
             style="width: 100%"
             size="small"
           >
@@ -1035,6 +1034,7 @@
                   新 增
                 </el-button>
                 <el-table
+                  :height="height"
                   :data="tempparams.specs"
                   style="width: 100%; text-align: center"
                 >
@@ -1141,6 +1141,7 @@
   export default {
     data() {
       return {
+        height: this.$baseTableHeight(0),
         config: {},
         dataList: [{}],
         parserView: false,
@@ -2243,7 +2244,6 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    padding: 20px;
   }
 
   .devproduct ::v-deep .el-dialog__wrapper .el-dialog__header,
@@ -2285,7 +2285,6 @@
   .devproduct ::v-deep .prosecond {
     box-sizing: border-box;
     width: 100%;
-    padding: 20px 10px;
   }
 
   .devproduct ::v-deep .el-dialog {

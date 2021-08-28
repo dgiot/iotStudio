@@ -1,12 +1,12 @@
 <template>
-  <div class="rulesengine">
+  <div class="rulesengine dgiot-container">
     <div class="engintable">
       <div class="engineheader">
         <el-button
           :disabled="alarmsRuleId.length > 0 && engineData.length > 0"
           type="primary"
           icon="el-icon-plus"
-          style="float: right; margin: 19px 0"
+          style="float: right"
           size="small"
           @click="addEngine"
         >
@@ -14,6 +14,7 @@
         </el-button>
       </div>
       <el-table
+        :height="height"
         :data="engineData"
         :cell-class-name="getRowindex"
         style="width: 100%; text-align: center"
@@ -131,6 +132,7 @@
     // components: { VabParser },
     data() {
       return {
+        height: this.$baseTableHeight(0),
         engineData: [],
         pagesize: 10,
         start: 0,
@@ -251,7 +253,6 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    padding: 20px;
     .engintable {
       width: 100%;
       height: auto;
@@ -261,7 +262,6 @@
         }
       }
       .block {
-        margin-top: 20px;
       }
     }
     ::v-deep .firstcolumn {

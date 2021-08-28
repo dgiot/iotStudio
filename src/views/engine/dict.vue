@@ -1,6 +1,6 @@
 <!-- 组件说明 -->
 <template>
-  <div class="dict">
+  <div class="dict dict-container">
     <div class="dialog">
       <el-dialog
         :append-to-body="true"
@@ -287,7 +287,7 @@
 
                 <el-table
                   :data="dictTempForm.params"
-                  height="300"
+                  :height="height"
                   style="width: 100%; text-align: center"
                 >
                   <!-- <el-table-column prop="name" label="名称" /> -->
@@ -677,6 +677,7 @@
           :header-cell-style="{ 'text-align': 'center' }"
           :cell-style="{ 'text-align': 'center' }"
           :data="dictRecord"
+          :height="height"
           :row-class-name="tableRowClassName"
           style="width: 100%"
         >
@@ -1060,6 +1061,7 @@
     components: {},
     data() {
       return {
+        height: this.$baseTableHeight(0) - 50,
         queryid: this.$route.query.dictid,
         arrlist: [],
         addDictForm: {
@@ -1649,7 +1651,6 @@
         }
       }
     }
-    margin: 20px;
     ::v-deep .el-table .warning-row {
       background: oldlace;
     }

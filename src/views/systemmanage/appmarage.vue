@@ -1,5 +1,5 @@
 <template>
-  <div class="appmarage">
+  <div class="appmarage appmarage-container">
     <div class="header">
       <el-button type="primary" size="small" @click="checkupdateall">
         {{ $translateTitle('plugins.checkupdate') }}
@@ -7,6 +7,7 @@
     </div>
     <div class="block" style="margin-top: 10px">
       <el-table
+        :height="height"
         :data="tableData.slice((start - 1) * length, start * length)"
         style="width: 100%; text-align: center"
       >
@@ -171,6 +172,7 @@
   export default {
     data() {
       return {
+        height: this.$baseTableHeight(0) - 15,
         tableData: [],
         total: 0,
         start: 1,
@@ -360,20 +362,3 @@
     },
   }
 </script>
-<style scoped>
-  .appmarage {
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    background: #ffffff;
-  }
-</style>
-<style>
-  .appmarage .el-dialog__footer {
-    padding-bottom: 50px;
-  }
-  .appmarage .el-table th.is-leaf {
-    padding: 5px 0;
-  }
-</style>

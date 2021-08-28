@@ -133,7 +133,7 @@
         infoData: 'Category',
         isFullscreen: false,
         border: true,
-        height: this.$baseTableHeight(1),
+        height: this.$baseTableHeight(0) - 20,
         stripe: false,
         lineHeight: 'medium',
         categoryList: [],

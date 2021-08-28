@@ -1,5 +1,5 @@
 <template>
-  <div class="department">
+  <div class="department department-container">
     <el-row :gutter="20">
       <el-col :span="6">
         <el-table
@@ -47,7 +47,7 @@
         </el-table>
       </el-col>
 
-      <el-col :span="8">
+      <el-col :span="9">
         <el-col :span="12">
           <!--权限 -->
           <div class="footerleft">
@@ -60,14 +60,50 @@
                 {{ $translateTitle('user.assignroles1') }}
               </span>
             </p>
+            <div>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="expand('permissionTree', 'isExpand')"
+              >
+                <span v-if="!isExpand">
+                  {{ $translateTitle('button.Unfold') }}
+                </span>
+                <span v-else>{{ $translateTitle('button.fold') }}</span>
+              </el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="checkAll('permissionTree', 'permissionTreeData')"
+              >
+                {{ $translateTitle('button.select all') }}
+              </el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="inverse('permissionTree', 'permissionTreeData')"
+              >
+                {{ $translateTitle('button.Reverse election') }}
+              </el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="checkNot('permissionTree')"
+              >
+                {{ $translateTitle('button.unselect all') }}
+              </el-button>
+            </div>
             <div class="rolecontrol">
               <el-tree
                 ref="permissionTree"
+                check-on-click-node
+                :default-expand-all="isExpand"
                 :data="permissionTreeData"
                 :default-checked-keys="rolePermissonList"
                 :expand-on-click-node="false"
                 show-checkbox
                 node-key="name"
+                default-props
                 accordion
               >
                 <span slot-scope="{ node }" class="custom-tree-node">
@@ -90,10 +126,45 @@
                 {{ $translateTitle('user.assignmenu') }}
               </span>
             </p>
-            <div class="menucontrol" style="margin-top: 30px">
+            <div>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="expand('menusTree', 'menuExpand')"
+              >
+                <span v-if="!menuExpand">
+                  {{ $translateTitle('button.Unfold') }}
+                </span>
+                <span v-else>{{ $translateTitle('button.fold') }}</span>
+              </el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="checkAll('menusTree', 'menuTreeData')"
+              >
+                {{ $translateTitle('button.select all') }}
+              </el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="inverse('menusTree', 'menuTreeData')"
+              >
+                {{ $translateTitle('button.Reverse election') }}
+              </el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="checkNot('menusTree')"
+              >
+                {{ $translateTitle('button.unselect all') }}
+              </el-button>
+            </div>
+            <div class="menucontrol">
               <el-tree
                 ref="menusTree"
                 :data="menuTreeData"
+                check-on-click-node
+                :default-expand-all="menuExpand"
                 :default-checked-keys="roleMenuList"
                 :expand-on-click-node="false"
                 show-checkbox
@@ -110,8 +181,8 @@
           </div>
         </el-col>
       </el-col>
-      <el-col :span="10">
-        <div class="footerleft">
+      <el-col :span="9">
+        <div class="footerleft2">
           <p class="top">
             <span class="svg-container">
               <vab-icon icon="role_group" />
@@ -279,6 +350,8 @@
           secret: 'RTc3MDk4MTgxNjAzMTc1MTUxMDY0',
           home: 'E:/shuwa/4.1.0/shuwa_data_center/datacenter/file/files',
         },
+        isExpand: false,
+        menuExpand: false,
         roletempList: [],
         dataMenus: [],
         roleMenuList: [],
@@ -309,6 +382,7 @@
           return father.parentId == 0
         })
       },
+
       menuTreeData() {
         const cloneData = JSON.parse(JSON.stringify(this.dataMenus))
         return cloneData.filter((father) => {
@@ -335,6 +409,41 @@
   },
 
   methods: {
+    expand (tree,isExpand) { // 展开/折叠
+      this[isExpand] = !this[isExpand]
+      console.log('tree',tree,this.$refs[tree],isExpand)
+      const nodes = this.$refs[tree].store._getAllNodes()
+      console.log(nodes)
+      // 或者方法二
+      // const nodes = this.$refs.tree.store.nodesMap
+      for (let i in nodes) {
+        nodes[i].expanded = this[isExpand]
+      }
+    },
+    checkAll (tree,data) { // 全选
+      this.$refs[tree].setCheckedNodes(this[data])
+    },
+    inverse(tree,data){
+      let res = this.$refs[tree];
+      let nodes = res.getCheckedNodes(true, true);
+      this.batchSelect(this[data], res, true, nodes);
+    },
+    checkNot (tree) { // 全不选
+      this.$refs[tree].setCheckedKeys([])
+    },
+    // 全选处理方法
+    batchSelect(nodes, refs, flag, seleteds) {
+      if (typeof nodes != "undefined") {
+        nodes.forEach(element => {
+          refs.setChecked(element, flag, true);
+        });
+      }
+      if (typeof seleteds != "undefined") {
+        seleteds.forEach(node => {
+          refs.setChecked(node, !flag, true);
+        });
+      }
+    },
     handleClickRefresh() {
       const ranNum = Math.ceil(Math.random() * 25)
       this.form.secret = Base64.encode(
@@ -522,7 +631,6 @@
 </script>
 <style scoped lang="scss">
 .department {
-  width: 90%;
   margin: auto;
   margin-top: 20px;
 }
@@ -531,8 +639,17 @@
 .roles .search .el-input {
   width: 200px;
 }
+.top{
+  margin: 0 auto;
+  text-align: center;
+}
 
-.leftTree {
+.leftTree ,.footerleft,.footerright{
+  height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
+  border: 1px solid #cccccc;
+  overflow-x: hidden;
+  overflow-y: scroll;
+
   span.selected {
     font-weight: bold;
     color: #409eff;

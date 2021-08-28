@@ -1,5 +1,5 @@
 <template>
-  <div class="menu">
+  <div class="menu dgiot-container">
     <el-row>
       <el-col :lg="24" :md="24" :sm="2244" :xl="24" :xs="24">
         <vab-query-form>
@@ -58,6 +58,7 @@
           v-loading="listLoading"
           :data="treeData"
           size="mini"
+          :height="tableHeight"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           border
           :default-sort="{ prop: 'order', order: 'ascending' }"
@@ -238,6 +239,7 @@
     components: { Edit },
     data() {
       return {
+        tableHeight: this.$baseTableHeight(0) + 46,
         refreshTable: 'false',
         isdefaultExpandAll: false,
         MenuForm: {

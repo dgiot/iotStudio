@@ -1,7 +1,7 @@
 <!-- eslint-disable-next-line -->
 
 <template>
-  <div class="roles">
+  <div class="roles dgiot-container">
     <el-row :gutter="20">
       <el-col :span="14" :xs="8">
         <div class="rightTable">
@@ -99,6 +99,7 @@
           </div>
           <div class="tableroles" style="margin-top: 20px">
             <el-table
+              :height="tableHeight"
               highlight-current-row
               :data="roleList"
               :row-class-name="tableRowClassName"
@@ -201,8 +202,43 @@
               </span>
             </p>
             <div class="rolecontrol">
+              <div>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="expand('permissionTree', 'isExpand')"
+                >
+                  <span v-if="!isExpand">
+                    {{ $translateTitle('button.Unfold') }}
+                  </span>
+                  <span v-else>{{ $translateTitle('button.fold') }}</span>
+                </el-button>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="checkAll('permissionTree', 'permissionTreeData')"
+                >
+                  {{ $translateTitle('button.select all') }}
+                </el-button>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="inverse('permissionTree', 'permissionTreeData')"
+                >
+                  {{ $translateTitle('button.Reverse election') }}
+                </el-button>
+                <el-button
+                  type="primary"
+                  size="mini"
+                  @click="checkNot('permissionTree')"
+                >
+                  {{ $translateTitle('button.unselect all') }}
+                </el-button>
+              </div>
               <el-tree
                 ref="permissionTree"
+                check-on-click-node
+                :default-expand-all="isExpand"
                 :data="permissionTreeData"
                 :default-checked-keys="rolePermissonList"
                 :expand-on-click-node="false"
@@ -234,10 +270,45 @@
                 {{ $translateTitle('user.assignmenu') }}
               </span>
             </p>
-            <div class="menucontrol" style="margin-top: 30px">
+            <div>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="expand('menusTree', 'menuExpand')"
+              >
+                <span v-if="!menuExpand">
+                  {{ $translateTitle('button.Unfold') }}
+                </span>
+                <span v-else>{{ $translateTitle('button.fold') }}</span>
+              </el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="checkAll('menusTree', 'menuTreeData')"
+              >
+                {{ $translateTitle('button.select all') }}
+              </el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="inverse('menusTree', 'menuTreeData')"
+              >
+                {{ $translateTitle('button.Reverse election') }}
+              </el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="checkNot('menusTree')"
+              >
+                {{ $translateTitle('button.unselect all') }}
+              </el-button>
+            </div>
+            <div class="menucontrol" style="margin-top: 0px">
               <el-tree
                 ref="menusTree"
                 :data="menuTreeData"
+                check-on-click-node
+                :default-expand-all="menuExpand"
                 :default-checked-keys="roleMenuList"
                 :expand-on-click-node="false"
                 show-checkbox
@@ -278,6 +349,7 @@
       <el-table
         ref="multipleTable"
         :data="tableDataroles"
+        :height="tableHeight"
         style="width: 100%; text-align: center"
         @selection-change="handleSelectionChange"
       >
@@ -378,6 +450,9 @@
     name: 'Role',
     data() {
       return {
+        tableHeight: this.$baseTableHeight(2),
+        isExpand: false,
+        menuExpand: false,
         curDepartmentId: '',
         formLabelWidth: '120px',
         roleEdit: false,
@@ -469,21 +544,56 @@
       return res
     },
   },
-  components: {
-    addroles,
-  },
-  mounted() {
-    this.getRoletree()
-    this.getRoleschema()
-    this.getMenu()
-    this.getRolesList()
-    this.$baseEventBus.$on('dialogHide', () => {
-      this.centerDialogRole = false
+    components: {
+      addroles,
+    },
+    mounted() {
+      this.getRoletree()
+      this.getRoleschema()
       this.getMenu()
-    })
-  },
+      this.getRolesList()
+      this.$baseEventBus.$on('dialogHide', () => {
+        this.centerDialogRole = false
+        this.getMenu()
+      })
+    },
 
   methods: {
+    expand (tree,isExpand) { // 展开/折叠
+      this[isExpand] = !this[isExpand]
+      console.log('tree',tree,this.$refs[tree],isExpand)
+      const nodes = this.$refs[tree].store._getAllNodes()
+      console.log(nodes)
+      // 或者方法二
+      // const nodes = this.$refs.tree.store.nodesMap
+      for (let i in nodes) {
+        nodes[i].expanded = this[isExpand]
+      }
+    },
+    checkAll (tree,data) { // 全选
+      this.$refs[tree].setCheckedNodes(this[data])
+    },
+    inverse(tree,data){
+      let res = this.$refs[tree];
+      let nodes = res.getCheckedNodes(true, true);
+      this.batchSelect(this[data], res, true, nodes);
+    },
+    checkNot (tree) { // 全不选
+      this.$refs[tree].setCheckedKeys([])
+    },
+    // 全选处理方法
+    batchSelect(nodes, refs, flag, seleteds) {
+      if (typeof nodes != "undefined") {
+        nodes.forEach(element => {
+          refs.setChecked(element, flag, true);
+        });
+      }
+      if (typeof seleteds != "undefined") {
+        seleteds.forEach(node => {
+          refs.setChecked(node, !flag, true);
+        });
+      }
+      },
     ...mapMutations({
       setRoleTree: 'user/setRoleTree'
     }),
@@ -908,7 +1018,11 @@
 <style scoped lang="scss">
 .roles {
   background: #ffffff;
-
+  .top span{
+    width: 100px;
+    margin: 0 auto;
+    text-align: center;
+  }
   ::v-deep .el-table__body tr.current-row > td {
     color: #f19944;
     background-color: #fdf3ea;
@@ -920,8 +1034,7 @@
     overflow-y: scroll;
 
     .search {
-      margin: 20px;
-      text-align: center;
+            text-align: center;
     }
 
     .rightPagination {
@@ -946,7 +1059,7 @@
   box-sizing: border-box;
   width: 45%;
   height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
-  padding: 20px;
+  padding: 10px;
   overflow-x: hidden;
   overflow-y: scroll;
   border: 1px solid #cccccc;

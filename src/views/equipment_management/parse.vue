@@ -85,7 +85,7 @@
       return {
         isFullscreen: false,
         border: true,
-        height: this.$baseTableHeight(0),
+        height: this.$baseTableHeight(0) + 100,
         stripe: false,
         lineHeight: 'medium',
         list: [],

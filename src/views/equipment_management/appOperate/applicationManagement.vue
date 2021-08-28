@@ -1,131 +1,128 @@
 <template>
-  <div id="application">
-    <el-tabs v-model="activeName">
-      <!-- <el-tab-pane label="应用管理" name="app"> -->
-      <el-tab-pane
-        :label="$translateTitle('developer.Applicationmanagement')"
-        name="app"
-      >
-        <div class="form">
-          <div class="search">
-            <el-input
-              v-model="name"
-              :placeholder="$translateTitle('application.applicationname')"
-              size="small"
-            />
-            <el-button type="primary" size="small" @click="getAppMange(0)">
-              {{ $translateTitle('application.search') }}
-            </el-button>
-          </div>
-        </div>
-        <el-table :data="tableData" style="width: 100%">
-          <!-- 应用标识 -->
-          <el-table-column
-            :label="$translateTitle('application.applicationidentification')"
-            prop="productIdentifier"
+  <div id="application dgiot-container">
+    <vab-query-form-top-panel>
+      <el-form ref="form" :inline="true" label-width="0">
+        <el-form-item>
+          <el-input
+            v-model="name"
+            :placeholder="$translateTitle('application.applicationname')"
+            size="mini"
           />
-          <!-- 应用名称 -->
-          <el-table-column
-            :label="$translateTitle('application.applicationname')"
-            prop="title"
-          />
-          <!-- 应用单位 -->
-          <el-table-column
-            prop="userUnit"
-            :label="$translateTitle('developer.Applicationunit')"
-          />
-          <!-- 服务规模 -->
-          <el-table-column
-            :label="$translateTitle('application.scaleofservice')"
-            prop="scale"
-            sortable
-          />
-          <!-- 所属行业 -->
-          <el-table-column
-            :label="$translateTitle('application.industrytype')"
-            prop="category"
-          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="small" @click="getAppMange(0)">
+            {{ $translateTitle('application.search') }}
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </vab-query-form-top-panel>
+    <el-table
+      :header-cell-style="{ 'text-align': 'center' }"
+      :cell-style="{ 'text-align': 'center' }"
+      :height="tableHeight"
+      :data="tableData"
+      style="width: 100%"
+    >
+      <!-- 应用标识 -->
+      <el-table-column
+        :label="$translateTitle('application.applicationidentification')"
+        prop="productIdentifier"
+      />
+      <!-- 应用名称 -->
+      <el-table-column
+        :label="$translateTitle('application.applicationname')"
+        prop="title"
+      />
+      <!-- 应用单位 -->
+      <el-table-column
+        prop="userUnit"
+        :label="$translateTitle('developer.Applicationunit')"
+      />
+      <!-- 服务规模 -->
+      <el-table-column
+        :label="$translateTitle('application.scaleofservice')"
+        prop="scale"
+        sortable
+      />
+      <!-- 所属行业 -->
+      <el-table-column
+        :label="$translateTitle('application.industrytype')"
+        prop="category"
+      />
 
-          <el-table-column
-            :label="$translateTitle('application.createtime')"
-            prop="creation_time"
-          />
-          <el-table-column
-            :label="$translateTitle('developer.operation')"
-            prop="operation"
-            width="350"
+      <el-table-column
+        :label="$translateTitle('application.createtime')"
+        prop="creation_time"
+      />
+      <el-table-column
+        :label="$translateTitle('developer.operation')"
+        prop="operation"
+        width="350"
+        flex="right"
+      >
+        <template slot-scope="scope">
+          <el-popover
+            :ref="`popover-${scope.$index}`"
+            placement="top"
+            width="300"
           >
-            <template slot-scope="scope">
-              <el-popover
-                :ref="`popover-${scope.$index}`"
-                placement="top"
-                width="300"
-              >
-                <p>
-                  {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
-                  }}{{ $translateTitle('equipment.yym') }}
-                </p>
-                <div style="margin: 0; text-align: right">
-                  <el-button
-                    size="mini"
-                    @click="
-                      scope._self.$refs[`popover-${scope.$index}`].doClose()
-                    "
-                  >
-                    {{ $translateTitle('developer.cancel') }}
-                  </el-button>
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="makeSure(scope)"
-                  >
-                    {{ $translateTitle('developer.determine') }}
-                  </el-button>
-                </div>
-                <el-link
-                  slot="reference"
-                  :underline="false"
-                  icon="el-icon-delete"
-                  type="danger"
-                >
-                  {{ $translateTitle('developer.delete') }}
-                </el-link>
-              </el-popover>
+            <p>
+              {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+              }}{{ $translateTitle('equipment.yym') }}
+            </p>
+            <div style="margin: 0; text-align: right">
               <el-button
-                type="text"
-                size="small"
-                icon="el-icon-edit"
-                @click="handleClickUpdate(scope)"
+                size="mini"
+                @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
               >
-                {{ $translateTitle('developer.edit') }}
+                {{ $translateTitle('developer.cancel') }}
               </el-button>
-              <el-button type="text" size="small" @click="Gotoproduct(scope)">
-                <i class="el-icon-s-management" />
-                <!-- 管理 -->
-                {{ $translateTitle('leftbar.management') }}
+              <el-button type="primary" size="mini" @click="makeSure(scope)">
+                {{ $translateTitle('developer.determine') }}
               </el-button>
-              <el-link
-                :underline="false"
-                type="primary"
-                @click="applicationDeployment(scope.row)"
-              >
-                <!-- 部署 -->
-                {{ $translateTitle('developer.deploy') }}
-              </el-link>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-pagination
-          :current-page="page.currentPage"
-          :page-sizes="page.pageSizes"
-          :page-size="page.pageSize"
-          :total="page.total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
-      </el-tab-pane>
-    </el-tabs>
+            </div>
+            <el-link
+              slot="reference"
+              :underline="false"
+              icon="el-icon-delete"
+              type="danger"
+            >
+              {{ $translateTitle('developer.delete') }}
+            </el-link>
+          </el-popover>
+          <el-button
+            type="text"
+            size="small"
+            icon="el-icon-edit"
+            @click="handleClickUpdate(scope)"
+          >
+            {{ $translateTitle('developer.edit') }}
+          </el-button>
+          <el-button type="text" size="small" @click="Gotoproduct(scope)">
+            <i class="el-icon-s-management" />
+            <!-- 管理 -->
+            {{ $translateTitle('leftbar.management') }}
+          </el-button>
+          <el-link
+            :underline="false"
+            type="primary"
+            @click="applicationDeployment(scope.row)"
+          >
+            <!-- 部署 -->
+            {{ $translateTitle('developer.deploy') }}
+          </el-link>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      :current-page="page.currentPage"
+      :page-sizes="page.pageSizes"
+      :page-size="page.pageSize"
+      :total="page.total"
+      layout="total, sizes, prev, pager, next, jumper"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </div>
 </template>
 
@@ -137,6 +134,7 @@
   export default {
     data() {
       return {
+        tableHeight: this.$baseTableHeight(0),
         // tab标题
         label: '我的应用',
         // 初始页
@@ -382,40 +380,8 @@
   #application {
     box-sizing: border-box;
     width: 100%;
-    padding: 20px;
     margin: 0 auto;
     ::v-deep .el-tabs {
-      .el-tabs__header {
-        margin: 0;
-        .el-tabs__item {
-          font-size: 16px;
-        }
-      }
-      .el-tabs__content {
-        padding: 15px;
-        background: #f4f4f4;
-        .form {
-          display: flex;
-          justify-content: space-between;
-          padding: 20px 15px;
-          background: #fff;
-          .search {
-            display: flex;
-            button {
-              margin-left: 5%;
-            }
-          }
-        }
-      }
-      .el-table {
-        .el-divider {
-          width: 2px;
-          background-color: #409eff;
-        }
-        .el-button + .el-button {
-          margin-left: 0;
-        }
-      }
     }
   }
 </style>
