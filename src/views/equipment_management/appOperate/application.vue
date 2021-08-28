@@ -1,5 +1,5 @@
 <template>
-  <div class="application">
+  <div class="application dgiot-container">
     <div class="addApplication" />
     <div
       class="appcontent"
@@ -653,16 +653,10 @@
     box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
-    min-height: 850px;
-    padding: 20px 20px 40px 20px;
     background: #ffffff;
-    .addApplication {
-      width: 100%;
-      height: 50px;
-    }
   }
 </style>
-<style>
+<style scoped lang="scss">
   .application .el-dialog__body {
     padding: 20px;
     border-bottom: 1px solid #333333;
@@ -701,6 +695,9 @@
   }
   .application .el-card__body {
     font-size: 14px;
+  }
+  .application {
+    height: calc(100vh - #{$base-top-bar-height}* 3 - 25px);
   }
   .application .appcontent .isbutton .el-button {
     position: absolute;

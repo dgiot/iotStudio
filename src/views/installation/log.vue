@@ -1,5 +1,5 @@
 <template>
-  <div class="log">
+  <div class="log log-container">
     <div class="left">
       <el-button
         type="primary"
@@ -12,6 +12,7 @@
     </div>
 
     <el-table
+      :height="height"
       :data="tableData5.slice((start - 1) * length, start * length)"
       style="width: 100%; margin-top: 20px"
       border
@@ -115,6 +116,7 @@
         form: {
           nodename: '',
         },
+        height: this.$baseTableHeight(0) - 25,
         tableData5: [],
         node: null,
         start: 1,
@@ -239,16 +241,3 @@
     },
   }
 </script>
-<style lang="scss" scoped>
-  .log {
-    box-sizing: border-box;
-    height: 100%;
-    padding: 10px 20px 20px 20px;
-    background: white;
-    ::v-deep .cell {
-      font-size: 14px;
-      line-height: 1;
-      color: black;
-    }
-  }
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="serverlist">
+  <div class="serverlist serverlist-container">
     <div class="servercontent">
       <el-breadcrumb
         separator-class="el-icon-arrow-right"
@@ -114,7 +114,11 @@
       </el-form>
     </div>
     <div class="servertable">
-      <el-table :data="tableData" style="width: 100%; text-align: center">
+      <el-table
+        :height="height"
+        :data="tableData"
+        style="width: 100%; text-align: center"
+      >
         <!-- <el-table-column label="编号" type="index" width="50" align="center" /> -->
         <el-table-column
           :label="$translateTitle('equipment.number')"
@@ -782,6 +786,7 @@
         }
       }
       return {
+        height: this.$baseTableHeight(1),
         appid: '',
         appsecret: '',
         serverdialogVisible: false,

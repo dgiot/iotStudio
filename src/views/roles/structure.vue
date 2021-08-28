@@ -1,7 +1,7 @@
 <!-- eslint-disable-next-line -->
 
 <template>
-  <div class="structure">
+  <div class="structure dgiot-container">
     <div class="adduserDiadlog">
       <a-drawer
         v-loading="isloading"
@@ -208,6 +208,7 @@
                 <el-table
                   v-loading="pictLoading"
                   :data="tableFilterData"
+                  :height="tableHeight"
                   style="width: 100%; margin-top: 20px"
                 >
                   <el-table-column :label="$translateTitle('user.username')">
@@ -329,7 +330,7 @@
         <el-table
           ref="multipleTable"
           :data="rolelist"
-          height="500px"
+          :height="tableHeight"
           size="mini"
           @selection-change="handleSelectionChange"
         >
@@ -406,6 +407,7 @@
         }
       }
       return {
+        tableHeight: this.$baseTableHeight(0) - 20,
         isloading: false,
         isStructures: true,
         upKey: Number(moment().unix()),
@@ -1033,7 +1035,7 @@
 
       .elTable {
         .total_pagination {
-          width: 90%;
+          width: 100%;
           margin-top: 20px;
           text-align: center;
         }

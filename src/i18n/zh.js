@@ -978,6 +978,11 @@ export default {
         '点击左侧名称，标识符，默认值，可自动复制。可与组件属性配置填充关联',
     },
     button: {
+      Unfold: '展开',
+      fold: '折叠',
+      'select all': '全选',
+      'Reverse election': '反选',
+      'unselect all': '不选',
       add: '新增',
       delete: '删除',
       create: '创建',
