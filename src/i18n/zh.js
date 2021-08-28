@@ -102,6 +102,8 @@ export default {
       connectFailure: '连接失败',
       connectLeave: '尚未连接到服务器',
       subscribeSuccess: '订阅成功',
+      'mqtt connection failed, automatically reconnect':
+        'mqtt连接失败，自动重连',
       subscribeFailure: '订阅失败',
       messageSendOut: '消息已发出',
       connected: '已连接',

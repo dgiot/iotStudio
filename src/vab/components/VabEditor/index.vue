@@ -88,7 +88,7 @@
         const style = {
           height: height + 'px !important',
         }
-        console.log('height', height, style)
+        // console.log('height', height, style)
         return style
       },
     },
@@ -232,7 +232,7 @@
       },
     },
     render(h) {
-      console.log(h, 'hhh')
+      // console.log(h, 'hhh')
       return h('div')
     },
   }
