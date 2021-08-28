@@ -44,6 +44,14 @@
     data() {
       return {}
     },
+    watch: {
+      topic: {
+        handler(newName, oldName) {
+          console.info(newName, oldName)
+          if (newName !== oldName) iotMqtt.unsubscribe(oldName)
+        },
+      },
+    },
     mounted() {
       if (this.connect) {
         this.clientMqtt()
@@ -75,7 +83,9 @@
           },
           onMessage: function (message) {
             // console.log(`topic:${_this.topic}收到消息:${message.payloadString}`)
-            _this.$emit('mqttMsg', message.payloadString)
+            let key = moment(new Date()).valueOf()
+            _this.$parent.mqttMsg(message.payloadString, key)
+            // _this.$emit('mqttMsg', message.payloadString, key)
           },
         })
       },

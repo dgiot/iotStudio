@@ -384,10 +384,6 @@
             })
           })
         }
-        // // 设置页面是从设备界面进入 则不添加以下事件
-        if (_this.isDevice && _this.productconfig) {
-          _this.konvaClass.push('isDevice')
-        }
         //   _this.leftrow = _this.rightrow = 0
         // } else {
         //   // _this.leftrow = 3
