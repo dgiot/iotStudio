@@ -136,6 +136,7 @@
       />
       <el-table-column
         v-for="(item, index) in finallyColumns"
+        v-show="item != 'msg'"
         :key="index"
         :prop="item"
         :label="item"
@@ -347,7 +348,7 @@
           results.forEach((item) => {
             item.time = this.$moment(
               Number(item.time.toString().substring(0, 13))
-            ).format('YYYY-MM-DD HH:mm:ss')
+            ).format('YYYY-MM-DD HH:mm:ss.SSS')
           })
           this.logdata = results
           this.queryForm.total = total

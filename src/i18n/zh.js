@@ -913,6 +913,10 @@ export default {
       save: '保存',
       data: '数据',
       card: '卡片',
+      edit: '编辑',
+      share: '分享',
+      socket: '通信',
+      delete: '删除',
     },
     Maintenance: {
       'Are you sure you want to delete the current item':
@@ -1036,6 +1040,8 @@ export default {
       'Exit Full Screen': '退出全屏',
       'For details, please refer to': '详细请参考',
       Documentation: '文档',
+      'Copy successfully': '复制成功',
+      'Copy error': '复制失败',
     },
     article: {
       'New category': '新建分类',

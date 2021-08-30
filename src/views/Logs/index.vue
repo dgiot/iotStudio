@@ -212,13 +212,14 @@
                     {{
                       $moment(
                         Number(row.time.toString().substring(0, 13))
-                      ).format('YYYY-MM-DD HH:mm:ss')
+                      ).format('YYYY-MM-DD HH:mm:ss.SSS')
                     }}
                   </span>
                 </template>
               </el-table-column>
               <el-table-column
                 v-for="(item, index) in finallyColumns"
+                v-show="item != 'msg'"
                 :key="index"
                 :prop="item"
                 :label="item"
@@ -288,12 +289,11 @@
         logTree: [],
         clickItem: '',
         height: this.$baseTableHeight(1),
-        checkList: ['pid', 'msg', 'level', 'gl', 'mfa'],
+        checkList: ['pid', 'level', 'gl', 'mfa'],
         logcolumns: [
           'topic',
           'pid',
           'peername',
-          'msg',
           'level',
           'gl',
           'clientid',

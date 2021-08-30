@@ -1,7 +1,7 @@
 <!-- 组件说明 -->
 <template>
   <div class="operation">
-    <el-tabs v-model="activeName">
+    <el-tabs v-model="activeName" stretch>
       <div class="unvisible">
         <el-upload
           ref="upload"
@@ -722,7 +722,7 @@
 </script>
 <style lang="scss" scoped>
   .operation {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7 - 100px) !important;
+    height: calc(100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 100px) !important;
     overflow: auto;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -730,10 +730,16 @@
   }
 
   ::v-deep .jsoneditor-vue {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7 - 100px) !important;
+    height: calc(100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 100px) !important;
     overflow: auto;
   }
-
+  ::v-deep .el-tabs__nav-wrap
+  .el-tabs__nav-scroll
+  .el-tabs__nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
   ::v-deep .json-save-btn {
     cursor: pointer;
   }
