@@ -1,7 +1,7 @@
 <template>
   <div
     ref="custom-table"
-    class="devproduct"
+    class="devproduct devproduct-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <el-dialog
@@ -33,7 +33,7 @@
 
     <div class="prosecond">
       <vab-query-form>
-        <vab-query-form-left-panel>
+        <vab-query-form-top-panel>
           <el-form
             label-width="100px"
             :inline="true"
@@ -45,6 +45,7 @@
               <div class="border-panel">
                 <el-select
                   v-model="formInline.category"
+                  size="mini"
                   clearable
                   placeholder="请选择"
                   @clear="clearCategory"
@@ -63,51 +64,52 @@
               <el-input
                 v-model="formInline.productname"
                 clearable
+                size="mini"
+                style="width: 90%"
                 :placeholder="$translateTitle('product.searchproductname')"
               >
                 <el-button
                   slot="append"
                   size="mini"
                   icon="el-icon-search"
-                  style="margin: 0 !important; padding: 0 !important"
+                  style=" padding: 0 !important margin: 0 !important;"
                   @click="searchProduct(0)"
                 />
               </el-input>
             </el-form-item>
           </el-form>
-        </vab-query-form-left-panel>
-        <vab-query-form-right-panel>
-          <div class="stripe-panel">
-            <el-button
-              type="primary"
-              size="mini"
-              @click="$refs['templet'].showEdit()"
-            >
-              {{ $translateTitle('product.Product template') }}
-            </el-button>
-            <el-button
-              v-show="!$loadsh.isEmpty(productDetail)"
-              size="mini"
-              type="primary"
-              @click="isFullscreen = !isFullscreen"
-            >
-              <vab-icon
-                :icon="
-                  isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'
-                "
-              />
-              {{
-                isFullscreen
-                  ? $translateTitle('alert.Exit Full Screen')
-                  : $translateTitle('alert.full screen')
-              }}
-            </el-button>
-          </div>
-        </vab-query-form-right-panel>
+
+          <el-button
+            type="primary"
+            size="mini"
+            @click="$refs['templet'].showEdit()"
+          >
+            {{ $translateTitle('product.Product template') }}
+          </el-button>
+          <el-button
+            v-show="!$loadsh.isEmpty(productDetail)"
+            size="mini"
+            type="primary"
+            @click="isFullscreen = !isFullscreen"
+          >
+            <vab-icon
+              :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
+            />
+            {{
+              isFullscreen
+                ? $translateTitle('alert.Exit Full Screen')
+                : $translateTitle('alert.full screen')
+            }}
+          </el-button>
+        </vab-query-form-top-panel>
       </vab-query-form>
       <el-row :gutter="24">
         <el-col :xs="12" :sm="6" :md="5" :lg="4" :xl="3">
-          <ul class="infinite-list" style="overflow: auto">
+          <ul
+            class="infinite-list"
+            :style="{ height: tableHeight + 'px' }"
+            style="overflow: auto"
+          >
             <li
               v-for="(item, index) in category"
               :key="index"
@@ -133,7 +135,7 @@
               ref="multipleTable"
               v-loading="listLoading"
               highlight-current-row
-              height="60vh"
+              :height="tableHeight"
               size="medium"
               :header-cell-style="{ 'text-align': 'center' }"
               :cell-style="{ 'text-align': 'center' }"
@@ -236,6 +238,7 @@
     components: { ...res_components },
     data() {
       return {
+        tableHeight: this.$baseTableHeight(0),
         dataList: [{}],
         dictrules: {},
         isFullscreen: false,
@@ -1543,9 +1546,7 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    padding: 20px;
     .infinite-list {
-      height: 60vh;
       padding: 0;
       margin: 0;
       list-style: none;
@@ -1553,11 +1554,11 @@
         cursor: pointer;
         display: flex;
         align-items: center;
+        color: #7dbcfc;
         justify-content: center;
+        margin: 10px;
         height: 40px;
         background: #e8f3fe;
-        margin: 10px;
-        color: #7dbcfc;
       }
     }
   }
@@ -1600,7 +1601,6 @@
   .devproduct .prosecond {
     box-sizing: border-box;
     width: 100%;
-    padding: 20px 10px;
   }
 
   .devproduct .el-dialog {

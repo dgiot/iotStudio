@@ -2250,7 +2250,7 @@
         allchannelData: [],
         innerVisible: false,
         allChannelstart: 0,
-        allChannellength: 10,
+        allChannellength: 20,
         allChanneltotal: 0,
         // 物模型数据
         category: [],
@@ -2478,7 +2478,6 @@
           identifier: '',
           type: 'INT',
           startnumber: '',
-          startnumber: '',
           endnumber: '',
           step: '',
           true: '',
@@ -2556,7 +2555,7 @@
         editorList: [],
 
         warningeditror: [],
-        channellength: 10,
+        channellength: 20,
         channelstart: 0,
         channeltotal: 0,
         isupdatedstruct: -1,
@@ -2871,7 +2870,8 @@
       },
 
       // 物接入选择通道
-      showAllChannel() {
+      showAllChannel(label = '') {
+        console.log(this.allChannelstart, this.allChannellength)
         this.allChanneltotal = 0
         this.allchannelData = []
         this.channeltype = 1
@@ -2885,8 +2885,8 @@
           },
         }
         getChannelCountByProduct(
-          this.channellength,
-          this.channelstart,
+          label != '' ? this.allChannellength : this.channellength,
+          label != '' ? this.allChannelstart : this.channelstart,
           product,
           type
         )
@@ -3053,11 +3053,11 @@
 
       allChannelSizeChange(val) {
         this.allChannellength = val
-        this.showAllChannel()
+        this.showAllChannel('Channel')
       },
       allChannelCurrentChange(val) {
         this.allChannelstart = (val - 1) * this.allChannellength
-        this.showAllChannel()
+        this.showAllChannel('Channel')
       },
 
       // 自定义模型弹窗

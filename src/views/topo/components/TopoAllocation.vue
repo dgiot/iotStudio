@@ -8,7 +8,12 @@
       <el-collapse-item title="iconfont" name="icon">
         <el-row :gutter="20">
           <el-col v-for="item in iconfont.glyphs" :key="item.icon_id" :span="8">
-            <i v-svg-drag @mousedown="moveSvg(item)">
+            <i
+              v-svg-drag
+              v-svg-drag:move="startSvg"
+              v-svg-drag:end="endSvg"
+              @mousedown="moveSvg(item)"
+            >
               <VabIconfont
                 type="svg"
                 :title="item.name"
@@ -118,6 +123,12 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      startSvg(start) {
+        console.log(start)
+      },
+      endSvg(end) {
+        console.log(end)
+      },
       moveSvg(item) {
         // let el = getSvgPath(item, 'path')
         // console.log(JSON.stringify(el.topo))
