@@ -112,7 +112,11 @@
 </script>
 
 <style scoped>
-  .VabIframe {
+  .VabHelp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
     margin: 0 8px;
     font-size: 14px;
     line-height: 22px;

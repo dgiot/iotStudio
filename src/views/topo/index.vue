@@ -1,5 +1,8 @@
 <template>
-  <div class="konva">
+  <div
+    class="konva konva-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
+  >
     <el-container class="konva-container">
       <el-header
         v-show="!isDevice"
@@ -73,6 +76,7 @@
     },
     data() {
       return {
+        isFullscreen: false,
         gutter: {
           gutter: 24,
           xs: 24,
@@ -527,7 +531,7 @@
 </script>
 <style lang="scss" scoped>
   .konva {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7);
+    height: calc(100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2);
     overflow-x: hidden;
     overflow-y: scroll;
     background: $base-color-white;
@@ -539,7 +543,9 @@
         border-bottom: 1px solid #e5e5e5;
       }
       &-main {
-        height: calc(100vh - #{$base-top-bar-height}* 2.7 - 70px) !important;
+        height: calc(
+          100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 70px
+        ) !important;
         padding: 0 !important;
         &-allocation {
         }
@@ -549,7 +555,7 @@
           overflow: auto;
           &-baseContainer {
             height: calc(
-              100vh - #{$base-top-bar-height}* 2.7 - 90px
+              100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 90px
             ) !important;
           }
         }

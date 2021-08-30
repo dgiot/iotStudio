@@ -244,13 +244,17 @@
 <style scoped lang="scss">
   .topoBase {
     width: 100%;
-    height: calc(100vh - #{$base-top-bar-height}* 2.7 - 90px) !important;
+    height: calc(
+      100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 90px
+    ) !important;
     padding: 0;
     margin: 0;
     ::v-deep {
       .konvajs-content {
         width: 100%;
-        height: calc(100vh - #{$base-top-bar-height}* 2.7 - 100px) !important;
+        height: calc(
+          100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 100px
+        ) !important;
         overflow: auto !important;
       }
     }

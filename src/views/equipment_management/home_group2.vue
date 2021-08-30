@@ -130,18 +130,12 @@
           :data="proTableData"
           style="width: 100%"
         >
-          <el-table-column label="ProductID" sortable show-overflow-tooltip>
-            <template slot-scope="scope">
-              <router-link
-                :to="{
-                  path: '/Topo?productid',
-                  query: { productid: scope.row.objectId },
-                }"
-              >
-                {{ scope.row.objectId }}
-              </router-link>
-            </template>
-          </el-table-column>
+          <el-table-column
+            label="ProductID"
+            prop="objectId"
+            sortable
+            show-overflow-tooltip
+          />
           <el-table-column :label="$translateTitle('product.productname')">
             <template slot-scope="scope">
               <span>{{ scope.row.name }}</span>
@@ -182,7 +176,7 @@
           </el-table-column>
           <el-table-column
             fixed="right"
-            width="280"
+            width="340"
             :label="$translateTitle('developer.operation')"
           >
             <template slot-scope="scope">
@@ -202,6 +196,18 @@
               >
                 {{ $translateTitle('product.dict') }}
               </el-button>
+
+              <el-button size="mini">
+                <router-link
+                  :to="{
+                    path: '/Topo?productid',
+                    query: { productid: scope.row.objectId },
+                  }"
+                >
+                  {{ $translateTitle('concentrator.konva') }}
+                </router-link>
+              </el-button>
+
               <el-button
                 :underline="false"
                 size="mini"

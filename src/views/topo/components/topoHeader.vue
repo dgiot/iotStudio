@@ -19,11 +19,13 @@
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
             <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
               <a-icon type="tool" />
-              <p>socket</p>
+              <p>{{ $translateTitle('konva.socket') }}</p>
             </a>
             <a-menu slot="overlay">
               <a-sub-menu key="websocket" title="websocket">
-                <a-menu-item @click="drawerFlag">websocket</a-menu-item>
+                <a-menu-item @click="drawerFlag">
+                  {{ $translateTitle('konva.socket') }}
+                </a-menu-item>
               </a-sub-menu>
 
               <a-sub-menu key="mqtt" title="mqtt">
@@ -55,7 +57,9 @@
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
             <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
               <a-icon type="edit" />
-              <p>edit</p>
+              <p>
+                {{ $translateTitle('konva.edit') }}
+              </p>
             </a>
             <a-menu slot="overlay">
               <a-menu-item @click="flagFn('pencil')">铅笔</a-menu-item>
@@ -77,29 +81,34 @@
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
             <a class="ant-dropdown-link" @click="removeFn()">
               <a-icon type="delete" />
-              <p>delete</p>
+              <p>{{ $translateTitle('konva.delete') }}</p>
             </a>
           </a-dropdown>
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
             <a class="ant-dropdown-link" @click="$message.success('开发中')">
               <a-icon type="save" theme="filled" />
-              <p>save</p>
+              <p>{{ $translateTitle('konva.save') }}</p>
             </a>
           </a-dropdown>
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a class="ant-dropdown-link" @click="$message.success('开发中')">
+            <a v-copyText="copyText" class="ant-dropdown-link">
               <a-icon type="share-alt" />
-              <p>shaer</p>
+              <p>{{ $translateTitle('konva.share') }}</p>
             </a>
           </a-dropdown>
 
-          <el-color-picker
-            v-model="pickerColor"
-            size="medium"
-            @change="setColor"
-          />
+          <!--          <el-color-picker-->
+          <!--            v-model="pickerColor"-->
+          <!--            size="medium"-->
+          <!--            @change="setColor"-->
+          <!--          />-->
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
+          <vab-icon
+            style="cursor: pointer"
+            :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
+            @click="handFullscreen"
+          />
           <vab-help
             trigger="click"
             src="https://tech.iotn2n.com/w/docs/details?id=6"
@@ -147,6 +156,9 @@
       }
     },
     computed: {
+      copyText: function () {
+        return location.href
+      },
       ...mapGetters({
         graphColor: 'konva/graphColor',
         drawing: 'konva/drawing',
@@ -181,6 +193,10 @@
         setGraphColor: 'konva/setGraphColor',
         setDrawParams: 'konva/setDrawParams',
       }),
+      handFullscreen() {
+        this.$parent.$parent.$parent.isFullscreen =
+          !this.$parent.$parent.$parent.isFullscreen
+      },
       setColor(v) {
         this.setGraphColor(v)
       },

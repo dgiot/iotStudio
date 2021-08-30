@@ -50,7 +50,7 @@ function handleClick(text) {
   input.value = text
   input.select()
   document.execCommand('copy')
-  // alert('复制成功')
+  alert('复制成功')
 }
 
 export default copy

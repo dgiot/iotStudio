@@ -270,7 +270,7 @@
           results.forEach((item) => {
             item.time = this.$moment(
               Number(item.time.toString().substring(0, 13))
-            ).format('YYYY-MM-DD HH:mm:ss')
+            ).format('YYYY-MM-DD HH:mm:ss.SSS')
             var msg = JSON.parse(item.msg)
             for (let k in msg) {
               item[k] = msg[k]
