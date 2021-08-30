@@ -10,8 +10,10 @@
           <el-col v-for="item in iconfont.glyphs" :key="item.icon_id" :span="8">
             <i
               v-svg-drag
-              v-svg-drag:move="startSvg"
-              v-svg-drag:end="endSvg"
+              v-svg-drag:mousedown="coordinate"
+              v-svg-drag:mousemove="coordinate"
+              v-svg-drag:mouseover="coordinate"
+              v-svg-drag:mouseup="coordinate"
               @mousedown="moveSvg(item)"
             >
               <VabIconfont
@@ -89,6 +91,7 @@
     name: 'Allocation',
     data() {
       return {
+        coordinate: {},
         iconfont,
         accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF',
         imgHost:
@@ -123,12 +126,19 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
-      startSvg(start) {
+      mousedown(start) {
         console.log(start)
       },
-      endSvg(end) {
+      mousemove(end) {
         console.log(end)
       },
+      mouseover(end) {
+        console.log(end)
+      },
+      mouseup(end) {
+        console.log(end)
+      },
+
       moveSvg(item) {
         // let el = getSvgPath(item, 'path')
         // console.log(JSON.stringify(el.topo))
@@ -142,16 +152,16 @@
         setFlag: 'konva/setFlag',
         setDrawParams: 'konva/setDrawParams',
       }),
-      mousedown(item) {
-        this.$emit('fatherMousedown', item)
-      },
-      mousemove(item) {
-        this.$emit('fatherMousemove', item)
-        // console.log(item)
-      },
-      mouseup(item) {
-        this.$emit('fatherMouseup', item)
-      },
+      // mousedown(item) {
+      //   this.$emit('fatherMousedown', item)
+      // },
+      // mousemove(item) {
+      //   this.$emit('fatherMousemove', item)
+      //   // console.log(item)
+      // },
+      // mouseup(item) {
+      //   this.$emit('fatherMouseup', item)
+      // },
 
       async fetchData() {
         const { data, totalCount } = await getMaterial(this.queryForm)
