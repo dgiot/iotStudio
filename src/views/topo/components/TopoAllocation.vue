@@ -8,14 +8,7 @@
       <el-collapse-item title="iconfont" name="icon">
         <el-row :gutter="20">
           <el-col v-for="item in iconfont.glyphs" :key="item.icon_id" :span="8">
-            <i
-              v-svg-drag
-              v-svg-drag:mousedown="coordinate"
-              v-svg-drag:mousemove="coordinate"
-              v-svg-drag:mouseover="coordinate"
-              v-svg-drag:mouseup="coordinate"
-              @mousedown="moveSvg(item)"
-            >
+            <i v-svg-drag="{ callback: coordinate }" @mousedown="moveSvg(item)">
               <VabIconfont
                 type="svg"
                 :title="item.name"
@@ -91,8 +84,8 @@
     name: 'Allocation',
     data() {
       return {
-        coordinate: {},
         iconfont,
+        busData: { coordinate: {}, paths: [] },
         accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF',
         imgHost:
           'https://dgiot-1253666439.file.myqcloud.com/dgiot_release/topo/',
@@ -126,22 +119,17 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
-      mousedown(start) {
-        console.log(start)
-      },
-      mousemove(end) {
-        console.log(end)
-      },
-      mouseover(end) {
-        console.log(end)
-      },
-      mouseup(end) {
-        console.log(end)
+      coordinate(e) {
+        const _coordinate = { x: e.pageX, y: e.pageY }
+        this.busData.coordinate = _coordinate
       },
 
       moveSvg(item) {
-        // let el = getSvgPath(item, 'path')
-        // console.log(JSON.stringify(el.topo))
+        let el = getSvgPath(item, 'path')
+        const paths = JSON.stringify(el.topo)
+        console.info(`getSvgPath function return ${paths}`)
+        this.busData.paths = paths
+        this.$baseEventBus.$emit('busTopo', 'path', this.busData)
       },
       uploadCkick() {
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(

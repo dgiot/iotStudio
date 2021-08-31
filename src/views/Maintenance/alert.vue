@@ -69,6 +69,7 @@
           :inline="true"
           label-width="auto"
           :model="queryForm"
+          size="mini"
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('alert.productname')">
@@ -112,6 +113,16 @@
           <el-form-item>
             <el-button icon="el-icon-search" type="primary" @click="fetchData">
               {{ $translateTitle('Maintenance.search') }}
+            </el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              icon="el-icon-delete"
+              :disabled="!selectedList.length"
+              type="danger"
+              @click="fetchDelete(selectedList)"
+            >
+              {{ $translateTitle('Maintenance.delete') }}
             </el-button>
           </el-form-item>
         </el-form>
@@ -274,6 +285,7 @@
     putNotification,
     delNotification,
   } from '@/api/Notification'
+  import { batch } from '@/api/Batch'
   import { getProduct } from '@/api/Product'
   import { mapGetters, mapMutations } from 'vuex'
   import { Promise } from 'q'
@@ -359,16 +371,38 @@
       }),
     },
 
-    created() {
-      console.log(this._Product, '_Product')
-      console.log('role', this.role)
-
-      console.log('this.height', this.height)
-    },
+    created() {},
     mounted() {
       this.fetchData()
     },
     methods: {
+      fetchDelete(row) {
+        let batchParams = []
+        row.forEach((item) => {
+          batchParams.push({
+            method: 'DELETE',
+            path: `/classes/Notification/${item.objectId}`,
+            body: {},
+          })
+        })
+        this.$baseConfirm(
+          this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ),
+          null,
+          async () => {
+            const res = await batch(batchParams)
+            this.$baseMessage(
+              this.$translateTitle('Maintenance.successfully deleted'),
+              'success',
+              'vab-hey-message-success'
+            )
+            setTimeout(() => {
+              this.fetchData()
+            }, 1500)
+          }
+        )
+      },
       handleSubmit(data) {
         console.log('data', data)
         // eslint-disable-next-line no-console

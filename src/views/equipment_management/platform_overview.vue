@@ -270,8 +270,8 @@
             >
               <Card
                 style="
-                  width: 100px;
-                  height: 100px;
+                  width: 80px;
+                  height: 80px;
                   color: #fff;
                   background-color: #ffad33;
                   border-color: #ffad33;
@@ -279,7 +279,11 @@
                 "
               >
                 <div style="text-align: center">
-                  <Tag checkable color="warning">
+                  <Tag
+                    checkable
+                    color="warning"
+                    style="background: rgb(255, 173, 51)"
+                  >
                     {{ $translateTitle('zetadevices.offline') }}
                   </Tag>
                   <p>{{ offlineData.length || 0 }}</p>
@@ -287,8 +291,8 @@
               </Card>
               <Card
                 style="
-                  width: 100px;
-                  height: 100px;
+                  width: 80px;
+                  height: 80px;
                   margin: 20px 0;
                   color: #fff;
                   background-color: #19be6b;
@@ -297,7 +301,11 @@
                 "
               >
                 <div style="text-align: center">
-                  <Tag checkable color="success">
+                  <Tag
+                    checkable
+                    color="success"
+                    style="background: rgb(25, 190, 107)"
+                  >
                     {{ $translateTitle('zetadevices.online') }}
                   </Tag>
                   <p>{{ dev_online_count || 0 }}</p>
@@ -305,8 +313,8 @@
               </Card>
               <Card
                 style="
-                  width: 100px;
-                  height: 100px;
+                  width: 80px;
+                  height: 80px;
                   color: #fff;
                   background-color: #f16643;
                   border-color: #f16643;
@@ -314,7 +322,11 @@
                 "
               >
                 <div style="text-align: center">
-                  <Tag checkable color="error">
+                  <Tag
+                    checkable
+                    color="error"
+                    style="background: rgb(241, 102, 67)"
+                  >
                     {{ $translateTitle('leftbar.alarms') }}
                   </Tag>
                   <p>{{ warnCount }}</p>

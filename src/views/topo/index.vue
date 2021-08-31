@@ -120,7 +120,76 @@
       }
     },
     destroyed() {},
+    created() {
+      this.$baseEventBus.$on('busTopo', (type, data) => {
+        this.newTopo(type, data)
+      })
+      this.$baseEventBus.$on('busUpdata', () => {
+        this.updataTopo()
+      })
+    },
     methods: {
+      async updataTopo() {
+        let config = this.productconfig.config
+        let stage = JSON.parse(this.stage.toJSON())
+        console.log(stage)
+        config.konva.Stage = stage
+        let upconfig = _.merge(config, this.paramsconfig)
+        console.log(upconfig, 'upconfig')
+        let params = {
+          config: upconfig,
+        }
+        await putProduct(this.productid, params)
+          .then((res) => {
+            // this.handleCloseSub()
+            this.$message.success(this.$translateTitle('产品组态更新成功'))
+          })
+          .catch((e) => {
+            this.$message.error(this.$translateTitle(`${e.error}`))
+          })
+      },
+      newTopo(type, data) {
+        const group = new Konva.Group({
+          x: data.coordinate.x,
+          y: data.coordinate.y,
+          id: `Group_${uuid(6)}`,
+          draggable: true,
+          // opacity: 1,
+        })
+
+        const Layer = this.stage.find('Layer')[0]
+        const { paths = [] } = data
+        const __paths = JSON.parse(paths)
+        console.log(paths, 'path')
+        __paths.forEach((e) => {
+          var path = new Konva.Path(e)
+          group.add(path)
+        })
+        console.log(data, 'data')
+
+        Layer.add(group)
+        Layer.batchDraw()
+        this.$refs.topobase.createTopo(
+          this.stage.toJSON(),
+          moment(new Date()).valueOf()
+        )
+        // 更新到数据库
+        // this.upTopo()
+
+        // Layer.draw()
+        // Layer.batchDraw()
+        // console.log(group)
+
+        // if (type == 'path') {
+        //   const Layer = _this.stage.find('Layer')[0]
+        //   // console.log(data)
+        //   groupchildren = children.concat(JSON.parse(data))
+        //   group.children = groupchildren
+        //   console.log(children)
+        //
+        // }
+        // console.log(type, value, 'Group')
+      },
       // 取消订阅mqtt
       async handleCloseSub() {
         let _this = this
