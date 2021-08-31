@@ -65,6 +65,7 @@
     queryArticle,
   } from '@/api/Article'
   import { uuid } from '@/utils'
+  import { batch } from '@/api/Batch'
   export default {
     name: 'DgiotDoc',
     components: {
@@ -155,11 +156,27 @@
         this.$refs.DocDialog.form = res
         this.$refs.DocDialog.form.type = 'edit'
       },
-      async deletDoc(objectId) {
-        const loading = this.$baseColorfullLoading()
-        const res = await delArticle(objectId)
-        loading.close()
-        this.getTree(this.$route.query)
+      deletDoc(objectId) {
+        this.$baseConfirm(
+          this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ),
+          null,
+          async () => {
+            const loading = this.$baseColorfullLoading()
+            const res = await delArticle(objectId)
+
+            this.$baseMessage(
+              this.$translateTitle('Maintenance.successfully deleted'),
+              'success',
+              'vab-hey-message-success'
+            )
+            setTimeout(() => {
+              loading.close()
+              this.getTree(this.$route.query)
+            }, 800)
+          }
+        )
       },
       init() {
         this.$refs.DocDialog.$refs.form.resetFields()
@@ -267,6 +284,21 @@
         // }
       },
       async newCategory(type, treeKey) {
+        this.$refs.DocDialog.form = {
+          type: '',
+          name: '',
+          parent: {
+            objectId: 'article',
+            __type: 'Pointer',
+            className: 'Article',
+          },
+          data: '',
+          order: 0,
+          category: '',
+          Icon: '',
+          desc: '',
+        }
+        console.log(type, treeKey)
         try {
           const loading = this.$baseColorfullLoading()
           const res = await getArticle(treeKey)
@@ -292,6 +324,28 @@
             const { createdAt = '' } = await createArticle(params)
             loading.close()
             if (createdAt.length) this.init()
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      async editDoc(formName, from) {
+        this.$refs.DocDialog.$refs[`${formName}`].validate(async (valid) => {
+          if (valid) {
+            const loading = this.$baseColorfullLoading()
+            const params = {
+              category: from.category,
+              ico: from.ico,
+              name: from.name,
+              order: from.order,
+            }
+            const res = await putArticle(from.objectId, params)
+            loading.close()
+            setTimeout(() => {
+              this.getTree(this.$route.query)
+              this.init()
+            }, 800)
           } else {
             console.log('error submit!!')
             return false

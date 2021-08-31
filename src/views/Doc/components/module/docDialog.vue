@@ -62,14 +62,18 @@
           {{ $translateTitle('button.cancel') }}
         </el-button>
         <el-button
+          v-if="form.type == 'add'"
           type="primary"
           @click="$parent.createDoc('form', form, form.type)"
         >
-          {{
-            form.type == 'add'
-              ? $translateTitle('button.create')
-              : $translateTitle('button.modify')
-          }}
+          {{ $translateTitle('button.create') }}
+        </el-button>
+        <el-button
+          v-else
+          type="primary"
+          @click="$parent.editDoc('form', form, form.type)"
+        >
+          {{ $translateTitle('button.modify') }}
         </el-button>
       </div>
     </el-dialog>

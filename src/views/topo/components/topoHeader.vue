@@ -85,7 +85,7 @@
             </a>
           </a-dropdown>
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a class="ant-dropdown-link" @click="$message.success('开发中')">
+            <a class="ant-dropdown-link" @click="saveTopo">
               <a-icon type="save" theme="filled" />
               <p>{{ $translateTitle('konva.save') }}</p>
             </a>
@@ -106,7 +106,11 @@
         <vab-query-form-right-panel>
           <vab-icon
             style="cursor: pointer"
-            :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
+            :icon="
+              $parent.$parent.$parent.isFullscreen
+                ? 'fullscreen-exit-fill'
+                : 'fullscreen-fill'
+            "
             @click="handFullscreen"
           />
           <vab-help
@@ -193,6 +197,9 @@
         setGraphColor: 'konva/setGraphColor',
         setDrawParams: 'konva/setDrawParams',
       }),
+      saveTopo() {
+        this.$baseEventBus.$emit('busUpdata')
+      },
       handFullscreen() {
         this.$parent.$parent.$parent.isFullscreen =
           !this.$parent.$parent.$parent.isFullscreen

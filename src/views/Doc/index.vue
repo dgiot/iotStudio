@@ -16,12 +16,12 @@
             <el-form-item>
               <el-input
                 v-model="queryForm.name"
+                clearable
                 :placeholder="$translateTitle('product.title')"
               />
             </el-form-item>
             <el-form-item>
               <el-button
-                :disabled="!queryForm.name.length"
                 icon="el-icon-search"
                 native-type="submit"
                 type="primary"
@@ -49,6 +49,12 @@
           :key="item.objectId"
           class="dgiot-doc-center-row-antdcol"
           :span="6"
+          :xs="24"
+          :sm="12"
+          :md="8"
+          :lg="8"
+          :xl="6"
+          :xxl="4.5"
         >
           <a-card
             class="dgiot-doc-center-row-antdcol-card ant-card-bordered"
@@ -68,19 +74,6 @@
                 @click="newCategory('edit', item)"
               />
               <a-icon key="delete" type="delete" @click="deletDoc(item)" />
-              <vab-iconfont
-                key="gengduo"
-                type="svg"
-                size="16px"
-                name="gengduo"
-                :icon-style="iconStyle"
-              />
-              <vab-iconfont
-                type="svg"
-                size="16px"
-                :icon-style="iconStyle"
-                name="dianying"
-              />
             </template>
             <el-button type="success" @click="goChild(item)">
               {{ $translateTitle('article.view') }}
@@ -104,6 +97,7 @@
     putArticle,
     queryArticle,
   } from '@/api/Article'
+  import { batch } from '@/api/Batch'
   export default {
     name: 'DgiotDoc',
     components: {
@@ -145,13 +139,27 @@
         if (item) this.$refs.DocDialog.form = item
         this.$refs.DocDialog.form.type = type
       },
-      async deletDoc(item) {
-        const loading = this.$baseColorfullLoading()
-        const res = await delArticle(item.objectId)
-        loading.close()
-        setTimeout(() => {
-          this.queryDoc()
-        }, 1200)
+      deletDoc(item) {
+        this.$baseConfirm(
+          this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ),
+          null,
+          async () => {
+            const loading = this.$baseColorfullLoading()
+            const res = await delArticle(item.objectId)
+            loading.close()
+
+            this.$baseMessage(
+              this.$translateTitle('Maintenance.successfully deleted'),
+              'success',
+              'vab-hey-message-success'
+            )
+            setTimeout(() => {
+              this.queryDoc()
+            }, 1200)
+          }
+        )
       },
       /**
        *
@@ -163,7 +171,12 @@
         try {
           const loading = this.$baseColorfullLoading()
           const { results = [] } = await queryArticle({
-            where: { parent: 'article' },
+            where: {
+              parent: 'article',
+              name: this.queryForm.name.length
+                ? { $regex: this.queryForm.name }
+                : { $ne: null },
+            },
           })
           this.HomePageForDetails = results
           loading.close()
@@ -188,6 +201,27 @@
             const { createdAt = '' } = await createArticle(params)
             loading.close()
             if (createdAt.length) this.init()
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      async editDoc(formName, from) {
+        this.$refs.DocDialog.$refs[`${formName}`].validate(async (valid) => {
+          if (valid) {
+            const loading = this.$baseColorfullLoading()
+            const params = {
+              category: from.category,
+              ico: from.ico,
+              name: from.name,
+              order: from.order,
+            }
+            const res = await putArticle(from.objectId, params)
+            loading.close()
+            setTimeout(() => {
+              this.init()
+            }, 800)
           } else {
             console.log('error submit!!')
             return false

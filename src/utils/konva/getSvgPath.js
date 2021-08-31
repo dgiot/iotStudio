@@ -7,7 +7,7 @@ function getSvgPath(item) {
   const topo = []
   const font_class = item.font_class || ''
   if (!font_class) alert('No font class')
-  const svgId = `#icon-${item.font_class}` || ''
+  const svgId = `#dgiot-${item.font_class}` || ''
   let el = $(svgId)
   const childPath = el
   let result = {
@@ -28,7 +28,7 @@ function getSvgPath(item) {
         data: _d,
         originX: 'center',
         originY: 'bottom',
-        id: `${svgId}-${index}`,
+        id: `${svgId}-${index}-${moment(new Date()).valueOf()}`,
         x: 10,
         y: 15,
         angle: -30,
