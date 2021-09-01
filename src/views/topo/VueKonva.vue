@@ -903,10 +903,10 @@
           .konva {
             position: relative;
             width: 1200px;
-            padding: 2%;
             height: calc(100vh - 240px);
-            overflow-y: auto;
+            padding: 2%;
             overflow-x: auto;
+            overflow-y: auto;
             // background-image: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png');
             background-size: 100% 100%;
             border: 1px solid #ebeef5;

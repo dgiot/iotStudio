@@ -72,7 +72,7 @@
                   slot="append"
                   size="mini"
                   icon="el-icon-search"
-                  style=" padding: 0 !important margin: 0 !important;"
+                  style=" padding: 0 !important; margin: 0 !important"
                   @click="searchProduct(0)"
                 />
               </el-input>
@@ -1540,8 +1540,8 @@
 <style scoped lang="scss">
   .devproduct {
     ::v-deep .el-table--enable-row-hover .el-table__body tr:hover > td {
-      background-color: #fdf3ea;
       color: #f19944;
+      background-color: #fdf3ea;
     }
     box-sizing: border-box;
     width: 100%;
@@ -1551,13 +1551,13 @@
       margin: 0;
       list-style: none;
       .infinite-list-item {
-        cursor: pointer;
         display: flex;
         align-items: center;
-        color: #7dbcfc;
         justify-content: center;
-        margin: 10px;
         height: 40px;
+        margin: 10px;
+        color: #7dbcfc;
+        cursor: pointer;
         background: #e8f3fe;
       }
     }

@@ -646,9 +646,9 @@
 
 .leftTree ,.footerleft,.footerright{
   height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
-  border: 1px solid #cccccc;
   overflow-x: hidden;
   overflow-y: scroll;
+  border: 1px solid #cccccc;
 
   span.selected {
     font-weight: bold;

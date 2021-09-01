@@ -394,9 +394,9 @@
     //background-color: #ececec;
     transition: $base-transition;
     #components-layout-demo-custom-trigger .trigger {
+      padding: 0 24px;
       font-size: 18px;
       line-height: 64px;
-      padding: 0 24px;
       cursor: pointer;
       transition: color 0.3s;
     }
@@ -407,8 +407,8 @@
 
     #components-layout-demo-custom-trigger .logo {
       height: 32px;
-      background: rgba(255, 255, 255, 0.2);
       margin: 16px;
+      background: rgba(255, 255, 255, 0.2);
     }
   }
 </style>

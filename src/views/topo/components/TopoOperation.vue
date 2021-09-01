@@ -736,9 +736,9 @@
   ::v-deep .el-tabs__nav-wrap
   .el-tabs__nav-scroll
   .el-tabs__nav {
-    width: 100%;
     display: flex;
     justify-content: space-around;
+    width: 100%;
   }
   ::v-deep .json-save-btn {
     cursor: pointer;
