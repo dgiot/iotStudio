@@ -1,6 +1,7 @@
 // https://unpkg.com/browse/xhl-mqttx@1.0.2/mqttx.js
 let Paho = require('./mqttws31.js')
 Paho = Paho.default
+import store from '@/store'
 var isUseSSL = window.location.protocol === 'https:' ? true : false
 const iotMqtt = {
   client: null,
@@ -32,6 +33,9 @@ const iotMqtt = {
     if (iotMqtt.options && iotMqtt.options.onMessage) {
       // options.onMessage(message)
       iotMqtt.options.onMessage(message)
+      // console.log('message', message)
+      // // store.getters['mqttMsg/setMqttInfo']
+      // store.dispatch('mqttMsg/resaveMqttInfo', message)
     }
   },
   sendMessage: function (topic, obj) {

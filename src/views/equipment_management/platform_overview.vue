@@ -8,17 +8,6 @@
 -->
 <template>
   <div ref="platform" class="platform">
-    <VabMqtt
-      ref="mqtt"
-      :connect="isConnect"
-      :topic="channeltopic"
-      :reconnection="true"
-      @mqttMsg="mqttMsg"
-      @mqttError="mqttError"
-      @mqttConnectLost="mqttConnectLost"
-      @mqttSuccess="mqttSuccess"
-    />
-
     <div class="home_dialog">
       <el-dialog
         :append-to-body="true"
@@ -702,6 +691,8 @@
   </div>
 </template>
 <script>
+  import MQTTConnect from '@/utils/MQTTConnect'
+  const { options, iotMqtt } = MQTTConnect
   import { queryProduct } from '@/api/Product'
   import { getDevice, putDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
@@ -726,7 +717,6 @@
     BmlMarkerClusterer,
     BmInfoWindow,
   } from 'vue-baidu-map'
-  import { query_object } from '@/api/shuwa_parse'
 
   export default {
     name: 'Index',
@@ -779,6 +769,7 @@
             { 状态: '离线', 数量: 0 },
           ],
         },
+        clientId: 'dgiot_clientId_',
         infoWindow: {
           show: true,
           contents:
@@ -824,6 +815,7 @@
             minInterval: 1,
           },
         },
+        msgtopic: '',
         NODE_ENV: process.env.NODE_ENV,
         category: Category,
         activeName: 'second',
@@ -864,6 +856,7 @@
         _pcimg: 'dashboard/_pcimg',
         _role: 'acl/role',
         _mimg: 'dashboard/_mimg',
+        mqttInfo: 'mqttMsg/mqttInfo',
       }),
     },
     // watch: {
@@ -882,7 +875,22 @@
     //     immediate: true,
     //   },
     // },
+    created() {
+      const option = {
+        id: this.objectId + moment(new Date()),
+        ip: options.host,
+        port: options.port,
+        userName: this.objectId,
+        passWord: 'toppicPwd',
+      }
+      this.$bus.$off('busSendMsg')
+      this.$bus.$on('busSendMsg', (...res) => {
+        console.log(...res, 'busSendMsg')
+      })
+      this.initMqtt(option)
+    },
     mounted() {
+      this.subscribe('subscribe')
       console.log(`global static url ${this._role}`)
       this.queryForm.account =
         this.language == 'zh' ? '全部产品' : 'All Products'
@@ -949,6 +957,7 @@
         return ''
       },
       ...mapMutations({
+        resaveMqttInfo: 'mqttMsg/resaveMqttInfo',
         setRoleTree: 'user/setRoleTree',
         set_Product: 'user/set_Product',
         set_dev_count: 'dashboard/set_dev_count',
@@ -1047,7 +1056,8 @@
           : (this.deviceInfo.topicData = _toppic)
         this.deviceFlag = true
       },
-      mqttMsg(e) {
+      mqttMsg(e, i, { destinationName, payloadString } = message) {
+        // console.log(destinationName, payloadString)
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
@@ -1056,7 +1066,7 @@
           '',
           `${this.$translateTitle('websocket.messages')}${key}`
         )
-        console.log(key, mqttMsgValue, JSON.parse(mqttMsg))
+        // console.log(key, mqttMsgValue, JSON.parse(mqttMsg))
         // console.clear()
 
         switch (key) {
@@ -1120,7 +1130,7 @@
             console.log(JSON.parse(mqttMsg))
             break
         }
-        console.info('today warning', this.warnCount)
+        // console.info('today warning', this.warnCount)
         this.$forceUpdate()
       },
       mqttConnectLost(e) {
@@ -1195,6 +1205,10 @@
         console.log(objectId)
       },
       queryData() {
+        this.sendMessage(
+          'Klht7ERlYn',
+          moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS')
+        )
         const loading = this.$baseColorfullLoading(3)
         setTimeout(() => {
           loading.close()

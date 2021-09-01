@@ -1,4 +1,7 @@
 import i18n from '@/i18n'
+import Bus from './eventBus'
+Vue.use(Bus)
+
 import { getToken, setToken, removeToken } from './vuex'
 import globalConfig from './globalConfig'
 import store from '@/store'
@@ -312,5 +315,6 @@ export default {
     Vue.prototype.$ajax = ajax
     Vue.prototype.$loadsh = _
     Vue.prototype.$convertRes2Blob = convertRes2Blob
+    Vue.prototype.$bus = Bus
   },
 }

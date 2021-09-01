@@ -72,7 +72,7 @@
                   slot="append"
                   size="mini"
                   icon="el-icon-search"
-                  style=" padding: 0 !important; margin: 0 !important"
+                  style="padding: 0 !important; margin: 0 !important"
                   @click="searchProduct(0)"
                 />
               </el-input>

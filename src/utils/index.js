@@ -794,3 +794,31 @@ export default function () {
     s4()
   )
 }
+
+/**
+ *
+ * @param map
+ * @return {null}
+ * @constructor
+ */
+export function Map2Json(map) {
+  let obj = Object.create(null)
+  for (let [k, v] of map) {
+    obj[k] = v
+  }
+  return obj
+}
+
+/**
+ *
+ * @param json
+ * @return {Map<any, any>}
+ * @constructor
+ */
+export function Json2Map(json) {
+  let strMap = new Map()
+  for (let k of Object.keys(json)) {
+    strMap.set(k, json[k])
+  }
+  return strMap
+}

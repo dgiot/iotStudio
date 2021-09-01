@@ -1733,6 +1733,9 @@
           this.listLoading = false
           this.proTableData = results
           this.total = count
+          this.$bus.$emit('mqttSubscribe', {
+            topic: this.$route.name,
+          })
         }
         this.getApps()
       },
@@ -1752,6 +1755,10 @@
       },
       // 添加产品弹窗
       addproduct() {
+        this.$bus.$emit('mqttUnSubscribe', {
+          topic: this.$route.name,
+        })
+        return false
         this.moduleTitle = this.$translateTitle('product.createproduct')
         this.imageUrl = ''
         this.handleNodeClick(this.allApps[0])

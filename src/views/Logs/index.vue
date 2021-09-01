@@ -347,7 +347,6 @@
         },
       },
     },
-    created() {},
     mounted() {
       this.getTree(this.treeQueryForm)
     },

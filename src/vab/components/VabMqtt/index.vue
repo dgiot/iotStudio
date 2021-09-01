@@ -84,8 +84,9 @@
           onMessage: function (message) {
             // console.log(`topic:${_this.topic}收到消息:${message.payloadString}`)
             let key = moment(new Date()).valueOf()
-            _this.$parent.mqttMsg(message.payloadString, key)
+            _this.$parent.mqttMsg(message.payloadString, key, message)
             // _this.$emit('mqttMsg', message.payloadString, key)
+            _this.$bus.$emit('onMessage', message)
           },
         })
       },

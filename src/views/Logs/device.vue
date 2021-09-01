@@ -115,190 +115,190 @@
 </template>
 
 <script>
-import { queryLog } from '@/api/Logs'
-export default {
-  name: 'AccessLog',
-  data() {
-    return {
-      isFullscreen: false,
-      height: this.$baseTableHeight(0),
-      logdata: [],
-      momentKey: moment(new Date()).valueOf(),
-      checkList: ['time', 'devicename', 'status'],
-      logcolumns: ['time', 'devicename', 'status'],
-      queryForm: {
-        total: 0,
-        count: 'objectId',
-        limit: 20,
-        pageNo: 1,
-        pageSize: 20,
-        skip: 0,
-        level: '',
-        peername: '',
-        pid: '',
-        mfa: '',
-        topic: '',
-        domain: 'device_log',
-        searchDate: [
-          moment().subtract('days', 7).format('YYYY-MM-DD'),
-          moment(new Date()).format('YYYY-MM-DD'),
-        ],
-        order: '-createdAt',
-        keys: 'count(*)',
-      },
-    }
-  },
-  computed: {
-    dragOptions() {
+  import { queryLog } from '@/api/Logs'
+  export default {
+    name: 'AccessLog',
+    data() {
       return {
-        animation: 600,
-        group: 'description',
-      }
-    },
-    finallyColumns() {
-      return this.logcolumns.filter((item) => this.checkList.includes(item))
-    },
-  },
-  created() {},
-  mounted() {
-    this.queryTable({})
-    this.rowDrop()
-    this.columnDrop()
-  },
-  methods: {
-    handleHeight() {
-      this.isFullscreen = !this.isFullscreen
-      if (this.isFullscreen) this.height = this.$baseTableHeight(0) + 120
-      else this.height = this.$baseTableHeight(0)
-      this.momentKey = moment(new Date()).valueOf()
-    },
-    // 设置表格row的class
-    tableRowClassName({ row }) {
-      if (row.disabled) {
-        return 'disabled'
-      }
-      return ''
-    },
-    // 行拖拽
-    rowDrop() {
-      // 此时找到的元素是要拖拽元素的父容器
-      const tbody = this.$refs.dragTable.$el.querySelector(
-        '.el-table__body-wrapper tbody'
-      )
-      const _this = this
-      Sortable.create(tbody, {
-        //  指定父元素下可被拖拽的子元素
-        draggable: '.el-table__row',
-        onEnd({ newIndex, oldIndex }) {
-          const currRow = _this.logdata.splice(oldIndex, 1)[0]
-          _this.logdata.splice(newIndex, 0, currRow)
+        isFullscreen: false,
+        height: this.$baseTableHeight(0),
+        logdata: [],
+        momentKey: moment(new Date()).valueOf(),
+        checkList: ['time', 'devicename', 'status'],
+        logcolumns: ['time', 'devicename', 'status'],
+        queryForm: {
+          total: 0,
+          count: 'objectId',
+          limit: 20,
+          pageNo: 1,
+          pageSize: 20,
+          skip: 0,
+          level: '',
+          peername: '',
+          pid: '',
+          mfa: '',
+          topic: '',
+          domain: 'device_log',
+          searchDate: [
+            moment().subtract('days', 7).format('YYYY-MM-DD'),
+            moment(new Date()).format('YYYY-MM-DD'),
+          ],
+          order: '-createdAt',
+          keys: 'count(*)',
         },
-      })
-    },
-    // 列拖拽
-    columnDrop() {
-      const _this = this
-      const wrapperTr = this.$refs.dragTable.$el.querySelector(
-        '.el-table__header-wrapper tr'
-      )
-      _this.sortable = Sortable.create(wrapperTr, {
-        animation: 180,
-        delay: 0,
-        onEnd: (evt) => {
-          const oldItem = _this.finallyColumns[evt.oldIndex]
-          _this.finallyColumns.splice(evt.oldIndex, 1)
-          _this.finallyColumns.splice(evt.newIndex, 0, oldItem)
-          _this.momentKey = moment(new Date()).valueOf()
-          setTimeout(() => {
-            _this.rowDrop()
-            _this.columnDrop()
-          }, 1500)
-        },
-      })
-    },
-    async queryTable(args = {}) {
-      if (!args.limit) {
-        args = this.queryForm
       }
-      const loading = this.$baseColorfullLoading()
-      try {
-        loading.close()
-        const params = {
-          limit: args.limit,
-          skip: args.skip,
-          order: args.order,
-          count: this.queryForm.count,
-          keys: 'time,msg',
-          include: '',
-          where: {
-            domain: this.queryForm.domain
-              ? {
-                $all: this.queryForm.domain.split(
-                  /,(?=(?:[^']*(?:'[^']*')?[^']*)*$)/
-                ),
-              }
-              : { $ne: '' },
-            createdAt: {
-              $gte: {
-                __type: 'Date',
-                iso: `${this.queryForm.searchDate[0]}T00:00:00.000Z`,
-              },
-              $lte: {
-                __type: 'Date',
-                iso: `${this.queryForm.searchDate[1]}T23:59:59.000Z`,
+    },
+    computed: {
+      dragOptions() {
+        return {
+          animation: 600,
+          group: 'description',
+        }
+      },
+      finallyColumns() {
+        return this.logcolumns.filter((item) => this.checkList.includes(item))
+      },
+    },
+    created() {},
+    mounted() {
+      this.queryTable({})
+      this.rowDrop()
+      this.columnDrop()
+    },
+    methods: {
+      handleHeight() {
+        this.isFullscreen = !this.isFullscreen
+        if (this.isFullscreen) this.height = this.$baseTableHeight(0) + 120
+        else this.height = this.$baseTableHeight(0)
+        this.momentKey = moment(new Date()).valueOf()
+      },
+      // 设置表格row的class
+      tableRowClassName({ row }) {
+        if (row.disabled) {
+          return 'disabled'
+        }
+        return ''
+      },
+      // 行拖拽
+      rowDrop() {
+        // 此时找到的元素是要拖拽元素的父容器
+        const tbody = this.$refs.dragTable.$el.querySelector(
+          '.el-table__body-wrapper tbody'
+        )
+        const _this = this
+        Sortable.create(tbody, {
+          //  指定父元素下可被拖拽的子元素
+          draggable: '.el-table__row',
+          onEnd({ newIndex, oldIndex }) {
+            const currRow = _this.logdata.splice(oldIndex, 1)[0]
+            _this.logdata.splice(newIndex, 0, currRow)
+          },
+        })
+      },
+      // 列拖拽
+      columnDrop() {
+        const _this = this
+        const wrapperTr = this.$refs.dragTable.$el.querySelector(
+          '.el-table__header-wrapper tr'
+        )
+        _this.sortable = Sortable.create(wrapperTr, {
+          animation: 180,
+          delay: 0,
+          onEnd: (evt) => {
+            const oldItem = _this.finallyColumns[evt.oldIndex]
+            _this.finallyColumns.splice(evt.oldIndex, 1)
+            _this.finallyColumns.splice(evt.newIndex, 0, oldItem)
+            _this.momentKey = moment(new Date()).valueOf()
+            setTimeout(() => {
+              _this.rowDrop()
+              _this.columnDrop()
+            }, 1500)
+          },
+        })
+      },
+      async queryTable(args = {}) {
+        if (!args.limit) {
+          args = this.queryForm
+        }
+        const loading = this.$baseColorfullLoading()
+        try {
+          loading.close()
+          const params = {
+            limit: args.limit,
+            skip: args.skip,
+            order: args.order,
+            count: this.queryForm.count,
+            keys: 'time,msg',
+            include: '',
+            where: {
+              domain: this.queryForm.domain
+                ? {
+                    $all: this.queryForm.domain.split(
+                      /,(?=(?:[^']*(?:'[^']*')?[^']*)*$)/
+                    ),
+                  }
+                : { $ne: '' },
+              createdAt: {
+                $gte: {
+                  __type: 'Date',
+                  iso: `${this.queryForm.searchDate[0]}T00:00:00.000Z`,
+                },
+                $lte: {
+                  __type: 'Date',
+                  iso: `${this.queryForm.searchDate[1]}T23:59:59.000Z`,
+                },
               },
             },
-          },
-        }
-        const { results = [], count: total = 0 } = await queryLog(params)
-        results.forEach((item) => {
-          item.time = this.$moment(
-            Number(item.time.toString().substring(0, 13))
-          ).format('YYYY-MM-DD HH:mm:ss.SSS')
-          var msg = JSON.parse(item.msg)
-          for (let k in msg) {
-            item[k] = msg[k]
           }
-        })
-        this.logdata = results
-        this.queryForm.total = total
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'vab-hey-message-success'
-        )
-        loading.close()
-      } catch (error) {
-        loading.close()
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'vab-hey-message-error'
-        )
-      }
+          const { results = [], count: total = 0 } = await queryLog(params)
+          results.forEach((item) => {
+            item.time = this.$moment(
+              Number(item.time.toString().substring(0, 13))
+            ).format('YYYY-MM-DD HH:mm:ss.SSS')
+            var msg = JSON.parse(item.msg)
+            for (let k in msg) {
+              item[k] = msg[k]
+            }
+          })
+          this.logdata = results
+          this.queryForm.total = total
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request successfully'),
+            'success',
+            'vab-hey-message-success'
+          )
+          loading.close()
+        } catch (error) {
+          loading.close()
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
+      },
     },
-  },
-}
+  }
 </script>
 <style scoped lang="scss">
-.logs {
-  height: calc(100vh - #{$base-top-bar-height}* 2.7) !important;
-  ::v-deep {
-    .item-time {
-      .el-form-item__content {
-        //width: 50% !important;
-        .item-time-picker {
+  .logs {
+    height: calc(100vh - #{$base-top-bar-height}* 2.7) !important;
+    ::v-deep {
+      .item-time {
+        .el-form-item__content {
           //width: 50% !important;
+          .item-time-picker {
+            //width: 50% !important;
+          }
         }
       }
     }
-  }
-  &-row {
-    &-query {
+    &-row {
+      &-query {
+      }
+      &-tree {
+        overflow: scroll;
+      }
     }
-    &-tree {
-      overflow: scroll;
-    }
   }
-}
 </style>

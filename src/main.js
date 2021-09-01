@@ -6,8 +6,10 @@ import i18n from './i18n'
 import store from './store'
 import router from './router'
 import utilwen from './utils/utilwen'
+import MqttMixin from './mixins/MqttMixin'
 import '@/vab'
 Vue.use(utilwen)
+Vue.mixin(MqttMixin)
 
 process.env.NODE_ENV !== 'development'
   ? (Vue.config.productionTip = true)
