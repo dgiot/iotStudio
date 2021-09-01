@@ -30,20 +30,20 @@
 <style lang="scss" scoped>
   .wrapper {
     position: fixed;
-    font-weight: 700;
-    z-index: 9999;
-    color: #fff;
-    bottom: 145px;
     right: -11.5px;
-    cursor: pointer;
+    bottom: 145px;
+    z-index: 9999;
     padding: 7px 15px;
     padding-right: 19px;
     font-size: 12px;
+    font-weight: 700;
     line-height: 12px;
-    border-radius: 4px;
-    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    cursor: pointer;
     user-select: none;
+    background-color: rgba(0, 0, 0, 0.7);
     border: 1px solid #000;
+    border-radius: 4px;
     opacity: 1;
     -webkit-transition: all 0.3s;
     transition: all 0.3s;

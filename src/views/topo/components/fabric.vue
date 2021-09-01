@@ -669,24 +669,24 @@
     border: 1px dashed black;
   }
   .draw-btn-group {
-    // width: 1270px;
-    margin-top: 10px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    // width: 1270px;
+    margin-top: 10px;
     & > div {
-      background: #fafafa;
       cursor: pointer;
+      background: #fafafa;
       &:hover {
         background: #eee;
       }
       i {
         display: flex;
-        background-repeat: no-repeat;
-        background-size: 80%;
-        background-position: 50% 50%;
-        height: 30px;
         width: 30px;
+        height: 30px;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        background-size: 80%;
       }
       .icon-1 {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/1.png');

@@ -200,8 +200,8 @@
     display: flex;
     @keyframes animate-filp-face {
       0% {
-        transform: rotateX(-0.01deg);
         opacity: 1; // 改变opacity 为了QQ浏览器和safari(不支持z-index animate)
+        transform: rotateX(-0.01deg);
       }
       50% {
         opacity: 1;
@@ -210,8 +210,8 @@
         opacity: 0;
       }
       100% {
-        transform: rotateX(-180deg);
         opacity: 0;
+        transform: rotateX(-180deg);
       }
     }
     @keyframes animate-filp-back {
@@ -246,96 +246,96 @@
     }
     .time-unit {
       padding: 0 4px;
-      color: #222;
       font-size: 14px;
       line-height: 30px;
+      color: #222;
       white-space: nowrap;
     }
     .time-box {
       position: relative;
       box-sizing: border-box;
-      height: 30px;
       min-width: 28px;
+      height: 30px;
+      padding: 0 2px;
       font-size: 14px;
+      line-height: 30px;
+      color: #fff;
       text-align: center;
       background-color: #6c96e8;
-      perspective: 60px;
       border-radius: 3px;
-      padding: 0 2px;
-      color: #fff;
-      line-height: 30px;
+      perspective: 60px;
       &:before {
-        content: '';
         position: absolute;
-        background: #a7c7ff;
-        width: 1px;
-        height: 6px;
         top: 50%;
         left: -1px;
-        margin-top: -3px;
         z-index: -1;
-      }
-      &:after {
-        content: '';
-        position: absolute;
-        background: #a7c7ff;
         width: 1px;
         height: 6px;
+        margin-top: -3px;
+        content: '';
+        background: #a7c7ff;
+      }
+      &:after {
+        position: absolute;
         top: 50%;
         right: -1px;
-        margin-top: -3px;
         z-index: -1;
+        width: 1px;
+        height: 6px;
+        margin-top: -3px;
+        content: '';
+        background: #a7c7ff;
       }
       & + .time-box {
         margin-left: 8px;
       }
       & > div {
         overflow: hidden;
-        animation-timing-function: linear;
-        animation-duration: 400ms;
+        border-radius: 3px;
         // 为了chrome，需要一个小的角度，否则字体渲染错位
         transform: rotateX(-0.01deg);
-        border-radius: 3px;
+        animation-duration: 400ms;
+        animation-timing-function: linear;
         &.base {
           position: relative;
           .base-b {
             position: absolute;
-            left: 0;
             bottom: 0;
-            border-radius: 0 0 3px 3px;
+            left: 0;
             width: 100%;
             height: 100%;
-            background-color: #709bf1; // a1比base浅一点点，为了模拟翻页的阴影效果
             // background-color: #0ff;
             clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+            background-color: #709bf1; // a1比base浅一点点，为了模拟翻页的阴影效果
+            border-radius: 0 0 3px 3px;
           }
         }
         &.face {
           position: absolute;
-          left: 0;
           top: 0;
+          left: 0;
+          z-index: 2;
           width: 100%;
           height: 100%;
+          clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
           background-color: #6c96e8;
           // background-color: #f00;
           backface-visibility: visible;
-          clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
-          z-index: 2;
           &.anime {
             animation-name: animate-filp-face;
           }
         }
         &.back {
           position: absolute;
-          left: 0;
           top: 0;
+          left: 0;
           width: 100%;
           height: 100%;
+          clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
           background-color: #709bf1; // b0和a1一致
           // background-color: #aa0;
           transform: rotateX(-180deg);
           backface-visibility: visible;
-          clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
           &.anime {
             animation-name: animate-filp-back;
           }
