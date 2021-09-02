@@ -998,6 +998,10 @@ export default {
       refresh: '刷新',
       search: '查询',
       determine: '确定',
+      medium: '中等',
+      small: '小型',
+      mini: '超小',
+      default: '默认',
     },
     category: {
       'Add subcategory': '新增子分类',

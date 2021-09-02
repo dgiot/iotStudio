@@ -73,16 +73,31 @@
     <el-table
       ref="dragTable"
       :key="finallyColumns.length + momentKey"
+      class="logs-table"
       border
       resizable
       highlight-current-row
-      default-expand-all
       stripe
       :row-class-name="tableRowClassName"
-      size="mini"
+      :size="size"
       :data="logdata"
       :height="height"
     >
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-descriptions class="margin-top" :column="2" :size="size" border>
+            <el-descriptions-item
+              v-for="(item, key, index) in props.row.body"
+              v-show="key != 'elm'"
+              :key="index"
+              :label="key"
+              label-class-name="my-label"
+            >
+              {{ item }}
+            </el-descriptions-item>
+          </el-descriptions>
+        </template>
+      </el-table-column>
       <el-table-column
         v-for="(item, index) in finallyColumns"
         :key="index"
@@ -92,14 +107,14 @@
         sortable
         show-overflow-tooltip
       />
-      <!--      <el-table-column-->
-      <!--        prop="msg"-->
-      <!--        align="center"-->
-      <!--        sortable-->
-      <!--        show-overflow-tooltip-->
-      <!--        label="msg"-->
-      <!--        fixed="right"-->
-      <!--      />-->
+      <el-table-column
+        prop="msg.body"
+        align="center"
+        sortable
+        show-overflow-tooltip
+        label="msg"
+        fixed="right"
+      />
       <template #empty>
         <vab-empty />
       </template>
@@ -120,6 +135,7 @@
     name: 'AccessLog',
     data() {
       return {
+        size: '',
         isFullscreen: false,
         height: this.$baseTableHeight(0),
         logdata: [],
@@ -132,6 +148,7 @@
           'path',
           'code',
           'reason',
+          'elapsedtime',
         ],
         logcolumns: [
           'time',
@@ -141,6 +158,7 @@
           'path',
           'code',
           'reason',
+          'elapsedtime',
         ],
         queryForm: {
           total: 0,
@@ -267,13 +285,21 @@
             },
           }
           const { results = [], count: total = 0 } = await queryLog(params)
-          results.forEach((item) => {
+          results.forEach((item, index) => {
             item.time = this.$moment(
               Number(item.time.toString().substring(0, 13))
             ).format('YYYY-MM-DD HH:mm:ss.SSS')
-            var msg = JSON.parse(item.msg)
+            const msg = JSON.parse(item.msg)
             for (let k in msg) {
-              item[k] = msg[k]
+              if (k == 'body') {
+                item['body'] = msg['body']
+              } else {
+                item[k] = msg[k]
+              }
+            }
+            if (index == 0) {
+              console.log(item)
+              console.log(item.body)
             }
           })
           this.logdata = results
@@ -292,10 +318,17 @@
             'vab-hey-message-error'
           )
         }
+        this.momentKey = moment(new Date()).valueOf()
       },
     },
   }
 </script>
+<style>
+  .my-label {
+    font-size: 16px !important;
+    text-align: center !important;
+  }
+</style>
 <style scoped lang="scss">
   .logs {
     height: calc(100vh - #{$base-top-bar-height}* 2.7) !important;
@@ -314,6 +347,15 @@
       }
       &-tree {
         overflow: scroll;
+      }
+    }
+    &-table {
+      ::v-deep {
+        * {
+          font-size: 14px;
+          font-weight: normal;
+          color: #606266;
+        }
       }
     }
   }
