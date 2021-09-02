@@ -21,5 +21,6 @@ Object.keys(modules).forEach((key) => {
 })
 const store = new Vuex.Store({
   modules,
+  // plugins: [createLogger()],
 })
 export default store

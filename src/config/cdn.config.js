@@ -115,6 +115,7 @@ let cdnUrl = {
     'https://unpkg.com/resize-observer-polyfill',
     'https://unpkg.com/vditor',
     'https://unpkg.com/fabric/dist/fabric.js',
+    // 'https://unpkg.com/vuex/dist/logger',
     // 'https://unpkg.com/v-ace-editor/index.js',
     // 'https://unpkg.com/colors.js/colors.min.js',
     // 'https://unpkg.com/colors/lib/index.js',

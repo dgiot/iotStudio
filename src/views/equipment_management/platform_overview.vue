@@ -240,24 +240,17 @@
               <!--                {{ $translateTitle('konva.top') }}-->
               <!--              </el-button>-->
               <el-button
-                :icon="leftRow == 20 ? 'el-icon-s-unfold' : 'el-icon-s-fold'"
                 type="primary"
                 @click="leftRow == 20 ? (leftRow = 24) : (leftRow = 20)"
               >
                 {{
-                  cardHeight != '0px'
+                  leftRow == 20
                     ? $translateTitle('konva.hide')
                     : $translateTitle('konva.show')
                 }}
                 {{ $translateTitle('konva.right') }}
               </el-button>
-              <el-button
-                :icon="
-                  cardHeight != '0px' ? 'el-icon-s-unfold' : 'el-icon-s-fold'
-                "
-                type="primary"
-                @click="toggleCard(cardHeight)"
-              >
+              <el-button type="primary" @click="toggleCard(cardHeight)">
                 {{
                   cardHeight != '0px'
                     ? $translateTitle('konva.hide')
@@ -274,7 +267,7 @@
       <el-col :span="leftRow" :xs="24">
         <el-row :span="24">
           <div class="chart_map" style="position: relative">
-            <div class="card_left">
+            <div v-show="false" class="card_left">
               <el-row class="card_left-row" :gutter="24">
                 <el-col class="card_left-row-col" :span="6">
                   <Card
@@ -335,6 +328,16 @@
               class="card"
               style="position: absolute; right: 100px; z-index: 10086"
             >
+              <p
+                style="
+                  margin: 0;
+                  font-size: 18px;
+                  color: #f16643;
+                  text-align: center;
+                "
+              >
+                {{ $translateTitle('zetadevices.offline') }}
+              </p>
               <Card
                 style="
                   width: 80px;
@@ -350,11 +353,21 @@
                   <p>{{ offlineData.length || 0 }}</p>
                 </div>
               </Card>
+              <p
+                style="
+                  margin: 0;
+                  font-size: 18px;
+                  color: rgb(25, 190, 107);
+                  text-align: center;
+                "
+              >
+                {{ $translateTitle('zetadevices.online') }}
+              </p>
               <Card
                 style="
                   width: 80px;
                   height: 80px;
-                  margin: 20px 0;
+                  margin: 5px 0;
                   color: #fff;
                   background-color: #19be6b;
                   border-color: #19be6b;
@@ -366,6 +379,16 @@
                   <p>{{ dev_online_count || 0 }}</p>
                 </div>
               </Card>
+              <p
+                style="
+                  margin: 0;
+                  font-size: 18px;
+                  color: rgb(241, 102, 67);
+                  text-align: center;
+                "
+              >
+                {{ $translateTitle('leftbar.alarms') }}
+              </p>
               <Card
                 style="
                   width: 80px;
@@ -1124,10 +1147,10 @@
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
         this.loadingConfig[`${key}`] = true
-        this.$baseNotify(
-          '',
-          `${this.$translateTitle('websocket.messages')}${key}`
-        )
+        // this.$baseNotify(
+        //   '',
+        //   `${this.$translateTitle('websocket.messages')}${key}`
+        // )
         // console.log(key, mqttMsgValue, JSON.parse(mqttMsg))
         // console.clear()
 
@@ -1199,18 +1222,18 @@
         StartDashboard(queryParams)
           .then((res) => {
             console.log(res)
-            this.$baseNotify(
-              e,
-              `mqtt${this.$translateTitle('websocket.subscribeSuccess')}`
-            )
+            // this.$baseNotify(
+            //   e,
+            //   `mqtt${this.$translateTitle('websocket.subscribeSuccess')}`
+            // )
           })
           .catch((e) => {
             console.log(e)
-            this.$baseNotify(
-              e,
-              `mqtt${this.$translateTitle('websocket.subscribeSuccess')}`,
-              'error'
-            )
+            // this.$baseNotify(
+            //   e,
+            //   `mqtt${this.$translateTitle('websocket.subscribeSuccess')}`,
+            //   'error'
+            // )
           })
       },
       toggleCard(height) {
@@ -1264,10 +1287,6 @@
         console.log(objectId)
       },
       queryData() {
-        this.sendMessage(
-          'Klht7ERlYn',
-          moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS')
-        )
         const loading = this.$baseColorfullLoading(3)
         setTimeout(() => {
           loading.close()
@@ -1526,7 +1545,7 @@
               //height: 40px;
               p {
                 margin: 8px 0 auto;
-                font-size: 18px;
+                font-size: 20px;
                 text-align: center;
               }
             }
