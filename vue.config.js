@@ -24,6 +24,7 @@ const {
   dateTime,
   proxy,
   useCdn,
+  pwa,
 } = require('./src/config')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
@@ -71,6 +72,21 @@ module.exports = {
   lintOnSave,
   transpileDependencies,
   devServer,
+  pwa: {
+    workboxOptions: {
+      skipWaiting: true,
+      clientsClaim: true,
+    },
+    themeColor: '#ffffff',
+    msTileColor: '#ffffff',
+    appleMobileWebAppCapable: 'yes',
+    appleMobileWebAppStatusBarStyle: 'black',
+    manifestOptions: {
+      name: 'dgiot_dashboard',
+      short_name: 'dgiot_dashboard',
+      background_color: '#ffffff',
+    },
+  },
   configureWebpack() {
     // https://blog.csdn.net/weixin_43972992/article/details/105159723
     return {

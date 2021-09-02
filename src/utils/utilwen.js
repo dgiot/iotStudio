@@ -276,6 +276,177 @@ export function globalUrl(hostname = window.location.hostname, localHost) {
     return ''
   }
 }
+
+/**
+ *
+ * @param link
+ * @param name
+ */
+function downLink(link, name) {
+  if (!name) {
+    name = link.slice(link.lastIndexOf('/') + 1)
+  }
+  let eleLink = document.createElement('a')
+  eleLink.download = name
+  eleLink.style.display = 'none'
+  eleLink.href = link
+  document.body.appendChild(eleLink)
+  eleLink.click()
+  document.body.removeChild(eleLink)
+}
+
+/**
+ * 浏览器下载静态文件
+ * @param {String} name 文件名
+ * @param {String} content 文件内容
+ */
+function downloadFile(name, content) {
+  if (typeof name == 'undefined') {
+    throw new Error('The first parameter name is a must')
+  }
+  if (typeof content == 'undefined') {
+    throw new Error('The second parameter content is a must')
+  }
+  if (!(content instanceof Blob)) {
+    content = new Blob([content])
+  }
+  const link = URL.createObjectURL(content)
+  download(link, name)
+}
+
+/**
+ *
+ * @param link
+ * @param name
+ */
+function download(link, name) {
+  if (!name) {
+    name = link.slice(link.lastIndexOf('/') + 1)
+  }
+  let eleLink = document.createElement('a')
+  eleLink.download = name
+  eleLink.style.display = 'none'
+  eleLink.href = link
+  document.body.appendChild(eleLink)
+  eleLink.click()
+  document.body.removeChild(eleLink)
+}
+
+/**
+ *
+ * @param link
+ * @param fileName
+ */
+function downloadByLink(link, fileName) {
+  axios
+    .request({
+      url: link,
+      responseType: 'blob', //关键代码，让axios把响应改成blob
+    })
+    .then((res) => {
+      const link = URL.createObjectURL(res.data)
+      download(link, fileName)
+    })
+}
+
+/**
+ *
+ * @param {*} func 要进行debouce的函数
+ * @param {*} wait 等待时间,默认500ms
+ * @param {*} immediate 是否立即执行
+ */
+export function debounce(func, wait = 500, immediate = false) {
+  var timeout
+  return function () {
+    var context = this
+    var args = arguments
+
+    if (timeout) clearTimeout(timeout)
+    if (immediate) {
+      // 如果已经执行过，不再执行
+      var callNow = !timeout
+      timeout = setTimeout(function () {
+        timeout = null
+      }, wait)
+      if (callNow) func.apply(context, args)
+    } else {
+      timeout = setTimeout(function () {
+        func.apply(context, args)
+      }, wait)
+    }
+  }
+}
+
+/**
+ * 节流，多次触发，间隔时间段执行
+ * @param {Function} func
+ * @param {Int} wait
+ * @param {Object} options
+ */
+export function throttle(func, wait = 500, options) {
+  //container.onmousemove = throttle(getUserAction, 1000);
+  var timeout, context, args
+  var previous = 0
+  if (!options) options = { leading: false, trailing: true }
+
+  var later = function () {
+    previous = options.leading === false ? 0 : new Date().getTime()
+    timeout = null
+    func.apply(context, args)
+    if (!timeout) context = args = null
+  }
+
+  var throttled = function () {
+    var now = new Date().getTime()
+    if (!previous && options.leading === false) previous = now
+    var remaining = wait - (now - previous)
+    context = this
+    args = arguments
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout)
+        timeout = null
+      }
+      previous = now
+      func.apply(context, args)
+      if (!timeout) context = args = null
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining)
+    }
+  }
+  return throttled
+}
+
+/**
+ *
+ * @param value
+ * @return {boolean|boolean}
+ */
+export const isFalsy = (value) => (value === 0 ? false : !value)
+/**
+ *
+ * @param value
+ * @return {boolean}
+ */
+export const isVoid = (value) =>
+  value === undefined || value === null || value === ''
+
+/**
+ *
+ * @param object
+ * @return {{}|*}
+ */
+export const cleanObject = (object) => {
+  // Object.assign({}, object)
+  if (!object) return {}
+  const result = { ...object }
+  Object.keys(result).forEach((key) => {
+    const value = result[key]
+    if (isVoid(value)) delete result[key]
+  })
+  return result
+}
+
 export default {
   install(Vue, options) {
     Vue.prototype.$axios = axios

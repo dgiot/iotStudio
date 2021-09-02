@@ -47,6 +47,7 @@
     "@babel/helper-plugin-utils": "^7.14.5",
     "@logicflow/core": "^0.6.15",
     "@logicflow/extension": "^0.6.15",
+    "@vue/cli-plugin-pwa": "^4.5.13",
     "axios": "^0.21.1",
     "core-js": "^3.16.4",
     "element-ui": "^2.15.5",

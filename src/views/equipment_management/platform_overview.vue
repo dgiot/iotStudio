@@ -253,6 +253,63 @@
       <el-col :span="leftRow" :xs="24">
         <el-row :span="24">
           <div class="chart_map" style="position: relative">
+            <div class="card_left">
+              <el-row class="card_left-row" :gutter="24">
+                <el-col class="card_left-row-col" :span="6">
+                  <Card
+                    class="card_left-row-col-card"
+                    style="background-color: #ffad33; border-color: #ffad33"
+                  >
+                    <div style="text-align: center">
+                      <Tag
+                        checkable
+                        color="warning"
+                        style="background: rgb(255, 173, 51)"
+                      >
+                        {{ offlineData.length || 0 }}
+                      </Tag>
+                      <p>{{ $translateTitle('zetadevices.offline') }}</p>
+                    </div>
+                  </Card>
+                </el-col>
+                <el-col class="card_left-row-col" :offset="2" :span="6">
+                  <Card
+                    class="card_left-row-col-card"
+                    style="background-color: #19be6b; border-color: #19be6b"
+                  >
+                    <div style="text-align: center">
+                      <Tag
+                        checkable
+                        color="success"
+                        style="background: rgb(25, 190, 107)"
+                      >
+                        {{ dev_online_count || 0 }}
+                      </Tag>
+                      <p>{{ $translateTitle('zetadevices.online') }}</p>
+                    </div>
+                  </Card>
+                </el-col>
+                <el-col class="card_left-row-col" :offset="2" :span="6">
+                  <Card
+                    class="card_left-row-col-card"
+                    style="background-color: #f16643; border-color: #f16643"
+                  >
+                    <div style="text-align: center">
+                      <Tag
+                        checkable
+                        color="error"
+                        style="background: rgb(241, 102, 67)"
+                      >
+                        {{ warnCount }}
+                      </Tag>
+                    </div>
+                    <p>
+                      {{ $translateTitle('leftbar.alarms') }}
+                    </p>
+                  </Card>
+                </el-col>
+              </el-row>
+            </div>
             <div
               class="card"
               style="position: absolute; right: 100px; z-index: 10086"
@@ -265,16 +322,10 @@
                   background-color: #ffad33;
                   border-color: #ffad33;
                   border-radius: 50%;
+                  opacity: 0.89;
                 "
               >
                 <div style="text-align: center">
-                  <Tag
-                    checkable
-                    color="warning"
-                    style="background: rgb(255, 173, 51)"
-                  >
-                    {{ $translateTitle('zetadevices.offline') }}
-                  </Tag>
                   <p>{{ offlineData.length || 0 }}</p>
                 </div>
               </Card>
@@ -287,16 +338,10 @@
                   background-color: #19be6b;
                   border-color: #19be6b;
                   border-radius: 50%;
+                  opacity: 0.89;
                 "
               >
                 <div style="text-align: center">
-                  <Tag
-                    checkable
-                    color="success"
-                    style="background: rgb(25, 190, 107)"
-                  >
-                    {{ $translateTitle('zetadevices.online') }}
-                  </Tag>
                   <p>{{ dev_online_count || 0 }}</p>
                 </div>
               </Card>
@@ -308,16 +353,10 @@
                   background-color: #f16643;
                   border-color: #f16643;
                   border-radius: 50%;
+                  opacity: 0.89;
                 "
               >
                 <div style="text-align: center">
-                  <Tag
-                    checkable
-                    color="error"
-                    style="background: rgb(241, 102, 67)"
-                  >
-                    {{ $translateTitle('leftbar.alarms') }}
-                  </Tag>
                   <p>{{ warnCount }}</p>
                 </div>
               </Card>
@@ -327,7 +366,7 @@
               ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
               :scroll-wheel-zoom="true"
               class="baidu_map"
-              :center="{ lng: 116.404, lat: 39.915 }"
+              :center="{ lng: 106.553838, lat: 29.563216 }"
               :zoom="sizeZoom"
             >
               <bm-control>
@@ -805,7 +844,7 @@
         treeDataValue: '',
         deptTreeData: [],
         show: false,
-        sizeZoom: 5,
+        sizeZoom: 6,
         tableData: [],
         offlineData: [],
         onlineData: [],
@@ -1425,6 +1464,54 @@
     padding: 10px;
     background-size: 100%;
     .chart_map {
+      .card_left {
+        position: absolute;
+        bottom: 60px;
+        left: 10px;
+        z-index: 10086;
+        color: black;
+        &-row {
+          &-col {
+            color: black;
+            &-card {
+              width: 40px;
+              height: 40px;
+              padding: 8px;
+              color: #fff;
+              color: black;
+              border-radius: 50%;
+              opacity: 0.89;
+              ::v-deep .ivu-card-body {
+                padding: 0 !important;
+                p {
+                  margin-top: 6px;
+                  margin-left: -5px;
+                  white-space: nowrap;
+                }
+              }
+            }
+          }
+        }
+      }
+      .card {
+        .ivu-card,
+        .ivu-card-bordered {
+          font-size: 18px;
+          .ivu-card-body {
+            div {
+              display: flex;
+              justify-content: center;
+              //width: 40px;
+              //height: 40px;
+              p {
+                margin: 8px 0 auto;
+                font-size: 18px;
+                text-align: center;
+              }
+            }
+          }
+        }
+      }
       .baidu_map {
         height: calc(78vh - 20px);
       }
