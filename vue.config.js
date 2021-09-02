@@ -84,7 +84,15 @@ module.exports = {
     manifestOptions: {
       name: 'dgiot_dashboard',
       short_name: 'dgiot_dashboard',
+      description: '提供物联网垂直领域应用使能平台及解决方案',
+      display: 'standalone',
+      orientation: 'portrait-primary',
+      prefer_related_applications: false,
       background_color: '#ffffff',
+      lang: 'zh-CN',
+      start_url: '/',
+      scope: '/',
+      theme_color: '#4fc08d',
     },
   },
   configureWebpack() {

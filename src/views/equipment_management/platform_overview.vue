@@ -32,7 +32,14 @@
     >
       <div v-show="cardHeight != '0px'" class="map_card">
         <el-row>
-          <el-col class="card-panel-col" :xs="24" :sm="24" :md="6" :xl="6">
+          <el-col
+            class="card-panel-col"
+            :xs="24"
+            :sm="12"
+            :md="6"
+            :xl="6"
+            :lg="6"
+          >
             <el-card
               v-loading="loadingConfig['product_count'] == false"
               :element-loading-text="
@@ -54,12 +61,12 @@
             </el-card>
           </el-col>
           <el-col
-            :lg="{ span: '4-8' }"
             class="card-panel-col"
             :xs="24"
-            :sm="24"
+            :sm="12"
             :md="6"
             :xl="6"
+            :lg="6"
           >
             <el-card
               v-loading="loadingConfig['app_count'] == false"
@@ -79,7 +86,14 @@
               </el-col>
             </el-card>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="6" class="card-panel-col" :xl="6">
+          <el-col
+            :xs="24"
+            :sm="12"
+            :md="6"
+            :xl="6"
+            :lg="6"
+            class="card-panel-col"
+          >
             <el-card
               v-loading="loadingConfig['device_count'] == false"
               :element-loading-text="
@@ -98,7 +112,14 @@
               </el-col>
             </el-card>
           </el-col>
-          <el-col class="card-panel-col" :xs="24" :sm="24" :md="6" :xl="6">
+          <el-col
+            class="card-panel-col"
+            :xs="24"
+            :sm="12"
+            :md="6"
+            :xl="6"
+            :lg="6"
+          >
             <el-card
               v-loading="loadingConfig['warn_count'] == false"
               :element-loading-text="
@@ -238,7 +259,7 @@
                 @click="toggleCard(cardHeight)"
               >
                 {{
-                  leftRow == 20
+                  cardHeight != '0px'
                     ? $translateTitle('konva.hide')
                     : $translateTitle('konva.show')
                 }}
@@ -840,7 +861,7 @@
         cardHeight: '',
         fixedPaddingTop: '',
         curDepartmentId: '',
-        leftRow: 20,
+        leftRow: 24,
         treeDataValue: '',
         deptTreeData: [],
         show: false,
@@ -1611,10 +1632,12 @@
       padding: 5px;
       margin: 0px;
       font-weight: bolder;
+      white-space: nowrap;
     }
     .card-right p {
       font-size: 20px;
       color: #fff;
+      white-space: nowrap;
     }
   }
   .text {
