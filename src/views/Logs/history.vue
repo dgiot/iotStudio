@@ -115,13 +115,13 @@
     <el-table
       ref="dragTable"
       :key="finallyColumns.length + momentKey"
+      class="logs-table"
       border
       resizable
       highlight-current-row
       default-expand-all
       stripe
       :row-class-name="tableRowClassName"
-      size="mini"
       :data="logdata"
       :height="height"
     >
@@ -136,23 +136,34 @@
       />
       <el-table-column
         v-for="(item, index) in finallyColumns"
-        v-show="item != 'msg'"
         :key="index"
         :prop="item"
         :label="item"
         align="center"
         sortable
-        :width="w80.includes(item) ? 80 : Wh120.includes(item) ? 120 : 180"
+        :width="w80.includes(item) ? 80 : Wh120.includes(item) ? 120 : 'auto'"
         show-overflow-tooltip
       />
-      <el-table-column
-        prop="msg"
-        align="center"
-        sortable
-        show-overflow-tooltip
-        label="msg"
-        fixed="right"
-      />
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-descriptions class="margin-top" :column="2" border>
+            <el-descriptions-item>
+              <template slot="label">
+                <i v-copy="props.row.msg" class="el-icon-copy-document"></i>
+              </template>
+              {{ props.row.msg }}
+            </el-descriptions-item>
+          </el-descriptions>
+        </template>
+      </el-table-column>
+      <!--      <el-table-column-->
+      <!--        prop="msg"-->
+      <!--        align="center"-->
+      <!--        sortable-->
+      <!--        show-overflow-tooltip-->
+      <!--        label="msg"-->
+      <!--        fixed="right"-->
+      <!--      />-->
       <template #empty>
         <vab-empty />
       </template>
@@ -190,7 +201,7 @@
         ],
         fold: true,
         w80: ['line', 'level'],
-        Wh120: ['pid', 'level', 'domain', 'gl'],
+        Wh120: ['pid', 'domain', 'gl'],
         Wh200: ['time', 'clientid', 'peername'],
         leverData: [
           'debug',
@@ -367,6 +378,7 @@
             'vab-hey-message-error'
           )
         }
+        this.momentKey = moment(new Date()).valueOf()
       },
     },
   }
@@ -389,6 +401,15 @@
       }
       &-tree {
         overflow: scroll;
+      }
+    }
+    &-table {
+      ::v-deep {
+        * {
+          font-size: 14px;
+          font-weight: normal;
+          color: #606266;
+        }
       }
     }
   }
