@@ -5,7 +5,7 @@ module.exports = {
   proxy: [
     {
       path: 'iotapi',
-      target: 'http://prod.iotn2n.com',
+      target: 'http://114.117.171.233',
     },
     {
       path: 'group1',
