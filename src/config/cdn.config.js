@@ -93,7 +93,7 @@ let cdnUrl = {
     'https://map.qq.com/api/js?v=2.exp&key=OXUBZ-TOX3S-HIXO7-6ITJZ-I7X6F-PTF3T',
     'https://unpkg.com/vue-amap/dist/index.js',
     'https://unpkg.com/jsoneditor/dist/jsoneditor.min.js',
-    'https://dn-bts.bugtags.cn/sdk/bugtags-2.0.2.js',
+    // 'https://dn-bts.bugtags.cn/sdk/bugtags-2.0.2.js',
     'https://unpkg.com/vue-flv-player/dist/vue-flv-player.umd.min.js',
     'https://unpkg.com/ezuikit-js',
     'https://unpkg.com/f-render',

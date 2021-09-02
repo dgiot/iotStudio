@@ -859,50 +859,45 @@
         mqttInfo: 'mqttMsg/mqttInfo',
       }),
     },
-    // watch: {
-    //   collapse: {
-    //     handler(_collapse) {
-    //       $('.appendLogo').remove()
-    //       $('.logo-container .router-link-active').css({
-    //         display: 'none',
-    //       })
-    //       let img = this.collapse == true ? this._pcimg : this._mimg
-    //       $('.logo-container').append(
-    //         `<img src=${img} class="appendLogo" style="width: 100%" />`
-    //       )
-    //     },
-    //     deep: true,
-    //     immediate: true,
-    //   },
-    // },
+    watch: {
+      // collapse: {
+      //   handler(_collapse) {
+      //     $('.appendLogo').remove()
+      //     $('.logo-container .router-link-active').css({
+      //       display: 'none',
+      //     })
+      //     let img = this.collapse == true ? this._pcimg : this._mimg
+      //     $('.logo-container').append(
+      //       `<img src=${img} class="appendLogo" style="width: 100%" />`
+      //     )
+      //   },
+      //   deep: true,
+      //   immediate: true,
+      // },
+    },
     created() {
-      const option = {
-        id: this.objectId + moment(new Date()),
-        ip: options.host,
-        port: options.port,
-        userName: this.objectId,
-        passWord: 'toppicPwd',
-      }
-      this.$bus.$off('busSendMsg')
-      this.$bus.$on('busSendMsg', (...res) => {
-        console.log(...res, 'busSendMsg')
+      let _this = this
+      _this.$bus.$off('busSendMsg')
+      _this.$bus.$on('busSendMsg', (...res) => {
+        const { topic = '', Message = {} } = res[0]
+        if (topic.length) {
+          const key = moment().format('x')
+          // console.info('%c%s', 'color: pink;font-size: 12px;', key)
+          _this.mqttMsg(Message.payloadString, Message, key)
+        }
       })
-      this.initMqtt(option)
     },
     mounted() {
-      this.subscribe('subscribe')
+      this.initDgiotMqtt()
       console.log(`global static url ${this._role}`)
       this.queryForm.account =
         this.language == 'zh' ? '全部产品' : 'All Products'
-      this.getRoletree()
-      this.getProduct()
     },
     activated() {
       console.log('keep-alive生效')
       this.resizeTheChart()
     }, //如果页面有keep-alive缓存功能，这个函数会触发
     destroyed() {
-      this.$iotMqtt.unsubscribe(this.channeltopic)
       this.resizeTheChart()
     },
     methods: {
@@ -911,6 +906,19 @@
        * @param
        * @returns
        */
+      initDgiotMqtt() {
+        const option = {
+          id: 'DGmqtt_' + this.objectId + moment(new Date()),
+          ip: options.host,
+          port: options.port,
+          userName: this.objectId,
+          passWord: 'toppicPwd',
+        }
+        this.initMqtt(option)
+        this.getRoletree()
+        this.getProduct()
+        this.subscribe('dgiottopic')
+      },
       async getWarnCount(params = { count: '*', where: {} }) {
         params.where['createdAt'] = {
           $gt: {
@@ -985,9 +993,6 @@
           },
         })
       },
-      /*
-   连接webscroket
-   */
       getCategory(key) {
         console.log(key)
         let name = ''
@@ -997,9 +1002,6 @@
           }
         })
         return name
-      },
-      mqttError(e) {
-        console.log('mqttError', e)
       },
       closeInfo(item, index) {
         // item.show = false
@@ -1056,9 +1058,9 @@
           : (this.deviceInfo.topicData = _toppic)
         this.deviceFlag = true
       },
-      mqttMsg(e, i, { destinationName, payloadString } = message) {
-        // console.log(destinationName, payloadString)
+      mqttMsg(e, { destinationName, payloadString }, k) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
+        // console.log(destinationName, mqttMsg, 'mqttMsg')
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
         this.loadingConfig[`${key}`] = true
@@ -1132,9 +1134,6 @@
         }
         // console.info('today warning', this.warnCount)
         this.$forceUpdate()
-      },
-      mqttConnectLost(e) {
-        console.log('mqttConnectLost', e)
       },
       mqttSuccess(e) {
         StartDashboard(queryParams)
@@ -1297,15 +1296,17 @@
         this.curDepartmentId = objectId
         // this.channeltopic = `dashboard/${this.queryForm.access_token}/post`
         this.channeltopic = `dashboard/${this.token}/post`
-
-        // this.isConnect = true
-        console.log(this.channeltopic, 'this.channeltopic')
-        // this.$iotMqtt.subscribe(this.channeltopic)
-        // console.log(this.$iotMqtt, 'this.$iotMqtt.init')
-        if (this.$refs.mqtt) {
-          this.$refs.mqtt.clientMqtt()
+        this.subscribe(this.channeltopic)
+        this.$nextTick(() => {
+          // this.isConnect = true
+          console.log(this.channeltopic, 'this.channeltopic')
+          console.info(
+            '%c%s',
+            'color: green;font-size: 12px;',
+            'channeltopic ' + this.channeltopic
+          )
           this.resizeTheChart()
-        }
+        })
         // $('.el-select-dropdown').css({ height: '0px', display: 'none' })
       },
       handleChange() {},

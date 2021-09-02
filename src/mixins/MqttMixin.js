@@ -33,34 +33,44 @@ const MqttMixin = {
      * @param payloadString
      * @return {Vue|*}
      */
-    busSendMsg(topic, payloadString) {
+    busSendMsg(topic, payloadString, Message) {
       let _this = this
       const splitTopic = topic.split('/', 9999)
       const map = Map2Json(this.mapTopic)
       for (let key in map) {
         if (map[key] < Number(moment().format('x'))) this.unsubscribe(key)
         if (topic == key) {
+          console.groupCollapsed(
+            '%ciotMqtt busSendMsg payloadString',
+            'color:#009a61; font-size: 28px; font-weight: 300'
+          )
+          console.warn('%c%s', 'font-size: 24px;', payloadString)
+          console.groupEnd()
+          return _this.$bus.$emit('busSendMsg', {
+            topic: topic,
+            msg: payloadString,
+            Message: Message,
+          })
+        } else {
+          const splitKey = key.split('/', 9999)
           console.info(
             '%c%s',
-            'color: green;font-size: 12px;',
-            'busSendMsg payloadString:' + payloadString
+            'color: green;font-size: 24px;',
+            'busSendMsg splitKey: ' + splitKey
           )
-          return _this.$bus.$emit('busSendMsg', {
-            topic: key,
-            msg: payloadString,
-          })
-        }
-        const splitKey = key.split('/', 9999)
-        if (this.checkTopic(splitTopic, splitKey)) {
-          console.info(
-            '%c%s',
-            'color: green;font-size: 12px;',
-            'busSendMsg payloadString:' + payloadString
-          )
-          return _this.$bus.$emit('busSendMsg', {
-            topic: key,
-            msg: payloadString,
-          })
+          if (this.checkTopic(splitTopic, splitKey)) {
+            console.groupCollapsed(
+              '%ciotMqtt busSendMsg payloadString',
+              'color:#009a61; font-size: 28px; font-weight: 300'
+            )
+            console.warn('%c%s', 'font-size: 24px;', payloadString)
+            console.groupEnd()
+            return _this.$bus.$emit('busSendMsg', {
+              topic: key,
+              msg: payloadString,
+              Message: Message,
+            })
+          }
         }
       }
     },
@@ -75,7 +85,7 @@ const MqttMixin = {
       for (let k in length) {
         if (splitKey[k] == '#') {
           return true
-        } else if (splitKey[k] == '+' || splitTopic[k] == splitkey[k]) {
+        } else if (splitKey[k] == '+' || splitTopic[k] == splitKey[k]) {
         } else {
           return false
         }
@@ -103,7 +113,7 @@ const MqttMixin = {
         console.info(
           '%c%s',
           'color: green;font-size: 24px;',
-          `${options.time} mqtt连接`
+          `${options.time} mqtt连接信息` + JSON.stringify(options)
         )
       }
       iotMqtt.init({
@@ -136,7 +146,7 @@ const MqttMixin = {
         '%ciotMqtt connection succeeded',
         'color:#009a61; font-size: 28px; font-weight: 300'
       )
-      console.info('%c%s', 'color: green;font-size: 12px;', msg)
+      console.info('%c%s', 'color: green;font-size: 24px;', msg)
       console.groupEnd()
       iotMqtt.subscribe(this.objectId)
       this.subscribe(this.objectId)
@@ -150,7 +160,7 @@ const MqttMixin = {
         '%ciotMqtt Connection failed',
         'color:#009a61; font-size: 28px; font-weight: 300'
       )
-      console.error('%c%s', 'color: red;font-size: 12px;', msg)
+      console.error('%c%s', 'color: red;font-size: 24px;', msg)
       console.groupEnd()
       this.reconnect()
     },
@@ -163,7 +173,7 @@ const MqttMixin = {
         '%ciotMqtt Connection lost',
         'color:#009a61; font-size: 28px; font-weight: 300'
       )
-      console.error('%c%s', 'color: red;font-size: 12px;', msg)
+      console.error('%c%s', 'color: red;font-size: 24px;', msg)
       console.groupEnd()
     },
     /**
@@ -179,8 +189,7 @@ const MqttMixin = {
         qos = 'qos',
         retained = 'retained',
       } = Message
-      console.log(destinationName, 'destinationName')
-      this.busSendMsg(destinationName, payloadString)
+      this.busSendMsg(destinationName, payloadString, Message)
 
       const table = {
         destinationName: destinationName,
@@ -214,8 +223,8 @@ const MqttMixin = {
       )
       console.info(
         '%c%s',
-        'color: green;font-size: 12px;',
-        'subscribe topic:' + topic
+        'color: green;font-size: 24px;',
+        'subscribe topic:   ' + topic
       )
       console.groupEnd()
     },
@@ -223,7 +232,7 @@ const MqttMixin = {
       iotMqtt.unsubscribe(topic)
       const map = this.mapTopic
       map.delete(topic)
-      console.info('%c%s', 'color: green;font-size: 12px;', map)
+      console.info('%c%s', 'color: green;font-size: 24px;', map)
       this.setMapTopic(map)
       console.groupCollapsed(
         '%ciotMqtt unsubscribe',
@@ -231,7 +240,7 @@ const MqttMixin = {
       )
       console.info(
         '%c%s',
-        'color: green;font-size: 12px;',
+        'color: green;font-size: 24px;',
         'unsubscribe: topic' + topic
       )
       console.groupEnd()
@@ -246,7 +255,7 @@ const MqttMixin = {
         '%ciotMqtt reconnect',
         'color:#009a61; font-size: 28px; font-weight: 300'
       )
-      console.warn('%c%s', 'color: yellow;font-size: 12px;', msg)
+      console.warn('%c%s', 'color: yellow;font-size: 24px;', msg)
       console.groupEnd()
     },
     /**
@@ -261,16 +270,14 @@ const MqttMixin = {
           '%csendMsg',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-        console.log(`%ctopic:${topic}, msg: ${obj}`, 'color:#009a61')
         console.groupEnd()
         iotMqtt.sendMessage(topic, obj)
       } catch (err) {
-        console.log('send failed' + err)
         console.groupCollapsed(
           '%ciotMqtt sendMessage error',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-        console.warn('%c%s', 'color: red;font-size: 12px;', msg)
+        console.warn('%c%s', 'color: red;font-size: 24px;', msg)
         console.groupEnd()
       }
     },
