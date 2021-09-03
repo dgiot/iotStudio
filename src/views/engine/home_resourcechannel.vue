@@ -245,7 +245,8 @@
       </el-table>
       <div class="elpagination">
         <el-pagination
-          :page-sizes="[10, 20, 30, 50]"
+          :key="length + 'key' + total"
+          :page-sizes="[5, 10, 20, 30, 50]"
           :page-size="length"
           :total="total"
           layout="total, sizes, prev, pager, next, jumper"
@@ -878,9 +879,13 @@
       // 分页
       channelSizeChange(val) {
         this.length = val
+        // this.total = 0
         this.Get_Re_Channel(1)
       },
       channelCurrentChange(val) {
+        // this.total = 0
+        if (val <= 1) this.total = 0
+        console.log(val)
         this.start = (val - 1) * this.length
         this.Get_Re_Channel(1)
       },

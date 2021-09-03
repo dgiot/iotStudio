@@ -238,11 +238,8 @@
       },
       removeFn() {
         console.log(this.graphNow)
-        if (this.graphNow) {
-          this.$emit('removeShape', this.graphNow)
-        } else {
-          this.$message.error('请选择图形')
-        }
+        if (this.graphNow) this.$bus.$emit('removeShape', this.graphNow)
+        else this.$message.error('请选择图形')
       },
       showImageTable(type) {
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(

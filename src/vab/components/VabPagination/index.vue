@@ -1,6 +1,7 @@
 <template>
   <div :class="{ hidden: hidden }" class="pagination-container">
     <el-pagination
+      :key="momentKey"
       :background="background"
       :current-page.sync="currentPage"
       :page-size.sync="pageSize"
@@ -53,6 +54,11 @@
         default: false,
       },
     },
+    data() {
+      return {
+        momentKey: moment(new Date()).format('X'),
+      }
+    },
     computed: {
       currentPage: {
         get() {
@@ -73,22 +79,50 @@
     },
     methods: {
       handleSizeChange(val) {
-        this.$emit('pagination', {
+        this.pageSize = val
+        const args = {
           skip: this.currentPage,
-          limit: val,
-          count: '*',
-          order: '-createdAt',
-          keys: 'count(*)',
-        })
-      },
-      handleCurrentChange(val) {
-        this.$emit('pagination', {
-          skip: (val - 1) * this.currentPage,
           limit: this.pageSize,
           count: '*',
           order: '-createdAt',
           keys: 'count(*)',
-        })
+        }
+        // this.momentKey = moment(new Date()).format('X')
+        this.$emit('pagination', args)
+        console.groupCollapsed(
+          '%cpagination info',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.info(
+          '%c%s',
+          'color: green;font-size: 24px;',
+          'handleSizeChange val:   ' + val + this.limit + this.currentPage
+        )
+        console.table(args)
+        console.groupEnd()
+      },
+      handleCurrentChange(val) {
+        // this.momentKey = moment(new Date()).format('X')
+        this.currentPage = (val - 1) * this.pageSize
+        const args = {
+          skip: this.currentPage,
+          limit: this.pageSize,
+          count: '*',
+          order: '-createdAt',
+          keys: 'count(*)',
+        }
+        console.groupCollapsed(
+          '%cpagination info',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.info(
+          '%c%s',
+          'color: green;font-size: 24px;',
+          'handleCurrentChange val:   ' + val + this.limit + this.currentPage
+        )
+        console.table(args)
+        console.groupEnd()
+        this.$emit('pagination', args)
       },
     },
   }

@@ -3,6 +3,7 @@
     class="konva konva-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
   >
+    <!--    <vab-xterm />-->
     <el-container class="konva-container">
       <el-header
         v-show="!isDevice"
@@ -52,7 +53,7 @@
             :xl="isDevice ? 0 : 3"
           >
             <el-aside class="konva-container-main-operationsSide">
-              <TopoOperation />
+              <TopoOperation ref="operation" />
             </el-aside>
           </el-col>
         </el-row>
@@ -121,6 +122,13 @@
     },
     destroyed() {},
     created() {
+      this.$bus.$off('removeShape')
+      this.$bus.$on('removeShape', (topo) => {
+        if (topo.attrs.id) this.removeShape(topo)
+        else {
+          throw new Error('选择元素没有绑定元素id')
+        }
+      })
       this.$baseEventBus.$on('busTopo', (type, data) => {
         this.newTopo(type, data)
       })
@@ -129,12 +137,94 @@
       })
     },
     methods: {
-      async updataTopo() {
+      ...mapMutations({
+        setDrawing: 'konva/setDrawing',
+        setPointStart: 'konva/setPointStart',
+        setDraw: 'konva/setDraw',
+        setFlag: 'konva/setFlag',
+        setGraphNow: 'konva/setGraphNow',
+        setGraphColor: 'konva/setGraphColor',
+        setDrawParams: 'konva/setDrawParams',
+      }),
+      removeShape(node) {
+        const topoid = node.attrs.id
+        const lab = node.attrs.className
+        var type = ''
+        let _this = this
+        const Layer = _this.stage.find('Layer')[0]
+        const Path = _this.stage.find('Path')
+        const Image = _this.stage.find('Image')
+        const Text = _this.stage.find('Text')
+        const Group = _this.stage.find('Group')
+        const stage = _this.stage.find(node.attrs.id)
+        var tweens = []
+        for (var n = 0; n < tweens.length; n++) {
+          tweens[n].destroy()
+        }
+        if (lab == 'Path') {
+          type = 'Path'
+          Path.forEach((shape) => {
+            if (shape.attrs.id == topoid) {
+              type = 'img'
+              shape.remove()
+              shape.destroy()
+              node.remove()
+              node.destroy()
+              Layer.draw()
+            }
+          })
+        }
+        if (node?.attrs?.image) {
+          Image.each((shape) => {
+            console.log('图片相关', shape)
+            if (shape.attrs.id == node.attrs.id) {
+              type = 'img'
+              shape.remove()
+              shape.destroy()
+              node.remove()
+              node.destroy()
+              Layer.draw()
+            }
+          })
+        }
+        _this.stage.find('Transformer').map((_Transformer) => {
+          console.log(_Transformer, '_Transformer')
+        })
+        const tabInfo = {
+          topoid: topoid,
+          lab: lab,
+          type: type,
+          PathLen: Path.length,
+          // node: node,
+        }
+        console.groupCollapsed(
+          '%cTopo delete info',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.table(tabInfo)
+        console.groupEnd()
+        console.log(_this.stage.find('Transformer'), _this.stage.find())
+        // _this.stage.find('Transformer').destroy()
+        node.remove()
+        Layer.draw()
+        Layer.batchDraw()
+        _this.$refs.topobase.createTopo(
+          _this.stage.toJSON(),
+          moment(new Date()).valueOf()
+        )
+        _this.setGraphNow('')
+        if (node.attrs.id == _this.$refs['operation'].Shapeconfig.attrs.id)
+          _this.$refs['operation'].Shapeconfig = []
+        _this.updataTopo(this.productid)
+      },
+      async updataTopo(productid = '') {
+        if (productid) this.productconfig.config.konva = { Stage: {} }
+
         let config = this.productconfig.config
         let stage = JSON.parse(this.stage.toJSON())
-        console.log(stage)
+        console.log(stage, config)
         config.konva.Stage = stage
-        let upconfig = _.merge(config, this.paramsconfig)
+        let upconfig = _.merge(this.paramsconfig, config)
         console.log(upconfig, 'upconfig')
         let params = {
           config: upconfig,
@@ -142,7 +232,8 @@
         await putProduct(this.productid, params)
           .then((res) => {
             // this.handleCloseSub()
-            this.$message.success(this.$translateTitle('产品组态更新成功'))
+            if (productid)
+              this.$message.success(this.$translateTitle('产品组态更新成功'))
           })
           .catch((e) => {
             this.$message.error(this.$translateTitle(`${e.error}`))
@@ -309,7 +400,7 @@
         _konvarow.appendChild(div)
         div.setAttribute('id', globalStageid)
         console.log('globalStageid', globalStageid)
-        console.log(JSON.stringify(Stage), 'Stage')
+        // console.log(JSON.stringify(Stage), 'Stage')
         _this.stage = Konva.Node.create(Stage, globalStageid)
 
         console.log('_this.$refs.topobase', _this.$refs.topobase)
@@ -335,7 +426,7 @@
             //     )
             Layer.draw()
           }
-          console.log(node.toJSON())
+          // console.log(node.toJSON())
           if (_this.isDevice) return
           _this.setGraphNow(e.target)
 
@@ -490,17 +581,17 @@
               // _this.$refs['operation'].Shapeconfig = node.toJSON()
             })
             _G.on('mouseup', (e) => {
-              console.log(e, '_G mouseup')
+              // console.log(e, '_G mouseup')
               if (!_this.isDevice && _this.productid) _this.headevisible = true
 
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseover', (e) => {
-              console.log(e, '_G mouseover')
+              // console.log(e, '_G mouseover')
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseout', (e) => {
-              console.log(e, '_G mouseout')
+              // console.log(e, '_G mouseout')
               // _this.stage.find('Transformer').destroy() // 禁用后 无法拖动
               const id = e.target.id()
               const item = _this.stage.find((i) => i.id === id)
@@ -564,17 +655,17 @@
               // _this.$refs['operation'].Shapeconfig = node.toJSON()
             })
             _G.on('mouseup', (e) => {
-              console.log(e, 'Group mouseup')
+              // console.log(e, 'Group mouseup')
               if (!_this.isDevice && _this.productid) _this.headevisible = true
 
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseover', (e) => {
-              console.log(e, 'Group mouseover')
+              // console.log(e, 'Group mouseover')
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseout', (e) => {
-              console.log(e, 'Group mouseout')
+              // console.log(e, 'Group mouseout')
               // _this.stage.find('Transformer').destroy() // 禁用后 无法拖动
               const id = e.target.id()
               const item = _this.stage.find((i) => i.id === id)

@@ -45,47 +45,47 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="样式" name="styles">
-        <el-input-number
-          v-model="ShapeIndex"
-          size="mini"
-          :min="1"
-          :max="1000000"
-          label="描述文字"
-          type="primary"
-          ontrols-position="right"
-        />
-        <el-button
-          v-if="Shapeconfig"
-          type="primary"
-          @click="
-            setZIndex(Shapeconfig, { opacity: ShapeOpacity, index: ShapeIndex })
-          "
-        >
-          设置层级
-        </el-button>
-        <el-input-number
-          v-model="ShapeOpacity"
-          size="mini"
-          :min="0.01"
-          :max="1"
-          :precision="2"
-          :step="0.1"
-          label="描述文字"
-          type="primary"
-          ontrols-position="right"
-        />
-        <el-button
-          v-if="Shapeconfig"
-          type="primary"
-          @click="
-            setZIndex(Shapeconfig, { opacity: ShapeOpacity, index: ShapeIndex })
-          "
-        >
-          设置透明度
-        </el-button>
-      </el-tab-pane>
-      <el-tab-pane label="行为" name="function">行为</el-tab-pane>
+      <!--      <el-tab-pane label="样式" name="styles">-->
+      <!--        <el-input-number-->
+      <!--          v-model="ShapeIndex"-->
+      <!--          size="mini"-->
+      <!--          :min="1"-->
+      <!--          :max="1000000"-->
+      <!--          label="描述文字"-->
+      <!--          type="primary"-->
+      <!--          ontrols-position="right"-->
+      <!--        />-->
+      <!--        <el-button-->
+      <!--          v-if="Shapeconfig"-->
+      <!--          type="primary"-->
+      <!--          @click="-->
+      <!--            setZIndex(Shapeconfig, { opacity: ShapeOpacity, index: ShapeIndex })-->
+      <!--          "-->
+      <!--        >-->
+      <!--          设置层级-->
+      <!--        </el-button>-->
+      <!--        <el-input-number-->
+      <!--          v-model="ShapeOpacity"-->
+      <!--          size="mini"-->
+      <!--          :min="0.01"-->
+      <!--          :max="1"-->
+      <!--          :precision="2"-->
+      <!--          :step="0.1"-->
+      <!--          label="描述文字"-->
+      <!--          type="primary"-->
+      <!--          ontrols-position="right"-->
+      <!--        />-->
+      <!--        <el-button-->
+      <!--          v-if="Shapeconfig"-->
+      <!--          type="primary"-->
+      <!--          @click="-->
+      <!--            setZIndex(Shapeconfig, { opacity: ShapeOpacity, index: ShapeIndex })-->
+      <!--          "-->
+      <!--        >-->
+      <!--          设置透明度-->
+      <!--        </el-button>-->
+      <!--      </el-tab-pane>-->
+      <!--      <el-tab-pane label="行为" name="function">行为</el-tab-pane>-->
       <div class="TopoArom">
         <el-dialog
           :append-to-body="true"

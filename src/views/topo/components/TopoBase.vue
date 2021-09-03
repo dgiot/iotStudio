@@ -220,9 +220,6 @@
         console.clear()
         this.konvaKey = key
         this.konvajson = json
-        console.log(json, 'json')
-        console.log(this.konvaKey, 'konvaKey')
-        console.log(this.konvajson, 'this.konvajson')
         const stage = Konva.Node.create(json, 'kevCurrent')
         stage.find('Image').forEach((node) => {
           const img = new Image()
@@ -232,10 +229,20 @@
             stage.batchDraw()
           }
         })
-        console.log(stage.toJSON())
         this.$message.success('successfully')
         this.konvaKey = moment(new Date()).valueOf()
-        console.log(this.konvaKey, 'this.konvaKey')
+        const tabInfo = {
+          json: json,
+          konvaKey: this.konvaKey,
+          konvajson: this.konvajson,
+          stage: stage.toJSON(),
+        }
+        console.groupCollapsed(
+          '%cTopobase info',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.table(tabInfo)
+        console.groupEnd()
       },
     },
   }
