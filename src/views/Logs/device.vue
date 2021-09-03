@@ -5,7 +5,7 @@
         <el-form
           ref="form"
           :inline="true"
-          label-width="auto"
+          label-width="100px"
           :model="queryForm"
           @submit.native.prevent
         >
@@ -21,6 +21,24 @@
               :start-placeholder="$translateTitle('Maintenance.start time')"
               type="daterange"
               value-format="yyyy-MM-dd"
+            />
+          </el-form-item>
+          <el-form-item :label="$translateTitle('equipment.Products')">
+            <el-select v-model="queryForm.productid" clearable>
+              <el-option
+                v-for="(item, index) in proTableData"
+                v-show="item.objectId != 0"
+                :key="index"
+                :label="item.name"
+                :value="item.objectId"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$translateTitle('equipment.devicenumber')">
+            <el-input
+              v-model="queryForm.devaddr"
+              :placeholder="$translateTitle('equipment.enterdevicenumber')"
+              clearable
             />
           </el-form-item>
           <el-form-item>
@@ -70,52 +88,133 @@
         </el-form>
       </vab-query-form-top-panel>
     </vab-query-form>
-    <el-table
-      ref="dragTable"
-      :key="finallyColumns.length + momentKey"
-      border
-      resizable
-      highlight-current-row
-      default-expand-all
-      stripe
-      :row-class-name="tableRowClassName"
-      size="mini"
-      :data="logdata"
-      :height="height"
-    >
-      <el-table-column
-        v-for="(item, index) in finallyColumns"
-        :key="index"
-        :prop="item"
-        :label="item"
-        align="center"
-        sortable
-        show-overflow-tooltip
-      />
-      <!--      <el-table-column-->
-      <!--        prop="msg"-->
-      <!--        align="center"-->
-      <!--        sortable-->
-      <!--        show-overflow-tooltip-->
-      <!--        label="msg"-->
-      <!--        fixed="right"-->
-      <!--      />-->
-      <template #empty>
-        <vab-empty />
-      </template>
-    </el-table>
-    <vab-Pagination
-      v-show="queryForm.total > 0"
-      :total="queryForm.total"
-      :page.sync="queryForm.pageNo"
-      :limit.sync="queryForm.pageSize"
-      @pagination="queryTable"
-    />
+    <el-tabs v-model="activeName" :height="height" @tab-click="changetabs">
+      <el-tab-pane :label="$translateTitle('equipment.statuslog')" name="first">
+        <el-table
+          ref="dragTable"
+          :key="finallyColumns.length + momentKey"
+          border
+          resizable
+          highlight-current-row
+          default-expand-all
+          stripe
+          :row-class-name="tableRowClassName"
+          size="mini"
+          :data="logdata"
+          :height="height"
+        >
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-descriptions
+                class="margin-top"
+                :column="2"
+                :size="size"
+                border
+              >
+                <el-descriptions-item
+                  v-for="(item, key, index) in props.row"
+                  :key="index"
+                  :label="key"
+                  label-class-name="my-label"
+                >
+                  {{ item }}
+                </el-descriptions-item>
+              </el-descriptions>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-for="(item, index) in finallyColumns"
+            :key="index"
+            :prop="item"
+            :label="item"
+            align="center"
+            sortable
+            show-overflow-tooltip
+          />
+          <template #empty>
+            <vab-empty />
+          </template>
+        </el-table>
+        <vab-Pagination
+          v-show="queryForm.total > 0"
+          :total="queryForm.total"
+          :page.sync="queryForm.pageNo"
+          :limit.sync="queryForm.pageSize"
+          @pagination="queryTable"
+        />
+      </el-tab-pane>
+      <el-tab-pane
+        :label="$translateTitle('equipment.operationlog')"
+        name="second"
+      >
+        <el-table
+          ref="dragTable"
+          :key="finallyColumns.length + momentKey"
+          border
+          resizable
+          highlight-current-row
+          stripe
+          :row-class-name="tableRowClassName"
+          size="mini"
+          :data="logdata"
+          :height="height"
+        >
+          <el-table-column type="expand">
+            <template slot-scope="props">
+              <el-descriptions
+                class="margin-top"
+                :column="2"
+                :size="size"
+                border
+              >
+                <el-descriptions-item
+                  v-for="(item, key, index) in props.row"
+                  :key="index"
+                  :label="key"
+                  label-class-name="my-label"
+                >
+                  {{ item }}
+                </el-descriptions-item>
+              </el-descriptions>
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-for="(item, index) in finallyColumns"
+            :key="index"
+            :prop="item"
+            :label="item"
+            align="center"
+            sortable
+            show-overflow-tooltip
+          />
+          <!--      <el-table-column-->
+          <!--        prop="msg"-->
+          <!--        align="center"-->
+          <!--        sortable-->
+          <!--        show-overflow-tooltip-->
+          <!--        label="msg"-->
+          <!--        fixed="right"-->
+          <!--      />-->
+          <template #empty>
+            <vab-empty />
+          </template>
+        </el-table>
+        <vab-Pagination
+          v-show="queryForm.total > 0"
+          :total="queryForm.total"
+          :page.sync="queryForm.pageNo"
+          :limit.sync="queryForm.pageSize"
+          @pagination="queryTable"
+        />
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script>
   import { queryLog } from '@/api/Logs'
+  import { queryProduct } from '@/api/Product'
+
   export default {
     name: 'AccessLog',
     data() {
@@ -124,28 +223,10 @@
         height: this.$baseTableHeight(0),
         logdata: [],
         momentKey: moment(new Date()).valueOf(),
-        checkList: [
-          'time',
-          'username',
-          'devicename',
-          'productname',
-          'status',
-          'protocol',
-          'thingname',
-          'identifier',
-          'value',
-        ],
-        logcolumns: [
-          'time',
-          'username',
-          'devicename',
-          'productname',
-          'status',
-          'protocol',
-          'thingname',
-          'identifier',
-          'value',
-        ],
+        checkList: ['time', 'productname', 'devicename', 'status'],
+        logcolumns: ['time', 'productname', 'devicename', 'status'],
+        proTableData: [],
+        activeName: 'first',
         queryForm: {
           total: 0,
           count: 'objectId',
@@ -158,13 +239,15 @@
           pid: '',
           mfa: '',
           topic: '',
-          domain: 'device_log',
+          domain: 'device_statuslog',
           searchDate: [
             moment().subtract('days', 7).format('YYYY-MM-DD'),
             moment(new Date()).format('YYYY-MM-DD'),
           ],
           order: '-createdAt',
           keys: 'count(*)',
+          productid: '',
+          devaddr: '',
         },
       }
     },
@@ -183,9 +266,22 @@
     mounted() {
       this.queryTable({})
       this.rowDrop()
+      this.queryProduct()
       this.columnDrop()
     },
     methods: {
+      async queryProduct() {
+        // 查询产品
+        this.proTableData = []
+        const { results = [] } = await queryProduct({
+          count: 'objectId',
+          order: '-updatedAt',
+          where: {
+            category: 'IotHub',
+          },
+        })
+        this.proTableData = results
+      },
       handleHeight() {
         this.isFullscreen = !this.isFullscreen
         if (this.isFullscreen) this.height = this.$baseTableHeight(0) + 120
@@ -236,6 +332,40 @@
           },
         })
       },
+      changetabs(tab) {
+        this.checkList = []
+        this.logcolumns = []
+        if (tab.name == 'second') {
+          this.queryForm.domain = 'device_operationlog'
+          ;(this.checkList = [
+            'time',
+            'username',
+            'productname',
+            'devicename',
+            'status',
+            'protocol',
+            'thingname',
+            'identifier',
+            'value',
+          ]),
+            (this.logcolumns = [
+              'time',
+              'username',
+              'productname',
+              'devicename',
+              'status',
+              'protocol',
+              'thingname',
+              'identifier',
+              'value',
+            ])
+        } else {
+          this.queryForm.domain = 'device_statuslog'
+          ;(this.checkList = ['time', 'productname', 'devicename', 'status']),
+            (this.logcolumns = ['time', 'productname', 'devicename', 'status'])
+        }
+        this.queryTable({})
+      },
       async queryTable(args = {}) {
         if (!args.limit) {
           args = this.queryForm
@@ -270,11 +400,17 @@
               },
             },
           }
+          if (this.queryForm.devaddr) {
+            params.where.devaddr = this.queryForm.devaddr
+          }
+          if (this.queryForm.productid) {
+            params.where.productid = this.queryForm.productid
+          }
           const { results = [], count: total = 0 } = await queryLog(params)
           results.forEach((item) => {
             item.time = this.$moment(
               Number(item.time.toString().substring(0, 13))
-            ).format('YYYY-MM-DD HH:mm:ss.SSS')
+            ).format('YYYY-MM-DD HH:mm:ss')
             var msg = JSON.parse(item.msg)
             for (let k in msg) {
               item[k] = msg[k]
@@ -302,7 +438,8 @@
 </script>
 <style scoped lang="scss">
   .logs {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7) !important;
+    height: calc(100vh - #{$base-top-bar-height} * 2.7) !important;
+
     ::v-deep {
       .item-time {
         .el-form-item__content {
@@ -313,9 +450,11 @@
         }
       }
     }
+
     &-row {
       &-query {
       }
+
       &-tree {
         overflow: scroll;
       }

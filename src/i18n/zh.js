@@ -167,6 +167,8 @@ export default {
       allproducts: '全部产品',
       enterproductname: '请输入设备名称',
       enterdevicenumber: '请输入设备编号',
+      statuslog: '设备状态日志',
+      operationlog: '设备操作日志',
       name: '名称',
       state: '状态',
       defaultvalue: '默认值',
