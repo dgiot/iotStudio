@@ -727,9 +727,12 @@
       async Get_Re_Channel(start = 0) {
         this.listLoading = true
         this.tableData = []
-        this.total = 0
-        this.start = start == 0 ? 0 : this.start
+        // this.total = 0
+        if (start == 0) {
+          this.start = 0
+        }
         const params = {
+          count: 'objectId',
           skip: this.start,
           limit: this.length,
           order: '-createdAt',
