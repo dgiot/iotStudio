@@ -2,9 +2,10 @@ const { iconfontId } = require('../src/config')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
-const log = require('logger-color')
 const resourceType = ['css', 'js', 'json', 'ttf', 'woff', 'woff2']
 const filePath = ['js', 'css', 'iconfont']
+const log = require('logger-color')
+const chalk = require('chalk')
 /**
  * @description Create resource folder
  * @param files
@@ -14,9 +15,9 @@ function createFile(files) {
     const dirPath = path.join(__dirname, `../public/assets/${e}`)
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath)
-      log.info(`${e} Folder created successfully`)
+      log(chalk.blue(`${e} Folder created successfully`))
     }
-    log.error(`${e} Folder already exists`)
+    log(chalk.red(`${e}  Folder already exists`))
   })
 }
 
@@ -25,7 +26,7 @@ function createFile(files) {
  * @param _static
  */
 function downIconfront(_static) {
-  log.warning('Execute downIconfront resource script')
+  log(chalk.yellow('Execute downIconfront  resource script'))
   createFile(filePath)
   _static.forEach((fontId) => {
     resourceType.forEach((resource) => {
@@ -38,13 +39,13 @@ function downIconfront(_static) {
               if (res.data && resource == 'json')
                 res.data = JSON.stringify(res.data)
               writeFile(`iconfont/iconfont.${resource}`, res.data, resource)
-            } else log.error(donwUrl, 'downIconfront error')
+            } else log(chalk.red(donwUrl, 'downIconfront error'))
           })
           .catch((e) => {
-            log.error(e, donwUrl, 'downIconfront error')
+            log(chalk.red(e, donwUrl, 'downIconfront error'))
           })
       } catch (error) {
-        log.error(error, 'downIconfront error')
+        log(chalk.red(error, 'downIconfront error'))
       }
     })
   })
@@ -57,7 +58,8 @@ function downIconfront(_static) {
  */
 function writeFile(files, data, resource) {
   const dirPath = path.join(__dirname, `../public/assets/${files}`)
-  log.info(files, dirPath)
+  log(chalk.blue(files, dirPath))
+
   fs.readFile(dirPath, function (err, _data) {
     // if (err) {
     //   console.log(err, 'err')
@@ -65,9 +67,9 @@ function writeFile(files, data, resource) {
     // }
     fs.writeFile(dirPath, data, function (err) {
       if (err) {
-        log.error(`${files} File written error ${err}  ${data}`)
+        log(chalk.red(`${files} File written error ${err}  ${data}`))
       }
-      log.info(`${files} File written successfully`)
+      log(chalk.blue(`${files} File written successfully`))
     })
     if (resource == 'json') {
       const jsonPath = path.join(
@@ -82,9 +84,9 @@ function writeFile(files, data, resource) {
 function upIconJson(path, data) {
   fs.writeFile(path, data, function (err) {
     if (err) {
-      log.error(`${path} File written error ${err}  ${data}`)
+      log(chalk.red(`${path} File written successfully ${err}`))
     }
-    log.info(`${path} File written successfully`)
+    log(chalk.green(`${path} File written successfully`))
   })
 }
 

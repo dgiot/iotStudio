@@ -19,7 +19,7 @@ jobs:
       - name: build
         run: yarn build
       - name: copy Swagger
-        run:  yarn swagger && cp -r swagger.json dist && cp -r swagger dist && cd dist && dir
+        run:  yarn swagger && cp -r swagger.json dist && dir
       - name: Deploy static to github pagese 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:

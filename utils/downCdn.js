@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
 const log = require('logger-color')
-
+const chalk = require('chalk')
 /**
  * @description Create resource folder
  * @param files
@@ -13,9 +13,9 @@ function createFile(files) {
     const dirPath = path.join(__dirname, `../public/assets/${e}`)
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath)
-      log.info(`${e} Folder created successfully`)
+      log(chalk.blue(`${e} Folder created successfully`))
     } else {
-      log.error(`${e} Folder already exists`)
+      log(chalk.red(`${e}  Folder already exists`))
     }
   })
 }
@@ -29,14 +29,14 @@ function download(_static) {
     js: [],
     css: [],
   }
-  log.warning('Execute download cdn resource script')
+  log(chalk.yellow('Execute download cdn resource script'))
   const { css, js } = _static
   createFile(['js', 'css'])
   // console.log(css, js)
   css.forEach((_css) => {
     ignoreCdn.forEach((i) => {
       if (_css.indexOf(i) == -1) {
-        log.error(_css, '_css', _css.indexOf(i))
+        log(chalk.red(_css, '_css', _css.indexOf(i)))
         axios.get(_css).then((rescss) => {
           let cssfille =
             _css.substring(_css.lastIndexOf('/') + 1).indexOf('.css') != -1
@@ -51,14 +51,14 @@ function download(_static) {
   })
   js.forEach((_js) => {
     ignoreCdn.forEach((i) => {
-      log.error(_js, '_js', _js.indexOf(i))
+      log(chalk.red(_js, '_js', _js.indexOf(i)))
       if (_js.indexOf(i) == -1) {
         axios.get(_js).then((resjs) => {
           let jsfille =
             _js.substring(_js.lastIndexOf('/') + 1).indexOf('.js') != -1
               ? _js.substring(_js.lastIndexOf('/') + 1)
               : _js.substring(_js.lastIndexOf('/') + 1) + '.js'
-          log.error(jsfille)
+          log(chalk.red(jsfille))
           writeFile('js/' + jsfille, resjs.data)
         })
       } else {
@@ -66,7 +66,7 @@ function download(_static) {
       }
     })
   })
-  log.error(ignoreStatic, 'ignoreStatic')
+  log(chalk.red(ignoreStatic, 'ignoreStatic'))
 }
 
 /**
@@ -76,7 +76,7 @@ function download(_static) {
  */
 function writeFile(files, data) {
   const dirPath = path.join(__dirname, `../public/assets/${files}`)
-  log.info(files, dirPath)
+  log(chalk.green(files, dirPath))
   fs.readFile(dirPath, function (err, _data) {
     // if (err) {
     //   console.log(err, 'err')
@@ -84,9 +84,9 @@ function writeFile(files, data) {
     // }
     fs.writeFile(dirPath, data, function (err) {
       if (err) {
-        log.error(`${files} File written successfully ${err}`)
+        log(chalk.red(`${files} File written successfully ${err}`))
       }
-      log.info(`${files} File written successfully`)
+      log(chalk.green(`${files} File written successfully`))
     })
   })
 }
