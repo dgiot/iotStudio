@@ -11,8 +11,8 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="<%= BASE_URL %>assets/img/icons/ms-icon-144x144.png">
-  <meta name="theme-color" content="#ffffff">
   <link rel="manifest" href="<%= BASE_URL %>manifest.json">
+  <link rel="manifest" href="<%= BASE_URL %>manifest.webmanifest" crossorigin="use-credentials">
   <!-- 引入样式 -->
   <% for(var css of htmlWebpackPlugin.options.staticUrl.css) { %>
   <link rel="stylesheet" href="<%=css%>" />
@@ -58,13 +58,13 @@
     </div>
   </div>
 </div>
-<script charset="utf-8" src="<%= BASE_URL %>assets/js/vue-baidu-map.js"></script>
 <!-- 引入JS -->
+<!-- 百度地图需要在前面加载 -->
+<script charset="utf-8" src="<%= BASE_URL %>assets/js/vue-baidu-map.js"></script>
 <% for(var js of htmlWebpackPlugin.options.staticUrl.js) { %>
 <script charset="utf-8" src="<%=js%>"></script>
 <% } %>
 </body>
-<!-- 百度地图需要在前面加载 -->
 <script charset="utf-8" src="<%= BASE_URL %>assets/iconfont/iconfont.js"></script>
 <!--  百度统计挂掉了-->
 <!--  <script charset="utf-8" src='https://hm.baidu.com/hm.js?a0f8b01930320b849a92a00e0c6da990'></script>-->

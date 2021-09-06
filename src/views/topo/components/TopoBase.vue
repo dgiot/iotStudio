@@ -25,6 +25,7 @@
     },
     data() {
       return {
+        stage: {},
         konvaKey: moment(new Date()).valueOf(),
         konvajson: {},
         defaultJson:
@@ -221,6 +222,7 @@
         this.konvaKey = key
         this.konvajson = json
         const stage = Konva.Node.create(json, 'kevCurrent')
+        this.stage = stage.toJSON()
         stage.find('Image').forEach((node) => {
           const img = new Image()
           img.src = node.getAttr('source')

@@ -93,4 +93,4 @@ function writeFile(files, data) {
 
 // export default download
 
-if (useCdn) download(cdnUrl)
+if (useCdn || process.env.NODE_ENV !== 'development') download(cdnUrl)

@@ -254,16 +254,14 @@
         _this.setGraphNow('')
         if (node.attrs.id == _this.$refs['operation'].Shapeconfig.attrs.id)
           _this.$refs['operation'].Shapeconfig = []
-        _this.updataTopo(this.productid, _this.stage.toJSON())
+        _this.updataTopo(this.productid)
       },
-      async updataTopo(productid = '', json) {
-        if (productid && json) this.productconfig.config.konva = { Stage: {} }
-
+      async updataTopo(productid = '') {
         let config = this.productconfig.config
-        let stage = JSON.parse(this.stage.toJSON())
+        let stage = JSON.parse(this.$refs['topobase'].stage)
         console.log(stage, config)
         config.konva.Stage = stage
-        if (json) config.konva.Stage = JSON.parse(json)
+        this.paramsconfig.konva.Stage = stage
         let upconfig = _.merge(this.paramsconfig, config)
         console.log(upconfig, 'upconfig')
         let params = {
