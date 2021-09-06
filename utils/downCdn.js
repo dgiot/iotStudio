@@ -2,7 +2,7 @@ const { cdnUrl, useCdn, ignoreCdn } = require('../src/config')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
-const log = require('logger-color')
+const log = console.log
 const chalk = require('chalk')
 /**
  * @description Create resource folder

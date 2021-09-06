@@ -17,7 +17,7 @@ jobs:
       - name: install
         run: yarn
       - name: build
-        run: yarn build
+        run: yarn build:cdn
       - name: copy Swagger
         run:  yarn swagger && cp -r swagger.json dist && dir
       - name: Deploy static to github pagese 🚀

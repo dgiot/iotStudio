@@ -4,7 +4,7 @@ const path = require('path')
 const axios = require('axios')
 const resourceType = ['css', 'js', 'json', 'ttf', 'woff', 'woff2']
 const filePath = ['js', 'css', 'iconfont']
-const log = require('logger-color')
+const log = console.log
 const chalk = require('chalk')
 /**
  * @description Create resource folder
