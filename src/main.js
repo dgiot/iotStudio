@@ -7,12 +7,12 @@ import store from './store'
 import router from './router'
 import utilwen from './utils/utilwen'
 import MqttMixin from './mixins/MqttMixin'
-import { pwa } from './config'
+import { isPwa } from './config'
 
 import '@/vab'
 Vue.use(utilwen)
 Vue.mixin(MqttMixin)
-if (pwa) require('./registerServiceWorker')
+if (isPwa) require('./registerServiceWorker')
 process.env.NODE_ENV !== 'development'
   ? (Vue.config.productionTip = true)
   : (Vue.config.productionTip = false)

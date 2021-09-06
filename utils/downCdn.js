@@ -10,7 +10,7 @@ const log = require('logger-color')
  */
 function createFile(files) {
   files.forEach((e) => {
-    const dirPath = path.join(__dirname, `../public/${e}`)
+    const dirPath = path.join(__dirname, `../public/assets/${e}`)
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath)
       log.info(`${e} Folder created successfully`)
@@ -75,7 +75,7 @@ function download(_static) {
  * @param data
  */
 function writeFile(files, data) {
-  const dirPath = path.join(__dirname, `../public/${files}`)
+  const dirPath = path.join(__dirname, `../public/assets/${files}`)
   log.info(files, dirPath)
   fs.readFile(dirPath, function (err, _data) {
     // if (err) {

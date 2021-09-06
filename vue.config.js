@@ -24,7 +24,8 @@ const {
   dateTime,
   proxy,
   useCdn,
-  pwa,
+  isPwa,
+  pwaConfig,
 } = require('./src/config')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
@@ -72,29 +73,7 @@ module.exports = {
   lintOnSave,
   transpileDependencies,
   devServer,
-  pwa: {
-    workboxOptions: {
-      skipWaiting: true,
-      clientsClaim: true,
-    },
-    themeColor: '#ffffff',
-    msTileColor: '#ffffff',
-    appleMobileWebAppCapable: 'yes',
-    appleMobileWebAppStatusBarStyle: 'black',
-    manifestOptions: {
-      name: 'dgiot_dashboard',
-      short_name: 'dgiot_dashboard',
-      description: '提供物联网垂直领域应用使能平台及解决方案',
-      display: 'standalone',
-      orientation: 'portrait-primary',
-      prefer_related_applications: false,
-      background_color: '#ffffff',
-      lang: 'zh-CN',
-      start_url: '/',
-      scope: '/',
-      theme_color: '#4fc08d',
-    },
-  },
+  pwa: isPwa ? pwaConfig : {},
   configureWebpack() {
     // https://blog.csdn.net/weixin_43972992/article/details/105159723
     return {
@@ -165,15 +144,17 @@ module.exports = {
         css.forEach((_css) => {
           let i =
             _css.substring(_css.lastIndexOf('/') + 1).indexOf('.css') != -1
-              ? '/css/' + _css.substring(_css.lastIndexOf('/') + 1)
-              : '/css/' + _css.substring(_css.lastIndexOf('/') + 1) + '.css'
+              ? '/assets/css/' + _css.substring(_css.lastIndexOf('/') + 1)
+              : '/assets/css/' +
+                _css.substring(_css.lastIndexOf('/') + 1) +
+                '.css'
           _staticUrl.css.push(i)
         })
         js.forEach((_js) => {
           let i =
             _js.substring(_js.lastIndexOf('/') + 1).indexOf('.js') != -1
-              ? '/js/' + _js.substring(_js.lastIndexOf('/') + 1)
-              : '/js/' + _js.substring(_js.lastIndexOf('/') + 1) + '.js'
+              ? '/assets/js/' + _js.substring(_js.lastIndexOf('/') + 1)
+              : '/assets/js/' + _js.substring(_js.lastIndexOf('/') + 1) + '.js'
           _staticUrl.js.push(i)
         })
         console.log(_staticUrl)

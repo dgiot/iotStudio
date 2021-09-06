@@ -6,10 +6,12 @@ const setting = require('./setting.config')
 const theme = require('./theme.config')
 const network = require('./net.config')
 const cdnConfig = require('./cdn.config')
+const pwa = require('./pwa.config')
 module.exports = {
   ...cli,
   ...setting,
   ...theme,
   ...network,
   ...cdnConfig,
+  ...pwa,
 }
