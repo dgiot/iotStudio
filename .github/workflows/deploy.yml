@@ -34,3 +34,5 @@ jobs:
           secretKey: ${{ secrets.SECRET_KEY }}
           envId: ${{ secrets.ENV_ID }}
           staticSrcPath: dist
+      - name: echo url
+        run: echo -e "\033[4mhttps://dgiotdashboard-8gb17b3673ff6cdd-1253666439.tcloudbaseapp.com\033[0m"

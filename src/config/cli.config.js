@@ -25,7 +25,7 @@ module.exports = {
   // npm run build时是否开启图片压缩，由于国内网路原因image-webpack-loader必须使用cnpm安装，如无法使用cnpm，请配置false
   imageCompression: false,
   // 是否启用cdn，如果不启用。则将cdn资源文件下载到本地，并替换引入资源地址。
-  useCdn: true,
+  useCdn: false,
   // 忽略cdn下载的文件关键字
   ignoreCdn: ['php', 'bugtags', '1279876845', 'qq'],
   // iconfront 的id //

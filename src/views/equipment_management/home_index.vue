@@ -1108,6 +1108,20 @@
                       <el-input v-model="deviceform.videoSrc" />
                     </el-form-item>
                   </el-col>
+                  <el-col :span="12">
+                    <el-form-item
+                      :label="$translateTitle('equipment.videoType')"
+                    >
+                      <el-select v-model="deviceform.videoType">
+                        <el-option
+                          v-for="item in videoOptions"
+                          :key="item"
+                          :label="item"
+                          :value="item"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
                   <el-col
                     v-for="(item, index) in arrlist"
                     :key="index"
@@ -1437,6 +1451,7 @@
         }
       }
       return {
+        videoOptions: [],
         queryInfo: {},
         isFullscreen: false,
         border: true,
@@ -1531,6 +1546,7 @@
         },
         deviceform: {
           videoSrc: '',
+          videoType: 'm3u8',
           name: '',
           devaddr: '',
           batchId: '',
@@ -1656,7 +1672,7 @@
           this.$router.push({
             path: '/tools/player',
             query: {
-              type: 'flv',
+              type: basedata.videoType || 'm3u8',
               url: basedata.videoSrc,
             },
           })
@@ -2654,6 +2670,7 @@
           productName: row.product.objectId,
           status: row.status,
           isEnable: row.isEnable,
+          videoType: row.detail.videoType,
           videoSrc: row.detail.videoSrc,
           address: row.detail.address,
         }
@@ -2795,6 +2812,7 @@
               brand: this.deviceform.brand,
               address: this.bmapform.address,
               desc: this.deviceform.desc,
+              videoType: this.deviceform.videoType,
               videoSrc: this.deviceform.videoSrc,
             }
             var obj = {}

@@ -185,6 +185,7 @@ export default {
       equipmentbrand: '设备品牌',
       installationlocation: '安装位置',
       videoSrc: '视频地址',
+      videoType: '视频类型',
       'The device is not bound to the video address yet':
         '该设备暂未绑定视频地址',
       createdAt: '创建时间',

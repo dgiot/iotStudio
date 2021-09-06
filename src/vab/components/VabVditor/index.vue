@@ -1,9 +1,8 @@
 <template>
   <div class="center">
     <div class="dgiot-doc-header">
-      <vab-query-form>
-        <vab-query-form-left-panel />
-        <vab-query-form-right-panel>
+      <vab-query-form v-show="value != 'temp'">
+        <vab-query-form-right-panel style="float: right">
           <el-form
             ref="form"
             :inline="true"
@@ -24,7 +23,13 @@
         </vab-query-form-right-panel>
       </vab-query-form>
     </div>
-    <div id="vditor" :key="setKey" name="description"></div>
+    <div
+      v-show="value != 'temp'"
+      id="vditor"
+      :key="setKey"
+      name="description"
+    />
+    <el-empty v-show="value == 'temp'" :image-size="200" />
   </div>
 </template>
 <script>
@@ -35,7 +40,7 @@
       value: {
         type: String,
         required: false,
-        default: '111',
+        default: 'temp',
       },
     },
     data() {
@@ -50,10 +55,7 @@
     },
     watch: {
       value(v) {
-        console.warn(
-          v,
-          'vditorvditorvditorvditorvditorvditorvditorvditorvditorvditor'
-        )
+        // if (v.length)
         this.createVditor()
       },
     },

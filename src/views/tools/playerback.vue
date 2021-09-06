@@ -2,48 +2,40 @@
   <div class="player-container">
     <el-row :gutter="24">
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
-        <!--        <el-row v-show="!$route.query.url" :gutter="24">-->
-        <!--          <el-col :span="23">-->
-        <!--            <el-input-->
-        <!--              v-model="flvsrc"-->
-        <!--              :disabled="$route.query.url"-->
-        <!--              placeholder="请输入内容"-->
-        <!--              class="input-with-select"-->
-        <!--            >-->
-        <!--              <el-select-->
-        <!--                slot="append"-->
-        <!--                v-model="type"-->
-        <!--                :disabled="$route.query.type"-->
-        <!--                style="width: 200px"-->
-        <!--                placeholder="请选择視頻流格式"-->
-        <!--                @change="changeType"-->
-        <!--              >-->
-        <!--                <el-option-->
-        <!--                  v-for="item in videoType"-->
-        <!--                  :key="item.type"-->
-        <!--                  :label="item.type"-->
-        <!--                  :value="item.type"-->
-        <!--                />-->
-        <!--              </el-select>-->
-        <!--            </el-input>-->
-        <!--          </el-col>-->
-        <!--          <el-col :span="1">-->
-        <!--            <el-button type="primary" plain @click="Play()">播放</el-button>-->
-        <!--          </el-col>-->
-        <!--        </el-row>-->
+        <el-row v-show="!$route.query.url" :gutter="24">
+          <el-col :span="23">
+            <el-input
+              v-model="flvsrc"
+              :disabled="$route.query.url"
+              placeholder="请输入内容"
+              class="input-with-select"
+            >
+              <el-select
+                slot="append"
+                v-model="type"
+                :disabled="$route.query.type"
+                style="width: 200px"
+                placeholder="请选择視頻流格式"
+                @change="changeType"
+              >
+                <el-option
+                  v-for="item in videoType"
+                  :key="item.type"
+                  :label="item.type"
+                  :value="item.type"
+                />
+              </el-select>
+            </el-input>
+          </el-col>
+          <el-col :span="1">
+            <el-button type="primary" plain @click="Play()">播放</el-button>
+          </el-col>
+        </el-row>
         <el-card shadow="hover" class="player_card">
-          <!--          <vab-player-->
-          <!--            ref="vabPlayer"-->
-          <!--            :autoplay="mp4Play"-->
-          <!--            :source="flvsrc"-->
-          <!--            :type="type"-->
-          <!--            :width="width"-->
-          <!--            :height="height"-->
-          <!--          />-->
-          <vab-aliplayer
+          <vab-player
             ref="vabPlayer"
             :autoplay="mp4Play"
-            :playsource="flvsrc"
+            :source="flvsrc"
             :type="type"
             :width="width"
             :height="height"
@@ -59,9 +51,9 @@
     name: 'Player',
     data() {
       return {
-        height: this.$baseTableHeight(0) + 'px',
+        height: this.$baseTableHeight(0),
         type: this.$route.query ? this.$route.query.type : 'mp4',
-        width: '100%',
+        width: 1600,
         flvsrc: this.$route.query
           ? this.$route.query.url
           : 'https://media.w3.org/2010/05/sintel/trailer.mp4',

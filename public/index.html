@@ -58,11 +58,13 @@
     </div>
   </div>
 </div>
+<script charset="utf-8" src="<%= BASE_URL %>assets/js/vue-baidu-map.js"></script>
 <!-- 引入JS -->
 <% for(var js of htmlWebpackPlugin.options.staticUrl.js) { %>
 <script charset="utf-8" src="<%=js%>"></script>
 <% } %>
 </body>
+<!-- 百度地图需要在前面加载 -->
 <script charset="utf-8" src="<%= BASE_URL %>assets/iconfont/iconfont.js"></script>
 <!--  百度统计挂掉了-->
 <!--  <script charset="utf-8" src='https://hm.baidu.com/hm.js?a0f8b01930320b849a92a00e0c6da990'></script>-->

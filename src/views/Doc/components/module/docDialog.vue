@@ -10,6 +10,7 @@
           : $translateTitle('article.edit category')
       "
       :visible.sync="dialogFormVisible"
+      @close="handleClose"
     >
       <el-form ref="form" :model="form" :rules="rules">
         <el-form-item
@@ -81,14 +82,6 @@
 </template>
 
 <script>
-  import { getSetting } from '@/api/Doc'
-  import {
-    createArticle,
-    getArticle,
-    delArticle,
-    putArticle,
-    queryArticle,
-  } from '@/api/Article'
   export default {
     name: 'DocDialog',
     data() {
@@ -159,5 +152,25 @@
     beforeDestroy() {}, //生命周期 - 销毁之前
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
+    methods: {
+      handleClose(done) {
+        console.log(done)
+        this.$refs.form.resetFields()
+        this.form = {
+          type: '',
+          name: '',
+          parent: {
+            objectId: 'article',
+            __type: 'Pointer',
+            className: 'Article',
+          },
+          data: '',
+          order: 0,
+          category: '',
+          Icon: '',
+          desc: '',
+        }
+      },
+    },
   }
 </script>

@@ -1442,7 +1442,7 @@
               this.$router.push({
                 path: '/tools/player',
                 query: {
-                  type: 'flv',
+                  type: basedata.videoType || 'm3u8',
                   url: basedata.videoSrc,
                 },
               })

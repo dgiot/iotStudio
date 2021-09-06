@@ -46,7 +46,7 @@
       </a-col>
       <a-col :span="20">
         <div class="text">
-          <vab-vditor :value="productDetail.data" />
+          <vab-vditor ref="vditor" :value="productDetail.data" />
         </div>
       </a-col>
     </a-row>
@@ -208,7 +208,6 @@
           const loading = this.$baseColorfullLoading()
           const data = await getArticle(this.articleId)
           this.productDetail = data
-          this.setKey = moment(new Date()).valueOf()
           console.log('productDetail', this.productDetail)
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),

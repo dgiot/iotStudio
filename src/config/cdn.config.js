@@ -118,6 +118,7 @@ let cdnUrl = {
     'https://unpkg.com/xterm',
     'https://unpkg.com/xterm-addon-fit',
     'https://unpkg.com/xterm-addon-attach',
+    'https://unpkg.com/vue-aliplayer-v2',
     // 'https://unpkg.com/vuex/dist/logger',
     // 'https://unpkg.com/v-ace-editor/index.js',
     // 'https://unpkg.com/colors.js/colors.min.js',

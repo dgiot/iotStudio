@@ -39,7 +39,6 @@
             </el-form-item>
           </el-form>
         </vab-query-form-left-panel>
-        <vab-query-form-right-panel />
       </vab-query-form>
     </div>
     <div class="dgiot-doc-center">
