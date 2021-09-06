@@ -174,6 +174,45 @@
             }
           })
         }
+        if (lab == 'Stage') {
+          type = 'Stage'
+          stage.forEach((shape) => {
+            if (shape.attrs.id == topoid) {
+              type = 'Stage'
+              shape.remove()
+              shape.destroy()
+              node.remove()
+              node.destroy()
+              Layer.draw()
+            }
+          })
+        }
+        if (lab == 'Text') {
+          type = 'Text'
+          Text.forEach((shape) => {
+            if (shape.attrs.id == topoid) {
+              type = 'img'
+              shape.remove()
+              shape.destroy()
+              node.remove()
+              node.destroy()
+              Layer.draw()
+            }
+          })
+        }
+        if (lab == 'Group') {
+          type = 'Group'
+          Group.forEach((shape) => {
+            if (shape.attrs.id == topoid) {
+              type = 'img'
+              shape.remove()
+              shape.destroy()
+              node.remove()
+              node.destroy()
+              Layer.draw()
+            }
+          })
+        }
         if (node?.attrs?.image) {
           Image.each((shape) => {
             console.log('图片相关', shape)
@@ -215,15 +254,16 @@
         _this.setGraphNow('')
         if (node.attrs.id == _this.$refs['operation'].Shapeconfig.attrs.id)
           _this.$refs['operation'].Shapeconfig = []
-        _this.updataTopo(this.productid)
+        _this.updataTopo(this.productid, _this.stage.toJSON())
       },
-      async updataTopo(productid = '') {
-        if (productid) this.productconfig.config.konva = { Stage: {} }
+      async updataTopo(productid = '', json) {
+        if (productid && json) this.productconfig.config.konva = { Stage: {} }
 
         let config = this.productconfig.config
         let stage = JSON.parse(this.stage.toJSON())
         console.log(stage, config)
         config.konva.Stage = stage
+        if (json) config.konva.Stage = JSON.parse(json)
         let upconfig = _.merge(this.paramsconfig, config)
         console.log(upconfig, 'upconfig')
         let params = {

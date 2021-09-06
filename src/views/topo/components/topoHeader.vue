@@ -79,7 +79,11 @@
           </a-dropdown>
 
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a class="ant-dropdown-link" @click="removeFn()">
+            <a
+              class="ant-dropdown-link"
+              @keyup.delete="removeFn()"
+              @click="removeFn()"
+            >
               <a-icon type="delete" />
               <p>{{ $translateTitle('konva.delete') }}</p>
             </a>
@@ -180,7 +184,16 @@
       //   flag: 'konva/flag',
       // }),
     },
-    mounted() {},
+    mounted() {
+      this.$nextTick(() => {
+        document.onkeydown = (e) => {
+          if (e.keyCode == 46) {
+            //这是delete健，当然也可以根据自己的需求更改
+            this.removeFn() //操作方法
+          }
+        }
+      })
+    },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前

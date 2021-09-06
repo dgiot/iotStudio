@@ -1758,7 +1758,7 @@
         this.$bus.$emit('mqttUnSubscribe', {
           topic: this.$route.name,
         })
-        return false
+        // return false
         this.moduleTitle = this.$translateTitle('product.createproduct')
         this.imageUrl = ''
         this.handleNodeClick(this.allApps[0])
@@ -2015,7 +2015,7 @@
                       attrs: {
                         x: 14,
                         y: 29,
-                        id: 'container',
+                        id: 'current1',
                         width: 1868,
                         height: 469,
                         draggable: true,
