@@ -990,14 +990,6 @@
        * @returns
        */
       initDgiotMqtt() {
-        const option = {
-          id: 'DGmqtt_' + this.objectId + moment(new Date()),
-          ip: options.host,
-          port: options.port,
-          userName: this.objectId,
-          passWord: 'toppicPwd',
-        }
-        this.initMqtt(option)
         this.getRoletree()
         this.getProduct()
         this.subscribe('dgiottopic')

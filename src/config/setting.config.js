@@ -33,7 +33,7 @@ module.exports = {
   // token名称
   tokenName: 'sessionToken',
   // token在localStorage、sessionStorage、cookie存储的key的名称
-  tokenTableName: 'localStorage',
+  tokenTableName: 'dgiot_auth_token',
   // token 有效期时长
   expiresTime: 60 * 1000 * 30,
   // token存储位置localStorage sessionStorage cookie

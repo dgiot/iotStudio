@@ -135,8 +135,10 @@
                             </span>
                           </div>
                           <div class="stla">
-                            <span>{{ item.number | filterVal }}</span>
-                            <span v-if="item.unit">
+                            <span :title="item.number | filterVal">
+                              {{ item.number | filterVal }}
+                            </span>
+                            <span v-if="item.unit" :title="item.unit">
                               {{ item.unit }}
                             </span>
                           </div>
@@ -731,11 +733,8 @@
         >
           <Instruct :product-id="productid" :devices-id="deviceid" />
         </el-tab-pane>
-        <el-tab-pane
-          :label="$translateTitle('device.Equipment task')"
-          name="task"
-        >
-          <Empty />
+        <el-tab-pane :label="$translateTitle('device.Scene log')" name="task">
+          <scene-log :device-info="deviceInfo" />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -743,7 +742,7 @@
 </template>
 <script>
   import info from '@/components/Device/info'
-  import Empty from '@/views/Empty/index'
+  import SceneLog from '@/views/equipment_management/component/SceneLog'
   const columns = [
     {
       title: '图片',
@@ -778,7 +777,7 @@
     components: {
       Instruct,
       info,
-      Empty,
+      SceneLog,
     },
     filters: {
       filterVal(val) {
@@ -814,7 +813,7 @@
       },
     },
     data() {
-      ;(this.chartExtend = {
+      this.chartExtend = {
         series: {
           barMaxWidth: 35,
         },
@@ -837,35 +836,35 @@
         grid: {
           right: 40,
         },
-      }),
-        (this.toolbox = {
-          orient: 'vertical',
-          right: -5,
-          feature: {
-            dataZoom: {
-              yAxisIndex: 'none',
-            },
-            magicType: {
-              type: [
-                'line',
-                'bar',
-                'histogram',
-                'pie',
-                'ring',
-                'waterfall',
-                'funnel',
-                'radar',
-                'heatmap',
-                'scatter',
-                'candle',
-                'stack',
-              ],
-            },
-            dataView: { show: true, readOnly: false },
-            saveAsImage: { show: true },
-            restore: { show: true },
+      }
+      this.toolbox = {
+        orient: 'vertical',
+        right: -5,
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none',
           },
-        })
+          magicType: {
+            type: [
+              'line',
+              'bar',
+              'histogram',
+              'pie',
+              'ring',
+              'waterfall',
+              'funnel',
+              'radar',
+              'heatmap',
+              'scatter',
+              'candle',
+              'stack',
+            ],
+          },
+          dataView: { show: true, readOnly: false },
+          saveAsImage: { show: true },
+          restore: { show: true },
+        },
+      }
 
       return {
         chartKey: moment(new Date()).valueOf(),
@@ -1944,10 +1943,13 @@
   }
 
   .stla {
+    overflow: hidden;
     font-family: fantasy;
     font-size: 25px;
     color: #666666;
     text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .ht7 {

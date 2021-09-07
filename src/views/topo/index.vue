@@ -644,6 +644,7 @@
           console.log('img node ', node)
           const img = new Image()
           img.src = node.getAttr('source')
+          img.draggable = true
 
           var img_url = node.getAttr('source') + '?' + Date.parse(new Date())
           // var _img = new Image()

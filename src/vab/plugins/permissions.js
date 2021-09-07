@@ -29,6 +29,10 @@ VabProgress.configure({
   showSpinner: false,
 })
 router.beforeEach(async (to, from, next) => {
+  store.dispatch('routes/setRoutesOpenTime', {
+    router: to.meta.component,
+    timestamp: moment(new Date()).valueOf(),
+  })
   if (to.name == '404') {
     return false
   }

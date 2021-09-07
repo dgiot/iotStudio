@@ -1,7 +1,6 @@
 import { getToken, setToken } from '@/utils/vuex'
-import { storage } from '@/config'
 const state = () => ({
-  mapTopic: getToken('mapTopic', storage, new Map()),
+  mapTopic: getToken('mapTopic', new Map()),
 })
 
 const getters = {
@@ -10,7 +9,7 @@ const getters = {
 const mutations = {
   setMapTopic(state, MapTopic) {
     state.mapTopic = MapTopic
-    setToken('mapTopic', MapTopic, storage)
+    setToken('mapTopic', MapTopic)
   },
 }
 const actions = {

@@ -85,3 +85,16 @@ export function subupadte(channelId, action) {
     },
   })
 }
+
+/**
+ * @api http://114.117.171.233/swagger/#/System/post_trace
+ * @param params
+ * @return {*}
+ */
+export function postTrace(params) {
+  return request({
+    url: `trace`,
+    method: 'post',
+    data: params,
+  })
+}

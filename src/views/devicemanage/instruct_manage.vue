@@ -398,7 +398,7 @@
           }
         })
       },
-      async Instruct(start) {
+      async Instruct(start = 9) {
         if (start == 0) {
           this.start = 0
         }
@@ -431,7 +431,7 @@
         if (this.formInline.name) {
           params.where.name = this.formInline.name
         }
-        const { count, results } = await queryIndustry(params)
+        const { count = 0, results = [] } = await queryIndustry(params)
         this.total = count
         this.instructData = results
       },

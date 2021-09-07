@@ -43,6 +43,7 @@ import MQTTConnect from '@/utils/MQTTConnect'
  * @param option
  * @returns {*}
  */
+import o2Log from './o2Console'
 function moreHttp(option) {
   let arr = [],
     keys = []
@@ -487,5 +488,10 @@ export default {
     Vue.prototype.$loadsh = _
     Vue.prototype.$convertRes2Blob = convertRes2Blob
     Vue.prototype.$bus = Bus
+    Vue.prototype.$o2Log = o2Log
+    // https://shufei021.github.io/rutils/library/
+    Vue.prototype.$dgiotUtils = rutils
+    // https://shufei021.github.io/rdate/
+    Vue.prototype.$dgiotRdate = rdate
   },
 }

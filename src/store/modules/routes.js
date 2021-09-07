@@ -5,15 +5,21 @@ import { asyncRoutes, constantRoutes, resetRouter } from '@/router'
 import { errorRoutes, defaultRoutes } from '@/config/router.config'
 import { getRouterList } from '@/api/User'
 import { convertRouter, filterRoutes } from '@/utils/routes'
+import { getToken } from '@/utils/vuex'
 const state = () => ({
   routes: [],
   cachedRoutes: [],
+  routerOpenTime: getToken('routerOpenTime', localStorage, []),
 })
 const getters = {
   routes: (state) => state.routes,
   cachedRoutes: (state) => state.cachedRoutes,
+  routerOpenTime: (state) => state.routerOpenTime,
 }
 const mutations = {
+  setRoutesOpenTime(state, info) {
+    state.routerOpenTime = _.merge(state.routerOpenTime, info)
+  },
   /**
    * @description 多模式设置路由
    * @param {*} state
@@ -151,6 +157,9 @@ const actions = {
    */
   setCachedRoutes({ commit }, routes) {
     commit('setCachedRoutes', routes)
+  },
+  setRoutesOpenTime({ commit }, info) {
+    commit('setRoutesOpenTime', info)
   },
   /**
    * @description 修改Route Meta

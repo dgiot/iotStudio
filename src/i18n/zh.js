@@ -220,6 +220,7 @@ export default {
     device: {
       'Equipment Directive': '设备指令',
       'Equipment task': '设备任务',
+      'Scene log': '场景日志',
     },
     concentrator: {
       Standard: '标准版',

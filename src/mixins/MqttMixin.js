@@ -1,5 +1,5 @@
 import MQTTConnect from '@/utils/MQTTConnect'
-import { Map2Json } from '@/utils'
+import { Map2Json, getMqttEventId, getTopicEventId } from '@/utils'
 const { iotMqtt } = MQTTConnect
 import { mapGetters, mapMutations } from 'vuex'
 const MqttMixin = {
@@ -14,7 +14,16 @@ const MqttMixin = {
     ...mapGetters({
       objectId: 'user/objectId',
       mapTopic: 'mqttMsg/mapTopic',
+      routerOpenTime: 'router/routerOpenTime',
     }),
+  },
+  created() {
+    const _this = this
+    _this.$bus.$off(getMqttEventId('publish'))
+    _this.$bus.$on(getMqttEventId('subscribe'), (arg) => {
+      const { topic, router, ttl } = arg
+      _this.subscribe(topic, router, ttl)
+    })
   },
   methods: {
     ...mapMutations({
@@ -34,45 +43,26 @@ const MqttMixin = {
      * @return {Vue|*}
      */
     busSendMsg(topic, payloadString, Message) {
-      let _this = this
-      const splitTopic = topic.split('/', 9999)
+      const nowTime = Number(moment().format('x'))
       const map = Map2Json(this.mapTopic)
-      for (let key in map) {
-        if (map[key] < Number(moment().format('x'))) this.unsubscribe(key)
-        if (topic == key) {
-          console.groupCollapsed(
-            '%ciotMqtt busSendMsg payloadString',
-            'color:#009a61; font-size: 28px; font-weight: 300'
-          )
-          console.warn('%c%s', 'font-size: 24px;', payloadString)
-          console.groupEnd()
-          return _this.$bus.$emit('busSendMsg', {
+      for (let router in map) {
+        if (this.checkTopic(map[router].topic, topic)) {
+          const topicKey = getTopicEventId(map[router].topic, router)
+          this.$bus.$emit(topicKey, {
             topic: topic,
             msg: payloadString,
             Message: Message,
           })
-        } else {
-          const splitKey = key.split('/', 9999)
-          console.info(
-            '%c%s',
-            'color: green;font-size: 24px;',
-            'busSendMsg splitKey: ' + splitKey
-          )
-          if (this.checkTopic(splitTopic, splitKey)) {
-            console.groupCollapsed(
-              '%ciotMqtt busSendMsg payloadString',
-              'color:#009a61; font-size: 28px; font-weight: 300'
-            )
-            console.warn('%c%s', 'font-size: 24px;', payloadString)
-            console.groupEnd()
-            return _this.$bus.$emit('busSendMsg', {
-              topic: key,
-              msg: payloadString,
-              Message: Message,
-            })
-          }
         }
+        if (Number(map[router].endtime) < nowTime)
+          this.unsubscribe(map[router].topic, router)
       }
+      console.groupCollapsed(
+        '%ciotMqtt busSendMsg payloadString',
+        'color:#009a61; font-size: 28px; font-weight: 300'
+      )
+      console.warn('%c%s', 'font-size: 24px;', payloadString)
+      console.groupEnd()
     },
     /**
      *
@@ -81,6 +71,7 @@ const MqttMixin = {
      * @return {boolean}
      */
     checkTopic(splitTopic, splitKey) {
+      const map = Map2Json(this.mapTopic)
       let length = splitTopic.length > splitKey.length ? splitKey : splitTopic
       for (let k in length) {
         if (splitKey[k] == '#') {
@@ -189,8 +180,6 @@ const MqttMixin = {
         qos = 'qos',
         retained = 'retained',
       } = Message
-      this.busSendMsg(destinationName, payloadString, Message)
-
       const table = {
         destinationName: destinationName,
         duplicate: duplicate,
@@ -206,15 +195,17 @@ const MqttMixin = {
       )
       console.table(this.consoleTale)
       console.groupEnd()
+
+      this.busSendMsg(destinationName, payloadString, Message)
     },
     /**
      *
      * @param topic
      * @param timeout
      */
-    subscribe: function (topic, timeout = 1000 * 60 * 60 * 3) {
-      let flagTtl = Number(moment().format('x')) + timeout
-      this.MapTopic.set(topic, flagTtl)
+    subscribe: function (topic, router, timeout = 1000 * 60 * 60 * 3) {
+      let endtime = Number(moment().format('x')) + timeout
+      this.MapTopic.set(router, { topic: topic, endtime: endtime })
       this.setMapTopic(this.MapTopic)
       iotMqtt.subscribe(topic)
       console.groupCollapsed(
@@ -228,12 +219,16 @@ const MqttMixin = {
       )
       console.groupEnd()
     },
-    unsubscribe: function (topic) {
+    unsubscribe: function (topic, router) {
       iotMqtt.unsubscribe(topic)
       const map = this.mapTopic
-      map.delete(topic)
+      if (!_.isEmpty(map)) {
+        console.info(map)
+        map.delete(topic)
+        map.delete(router)
+        this.setMapTopic(map)
+      }
       console.info('%c%s', 'color: green;font-size: 24px;', map)
-      this.setMapTopic(map)
       console.groupCollapsed(
         '%ciotMqtt unsubscribe',
         'color:#009a61; font-size: 28px; font-weight: 300'

@@ -822,3 +822,23 @@ export function Json2Map(json) {
   }
   return strMap
 }
+
+/**
+ *
+ * @param type ['subscribe','publish','unsubscribe']
+ * @return {string}
+ */
+export function getMqttEventId(type) {
+  return type + 'bdfddf43234r2'
+}
+
+/**
+ *
+ * @param topic
+ * @param timestamp
+ * @return {*}
+ */
+export function getTopicEventId(topic, router) {
+  const mergesKey = topic + router
+  return md5(mergesKey)
+}

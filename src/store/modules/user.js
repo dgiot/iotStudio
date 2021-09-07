@@ -9,6 +9,16 @@ const getLocalStorage = (key) => {
     return false
   }
 }
+function initDgiotMqtt() {
+  // const option = {
+  //   id: 'DGmqtt_' + this.objectId + moment(new Date()),
+  //   ip: options.host,
+  //   port: options.port,
+  //   userName: this.objectId,
+  //   passWord: 'toppicPwd',
+  // }
+  // this.initMqtt(option)
+}
 import {
   columnStyle,
   fixedHeader,
@@ -204,6 +214,7 @@ const actions = {
     const { sessionToken = '', nick, objectId, roles, tag = {} } = data
     if (sessionToken) {
       clientMqtt()
+      initDgiotMqtt()
       commit('_setToken', sessionToken)
       if (nick) commit('setUsername', nick)
       const page_title = getToken('title') || title
