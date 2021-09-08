@@ -232,6 +232,7 @@
       },
       ...mapActions({
         login: 'user/login',
+        queryAll: 'user/queryAll',
         // getlicense: 'user/getlicense',
         // getDefault: 'user/getDefault',
       }),
@@ -277,6 +278,8 @@
               this.loading = true
               await this.login(this.form)
               await this.$router.push(this.handleRoute())
+              // 批量查询写在登录后面,优化登录速度
+              await this.queryAll()
             } finally {
               this.loading = false
             }

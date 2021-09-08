@@ -56,6 +56,52 @@ function initDgiotMqtt(userid) {
     },
   })
 }
+function queryAll(commit) {
+  console.error('queryAll')
+  const params = {
+    count: 'objectId',
+    order: '-updatedAt',
+    // keys: 'name',
+    where: {
+      category: 'IotHub',
+    },
+  }
+  queryProduct(params)
+    .then((res) => {
+      let results = res.results
+      results.unshift({
+        name: language == 'zh' ? '全部产品' : 'All Products',
+        objectId: '0',
+      })
+      commit('set_Product', results)
+    })
+    .catch((e) => {
+      console.log(`query role error ${e}`)
+      commit('set_Product', [])
+    })
+  queryMenu({})
+    .then((res) => {
+      commit('setMenu', res.results)
+    })
+    .catch((e) => {
+      commit('setMenu', [])
+    })
+  Permission()
+    .then((res) => {
+      commit('setPermission', res.results)
+    })
+    .catch((e) => {
+      commit('setPermission', [])
+    })
+  Roletree()
+    .then((res) => {
+      commit('setRoleTree', res.results)
+    })
+    .catch((e) => {
+      console.log(`get role error ${e}`)
+      commit('setRoleTree', [])
+    })
+}
 import {
   columnStyle,
   fixedHeader,
@@ -110,6 +156,7 @@ import { isJson } from '@/utils/validate'
 const { language } = getLocalStorage('language')
 import { clientMqtt } from '@/utils/clientMqtt'
 const state = () => ({
+  loginInfo: getToken('loginInfo'),
   Menu: getToken('Menu'),
   Permission: getToken('Permission'),
   language: language || i18n,
@@ -129,6 +176,7 @@ const state = () => ({
   objectId: getToken('objectId', storage),
 })
 const getters = {
+  loginInfo: (state) => state.loginInfo,
   Menu: (state) => state.Menu,
   Permission: (state) => state.Permission,
   language: (state) => state.language,
@@ -144,6 +192,10 @@ const getters = {
   name: (state) => state.name,
 }
 const mutations = {
+  setLoginInfo(state, loginInfo) {
+    state.loginInfo = loginInfo
+    setToken('loginInfo', loginInfo)
+  },
   setMenu(state, Menu) {
     state.Menu = Menu
     setToken('Menu', Menu)
@@ -250,6 +302,7 @@ const actions = {
     )
     const { sessionToken = '', nick, objectId, roles, tag = {} } = data
     if (sessionToken) {
+      commit('setLoginInfo', userInfo)
       // clientMqtt()
       // initDgiotMqtt(objectId)
       commit('_setToken', sessionToken)
@@ -288,50 +341,6 @@ const actions = {
           ? '下午好'
           : '晚上好'
       Vue.prototype.$baseNotify(title, `${thisTime}！`)
-
-      Roletree()
-        .then((res) => {
-          commit('setRoleTree', res.results)
-        })
-        .catch((e) => {
-          console.log(`get role error ${e}`)
-          commit('setRoleTree', [])
-        })
-      const params = {
-        count: 'objectId',
-        order: '-updatedAt',
-        // keys: 'name',
-        where: {
-          category: 'IotHub',
-        },
-      }
-      queryProduct(params)
-        .then((res) => {
-          let results = res.results
-          results.unshift({
-            name: language == 'zh' ? '全部产品' : 'All Products',
-            objectId: '0',
-          })
-          commit('set_Product', results)
-        })
-        .catch((e) => {
-          console.log(`query role error ${e}`)
-          commit('set_Product', [])
-        })
-      queryMenu({})
-        .then((res) => {
-          commit('setMenu', res.results)
-        })
-        .catch((e) => {
-          commit('setMenu', [])
-        })
-      Permission()
-        .then((res) => {
-          commit('setPermission', res.results)
-        })
-        .catch((e) => {
-          commit('setPermission', [])
-        })
     } else {
       // Vue.prototype.$baseMessage(
       //   `登录接口异常，未正确返回${tokenName}...`,
@@ -343,6 +352,14 @@ const actions = {
       )
       return Promise.reject()
     }
+  },
+  /**
+   * @description 通用批量查询接口
+   * @param commit
+   * @return {Promise<void>}
+   */
+  async queryAll({ commit }) {
+    queryAll(commit)
   },
   /**
    * @description 第三方登录
@@ -466,6 +483,9 @@ const actions = {
   },
   setPermission({ commit }, Permission) {
     commit('setPermission', Permission)
+  },
+  setLoginInfo({ commit }, loginInfo) {
+    commit('setLoginInfo', loginInfo)
   },
 }
 export default { state, getters, mutations, actions }

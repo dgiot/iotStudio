@@ -138,7 +138,8 @@ module.exports = {
   chainWebpack(config) {
     config.plugin('html').tap((args) => {
       var _staticUrl = cdnUrl
-      if (useCdn || process.env.NODE_ENV !== 'development') {
+      // if (useCdn || process.env.NODE_ENV !== 'development') {
+      if (useCdn || process.env.useCdn) {
         const { css, js } = cdnUrl
         _staticUrl = { css: [], js: [] }
         css.forEach((_css) => {

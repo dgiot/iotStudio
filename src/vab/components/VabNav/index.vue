@@ -71,6 +71,7 @@
         extra: 'settings/extra',
         routes: 'routes/routes',
         token: 'user/token',
+        loginInfo: 'user/loginInfo',
       }),
       handleRoutes() {
         return this.routes.filter((item) => item.hidden !== true && item.meta)
@@ -94,17 +95,22 @@
     },
     mounted() {
       // 写在页面公共组件里。确保全局只订阅一个mqtt。刷新则再次重新订阅
-      this.Mqtt(md5(this.token))
+      const md5Info = {
+        token: md5(this.token),
+        username: md5(this.loginInfo.username),
+        password: md5(this.loginInfo.password),
+      }
+      const option = {
+        id: md5Info.token,
+        ip: options.host,
+        port: options.port,
+        userName: md5Info.username,
+        passWord: md5Info.password,
+      }
+      this.Mqtt(option)
     },
     methods: {
-      Mqtt(token) {
-        const option = {
-          id: token,
-          ip: options.host,
-          port: options.port,
-          userName: this.objectId,
-          passWord: uuid(6),
-        }
+      Mqtt(option) {
         this.initMqtt(option)
         // iotMqtt.subscribe('dgiottopic')
       },
