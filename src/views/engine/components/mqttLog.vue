@@ -29,72 +29,70 @@
             theme="gob"
           />
         </a-tab-pane>
-        <!--        <a-tab-pane key="table">-->
-        <!--          <span slot="tab">-->
-        <!--            <vab-icon icon="table-2" />-->
-        <!--            {{ $translateTitle('Logs.table') }}-->
-        <!--          </span>-->
-        <!--          <el-table-->
-        <!--            v-loading="listLoading"-->
-        <!--            :height="height"-->
-        <!--            :data="-->
-        <!--              list.slice(-->
-        <!--                (queryForm.pageNo - 1) * queryForm.pageSize,-->
-        <!--                queryForm.pageNo * queryForm.pageSize-->
-        <!--              )-->
-        <!--            "-->
-        <!--          >-->
-        <!--            <el-table-column-->
-        <!--              align="center"-->
-        <!--              label="日志类型"-->
-        <!--              prop="type"-->
-        <!--              show-overflow-tooltip-->
-        <!--              width="230px"-->
-        <!--            />-->
-        <!--            <el-table-column-->
-        <!--              align="center"-->
-        <!--              label="账号"-->
-        <!--              prop="account"-->
-        <!--              show-overflow-tooltip-->
-        <!--            />-->
-        <!--            <el-table-column-->
-        <!--              align="center"-->
-        <!--              label="执行结果"-->
-        <!--              prop="executeResult"-->
-        <!--              show-overflow-tooltip-->
-        <!--            >-->
-        <!--              <template #default="{ row }">-->
-        <!--                <span v-if="row.executeResult === '登录成功'">-->
-        <!--                  <span class="vab-dot vab-dot-success"><span></span></span>-->
-        <!--                  {{ row.executeResult }}-->
-        <!--                </span>-->
-        <!--                <span v-else>-->
-        <!--                  <span class="vab-dot vab-dot-error"><span></span></span>-->
-        <!--                  {{ row.executeResult }}-->
-        <!--                </span>-->
-        <!--              </template>-->
-        <!--            </el-table-column>-->
-        <!--            <el-table-column align="center" label="登录IP" prop="ip" />-->
-        <!--            <el-table-column-->
-        <!--              align="center"-->
-        <!--              label="访问时间"-->
-        <!--              prop="datetime"-->
-        <!--              show-overflow-tooltip-->
-        <!--            />-->
-        <!--            <template #empty>-->
-        <!--              <a-empty class="vab-data-empty" :description="false" />-->
-        <!--            </template>-->
-        <!--          </el-table>-->
-        <!--          <el-pagination-->
-        <!--            background-->
-        <!--            :current-page="queryForm.pageNo"-->
-        <!--            :layout="layout"-->
-        <!--            :page-size="queryForm.pageSize"-->
-        <!--            :total="list.length"-->
-        <!--            @current-change="handleCurrentChange"-->
-        <!--            @size-change="handleSizeChange"-->
-        <!--          />-->
-        <!--        </a-tab-pane>-->
+        <a-tab-pane key="table">
+          <span slot="tab">
+            <vab-icon icon="table-2" />
+            {{ $translateTitle('Logs.table') }}
+          </span>
+          <el-table
+            v-loading="listLoading"
+            :height="height"
+            :data="
+              list.slice(
+                (queryForm.pageNo - 1) * queryForm.pageSize,
+                queryForm.pageNo * queryForm.pageSize
+              )
+            "
+          >
+            <el-table-column
+              align="center"
+              sortable
+              :label="$translateTitle('home.updatedAt')"
+              prop="timestamp"
+              show-overflow-tooltip
+              width="230px"
+            >
+              <template #default="{ row }">
+                <span>
+                  {{
+                    $moment(Number(row.timestamp)).format(
+                      'YYYY-MM-DD HH:mm:ss.SSS'
+                    )
+                  }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="msg"
+              sortable
+              :label="$translateTitle('product.log')"
+              show-overflow-tooltip
+            >
+              <template #default="{ row }">
+                <el-input v-model="row.msg">
+                  <el-button
+                    slot="prepend"
+                    v-copyText="row.msg"
+                    icon="el-icon-copy-document"
+                  />
+                </el-input>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <a-empty class="vab-data-empty" :description="false" />
+            </template>
+          </el-table>
+          <el-pagination
+            background
+            :current-page="queryForm.pageNo"
+            :layout="layout"
+            :page-size="queryForm.pageSize"
+            :total="list.length"
+            @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
+          />
+        </a-tab-pane>
       </a-tabs>
     </div>
   </div>
@@ -121,7 +119,7 @@
     },
     data() {
       return {
-        height: this.$baseTableHeight(0),
+        height: this.$baseTableHeight(0) + 60,
         clickItem: '',
         isFullscreen: false,
         listLoading: false,

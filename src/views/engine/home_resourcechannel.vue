@@ -511,9 +511,11 @@
       </span>
     </el-dialog>
     <a-drawer
-      width="640"
+      width="80%"
       placement="right"
       :closable="false"
+      :title="channelname + '日志'"
+      :append-to-body="true"
       :visible="subdialog"
       @close="handleCloseSubdialog"
     >
@@ -667,6 +669,7 @@
             this.unsubscribe('', oldval)
             this.submessage = ''
             this.msgList = []
+            this.logKey = '99'
           }
         },
         deep: true,
@@ -1083,7 +1086,10 @@
         return h + m + s + ' '
       },
       mqttMsg(Msg, res, key) {
-        this.msgList.push(JSON.parse(Msg))
+        this.msgList.push({
+          timestamp: moment().format('x'),
+          msg: Msg,
+        })
         this.logKey = key
         this.submessage += Msg + `\n`
         // subdialog.setValue(this.submessage)
@@ -1169,17 +1175,8 @@
         // Websocket.sendMessage(sendInfo)
       },
       handleCloseSubdialog() {
-        this.subdialog = false
-        var text0 = JSON.stringify({ action: 'stop_logger' })
-        var sendInfo = {
-          topic: 'channel/' + this.subdialogid,
-          text: text0,
-          retained: true,
-          qos: 2,
-        }
-        // Websocket.sendMessage(sendInfo)
-        window.clearInterval(this.subdialogtimer)
-        this.subdialogtimer = null
+        console.log('111')
+        this.subdialog = !this.subdialog
       },
     },
   }
