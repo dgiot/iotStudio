@@ -831,16 +831,15 @@ export function Json2Map(json) {
  * @return {string}
  */
 export function getMqttEventId(type) {
-  return type + 'bdfddf43234r2'
+  return type + 'Identifier'
 }
 
 /**
- *
  * @param topic
- * @param timestamp
+ * @param fullPath
  * @return {*}
  */
-export function getTopicEventId(topic, router) {
-  const mergesKey = topic + router
+export function getTopicEventId(topic, fullPath) {
+  const mergesKey = topic + md5(fullPath)
   return md5(mergesKey)
 }

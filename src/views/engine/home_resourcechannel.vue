@@ -1,6 +1,6 @@
 <template>
   <div class="resourcechannel resourcechannel-container">
-    <VabMqtt ref="mqtt" :topic="channeltopic" @mqttMsg="mqttMsg" />
+    <!--    <VabMqtt ref="mqtt" :topic="channeltopic" @mqttMsg="mqttMsg" />-->
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="firsttable">
       <el-form
@@ -510,37 +510,47 @@
         </el-button>
       </span>
     </el-dialog>
-    <!--订阅日志-->
-    <el-dialog
-      :append-to-body="true"
-      :title="channelname + '日志'"
-      :visible.sync="subdialog"
-      :before-close="handleCloseSubdialog"
-      width="85%"
+    <a-drawer
+      width="640"
+      placement="right"
+      :closable="false"
+      :visible="subdialog"
+      @close="handleCloseSubdialog"
     >
-      <div style="margin-top: 20px">
-        <pre
-          id="subdialog"
-          class="ace_editor"
-          style="width: 100%; min-height: 300px"
-        >
-                      <textarea class="ace_text-input" style="overflow:scroll"/>
-        </pre>
-      </div>
-      <span slot="footer" class="dialog-footer" style="height: 30px">
-        <el-switch
-          v-model="value4"
-          style="display: inline-block; margin-right: 10px"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
-          inactive-text="自动刷新"
-          @change="stopsub"
-        />
-      </span>
-    </el-dialog>
+      <mqtt-log :log-key="logKey" :msg="submessage" :list="msgList" />
+    </a-drawer>
+    <!--    &lt;!&ndash;订阅日志&ndash;&gt;-->
+    <!--    <el-dialog-->
+    <!--      :append-to-body="true"-->
+    <!--      :title="channelname + '日志'"-->
+    <!--      :visible.sync="subdialog"-->
+    <!--      :before-close="handleCloseSubdialog"-->
+    <!--      width="85%"-->
+    <!--    >-->
+    <!--      <div style="margin-top: 20px">-->
+    <!--        <pre-->
+    <!--          id="subdialog"-->
+    <!--          class="ace_editor"-->
+    <!--          style="width: 100%; min-height: 300px"-->
+    <!--        >-->
+    <!--                      <textarea class="ace_text-input" style="overflow:scroll"/>-->
+    <!--        </pre>-->
+    <!--      </div>-->
+    <!--      <span slot="footer" class="dialog-footer" style="height: 30px">-->
+    <!--        <el-switch-->
+    <!--          v-model="value4"-->
+    <!--          style="display: inline-block; margin-right: 10px"-->
+    <!--          active-color="#13ce66"-->
+    <!--          inactive-color="#ff4949"-->
+    <!--          inactive-text="自动刷新"-->
+    <!--          @change="stopsub"-->
+    <!--        />-->
+    <!--      </span>-->
+    <!--    </el-dialog>-->
   </div>
 </template>
 <script>
+  import { requireModule } from '@/utils/file'
   import {
     queryChannel,
     delChannel,
@@ -553,14 +563,21 @@
   import { mapGetters } from 'vuex'
 
   var subdialog
-  import { Websocket } from '@/utils/wxscoket.js'
+  // import { Websocket } from '@/utils/wxscoket.js'
   import VabInput from '@/vab/components/VabInput/input'
+  import { getMqttEventId, getTopicEventId } from '@/utils'
 
   export default {
-    components: { VabInput },
+    components: {
+      VabInput,
+      ...requireModule(require.context('./components', true, /\.vue$/)),
+    },
     // inject: ['reload'],
     data() {
       return {
+        logKey: '99',
+        msgList: [],
+        submessage: '',
         channeltopic: '',
         channeindex: 0,
         channeType: '',
@@ -625,10 +642,42 @@
     ...mapGetters({
       roleTree: 'user/roleTree',
     }),
+    watch: {
+      channeltopic: {
+        handler: function (newVal, oldval) {
+          if (newVal) {
+            this.$bus.$off(
+              `${this.$getTopicEventId(
+                this.channeltopic,
+                this.$route.fullPath
+              )}`
+            )
+            this.$bus.$on(
+              `${this.$getTopicEventId(
+                this.channeltopic,
+                this.$route.fullPath
+              )}`,
+              (res) => {
+                const { msg = '', timestamp } = res
+                if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
+              }
+            )
+          }
+          if (oldval) {
+            this.unsubscribe('', oldval)
+            this.submessage = ''
+            this.msgList = []
+          }
+        },
+        deep: true,
+        limit: true,
+      },
+    },
     mounted() {
       this.Get_Re_Channel(0)
       this.dialogType()
       this.getApplication()
+      // this.bus('')
     },
     methods: {
       uploadCkick(type, index, channeType) {
@@ -1033,59 +1082,74 @@
             : date.getSeconds()
         return h + m + s + ' '
       },
-      mqttMsg(e) {
-        console.log(e)
+      mqttMsg(Msg, res, key) {
+        this.msgList.push(JSON.parse(Msg))
+        this.logKey = key
+        this.submessage += Msg + `\n`
+        // subdialog.setValue(this.submessage)
+        // subdialog.gotoLine(subdialog.session.getLength())
       },
       subProTopic(row) {
-        this.subdialog = true
-        this.subdialogid = row.objectId
-        this.channelname = row.objectId
-        setTimeout(() => {
-          subdialog = ace.edit('subdialog')
-          subdialog.session.setMode('ace/mode/text') // 设置语言
-          subdialog.setTheme('ace/theme/gob') // 设置主题
-          subdialog.setReadOnly(true)
-          subdialog.setOptions({
-            enableBasicAutocompletion: false,
-            enableSnippets: true,
-            enableLiveAutocompletion: true, // 设置自动提示
-          })
-        })
         var info = {
           topic: 'log/channel/' + row.objectId,
           qos: 2,
         }
+        console.log(
+          `${this.$getMqttEventId('subscribe')}`,
+          "${this.$getMqttEventId('subscribe')}"
+        )
+        this.$bus.$emit(`${this.$getMqttEventId('subscribe')}`, {
+          topicKey: this.$getTopicEventId(info.topic, this.$route.fullPath),
+          topic: info.topic,
+          ttl: 1000 * 60 * 60 * 3,
+        })
+        this.subdialog = true
+        this.subdialogid = row.objectId
+        this.channelname = row.objectId
+        // setTimeout(() => {
+        //   subdialog = ace.edit('subdialog')
+        //   subdialog.session.setMode('ace/mode/text') // 设置语言
+        //   subdialog.setTheme('ace/theme/gob') // 设置主题
+        //   subdialog.setReadOnly(true)
+        //   subdialog.setOptions({
+        //     enableBasicAutocompletion: false,
+        //     enableSnippets: true,
+        //     enableLiveAutocompletion: true, // 设置自动提示
+        //   })
+        // })
         var channeltopic = new RegExp('log/channel/' + row.objectId)
         var submessage = ''
         var _this = this
         _this.channeltopic = info.topic
-        _this.$refs.mqtt.clientMqtt()
-        Websocket.add_hook(channeltopic, function (Msg) {
-          // 判断长度
-          if (subdialog.session.getLength() >= 1000) {
-            submessage = ''
-          } else {
-            submessage += _this.nowtime() + Msg + `\n`
-          }
-          subdialog.setValue(submessage)
-          subdialog.gotoLine(subdialog.session.getLength())
-        })
+
+        // _this.bus(info.topic)
+        // _this.$refs.mqtt.clientMqtt()
+        // Websocket.add_hook(channeltopic, function (Msg) {
+        //   // 判断长度
+        //   if (subdialog.session.getLength() >= 1000) {
+        //     submessage = ''
+        //   } else {
+        //     submessage += _this.nowtime() + Msg + `\n`
+        //   }
+        //   subdialog.setValue(submessage)
+        //   subdialog.gotoLine(subdialog.session.getLength())
+        // })
         // 订阅
         var text0 = JSON.stringify({ action: 'start_logger' })
-        Websocket.subscribe(info, function (res) {
-          if (res.result) {
-            var sendInfo = {
-              topic: 'channel/' + row.objectId,
-              text: text0,
-              retained: true,
-              qos: 2,
-            }
-            Websocket.sendMessage(sendInfo)
-            _this.subdialogtimer = window.setInterval(() => {
-              Websocket.sendMessage(sendInfo)
-            }, 600000)
-          }
-        })
+        // Websocket.subscribe(info, function (res) {
+        //   if (res.result) {
+        //     var sendInfo = {
+        //       topic: 'channel/' + row.objectId,
+        //       text: text0,
+        //       retained: true,
+        //       qos: 2,
+        //     }
+        //     Websocket.sendMessage(sendInfo)
+        //     _this.subdialogtimer = window.setInterval(() => {
+        //       Websocket.sendMessage(sendInfo)
+        //     }, 600000)
+        //   }
+        // })
       },
       stopsub(value) {
         var text0
@@ -1102,7 +1166,7 @@
           retained: true,
           qos: 2,
         }
-        Websocket.sendMessage(sendInfo)
+        // Websocket.sendMessage(sendInfo)
       },
       handleCloseSubdialog() {
         this.subdialog = false
@@ -1113,7 +1177,7 @@
           retained: true,
           qos: 2,
         }
-        Websocket.sendMessage(sendInfo)
+        // Websocket.sendMessage(sendInfo)
         window.clearInterval(this.subdialogtimer)
         this.subdialogtimer = null
       },

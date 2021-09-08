@@ -219,6 +219,7 @@
     name: 'AccessLog',
     data() {
       return {
+        size: '',
         isFullscreen: false,
         height: this.$baseTableHeight(0),
         logdata: [],

@@ -36,6 +36,7 @@ import {
 } from '@/api/Device/index'
 import { queryProduct } from '@/api/Product/index'
 import MQTTConnect from '@/utils/MQTTConnect'
+import { getMqttEventId, getTopicEventId } from '@/utils'
 
 // https://www.jianshu.com/p/abdee4e7875a
 /**
@@ -493,5 +494,7 @@ export default {
     Vue.prototype.$dgiotUtils = rutils
     // https://shufei021.github.io/rdate/
     Vue.prototype.$dgiotRdate = rdate
+    Vue.prototype.$getMqttEventId = getMqttEventId
+    Vue.prototype.$getTopicEventId = getTopicEventId
   },
 }

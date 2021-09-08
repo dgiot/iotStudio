@@ -1,8 +1,7 @@
 import MQTTConnect from '@/utils/MQTTConnect'
-import { Map2Json, getMqttEventId, getTopicEventId } from '@/utils'
+import { Map2Json, getMqttEventId } from '@/utils'
 import store from '@/store'
 const { iotMqtt } = MQTTConnect
-import { mapGetters, mapMutations, mapActions } from 'vuex'
 const MqttMixin = {
   name: 'MqttMixin',
   data() {
@@ -29,10 +28,15 @@ const MqttMixin = {
   },
   created() {
     const _this = this
-    _this.$bus.$off(getMqttEventId('subscribe'))
-    _this.$bus.$on(getMqttEventId('subscribe'), (arg) => {
-      const { topicKey, topic, ttl } = arg
-      _this.subscribe(topicKey, topic, ttl)
+    _this.$bus.$off(`${getMqttEventId('subscribe')}`)
+    _this.$bus.$on(`${getMqttEventId('subscribe')}`, (arg) => {
+      console.groupCollapsed(
+        '%ciotMqtt subscribe arg',
+        'color:#009a61; font-size: 28px; font-weight: 300'
+      )
+      console.table(arg)
+      console.groupEnd()
+      _this.subscribe(arg)
     })
   },
   mounted() {},
@@ -47,11 +51,11 @@ const MqttMixin = {
       // const map = Map2Json(this.mapTopic)
       for (let topickey in map) {
         if (map[topickey].endtime > Number(moment().format('x')))
-          this.subscribe(
-            topickey,
-            map[topickey].topic,
-            map[topickey].endtime - Number(moment().format('x'))
-          )
+          this.subscribe({
+            topickey: topickey,
+            topic: map[topickey].topic,
+            ttl: map[topickey].endtime - Number(moment().format('x')),
+          })
         else this.unsubscribe(topickey, map[topickey].topic)
       }
     },
@@ -72,15 +76,13 @@ const MqttMixin = {
             Message: Message,
             timestamp: moment().format('x'),
           }
+          this.$bus.$emit(`${topicKey}`, args)
           console.groupCollapsed(
             '%ciotMqtt SendMsg payloadString',
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
           console.groupEnd()
-          console.info('%c%s', 'font-size: 24px;', topic)
-          console.info('%c%s', 'font-size: 24px;', topicKey)
-          console.info('%c%s', 'font-size: 24px;', args)
-          this.$bus.$emit(`${topicKey}`, args)
+          console.table({ topic, topicKey, args })
         }
         if (Number(map[topicKey].endtime) < nowTime)
           this.unsubscribe(map[topicKey].topic, topicKey)
@@ -101,7 +103,7 @@ const MqttMixin = {
     checkTopic(subTopic, pubTopic) {
       let length = pubTopic.length < subTopic.length ? pubTopic : subTopic // 返回短的topic 短的topic 包含#/+
       for (let k in length) {
-        if (subTopic[k] == '#') {
+        if (subTopic[k] == '#' || subTopic == pubTopic) {
           return true
         } else if (subTopic[k] == '+' || subTopic[k] == subTopic[k]) {
           // return true
@@ -128,11 +130,12 @@ const MqttMixin = {
         )
         return false
       } else {
-        console.info(
-          '%c%s',
-          'color: green;font-size: 24px;',
-          `${options.time} mqtt连接信息` + JSON.stringify(options)
+        console.groupCollapsed(
+          '%ciotMqtt connect msg',
+          'color:#009a61; font-size: 28px; font-weight: 300'
         )
+        console.table(options)
+        console.groupEnd()
       }
       iotMqtt.init({
         id: options.id,
@@ -167,7 +170,7 @@ const MqttMixin = {
       )
       console.info('%c%s', 'color: green;font-size: 24px;', msg)
       console.groupEnd()
-      iotMqtt.subscribe(this.objectId)
+      // iotMqtt.subscribe(this.objectId)
       // this.subscribe(this.objectId)
     },
     /**
@@ -233,25 +236,22 @@ const MqttMixin = {
      * @param topic
      * @param ttl
      */
-    subscribe: function (topickey, topic, ttl = 1000 * 60 * 60 * 3) {
-      console.log(topickey, topic, '!!!!!!!')
+    subscribe: function (args) {
+      const { topicKey, topic, ttl } = args
       let _this = this
       let endTime = Number(moment().format('x')) + ttl
-      _this.MapTopic.set(`${topickey}`, { topic: topic, endtime: endTime })
+      _this.MapTopic.set(topicKey, { topic: topic, endtime: endTime })
       // _this.setMapTopic(_this.MapTopic)
       store.dispatch('mqttMsg/setMapTopic', _this.MapTopic)
-      if (topic) iotMqtt.subscribe(topic)
-      else console.error('no topic')
-      console.groupCollapsed(
-        '%ciotMqtt subscribe',
-        'color:#009a61; font-size: 28px; font-weight: 300'
-      )
-      console.info(
-        '%c%s',
-        'color: green;font-size: 24px;',
-        'subscribe topic:   ' + topickey
-      )
-      console.groupEnd()
+      if (!_.isEmpty(topic)) {
+        iotMqtt.subscribe(topic)
+        console.groupCollapsed(
+          '%ciotMqtt subscribe',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.table(args)
+        console.groupEnd()
+      } else console.error('no topic')
     },
     /**
      *

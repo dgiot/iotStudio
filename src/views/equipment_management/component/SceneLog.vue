@@ -218,7 +218,6 @@
         productId: '',
         ttl: 1000 * 60 * 60 * 3,
         topicKey: '',
-        router: '',
         topic: '',
         logMqtt: {
           channeltopic: '',
@@ -294,11 +293,8 @@
       },
     },
     mounted() {
-      const fullPath = this.$route.fullPath
-      const router = md5(fullPath)
-      this.topicKey = getTopicEventId(this.topic, router)
+      this.topicKey = getTopicEventId(this.topic, this.$route.fullPath)
       this.topic = 'logger_trace/trace/' + this.$route.query.deviceid + '/#'
-      this.router = router
       // this.$bus.$off(`${this.topicKey}`)
       this.bus(this.topicKey, this.topic, this.ttl)
       this.queryTable()
@@ -312,7 +308,7 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
-      bus(topicKey, topic, ttl) {
+      bus(topicKey, topic) {
         console.log(' this.topic ', topic)
         this.$bus.$off(`${this.topicKey}`)
         this.$bus.$on(`${this.topicKey}`, (res) => {

@@ -63,6 +63,7 @@
     data() {
       return {
         firstMenu: '',
+        option: {},
       }
     },
     computed: {
@@ -92,6 +93,12 @@
         },
         immediate: true,
       },
+      option: {
+        handler(o) {
+          if (!_.isEmpty(o)) this.Mqtt(this.option)
+        },
+        immediate: true,
+      },
     },
     mounted() {
       // 写在页面公共组件里。确保全局只订阅一个mqtt。刷新则再次重新订阅
@@ -100,14 +107,13 @@
         username: md5(this.loginInfo.username),
         password: md5(this.loginInfo.password),
       }
-      const option = {
-        id: md5Info.token,
+      this.option = {
+        id: md5Info.token + uuid(2),
         ip: options.host,
         port: options.port,
         userName: md5Info.username,
         passWord: md5Info.password,
       }
-      this.Mqtt(option)
     },
     methods: {
       Mqtt(option) {
