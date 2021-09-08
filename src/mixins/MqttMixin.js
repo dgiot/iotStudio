@@ -7,6 +7,7 @@ const MqttMixin = {
   data() {
     return {
       consoleTale: [],
+      reconnectNum: 0,
       MapTopic: new Map(),
     }
   },
@@ -149,10 +150,12 @@ const MqttMixin = {
             _this.connectCheckTopic(Map2Json(this.mapTopic))
         },
         error: function (msg = `iotMqtt接失败,自动重连`) {
+          // _this.connectLost()
           _this.mqttError(msg)
         },
         connectLost: function (msg = `iotMqtt连接丢失`) {
-          _this.connectLost()
+          // _this.connectLost()
+          _this.mqttError(msg)
         },
         onMessage: function (Message) {
           _this.onMessage(Message)
@@ -283,13 +286,26 @@ const MqttMixin = {
      * @param msg
      */
     reconnect: function (msg = '自动重连mqtt') {
-      iotMqtt.reconnect()
-      console.groupCollapsed(
-        '%ciotMqtt reconnect',
-        'color:#009a61; font-size: 28px; font-weight: 300'
-      )
-      console.warn('%c%s', 'color: yellow;font-size: 24px;', msg)
-      console.groupEnd()
+      this.reconnectNum++
+      if (this.reconnectNum < 5) {
+        iotMqtt.reconnect()
+        console.groupCollapsed(
+          '%ciotMqtt reconnect',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.warn(
+          '%c%s',
+          'color: yellow;font-size: 24px;',
+          '当前重连次数：' + this.reconnectNum + '次' + msg
+        )
+        console.groupEnd()
+      } else {
+        console.error(
+          '%c%s',
+          'color: yellow;font-size: 24px;',
+          '当前重连次数大于5次,不再自动重连,重连第' + this.reconnectNum + '次'
+        )
+      }
     },
     /**
      *
