@@ -46,6 +46,9 @@
 </template>
 
 <script>
+  import MQTTConnect from '@/utils/MQTTConnect'
+  const { options, iotMqtt } = MQTTConnect
+  import { uuid } from '@/utils'
   import { mapGetters } from 'vuex'
   import { openFirstMenu } from '@/config'
 
@@ -64,8 +67,10 @@
     },
     computed: {
       ...mapGetters({
+        objectId: 'user/objectId',
         extra: 'settings/extra',
         routes: 'routes/routes',
+        token: 'user/token',
       }),
       handleRoutes() {
         return this.routes.filter((item) => item.hidden !== true && item.meta)
@@ -87,7 +92,22 @@
         immediate: true,
       },
     },
+    mounted() {
+      // 写在页面公共组件里。确保全局只订阅一个mqtt。刷新则再次重新订阅
+      this.Mqtt(md5(this.token))
+    },
     methods: {
+      Mqtt(token) {
+        const option = {
+          id: token,
+          ip: options.host,
+          port: options.port,
+          userName: this.objectId,
+          passWord: uuid(6),
+        }
+        this.initMqtt(option)
+        // iotMqtt.subscribe('dgiottopic')
+      },
       handleTabClick(handler) {
         if (handler !== true && openFirstMenu)
           this.$router.push(this.handlePartialRoutes[0].path)

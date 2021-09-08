@@ -774,8 +774,6 @@
   </div>
 </template>
 <script>
-  import MQTTConnect from '@/utils/MQTTConnect'
-  const { options, iotMqtt } = MQTTConnect
   import { queryProduct } from '@/api/Product'
   import { getDevice, putDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
@@ -992,7 +990,6 @@
       initDgiotMqtt() {
         this.getRoletree()
         this.getProduct()
-        this.subscribe('dgiottopic')
       },
       async getWarnCount(params = { count: '*', where: {} }) {
         params.where['createdAt'] = {

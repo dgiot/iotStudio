@@ -404,14 +404,14 @@
           >
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
-          <el-button
-            v-show="row.status == 0"
-            size="mini"
-            type="success"
-            @click="showInfo(row)"
-          >
-            {{ $translateTitle('Maintenance.Dispatch') }}
-          </el-button>
+          <!--          <el-button-->
+          <!--            v-show="row.status == 0"-->
+          <!--            size="mini"-->
+          <!--            type="success"-->
+          <!--            @click="showInfo(row)"-->
+          <!--          >-->
+          <!--            {{ $translateTitle('Maintenance.Dispatch') }}-->
+          <!--          </el-button>-->
           <el-button
             v-show="row.status == 1"
             size="mini"

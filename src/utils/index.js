@@ -1,5 +1,6 @@
-// /data/dgiot/lib/dgiot_api-1.6.4/priv/www
-// D:\msys64\home\vivi\dgiot_dashboard\dist
+// prod /data/dgiot/lib/dgiot_api-4.3.0/priv/www
+// flow /data/dgiot/lib/dgiot_api-1.6.4/priv/www
+// local D:\msys64\home\vivi\dgiot_dashboard\dist
 
 /**
  * @description 格式化时间
@@ -804,6 +805,7 @@ export default function () {
 export function Map2Json(map) {
   let obj = Object.create(null)
   for (let [k, v] of map) {
+    // console.log(k, v)
     obj[k] = v
   }
   return obj

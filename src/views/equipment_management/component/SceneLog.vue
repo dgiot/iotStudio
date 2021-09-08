@@ -3,6 +3,7 @@
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form
+          v-if="!$loadsh.isEmpty(queryForm)"
           ref="form"
           :inline="true"
           label-width="auto"
@@ -136,7 +137,7 @@
           default-expand-all
           stripe
           :row-class-name="tableRowClassName"
-          :data="logdata"
+          :data="scroketMsg"
           :height="height"
         >
           <el-table-column
@@ -214,6 +215,10 @@
     },
     data() {
       return {
+        productId: '',
+        ttl: 1000 * 60 * 60 * 3,
+        topicKey: '',
+        router: '',
         topic: '',
         logMqtt: {
           channeltopic: '',
@@ -225,16 +230,17 @@
         height: this.$baseTableHeight(0),
         logdata: [],
         momentKey: moment(new Date()).valueOf(),
-        checkList: ['pid', 'level', 'mfa', 'line'],
+        checkList: ['topic', 'time', 'pid', 'peername'],
         logcolumns: [
-          'pid',
-          'level',
-          'domain',
-          'mfa',
-          'line',
-          'clientid',
           'topic',
+          'time',
+          'pid',
           'peername',
+          'msg',
+          'level',
+          'gl',
+          'clientid',
+          'mfa',
         ],
         fold: true,
         w80: ['line', 'level'],
@@ -278,22 +284,24 @@
         return this.logcolumns.filter((item) => this.checkList.includes(item))
       },
     },
+    watch: {
+      'deviceInfo.product.objectId': {
+        handler: function (newVal) {
+          if (newVal) this.productId = newVal
+        },
+        deep: true,
+        limit: true,
+      },
+    },
     mounted() {
-      let _this = this
-      const fullPath = _this.$route.fullPath
+      const fullPath = this.$route.fullPath
       const router = md5(fullPath)
-      const topicKey = getTopicEventId(_this.topic + router)
-      this.topic = 'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
-      const topic = this.topic
-      const ttl = 1000 * 60 * 60 * 3
-      _this.$bus.$emit(getMqttEventId('subscribe'), {
-        topic,
-        router,
-        ttl,
-      })
-      _this.$bus.$on(topicKey, (res) => {
-        console.error(res, '收到消息')
-      })
+      this.topicKey = getTopicEventId(this.topic, router)
+      this.topic = 'logger_trace/trace/' + this.$route.query.deviceid + '/#'
+      this.router = router
+      // this.$bus.$off(`${this.topicKey}`)
+      this.bus(this.topicKey, this.topic, this.ttl)
+      this.queryTable()
     },
     created() {},
     beforeCreate() {}, //生命周期 - 创建之前
@@ -304,6 +312,14 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      bus(topicKey, topic, ttl) {
+        console.log(' this.topic ', topic)
+        this.$bus.$off(`${this.topicKey}`)
+        this.$bus.$on(`${this.topicKey}`, (res) => {
+          const { msg = '', timestamp } = res
+          if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
+        })
+      },
       handleHeight() {
         this.isFullscreen = !this.isFullscreen
         if (this.isFullscreen) this.height = this.$baseTableHeight(0) + 120
@@ -357,13 +373,16 @@
       queryTable() {
         this.scroketMsg = []
         this.clickItem = ''
-        this.queryForm.topic =
-          'logger_trace/trace/' + this.deviceInfo.product.objectId + '/#'
+        this.queryForm.topic = 'logger_trace/trace/' + this.productId + '/#'
         // this.topic = this.queryForm.topic + this.logMqtt.key + ''
         this.queryForm.deviceid = this.deviceInfo.objectId
-        this.queryForm.action == 'stop'
-          ? ''
-          : this.subscribe(this.topic, moment(new Date()).valueOf())
+        if (this.queryForm.action == 'start')
+          this.$bus.$emit(getMqttEventId('subscribe'), {
+            topicKey: this.topicKey,
+            topic: this.topic,
+            ttl: this.ttl,
+          })
+        //   :
         const loading = this.$baseColorfullLoading()
         const { level, action, topic, order, deviceid, tracetype } =
           this.queryForm
@@ -421,10 +440,21 @@
         this.momentKey = moment(new Date()).valueOf()
       },
       mqttMsg(e, msg, key) {
+        // const msg =   {
+        //   "topic": "testtopic",
+        //   "time": 1631083271442413,
+        //   "pid": "<0.21153.0>",
+        //   "peername": "183.128.48.161:55095",
+        //   "msg": "PUBLISH to testtopic: <<\"{ \\\"msg\\\": \\\"Hello, World!\\\" }\">>",
+        //   "level": "info",
+        //   "gl": "<0.1629.0>",
+        //   "clientid": "6e0f054b82",
+        //   "mfa": "emqx_tracer/trace/2"
+        // }
         this.scroketMsg.push(JSON.parse(e))
         this.logMqtt.key = key
         this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
-        console.log('payload,msg,key', payload, msg, key)
+        console.log('payload,msg,key', msg, key)
       },
     },
   }
