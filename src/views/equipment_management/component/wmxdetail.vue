@@ -420,7 +420,7 @@
               </el-form-item>
             </div>
             <!--            地理位置-->
-            <div v-if="sizeForm.type == 'geoPoint'">
+            <div v-if="sizeForm.type == 'geopoint'">
               <!--百度地图-->
               <el-row :gutter="20">
                 <el-col :span="12">
@@ -429,13 +429,13 @@
                     :label="$translateTitle('product.gps type')"
                   >
                     <el-select
-                      v-model="options.value"
+                      v-model="sizeForm.gpstype"
                       style="width: 100%"
                       clearable
                     >
                       <el-option
-                        v-for="item in [' NMEA0183']"
-                        :key="item"
+                        v-for="(item, key) in ['NMEA0183']"
+                        :key="key"
                         :label="item"
                         :value="item"
                       />
@@ -1700,6 +1700,38 @@
             devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
+            collection:
+              item.dataForm == undefined ? '' : item.dataForm.collection,
+            control: item.dataForm == undefined ? '' : item.dataForm.control,
+            strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
+            startnumber: that.$objGet(item, 'dataType.specs.min'),
+            step: that.$objGet(item, 'dataType.specs.step'),
+            unit: that.$objGet(item, 'dataType.specs.unit'),
+            round: that.$objGet(item, 'dataForm.round'),
+            dinumber: that.$objGet(item, 'dataForm.data'),
+            rate: that.$objGet(item, 'dataForm.rate'),
+            offset: that.$objGet(item, 'dataForm.offset'),
+            order: that.$objGet(item, 'dataForm.order'),
+            protocol: that.$objGet(item, 'dataForm.protocol'),
+            operatetype: that.$objGet(item, 'dataForm.operatetype'),
+            originaltype: that.$objGet(item, 'dataForm.originaltype'),
+            slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            iscount: this.$objGet(item, 'dataForm.iscount'),
+            countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
+            countround: this.$objGet(item, 'dataForm.countround'),
+            countcollection: this.$objGet(item, 'dataForm.countcollection'),
+            required: true,
+            isread: item.accessMode,
+            isshow: item.isshow,
+            identifier: item.identifier,
+          }
+        } else if (item.dataType.type == 'geopoint') {
+          obj = {
+            name: item.name,
+            devicetype: item.devicetype,
+            ico: item.ico,
+            type: item.dataType.type,
+            gpstype: item.dataType.gpstype,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
             control: item.dataForm == undefined ? '' : item.dataForm.control,

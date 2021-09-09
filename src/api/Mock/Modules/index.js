@@ -48,7 +48,7 @@ const dataType = [
         label: '密码',
       },
       {
-        value: 'geoPoint',
+        value: 'geopoint',
         label: '地理位置',
       },
       // {

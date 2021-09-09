@@ -2744,7 +2744,7 @@
           })
         }
       },
-      selectChange(objectId, flag = 'edit') {
+      selectChange(objectId, flag = 'add') {
         this.arrlist = []
         getProduct(objectId).then((res) => {
           const { config = { basedate: {} } } = res
@@ -2755,22 +2755,22 @@
                 if (item.type == 'bool') {
                   this.$set(
                     this.deviceform,
-                    item?.identifier ? item.identifier : '',
+                    item.identifier ? item.identifier : '',
                     item.default?.length ? item.default : ''
                   )
                 } else if (item.type == 'enum') {
                   this.$set(
                     this.deviceform,
-                    item?.identifier ? item.identifier : '',
-                    item?.item.specs?.[0]?.attribute?.length
+                    item.identifier ? item.identifier : '',
+                    item.specs?.[0]?.attribute?.length
                       ? item.specs[0].attribute
                       : ''
                   )
                 } else {
                   this.$set(
                     this.deviceform,
-                    item?.identifier ? item.identifier : '',
-                    item?.item.default?.length ? item.default : ''
+                    item.identifier ? item.identifier : '',
+                    item.default?.length ? item.default : ''
                   )
                 }
                 if (item.required) {
@@ -2795,6 +2795,8 @@
               })
             }
             console.log('afd', this.arrlist)
+            console.log('deviceform', this.deviceform)
+            console.log('rules', this.rules)
           }
         })
       },

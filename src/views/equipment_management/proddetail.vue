@@ -3369,6 +3369,7 @@
             dataType: {
               type: sizeForm.type.toLowerCase(),
               imagevalue: sizeForm.imagevalue,
+              specs: {},
             },
           }
           Object.assign(obj, obj1)
@@ -3409,6 +3410,7 @@
             dataType: {
               type: sizeForm.type.toLowerCase(),
               size: sizeForm.string,
+              specs: {},
             },
           }
           Object.assign(obj, obj1)
@@ -3416,6 +3418,16 @@
           var obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
+              specs: {},
+            },
+          }
+          Object.assign(obj, obj1)
+        } else if (sizeForm.type == 'geopoint') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              gpstype: sizeForm.gpstype,
+              specs: {},
             },
           }
           Object.assign(obj, obj1)
@@ -3737,6 +3749,42 @@
             name: rowData.name,
             devicetype: rowData.devicetype,
             type: rowData.dataType.type,
+            collection:
+              rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
+            control:
+              rowData.dataForm == undefined ? '' : rowData.dataForm.control,
+            strategy:
+              rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
+            startnumber: this.$objGet(rowData, 'dataType.specs.min'),
+            step: this.$objGet(rowData, 'dataType.specs.step'),
+            unit: this.$objGet(rowData, 'dataType.specs.unit'),
+            round: this.$objGet(rowData, 'dataForm.round'),
+            dis: this.$objGet(rowData, 'dataForm.address'),
+            order: this.$objGet(rowData, 'dataForm.order'),
+            dinumber: this.$objGet(rowData, 'dataForm.data'),
+            rate: this.$objGet(rowData, 'dataForm.rate'),
+            offset: this.$objGet(rowData, 'dataForm.offset'),
+            protocol: this.$objGet(rowData, 'dataForm.protocol'),
+            operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
+            originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
+            slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+            iscount: this.$objGet(rowData, 'dataForm.iscount'),
+            countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
+            countround: this.$objGet(rowData, 'dataForm.countround'),
+            countcollection: this.$objGet(rowData, 'dataForm.countcollection'),
+            required: true,
+            ico: rowData.ico,
+            isread: rowData.accessMode,
+            isshow: rowData.isshow,
+            identifier: rowData.identifier,
+            editdatatype: true,
+          }
+        } else if (rowData.dataType.type == 'geopoint') {
+          obj = {
+            name: rowData.name,
+            devicetype: rowData.devicetype,
+            type: rowData.dataType.type,
+            gpstype: rowData.dataType.gpstype,
             collection:
               rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
             control:

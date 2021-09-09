@@ -96,7 +96,6 @@
           border
           resizable
           highlight-current-row
-          default-expand-all
           stripe
           :row-class-name="tableRowClassName"
           size="mini"
