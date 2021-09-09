@@ -205,6 +205,11 @@
   export default {
     name: 'SceneLog',
     props: {
+      name: {
+        type: String,
+        required: true,
+        default: 'name',
+      },
       deviceInfo: {
         type: Object,
         required: true,
@@ -291,13 +296,19 @@
         deep: true,
         limit: true,
       },
+      name: {
+        handler: function (newVal) {
+          if (newVal == 'task') this.queryTable()
+        },
+        deep: true,
+        limit: true,
+      },
     },
     mounted() {
       this.topicKey = getTopicEventId(this.topic, this.$route.fullPath)
       this.topic = 'logger_trace/trace/' + this.$route.query.deviceid + '/#'
       // this.$bus.$off(`${this.topicKey}`)
       this.bus(this.topicKey, this.topic, this.ttl)
-      this.queryTable()
     },
     created() {},
     beforeCreate() {}, //生命周期 - 创建之前

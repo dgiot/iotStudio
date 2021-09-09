@@ -941,33 +941,38 @@
       }),
     },
     watch: {
-      // collapse: {
-      //   handler(_collapse) {
-      //     $('.appendLogo').remove()
-      //     $('.logo-container .router-link-active').css({
-      //       display: 'none',
-      //     })
-      //     let img = this.collapse == true ? this._pcimg : this._mimg
-      //     $('.logo-container').append(
-      //       `<img src=${img} class="appendLogo" style="width: 100%" />`
-      //     )
-      //   },
-      //   deep: true,
-      //   immediate: true,
-      // },
+      channeltopic: {
+        handler: function (newVal, oldval) {
+          if (newVal) {
+            this.$bus.$off(
+              `${this.$getTopicEventId(
+                this.channeltopic,
+                this.$route.fullPath
+              )}`
+            )
+            this.$bus.$on(
+              `${this.$getTopicEventId(
+                this.channeltopic,
+                this.$route.fullPath
+              )}`,
+              (res) => {
+                const { msg = '', timestamp } = res
+                if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
+              }
+            )
+          }
+          if (oldval) {
+            this.unsubscribe('', oldval)
+            this.submessage = ''
+            this.msgList = []
+            this.logKey = '99'
+          }
+        },
+        deep: true,
+        limit: true,
+      },
     },
-    created() {
-      let _this = this
-      _this.$bus.$off('busSendMsg')
-      _this.$bus.$on('busSendMsg', (...res) => {
-        const { topic = '', Message = {} } = res[0]
-        if (topic.length) {
-          const key = moment().format('x')
-          // console.info('%c%s', 'color: pink;font-size: 12px;', key)
-          _this.mqttMsg(Message.payloadString, Message, key)
-        }
-      })
-    },
+    created() {},
     mounted() {
       this.initDgiotMqtt()
       console.log(`global static url ${this._role}`)
@@ -1364,17 +1369,26 @@
         this.curDepartmentId = objectId
         // this.channeltopic = `dashboard/${this.queryForm.access_token}/post`
         this.channeltopic = `dashboard/${this.token}/post`
-        this.subscribe(this.channeltopic)
-        this.$nextTick(() => {
-          // this.isConnect = true
-          console.log(this.channeltopic, 'this.channeltopic')
-          console.info(
-            '%c%s',
-            'color: green;font-size: 12px;',
-            'channeltopic ' + this.channeltopic
-          )
-          this.resizeTheChart()
+        this.$bus.$emit(`${this.$getMqttEventId('subscribe')}`, {
+          topicKey: this.$getTopicEventId(
+            this.channeltopic,
+            this.$route.fullPath
+          ),
+          topic: this.channeltopic,
+          ttl: 1000 * 60 * 60 * 3,
         })
+        this.mqttSuccess('')
+        // this.subscribe(this.channeltopic)
+        // this.$nextTick(() => {
+        //   // this.isConnect = true
+        //   console.log(this.channeltopic, 'this.channeltopic')
+        //   console.info(
+        //     '%c%s',
+        //     'color: green;font-size: 12px;',
+        //     'channeltopic ' + this.channeltopic
+        //   )
+        //   this.resizeTheChart()
+        // })
         // $('.el-select-dropdown').css({ height: '0px', display: 'none' })
       },
       handleChange() {},

@@ -7,6 +7,7 @@ const theme = require('./theme.config')
 const network = require('./net.config')
 const cdnConfig = require('./cdn.config')
 const pwa = require('./pwa.config')
+const mqtt = require('./mqtt.config')
 module.exports = {
   ...cli,
   ...setting,
@@ -14,4 +15,5 @@ module.exports = {
   ...network,
   ...cdnConfig,
   ...pwa,
+  ...mqtt,
 }

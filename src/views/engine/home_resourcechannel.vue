@@ -667,9 +667,6 @@
           }
           if (oldval) {
             this.unsubscribe('', oldval)
-            this.submessage = ''
-            this.msgList = []
-            this.logKey = '99'
           }
         },
         deep: true,

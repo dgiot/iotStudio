@@ -1,5 +1,6 @@
 import MQTTConnect from '@/utils/MQTTConnect'
 import { Map2Json, getMqttEventId } from '@/utils'
+import { reconnect, maxReconnectNum } from '../config'
 import store from '@/store'
 const { iotMqtt } = MQTTConnect
 const MqttMixin = {
@@ -8,6 +9,8 @@ const MqttMixin = {
     return {
       consoleTale: [],
       reconnectNum: 0,
+      isReconnect: reconnect,
+      maxReconnectNum: maxReconnectNum,
       MapTopic: new Map(),
     }
   },
@@ -181,13 +184,16 @@ const MqttMixin = {
      * @param msg
      */
     mqttError(msg = 'error') {
+      let _this = this
       console.groupCollapsed(
         '%ciotMqtt Connection failed',
         'color:#009a61; font-size: 28px; font-weight: 300'
       )
       console.error('%c%s', 'color: red;font-size: 24px;', msg)
       console.groupEnd()
-      this.reconnect()
+      if (this.isReconnect) {
+        _this.reconnect()
+      } else console.info('reconnect 为' + reconnect, '不自動重連')
     },
     /**
      *
@@ -286,24 +292,31 @@ const MqttMixin = {
      * @param msg
      */
     reconnect: function (msg = '自动重连mqtt') {
-      this.reconnectNum++
-      if (this.reconnectNum < 5) {
+      const _this = this
+      _this.reconnectNum++
+      const maxReconnectNum =
+        _this.maxReconnectNum < 4 ? 4 : _this.maxReconnectNum
+      if (_this.reconnectNum < maxReconnectNum) {
         iotMqtt.reconnect()
         console.groupCollapsed(
           '%ciotMqtt reconnect',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-        console.warn(
+        console.log(
           '%c%s',
-          'color: yellow;font-size: 24px;',
-          '当前重连次数：' + this.reconnectNum + '次' + msg
+          'color: black; font-size: 24px;',
+          '当前重连次数：' + _this.reconnectNum + '次' + msg
         )
         console.groupEnd()
       } else {
         console.error(
           '%c%s',
-          'color: yellow;font-size: 24px;',
-          '当前重连次数大于5次,不再自动重连,重连第' + this.reconnectNum + '次'
+          'color: black;font-size: 24px;',
+          '当前重连次数大于' +
+            maxReconnectNum +
+            '次,不再自动重连,重连第' +
+            _this.reconnectNum +
+            '次'
         )
       }
     },
