@@ -19,6 +19,7 @@ function createState(type, offsetX, offsetY, color, params) {
         lineCap: 'round',
         lineJoin: 'round',
         tension: 0.5,
+        listening: true,
         draggable: true,
       })
       break
@@ -33,6 +34,7 @@ function createState(type, offsetX, offsetY, color, params) {
         radiusY: 20,
         stroke: color,
         strokeWidth: 4,
+        listening: true,
         draggable: true,
       })
       break
@@ -49,6 +51,7 @@ function createState(type, offsetX, offsetY, color, params) {
         stroke: 'black',
         strokeWidth: 4,
         opacity: 1,
+        listening: true,
         draggable: true,
       })
       break
@@ -62,6 +65,7 @@ function createState(type, offsetX, offsetY, color, params) {
         fontSize: 30,
         fontFamily: 'Calibri',
         width: 300,
+        listening: true,
         draggable: true,
       })
       break
@@ -76,6 +80,7 @@ function createState(type, offsetX, offsetY, color, params) {
         source: params.src,
         width: params.width,
         height: params.height,
+        listening: true,
         draggable: true,
       })
       imageObj.src = params.src

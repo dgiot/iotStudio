@@ -62,7 +62,7 @@
               </p>
             </a>
             <a-menu slot="overlay">
-              <a-menu-item @click="flagFn('pencil')">铅笔</a-menu-item>
+              <!--              <a-menu-item @click="flagFn('pencil')">铅笔</a-menu-item>-->
               <a-menu-item>
                 <el-link @click="flagFn('ellipse')">椭圆-空心</el-link>
               </a-menu-item>
@@ -244,10 +244,15 @@
         })
       },
       flagFn(v) {
-        if (v == 'text') this.setDrawParams({ text: '请输入相关文字' })
-        this.setFlag(v)
+        if (v == 'text')
+          this.setDrawParams({ text: '请输入相关文字' + moment().format('x') })
+
         // this.$emit('createShape', v, this.graphColor)
-        if (v) this.setDraw(true)
+        if (v) {
+          this.setDraw(true)
+          this.setFlag(v)
+        }
+        console.info('我要绘制', v)
       },
       removeFn() {
         console.log(this.graphNow)

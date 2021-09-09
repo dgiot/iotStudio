@@ -734,13 +734,13 @@
           <Instruct :product-id="productid" :devices-id="deviceid" />
         </el-tab-pane>
         <!--        明诚发布注释 737 到 743 行的代码-->
-        <el-tab-pane :label="$translateTitle('device.Scene log')" name="task">
-          <scene-log
-            v-show="activeName == 'task'"
-            :name="activeName"
-            :device-info="deviceInfo"
-          />
-        </el-tab-pane>
+        <!--        <el-tab-pane :label="$translateTitle('device.Scene log')" name="task">-->
+        <!--          <scene-log-->
+        <!--            v-show="activeName == 'task'"-->
+        <!--            :name="activeName"-->
+        <!--            :device-info="deviceInfo"-->
+        <!--          />-->
+        <!--        </el-tab-pane>-->
       </el-tabs>
     </div>
   </div>

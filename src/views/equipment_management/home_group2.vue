@@ -197,15 +197,8 @@
                 {{ $translateTitle('product.dict') }}
               </el-button>
 
-              <el-button size="mini">
-                <router-link
-                  :to="{
-                    path: '/Topo?productid',
-                    query: { productid: scope.row.objectId },
-                  }"
-                >
-                  {{ $translateTitle('concentrator.konva') }}
-                </router-link>
+              <el-button size="mini" @click="goKonva(scope.row.objectId)">
+                {{ $translateTitle('concentrator.konva') }}
               </el-button>
 
               <el-button
@@ -1362,6 +1355,14 @@
       this.projectName = ''
     },
     methods: {
+      goKonva(id) {
+        this.$router.push({
+          path: '/Topo?productid',
+          query: {
+            productid: id,
+          },
+        })
+      },
       uploadCkick() {
         this.loading = true
         // 触发子组件的点击事件

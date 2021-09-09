@@ -1,0 +1,113 @@
+@font-face { // 平面图图标
+  font-family: 'iconfont';  /* project id 1776547 */
+  src: url('//at.alicdn.com/t/font_1776547_3es98zmuy21.eot');
+  src: url('//at.alicdn.com/t/font_1776547_3es98zmuy21.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_1776547_3es98zmuy21.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_1776547_3es98zmuy21.woff') format('woff'),
+  url('//at.alicdn.com/t/font_1776547_3es98zmuy21.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_1776547_3es98zmuy21.svg#iconfont') format('svg');
+}
+
+a {
+  color: #314659;
+  text-decoration: none;
+  &:hover {
+    color: #1890ff;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.ml5 {
+  margin-left: 0.05rem;
+}
+
+.ml30 {
+  margin-left: 0.3rem;
+}
+
+.ml50 {
+  margin-left: 0.5rem;
+}
+
+.mt5 {
+  margin-top: 0.05rem;
+}
+
+.mt10 {
+  margin-top: 0.1rem;
+}
+
+.mr5 {
+  margin-right: 0.05rem;
+}
+
+.ph15 {
+  padding-right: 0.15rem;
+  padding-left: 0.15rem;
+}
+
+.pv10 {
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+}
+
+.gray {
+  color: #ccc;
+}
+
+.title {
+  font-weight: 600;
+  color: #0d1a26;
+}
+
+.flex {
+  display: flex;
+
+  &.column {
+    flex-direction: column;
+  }
+
+  &.reverse {
+    flex-direction: row-reverse;
+    &.column {
+      flex-direction: column-reverse;
+    }
+  }
+
+  &.inline {
+    display: inline-flex;
+  }
+
+  &.wrap {
+    flex-wrap: wrap;
+  }
+
+  &.nowrap {
+    flex-wrap: nowrap;
+  }
+
+  &.center {
+    justify-content: center;
+  }
+
+  &.middle {
+    align-items: center;
+  }
+
+  & > .full {
+    flex-grow: 1;
+    width: auto !important;
+    min-width: auto !important;
+  }
+
+  &.grid > div {
+    flex: 1;
+  }
+
+  label {
+    flex-shrink: 0;
+  }
+}

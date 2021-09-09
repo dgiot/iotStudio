@@ -15,16 +15,16 @@
       <el-main class="konva-container-main">
         <el-row :gutter="gutter.gutter">
           <!--       明诚发布注释18 到 27 行-->
-          <!--          <el-col-->
-          <!--            class="hidden-xs-only konva-container-main-allocation"-->
-          <!--            :xs="0"-->
-          <!--            :sm="isDevice ? 0 : 6"-->
-          <!--            :md="isDevice ? 0 : 6"-->
-          <!--            :lg="isDevice ? 0 : 4"-->
-          <!--            :xl="isDevice ? 0 : 3"-->
-          <!--          >-->
-          <!--            <Topo-allocation />-->
-          <!--          </el-col>-->
+          <el-col
+            class="hidden-xs-only konva-container-main-allocation"
+            :xs="0"
+            :sm="isDevice ? 0 : 6"
+            :md="isDevice ? 0 : 6"
+            :lg="isDevice ? 0 : 4"
+            :xl="isDevice ? 0 : 3"
+          >
+            <Topo-allocation />
+          </el-col>
 
           <el-col
             :xs="isDevice ? 24 : gutter.xs"
@@ -397,6 +397,7 @@
         _this.updataTopo(_this.productid)
       },
       newTopo(type, data) {
+        const _this = this
         const group = new Konva.Group({
           x: data.coordinate.x,
           y: data.coordinate.y,
@@ -405,7 +406,7 @@
           // opacity: 1,
         })
 
-        const Layer = this.stage.find('Layer')[0]
+        const Layer = _this.stage.find('Layer')[0]
         const { paths = [] } = data
         const __paths = JSON.parse(paths)
         console.log(paths, 'path')
@@ -417,8 +418,8 @@
 
         Layer.add(group)
         Layer.batchDraw()
-        this.$refs.topobase.createTopo(
-          this.stage.toJSON(),
+        _this.$refs.topobase.createTopo(
+          _this.stage.toJSON(),
           moment(new Date()).valueOf()
         )
         // 更新到数据库
@@ -436,6 +437,10 @@
         //   console.log(children)
         //
         // }
+        // this.$refs.topobase.createTopo(
+        //   this.stage.toJSON(),
+        //   moment(new Date()).valueOf()
+        // )
         // console.log(type, value, 'Group')
       },
       // 取消订阅mqtt
@@ -475,7 +480,7 @@
           _this.$refs['operation']
             ? (_this.$refs['operation'].productconfig = results[0])
             : console.log(" _this.$refs['operation']", _this.$refs['operation'])
-          console.log(data.Stage.attrs.id)
+          console.error(data.Stage.attrs.id)
           _this.globalStageid = data.Stage.attrs.id
           _this.createKonva(data, _this.globalStageid, 'create')
           _this.paramsconfig = { konva: data }
@@ -599,7 +604,7 @@
           console.log('类型', _this.flag)
           console.log('this.draw', _this.draw)
           console.log('color', _this.graphColor)
-          console.log('drawParams', _this.drawParams)
+          console.error('drawParams', _this.drawParams)
           const color = _this.graphColor
           const type = _this.flag
           console.log('params', _this.drawParams)
@@ -618,6 +623,11 @@
           Layer.batchDraw()
           _this.setFlag('')
           _this.setDraw(false)
+          _this.$refs.topobase.createTopo(
+            _this.stage.toJSON(),
+            moment(new Date()).valueOf()
+          )
+          _this.updataTopo()
         })
         const Group = _this.stage.find('Group')
         const Text = _this.stage.find('Text')
