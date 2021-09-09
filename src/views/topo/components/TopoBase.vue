@@ -218,7 +218,7 @@
     },
     methods: {
       createTopo(json, key) {
-        console.clear()
+        // console.clear()
         this.konvaKey = key
         this.konvajson = json
         const stage = Konva.Node.create(json, 'kevCurrent')

@@ -2019,15 +2019,20 @@
                         width: 1868,
                         height: 469,
                         draggable: true,
+                        listening: true,
                       },
                       children: [
                         {
                           attrs: {
+                            draggable: true,
+                            listening: true,
                             id: 'Layer_' + Mock.mock('@string'),
                           },
                           children: [
                             {
                               attrs: {
+                                draggable: true,
+                                listening: true,
                                 id: 'Group_' + Mock.mock('@string'),
                                 width: 2000,
                                 height: 2000,

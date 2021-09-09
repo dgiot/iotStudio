@@ -1,5 +1,5 @@
 const state = () => ({
-  graphColor: 'red',
+  graphColor: 'black',
   drawing: false,
   pointStart: [],
   graphNow: null,

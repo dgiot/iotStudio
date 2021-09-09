@@ -108,15 +108,15 @@
           <!--          />-->
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
-          <vab-icon
-            style="cursor: pointer"
-            :icon="
-              $parent.$parent.$parent.isFullscreen
-                ? 'fullscreen-exit-fill'
-                : 'fullscreen-fill'
-            "
-            @click="handFullscreen"
-          />
+          <!--          <vab-icon-->
+          <!--            style="cursor: pointer"-->
+          <!--            :icon="-->
+          <!--              $parent.$parent.$parent.isFullscreen-->
+          <!--                ? 'fullscreen-exit-fill'-->
+          <!--                : 'fullscreen-fill'-->
+          <!--            "-->
+          <!--            @click="handFullscreen"-->
+          <!--          />-->
           <vab-help
             trigger="click"
             src="https://tech.iotn2n.com/w/docs/details?id=6"

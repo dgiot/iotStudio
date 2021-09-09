@@ -1,7 +1,7 @@
 <!-- 组件说明 -->
 <template>
   <div class="operation">
-    <el-tabs v-model="activeName" stretch>
+    <el-tabs v-if="Shapeconfig.attrs" v-model="activeName" stretch>
       <div class="unvisible">
         <el-upload
           ref="upload"
@@ -19,31 +19,59 @@
           <el-button size="small" type="primary">点击上传</el-button>
         </el-upload>
       </div>
-      <el-tab-pane label="配置" name="setting">
-        <el-form v-if="Shapeconfig.className">
-          <el-form-item>
-            <vab-json-editor
-              v-if="showJson"
-              v-model="Shapeconfig"
-              :mode="'code'"
-              lang="zh"
-            />
-            <el-button type="primary" @click="saveKonvaitem(Shapeconfig)">
-              {{ $translateTitle('developer.determine') }}
-            </el-button>
-            <el-button type="primary" @click="showJson = !showJson">
-              {{ $translateTitle('developer.json') }}
-            </el-button>
-            <el-button
-              type="primary"
-              :disabled="disabledModule"
-              @click="handleModule(wmxdialogVisible)"
+      <el-tab-pane
+        :label="$translateTitle('konva.Configuration')"
+        name="setting"
+      >
+        <el-form
+          v-for="(item, key, index) in Shapeconfig.attrs"
+          ref="numberValidateForm"
+          :key="index"
+          :disabled="disabledForm"
+          label-width="80px"
+          class="demo-ruleForm"
+        >
+          <el-form-item :label="$translateTitle(`konva.${key}`)">
+            <!--            判断不同的数据类型,显示不同的控件-->
+            <el-input
+              v-if="$loadsh.isString(Shapeconfig.attrs[key])"
+              v-model="Shapeconfig.attrs[key]"
+              :disabled="disableKey.includes(key)"
             >
-              <!-- {{ $translateTitle('developer.json') }}  -->
-              物模型
-            </el-button>
+              <el-color-picker
+                v-if="key == 'fill'"
+                slot="append"
+                v-model="Shapeconfig.attrs[key]"
+                size="mini"
+                show-alpha
+              />
+            </el-input>
+
+            <el-input-number
+              v-if="$loadsh.isNumber(Shapeconfig.attrs[key])"
+              v-model="Shapeconfig.attrs[key]"
+              style="width: 100%"
+            />
+            <el-switch
+              v-if="$loadsh.isBoolean(Shapeconfig.attrs[key])"
+              v-model="Shapeconfig.attrs[key]"
+              style="width: 100%"
+              :active-text="$translateTitle(`konva.draggable`)"
+              :inactive-text="$translateTitle(`konva.undraggable`)"
+            />
           </el-form-item>
         </el-form>
+        <div class="footer-panel">
+          <el-button type="success" @click="disabledForm = !disabledForm">
+            {{ $translateTitle('developer.edit') }}
+          </el-button>
+          <el-button type="info" @click="saveKonvaitem(Shapeconfig)">
+            {{ $translateTitle('developer.determine') }}
+          </el-button>
+          <el-button type="primary" @click="handleModule(wmxdialogVisible)">
+            {{ $translateTitle('product.physicalmodel') }}
+          </el-button>
+        </div>
       </el-tab-pane>
       <!--      <el-tab-pane label="样式" name="styles">-->
       <!--        <el-input-number-->
@@ -108,6 +136,7 @@
         </el-dialog>
       </div>
     </el-tabs>
+    <a-empty v-else />
   </div>
 </template>
 
@@ -136,6 +165,8 @@
     },
     data() {
       return {
+        disabledForm:true,
+        disableKey:['id','container','type'],
         ShapeIndex: 0,
         ShapeOpacity: 1,
         properties: [],
@@ -689,6 +720,7 @@
       },
       saveKonvaitem(config) {
         // 触发父组件更新事件
+        console.log(config)
         this.$emit('upconfig', config)
       },
       handleCloseSub() {
@@ -730,7 +762,7 @@
   }
 
   ::v-deep .jsoneditor-vue {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 100px) !important;
+    height: calc(100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 200px) !important;
     overflow: auto;
   }
   ::v-deep .el-tabs__nav-wrap
@@ -742,5 +774,12 @@
   }
   ::v-deep .json-save-btn {
     cursor: pointer;
+  }
+  ::v-deep .el-input-group__append, .el-input-group__prepend{
+    margin: 0 !important;
+    padding:0 !important
+  }
+  .footer-panel{
+    text-align: center
   }
 </style>

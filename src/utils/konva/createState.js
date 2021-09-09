@@ -59,7 +59,8 @@ function createState(type, offsetX, offsetY, color, params) {
         x: offsetX,
         y: offsetY,
         fill: color,
-        fontSize: 12,
+        fontSize: 30,
+        fontFamily: 'Calibri',
         width: 300,
         draggable: true,
       })

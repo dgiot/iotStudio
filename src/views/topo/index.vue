@@ -14,16 +14,17 @@
 
       <el-main class="konva-container-main">
         <el-row :gutter="gutter.gutter">
-          <el-col
-            class="hidden-xs-only konva-container-main-allocation"
-            :xs="0"
-            :sm="isDevice ? 0 : 6"
-            :md="isDevice ? 0 : 6"
-            :lg="isDevice ? 0 : 4"
-            :xl="isDevice ? 0 : 3"
-          >
-            <Topo-allocation />
-          </el-col>
+          <!--       明诚发布注释18 到 27 行-->
+          <!--          <el-col-->
+          <!--            class="hidden-xs-only konva-container-main-allocation"-->
+          <!--            :xs="0"-->
+          <!--            :sm="isDevice ? 0 : 6"-->
+          <!--            :md="isDevice ? 0 : 6"-->
+          <!--            :lg="isDevice ? 0 : 4"-->
+          <!--            :xl="isDevice ? 0 : 3"-->
+          <!--          >-->
+          <!--            <Topo-allocation />-->
+          <!--          </el-col>-->
 
           <el-col
             :xs="isDevice ? 24 : gutter.xs"
@@ -53,7 +54,7 @@
             :xl="isDevice ? 0 : 3"
           >
             <el-aside class="konva-container-main-operationsSide">
-              <TopoOperation ref="operation" />
+              <TopoOperation ref="operation" @upconfig="saveKonvaitem" />
             </el-aside>
           </el-col>
         </el-row>
@@ -86,6 +87,15 @@
           lg: 15,
           xl: 18,
         },
+        // 明诚发布用下面的
+        // gutter: {
+        //   gutter: 24,
+        //   xs: 24,
+        //   sm: 18,
+        //   md: 18,
+        //   lg: 19,
+        //   xl: 21,
+        // },
         productid: this.$route.query.productid || '',
       }
     },
@@ -277,6 +287,115 @@
             this.$message.error(this.$translateTitle(`${e.error}`))
           })
       },
+      // saveKonvaitem
+      saveKonvaitem(config, ShapeConfig = { index: 1, opacity: 1 }) {
+        // 首先找到他的类型
+        const type = config.className
+        let _this = this
+        const Text = _this.stage.find('Text')
+        const Image = _this.stage.find('Image')
+        const Group = _this.stage.find('Group')
+        const stage = _this.stage.find(config.attrs.id)
+        const Layer = _this.stage.find('Layer')[0]
+        let upshape = stage
+        console.log('stage', stage)
+        const tweens = []
+        for (let n = 0; n < tweens.length; n++) {
+          tweens[n].destroy()
+          tweens[n].remove()
+        }
+
+        // 根据类型去找这个组态
+        const shope = _this.stage.find(`${type}`)
+        console.log(_this.stage.find(`#${config.attrs.id}`))
+        console.log('shope', shope)
+        shope.forEach((shape) => {
+          if (shape.attrs.id == config.attrs.id) {
+            console.log('updata type is image', shape, config)
+            upshape = shape
+            _this.kovaUpType = 'Image'
+            upshape.zIndex(ShapeConfig.zIndex)
+            upshape.opacity(ShapeConfig.opacity)
+            Layer.draw()
+            tweens.push(
+              new Konva.Tween({
+                node: shape,
+                Opacity: ShapeConfig.opacity,
+                duration: 1,
+                zIndex: ShapeConfig.zIndex,
+                easing: Konva.Easings.ElasticEaseOut,
+              }).play()
+            )
+          }
+        })
+
+        Image.forEach((shape) => {
+          if (shape.attrs.id == config.attrs.id) {
+            console.log('updata type is image', shape, config)
+            upshape = shape
+            _this.kovaUpType = 'Image'
+            upshape.zIndex(ShapeConfig.zIndex)
+            upshape.opacity(ShapeConfig.opacity)
+            Layer.draw()
+            tweens.push(
+              new Konva.Tween({
+                node: shape,
+                Opacity: ShapeConfig.opacity,
+                duration: 1,
+                zIndex: ShapeConfig.zIndex,
+                easing: Konva.Easings.ElasticEaseOut,
+              }).play()
+            )
+          }
+        })
+        Group.forEach((shape) => {
+          if (shape.attrs.id == config.attrs.id) {
+            _this.kovaUpType = 'Group'
+            upshape = shape
+            tweens.push(
+              new Konva.Tween({
+                node: Object.assign(shape, config),
+                Opacity: 0.8,
+                duration: 1,
+                easing: Konva.Easings.ElasticEaseOut,
+              }).play()
+            )
+          }
+        })
+        Text.forEach((shape) => {
+          if (shape.attrs.id == config.attrs.id) {
+            _this.kovaUpType = 'Text'
+            upshape = shape
+            tweens.push(
+              new Konva.Tween({
+                node: Object.assign(shape, config),
+                Opacity: 0.8,
+                duration: 1,
+                easing: Konva.Easings.ElasticEaseOut,
+              }).play()
+            )
+          }
+        })
+        if (_this.kovaUpType != 'Image') {
+          upshape.zIndex(ShapeConfig.index)
+          upshape.opacity(ShapeConfig.opacity)
+          Layer.draw()
+        }
+        _this.stage.batchDraw()
+        if (_this.stage.attrs.id == config.attrs.id) {
+          _this.kovaUpType = 'Layer'
+          _this.stage = config
+        }
+        _this.$refs.topobase.createTopo(
+          _this.stage.toJSON(),
+          moment(new Date()).valueOf()
+        )
+        // console.clear()
+        console.info(`updata type is ${_this.kovaUpType}`)
+        // _this.ShapeVisible = false
+        console.log('konva数据更新成功')
+        _this.updataTopo(_this.productid)
+      },
       newTopo(type, data) {
         const group = new Konva.Group({
           x: data.coordinate.x,
@@ -444,6 +563,11 @@
         console.log('_this.$refs.topobase', _this.$refs.topobase)
         console.log('data', data)
         var Layer = _this.stage.find('Layer')[0]
+        var allLayer = _this.stage.find('Layer')
+        allLayer.forEach((layer) => {
+          console.log(layer, 'layer')
+          layer.draggable = true
+        })
         _this.stage.on('click', (e) => {
           var node = e.target
           console.log(e, 'stage node')
@@ -596,6 +720,7 @@
         if (!_this.isDevice && Group?.length) {
           Group.forEach(function (_G) {
             _G.on('dblclick', (e) => {
+              _G.draggable = true
               console.log(e, 'Group dblclick')
               // 创建图形选框事件
               const tr = new Konva.Transformer({
@@ -717,7 +842,7 @@
         Layer.draw()
         Layer.batchDraw()
         console.log('绘制完成')
-        console.clear()
+        // console.clear()
         _this.$refs.topobase.createTopo(
           _this.stage.toJSON(),
           moment(new Date()).valueOf()

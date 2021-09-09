@@ -747,7 +747,8 @@
 </template>
 <script>
   import info from '@/components/Device/info'
-  import SceneLog from '@/views/equipment_management/component/SceneLog'
+  import { requireModule } from '@/utils/file'
+
   const columns = [
     {
       title: '图片',
@@ -782,7 +783,7 @@
     components: {
       Instruct,
       info,
-      SceneLog,
+      ...requireModule(require.context('./component', true, /\.vue$/)),
     },
     filters: {
       filterVal(val) {
