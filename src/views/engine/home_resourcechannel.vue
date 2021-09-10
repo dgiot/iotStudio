@@ -672,8 +672,14 @@
           }
           if (oldval) {
             this.unsubscribe('', oldval)
-            _this.sendMessage(oldval, JSON.stringify({ action: 'stop_logger' }))
-            _this.sendMessage(oldval, JSON.stringify({ action: 'stop_logger' }))
+            this.sendMessage(oldval, JSON.stringify({ action: 'stop_logger' }))
+            this.sendMessage(
+              oldval.split('log/')[1],
+              JSON.stringify({ action: 'stop_logger' })
+            )
+            this.submessage = ''
+            this.msgList = []
+            this.logKey = oldval.split('log/')[1]
           }
         },
         deep: true,
@@ -1157,13 +1163,13 @@
         _this.$bus.$emit(`mqttSendMsg`, sendInfo, 2, true)
         // 在链接成功后发一句消息，启用通道
         setTimeout(() => {
-          _this.sendMessage(_this.channeltopic, text0)
-          _this.sendMessage('channel/' + this.subdialogid, text0)
-          _this.sendMessage('channel/' + this.subdialogid, sendInfo)
-          _this.sendMessage(_this.channeltopic, sendInfo)
-          this.submessage = ''
-          this.msgList = []
-          this.logKey = '99'
+          _this.sendMessage(_this.channeltopic, { action: 'start_logger' })
+          _this.sendMessage('channel/' + _this.subdialogid, text0)
+          _this.sendMessage('channel/' + _this.subdialogid, sendInfo)
+          _this.submessage = ''
+          _this.msgList = []
+          _this.logKey = _this.channeltopic.split('log')[1]
+          // _this.sendMessage(_this.channeltopic, sendInfo)
         }, 1000)
         // Websocket.subscribe(info, function (res) {
         //   if (res.result) {
