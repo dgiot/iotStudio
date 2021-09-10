@@ -33,14 +33,14 @@ const MqttMixin = {
   created() {
     const _this = this
     _this.$bus.$off(`${getMqttEventId('subscribe')}`)
-    _this.$bus.$on(`${getMqttEventId('subscribe')}`, (arg) => {
+    _this.$bus.$on(`${getMqttEventId('subscribe')}`, (arg, qos = 0) => {
       console.groupCollapsed(
         '%ciotMqtt subscribe arg',
         'color:#009a61; font-size: 28px; font-weight: 300'
       )
       console.table(arg)
       console.groupEnd()
-      _this.subscribe(arg)
+      _this.subscribe(arg, qos)
     })
   },
   mounted() {},
@@ -218,7 +218,7 @@ const MqttMixin = {
         duplicate = 'duplicate',
         payloadBytes = 'payloadBytes',
         payloadString = 'payloadString',
-        qos = 'qos',
+        qos = 0,
         retained = 'retained',
       } = Message
       const table = {
@@ -245,7 +245,7 @@ const MqttMixin = {
      * @param topic
      * @param ttl
      */
-    subscribe: function (args) {
+    subscribe: function (args, qos = 0) {
       const { topicKey, topic, ttl } = args
       let _this = this
       let endTime = Number(moment().format('x')) + ttl
@@ -253,7 +253,7 @@ const MqttMixin = {
       // _this.setMapTopic(_this.MapTopic)
       store.dispatch('mqttMsg/setMapTopic', _this.MapTopic)
       if (!_.isEmpty(topic)) {
-        iotMqtt.subscribe(topic)
+        iotMqtt.subscribe(topic, qos)
         console.groupCollapsed(
           '%ciotMqtt subscribe',
           'color:#009a61; font-size: 28px; font-weight: 300'
@@ -325,16 +325,24 @@ const MqttMixin = {
      * @param topic
      * @param obj
      */
-    sendMessage(topic, obj) {
-      console.log(topic, obj)
-      // 数据发送
-      try {
-        console.log('success')
-        iotMqtt.sendMessage(topic, new Paho.MQTT.Message('text0'))
+    sendMessage(topic, obj, qos = 0, retained = false) {
+      if (_.isEmpty(obj)) {
         console.groupCollapsed(
           '%csendMsg',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
+        console.error(topic, obj, '没有发送消息的内容')
+        console.groupEnd()
+        return
+      }
+      // 数据发送
+      try {
+        iotMqtt.sendMessage(topic, obj, qos, retained)
+        console.groupCollapsed(
+          '%csendMsg',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.log(topic, obj)
         console.groupEnd()
       } catch (err) {
         console.log('error', err)

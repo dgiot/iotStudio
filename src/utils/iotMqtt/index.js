@@ -1,7 +1,6 @@
 // https://unpkg.com/browse/xhl-mqttx@1.0.2/mqttx.js
-let Paho = require('./mqttws31.js')
-Paho = Paho.default
-import store from '@/store'
+let PahoJs = require('./mqttws31.js')
+PahoJs = PahoJs.default
 var isUseSSL = window.location.protocol === 'https:' ? true : false
 const iotMqtt = {
   client: null,
@@ -38,10 +37,14 @@ const iotMqtt = {
       // store.dispatch('mqttMsg/resaveMqttInfo', message)
     }
   },
-  sendMessage: function (topic, obj) {
+  sendMessage: function (topic, obj, qos = 0, retained = true) {
     if (iotMqtt.mqttStatus) {
-      let message = new Paho.MQTT.Message(JSON.stringify(obj))
+      let message = new PahoJs.MQTT.Message(JSON.stringify(obj))
       message.destinationName = topic
+      // var message = new PahoJs.MQTT.Message(obj)
+      // message.destinationName = topic
+      // message.qos = Number(qos)
+      // message.retained = retained
       if (iotMqtt.client && iotMqtt.mqttStatus) {
         console.info('send msg', message)
         iotMqtt.client.send(message)
@@ -86,7 +89,7 @@ const iotMqtt = {
     window.location.protocol === 'https:' ? (options1.useSSL = isUseSSL) : ''
     if (options1) {
       iotMqtt.options = options1
-      iotMqtt.client = new Paho.MQTT.Client(
+      iotMqtt.client = new PahoJs.MQTT.Client(
         iotMqtt.options.ip || '127.0.0.1',
         Number(iotMqtt.options.port || 61623),
         iotMqtt.options.id || '0'
@@ -103,4 +106,5 @@ const iotMqtt = {
     }
   },
 }
+window.iotMqtt = iotMqtt
 export default iotMqtt

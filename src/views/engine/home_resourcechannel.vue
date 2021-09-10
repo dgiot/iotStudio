@@ -1155,21 +1155,24 @@
           qos: 2,
           retained: true,
         }
-        _this.$bus.$emit(`mqttSendMsg`, sendInfo)
-        Websocket.subscribe(info, function (res) {
-          if (res.result) {
-            var sendInfo = {
-              topic: 'channel/' + row.objectId,
-              text: text0,
-              retained: true,
-              qos: 2,
-            }
-            Websocket.sendMessage(sendInfo)
-            _this.subdialogtimer = window.setInterval(() => {
-              Websocket.sendMessage(sendInfo)
-            }, 600000)
-          }
-        })
+        _this.$bus.$emit(`mqttSendMsg`, sendInfo, 2, true)
+        setInterval(() => {
+          _this.sendMessage('channel/' + row.objectId, 'start_logger')
+        }, 1000)
+        // Websocket.subscribe(info, function (res) {
+        //   if (res.result) {
+        //     var sendInfo = {
+        //       topic: 'channel/' + row.objectId,
+        //       text: text0,
+        //       retained: true,
+        //       qos: 2,
+        //     }
+        //
+        //     _this.subdialogtimer = window.setInterval(() => {
+        //       Websocket.sendMessage(sendInfo)
+        //     }, 600000)
+        //   }
+        // })
       },
       stopsub(value) {
         var text0
