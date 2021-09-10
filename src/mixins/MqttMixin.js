@@ -326,20 +326,23 @@ const MqttMixin = {
      * @param obj
      */
     sendMessage(topic, obj) {
+      console.log(topic, obj)
       // 数据发送
       try {
+        console.log('success')
+        iotMqtt.sendMessage(topic, new Paho.MQTT.Message('text0'))
         console.groupCollapsed(
           '%csendMsg',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
         console.groupEnd()
-        iotMqtt.sendMessage(topic, obj)
       } catch (err) {
+        console.log('error', err)
         console.groupCollapsed(
           '%ciotMqtt sendMessage error',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-        console.warn('%c%s', 'color: red;font-size: 24px;', msg)
+        console.warn('%c%s', 'color: red;font-size: 24px;', err)
         console.groupEnd()
       }
     },

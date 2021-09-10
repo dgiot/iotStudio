@@ -151,6 +151,57 @@
 <style lang="scss" scoped>
   @import './assets/css/base.scss';
   .confing-layout {
-    height: 100%;
+    color: #314659 !important;
+    height: 100vh;
   }
+
+  li {
+    list-style: none;
+  }
+  *,
+  *:before,
+  *:after {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  .headers {
+    display: flex;
+    height: 61px;
+    background-color: #dcdcdc;
+    .el-menu {
+      display: flex;
+    }
+    .full {
+      flex: 1;
+    }
+
+    .logo {
+      img {
+        position: relative;
+      }
+    }
+  }
+
+  .el-menu-item,
+  .el-submenu__title {
+    color: #314659 !important;
+
+    &.separator {
+      border-top: 1px solid #e8e8e8;
+    }
+
+    a {
+      color: #314659;
+      text-decoration: none;
+    }
+
+    .iconfont {
+      color: #314659;
+    }
+  }
+
+  //body {
+  //  height: 100vh;
+  //}
 </style>

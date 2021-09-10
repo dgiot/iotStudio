@@ -18,21 +18,21 @@
         .label 禁用滚轮缩放
         el-switch(v-model="canvasOptions.disableScale" @change='onChangeOptions')
 
-      //- .item
-      //-   .label 画布宽度（px）
-      //-   el-input-number(v-model="canvasOptions.width" @change='onChangeOptions')
-      //- .item
-      //-   .label 画布高度（px）
-      //-   el-input-number(v-model="canvasOptions.height" @change='onChangeOptions')
-      //- .item
-      //-   .label 选中颜色
-      //-   el-color-picker(v-model="canvasOptions.bkColor" @change='onChangeOptions')
-      //- .item
-      //-   .label 线条/边框颜色
-      //-   el-color-picker(v-model="canvasOptions.color" @change='onChangeOptions')
-      //- .item
-      //-   .label 活动层颜色
-      //-   el-color-picker(v-model="canvasOptions.hoverColor" @change='onChangeOptions')
+      .item
+        .label 画布宽度（px）
+        el-input-number(v-model="canvasOptions.width" @change='onChangeOptions')
+      .item
+        .label 画布高度（px）
+        el-input-number(v-model="canvasOptions.height" @change='onChangeOptions')
+      .item
+        .label 选中颜色
+        el-color-picker(v-model="canvasOptions.bkColor" @change='onChangeOptions')
+      .item
+        .label 线条/边框颜色
+        el-color-picker(v-model="canvasOptions.color" @change='onChangeOptions')
+      .item
+        .label 活动层颜色
+        el-color-picker(v-model="canvasOptions.hoverColor" @change='onChangeOptions')
 
   div(v-if="!props.node && !props.line && !props.multi")
     .bottom

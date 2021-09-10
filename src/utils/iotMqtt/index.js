@@ -43,6 +43,7 @@ const iotMqtt = {
       let message = new Paho.MQTT.Message(JSON.stringify(obj))
       message.destinationName = topic
       if (iotMqtt.client && iotMqtt.mqttStatus) {
+        console.info('send msg', message)
         iotMqtt.client.send(message)
         return true
       }

@@ -1,93 +1,94 @@
 <template>
   <div class="log log-container">
-    <div class="left">
-      <el-button
-        type="primary"
-        icon="el-icon-circle-plus-outline"
-        size="small"
-        @click="install"
-      >
-        {{ $translateTitle('node.join') }}
-      </el-button>
-    </div>
+    <vab-topology />
+    <!--    <div class="left">-->
+    <!--      <el-button-->
+    <!--        type="primary"-->
+    <!--        icon="el-icon-circle-plus-outline"-->
+    <!--        size="small"-->
+    <!--        @click="install"-->
+    <!--      >-->
+    <!--        {{ $translateTitle('node.join') }}-->
+    <!--      </el-button>-->
+    <!--    </div>-->
 
-    <el-table
-      :height="height"
-      :data="tableData5.slice((start - 1) * length, start * length)"
-      style="width: 100%; margin-top: 20px"
-      border
-    >
-      <el-table-column :label="$translateTitle('node.nodename')" prop="name" />
-      <el-table-column
-        :label="'Erlang/' + $translateTitle('node.OTPversion')"
-        prop="otp_release"
-      />
-      <el-table-column>
-        <template slot="header">
-          <span>
-            {{ 'Erlang' + $translateTitle('node.process') }}
-          </span>
-          <p>used/avaliable</p>
-        </template>
-        <template slot-scope="scope">
-          <span>
-            {{ scope.row.process_used + '/' + scope.row.process_available }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="CPU">
-        <template slot="header">
-          <span>CPU</span>
-          <p>1load/5load/15load</p>
-        </template>
-        <template slot-scope="scope">
-          <span>
-            {{
-              scope.row.load1 + '/' + scope.row.load5 + '/' + scope.row.load15
-            }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$translateTitle('node.memory')">
-        <template slot="header">
-          <span>
-            {{ $translateTitle('node.memory') }}
-          </span>
-          <p>used/total</p>
-        </template>
-        <template slot-scope="scope">
-          <span>
-            {{ scope.row.memory_used + '/' + scope.row.memory_total }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$translateTitle('node.Maximumnumberofhandles')"
-        prop="max_fds"
-      />
-      <el-table-column
-        :label="$translateTitle('node.state')"
-        prop="node_status"
-      />
-      <el-table-column :label="$translateTitle('node.operation')">
-        <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="removeNode(scope.row)">
-            {{ $translateTitle('node.remove') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="block" style="margin-top: 30px">
-      <el-pagination
-        :page-sizes="[10, 25, 50, 100]"
-        :page-size="length"
-        :total="total"
-        background
-        layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </div>
+    <!--    <el-table-->
+    <!--      :height="height"-->
+    <!--      :data="tableData5.slice((start - 1) * length, start * length)"-->
+    <!--      style="width: 100%; margin-top: 20px"-->
+    <!--      border-->
+    <!--    >-->
+    <!--      <el-table-column :label="$translateTitle('node.nodename')" prop="name" />-->
+    <!--      <el-table-column-->
+    <!--        :label="'Erlang/' + $translateTitle('node.OTPversion')"-->
+    <!--        prop="otp_release"-->
+    <!--      />-->
+    <!--      <el-table-column>-->
+    <!--        <template slot="header">-->
+    <!--          <span>-->
+    <!--            {{ 'Erlang' + $translateTitle('node.process') }}-->
+    <!--          </span>-->
+    <!--          <p>used/avaliable</p>-->
+    <!--        </template>-->
+    <!--        <template slot-scope="scope">-->
+    <!--          <span>-->
+    <!--            {{ scope.row.process_used + '/' + scope.row.process_available }}-->
+    <!--          </span>-->
+    <!--        </template>-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column label="CPU">-->
+    <!--        <template slot="header">-->
+    <!--          <span>CPU</span>-->
+    <!--          <p>1load/5load/15load</p>-->
+    <!--        </template>-->
+    <!--        <template slot-scope="scope">-->
+    <!--          <span>-->
+    <!--            {{-->
+    <!--              scope.row.load1 + '/' + scope.row.load5 + '/' + scope.row.load15-->
+    <!--            }}-->
+    <!--          </span>-->
+    <!--        </template>-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column :label="$translateTitle('node.memory')">-->
+    <!--        <template slot="header">-->
+    <!--          <span>-->
+    <!--            {{ $translateTitle('node.memory') }}-->
+    <!--          </span>-->
+    <!--          <p>used/total</p>-->
+    <!--        </template>-->
+    <!--        <template slot-scope="scope">-->
+    <!--          <span>-->
+    <!--            {{ scope.row.memory_used + '/' + scope.row.memory_total }}-->
+    <!--          </span>-->
+    <!--        </template>-->
+    <!--      </el-table-column>-->
+    <!--      <el-table-column-->
+    <!--        :label="$translateTitle('node.Maximumnumberofhandles')"-->
+    <!--        prop="max_fds"-->
+    <!--      />-->
+    <!--      <el-table-column-->
+    <!--        :label="$translateTitle('node.state')"-->
+    <!--        prop="node_status"-->
+    <!--      />-->
+    <!--      <el-table-column :label="$translateTitle('node.operation')">-->
+    <!--        <template slot-scope="scope">-->
+    <!--          <el-button type="danger" size="small" @click="removeNode(scope.row)">-->
+    <!--            {{ $translateTitle('node.remove') }}-->
+    <!--          </el-button>-->
+    <!--        </template>-->
+    <!--      </el-table-column>-->
+    <!--    </el-table>-->
+    <!--    <div class="block" style="margin-top: 30px">-->
+    <!--      <el-pagination-->
+    <!--        :page-sizes="[10, 25, 50, 100]"-->
+    <!--        :page-size="length"-->
+    <!--        :total="total"-->
+    <!--        background-->
+    <!--        layout="total, sizes, prev, pager, next, jumper"-->
+    <!--        @size-change="handleSizeChange"-->
+    <!--        @current-change="handleCurrentChange"-->
+    <!--      />-->
+    <!--    </div>-->
     <el-dialog
       :append-to-body="true"
       :title="$translateTitle('node.joincluster')"

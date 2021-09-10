@@ -553,6 +553,8 @@
 </template>
 <script>
   import { requireModule } from '@/utils/file'
+  import MQTTConnect from '@/utils/MQTTConnect'
+  const { iotMqtt } = MQTTConnect
   import {
     queryChannel,
     delChannel,
@@ -565,7 +567,7 @@
   import { mapGetters } from 'vuex'
 
   var subdialog
-  // import { Websocket } from '@/utils/wxscoket.js'
+  import { Websocket } from '@/utils/wxscoket.js'
   import VabInput from '@/vab/components/VabInput/input'
   import { getMqttEventId, getTopicEventId } from '@/utils'
 
@@ -664,9 +666,15 @@
                 if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
               }
             )
+            // setInterval(() => {
+            //   iotMqtt.sendMessage(newVal, { sendInfo: 'sendInfo' })
+            // }, 2000)
           }
           if (oldval) {
             this.unsubscribe('', oldval)
+            this.submessage = ''
+            this.msgList = []
+            this.logKey = '99'
           }
         },
         deep: true,
@@ -1109,6 +1117,7 @@
         this.subdialog = true
         this.subdialogid = row.objectId
         this.channelname = row.objectId
+
         // setTimeout(() => {
         //   subdialog = ace.edit('subdialog')
         //   subdialog.session.setMode('ace/mode/text') // 设置语言
@@ -1139,20 +1148,28 @@
         // })
         // 订阅
         var text0 = JSON.stringify({ action: 'start_logger' })
-        // Websocket.subscribe(info, function (res) {
-        //   if (res.result) {
-        //     var sendInfo = {
-        //       topic: 'channel/' + row.objectId,
-        //       text: text0,
-        //       retained: true,
-        //       qos: 2,
-        //     }
-        //     Websocket.sendMessage(sendInfo)
-        //     _this.subdialogtimer = window.setInterval(() => {
-        //       Websocket.sendMessage(sendInfo)
-        //     }, 600000)
-        //   }
-        // })
+        //   发送消息
+        const sendInfo = {
+          topic: 'channel/' + this.subdialogid,
+          text: text0,
+          qos: 2,
+          retained: true,
+        }
+        _this.$bus.$emit(`mqttSendMsg`, sendInfo)
+        Websocket.subscribe(info, function (res) {
+          if (res.result) {
+            var sendInfo = {
+              topic: 'channel/' + row.objectId,
+              text: text0,
+              retained: true,
+              qos: 2,
+            }
+            Websocket.sendMessage(sendInfo)
+            _this.subdialogtimer = window.setInterval(() => {
+              Websocket.sendMessage(sendInfo)
+            }, 600000)
+          }
+        })
       },
       stopsub(value) {
         var text0

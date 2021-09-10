@@ -369,6 +369,11 @@
       },
     },
     created() {
+      // mqttSendMsg
+      this.$bus.$off(`mqttSendMsg`)
+      this.$bus.$on('mqttSendMsg', (res) => {
+        console.log(res, 'mqttSendMsg')
+      })
       this.setSSL()
       this.loadConnect()
     },
