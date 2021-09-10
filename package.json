@@ -62,7 +62,7 @@
     "topology-core": "^0.2.8-dev",
     "topology-flow-diagram": "0.0.3",
     "topology-layout": "0.0.3",
-    "vab-icons": "git+https://hub.fastgit.org/zxcasvw/vab-icons.git",
+    "vab-icons": "git+https://github.com/zxcasvw/vab-icons.git",
     "vue-aliplayer-v2": "^1.3.0"
   },
   "devDependencies": {

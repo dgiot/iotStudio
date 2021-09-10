@@ -1,6 +1,4 @@
 // https://unpkg.com/browse/xhl-mqttx@1.0.2/mqttx.js
-let PahoJs = require('./mqttws31.js')
-PahoJs = PahoJs.default
 var isUseSSL = window.location.protocol === 'https:' ? true : false
 const iotMqtt = {
   client: null,
@@ -39,9 +37,9 @@ const iotMqtt = {
   },
   sendMessage: function (topic, obj, qos = 0, retained = true) {
     if (iotMqtt.mqttStatus) {
-      let message = new PahoJs.MQTT.Message(JSON.stringify(obj))
+      let message = new Paho.MQTT.Message(JSON.stringify(obj))
       message.destinationName = topic
-      // var message = new PahoJs.MQTT.Message(obj)
+      // var message = new Paho.MQTT.Message(obj)
       // message.destinationName = topic
       // message.qos = Number(qos)
       // message.retained = retained
@@ -89,7 +87,7 @@ const iotMqtt = {
     window.location.protocol === 'https:' ? (options1.useSSL = isUseSSL) : ''
     if (options1) {
       iotMqtt.options = options1
-      iotMqtt.client = new PahoJs.MQTT.Client(
+      iotMqtt.client = new Paho.MQTT.Client(
         iotMqtt.options.ip || '127.0.0.1',
         Number(iotMqtt.options.port || 61623),
         iotMqtt.options.id || '0'

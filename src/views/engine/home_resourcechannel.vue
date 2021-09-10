@@ -1147,7 +1147,7 @@
         //   subdialog.gotoLine(subdialog.session.getLength())
         // })
         // 订阅
-        var text0 = JSON.stringify({ action: 'start_logger' })
+        var text0 = { action: 'start_logger' }
         //   发送消息
         const sendInfo = {
           topic: 'channel/' + this.subdialogid,
@@ -1156,8 +1156,10 @@
           retained: true,
         }
         _this.$bus.$emit(`mqttSendMsg`, sendInfo, 2, true)
-        setInterval(() => {
-          _this.sendMessage('channel/' + row.objectId, 'start_logger')
+        // 在链接成功后发一句消息，启用通道
+        setTimeout(() => {
+          _this.sendMessage('channel/' + this.subdialogid, text0)
+          _this.sendMessage(_this.channeltopic, text0)
         }, 1000)
         // Websocket.subscribe(info, function (res) {
         //   if (res.result) {
