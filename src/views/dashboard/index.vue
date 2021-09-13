@@ -19,6 +19,9 @@
         >
           <empty />
         </a-tab-pane>
+        <a-tab-pane key="visual" tab="visual">
+          <visual />
+        </a-tab-pane>
       </a-tabs>
     </div>
   </div>
@@ -29,10 +32,10 @@
   import { mapGetters } from 'vuex'
   import { setTimeout } from 'timers'
   // import adminDashboard from './admin'
-
+  import visual from '@/views/visual'
   export default {
     name: 'Dashboard',
-    components: { empty },
+    components: { empty, visual },
     data() {
       return {
         currentRole: 'adminDashboard',
@@ -87,10 +90,10 @@
     main {
       position: relative;
       top: 20px;
-      height: 100%;
+      height: 100vh;
       margin: 0 auto;
       text-align: center;
-      background: rgb(29, 27, 27);
+      //background: rgb(29, 27, 27);
     }
   }
 </style>
