@@ -50,7 +50,8 @@ yarn serve
   | dgiot_admin         | dgiot_admin                             |
 
 - Device details Preview
-  ![b87bd877-7cb6-f6b6-1eac-ae17b39bf928.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/b87bd877-7cb6-f6b6-1eac-ae17b39bf928.png)
+ ![image](https://user-images.githubusercontent.com/55233292/133011218-56c4e9fe-8104-4fa6-912f-168c2dd92ab1.png)
+ ![image](https://user-images.githubusercontent.com/55233292/133011274-8fd2ff14-f632-481b-a511-9b7f45ac13f8.png)
 
 - [Project Preview](https://tech.iotn2n.com/zh/frontend/web/#%E9%A1%B9%E7%9B%AE%E9%A2%84%E8%A7%88)
 
