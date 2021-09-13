@@ -773,6 +773,7 @@
     getDabDevice,
     getCardDevice,
     getDevice,
+    queryDevice,
   } from '@/api/Device/index.js'
   import { utc2beijing, timestampToTime } from '@/utils/index'
   import Instruct from '../devicemanage/instruct_manage'
@@ -1439,7 +1440,13 @@
         var vm = this
         vm.deviceid = deviceid
         vm.ischildren = vm.$route.query.ischildren
-        getTdDevice(deviceid).then((res) => {
+        const params = {
+          limit: 1,
+          count: 'objectId',
+          include: 'product',
+          where: { objectId: deviceid },
+        }
+        queryDevice(params).then((res) => {
           console.log(res, 'res')
           if (res.results.length > 0) {
             // console.log(resultes, 'resproduct')
