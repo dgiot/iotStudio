@@ -30,17 +30,22 @@ export function UploadImg(params) {
   //   scene = 'default',
   //   filename,
   //   output = 'json',
+  //   path
   //   code,
   //   submit = 'json',
   //   auth_token = store.getters['user/token'],
   // }
-  params = _.merge(params, {
-    auth_token: store.getters['user/token'],
-    scene: 'default',
-    code: '',
-    output: 'json',
-    submit: 'upload',
-  })
+  params = _.merge(
+    {
+      auth_token: store.getters['user/token'],
+      scene: 'default',
+      code: '',
+      path: 'dgiot',
+      output: 'json',
+      submit: 'upload',
+    },
+    params
+  )
   console.log(params, 'params', result)
   var formData = new FormData()
   for (let key in params) {

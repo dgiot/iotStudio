@@ -605,7 +605,7 @@
     },
     methods: {
       myUpload(content) {
-        console.log('e', content.file)
+        const file = content.file
         let config = {
           headers: {
             proxy: true, // 是否开启代理
@@ -613,7 +613,16 @@
             devurl: 'iotapi/',
           },
         }
-        UploadImg(content.file, config)
+        let extension = file.name.substring(file.name.lastIndexOf('.') + 1)
+
+        const params = {
+          file: file,
+          // scene: 'ticket',
+          path: 'ticket',
+          filename: 'ticket' + `${moment().format('x')}.${extension}`,
+        }
+        console.log('extension', params)
+        UploadImg(params)
           .then((res) => {
             if (res.data.url) {
               this.form.photo.push(res.data.url)
