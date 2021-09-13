@@ -363,14 +363,12 @@
                 align="center"
                 width="120"
                 sortable
+                prop="devaddr"
                 show-overflow-tooltip
-              >
-                <template slot-scope="scope">
-                  {{ scope.row.devaddr }}
-                </template>
-              </el-table-column>
+              />
               <el-table-column
                 sortable
+                prop="name"
                 show-overflow-tooltip
                 :label="$translateTitle('equipment.name')"
                 align="center"
@@ -384,6 +382,7 @@
               <el-table-column
                 sortable
                 show-overflow-tooltip
+                prop="status"
                 :label="$translateTitle('equipment.state')"
                 align="center"
                 width="80"
@@ -440,6 +439,7 @@
               </el-table-column>
               <el-table-column
                 sortable
+                prop="product.name"
                 show-overflow-tooltip
                 :label="$translateTitle('equipment.product')"
                 align="center"
@@ -453,18 +453,16 @@
               </el-table-column>
               <el-table-column
                 sortable
+                prop="Company"
                 show-overflow-tooltip
                 :label="$translateTitle('developer.Company')"
                 align="center"
                 width="200"
-              >
-                <template slot-scope="scope">
-                  <span>
-                    {{ scope.row.Company }}
-                  </span>
-                </template>
-              </el-table-column>
+              />
               <el-table-column
+                prop="isEnable"
+                sortable
+                show-overflow-tooltip
                 :label="
                   $translateTitle('developer.enable') +
                   '/' +
@@ -485,6 +483,7 @@
               <el-table-column
                 sortable
                 show-overflow-tooltip
+                prop="createdAt"
                 align="center"
                 :label="$translateTitle('developer.createdAt')"
                 width="200"

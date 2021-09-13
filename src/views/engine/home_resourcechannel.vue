@@ -28,7 +28,9 @@
       </el-form>
       <!----------------------------------------------------资源通道表格------------------>
       <el-table
+        ref="tableRef"
         v-loading="listLoading"
+        row-key="objectId"
         :header-cell-style="{ 'text-align': 'center' }"
         :cell-style="{ 'text-align': 'center' }"
         :data="tableData"
@@ -38,15 +40,13 @@
       >
         <el-table-column
           sortable
+          prop="objectId"
           show-overflow-tooltip
           width="150"
           :label="$translateTitle('developer.channelnumber')"
-        >
-          <template slot-scope="scope">
-            <span>{{ scope.row.objectId }}</span>
-          </template>
-        </el-table-column>
+        />
         <el-table-column
+          prop="name"
           sortable
           show-overflow-tooltip
           width="160"
@@ -58,6 +58,7 @@
         </el-table-column>
         <el-table-column
           sortable
+          prop="type"
           show-overflow-tooltip
           width="180"
           :label="$translateTitle('developer.channeltype')"
@@ -76,6 +77,7 @@
           </template>
         </el-table-column>
         <el-table-column
+          prop="cType"
           sortable
           show-overflow-tooltip
           width="140"
@@ -90,6 +92,7 @@
           sortable
           show-overflow-tooltip
           width="100"
+          prop="status"
           :label="$translateTitle('developer.channelstatus')"
         >
           <template slot-scope="scope">
@@ -105,6 +108,7 @@
         </el-table-column>
         <el-table-column
           show-overflow-tooltip
+          prop="objectId"
           sortable
           :label="$translateTitle('developer.channeladdr')"
           width="200"
@@ -116,6 +120,8 @@
         <el-table-column
           width="120"
           show-overflow-tooltip
+          prop="isEnable"
+          sortable
           :label="
             $translateTitle('developer.enable') +
             '/' +
@@ -141,13 +147,11 @@
           </template>
         </el-table-column>
         <el-table-column
+          prop="desc"
+          sortable
           show-overflow-tooltip
           :label="$translateTitle('developer.describe')"
-        >
-          <template slot-scope="scope">
-            <span>{{ scope.row.desc }}</span>
-          </template>
-        </el-table-column>
+        />
         <el-table-column
           :label="$translateTitle('developer.operation')"
           fixed="right"
