@@ -1111,7 +1111,10 @@
                     <el-form-item
                       :label="$translateTitle('equipment.videoType')"
                     >
-                      <el-select v-model="deviceform.videoType">
+                      <el-select
+                        v-model="deviceform.videoType"
+                        style="width: 100%"
+                      >
                         <el-option
                           v-for="item in videoOptions"
                           :key="item"
@@ -1450,7 +1453,7 @@
         }
       }
       return {
-        videoOptions: [],
+        videoOptions: ['m3u8', 'mp4', 'flv', 'mp3'],
         queryInfo: {},
         isFullscreen: false,
         border: true,

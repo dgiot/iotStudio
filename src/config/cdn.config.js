@@ -30,6 +30,7 @@ let cdnUrl = {
     'https://unpkg.com/prismjs/themes/prism-tomorrow.css',
     'https://unpkg.com/vue-prism-editor/dist/prismeditor.min.css',
     'https://unpkg.com/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.min.css',
+    'https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css',
     //  https://at.alicdn.com/t/font_2759556_18gyfqayutt.json
   ],
   js: [
@@ -115,6 +116,7 @@ let cdnUrl = {
     'https://unpkg.com/resize-observer-polyfill',
     'https://unpkg.com/vditor',
     'https://unpkg.com/fabric/dist/fabric.js',
+    'https://g.alicdn.com/de/prismplayer/2.8.2/aliplayer-min.js',
     'https://unpkg.com/xterm',
     'https://unpkg.com/xterm-addon-fit',
     'https://unpkg.com/xterm-addon-attach',

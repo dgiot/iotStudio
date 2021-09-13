@@ -127,6 +127,7 @@ module.exports = {
         'vue-flv-player': 'vueFlvPlayer',
         'ezuikit-js': 'EZUIKit',
         fuzzy: 'fuzzy',
+        'vue-aliplayer-v2': 'VueAliplayerV2',
       },
       resolve: {
         alias: {
