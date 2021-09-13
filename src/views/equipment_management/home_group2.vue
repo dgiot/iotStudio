@@ -1,5 +1,12 @@
 <template>
   <div class="devproduct devproduct-container">
+    <input
+      ref="uploader"
+      type="file"
+      style="display: none"
+      accept="zip"
+      @change="doUpload($event)"
+    />
     <el-dialog
       :append-to-body="true"
       :visible.sync="dialogVisible"
@@ -116,7 +123,7 @@
           <el-button type="primary" @click="exportpro">
             {{ $translateTitle('product.exportpro') }}
           </el-button>
-          <el-button type="primary" @click="importDialogShow = true">
+          <el-button type="primary" @click="handleImport()">
             {{ $translateTitle('product.importpro') }}
           </el-button>
         </el-form-item>
@@ -1137,6 +1144,7 @@
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
   import Category from '@/api/Mock/Category'
+  import { ExportParse, ImportParse } from '@/api/Export'
   export default {
     data() {
       return {
@@ -2063,6 +2071,21 @@
           }
         })
       },
+      async doUpload(event) {
+        const parseFile = event.target.files[0]
+        const loading = this.$baseColorfullLoading(3)
+        try {
+          const res = await ImportParse('Product', parseFile)
+          loading.close()
+          console.log('eresresrror', res)
+          this.$message.success(``)
+        } catch (error) {
+          loading.close()
+          console.log('error', error)
+          this.$message.error(`${error}`)
+        }
+        this.$baseEventBus.$emit('reload-router-view')
+      },
       async createProduct(params) {
         const res = await this.$create_object('Product', params)
         if (res.objectId) {
@@ -2244,15 +2267,20 @@
         var url = `${topoUrl}/#/view`
         window.open(url, '__blank')
       },
+      async handleImport() {
+        await this.$refs.uploader.click()
+      },
       // 导出
-      exportpro() {
-        if (this.allTableDate) {
-          export_txt_to_zip(JSON.stringify(this.allTableDate), 'Dict', 'Dict')
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '数据为空,无法导出',
-          })
+      async exportpro() {
+        const loading = this.$baseColorfullLoading(2)
+        try {
+          const res = await ExportParse('Product', {})
+          loading.close()
+          this.$convertRes2Blob(res)
+          // this.$message.success(`${res}`)
+        } catch (error) {
+          loading.close()
+          this.$message.error(`${error}`)
         }
       },
     },
