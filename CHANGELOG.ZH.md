@@ -1,3 +1,61 @@
+## [4.3.2](https://github.com/dgiot/dgiot_dashboard/compare/4.4.0...4.3.2) (2021-09-13)
+
+
+### Bug Fixes
+
+* **src/views/equipment_management/home_group2.vue:** product ([b588934](https://github.com/dgiot/dgiot_dashboard/commit/b58893484573c923c621bbd7a2e0b5b791503321))
+* konvajs delete shape ([9683317](https://github.com/dgiot/dgiot_dashboard/commit/968331762e194b2ca615526206e3a01df4a9b10a))
+* stop_logger ([e87d641](https://github.com/dgiot/dgiot_dashboard/commit/e87d641a0e0d31f73cf5b769948c0fc051a95274))
+* stop_logger mqtt channel ([53ed1a2](https://github.com/dgiot/dgiot_dashboard/commit/53ed1a2ecc076e718bf7e18ea3df571237287c5f))
+* **mqtt:** fix mqtt can't send message ([28f3ba5](https://github.com/dgiot/dgiot_dashboard/commit/28f3ba578731d1199b26684cf1ce69769b5551ce))
+* **src/mixins/mqttmixin.js:** mqtt bug fix ([1943269](https://github.com/dgiot/dgiot_dashboard/commit/19432696fa403d6250aa761e342e6fea5ca63bf9))
+* **src/views/equipment_management/platform_overview.vue:** mqtt && view && style ([87844f9](https://github.com/dgiot/dgiot_dashboard/commit/87844f9598c60dff1a6205820dca3860edfd5c06))
+* **src/views/equipment_management/proddetail.vue:** channel query ([7165bd6](https://github.com/dgiot/dgiot_dashboard/commit/7165bd6174672dc8d13b1cafa2ea44cb255b34d7))
+* **src/views/topo/index.vue:** konva save ([cf07103](https://github.com/dgiot/dgiot_dashboard/commit/cf0710350225b458d29fbb0f02ba9a00a761ba4f))
+
+
+### Features
+
+* gettddevice改为getdevice ([3ea0dc0](https://github.com/dgiot/dgiot_dashboard/commit/3ea0dc0451a9ae78899727a0f45d6af48e096ff7))
+* imamges uoload ([c0558ee](https://github.com/dgiot/dgiot_dashboard/commit/c0558eec5c863dda944f1661d49b35872e11747a))
+* **src/utils/iotmqtt/index.js && src/mixins/mqttmixin.js && src/utils/iotmqtt/mqttws31.js:** mqtt ([a7425e3](https://github.com/dgiot/dgiot_dashboard/commit/a7425e38f3d3a7ebff1111729ad7aea9dc836acf))
+* **src/views/engine/home_resourcechannel.vue:** fuzzy query of product channel ([0a72829](https://github.com/dgiot/dgiot_dashboard/commit/0a7282970e8ab0b7e4adb5736d40f7a3fcfd29e4))
+* **src/views/equipment_management/home_index.vue && ~/home_group2.vue:** table sortable ([8504df1](https://github.com/dgiot/dgiot_dashboard/commit/8504df180ddec946c9be0ea0b113bc84d94ddc04))
+* **src/views/maintenance/createticket.vue:** order ([a555747](https://github.com/dgiot/dgiot_dashboard/commit/a5557473b3610689603e9e71a3171b32afd3a234))
+* 忽略 ([3886460](https://github.com/dgiot/dgiot_dashboard/commit/38864605101041ff1666ee92a300e4bb4739c066))
+* 设备日志 ([96094d9](https://github.com/dgiot/dgiot_dashboard/commit/96094d909f47f7a267aa28a03dee9aa126f398e4))
+* 设备日志 ([5c73934](https://github.com/dgiot/dgiot_dashboard/commit/5c73934f6efc7bf90452838eb723853c13e92376))
+* 设备日志 ([62996b8](https://github.com/dgiot/dgiot_dashboard/commit/62996b8ea7f1e8270e4151f3536a2f6f241e9ed5))
+* 实时日志 ([74fd6c1](https://github.com/dgiot/dgiot_dashboard/commit/74fd6c10eeb69f2421574638f3645d350ce46fdc))
+* 物模型gps ([ab1b477](https://github.com/dgiot/dgiot_dashboard/commit/ab1b477bf30caba7037c5341057586cc2f84803a))
+* iotmqtt ([d27b118](https://github.com/dgiot/dgiot_dashboard/commit/d27b1180269a198b074a60c61e126edf96e309df))
+* m3u8 play ([32b17ff](https://github.com/dgiot/dgiot_dashboard/commit/32b17ff4bfb3a95daad3c11d3d687b4675136a11))
+* mqtt send msg ([d374f89](https://github.com/dgiot/dgiot_dashboard/commit/d374f899df21281d066e4c89c7fa0d7c2c8b0156))
+* src/views/equipment_management/home_group2.vue ([4a448c4](https://github.com/dgiot/dgiot_dashboard/commit/4a448c435fae589d5f0dbb0c1e5c7fb42c837a98))
+* upload ([7ab76a5](https://github.com/dgiot/dgiot_dashboard/commit/7ab76a5886490d2089a6e03b55a5cbe4d1a4bed6))
+* **konva:** konva ([09c86d2](https://github.com/dgiot/dgiot_dashboard/commit/09c86d23ac92ad855ff7ed1b46ed8e511f60dcd7))
+* **log component information replication:** src/views/engine/components/mqttLog.vue ([ac5d4b7](https://github.com/dgiot/dgiot_dashboard/commit/ac5d4b70e03ca8311893b2e75e50421f79d7758e))
+* **public/index.html:** style ([affd217](https://github.com/dgiot/dgiot_dashboard/commit/affd21755ce35884e25a40f8252cc220dc35b0a4))
+* **public/manifest.json:** :zap:	pwa ([dde7447](https://github.com/dgiot/dgiot_dashboard/commit/dde7447dfc67521528d896f38e52fb621490f6b0))
+* **src/views/engine/home_resourcechannel.vue:** optimize channel log ([f096f27](https://github.com/dgiot/dgiot_dashboard/commit/f096f2732aa3fff14771a4467c925656e369b615))
+* **src/views/engine/home_resourcechannel.vue:** page query limit ([b418d87](https://github.com/dgiot/dgiot_dashboard/commit/b418d876ef5966f943ba4189cb033169af4936f1))
+* **src/views/equipment_management/component/scenelog.vue:** scenelog ([c05f599](https://github.com/dgiot/dgiot_dashboard/commit/c05f599c5b33a1320bdca2a04bebe9f2714f8bbe))
+* **src/views/equipment_management/editdevices.vue:** scene log subscription ([996fb81](https://github.com/dgiot/dgiot_dashboard/commit/996fb81e14434b5c519642800a824ca4b105569e))
+* **src/views/equipment_management/profile.vue:** fuzzy query of device template product name ([13cda8a](https://github.com/dgiot/dgiot_dashboard/commit/13cda8a6b0740529048651aed9bd7960a8ced83d))
+* **src/views/logs/*:** log table ([e0e3913](https://github.com/dgiot/dgiot_dashboard/commit/e0e39131c3323f97543e7696c1dbd9da1349a7bb))
+* **src/views/logs/access.vue:** access query Log details ([bc4a2c5](https://github.com/dgiot/dgiot_dashboard/commit/bc4a2c52d3f0dbdd23c7927971ed4ed630561579))
+* **src/views/topo/index.vue:** topo ([2b4be41](https://github.com/dgiot/dgiot_dashboard/commit/2b4be41f62fa2ef0ea7d3b904a9f48cbf031495b))
+* **utils/downiconfront.js utils/downcdn.js:** log require ([ca580da](https://github.com/dgiot/dgiot_dashboard/commit/ca580dafa11b4910c761f8103ede49e3b4e2230c))
+
+
+### Performance Improvements
+
+* **src/mixins/mqttmixin.js:** mqtt and eventbus bridge conversion ([6ee68b7](https://github.com/dgiot/dgiot_dashboard/commit/6ee68b745cd95380da60587912a3a6652d80cac7))
+* **src/mixins/mqttmixin.js:** mqtt auto reconnect ([a70eda1](https://github.com/dgiot/dgiot_dashboard/commit/a70eda1d84fa56e468a6a4b2cf13a0b5fa1c34f6))
+* **src/store/modules/user.js &&:** optimize the information query logic after login ([2de264e](https://github.com/dgiot/dgiot_dashboard/commit/2de264e5204de91faf32a1618a670a0d3e5c2540))
+
+
+
 # [4.4.0](https://github.com/dgiot/dgiot_dashboard/compare/682fd80f75b6552641e16644cc30d99cd827fd13...4.4.0) (2021-08-28)
 
 

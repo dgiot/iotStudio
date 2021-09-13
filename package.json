@@ -1,6 +1,6 @@
 {
   "name": "dgiot_dashboard",
-  "version": "4.4.0",
+  "version": "4.3.2",
   "author": "iotn2n",
   "license": "Mozilla Public License Version 2.0",
   "private": true,
@@ -54,7 +54,7 @@
     "register-service-worker": "^1.7.2",
     "resize-detector": "^0.3.0",
     "rimraf": "^3.0.2",
-    "vab-icons": "git+https://github.com/zxcasvw/vab-icons.git"
+    "vab-icons": "git+https://github.com.cnpmjs.org/zxcasvw/vab-icons.git"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
@@ -70,7 +70,7 @@
     "chalk": "^4.1.2",
     "chokidar": "^3.5.2",
     "commitizen": "^4.2.4",
-    "compression-webpack-plugin": "^6.1.1",
+    "compression-webpack-plugin": "^9.0.0",
     "cz-conventional-changelog": "^3.3.0",
     "cz-customizable": "^6.3.0",
     "eslint": "^7.32.0",

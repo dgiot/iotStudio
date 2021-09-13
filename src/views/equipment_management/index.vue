@@ -164,6 +164,9 @@
             >
               <el-table-column type="selection" align="center" width="55" />
               <el-table-column
+                sortable
+                prop="name"
+                show-overflow-tooltip
                 :label="
                   $translateTitle('equipment.devicenumber') +
                   '/' +
@@ -180,6 +183,9 @@
                 :label="$translateTitle('equipment.state')"
                 align="center"
                 width="200"
+                sortable
+                prop="status"
+                show-overflow-tooltip
               >
                 <template slot-scope="scope">
                   <!-- <span  :class="scope.row.status" v-if="scope.row.status=='ACTIVE'">{{ $translateTitle('product.active')}}</span><el-tooltip content="设备已注册" placement="top" v-if="scope.row.status=='ACTIVE'">
@@ -233,6 +239,9 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                prop="product.name"
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.product')"
                 align="center"
                 width="200"
@@ -242,6 +251,9 @@
                 </template>
               </el-table-column>
               <el-table-column
+                sortable
+                prop="product.nodeType"
+                show-overflow-tooltip
                 :label="$translateTitle('equipment.nodetype')"
                 align="center"
                 width="200"
@@ -269,6 +281,9 @@
               <!--                </template>-->
               <!--              </el-table-column>-->
               <el-table-column
+                sortable
+                prop="enable"
+                show-overflow-tooltip
                 :label="
                   $translateTitle('developer.enable') +
                   '/' +
@@ -304,12 +319,19 @@
                   <span v-else>—</span>
                 </template>
               </el-table-column>-->
-              <el-table-column label="创建时间">
+              <el-table-column
+                label="创建时间"
+                sortable
+                prop="createdAt"
+                show-overflow-tooltip
+              >
                 <template slot-scope="scope">
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
               </el-table-column>
               <el-table-column
+                fixed="right"
+                width="180"
                 :label="$translateTitle('developer.operation')"
                 align="center"
               >
@@ -325,7 +347,6 @@
                   <el-link
                     :underline="false"
                     type="primary"
-                    icon="el-icon-edit"
                     @click="editorDevice(scope.row)"
                   >
                     编辑
@@ -353,12 +374,7 @@
                         {{ $translateTitle('developer.determine') }}
                       </el-button>
                     </div>
-                    <el-link
-                      slot="reference"
-                      :underline="false"
-                      icon="el-icon-delete"
-                      type="danger"
-                    >
+                    <el-link slot="reference" :underline="false" type="danger">
                       {{ $translateTitle('developer.delete') }}
                     </el-link>
                   </el-popover>
@@ -401,6 +417,9 @@
               width="200"
             />
             <el-table-column
+              sortable
+              prop="data.batch_name"
+              show-overflow-tooltip
               :label="$translateTitle('equipment.batchname')"
               align="center"
             >
@@ -409,6 +428,9 @@
               </template>
             </el-table-column>
             <el-table-column
+              sortable
+              prop="createdAt"
+              show-overflow-tooltip
               :label="$translateTitle('equipment.createdAt')"
               align="center"
             >
@@ -605,6 +627,9 @@
               width="50"
             />
             <el-table-column
+              sortable
+              prop="data.batch_name"
+              show-overflow-tooltip
               :label="$translateTitle('equipment.batchname')"
               align="center"
             >
@@ -613,6 +638,9 @@
               </template>
             </el-table-column>
             <el-table-column
+              sortable
+              prop="createdAt"
+              show-overflow-tooltip
               :label="$translateTitle('equipment.createdAt')"
               align="center"
             >

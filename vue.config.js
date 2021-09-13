@@ -220,9 +220,10 @@ module.exports = {
           })
           .end()
       if (buildGzip)
+        // https://blog.csdn.net/weixin_42164539/article/details/110389256
         config.plugin('compression').use(CompressionWebpackPlugin, [
           {
-            filename: '[path][base].gz[query]',
+            filename: '[path][base].gz',
             algorithm: 'gzip',
             test: new RegExp(
               '\\.(' + productionGzipExtensions.join('|') + ')$'
