@@ -89,7 +89,7 @@ module.exports = {
   dateTime: new Date(),
   // 打包时间
   webpackBanner:
-    ' build: 杭州数蛙科技有限公司 \n copyright: dgiot_dashboard \n time: ',
+    ' build: 杭州数蛙科技有限公司 \n copyright: dgiot_dashboard \n author: h7ml(h7ml@qq.com) \n time: ',
   // webpack.BannerPlugin打包输出信息
   Keywords: '一站式物联网PaaS平台|物联网应用服务',
   // 网站seo关键字

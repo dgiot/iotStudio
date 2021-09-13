@@ -39,6 +39,7 @@ const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
 const FileManagerPlugin = require('filemanager-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 process.env.VUE_APP_TITLE = title
 process.env.VUE_APP_AUTHOR = author
@@ -140,10 +141,41 @@ module.exports = {
         new WebpackBar({
           name: webpackBarName,
         }),
+        // new MiniCssExtractPlugin({
+        //   // 修改打包后css文件名
+        //   filename: `assets/css/[name].dgiot.css `,
+        //   chunkFilename: `assets/css/[name].dgiot.css`,
+        // }),
       ],
+      output: {
+        // 输出重构  打包编译后的 文件名称  【模块名称.版本号】
+        filename: `assets/js/[name].dgiot.js?v=${
+          process.env.VUE_APP_VERSION
+        }&t=${new Date().getTime()}`,
+        chunkFilename: `assets/js/[name].dgiot.js?v=${
+          process.env.VUE_APP_VERSION
+        }&t=${new Date().getTime()}`,
+      },
     }
   },
   chainWebpack(config) {
+    config.module
+      .rule('images')
+      .use('url-loader')
+      .tap((options) => {
+        options.name = `assets/images/[name].dgiot.[ext]?v=${
+          process.env.VUE_APP_VERSION
+        }&t=${new Date().getTime()}`
+        options.fallback = {
+          loader: 'file-loader',
+          options: {
+            name: `assets/images/[name].dgiot.[ext]?v=${
+              process.env.VUE_APP_VERSION
+            }&t=${new Date().getTime()}`,
+          },
+        }
+        return options
+      })
     config.plugin('html').tap((args) => {
       var _staticUrl = cdnUrl
       // if (useCdn || process.env.NODE_ENV !== 'development') {
@@ -180,7 +212,9 @@ module.exports = {
       .end()
       .use('svg-sprite-loader')
       .loader('svg-sprite-loader')
-      .options({ symbolId: 'vab-icon-[name]' })
+      .options({
+        symbolId: 'vab-icon-[name]',
+      })
     config.when(process.env.NODE_ENV === 'development', (config) => {
       config.devtool('source-map')
     })
@@ -191,17 +225,21 @@ module.exports = {
       config.devtool('none')
       config.optimization.splitChunks({
         chunks: 'all',
-        minSize: 300000, //字节 引入的文件大于300kb才进行分割
+        minSize: 30000, //字节 引入的文件大于300kb才进行分割
         maxSize: 700000, //700kb，尝试将大于700kb的文件拆分成n个700kb的文件
+        minChunks: 1, // 模块的最小被引用次数
+        maxAsyncRequests: 5, // 按需加载的最大并行请求数
+        maxInitialRequests: 3, // 一个入口最大并行请求数
+        automaticNameDelimiter: '-dgiot-', // 文件名的连接符
         cacheGroups: {
           libs: {
-            name: 'dgiot-libs',
+            name: 'libs',
             test: /[\\/]node_modules[\\/]/,
             priority: 10,
             chunks: 'initial',
           },
           elementUI: {
-            name: 'dgiot-element-ui',
+            name: 'element',
             priority: 20,
             test: /[\\/]node_modules[\\/]_?element-ui(.*)/,
           },
@@ -223,7 +261,7 @@ module.exports = {
         // https://blog.csdn.net/weixin_42164539/article/details/110389256
         config.plugin('compression').use(CompressionWebpackPlugin, [
           {
-            filename: '[path][base].gz',
+            filename: '[path][base].gz[query]',
             algorithm: 'gzip',
             test: new RegExp(
               '\\.(' + productionGzipExtensions.join('|') + ')$'
@@ -267,6 +305,14 @@ module.exports = {
           return content
         },
       },
+    },
+    extract: {
+      filename: `assets/css/[name].dgiot.css?v=${
+        process.env.VUE_APP_VERSION
+      }&t=${new Date().getTime()}`,
+      chunkFilename: `assets/css/[name].dgiot.css?v=${
+        process.env.VUE_APP_VERSION
+      }&t=${new Date().getTime()}`,
     },
   },
 }

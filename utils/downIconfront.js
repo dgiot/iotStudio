@@ -12,7 +12,7 @@ const chalk = require('chalk')
  */
 function createFile(files) {
   files.forEach((e) => {
-    const dirPath = path.join(__dirname, `../public/assets/${e}`)
+    const dirPath = path.join(__dirname, `../public/assets/images/${e}`)
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath)
       log(chalk.blue(`${e} Folder created successfully`))

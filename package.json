@@ -12,8 +12,8 @@
     "start:cdn": "cross-env useCdn=true  && yarn downCdn && yarn downIconfront &&  vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "serve:cdn": "cross-env useCdn=true  &&  yarn downCdn && yarn downIconfront && vue-cli-service serve",
-    "build": "vue-cli-service build && yarn swagger && cp -r swagger.json dist && cd dist &&  cp -i manifest.json manifest.webmanifest",
-    "build:cdn": "yarn downCdn && yarn downIconfront && cross-env useCdn=true  && vue-cli-service build && yarn swagger && cp -r swagger.json dist && cd dist && cp -i manifest.json manifest.webmanifest",
+    "build": "vue-cli-service build --report && yarn swagger && cp -r swagger.json dist && cd dist &&  cp -i manifest.json manifest.webmanifest",
+    "build:cdn": "yarn downCdn && yarn downIconfront && cross-env useCdn=true  && vue-cli-service build --report && yarn swagger && cp -r swagger.json dist && cd dist && cp -i manifest.json manifest.webmanifest",
     "build:report": "yarn downCdn && yarn downIconfront &&  vue-cli-service build --report && yarn swagger && cp -r swagger.json dist && cd dist && cp -i manifest.json manifest.webmanifest",
     "build:cdn:report": "cross-env useCdn=true && vue-cli-service build --report",
     "lint": "vue-cli-service lint",
@@ -54,6 +54,7 @@
     "register-service-worker": "^1.7.2",
     "resize-detector": "^0.3.0",
     "rimraf": "^3.0.2",
+    "url-loader": "^4.1.1",
     "vab-icons": "git+https://github.com.cnpmjs.org/zxcasvw/vab-icons.git"
   },
   "devDependencies": {
@@ -70,7 +71,7 @@
     "chalk": "^4.1.2",
     "chokidar": "^3.5.2",
     "commitizen": "^4.2.4",
-    "compression-webpack-plugin": "^9.0.0",
+    "compression-webpack-plugin": "^6.1.1",
     "cz-conventional-changelog": "^3.3.0",
     "cz-customizable": "^6.3.0",
     "eslint": "^7.32.0",
