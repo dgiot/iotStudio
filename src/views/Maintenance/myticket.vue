@@ -606,13 +606,6 @@
     methods: {
       myUpload(content) {
         const file = content.file
-        let config = {
-          headers: {
-            proxy: true, // 是否开启代理
-            produrl: '/', // 开启代理后的真实上传路径
-            devurl: 'iotapi/',
-          },
-        }
         let extension = file.name.substring(file.name.lastIndexOf('.') + 1)
 
         const params = {

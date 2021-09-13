@@ -540,7 +540,7 @@
           type: '',
           pageNo: 1,
           pageSize: 20,
-          searchDate: ['1577808000', '1609430400'],
+          searchDate: [],
           limt: 10,
           skip: 0,
           order: '-createdAt',
@@ -612,15 +612,17 @@
     },
     methods: {
       myUpload(content) {
-        console.log('e', content.file)
-        let config = {
-          headers: {
-            proxy: true, // 是否开启代理
-            produrl: '/', // 开启代理后的真实上传路径
-            devurl: 'iotapi/',
-          },
+        const file = content.file
+        let extension = file.name.substring(file.name.lastIndexOf('.') + 1)
+
+        const params = {
+          file: file,
+          // scene: 'ticket',
+          path: 'ticket',
+          filename: 'ticket' + `${moment().format('x')}.${extension}`,
         }
-        UploadImg(content.file, config)
+        console.log('extension', params)
+        UploadImg(params)
           .then((res) => {
             if (res.data.url) {
               this.form.photo.push(res.data.url)
