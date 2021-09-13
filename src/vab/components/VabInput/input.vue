@@ -77,7 +77,16 @@
           },
         }
         this.$emit('files', file, type)
-        UploadImg(this.params, config)
+        let extension = file.name.substring(file.name.lastIndexOf('.') + 1)
+
+        const params = {
+          file: file,
+          // scene: 'ticket',
+          path: `${moment().format('x')}.${extension}`,
+          filename: `${moment().format('x')}.${extension}`,
+        }
+        console.log('extension', params)
+        UploadImg(params)
           .then((res) => {
             //将生成的url传递给父组件
             this.$emit('fileInfo', res.data)

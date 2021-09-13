@@ -420,7 +420,7 @@
                   ref="uploadform"
                   method="POST"
                   enctype="multipart/form-data"
-                  style="position: absolute"
+                  style="position: absolute; visibility: hidden"
                 >
                   <input
                     type="file"
