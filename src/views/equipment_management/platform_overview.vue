@@ -986,12 +986,12 @@
     created() {},
     mounted() {
       this.initDgiotMqtt()
-      console.log(`global static url ${this._role}`)
+      // console.log(`global static url ${this._role}`)
       this.queryForm.account =
         this.language == 'zh' ? '全部产品' : 'All Products'
     },
     activated() {
-      console.log('keep-alive生效')
+      // console.log('keep-alive生效')
       this.resizeTheChart()
     }, //如果页面有keep-alive缓存功能，这个函数会触发
     destroyed() {
@@ -1022,7 +1022,7 @@
           this.warnCount = count
           // this.$message.success(`${res}`)
         } catch (error) {
-          console.log(error)
+          // console.log(error)
           this.$message.error(`${error}`)
         }
       },
@@ -1031,14 +1031,14 @@
         this.count % 2 == 0
           ? this.$exitFull('baidu_map')
           : this.$beFull('baidu_map')
-        console.log(this.count, this.count % 2)
+        // console.log(this.count, this.count % 2)
       },
       resizeTheChart() {
         this.loading = true
         let charts = this.$refs[`charts`]
         if (charts) {
           charts.$children[0].resize()
-          console.log('重绘完成', charts)
+          // console.log('重绘完成', charts)
           setTimeout(() => {
             this.loading = false
           }, 2000)
@@ -1070,7 +1070,7 @@
       }),
       // 设备详情
       deviceToDetail(row) {
-        console.log(row, 'deviceToDetail')
+        // console.log(row, 'deviceToDetail')
         // row.show = !row.show
         this.$router.push({
           path: '/roles/editdevices',
@@ -1082,7 +1082,7 @@
         })
       },
       getCategory(key) {
-        console.log(key)
+        // console.log(key)
         let name = ''
         this.category.filter((item) => {
           if (item.type == key) {
@@ -1112,7 +1112,7 @@
         this.productIco = results[0].icon
         row.show = true
 
-        console.log(this.productIco, row, row.show, index, this.deviceInfo)
+        // console.log(this.productIco, row, row.show, index, this.deviceInfo)
         // 延时加载
         setTimeout(() => {
           loading.close()
@@ -1148,7 +1148,7 @@
       },
       mqttMsg(e, { destinationName, payloadString }, k) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
-        // console.log(destinationName, mqttMsg, 'mqttMsg')
+        // // console.log(destinationName, mqttMsg, 'mqttMsg')
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
         this.loadingConfig[`${key}`] = true
@@ -1156,7 +1156,7 @@
         //   '',
         //   `${this.$translateTitle('websocket.messages')}${key}`
         // )
-        // console.log(key, mqttMsgValue, JSON.parse(mqttMsg))
+        // // console.log(key, mqttMsgValue, JSON.parse(mqttMsg))
         // console.clear()
 
         switch (key) {
@@ -1217,7 +1217,7 @@
             this.set_dev_count(this.dev_count)
             break
           default:
-            console.log(JSON.parse(mqttMsg))
+            // console.log(JSON.parse(mqttMsg))
             break
         }
         // console.info('today warning', this.warnCount)
@@ -1226,14 +1226,14 @@
       mqttSuccess(e) {
         StartDashboard(queryParams)
           .then((res) => {
-            console.log(res)
+            // console.log(res)
             // this.$baseNotify(
             //   e,
             //   `mqtt${this.$translateTitle('websocket.subscribeSuccess')}`
             // )
           })
           .catch((e) => {
-            console.log(e)
+            // console.log(e)
             // this.$baseNotify(
             //   e,
             //   `mqtt${this.$translateTitle('websocket.subscribeSuccess')}`,
@@ -1242,7 +1242,7 @@
           })
       },
       toggleCard(height) {
-        console.log('cardHeight', height)
+        // console.log('cardHeight', height)
         if (height != '0px') {
           $('.map_card').css({ height: '0px' })
           this.cardHeight = '0px'
@@ -1252,7 +1252,7 @@
         }
       },
       toggleLeftWidth(width) {
-        console.log(width, 'width')
+        // console.log(width, 'width')
         if (width != '0px') {
           $('.vab-side-bar').css({ width: '0px' })
           $('.vab-main').css({ 'margin-left': '0px' })
@@ -1264,7 +1264,7 @@
         }
       },
       setPadding(top) {
-        console.log(top, 'top')
+        // console.log(top, 'top')
         if (top != '0px') {
           $('.fixed').css({ 'padding-top': '0px' })
           $('.fixed-header').css({ height: '0px', display: 'none' })
@@ -1285,11 +1285,11 @@
         // this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
         //   'padding-top'
         // ]
-        console.log($('.fixed')[0].style)
-        // console.log(this.fixedPaddingTop)
+        // console.log($('.fixed')[0].style)
+        // // console.log(this.fixedPaddingTop)
       },
       selectProdChange(objectId) {
-        console.log(objectId)
+        // console.log(objectId)
       },
       queryData() {
         const loading = this.$baseColorfullLoading(3)
@@ -1312,16 +1312,16 @@
         // ]
         // this.leftWidth = window.getComputedStyle($('.vab-side-bar')[0])['width']
         this.cardHeight = window.getComputedStyle($('.map_card')[0])['height']
-        console.log(this.fixedPaddingTop, this.leftWidth, this.cardHeight)
+        // console.log(this.fixedPaddingTop, this.leftWidth, this.cardHeight)
         await Roletree()
           .then((res) => {
-            console.log(res)
+            // console.log(res)
             this.setRoleTree(res.results)
             this.handleNodeClick(res.results[0], 0)
             this.queryForm.workGroupTreeShow = false
           })
           .catch((e) => {
-            console.log(e)
+            // console.log(e)
           })
         this.deptTreeData = this.roleTree
       },
@@ -1341,7 +1341,7 @@
         this.set_Product(results)
       },
       change(e) {
-        console.log(e)
+        // console.log(e)
         if (e) {
           $('.el-tree').css({
             height: '100px',
@@ -1362,7 +1362,7 @@
         $('.el-select-dropdown').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
         this.treeDataValue = data.label
-        console.log(this.treeDataValue)
+        // console.log(this.treeDataValue)
         if (aclRole.includes(data.name)) {
           this.queryForm.access_token = this.token
         } else if (node.level != 1) {
@@ -1370,7 +1370,7 @@
           const { access_token = '' } = await getToken(data.name)
           this.queryForm.access_token = access_token
         } else {
-          console.log(node.level, '登录的token', this.token)
+          // console.log(node.level, '登录的token', this.token)
           this.queryForm.access_token = this.token
         }
         this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
@@ -1392,7 +1392,7 @@
         // this.subscribe(this.channeltopic)
         // this.$nextTick(() => {
         //   // this.isConnect = true
-        //   console.log(this.channeltopic, 'this.channeltopic')
+        //   // console.log(this.channeltopic, 'this.channeltopic')
         //   console.info(
         //     '%c%s',
         //     'color: green;font-size: 12px;',

@@ -45,7 +45,7 @@ router.beforeEach(async (to, from, next) => {
   if (hasToken) {
     if (store.getters['routes/routes'].length) {
       // 这里判断下存储的路由表  并且过滤掉白名单
-      console.log(store.getters['routes/routes'])
+      // console.log(store.getters['routes/routes'])
       // 禁止已登录用户返回登录页
       if (to.path === '/login') {
         next({

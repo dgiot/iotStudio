@@ -1,33 +1,38 @@
 <template>
-  <div class="dashboard-container" style="background: #1d1b1b">
-    <div
-      style="
-        position: relative;
-        top: 20px;
-        height: 100%;
-        margin: 0 auto;
-        text-align: center;
-        background: rgb(29, 27, 27);
-      "
-    >
-      <iframe
-        v-show="dashboardrul != '' && dashboardrul"
-        id="ifream"
-        width="100%"
-        height="800"
-        frameborder="0"
-      />
+  <div class="dashboard-container">
+    <div class="main">
+      <a-tabs class="tabs" default-active-key="iframe">
+        <a-tab-pane key="iframe" :tab="$translateTitle('leftbar.monitor')">
+          <iframe
+            v-show="dashboardrul != '' && dashboardrul"
+            id="iframe"
+            class="iframe"
+            width="100%"
+            height="700"
+            frameborder="0"
+          />
+        </a-tab-pane>
+        <a-tab-pane
+          key="chart"
+          :tab="$translateTitle('equipment.chart')"
+          force-render
+        >
+          <empty />
+        </a-tab-pane>
+      </a-tabs>
     </div>
   </div>
 </template>
 
 <script>
+  import empty from '@/views/Empty'
   import { mapGetters } from 'vuex'
   import { setTimeout } from 'timers'
   // import adminDashboard from './admin'
 
   export default {
     name: 'Dashboard',
+    components: { empty },
     data() {
       return {
         currentRole: 'adminDashboard',
@@ -57,7 +62,7 @@
           this.dashboardrul =
             location.protocol + '//' + location.hostname + ':3000'
         }
-        var dashboard = document.getElementById('ifream')
+        var dashboard = document.getElementById('iframe')
         dashboard.setAttribute('src', this.dashboardrul)
         // if (
         //   sessionStorage.getItem('dashboard') != '' &&
@@ -77,4 +82,15 @@
     },
   }
 </script>
-<style></style>
+<style lang="scss" scope>
+  .dashboard-container {
+    main {
+      position: relative;
+      top: 20px;
+      height: 100%;
+      margin: 0 auto;
+      text-align: center;
+      background: rgb(29, 27, 27);
+    }
+  }
+</style>

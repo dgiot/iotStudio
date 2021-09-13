@@ -963,11 +963,14 @@
             category: this.formInline.category
               ? { $regex: this.formInline.category }
               : { $ne: null },
+            name: this.formInline.productname
+              ? { $regex: this.formInline.productname }
+              : { $ne: null },
           },
         }
-        if (this.formInline.productname != '') {
-          parsms.where.name = this.formInline.productname
-        }
+        // if (this.formInline.productname != '') {
+        //   parsms.where.name = this.formInline.productname
+        // }
         const { results, count } = await this.$query_object('Product', parsms)
         // console.log("results", results)
         if (results) {

@@ -44,7 +44,6 @@
     },
     methods: {
       setTabImg(pictureSwitch, collapse, type) {
-        console.log(pictureSwitch, collapse, type, 1111111111111111)
         let img = collapse == true ? this._pcimg : this._mimg
         $('.logo-container .appendLogo').remove()
         if (pictureSwitch == true && collapse == true) {
