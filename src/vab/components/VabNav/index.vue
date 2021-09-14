@@ -49,7 +49,7 @@
   import MQTTConnect from '@/utils/MQTTConnect'
   const { options, iotMqtt } = MQTTConnect
   import { uuid } from '@/utils'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import { openFirstMenu } from '@/config'
 
   export default {
@@ -106,18 +106,24 @@
         token: md5(this.token),
         username: md5(this.loginInfo.username),
         password: md5(this.loginInfo.password),
+        router: md5(this.$route.fullPath),
       }
       this.option = {
-        id: md5Info.token + uuid(2),
+        clientId: md5Info.token + uuid(2),
         ip: options.host,
         port: options.port,
         userName: md5Info.username,
         passWord: md5Info.password,
+        router: md5Info.router,
       }
     },
     methods: {
+      ...mapMutations({
+        setMqttSettings: 'mqttDB/setMqttSettings',
+      }),
       Mqtt(option) {
         this.initMqtt(option)
+        this.setMqttSettings(option)
         // iotMqtt.subscribe('dgiottopic')
       },
       handleTabClick(handler) {

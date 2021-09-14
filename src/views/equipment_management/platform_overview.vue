@@ -794,6 +794,7 @@
   import { isBase64 } from '@/utils'
   import info from '@/components/Device/info'
   import queryParams from '@/api/Mock/Dashboard'
+  import { uuid } from '@/utils'
   import {
     BmNavigation,
     BaiduMap,
@@ -948,29 +949,19 @@
         _pcimg: 'dashboard/_pcimg',
         _role: 'acl/role',
         _mimg: 'dashboard/_mimg',
-        mqttInfo: 'mqttMsg/mqttInfo',
+        mqttInfo: 'mqttDB/mqttInfo',
       }),
     },
     watch: {
       channeltopic: {
         handler: function (newVal, oldval) {
           if (newVal) {
-            this.$bus.$off(
-              `${this.$getTopicEventId(
-                this.channeltopic,
-                this.$route.fullPath
-              )}`
-            )
-            this.$bus.$on(
-              `${this.$getTopicEventId(
-                this.channeltopic,
-                this.$route.fullPath
-              )}`,
-              (res) => {
-                const { msg = '', timestamp } = res
-                if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
-              }
-            )
+            this.$bus.$off(this.channeltopic + this.$route.fullPath)
+            this.$bus.$on(this.channeltopic + this.$route.fullPath, (res) => {
+              const { msg = '', timestamp } = res
+              console.log('val', newVal, oldval, 'res', res)
+              if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
+            })
           }
           if (oldval) {
             this.unsubscribe('', oldval)
@@ -1053,7 +1044,7 @@
         return ''
       },
       ...mapMutations({
-        resaveMqttInfo: 'mqttMsg/resaveMqttInfo',
+        resaveMqttInfo: 'mqttDB/resaveMqttInfo',
         setRoleTree: 'user/setRoleTree',
         set_Product: 'user/set_Product',
         set_dev_count: 'dashboard/set_dev_count',
@@ -1380,11 +1371,10 @@
         this.curDepartmentId = objectId
         // this.channeltopic = `dashboard/${this.queryForm.access_token}/post`
         this.channeltopic = `dashboard/${this.token}/post`
-        this.$bus.$emit(`${this.$getMqttEventId('subscribe')}`, {
-          topicKey: this.$getTopicEventId(
-            this.channeltopic,
-            this.$route.fullPath
-          ),
+        this.$bus.$emit('MqttSubscribe', {
+          topicKey: this.channeltopic + this.$route.fullPath,
+          qos: 0,
+          created: moment().format('x'),
           topic: this.channeltopic,
           ttl: 1000 * 60 * 60 * 3,
         })

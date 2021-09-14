@@ -826,8 +826,8 @@ export function Json2Map(json) {
  * @param type ['subscribe','publish','unsubscribe']
  * @return {string}
  */
-export function getMqttEventId(type) {
-  return type + 'Identifier'
+export function getMqttEventId(type, Identifier = 'dmmd34r23fdew') {
+  return type + Identifier
 }
 
 /**
@@ -836,6 +836,5 @@ export function getMqttEventId(type) {
  * @return {*}
  */
 export function getTopicEventId(topic, fullPath) {
-  const mergesKey = topic + md5(fullPath)
-  return md5(mergesKey)
+  return md5(topic + fullPath)
 }

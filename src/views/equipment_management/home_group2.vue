@@ -1742,7 +1742,7 @@
           this.listLoading = false
           this.proTableData = results
           this.total = count
-          this.$bus.$emit('mqttSubscribe', {
+          this.$bus.$emit('MqttSubscribe', {
             topic: this.$route.name,
           })
         }

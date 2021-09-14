@@ -9,16 +9,17 @@
  *
  * @type {Vue}
  */
+import { getMqttEventId } from '@/utils'
 const Bus = new Vue({
   methods: {
     emit(event, ...args) {
-      this.$emit(event, ...args)
+      this.$emit(getMqttEventId(event), ...args)
     },
     on(event, callback) {
-      this.$on(event, callback)
+      this.$on(getMqttEventId(event), callback)
     },
     off(event, callback) {
-      this.$off(event, callback)
+      this.$off(getMqttEventId(event), callback)
     },
   },
 })

@@ -1,58 +1,115 @@
 import MQTTConnect from '@/utils/MQTTConnect'
-import { Map2Json, getMqttEventId } from '@/utils'
+import { Map2Json } from '@/utils'
 import { reconnect, maxReconnectNum } from '../config'
 import store from '@/store'
+// window.store = store
 const { iotMqtt } = MQTTConnect
 const MqttMixin = {
   name: 'MqttMixin',
   data() {
     return {
       consoleTale: [],
+      MapTopic: new Map(),
+      HistoryMsg: new Map(),
+      countNum: 0,
       reconnectNum: 0,
       isReconnect: reconnect,
       maxReconnectNum: maxReconnectNum,
-      MapTopic: new Map(),
     }
   },
   computed: {
-    // ...mapGetters({
-    //   objectId: 'user/objectId',
-    //   mapTopic: 'mqttMsg/mapTopic',
-    //   routerOpenTime: 'router/routerOpenTime',
-    // }),
     objectId() {
       return store.getters['user/objectId']
-    },
-    mapTopic() {
-      return store.getters['mqttMsg/mapTopic']
     },
     routerOpenTime() {
       return store.getters['router/routerOpenTime']
     },
+    pathRouter() {
+      return store.getters['mqttDB/pathRouter']
+    },
+    connectStatus() {
+      return store.getters['mqttDB/connectStatus']
+    },
+    MqttTopic() {
+      return store.getters['mqttDB/MqttTopic']
+    },
+    mqttSettings() {
+      return store.getters['mqttDB/mqttSettings']
+    },
   },
   created() {
     const _this = this
-    _this.$bus.$off(`${getMqttEventId('subscribe')}`)
-    _this.$bus.$on(`${getMqttEventId('subscribe')}`, (arg, qos = 0) => {
-      console.groupCollapsed(
-        '%ciotMqtt subscribe arg',
-        'color:#009a61; font-size: 28px; font-weight: 300'
-      )
-      console.table(arg)
-      console.groupEnd()
-      _this.subscribe(arg, qos)
+    /**
+     * @description MqttConnect enentbus
+     */
+    _this.$bus.$off('MqttConnect')
+    _this.$bus.$on('MqttConnect', (options) => {
+      if (options) {
+        _this.connectMqtt(options)
+        const tempRouter = {}
+        tempRouter[`${options.router}`] = `${options.router}`
+        store.dispatch('mqttDB/setPathRouter', tempRouter)
+      }
+    })
+    /**
+     * @description MqttStatus enentbus
+     */
+    _this.$bus.$off('MqttStatus')
+    _this.$bus.$on('MqttStatus', (router) => {
+      if (router) {
+        const tempRouter = {}
+        tempRouter[`${router}`] = `${router}`
+        store.dispatch('mqttDB/setPathRouter', tempRouter)
+        _this.routerAck('init')
+      }
+    })
+    /**
+     *@description disconnect enentbus
+     */
+    _this.$bus.$off('mqttDisconnect')
+    _this.$bus.$on('mqttDisconnect', (timestamp) => {
+      if (timestamp) {
+        _this.disconnect()
+      }
+    })
+    /**
+     *@description MqttSubscribe enentbus
+     */
+    _this.$bus.$off('MqttSubscribe')
+    _this.$bus.$on('MqttSubscribe', (args) => {
+      if (!_.isEmpty(args)) _this.subscribe(args)
+    })
+    /**
+     *@description MqttUnbscribe enentbus
+     */
+    _this.$bus.$off('MqttUnbscribe')
+    _this.$bus.$on('MqttUnbscribe', (topicKey, topic) => {
+      if (topicKey && topic) _this.unsubscribe(topicKey, topic)
+    })
+    /**
+     *@description MqttPublish enentbus
+     */
+    _this.$bus.$off('')
+    _this.$bus.$on('MqttPublish', (topic, obj, qos = 0, retained = false) => {
+      if (!_.isEmpty(topic)) _this.sendMessage(topic, obj, qos, retained)
     })
   },
   mounted() {},
   methods: {
-    // ...mapActions({
-    //   setMapTopic: 'mqttMsg/setMapTopic',
-    // }),
-    // ...mapMutations({
-    //   setMapTopic: 'mqttMsg/setMapTopic',
-    // }),
+    routerAck(type) {
+      let _this = this
+      if (_this.pathRouter) {
+        for (let router in _this.pathRouter) {
+          _this.$bus.$emit(router, {
+            settings: _this.mqttSettings,
+            connectStatus: _this.connectStatus,
+            topics: _this.MqttTopic,
+            type,
+          })
+        }
+      }
+    },
     connectCheckTopic(map) {
-      // const map = Map2Json(this.mapTopic)
       for (let topickey in map) {
         if (map[topickey].endtime > Number(moment().format('x')))
           this.subscribe({
@@ -71,7 +128,7 @@ const MqttMixin = {
      */
     busSendMsg(topic, payloadString, Message) {
       const nowTime = Number(moment().format('x'))
-      const map = Map2Json(this.mapTopic)
+      const map = Map2Json(this.MqttTopic)
       for (let topicKey in map) {
         if (this.checkTopic(map[topicKey].topic, topic)) {
           const args = {
@@ -80,6 +137,7 @@ const MqttMixin = {
             Message: Message,
             timestamp: moment().format('x'),
           }
+          console.error(topicKey)
           this.$bus.$emit(`${topicKey}`, args)
           console.groupCollapsed(
             '%ciotMqtt SendMsg payloadString',
@@ -126,7 +184,7 @@ const MqttMixin = {
         time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS'),
       })
       let _this = this
-      if (_.isEmpty(options.id)) {
+      if (_.isEmpty(options.clientId)) {
         console.info(
           '%c%s',
           'color: green;font-size: 24px;',
@@ -141,27 +199,60 @@ const MqttMixin = {
         console.table(options)
         console.groupEnd()
       }
+      _this.$bus.$emit('MqttConnect', options)
+    },
+    connectMqtt(options) {
+      const _this = this
+      store.dispatch('mqttDB/setConnectStatus', 'connecting')
       iotMqtt.init({
-        id: options.id,
+        id: options.clientId || options.id,
         ip: options.ip,
         port: options.port,
         userName: options.userName,
         passWord: options.passWord,
-        success: (msg = `clientId为${options.id},iotMqtt连接成功`) => {
+        success: (msg = `clientId为${options.clientId},iotMqtt连接成功`) => {
+          store.dispatch('mqttDB/setConnectStatus', 'connected')
           _this.mqttSuccess(msg)
-          if (!_.isEmpty(_this.mapTopic))
-            _this.connectCheckTopic(Map2Json(this.mapTopic))
+          if (!_.isEmpty(this.MqttTopic)) {
+            _this.connectCheckTopic(Map2Json(this.MqttTopic))
+          }
+          _this.$nextTick(() => {
+            _this.subscribe({
+              topicKey: md5(_this.$route.fullPath),
+              topic: 'dgiot/topic/test',
+              ttl: 1000 * 60 * 60 * 3,
+            })
+          })
+          iotMqtt.subscribe('dgiot/topic/test', 0)
+          _this.routerAck('connected')
         },
         error: function (msg = `iotMqtt接失败,自动重连`) {
+          store.dispatch('mqttDB/setConnectStatus')
           // _this.connectLost()
           _this.mqttError(msg)
+          _this.routerAck('disconnected')
         },
         connectLost: function (msg = `iotMqtt连接丢失`) {
+          store.dispatch('mqttDB/setConnectStatus', 'disconnected')
           // _this.connectLost()
           _this.mqttError(msg)
+          _this.routerAck('disconnected')
         },
         onMessage: function (Message) {
-          _this.onMessage(Message)
+          const {
+            destinationName = 'destinationName',
+            duplicate = 'duplicate',
+            payloadString = 'payloadString',
+            qos = 0,
+            retained = 'retained',
+          } = Message
+          _this.onMessage({
+            destinationName,
+            duplicate,
+            payloadString,
+            qos,
+            retained,
+          })
         },
       })
     },
@@ -176,6 +267,17 @@ const MqttMixin = {
       )
       console.info('%c%s', 'color: green;font-size: 24px;', msg)
       console.groupEnd()
+      // iotMqtt.subscribe(this.objectId)
+      // this.subscribe(this.objectId)
+    },
+    disconnect(msg = 'disconnect mqtt') {
+      console.groupCollapsed(
+        '%ciotMqtt connection succeeded',
+        'color:#009a61; font-size: 28px; font-weight: 300'
+      )
+      console.info('%c%s', 'color: green;font-size: 24px;', msg)
+      console.groupEnd()
+      iotMqtt.client.disconnect()
       // iotMqtt.subscribe(this.objectId)
       // this.subscribe(this.objectId)
     },
@@ -213,6 +315,7 @@ const MqttMixin = {
      */
     onMessage(Message) {
       let _this = this
+      _this.countNum++ >= 10 ? (_this.countNum = 0) : _this.countNum
       const {
         destinationName = 'destinationName',
         duplicate = 'duplicate',
@@ -221,6 +324,24 @@ const MqttMixin = {
         qos = 0,
         retained = 'retained',
       } = Message
+      // 判断是否为二进制
+      if (_.isTypedArray(Message)) {
+        const str = String.fromCharCode.apply(null, new Uint8Array(Message))
+        const res = JSON.parse(str)
+        console.log(res)
+        this.HistoryMsg.set(_this.countNum, {
+          111: Message,
+          type: 'Uint8Array ',
+          time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS'),
+        })
+      } else {
+        this.HistoryMsg.set(_this.countNum, {
+          111: Message,
+          type: 'json',
+          time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS'),
+        })
+      }
+
       const table = {
         destinationName: destinationName,
         duplicate: duplicate,
@@ -236,7 +357,7 @@ const MqttMixin = {
       )
       console.table(_this.consoleTale)
       console.groupEnd()
-
+      store.dispatch('mqttDB/setHistoryMsg', _this.HistoryMsg)
       this.busSendMsg(destinationName, payloadString, Message)
     },
     /**
@@ -245,13 +366,24 @@ const MqttMixin = {
      * @param topic
      * @param ttl
      */
-    subscribe: function (args, qos = 0) {
-      const { topicKey, topic, ttl } = args
+    subscribe: function (args) {
       let _this = this
-      let endTime = Number(moment().format('x')) + ttl
-      _this.MapTopic.set(topicKey, { topic: topic, endtime: endTime })
-      // _this.setMapTopic(_this.MapTopic)
-      store.dispatch('mqttMsg/setMapTopic', _this.MapTopic)
+      // const MapTopic = new Map()
+      const {
+        topicKey,
+        topic,
+        ttl,
+        created = moment().format('x'),
+        qos = 0,
+      } = args
+      const endTime = Number(moment().format('x')) + ttl
+      _this.MapTopic.set(topicKey, {
+        topic: topic,
+        endtime: endTime,
+        created: created,
+        qos: qos,
+      })
+      store.dispatch('mqttDB/setMqttTopic', _this.MapTopic)
       if (!_.isEmpty(topic)) {
         iotMqtt.subscribe(topic, qos)
         console.groupCollapsed(
@@ -269,11 +401,10 @@ const MqttMixin = {
      */
     unsubscribe: function (topicKey, topic) {
       iotMqtt.unsubscribe(topic)
-      const map = this.mapTopic
+      const map = this.MqttTopic
       if (!_.isEmpty(map)) {
         map.delete(topicKey)
-        // this.setMapTopic(map)
-        store.dispatch('mqttMsg/setMapTopic', map)
+        store.dispatch('mqttDB/setMqttTopic', map)
       }
       console.info('%c%s', 'color: green;font-size: 24px;', map)
       console.groupCollapsed(

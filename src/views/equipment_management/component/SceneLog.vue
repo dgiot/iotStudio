@@ -200,7 +200,6 @@
 <script>
   import MQTTConnect from '@/utils/MQTTConnect'
   const { options, iotMqtt } = MQTTConnect
-  import { getMqttEventId, getTopicEventId } from '@/utils'
   import { postTrace } from '@/api/System'
   export default {
     name: 'SceneLog',
@@ -305,7 +304,7 @@
       },
     },
     mounted() {
-      this.topicKey = getTopicEventId(this.topic, this.$route.fullPath)
+      this.topicKey = this.topic + this.$route.fullPath
       this.topic = 'logger_trace/trace/' + this.$route.query.deviceid + '/#'
       // this.$bus.$off(`${this.topicKey}`)
       this.bus(this.topicKey, this.topic, this.ttl)
@@ -384,7 +383,7 @@
         // this.topic = this.queryForm.topic + this.logMqtt.key + ''
         this.queryForm.deviceid = this.deviceInfo.objectId
         if (this.queryForm.action == 'start')
-          this.$bus.$emit(getMqttEventId('subscribe'), {
+          this.$bus.$emit('MqttSubscribe', {
             topicKey: this.topicKey,
             topic: this.topic,
             ttl: this.ttl,

@@ -573,7 +573,6 @@
   var subdialog
   import { Websocket } from '@/utils/wxscoket.js'
   import VabInput from '@/vab/components/VabInput/input'
-  import { getMqttEventId, getTopicEventId } from '@/utils'
 
   export default {
     components: {
@@ -654,22 +653,11 @@
       channeltopic: {
         handler: function (newVal, oldval) {
           if (newVal) {
-            this.$bus.$off(
-              `${this.$getTopicEventId(
-                this.channeltopic,
-                this.$route.fullPath
-              )}`
-            )
-            this.$bus.$on(
-              `${this.$getTopicEventId(
-                this.channeltopic,
-                this.$route.fullPath
-              )}`,
-              (res) => {
-                const { msg = '', timestamp } = res
-                if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
-              }
-            )
+            this.$bus.$off(this.channeltopic + this.$route.fullPath)
+            this.$bus.$on(this.channeltopic + this.$route.fullPath, (res) => {
+              const { msg = '', timestamp } = res
+              if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
+            })
             // setInterval(() => {
             //   iotMqtt.sendMessage(newVal, { sendInfo: 'sendInfo' })
             // }, 2000)
@@ -1119,12 +1107,8 @@
           topic: 'log/channel/' + row.objectId,
           qos: 2,
         }
-        console.log(
-          `${this.$getMqttEventId('subscribe')}`,
-          "${this.$getMqttEventId('subscribe')}"
-        )
-        this.$bus.$emit(`${this.$getMqttEventId('subscribe')}`, {
-          topicKey: this.$getTopicEventId(info.topic, this.$route.fullPath),
+        this.$bus.$emit('MqttSubscribe', {
+          topicKey: info.topic + this.$route.fullPath,
           topic: info.topic,
           ttl: 1000 * 60 * 60 * 3,
         })
@@ -1169,17 +1153,22 @@
           qos: 2,
           retained: true,
         }
-        _this.$bus.$emit(`mqttSendMsg`, sendInfo, 2, true)
+        _this.$bus.$emit(`MqttPublish`, sendInfo.topic, sendInfo, 2, true)
         // 在链接成功后发一句消息，启用通道
-        setTimeout(() => {
-          _this.sendMessage(_this.channeltopic, { action: 'start_logger' })
-          _this.sendMessage('channel/' + _this.subdialogid, text0)
-          _this.sendMessage('channel/' + _this.subdialogid, sendInfo)
-          _this.submessage = ''
-          _this.msgList = []
-          _this.logKey = _this.channeltopic.split('log')[1]
-          // _this.sendMessage(_this.channeltopic, sendInfo)
-        }, 1000)
+        // setTimeout(() => {
+        _this.sendMessage(
+          _this.channeltopic,
+          { action: 'start_logger' },
+          0,
+          false
+        )
+        _this.sendMessage('channel/' + _this.subdialogid, text0, 0, false)
+        _this.sendMessage('channel/' + _this.subdialogid, sendInfo, 0, false)
+        _this.submessage = ''
+        _this.msgList = []
+        _this.logKey = _this.channeltopic.split('log')[1]
+        // _this.sendMessage(_this.channeltopic, sendInfo)
+        // }, 1000)
         // Websocket.subscribe(info, function (res) {
         //   if (res.result) {
         //     var sendInfo = {

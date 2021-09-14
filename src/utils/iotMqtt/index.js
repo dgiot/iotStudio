@@ -31,8 +31,8 @@ const iotMqtt = {
       // options.onMessage(message)
       iotMqtt.options.onMessage(message)
       // console.log('message', message)
-      // // store.getters['mqttMsg/setMqttInfo']
-      // store.dispatch('mqttMsg/resaveMqttInfo', message)
+      // // store.getters['mqttDB/setMqttInfo']
+      // store.dispatch('mqttDB/resaveMqttInfo', message)
     }
   },
   sendMessage: function (topic, obj, qos = 0, retained = true) {

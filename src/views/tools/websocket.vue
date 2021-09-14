@@ -369,10 +369,10 @@
       },
     },
     created() {
-      // mqttSendMsg
-      this.$bus.$off(`mqttSendMsg`)
-      this.$bus.$on('mqttSendMsg', (res) => {
-        console.log(res, 'mqttSendMsg')
+      // MqttPublish
+      this.$bus.$off(`MqttPublish`)
+      this.$bus.$on('MqttPublish', (res) => {
+        console.log(res, 'MqttPublish')
       })
       this.setSSL()
       this.loadConnect()

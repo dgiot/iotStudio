@@ -1,10 +1,14 @@
 <template>
   <div class="websocket-view">
-    <el-card class="el-card--self" @keyup.enter.native="mqttConnect">
+    <el-card
+      :key="momentKey"
+      class="el-card--self"
+      @keyup.enter.native="mqttConnect"
+    >
       <div slot="header">
         <span>{{ $translateTitle('websocket.connect') }}</span>
       </div>
-      <el-form size="medium">
+      <el-form size="mini" disabled>
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item :label="$translateTitle('websocket.host')">
@@ -18,7 +22,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="8">
+          <el-col v-show="false" :span="8">
             <el-form-item :label="$translateTitle('developer.path')">
               <el-input v-model="path" />
             </el-form-item>
@@ -92,7 +96,7 @@
         <div class="connect-state">
           {{ $translateTitle('websocket.currentState') }}:
           <span :style="client.connected ? 'color: #42d885' : 'color: #ff6d6d'">
-            {{ getStatus }}
+            {{ $translateTitle(`websocket.${getStatus}`) }}:
           </span>
         </div>
       </div>
@@ -103,10 +107,17 @@
         <span>{{ $translateTitle('websocket.subscribe') }}</span>
       </div>
       <el-form size="medium">
-        <el-row :gutter="20" @keyup.enter.native="mqttSubscribe">
+        <el-row :gutter="20" @keyup.enter.native="MqttSubscribe">
           <el-col :span="12">
             <el-form-item :label="$translateTitle('websocket.topic')">
-              <el-input v-model="subTopic" />
+              <el-select v-model="subTopic">
+                <el-option
+                  v-for="item in subscriptions"
+                  :key="item.topic"
+                  :label="item.topic"
+                  :value="item.topic"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item :label="$translateTitle('websocket.qoS')">
               <el-select v-model.number="subQos">
@@ -119,8 +130,8 @@
               <el-button
                 class="confirm-btn"
                 type="success"
-                @keyup.enter.native="mqttSubscribe"
-                @click="mqttSubscribe"
+                @keyup.enter.native="MqttSubscribe"
+                @click="MqttSubscribe"
               >
                 {{ $translateTitle('websocket.subscribe') }}
               </el-button>
@@ -171,7 +182,7 @@
         <span>{{ $translateTitle('websocket.messages') }}</span>
       </div>
       <el-form size="medium">
-        <el-row :gutter="20" @keyup.enter.native="mqttPublish">
+        <el-row :gutter="20" @keyup.enter.native="MqttPublish">
           <el-col :span="6">
             <el-form-item :label="$translateTitle('websocket.topic')">
               <el-input v-model="publishTopic" />
@@ -200,8 +211,8 @@
                 class="confirm-btn"
                 type="success"
                 style="float: right; margin-top: 4px"
-                @click="mqttPublish"
-                @keyup.enter.native="mqttPublish"
+                @click="MqttPublish"
+                @keyup.enter.native="MqttPublish"
               >
                 {{ $translateTitle('websocket.send') }}
               </el-button>
@@ -282,38 +293,12 @@
 </template>
 
 <script>
-  import {
-    Input,
-    Checkbox,
-    Select,
-    Option,
-    Button,
-    Form,
-    FormItem,
-    Table,
-    TableColumn,
-    Row,
-    Col,
-    Card,
-  } from 'element-ui'
+  import { Map2Json } from '@/utils'
+  import { mapGetters, mapActions } from 'vuex'
   import MQTTConnect from '@/utils/MQTTConnect'
   import { _scokethost } from '@/utils/wxscoket'
   export default {
-    name: 'WebsocketView',
-    components: {
-      'el-input': Input,
-      'el-checkbox': Checkbox,
-      'el-select': Select,
-      'el-option': Option,
-      'el-button': Button,
-      'el-table': Table,
-      'el-table-column': TableColumn,
-      'el-row': Row,
-      'el-col': Col,
-      'el-card': Card,
-      'el-form': Form,
-      'el-form-item': FormItem,
-    },
+    name: 'Mqtt',
     beforeRouteLeave(to, from, next) {
       if (this.client.connected) {
         this.stashConnect()
@@ -328,7 +313,13 @@
     },
     data() {
       return {
+        count: 0,
+        eventMqttMsg: {},
+        getStatus: '',
+        momentKey: moment().format('x'),
         retryTimes: 0,
+        settings: {},
+        allTopics: {},
         loading: false,
         sending: false,
         host: _scokethost,
@@ -343,8 +334,8 @@
         subQos: 0,
         publishQos: 0,
         publishMessage: '{ "msg": "Hello, World!" }',
-        subTopic: 'testtopic/#',
-        publishTopic: 'testtopic',
+        subTopic: 'test/subscribe/post/#',
+        publishTopic: 'test/subscribe/post',
         publishRetain: false,
         receivedMessages: [],
         publishedMessages: [],
@@ -353,31 +344,77 @@
       }
     },
     computed: {
-      getStatus() {
-        if (this.client.connected) {
-          return this.$translateTitle('websocket.connected')
+      ...mapGetters({
+        mqttSettings: 'mqttDB/mqttSettings',
+        MqttTopic: 'mqttDB/MqttTopic',
+        pathRouter: 'mqttDB/pathRouter',
+      }),
+      connectOptions() {
+        const { clientId, ip, port, passWord, userName } = this.settings
+        return {
+          password: passWord,
+          clientId: clientId,
+          host: ip,
+          port: port,
+          username: userName,
         }
-        if (this.loading) {
-          return this.$translateTitle('websocket.connecting')
-        }
-        return this.$translateTitle('websocket.disconnected')
       },
       connectURL() {
         const path =
           this.path && this.path.startsWith('/') ? this.path : `/${this.path}`
-        return `${this.isSSL ? 'wss' : 'ws'}://${this.host}:${this.port}${path}`
+        return `${this.isSSL ? 'wss' : 'ws'}:${this.mqttSettings.ip}:${
+          this.port
+        }${path}`
+      },
+    },
+    watch: {
+      MqttTopic: {
+        handler(val) {
+          if (_.isMap(val)) {
+            this.MqttSubscribeAll(Map2Json(val))
+          }
+        },
+        deep: true,
+        immediate: true,
+      },
+      settings: {
+        handler(val) {
+          if (val) {
+            const { clientId, ip, port, passWord, userName } = val
+            this.clientId = clientId
+            this.password = passWord
+            this.host = ip
+            // this.port = port
+            this.momentKey = moment().format('x') + 'time'
+            this.username = userName
+            this.mqttConnect()
+          }
+        },
+        deep: true,
+        immediate: true,
       },
     },
     created() {
-      // mqttSendMsg
-      this.$bus.$off(`mqttSendMsg`)
-      this.$bus.$on('mqttSendMsg', (res) => {
-        console.log(res, 'mqttSendMsg')
+      const router = md5(this.$route.fullPath)
+      this.$bus.$off(router)
+      this.$bus.$on(router, (res) => {
+        if (res) {
+          this.eventMqttMsg = res
+          const { connectStatus, settings } = res
+          this.getStatus = connectStatus
+          this.settings = settings
+        }
       })
+      this.$bus.$emit(`MqttStatus`, md5(this.$route.fullPath))
+    },
+    mounted() {
       this.setSSL()
       this.loadConnect()
     },
     methods: {
+      ...mapActions({
+        setConnectStatus: 'mqttDB/setConnectStatus',
+      }),
       handleSSL() {
         this.port = this.isSSL ? 8084 : 8083
       },
@@ -385,6 +422,7 @@
         return moment().format('YYYY-MM-DD')
       },
       disconnectSwitch() {
+        this.$bus.$emit('mqttDisconnect', '1')
         // connecting
         if (this.loading && !this.client.connected) {
           this.loading = false
@@ -417,12 +455,13 @@
         }
         try {
           this.client = mqtt.connect(this.connectURL, options)
-          this.client.on('connect', () => {
+          this.client.on('MqttConnect', () => {
             this.loading = false
             NProgress.done()
           })
           this.client.on('reconnect', this.handleReconnect)
           this.client.on('error', (error) => {
+            this.mqttError(error)
             this.$message.error(
               error.toString() || this.$translateTitle('error.networkError')
             )
@@ -434,6 +473,7 @@
             NProgress.done()
           })
           this.client.on('message', (topic, message, packet) => {
+            this.onMessage(message)
             this.receivedMessages.unshift({
               topic,
               message: message.toString(),
@@ -441,6 +481,17 @@
               time: this.now(),
             })
           })
+          //  订阅
+          const topic = `test/subscribe/post`
+          const topicKey = md5(topic + '/dashboard/mqtt/test')
+          const ttl = 1000 * 60 * 60 * 3
+          this.$bus.$emit('MqttSubscribe', {
+            topicKey,
+            topic,
+            ttl,
+            qos: 0,
+          })
+          this.momentKey = moment().format('x') + 'time'
         } catch (error) {
           this.loading = false
           NProgress.done()
@@ -461,7 +512,7 @@
           this.$message.error(this.$translateTitle('websocket.connectLeave'))
         }
       },
-      mqttSubscribe() {
+      MqttSubscribe() {
         if (this.client.connected || this.subTopic) {
           this.subscriptions.forEach((x, index) => {
             if (x.topic === this.subTopic) {
@@ -489,6 +540,7 @@
                   qos: this.subQos,
                   time: this.now(),
                 })
+                this.subscriptions = _.uniqWith(this.subscriptions, _.isEqual)
                 this.$message.success(
                   this.$translateTitle('websocket.subscribeSuccess')
                 )
@@ -500,7 +552,7 @@
           this.$message.error(this.$translateTitle('websocket.connectLeave'))
         }
       },
-      mqttPublish() {
+      MqttPublish() {
         if (this.client.connected) {
           NProgress.start()
           const options = {
@@ -598,8 +650,8 @@
         this.receivedMessages = []
         this.publishedMessages = []
         this.publishMessage = '{ "msg": "Hello, World!" }'
-        this.subTopic = 'testtopic/#'
-        this.publishTopic = 'testtopic'
+        this.subTopic = 'test/subscribe/post/#'
+        this.publishTopic = 'test/subscribe/post'
       },
       clearMessage(received = true) {
         if (received) {
@@ -610,11 +662,10 @@
       },
       loadConnect() {
         if (this.topic) {
-          console.log(this.topic, 'topic')
           this.subTopic = this.topic
           this.publishTopic = this.topic
           this.mqttConnect()
-          this.mqttSubscribe()
+          this.MqttSubscribe()
         }
         if (MQTTConnect.client && MQTTConnect.client.connected) {
           this.client = MQTTConnect.client
@@ -630,9 +681,29 @@
         })
       },
       setSSL() {
-        if (window.location.protocol === 'https:') {
+        if (location.protocol === 'https:') {
           this.isSSL = true
           this.port = 8084
+        }
+      },
+      MqttSubscribeAll(mapTopic) {
+        const subscriptions = []
+        if (mapTopic) {
+          for (let topicKey in mapTopic) {
+            subscriptions.push({
+              topic: mapTopic[topicKey].topic,
+              qos: this.subQos,
+              time: this.now(),
+            })
+          }
+
+          subscriptions.forEach((i) => {
+            this.subTopic = i.topic
+            this.subQos = i.qos
+            setTimeout(() => {
+              this.MqttSubscribe()
+            }, 1200)
+          })
         }
       },
     },
