@@ -60,7 +60,7 @@
               : `-${canvasHeight * 0.578}px`
           }) skew(-30deg, 0);`"
         ></div>
-        <img class="reset_" :src="resetSvg" @click.native="reset" />
+        <img class="reset_" :src="resetSvg" @click="reset" />
       </div>
       <div class="auth-control_">
         <div class="range-box" :style="`height:${sliderBaseSize}px`">

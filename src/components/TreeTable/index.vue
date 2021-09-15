@@ -24,7 +24,7 @@
             <span
               v-show="showSperadIcon(scope.row)"
               class="tree-ctrl"
-              @click.native="toggleExpanded(scope.$index)"
+              @click="toggleExpanded(scope.$index)"
             />
             <i
               v-if="!scope.row._expand && !scope.row.children"

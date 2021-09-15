@@ -23,7 +23,7 @@
           v-for="item of filteredComps"
           :key="item.type"
           class="vab-render-comp"
-          @click.native="handleDoubleClick(item)"
+          @click="handleDoubleClick(item)"
         >
           <div class="vab-render-comp-title">{{ item.type }}</div>
           <div>{{ item.label }}</div>

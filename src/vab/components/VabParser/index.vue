@@ -111,7 +111,7 @@
                 v-show="headerInfo.table == 'Notification'"
                 type="text"
                 :disabled="!headerInfo.uid"
-                @click.native.prevent="goRule(headerInfo, '_start')"
+                @click.prevent="goRule(headerInfo, '_start')"
               >
                 {{ $translateTitle('alert._start') }}
               </el-button>
@@ -120,7 +120,7 @@
                 v-show="headerInfo && headerInfo.table == 'Notification'"
                 type="text"
                 :disabled="!headerInfo.uid"
-                @click.native.prevent="goRule(headerInfo, '_stop')"
+                @click.prevent="goRule(headerInfo, '_stop')"
               >
                 {{ $translateTitle('alert._stop') }}
               </el-button>

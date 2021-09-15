@@ -146,7 +146,7 @@
         @open="_infoWindowOpen"
       >
         <p v-if="textShow" v-text="infoWindowContents"></p>
-        <button @click.native="_infoWindowclear">Clear</button>
+        <button @click="_infoWindowclear">Clear</button>
       </bm-info-window>
       <!--      <bm-overlay-->
       <!--        v-if="overlayShow"-->

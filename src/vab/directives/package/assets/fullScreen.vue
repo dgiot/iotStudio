@@ -76,7 +76,7 @@
         <span
           :id="'clickID' + index"
           class="full-screen-iconCover"
-          @click.native="toggleFullScreen"
+          @click="toggleFullScreen"
         ></span>
       </span>
     </Tooltip>

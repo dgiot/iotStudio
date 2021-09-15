@@ -256,7 +256,7 @@
                     <template slot-scope="scope">
                       <el-button
                         type="success"
-                        :disabled="scope.row.objectId !== ObjectId"
+                        :disabled="scope.row.objectId !== objectId"
                         size="small"
                         @click="handleEditor(scope.row)"
                       >
@@ -465,7 +465,7 @@
         departmentid: [],
         userlist: [],
         rolelist: [],
-        objectId: '',
+        userId: '',
         roleacl: false,
         multipleSelection: [],
         userrolelist: [],
@@ -542,8 +542,8 @@
         },
       },
       ...mapGetters({
-        ObjectId: 'user/objectId',
         title: 'settings/title',
+        objectId: 'user/objectId',
       }),
       tableFilterData() {
         return this.tempData
@@ -722,11 +722,11 @@
         }
         this.rolelist = []
         this.userrolelist = []
-        this.objectId = id
+        this.userId = id
         const { results } = await this.$query_object('_User', {
           limit: 1,
           where: {
-            objectId: this.objectId,
+            objectId: this.userId,
           },
         })
         if (results.length) {
@@ -741,9 +741,9 @@
             console.log(
               roleitem.objectId,
               roleitem,
-              this.objectId == roleitem.objectId
+              this.userId == roleitem.objectId
             )
-            if (this.objectId == roleitem.objectId) {
+            if (this.userId == roleitem.objectId) {
               this.$refs.multipleTable.toggleRowSelection(
                 this.rolelist[index],
                 true

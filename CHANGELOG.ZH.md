@@ -4,6 +4,7 @@
 ### Bug Fixes
 
 * **src/views/equipment_management/home_group2.vue:** product ([b588934](https://github.com/dgiot/dgiot_dashboard/commit/b58893484573c923c621bbd7a2e0b5b791503321))
+* **view:** the page element click event is invalid ([98212c8](https://github.com/dgiot/dgiot_dashboard/commit/98212c887cff9e5c6bd4c1f437c4f3d95116e7ff))
 * konvajs delete shape ([9683317](https://github.com/dgiot/dgiot_dashboard/commit/968331762e194b2ca615526206e3a01df4a9b10a))
 * stop_logger ([e87d641](https://github.com/dgiot/dgiot_dashboard/commit/e87d641a0e0d31f73cf5b769948c0fc051a95274))
 * stop_logger mqtt channel ([53ed1a2](https://github.com/dgiot/dgiot_dashboard/commit/53ed1a2ecc076e718bf7e18ea3df571237287c5f))

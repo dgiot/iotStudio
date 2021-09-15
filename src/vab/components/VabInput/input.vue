@@ -11,7 +11,7 @@
       <i
         class="el-icon-close"
         style="position: relative; top: 20px; left: 101px"
-        @click.native="remove"
+        @click="remove"
       ></i>
       <img :src="url" style="width: 100px; height: 100px" />
     </div>

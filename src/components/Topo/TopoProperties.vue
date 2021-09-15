@@ -14,21 +14,21 @@
         <div
           class="topo-properties-tab"
           :class="{ 'topo-properties-tab-active': tabIndex == 0 }"
-          @click.native="changeTab(0)"
+          @click="changeTab(0)"
         >
           样式
         </div>
         <div
           class="topo-properties-tab"
           :class="{ 'topo-properties-tab-active': tabIndex == 1 }"
-          @click.native="changeTab(1)"
+          @click="changeTab(1)"
         >
           数据
         </div>
         <div
           class="topo-properties-tab"
           :class="{ 'topo-properties-tab-active': tabIndex == 2 }"
-          @click.native="changeTab(2)"
+          @click="changeTab(2)"
         >
           行为
         </div>

@@ -80,7 +80,7 @@
       <li
         :class="{ 'is-disabled': visitedRoutes.length === 1 }"
         class="el-dropdown-menu__item"
-        @click.native="closeOthersTabs"
+        @click="closeOthersTabs"
       >
         <vab-icon icon="close-line" />
         <span>{{ $translateTitle('关闭其他') }}</span>
@@ -88,7 +88,7 @@
       <li
         :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }"
         class="el-dropdown-menu__item"
-        @click.native="closeLeftTabs"
+        @click="closeLeftTabs"
       >
         <vab-icon icon="arrow-left-line" />
         <span>{{ $translateTitle('关闭左侧') }}</span>
@@ -99,12 +99,12 @@
             visitedRoutes.indexOf(hoverRoute) === visitedRoutes.length - 1,
         }"
         class="el-dropdown-menu__item"
-        @click.native="closeRightTabs"
+        @click="closeRightTabs"
       >
         <vab-icon icon="arrow-right-line" />
         <span>{{ $translateTitle('关闭右侧') }}</span>
       </li>
-      <li class="el-dropdown-menu__item" @click.native="closeAllTabs">
+      <li class="el-dropdown-menu__item" @click="closeAllTabs">
         <vab-icon icon="close-line" />
         <span>{{ $translateTitle('关闭全部') }}</span>
       </li>

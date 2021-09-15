@@ -11,7 +11,7 @@
         class="topo-layer"
         :class="{ 'topo-layer-view-selected': selectedIsLayer }"
         :style="layerStyle"
-        @click.native="onLayerClick($event)"
+        @click="onLayerClick($event)"
         @mouseup="onLayerMouseup($event)"
         @mousemove="onLayerMousemove($event)"
         @mousedown="onLayerMousedown($event)"

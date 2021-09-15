@@ -173,7 +173,7 @@ const state = () => ({
   backgroundimage:
     getToken('backgroundimage') ||
     'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
-  objectId: getToken('objectId', storage),
+  objectId: getToken('objectId'),
 })
 const getters = {
   loginInfo: (state) => state.loginInfo,
@@ -234,8 +234,9 @@ const mutations = {
    * @param {*} objectId
    */
   setObejectId(state, objectId) {
+    console.error('我设置了', state, objectId)
     state.objectId = objectId
-    setToken('objectId', objectId, storage)
+    setToken('objectId', objectId)
   },
   /**
    * @description 设置token

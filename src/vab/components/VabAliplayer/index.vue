@@ -21,17 +21,17 @@
     <p v-if="!show" class="remove-text">播放器已销毁!</p>
     <div v-if="!show" class="player-btns">
       <template v-if="!isShowMultiple && show">
-        <span @click.native="play()">播放</span>
-        <span @click.native="pause()">暂停</span>
-        <span @click.native="replay()">重播</span>
-        <span @click.native="getCurrentTime()">播放时刻</span>
-        <span @click.native="getStatus()">获取播放器状态</span>
+        <span @click="play()">播放</span>
+        <span @click="pause()">暂停</span>
+        <span @click="replay()">重播</span>
+        <span @click="getCurrentTime()">播放时刻</span>
+        <span @click="getStatus()">获取播放器状态</span>
       </template>
-      <span @click.native="show = !show">{{ show ? '销毁' : '重载' }}</span>
-      <span @click.native="options.isLive = !options.isLive">
+      <span @click="show = !show">{{ show ? '销毁' : '重载' }}</span>
+      <span @click="options.isLive = !options.isLive">
         {{ options.isLive ? '切换普通模式' : '切换直播模式' }}
       </span>
-      <span @click.native="showMultiple()">
+      <span @click="showMultiple()">
         {{ isShowMultiple ? '显示1个播放器' : '显示多个播放器' }}
       </span>
     </div>
