@@ -123,11 +123,7 @@
     },
     watch: {},
     mounted() {
-      if (this.productid) {
-        this.handleCloseSub()
-      } else {
-        this._initCreate()
-      }
+      this.handleMqtt()
     },
     destroyed() {
       this.$bus.$emit(
@@ -137,11 +133,6 @@
       )
     },
     created() {
-      const router = md5(this.$route.fullPath)
-      this.$bus.$off(router)
-      this.$bus.$on(router, (res) => {
-        if (res) console.error(res)
-      })
       this.$bus.$off('removeShape')
       this.$bus.$on('removeShape', (topo) => {
         if (topo.attrs.id) this.removeShape(topo)
@@ -234,7 +225,7 @@
           })
         }
         if (node?.attrs?.image) {
-          Image.each((shape) => {
+          Image.forEach((shape) => {
             console.log('图片相关', shape)
             if (shape.attrs.id == node.attrs.id) {
               type = 'img'
@@ -453,13 +444,12 @@
         // )
         // console.log(type, value, 'Group')
       },
-      // 取消订阅mqtt
-      async handleCloseSub() {
+      // 订阅mqtt
+      async handleMqtt() {
         let _this = this
         if (_this.$route.query.type == 'device') {
           _this.productid = _this.$route.query.deviceid
         }
-        _this.handleMqttMsg(_this.productid)
         const { productid, devaddr = undefined } = _this.$route.query
         let params = {
           productid: productid,
@@ -490,10 +480,10 @@
         const router = md5(this.topotopic + this.$route.fullPath)
         this.$bus.$off(router)
         this.$bus.$on(router, (Msg) => {
+          console.log('收到消息', Msg)
           if (Msg.msg) {
             let decodeMqtt
             let updataId = []
-            console.log('收到消息', Msg)
             if (!isBase64(Msg.msg)) {
               console.log('非base64数据类型')
               return
@@ -513,8 +503,8 @@
               tweens[n].destroy()
             }
 
-            Shape.each((i) => {
-              Text.each((shape) => {
+            Shape.forEach((i) => {
+              Text.forEach((shape) => {
                 if (i.id == shape.attrs.id) {
                   console.log('更新节点', i)
                   console.log(shape)
@@ -864,6 +854,7 @@
         }
         // 订阅webscroket
         _this.$bus.$emit(`MqttSubscribe`, args)
+        _this.handleMqttMsg()
         // 处理消息
       },
     },
