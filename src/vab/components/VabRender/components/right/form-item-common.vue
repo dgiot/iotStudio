@@ -22,7 +22,7 @@
       >
         <template #rules="{ desc, formData, field, type }">
           <div style="margin-bottom: 20px">
-            <el-button type="danger" @click="isShowRuleDialog = true">
+            <el-button type="danger" @click.native="isShowRuleDialog = true">
               新增校检规则
             </el-button>
           </div>

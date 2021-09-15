@@ -147,7 +147,7 @@
       </el-row>
 
       <div class="view-more">
-        <a href="javascript:;" @click="showMore = !showMore">
+        <a href="javascript:;" @click.native="showMore = !showMore">
           {{ showMore ? $t('oper.collapse') : $t('oper.viewMore') }}
           <i :class="showMore ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
         </a>

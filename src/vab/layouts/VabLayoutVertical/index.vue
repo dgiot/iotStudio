@@ -11,7 +11,7 @@
     <div
       v-if="device === 'mobile' && !collapse"
       class="v-modal"
-      @click="handleFoldSideBar"
+      @click.native="handleFoldSideBar"
     />
     <div
       :class="{

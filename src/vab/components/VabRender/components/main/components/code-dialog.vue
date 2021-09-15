@@ -17,7 +17,9 @@
       readonly
     />
     <div style="margin-top: 20px; text-align: center">
-      <el-button type="primary" @click="handleCopyCode">复制代码</el-button>
+      <el-button type="primary" @click.native="handleCopyCode">
+        复制代码
+      </el-button>
       <!-- 下载 TODO 检测移入事件 -->
       <el-button type="primary">
         <el-link
@@ -29,7 +31,7 @@
           下载文件
         </el-link>
       </el-button>
-      <el-button @click="$emit('change', false)">关闭弹窗</el-button>
+      <el-button @click.native="$emit('change', false)">关闭弹窗</el-button>
     </div>
   </el-dialog>
 </template>

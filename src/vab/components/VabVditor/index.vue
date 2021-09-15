@@ -14,7 +14,7 @@
               <el-button
                 icon="el-icon-plus"
                 type="primary"
-                @click="save(value)"
+                @click.native="save(value)"
               >
                 {{ $translateTitle('button.save') }}
               </el-button>

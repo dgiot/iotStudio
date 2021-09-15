@@ -25,7 +25,7 @@
             <!--              slot="icon"-->
             <!--              style="float: right"-->
             <!--              :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"-->
-            <!--              @click="isFullscreen = !isFullscreen"-->
+            <!--              @click.native="isFullscreen = !isFullscreen"-->
             <!--            />-->
             <template slot="title">
               <iframe

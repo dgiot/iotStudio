@@ -22,7 +22,7 @@
         style="margin-left: 10px"
         size="small"
         type="success"
-        @click="submitUpload"
+        @click.native="submitUpload"
       >
         上传
       </el-button>
@@ -47,7 +47,7 @@
     >
       <span>文件上传成功</span>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="ensure">确 定</el-button>
+        <el-button type="primary" @click.native="ensure">确 定</el-button>
       </span>
     </el-dialog>
   </div>

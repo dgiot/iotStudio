@@ -2,7 +2,7 @@
   <div
     class="wrapper"
     :title="$translateTitle('Logs.Source code') + link"
-    @click="showSourceCode"
+    @click.native="showSourceCode"
   >
     <vab-icon icon="code-box-line" />
     {{ $translateTitle('Logs.Source code') }}

@@ -2,7 +2,7 @@
   <vab-icon
     v-if="theme.showRefresh"
     icon="refresh-line"
-    @click="refreshRoute"
+    @click.native="refreshRoute"
   />
 </template>
 

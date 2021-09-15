@@ -52,8 +52,8 @@
         </el-table-column>
       </el-table>
       <template #footer>
-        <el-button @click="dialogTableVisible = false">取 消</el-button>
-        <el-button type="danger" @click="clearAll">暂不显示</el-button>
+        <el-button @click.native="dialogTableVisible = false">取 消</el-button>
+        <el-button type="danger" @click.native="clearAll">暂不显示</el-button>
       </template>
     </el-dialog>
   </div>

@@ -12,7 +12,7 @@
             type="success"
             icon="el-icon-refresh"
             plain
-            @click="reload"
+            @click.native="reload"
           >
             {{ $t('oper.refresh') }}
           </el-button>
@@ -21,7 +21,7 @@
             type="success"
             icon="el-icon-plus"
             plain
-            @click="open"
+            @click.native="open"
           >
             {{ $t('clients.addSubs') }}
           </el-button>
@@ -42,7 +42,7 @@
               size="mini"
               type="danger"
               plain
-              @click="handleUnsub(row)"
+              @click.native="handleUnsub(row)"
             >
               {{ $t('oper.unsubscribe') }}
             </el-button>
@@ -82,14 +82,14 @@
       </el-form>
 
       <div slot="footer">
-        <el-button type="text" class="cache-btn" @click="handleClose">
+        <el-button type="text" class="cache-btn" @click.native="handleClose">
           {{ $t('oper.cancel') }}
         </el-button>
         <el-button
           type="success"
           class="confirm-btn"
           :loading="$store.state.loading"
-          @click="handleAdd"
+          @click.native="handleAdd"
         >
           {{ $t('oper.add') }}
         </el-button>

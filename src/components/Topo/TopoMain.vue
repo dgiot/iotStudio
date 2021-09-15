@@ -11,7 +11,7 @@
         class="topo-layer"
         :class="{ 'topo-layer-view-selected': selectedIsLayer }"
         :style="layerStyle"
-        @click="onLayerClick($event)"
+        @click.native="onLayerClick($event)"
         @mouseup="onLayerMouseup($event)"
         @mousemove="onLayerMousemove($event)"
         @mousedown="onLayerMousedown($event)"
@@ -149,10 +149,12 @@
     >
       <el-row :gutter="10">
         <el-col :xs="8" :push="1" :sm="8" :md="8" :lg="8" :xl="8">
-          <el-button type="primary" disabled @click="fullScreen">
+          <el-button type="primary" disabled @click.native="fullScreen">
             预览
           </el-button>
-          <el-button type="primary" @click="printData">当前数据</el-button>
+          <el-button type="primary" @click.native="printData">
+            当前数据
+          </el-button>
         </el-col>
         <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
           <p style="height: 20px; font-size: 18px; line-height: 20px">

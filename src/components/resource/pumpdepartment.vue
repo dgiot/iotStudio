@@ -6,7 +6,9 @@
     <div>
       <el-input v-model="search" style="width: 150px" />
       <el-button type="primary" size="mini">搜索</el-button>
-      <el-button type="primary" size="mini" @click="reset">重置</el-button>
+      <el-button type="primary" size="mini" @click.native="reset">
+        重置
+      </el-button>
       <el-tree
         ref="tree"
         :props="defaultProps"

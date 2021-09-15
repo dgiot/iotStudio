@@ -146,7 +146,7 @@
         @open="_infoWindowOpen"
       >
         <p v-if="textShow" v-text="infoWindowContents"></p>
-        <button @click="_infoWindowclear">Clear</button>
+        <button @click.native="_infoWindowclear">Clear</button>
       </bm-info-window>
       <!--      <bm-overlay-->
       <!--        v-if="overlayShow"-->
@@ -164,7 +164,7 @@
         shape="BMAP_POINT_SHAPE_STAR"
         color="red"
         size="BMAP_POINT_SIZE_SMALL"
-        @click="_clickHandler"
+        @click.native="_clickHandler"
       />
       <bm-local-search
         v-if="searchShow"

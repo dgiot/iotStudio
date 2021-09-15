@@ -204,10 +204,10 @@
       </div>
     </el-scrollbar>
     <div class="el-drawer__footer">
-      <el-button type="primary" @click="handleSaveTheme(theme)">
+      <el-button type="primary" @click.native="handleSaveTheme(theme)">
         {{ $translateTitle('保存') }}
       </el-button>
-      <el-button @click="setDefaultTheme">
+      <el-button @click.native="setDefaultTheme">
         {{ $translateTitle('恢复默认') }}
       </el-button>
     </div>

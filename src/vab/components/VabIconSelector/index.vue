@@ -14,7 +14,7 @@
                 type="primary"
                 icon="el-icon-search"
                 circle
-                @click="queryData"
+                @click.native="queryData"
               />
             </el-form-item>
           </el-form>

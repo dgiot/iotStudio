@@ -2,7 +2,7 @@
   <vab-icon
     :icon="collapse ? 'menu-unfold-line' : 'menu-fold-line'"
     class="fold-unfold"
-    @click="toggleCollapse"
+    @click.native="toggleCollapse"
   />
 </template>
 

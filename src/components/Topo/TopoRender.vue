@@ -24,7 +24,7 @@
             ? `rotate(${component.style.transform}deg)`
             : 'rotate(0deg)',
         }"
-        @click="doClickComponent(component)"
+        @click.native="doClickComponent(component)"
         @dblclick="doDbClickComponent(component)"
       >
         <component

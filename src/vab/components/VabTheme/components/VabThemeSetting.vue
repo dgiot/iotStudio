@@ -10,7 +10,7 @@
         display: device == 'mobile' ? 'none' : 'block',
       }"
       class="setting-btn"
-      @click="changeThemeSetting(showThemeSetting)"
+      @click.native="changeThemeSetting(showThemeSetting)"
     />
     <ul v-if="showThemeSetting" class="vab-theme-setting">
       <li @click="handleOpenTheme">

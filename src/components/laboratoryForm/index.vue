@@ -269,10 +269,12 @@
               />
             </el-form-item>
             <el-form-item v-show="otherForm.other != ''">
-              <el-button type="primary" @click="addOther">确定</el-button>
+              <el-button type="primary" @click.native="addOther">
+                确定
+              </el-button>
             </el-form-item>
             <el-form-item v-show="otherForm.other != ''">
-              <el-button type="primary" @click="otherForm.other = ''">
+              <el-button type="primary" @click.native="otherForm.other = ''">
                 取消
               </el-button>
             </el-form-item>
@@ -280,7 +282,7 @@
         </el-row>
       </el-form>
       <div>
-        <!-- <el-button type="primary" @click="addLaboratory('laboratoryForm')">确定,添加实验室</el-button> -->
+        <!-- <el-button type="primary" @click.native="addLaboratory('laboratoryForm')">确定,添加实验室</el-button> -->
       </div>
     </div>
     <el-dialog
@@ -412,7 +414,7 @@
                       left: 200px;
                       margin-left: 0;
                     "
-                    @click="addotherform.imgsrc = ''"
+                    @click.native="addotherform.imgsrc = ''"
                   >
                     删除
                   </el-button>
@@ -423,7 +425,7 @@
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="updateOther('addotherform')">
+        <el-button type="primary" @click.native="updateOther('addotherform')">
           确 定
         </el-button>
       </span>

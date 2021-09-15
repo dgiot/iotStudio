@@ -6,7 +6,7 @@
         class="json-save-btn"
         type="button"
         :disabled="error"
-        @click="onSave()"
+        @click.native="onSave()"
       >
         {{ locale[lang].save }}
       </button>

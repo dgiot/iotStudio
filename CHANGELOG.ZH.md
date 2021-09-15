@@ -16,6 +16,7 @@
 
 ### Features
 
+* **src/views/topo/index.vue:** configuration channel mqtt ([b906d4e](https://github.com/dgiot/dgiot_dashboard/commit/b906d4eb930a892265ede3674b4f3cef5d71a1b2))
 * build ([e5f2d07](https://github.com/dgiot/dgiot_dashboard/commit/e5f2d077656de594939bcd041666300331feeab5))
 * **konva:** konva ([09c86d2](https://github.com/dgiot/dgiot_dashboard/commit/09c86d23ac92ad855ff7ed1b46ed8e511f60dcd7))
 * **log component information replication:** src/views/engine/components/mqttLog.vue ([ac5d4b7](https://github.com/dgiot/dgiot_dashboard/commit/ac5d4b70e03ca8311893b2e75e50421f79d7758e))
@@ -31,9 +32,7 @@
 * **src/views/equipment_management/index.vue:** batch list table is adaptive and sorted ([b639cc7](https://github.com/dgiot/dgiot_dashboard/commit/b639cc7a5d4207cf1aef79eaf26715698091559f))
 * **src/views/equipment_management/profile.vue:** fuzzy query of device template product name ([13cda8a](https://github.com/dgiot/dgiot_dashboard/commit/13cda8a6b0740529048651aed9bd7960a8ced83d))
 * **src/views/logs/*:** log table ([e0e3913](https://github.com/dgiot/dgiot_dashboard/commit/e0e39131c3323f97543e7696c1dbd9da1349a7bb))
-* **src/views/logs/access.vue:** access query Log details ([bc4a2c5](https://github.com/dgiot/dgiot_dashboard/commit/bc4a2c52d3f0dbdd23c7927971ed4ed630561579))
 * **src/views/maintenance/createticket.vue:** order ([a555747](https://github.com/dgiot/dgiot_dashboard/commit/a5557473b3610689603e9e71a3171b32afd3a234))
-* **src/views/topo/index.vue:** topo ([2b4be41](https://github.com/dgiot/dgiot_dashboard/commit/2b4be41f62fa2ef0ea7d3b904a9f48cbf031495b))
 * **src/views/visual:** visual ([6c4cedb](https://github.com/dgiot/dgiot_dashboard/commit/6c4cedbb3a4e7892a1f478ce49f8e4f1e448d229))
 * 忽略 ([3886460](https://github.com/dgiot/dgiot_dashboard/commit/38864605101041ff1666ee92a300e4bb4739c066))
 * 设备日志 ([96094d9](https://github.com/dgiot/dgiot_dashboard/commit/96094d909f47f7a267aa28a03dee9aa126f398e4))
@@ -48,6 +47,8 @@
 * mqtt send msg ([d374f89](https://github.com/dgiot/dgiot_dashboard/commit/d374f899df21281d066e4c89c7fa0d7c2c8b0156))
 * src/views/equipment_management/home_group2.vue ([4a448c4](https://github.com/dgiot/dgiot_dashboard/commit/4a448c435fae589d5f0dbb0c1e5c7fb42c837a98))
 * upload ([7ab76a5](https://github.com/dgiot/dgiot_dashboard/commit/7ab76a5886490d2089a6e03b55a5cbe4d1a4bed6))
+* **src/views/logs/access.vue:** access query Log details ([bc4a2c5](https://github.com/dgiot/dgiot_dashboard/commit/bc4a2c52d3f0dbdd23c7927971ed4ed630561579))
+* **src/views/topo/index.vue:** topo ([2b4be41](https://github.com/dgiot/dgiot_dashboard/commit/2b4be41f62fa2ef0ea7d3b904a9f48cbf031495b))
 * **utils/downiconfront.js utils/downcdn.js:** log require ([ca580da](https://github.com/dgiot/dgiot_dashboard/commit/ca580dafa11b4910c761f8103ede49e3b4e2230c))
 
 

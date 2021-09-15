@@ -19,8 +19,12 @@
       line-numbers
     />
     <div style="margin-top: 20px; text-align: center">
-      <el-button type="primary" @click="handleChangeCode">更改数据</el-button>
-      <el-button type="primary" @click="handleCopyData">复制数据</el-button>
+      <el-button type="primary" @click.native="handleChangeCode">
+        更改数据
+      </el-button>
+      <el-button type="primary" @click.native="handleCopyData">
+        复制数据
+      </el-button>
       <el-button type="primary">
         <el-link
           :href="fileURL"
@@ -31,7 +35,7 @@
           下载数据
         </el-link>
       </el-button>
-      <el-button @click="$emit('change', false)">关闭弹窗</el-button>
+      <el-button @click.native="$emit('change', false)">关闭弹窗</el-button>
     </div>
   </el-dialog>
 </template>

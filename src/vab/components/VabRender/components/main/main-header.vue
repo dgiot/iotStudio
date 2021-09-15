@@ -9,14 +9,18 @@
             :key="key"
             :icon="operationBtns[key].icon"
             type="text"
-            @click="operationBtns[key].click"
+            @click.native="operationBtns[key].click"
           >
             {{ operationBtns[key].label }}
           </el-button>
         </template>
       </div>
       <div v-if="VabRender.operations.includes('save')">
-        <el-button icon="el-icon-upload2" type="text" @click="$emit('save')">
+        <el-button
+          icon="el-icon-upload2"
+          type="text"
+          @click.native="$emit('save')"
+        >
           保存数据
         </el-button>
       </div>

@@ -2,7 +2,7 @@
   <span>
     <vab-icon
       icon="settings-5-line"
-      @click="changeThemeSetting(showThemeSetting)"
+      @click.native="changeThemeSetting(showThemeSetting)"
     />
   </span>
 </template>

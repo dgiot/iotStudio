@@ -2,7 +2,7 @@
   <vab-icon
     v-if="theme.showFullScreen"
     :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
-    @click="click"
+    @click.native="click"
   />
 </template>
 
