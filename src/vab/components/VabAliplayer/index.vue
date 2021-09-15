@@ -62,7 +62,7 @@
    * @document https://github.com/langyuxiansheng/vue-aliplayer-v2#31-%E9%85%8D%E7%BD%AE%E9%A1%B9-options-%E5%B1%9E%E6%80%A7
    */
   const VueAliplayerV2 = window['vue-aliplayer-v2'].default
-  console.log('VueAliplayerV2', VueAliplayerV2)
+  // console.log('VueAliplayerV2', VueAliplayerV2)
   // import VueAliplayerV2 from 'vue-aliplayer-v2'
   export default {
     name: 'VabAliplayer',

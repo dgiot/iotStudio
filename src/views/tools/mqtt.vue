@@ -228,7 +228,7 @@
             >
               <i
                 title="clear message"
-                class="fa fa-refresh refresh-btn"
+                class="el-icon-refresh"
                 @click="clearMessage(false)"
               ></i>
               <el-table border :data="publishedMessages" :max-height="600">
@@ -260,7 +260,7 @@
             >
               <i
                 title="clear message"
-                class="fa fa-refresh refresh-btn"
+                class="el-icon-refresh"
                 @click="clearMessage"
               ></i>
               <el-table border :data="receivedMessages" :max-height="600">
@@ -304,12 +304,6 @@
         this.stashConnect()
       }
       next()
-    },
-    props: {
-      topic: {
-        type: String,
-        default: '',
-      },
     },
     data() {
       return {
@@ -380,6 +374,7 @@
       settings: {
         handler(val) {
           if (val) {
+            console.error(val)
             const { clientId, ip, port, passWord, userName } = val
             this.clientId = clientId
             this.password = passWord
@@ -387,7 +382,8 @@
             // this.port = port
             this.momentKey = moment().format('x') + 'time'
             this.username = userName
-            this.mqttConnect()
+            if (this.password) this.mqttConnect()
+            this.loading = false
           }
         },
         deep: true,
@@ -409,7 +405,7 @@
     },
     mounted() {
       this.setSSL()
-      this.loadConnect()
+      // this.loadConnect()
     },
     methods: {
       ...mapActions({
@@ -422,7 +418,7 @@
         return moment().format('YYYY-MM-DD')
       },
       disconnectSwitch() {
-        this.$bus.$emit('mqttDisconnect', '1')
+        this.$bus.$emit('MqttDisconnect', '1')
         // connecting
         if (this.loading && !this.client.connected) {
           this.loading = false
@@ -453,6 +449,7 @@
           clean: this.clean,
           connectTimeout: 10 * 1000,
         }
+        console.error(options, 'options')
         try {
           this.client = mqtt.connect(this.connectURL, options)
           this.client.on('MqttConnect', () => {
@@ -483,7 +480,7 @@
           })
           //  订阅
           const topic = `test/subscribe/post`
-          const topicKey = md5(topic + '/dashboard/mqtt/test')
+          const topicKey = md5('test/subscribe/post' + '/dashboard/mqtt/test')
           const ttl = 1000 * 60 * 60 * 3
           this.$bus.$emit('MqttSubscribe', {
             topicKey,
@@ -710,7 +707,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .websocket-view {
     .el-form-item--small.el-form-item {
       margin-bottom: 2px;

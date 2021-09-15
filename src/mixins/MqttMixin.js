@@ -66,8 +66,8 @@ const MqttMixin = {
     /**
      *@description disconnect enentbus
      */
-    _this.$bus.$off('mqttDisconnect')
-    _this.$bus.$on('mqttDisconnect', (timestamp) => {
+    _this.$bus.$off('MqttDisconnect')
+    _this.$bus.$on('MqttDisconnect', (timestamp) => {
       if (timestamp) {
         _this.disconnect()
       }
@@ -89,7 +89,7 @@ const MqttMixin = {
     /**
      *@description MqttPublish enentbus
      */
-    _this.$bus.$off('')
+    _this.$bus.$off('MqttPublish')
     _this.$bus.$on('MqttPublish', (topic, obj, qos = 0, retained = false) => {
       if (!_.isEmpty(topic)) _this.sendMessage(topic, obj, qos, retained)
     })
@@ -129,6 +129,7 @@ const MqttMixin = {
     busSendMsg(topic, payloadString, Message) {
       const nowTime = Number(moment().format('x'))
       const map = Map2Json(this.MqttTopic)
+      // console.error(map)
       for (let topicKey in map) {
         if (this.checkTopic(map[topicKey].topic, topic)) {
           const args = {
@@ -137,7 +138,7 @@ const MqttMixin = {
             Message: Message,
             timestamp: moment().format('x'),
           }
-          console.error(topicKey)
+          // console.error(topicKey)
           this.$bus.$emit(`${topicKey}`, args)
           console.groupCollapsed(
             '%ciotMqtt SendMsg payloadString',
@@ -179,10 +180,8 @@ const MqttMixin = {
      * @param options
      * @return {boolean}
      */
-    initMqtt(options = {}) {
-      options = _.merge(options, {
-        time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS'),
-      })
+    initMqtt(options) {
+      options.time = moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS')
       let _this = this
       if (_.isEmpty(options.clientId)) {
         console.info(
@@ -196,7 +195,7 @@ const MqttMixin = {
           '%ciotMqtt connect msg',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-        console.table(options)
+        console.table({ ...options })
         console.groupEnd()
       }
       _this.$bus.$emit('MqttConnect', options)
@@ -355,7 +354,7 @@ const MqttMixin = {
         '%ciotMqtt onMessage',
         'color:#009a61; font-size: 28px; font-weight: 300'
       )
-      console.table(_this.consoleTale)
+      console.table({ ..._this.consoleTale })
       console.groupEnd()
       store.dispatch('mqttDB/setHistoryMsg', _this.HistoryMsg)
       this.busSendMsg(destinationName, payloadString, Message)
@@ -390,7 +389,7 @@ const MqttMixin = {
           '%ciotMqtt subscribe',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-        console.table(args)
+        console.table({ ...args })
         console.groupEnd()
       } else console.error('no topic')
     },
@@ -473,7 +472,8 @@ const MqttMixin = {
           '%csendMsg',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-        console.log(topic, obj)
+        console.log('topic:', topic)
+        console.table({ ...obj })
         console.groupEnd()
       } catch (err) {
         console.log('error', err)

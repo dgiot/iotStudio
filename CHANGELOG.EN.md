@@ -1,4 +1,4 @@
-## [4.3.2](https://github.com/dgiot/dgiot_dashboard/compare/4.4.0...4.3.2) (2021-09-14)
+## [4.3.2](https://github.com/dgiot/dgiot_dashboard/compare/4.4.0...4.3.2) (2021-09-15)
 
 
 ### Bug Fixes
@@ -53,6 +53,7 @@
 
 ### Performance Improvements
 
+* **mqttmixin vuex:** global mqtt store ([502a4ad](https://github.com/dgiot/dgiot_dashboard/commit/502a4ad5c79f38f4296578972047302decb72aee))
 * **src/mixins/mqttmixin.js:** mqtt and eventbus bridge conversion ([6ee68b7](https://github.com/dgiot/dgiot_dashboard/commit/6ee68b745cd95380da60587912a3a6652d80cac7))
 * **src/mixins/mqttmixin.js:** mqtt auto reconnect ([a70eda1](https://github.com/dgiot/dgiot_dashboard/commit/a70eda1d84fa56e468a6a4b2cf13a0b5fa1c34f6))
 * **src/store/modules/user.js &&:** optimize the information query logic after login ([2de264e](https://github.com/dgiot/dgiot_dashboard/commit/2de264e5204de91faf32a1618a670a0d3e5c2540))

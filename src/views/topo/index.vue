@@ -69,7 +69,6 @@
   import { uuid } from '@/utils'
   import { createState } from '@/utils/konva'
   import { isBase64, isImage } from '@/utils'
-  import { Websocket } from '@/utils/wxscoket.js'
   import { _getTopo } from '@/api/Topo'
   import { putProduct, queryProduct } from '@/api/Product'
   export default {
@@ -130,8 +129,19 @@
         this._initCreate()
       }
     },
-    destroyed() {},
+    destroyed() {
+      this.$bus.$emit(
+        'MqttUnbscribe',
+        md5(this.topotopic + this.$route.fullPath),
+        this.topotopic
+      )
+    },
     created() {
+      const router = md5(this.$route.fullPath)
+      this.$bus.$off(router)
+      this.$bus.$on(router, (res) => {
+        if (res) console.error(res)
+      })
       this.$bus.$off('removeShape')
       this.$bus.$on('removeShape', (topo) => {
         if (topo.attrs.id) this.removeShape(topo)
@@ -450,19 +460,6 @@
           _this.productid = _this.$route.query.deviceid
         }
         _this.handleMqttMsg(_this.productid)
-        _this.stop_Mqtt = true
-        var text0 = JSON.stringify({ action: 'stop_logger' })
-        var sendInfo = {
-          topic: 'thing/' + _this.productid + '/post',
-          text: text0,
-          retained: true,
-          qos: 2,
-        }
-        console.log('sendInfo', sendInfo)
-        if (_this.$refs.topoheader) {
-          console.log('订阅mqtt')
-          _this.$refs.topoheader.handleCloseSub(sendInfo)
-        }
         const { productid, devaddr = undefined } = _this.$route.query
         let params = {
           productid: productid,
@@ -489,57 +486,57 @@
         }
       },
       // 处理mqtt信息
-      handleMqttMsg(subdialogid) {
-        let _this = this
+      handleMqttMsg() {
+        const router = md5(this.topotopic + this.$route.fullPath)
+        this.$bus.$off(router)
+        this.$bus.$on(router, (Msg) => {
+          if (Msg.msg) {
+            let decodeMqtt
+            let updataId = []
+            console.log('收到消息', Msg)
+            if (!isBase64(Msg.msg)) {
+              console.log('非base64数据类型')
+              return
+            } else {
+              decodeMqtt = JSON.parse(Base64.decode(Msg.msg))
+              console.log('消息解密消息', decodeMqtt)
+            }
 
-        var channeltopic = new RegExp('thing/' + subdialogid + '/post')
-        Websocket.add_hook(channeltopic, (Msg) => {
-          let decodeMqtt
-          let updataId = []
-          console.log('收到消息', Msg)
-          if (!isBase64(Msg)) {
-            console.log('非base64数据类型')
-            return
-          } else {
-            decodeMqtt = JSON.parse(Base64.decode(Msg))
-            console.log('消息解密消息', decodeMqtt)
-          }
+            console.log(decodeMqtt.konva)
+            const Shape = decodeMqtt.konva
+            // apply transition to all nodes in the array
+            // Text.each(function (shape) {
+            const Text = this.stage.find('Text')
+            console.log(Text)
+            const tweens = []
+            for (var n = 0; n < tweens.length; n++) {
+              tweens[n].destroy()
+            }
 
-          console.log(decodeMqtt.konva)
-          const Shape = decodeMqtt.konva
-          // apply transition to all nodes in the array
-          // Text.each(function (shape) {
-          const Text = this.stage.find('Text')
-          console.log(Text)
-          const tweens = []
-          for (var n = 0; n < tweens.length; n++) {
-            tweens[n].destroy()
-          }
-
-          Shape.each((i) => {
-            Text.each((shape) => {
-              if (i.id == shape.attrs.id) {
-                console.log('更新节点', i)
-                console.log(shape)
-                shape.text(i.text)
-                tweens.push(
-                  new Konva.Tween({
-                    node: shape,
-                    duration: 1,
-                    easing: Konva.Easings.ElasticEaseOut,
-                  }).play()
-                )
-              } else {
-                updataId.push(i.id)
-              }
+            Shape.each((i) => {
+              Text.each((shape) => {
+                if (i.id == shape.attrs.id) {
+                  console.log('更新节点', i)
+                  console.log(shape)
+                  shape.text(i.text)
+                  tweens.push(
+                    new Konva.Tween({
+                      node: shape,
+                      duration: 1,
+                      easing: Konva.Easings.ElasticEaseOut,
+                    }).play()
+                  )
+                } else {
+                  updataId.push(i.id)
+                }
+              })
             })
-          })
-          if (updataId) {
-            console.log('以下组态id未更新', updataId)
+            if (updataId) {
+              console.log('以下组态id未更新', updataId)
+            }
+            this.stage.batchDraw()
+            console.log('konva数据更新成功')
           }
-          _this.stage.batchDraw()
-          console.log('konva数据更新成功')
-          // _this.updataProduct(this.productid)
         })
       },
       createKonva(data, globalStageid, type) {
@@ -857,8 +854,17 @@
           _this.stage.toJSON(),
           moment(new Date()).valueOf()
         )
-        if (_this.$refs.topoheader)
-          _this.$refs.topoheader.subscribe(_this.productid)
+        _this.topotopic = `thing/${_this.productid}/post`
+        const args = {
+          topicKey: md5(
+            `thing/${_this.productid}/post` + _this.$route.fullPath
+          ),
+          topic: `thing/${_this.productid}/post`,
+          ttl: 1000 * 60 * 60 * 3,
+        }
+        // 订阅webscroket
+        _this.$bus.$emit(`MqttSubscribe`, args)
+        // 处理消息
       },
     },
   }

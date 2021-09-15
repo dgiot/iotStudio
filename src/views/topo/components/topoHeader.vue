@@ -9,50 +9,50 @@
         append-to-body
         direction="rtl"
       >
-        <websocket :topic="topic" />
+        <!--        <websocket :topic="topic" />-->
       </el-drawer>
     </div>
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="topo-header-top">
       <vab-query-form class="topo-header-top-query">
         <vab-query-form-left-panel class="topo-header-top-query-left-panel">
-          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
-              <a-icon type="tool" />
-              <p>{{ $translateTitle('konva.socket') }}</p>
-            </a>
-            <a-menu slot="overlay">
-              <a-sub-menu key="websocket" title="websocket">
-                <a-menu-item @click="drawerFlag">
-                  {{ $translateTitle('konva.socket') }}
-                </a-menu-item>
-              </a-sub-menu>
+          <!--          <a-dropdown class="topo-header-top-query-left-panel-dropdown">-->
+          <!--            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">-->
+          <!--              <a-icon type="tool" />-->
+          <!--              <p>{{ $translateTitle('konva.socket') }}</p>-->
+          <!--            </a>-->
+          <!--            <a-menu slot="overlay">-->
+          <!--              <a-sub-menu key="websocket" title="websocket">-->
+          <!--                <a-menu-item @click="drawerFlag">-->
+          <!--                  {{ $translateTitle('konva.socket') }}-->
+          <!--                </a-menu-item>-->
+          <!--              </a-sub-menu>-->
 
-              <a-sub-menu key="mqtt" title="mqtt">
-                <a-menu-item
-                  :disabled="productid.length < 0"
-                  @click="subscribe(productid)"
-                >
-                  {{ $translateTitle('leftbar.subscriptions') }} mqtt
-                </a-menu-item>
-                <a-menu-item :disabled="stopMqtt" @click="CloseSub()">
-                  {{ $translateTitle('leftbar. cancel') }} mqtt
-                </a-menu-item>
-              </a-sub-menu>
+          <!--              <a-sub-menu key="mqtt" title="mqtt">-->
+          <!--                <a-menu-item-->
+          <!--                  :disabled="productid.length < 0"-->
+          <!--                  @click="subscribe(productid)"-->
+          <!--                >-->
+          <!--                  {{ $translateTitle('leftbar.subscriptions') }} mqtt-->
+          <!--                </a-menu-item>-->
+          <!--                <a-menu-item :disabled="stopMqtt" @click="CloseSub()">-->
+          <!--                  {{ $translateTitle('leftbar. cancel') }} mqtt-->
+          <!--                </a-menu-item>-->
+          <!--              </a-sub-menu>-->
 
-              <a-menu-item key="test" title="sub menu">
-                <el-switch
-                  v-model="switchvalue"
-                  :disabled="productid.length < 0"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949"
-                  :active-text="$translateTitle('tagsView.close')"
-                  :inactive-text="$translateTitle('tagsView.open')"
-                  @change="stopsub"
-                />
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
+          <!--              <a-menu-item key="test" title="sub menu">-->
+          <!--                <el-switch-->
+          <!--                  v-model="switchvalue"-->
+          <!--                  :disabled="productid.length < 0"-->
+          <!--                  active-color="#13ce66"-->
+          <!--                  inactive-color="#ff4949"-->
+          <!--                  :active-text="$translateTitle('tagsView.close')"-->
+          <!--                  :inactive-text="$translateTitle('tagsView.open')"-->
+          <!--                  @change="stopsub"-->
+          <!--                />-->
+          <!--              </a-menu-item>-->
+          <!--            </a-menu>-->
+          <!--          </a-dropdown>-->
 
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
             <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
@@ -129,12 +129,10 @@
 </template>
 
 <script>
-  import { Websocket } from '@/utils/wxscoket.js'
-  import websocket from '@/views/tools/websocket'
   import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   export default {
     name: 'TopoHeader',
-    components: { websocket },
+    components: {},
     props: {
       productid: {
         type: String,

@@ -44,7 +44,7 @@ const iotMqtt = {
       // message.qos = Number(qos)
       // message.retained = retained
       if (iotMqtt.client && iotMqtt.mqttStatus) {
-        console.info('send msg', message)
+        // console.info('send msg', message)
         iotMqtt.client.send(message)
         return true
       }

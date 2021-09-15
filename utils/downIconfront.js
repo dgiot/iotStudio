@@ -57,7 +57,7 @@ function downIconfront(_static) {
  * @param data
  */
 function writeFile(files, data, resource) {
-  const dirPath = path.join(__dirname, `../public/assets/${files}`)
+  const dirPath = path.join(__dirname, `../public/assets/images/${files}`)
   log(chalk.blue(files, dirPath))
 
   fs.readFile(dirPath, function (err, _data) {

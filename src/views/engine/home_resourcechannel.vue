@@ -582,6 +582,7 @@
     // inject: ['reload'],
     data() {
       return {
+        topotopic: '',
         logKey: '99',
         msgList: [],
         submessage: '',
@@ -1108,7 +1109,7 @@
           qos: 2,
         }
         this.$bus.$emit('MqttSubscribe', {
-          topicKey: info.topic + this.$route.fullPath,
+          topicKey: md5(info.topic + this.$route.fullPath),
           topic: info.topic,
           ttl: 1000 * 60 * 60 * 3,
         })
@@ -1162,8 +1163,21 @@
           0,
           false
         )
-        _this.sendMessage('channel/' + _this.subdialogid, text0, 0, false)
-        _this.sendMessage('channel/' + _this.subdialogid, sendInfo, 0, false)
+        _this.$bus.$emit(
+          'MqttPublish',
+          'channel/' + _this.subdialogid,
+          text0,
+          0,
+          false
+        )
+        _this.$bus.$emit(
+          'MqttPublish',
+          'channel/' + _this.subdialogid,
+          sendInfo,
+          0,
+          false
+        )
+        _this.$bus.$emit(`MqttPublish`, sendInfo.topic, sendInfo, 2, true)
         _this.submessage = ''
         _this.msgList = []
         _this.logKey = _this.channeltopic.split('log')[1]
