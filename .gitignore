@@ -40,5 +40,5 @@ pnpm-debug.log*
 /github
 src/config/developer.lock.js
 src/config/developer.config.js
-
+swagger.json
 # files
