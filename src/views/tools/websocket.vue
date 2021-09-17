@@ -370,8 +370,8 @@
     },
     created() {
       // MqttPublish
-      this.$bus.$off(`MqttPublish`)
-      this.$bus.$on('MqttPublish', (res) => {
+      this.$dgiotBus.$off(`MqttPublish`)
+      this.$dgiotBus.$on('MqttPublish', (res) => {
         console.log(res, 'MqttPublish')
       })
       this.setSSL()

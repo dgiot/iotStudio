@@ -123,6 +123,7 @@ let cdnUrl = {
     'https://unpkg.com/vue-aliplayer-v2',
     'https://unpkg.com/rutilsjs',
     'https://unpkg.com/rdatejs',
+    'https://unpkg.com/bcryptjs',
     // 'https://unpkg.com/vuex/dist/logger',
     // 'https://unpkg.com/v-ace-editor/index.js',
     // 'https://unpkg.com/colors.js/colors.min.js',

@@ -34,26 +34,26 @@ export default Bus
 // }
 // let str = 'hello';
 // let arr = [2,3,4,5];
-// this.$bus.$emit('log',aa())
-// this.$bus.$emit('log1',str)
-// this.$bus.$emit('log2',arr)
+// this.$dgiotBus.$emit('log',aa())
+// this.$dgiotBus.$emit('log1',str)
+// this.$dgiotBus.$emit('log2',arr)
 
 // $on 接受
 
 // created() {
-// this.$bus.$on('log',(res)=>{
+// this.$dgiotBus.$on('log',(res)=>{
 //   console.log(res);
 // })
-// this.$bus.$on('log1',(res)=>{
+// this.$dgiotBus.$on('log1',(res)=>{
 //   console.log(res);
 // })
-// this.$bus.$on('log2',(res)=>{
+// this.$dgiotBus.$on('log2',(res)=>{
 //   console.log(res);
 // })
 // }
 
 // $off 清空
 //
-// this.$bus.$off('log')
-// this.$bus.$off('log1')
-// this.$bus.$off('log2')
+// this.$dgiotBus.$off('log')
+// this.$dgiotBus.$off('log1')
+// this.$dgiotBus.$off('log2')

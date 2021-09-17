@@ -1,9 +1,9 @@
 {
-  "name": "dgiot_dashboard",
+  "name": "@dgiot/dgiot-dashboard",
   "version": "4.3.2",
   "author": "iotn2n",
   "license": "Mozilla Public License Version 2.0",
-  "private": true,
+  "private": false,
   "homepage": "https://github.com/dgiot/dgiot_dashboard.git",
   "scripts": {
     "dev": "vue-cli-service serve",
@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@babel/helper-plugin-utils": "^7.14.5",
+    "@dgiot/dgiot-mqtt-dashboard": "^1.1.2-alpha",
     "@vue/cli-plugin-pwa": "^4.5.13",
     "core-js": "^3.16.4",
     "cross-env": "^7.0.3",

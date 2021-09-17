@@ -259,7 +259,6 @@
 </template>
 
 <script>
-  import iotMqtt from '@/utils/iotMqtt'
   import { post_tree, putLogLevel } from '@/api/Logs'
   export default {
     name: 'RealLog',

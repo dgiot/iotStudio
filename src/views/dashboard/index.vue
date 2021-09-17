@@ -26,12 +26,11 @@
 
 <script>
   import empty from '@/views/Empty'
-  import { mapGetters } from 'vuex'
-  import { setTimeout } from 'timers'
-  // import adminDashboard from './admin'
   export default {
     name: 'Dashboard',
-    components: { empty },
+    components: {
+      empty,
+    },
     data() {
       return {
         currentRole: 'adminDashboard',

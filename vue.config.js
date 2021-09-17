@@ -86,6 +86,7 @@ module.exports = {
     // https://blog.csdn.net/weixin_43972992/article/details/105159723
     return {
       externals: {
+        bcrypt: 'bcrypt',
         'be-full': 'BeFull',
         JSONEditor: 'JSONEditor',
         AMap: 'VueAMap',

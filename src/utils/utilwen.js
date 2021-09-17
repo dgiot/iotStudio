@@ -6,7 +6,6 @@ import { getToken, setToken, removeToken } from './vuex'
 import globalConfig from './globalConfig'
 import store from '@/store'
 import { Message } from 'element-ui'
-const { iotMqtt } = MQTTConnect
 const Headers = {
   sessionToken: store ? store.getters['user/token'] : '',
 }
@@ -480,7 +479,6 @@ export default {
     Vue.prototype.$putDevice = putDevice
     Vue.prototype.$getDevice = getDevice
     Vue.prototype.$deleteDevice = delDevice
-    Vue.prototype.$iotMqtt = iotMqtt
     Vue.prototype.$moment = moment
     Vue.prototype.$queryProduct = queryProduct
     Vue.prototype.$aclObj = aclObj

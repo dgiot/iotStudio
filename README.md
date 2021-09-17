@@ -1,4 +1,27 @@
 ## dgiot_dashboard
+<p align="center">
+  <img src="https://img.shields.io/github/commit-activity/m/dgiot/dgiot_dashboard" alt="ommit-activity">
+	<img src="https://badgen.net/badge/package/%40dgiot%2Fdgiot_dashboard/blue"
+	alt="package" maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<img src="https://badgen.net/npm/v/@dgiot/dgiot-dashboard" alt="Npm Version"
+	maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<img src="https://badgen.net/npm/node/@dgiot/dgiot-mqtt-dashboard" alt="Node Version"
+	maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<br>
+	<img src="https://badgen.net/jsdelivr/hits/npm/@dgiot/dgiot-dashboard"
+	alt="Jsdeliver Month Downloads" maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<img src="https://badgen.net/packagephobia/install/@dgiot/dgiot-dashboard"
+	alt="Install Size" maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<img src="https://badgen.net/npm/types/@dgiot/dgiot-dashboard" alt="Type Support"
+	maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<br>
+	<img src="https://img.shields.io/librariesio/release/npm/@dgiot/dgiot-dashboard"
+	alt="Outdated Dep" maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<img src="https://img.shields.io/snyk/vulnerabilities/npm/@dgiot/dgiot-dashboard"
+	alt="Vulnerablities" maxretrytimes="3" class="m-1 transition-all duration-1000">
+  <a href="https://www.npmjs.com/package/@dgiot/dgiot-dashboard"><img src="https://img.shields.io/npm/l/@dgiot/dgiot-dashboard" alt="License"></a>
+<p>
+
 
 dgiot Front framemaker
 

@@ -126,15 +126,15 @@
       this.handleMqtt()
     },
     destroyed() {
-      this.$bus.$emit(
+      this.$dgiotBus.$emit(
         'MqttUnbscribe',
         md5(this.topotopic + this.$route.fullPath),
         this.topotopic
       )
     },
     created() {
-      this.$bus.$off('removeShape')
-      this.$bus.$on('removeShape', (topo) => {
+      this.$dgiotBus.$off('removeShape')
+      this.$dgiotBus.$on('removeShape', (topo) => {
         if (topo.attrs.id) this.removeShape(topo)
         else {
           throw new Error('选择元素没有绑定元素id')
@@ -478,8 +478,8 @@
       // 处理mqtt信息
       handleMqttMsg() {
         const router = md5(this.topotopic + this.$route.fullPath)
-        this.$bus.$off(router)
-        this.$bus.$on(router, (Msg) => {
+        this.$dgiotBus.$off(router)
+        this.$dgiotBus.$on(router, (Msg) => {
           console.log('收到消息', Msg)
           if (Msg.msg) {
             let decodeMqtt
@@ -853,7 +853,7 @@
           ttl: 1000 * 60 * 60 * 3,
         }
         // 订阅webscroket
-        _this.$bus.$emit(`MqttSubscribe`, args)
+        _this.$dgiotBus.$emit(`MqttSubscribe`, args)
         _this.handleMqttMsg()
         // 处理消息
       },

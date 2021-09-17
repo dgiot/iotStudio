@@ -86,7 +86,7 @@
             let key = moment(new Date()).valueOf()
             _this.$parent.mqttDB / (message.payloadString, key, message)
             // _this.$emit('mqttMsg', message.payloadString, key)
-            _this.$bus.$emit('onMessage', message)
+            _this.$dgiotBus.$emit('onMessage', message)
           },
         })
       },

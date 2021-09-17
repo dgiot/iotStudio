@@ -1742,7 +1742,7 @@
           this.listLoading = false
           this.proTableData = results
           this.total = count
-          this.$bus.$emit('MqttSubscribe', {
+          this.$dgiotBus.$emit('MqttSubscribe', {
             topic: this.$route.name,
           })
         }
@@ -1764,7 +1764,7 @@
       },
       // 添加产品弹窗
       addproduct() {
-        this.$bus.$emit('mqttUnSubscribe', {
+        this.$dgiotBus.$emit('mqttUnSubscribe', {
           topic: this.$route.name,
         })
         // return false

@@ -306,7 +306,7 @@
     mounted() {
       this.topicKey = this.topic + this.$route.fullPath
       this.topic = 'logger_trace/trace/' + this.$route.query.deviceid + '/#'
-      // this.$bus.$off(`${this.topicKey}`)
+      // this.$dgiotBus.$off(`${this.topicKey}`)
       this.bus(this.topicKey, this.topic, this.ttl)
     },
     created() {},
@@ -320,8 +320,8 @@
     methods: {
       bus(topicKey, topic) {
         console.log(' this.topic ', topic)
-        this.$bus.$off(`${this.topicKey}`)
-        this.$bus.$on(`${this.topicKey}`, (res) => {
+        this.$dgiotBus.$off(`${this.topicKey}`)
+        this.$dgiotBus.$on(`${this.topicKey}`, (res) => {
           const { msg = '', timestamp } = res
           if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
         })
@@ -383,7 +383,7 @@
         // this.topic = this.queryForm.topic + this.logMqtt.key + ''
         this.queryForm.deviceid = this.deviceInfo.objectId
         if (this.queryForm.action == 'start')
-          this.$bus.$emit('MqttSubscribe', {
+          this.$dgiotBus.$emit('MqttSubscribe', {
             topicKey: this.topicKey,
             topic: this.topic,
             ttl: this.ttl,

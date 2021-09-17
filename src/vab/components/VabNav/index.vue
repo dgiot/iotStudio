@@ -122,8 +122,8 @@
         setMqttSettings: 'mqttDB/setMqttSettings',
       }),
       Mqtt(option) {
-        this.initMqtt(option)
-        this.setMqttSettings(option)
+        // this.initMqtt(option)
+        // this.setMqttSettings(option)
         // iotMqtt.subscribe('dgiottopic')
       },
       handleTabClick(handler) {

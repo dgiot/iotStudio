@@ -20,10 +20,9 @@ function globalUrl(hostname = window.location.hostname, localHost) {
   return result
 }
 
-import iotMqtt from '@/utils/iotMqtt'
 export default {
   client: {},
-  iotMqtt: iotMqtt,
+  iotMqtt: {},
   options: {
     host: globalUrl(hostname, localHost),
     port: window.location.protocol === 'https:' ? 8084 : 8083,

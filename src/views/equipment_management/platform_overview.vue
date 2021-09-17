@@ -812,6 +812,7 @@
   } from 'vue-baidu-map'
 
   export default {
+    topicKey: '',
     name: 'Index',
     components: {
       BmInfoWindow,
@@ -846,6 +847,7 @@
       }
 
       return {
+        routerKey: '',
         loadingConfig: {
           product_count: false,
           app_count: false,
@@ -930,6 +932,7 @@
     },
     computed: {
       ...mapGetters({
+        mqttName: 'user/username',
         objectId: 'user/objectId',
         roleTree: 'user/roleTree',
         collapse: 'settings/collapse',
@@ -953,22 +956,38 @@
       }),
     },
     watch: {
-      channeltopic: {
+      topicKey: {
         handler: function (newVal, oldval) {
+          let _this = this
           if (newVal) {
-            this.$bus.$off(this.channeltopic + this.$route.fullPath)
-            this.$bus.$on(this.channeltopic + this.$route.fullPath, (res) => {
+            _this.$dgiotBus.$off(topicKey)
+            _this.$dgiotBus.$on(topicKey, (res) => {
+              console.log('res', res)
               const { msg = '', timestamp } = res
               console.log('val', newVal, oldval, 'res', res)
-              if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
+              if (!_.isEmpty(msg)) _this.mqttMsg(msg, res, timestamp)
             })
           }
           if (oldval) {
-            this.unsubscribe('', oldval)
-            this.submessage = ''
-            this.msgList = []
-            this.logKey = '99'
+            // 取消订阅
+            _this.submessage = ''
+            _this.msgList = []
+            _this.logKey = '99'
           }
+        },
+        deep: true,
+        limit: true,
+      },
+      routerKey: {
+        handler: function (newVal) {
+          let _this = this
+          _this.$dgiotBus.$off(newVal)
+          _this.$dgiotBus.$on(newVal, (res) => {
+            console.log('res', res)
+            const { msg = '', timestamp } = res
+            console.log('val', newVal, 'res', res)
+            if (!_.isEmpty(msg)) _this.mqttMsg(msg, res, timestamp)
+          })
         },
         deep: true,
         limit: true,
@@ -995,6 +1014,7 @@
        * @returns
        */
       initDgiotMqtt() {
+        this.MqttConnect()
         this.getRoletree()
         this.getProduct()
       },
@@ -1139,6 +1159,7 @@
       },
       mqttMsg(e, { destinationName, payloadString }, k) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
+        console.log(mqttMsg, 'mqttMsg')
         // // console.log(destinationName, mqttMsg, 'mqttMsg')
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
@@ -1288,6 +1309,28 @@
           loading.close()
         }, 3000)
       },
+      async MqttConnect() {
+        let _this = this
+        const options = {
+          keepalive: 60,
+          userName: _this.mqttName,
+          passWord: await dcodeIO.bcrypt.hash(
+            _this.objectId + moment().format('YYYY:MM:DD'),
+            3
+          ),
+          clientId: 'dgiot_mqtt_' + md5(_this.token),
+          clean: false,
+          ip:
+            process.env.NODE_ENV == 'development'
+              ? 'prod.iotn2n.com'
+              : location.hostname,
+          isSSL: location.protocol === 'https:' ? true : false,
+          port: location.protocol === 'https:' ? 8084 : 8083,
+          connectTimeout: 10 * 1000,
+          router: _this.routerKey,
+        }
+        _this.$dgiotBus.$emit('MqttConnect', options)
+      },
       async getRoletree() {
         // mqtt 未返回时的容错处理
         setTimeout((_) => {
@@ -1342,7 +1385,8 @@
         }
       },
       async handleNodeClick(data, node) {
-        const aclRole = this._role.map((r) => {
+        let _this = this
+        const aclRole = _this._role.map((r) => {
           return r.name
         })
         $('.el-tree').css({
@@ -1351,34 +1395,37 @@
           'overflow-x': 'auto',
         })
         $('.el-select-dropdown').css({ display: 'none' })
-        this.queryForm.workGroupName = data.label
-        this.treeDataValue = data.label
+        _this.queryForm.workGroupName = data.label
+        _this.treeDataValue = data.label
         // console.log(this.treeDataValue)
         if (aclRole.includes(data.name)) {
-          this.queryForm.access_token = this.token
+          _this.queryForm.access_token = _this.token
         } else if (node.level != 1) {
           // 在这里获取点击厂家的session
           const { access_token = '' } = await getToken(data.name)
-          this.queryForm.access_token = access_token
+          _this.queryForm.access_token = access_token
         } else {
           // console.log(node.level, '登录的token', this.token)
-          this.queryForm.access_token = this.token
+          _this.queryForm.access_token = _this.token
         }
-        this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
+        _this.queryForm.workGroupTreeShow = !_this.queryForm.workGroupTreeShow
 
         // 点击的公司名
         const { name, objectId } = data
-        this.curDepartmentId = objectId
+        _this.curDepartmentId = objectId
+        _this.routerKey = md5(_this.$route.fullPath)
+        _this.$dgiotBus.$emit('MqttStatus', _this.routerKey)
+        _this.topicKey = md5(_this.channeltopic + _this.$route.fullPath)
         // this.channeltopic = `dashboard/${this.queryForm.access_token}/post`
-        this.channeltopic = `dashboard/${this.token}/post`
-        this.$bus.$emit('MqttSubscribe', {
-          topicKey: this.channeltopic + this.$route.fullPath,
-          qos: 0,
-          created: moment().format('x'),
-          topic: this.channeltopic,
+        _this.channeltopic = `dashboard/${_this.token}/post`
+        _this.$dgiotBus.$emit('MqttSubscribe', {
+          topicKey: _this.topicKey,
+          topic: _this.channeltopic,
           ttl: 1000 * 60 * 60 * 3,
+          created: moment().format('x'),
+          qos: 0,
         })
-        this.mqttSuccess('')
+        _this.mqttSuccess('')
         // this.subscribe(this.channeltopic)
         // this.$nextTick(() => {
         //   // this.isConnect = true

@@ -654,11 +654,14 @@
       channeltopic: {
         handler: function (newVal, oldval) {
           if (newVal) {
-            this.$bus.$off(this.channeltopic + this.$route.fullPath)
-            this.$bus.$on(this.channeltopic + this.$route.fullPath, (res) => {
-              const { msg = '', timestamp } = res
-              if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
-            })
+            this.$dgiotBus.$off(this.channeltopic + this.$route.fullPath)
+            this.$dgiotBus.$on(
+              this.channeltopic + this.$route.fullPath,
+              (res) => {
+                const { msg = '', timestamp } = res
+                if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
+              }
+            )
             // setInterval(() => {
             //   iotMqtt.sendMessage(newVal, { sendInfo: 'sendInfo' })
             // }, 2000)
@@ -1108,7 +1111,7 @@
           topic: 'log/channel/' + row.objectId,
           qos: 2,
         }
-        this.$bus.$emit('MqttSubscribe', {
+        this.$dgiotBus.$emit('MqttSubscribe', {
           topicKey: md5(info.topic + this.$route.fullPath),
           topic: info.topic,
           ttl: 1000 * 60 * 60 * 3,
@@ -1154,7 +1157,7 @@
           qos: 2,
           retained: true,
         }
-        _this.$bus.$emit(`MqttPublish`, sendInfo.topic, sendInfo, 2, true)
+        _this.$dgiotBus.$emit(`MqttPublish`, sendInfo.topic, sendInfo, 2, true)
         // 在链接成功后发一句消息，启用通道
         // setTimeout(() => {
         _this.sendMessage(
@@ -1163,21 +1166,21 @@
           0,
           false
         )
-        _this.$bus.$emit(
+        _this.$dgiotBus.$emit(
           'MqttPublish',
           'channel/' + _this.subdialogid,
           text0,
           0,
           false
         )
-        _this.$bus.$emit(
+        _this.$dgiotBus.$emit(
           'MqttPublish',
           'channel/' + _this.subdialogid,
           sendInfo,
           0,
           false
         )
-        _this.$bus.$emit(`MqttPublish`, sendInfo.topic, sendInfo, 2, true)
+        _this.$dgiotBus.$emit(`MqttPublish`, sendInfo.topic, sendInfo, 2, true)
         _this.submessage = ''
         _this.msgList = []
         _this.logKey = _this.channeltopic.split('log')[1]
