@@ -10,8 +10,6 @@
 	<br>
 	<img src="https://badgen.net/jsdelivr/hits/npm/@dgiot/dgiot-dashboard"
 	alt="Jsdeliver Month Downloads" maxretrytimes="3" class="m-1 transition-all duration-1000">
-	<img src="https://badgen.net/packagephobia/install/@dgiot/dgiot-dashboard"
-	alt="Install Size" maxretrytimes="3" class="m-1 transition-all duration-1000">
 	<img src="https://badgen.net/npm/types/@dgiot/dgiot-dashboard" alt="Type Support"
 	maxretrytimes="3" class="m-1 transition-all duration-1000">
   <img src="https://img.shields.io/badge/Community-DGIOT-yellow" alt="Community">

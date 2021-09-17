@@ -1,8 +1,6 @@
 /**
  * @description 登录、获取用户信息、退出登录、清除token逻辑，不建议修改
  */
-import MQTTConnect from '@/utils/MQTTConnect'
-const { iotMqtt, options } = MQTTConnect
 const getLocalStorage = (key) => {
   const value = localStorage.getItem(key)
   if (isJson(value)) {
@@ -11,53 +9,7 @@ const getLocalStorage = (key) => {
     return false
   }
 }
-function initDgiotMqtt(userid) {
-  iotMqtt.init({
-    id: 'DGmqtt_' + userid + moment(new Date()),
-    ip: options.host,
-    port: options.port,
-    userName: userid,
-    passWord: 'toppicPwd',
-    success: (msg = `clientId为${userid},iotMqtt连接成功`) => {
-      console.info(
-        '%c%s',
-        'color: green;font-size: 24px;',
-        `${moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS')} mqtt连接信息` +
-          msg
-      )
-      // _this.mqttSuccess(msg)
-    },
-    error: function (msg = `iotMqtt接失败,自动重连`) {
-      // _this.mqttError(msg)
-      console.info(
-        '%c%s',
-        'color: green;font-size: 24px;',
-        `${moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS')} mqtt连接信息` +
-          msg
-      )
-    },
-    connectLost: function (msg = `iotMqtt连接丢失`) {
-      // _this.connectLost()
-      console.info(
-        '%c%s',
-        'color: green;font-size: 24px;',
-        `${moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS')} mqtt连接信息` +
-          msg
-      )
-    },
-    onMessage: function (Message) {
-      // _this.onMessage(Message)
-      console.info(
-        '%c%s',
-        'color: green;font-size: 24px;',
-        `${moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS')} mqtt连接信息`
-      )
-      console.info(Message)
-    },
-  })
-}
 function queryAll(commit) {
-  console.error('queryAll')
   const params = {
     count: 'objectId',
     order: '-updatedAt',
@@ -154,7 +106,6 @@ import { queryProduct } from '@/api/Product'
 import { license, SiteDefault } from '@/api/License'
 import { isJson } from '@/utils/validate'
 const { language } = getLocalStorage('language')
-import { clientMqtt } from '@/utils/clientMqtt'
 const state = () => ({
   loginInfo: getToken('loginInfo'),
   Menu: getToken('Menu'),
@@ -234,7 +185,6 @@ const mutations = {
    * @param {*} objectId
    */
   setObejectId(state, objectId) {
-    console.error('我设置了', state, objectId)
     state.objectId = objectId
     setToken('objectId', objectId)
   },

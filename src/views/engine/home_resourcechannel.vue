@@ -1,6 +1,5 @@
 <template>
   <div class="resourcechannel resourcechannel-container">
-    <!--    <VabMqtt ref="mqtt" :topic="channeltopic" @mqttMsg="mqttMsg" />-->
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="firsttable">
       <el-form
@@ -523,42 +522,12 @@
       :visible="subdialog"
       @close="handleCloseSubdialog"
     >
-      <mqtt-log :log-key="logKey" :msg="submessage" :list="msgList" />
+      <mqtt-log :refresh-key="refreshFlag" :msg="submessage" :list="msgList" />
     </a-drawer>
-    <!--    &lt;!&ndash;订阅日志&ndash;&gt;-->
-    <!--    <el-dialog-->
-    <!--      :append-to-body="true"-->
-    <!--      :title="channelname + '日志'"-->
-    <!--      :visible.sync="subdialog"-->
-    <!--      :before-close="handleCloseSubdialog"-->
-    <!--      width="85%"-->
-    <!--    >-->
-    <!--      <div style="margin-top: 20px">-->
-    <!--        <pre-->
-    <!--          id="subdialog"-->
-    <!--          class="ace_editor"-->
-    <!--          style="width: 100%; min-height: 300px"-->
-    <!--        >-->
-    <!--                      <textarea class="ace_text-input" style="overflow:scroll"/>-->
-    <!--        </pre>-->
-    <!--      </div>-->
-    <!--      <span slot="footer" class="dialog-footer" style="height: 30px">-->
-    <!--        <el-switch-->
-    <!--          v-model="value4"-->
-    <!--          style="display: inline-block; margin-right: 10px"-->
-    <!--          active-color="#13ce66"-->
-    <!--          inactive-color="#ff4949"-->
-    <!--          inactive-text="自动刷新"-->
-    <!--          @change="stopsub"-->
-    <!--        />-->
-    <!--      </span>-->
-    <!--    </el-dialog>-->
   </div>
 </template>
 <script>
   import { requireModule } from '@/utils/file'
-  import MQTTConnect from '@/utils/MQTTConnect'
-  const { iotMqtt } = MQTTConnect
   import {
     queryChannel,
     delChannel,
@@ -573,6 +542,7 @@
   var subdialog
   import { Websocket } from '@/utils/wxscoket.js'
   import VabInput from '@/vab/components/VabInput/input'
+  import send from 'send'
 
   export default {
     components: {
@@ -582,11 +552,12 @@
     // inject: ['reload'],
     data() {
       return {
+        router: '',
         topotopic: '',
-        logKey: '99',
+        refreshFlag: '99',
         msgList: [],
         submessage: '',
-        channeltopic: '',
+        subtopic: '',
         channeindex: 0,
         channeType: '',
         listLoading: false,
@@ -640,6 +611,7 @@
         channelId: '',
         channelrow: [],
         showTree: false,
+        topicKey: '',
         allApps: [],
         defaultProps: {
           children: 'children',
@@ -651,31 +623,24 @@
       roleTree: 'user/roleTree',
     }),
     watch: {
-      channeltopic: {
+      topicKey: {
         handler: function (newVal, oldval) {
+          console.log('newVal topicKey', newVal)
+          console.log('oldval topicKey', oldval)
+          let _this = this
           if (newVal) {
-            this.$dgiotBus.$off(this.channeltopic + this.$route.fullPath)
-            this.$dgiotBus.$on(
-              this.channeltopic + this.$route.fullPath,
-              (res) => {
-                const { msg = '', timestamp } = res
-                if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
-              }
-            )
-            // setInterval(() => {
-            //   iotMqtt.sendMessage(newVal, { sendInfo: 'sendInfo' })
-            // }, 2000)
+            this.$dgiotBus.$off(newVal)
+            this.$dgiotBus.$on(newVal, (res) => {
+              console.error(res)
+              const { payload } = res
+              this.mqttMsg(payload)
+            })
           }
           if (oldval) {
-            this.unsubscribe('', oldval)
-            this.sendMessage(oldval, JSON.stringify({ action: 'stop_logger' }))
-            this.sendMessage(
-              oldval.split('log/')[1],
-              JSON.stringify({ action: 'stop_logger' })
-            )
-            this.submessage = ''
-            this.msgList = []
-            this.logKey = oldval.split('log/')[1]
+            // 取消订阅
+            _this.submessage = ''
+            _this.msgList = []
+            _this.logKey = '99'
           }
         },
         deep: true,
@@ -683,6 +648,7 @@
       },
     },
     mounted() {
+      this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.Get_Re_Channel(0)
       this.dialogType()
       this.getApplication()
@@ -1096,110 +1062,45 @@
             : date.getSeconds()
         return h + m + s + ' '
       },
-      mqttMsg(Msg, res, key) {
+      mqttMsg(Msg) {
         this.msgList.push({
           timestamp: moment().format('x'),
           msg: Msg,
         })
-        this.logKey = key
+        this.refreshFlag = moment().format('x')
         this.submessage += Msg + `\n`
         // subdialog.setValue(this.submessage)
         // subdialog.gotoLine(subdialog.session.getLength())
       },
       subProTopic(row) {
-        var info = {
-          topic: 'log/channel/' + row.objectId,
-          qos: 2,
-        }
-        this.$dgiotBus.$emit('MqttSubscribe', {
-          topicKey: md5(info.topic + this.$route.fullPath),
-          topic: info.topic,
-          ttl: 1000 * 60 * 60 * 3,
-        })
         this.subdialog = true
         this.subdialogid = row.objectId
         this.channelname = row.objectId
+        this.subtopic = 'log/channel/' + row.objectId
+        let subInfo = {
+          router: this.router,
+          topic: this.subtopic,
+          qos: 2,
+          ttl: 1000 * 60 * 60 * 3,
+        }
+        // 订阅接收服务消息的topic
+        this.$dgiotBus.$emit('MqttSubscribe', subInfo)
 
-        // setTimeout(() => {
-        //   subdialog = ace.edit('subdialog')
-        //   subdialog.session.setMode('ace/mode/text') // 设置语言
-        //   subdialog.setTheme('ace/theme/gob') // 设置主题
-        //   subdialog.setReadOnly(true)
-        //   subdialog.setOptions({
-        //     enableBasicAutocompletion: false,
-        //     enableSnippets: true,
-        //     enableLiveAutocompletion: true, // 设置自动提示
-        //   })
-        // })
-        var channeltopic = new RegExp('log/channel/' + row.objectId)
-        var submessage = ''
-        var _this = this
-        _this.channeltopic = info.topic
-
-        // _this.bus(info.topic)
-        // _this.$refs.mqtt.clientMqtt()
-        // Websocket.add_hook(channeltopic, function (Msg) {
-        //   // 判断长度
-        //   if (subdialog.session.getLength() >= 1000) {
-        //     submessage = ''
-        //   } else {
-        //     submessage += _this.nowtime() + Msg + `\n`
-        //   }
-        //   subdialog.setValue(submessage)
-        //   subdialog.gotoLine(subdialog.session.getLength())
-        // })
-        // 订阅
-        var text0 = JSON.stringify({ action: 'start_logger' })
-        //   发送消息
-        const sendInfo = {
-          topic: 'channel/' + this.subdialogid,
-          text: text0,
+        // 向服务器发送的消息过滤的mqtt消息
+        let payload = JSON.stringify({ action: 'start_logger' })
+        const pubInfo = {
+          topic: this.subtopic.replace('log/', ''),
+          text: payload,
           qos: 2,
           retained: true,
         }
-        _this.$dgiotBus.$emit(`MqttPublish`, sendInfo.topic, sendInfo, 2, true)
-        // 在链接成功后发一句消息，启用通道
-        // setTimeout(() => {
-        _this.sendMessage(
-          _this.channeltopic,
-          { action: 'start_logger' },
-          0,
-          false
-        )
-        _this.$dgiotBus.$emit(
-          'MqttPublish',
-          'channel/' + _this.subdialogid,
-          text0,
-          0,
-          false
-        )
-        _this.$dgiotBus.$emit(
-          'MqttPublish',
-          'channel/' + _this.subdialogid,
-          sendInfo,
-          0,
-          false
-        )
-        _this.$dgiotBus.$emit(`MqttPublish`, sendInfo.topic, sendInfo, 2, true)
-        _this.submessage = ''
-        _this.msgList = []
-        _this.logKey = _this.channeltopic.split('log')[1]
-        // _this.sendMessage(_this.channeltopic, sendInfo)
-        // }, 1000)
-        // Websocket.subscribe(info, function (res) {
-        //   if (res.result) {
-        //     var sendInfo = {
-        //       topic: 'channel/' + row.objectId,
-        //       text: text0,
-        //       retained: true,
-        //       qos: 2,
-        //     }
-        //
-        //     _this.subdialogtimer = window.setInterval(() => {
-        //       Websocket.sendMessage(sendInfo)
-        //     }, 600000)
-        //   }
-        // })
+        this.$dgiotBus.$emit(`MqttPublish`, (pubInfo, payload, send, 2, false))
+        this.submessage = ''
+        this.msgList = []
+        this.refreshFlag = this.subtopic.split('log')[1]
+        console.error('this.topicKey', this.topicKey)
+        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        console.error('this.topicKey', this.topicKey)
       },
       stopsub(value) {
         var text0
@@ -1216,10 +1117,8 @@
           retained: true,
           qos: 2,
         }
-        // Websocket.sendMessage(sendInfo)
       },
       handleCloseSubdialog() {
-        console.log('111')
         this.subdialog = !this.subdialog
       },
     },

@@ -46,8 +46,6 @@
 </template>
 
 <script>
-  import MQTTConnect from '@/utils/MQTTConnect'
-  const { options, iotMqtt } = MQTTConnect
   import { uuid } from '@/utils'
   import { mapGetters, mapMutations } from 'vuex'
   import { openFirstMenu } from '@/config'
@@ -93,14 +91,10 @@
         },
         immediate: true,
       },
-      option: {
-        handler(o) {
-          if (!_.isEmpty(o)) this.Mqtt(this.option)
-        },
-        immediate: true,
-      },
     },
     mounted() {
+      console.log(process.env.NODE_ENV)
+      const { VUE_APP_URL, NODE_ENV } = process.env
       // 写在页面公共组件里。确保全局只订阅一个mqtt。刷新则再次重新订阅
       const md5Info = {
         token: md5(this.token),
@@ -108,23 +102,28 @@
         password: md5(this.loginInfo.password),
         router: md5(this.$route.fullPath),
       }
+      const { host, protocol } = location
       this.option = {
         clientId: md5Info.token + uuid(2),
-        ip: options.host,
-        port: options.port,
+        ip: NODE_ENV == 'development' ? VUE_APP_URL.split('//')[1] : host,
+        port: protocol == 'http:' ? 8083 : 8084,
         userName: md5Info.username,
         passWord: md5Info.password,
         router: md5Info.router,
       }
+      this.Mqtt()
     },
     methods: {
-      ...mapMutations({
-        setMqttSettings: 'mqttDB/setMqttSettings',
-      }),
-      Mqtt(option) {
-        // this.initMqtt(option)
-        // this.setMqttSettings(option)
-        // iotMqtt.subscribe('dgiottopic')
+      ...mapMutations({}),
+      async Mqtt() {
+        await this.$dgiotBus.$emit('MqttConnect', this.option)
+        this.$dgiotBus.$emit('MqttSubscribe', {
+          router: md5(this.$route.fullPath),
+          topic: 'h7ml/topic/test/1',
+          ttl: 1000 * 60 * 60 * 3,
+          created: Math.round(new Date() / 1000),
+          qos: 0,
+        })
       },
       handleTabClick(handler) {
         if (handler !== true && openFirstMenu)

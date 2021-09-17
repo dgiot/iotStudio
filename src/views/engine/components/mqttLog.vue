@@ -8,7 +8,7 @@
             {{ $translateTitle('Logs.console') }}
           </span>
           <vab-editor
-            :key="logKey"
+            :key="refreshFlag"
             :value="msg"
             :height="
               isFullscreen
@@ -111,7 +111,7 @@
         default: () => [],
         required: false,
       },
-      logKey: {
+      refreshFlag: {
         type: String,
         default: '',
         required: false,

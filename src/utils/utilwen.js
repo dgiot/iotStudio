@@ -1,5 +1,10 @@
 import i18n from '@/i18n'
 import Bus from './eventBus'
+import dgiotBus from '@dgiot/dgiot-mqtt-dashboard/src/utils/bus'
+import dgiotMixin from '@dgiot/dgiot-mqtt-dashboard/src/mixins/mqtt'
+
+Vue.use(dgiotBus)
+Vue.mixin(dgiotMixin)
 Vue.use(Bus)
 
 import { getToken, setToken, removeToken } from './vuex'
@@ -34,7 +39,6 @@ import {
   getDevice,
 } from '@/api/Device/index'
 import { queryProduct } from '@/api/Product/index'
-import MQTTConnect from '@/utils/MQTTConnect'
 import { getMqttEventId, getTopicEventId } from '@/utils'
 
 // https://www.jianshu.com/p/abdee4e7875a

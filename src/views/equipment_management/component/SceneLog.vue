@@ -198,8 +198,6 @@
 </template>
 
 <script>
-  import MQTTConnect from '@/utils/MQTTConnect'
-  const { options, iotMqtt } = MQTTConnect
   import { postTrace } from '@/api/System'
   export default {
     name: 'SceneLog',

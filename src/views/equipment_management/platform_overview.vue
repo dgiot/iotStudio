@@ -812,7 +812,6 @@
   } from 'vue-baidu-map'
 
   export default {
-    topicKey: '',
     name: 'Index',
     components: {
       BmInfoWindow,
@@ -847,7 +846,8 @@
       }
 
       return {
-        routerKey: '',
+        router: '',
+        topicKey: '',
         loadingConfig: {
           product_count: false,
           app_count: false,
@@ -958,36 +958,20 @@
     watch: {
       topicKey: {
         handler: function (newVal, oldval) {
-          let _this = this
           if (newVal) {
-            _this.$dgiotBus.$off(topicKey)
-            _this.$dgiotBus.$on(topicKey, (res) => {
-              console.log('res', res)
-              const { msg = '', timestamp } = res
-              console.log('val', newVal, oldval, 'res', res)
-              if (!_.isEmpty(msg)) _this.mqttMsg(msg, res, timestamp)
+            this.$dgiotBus.$off(newVal)
+            this.$dgiotBus.$on(newVal, (res) => {
+              console.error(res, 'res')
+              const { payload } = res
+              this.mqttMsg(payload)
             })
           }
           if (oldval) {
             // 取消订阅
-            _this.submessage = ''
-            _this.msgList = []
-            _this.logKey = '99'
+            this.submessage = ''
+            this.msgList = []
+            this.logKey = '99'
           }
-        },
-        deep: true,
-        limit: true,
-      },
-      routerKey: {
-        handler: function (newVal) {
-          let _this = this
-          _this.$dgiotBus.$off(newVal)
-          _this.$dgiotBus.$on(newVal, (res) => {
-            console.log('res', res)
-            const { msg = '', timestamp } = res
-            console.log('val', newVal, 'res', res)
-            if (!_.isEmpty(msg)) _this.mqttMsg(msg, res, timestamp)
-          })
         },
         deep: true,
         limit: true,
@@ -1157,7 +1141,7 @@
           : (this.deviceInfo.topicData = _toppic)
         this.deviceFlag = true
       },
-      mqttMsg(e, { destinationName, payloadString }, k) {
+      mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
         console.log(mqttMsg, 'mqttMsg')
         // // console.log(destinationName, mqttMsg, 'mqttMsg')
@@ -1327,7 +1311,7 @@
           isSSL: location.protocol === 'https:' ? true : false,
           port: location.protocol === 'https:' ? 8084 : 8083,
           connectTimeout: 10 * 1000,
-          router: _this.routerKey,
+          router: _this.router,
         }
         _this.$dgiotBus.$emit('MqttConnect', options)
       },
@@ -1413,17 +1397,16 @@
         // 点击的公司名
         const { name, objectId } = data
         _this.curDepartmentId = objectId
-        _this.routerKey = md5(_this.$route.fullPath)
-        _this.$dgiotBus.$emit('MqttStatus', _this.routerKey)
-        _this.topicKey = md5(_this.channeltopic + _this.$route.fullPath)
+        _this.router = md5(_this.$route.fullPath)
+        _this.$dgiotBus.$emit('MqttStatus', _this.router)
+        _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)
         // this.channeltopic = `dashboard/${this.queryForm.access_token}/post`
         _this.channeltopic = `dashboard/${_this.token}/post`
         _this.$dgiotBus.$emit('MqttSubscribe', {
-          topicKey: _this.topicKey,
+          router: _this.router,
           topic: _this.channeltopic,
-          ttl: 1000 * 60 * 60 * 3,
-          created: moment().format('x'),
           qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
         })
         _this.mqttSuccess('')
         // this.subscribe(this.channeltopic)
