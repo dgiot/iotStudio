@@ -974,11 +974,7 @@
             name: '年',
           },
           {
-            type: 'w',
-            name: '周',
-          },
-          {
-            type: 'd',
+            type: 'n',
             name: '月',
           },
           {
