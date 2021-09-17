@@ -10,7 +10,7 @@
     <el-dialog
       :append-to-body="true"
       :visible.sync="dialogTableVisible"
-      title="dgiot_dashboard异常捕获(温馨提示：错误必须解决)"
+      title="dgiot-dashboard异常捕获(温馨提示：错误必须解决)"
       width="70%"
     >
       <el-table :data="errorLogs" border>

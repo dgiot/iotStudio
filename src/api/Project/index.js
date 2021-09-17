@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-03-03 15:23:10
  * @LastEditors: h7ml
  * @Description: In User Settings Edit
- * @FilePath: \dgiot_dashboard\src\api\Project\index.js
+ * @FilePath: \dgiot-dashboard\src\api\Project\index.js
  */
 import {
   query_object,

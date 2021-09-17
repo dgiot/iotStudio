@@ -3,7 +3,7 @@
  * @Date: 2021-03-10 17:43:51
  * @LastEditTime: 2021-03-10 17:44:13
  * @LastEditors: h7ml
- * @FilePath: \dgiot_dashboard\src\views\webSocket\index.vue
+ * @FilePath: \dgiot-dashboard\src\views\webSocket\index.vue
  * @Description:
 -->
 <template>

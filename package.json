@@ -4,7 +4,7 @@
   "author": "iotn2n",
   "license": "Mozilla Public License Version 2.0",
   "private": false,
-  "homepage": "https://github.com/dgiot/dgiot_dashboard.git",
+  "homepage": "https://github.com/dgiot/dgiot-dashboard.git",
   "scripts": {
     "dev": "vue-cli-service serve",
     "dev:cdn": "cross-env useCdn=true  && yarn downCdn && yarn downIconfront && vue-cli-service serve",
@@ -42,7 +42,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dgiot/dgiot_dashboard.git"
+    "url": "git+https://github.com/dgiot/dgiot-dashboard.git"
   },
   "dependencies": {
     "@babel/helper-plugin-utils": "^7.14.5",

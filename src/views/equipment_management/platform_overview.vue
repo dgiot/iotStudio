@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-03-15 12:42:33
  * @LastEditors: h7ml
  * @Description: In User Settings Edit
- * @FilePath: \dgiot_dashboard\src\views\equipment_management\platform_overview.vue
+ * @FilePath: \dgiot-dashboard\src\views\equipment_management\platform_overview.vue
 -->
 <template>
   <div>

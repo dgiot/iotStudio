@@ -16,7 +16,7 @@
       link: {
         required: false,
         type: String,
-        default: 'https://github.com/dgiot/dgiot_dashboard',
+        default: 'https://github.com/dgiot/dgiot-dashboard',
       },
     },
     methods: {

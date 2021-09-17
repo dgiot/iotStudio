@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-03-03 15:23:10
  * @LastEditors: h7ml
  * @Description: Hash Api
- * @FilePath: \dgiot_dashboard\src\api\Product\index.js
+ * @FilePath: \dgiot-dashboard\src\api\Product\index.js
  */
 // http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/web/getHash.png
 import { Message } from 'element-ui'

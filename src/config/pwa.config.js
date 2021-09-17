@@ -17,8 +17,8 @@ module.exports = {
     manifestOptions: {
       author: 'h7ml',
       dateTime: new Date(),
-      name: 'dgiot_dashboard',
-      short_name: 'dgiot_dashboard',
+      name: 'dgiot-dashboard',
+      short_name: 'dgiot-dashboard',
       description: '提供物联网垂直领域应用使能平台及解决方案',
       display: 'standalone',
       orientation: 'portrait-primary',

@@ -1,6 +1,6 @@
 {
-  "name": "dgiot_dashboard",
-  "short_name": "dgiot_dashboard",
+  "name": "dgiot-dashboard",
+  "short_name": "dgiot-dashboard",
   "theme_color": "#4fc08d",
   "icons": [
     {

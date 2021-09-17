@@ -3,7 +3,7 @@
  * @Date: 2021-03-17 10:37:21
  * @LastEditTime: 2021-03-17 19:55:31
  * @LastEditors: h7ml
- * @FilePath: \dgiot_dashboard\src\router\index.js
+ * @FilePath: \dgiot-dashboard\src\router\index.js
  * @Description:
  */
 /**
