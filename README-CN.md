@@ -1,4 +1,31 @@
 ## dgiot_dashboard
+<p align="center">
+  <img src="https://img.shields.io/github/commit-activity/m/dgiot/dgiot_dashboard" alt="ommit-activity">
+	<img src="https://badgen.net/badge/package/%40dgiot%2Fdgiot_dashboard/blue"
+	alt="package" maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<img src="https://badgen.net/npm/v/@dgiot/dgiot-dashboard" alt="Npm Version"
+	maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<img src="https://badgen.net/npm/node/@dgiot/dgiot-mqtt-dashboard" alt="Node Version"
+	maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<br>
+	<img src="https://badgen.net/jsdelivr/hits/npm/@dgiot/dgiot-dashboard"
+	alt="Jsdeliver Month Downloads" maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<img src="https://badgen.net/packagephobia/install/@dgiot/dgiot-dashboard"
+	alt="Install Size" maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<img src="https://badgen.net/npm/types/@dgiot/dgiot-dashboard" alt="Type Support"
+	maxretrytimes="3" class="m-1 transition-all duration-1000">
+  <img src="https://img.shields.io/badge/Community-DGIOT-yellow" alt="Community">
+  <img src="https://img.shields.io/docker/pulls/dgiot/dgiot-dashboard" alt="docker">
+	<br>
+	<img src="https://img.shields.io/librariesio/release/npm/@dgiot/dgiot-dashboard"
+	alt="Outdated Dep" maxretrytimes="3" class="m-1 transition-all duration-1000">
+	<img src="https://img.shields.io/snyk/vulnerabilities/npm/@dgiot/dgiot-dashboard"
+	alt="Vulnerablities" maxretrytimes="3" class="m-1 transition-all duration-1000">
+  <img src="https://img.shields.io/github/release/dgiot/dgiot_dashboard?color=brightgreen" alt="release">
+  <img src="https://img.shields.io/github/license/dgiot/dgiot_dashboard" alt="license">
+<p>
+
+![微服务架构图_02.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%9B%BE_02.png)
 
 dgiot 前端框架
 
