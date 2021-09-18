@@ -1,3 +1,36 @@
+## [4.3.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.2...v4.3.3) (2021-09-18)
+
+
+### Bug Fixes
+
+* mqtt bus channel ([3cf25d0](https://github.com/dgiot/dgiot-dashboard/commit/3cf25d0d7c7063b0ec2dd0d0f886a73dda326e9d))
+* **view:** the page element click event is invalid ([98212c8](https://github.com/dgiot/dgiot-dashboard/commit/98212c887cff9e5c6bd4c1f437c4f3d95116e7ff))
+
+
+### Features
+
+* **.github/workflows:** npm package release trigger method ([4e22eee](https://github.com/dgiot/dgiot-dashboard/commit/4e22eeeabc3a2a152aee3b64ac84113d6f69c497))
+* **@dgiot/dgiot-mqtt-dashboard:** the project integrates mqtt and uses dgiot-mqtt-dashboard ([e821645](https://github.com/dgiot/dgiot-dashboard/commit/e82164516f3f0ca79655ae85185ba9364d84f3c4))
+* **editdevice.vue:** interval 修改 ([4f97d36](https://github.com/dgiot/dgiot-dashboard/commit/4f97d364f03bc1e5330cf38e8a1fcfe7bb97564b))
+* **src/views/engine/home_resourcechannel.vue:** channel interface mqtt finishing ([b3336a5](https://github.com/dgiot/dgiot-dashboard/commit/b3336a52f7170e995c4ae6006e094fe3962c311d))
+* **src/views/roles/structure.vue:** solve the element not found ([d2fe6d5](https://github.com/dgiot/dgiot-dashboard/commit/d2fe6d538b3a229c30cc0c67cb46e14a8602514e))
+* **src/views/topo/index.vue:** configuration channel mqtt ([b906d4e](https://github.com/dgiot/dgiot-dashboard/commit/b906d4eb930a892265ede3674b4f3cef5d71a1b2))
+* **src/views/topo/index.vue:** topo mqtt updata ([2ea9bec](https://github.com/dgiot/dgiot-dashboard/commit/2ea9bec9a61744b85201e20df65a3b206a67bbee))
+* build ([e5f2d07](https://github.com/dgiot/dgiot-dashboard/commit/e5f2d077656de594939bcd041666300331feeab5))
+
+
+### Performance Improvements
+
+* rename ([9c2af8a](https://github.com/dgiot/dgiot-dashboard/commit/9c2af8ae539443eb2d26369244c5bd36e948f38f))
+* **mqttmixin vuex:** global mqtt store ([502a4ad](https://github.com/dgiot/dgiot-dashboard/commit/502a4ad5c79f38f4296578972047302decb72aee))
+
+
+### Reverts
+
+* recover files deleted by mistake in the last submission ([a6987e1](https://github.com/dgiot/dgiot-dashboard/commit/a6987e1d7ee1be1816fe3f19b1727a1e1ed29ec1))
+
+
+
 ## [4.3.2](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.0...v4.3.2) (2021-09-13)
 
 

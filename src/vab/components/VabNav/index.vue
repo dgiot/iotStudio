@@ -66,6 +66,7 @@
     },
     computed: {
       ...mapGetters({
+        mqttName: 'user/username',
         objectId: 'user/objectId',
         extra: 'settings/extra',
         routes: 'routes/routes',
@@ -93,29 +94,33 @@
       },
     },
     mounted() {
-      console.log(process.env.NODE_ENV)
-      const { VUE_APP_URL, NODE_ENV } = process.env
       // 写在页面公共组件里。确保全局只订阅一个mqtt。刷新则再次重新订阅
       const md5Info = {
         token: md5(this.token),
-        username: md5(this.loginInfo.username),
+        username: this.mqttName,
         password: md5(this.loginInfo.password),
         router: md5(this.$route.fullPath),
       }
-      const { host, protocol } = location
-      this.option = {
-        clientId: md5Info.token + uuid(2),
-        ip: NODE_ENV == 'development' ? VUE_APP_URL.split('//')[1] : host,
-        port: protocol == 'http:' ? 8083 : 8084,
-        userName: md5Info.username,
-        passWord: md5Info.password,
-        router: md5Info.router,
-      }
-      this.Mqtt()
+      this.Mqtt(md5Info)
     },
     methods: {
-      ...mapMutations({}),
-      async Mqtt() {
+      async Mqtt(md5Info) {
+        const { VUE_APP_URL, NODE_ENV } = process.env
+        const { host, protocol } = location
+        this.option = {
+          keepalive: 60,
+          clientId: 'dgiot_mqtt_' + md5(this.token),
+          ip: NODE_ENV == 'development' ? VUE_APP_URL.split('//')[1] : host,
+          isSSL: protocol === 'https:' ? true : false,
+          port: protocol == 'http:' ? 8083 : 8084,
+          userName: md5Info.username,
+          passWord: await dcodeIO.bcrypt.hash(
+            this.objectId + moment().format('YYYY:MM:DD'),
+            3
+          ),
+          connectTimeout: 10 * 1000,
+          router: md5Info.router,
+        }
         await this.$dgiotBus.$emit('MqttConnect', this.option)
         this.$dgiotBus.$emit('MqttSubscribe', {
           router: md5(this.$route.fullPath),

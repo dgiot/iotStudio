@@ -932,7 +932,6 @@
     },
     computed: {
       ...mapGetters({
-        mqttName: 'user/username',
         objectId: 'user/objectId',
         roleTree: 'user/roleTree',
         collapse: 'settings/collapse',
@@ -1263,28 +1262,6 @@
         setTimeout(() => {
           loading.close()
         }, 3000)
-      },
-      async MqttConnect() {
-        let _this = this
-        const options = {
-          keepalive: 60,
-          userName: _this.mqttName,
-          passWord: await dcodeIO.bcrypt.hash(
-            _this.objectId + moment().format('YYYY:MM:DD'),
-            3
-          ),
-          clientId: 'dgiot_mqtt_' + md5(_this.token),
-          clean: false,
-          ip:
-            process.env.NODE_ENV == 'development'
-              ? 'prod.iotn2n.com'
-              : location.hostname,
-          isSSL: location.protocol === 'https:' ? true : false,
-          port: location.protocol === 'https:' ? 8084 : 8083,
-          connectTimeout: 10 * 1000,
-          router: _this.router,
-        }
-        _this.$dgiotBus.$emit('MqttConnect', options)
       },
       async getRoletree() {
         // mqtt 未返回时的容错处理
