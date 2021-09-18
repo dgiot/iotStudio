@@ -520,7 +520,7 @@
       :title="channelname + '日志'"
       :append-to-body="true"
       :visible="subdialog"
-      @close="handleCloseSubdialog"
+      @close="handleCloseSubdialog(pubtopic)"
     >
       <mqtt-log :refresh-key="refreshFlag" :msg="submessage" :list="msgList" />
     </a-drawer>
@@ -558,6 +558,7 @@
         msgList: [],
         submessage: '',
         subtopic: '',
+        pubtopic: '',
         channeindex: 0,
         channeType: '',
         listLoading: false,
@@ -1077,48 +1078,40 @@
         this.subdialogid = row.objectId
         this.channelname = row.objectId
         this.subtopic = 'log/channel/' + row.objectId
+        this.submessage = ''
+        this.msgList = []
         let subInfo = {
           router: this.router,
           topic: this.subtopic,
           qos: 2,
           ttl: 1000 * 60 * 60 * 3,
         }
-        // 订阅接收服务消息的topic
         this.$dgiotBus.$emit('MqttSubscribe', subInfo)
 
-        // 向服务器发送的消息过滤的mqtt消息
-        let payload = JSON.stringify({ action: 'start_logger' })
-        const pubInfo = {
-          topic: this.subtopic.replace('log/', ''),
-          text: payload,
-          qos: 2,
-          retained: true,
-        }
-        this.$dgiotBus.$emit(`MqttPublish`, (pubInfo, payload, send, 2, false))
-        this.submessage = ''
-        this.msgList = []
+        this.pubtopic = this.subtopic.replace('log/', '')
+        this.$dgiotBus.$emit(
+          `MqttPublish`,
+          this.pubtopic,
+          JSON.parse(JSON.stringify({ action: 'start_logger' })),
+          0,
+          false
+        )
         this.refreshFlag = this.subtopic.split('log')[1]
         console.error('this.topicKey', this.topicKey)
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
         console.error('this.topicKey', this.topicKey)
       },
-      stopsub(value) {
-        var text0
-        if (value == false) {
-          // this.subaction = 'start'
-          text0 = JSON.stringify({ action: 'stop_logger' })
-        } else {
-          // this.subaction = 'stop'
-          text0 = JSON.stringify({ action: 'start_logger' })
-        }
-        var sendInfo = {
-          topic: 'channel/' + this.subdialogid,
-          text: text0,
-          retained: true,
-          qos: 2,
-        }
-      },
-      handleCloseSubdialog() {
+      handleCloseSubdialog(pubtopic) {
+        this.$dgiotBus.$emit(
+          `MqttPublish`,
+          pubtopic,
+          JSON.parse(JSON.stringify({ action: 'stop_logger' })),
+          0,
+          false
+        )
+        this.refreshFlag = moment().format('x')
+        this.submessage = ''
+        this.msgList = []
         this.subdialog = !this.subdialog
       },
     },

@@ -877,7 +877,7 @@
         Product: [],
         imgurl:
           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        channeltopic: '',
+        subtopic: '',
         isConnect: false,
         queryForm: {
           account: '',
@@ -957,21 +957,12 @@
     },
     watch: {
       topicKey: {
-        handler: function (newVal, oldval) {
-          if (newVal) {
-            this.$dgiotBus.$off(newVal)
-            this.$dgiotBus.$on(newVal, (res) => {
-              console.error(res, 'res')
-              const { payload } = res
-              this.mqttMsg(payload)
-            })
-          }
-          if (oldval) {
-            // 取消订阅
-            this.submessage = ''
-            this.msgList = []
-            this.logKey = '99'
-          }
+        handler: function (newVal) {
+          this.$dgiotBus.$off(newVal)
+          this.$dgiotBus.$on(newVal, (res) => {
+            const { payload } = res
+            this.mqttMsg(payload)
+          })
         },
         deep: true,
         limit: true,
@@ -979,6 +970,7 @@
     },
     created() {},
     mounted() {
+      this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.initDgiotMqtt()
       // console.log(`global static url ${this._role}`)
       this.queryForm.account =
@@ -998,7 +990,6 @@
        * @returns
        */
       initDgiotMqtt() {
-        this.MqttConnect()
         this.getRoletree()
         this.getProduct()
       },
@@ -1213,29 +1204,9 @@
             this.set_dev_count(this.dev_count)
             break
           default:
-            // console.log(JSON.parse(mqttMsg))
             break
         }
-        // console.info('today warning', this.warnCount)
         this.$forceUpdate()
-      },
-      mqttSuccess(e) {
-        StartDashboard(queryParams)
-          .then((res) => {
-            // console.log(res)
-            // this.$baseNotify(
-            //   e,
-            //   `mqtt${this.$translateTitle('websocket.subscribeSuccess')}`
-            // )
-          })
-          .catch((e) => {
-            // console.log(e)
-            // this.$baseNotify(
-            //   e,
-            //   `mqtt${this.$translateTitle('websocket.subscribeSuccess')}`,
-            //   'error'
-            // )
-          })
       },
       toggleCard(height) {
         // console.log('cardHeight', height)
@@ -1369,8 +1340,7 @@
         }
       },
       async handleNodeClick(data, node) {
-        let _this = this
-        const aclRole = _this._role.map((r) => {
+        const aclRole = this._role.map((r) => {
           return r.name
         })
         $('.el-tree').css({
@@ -1379,48 +1349,33 @@
           'overflow-x': 'auto',
         })
         $('.el-select-dropdown').css({ display: 'none' })
-        _this.queryForm.workGroupName = data.label
-        _this.treeDataValue = data.label
+        this.queryForm.workGroupName = data.label
+        this.treeDataValue = data.label
         // console.log(this.treeDataValue)
         if (aclRole.includes(data.name)) {
-          _this.queryForm.access_token = _this.token
+          this.queryForm.access_token = this.token
         } else if (node.level != 1) {
           // 在这里获取点击厂家的session
           const { access_token = '' } = await getToken(data.name)
-          _this.queryForm.access_token = access_token
+          this.queryForm.access_token = access_token
         } else {
           // console.log(node.level, '登录的token', this.token)
-          _this.queryForm.access_token = _this.token
+          this.queryForm.access_token = this.token
         }
-        _this.queryForm.workGroupTreeShow = !_this.queryForm.workGroupTreeShow
+        this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
 
         // 点击的公司名
         const { name, objectId } = data
-        _this.curDepartmentId = objectId
-        _this.router = md5(_this.$route.fullPath)
-        _this.$dgiotBus.$emit('MqttStatus', _this.router)
-        _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)
-        // this.channeltopic = `dashboard/${this.queryForm.access_token}/post`
-        _this.channeltopic = `dashboard/${_this.token}/post`
-        _this.$dgiotBus.$emit('MqttSubscribe', {
-          router: _this.router,
-          topic: _this.channeltopic,
+        this.curDepartmentId = objectId
+        this.subtopic = `dashboard/${this.token}/post`
+        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        this.$dgiotBus.$emit('MqttSubscribe', {
+          router: this.router,
+          topic: this.subtopic,
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        _this.mqttSuccess('')
-        // this.subscribe(this.channeltopic)
-        // this.$nextTick(() => {
-        //   // this.isConnect = true
-        //   // console.log(this.channeltopic, 'this.channeltopic')
-        //   console.info(
-        //     '%c%s',
-        //     'color: green;font-size: 12px;',
-        //     'channeltopic ' + this.channeltopic
-        //   )
-        //   this.resizeTheChart()
-        // })
-        // $('.el-select-dropdown').css({ height: '0px', display: 'none' })
+        StartDashboard(queryParams)
       },
       handleChange() {},
       handleClickVisit(project) {

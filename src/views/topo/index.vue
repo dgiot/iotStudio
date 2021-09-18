@@ -77,6 +77,8 @@
     },
     data() {
       return {
+        router: '',
+        topicKey: '',
         isFullscreen: false,
         gutter: {
           gutter: 24,
@@ -86,15 +88,6 @@
           lg: 15,
           xl: 18,
         },
-        // 明诚发布用下面的
-        // gutter: {
-        //   gutter: 24,
-        //   xs: 24,
-        //   sm: 18,
-        //   md: 18,
-        //   lg: 19,
-        //   xl: 21,
-        // },
         productid: this.$route.query.productid || '',
       }
     },
@@ -121,8 +114,21 @@
         return this.$route.query.type == 'device' ? true : false
       },
     },
-    watch: {},
+    watch: {
+      topicKey: {
+        handler: function (newVal) {
+          this.$dgiotBus.$off(newVal)
+          this.$dgiotBus.$on(newVal, (res) => {
+            const { payload } = res
+            this.mqttMsg(payload)
+          })
+        },
+        deep: true,
+        limit: true,
+      },
+    },
     mounted() {
+      this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.handleMqtt()
     },
     destroyed() {
@@ -844,16 +850,15 @@
           _this.stage.toJSON(),
           moment(new Date()).valueOf()
         )
-        _this.topotopic = `thing/${_this.productid}/post`
-        const args = {
-          topicKey: md5(
-            `thing/${_this.productid}/post` + _this.$route.fullPath
-          ),
-          topic: `thing/${_this.productid}/post`,
-          ttl: 1000 * 60 * 60 * 3,
-        }
+        _this.subtopic = `thing/${_this.productid}/post`
+        _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)
         // 订阅webscroket
-        _this.$dgiotBus.$emit(`MqttSubscribe`, args)
+        _this.$dgiotBus.$emit(`MqttSubscribe`, {
+          router: this.router,
+          topic: this.subtopic,
+          qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
+        })
         _this.handleMqttMsg()
         // 处理消息
       },
