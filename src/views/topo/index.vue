@@ -114,19 +114,7 @@
         return this.$route.query.type == 'device' ? true : false
       },
     },
-    watch: {
-      topicKey: {
-        handler: function (newVal) {
-          this.$dgiotBus.$off(newVal)
-          this.$dgiotBus.$on(newVal, (res) => {
-            const { payload } = res
-            this.mqttMsg(payload)
-          })
-        },
-        deep: true,
-        limit: true,
-      },
-    },
+    watch: {},
     mounted() {
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.handleMqtt()
@@ -134,7 +122,7 @@
     destroyed() {
       this.$dgiotBus.$emit(
         'MqttUnbscribe',
-        md5(this.topotopic + this.$route.fullPath),
+        this.$dgiotBus.topicKey(this.router + this.topotopic),
         this.topotopic
       )
     },
@@ -483,18 +471,18 @@
       },
       // 处理mqtt信息
       handleMqttMsg() {
-        const router = md5(this.topotopic + this.$route.fullPath)
-        this.$dgiotBus.$off(router)
-        this.$dgiotBus.$on(router, (Msg) => {
+        console.error('this.topicKey', this.topicKey)
+        this.$dgiotBus.$off(this.topicKey)
+        this.$dgiotBus.$on(this.topicKey, (Msg) => {
           console.log('收到消息', Msg)
-          if (Msg.msg) {
+          if (Msg.payload) {
             let decodeMqtt
             let updataId = []
-            if (!isBase64(Msg.msg)) {
+            if (!isBase64(Msg.payload)) {
               console.log('非base64数据类型')
-              return
+              decodeMqtt = Msg.payload
             } else {
-              decodeMqtt = JSON.parse(Base64.decode(Msg.msg))
+              decodeMqtt = JSON.parse(Base64.decode(Msg.payload))
               console.log('消息解密消息', decodeMqtt)
             }
 
