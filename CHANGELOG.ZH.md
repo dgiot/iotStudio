@@ -13,7 +13,6 @@
 * **@dgiot/dgiot-mqtt-dashboard:** the project integrates mqtt and uses dgiot-mqtt-dashboard ([e821645](https://github.com/dgiot/dgiot-dashboard/commit/e82164516f3f0ca79655ae85185ba9364d84f3c4))
 * **editdevice.vue:** interval 修改 ([4f97d36](https://github.com/dgiot/dgiot-dashboard/commit/4f97d364f03bc1e5330cf38e8a1fcfe7bb97564b))
 * **src/views/engine/home_resourcechannel.vue:** channel interface mqtt finishing ([b3336a5](https://github.com/dgiot/dgiot-dashboard/commit/b3336a52f7170e995c4ae6006e094fe3962c311d))
-* **src/views/equipment_management/platform_overview.vue:** mqtt ([e92910d](https://github.com/dgiot/dgiot-dashboard/commit/e92910dd390e904d1a47b1c09935676743bad9c1))
 * **src/views/roles/structure.vue:** solve the element not found ([d2fe6d5](https://github.com/dgiot/dgiot-dashboard/commit/d2fe6d538b3a229c30cc0c67cb46e14a8602514e))
 * **src/views/topo/index.vue:** configuration channel mqtt ([b906d4e](https://github.com/dgiot/dgiot-dashboard/commit/b906d4eb930a892265ede3674b4f3cef5d71a1b2))
 * **src/views/topo/index.vue:** topo mqtt updata ([2ea9bec](https://github.com/dgiot/dgiot-dashboard/commit/2ea9bec9a61744b85201e20df65a3b206a67bbee))

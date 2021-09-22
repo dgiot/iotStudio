@@ -535,6 +535,7 @@ export default {
       productinformation: '产品信息',
       productidentification: '产品标识',
       gateway: '网关',
+      direct: '直联',
       networkinganddescription: '连网与描述',
       networking: '连网方式',
       honeycomb: '蜂窝',

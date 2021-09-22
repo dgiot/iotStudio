@@ -161,8 +161,11 @@
               <span v-if="scope.row.nodeType == 1">
                 {{ $translateTitle('product.gateway') }}
               </span>
-              <span v-if="scope.row.nodeType == 0">
+              <span v-else-if="scope.row.nodeType == 0">
                 {{ $translateTitle('product.equipment') }}
+              </span>
+              <span v-if="scope.row.nodeType == 2">
+                {{ $translateTitle('product.direct') }}
               </span>
             </template>
           </el-table-column>
@@ -284,18 +287,18 @@
     </div>
     <!--      </el-tab-pane>-->
     <!--    </el-tabs>-->
-    <div class="prodialog">
+    <div class="devproduct-prodialog">
       <!-- 创建产品对话框 ###-->
-      <el-dialog
+      <el-drawer
         :append-to-body="true"
         :title="moduleTitle"
         :visible.sync="dialogFormVisible"
         :close-on-click-modal="false"
         :before-close="handleClose"
-        size="60%"
+        size="100%"
         top="5vh"
       >
-        <div class="content">
+        <div class="devproduct-prodialog-content">
           <!--产品信息-->
           <div class="contentone">
             <div style="display: flex">
@@ -330,6 +333,7 @@
               <el-form-item :label="$translateTitle('product.classification')">
                 <el-cascader
                   v-model="form.category"
+                  style="width: 100%"
                   :options="categoryListOptions"
                 />
               </el-form-item>
@@ -367,6 +371,9 @@
                   <el-radio :label="1">
                     {{ $translateTitle('product.gateway') }}
                   </el-radio>
+                  <el-radio :label="2">
+                    {{ $translateTitle('product.direct') }}
+                  </el-radio>
                 </el-radio-group>
               </el-form-item>
               <!-- <el-form-item label="是否接入网关" v-show="form.resource=='网关'">
@@ -387,6 +394,7 @@
               >
                 <el-select
                   v-model="form.netType"
+                  style="width: 100%"
                   :placeholder="$translateTitle('product.selectgateway')"
                 >
                   <el-option
@@ -445,24 +453,9 @@
               </el-form-item>
             </el-form>
           </div>
-          <!--节点类型-->
-          <div class="contenttwo" style="margin-top: 20px">
-            <div style="display: flex">
-              <span>{{ $translateTitle('product.nodetype') }}</span>
-              <p
-                style="
-                  flex-grow: 2;
-                  width: auto;
-                  height: 1px;
-                  margin: 10px;
-                  border-top: 1px dashed #dddddd;
-                "
-              />
-            </div>
-          </div>
         </div>
 
-        <div slot="footer" class="dialog-footer">
+        <div class="devproduct-prodialog-footer">
           <el-button type="primary" @click="submitForm()">
             {{ $translateTitle('developer.determine') }}
           </el-button>
@@ -470,7 +463,7 @@
             {{ $translateTitle('developer.cancel') }}
           </el-button>
         </div>
-      </el-dialog>
+      </el-drawer>
       <!--新增字典-->
       <a-drawer
         v-if="dictVisible"
@@ -1148,6 +1141,7 @@
   export default {
     data() {
       return {
+        drawerWidth: Number($(window).width()) - 240,
         height: this.$baseTableHeight(0),
         config: {},
         dataList: [{}],
@@ -2291,6 +2285,17 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+    &-prodialog {
+      margin-left: 52px;
+      &-content {
+        width: 80%;
+        margin: 0 10%;
+      }
+      &-footer {
+        text-align: center;
+        margin: 0 auto;
+      }
+    }
   }
 
   .devproduct ::v-deep .el-dialog__wrapper .el-dialog__header,
