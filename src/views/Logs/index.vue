@@ -1,18 +1,5 @@
 <template>
   <div class="logs logs-container">
-    <div class="mqtt">
-      <VabMqtt
-        ref="dgiot_log"
-        :key="logMqtt.key"
-        :client-id="'dgiot_log' + logMqtt.key"
-        :topic="logMqtt.channeltopic"
-        :reconnection="true"
-        @mqttMsg="mqttMsg"
-        @mqttError="mqttError"
-        @mqttConnectLost="mqttConnectLost"
-        @mqttSuccess="mqttSuccess"
-      />
-    </div>
     <a-row class="logs-row">
       <a-col
         :xs="24"
@@ -99,7 +86,7 @@
               {{ $translateTitle('Logs.console') }}
             </span>
             <vab-editor
-              :key="logMqtt.key"
+              :key="key"
               v-model="clickItem"
               :height="
                 isFullscreen
@@ -171,7 +158,7 @@
             </vab-query-form>
 
             <el-table
-              :key="logMqtt.key"
+              :key="key"
               ref="dragTable"
               border
               resizable
@@ -260,6 +247,7 @@
 
 <script>
   import { post_tree, putLogLevel } from '@/api/Logs'
+  import { isBase64 } from '@/utils'
   export default {
     name: 'RealLog',
     data() {
@@ -268,6 +256,10 @@
           channeltopic: '',
           key: moment(new Date()).valueOf(),
         },
+        key: moment(new Date()).valueOf(),
+        subtopic: '',
+        topicKey: '',
+        router: '',
         currentPage: 1,
         pageSize: 20,
         isFullscreen: false,
@@ -324,29 +316,9 @@
         }
       },
     },
-    watch: {
-      'logMqtt.channeltopic': {
-        handler(newName, oldName) {
-          if (newName)
-            this.$baseMessage(
-              this.logMqtt.channeltopic +
-                this.$translateTitle('websocket.subscribeSuccess'),
-              'success',
-              false,
-              'vab-hey-message-success'
-            )
-          this.$baseNotify(
-            this.logMqtt.channeltopic,
-            'topic:',
-            'success',
-            '',
-            5000
-          )
-          if (oldName) iotMqtt.unsubscribe(oldName)
-        },
-      },
-    },
+    watch: {},
     mounted() {
+      this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.getTree(this.treeQueryForm)
     },
     methods: {
@@ -437,48 +409,39 @@
       subLog() {
         this.clickItem = ''
         this.scroketMsg = []
-        this.logMqtt.key = moment(new Date()).valueOf()
-        console.log(this.dataRef, 'subLog')
+        this.key = moment(new Date()).valueOf()
         if (this.dataRef.objectId) {
-          this.logMqtt.channeltopic = `${this.dataRef.topic}`
-          this.$nextTick(() => {
-            this.$refs.dgiot_log.clientMqtt()
-            // iotMqtt.subscribe(this.logMqtt.channeltopic)
+          this.subtopic = `${this.dataRef.topic}`
+          this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+          this.$dgiotBus.$emit(`MqttSubscribe`, {
+            router: this.router,
+            topic: this.subtopic,
+            qos: 0,
+            ttl: 1000 * 60 * 60 * 3,
           })
+
+          this.$baseMessage(
+            this.subtopic + this.$translateTitle('websocket.subscribeSuccess'),
+            'success',
+            false,
+            'vab-hey-message-success'
+          )
+          this.$baseNotify(this.subtopic, 'topic:', 'success', '', 5000)
+          this.handleMqttMsg()
         }
       },
-      mqttMsg(e, key) {
-        console.log(e, 'mqttMsg', key)
-        this.scroketMsg.push(JSON.parse(e))
-        this.logMqtt.key = key
-        this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
-        // console.log(e, 'mqttMsg')
-      },
-      mqttConnectLost(e) {
-        // this.$baseMessage(
-        //   this.logMqtt.channeltopic +
-        //     this.$translateTitle(
-        //       'websocket.mqtt connection failed, automatically reconnect'
-        //     ),
-        //   'warning',
-        //   false,
-        //   'vab-hey-message-warning'
-        // )
-        this.$refs.dgiot_log.clientMqtt()
-        console.log('mqttConnectLost', e)
-      },
-      mqttSuccess(clientId) {
-        console.log('mqttSuccess', e)
-      },
-      mqttError(e) {
-        this.$baseMessage(
-          this.logMqtt.channeltopic +
-            this.$translateTitle('websocket.subscribeFailure'),
-          'error',
-          false,
-          'vab-hey-message-error'
-        )
-        console.log('mqttError', e)
+      handleMqttMsg() {
+        this.scroketMsg = []
+        this.clickItem = ''
+        this.$dgiotBus.$off(this.topicKey)
+        this.$dgiotBus.$on(this.topicKey, (Msg) => {
+          console.log('收到消息', Msg)
+          if (Msg.payload) {
+            this.scroketMsg.push(JSON.parse(Msg.payload))
+            this.key = moment(new Date()).valueOf()
+            this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
+          }
+        })
       },
     },
   }
