@@ -9,7 +9,6 @@ release
 .env.*.local
 
 # Log files
-logs
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -37,7 +36,7 @@ pnpm-debug.log*
 
 # config
 /gitbit
-/.git
+/github
 src/config/developer.lock.js
 src/config/developer.config.js
 swagger.json
