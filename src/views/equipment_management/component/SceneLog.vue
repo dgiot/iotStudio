@@ -225,6 +225,8 @@
           channeltopic: '',
           key: moment(new Date()).valueOf(),
         },
+        subtopic: '',
+        router: '',
         scroketMsg: [],
         clickItem: '',
         isFullscreen: false,
@@ -302,10 +304,7 @@
       },
     },
     mounted() {
-      this.topicKey = this.topic + this.$route.fullPath
-      this.topic = 'logger_trace/trace/' + this.$route.query.deviceid + '/#'
-      // this.$dgiotBus.$off(`${this.topicKey}`)
-      this.bus(this.topicKey, this.topic, this.ttl)
+      this.router = this.$dgiotBus.router(this.$route.fullPath)
     },
     created() {},
     beforeCreate() {}, //生命周期 - 创建之前
@@ -316,14 +315,6 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
-      bus(topicKey, topic) {
-        console.log(' this.topic ', topic)
-        this.$dgiotBus.$off(`${this.topicKey}`)
-        this.$dgiotBus.$on(`${this.topicKey}`, (res) => {
-          const { msg = '', timestamp } = res
-          if (!_.isEmpty(msg)) this.mqttMsg(msg, res, timestamp)
-        })
-      },
       handleHeight() {
         this.isFullscreen = !this.isFullscreen
         if (this.isFullscreen) this.height = this.$baseTableHeight(0) + 120
@@ -377,19 +368,28 @@
       queryTable() {
         this.scroketMsg = []
         this.clickItem = ''
-        this.queryForm.topic = 'logger_trace/trace/' + this.productId + '/#'
-        // this.topic = this.queryForm.topic + this.logMqtt.key + ''
         this.queryForm.deviceid = this.deviceInfo.objectId
         if (this.queryForm.action == 'start')
-          this.$dgiotBus.$emit('MqttSubscribe', {
-            topicKey: this.topicKey,
-            topic: this.topic,
-            ttl: this.ttl,
-          })
+          this.subtopic =
+            'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
+        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        this.$dgiotBus.$emit(`MqttSubscribe`, {
+          router: this.router,
+          topic: this.subtopic,
+          qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
+        })
+        this.$dgiotBus.$off(`${this.topicKey}`)
+        this.$dgiotBus.$on(`${this.topicKey}`, (Msg) => {
+          if (Msg.payload) {
+            this.scroketMsg.push(JSON.parse(Msg.payload))
+            this.logMqtt.key = this.topicKey
+            this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
+          }
+        })
         //   :
         const loading = this.$baseColorfullLoading()
-        const { level, action, topic, order, deviceid, tracetype } =
-          this.queryForm
+        const { level, action, order, deviceid, tracetype } = this.queryForm
         const handle =
           this.queryForm.tracetype == 'clientid'
             ? this.queryForm.deviceid
@@ -442,23 +442,6 @@
           )
         }
         this.momentKey = moment(new Date()).valueOf()
-      },
-      mqttMsg(e, msg, key) {
-        // const msg =   {
-        //   "topic": "testtopic",
-        //   "time": 1631083271442413,
-        //   "pid": "<0.21153.0>",
-        //   "peername": "183.128.48.161:55095",
-        //   "msg": "PUBLISH to testtopic: <<\"{ \\\"msg\\\": \\\"Hello, World!\\\" }\">>",
-        //   "level": "info",
-        //   "gl": "<0.1629.0>",
-        //   "clientid": "6e0f054b82",
-        //   "mfa": "emqx_tracer/trace/2"
-        // }
-        this.scroketMsg.push(JSON.parse(e))
-        this.logMqtt.key = key
-        this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
-        console.log('payload,msg,key', msg, key)
       },
     },
   }

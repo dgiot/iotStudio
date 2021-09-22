@@ -122,13 +122,13 @@
           router: md5Info.router,
         }
         await this.$dgiotBus.$emit('MqttConnect', this.option)
-        this.$dgiotBus.$emit('MqttSubscribe', {
-          router: md5(this.$route.fullPath),
-          topic: 'h7ml/topic/test/1',
-          ttl: 1000 * 60 * 60 * 3,
-          created: Math.round(new Date() / 1000),
-          qos: 0,
-        })
+        // this.$dgiotBus.$emit('MqttSubscribe', {
+        //   router: md5(this.$route.fullPath),
+        //   topic: 'h7ml/topic/test/1',
+        //   ttl: 1000 * 60 * 60 * 3,
+        //   created: Math.round(new Date() / 1000),
+        //   qos: 0,
+        // })
       },
       handleTabClick(handler) {
         if (handler !== true && openFirstMenu)
