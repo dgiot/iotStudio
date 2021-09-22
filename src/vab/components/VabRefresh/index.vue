@@ -18,6 +18,15 @@
         visitedRoutes: 'tabs/visitedRoutes',
       }),
     },
+    created() {
+      this.$dgiotBus.$off('refresh')
+      this.$dgiotBus.$on('refresh', (args) => {
+        console.log('我调用了', args)
+        // location.reload()
+        // this.$router.go(0)
+        this.refreshRoute()
+      })
+    },
     methods: {
       async refreshRoute() {
         const currentRoute = this.$route

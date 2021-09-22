@@ -1118,11 +1118,7 @@
             <el-row v-show="sizeForm.protocol != 'modbus'" :gutter="24">
               <el-col :span="12">
                 <el-form-item label="数据地址">
-                  <el-input
-                    v-model="sizeForm.dis"
-                    :disabled="sizeForm.isdis"
-                    placeholder="数据地址"
-                  />
+                  <el-input v-model="sizeForm.dis" placeholder="数据地址" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -1759,7 +1755,7 @@
           }
         }
         obj.nobound = this.sizeForm.nobound
-        obj.dis = this.sizeForm.dis
+        obj.dis = item.dataForm.address
         obj.isdis = this.sizeForm.isdis
         console.log('obj', obj)
         that.setSizeForm(obj)
