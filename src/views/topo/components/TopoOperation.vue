@@ -311,33 +311,42 @@
           var obj = {}
           // 提交之前需要先判断类型
           if (
-            ['float', 'double', 'int'].indexOf(konvathing.dataType.type) != -1
+            ['float', 'double', 'int', 'long'].indexOf(konvathing.dataType.type) !=
+            -1
           ) {
             obj = {
               name: konvathing.name,
-              // konvathing.dataType
+              devicetype: konvathing.devicetype,
               type: konvathing.dataType.type,
               endnumber: this.$objGet(konvathing, 'dataType.specs.max'),
               startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
               step: this.$objGet(konvathing, 'dataType.specs.step'),
               unit: this.$objGet(konvathing, 'dataType.specs.unit'),
+              precision: this.$objGet(konvathing, 'dataType.specs.precision'),
               // : konvathing.dataForm.
               dis: this.$objGet(konvathing, 'dataForm.address'),
               round: this.$objGet(konvathing, 'dataForm.round'),
-              dinumber: this.$objGet(konvathing, 'dataForm.quantity'),
+              dinumber: this.$objGet(konvathing, 'dataForm.data'),
               rate: this.$objGet(konvathing, 'dataForm.rate'),
               offset: this.$objGet(konvathing, 'dataForm.offset'),
-              byteorder: this.$objGet(konvathing, 'dataForm.byteorder'),
+              order: this.$objGet(konvathing, 'dataForm.order'),
               protocol: this.$objGet(konvathing, 'dataForm.protocol'),
               operatetype: this.$objGet(konvathing, 'dataForm.operatetype'),
               originaltype: this.$objGet(konvathing, 'dataForm.originaltype'),
+              iscount: this.$objGet(konvathing, 'dataForm.iscount'),
+              countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
+              countround: this.$objGet(konvathing, 'dataForm.countround'),
+              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
               slaveid: this.$objGet(konvathing, 'dataForm.slaveid'),
               collection: '',
               control: '',
               strategy: '',
               required: true,
+              ico: konvathing.ico,
               isread: konvathing.accessMode,
+              isshow: konvathing.isshow,
               identifier: konvathing.identifier,
+              editdatatype: true,
             }
             if (konvathing.dataForm) {
               obj.collection = konvathing.dataForm.collection
@@ -347,6 +356,7 @@
           } else if (konvathing.dataType.type == 'bool') {
             obj = {
               name: konvathing.name,
+              devicetype: konvathing.devicetype,
               type: konvathing.dataType.type,
               true: konvathing.dataType.specs[1],
               false: konvathing.dataType.specs[0],
@@ -356,29 +366,67 @@
               unit: this.$objGet(konvathing, 'dataType.specs.unit'),
               round: this.$objGet(konvathing, 'dataForm.round'),
               dis: this.$objGet(konvathing, 'dataForm.address'),
-              dinumber: this.$objGet(konvathing, 'dataForm.quantity'),
+              dinumber: this.$objGet(konvathing, 'dataForm.data'),
               rate: this.$objGet(konvathing, 'dataForm.rate'),
               offset: this.$objGet(konvathing, 'dataForm.offset'),
-              byteorder: this.$objGet(konvathing, 'dataForm.byteorder'),
+              order: this.$objGet(konvathing, 'dataForm.order'),
               protocol: this.$objGet(konvathing, 'dataForm.protocol'),
               operatetype: this.$objGet(konvathing, 'dataForm.operatetype'),
               originaltype: this.$objGet(konvathing, 'dataForm.originaltype'),
               slaveid: this.$objGet(konvathing, 'dataForm.slaveid'),
+              iscount: this.$objGet(konvathing, 'dataForm.iscount'),
+              countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
+              countround: this.$objGet(konvathing, 'dataForm.countround'),
+              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
               required: false,
+              ico: konvathing.ico,
               isread: konvathing.accessMode,
+              isshow: konvathing.isshow,
               identifier: konvathing.identifier,
               collection:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.control,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
               strategy:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+              editdatatype: true,
+            }
+          } else if (konvathing.dataType.type == 'image') {
+            obj = {
+              name: konvathing.name,
+              devicetype: konvathing.devicetype,
+              type: konvathing.dataType.type,
+              imagevalue: konvathing.dataType.imagevalue,
+              // konvathing.dataForm.
+              startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
+              step: this.$objGet(konvathing, 'dataType.specs.step'),
+              unit: this.$objGet(konvathing, 'dataType.specs.unit'),
+              round: this.$objGet(konvathing, 'dataForm.round'),
+              dis: this.$objGet(konvathing, 'dataForm.address'),
+              dinumber: this.$objGet(konvathing, 'dataForm.data'),
+              rate: this.$objGet(konvathing, 'dataForm.rate'),
+              offset: this.$objGet(konvathing, 'dataForm.offset'),
+              order: this.$objGet(konvathing, 'dataForm.order'),
+              protocol: this.$objGet(konvathing, 'dataForm.protocol'),
+              operatetype: this.$objGet(konvathing, 'dataForm.operatetype'),
+              originaltype: this.$objGet(konvathing, 'dataForm.originaltype'),
+              slaveid: this.$objGet(konvathing, 'dataForm.slaveid'),
+              iscount: this.$objGet(konvathing, 'dataForm.iscount'),
+              countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
+              countround: this.$objGet(konvathing, 'dataForm.countround'),
+              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
+              required: false,
+              ico: konvathing.ico,
+              isread: konvathing.accessMode,
+              isshow: konvathing.isshow,
+              identifier: konvathing.identifier,
+              collection:
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
+              control:
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
+              strategy:
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+              editdatatype: true,
             }
           } else if (konvathing.dataType.type == 'enum') {
             var structArray = []
@@ -390,6 +438,7 @@
             }
             obj = {
               name: konvathing.name,
+              devicetype: konvathing.devicetype,
               type: konvathing.dataType.type,
               specs: konvathing.dataType.specs,
               struct: structArray,
@@ -398,33 +447,35 @@
               unit: this.$objGet(konvathing, 'dataType.specs.unit'),
               round: this.$objGet(konvathing, 'dataForm.round'),
               dis: this.$objGet(konvathing, 'dataForm.address'),
-              dinumber: this.$objGet(konvathing, 'dataForm.quantity'),
+              dinumber: this.$objGet(konvathing, 'dataForm.data'),
               rate: this.$objGet(konvathing, 'dataForm.rate'),
               offset: this.$objGet(konvathing, 'dataForm.offset'),
-              byteorder: this.$objGet(konvathing, 'dataForm.byteorder'),
+              order: this.$objGet(konvathing, 'dataForm.order'),
               protocol: this.$objGet(konvathing, 'dataForm.protocol'),
               operatetype: this.$objGet(konvathing, 'dataForm.operatetype'),
               originaltype: this.$objGet(konvathing, 'dataForm.originaltype'),
               slaveid: this.$objGet(konvathing, 'dataForm.slaveid'),
+              iscount: this.$objGet(konvathing, 'dataForm.iscount'),
+              countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
+              countround: this.$objGet(konvathing, 'dataForm.countround'),
+              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
               required: true,
+              ico: konvathing.ico,
               isread: konvathing.accessMode,
+              isshow: konvathing.isshow,
               identifier: konvathing.identifier,
               collection:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.control,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
               strategy:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+              editdatatype: true,
             }
           } else if (konvathing.dataType.type == 'struct') {
             obj = {
               name: konvathing.name,
+              devicetype: konvathing.devicetype,
               type: konvathing.dataType.type,
               struct: konvathing.dataType.specs,
               startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
@@ -432,97 +483,137 @@
               unit: this.$objGet(konvathing, 'dataType.specs.unit'),
               round: this.$objGet(konvathing, 'dataForm.round'),
               dis: this.$objGet(konvathing, 'dataForm.address'),
-              dinumber: this.$objGet(konvathing, 'dataForm.quantity'),
+              dinumber: this.$objGet(konvathing, 'dataForm.data'),
               rate: this.$objGet(konvathing, 'dataForm.rate'),
               offset: this.$objGet(konvathing, 'dataForm.offset'),
-              byteorder: this.$objGet(konvathing, 'dataForm.byteorder'),
+              order: this.$objGet(konvathing, 'dataForm.order'),
               protocol: this.$objGet(konvathing, 'dataForm.protocol'),
               operatetype: this.$objGet(konvathing, 'dataForm.operatetype'),
               originaltype: this.$objGet(konvathing, 'dataForm.originaltype'),
               slaveid: this.$objGet(konvathing, 'dataForm.slaveid'),
+              iscount: this.$objGet(konvathing, 'dataForm.iscount'),
+              countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
+              countround: this.$objGet(konvathing, 'dataForm.countround'),
+              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
               required: true,
+              ico: konvathing.ico,
               isread: konvathing.accessMode,
+              isshow: konvathing.isshow,
               collection:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.control,
-              identifier:
-                konvathing.dataForm == undefined ? '' : konvathing.identifier,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
+              identifier: konvathing.dataForm == undefined ? '' : konvathing.identifier,
               strategy:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+              editdatatype: true,
             }
-          } else if (konvathing.dataType.type == 'string') {
+          } else if (konvathing.dataType.type == 'text') {
             obj = {
               name: konvathing.name,
+              devicetype: konvathing.devicetype,
               type: konvathing.dataType.type,
               collection:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.control,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
               string: konvathing.dataType.size,
               startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
               step: this.$objGet(konvathing, 'dataType.specs.step'),
               unit: this.$objGet(konvathing, 'dataType.specs.unit'),
               round: this.$objGet(konvathing, 'dataForm.round'),
               dis: this.$objGet(konvathing, 'dataForm.address'),
-              dinumber: this.$objGet(konvathing, 'dataForm.quantity'),
+              dinumber: this.$objGet(konvathing, 'dataForm.data'),
               rate: this.$objGet(konvathing, 'dataForm.rate'),
               offset: this.$objGet(konvathing, 'dataForm.offset'),
-              byteorder: this.$objGet(konvathing, 'dataForm.byteorder'),
+              order: this.$objGet(konvathing, 'dataForm.order'),
               protocol: this.$objGet(konvathing, 'dataForm.protocol'),
               operatetype: this.$objGet(konvathing, 'dataForm.operatetype'),
               originaltype: this.$objGet(konvathing, 'dataForm.originaltype'),
               slaveid: this.$objGet(konvathing, 'dataForm.slaveid'),
+              iscount: this.$objGet(konvathing, 'dataForm.iscount'),
+              countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
+              countround: this.$objGet(konvathing, 'dataForm.countround'),
+              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
               required: true,
+              ico: konvathing.ico,
               isread: konvathing.accessMode,
+              isshow: konvathing.isshow,
               identifier: konvathing.identifier,
               strategy:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+              editdatatype: true,
             }
           } else if (konvathing.dataType.type == 'date') {
             obj = {
               name: konvathing.name,
+              devicetype: konvathing.devicetype,
               type: konvathing.dataType.type,
               collection:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.control,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
               strategy:
-                konvathing.dataForm == undefined
-                  ? ''
-                  : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
               startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
               step: this.$objGet(konvathing, 'dataType.specs.step'),
               unit: this.$objGet(konvathing, 'dataType.specs.unit'),
               round: this.$objGet(konvathing, 'dataForm.round'),
               dis: this.$objGet(konvathing, 'dataForm.address'),
-              dinumber: this.$objGet(konvathing, 'dataForm.quantity'),
+              order: this.$objGet(konvathing, 'dataForm.order'),
+              dinumber: this.$objGet(konvathing, 'dataForm.data'),
               rate: this.$objGet(konvathing, 'dataForm.rate'),
               offset: this.$objGet(konvathing, 'dataForm.offset'),
-              byteorder: this.$objGet(konvathing, 'dataForm.byteorder'),
               protocol: this.$objGet(konvathing, 'dataForm.protocol'),
               operatetype: this.$objGet(konvathing, 'dataForm.operatetype'),
               originaltype: this.$objGet(konvathing, 'dataForm.originaltype'),
               slaveid: this.$objGet(konvathing, 'dataForm.slaveid'),
+              iscount: this.$objGet(konvathing, 'dataForm.iscount'),
+              countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
+              countround: this.$objGet(konvathing, 'dataForm.countround'),
+              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
               required: true,
+              ico: konvathing.ico,
               isread: konvathing.accessMode,
+              isshow: konvathing.isshow,
               identifier: konvathing.identifier,
+              editdatatype: true,
+            }
+          } else if (konvathing.dataType.type == 'geopoint') {
+            obj = {
+              name: konvathing.name,
+              devicetype: konvathing.devicetype,
+              type: konvathing.dataType.type,
+              gpstype: konvathing.dataType.gpstype,
+              collection:
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
+              control:
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
+              strategy:
+                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+              startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
+              step: this.$objGet(konvathing, 'dataType.specs.step'),
+              unit: this.$objGet(konvathing, 'dataType.specs.unit'),
+              round: this.$objGet(konvathing, 'dataForm.round'),
+              dis: this.$objGet(konvathing, 'dataForm.address'),
+              order: this.$objGet(konvathing, 'dataForm.order'),
+              dinumber: this.$objGet(konvathing, 'dataForm.data'),
+              rate: this.$objGet(konvathing, 'dataForm.rate'),
+              offset: this.$objGet(konvathing, 'dataForm.offset'),
+              protocol: this.$objGet(konvathing, 'dataForm.protocol'),
+              operatetype: this.$objGet(konvathing, 'dataForm.operatetype'),
+              originaltype: this.$objGet(konvathing, 'dataForm.originaltype'),
+              slaveid: this.$objGet(konvathing, 'dataForm.slaveid'),
+              iscount: this.$objGet(konvathing, 'dataForm.iscount'),
+              countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
+              countround: this.$objGet(konvathing, 'dataForm.countround'),
+              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
+              required: true,
+              ico: konvathing.ico,
+              isread: konvathing.accessMode,
+              isshow: konvathing.isshow,
+              identifier: konvathing.identifier,
+              editdatatype: true,
             }
           }
           obj.nobound = []
@@ -654,16 +745,10 @@
           }
           Object.assign(obj, obj1)
         }
-        // 检测到
-        // if (this.wmxSituation == '新增') {
-        //   // console.log("新增");
-        //   this.properties.push(obj)
-        // } else if (this.wmxSituation == '编辑') {
-        //   console.log('编辑', obj)
         let flag = true
-        this.properties.forEach((rowData, index) => {
-          console.log(rowData, 'rowData')
-          if (rowData.identifier === obj.identifier) {
+        this.properties.forEach((row, index) => {
+          console.log(row, 'row')
+          if (row.identifier === obj.identifier) {
             this.properties[index] = obj
             console.log(this.properties[index], 'this.properties[index]')
             flag = false

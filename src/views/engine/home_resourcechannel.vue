@@ -1088,18 +1088,18 @@
         }
         this.$dgiotBus.$emit('MqttSubscribe', subInfo)
 
-        this.pubtopic = this.subtopic.replace('log/', '')
-        this.$dgiotBus.$emit(
-          `MqttPublish`,
-          this.pubtopic,
-          JSON.parse(JSON.stringify({ action: 'start_logger' })),
-          0,
-          false
-        )
-        this.refreshFlag = this.subtopic.split('log')[1]
-        console.error('this.topicKey', this.topicKey)
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        console.error('this.topicKey', this.topicKey)
+        this.pubtopic = this.subtopic.replace('log/', '')
+        setTimeout(() => {
+          this.$dgiotBus.$emit(
+            `MqttPublish`,
+            this.pubtopic,
+            JSON.parse(JSON.stringify({ action: 'start_logger' })),
+            0,
+            false
+          )
+          this.refreshFlag = this.subtopic.split('log')[1]
+        }, 500)
       },
       handleCloseSubdialog(pubtopic) {
         this.$dgiotBus.$emit(
