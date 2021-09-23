@@ -1,6 +1,8 @@
 ---
 name: 报告缺陷
 about: 报告缺陷以帮助我们改进
+labels: bug
+assignees: h7ml
 ---
 
 ### 描述问题
