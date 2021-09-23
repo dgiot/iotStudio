@@ -158,14 +158,14 @@
             :label="$translateTitle('product.nodetype')"
           >
             <template slot-scope="scope">
+              <span v-if="scope.row.nodeType == 3">
+                {{ $translateTitle('product.direct') }}
+              </span>
               <span v-if="scope.row.nodeType == 1">
                 {{ $translateTitle('product.gateway') }}
               </span>
               <span v-else-if="scope.row.nodeType == 0">
                 {{ $translateTitle('product.equipment') }}
-              </span>
-              <span v-if="scope.row.nodeType == 2">
-                {{ $translateTitle('product.direct') }}
               </span>
             </template>
           </el-table-column>
@@ -283,6 +283,13 @@
           @size-change="productSizeChange"
           @current-change="productCurrentChange"
         />
+        <!--        <dgiot-pagination-->
+        <!--          v-show="total > 0"-->
+        <!--          :total="total"-->
+        <!--          :page.sync="queryForm.pageNo"-->
+        <!--          :limit.sync="queryForm.pageSize"-->
+        <!--          @pagination="searchProduct"-->
+        <!--        />-->
       </div>
     </div>
     <!--      </el-tab-pane>-->
@@ -300,161 +307,266 @@
       >
         <div class="devproduct-prodialog-content">
           <!--产品信息-->
-          <div class="contentone">
-            <div style="display: flex">
-              <span>{{ $translateTitle('product.productinformation') }}</span>
-              <p
-                style="
-                  flex-grow: 2;
-                  width: auto;
-                  height: 1px;
-                  margin: 10px;
-                  border-top: 1px dashed #dddddd;
-                "
-              />
-            </div>
-
-            <el-form ref="form" :model="form" :rules="rules">
-              <el-form-item
-                :label="$translateTitle('product.productname')"
-                prop="name"
-              >
-                <el-input v-model="form.name" autocomplete="off" />
-              </el-form-item>
-              <el-form-item label="产品分组" prop="devType">
-                <!-- <el-form-item :label=" $translateTitle('product.productidentification')" prop="devType"> -->
-                <el-input v-model="form.devType" autocomplete="off" />
-              </el-form-item>
-
-              <!--        <el-form-item :label=" $translateTitle('product.classification')" prop="category">
-                <el-cascader v-model="form.category" :options="treeData"></el-cascader>
-              </el-form-item>-->
-
-              <el-form-item :label="$translateTitle('product.classification')">
-                <el-cascader
-                  v-model="form.category"
-                  style="width: 100%"
-                  :options="categoryListOptions"
-                />
-              </el-form-item>
-
-              <!--  :label="item.attributes.desc"
-              :value="item.attributes.name"-->
-              <el-form-item label="所属应用" prop="relationApp">
-                <el-input
-                  v-model="form.relationApp"
-                  placeholder="请选择所属应用"
-                  readonly
-                  :disabled="custom_status == 'edit' && form.relationApp != ''"
-                  @focus="showTree = !showTree"
-                />
-                <div v-if="showTree">
-                  <el-tree
-                    :data="allApps"
-                    :props="defaultProps"
-                    @node-click="handleNodeClick"
-                  />
-                </div>
-                <!-- <el-select v-model="form.relationApp" @change="selectApp">
-                  <el-option v-for="(item,index) in allApps" :key="index" :label="item.attributes.title"
-                    :value="item.attributes.title" />
-                </el-select> -->
-              </el-form-item>
-              <el-form-item
-                :label="$translateTitle('product.nodetype')"
-                prop="nodeType"
-              >
-                <el-radio-group v-model="form.nodeType" @change="changeNode">
-                  <el-radio :label="0">
-                    {{ $translateTitle('product.equipment') }}
-                  </el-radio>
-                  <el-radio :label="1">
-                    {{ $translateTitle('product.gateway') }}
-                  </el-radio>
-                  <el-radio :label="2">
-                    {{ $translateTitle('product.direct') }}
-                  </el-radio>
-                </el-radio-group>
-              </el-form-item>
-              <!-- <el-form-item label="是否接入网关" v-show="form.resource=='网关'">
-                   <el-radio-group v-model="form.isshow">
-                        <el-radio label="是"></el-radio>
-                        <el-radio label="否"></el-radio>
-                    </el-radio-group>
-              </el-form-item>-->
-
-              <el-form-item
-                :label="
-                  $translateTitle('product.networking') +
-                  '(共' +
-                  channel.length +
-                  '项)'
-                "
-                prop="netType"
-              >
-                <el-select
-                  v-model="form.netType"
-                  style="width: 100%"
-                  :placeholder="$translateTitle('product.selectgateway')"
-                >
-                  <el-option
-                    v-for="(item, index) in channel"
-                    :key="index"
-                    :label="index + 1 + ':' + item.label"
-                    :value="item.value"
-                    :title="'当前第' + (index + 1) + '项'"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="产品模型">
-                <div v-if="imageUrl">
-                  <img :src="imageUrl" class="avatar" />
-                  <el-button
-                    type="danger"
-                    size="mini"
-                    style="vertical-align: text-bottom"
-                    @click.stop="deleteImgsrc"
-                  >
-                    删除
-                  </el-button>
-                </div>
-                <i
-                  v-else
-                  v-loading="loading"
-                  class="el-icon-plus avatar-uploader-icon"
-                  @click="uploadCkick"
-                />
-                <form
-                  ref="uploadform"
-                  method="POST"
-                  enctype="multipart/form-data"
-                  style="position: absolute; visibility: hidden"
-                >
-                  <input
-                    type="file"
+          <el-row :gutter="24">
+            <el-col :xs="14" :sm="14" :md="18" :lg="18" :xl="18">
+              <div class="contentone">
+                <div style="display: flex">
+                  <span>
+                    {{ $translateTitle('product.productinformation') }}
+                  </span>
+                  <p
                     style="
-                      position: relative;
-                      z-index: 5;
-                      width: 100px;
-                      height: 100px;
-                      cursor: pointer;
-                      opacity: 0;
+                      flex-grow: 2;
+                      width: auto;
+                      height: 1px;
+                      margin: 10px;
+                      border-top: 1px dashed #dddddd;
                     "
-                    @change="upload($event)"
                   />
-                </form>
-                <br />
-              </el-form-item>
-              <el-form-item
-                :label="$translateTitle('developer.describe')"
-                prop="desc"
-              >
-                <el-input v-model="form.desc" type="textarea" />
-              </el-form-item>
-            </el-form>
-          </div>
-        </div>
+                </div>
 
+                <el-form ref="form" :model="form" :rules="rules">
+                  <el-form-item
+                    :label="$translateTitle('product.productname')"
+                    prop="name"
+                  >
+                    <el-input v-model="form.name" autocomplete="off" />
+                  </el-form-item>
+                  <el-form-item label="产品分组" prop="devType">
+                    <!-- <el-form-item :label=" $translateTitle('product.productidentification')" prop="devType"> -->
+                    <el-input v-model="form.devType" autocomplete="off" />
+                  </el-form-item>
+
+                  <!--        <el-form-item :label=" $translateTitle('product.classification')" prop="category">
+                  <el-cascader v-model="form.category" :options="treeData"></el-cascader>
+                </el-form-item>-->
+
+                  <el-form-item
+                    :label="$translateTitle('product.classification')"
+                  >
+                    <el-input
+                      v-model="form.category"
+                      :disabled="custom_status == 'edit'"
+                      readonly
+                      @click.native="showTemplet()"
+                    />
+                  </el-form-item>
+
+                  <el-form-item
+                    prop="tdchannel"
+                    :label="$translateTitle('product.Storage channel')"
+                  >
+                    <el-select
+                      v-model="form.tdchannel"
+                      :placeholder="$translateTitle('task.Select')"
+                      style="width: 100%"
+                      @click.native="getResource('tdchannel', '2')"
+                    >
+                      <el-option
+                        v-for="item in getChannel(channelResource, channeltype)"
+                        :key="item.name"
+                        :label="item.name"
+                        :value="item.name"
+                      />
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item
+                    prop="taskchannel"
+                    :label="$translateTitle('product.taskchannel')"
+                  >
+                    <el-select
+                      v-model="form.taskchannel"
+                      :placeholder="$translateTitle('task.Select')"
+                      style="width: 100%"
+                      @click.native="getResource('taskchannel', '2')"
+                    >
+                      <el-option
+                        v-for="item in getChannel(channelResource, channeltype)"
+                        :key="item.name"
+                        :label="item.name"
+                        :value="item.name"
+                      />
+                    </el-select>
+                  </el-form-item>
+
+                  <el-form-item
+                    prop="otherchannel"
+                    :label="$translateTitle('product.Acquisition channel')"
+                  >
+                    <el-select
+                      v-model="form.otherchannel"
+                      multiple
+                      :placeholder="$translateTitle('task.Select')"
+                      style="width: 100%"
+                      @click.native="getResource('otherchannel', '1')"
+                    >
+                      <el-option
+                        v-for="item in getChannel(channelResource, channeltype)"
+                        :key="item.name"
+                        :label="item.name"
+                        :value="item.name"
+                      />
+                    </el-select>
+                  </el-form-item>
+
+                  <!--  :label="item.attributes.desc"
+                :value="item.attributes.name"-->
+                  <el-form-item
+                    :label="$translateTitle('developer.applicationtype')"
+                    prop="relationApp"
+                  >
+                    <el-input
+                      v-model="form.relationApp"
+                      :placeholder="
+                        $translateTitle('product.pleaseselectyourapp')
+                      "
+                      readonly
+                      :disabled="
+                        custom_status == 'edit' && form.relationApp != ''
+                      "
+                      @focus="showTree = !showTree"
+                    />
+                    <div v-if="showTree">
+                      <el-tree
+                        :data="allApps"
+                        :props="defaultProps"
+                        @node-click="handleNodeClick"
+                      />
+                    </div>
+                    <!-- <el-select v-model="form.relationApp" @change="selectApp">
+                    <el-option v-for="(item,index) in allApps" :key="index" :label="item.attributes.title"
+                      :value="item.attributes.title" />
+                  </el-select> -->
+                  </el-form-item>
+                  <el-form-item
+                    prop="storageStrategy"
+                    :label="$translateTitle('product.Storage strategy')"
+                  >
+                    <el-select
+                      v-model="form.storageStrategy"
+                      :placeholder="$translateTitle('task.Select')"
+                      style="width: 100%"
+                      @click.native="getResource('otherchannel', '1')"
+                    >
+                      <el-option
+                        v-for="item in storageArr"
+                        :key="item"
+                        :label="item"
+                        :value="item"
+                      />
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item
+                    :label="$translateTitle('product.nodetype')"
+                    prop="nodeType"
+                  >
+                    <el-radio-group
+                      v-model="form.nodeType"
+                      @change="changeNode"
+                    >
+                      <el-radio :label="3">
+                        {{ $translateTitle('product.direct') }}
+                      </el-radio>
+                      <el-radio :label="1">
+                        {{ $translateTitle('product.gateway') }}
+                      </el-radio>
+                      <el-radio :label="0">
+                        {{ $translateTitle('product.equipment') }}
+                      </el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                  <!-- <el-form-item label="是否接入网关" v-show="form.resource=='网关'">
+                     <el-radio-group v-model="form.isshow">
+                          <el-radio label="是"></el-radio>
+                          <el-radio label="否"></el-radio>
+                      </el-radio-group>
+                </el-form-item>-->
+
+                  <el-form-item
+                    :label="
+                      $translateTitle('product.networking') +
+                      '(共' +
+                      channel.length +
+                      '项)'
+                    "
+                    prop="netType"
+                  >
+                    <el-select
+                      v-model="form.netType"
+                      style="width: 100%"
+                      :placeholder="$translateTitle('product.selectgateway')"
+                    >
+                      <el-option
+                        v-for="(item, index) in channel"
+                        :key="index"
+                        :label="index + 1 + ':' + item.label"
+                        :value="item.value"
+                        :title="'当前第' + (index + 1) + '项'"
+                      />
+                    </el-select>
+                  </el-form-item>
+
+                  <el-form-item
+                    :label="$translateTitle('developer.describe')"
+                    prop="desc"
+                  >
+                    <el-input v-model="form.desc" type="textarea" />
+                  </el-form-item>
+                </el-form>
+              </div>
+            </el-col>
+            <el-col
+              :xs="10"
+              :sm="10"
+              :md="6"
+              :lg="6"
+              :xl="6"
+              style="text-align: center; margin: 0px auto"
+              s
+            >
+              <el-divider content-position="center">
+                {{ $translateTitle('developer.productmodel') }}
+              </el-divider>
+              <div v-if="imageUrl">
+                <img :src="imageUrl" class="avatar" />
+                <el-button
+                  type="danger"
+                  size="mini"
+                  style="vertical-align: text-bottom"
+                  @click.stop="deleteImgsrc"
+                >
+                  删除
+                </el-button>
+              </div>
+              <i
+                v-else
+                v-loading="loading"
+                class="el-icon-plus avatar-uploader-icon"
+                @click="uploadCkick"
+              />
+              <form
+                ref="uploadform"
+                method="POST"
+                enctype="multipart/form-data"
+                style="position: absolute; visibility: hidden"
+              >
+                <input
+                  type="file"
+                  style="
+                    position: relative;
+                    z-index: 5;
+                    width: 100px;
+                    height: 100px;
+                    cursor: pointer;
+                    opacity: 0;
+                  "
+                  @change="upload($event)"
+                />
+              </form>
+              <br />
+            </el-col>
+          </el-row>
+        </div>
         <div class="devproduct-prodialog-footer">
           <el-button type="primary" @click="submitForm()">
             {{ $translateTitle('developer.determine') }}
@@ -463,6 +575,57 @@
             {{ $translateTitle('developer.cancel') }}
           </el-button>
         </div>
+        <el-drawer :append-to-body="true" :visible.sync="cascaderDrawer">
+          <div>
+            <el-table
+              :height="$baseTableHeight(0) + 120"
+              :header-cell-style="{ 'text-align': 'center' }"
+              :cell-style="{ 'text-align': 'center' }"
+              :data="tableData"
+              border
+              size="mini"
+              style="width: 100%"
+            >
+              <el-table-column
+                :label="$translateTitle('department.category')"
+                width="140"
+                align="center"
+              >
+                <template #default="{ row }">
+                  {{ getCategory(row.category) }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                :label="$translateTitle('developer.Templatename')"
+              />
+              <el-table-column
+                :label="$translateTitle('developer.operation')"
+                align="center"
+              >
+                <template #default="{ row }">
+                  <!--          <el-button size="mini" type="success" @click="updateTemplate(row)">-->
+                  <!--            {{ $translateTitle('product.Update template') }}-->
+                  <!--          </el-button>-->
+                  <el-button
+                    size="mini"
+                    type="text"
+                    @click="chooseTemplate(row)"
+                  >
+                    {{ $translateTitle('product.choose') }}
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <vab-Pagination
+              v-show="queryForm.total > 0"
+              :total="queryForm.total"
+              :page.sync="queryForm.pageNo"
+              :limit.sync="queryForm.pageSize"
+              @pagination="Industry"
+            />
+          </div>
+        </el-drawer>
       </el-drawer>
       <!--新增字典-->
       <a-drawer
@@ -1127,7 +1290,9 @@
   </div>
 </template>
 <script>
+  // import Pagination from '@dgiot/dgiot-component/src/components/Pagination'
   import { uuid } from '@/utils'
+  import { queryChannel } from '@/api/Channel/index'
   import { mapGetters } from 'vuex'
   import { delProduct, getProduct, putProduct } from '@/api/Product'
   import { getAllunit } from '@/api/Dict/index'
@@ -1138,9 +1303,41 @@
   import { getHashClass } from '@/api/Hash'
   import Category from '@/api/Mock/Category'
   import { ExportParse, ImportParse } from '@/api/Export'
+  import { queryProductTemplet } from '@/api/ProductTemplet'
   export default {
+    components: {
+      //   // eslint-disable-next-line vue/no-unused-components
+      //   'dgiot-pagination': Pagination,
+    },
     data() {
       return {
+        storageArr: [
+          '默认-行式存储',
+          '默认-列式存储',
+          'InfluxDB-行式存储',
+          'InfluxDB-列式存储',
+          'TDEngine-列式存储',
+        ], // http://doc.jetlinks.cn/best-practices/start.html#tdengine-%E5%88%97%E5%BC%8F%E5%AD%98%E5%82%A8
+        channeltype: '2', // 1，采集 2，存储 任务
+        channeldialog: false,
+        channelResource: [],
+        selectedRow: {},
+        tableData: [],
+        allTemp: [],
+        category: Category,
+        queryForm: {
+          productId: '',
+          productFlag: false,
+          pageNo: 1,
+          pageSize: 20,
+          searchDate: [],
+          limt: 10,
+          skip: 0,
+          total: 0,
+          order: '-createdAt',
+          keys: 'count(*)',
+        },
+        cascaderDrawer: false,
         drawerWidth: Number($(window).width()) - 240,
         height: this.$baseTableHeight(0),
         config: {},
@@ -1153,7 +1350,6 @@
         moduleTitle: this.$translateTitle('product.createproduct'),
         allunit: [],
         productInfo: {},
-        category: Category,
         edit_dict_temp_dialog: false,
         title_dict_edit_dialog: '新增字典数据',
         tempparams: {
@@ -1212,9 +1408,13 @@
         dialogFormVisible: false,
         importDialogShow: false,
         form: {
+          storageStrategy: '',
           name: '',
-          category: [],
-          nodeType: 0,
+          tdchannel: '',
+          category: '',
+          taskchannel: '',
+          otherchannel: [],
+          nodeType: 3,
           desc: '',
           netType: '',
           devType: '',
@@ -1231,6 +1431,34 @@
             {
               required: true,
               message: '请输入产品',
+              trigger: 'blur',
+            },
+          ],
+          tdchannel: [
+            {
+              required: true,
+              message: '请选择存储通道',
+              trigger: 'blur',
+            },
+          ],
+          storageStrategy: [
+            {
+              required: true,
+              message: '请选择存储策略',
+              trigger: 'blur',
+            },
+          ],
+          taskchannel: [
+            {
+              required: true,
+              message: '请选择任务通道',
+              trigger: 'blur',
+            },
+          ],
+          otherchannel: [
+            {
+              required: true,
+              message: '请选择采集通道',
               trigger: 'blur',
             },
           ],
@@ -1323,6 +1551,7 @@
           },
         ],
         imageUrl: '',
+        selectfromtype: '',
         productid: '',
         parserDict: [],
         formConfig: {},
@@ -1339,6 +1568,7 @@
         projectName: '',
         allTableDate: [],
         showTree: false,
+        multipleSelection: [],
       }
     },
     computed: {
@@ -1351,12 +1581,86 @@
       const { project = '' } = this.$route.query
       this.formInline.productname = project
       this.Industry()
+      this.Get_Re_Channel()
       this.searchProduct(0)
     },
     beforeDestroy() {
       this.projectName = ''
     },
     methods: {
+      handleSelectionChange(val) {
+        this.multipleSelection = val
+        let vals = []
+        console.log(
+          'multipleSelection',
+          this.multipleSelection,
+          this.selectfromtype
+        )
+        if (!_.isObject(val))
+          val.forEach((v) => {
+            vals.push(v.objectId)
+          })
+
+        if (this.selectfromtype == 'otherchannel')
+          this.form[this.selectfromtype] = vals
+        else this.form[this.selectfromtype] = val.objectId
+        console.log('multipleSelection', this.form)
+      },
+      async getResource(text, type) {
+        this.selectfromtype = text
+        this.channeltype = type
+      },
+      getChannel(channelResource, type) {
+        return channelResource.filter(function (item) {
+          return item.type == type
+        })
+      },
+      async Get_Re_Channel() {
+        const params = {
+          count: 'objectId',
+          order: '-createdAt',
+          keys: 'count(*)',
+          where: {},
+        }
+        const { results } = await queryChannel(params)
+        this.channelResource = results
+      },
+      async showTemplet(args = {}) {
+        if (!args.limit) {
+          args = this.queryForm
+        }
+        let params = {
+          limit: args.limit,
+          order: args.order,
+          skip: args.skip,
+          keys: args.keys,
+        }
+        try {
+          const loading = this.$baseColorfullLoading()
+          // console.log(this.categoryListOptions, 'categoryListOptions')
+          const { results, count = 0 } = await queryProductTemplet(params)
+          loading.close()
+          this.tableData = results
+          this.queryForm.total = count
+          // this.category.forEach((category) => {
+          //   this.allTemp.forEach((temp) => {
+          //     if (category.type == temp.category) {
+          //       console.log(category.type, temp, 'category')
+          //       category.children.push({
+          //         data: { CategoryName: temp.category },
+          //         type: temp.name,
+          //       })
+          //     } else category.children = []
+          //   })
+          //   console.log(category.type, 'category')
+          // })
+        } catch (error) {
+          console.log(error)
+          this.$message.error(`${error}`)
+        }
+
+        this.cascaderDrawer = !this.cascaderDrawer
+      },
       goKonva(id) {
         this.$router.push({
           path: '/Topo?productid',
@@ -1714,7 +2018,7 @@
           order: '-updatedAt',
           limit: this.length,
           skip: this.start,
-          keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon',
+          keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon,channel',
           where: {
             name: this.formInline.productname.length
               ? { $regex: this.formInline.productname }
@@ -1748,6 +2052,13 @@
       handleClose() {
         this.dialogFormVisible = false
       },
+      // 选择通道事件
+      chooseTemplate(row) {
+        this.selectedRow = row
+        this.form.category = row.category
+        this.cascaderDrawer = !this.cascaderDrawer
+        console.log(this.selectedRow)
+      },
       // 关闭dialog 事件
       handleCloseDialogForm() {
         this.dialogFormVisible = false
@@ -1767,8 +2078,8 @@
         this.handleNodeClick(this.allApps[0])
         this.form = {
           name: '',
-          category: ['IotHub'],
-          nodeType: 0,
+          category: 'IotHub',
+          nodeType: 3,
           desc: '',
           netType: ' ',
           devType: '',
@@ -1933,6 +2244,12 @@
         this.form.desc = row.desc
         this.form.name = row.name
         this.form.nodeType = row.nodeType
+        this.form.tdchannel = row.channel ? row.channel.tdchannel : ''
+        this.form.taskchannel = row.channel ? row.channel.taskchannel : ''
+        this.form.otherchannel = row.channel ? row.channel.otherchannel : []
+        this.form.storageStrategy = row.channel
+          ? row.channel.storageStrategy
+          : ''
         this.form.netType = row.netType
         this.form.devType = row.devType
         this.form.productSecret = row.productSecret
@@ -2005,14 +2322,18 @@
               setAcl['*'] = {
                 read: true,
               }
-              var addparams = {
-                category: this.form.category[this.form.category.length - 1],
-                productSecret: productSecret,
-                ACL: setAcl,
-                topics: [],
-                thing: {},
-                dynamicReg: false,
-                config: {
+              const {
+                topics = [],
+                thing = {},
+                decoder = {},
+                category = this.form.category,
+                channel = {
+                  tdchannel: this.form.tdchannel,
+                  taskchannel: this.form.taskchannel,
+                  otherchannel: this.form.otherchannel,
+                  storageStrategy: this.form.storageStrategy,
+                },
+                config = {
                   konva: {
                     Stage: {
                       attrs: {
@@ -2051,13 +2372,35 @@
                     },
                   },
                 },
+                icon = '',
+              } = this.selectedRow
+              // 继承select的属性
+              var addparams = {
+                category,
+                productSecret,
+                ACL: setAcl,
+                topics,
+                thing,
+                channel,
+                dynamicReg: false,
+                config,
+                decoder,
+                icon,
               }
-              params = Object.assign(initparams, addparams)
+              params = _.merge(initparams, addparams)
               this.createProduct(params)
             } else {
               // console.log(this.custom_row)
-              var editparams = {}
-              params = Object.assign(initparams, editparams)
+              var editparams = {
+                channel: {
+                  category: this.form.category,
+                  tdchannel: this.form.tdchannel,
+                  taskchannel: this.form.taskchannel,
+                  otherchannel: this.form.otherchannel,
+                  storageStrategy: this.form.storageStrategy,
+                },
+              }
+              params = _.merge(initparams, editparams)
               this.editProduct(params)
             }
           } else {
@@ -2119,8 +2462,8 @@
       resetProductForm() {
         this.form = {
           name: '',
-          category: [],
-          nodeType: 0,
+          category: '',
+          nodeType: 3,
           desc: '',
           netType: '',
           devType: '',
@@ -2288,118 +2631,118 @@
     &-prodialog {
       margin-left: 52px;
       &-content {
-        width: 80%;
-        margin: 0 10%;
+        margin: auto 30px;
       }
       &-footer {
         text-align: center;
-        margin: 0 auto;
       }
     }
   }
 
   .devproduct ::v-deep .el-dialog__wrapper .el-dialog__header,
-  //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
-  //  display: none;
-  //}
-.devproduct .parserTable {
+    //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
+    //  display: none;
+    //}
+  .devproduct .parserTable {
     display: block;
   }
 
-  .devproduct ::v-deep .el-dialog {
-    margin: 0 auto;
-  }
+  .devproduct ::v-deep {
+    .el-dialog {
+      margin: 0 auto;
+    }
 
-  .devproduct .el-tabs__header {
-    margin: 0;
-  }
+    .devproduct .el-tabs__header {
+      margin: 0;
+    }
 
-  .devproduct ::v-deep .el-tabs__item {
-    height: 50px;
-    margin: 0;
-    margin-top: 20px;
-    font-family: auto;
-    font-size: 16px;
-    line-height: 50px;
-  }
+    .devproduct ::v-deep .el-tabs__item {
+      height: 50px;
+      margin: 0;
+      margin-top: 20px;
+      font-family: auto;
+      font-size: 16px;
+      line-height: 50px;
+    }
 
-  .devproduct ::v-deep .el-tabs__content {
-    box-sizing: border-box;
-    padding: 20px;
-    background: #f4f4f4;
-  }
+    .devproduct ::v-deep .el-tabs__content {
+      box-sizing: border-box;
+      padding: 20px;
+      background: #f4f4f4;
+    }
 
-  .devproduct ::v-deep .el-tab-pane {
-    background: #ffffff;
-  }
+    .devproduct ::v-deep .el-tab-pane {
+      background: #ffffff;
+    }
 
-  .devproduct ::v-deep .procontent,
-  .devproduct ::v-deep .prosecond {
-    box-sizing: border-box;
-    width: 100%;
-  }
+    .devproduct ::v-deep .procontent,
+    .devproduct ::v-deep .prosecond {
+      box-sizing: border-box;
+      width: 100%;
+    }
 
-  .devproduct ::v-deep .el-dialog {
-    margin-top: 5vh;
-  }
+    .devproduct ::v-deep .el-dialog {
+      margin-top: 5vh;
+    }
 
-  .devproduct .el-dialog .el-dialog__header {
-    border-bottom: 1px solid #cccccc;
-  }
+    .devproduct .el-dialog .el-dialog__header {
+      border-bottom: 1px solid #cccccc;
+    }
 
-  .devproduct .el-dialog .el-cascader,
-  .devproduct .el-dialog .el-select {
-    width: 100%;
-  }
+    .devproduct .el-dialog .el-cascader,
+    .devproduct .el-dialog .el-select {
+      width: 100%;
+    }
 
-  .devproduct .el-dialog .el-form {
-    box-sizing: border-box;
-    padding: 0 10px;
-  }
+    .devproduct .el-dialog .el-form {
+      box-sizing: border-box;
+      padding: 0 10px;
+    }
 
-  .devproduct .el-dialog .el-form .el-form-item {
-    margin-bottom: 5px;
-  }
+    .devproduct .el-dialog .el-form .el-form-item {
+      margin-bottom: 5px;
+    }
 
-  .devproduct .el-dialog .el-form .el-form-item__content {
-    margin-left: 10px;
-    clear: both;
-  }
+    .devproduct .el-dialog .el-form .el-form-item__content {
+      margin-left: 10px;
+      clear: both;
+    }
 
-  .devproduct .avatar-uploader {
-    display: inline-block;
-  }
+    .devproduct .avatar-uploader {
+      display: inline-block;
+    }
 
-  .avatar-uploader .el-upload {
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-  }
+    .avatar-uploader .el-upload {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+    }
 
-  .avatar-uploader .el-upload:hover {
-    border-color: #409eff;
-  }
+    .avatar-uploader .el-upload:hover {
+      border-color: #409eff;
+    }
 
-  .avatar-uploader-icon {
-    width: 150px;
-    height: 150px;
-    font-size: 28px;
-    line-height: 150px;
-    color: #8c939d;
-    text-align: center;
-    border: 1px dashed #cccccc;
-  }
+    .avatar-uploader-icon {
+      width: 150px;
+      height: 150px;
+      font-size: 28px;
+      line-height: 150px;
+      color: #8c939d;
+      text-align: center;
+      border: 1px dashed #cccccc;
+    }
 
-  .avatar {
-    display: block;
-    width: 150px;
-    height: 150px;
+    .avatar {
+      display: block;
+      width: 150px;
+      height: 150px;
+    }
   }
 
   /* .devproduct .el-icon-close{
-position:absolute;
-right:0;
-} */
+  position:absolute;
+  right:0;
+  } */
 </style>

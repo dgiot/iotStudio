@@ -131,6 +131,8 @@
 <style>
   .pagination-container {
     /*padding: 32px 16px;*/
+    width: 100%;
+    overflow: auto; /* 超出部分滚动条 */
     background: #fff;
   }
   .pagination-container.hidden {
