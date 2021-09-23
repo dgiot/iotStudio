@@ -7,8 +7,8 @@ import {
 } from '@/api/shuwa_parse'
 import request from '@/utils/request'
 
-export async function queryChannel(params) {
-  return query_object('Channel', params)
+export async function queryChannel(params, method) {
+  return query_object('Channel', params, method)
 }
 
 export async function getChannel(ObjectId) {
