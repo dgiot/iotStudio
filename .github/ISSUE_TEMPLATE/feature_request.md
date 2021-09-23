@@ -1,6 +1,8 @@
 ---
 name: 请求新功能
 about: 提出你期待的功能特性
+labels: Feature
+assignees: h7ml
 ---
 
 ### 你在什么场景下需要该功能？
