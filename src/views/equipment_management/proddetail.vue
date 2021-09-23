@@ -1491,156 +1491,157 @@
           <TaskCollection1 :productId="productId" :isreload="isreload" />
         </el-tab-pane>-->
         <!-- <el-tab-pane label="物存储" name="seven"> -->
-        <el-tab-pane
-          :label="$translateTitle('product.materialstorage')"
-          name="seven"
-        >
-          <vab-query-form>
-            <vab-query-form-left-panel>
-              <div
-                class="productchannel"
-                style="padding: 10px; text-align: right"
-              >
-                <!-- <el-popover
-                  title="自定义数据模型提示"
-                  placement="right"
-                  width="600"
-                  trigger="hover"
-                  @show="questionModel"
-                > -->
-                <el-popover
-                  :title="$translateTitle('developer.tipsforcustomdatamodel')"
-                  placement="right"
-                  width="600"
-                  trigger="hover"
-                  @show="questionModel"
-                >
-                  <pre
-                    id="editorinsert"
-                    class="ace_editor"
-                    style="min-height: 400px"
-                  ><el-input class="ace_text-input" type="textarea"/></pre>
-                  <el-button
-                    slot="reference"
-                    type="primary"
-                    size="mini"
-                    icon="el-icon-question"
-                  >
-                    <!-- 自定义数据模型帮助 -->
-                    {{ $translateTitle('developer.customizedatamodelhelp') }}
-                  </el-button>
-                </el-popover>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  style="margin-left: 20px"
-                  @click="resourceShowAllChannel"
-                >
-                  {{ $translateTitle('developer.createchannel') }}
-                </el-button>
-              </div>
-            </vab-query-form-left-panel>
-            <vab-query-form-right-panel>
-              <vab-help
-                trigger="manual"
-                src="https://tech.iotn2n.com/w/docs/details?id=6"
-                title="产品下的所有设备都会继承该产品的 Topic 类"
-              />
-            </vab-query-form-right-panel>
-          </vab-query-form>
+        <!--        <el-tab-pane-->
+        <!--          disabled-->
+        <!--          :label="$translateTitle('product.materialstorage')"-->
+        <!--          name="seven"-->
+        <!--        >-->
+        <!--          <vab-query-form>-->
+        <!--            <vab-query-form-left-panel>-->
+        <!--              <div-->
+        <!--                class="productchannel"-->
+        <!--                style="padding: 10px; text-align: right"-->
+        <!--              >-->
+        <!--                &lt;!&ndash; <el-popover-->
+        <!--                  title="自定义数据模型提示"-->
+        <!--                  placement="right"-->
+        <!--                  width="600"-->
+        <!--                  trigger="hover"-->
+        <!--                  @show="questionModel"-->
+        <!--                > &ndash;&gt;-->
+        <!--                <el-popover-->
+        <!--                  :title="$translateTitle('developer.tipsforcustomdatamodel')"-->
+        <!--                  placement="right"-->
+        <!--                  width="600"-->
+        <!--                  trigger="hover"-->
+        <!--                  @show="questionModel"-->
+        <!--                >-->
+        <!--                  <pre-->
+        <!--                    id="editorinsert"-->
+        <!--                    class="ace_editor"-->
+        <!--                    style="min-height: 400px"-->
+        <!--                  ><el-input class="ace_text-input" type="textarea"/></pre>-->
+        <!--                  <el-button-->
+        <!--                    slot="reference"-->
+        <!--                    type="primary"-->
+        <!--                    size="mini"-->
+        <!--                    icon="el-icon-question"-->
+        <!--                  >-->
+        <!--                    &lt;!&ndash; 自定义数据模型帮助 &ndash;&gt;-->
+        <!--                    {{ $translateTitle('developer.customizedatamodelhelp') }}-->
+        <!--                  </el-button>-->
+        <!--                </el-popover>-->
+        <!--                <el-button-->
+        <!--                  type="primary"-->
+        <!--                  size="mini"-->
+        <!--                  style="margin-left: 20px"-->
+        <!--                  @click="resourceShowAllChannel"-->
+        <!--                >-->
+        <!--                  {{ $translateTitle('developer.createchannel') }}-->
+        <!--                </el-button>-->
+        <!--              </div>-->
+        <!--            </vab-query-form-left-panel>-->
+        <!--            <vab-query-form-right-panel>-->
+        <!--              <vab-help-->
+        <!--                trigger="manual"-->
+        <!--                src="https://tech.iotn2n.com/w/docs/details?id=6"-->
+        <!--                title="产品下的所有设备都会继承该产品的 Topic 类"-->
+        <!--              />-->
+        <!--            </vab-query-form-right-panel>-->
+        <!--          </vab-query-form>-->
 
-          <div>
-            <el-table
-              :data="resourcechannelData"
-              :row-class-name="getChannelEnable"
-              style="width: 100%"
-            >
-              <el-table-column
-                :label="$translateTitle('developer.channelnumber')"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.objectId }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.channelname')"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.name }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.channeladdr')"
-              >
-                <template slot-scope="scope">
-                  <span>{{ 'channel/' + scope.row.objectId }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.channeltype')"
-              >
-                <template slot-scope="scope">
-                  <span v-if="scope.row.type == 1">
-                    {{ $translateTitle('developer.collectionchannel') }}
-                  </span>
-                  <span v-else>
-                    {{ $translateTitle('developer.resourcechannel') }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.servicetype')"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.cType }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.operation')"
-                width="350"
-              >
-                <template slot-scope="scope">
-                  <el-button
-                    type="danger"
-                    size="mini"
-                    @click="deleteRelation(scope.row)"
-                  >
-                    {{ $translateTitle('developer.remove') }}
-                  </el-button>
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="subProTopic(scope.row)"
-                  >
-                    <!-- 订阅日志 -->
-                    {{ $translateTitle('product.subscriptionlog') }}
-                  </el-button>
+        <!--          <div>-->
+        <!--            <el-table-->
+        <!--              :data="resourcechannelData"-->
+        <!--              :row-class-name="getChannelEnable"-->
+        <!--              style="width: 100%"-->
+        <!--            >-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.channelnumber')"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <span>{{ scope.row.objectId }}</span>-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.channelname')"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <span>{{ scope.row.name }}</span>-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.channeladdr')"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <span>{{ 'channel/' + scope.row.objectId }}</span>-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.channeltype')"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <span v-if="scope.row.type == 1">-->
+        <!--                    {{ $translateTitle('developer.collectionchannel') }}-->
+        <!--                  </span>-->
+        <!--                  <span v-else>-->
+        <!--                    {{ $translateTitle('developer.resourcechannel') }}-->
+        <!--                  </span>-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.servicetype')"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <span>{{ scope.row.cType }}</span>-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.operation')"-->
+        <!--                width="350"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <el-button-->
+        <!--                    type="danger"-->
+        <!--                    size="mini"-->
+        <!--                    @click="deleteRelation(scope.row)"-->
+        <!--                  >-->
+        <!--                    {{ $translateTitle('developer.remove') }}-->
+        <!--                  </el-button>-->
+        <!--                  <el-button-->
+        <!--                    type="primary"-->
+        <!--                    size="mini"-->
+        <!--                    @click="subProTopic(scope.row)"-->
+        <!--                  >-->
+        <!--                    &lt;!&ndash; 订阅日志 &ndash;&gt;-->
+        <!--                    {{ $translateTitle('product.subscriptionlog') }}-->
+        <!--                  </el-button>-->
 
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="customize(scope.row)"
-                  >
-                    <!-- 自定义模型 -->
-                    {{ $translateTitle('product.custommodel') }}
-                  </el-button>
+        <!--                  <el-button-->
+        <!--                    type="primary"-->
+        <!--                    size="mini"-->
+        <!--                    @click="customize(scope.row)"-->
+        <!--                  >-->
+        <!--                    &lt;!&ndash; 自定义模型 &ndash;&gt;-->
+        <!--                    {{ $translateTitle('product.custommodel') }}-->
+        <!--                  </el-button>-->
 
-                  <!-- <el-button type="primary" size="mini" @click="customize(scope.row)">自定义模型</el-button> -->
-                </template>
-              </el-table-column>
-            </el-table>
-            <div class="elpagination" style="margin-top: 20px">
-              <el-pagination
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="resourcelength"
-                :total="resourcetotal"
-                layout="total, sizes, prev, pager, next, jumper"
-                @size-change="resourcechannelSizeChange"
-                @current-change="resourcechannelCurrentChange"
-              />
-            </div>
-          </div>
-        </el-tab-pane>
+        <!--                  &lt;!&ndash; <el-button type="primary" size="mini" @click="customize(scope.row)">自定义模型</el-button> &ndash;&gt;-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--            </el-table>-->
+        <!--            <div class="elpagination" style="margin-top: 20px">-->
+        <!--              <el-pagination-->
+        <!--                :page-sizes="[10, 20, 30, 50]"-->
+        <!--                :page-size="resourcelength"-->
+        <!--                :total="resourcetotal"-->
+        <!--                layout="total, sizes, prev, pager, next, jumper"-->
+        <!--                @size-change="resourcechannelSizeChange"-->
+        <!--                @current-change="resourcechannelCurrentChange"-->
+        <!--              />-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </el-tab-pane>-->
         <!-- <el-tab-pane label="物规则" name="sixeth">
           <div class="engintable">
             <div class="engineheader">

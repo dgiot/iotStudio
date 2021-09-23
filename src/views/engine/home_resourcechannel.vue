@@ -154,7 +154,7 @@
         <el-table-column
           :label="$translateTitle('developer.operation')"
           fixed="right"
-          width="340"
+          width="400"
         >
           <template slot-scope="scope">
             <el-button
@@ -242,6 +242,14 @@
             >
               <!-- 订阅日志 -->
               {{ $translateTitle('product.log') }}
+            </el-button>
+            <el-button
+              type="goon"
+              size="mini"
+              @click="productinformation(scope.row.objectId)"
+            >
+              <!-- 订阅日志 -->
+              {{ $translateTitle('product.productinformation') }}
             </el-button>
           </template>
         </el-table-column>
@@ -524,6 +532,82 @@
     >
       <mqtt-log :refresh-key="refreshFlag" :msg="submessage" :list="msgList" />
     </a-drawer>
+    <el-dialog
+      custom-class="dgiot_dialog"
+      :visible.sync="channelDialog"
+      :show-close="false"
+      width="50%"
+    >
+      <vab-query-form>
+        <vab-query-form-left-panel :span="12">
+          <el-button
+            :disabled="!selectedData.length"
+            type="danger"
+            @click="handleDelete(channelInfo)"
+          >
+            {{ $translateTitle('Maintenance.batch deletion') }}
+          </el-button>
+        </vab-query-form-left-panel>
+      </vab-query-form>
+
+      <el-table
+        height="60vh"
+        :data="channelInfo"
+        stripe
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="index" align="center" />
+        <el-table-column type="selection" width="50" />
+        <el-table-column
+          prop="name"
+          sortable
+          align="center"
+          show-overflow-tooltip
+          :label="$translateTitle('developer.channelname')"
+        />
+        <el-table-column
+          prop="devType"
+          show-overflow-tooltip
+          sortable
+          :label="$translateTitle('developer.servicetype')"
+          align="center"
+        />
+        <el-table-column
+          prop="desc"
+          show-overflow-tooltip
+          align="center"
+          sortable
+          :label="$translateTitle('developer.describe')"
+        />
+        <el-table-column
+          prop="objectId"
+          sortable
+          show-overflow-tooltip
+          align="center"
+          :label="$translateTitle('developer.operation')"
+        >
+          <template #default="{ row }">
+            <el-button
+              type="danger"
+              size="mini"
+              @click="deleteRelation(channelInfo, row.objectId)"
+            >
+              {{ $translateTitle('developer.remove') }}
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :current-page="pagination.currentPage"
+        :page-sizes="pagination.sizes"
+        :page-size="pagination.size"
+        :layout="pagination.layout"
+        :total="pagination.total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -533,16 +617,16 @@
     delChannel,
     postChannel,
     putChannel,
+    saveChanne,
   } from '@/api/Channel/index'
+  import { queryProduct } from '@/api/Product/index'
   import { queryRole } from '@/api/Role/index'
   import { subupadte } from '@/api/System/index'
   import { resourceTypes } from '@/api/Rules'
   import { mapGetters } from 'vuex'
 
   var subdialog
-  import { Websocket } from '@/utils/wxscoket.js'
   import VabInput from '@/vab/components/VabInput/input'
-  import send from 'send'
 
   export default {
     components: {
@@ -552,6 +636,24 @@
     // inject: ['reload'],
     data() {
       return {
+        selectedData: [],
+        pagination: {
+          currentPage: 4,
+          sizes: [10, 20, 30, 50, 100],
+          size: 10,
+          layout: 'total, sizes, prev, pager, next, jumper',
+          total: 0,
+          pageNo: 1,
+          pageSize: 20,
+          searchDate: [],
+          limit: 10,
+          skip: 0,
+          order: '-createdAt',
+          keys: 'count(*)',
+        },
+        channelid: '',
+        channelInfo: [],
+        channelDialog: false,
         router: '',
         topotopic: '',
         refreshFlag: '99',
@@ -656,6 +758,99 @@
       // this.bus('')
     },
     methods: {
+      handleSelectionChange(data) {
+        this.selectedData = data
+      },
+      handleDelete(channelInfo) {
+        this.$baseConfirm(
+          this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ),
+          null,
+          async () => {
+            const selectedData = this.selectedData
+            if (selectedData) {
+              selectedData.forEach(function (item, index) {
+                channelInfo.forEach(function (itemI, indexI) {
+                  if (item === itemI) {
+                    channelInfo.splice(indexI, 1)
+                  }
+                })
+              })
+            }
+          }
+        )
+      },
+      // 移除通道
+      async deleteRelation(channelInfo, objectId) {
+        try {
+          const params = {
+            product: {
+              __op: 'RemoveRelation',
+              objects: [
+                {
+                  __type: 'Pointer',
+                  className: 'Product',
+                  objectId: objectId,
+                },
+              ],
+            },
+          }
+          const loading = this.$baseColorfullLoading()
+          const res = await saveChanne(this.channelid, params)
+          console.log(res)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request successfully'),
+            'success',
+            'vab-hey-message-success'
+          )
+          loading.close()
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
+      },
+      async handleSizeChange() {},
+      async handleCurrentChange() {},
+      async productinformation(objectId) {
+        this.channelid = objectId
+        const loading = this.$baseLoading(3)
+        try {
+          const params = {
+            limit: this.pagination.limit,
+            order: this.pagination.order,
+            skip: this.pagination.skip,
+            keys: this.pagination.keys,
+            where: {
+              $relatedTo: {
+                object: {
+                  __type: 'Pointer',
+                  className: 'Channel',
+                  objectId: objectId,
+                },
+                key: 'product',
+              },
+            },
+          }
+          const { results = [], count: total = 0 } = await queryProduct(params)
+          loading.close()
+          this.pagination.total = total
+          this.channelInfo = results
+          this.channelDialog = true
+        } catch (error) {
+          console.log(error)
+          loading.close()
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
+      },
       uploadCkick(type, index, channeType) {
         console.log(type, index)
         this.channeindex = index
@@ -1117,7 +1312,38 @@
     },
   }
 </script>
+<style lang="scss">
+  .dgiot_dialog {
+    .el-dialog__header {
+      display: none;
+    }
+    .dj-dialog-content {
+      padding: 0;
+      overflow: unset;
+    }
+  }
+</style>
 <style lang="scss" scoped>
+  .el-button--goon.is-active,
+  .el-button--goon:active {
+    background: #20b2aa;
+    border-color: #20b2aa;
+    color: #fff;
+  }
+
+  .el-button--goon:focus,
+  .el-button--goon:hover {
+    background: #48d1cc;
+    border-color: #48d1cc;
+    color: #fff;
+  }
+
+  .el-button--goon {
+    color: #fff;
+    background-color: #20b2aa;
+    border-color: #20b2aa;
+  }
+
   ::v-deep .row-bg {
     .el-form-item {
       .el-form-item__content {

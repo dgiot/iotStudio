@@ -358,15 +358,16 @@
                   >
                     <el-select
                       v-model="form.tdchannel"
+                      :disabled="custom_status == 'edit'"
                       :placeholder="$translateTitle('task.Select')"
                       style="width: 100%"
                       @click.native="getResource('tdchannel', '2')"
                     >
                       <el-option
                         v-for="item in getChannel(channelResource, channeltype)"
-                        :key="item.name"
+                        :key="item.objectId"
                         :label="item.name"
-                        :value="item.name"
+                        :value="item.objectId"
                       />
                     </el-select>
                   </el-form-item>
@@ -376,15 +377,16 @@
                   >
                     <el-select
                       v-model="form.taskchannel"
+                      :disabled="custom_status == 'edit'"
                       :placeholder="$translateTitle('task.Select')"
                       style="width: 100%"
                       @click.native="getResource('taskchannel', '2')"
                     >
                       <el-option
                         v-for="item in getChannel(channelResource, channeltype)"
-                        :key="item.name"
+                        :key="item.objectId"
                         :label="item.name"
-                        :value="item.name"
+                        :value="item.objectId"
                       />
                     </el-select>
                   </el-form-item>
@@ -395,6 +397,7 @@
                   >
                     <el-select
                       v-model="form.otherchannel"
+                      value-key="objectId"
                       multiple
                       :placeholder="$translateTitle('task.Select')"
                       style="width: 100%"
@@ -402,9 +405,9 @@
                     >
                       <el-option
                         v-for="item in getChannel(channelResource, channeltype)"
-                        :key="item.name"
+                        :key="item.objectId"
                         :label="item.name"
-                        :value="item.name"
+                        :value="item.objectId"
                       />
                     </el-select>
                   </el-form-item>
