@@ -23,7 +23,10 @@
               value-format="yyyy-MM-dd"
             />
           </el-form-item>
-          <el-form-item :label="$translateTitle('equipment.Products')">
+          <el-form-item
+            v-show="!isDeviceInfo"
+            :label="$translateTitle('equipment.Products')"
+          >
             <el-select v-model="queryForm.productid" clearable>
               <el-option
                 v-for="(item, index) in proTableData"
@@ -34,7 +37,10 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item :label="$translateTitle('equipment.devicenumber')">
+          <el-form-item
+            v-show="!isDeviceInfo"
+            :label="$translateTitle('equipment.devicenumber')"
+          >
             <el-input
               v-model="queryForm.devaddr"
               :placeholder="$translateTitle('equipment.enterdevicenumber')"
@@ -216,6 +222,20 @@
 
   export default {
     name: 'AccessLog',
+    props: {
+      productid: {
+        type: String,
+        default: '',
+      },
+      devaddr: {
+        type: String,
+        default: '',
+      },
+      isDeviceInfo: {
+        type: Boolean,
+        default: true,
+      },
+    },
     data() {
       return {
         size: '',
@@ -264,6 +284,8 @@
     },
     created() {},
     mounted() {
+      if (this.productid) this.queryForm.productid = this.productid
+      if (this.devaddr) this.queryForm.devaddr = this.devaddr
       this.queryTable({})
       this.rowDrop()
       this.queryProduct()

@@ -218,6 +218,12 @@ export default {
       userinfo: '个人信息',
     },
     device: {
+      level: '等级',
+      action: '动作',
+      stop: '停止',
+      start: '启动',
+      'trace log': 'trace 日志',
+      tracetype: '类型',
       'Equipment Directive': '设备指令',
       'Equipment task': '设备任务',
       'Scene log': '场景日志',
