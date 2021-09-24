@@ -726,20 +726,33 @@
         >
           <Instruct :product-id="productid" :devices-id="deviceid" />
         </el-tab-pane>
-        <el-tab-pane :label="$translateTitle('device.Scene log')" name="task">
+        <el-tab-pane
+          :label="$translateTitle('device.Equipment message')"
+          name="task"
+        >
           <scene-log
             v-show="activeName == 'task'"
             :name="activeName"
             :device-info="deviceInfo"
           />
         </el-tab-pane>
-        <el-tab-pane :label="$translateTitle('device.trace log')" name="trace">
+        <el-tab-pane
+          :label="$translateTitle('device.Equipment log')"
+          name="trace"
+        >
           <device-log
             v-show="activeName == 'trace'"
             :is-device-info="true"
             :productid="productId"
             :devaddr="devicedevaddr"
           />
+        </el-tab-pane>
+
+        <el-tab-pane
+          :label="$translateTitle('device.Equipment alert settings')"
+          name="alert"
+        >
+          <vab-empty />
         </el-tab-pane>
       </el-tabs>
     </div>
