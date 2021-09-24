@@ -10,7 +10,11 @@
       <el-form-item :label="$translateTitle('category.name')" prop="name">
         <el-input v-model.trim="form.name" />
       </el-form-item>
-      <el-form-item :label="$translateTitle('category.type')" prop="type">
+      <el-form-item
+        v-show="flagType != 'child'"
+        :label="$translateTitle('category.type')"
+        prop="type"
+      >
         <el-select v-model="form.type">
           <el-option
             v-for="item in categoryList"
@@ -48,6 +52,7 @@
     name: 'TableEdit',
     data() {
       return {
+        flagType: 'father',
         form: {
           data: {},
           name: '',
@@ -147,20 +152,22 @@
         // console.log(this.categoryListOptions, 'categoryListOptions')
       },
       showEdit(row, type) {
+        console.log(row)
+        this.flagType = type
         this.title =
-          type == 'top'
+          this.flagType == 'top'
             ? this.$translateTitle('category.New top category')
             : type == 'child'
             ? this.$translateTitle('category.Add subcategory')
             : this.$translateTitle('category.Modify category')
         this.form =
-          type != 'child'
+          this.flagType != 'child'
             ? _.merge({ mark: type }, row)
-            : _.merge(
-                { mark: type, objectId: row.objectId },
-                this.$options.data().form
-              )
-
+            : _.merge(this.$options.data().form, {
+                mark: type,
+                objectId: row.objectId,
+                type: row.type,
+              })
         this.dialogFormVisible = true
       },
       close() {

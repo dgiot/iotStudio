@@ -371,7 +371,7 @@
                       v-model="form.category"
                       :disabled="custom_status == 'edit'"
                       readonly
-                      @click="cascaderDrawer = !cascaderDrawer"
+                      @click.native="cascaderDrawer = !cascaderDrawer"
                     >
                       <template v-if="form.category" slot="prepend">
                         {{ getCategory(form.category) }}
