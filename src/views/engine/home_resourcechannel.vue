@@ -536,13 +536,18 @@
     <a-drawer
       width="80%"
       placement="right"
-      :closable="false"
       :title="channelname + '日志'"
       :append-to-body="true"
       :visible="subdialog"
       @close="handleCloseSubdialog(pubtopic)"
     >
-      <mqtt-log :refresh-key="refreshFlag" :msg="submessage" :list="msgList" />
+      <mqtt-log
+        :channel-id="channelname"
+        :refresh-key="refreshFlag"
+        :msg="submessage"
+        :list="msgList"
+        :product="channelInfo"
+      />
     </a-drawer>
     <el-dialog
       custom-class="dgiot_dialog"
@@ -763,7 +768,7 @@
       },
     },
     mounted() {
-      this.router = this.$dgiotBus.router(this.$route.fullPath)
+      this.router = this.$dgiotBus.router(this.$route.fullPath + 'llslslsls')
       this.Get_Re_Channel(0)
       this.dialogType()
       this.getApplication()
@@ -852,7 +857,7 @@
           loading.close()
           this.pagination.total = total
           this.channelInfo = results
-          this.channelDialog = true
+          // this.channelDialog = true
         } catch (error) {
           console.log(error)
           loading.close()
@@ -1281,6 +1286,7 @@
         // subdialog.gotoLine(subdialog.session.getLength())
       },
       subProTopic(row) {
+        this.productinformation(row.objectId)
         this.subdialog = true
         this.subdialogid = row.objectId
         this.channelname = row.objectId
@@ -1338,16 +1344,16 @@
 <style lang="scss" scoped>
   .el-button--goon.is-active,
   .el-button--goon:active {
+    color: #fff;
     background: #20b2aa;
     border-color: #20b2aa;
-    color: #fff;
   }
 
   .el-button--goon:focus,
   .el-button--goon:hover {
+    color: #fff;
     background: #48d1cc;
     border-color: #48d1cc;
-    color: #fff;
   }
 
   .el-button--goon {

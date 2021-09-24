@@ -25,13 +25,12 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$translateTitle('category.sort')" prop="order">
-        <el-input-number
-          v-model="form.order"
-          style="width: 100%"
-          :min="0"
-          :max="30"
-        />
+      <el-form-item
+        v-show="flagType == 'child'"
+        :label="$translateTitle('category.sort')"
+        prop="order"
+      >
+        <el-input-number v-model="form.order" style="width: 100%" :min="0" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -46,6 +45,7 @@
 </template>
 
 <script>
+  import { uuid } from '@/utils'
   import { putCategory, postCategory } from '@/api/Category'
   import { mapGetters } from 'vuex'
   export default {
@@ -152,7 +152,6 @@
         // console.log(this.categoryListOptions, 'categoryListOptions')
       },
       showEdit(row, type) {
-        console.log(row)
         this.flagType = type
         this.title =
           this.flagType == 'top'
@@ -163,11 +162,14 @@
         this.form =
           this.flagType != 'child'
             ? _.merge({ mark: type }, row)
-            : _.merge(this.$options.data().form, {
+            : this.flagType == 'top'
+            ? _.merge(this.$options.data().form, {
                 mark: type,
                 objectId: row.objectId,
                 type: row.type,
+                order: Number(moment(new Date()).valueOf()),
               })
+            : ''
         this.dialogFormVisible = true
       },
       close() {

@@ -1038,6 +1038,10 @@ export default {
       mini: '超小',
       default: '默认',
     },
+    // 云系统
+    system: {
+      'Accurate log': '精确日志查询',
+    },
     category: {
       'Add subcategory': '新增子分类',
       'New top category': '新增顶级分类',
