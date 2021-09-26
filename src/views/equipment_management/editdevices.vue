@@ -1,10 +1,5 @@
 <template>
   <div class="editdevices">
-    <VabMqtt
-      :client-id="'default'"
-      :topic="'test/topic2222222'"
-      @mqttMsg="mqttMsg"
-    />
     <div class="editheader">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/dashboard/devicelist' }">
@@ -731,13 +726,33 @@
         >
           <Instruct :product-id="productid" :devices-id="deviceid" />
         </el-tab-pane>
-        <!--        明诚发布注释 737 到 743 行的代码-->
-        <el-tab-pane :label="$translateTitle('device.Scene log')" name="task">
+        <el-tab-pane
+          :label="$translateTitle('device.Equipment message')"
+          name="task"
+        >
           <scene-log
             v-show="activeName == 'task'"
             :name="activeName"
             :device-info="deviceInfo"
           />
+        </el-tab-pane>
+        <el-tab-pane
+          :label="$translateTitle('device.Equipment log')"
+          name="trace"
+        >
+          <device-log
+            v-show="activeName == 'trace'"
+            :is-device-info="true"
+            :productid="productId"
+            :devaddr="devicedevaddr"
+          />
+        </el-tab-pane>
+
+        <el-tab-pane
+          :label="$translateTitle('device.Equipment alert settings')"
+          name="alert"
+        >
+          <vab-empty />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -745,6 +760,7 @@
 </template>
 <script>
   import info from '@/components/Device/info'
+  import deviceLog from '@/views/Logs/device'
   import { requireModule } from '@/utils/file'
   const columns = [
     {
@@ -780,6 +796,7 @@
     components: {
       Instruct,
       info,
+      deviceLog,
       ...requireModule(require.context('./component', true, /\.vue$/)),
     },
     filters: {
@@ -1254,9 +1271,6 @@
         options.tooltip.showDelay = 500
         return options
       },
-      mqttMsg(e) {
-        console.log(e)
-      },
       initChart() {
         const end = new Date()
         const start = new Date()
@@ -1423,7 +1437,7 @@
       },
       // 详情
       async getDeviceDetail(deviceid) {
-        var vm = this
+        const vm = this
         vm.deviceid = deviceid
         vm.ischildren = vm.$route.query.ischildren
         const params = {

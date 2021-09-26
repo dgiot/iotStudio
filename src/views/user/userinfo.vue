@@ -81,7 +81,7 @@
                       <el-input v-model="password" />
                     </el-form-item>
                     <el-form-item>
-                      <el-button type="primary" @click="onSubmit">
+                      <el-button type="primary" @click.native="onSubmit">
                         保存
                       </el-button>
                     </el-form-item>
@@ -118,7 +118,7 @@
                             <vab-icon
                               icon="chat-upload-fill"
                               style="color: #3492ed"
-                              @click="uploadCkick('companyinfo.logo')"
+                              @click.native="uploadCkick('companyinfo.logo')"
                             />
                           </template>
                         </el-input>
@@ -156,7 +156,7 @@
                             <vab-icon
                               icon="chat-upload-fill"
                               style="color: #3492ed"
-                              @click="
+                              @click.native="
                                 uploadCkick('companyinfo.backgroundimage')
                               "
                             />
@@ -175,7 +175,7 @@
                             <vab-icon
                               icon="chat-upload-fill"
                               style="color: #3492ed"
-                              @click="uploadCkick('companyinfo._mimg')"
+                              @click.native="uploadCkick('companyinfo._mimg')"
                             />
                           </template>
                         </el-input>
@@ -196,13 +196,13 @@
                             <vab-icon
                               icon="chat-upload-fill"
                               style="color: #3492ed"
-                              @click="uploadCkick('companyinfo._pcimg')"
+                              @click.native="uploadCkick('companyinfo._pcimg')"
                             />
                           </template>
                         </el-input>
                       </el-form-item>
                       <el-form-item>
-                        <el-button type="primary" @click="onSubmit">
+                        <el-button type="primary" @click.native="onSubmit">
                           保存
                         </el-button>
                       </el-form-item>

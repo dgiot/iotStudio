@@ -207,8 +207,6 @@
   </div>
 </template>
 <script>
-  // import ProductTemplet from '@/views/equipment_management/component/profile/ProductTemplet'
-  // import description from '@/views/equipment_management/component/profile/descriptions'
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
   context.keys().forEach((fileName) => {
@@ -227,13 +225,7 @@
   import { getHashClass } from '@/api/Hash'
   import Category from '@/api/Mock/Category'
   import { getTable } from '@/api/Dba'
-  import {
-    queryProductTemplet,
-    getProductTemplet,
-    delProductTemplet,
-    putProductTemplet,
-    postProductTemplet,
-  } from '@/api/ProductTemplet'
+  import { postProductTemplet } from '@/api/ProductTemplet'
   export default {
     components: { ...res_components },
     data() {

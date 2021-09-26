@@ -3,6 +3,36 @@ import VabIcon from 'vab-icons'
 import 'vab-icons/lib/vab-icons.css'
 import utilwen from '@/utils/utilwen'
 import Directives from './directives/index.js'
+// https://frontend-infra.deepexi.com/#/material/el-data-table
+import ElDataTable from '@femessage/el-data-table'
+import ElFormRenderer from '@femessage/el-form-renderer'
+import {
+  Button,
+  Dialog,
+  Form,
+  FormItem,
+  Loading,
+  Pagination,
+  Table,
+  TableColumn,
+  Message,
+  MessageBox,
+} from 'element-ui'
+
+Vue.use(Button)
+Vue.use(Dialog)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Loading.directive)
+Vue.use(Pagination)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.component('ElFormRenderer', ElFormRenderer)
+Vue.component('ElDataTable', ElDataTable)
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$message = Message
+Vue.prototype.$axios = axios
+
 Vue.component('VabIcon', VabIcon)
 Vue.use(Directives)
 Vue.use(utilwen)

@@ -196,7 +196,7 @@
         this.selectRows = val
       },
       handleAdd() {
-        this.$refs['edit'].showEdit({}, 'top')
+        this.$refs['edit'].showEdit({ order: 0 }, 'top')
       },
       handleAddChild(row) {
         this.$refs['edit'].showEdit(row, 'child')

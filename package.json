@@ -1,6 +1,6 @@
 {
   "name": "@dgiot/dgiot-dashboard",
-  "version": "4.3.3",
+  "version": "4.3.4",
   "author": "iotn2n",
   "license": "Mozilla Public License Version 2.0",
   "private": false,
@@ -48,6 +48,9 @@
     "@babel/helper-plugin-utils": "^7.14.5",
     "@dgiot/dgiot-component": "^0.0.1",
     "@dgiot/dgiot-mqtt-dashboard": "^1.1.3-alpha-3",
+    "@femessage/data-list": "^1.4.0",
+    "@femessage/el-data-table": "^1.23.0",
+    "@femessage/el-form-renderer": "^1.23.0",
     "@vue/cli-plugin-pwa": "^4.5.13",
     "core-js": "^3.16.4",
     "cross-env": "^7.0.3",

@@ -80,6 +80,18 @@
           sortable
           show-overflow-tooltip
           width="140"
+          :label="$translateTitle('websocket.port')"
+        >
+          <template slot-scope="scope">
+            <span>{{ scope.row.config.port }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          prop="cType"
+          sortable
+          show-overflow-tooltip
+          width="140"
           :label="$translateTitle('developer.servicetype')"
         >
           <template slot-scope="scope">
@@ -105,17 +117,17 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          prop="objectId"
-          sortable
-          :label="$translateTitle('developer.channeladdr')"
-          width="200"
-        >
-          <template slot-scope="scope">
-            <span>{{ 'channel/' + scope.row.objectId }}</span>
-          </template>
-        </el-table-column>
+        <!--        <el-table-column-->
+        <!--          show-overflow-tooltip-->
+        <!--          prop="objectId"-->
+        <!--          sortable-->
+        <!--          :label="$translateTitle('developer.channeladdr')"-->
+        <!--          width="200"-->
+        <!--        >-->
+        <!--          <template slot-scope="scope">-->
+        <!--            <span>{{ 'channel/' + scope.row.objectId }}</span>-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
         <el-table-column
           width="120"
           show-overflow-tooltip
@@ -154,59 +166,9 @@
         <el-table-column
           :label="$translateTitle('developer.operation')"
           fixed="right"
-          width="400"
+          width="240"
         >
           <template slot-scope="scope">
-            <el-button
-              slot="reference"
-              type="primary"
-              size="mini"
-              @click="editorChannel(scope.row)"
-            >
-              <!-- 编辑 -->
-              {{ $translateTitle('task.Edit') }}
-            </el-button>
-            <el-button
-              type="success"
-              size="mini"
-              @click="updateChannel(scope.row)"
-            >
-              <!-- 详情 -->
-              {{ $translateTitle('product.details') }}
-            </el-button>
-            <el-popover
-              :ref="`popover-${scope.$index}`"
-              placement="top"
-              width="300"
-              style="margin-left: 10px"
-            >
-              <!-- <p>确定删除这个{{ scope.row.name }}通道吗？</p> -->
-              <p>
-                {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
-                }}{{ $translateTitle('equipment.channel') }}
-              </p>
-              <div>
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click="
-                    scope._self.$refs[`popover-${scope.$index}`].doClose()
-                  "
-                >
-                  {{ $translateTitle('developer.cancel') }}
-                </el-button>
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click="deleteChannel(scope)"
-                >
-                  {{ $translateTitle('developer.determine') }}
-                </el-button>
-              </div>
-              <el-button slot="reference" type="danger" size="mini">
-                {{ $translateTitle('developer.delete') }}
-              </el-button>
-            </el-popover>
             <!-- <el-popover
                 placement="top-start"
                 title="标题"
@@ -244,13 +206,63 @@
               {{ $translateTitle('product.log') }}
             </el-button>
             <el-button
-              type="goon"
+              slot="reference"
+              type="primary"
               size="mini"
-              @click="productinformation(scope.row.objectId)"
+              @click="editorChannel(scope.row)"
             >
-              <!-- 订阅日志 -->
-              {{ $translateTitle('product.productinformation') }}
+              <!-- 编辑 -->
+              {{ $translateTitle('task.Edit') }}
             </el-button>
+            <!--            <el-button-->
+            <!--              type="success"-->
+            <!--              size="mini"-->
+            <!--              @click="updateChannel(scope.row)"-->
+            <!--            >-->
+            <!--              &lt;!&ndash; 详情 &ndash;&gt;-->
+            <!--              {{ $translateTitle('product.details') }}-->
+            <!--            </el-button>-->
+            <el-popover
+              :ref="`popover-${scope.$index}`"
+              placement="top"
+              width="300"
+              style="margin-left: 10px"
+            >
+              <!-- <p>确定删除这个{{ scope.row.name }}通道吗？</p> -->
+              <p>
+                {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                }}{{ $translateTitle('equipment.channel') }}
+              </p>
+              <div>
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="
+                    scope._self.$refs[`popover-${scope.$index}`].doClose()
+                  "
+                >
+                  {{ $translateTitle('developer.cancel') }}
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="deleteChannel(scope)"
+                >
+                  {{ $translateTitle('developer.determine') }}
+                </el-button>
+              </div>
+              <el-button slot="reference" type="danger" size="mini">
+                {{ $translateTitle('developer.delete') }}
+              </el-button>
+            </el-popover>
+            <!--            <el-button-->
+            <!--              type="goon"-->
+            <!--              size="mini"-->
+            <!--              @click="productinformation(scope.row.objectId)"-->
+            <!--            >-->
+            <!--              &lt;!&ndash; 订阅日志 &ndash;&gt;-->
+            <!--              {{ $translateTitle('product.productinformation') }}-->
+            <!--            </el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -524,13 +536,18 @@
     <a-drawer
       width="80%"
       placement="right"
-      :closable="false"
       :title="channelname + '日志'"
       :append-to-body="true"
       :visible="subdialog"
       @close="handleCloseSubdialog(pubtopic)"
     >
-      <mqtt-log :refresh-key="refreshFlag" :msg="submessage" :list="msgList" />
+      <mqtt-log
+        :channel-id="channelname"
+        :refresh-key="refreshFlag"
+        :msg="submessage"
+        :list="msgList"
+        :product="channelInfo"
+      />
     </a-drawer>
     <el-dialog
       custom-class="dgiot_dialog"
@@ -751,7 +768,7 @@
       },
     },
     mounted() {
-      this.router = this.$dgiotBus.router(this.$route.fullPath)
+      this.router = this.$dgiotBus.router(this.$route.fullPath + 'llslslsls')
       this.Get_Re_Channel(0)
       this.dialogType()
       this.getApplication()
@@ -840,7 +857,7 @@
           loading.close()
           this.pagination.total = total
           this.channelInfo = results
-          this.channelDialog = true
+          // this.channelDialog = true
         } catch (error) {
           console.log(error)
           loading.close()
@@ -1269,6 +1286,7 @@
         // subdialog.gotoLine(subdialog.session.getLength())
       },
       subProTopic(row) {
+        this.productinformation(row.objectId)
         this.subdialog = true
         this.subdialogid = row.objectId
         this.channelname = row.objectId
@@ -1326,16 +1344,16 @@
 <style lang="scss" scoped>
   .el-button--goon.is-active,
   .el-button--goon:active {
+    color: #fff;
     background: #20b2aa;
     border-color: #20b2aa;
-    color: #fff;
   }
 
   .el-button--goon:focus,
   .el-button--goon:hover {
+    color: #fff;
     background: #48d1cc;
     border-color: #48d1cc;
-    color: #fff;
   }
 
   .el-button--goon {

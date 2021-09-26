@@ -10,7 +10,11 @@
       <el-form-item :label="$translateTitle('category.name')" prop="name">
         <el-input v-model.trim="form.name" />
       </el-form-item>
-      <el-form-item :label="$translateTitle('category.type')" prop="type">
+      <el-form-item
+        v-show="flagType != 'child'"
+        :label="$translateTitle('category.type')"
+        prop="type"
+      >
         <el-select v-model="form.type">
           <el-option
             v-for="item in categoryList"
@@ -21,13 +25,12 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$translateTitle('category.sort')" prop="order">
-        <el-input-number
-          v-model="form.order"
-          style="width: 100%"
-          :min="0"
-          :max="30"
-        />
+      <el-form-item
+        v-show="flagType == 'child'"
+        :label="$translateTitle('category.sort')"
+        prop="order"
+      >
+        <el-input-number v-model="form.order" style="width: 100%" :min="0" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -42,12 +45,14 @@
 </template>
 
 <script>
+  import { uuid } from '@/utils'
   import { putCategory, postCategory } from '@/api/Category'
   import { mapGetters } from 'vuex'
   export default {
     name: 'TableEdit',
     data() {
       return {
+        flagType: 'father',
         form: {
           data: {},
           name: '',
@@ -147,20 +152,24 @@
         // console.log(this.categoryListOptions, 'categoryListOptions')
       },
       showEdit(row, type) {
+        this.flagType = type
         this.title =
-          type == 'top'
+          this.flagType == 'top'
             ? this.$translateTitle('category.New top category')
             : type == 'child'
             ? this.$translateTitle('category.Add subcategory')
             : this.$translateTitle('category.Modify category')
         this.form =
-          type != 'child'
+          this.flagType != 'child'
             ? _.merge({ mark: type }, row)
-            : _.merge(
-                { mark: type, objectId: row.objectId },
-                this.$options.data().form
-              )
-
+            : this.flagType == 'top'
+            ? _.merge(this.$options.data().form, {
+                mark: type,
+                objectId: row.objectId,
+                type: row.type,
+                order: Number(moment(new Date()).valueOf()),
+              })
+            : ''
         this.dialogFormVisible = true
       },
       close() {

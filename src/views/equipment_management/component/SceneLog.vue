@@ -6,11 +6,11 @@
           v-if="!$loadsh.isEmpty(queryForm)"
           ref="form"
           :inline="true"
-          label-width="auto"
+          label-width="80px"
           :model="queryForm"
           @submit.native.prevent
         >
-          <el-form-item label="level">
+          <el-form-item :label="$translateTitle('device.level')">
             <el-select v-model="queryForm.level">
               <el-option
                 v-for="item in leverData"
@@ -22,19 +22,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="action">
-            <el-select v-model="queryForm.action">
-              <el-option
-                v-for="item in actionData"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
-                {{ item }}
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="tracetype">
+          <el-form-item :label="$translateTitle('device.tracetype')">
             <el-select v-model="queryForm.tracetype">
               <el-option
                 v-for="item in traceData"
@@ -46,7 +34,18 @@
               </el-option>
             </el-select>
           </el-form-item>
-
+          <el-form-item :label="$translateTitle('device.action')">
+            <el-switch
+              v-model="queryForm.action"
+              style="display: block"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              inactive-value="stop"
+              active-value="start"
+              :active-text="$translateTitle('device.start')"
+              :inactive-text="$translateTitle('device.stop')"
+            />
+          </el-form-item>
           <el-form-item>
             <el-button
               icon="el-icon-search"
@@ -66,7 +65,7 @@
               />
             </el-button>
 
-            <el-popover trigger="hover">
+            <el-popover v-show="scroketMsg.length" trigger="hover">
               <el-checkbox-group v-model="checkList">
                 <vue-draggable v-bind="dragOptions" :list="logcolumns">
                   <div v-for="(item, index) in logcolumns" :key="item + index">
@@ -446,7 +445,11 @@
     },
   }
 </script>
-
+<style>
+  .el-switch {
+    display: inline !important;
+  }
+</style>
 <style lang="scss" scoped>
   .logs {
     height: calc(100vh - #{$base-top-bar-height}* 2.7) !important;

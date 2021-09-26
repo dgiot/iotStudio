@@ -1,3 +1,32 @@
+## [4.3.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.3...v4.3.4) (2021-09-24)
+
+
+### Bug Fixes
+
+* **mqttbus:** mqttbus ([bf46b0a](https://github.com/dgiot/dgiot-dashboard/commit/bf46b0ad90c9833bc55107e8a8fdb534a104c9af))
+* **src/views/devicemanage/category.vue && src/views/devicemanage/categoryedit.vue && userinfo:** '' ([ed12485](https://github.com/dgiot/dgiot-dashboard/commit/ed1248534ca1acf06c57bc632f04bf5a875b3271))
+* **topo/index.vue:** topo-thing ([dc591c3](https://github.com/dgiot/dgiot-dashboard/commit/dc591c379f658e998ce972d5ee9062f9bdf729be))
+
+
+### Features
+
+* **src/main.js && pack:** dgiot-component ([44d8ff0](https://github.com/dgiot/dgiot-dashboard/commit/44d8ff06834093644b8b7dcce6aa22b80f289492))
+* **src/views/engine/home_resourcechannel.vue:** remove channel ([f783637](https://github.com/dgiot/dgiot-dashboard/commit/f783637ffcdf6007286fafaefa0bc1d29939a6ff))
+* **src/views/equipment_management/editdevices.vue:** device-log ([40c63d8](https://github.com/dgiot/dgiot-dashboard/commit/40c63d8837755c96464f4f83e44268fc54afdbf7))
+* **src/views/equipment_management/home_group2.vue:** product Details ([0781164](https://github.com/dgiot/dgiot-dashboard/commit/07811644beb1cad26049d1c75fcce7549d334b6e))
+* script ([f46988e](https://github.com/dgiot/dgiot-dashboard/commit/f46988e5a2302c57615f9b3936ce140c5cd4ee2e))
+* **src/views/equipment_management/home_group2.vue:** when creating a product, the node type  added ([6bf2a0c](https://github.com/dgiot/dgiot-dashboard/commit/6bf2a0c49f5548631961e7ec7030fd267deac4fb))
+* **src/views/equipment_management/platform_overview.vue:** mqtt ([e92910d](https://github.com/dgiot/dgiot-dashboard/commit/e92910dd390e904d1a47b1c09935676743bad9c1))
+* **src/views/logs/index.vue:** logs-mqtt ([5cba8ac](https://github.com/dgiot/dgiot-dashboard/commit/5cba8ac5c451402bd1dcf76994d54b350fe00f8c))
+* **src/views/topo/index.vue:** configuration page mqtt news subscription processing ([9f30de8](https://github.com/dgiot/dgiot-dashboard/commit/9f30de8a30b1ab3da7980be73447f23263db149b))
+
+
+### Performance Improvements
+
+* **src/views/equipment_management/home_group2.vue:** rewrite the new channel interface ([ad1a130](https://github.com/dgiot/dgiot-dashboard/commit/ad1a1306a23ca10bc98e1c342180826d367fbb6c))
+
+
+
 ## [4.3.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.2...v4.3.3) (2021-09-18)
 
 
