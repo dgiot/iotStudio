@@ -768,7 +768,7 @@
       },
     },
     mounted() {
-      this.router = this.$dgiotBus.router(this.$route.fullPath + 'llslslsls')
+      this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.Get_Re_Channel(0)
       this.dialogType()
       this.getApplication()
@@ -1027,7 +1027,7 @@
                 '' +
                 this.$translateTitle('node.success')
             )
-            this.Get_Re_Channel(0)
+            this.Get_Re_Channel(this.start)
           }
 
           // this.$message.success(`${res}`)
@@ -1290,7 +1290,7 @@
         this.subdialog = true
         this.subdialogid = row.objectId
         this.channelname = row.objectId
-        this.subtopic = 'log/channel/' + row.objectId
+        this.subtopic = 'log/channel/' + row.objectId + '/#'
         this.submessage = ''
         this.msgList = []
         let subInfo = {
@@ -1302,7 +1302,7 @@
         this.$dgiotBus.$emit('MqttSubscribe', subInfo)
 
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        this.pubtopic = this.subtopic.replace('log/', '')
+        this.pubtopic = 'channel/' + row.objectId
         setTimeout(() => {
           this.$dgiotBus.$emit(
             `MqttPublish`,
