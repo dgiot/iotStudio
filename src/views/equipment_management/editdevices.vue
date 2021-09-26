@@ -760,8 +760,9 @@
 </template>
 <script>
   import info from '@/components/Device/info'
+  import SceneLog from '@/views/equipment_management/component/SceneLog'
   import deviceLog from '@/views/Logs/device'
-  import { requireModule } from '@/utils/file'
+  // import { requireModule } from '@/utils/file'
   const columns = [
     {
       title: '图片',
@@ -797,7 +798,8 @@
       Instruct,
       info,
       deviceLog,
-      ...requireModule(require.context('./component', true, /\.vue$/)),
+      SceneLog,
+      // ...requireModule(require.context('./component', true, /\.vue$/)),
     },
     filters: {
       filterVal(val) {
