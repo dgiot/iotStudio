@@ -32,7 +32,7 @@
     </el-dialog>
 
     <div class="prosecond">
-      <vab-query-form>
+      <vab-query-form v-show="!isProduct">
         <vab-query-form-top-panel>
           <el-form
             label-width="100px"
@@ -104,7 +104,7 @@
         </vab-query-form-top-panel>
       </vab-query-form>
       <el-row :gutter="24">
-        <el-col :xs="12" :sm="6" :md="5" :lg="4" :xl="3">
+        <el-col v-show="!isProduct" :xs="12" :sm="6" :md="5" :lg="4" :xl="3">
           <ul
             class="infinite-list"
             :style="{ height: tableHeight + 'px' }"
@@ -124,6 +124,7 @@
           </ul>
         </el-col>
         <el-col
+          v-show="!isProduct"
           :xs="$loadsh.isEmpty(productDetail) ? 24 : 12"
           :sm="$loadsh.isEmpty(productDetail) ? 18 : 6"
           :md="$loadsh.isEmpty(productDetail) ? 19 : 6"
@@ -166,11 +167,11 @@
           </div>
         </el-col>
         <el-col
-          :xs="$loadsh.isEmpty(productDetail) ? 24 : 24"
-          :sm="$loadsh.isEmpty(productDetail) ? 0 : 12"
-          :md="$loadsh.isEmpty(productDetail) ? 0 : 13"
-          :lg="$loadsh.isEmpty(productDetail) ? 0 : 16"
-          :xl="$loadsh.isEmpty(productDetail) ? 0 : 18"
+          :xs="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 24 : 24"
+          :sm="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 0 : 12"
+          :md="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 0 : 13"
+          :lg="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 0 : 16"
+          :xl="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 0 : 18"
         >
           <profile-descriptions
             ref="ProfileDescription"
@@ -228,6 +229,15 @@
   import { postProductTemplet } from '@/api/ProductTemplet'
   export default {
     components: { ...res_components },
+    props: {
+      isProduct: {
+        type: Boolean,
+        default() {
+          return true
+        },
+        required: false,
+      },
+    },
     data() {
       return {
         tableHeight: this.$baseTableHeight(0),
@@ -476,23 +486,29 @@
     },
     methods: {
       async StepsListRowClick(params) {
+        console.log('this.isProduct', this.isProduct)
         console.log(this.$refs.multipleTable)
         var productDetail = {}
         // this.$refs.ProfileDescription.featDetail(params.objectId)
         try {
-          const loading = this.$baseColorfullLoading()
+          if (!this.isProduct) {
+            const loading = this.$baseColorfullLoading()
+          }
           const res = await getProduct(params.objectId)
           productDetail = _.merge(res, {
             decoder: { code: '' },
             thing: { properties: [] },
             config: { parser: [], profile: [], basedate: { params: [] } },
           })
+          console.log(res, 'res')
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
             'vab-hey-message-success'
           )
-          loading.close()
+          if (!this.isProduct) {
+            loading.close()
+          }
         } catch (error) {
           console.log(error)
           this.$baseMessage(

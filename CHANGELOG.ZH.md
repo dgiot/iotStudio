@@ -11,6 +11,7 @@
 ### Features
 
 * **src/main.js && pack:** dgiot-component ([44d8ff0](https://github.com/dgiot/dgiot-dashboard/commit/44d8ff06834093644b8b7dcce6aa22b80f289492))
+* **src/views/engine/home_resourcechannel.vue:** mqtt log ([fba6670](https://github.com/dgiot/dgiot-dashboard/commit/fba6670811c44c0e34977f70e143a8919ae30a18))
 * **src/views/engine/home_resourcechannel.vue:** remove channel ([f783637](https://github.com/dgiot/dgiot-dashboard/commit/f783637ffcdf6007286fafaefa0bc1d29939a6ff))
 * **src/views/equipment_management/editdevices.vue:** device-log ([40c63d8](https://github.com/dgiot/dgiot-dashboard/commit/40c63d8837755c96464f4f83e44268fc54afdbf7))
 * **src/views/equipment_management/home_group2.vue:** product Details ([0781164](https://github.com/dgiot/dgiot-dashboard/commit/07811644beb1cad26049d1c75fcce7549d334b6e))

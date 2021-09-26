@@ -351,9 +351,12 @@
                   <el-cascader v-model="form.category" :options="treeData"></el-cascader>
                 </el-form-item>-->
 
-              <el-form-item :label="$translateTitle('product.classification')">
+              <el-form-item
+                :label="$translateTitle('product.classification')"
+                prop="category"
+              >
                 <el-row :gutter="24">
-                  <el-col :span="14">
+                  <el-col :span="10">
                     <el-radio-group
                       v-model="form.type"
                       :disabled="custom_status == 'edit'"
@@ -366,16 +369,26 @@
                       </el-radio>
                     </el-radio-group>
                   </el-col>
-                  <el-col v-if="form.type == 1" :span="9">
+                  <el-col v-if="form.type == 1" :span="13" style="padding: 0">
                     <el-input
                       v-model="form.category"
                       :disabled="custom_status == 'edit'"
                       readonly
-                      @click.native="cascaderDrawer = !cascaderDrawer"
                     >
                       <template v-if="form.category" slot="prepend">
-                        {{ getCategory(form.category) }}
+                        <el-link
+                          :disabled="custom_status == 'edit'"
+                          @click.native="handleIconClick"
+                        >
+                          {{ getCategory(form.category) }}
+                        </el-link>
                       </template>
+                      <el-icon
+                        slot="append"
+                        size="mini"
+                        class="el-icon-edit el-input__icon"
+                        @click.native="cascaderDrawer = !cascaderDrawer"
+                      />
                     </el-input>
                   </el-col>
                 </el-row>
@@ -548,7 +561,6 @@
                 </div>
                 <i
                   v-else
-                  v-loading="loading"
                   class="el-icon-plus avatar-uploader-icon"
                   @click="uploadCkick"
                 />
@@ -664,21 +676,22 @@
                 <template #default="{ row }">
                   {{ getCategory(row.category) }}
                   <el-popover placement="left" width="800" trigger="click">
-                    <profile-descriptions
-                      ref="ProfileDescription"
-                      :table-type="descriptions.tableType"
-                      :product-id="descriptions.productId"
-                      :things="descriptions.things"
-                      :dict-table-list="descriptions.dictTableList"
-                      :decoder-table-list="descriptions.decoderTableList"
-                      :product-detail="descriptions.productDetail"
-                      :parser-table-list="descriptions.parserTableList"
-                      :table-loading="descriptions.tableLoading"
-                    />
+                    <dgiot-profile ref="profile" :is-product="true" />
+                    <!--                    <profile-descriptions-->
+                    <!--                      ref="ProfileDescription"-->
+                    <!--                      :table-type="descriptions.tableType"-->
+                    <!--                      :product-id="descriptions.productId"-->
+                    <!--                      :things="descriptions.things"-->
+                    <!--                      :dict-table-list="descriptions.dictTableList"-->
+                    <!--                      :decoder-table-list="descriptions.decoderTableList"-->
+                    <!--                      :product-detail="descriptions.productDetail"-->
+                    <!--                      :parser-table-list="descriptions.parserTableList"-->
+                    <!--                      :table-loading="descriptions.tableLoading"-->
+                    <!--                    />-->
                     <i
                       slot="reference"
                       class="el-icon-info"
-                      @click="descriptions.productId = row.objectId"
+                      @click="referenceHandle(row)"
                     ></i>
                   </el-popover>
                 </template>
@@ -721,6 +734,9 @@
           </div>
         </el-drawer>
       </el-drawer>
+      <el-dialog top="1vh" :append-to-body="true" :visible.sync="dialogProfile">
+        <dgiot-profile ref="dialogProfile" :is-product="true" />
+      </el-dialog>
       <!--新增字典-->
       <a-drawer
         v-if="dictVisible"
@@ -1385,6 +1401,7 @@
 </template>
 <script>
   // import Pagination from '@dgiot/dgiot-component/src/components/Pagination'
+  import profile from '@/views/equipment_management/profile'
   import { uuid } from '@/utils'
   import { queryChannel } from '@/api/Channel/index'
   import { mapGetters } from 'vuex'
@@ -1407,6 +1424,7 @@
 
   export default {
     components: {
+      'dgiot-profile': profile,
       ...res_components,
     },
     data() {
@@ -1668,6 +1686,7 @@
             value: 'OTHER',
           },
         ],
+        dialogProfile: false,
         imageUrl: '',
         selectfromtype: '',
         productid: '',
@@ -1707,6 +1726,10 @@
       this.projectName = ''
     },
     methods: {
+      async handleIconClick(ev) {
+        this.dialogProfile = !this.dialogProfile
+        await this.$refs.dialogProfile.StepsListRowClick(this.selectedRow)
+      },
       handleSelectionChange(val) {
         this.multipleSelection = val
         let vals = []
@@ -1755,6 +1778,9 @@
         }
         const { results } = await queryChannel(params)
         this.channelResource = results
+      },
+      async referenceHandle(row) {
+        await this.$refs.profile.StepsListRowClick(row)
       },
       async queryProdut(args) {
         if (!args.limit) {
@@ -2475,6 +2501,7 @@
                   storageStrategy: this.form.storageStrategy,
                 },
                 config = {
+                  type: this.form.type,
                   konva: {
                     Stage: {
                       attrs: {
@@ -2515,6 +2542,10 @@
                 },
                 icon = '',
               } = this.selectedRow
+
+              // type为1 继承 this.selectedRow 的参数
+              if (this.form.type == 1) {
+              }
               // 继承select的属性
               var addparams = {
                 category,
