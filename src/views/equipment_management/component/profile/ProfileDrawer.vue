@@ -1,12 +1,13 @@
 <template>
-  <a-drawer
-    width="40%"
+  <el-dialog
+    width="60%"
+    :append-to-body="true"
     direction="rtl"
-    :visible="parserTable"
+    :visible.sync="parserTable"
     class="parserTable"
     @close="$parent.parserTable = !parserTable"
   >
-    <div slot="title" class="header-title parserTable">
+    <div slot="title" class="header-title">
       <el-button type="primary" @click.native.prevent="addParse(parserTables)">
         {{ $translateTitle('product.newlyadded') }}
       </el-button>
@@ -119,7 +120,7 @@
         </template>
       </el-table-column>
     </el-table>
-  </a-drawer>
+  </el-dialog>
 </template>
 
 <script>

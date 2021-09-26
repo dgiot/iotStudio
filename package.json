@@ -60,7 +60,9 @@
     "resize-detector": "^0.3.0",
     "rimraf": "^3.0.2",
     "url-loader": "^4.1.1",
-    "vab-icons": "git+https://github.com.cnpmjs.org/zxcasvw/vab-icons.git"
+    "vab-icons": "git+https://github.com.cnpmjs.org/zxcasvw/vab-icons.git",
+    "vue-ele-form-data-editor": "^0.1.6",
+    "vue-ele-form-dynamic": "^0.4.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",

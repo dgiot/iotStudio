@@ -5,14 +5,12 @@
     :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <el-dialog
-      :append-to-body="true"
       :visible.sync="dialogVisible"
-      width="90%"
+      :append-to-body="true"
       top="1vh"
       :title="formConfig.uid"
-      style="margin: 0 auto"
     >
-      <VabParser
+      <vab-parser
         :dba-table="DbaTable"
         :productid="productid"
         :form-config="formConfig"
@@ -27,7 +25,7 @@
       <!--        </el-button>-->
       <!--      </span>-->
     </el-dialog>
-    <el-dialog v-drag-dialog :append-to-body="true" :visible.sync="parserView">
+    <el-dialog v-drag-dialog append-to-body :visible.sync="parserView">
       <f-render v-model="formConfig" :config="formConfig" pure />
     </el-dialog>
 
@@ -233,7 +231,7 @@
       isProduct: {
         type: Boolean,
         default() {
-          return true
+          return false
         },
         required: false,
       },
@@ -489,11 +487,12 @@
         console.log('this.isProduct', this.isProduct)
         console.log(this.$refs.multipleTable)
         var productDetail = {}
+        var isLoading = true
         // this.$refs.ProfileDescription.featDetail(params.objectId)
         try {
-          if (!this.isProduct) {
-            const loading = this.$baseColorfullLoading()
-          }
+          const loading = this.isProduct
+            ? (isLoading = false)
+            : this.$baseColorfullLoading()
           const res = await getProduct(params.objectId)
           productDetail = _.merge(res, {
             decoder: { code: '' },
@@ -506,9 +505,7 @@
             'success',
             'vab-hey-message-success'
           )
-          if (!this.isProduct) {
-            loading.close()
-          }
+          if (isLoading) loading.close()
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -1059,8 +1056,8 @@
       editorParser(config, type, flag) {
         const { objectId, thing = {} } = this.productDetail
         console.log('flag', flag)
-        this.tableLoading = true
-        setTimeout(() => (this.tableLoading = false), 800)
+        // this.tableLoading = true
+        // setTimeout(() => (this.tableLoading = false), 800)
         var _sourceDict = []
         var _sourceModule = []
         var _sourceField = []
@@ -1116,7 +1113,12 @@
       editParse(index, row) {
         this.formConfig = row
         this.editIndex = index
-        this.dialogVisible = true
+        this.parserTable = false
+        // const el = document.getElementsByClassName('parserTable')[0]
+        // el.style.display = 'none'
+        this.$nextTick(() => {
+          this.dialogVisible = true
+        })
       },
       async saveParse(list, type = -1, mark = true) {
         console.log('this.productConfig', this.productConfig)

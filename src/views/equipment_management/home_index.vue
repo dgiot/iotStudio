@@ -7,7 +7,7 @@
         top="5vh"
         width="40vh"
       >
-        <div class="leftTree">
+        <div class="deviceTree">
           <p style="text-align: center">
             {{ $translateTitle('developer.Company') }} :
             {{ deciceCompany }}
@@ -2996,7 +2996,7 @@
     }
   }
 
-  .leftTree {
+  .deviceTree {
     width: 200px;
     /* height: calc(120vh - #{$base-top-bar-height}* 4 + 38px); */
     overflow-x: scroll;
