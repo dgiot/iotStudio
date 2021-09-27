@@ -1783,6 +1783,7 @@
         await this.$refs.profile.StepsListRowClick(row)
       },
       async queryProdut(args) {
+        const loading = this.$baseColorfullLoading()
         if (!args.limit) {
           args = this.queryForm
         }
@@ -1797,9 +1798,8 @@
           },
         }
         try {
-          const loading = this.$baseColorfullLoading()
           // console.log(this.categoryListOptions, 'categoryListOptions')
-          const { results, count = 0 } = await queryProductTemplet(params)
+          const { results = [], count = 0 } = await queryProductTemplet(params)
           loading.close()
           this.tableData = results
           this.queryForm.total = count
@@ -1816,6 +1816,7 @@
           //   console.log(category.type, 'category')
           // })
         } catch (error) {
+          loading.close()
           console.log(error)
           this.$message.error(`${error}`)
         }
@@ -2167,43 +2168,55 @@
         this.allTableDate = Dictres.results
       },
       async searchProduct(start) {
-        this.listLoading = true
-        if (start == 0) {
-          this.start = 0
-        }
-        var category = []
-        const parsms = {
-          count: 'objectId',
-          order: '-updatedAt',
-          limit: this.length,
-          skip: this.start,
-          keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon,channel',
-          where: {
-            name: this.formInline.productname.length
-              ? { $regex: this.formInline.productname }
-              : { $ne: null },
-          },
-        }
-        const { results, count } = await this.$query_object('Product', parsms)
-        // console.log("results", results)
-        if (results) {
-          results.map((items) => {
-            if (
-              items.category != '' &&
-              items.category &&
-              items.devType != 'report'
-            ) {
-              category.push(items.category)
-            }
-          })
+        try {
+          this.listLoading = true
+          if (start == 0) this.start = 0
+
+          var category = []
+          const parsms = {
+            count: 'objectId',
+            order: '-updatedAt',
+            limit: this.length,
+            skip: this.start,
+            // keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon,channel',
+            where: {
+              name: this.formInline.productname.length
+                ? { $regex: this.formInline.productname }
+                : { $ne: null },
+            },
+          }
+          const { results = [], count = 0 } = await this.$query_object(
+            'Product',
+            parsms
+          )
+          // console.log("results", results)
+          if (results) {
+            results.map((items) => {
+              if (
+                items.category != '' &&
+                items.category &&
+                items.devType != 'report'
+              ) {
+                category.push(items.category)
+              }
+            })
+            this.listLoading = false
+            this.proTableData = results
+            this.total = count
+            this.$dgiotBus.$emit('MqttSubscribe', {
+              topic: this.$route.name,
+            })
+          }
+          this.getApps()
+        } catch (error) {
           this.listLoading = false
-          this.proTableData = results
-          this.total = count
-          this.$dgiotBus.$emit('MqttSubscribe', {
-            topic: this.$route.name,
-          })
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
         }
-        this.getApps()
       },
       getApps() {
         this.allApps = this.roleTree
@@ -2443,7 +2456,7 @@
             'data.key': 'category',
           },
         }
-        const { results } = await this.$query_object('Dict', parsms)
+        const { results = [] } = await this.$query_object('Dict', parsms)
         results.map((items) => {
           var obj = {}
           obj.value = items.type
