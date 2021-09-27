@@ -8,9 +8,9 @@
  */
 let cdnUrl = {
   css: [
-    // 'https://unpkg.com/iview/dist/styles/iview.css',
-    // 'https://unpkg.com/ant-design-vue/dist/antd.min.css',
-    // 'https://unpkg.com/vuetify/dist/vuetify.min.css',
+    'https://unpkg.com/iview/dist/styles/iview.css',
+    'https://unpkg.com/ant-design-vue/dist/antd.min.css',
+    'https://unpkg.com/vuetify/dist/vuetify.min.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/styles/google.css',
     'https://unpkg.com/mdi/css/materialdesignicons.min.css',
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/css/loading/dots.css',
@@ -30,7 +30,7 @@ let cdnUrl = {
     'https://unpkg.com/prismjs/themes/prism-tomorrow.css',
     'https://unpkg.com/vue-prism-editor/dist/prismeditor.min.css',
     'https://unpkg.com/vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.min.css',
-    // 'https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css', // 这个css 真坑爹。
+    // 'https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css',
     //  https://at.alicdn.com/t/font_2759556_18gyfqayutt.json
   ],
   js: [
