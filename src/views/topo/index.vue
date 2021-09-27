@@ -757,6 +757,8 @@
         Imgage.forEach((node) => {
           const img = new Image()
           img.src = node.getAttr('source')
+          node.draggable = false
+          node.attrs.draggable = false
           _this.unDraggable(node)
           img.draggable = _this.isDevice ? false : true
           img.onload = () => {
@@ -873,9 +875,15 @@
        * @param node
        */
       unDraggable(node) {
-        console.log('node', node)
         node.draggable = this.isDevice ? false : true
         node.attrs.draggable = this.isDevice ? false : true
+        console.log('node', node)
+        // node.draggable = this.isDevice ? false : true
+        // node.attrs.draggable = this.isDevice ? false : true
+        // if (node.attrs.source) {
+        //   node.draggable = false
+        //   node.attrs.draggable = false
+        // }
         this.stage.draw()
         this.stage.batchDraw()
       },
