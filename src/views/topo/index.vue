@@ -111,7 +111,9 @@
         }
       },
       isDevice: function () {
-        return this.$route.query.type == 'device' ? true : false
+        return this.$route.query.type == 'device' || this.$route.query.deviceid
+          ? true
+          : false
       },
     },
     watch: {},
@@ -130,9 +132,6 @@
       this.$dgiotBus.$off('removeShape')
       this.$dgiotBus.$on('removeShape', (topo) => {
         if (topo.attrs.id) this.removeShape(topo)
-        else {
-          throw new Error('选择元素没有绑定元素id')
-        }
       })
       this.$baseEventBus.$on('busTopo', (type, data) => {
         this.newTopo(type, data)
@@ -544,25 +543,22 @@
         div.setAttribute('id', globalStageid)
         console.log('globalStageid', globalStageid)
         // console.log(JSON.stringify(Stage), 'Stage')
+        Stage.attrs.draggable = _this.isDevice ? false : true // 最初的那个 Stage
         _this.stage = Konva.Node.create(Stage, globalStageid)
-
         console.log('_this.$refs.topobase', _this.$refs.topobase)
         console.log('data', data)
         var Layer = _this.stage.find('Layer')[0]
         var allLayer = _this.stage.find('Layer')
         allLayer.forEach((layer) => {
-          console.log(layer, 'layer')
-          layer.draggable = true
+          _this.unDraggable(layer)
         })
         _this.stage.on('click', (e) => {
           var node = e.target
+          // _this.scaleCanvas(node, {})
           console.log(e, 'stage node')
           console.log(node, 'stage target')
           // 判断是否为产品界面
-          if (_this.isDevice) {
-            node.attrs.draggable = false
-            console.log('isDevice', node)
-          }
+          _this.unDraggable(node)
           // 如果点击空白处 移除图形选择框
           // 移除图形选择框
           if (node == _this.stage) {
@@ -611,6 +607,9 @@
           _this.updataTopo()
         })
         const Group = _this.stage.find('Group')
+        Group.forEach(function (_G) {
+          _this.unDraggable(_G)
+        })
         const Text = _this.stage.find('Text')
         // console.clear()
         console.log(Text, 'Text')
@@ -710,8 +709,8 @@
         // https://github.com/xiongshuang/konva-palette/blob/master/palette/index.html
         if (!_this.isDevice && Group?.length) {
           Group.forEach(function (_G) {
+            _this.unDraggable(_G)
             _G.on('dblclick', (e) => {
-              _G.draggable = true
               console.log(e, 'Group dblclick')
               // 创建图形选框事件
               const tr = new Konva.Transformer({
@@ -737,7 +736,6 @@
             _G.on('mouseup', (e) => {
               // console.log(e, '_G mouseup')
               if (!_this.isDevice && _this.productid) _this.headevisible = true
-
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseover', (e) => {
@@ -757,35 +755,35 @@
         }
         var Imgage = _this.stage.find('Image')
         Imgage.forEach((node) => {
-          console.log('img node ', node)
           const img = new Image()
           img.src = node.getAttr('source')
-          img.draggable = true
-
-          var img_url = node.getAttr('source') + '?' + Date.parse(new Date())
-          // var _img = new Image()
-          //
-          // _img.src = img_url
-          //
-          // _img.onload = function () {
-          //   // 打印
-          //   img.with = _img.width ? _img.width:$('#current1').width()
-          //   img.height =  _img.width ? _img.width:$('#current1').height()
-          // }
-          // img.with = $('#konva').width()
-          // img.height = $('#konva').height()
-          console.log('img', img, "$('#konva')", $('#current1'))
-          $('#current1').css('background-image', `url(${img_url})`)
-          $('#current1').css('background-repeat', 'no-repeat')
-          $('#current1').css('background-size', '100%,100%')
-          // img.onload = () => {
-          //   node.image(img)
-          //   console.log(node.image(img), 'node.image(img)')
-          //   _this.stage.batchDraw()
-          // }
+          _this.unDraggable(node)
+          img.draggable = _this.isDevice ? false : true
+          img.onload = () => {
+            node.image(img)
+            _this.stage.batchDraw()
+          }
+          node.on('mouseout', (e) => {
+            const id = e.target.id()
+            console.log(
+              node,
+              'images的移动事件',
+              e.target,
+              e.target.x(),
+              e.target.y(),
+              id,
+              e
+            )
+            node.attrs.x = e.target.x()
+            node.attrs.y = e.target.y()
+            document.body.style.cursor = 'default'
+          })
         })
+        // console.clear()
+        // console.log(_this.stage.toJSON())
         if (!_this.isDevice && Group?.length) {
           Group.forEach(function (_G) {
+            _this.unDraggable(_G)
             _G.on('dblclick', (e) => {
               console.log(e, 'Group dblclick')
               // 创建图形选框事件
@@ -847,8 +845,39 @@
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
+        // console.error(_this.stage.toJSON())
         _this.handleMqttMsg()
         // 处理消息
+      },
+      /**
+       *
+       * @param Layer
+       * @param x
+       * @param y
+       * @param zoomLevelx
+       * @param zoomLevelY
+       */
+      scaleCanvas(
+        Layer,
+        { x = 1, y = 1, zoomLevelX = 1, zoomLevelY = 1 } = args
+      ) {
+        // Layer.x(x)
+        // Layer.y(y)
+        Layer.scale({
+          x: zoomLevelX,
+          y: zoomLevelY,
+        })
+      },
+      /**
+       * @description 将拖拽事件禁用
+       * @param node
+       */
+      unDraggable(node) {
+        console.log('node', node)
+        node.draggable = this.isDevice ? false : true
+        node.attrs.draggable = this.isDevice ? false : true
+        this.stage.draw()
+        this.stage.batchDraw()
       },
     },
   }

@@ -96,7 +96,7 @@ instance.interceptors.request.use(
     const { NODE_ENV = '' } = process.env
     const token = store.getters['user/token']
     const { path = '/' } = router.history.current
-    let { headers = {}, baseURL, url } = config
+    let { headers = {} } = config
     if (headers['proxy'] == true) {
       console.log(config, 'config')
       NODE_ENV == 'production'

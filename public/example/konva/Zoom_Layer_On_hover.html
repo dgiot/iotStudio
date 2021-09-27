@@ -1,0 +1,81 @@
+<!--Konva Zoom Image on Hover Demo  https://konvajs.org/docs/sandbox/Zoom_Layer_On_hover.html-->
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://unpkg.com/konva@8.2.1/konva.min.js"></script>
+  <meta charset="utf-8" />
+  <title>Konva Zoom Image on Hover Demo</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+<div id="container"></div>
+<script>
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+
+  var stage = new Konva.Stage({
+    container: 'container',
+    width: width,
+    height: height,
+  });
+
+  var layer = new Konva.Layer();
+  var rect1 = new Konva.Rect({
+    x: 200,
+    y: 200,
+    width: width/4,
+    height: height/3,
+    fill: 'green',
+    stroke: 'black',
+    strokeWidth: 4,
+  });
+  // add the shape to the layer
+  layer.add(rect1);
+  rect1.zIndex(0);
+  stage.add(layer);
+
+  var imageObj = new Image();
+  imageObj.onload = function () {
+    var backgroundImage = new Konva.Image({
+      x: 0,
+      y: 0,
+      width: width,
+      height: height,
+      image: imageObj,
+    });
+    layer.add(backgroundImage);
+  };
+
+  imageObj.src = 'https://konvajs.org/assets/space.jpg';
+
+  var zoomLevel = 2;
+  layer.on('mouseenter', function () {
+    layer.scale({
+      x: zoomLevel,
+      y: zoomLevel,
+    });
+  });
+
+  layer.on('mousemove', function (e) {
+    var pos = stage.getPointerPosition();
+    layer.x(-pos.x);
+    layer.y(-pos.y);
+  });
+  layer.on('mouseleave', function () {
+    layer.x(0);
+    layer.y(0);
+    layer.scale({
+      x: 1,
+      y: 1,
+    });
+  });
+</script>
+</body>
+</html>
