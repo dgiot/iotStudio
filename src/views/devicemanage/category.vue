@@ -14,7 +14,7 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <el-input v-model="queryForm.name" />
+            <el-input v-model="queryForm.name" clearable />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -41,7 +41,7 @@
       ref="tableSort"
       v-loading="listLoading"
       :border="border"
-      :data="treeData"
+      :data="categoryList"
       :height="height"
       :size="lineHeight"
       :stripe="stripe"
@@ -55,7 +55,7 @@
         :label="$translateTitle('equipment.serialnumber')"
         sortable
         show-overflow-tooltip
-        width="180"
+        width="280"
         prop="objectId"
       />
       <el-table-column
@@ -65,29 +65,6 @@
         prop="name"
         show-overflow-tooltip
       />
-      <el-table-column
-        align="center"
-        :label="$translateTitle('developer.type')"
-        sortable
-        show-overflow-tooltip
-        prop="type"
-      />
-      <!--      <el-table-column-->
-      <!--        v-for="(item, index) in finallyColumns"-->
-      <!--        :key="index"-->
-      <!--        align="center"-->
-      <!--        :label="item.label"-->
-      <!--        sortable-->
-      <!--        :width="item.width"-->
-      <!--      >-->
-      <!--        <template #default="{ row }">-->
-      <!--          <span v-if="item.label === '评级'">-->
-      <!--            <el-rate v-model="row.rate" disabled />-->
-      <!--          </span>-->
-      <!--          <span v-else>{{ row[item.prop] }}</span>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
-
       <el-table-column
         align="center"
         :label="$translateTitle('developer.operation')"
@@ -115,13 +92,6 @@
         />
       </template>
     </el-table>
-    <vab-Pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="queryForm.pageNo"
-      :limit.sync="queryForm.pageSize"
-      @pagination="fetchData"
-    />
     <categoryEdit ref="edit" @fetch-data="fetchData" />
   </div>
 </template>
@@ -129,6 +99,7 @@
 <script>
   import categoryEdit from './categoryEdit'
   import { queryCategory, delCategory } from '@/api/Category'
+  import { post_tree } from '@/api/Data'
   export default {
     name: 'Empty',
     components: { categoryEdit },
@@ -150,25 +121,12 @@
           name: '',
           limt: 10,
           skip: 0,
-          order: '-createdAt',
+          order: 'createdAt',
           keys: 'count(*)',
         },
       }
     },
     computed: {
-      treeData() {
-        const cloneData = JSON.parse(JSON.stringify(this.categoryList))
-        var Tree = [] // 对源数据深度克隆
-        Tree = cloneData.filter((father) => {
-          const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parent.objectId
-          ) // 返回每一项的子级数组
-          branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
-          father.parent.objectId == 0 ? (father.parent.objectId = '0') : ''
-          return father.parent.objectId == 0 // 返回第一层
-        })
-        return Tree
-      },
       dragOptions() {
         return {
           animation: 600,
@@ -246,26 +204,22 @@
         this.queryForm.pageNo = 1
         this.fetchData()
       },
-      async fetchData(args = {}) {
-        if (!args.limit) {
-          args = this.queryForm
-        }
+      async fetchData() {
+        let name = this.queryForm.name.length
+          ? '{ "$regex": "' + this.queryForm.name + '"}'
+          : '{ "$ne": "null" }'
         this.listLoading = true
         let params = {
-          limit: args.limit,
-          order: args.order,
-          skip: args.skip,
-          keys: args.keys,
-          // include: 'Category',
-          where: {
-            name: this.queryForm.name.length
-              ? { $regex: this.queryForm.name }
-              : { $ne: null },
-          },
+          class: 'Category',
+          filter:
+            '{"order": "createdAt","keys":["parent","name","level"],"where":{"level": {"$gte": 1}, "name":' +
+            name +
+            '}}',
+          parent: 'parent',
         }
-        const { results, count } = await queryCategory(params)
+        console.log(params)
+        const { results = [] } = await post_tree(params)
         this.categoryList = results
-        this.total = count
         this.listLoading = false
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发

@@ -854,6 +854,7 @@ export default {
       resource: '资源通道',
       name: '请输入资源名称搜索',
       Servicetype: '服务类型',
+      category: '产品分类',
       server: '服务器',
       updateinterval: '更新间隔',
       Synchronizationcallinterval: '同步调用间隔时间',

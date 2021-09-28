@@ -11,21 +11,6 @@
         <el-input v-model.trim="form.name" />
       </el-form-item>
       <el-form-item
-        v-show="flagType != 'child'"
-        :label="$translateTitle('category.type')"
-        prop="type"
-      >
-        <el-select v-model="form.type">
-          <el-option
-            v-for="item in categoryList"
-            :key="item.objectId"
-            :label="item.data.CategoryName"
-            :value="item.data.CategoryName"
-            @click.native="selectType(item)"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item
         v-show="flagType == 'child'"
         :label="$translateTitle('category.sort')"
         prop="order"
@@ -45,7 +30,6 @@
 </template>
 
 <script>
-  import { uuid } from '@/utils'
   import { putCategory, postCategory } from '@/api/Category'
   import { mapGetters } from 'vuex'
   export default {
@@ -57,12 +41,10 @@
           data: {},
           name: '',
           order: 0,
-          type: '',
+          level: 0,
         },
         rules: {},
         title: '',
-        categoryList: [],
-        categoryListOptions: [],
         dialogFormVisible: false,
       }
     },
@@ -74,7 +56,6 @@
       aclObj() {
         let aclObj = {}
         this.role.map((e) => {
-          console.log(e.name, '')
           aclObj[`${'role' + ':' + e.name}`] = {
             read: true,
             write: true,
@@ -102,56 +83,12 @@
             message: this.$translateTitle('category.Please enter the sort'),
           },
         ],
-        type: [
-          {
-            required: true,
-            trigger: 'blur',
-            message: this.$translateTitle('category.Please choose the type'),
-          },
-        ],
       }
-      this.Industry()
     },
     methods: {
-      // treeData(paramData) {
-      //   const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
-      //   return cloneData.filter((father) => {
-      //     const branchArr = cloneData.filter(
-      //       (child) => father.id == child.parentid
-      //     ) // 返回每一项的子级数组
-      //     console.log(branchArr, 'branchArr')
-      //     branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
-      //     // father.parentid == 0 ? (father.parentid = '0') : ''
-      //     return father.parentid == 0 // 返回第一层
-      //   })
-      // },
-      selectType(e) {
-        this.form.data = e
-        console.log(e)
-      },
-      async Industry() {
-        const params = {
-          limit: 100,
-          where: {
-            'data.key': 'category',
-          },
-        }
-        const { results } = await this.$query_object('Dict', params)
-        results.map((items) => {
-          var obj = {}
-          obj.key = items.key
-          obj.objectId = items.objectId
-          obj.type = items.type
-          obj.data = items.data
-          this.categoryList.push(obj)
-        })
-        // this.categoryList = results
-        console.log(this.categoryList, 'categoryList')
-        // this.searchProduct();
-        // this.categoryListOptions = this.treeData(this.categoryList)
-        // console.log(this.categoryListOptions, 'categoryListOptions')
-      },
       showEdit(row, type) {
+        console.log('row', row)
+        console.log('type', type)
         this.flagType = type
         this.title =
           this.flagType == 'top'
@@ -166,10 +103,18 @@
             ? _.merge(this.$options.data().form, {
                 mark: type,
                 objectId: row.objectId,
-                type: row.type,
+                level: row.level,
                 order: Number(moment(new Date()).valueOf()),
               })
-            : ''
+            : {
+                objectId: row.objectId,
+                mark: type,
+                data: {},
+                name: '',
+                order: 0,
+                level: 0,
+              }
+        console.log('this.form', this.form)
         this.dialogFormVisible = true
       },
       close() {
@@ -183,13 +128,8 @@
         setAcl['*'] = {
           read: true,
         }
-        setAcl[this.objectid] = {
-          read: true,
-          write: true,
-        }
         var params = {
           name: this.form.name,
-          type: this.form.type,
           data: this.form.data,
           order: this.form.order,
         }
@@ -198,10 +138,11 @@
             ? _.merge(params, {
                 ACL: _.merge(setAcl, this.aclObj),
                 parent: {
-                  objectId: '0',
+                  objectId: 'a60a85475a',
                   __type: 'Pointer',
                   className: 'Category',
                 },
+                level: 1,
               })
             : mark == 'child'
             ? _.merge(params, {
@@ -211,6 +152,7 @@
                   __type: 'Pointer',
                   className: 'Category',
                 },
+                level: 2,
               })
             : params
         this.$refs['form'].validate(async (valid) => {

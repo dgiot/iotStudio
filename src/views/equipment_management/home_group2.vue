@@ -172,7 +172,7 @@
           <el-table-column :label="$translateTitle('home.category')">
             <template slot-scope="scope">
               <span>
-                {{ getCategory(scope.row.category) }}
+                {{ scope.row.category }}
               </span>
             </template>
           </el-table-column>
@@ -297,7 +297,6 @@
     <div class="devproduct-prodialog">
       <!-- 创建产品对话框 ###-->
       <el-drawer
-        :append-to-body="true"
         :title="moduleTitle"
         :visible.sync="dialogFormVisible"
         :close-on-click-modal="false"
@@ -343,14 +342,8 @@
                 :label="$translateTitle('product.productgrouping')"
                 prop="devType"
               >
-                <!-- <el-form-item :label=" $translateTitle('product.productidentification')" prop="devType"> -->
                 <el-input v-model="form.devType" autocomplete="off" />
               </el-form-item>
-
-              <!--        <el-form-item :label=" $translateTitle('product.classification')" prop="category">
-                  <el-cascader v-model="form.category" :options="treeData"></el-cascader>
-                </el-form-item>-->
-
               <el-form-item
                 :label="$translateTitle('product.classification')"
                 prop="category"
@@ -380,14 +373,14 @@
                           :disabled="custom_status == 'edit'"
                           @click.native="handleIconClick"
                         >
-                          {{ getCategory(form.category) }}
+                          {{ form.category }}
                         </el-link>
                       </template>
                       <el-icon
                         slot="append"
                         size="mini"
                         class="el-icon-edit el-input__icon"
-                        @click.native="cascaderDrawer = !cascaderDrawer"
+                        @click.native="handlecateClick"
                       />
                     </el-input>
                   </el-col>
@@ -460,9 +453,6 @@
                   />
                 </el-select>
               </el-form-item>
-
-              <!--  :label="item.attributes.desc"
-                :value="item.attributes.name"-->
               <el-form-item
                 :label="$translateTitle('developer.applicationtype')"
                 prop="relationApp"
@@ -481,10 +471,6 @@
                     @node-click="handleNodeClick"
                   />
                 </div>
-                <!-- <el-select v-model="form.relationApp" @change="selectApp">
-                    <el-option v-for="(item,index) in allApps" :key="index" :label="item.attributes.title"
-                      :value="item.attributes.title" />
-                  </el-select> -->
               </el-form-item>
               <el-form-item
                 prop="storageStrategy"
@@ -624,12 +610,17 @@
                       <el-form-item
                         :label="$translateTitle('product.classification')"
                       >
-                        <el-select v-model="queryForm.category">
+                        <el-select
+                          v-model="queryForm.category"
+                          :placeholder="$translateTitle('task.Select')"
+                          style="width: 100%"
+                          @change="handleCateSearch"
+                        >
                           <el-option
-                            v-for="item in category"
-                            :key="item.data.Id"
-                            :label="item.data.CategoryName"
-                            :value="item.type"
+                            v-for="(item, index) in categoryList"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.objectId"
                           />
                         </el-select>
                       </el-form-item>
@@ -639,6 +630,7 @@
                       >
                         <el-input
                           v-model="queryForm.name"
+                          clearable
                           :placeholder="
                             $translateTitle(
                               'product.Please enter the category name'
@@ -669,25 +661,13 @@
               style="width: 100%"
             >
               <el-table-column
-                :label="$translateTitle('department.category')"
-                width="220"
+                :label="$translateTitle('developer.Templatename')"
                 align="center"
               >
                 <template #default="{ row }">
-                  {{ getCategory(row.category) }}
+                  {{ row.name }}
                   <el-popover placement="left" width="800" trigger="click">
                     <dgiot-profile ref="profile" :is-product="true" />
-                    <!--                    <profile-descriptions-->
-                    <!--                      ref="ProfileDescription"-->
-                    <!--                      :table-type="descriptions.tableType"-->
-                    <!--                      :product-id="descriptions.productId"-->
-                    <!--                      :things="descriptions.things"-->
-                    <!--                      :dict-table-list="descriptions.dictTableList"-->
-                    <!--                      :decoder-table-list="descriptions.decoderTableList"-->
-                    <!--                      :product-detail="descriptions.productDetail"-->
-                    <!--                      :parser-table-list="descriptions.parserTableList"-->
-                    <!--                      :table-loading="descriptions.tableLoading"-->
-                    <!--                    />-->
                     <i
                       slot="reference"
                       class="el-icon-info"
@@ -697,23 +677,14 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('product.productidentification')"
-                width="220"
-                align="center"
-                prop="category"
-              />
-              <el-table-column
-                prop="name"
-                :label="$translateTitle('developer.Templatename')"
+                prop="netType"
+                :label="$translateTitle('department.category')"
               />
               <el-table-column
                 :label="$translateTitle('developer.operation')"
                 align="center"
               >
                 <template #default="{ row }">
-                  <!--          <el-button size="mini" type="success" @click.native="updateTemplate(row)">-->
-                  <!--            {{ $translateTitle('product.Update template') }}-->
-                  <!--          </el-button>-->
                   <el-button
                     size="mini"
                     type="text"
@@ -729,7 +700,7 @@
               :total="queryForm.total"
               :page.sync="queryForm.pageNo"
               :limit.sync="queryForm.pageSize"
-              @pagination="Industry"
+              @pagination="categorytree"
             />
           </div>
         </el-drawer>
@@ -1418,6 +1389,7 @@
   import Category from '@/api/Mock/Category'
   import { ExportParse, ImportParse } from '@/api/Export'
   import { queryProductTemplet } from '@/api/ProductTemplet'
+  import { queryCategory } from '@/api/Category'
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
   context.keys().forEach((fileName) => {
@@ -1701,13 +1673,13 @@
         loading: false,
         allApps: [],
         categoryList: [],
-        categoryListOptions: [],
         fileServer: '',
         access_token: '',
         projectid: '',
         projectName: '',
         allTableDate: [],
         showTree: false,
+        showcateTree: false,
         multipleSelection: [],
       }
     },
@@ -1720,7 +1692,6 @@
     mounted() {
       const { project = '' } = this.$route.query
       this.formInline.productname = project
-      this.Industry()
       this.Get_Re_Channel()
       this.queryProdut({})
       this.searchProduct(0)
@@ -1732,6 +1703,10 @@
       async handleIconClick(ev) {
         this.dialogProfile = !this.dialogProfile
         await this.$refs.dialogProfile.StepsListRowClick(this.selectedRow)
+      },
+      handlecateClick() {
+        this.categorytree()
+        this.cascaderDrawer = true
       },
       handleSelectionChange(val) {
         this.multipleSelection = val
@@ -1786,38 +1761,30 @@
         await this.$refs.profile.StepsListRowClick(row)
       },
       async queryProdut(args) {
+        const categorys = args.categorys
         const loading = this.$baseColorfullLoading()
         if (!args.limit) {
           args = this.queryForm
         }
+        console.log('args', args)
         let params = {
           limit: args.limit,
           order: args.order,
           skip: args.skip,
           keys: args.keys,
           where: {
-            category: args.category ? args.category : { $ne: null },
-            name: args.name ? { $regex: args.name } : { $ne: null },
+            category: categorys ? { $in: categorys } : { $ne: null },
+            name: args.name
+              ? { $regex: args.name, $options: 'i' }
+              : { $ne: null },
           },
         }
+        console.log('params', params)
         try {
-          // console.log(this.categoryListOptions, 'categoryListOptions')
           const { results = [], count = 0 } = await queryProductTemplet(params)
           loading.close()
           this.tableData = results
           this.queryForm.total = count
-          // this.category.forEach((category) => {
-          //   this.allTemp.forEach((temp) => {
-          //     if (category.type == temp.category) {
-          //       console.log(category.type, temp, 'category')
-          //       category.children.push({
-          //         data: { CategoryName: temp.category },
-          //         type: temp.name,
-          //       })
-          //     } else category.children = []
-          //   })
-          //   console.log(category.type, 'category')
-          // })
         } catch (error) {
           loading.close()
           console.log(error)
@@ -1870,16 +1837,6 @@
         if (index !== -1) {
           this.tempparams.specs.splice(index, 1)
         }
-      },
-      getCategory(key) {
-        // console.log(key)
-        let name = ''
-        this.category.filter((item) => {
-          if (item.type == key) {
-            name = item.data.CategoryName
-          }
-        })
-        return name
       },
       delRow(index, rows) {
         rows.splice(index, 1)
@@ -2090,10 +2047,10 @@
         const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.id == child.parentid
+            (child) => father.objectId == child.parent.objectId
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
-          return father.parentid == 0 // 返回第一层
+          return father.parent.objectId == 0 // 返回第一层
         })
       },
       deleteImgsrc() {
@@ -2156,20 +2113,6 @@
           .replace(/\.[\d]{3}Z/, '')
         return date // 2017-03-31 16:02:06
       },
-      // 得到category
-      async getDict(category) {
-        category = [...new Set(category)]
-        const parsms = {
-          limit: 100,
-          where: {
-            'data.key': 'category',
-            type: category[0],
-          },
-        }
-        const Dictres = await this.$query_object('Dict', parsms)
-        // console.log(Dictres, 'results category')
-        this.allTableDate = Dictres.results
-      },
       async searchProduct(start) {
         try {
           this.listLoading = true
@@ -2206,9 +2149,9 @@
             this.listLoading = false
             this.proTableData = results
             this.total = count
-            this.$dgiotBus.$emit('MqttSubscribe', {
-              topic: this.$route.name,
-            })
+            // this.$dgiotBus.$emit('MqttSubscribe', {
+            //   topic: this.$route.name,
+            // })
           }
           this.getApps()
         } catch (error) {
@@ -2227,12 +2170,12 @@
       handleClose() {
         this.dialogFormVisible = false
       },
-      // 选择通道事件
+      // 选择产品模板
       chooseTemplate(row) {
+        console.log('row', row)
         this.selectedRow = row
         this.form.category = row.category
         this.cascaderDrawer = !this.cascaderDrawer
-        console.log(this.selectedRow)
       },
       // 关闭dialog 事件
       handleCloseDialogForm() {
@@ -2252,9 +2195,6 @@
       // 添加产品弹窗
       addproduct() {
         this.custom_status = 'add'
-        this.$dgiotBus.$emit('mqttUnSubscribe', {
-          topic: this.$route.name,
-        })
         // return false
         this.moduleTitle = this.$translateTitle('product.createproduct')
         this.imageUrl = ''
@@ -2452,25 +2392,42 @@
         console.log(this.form.relationApp)
         // this.selectApp(this.form.relationApp)
       },
-      async Industry() {
+      async categorytree() {
         const parsms = {
-          limit: 100,
-          where: {
-            'data.key': 'category',
-          },
+          order: 'createdAt',
+          keys: 'count(*)',
+          where: { level: { $in: [0, 1] } },
         }
-        const { results = [] } = await this.$query_object('Dict', parsms)
-        results.map((items) => {
-          var obj = {}
-          obj.value = items.type
-          obj.label = items.data.CategoryName
-          obj.id = items.data.Id
-          obj.parentid = items.data.SuperId
-          this.categoryList.push(obj)
-        })
-        // this.searchProduct();
-        this.categoryListOptions = this.treeData(this.categoryList)
-        // console.log(results)
+        const { results } = await queryCategory(parsms)
+        this.categoryList = results
+        console.log('this', this.categoryList)
+      },
+      handleCateSearch(objectId) {
+        this.queryForm.category = objectId
+        this.showcateTree = !this.showcateTree
+        if (objectId == 'a60a85475a') {
+          this.queryProdut({})
+        } else {
+          let params = {
+            keys: 'objectId',
+            where: {
+              parent: {
+                className: 'Category',
+                objectId: objectId,
+                __type: 'Pointer',
+              },
+            },
+          }
+          queryCategory(params).then((res) => {
+            const ids = []
+            ids.push(objectId)
+            res.results.forEach((result) => {
+              ids.push(result.objectId)
+            })
+            console.log('ids', ids)
+            this.queryProdut({ categorys: ids })
+          })
+        }
       },
       submitForm() {
         var params = {}

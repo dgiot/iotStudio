@@ -479,7 +479,7 @@
       this.formInline.productname = project
       this.Industry()
       this.featchTable()
-      // this.searchProduct(0)
+      this.searchProduct(0)
       this.categoryChange(this.category[0], 0)
     },
     methods: {
@@ -493,6 +493,8 @@
           const loading = this.isProduct
             ? (isLoading = false)
             : this.$baseColorfullLoading()
+          // http://localhost/iotapi/classes/Product/2e788bcd80
+          // http://localhost/iotapi/classes/Product/2f108755e8
           const res = await getProduct(params.objectId)
           productDetail = _.merge(res, {
             decoder: { code: '' },
@@ -514,7 +516,7 @@
             'vab-hey-message-error'
           )
         }
-        console.clear()
+        // console.clear()
         console.log('productDetail', productDetail)
         this.productId = params.objectId
         this.productDetail = productDetail
