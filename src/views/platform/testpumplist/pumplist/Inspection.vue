@@ -135,7 +135,7 @@
             <!-- 取消 -->
             {{ $translateTitle('developer.cancel') }}
           </el-button>
-          <el-button type="primary" @click="submiTask('task_form')">
+          <el-button type="primary" @click.native="submiTask('task_form')">
             <!-- 确定 -->
             {{ $translateTitle('developer.determine') }}
           </el-button>

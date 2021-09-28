@@ -15,7 +15,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="Instruct(0)">查询</el-button>
+          <el-button type="primary" @click.native="Instruct(0)">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -267,7 +267,9 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="check('form')">确 定</el-button>
+        <el-button type="primary" @click.native="check('form')">
+          确 定
+        </el-button>
       </div>
     </el-dialog>
   </div>

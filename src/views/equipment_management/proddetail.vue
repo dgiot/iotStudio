@@ -440,7 +440,7 @@
               <el-col :xs="24" :sm="6" :md="5" :lg="4" :xl="3">
                 <vab-query-form class="query-form">
                   <vab-query-form-top-panel>
-                    <el-button type="primary" @click="addMachine">
+                    <el-button type="primary" @click.native="addMachine">
                       添加类型
                     </el-button>
                   </vab-query-form-top-panel>
@@ -973,7 +973,7 @@
               </el-table-column>
             </el-table>
             <div slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="updateAllChannel">
+              <el-button type="primary" @click.native="updateAllChannel">
                 <!-- 确定 -->
                 {{ $translateTitle('developer.determine') }}
               </el-button>
@@ -1400,8 +1400,8 @@
               </el-table-column>
               <el-table-column align="center" :label=" $translateTitle('developer.operation')">
                 <template slot-scope="scope">
-                  <el-button type="info" @click="detailRules(scope.row.id)" size="mini" plain>查看</el-button>
-                  <el-button type="info" @click="deleteRule(scope.row.id)" size="mini" plain>删除</el-button>
+                  <el-button type="info" @click.native="detailRules(scope.row.id)" size="mini" plain>查看</el-button>
+                  <el-button type="info" @click.native="deleteRule(scope.row.id)" size="mini" plain>删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -1476,7 +1476,7 @@
         ><textarea class="ace_text-input" style="overflow:scroll"/></pre>
       </div>
       <span slot="footer" class="dialog-footer" style="height: 30px">
-        <el-button type="primary" @click="preserve">
+        <el-button type="primary" @click.native="preserve">
           <!-- 更新 -->
           {{ $translateTitle('equipment.update') }}
         </el-button>
@@ -1636,7 +1636,7 @@
           <!-- 退 出 -->
           {{ $translateTitle('product.quit') }}
         </el-button>
-        <el-button type="primary" @click="addData">
+        <el-button type="primary" @click.native="addData">
           <!-- 保 存 -->
           {{ $translateTitle('product.preservation') }}
         </el-button>
@@ -1740,11 +1740,11 @@
                     <!-- 测试 -->
                     {{ $translateTitle('rule.Test') }}
                   </el-button>
-                  <el-button type="info" @click="onReductionTap(index)">
+                  <el-button type="info" @click.native="onReductionTap(index)">
                     <!-- 还原 -->
                     {{ $translateTitle('product.reduction') }}
                   </el-button>
-                  <el-button type="primary" @click="onSaveTap(index)">
+                  <el-button type="primary" @click.native="onSaveTap(index)">
                     <!-- 保存 -->
                     {{ $translateTitle('product.preservation') }}
                   </el-button>

@@ -27,10 +27,10 @@
           <el-input v-model="formInline.name" placeholder="请输入检测名称" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="getStandardFromDict(0)">
+          <el-button type="primary" @click.native="getStandardFromDict(0)">
             查询
           </el-button>
-          <el-button type="primary" @click="reset">重置</el-button>
+          <el-button type="primary" @click.native="reset">重置</el-button>
         </el-form-item>
       </el-form>
       <div class="adddevices">
@@ -423,7 +423,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogTableVisible = false">取 消</el-button>
-        <el-button type="primary" @click="ReportChildrenDelete">
+        <el-button type="primary" @click.native="ReportChildrenDelete">
           确 定
         </el-button>
       </span>

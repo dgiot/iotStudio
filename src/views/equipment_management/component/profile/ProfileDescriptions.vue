@@ -99,7 +99,10 @@
           </el-link>
         </template>
 
-        <el-link type="success" @click="moveTemplate('set', productDetail)">
+        <el-link
+          type="success"
+          @click.native="moveTemplate('set', productDetail)"
+        >
           {{ $translateTitle('product.Set as template') }}
         </el-link>
       </el-descriptions-item>

@@ -37,7 +37,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="subTopic">订阅</el-button>
+            <el-button type="primary" @click.native="subTopic">订阅</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -374,7 +374,7 @@
       ><textarea class="ace_text-input"/></pre>
       <span slot="footer" class="dialog-footer">
         <el-button @click="messageDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addCmd">确 定</el-button>
+        <el-button type="primary" @click.native="addCmd">确 定</el-button>
       </span>
     </el-dialog>
   </div>

@@ -37,7 +37,7 @@
       <el-button @click="close">
         {{ $translateTitle('category.cancel') }}
       </el-button>
-      <el-button type="primary" @click="save(form.mark)">
+      <el-button type="primary" @click.native="save(form.mark)">
         {{ $translateTitle('category.submit') }}
       </el-button>
     </template>

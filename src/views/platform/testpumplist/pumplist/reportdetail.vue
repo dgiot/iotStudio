@@ -35,8 +35,8 @@
                       </el-table-column>
                       <el-table-column align="center" label="内容">
                         <template slot-scope="scope">
-                          <el-button type="success" @click="detail(scope.row.attributes.data.data)">查 看</el-button>
-                          <el-button type="danger" @click="deleteimg(scope.row.id)">删 除</el-button>
+                          <el-button type="success" @click.native="detail(scope.row.attributes.data.data)">查 看</el-button>
+                          <el-button type="danger" @click.native="deleteimg(scope.row.id)">删 除</el-button>
                         </template>
                       </el-table-column>
                     </el-table>
@@ -222,14 +222,14 @@
           >
             上传到服务器
           </el-button>
-          <el-button size="small" type="primary" @click="importdata">
+          <el-button size="small" type="primary" @click.native="importdata">
             提 交
           </el-button>
         </el-upload>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="deleteFile">取 消</el-button>
-        <el-button type="primary" @click="deleteFile">确 定</el-button>
+        <el-button type="primary" @click.native="deleteFile">确 定</el-button>
       </span>
     </el-dialog>
   </div>

@@ -25,7 +25,11 @@
             >
               查询
             </el-button>
-            <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
+            <el-button
+              icon="el-icon-plus"
+              type="primary"
+              @click.native="handleAdd"
+            >
               添加
             </el-button>
             <el-button

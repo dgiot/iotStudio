@@ -151,7 +151,9 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="verifyDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitVerify()">提 交</el-button>
+        <el-button type="primary" @click.native="submitVerify()">
+          提 交
+        </el-button>
       </span>
     </el-dialog>
   </div>

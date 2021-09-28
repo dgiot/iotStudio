@@ -559,7 +559,7 @@
           >
             提交审核
           </el-button>
-          <el-button type="info" @click="goBack">返回上一步</el-button>
+          <el-button type="info" @click.native="goBack">返回上一步</el-button>
         </div>
       </div>
     </div>
@@ -613,11 +613,13 @@
           </el-tabs>
           <div style="text-align: center">
             <el-row>
-              <el-button type="primary" @click="previewLaboratory">
+              <el-button type="primary" @click.native="previewLaboratory">
                 确定,预览
               </el-button>
               <el-button type="info">取消</el-button>
-              <el-button type="info" @click="allactive = 1">上一步</el-button>
+              <el-button type="info" @click.native="allactive = 1">
+                上一步
+              </el-button>
             </el-row>
           </div>
         </div>
@@ -638,8 +640,8 @@
         </el-tabs>
         <div style="text-align: center">
           <el-row>
-            <el-button type="primary" @click="next(3)">确定</el-button>
-            <el-button type="info" @click="laboratoryactive = 1">
+            <el-button type="primary" @click.native="next(3)">确定</el-button>
+            <el-button type="info" @click.native="laboratoryactive = 1">
               返回上一步
             </el-button>
           </el-row>
@@ -665,7 +667,7 @@
           预计3到5个工作日完成，请耐心等待，谢谢您的配合和理解
         </p>
         <p>
-          <el-button type="primary" @click="cancelAdd">
+          <el-button type="primary" @click.native="cancelAdd">
             填写新的企业资质
             <i class="el-icon-s-fold" />
           </el-button>
@@ -804,7 +806,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="updateOther('addotherform')">
+        <el-button type="primary" @click.native="updateOther('addotherform')">
           确 定
         </el-button>
       </span>

@@ -88,7 +88,7 @@
           <el-button @click="InfoDialog = false">
             {{ $translateTitle('developer.cancel') }}
           </el-button>
-          <el-button type="primary" @click="InfoDialog = false">
+          <el-button type="primary" @click.native="InfoDialog = false">
             {{ $translateTitle('developer.determine') }}
           </el-button>
         </span>
@@ -106,7 +106,7 @@
           <el-button @click="stateDialog = false">
             {{ $translateTitle('developer.cancel') }}
           </el-button>
-          <el-button type="primary" @click="stateDialog = false">
+          <el-button type="primary" @click.native="stateDialog = false">
             {{ $translateTitle('developer.determine') }}
           </el-button>
         </span>
@@ -1101,7 +1101,7 @@
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('deviceform')">
+          <el-button type="primary" @click.native="submitForm('deviceform')">
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="handleClose">
@@ -1137,7 +1137,7 @@
               <el-input v-model="bmapform.keyword" />
             </el-form-item>
             <!-- <el-form-item>
-              <el-button type="primary" @click="addressSure">搜 索</el-button>
+              <el-button type="primary" @click.native="addressSure">搜 索</el-button>
             </el-form-item>-->
             <!-- <el-form-item label="选中地址"> -->
             <el-form-item :label="$translateTitle('developer.selectaddress')">
@@ -1181,7 +1181,7 @@
           </baidu-map>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="addressSure">
+          <el-button type="primary" @click.native="addressSure">
             <!-- 保存 -->
             {{ $translateTitle('product.preservation') }}
           </el-button>

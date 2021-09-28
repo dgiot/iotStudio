@@ -23,7 +23,7 @@
       />
       <!--      <span slot="footer" class="dialog-footer">-->
       <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
-      <!--        <el-button type="primary" @click="dialogVisible = false">-->
+      <!--        <el-button type="primary" @click.native="dialogVisible = false">-->
       <!--          确 定-->
       <!--        </el-button>-->
       <!--      </span>-->
@@ -112,18 +112,18 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="searchProduct(0)">
+          <el-button type="primary" @click.native="searchProduct(0)">
             {{ $translateTitle('developer.search') }}
           </el-button>
         </el-form-item>
         <el-form-item style="float: right; text-align: right">
-          <el-button type="primary" @click="addproduct">
+          <el-button type="primary" @click.native="addproduct">
             {{ $translateTitle('product.createproduct') }}
           </el-button>
-          <el-button type="primary" @click="exportpro">
+          <el-button type="primary" @click.native="exportpro">
             {{ $translateTitle('product.exportpro') }}
           </el-button>
-          <el-button type="primary" @click="handleImport()">
+          <el-button type="primary" @click.native="handleImport()">
             {{ $translateTitle('product.importpro') }}
           </el-button>
         </el-form-item>
@@ -595,7 +595,7 @@
           </div>
         </div>
         <div class="devproduct-prodialog-footer">
-          <el-button type="primary" @click="submitForm()">
+          <el-button type="primary" @click.native="submitForm()">
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="handleCloseDialogForm()">
@@ -711,7 +711,7 @@
                 align="center"
               >
                 <template #default="{ row }">
-                  <!--          <el-button size="mini" type="success" @click="updateTemplate(row)">-->
+                  <!--          <el-button size="mini" type="success" @click.native="updateTemplate(row)">-->
                   <!--            {{ $translateTitle('product.Update template') }}-->
                   <!--          </el-button>-->
                   <el-button
@@ -873,7 +873,10 @@
           </el-form-item>
 
           <el-form-item size="mini" style="text-align: center">
-            <el-button type="primary" @click="onJsonSave('dictTempForm')">
+            <el-button
+              type="primary"
+              @click.native="onJsonSave('dictTempForm')"
+            >
               提交
             </el-button>
             <el-button @click="dictVisible = false">取消</el-button>
@@ -1338,7 +1341,7 @@
             </el-tabs>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitFormTempDict()">
+            <el-button type="primary" @click.native="submitFormTempDict()">
               提交
             </el-button>
           </el-form-item>

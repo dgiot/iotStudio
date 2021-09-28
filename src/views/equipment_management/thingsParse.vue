@@ -133,8 +133,8 @@
             </el-table-column>
           </el-table>
           <div slot="footer" class="dialog-footer">
-            <!-- <el-button type="primary" @click="updateAllChannel">确定</el-button> -->
-            <el-button type="primary" @click="updateAllChannel">
+            <!-- <el-button type="primary" @click.native="updateAllChannel">确定</el-button> -->
+            <el-button type="primary" @click.native="updateAllChannel">
               <!-- 确定 -->
               {{ $translateTitle('developer.determine') }}
             </el-button>

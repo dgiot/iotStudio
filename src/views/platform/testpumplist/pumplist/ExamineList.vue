@@ -321,7 +321,9 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="getTestReport">确定</el-button>
+              <el-button type="primary" @click.native="getTestReport">
+                确定
+              </el-button>
             </el-form-item>
           </el-form>
 

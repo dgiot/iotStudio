@@ -185,7 +185,11 @@
               <!-- 修改 -->
               {{ $translateTitle('product.modify') }}
             </el-button>
-            <el-button v-else type="primary" @click="onSubmit('dictForm')">
+            <el-button
+              v-else
+              type="primary"
+              @click.native="onSubmit('dictForm')"
+            >
               <!-- 立即创建 -->
               {{ $translateTitle('product.createnow') }}
             </el-button>
@@ -475,7 +479,10 @@
           </el-form-item>
 
           <el-form-item size="mini" style="text-align: center">
-            <el-button type="primary" @click="onJsonSave('dictTempForm')">
+            <el-button
+              type="primary"
+              @click.native="onJsonSave('dictTempForm')"
+            >
               <!-- 提交 -->
               {{ $translateTitle('application.submit') }}
             </el-button>
@@ -624,7 +631,7 @@
             <el-input v-model="tempparams.description.en" autocomplete="off" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitFormTempDict()">
+            <el-button type="primary" @click.native="submitFormTempDict()">
               <!-- 提交 -->
               {{ $translateTitle('application.submit') }}
             </el-button>

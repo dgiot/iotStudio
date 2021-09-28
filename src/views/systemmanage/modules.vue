@@ -28,7 +28,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="editPostForm('editForm')">
+        <el-button type="primary" @click.native="editPostForm('editForm')">
           修改
         </el-button>
         <el-button @click="resetForm('editForm')">重置</el-button>
@@ -62,7 +62,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm('moduleForm')">
+        <el-button type="primary" @click.native="submitForm('moduleForm')">
           立即创建
         </el-button>
         <el-button @click="resetForm('moduleForm')">重置</el-button>

@@ -358,7 +358,7 @@
           <el-button @click="roleacl = false">
             {{ $translateTitle('developer.cancel') }}
           </el-button>
-          <el-button type="primary" @click="adduseracl">
+          <el-button type="primary" @click.native="adduseracl">
             {{ $translateTitle('developer.determine') }}
           </el-button>
         </div>

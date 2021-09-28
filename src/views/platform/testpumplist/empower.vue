@@ -414,7 +414,7 @@
         <p>
           <el-button type="info" plain @click="allactive = 2">返回</el-button>
 
-          <!--     <el-button type="primary" @click="cancelAdd">
+          <!--     <el-button type="primary" @click.native="cancelAdd">
             填写新的企业资质
             <i class="el-icon-s-fold" />
           </el-button> -->
@@ -553,7 +553,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="updateOther('addotherform')">
+        <el-button type="primary" @click.native="updateOther('addotherform')">
           确 定
         </el-button>
       </span>

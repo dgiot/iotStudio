@@ -89,19 +89,22 @@
                 </strong>
               </p>
               <p class="editor">
-                <el-link type="primary" @click="updateapp(item)">
+                <el-link type="primary" @click.native="updateapp(item)">
                   <!-- 修改应用 -->
                   {{ $translateTitle('developer.Modifyapplication') }}
                 </el-link>
               </p>
               <p class="editor">
-                <el-link type="primary" @click="nodeDeployment(item)">
+                <el-link type="primary" @click.native="nodeDeployment(item)">
                   <!-- 节点部署 -->
                   {{ $translateTitle('developer.Nodedeployment') }}
                 </el-link>
               </p>
               <p class="editor">
-                <el-link type="primary" @click="applicationDeployment(item)">
+                <el-link
+                  type="primary"
+                  @click.native="applicationDeployment(item)"
+                >
                   <!-- 应用部署 -->
                   {{ $translateTitle('developer.Applicationdeployment') }}
                 </el-link>
@@ -246,7 +249,7 @@
           <!-- 取消 -->
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click="Define('form')">
+        <el-button type="primary" @click.native="Define('form')">
           <!-- 确定 -->
           {{ $translateTitle('developer.determine') }}
         </el-button>
@@ -377,7 +380,7 @@
           <!-- 取消 -->
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click="updatedDefine('form1')">
+        <el-button type="primary" @click.native="updatedDefine('form1')">
           <!-- 确定 -->
           {{ $translateTitle('developer.determine') }}
         </el-button>

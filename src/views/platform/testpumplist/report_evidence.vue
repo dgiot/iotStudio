@@ -80,8 +80,8 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
-            <el-button type="primary" @click="onSubmit">重置</el-button>
+            <el-button type="primary" @click.native="onSubmit">查询</el-button>
+            <el-button type="primary" @click.native="onSubmit">重置</el-button>
           </el-form-item>
         </el-form>
       </div>

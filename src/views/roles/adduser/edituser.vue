@@ -53,7 +53,7 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submit_edituser(ruleForm2)">
+        <el-button type="primary" @click.native="submit_edituser(ruleForm2)">
           <!-- 保存 -->
           {{ $translateTitle('product.preservation') }}
         </el-button>

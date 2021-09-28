@@ -22,7 +22,7 @@
             <el-button @click="deviceFlag = false">
               {{ $translateTitle('developer.cancel') }}
             </el-button>
-            <el-button type="primary" @click="deviceFlag = false">
+            <el-button type="primary" @click.native="deviceFlag = false">
               {{ $translateTitle('developer.determine') }}
             </el-button>
           </span>
@@ -254,7 +254,10 @@
                   }}
                   {{ $translateTitle('konva.right') }}
                 </el-button>
-                <el-button type="primary" @click="toggleCard(cardHeight)">
+                <el-button
+                  type="primary"
+                  @click.native="toggleCard(cardHeight)"
+                >
                   {{
                     cardHeight != '0px'
                       ? $translateTitle('konva.hide')

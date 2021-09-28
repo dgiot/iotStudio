@@ -34,7 +34,7 @@
             <el-input v-model="formInline.name" placeholder="检测台" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getBedtable(departmentid)">
+            <el-button type="primary" @click.native="getBedtable(departmentid)">
               查询
             </el-button>
           </el-form-item>
@@ -42,7 +42,7 @@
       </div>
       <!--      <div class="addbed" style="text-align:right">
         <el-button type="success" size="small" @click="disposeTestbed">检测台配置</el-button>
-        <el-button type="primary" @click="testBedAdd" size="small">新增检测台</el-button>
+        <el-button type="primary" @click.native="testBedAdd" size="small">新增检测台</el-button>
         <el-button type="danger" size="small" @click="deleteTestBed">删除检测台</el-button>
       </div> -->
 
@@ -125,7 +125,7 @@
               >
                 编辑
               </el-button>
-              <!-- <el-button size="mini" type="primary" @click="handleEdit(scope.row.id)">配 置</el-button> -->
+              <!-- <el-button size="mini" type="primary" @click.native="handleEdit(scope.row.id)">配 置</el-button> -->
               <el-button
                 size="mini"
                 type="danger"
@@ -247,7 +247,7 @@
           </div>
           <span slot="footer" class="dialog-footer">
             <el-button @click="beddialog = false">取 消</el-button>
-            <el-button type="primary" @click="addtestbed(testbedid)">
+            <el-button type="primary" @click.native="addtestbed(testbedid)">
               确 定
             </el-button>
           </span>
@@ -372,7 +372,7 @@
       </el-card>
       <span slot="footer" class="dialog-footer">
         <el-button @click="bedDevicedialog = false">取 消</el-button>
-        <el-button type="primary" @click="bedDevicedialog = false">
+        <el-button type="primary" @click.native="bedDevicedialog = false">
           确 定
         </el-button>
       </span>
@@ -558,7 +558,9 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="getAllBed">搜 索</el-button>
+            <el-button type="primary" @click.native="getAllBed">
+              搜 索
+            </el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -636,7 +638,9 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="disposeVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addTestRelation">确 定</el-button>
+        <el-button type="primary" @click.native="addTestRelation">
+          确 定
+        </el-button>
       </span>
     </el-dialog>
   </div>

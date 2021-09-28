@@ -27,8 +27,8 @@
           <el-input v-model="formInline.unumber" placeholder="U盾编号" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click="reseting">查询</el-button>
+          <el-button type="primary" @click.native="onSubmit">查询</el-button>
+          <el-button type="primary" @click.native="reseting">查询</el-button>
         </el-form-item>
       </el-form>
       <div>
@@ -243,7 +243,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addUshield">确 定</el-button>
+        <el-button type="primary" @click.native="addUshield">确 定</el-button>
       </div>
     </el-dialog>
   </div>

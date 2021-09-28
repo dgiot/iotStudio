@@ -102,7 +102,7 @@
         <el-button @click="dialogVisible = false">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click="join">
+        <el-button type="primary" @click.native="join">
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>

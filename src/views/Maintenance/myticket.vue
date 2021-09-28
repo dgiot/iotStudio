@@ -157,7 +157,7 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="submitForm('form')">
+            <el-button type="primary" @click.native="submitForm('form')">
               {{ $translateTitle('Maintenance.Create now') }}
             </el-button>
             <el-button @click="resetForm('form')">

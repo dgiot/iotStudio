@@ -12,7 +12,7 @@
         <el-button @click="handleClose">
           {{ $translateTitle('developer.back') }}
         </el-button>
-        <el-button type="primary" @click="addchannelForm('addchannel')">
+        <el-button type="primary" @click.native="addchannelForm('addchannel')">
           {{ $translateTitle('developer.create') }}
         </el-button>
       </div>

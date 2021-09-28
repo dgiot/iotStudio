@@ -74,7 +74,7 @@
               />
               <a-icon key="delete" type="delete" @click="deletDoc(item)" />
             </template>
-            <el-button type="success" @click="goChild(item)">
+            <el-button type="success" @click.native="goChild(item)">
               {{ $translateTitle('article.view') }}
             </el-button>
             <!--            {{ $moment(Number(item.created_at)).format('YYYY-MM-DD HH:mm:ss') }}-->

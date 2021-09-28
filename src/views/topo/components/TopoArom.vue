@@ -786,7 +786,7 @@
           {{ $translateTitle('developer.cancel') }}
         </el-button>
         <!-- 物模型提交 -->
-        <el-button type="primary" @click="submitForm('sizeForm')">
+        <el-button type="primary" @click.native="submitForm('sizeForm')">
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>

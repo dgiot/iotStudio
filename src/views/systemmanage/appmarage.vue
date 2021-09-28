@@ -151,7 +151,7 @@
         <el-button style="float: left" @click="dialogVisible = false">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button style="float: right" type="primary" @click="reupload">
+        <el-button style="float: right" type="primary" @click.native="reupload">
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>

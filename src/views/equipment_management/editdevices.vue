@@ -443,7 +443,7 @@
                 />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="getDevices(0)">
+                <el-button type="primary" @click.native="getDevices(0)">
                   {{ $translateTitle('developer.search') }}
                 </el-button>
               </el-form-item>
@@ -475,7 +475,7 @@
                   {{ $translateTitle('equipment.Refresh') }}
                 </el-button>
                 <!-- 添加子设备按钮  -->
-                <el-button type="primary" @click="childDialog = true">
+                <el-button type="primary" @click.native="childDialog = true">
                   {{ $translateTitle('equipment.addchilddevice') }}
                 </el-button>
               </el-form-item>
@@ -713,7 +713,10 @@
               <el-button @click="childDialog = false">
                 {{ $translateTitle('developer.cancel') }}
               </el-button>
-              <el-button type="primary" @click="submitDevice('childrenForm')">
+              <el-button
+                type="primary"
+                @click.native="submitDevice('childrenForm')"
+              >
                 {{ $translateTitle('developer.determine') }}
               </el-button>
             </span>

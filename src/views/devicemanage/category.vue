@@ -25,7 +25,11 @@
             >
               {{ $translateTitle('button.search') }}
             </el-button>
-            <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
+            <el-button
+              icon="el-icon-plus"
+              type="primary"
+              @click.native="handleAdd"
+            >
               {{ $translateTitle('button.add') }}
             </el-button>
           </el-form-item>

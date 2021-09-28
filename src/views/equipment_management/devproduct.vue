@@ -23,7 +23,7 @@
               />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="searchProduct(0)">
+              <el-button type="primary" @click.native="searchProduct(0)">
                 {{ $translateTitle('developer.search') }}
               </el-button>
             </el-form-item>
@@ -35,13 +35,13 @@
               >
                 {{ $translateTitle('product.createproduct') }}
               </el-button>
-              <el-button type="primary" @click="goTopoview">
+              <el-button type="primary" @click.native="goTopoview">
                 {{ $translateTitle('product.topoview') }}
               </el-button>
-              <el-button type="primary" @click="exportpro">
+              <el-button type="primary" @click.native="exportpro">
                 {{ $translateTitle('product.exportpro') }}
               </el-button>
-              <el-button type="primary" @click="importDialogShow = true">
+              <el-button type="primary" @click.native="importDialogShow = true">
                 {{ $translateTitle('product.importpro') }}
               </el-button>
 
@@ -395,7 +395,7 @@
         </div>
 
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('ruleForm')">
+          <el-button type="primary" @click.native="submitForm('ruleForm')">
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="dialogFormVisible = false">

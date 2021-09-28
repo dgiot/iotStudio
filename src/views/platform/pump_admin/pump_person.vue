@@ -28,7 +28,7 @@
           <el-input v-model="formInline.name" placeholder="请输入企业名称"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="personEmpower">查询</el-button>
+          <el-button type="primary" @click.native="personEmpower">查询</el-button>
           <el-button type="primary">重置</el-button>
         </el-form-item>
       </el-form> -->
@@ -237,7 +237,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">
+        <el-button type="primary" @click.native="dialogFormVisible = false">
           确 定
         </el-button>
       </div>
@@ -303,7 +303,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('verifyFormRef')">
+        <el-button type="primary" @click.native="submitForm('verifyFormRef')">
           提 交
         </el-button>
       </span>

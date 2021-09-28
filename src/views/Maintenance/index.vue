@@ -25,7 +25,7 @@
         <!--          <el-button @click="deviceFlag = false">-->
         <!--            {{ $translateTitle('developer.cancel') }}-->
         <!--          </el-button>-->
-        <!--          <el-button type="primary" @click="deviceFlag = false">-->
+        <!--          <el-button type="primary" @click.native="deviceFlag = false">-->
         <!--            {{ $translateTitle('developer.determine') }}-->
         <!--          </el-button>-->
         <!--        </span>-->
@@ -87,7 +87,11 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button icon="el-icon-search" type="primary" @click="fetchData">
+            <el-button
+              icon="el-icon-search"
+              type="primary"
+              @click.native="fetchData"
+            >
               {{ $translateTitle('Maintenance.search') }}
             </el-button>
             <el-button
@@ -191,7 +195,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <el-button size="mini" type="primary" @click="showInfo(row)">
+          <el-button size="mini" type="primary" @click.native="showInfo(row)">
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
           <!--          <el-button v-show="row.status == 0" type="success">-->

@@ -151,7 +151,7 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="submitForm('form')">
+            <el-button type="primary" @click.native="submitForm('form')">
               {{ $translateTitle('Maintenance.Create now') }}
             </el-button>
             <el-button @click="resetForm('form')">
@@ -415,7 +415,7 @@
           >
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
-          <el-button size="mini" type="success" @click="showInfo(row)">
+          <el-button size="mini" type="success" @click.native="showInfo(row)">
             {{ $translateTitle('Maintenance.Dispatch') }}
           </el-button>
           <!--          <el-button-->

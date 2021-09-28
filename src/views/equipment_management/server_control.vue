@@ -102,11 +102,11 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="getOrigin(0)">
+          <el-button type="primary" @click.native="getOrigin(0)">
             <!-- 查询 -->
             {{ $translateTitle('concentrator.search') }}
           </el-button>
-          <el-button type="primary" @click="addServer">
+          <el-button type="primary" @click.native="addServer">
             <!-- 新增 -->
             {{ $translateTitle('product.newlyadded') }}
           </el-button>
@@ -479,12 +479,12 @@
           </el-col>
         </el-form-item>-->
         <!-- <el-form-item class="notall">
-          <el-button type="primary" @click="submitForm('ruleForm')">部 署</el-button>
+          <el-button type="primary" @click.native="submitForm('ruleForm')">部 署</el-button>
           <el-button @click="resetForm('ruleForm')">取 消</el-button>
         </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="updatedLicense('ruleForm')">
+        <el-button type="primary" @click.native="updatedLicense('ruleForm')">
           <!-- 部署 -->
           {{ $translateTitle('developer.deploy') }}
         </el-button>
@@ -508,7 +508,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <!-- <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+        <el-button type="primary" @click.native="dialogVisible = false">确 定</el-button>-->
       </span>
     </el-dialog>
     <!--新增dialog-->
@@ -701,7 +701,7 @@
           <!-- 取消 -->
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click="serverOption('serverForm')">
+        <el-button type="primary" @click.native="serverOption('serverForm')">
           <!-- 确定 -->
           {{ $translateTitle('developer.determine') }}
         </el-button>
@@ -736,7 +736,7 @@
           <!-- 取消 -->
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click="updateLictool('onlineform')">
+        <el-button type="primary" @click.native="updateLictool('onlineform')">
           <!-- 确定 -->
           {{ $translateTitle('developer.determine') }}
         </el-button>

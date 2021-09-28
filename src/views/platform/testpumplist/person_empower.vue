@@ -316,7 +316,7 @@
         </el-form>
       </div>
       <div class="activefirst">
-        <el-button type="primary" @click="submitForm('powerform')">
+        <el-button type="primary" @click.native="submitForm('powerform')">
           <span>{{ ['', '提交审核', '提交更新', '确定'][phase] }}</span>
         </el-button>
         <el-button
@@ -358,7 +358,7 @@
             上一步
           </el-button>
 
-          <!--  <el-button type="primary" @click="cancelAdd">
+          <!--  <el-button type="primary" @click.native="cancelAdd">
             撤销审核
           </el-button> -->
         </p>

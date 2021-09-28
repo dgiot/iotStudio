@@ -17,12 +17,12 @@
               />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="Get_Re_Channel(0)">
+              <el-button type="primary" @click.native="Get_Re_Channel(0)">
                 {{ $translateTitle('developer.search') }}
               </el-button>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="addchanneltype">
+              <el-button type="primary" @click.native="addchanneltype">
                 {{ $translateTitle('developer.selectchannel') }}
               </el-button>
             </el-form-item>
@@ -384,7 +384,10 @@
           <el-button @click="handleClose">
             {{ $translateTitle('developer.cancel') }}
           </el-button>
-          <el-button type="primary" @click="addchannelForm('addchannel')">
+          <el-button
+            type="primary"
+            @click.native="addchannelForm('addchannel')"
+          >
             {{ $translateTitle('developer.determine') }}
           </el-button>
         </div>
@@ -416,7 +419,7 @@
           </el-row>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="dialogVisible = false">
+          <el-button type="primary" @click.native="dialogVisible = false">
             确 定
           </el-button>
         </span>

@@ -387,7 +387,7 @@
                   <!--                  >-->
                   <!--                    {{ $translateTitle('equipment.subdevice') }}-->
                   <!--                  </el-link>-->
-                  <!--                  <el-link type="primary" @click="goEdit(scope.row)">-->
+                  <!--                  <el-link type="primary" @click.native="goEdit(scope.row)">-->
                   <!--                    视图-->
                   <!--                  </el-link>-->
                 </template>
@@ -566,7 +566,7 @@
           </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm('deviceform')">
+          <el-button type="primary" @click.native="submitForm('deviceform')">
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="handleClose">
@@ -610,7 +610,10 @@
               />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="addbatch('pcformInline')">
+              <el-button
+                type="primary"
+                @click.native="addbatch('pcformInline')"
+              >
                 {{ $translateTitle('equipment.addbatch') }}
               </el-button>
             </el-form-item>
@@ -698,7 +701,7 @@
               <el-input v-model="bmapform.keyword" />
             </el-form-item>
             <!-- <el-form-item>
-              <el-button type="primary" @click="addressSure">搜 索</el-button>
+              <el-button type="primary" @click.native="addressSure">搜 索</el-button>
             </el-form-item>-->
             <el-form-item label="选中地址">
               <el-input v-model="bmapform.address" readonly />
@@ -741,7 +744,9 @@
           </baidu-map>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="addressSure">保 存</el-button>
+          <el-button type="primary" @click.native="addressSure">
+            保 存
+          </el-button>
           <el-button @click="bmapdialogVisible = false">取 消</el-button>
         </span>
       </el-dialog>

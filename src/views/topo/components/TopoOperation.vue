@@ -62,13 +62,19 @@
           </el-form-item>
         </el-form>
         <div class="footer-panel">
-          <el-button type="success" @click="disabledForm = !disabledForm">
+          <el-button
+            type="success"
+            @click.native="disabledForm = !disabledForm"
+          >
             {{ $translateTitle('developer.edit') }}
           </el-button>
-          <el-button type="info" @click="saveKonvaitem(Shapeconfig)">
+          <el-button type="info" @click.native="saveKonvaitem(Shapeconfig)">
             {{ $translateTitle('developer.determine') }}
           </el-button>
-          <el-button type="primary" @click="handleModule(wmxdialogVisible)">
+          <el-button
+            type="primary"
+            @click.native="handleModule(wmxdialogVisible)"
+          >
             {{ $translateTitle('product.physicalmodel') }}
           </el-button>
         </div>

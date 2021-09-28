@@ -57,7 +57,7 @@
           <el-button @click="dynamicformView = false">
             {{ $translateTitle('button.cancel') }}
           </el-button>
-          <el-button type="primary" @click="submitAlert(alertId)">
+          <el-button type="primary" @click.native="submitAlert(alertId)">
             {{ $translateTitle('button.submit') }}
           </el-button>
         </span>
@@ -111,7 +111,11 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button icon="el-icon-search" type="primary" @click="fetchData">
+            <el-button
+              icon="el-icon-search"
+              type="primary"
+              @click.native="fetchData"
+            >
               {{ $translateTitle('Maintenance.search') }}
             </el-button>
           </el-form-item>

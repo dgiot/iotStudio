@@ -111,7 +111,10 @@
               show-overflow-tooltip
             >
               <template slot-scope="scope">
-                <el-tag type="warning" @click="goDict(scope.row.config.dictid)">
+                <el-tag
+                  type="warning"
+                  @click.native="goDict(scope.row.config.dictid)"
+                >
                   {{ scope.row.config.dictid }}
                 </el-tag>
               </template>
@@ -362,7 +365,7 @@
               class="left"
               style="float: left"
             >
-              <el-link type="primary" @click="createDict()">
+              <el-link type="primary" @click.native="createDict()">
                 暂无报告模板字典,点击前去新建报告模板字典
               </el-link>
             </span>
@@ -370,8 +373,11 @@
               <!-- 取消 -->
               {{ $translateTitle('developer.cancel') }}
             </el-button>
-            <!-- <el-button type="primary" @click="addReport">确 定</el-button> -->
-            <el-button type="primary" @click="addReporttemp('reportForm')">
+            <!-- <el-button type="primary" @click.native="addReport">确 定</el-button> -->
+            <el-button
+              type="primary"
+              @click.native="addReporttemp('reportForm')"
+            >
               <!-- 确定 -->
               {{ $translateTitle('developer.determine') }}
             </el-button>
@@ -443,7 +449,7 @@
               <!-- 取消 -->
               {{ $translateTitle('developer.cancel') }}
             </el-button>
-            <el-button type="primary" @click="addStandardChildren">
+            <el-button type="primary" @click.native="addStandardChildren">
               <!-- 确定 -->
               {{ $translateTitle('developer.determine') }}
             </el-button>

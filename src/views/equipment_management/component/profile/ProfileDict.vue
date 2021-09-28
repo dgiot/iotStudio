@@ -605,7 +605,10 @@
           </el-tabs>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="$parent.submitFormTempDict()">
+          <el-button
+            type="primary"
+            @click.native="$parent.submitFormTempDict()"
+          >
             提交
           </el-button>
         </el-form-item>

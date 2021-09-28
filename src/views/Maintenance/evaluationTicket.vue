@@ -32,7 +32,7 @@
               {{ $translateTitle('Maintenance.check') }}
             </el-button>
 
-            <!--            <el-button type="primary" @click="dealwith()">-->
+            <!--            <el-button type="primary" @click.native="dealwith()">-->
             <!--              {{ $translateTitle('Maintenance.deal with') }}-->
             <!--            </el-button>-->
           </span>
@@ -129,7 +129,7 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="submitForm('form')">
+            <el-button type="primary" @click.native="submitForm('form')">
               {{ $translateTitle('Maintenance.Create now') }}
             </el-button>
             <el-button @click="resetForm('form')">

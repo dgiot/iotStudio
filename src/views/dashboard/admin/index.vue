@@ -12,7 +12,7 @@
         <div class="chart-wrapper">
           <span>台区用电量排名</span>
           <el-button-group style="float: right">
-            <el-button type="primary" @click="daydata">日</el-button>
+            <el-button type="primary" @click.native="daydata">日</el-button>
             <el-button type="primary">月</el-button>
             <el-button type="primary">年</el-button>
           </el-button-group>

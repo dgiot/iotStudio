@@ -170,7 +170,7 @@
             >
               数据库部署
             </el-button>
-            <el-button type="primary" @click="update">刷新</el-button>
+            <el-button type="primary" @click.native="update">刷新</el-button>
           </el-form-item>
         </el-form>
       </div>

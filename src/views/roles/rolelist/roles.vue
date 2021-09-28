@@ -139,8 +139,8 @@
                 align="center"
               >
                 <template slot-scope="scope">
-                  <!-- <el-button size="mini" type="primary" @click="handleEdit(scope.row)">分配权限</el-button> -->
-                  <!-- <el-button size="mini" type="success" @click="addmenu(scope.row)">分配菜单</el-button> -->
+                  <!-- <el-button size="mini" type="primary" @click.native="handleEdit(scope.row)">分配权限</el-button> -->
+                  <!-- <el-button size="mini" type="success" @click.native="addmenu(scope.row)">分配菜单</el-button> -->
                   <!-- <el-button size="mini" type="primary" >增加用户</el-button> -->
 
                   <el-dropdown
@@ -377,7 +377,7 @@
         <el-button @click="centerDialogVisible = false">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click="addacl">
+        <el-button type="primary" @click.native="addacl">
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>
@@ -428,7 +428,7 @@
         <el-button @click="roleEdit = false">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click="updaterole">
+        <el-button type="primary" @click.native="updaterole">
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="reportmodule">
     <div class="add">
-      <el-button type="primary" @click="addmodule">新 增</el-button>
+      <el-button type="primary" @click.native="addmodule">新 增</el-button>
     </div>
     <div class="reportlist">
       <el-table

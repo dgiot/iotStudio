@@ -22,7 +22,9 @@
             <el-input v-model="form.message" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submit">发送消息</el-button>
+            <el-button type="primary" @click.native="submit">
+              发送消息
+            </el-button>
           </el-form-item>
           <el-form-item label="返回信息汇总">
             {{ data }}

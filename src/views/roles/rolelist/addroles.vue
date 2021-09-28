@@ -64,7 +64,7 @@
           <el-input v-model="roleFormObj.description" type="textarea" />
         </el-form-item>
         <el-form-item v-if="!isStructures" class="el_btn">
-          <el-button type="warning" @click="resetFrom()">重置</el-button>
+          <el-button type="warning" @click.native="resetFrom()">重置</el-button>
 
           <el-button
             v-if="insert == 0 || insert == 1"

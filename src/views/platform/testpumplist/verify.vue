@@ -204,7 +204,7 @@
       </div>
 
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="pdfDialogVisible = false">
+        <el-button type="primary" @click.native="pdfDialogVisible = false">
           确 定
         </el-button>
       </span>

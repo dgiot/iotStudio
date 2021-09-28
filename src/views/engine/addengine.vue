@@ -170,7 +170,10 @@
                 ><el-input v-model="formInline.payload" class="ace_text-input" type="textarea"/></pre>
               </el-form-item>
               <el-form-item v-show="formInline.sqltest == true" label=" ">
-                <el-button type="success" @click="testRule('formInline')">
+                <el-button
+                  type="success"
+                  @click.native="testRule('formInline')"
+                >
                   {{ $translateTitle('rule.Test') }}
                 </el-button>
               </el-form-item>
@@ -446,7 +449,11 @@
             >
               {{ $translateTitle('button.modify') }}
             </el-button>
-            <el-button v-else type="success" @click="addrules('formInline')">
+            <el-button
+              v-else
+              type="success"
+              @click.native="addrules('formInline')"
+            >
               {{ $translateTitle('button.create') }}
             </el-button>
             <el-button>{{ $translateTitle('button.cancel') }}</el-button>

@@ -68,7 +68,7 @@
         align="center"
       >
         <template #default="{ row }">
-          <!--          <el-button size="mini" type="success" @click="updateTemplate(row)">-->
+          <!--          <el-button size="mini" type="success" @click.native="updateTemplate(row)">-->
           <!--            {{ $translateTitle('product.Update template') }}-->
           <!--          </el-button>-->
           <el-button
@@ -92,7 +92,7 @@
       <el-button @click="close">
         {{ $translateTitle('category.cancel') }}
       </el-button>
-      <el-button type="primary" @click="save(form.mark)">
+      <el-button type="primary" @click.native="save(form.mark)">
         {{ $translateTitle('category.submit') }}
       </el-button>
     </template>

@@ -57,7 +57,7 @@
     </el-dialog>
     <el-row :gutter="24">
       <el-col :span="7">
-        <el-button type="primary" @click="addApi">
+        <el-button type="primary" @click.native="addApi">
           <!-- 新增Api -->
           {{ $translateTitle('product.newapi') }}
         </el-button>

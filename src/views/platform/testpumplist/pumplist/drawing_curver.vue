@@ -5,7 +5,7 @@
         <div style="border-bottom: 1px solid #cccccc">
           <div id="echarts" style="width: 100%; height: 400px" />
           <div style="width: 100%; margin-bottom: 20px; text-align: center">
-            <el-button type="primary" @click="Getdata">采 集</el-button>
+            <el-button type="primary" @click.native="Getdata">采 集</el-button>
           </div>
         </div>
 
@@ -16,8 +16,12 @@
           <div id="bottomleft" style="width: 70%; height: 100%" />
           <div id="bottomright" style="width: 30%; height: 100%">
             <div class="caozuo">
-              <el-button type="success" @click="updatedcurver">绘 图</el-button>
-              <el-button type="success" @click="supportdata">提 交</el-button>
+              <el-button type="success" @click.native="updatedcurver">
+                绘 图
+              </el-button>
+              <el-button type="success" @click.native="supportdata">
+                提 交
+              </el-button>
             </div>
             <el-table
               :data="Dataavange"
@@ -30,7 +34,10 @@
               <el-table-column :label="'机组效率\nη(%)'" prop="effect" />
               <el-table-column label="操作">
                 <template slot-scope="scope">
-                  <el-button type="danger" @click="deletedata(scope.$index)">
+                  <el-button
+                    type="danger"
+                    @click.native="deletedata(scope.$index)"
+                  >
                     删 除
                   </el-button>
                 </template>

@@ -59,7 +59,7 @@
                 <vab-icon
                   class="show-password"
                   icon="eye-off-line"
-                  @click="handlePassword"
+                  @click.native="handlePassword"
                 />
               </template>
               <template v-else #suffix>
@@ -67,7 +67,7 @@
                   v-if="form.password.length"
                   class="show-password"
                   icon="eye-line"
-                  @click="handlePassword"
+                  @click.native="handlePassword"
                 />
               </template>
             </el-input>
@@ -79,7 +79,7 @@
                 :loading="loading"
                 class="login-btn"
                 type="primary"
-                @click="handleLogin"
+                @click.native="handleLogin"
               >
                 {{ $translateTitle('home.login') }}
               </el-button>
