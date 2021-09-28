@@ -297,6 +297,7 @@
     <div class="devproduct-prodialog">
       <!-- 创建产品对话框 ###-->
       <el-drawer
+        append-to-body
         :title="moduleTitle"
         :visible.sync="dialogFormVisible"
         :close-on-click-modal="false"
