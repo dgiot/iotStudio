@@ -6,3 +6,5 @@ node_modules
 release
 readme
 src/views/platform/testpumplist/pumplist/key-labelText.md
+.npmrc
+.yarnrc
