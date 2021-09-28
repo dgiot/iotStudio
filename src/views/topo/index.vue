@@ -375,6 +375,7 @@
           upshape.opacity(ShapeConfig.opacity)
           Layer.draw()
         }
+        console.log('upshape', upshape)
         _this.stage.batchDraw()
         if (_this.stage.attrs.id == config.attrs.id) {
           _this.kovaUpType = 'Layer'
@@ -388,6 +389,7 @@
         console.info(`updata type is ${_this.kovaUpType}`)
         // _this.ShapeVisible = false
         console.log('konva数据更新成功')
+        _this.$dgiotBus.$emit('refresh', this.$route)
         _this.updataTopo(_this.productid)
       },
       newTopo(type, data) {
@@ -779,6 +781,20 @@
             node.attrs.x = e.target.x()
             node.attrs.y = e.target.y()
             document.body.style.cursor = 'default'
+          })
+          node.on('dblclick', (e) => {
+            const tr = new Konva.Transformer({
+              borderStroke: '#000', // 虚线颜色
+              borderStrokeWidth: 1, //虚线大小
+              borderDash: [5], // 虚线间距
+              keepRatio: false, // 不等比缩放
+              id: `Transformer_${uuid(6)}`,
+            })
+            Layer.add(tr)
+            tr.attachTo(e.target)
+            Layer.draw()
+            // _this.ShapeVisible = true
+            console.log(`#${e.target.attrs.id}`)
           })
         })
         // console.clear()
