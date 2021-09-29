@@ -440,7 +440,7 @@
               <el-col :xs="24" :sm="6" :md="5" :lg="4" :xl="3">
                 <vab-query-form class="query-form">
                   <vab-query-form-top-panel>
-                    <el-button type="primary" @click="addMachine">
+                    <el-button type="primary" @click.native="addMachine">
                       添加类型
                     </el-button>
                   </vab-query-form-top-panel>
@@ -649,6 +649,16 @@
                     </template>
                   </el-table-column>
                   <el-table-column
+                    :label="$translateTitle('product.dataaddr')"
+                    align="center"
+                  >
+                    <template slot-scope="scope">
+                      <span>
+                        {{ scope.row.dataForm.address }}
+                      </span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
                     align="center"
                     :label="$translateTitle('product.datadefinition')"
                   >
@@ -827,299 +837,6 @@
               @submitForm="submitForm"
             />
           </el-dialog>
-          <!--物模型结构体-->
-          <el-dialog
-            :append-to-body="true"
-            :title="$translateTitle('product.addparameter')"
-            :visible.sync="structdialog"
-            :close-on-click-modal="false"
-            width="40%"
-            top="15vh"
-          >
-            <div class="structheader">
-              <el-form
-                ref="structform"
-                :model="structform"
-                :rules="structrule"
-                size="small"
-              >
-                <el-row :gutter="30">
-                  <el-col :span="10">
-                    <el-form-item
-                      :label="$translateTitle('product.functionname')"
-                      prop="name"
-                    >
-                      <el-input v-model="structform.name" />
-                    </el-form-item>
-                    <el-form-item
-                      :label="$translateTitle('product.identifier')"
-                      prop="identifier"
-                    >
-                      <el-input v-model="structform.identifier" />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="10">
-                    <el-form-item
-                      :label="$translateTitle('product.datatype')"
-                      prop="type"
-                    >
-                      <el-select v-model="structform.type">
-                        <el-option
-                          :label="$translateTitle('product.init')"
-                          value="int"
-                        />
-                        <el-option
-                          :label="$translateTitle('product.float')"
-                          value="float"
-                        />
-                        <el-option
-                          :label="$translateTitle('product.double')"
-                          value="double"
-                        />
-                        <el-option
-                          :label="$translateTitle('product.bool')"
-                          value="bool"
-                        />
-                        <el-option
-                          :label="$translateTitle('product.enum')"
-                          value="enum"
-                        />
-                        <el-option
-                          :label="$translateTitle('product.string')"
-                          value="string"
-                        />
-                        <el-option
-                          :label="$translateTitle('product.date')"
-                          value="date"
-                        />
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-
-                <div>
-                  <el-form-item label="数据标识" required>
-                    <el-col :span="11">
-                      <el-form-item prop="dis">
-                        <el-input
-                          v-model="structform.dis"
-                          placeholder="数据标识"
-                        />
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2">-</el-col>
-                    <el-col :span="11">
-                      <el-form-item>
-                        <el-input
-                          v-model.number="structform.dinumber"
-                          placeholder="数据长度(字节)"
-                        />
-                      </el-form-item>
-                    </el-col>
-                  </el-form-item>
-                </div>
-
-                <div>
-                  <el-form-item required label="取值范围">
-                    <el-col :span="12">
-                      <el-form-item prop="startnumber">
-                        <el-input
-                          v-model.number="structform.startnumber"
-                          :placeholder="$translateTitle('product.minimumvalue')"
-                          type="number"
-                          @input="changeStructValue('structform')"
-                        />
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                      <el-form-item prop="endnumber">
-                        <el-input
-                          v-model.number="structform.endnumber"
-                          :placeholder="$translateTitle('product.maximumvalue')"
-                          type="number"
-                        />
-                      </el-form-item>
-                    </el-col>
-                  </el-form-item>
-
-                  <el-form-item label="步长" prop="step">
-                    <el-input
-                      v-model="structform.step"
-                      :precision="2"
-                      :step="0.01"
-                      :min="0"
-                      controls-position="right"
-                    />
-                  </el-form-item>
-
-                  <el-form-item :label="$translateTitle('product.unit')">
-                    <el-select
-                      v-model="structform.unit"
-                      :placeholder="$translateTitle('product.unit')"
-                      filterable
-                    >
-                      <el-option
-                        v-for="(item, index) in allunit"
-                        :key="index"
-                        :label="item.data.Name + '/' + item.data.Symbol"
-                        :value="item.data.Symbol"
-                      />
-                    </el-select>
-                  </el-form-item>
-                </div>
-                <div v-if="structform.type == 'bool'">
-                  <el-form-item
-                    :label="$translateTitle('product.attribute')"
-                    required
-                  >
-                    <div style="height: 40px">
-                      <el-col :span="11">
-                        <el-form-item>
-                          <el-input
-                            v-model="structform.truevalue"
-                            :placeholder="
-                              $translateTitle('product.attributevalue')
-                            "
-                            class="inputnumber"
-                            type="number"
-                            readonly
-                          />
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="2">-</el-col>
-                      <el-col :span="11">
-                        <el-form-item prop="true">
-                          <el-input
-                            v-model="structform.true"
-                            :placeholder="$translateTitle('product.egopen')"
-                            class="inputnumber"
-                          />
-                        </el-form-item>
-                      </el-col>
-                    </div>
-                    <div style="margin-top: 20px">
-                      <el-col :span="11">
-                        <el-form-item>
-                          <el-input
-                            v-model="structform.falsevalue"
-                            :placeholder="
-                              $translateTitle('product.attributevalue')
-                            "
-                            class="inputnumber"
-                            type="number"
-                            readonly
-                          />
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="2">-</el-col>
-                      <el-col :span="11">
-                        <el-form-item prop="true">
-                          <el-input
-                            v-model="structform.false"
-                            :placeholder="$translateTitle('product.egclost')"
-                            class="inputnumber"
-                          />
-                        </el-form-item>
-                      </el-col>
-                    </div>
-                  </el-form-item>
-                </div>
-                <div v-if="structform.type == 'enum'">
-                  <el-form-item
-                    v-for="(item, index) in structform.specs"
-                    v-show="structform.specs.length"
-                    :key="index"
-                    required
-                  >
-                    <el-col :span="9">
-                      <el-form-item
-                        :label="$translateTitle('product.attribute') + index"
-                        :prop="'specs.' + index + '.attribute'"
-                        :rules="[{ required: true, message: '输入属性' }]"
-                      >
-                        <el-input
-                          v-model="item.attribute"
-                          :placeholder="$translateTitle('product.egnumber0')"
-                        />
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2" class="line">-</el-col>
-                    <el-col :span="9">
-                      <el-form-item
-                        :label="$translateTitle('product.attribute') + index"
-                        :prop="'specs.' + index + '.attributevalue'"
-                        :rules="[{ required: true, message: '输入属性值' }]"
-                      >
-                        <el-input
-                          v-model="item.attributevalue"
-                          :placeholder="$translateTitle('developer.describe')"
-                        />
-                      </el-form-item>
-                    </el-col>
-                    <el-col :span="2" class="line" />
-                    <el-col :span="4" class="line">
-                      <el-link
-                        :underline="false"
-                        type="primary"
-                        icon="el-icon-minus"
-                        style="margin-top: 30px; margin-left: 5px"
-                        @click.prevent="removeDomain1(item)"
-                      >
-                        {{ $translateTitle('developer.delete') }}
-                      </el-link>
-                    </el-col>
-                  </el-form-item>
-                  <el-link
-                    :underline="false"
-                    icon="el-icon-plus"
-                    type="primary"
-                    @click="addDomain1"
-                  >
-                    {{ $translateTitle('product.add') }}
-                  </el-link>
-                </div>
-                <div v-if="structform.type == 'string'">
-                  <el-form-item
-                    :label="$translateTitle('product.datalength')"
-                    prop="string"
-                  >
-                    <el-input v-model.number="structform.string" type="number">
-                      <template slot="append">
-                        {{ $translateTitle('product.byte') }}
-                      </template>
-                    </el-input>
-                  </el-form-item>
-                </div>
-                <!--date类型添加格式-->
-                <div v-if="structform.type == 'date'">
-                  <el-form-item :label="$translateTitle('product.timeformat')">
-                    <el-input v-model="structform.date" readonly />
-                  </el-form-item>
-                </div>
-                <el-form-item
-                  :label="$translateTitle('product.readandwritetype')"
-                  prop="isread"
-                >
-                  <el-radio-group v-model="structform.isread" size="medium">
-                    <el-radio label="rw">
-                      {{ $translateTitle('product.readandwrite') }}
-                    </el-radio>
-                    <el-radio label="r">
-                      {{ $translateTitle('product.onlyread') }}
-                    </el-radio>
-                  </el-radio-group>
-                </el-form-item>
-              </el-form>
-            </div>
-            <span slot="footer" class="dialog-footer">
-              <el-button @click="structdialog = false">
-                {{ $translateTitle('developer.cancel') }}
-              </el-button>
-              <el-button type="primary" @click="submitStruct('structform')">
-                {{ $translateTitle('developer.determine') }}
-              </el-button>
-            </span>
-          </el-dialog>
         </el-tab-pane>
         <!--协议解析-->
         <!-- <div style="diaplay:none;"> -->
@@ -1256,7 +973,7 @@
               </el-table-column>
             </el-table>
             <div slot="footer" class="dialog-footer">
-              <el-button type="primary" @click="updateAllChannel">
+              <el-button type="primary" @click.native="updateAllChannel">
                 <!-- 确定 -->
                 {{ $translateTitle('developer.determine') }}
               </el-button>
@@ -1382,7 +1099,12 @@
                 class="productchannel"
                 style="padding: 10px; text-align: right"
               >
-                <el-button type="primary" size="small" @click="showAllChannel">
+                <el-button
+                  type="primary"
+                  disabled
+                  size="small"
+                  @click="showAllChannel"
+                >
                   {{ $translateTitle('developer.createchannel') }}
                 </el-button>
               </div>
@@ -1450,6 +1172,7 @@
                   <el-button
                     type="danger"
                     size="mini"
+                    disabled
                     @click="deleteRelation(scope.row)"
                   >
                     {{ $translateTitle('developer.remove') }}
@@ -1491,156 +1214,157 @@
           <TaskCollection1 :productId="productId" :isreload="isreload" />
         </el-tab-pane>-->
         <!-- <el-tab-pane label="物存储" name="seven"> -->
-        <el-tab-pane
-          :label="$translateTitle('product.materialstorage')"
-          name="seven"
-        >
-          <vab-query-form>
-            <vab-query-form-left-panel>
-              <div
-                class="productchannel"
-                style="padding: 10px; text-align: right"
-              >
-                <!-- <el-popover
-                  title="自定义数据模型提示"
-                  placement="right"
-                  width="600"
-                  trigger="hover"
-                  @show="questionModel"
-                > -->
-                <el-popover
-                  :title="$translateTitle('developer.tipsforcustomdatamodel')"
-                  placement="right"
-                  width="600"
-                  trigger="hover"
-                  @show="questionModel"
-                >
-                  <pre
-                    id="editorinsert"
-                    class="ace_editor"
-                    style="min-height: 400px"
-                  ><el-input class="ace_text-input" type="textarea"/></pre>
-                  <el-button
-                    slot="reference"
-                    type="primary"
-                    size="mini"
-                    icon="el-icon-question"
-                  >
-                    <!-- 自定义数据模型帮助 -->
-                    {{ $translateTitle('developer.customizedatamodelhelp') }}
-                  </el-button>
-                </el-popover>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  style="margin-left: 20px"
-                  @click="resourceShowAllChannel"
-                >
-                  {{ $translateTitle('developer.createchannel') }}
-                </el-button>
-              </div>
-            </vab-query-form-left-panel>
-            <vab-query-form-right-panel>
-              <vab-help
-                trigger="manual"
-                src="https://tech.iotn2n.com/w/docs/details?id=6"
-                title="产品下的所有设备都会继承该产品的 Topic 类"
-              />
-            </vab-query-form-right-panel>
-          </vab-query-form>
+        <!--        <el-tab-pane-->
+        <!--          disabled-->
+        <!--          :label="$translateTitle('product.materialstorage')"-->
+        <!--          name="seven"-->
+        <!--        >-->
+        <!--          <vab-query-form>-->
+        <!--            <vab-query-form-left-panel>-->
+        <!--              <div-->
+        <!--                class="productchannel"-->
+        <!--                style="padding: 10px; text-align: right"-->
+        <!--              >-->
+        <!--                &lt;!&ndash; <el-popover-->
+        <!--                  title="自定义数据模型提示"-->
+        <!--                  placement="right"-->
+        <!--                  width="600"-->
+        <!--                  trigger="hover"-->
+        <!--                  @show="questionModel"-->
+        <!--                > &ndash;&gt;-->
+        <!--                <el-popover-->
+        <!--                  :title="$translateTitle('developer.tipsforcustomdatamodel')"-->
+        <!--                  placement="right"-->
+        <!--                  width="600"-->
+        <!--                  trigger="hover"-->
+        <!--                  @show="questionModel"-->
+        <!--                >-->
+        <!--                  <pre-->
+        <!--                    id="editorinsert"-->
+        <!--                    class="ace_editor"-->
+        <!--                    style="min-height: 400px"-->
+        <!--                  ><el-input class="ace_text-input" type="textarea"/></pre>-->
+        <!--                  <el-button-->
+        <!--                    slot="reference"-->
+        <!--                    type="primary"-->
+        <!--                    size="mini"-->
+        <!--                    icon="el-icon-question"-->
+        <!--                  >-->
+        <!--                    &lt;!&ndash; 自定义数据模型帮助 &ndash;&gt;-->
+        <!--                    {{ $translateTitle('developer.customizedatamodelhelp') }}-->
+        <!--                  </el-button>-->
+        <!--                </el-popover>-->
+        <!--                <el-button-->
+        <!--                  type="primary"-->
+        <!--                  size="mini"-->
+        <!--                  style="margin-left: 20px"-->
+        <!--                  @click="resourceShowAllChannel"-->
+        <!--                >-->
+        <!--                  {{ $translateTitle('developer.createchannel') }}-->
+        <!--                </el-button>-->
+        <!--              </div>-->
+        <!--            </vab-query-form-left-panel>-->
+        <!--            <vab-query-form-right-panel>-->
+        <!--              <vab-help-->
+        <!--                trigger="manual"-->
+        <!--                src="https://tech.iotn2n.com/w/docs/details?id=6"-->
+        <!--                title="产品下的所有设备都会继承该产品的 Topic 类"-->
+        <!--              />-->
+        <!--            </vab-query-form-right-panel>-->
+        <!--          </vab-query-form>-->
 
-          <div>
-            <el-table
-              :data="resourcechannelData"
-              :row-class-name="getChannelEnable"
-              style="width: 100%"
-            >
-              <el-table-column
-                :label="$translateTitle('developer.channelnumber')"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.objectId }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.channelname')"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.name }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.channeladdr')"
-              >
-                <template slot-scope="scope">
-                  <span>{{ 'channel/' + scope.row.objectId }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.channeltype')"
-              >
-                <template slot-scope="scope">
-                  <span v-if="scope.row.type == 1">
-                    {{ $translateTitle('developer.collectionchannel') }}
-                  </span>
-                  <span v-else>
-                    {{ $translateTitle('developer.resourcechannel') }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.servicetype')"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.cType }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.operation')"
-                width="350"
-              >
-                <template slot-scope="scope">
-                  <el-button
-                    type="danger"
-                    size="mini"
-                    @click="deleteRelation(scope.row)"
-                  >
-                    {{ $translateTitle('developer.remove') }}
-                  </el-button>
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="subProTopic(scope.row)"
-                  >
-                    <!-- 订阅日志 -->
-                    {{ $translateTitle('product.subscriptionlog') }}
-                  </el-button>
+        <!--          <div>-->
+        <!--            <el-table-->
+        <!--              :data="resourcechannelData"-->
+        <!--              :row-class-name="getChannelEnable"-->
+        <!--              style="width: 100%"-->
+        <!--            >-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.channelnumber')"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <span>{{ scope.row.objectId }}</span>-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.channelname')"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <span>{{ scope.row.name }}</span>-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.channeladdr')"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <span>{{ 'channel/' + scope.row.objectId }}</span>-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.channeltype')"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <span v-if="scope.row.type == 1">-->
+        <!--                    {{ $translateTitle('developer.collectionchannel') }}-->
+        <!--                  </span>-->
+        <!--                  <span v-else>-->
+        <!--                    {{ $translateTitle('developer.resourcechannel') }}-->
+        <!--                  </span>-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.servicetype')"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <span>{{ scope.row.cType }}</span>-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--              <el-table-column-->
+        <!--                :label="$translateTitle('developer.operation')"-->
+        <!--                width="350"-->
+        <!--              >-->
+        <!--                <template slot-scope="scope">-->
+        <!--                  <el-button-->
+        <!--                    type="danger"-->
+        <!--                    size="mini"-->
+        <!--                    @click="deleteRelation(scope.row)"-->
+        <!--                  >-->
+        <!--                    {{ $translateTitle('developer.remove') }}-->
+        <!--                  </el-button>-->
+        <!--                  <el-button-->
+        <!--                    type="primary"-->
+        <!--                    size="mini"-->
+        <!--                    @click="subProTopic(scope.row)"-->
+        <!--                  >-->
+        <!--                    &lt;!&ndash; 订阅日志 &ndash;&gt;-->
+        <!--                    {{ $translateTitle('product.subscriptionlog') }}-->
+        <!--                  </el-button>-->
 
-                  <el-button
-                    type="primary"
-                    size="mini"
-                    @click="customize(scope.row)"
-                  >
-                    <!-- 自定义模型 -->
-                    {{ $translateTitle('product.custommodel') }}
-                  </el-button>
+        <!--                  <el-button-->
+        <!--                    type="primary"-->
+        <!--                    size="mini"-->
+        <!--                    @click="customize(scope.row)"-->
+        <!--                  >-->
+        <!--                    &lt;!&ndash; 自定义模型 &ndash;&gt;-->
+        <!--                    {{ $translateTitle('product.custommodel') }}-->
+        <!--                  </el-button>-->
 
-                  <!-- <el-button type="primary" size="mini" @click="customize(scope.row)">自定义模型</el-button> -->
-                </template>
-              </el-table-column>
-            </el-table>
-            <div class="elpagination" style="margin-top: 20px">
-              <el-pagination
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="resourcelength"
-                :total="resourcetotal"
-                layout="total, sizes, prev, pager, next, jumper"
-                @size-change="resourcechannelSizeChange"
-                @current-change="resourcechannelCurrentChange"
-              />
-            </div>
-          </div>
-        </el-tab-pane>
+        <!--                  &lt;!&ndash; <el-button type="primary" size="mini" @click="customize(scope.row)">自定义模型</el-button> &ndash;&gt;-->
+        <!--                </template>-->
+        <!--              </el-table-column>-->
+        <!--            </el-table>-->
+        <!--            <div class="elpagination" style="margin-top: 20px">-->
+        <!--              <el-pagination-->
+        <!--                :page-sizes="[10, 20, 30, 50]"-->
+        <!--                :page-size="resourcelength"-->
+        <!--                :total="resourcetotal"-->
+        <!--                layout="total, sizes, prev, pager, next, jumper"-->
+        <!--                @size-change="resourcechannelSizeChange"-->
+        <!--                @current-change="resourcechannelCurrentChange"-->
+        <!--              />-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </el-tab-pane>-->
         <!-- <el-tab-pane label="物规则" name="sixeth">
           <div class="engintable">
             <div class="engineheader">
@@ -1676,8 +1400,8 @@
               </el-table-column>
               <el-table-column align="center" :label=" $translateTitle('developer.operation')">
                 <template slot-scope="scope">
-                  <el-button type="info" @click="detailRules(scope.row.id)" size="mini" plain>查看</el-button>
-                  <el-button type="info" @click="deleteRule(scope.row.id)" size="mini" plain>删除</el-button>
+                  <el-button type="info" @click.native="detailRules(scope.row.id)" size="mini" plain>查看</el-button>
+                  <el-button type="info" @click.native="deleteRule(scope.row.id)" size="mini" plain>删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -1752,7 +1476,7 @@
         ><textarea class="ace_text-input" style="overflow:scroll"/></pre>
       </div>
       <span slot="footer" class="dialog-footer" style="height: 30px">
-        <el-button type="primary" @click="preserve">
+        <el-button type="primary" @click.native="preserve">
           <!-- 更新 -->
           {{ $translateTitle('equipment.update') }}
         </el-button>
@@ -1912,7 +1636,7 @@
           <!-- 退 出 -->
           {{ $translateTitle('product.quit') }}
         </el-button>
-        <el-button type="primary" @click="addData">
+        <el-button type="primary" @click.native="addData">
           <!-- 保 存 -->
           {{ $translateTitle('product.preservation') }}
         </el-button>
@@ -2016,11 +1740,11 @@
                     <!-- 测试 -->
                     {{ $translateTitle('rule.Test') }}
                   </el-button>
-                  <el-button type="info" @click="onReductionTap(index)">
+                  <el-button type="info" @click.native="onReductionTap(index)">
                     <!-- 还原 -->
                     {{ $translateTitle('product.reduction') }}
                   </el-button>
-                  <el-button type="primary" @click="onSaveTap(index)">
+                  <el-button type="primary" @click.native="onSaveTap(index)">
                     <!-- 保存 -->
                     {{ $translateTitle('product.preservation') }}
                   </el-button>
@@ -2703,7 +2427,7 @@
           order: 0,
           protocol: 'normal',
           operatetype: 'readCoils',
-          originaltype: 'int',
+          originaltype: 'short16_AB',
           slaveid: '0X10',
           collection: '%s',
           control: '%d',
@@ -4809,8 +4533,8 @@
       // 订阅日志
       subProTopic(row) {
         this.subdialog = true
-        this.subdialogid = row.id
-        this.channelname = row.id
+        this.subdialogid = row.objectId
+        this.channelname = row.objectId
         setTimeout(() => {
           subdialog = ace.edit('subdialog')
           subdialog.session.setMode('ace/mode/text') // 设置语言
@@ -4823,11 +4547,11 @@
           })
         })
         var info = {
-          topic: 'log/channel/' + row.id + '/' + this.productId,
+          topic: 'log/channel/' + row.objectId + '/' + this.productId,
           qos: 2,
         }
         var channeltopic = new RegExp(
-          'log/channel/' + row.id + '/' + this.productId
+          'log/channel/' + row.objectId + '/' + this.productId
         )
         var submessage = ''
         var _this = this
@@ -4850,7 +4574,7 @@
             // console.log(info);
             // console.log("订阅成功");
             var sendInfo = {
-              topic: 'channel/' + row.id + '/' + _this.productId,
+              topic: 'channel/' + row.objectId + '/' + _this.productId,
               text: text0,
               retained: true,
               qos: 2,

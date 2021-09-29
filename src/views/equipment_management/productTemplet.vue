@@ -212,7 +212,6 @@
                     <el-tree
                       ref="workGroup"
                       :data="categoryTreeData"
-                      :props="roleProps"
                       :expand-on-click-node="false"
                       node-key="index"
                       default-expand-all
@@ -220,9 +219,9 @@
                       <div slot-scope="{ node, data }" class="custom-tree-node">
                         <span
                           :class="{
-                            selected: data.objectId == curDepartmentId,
+                            selected: false,
                           }"
-                          @click="handleNodeClick(data, node)"
+                          @click="handleCateClick(node, data)"
                         >
                           {{ node.label }}
                         </span>
@@ -324,6 +323,7 @@
   import { ExportParse, ImportParse } from '@/api/Export'
   import { queryProductTemplet } from '@/api/ProductTemplet'
   import { queryCategory } from '@/api/Category'
+  import { post_tree } from '@/api/Data'
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
   context.keys().forEach((fileName) => {
@@ -438,6 +438,7 @@
         cType: '',
         treeDataValue: '',
         categoryTreeData: [],
+        curCatementId: '',
         form: {
           type: 1,
           storageStrategy: '',
@@ -532,6 +533,7 @@
     mounted() {
       this.queryProdut({})
       this.categorytree()
+      this.categorylist()
       this.searchProduct(0)
     },
     beforeDestroy() {
@@ -542,9 +544,11 @@
         this.dialogProfile = !this.dialogProfile
         await this.$refs.dialogProfile.StepsListRowClick(this.selectedRow)
       },
-      handlecateClick() {
-        this.categorytree()
-        this.cascaderDrawer = true
+      handleCateClick(node, data) {
+        console.log('node', node)
+        console.log('data', data)
+        this.form.category = data.objectId
+        this.curCatementId = data.name
       },
       async queryProdut(args) {
         const categorys = args.categorys
@@ -1049,7 +1053,7 @@
           }
         }
       },
-      async categorytree() {
+      async categorylist() {
         const parsms = {
           order: 'createdAt',
           keys: 'count(*)',
@@ -1058,6 +1062,24 @@
         const { results } = await queryCategory(parsms)
         this.categoryList = results
         console.log('this', this.categoryList)
+      },
+      async categorytree() {
+        let name = this.queryForm.name.length
+          ? '{ "$regex": "' + this.queryForm.name + '"}'
+          : '{ "$ne": "null" }'
+        this.listLoading = true
+        let params = {
+          class: 'Category',
+          filter:
+            '{"order": "createdAt","keys":["parent","name","level"],"where":{"level": {"$gte": 1}, "name":' +
+            name +
+            '}}',
+          parent: 'parent',
+        }
+        console.log(params)
+        const { results = [] } = await post_tree(params)
+        this.categoryTreeData = results
+        this.listLoading = false
       },
       handleCateSearch(objectId) {
         this.queryForm.category = objectId

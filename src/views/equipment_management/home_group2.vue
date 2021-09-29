@@ -365,16 +365,16 @@
                   </el-col>
                   <el-col v-if="form.type == 1" :span="13" style="padding: 0">
                     <el-input
-                      v-model="form.category"
+                      v-model="form.netType"
                       :disabled="custom_status == 'edit'"
                       readonly
                     >
-                      <template v-if="form.category" slot="prepend">
+                      <template v-if="form.netType" slot="prepend">
                         <el-link
                           :disabled="custom_status == 'edit'"
                           @click.native="handleIconClick"
                         >
-                          {{ form.category }}
+                          {{ form.netType }}
                         </el-link>
                       </template>
                       <el-icon
@@ -473,24 +473,24 @@
                   />
                 </div>
               </el-form-item>
-              <el-form-item
-                prop="storageStrategy"
-                :label="$translateTitle('product.Storage strategy')"
-              >
-                <el-select
-                  v-model="form.storageStrategy"
-                  :placeholder="$translateTitle('task.Select')"
-                  style="width: 100%"
-                  @click.native="getResource('otherchannel', '1')"
-                >
-                  <el-option
-                    v-for="item in storageArr"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                  />
-                </el-select>
-              </el-form-item>
+              <!--              <el-form-item-->
+              <!--                prop="storageStrategy"-->
+              <!--                :label="$translateTitle('product.Storage strategy')"-->
+              <!--              >-->
+              <!--                <el-select-->
+              <!--                  v-model="form.storageStrategy"-->
+              <!--                  :placeholder="$translateTitle('task.Select')"-->
+              <!--                  style="width: 100%"-->
+              <!--                  @click.native="getResource('otherchannel', '1')"-->
+              <!--                >-->
+              <!--                  <el-option-->
+              <!--                    v-for="item in storageArr"-->
+              <!--                    :key="item"-->
+              <!--                    :label="item"-->
+              <!--                    :value="item"-->
+              <!--                  />-->
+              <!--                </el-select>-->
+              <!--              </el-form-item>-->
               <el-form-item
                 :label="$translateTitle('product.devicetype')"
                 prop="nodeType"
@@ -514,26 +514,26 @@
                       </el-radio-group>
                 </el-form-item>-->
 
-              <el-form-item prop="netType">
-                <span slot="label">
-                  {{ $translateTitle('product.networking') }}
-                  <el-badge :value="channel.length" class="item" />
-                </span>
+              <!--              <el-form-item prop="netType">-->
+              <!--                <span slot="label">-->
+              <!--                  {{ $translateTitle('product.networking') }}-->
+              <!--                  <el-badge :value="channel.length" class="item" />-->
+              <!--                </span>-->
 
-                <el-select
-                  v-model="form.netType"
-                  style="width: 100%"
-                  :placeholder="$translateTitle('product.selectgateway')"
-                >
-                  <el-option
-                    v-for="(item, index) in channel"
-                    :key="index"
-                    :label="index + 1 + ':' + item.label"
-                    :value="item.value"
-                    :title="'当前第' + (index + 1) + '项'"
-                  />
-                </el-select>
-              </el-form-item>
+              <!--                <el-select-->
+              <!--                  v-model="form.netType"-->
+              <!--                  style="width: 100%"-->
+              <!--                  :placeholder="$translateTitle('product.selectgateway')"-->
+              <!--                >-->
+              <!--                  <el-option-->
+              <!--                    v-for="(item, index) in channel"-->
+              <!--                    :key="index"-->
+              <!--                    :label="index + 1 + ':' + item.label"-->
+              <!--                    :value="item.value"-->
+              <!--                    :title="'当前第' + (index + 1) + '项'"-->
+              <!--                  />-->
+              <!--                </el-select>-->
+              <!--              </el-form-item>-->
               <el-form-item :label="$translateTitle('menu.icon')" prop="icon">
                 <div v-if="imageUrl">
                   <img :src="imageUrl" class="avatar" />
@@ -592,7 +592,7 @@
         <el-drawer
           :append-to-body="true"
           :visible.sync="cascaderDrawer"
-          size="50%"
+          size="35%"
         >
           <div>
             <el-row :gutter="20">
@@ -2173,9 +2173,9 @@
       },
       // 选择产品模板
       chooseTemplate(row) {
-        console.log('row', row)
         this.selectedRow = row
         this.form.category = row.category
+        this.form.netType = row.netType
         this.cascaderDrawer = !this.cascaderDrawer
       },
       // 关闭dialog 事件

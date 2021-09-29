@@ -7,19 +7,19 @@
       :column="2"
       border
     >
-      <el-descriptions-item :label="$translateTitle('home.category')">
-        {{ getCategory(productDetail.category) }}
-      </el-descriptions-item>
-      <el-descriptions-item :label="$translateTitle('product.nodetype')">
-        <span v-if="productDetail.nodeType == 1">
-          {{ $translateTitle('product.gateway') }}
-        </span>
-        <span v-if="productDetail.nodeType == 0">
-          {{ $translateTitle('product.equipment') }}
-        </span>
-      </el-descriptions-item>
-      <el-descriptions-item :label="$translateTitle('product.productgrouping')">
-        <span>{{ productDetail.devType }}</span>
+      <!--      <el-descriptions-item :label="$translateTitle('home.category')">-->
+      <!--        {{ productDetail.netType }}-->
+      <!--      </el-descriptions-item>-->
+      <!--      <el-descriptions-item :label="$translateTitle('product.nodetype')">-->
+      <!--        <span v-if="productDetail.nodeType == 1">-->
+      <!--          {{ $translateTitle('product.gateway') }}-->
+      <!--        </span>-->
+      <!--        <span v-if="productDetail.nodeType == 0">-->
+      <!--          {{ $translateTitle('product.equipment') }}-->
+      <!--        </span>-->
+      <!--      </el-descriptions-item>-->
+      <el-descriptions-item :label="$translateTitle('product.classification')">
+        <span>{{ productDetail.netType }}</span>
       </el-descriptions-item>
       <el-descriptions-item :label="$translateTitle('product.physicalmodel')">
         <el-link
@@ -62,33 +62,7 @@
           {{ productDetail.config.profile.length || 0 }}
         </el-link>
       </el-descriptions-item>
-
       <el-descriptions-item>
-        <template slot="label">
-          <!--          有个坑,暂时不显示。-->
-          <el-link
-            type="success"
-            disabled
-            @click="feateditorParser(productDetail, 'basedate.params', true)"
-          >
-            {{ $translateTitle('product.dict') }}
-          </el-link>
-        </template>
-        <el-link
-          type="primary"
-          @click="feateditorParser(productDetail, 'basedate.params', false)"
-        >
-          {{
-            productDetail.config &&
-            productDetail.config.basedate &&
-            productDetail.config.basedate.params
-              ? productDetail.config.basedate.params.length
-              : 0
-          }}
-        </el-link>
-      </el-descriptions-item>
-
-      <el-descriptions-item v-if="productDetail.decoder">
         <template slot="label">
           <el-link
             type="warning"
@@ -98,13 +72,6 @@
             {{ $translateTitle('product.decoder') }}
           </el-link>
         </template>
-
-        <el-link
-          type="success"
-          @click.native="moveTemplate('set', productDetail)"
-        >
-          {{ $translateTitle('product.Set as template') }}
-        </el-link>
       </el-descriptions-item>
     </el-descriptions>
     <el-table
@@ -163,15 +130,10 @@
               <el-table-column
                 :label="$translateTitle('product.datadefinition')"
                 align="center"
-              >
-                <template slot-scope="scope2">
-                  <span>{{ scope2.row.dataType.type }}</span>
-                </template>
-              </el-table-column>
+              />
             </el-table>
           </template>
         </el-table-column>
-
         <el-table-column
           :label="$translateTitle('product.order')"
           width="80"
@@ -182,7 +144,6 @@
             {{ row.dataForm.order }}
           </template>
         </el-table-column>
-
         <el-table-column
           :label="$translateTitle('product.Rounds')"
           width="80"
@@ -366,19 +327,6 @@
     />
     <el-empty v-else :image-size="200" />
   </div>
-  <!--  <el-table-column-->
-  <!--    width="160"-->
-  <!--    :label="$translateTitle('task.Operation')"-->
-  <!--  >-->
-  <!--    <template slot-scope="scope">-->
-  <!--      <el-link-->
-  <!--        type="success"-->
-  <!--        @click="moveTemplate('set', scope.row)"-->
-  <!--      >-->
-  <!--        {{ $translateTitle('product.Set as template') }}-->
-  <!--      </el-link>-->
-  <!--    </template>-->
-  <!--  </el-table-column>-->
 </template>
 <script>
   import Category from '@/api/Mock/Category'
@@ -428,6 +376,7 @@
         productDetail: {
           thing: { properties: [] },
           config: { parser: [], profile: [] },
+          decoder: { code: [] },
         },
         Category,
       }
@@ -441,9 +390,6 @@
         this.ace_editor = Base64.decode(decoder.code)
         // editor.gotoLine(editor.session.getLength())
       },
-      moveTemplate(type, params) {
-        this.$parent.$parent.$parent.moveTemplate(type, params)
-      },
       featProperties(params) {
         this.codeFlag = false
         this.$parent.$parent.$parent.properties(params)
@@ -451,14 +397,6 @@
       feateditorParser(config, type, flag) {
         this.codeFlag = false
         this.$parent.$parent.$parent.editorParser(config, type, flag)
-      },
-      getCategory(key) {
-        // console.log(key)
-        let name = ''
-        this.Category.filter((item) => {
-          if (item.type == key) name = item.data.CategoryName
-        })
-        return name
       },
     },
   }
