@@ -198,8 +198,7 @@
                   <td colspan="6">{{ productdetail.desc }}</td>
                 </tr>
               </table>
-
-              111
+              <dgiot-profile ref="profile" :is-product="true" />
             </div>
           </div>
         </el-tab-pane>
@@ -820,7 +819,7 @@
             width="60%"
             top="5vh"
           >
-            <wmxdetail
+            <dgiot-wmxdetail
               ref="sizeForm"
               :size-form1="sizeForm"
               @addDomain="addDomain"
@@ -2040,9 +2039,9 @@
     </el-dialog>
   </div>
 </template>
-<script src="./js/product.js"></script>
+<script src="./js/proddetail.js"></script>
 <style lang="scss" scoped>
-  @import './css/product.css';
+  @import './css/proddetail.css';
   .engintable {
     width: 100%;
     height: auto;

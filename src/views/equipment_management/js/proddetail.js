@@ -1,5 +1,5 @@
 import { mapGetters, mapMutations } from 'vuex'
-
+import profile from '@/views/equipment_management/profile'
 import { getDeviceCountByProduct } from '@/api/Device/index'
 import {
   queryProduct,
@@ -31,7 +31,8 @@ import { returnLogin } from '@/utils/utilwen'
 
 export default {
   components: {
-    wmxdetail,
+    'dgiot-profile': profile,
+    'dgiot-wmx': wmxdetail,
   },
   data() {
     var validCode = (rule, value, callback) => {
