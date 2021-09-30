@@ -83,7 +83,6 @@ const configure = {
     'be-full': 'BeFull',
     JSONEditor: 'JSONEditor',
     AMap: 'VueAMap',
-    'topology-vue': 'topology',
     konva: 'Konva',
     VCharts: 'v-charts',
     'vue-count-to': 'CountTo',

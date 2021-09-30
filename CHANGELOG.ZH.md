@@ -28,6 +28,7 @@
 ### Performance Improvements
 
 * **.npmrc && .yarnrc:** add related dependencies ([ac8e105](https://github.com/dgiot/dgiot-dashboard/commit/ac8e105eb1a396a537a2b241239b97385b07ffec))
+* **config:** :bookmark: Optimize loading speed, release version 4.3.5 ([81d9414](https://github.com/dgiot/dgiot-dashboard/commit/81d94149db3dc6f26291ca5713f879be74685aea))
 * **package.json && vue.config.js:** optimize packaging speed ([7dcc8f7](https://github.com/dgiot/dgiot-dashboard/commit/7dcc8f714a9c60ff1f995adf9ae0e6e553c64c5d))
 
 

@@ -8,7 +8,6 @@
 -->
 <template>
   <div>
-    <!--    <vab-topology />-->
     <div ref="platform" class="platform">
       <div class="home_dialog">
         <el-dialog

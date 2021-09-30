@@ -1,6 +1,5 @@
 <template>
   <div class="log log-container">
-    <vab-topology />
     <!--    <div class="left">-->
     <!--      <el-button-->
     <!--        type="primary"-->
