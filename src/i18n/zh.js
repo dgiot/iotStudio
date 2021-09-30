@@ -582,6 +582,7 @@ export default {
       class: '字段',
       viewobjectmodel: '查看物模型',
       newcustomattribute: '新增自定义属性',
+      newobjectmodel: '新增物模型',
       newstandardattribute: '新增标准属性',
       functionaltypes: '功能类型',
       functionname: '功能名称',

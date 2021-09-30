@@ -62,6 +62,14 @@
           {{ productDetail.config.profile.length || 0 }}
         </el-link>
       </el-descriptions-item>
+      <!--      组态完善之后再加-->
+      <el-descriptions-item v-if="false">
+        <template slot="label">
+          <el-link type="warning" @click="goKonva(productDetail.objectId)">
+            {{ $translateTitle('concentrator.konva') }}
+          </el-link>
+        </template>
+      </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <el-link
@@ -74,6 +82,24 @@
         </template>
       </el-descriptions-item>
     </el-descriptions>
+    <!--    查看物模型-->
+    <el-button
+      v-if="productDetail.objectId"
+      type="primary"
+      size="small"
+      @click="checkschema"
+    >
+      {{ $translateTitle('product.viewobjectmodel') }}
+    </el-button>
+    <!-- 新增自定义属性 -->
+    <el-button
+      v-if="productDetail.objectId"
+      type="primary"
+      size="small"
+      @click="createProperty"
+    >
+      {{ $translateTitle('product.newobjectmodel') }}
+    </el-button>
     <el-table
       v-if="!codeFlag"
       :key="tableType"
@@ -244,6 +270,25 @@
             <span v-else />
           </template>
         </el-table-column>
+        <el-table-column
+          align="center"
+          width="160"
+          :label="$translateTitle('developer.operation')"
+        >
+          <template slot-scope="scope">
+            <el-button type="danger" size="mini" @click="deletewmx(scope.row)">
+              {{ $translateTitle('developer.delete') }}
+            </el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="wmxDataFill(scope.row, scope.row.index)"
+            >
+              <!-- 编辑 -->
+              {{ $translateTitle('task.Edit') }}
+            </el-button>
+          </template>
+        </el-table-column>
       </div>
       <div v-else-if="tableType == 'profile' || tableType == 'parser'">
         <el-table-column
@@ -397,6 +442,21 @@
       feateditorParser(config, type, flag) {
         this.codeFlag = false
         this.$parent.$parent.$parent.editorParser(config, type, flag)
+      },
+      createProperty() {
+        this.$parent.$parent.$parent.createProperty()
+      },
+      deletewmx(row) {
+        this.$parent.$parent.$parent.deletewmx(row)
+      },
+      wmxDataFill(rowData, index) {
+        this.$parent.$parent.$parent.wmxDataFill(rowData, index)
+      },
+      goKonva(objectId) {
+        this.$parent.$parent.$parent.goKonva(objectId)
+      },
+      checkschema() {
+        this.$parent.$parent.$parent.checkschema()
       },
     },
   }

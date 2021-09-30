@@ -90,13 +90,7 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
-    <!--    <el-tabs v-model="activeName">-->
-    <!--      <el-tab-pane-->
-    <!--        :label="$translateTitle('product.myproduct') + '(' + total + ')'"-->
-    <!--        name="first"-->
-    <!--      >-->
     <div class="prosecond">
       <el-form
         :inline="true"
@@ -292,8 +286,6 @@
         <!--        />-->
       </div>
     </div>
-    <!--      </el-tab-pane>-->
-    <!--    </el-tabs>-->
     <div class="devproduct-prodialog">
       <!-- 创建产品对话框 ###-->
       <el-drawer
@@ -1320,7 +1312,6 @@
         </el-form>
       </el-dialog>
     </div>
-
     <div class="import-dialog">
       <el-dialog
         :append-to-body="true"
@@ -1370,7 +1361,6 @@
         </div>
       </el-dialog>
     </div>
-
     <VabRender v-show="false" :config="config" :loading="true" />
   </div>
 </template>
