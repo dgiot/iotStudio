@@ -58,7 +58,7 @@ let cdnUrl = {
     'https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/js/mqttws31.js',
     'https://unpkg.com/konva/konva.min.js',
     'https://unpkg.com/vue-konva/umd/vue-konva.min.js',
-    'https://unpkg.com/topology-vue/topology-vue.umd.min.js',
+    // 'https://unpkg.com/topology-vue/topology-vue.umd.min.js',
     // 'https://cdn.bootcdn.net/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.js',
     'https://unpkg.com/mockjs/dist/mock.js',
     'https://unpkg.com/js-base64/base64.js',

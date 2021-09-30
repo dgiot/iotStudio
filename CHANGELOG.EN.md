@@ -1,3 +1,37 @@
+## [4.3.5](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.4...v4.3.5) (2021-09-30)
+
+
+### Bug Fixes
+
+* **package.json:** devdepebdencies ([27805c2](https://github.com/dgiot/dgiot-dashboard/commit/27805c2cdaf57031b9ef9aa4fb8bcbfd544facd6))
+* **package.json:** remove the interactive information of the automated script ([d0cf645](https://github.com/dgiot/dgiot-dashboard/commit/d0cf64515b8a47d3a799d956d1c93966ccd36bcd))
+* .npmrc && yarnrc ([701b025](https://github.com/dgiot/dgiot-dashboard/commit/701b02542ebbee5fec55a54198939c0722500c86))
+* **scenelog.vue:** devicelog mqtt ([4d7352b](https://github.com/dgiot/dgiot-dashboard/commit/4d7352b5a96332988d219eb0a61415e95e6c5b39))
+* **src/config/cdn.config.js:** introduce antd css ([e992f12](https://github.com/dgiot/dgiot-dashboard/commit/e992f123edb921474af11f1bf300f4fc56421dac))
+* **src/views/equipment_management/home_group2.vue:** element-ui body mask ([150f97d](https://github.com/dgiot/dgiot-dashboard/commit/150f97db44addfb9a013e374bcf1c0f5b754facb))
+* 品类管理 ([1c95f72](https://github.com/dgiot/dgiot-dashboard/commit/1c95f72ce497e77921e20aec9b14db957d107e6c))
+* **src/views/equipment_management/editdevices.vue:** component reference error ([07cfb34](https://github.com/dgiot/dgiot-dashboard/commit/07cfb34035e51c0bd856d4f7c35497515dc00a38))
+* **views:** click modifier ([9cd02a8](https://github.com/dgiot/dgiot-dashboard/commit/9cd02a8d4044f1afe7b8448118efe6fdce6e0e59))
+
+
+### Features
+
+* productTemplet ([a80c4a1](https://github.com/dgiot/dgiot-dashboard/commit/a80c4a18d91130a06adccc4e37c41b91a9dfca7d))
+* **src/views/equipment_management/home_group2.vue:** device detail information optimization ([7a5e618](https://github.com/dgiot/dgiot-dashboard/commit/7a5e6180b06eb8fad81f4457c171ad92e2867794))
+* **src/views/equipment_management/home_group2.vue:** optimize product list query error ([c040771](https://github.com/dgiot/dgiot-dashboard/commit/c040771752da48e18ca83e542ed307a36b74a9a3))
+* **src/views/equipment_management/proddetail.vue:** product channel ([ee62c24](https://github.com/dgiot/dgiot-dashboard/commit/ee62c24dd157daa6e7083b8856cac9c2be275bcf))
+* **src/views/topo/index.vue:** configure picture size edit zoom function ([bae93b0](https://github.com/dgiot/dgiot-dashboard/commit/bae93b0305b71c959328cd9fc3d4b70707d4a6b2))
+* **src/views/topo/index.vue:** drag ([7839a6a](https://github.com/dgiot/dgiot-dashboard/commit/7839a6a4ed791ccc12d3402d6e1f5e7510fc6769))
+* channellogs ([9ae0c14](https://github.com/dgiot/dgiot-dashboard/commit/9ae0c142e746ba5753ef46bc01cc7cd333b52f6f))
+
+
+### Performance Improvements
+
+* **.npmrc && .yarnrc:** add related dependencies ([ac8e105](https://github.com/dgiot/dgiot-dashboard/commit/ac8e105eb1a396a537a2b241239b97385b07ffec))
+* **package.json && vue.config.js:** optimize packaging speed ([7dcc8f7](https://github.com/dgiot/dgiot-dashboard/commit/7dcc8f714a9c60ff1f995adf9ae0e6e553c64c5d))
+
+
+
 ## [4.3.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.3...v4.3.4) (2021-09-24)
 
 
