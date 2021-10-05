@@ -36,7 +36,7 @@ let cdnUrl = {
   js: [
     'https://unpkg.com/vue/dist/vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
     'https://unpkg.com/vue-router/dist/vue-router.min.js',
-    'https://unpkg.com/vue-i18n',
+    'https://unpkg.com/vue-i18n@8.26.1/dist/vue-i18n.min.js',
     'https://unpkg.com/cos-js-sdk-v5/dist/cos-js-sdk-v5.min.js',
     'https://unpkg.com/nprogress/nprogress.js',
     'https://unpkg.com/js-md5/build/md5.min.js',
