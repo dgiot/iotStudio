@@ -88,12 +88,12 @@
           >
             <!-- 导出 -->
             <vab-query-form>
-              <vab-query-form-left-panel>
+              <vab-query-form-left-panel  :disabled="!productName.length">
                 <div class="addtopic">
-                  <el-button type="primary" :disabled="!productName.length" size="small" @click.native="exportProduct(productName)">
+                  <el-button type="primary"  size="small" @click.native="exportProduct(productName)">
                     {{ $translateTitle('product.exportpro') }}
                   </el-button>
-                  <el-button size="small" type="primary" @click.native="SetTemplate">
+                  <el-button size="small" type="primary"   @click.native="setTemplate(productInfo)">
                     {{ $translateTitle('product.Set as template') }}
                   </el-button>
                 </div>
@@ -108,6 +108,10 @@
             </vab-query-form>
             <div>
               <table
+                v-loading="productName== ''"
+                :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
+                element-loading-spinner="el-icon-loading"
+                element-loading-background="rgba(0, 0, 0, 0.8)"
                 class="mailtable"
                 style="width: 100%"
                 border="0"

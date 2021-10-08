@@ -6,7 +6,12 @@ import { downBinary } from '@/api/File/index'
 import { getAllunit, getDictCount } from '@/api/Dict/index'
 import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
 import { getRule } from '@/api/Rules'
-
+import {
+  getProductTemplet,
+  postProductTemplet,
+  putProductTemplet,
+  queryProductTemplet,
+} from '@/api/ProductTemplet'
 var editor
 var editor1
 var editor2
@@ -127,6 +132,7 @@ export default {
       }
     }
     return {
+      productInfo: {},
       FromMachine: [{ name: 'ALL' }],
       machineForm: {},
       machine: false,
@@ -742,7 +748,7 @@ export default {
         })
     },
     /**
-     *
+     * @description 导出产品
      * @param
      * @returns
      */
@@ -765,6 +771,152 @@ export default {
         console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-10-08 15:41:23
+     * @Description: 设为产品模板
+     * @param productInfo
+     * @return {Promise<void>}
+     * @document http://prod.iotn2n.com/swagger/#/ProductTemplet/post_classes_producttemplet
+     */
+    async setTemplate(productInfo) {
+      const loading = this.$baseColorfullLoading()
+      const {
+        category = 'IotHub',
+        config = {
+          konva: {
+            Stage: {
+              attrs: {
+                x: 14,
+                y: 29,
+                id: 'container',
+                width: 1635,
+                height: 767,
+                container: 'container',
+                draggable: true,
+              },
+              children: [
+                {
+                  attrs: {
+                    id: 'Layer_5SKeJT',
+                  },
+                  children: [
+                    {
+                      attrs: {
+                        id: 'Group_RoT',
+                        width: 2000,
+                        height: 2000,
+                      },
+                      children: [],
+                      className: 'Group',
+                    },
+                    {
+                      attrs: {
+                        id: 'Group_QtGicp',
+                        draggable: true,
+                      },
+                      children: [
+                        {
+                          attrs: {
+                            x: 10,
+                            y: 15,
+                            id: '#dgiot-quanyizhongxinbeifen-0-1630891418339',
+                            data: 'M73.142857 0h877.714286v877.714286H73.142857z',
+                            fill: '#FFFFFF',
+                            angle: -30,
+                            scaleX: 0.15,
+                            scaleY: 0.15,
+                            originX: 'center',
+                            originY: 'bottom',
+                            className: 'Path',
+                          },
+                          className: 'Path',
+                        },
+                        {
+                          attrs: {
+                            x: 10,
+                            y: 15,
+                            id: '#dgiot-quanyizhongxinbeifen-1-1630891418339',
+                            data: 'M877.714286 137.142857A27.428571 27.428571 0 0 1 905.142857 164.571429v201.142857a27.428571 27.428571 0 0 1-27.428571 27.428571l-3.017143 0.091429A45.714286 45.714286 0 0 0 877.714286 484.571429l2.633143 0.128A27.428571 27.428571 0 0 1 905.142857 512v201.142857a27.428571 27.428571 0 0 1-27.428571 27.428572H146.285714A27.428571 27.428571 0 0 1 118.857143 713.142857V512A27.428571 27.428571 0 0 1 146.285714 484.571429l2.998857-0.091429A45.714286 45.714286 0 0 0 146.285714 393.142857l-2.651428-0.128A27.428571 27.428571 0 0 1 118.857143 365.714286V164.571429A27.428571 27.428571 0 0 1 146.285714 137.142857z m-296.100572 138.185143l-69.266285 69.284571-69.266286-69.284571-38.784 38.802286 58.258286 58.258285H402.285714v54.857143h82.285715v39.186286H402.285714v54.857143h82.285715v66.614857h54.857142v-66.614857H621.714286v-54.857143h-82.285715v-39.186286H621.714286v-54.857143h-59.574857l58.276571-58.258285-38.802286-38.802286z',
+                            fill: '#111111',
+                            angle: -30,
+                            scaleX: 0.15,
+                            scaleY: 0.15,
+                            originX: 'center',
+                            originY: 'bottom',
+                            className: 'Path',
+                          },
+                          className: 'Path',
+                        },
+                      ],
+                      className: 'Group',
+                    },
+                  ],
+                  className: 'Layer',
+                },
+              ],
+              className: 'Stage',
+            },
+          },
+          parser: [],
+          profile: [],
+          basedate: {},
+        },
+        decoder = {
+          code: '',
+        },
+        desc = '',
+        icon = '',
+        name = '',
+        netType = 'Modbus',
+        nodeType = 0,
+        thing = {
+          properties: [],
+        },
+      } = productInfo
+      try {
+        const ACL = {}
+        ACL['*'] = {
+          read: true,
+          write: true,
+        }
+        const params = {
+          ACL,
+          category,
+          config,
+          decoder,
+          desc,
+          icon,
+          name,
+          netType,
+          nodeType,
+          thing,
+        }
+        const res = await postProductTemplet(params)
+        console.log(res)
+        if (res)
+          this.$baseMessage(
+            this.$translateTitle('user.Save the template successfully'),
+            'success',
+            'vab-hey-message-success'
+          )
+        else
+          this.$baseMessage(
+            this.$translateTitle('user.Save the template error'),
+            'error',
+            'vab-hey-message-error'
+          )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        loading.close()
+        this.$baseMessage(
+          this.$translateTitle('user.Save the template error'),
           'error',
           'vab-hey-message-error'
         )
@@ -2223,6 +2375,7 @@ export default {
         .then((response) => {
           // console.log("response", response)
           if (response) {
+            this.productInfo = response
             this.productName = response.name
             for (var key in response) {
               this.productdetail[key] = response[key]

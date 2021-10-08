@@ -251,10 +251,12 @@ function convertRes2Blob(response) {
 
 /**
  *
+ * @description 下载二进制数据流文件
  * @param res
  * @document https://blog.csdn.net/Cris_are/article/details/108173681
  */
 function downBinary(res) {
+  if (!res) return false
   const { data, headers } = res
   let blob = new Blob([data], { type: headers['content-type'] }) // 这里标识下载文件类型
   console.log(blob, res.data)

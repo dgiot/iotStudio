@@ -1,0 +1,293 @@
+[[
+   "start",
+  ["text"," "],
+  ["comment","#test: symbol tokenizer"]
+],[
+   "start",
+  ["text","  "],
+  ["paren.lparen","["],
+  ["constant.other.symbol.ruby",":@thing"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":$thing"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":_thing"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":thing"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":Thing"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":thing1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":thing_a"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","              "],
+  ["constant.other.symbol.ruby",":THING"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":thing!"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":thing="],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":thing?"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":t?"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","              "],
+  ["punctuation.operator",":,"],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text","@"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["keyword.operator","$"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text","1"],
+  ["identifier","thing"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":th?"],
+  ["identifier","ing"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":thi="],
+  ["identifier","ng"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["punctuation.operator",":"],
+  ["text","1"],
+  ["identifier","thing"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","            "],
+  ["constant.other.symbol.ruby",":th!"],
+  ["identifier","ing"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":thing"],
+  ["comment","#"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.rparen","]"]
+],[
+   "start"
+],[
+   "start",
+  ["text"," "],
+  ["comment","#test: namespaces aren't symbols\" : function() {"]
+],[
+   "start",
+  ["text","   "],
+  ["support.class","Namespaced"],
+  ["punctuation","::"],
+  ["support.class","Class"]
+],[
+   "start",
+  ["text"," "],
+  ["comment","#test: hex tokenizer "]
+],[
+   "start",
+  ["text","    "],
+  ["constant.numeric","0x9a"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","0XA1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","0x9_a"],
+  ["punctuation.operator",","],
+  ["text"," 0"],
+  ["identifier","x"],
+  ["punctuation.operator",","],
+  ["text"," 0"],
+  ["identifier","x_9a"],
+  ["punctuation.operator",","],
+  ["text"," 0"],
+  ["identifier","x9a_"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text"," "],
+  ["comment","#test: float tokenizer"]
+],[
+   "start",
+  ["text","    "],
+  ["paren.lparen","["],
+  ["constant.numeric","1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","+1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","-1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","12_345"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","0.000_1"],
+  ["punctuation.operator",","]
+],[
+   "start",
+  ["text","    "],
+  ["identifier","_"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","3_1"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","1_2"],
+  ["punctuation.operator",","],
+  ["text"," 1"],
+  ["identifier","_"],
+  ["punctuation.operator","."],
+  ["constant.numeric","0"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.numeric","0"],
+  ["punctuation.operator","."],
+  ["identifier","_1"],
+  ["paren.rparen","]"],
+  ["punctuation.operator",";"]
+],[
+   "start",
+  ["text"," "]
+],[
+   "start",
+  ["paren.lparen","{"],
+  ["constant.other.symbol.ruby",":id"],
+  ["text"," "],
+  ["punctuation.separator.key-value","=>"],
+  ["text"," "],
+  ["string.character","?\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant.other.symbol.ruby",":key"],
+  ["text"," "],
+  ["punctuation.separator.key-value","=>"],
+  ["text"," "],
+  ["string.start","\""],
+  ["string","value"],
+  ["string.end","\""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","anotherKey"],
+  ["punctuation.operator",":"],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["identifier","x"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["identifier","y"],
+  ["punctuation.operator","?"],
+  ["paren.rparen","]}"]
+],[
+   "start"
+],[
+   "comment",
+  ["comment.multiline","=begin"]
+],[
+   "start",
+  ["comment.multiline","=end"]
+],[
+   "start"
+],[
+   "comment",
+  ["comment.multiline","=begin"],
+  ["comment"," x"]
+],[
+   "comment",
+  ["comment","=end-"]
+],[
+   "start",
+  ["comment.multiline","=end"],
+  ["text","   "],
+  ["identifier","x"]
+],[
+   "start"
+],[
+   ["heredoc","FOO","heredoc","BAR","indentedHeredoc","BAZ","indentedHeredoc","EXEC"],
+  ["text","    "],
+  ["identifier","herDocs"],
+  ["text"," "],
+  ["keyword.operator","="],
+  ["text"," "],
+  ["paren.lparen","["],
+  ["constant","<<"],
+  ["string","'"],
+  ["support.class","FOO"],
+  ["string","'"],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant","<<"],
+  ["string",""],
+  ["support.class","BAR"],
+  ["string",""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant","<<-"],
+  ["string",""],
+  ["support.class","BAZ"],
+  ["string",""],
+  ["punctuation.operator",","],
+  ["text"," "],
+  ["constant","<<-"],
+  ["string","`"],
+  ["support.class","EXEC"],
+  ["string","`"],
+  ["paren.rparen","]"],
+  ["text"," "],
+  ["comment","#comment"]
+],[
+   ["heredoc","FOO","heredoc","BAR","indentedHeredoc","BAZ","indentedHeredoc","EXEC"],
+  ["string","  FOO #{literal}"]
+],[
+   ["heredoc","BAR","indentedHeredoc","BAZ","indentedHeredoc","EXEC"],
+  ["support.class","FOO"]
+],[
+   ["heredoc","BAR","indentedHeredoc","BAZ","indentedHeredoc","EXEC"],
+  ["string","  BAR #{fact(10)}"]
+],[
+   ["indentedHeredoc","BAZ","indentedHeredoc","EXEC"],
+  ["support.class","BAR"]
+],[
+   ["indentedHeredoc","BAZ","indentedHeredoc","EXEC"],
+  ["string","  BAZ indented"]
+],[
+   ["indentedHeredoc","EXEC"],
+  ["string","    "],
+  ["support.class","BAZ"]
+],[
+   ["indentedHeredoc","EXEC"],
+  ["string","        echo hi"]
+],[
+   "start",
+  ["string","    "],
+  ["support.class","EXEC"]
+],[
+   "start",
+  ["support.function","puts"],
+  ["text"," "],
+  ["identifier","herDocs"]
+]]
