@@ -5,22 +5,22 @@
     <el-form
       ref="formRef"
       :inline="true"
-      :rules="formRule"
-      :model="BasicInfoObj"
-      size="small"
       label-width="68px"
+      :model="BasicInfoObj"
+      :rules="formRule"
+      size="small"
     >
       <el-row :gutter="24">
         <el-col :span="4">
           <el-form-item label="产品名称">
             <el-select
               v-model="BasicInfoObj.chanpinName"
-              filterable
               allow-create
-              default-first-option
               clearable
-              style="width: 100px"
+              default-first-option
+              filterable
               placeholder="请选择"
+              style="width: 100px"
             >
               <el-option
                 v-for="item in defaultObj.productOpt"
@@ -31,31 +31,31 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="水泵型号">
             <el-input
               v-model="BasicInfoObj.chanpinxh"
-              style="width: 127px"
               class="eipt"
+              style="width: 127px"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="出厂编号">
             <el-input v-model="BasicInfoObj.chuchangbh" class="eipt" />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="报告编号">
             <el-input v-model="BasicInfoObj.bianhao" class="eipt" />
           </el-form-item>
         </el-col>
-        <el-col :span="8" class="ep0">
+        <el-col class="ep0" :span="8">
           <el-form-item label="大气压">
             <el-input
               v-model="BasicInfoObj.daqiya"
-              style="width: 200px"
               class="eipt"
+              style="width: 200px"
             >
               <template slot="append">标准大气压</template>
             </el-input>
@@ -71,8 +71,8 @@
           <el-tag
             v-for="tag in BasicInfoObj.dynamicTags"
             :key="tag"
-            :disable-transitions="false"
             closable
+            :disable-transitions="false"
             @close="handleClose(tag)"
           >
             {{ tag }}
@@ -83,8 +83,8 @@
             v-model="inputValue"
             class="input-new-tag"
             size="small"
-            @keyup.enter.native="handleInputConfirm"
             @blur="handleInputConfirm"
+            @keyup.enter.native="handleInputConfirm"
           />
           <el-button
             v-else
@@ -97,43 +97,43 @@
         </el-col>
       </el-row>
       <el-row :gutter="24">
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="气温">
             <el-input
               v-model="BasicInfoObj.qiwen"
-              style="width: 127px"
               class="eipt"
+              style="width: 127px"
             >
               <template slot="append">℃</template>
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="水温">
             <el-input v-model="BasicInfoObj.shuiwen" class="eipt">
               <template slot="append">℃</template>
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="湿度">
             <el-input v-model="BasicInfoObj.shidu" class="eipt">
               <template slot="append">%</template>
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="样品等级">
             <el-input v-model="BasicInfoObj.yangpindengji" class="eipt" />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="生产日期">
             <el-date-picker
               v-model="BasicInfoObj.shengchangData"
+              format="yyyy年MM月dd日"
               style="width: 140px; font-size: 12px"
               type="date"
-              format="yyyy年MM月dd日"
             />
           </el-form-item>
         </el-col>
@@ -144,12 +144,12 @@
           <el-form-item label="检测地点">
             <el-select
               v-model="BasicInfoObj.jianyandidian"
-              filterable
               allow-create
-              default-first-option
               clearable
-              style="width: 300px"
+              default-first-option
+              filterable
               placeholder="请选择"
+              style="width: 300px"
             >
               <el-option
                 label="台州新华泵业制造有限公司"
@@ -158,26 +158,26 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="检测人员">
             <el-input
               v-model="BasicInfoObj.jianceren"
-              style="width: 127px"
               class="eipt"
+              style="width: 127px"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="批准人">
             <el-input v-model="BasicInfoObj.pizhunren" class="eipt" />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="审核人">
             <el-input v-model="BasicInfoObj.shenheren" class="eipt" />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="检验性质">
             <el-input v-model="BasicInfoObj.jianyanxingzhi" class="eipt" />
           </el-form-item>
@@ -189,12 +189,12 @@
           <el-form-item label="送样单位">
             <el-select
               v-model="BasicInfoObj.songyangdanwei"
-              filterable
               allow-create
-              default-first-option
-              clearable
-              placeholder
               class="ep50"
+              clearable
+              default-first-option
+              filterable
+              placeholder
             >
               <el-option
                 label="台州新华泵业制造有限公司"
@@ -219,12 +219,12 @@
           <el-form-item label="生产单位">
             <el-select
               v-model="BasicInfoObj.shengchanN"
-              filterable
               allow-create
-              default-first-option
-              clearable
-              placeholder
               class="ep50"
+              clearable
+              default-first-option
+              filterable
+              placeholder
             >
               <el-option
                 label="台州新华泵业制造有限公司"
@@ -237,12 +237,12 @@
           <el-form-item label="单位地址">
             <el-select
               v-model="BasicInfoObj.scdwAdrr"
-              filterable
               allow-create
-              default-first-option
-              clearable
-              placeholder
               class="ep50"
+              clearable
+              default-first-option
+              filterable
+              placeholder
             >
               <el-option label="温岭市大溪镇" value="温岭市大溪镇" />
             </el-select>
@@ -254,12 +254,12 @@
           <el-form-item label="委托单位">
             <el-select
               v-model="BasicInfoObj.weituodanwei"
-              filterable
               allow-create
-              default-first-option
-              clearable
-              placeholder
               class="ep50"
+              clearable
+              default-first-option
+              filterable
+              placeholder
             >
               <el-option
                 label="台州新华泵业制造有限公司"
@@ -272,12 +272,12 @@
           <el-form-item label="单位地址">
             <el-select
               v-model="BasicInfoObj.wtdwAdrr"
-              filterable
               allow-create
-              default-first-option
-              clearable
-              placeholder
               class="ep50"
+              clearable
+              default-first-option
+              filterable
+              placeholder
             >
               <el-option label="温岭市大溪镇" value="温岭市大溪镇" />
             </el-select>
@@ -332,9 +332,9 @@
           <el-form-item label="签发日期">
             <el-date-picker
               v-model="BasicInfoObj.qianfaData"
-              type="date"
               format="yyyy 年 MM 月 dd 日"
               style="width: 100%"
+              type="date"
             />
           </el-form-item>
         </el-col>
@@ -359,12 +359,12 @@
           <el-form-item label="抽样地点">
             <el-select
               v-model="BasicInfoObj.chouyangAddr"
-              filterable
               allow-create
-              default-first-option
-              clearable
-              placeholder
               class="ep50"
+              clearable
+              default-first-option
+              filterable
+              placeholder
             >
               <el-option
                 label="台州新华泵业制造有限公司"
@@ -385,9 +385,9 @@
           <el-form-item label="抽样日期" style="width: 100%">
             <el-date-picker
               v-model="BasicInfoObj.chouyangData"
-              type="date"
               format="yyyy 年 MM 月 dd 日"
               style="width: 100%"
+              type="date"
             />
           </el-form-item>
         </el-col>
@@ -402,9 +402,9 @@
           <el-form-item label="到样日期" style="width: 100%">
             <el-date-picker
               v-model="BasicInfoObj.daoyangData"
-              type="date"
               format="yyyy 年 MM 月 dd 日"
               style="width: 100%"
+              type="date"
             />
           </el-form-item>
         </el-col>
@@ -412,9 +412,9 @@
           <el-form-item label="检验日期" style="width: 100%">
             <el-date-picker
               v-model="BasicInfoObj.jianyanData"
-              type="date"
               format="yyyy 年 MM 月 dd 日"
               style="width: 100%"
+              type="date"
             />
           </el-form-item>
         </el-col>
@@ -458,8 +458,8 @@
           <el-form-item label="试验日期">
             <el-date-picker
               v-model="BasicInfoObj.shiyanDateTime"
-              type="date"
               format="yyyy 年 MM 月 dd 日"
+              type="date"
             />
           </el-form-item>
         </el-col>
@@ -478,8 +478,8 @@
           <el-form-item label="送样日期">
             <el-date-picker
               v-model="BasicInfoObj.songyangDateTime"
-              type="date"
               format="yyyy 年 MM 月 dd 日"
+              type="date"
             />
           </el-form-item>
         </el-col>
@@ -513,10 +513,10 @@
           <el-form-item label="备注" style="display: block; width: 100%">
             <el-input
               v-model="BasicInfoObj.beizhu"
-              :rows="2"
               :autosize="{ minRows: 1, maxRows: 1 }"
-              type="textarea"
               placeholder="备注"
+              :rows="2"
+              type="textarea"
             />
           </el-form-item>
         </el-col>

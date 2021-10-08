@@ -2,9 +2,9 @@
   <div class="instruct">
     <div>
       <el-form
+        class="demo-form-inline"
         :inline="true"
         :model="formInline"
-        class="demo-form-inline"
         size="small"
       >
         <el-form-item>
@@ -22,31 +22,31 @@
     <div class="instruct_button">
       <div>
         <el-button
-          type="primary"
           size="small"
+          type="primary"
           @click="dialogBtn_em('form', '3', form)"
         >
           新增指令
         </el-button>
-        <el-button type="danger" size="small" @click="deleteAll">
+        <el-button size="small" type="danger" @click="deleteAll">
           删 除
         </el-button>
       </div>
       <div>
-        <el-button type="success" size="small">启 用</el-button>
-        <el-button type="warning" size="small">禁 用</el-button>
+        <el-button size="small" type="success">启 用</el-button>
+        <el-button size="small" type="warning">禁 用</el-button>
       </div>
     </div>
     <div class="instruct_table">
       <el-table
         ref="multipleTable"
         :data="instructData"
-        tooltip-effect="dark"
         style="width: 100%"
+        tooltip-effect="dark"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column label="指令名称" align="center" sortable width="200">
+        <el-table-column align="center" label="指令名称" sortable width="200">
           <template slot-scope="scope">
             {{ scope.row.name }}
           </template>
@@ -54,48 +54,48 @@
         <!-- <el-table-column  label="指令编号" align="center" width="120">
             <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>-->
-        <el-table-column label="指令类型" align="center" width="100">
+        <el-table-column align="center" label="指令类型" width="100">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.op == 'Read'" type="primary">读</el-tag>
             <el-tag v-else type="success">写</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="指令标识" align="center">
+        <el-table-column align="center" label="指令标识">
           <template slot-scope="scope">{{ scope.row.di }}</template>
         </el-table-column>
-        <el-table-column label="指令序号" align="center" prop="order" />
-        <el-table-column label="超时时长" align="center">
+        <el-table-column align="center" label="指令序号" prop="order" />
+        <el-table-column align="center" label="超时时长">
           <template slot-scope="scope">
             {{ scope.row.duration + '秒' }}
           </template>
         </el-table-column>
-        <el-table-column label="子网编号" align="center" width="200">
+        <el-table-column align="center" label="子网编号" width="200">
           <template slot-scope="scope">{{ scope.row.pn }}</template>
         </el-table-column>
-        <el-table-column label="生效轮次" align="center">
+        <el-table-column align="center" label="生效轮次">
           <template slot-scope="scope">
             {{ scope.row.rotation }}
           </template>
         </el-table-column>
 
-        <el-table-column label="是否启用" align="center" width="100">
+        <el-table-column align="center" label="是否启用" width="100">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.enable" type="success">是</el-tag>
             <el-tag v-else type="danger">否</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="200">
+        <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
             <el-button
-              type="primary"
               size="small"
+              type="primary"
               @click="dialogBtn_em('', '2', scope.row)"
             >
               编 辑
             </el-button>
             <el-button
-              type="danger"
               size="small"
+              type="danger"
               @click="deleteInstruct(scope.row.objectId)"
             >
               删 除
@@ -104,14 +104,14 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="pagesize"
-        :total="total"
-        style="margin-top: 20px"
         background
         layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
+        :page-size="pagesize"
+        :page-sizes="[10, 20, 30, 40]"
+        style="margin-top: 20px"
+        :total="total"
         @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
       />
     </div>
     <!--指令弹窗-->
@@ -126,8 +126,8 @@
         <el-row>
           <el-col :span="12">
             <el-form-item
-              :label-width="formLabelWidth"
               label="指令名称"
+              :label-width="formLabelWidth"
               prop="name"
             >
               <el-input
@@ -137,8 +137,8 @@
               />
             </el-form-item>
             <el-form-item
-              :label-width="formLabelWidth"
               label="操作类型"
+              :label-width="formLabelWidth"
               prop="type"
             >
               <el-select v-model="form.type" placeholder="请选择操作类型">
@@ -147,8 +147,8 @@
               </el-select>
             </el-form-item>
             <el-form-item
-              :label-width="formLabelWidth"
               label="是否启用"
+              :label-width="formLabelWidth"
               prop="enable"
             >
               <el-radio-group v-model="form.enable">
@@ -159,8 +159,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              :label-width="formLabelWidth"
               label="指令指标"
+              :label-width="formLabelWidth"
               prop="pointer"
             >
               <el-input
@@ -170,8 +170,8 @@
               />
             </el-form-item>
             <el-form-item
-              :label-width="formLabelWidth"
               label="指令序号"
+              :label-width="formLabelWidth"
               prop="order"
             >
               <el-input
@@ -192,8 +192,8 @@
         <el-row>
           <el-col :span="12">
             <el-form-item
-              :label-width="formLabelWidth"
               label="超时时长"
+              :label-width="formLabelWidth"
               prop="duration"
             >
               <el-input
@@ -205,16 +205,16 @@
               </el-input>
             </el-form-item>
             <el-form-item
-              :label-width="formLabelWidth"
               label="生效轮次"
+              :label-width="formLabelWidth"
               prop="rotation"
             >
               <el-select
                 v-model="form.rotation"
-                filterable
-                clearable
                 allow-create
+                clearable
                 default-first-option
+                filterable
                 placeholder="请选择生效轮次"
               >
                 <el-option
@@ -239,8 +239,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              :label-width="formLabelWidth"
               label="子网编号"
+              :label-width="formLabelWidth"
               prop="subnet"
             >
               <el-input
@@ -250,8 +250,8 @@
               />
             </el-form-item>
             <el-form-item
-              :label-width="formLabelWidth"
               label="发送间隔"
+              :label-width="formLabelWidth"
               prop="interval"
             >
               <el-input

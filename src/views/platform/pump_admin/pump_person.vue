@@ -35,15 +35,15 @@
 
       <div class="block_table">
         <el-table
-          :data="tableData"
+          border
           :cell-style="rowClass"
+          :data="tableData"
           :header-cell-style="headClass"
           size="mini"
           stripe
           style="width: 100%; text-align: center"
-          border
         >
-          <el-table-column label="序号" width="50" type="index" />
+          <el-table-column label="序号" type="index" width="50" />
           <el-table-column label="企业名称" prop="data.name" />
           <el-table-column label="姓名" prop="data.name" />
           <el-table-column label="企业职务" prop="data.job" />
@@ -126,12 +126,12 @@
           </el-table-column>
           <el-table-column label="审核管理" width="180px">
             <template slot-scope="scope">
-              <el-button type="primary" size="small" @click="lookUp(scope.row)">
+              <el-button size="small" type="primary" @click="lookUp(scope.row)">
                 查看
               </el-button>
               <el-button
-                type="success"
                 size="small"
+                type="success"
                 @click="examine(scope.row)"
               >
                 审核
@@ -142,20 +142,20 @@
       </div>
       <div class="block_page">
         <el-pagination
-          :page-sizes="[10, 20, 30, 50]"
-          :page-size="pagesize"
-          :total="total"
           layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
+          :page-size="pagesize"
+          :page-sizes="[10, 20, 30, 50]"
+          :total="total"
           @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         />
       </div>
     </div>
 
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogFormVisible"
       title="个人资质审核"
+      :visible.sync="dialogFormVisible"
       width="80%"
     >
       <el-form label-width="120px" size="mini">
@@ -180,8 +180,8 @@
 
             <el-form-item label="身份证正反面">
               <img
-                :src="fileDomain + currentRow.data.frontimageUrl"
                 class="avatar"
+                :src="fileDomain + currentRow.data.frontimageUrl"
               />
             </el-form-item>
             <!--  <el-form-item label="身份证反面">
@@ -217,8 +217,8 @@
             </el-form-item>
             <el-form-item label="职业资质">
               <img
-                :src="fileDomain + currentRow.data.joblicenseUrl"
                 class="avatar"
+                :src="fileDomain + currentRow.data.joblicenseUrl"
               />
             </el-form-item>
             <el-form-item label="开始时间">
@@ -246,16 +246,16 @@
     <!--审核弹窗-->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogVisible"
       title="认证审核"
+      :visible.sync="dialogVisible"
       width="40%"
     >
       <div>
         <el-form
           ref="verifyFormRef"
+          label-width="100px"
           :model="verifyForm"
           :rules="verifyFormRules"
-          label-width="100px"
         >
           <el-form-item label="审核状态" prop="status">
             <el-radio-group v-model="verifyForm.status">

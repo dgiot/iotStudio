@@ -8,10 +8,10 @@
         <el-form
           ref="form"
           class="create-ticker"
-          :model="form"
-          size="medium "
-          :rules="rules"
           label-width="auto"
+          :model="form"
+          :rules="rules"
+          size="medium "
         >
           <el-row :gutter="24">
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -51,15 +51,15 @@
               <el-form-item
                 :label="$translateTitle('Maintenance.photo') + ': '"
               >
-                <el-carousel :interval="2000" type="card" height="200px">
+                <el-carousel height="200px" :interval="2000" type="card">
                   <el-carousel-item
                     v-for="(item, index) in form.info.photo"
                     :key="index"
                   >
                     <img
+                      :alt="item"
                       :src="item"
                       style="width: 100%; height: 100%"
-                      :alt="item"
                       :title="item"
                     />
                   </el-carousel-item>
@@ -71,30 +71,30 @@
               <el-form-item :label="$translateTitle('Maintenance.Remarks')">
                 <el-input
                   v-model="form.info.step1.Remarks"
-                  type="textarea"
-                  style="margin-bottom: 20px"
                   :placeholder="
                     $translateTitle(
                       'Maintenance.Please record the processing content in detail!'
                     )
                   "
+                  style="margin-bottom: 20px"
+                  type="textarea"
                 />
               </el-form-item>
             </el-col>
             <el-col v-if="showFooter" :span="24">
               <el-form-item
+                :label="$translateTitle('Maintenance.Maintenance staff')"
                 prop="info.receiveusername"
                 required
-                :label="$translateTitle('Maintenance.Maintenance staff')"
               >
                 <el-tree
                   ref="workGroup"
-                  style="float: left; width: 50%"
                   :data="deptTreeData"
-                  :props="roleProps"
-                  node-key="index"
                   default-expand-all
                   :expand-on-click-node="false"
+                  node-key="index"
+                  :props="roleProps"
+                  style="float: left; width: 50%"
                 >
                   <div slot-scope="{ node, data }" class="custom-tree-node">
                     <span
@@ -109,13 +109,13 @@
                   v-model="form.info.receiveusername"
                   v-loading="loading"
                   :disabled="!user.length"
+                  element-loading-background="rgba(0, 0, 0, 0.8)"
+                  element-loading-spinner="el-icon-loading"
                   :element-loading-text="
                     $translateTitle('developer.Data is loading')
                   "
-                  element-loading-spinner="el-icon-loading"
-                  element-loading-background="rgba(0, 0, 0, 0.8)"
-                  style="width: 50%"
                   :placeholder="$translateTitle('product.selectdepartment')"
+                  style="width: 50%"
                 >
                   <el-option
                     v-for="item in user"
@@ -135,9 +135,9 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane
-        style="height: 90%; overflow-x: hidden; overflow-y: auto"
         :label="$translateTitle('Maintenance.work process')"
         name="second"
+        style="height: 90%; overflow-x: hidden; overflow-y: auto"
       >
         <el-card shadow="hover">
           <template #header>
@@ -155,8 +155,8 @@
             <el-timeline-item
               v-for="item in form.info.timeline"
               :key="item.timestamp"
-              :timestamp="item.timestamp"
               placement="top"
+              :timestamp="item.timestamp"
             >
               <el-card>
                 <h4>{{ item.h4 }}</h4>

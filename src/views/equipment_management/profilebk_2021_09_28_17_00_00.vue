@@ -5,17 +5,17 @@
     :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <el-dialog
-      :visible.sync="dialogVisible"
       :append-to-body="true"
-      top="1vh"
       :title="formConfig.uid"
+      top="1vh"
+      :visible.sync="dialogVisible"
     >
       <vab-parser
         :dba-table="DbaTable"
-        :productid="productid"
+        :dict="parserDict"
         :form-config="formConfig"
         :parserindex="editIndex"
-        :dict="parserDict"
+        :productid="productid"
         @ParserSave="saveParse"
       />
       <!--      <span slot="footer" class="dialog-footer">-->
@@ -33,19 +33,19 @@
       <vab-query-form v-show="!isProduct">
         <vab-query-form-top-panel>
           <el-form
-            label-width="100px"
-            :inline="true"
-            :model="formInline"
             class="demo-form-inline"
+            :inline="true"
+            label-width="100px"
+            :model="formInline"
             @submit.native.prevent
           >
             <el-form-item :label="$translateTitle('resource.Servicetype')">
               <div class="border-panel">
                 <el-select
                   v-model="formInline.category"
-                  size="mini"
                   clearable
                   placeholder="请选择"
+                  size="mini"
                   @clear="clearCategory"
                 >
                   <el-option
@@ -62,14 +62,14 @@
               <el-input
                 v-model="formInline.productname"
                 clearable
+                :placeholder="$translateTitle('product.searchproductname')"
                 size="mini"
                 style="width: 90%"
-                :placeholder="$translateTitle('product.searchproductname')"
               >
                 <el-button
                   slot="append"
-                  size="mini"
                   icon="el-icon-search"
+                  size="mini"
                   style="padding: 0 !important; margin: 0 !important"
                   @click="searchProduct(0)"
                 />
@@ -78,8 +78,8 @@
           </el-form>
 
           <el-button
-            type="primary"
             size="mini"
+            type="primary"
             @click="$refs['templet'].showEdit()"
           >
             {{ $translateTitle('product.Product template') }}
@@ -102,17 +102,17 @@
         </vab-query-form-top-panel>
       </vab-query-form>
       <el-row :gutter="24">
-        <el-col v-show="!isProduct" :xs="12" :sm="6" :md="5" :lg="4" :xl="3">
+        <el-col v-show="!isProduct" :lg="4" :md="5" :sm="6" :xl="3" :xs="12">
           <ul
             class="infinite-list"
-            :style="{ height: tableHeight + 'px' }"
             style="overflow: auto"
+            :style="{ height: tableHeight + 'px' }"
           >
             <li
               v-for="(item, index) in category"
               :key="index"
-              disabled
               class="infinite-list-item"
+              disabled
               @click="categoryChange(item, index)"
             >
               <el-link :type="linkType == index ? 'success' : ''">
@@ -123,29 +123,29 @@
         </el-col>
         <el-col
           v-show="!isProduct"
-          :xs="$loadsh.isEmpty(productDetail) ? 24 : 12"
-          :sm="$loadsh.isEmpty(productDetail) ? 18 : 6"
-          :md="$loadsh.isEmpty(productDetail) ? 19 : 6"
           :lg="$loadsh.isEmpty(productDetail) ? 20 : 4"
+          :md="$loadsh.isEmpty(productDetail) ? 19 : 6"
+          :sm="$loadsh.isEmpty(productDetail) ? 18 : 6"
           :xl="$loadsh.isEmpty(productDetail) ? 21 : 3"
+          :xs="$loadsh.isEmpty(productDetail) ? 24 : 12"
         >
           <div class="protable">
             <el-table
               ref="multipleTable"
               v-loading="listLoading"
-              highlight-current-row
-              :height="tableHeight"
-              size="medium"
-              :header-cell-style="{ 'text-align': 'center' }"
               :cell-style="{ 'text-align': 'center' }"
               :data="proTableData"
+              :header-cell-style="{ 'text-align': 'center' }"
+              :height="tableHeight"
+              highlight-current-row
+              size="medium"
               style="width: 100%"
               @row-click="StepsListRowClick"
             >
               <el-table-column
-                sortable
-                show-overflow-tooltip
                 :label="$translateTitle('product.productname')"
+                show-overflow-tooltip
+                sortable
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>
@@ -155,52 +155,52 @@
           </div>
           <div class="elpagination" style="margin-top: 20px">
             <el-pagination
-              :page-sizes="[10, 20, 30, 50]"
-              :page-size="length"
-              :total="total"
               layout="total, sizes, prev, pager, next, jumper"
-              @size-change="productSizeChange"
+              :page-size="length"
+              :page-sizes="[10, 20, 30, 50]"
+              :total="total"
               @current-change="productCurrentChange"
+              @size-change="productSizeChange"
             />
           </div>
         </el-col>
         <el-col
-          :xs="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 24 : 24"
-          :sm="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 0 : 12"
-          :md="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 0 : 13"
           :lg="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 0 : 16"
+          :md="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 0 : 13"
+          :sm="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 0 : 12"
           :xl="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 0 : 18"
+          :xs="isProduct ? 24 : $loadsh.isEmpty(productDetail) ? 24 : 24"
         >
           <profile-descriptions
             ref="ProfileDescription"
-            :table-type="tableType"
-            :product-id="productId"
-            :things="things"
-            :dict-table-list="dictTableList"
             :decoder-table-list="decoderTableList"
-            :product-detail="productDetail"
+            :dict-table-list="dictTableList"
             :parser-table-list="parserTableList"
+            :product-detail="productDetail"
+            :product-id="productId"
             :table-loading="tableLoading"
+            :table-type="tableType"
+            :things="things"
           />
         </el-col>
       </el-row>
     </div>
     <profile-drawer
       ref="drawer"
-      :parser-tables="parserTables"
       :parser-table="parserTable"
+      :parser-tables="parserTables"
     />
     <profile-dict
       ref="dict"
-      :data-list="dataList"
       :allunit="allunit"
+      :data-list="dataList"
+      :dict-visible="dictVisible"
+      :edit-flag="edit_dict_temp_dialog"
+      :parser-table="parserTable"
+      :rules="dictrules"
       :tempparam="tempparams"
       :title-dict="title_dict_edit_dialog"
-      :edit-flag="edit_dict_temp_dialog"
-      :rules="dictrules"
       :title-temp-dialog="title_temp_dialog"
-      :dict-visible="dictVisible"
-      :parser-table="parserTable"
     />
     <product-templet ref="templet" @fetch-data="searchProduct(0)" />
   </div>

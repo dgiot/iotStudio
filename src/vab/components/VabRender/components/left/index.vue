@@ -12,10 +12,10 @@
     <!-- 组件列表 -->
     <perfect-scrollbar class="vab-render-scrollarea">
       <vue-draggable
+        class="vab-render-comps"
         :clone="handleAddFormItem"
         :group="{ name: 'form', pull: 'clone', put: false }"
         :list="filteredComps"
-        class="vab-render-comps"
         :sort="false"
         tag="ul"
       >

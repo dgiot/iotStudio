@@ -42,28 +42,28 @@
       </vab-query-form>
     </div>
     <div class="dgiot-doc-center">
-      <a-row :gutter="24" class="dgiot-doc-center-row">
+      <a-row class="dgiot-doc-center-row" :gutter="24">
         <a-col
           v-for="item in HomePageForDetails"
           :key="item.objectId"
           class="dgiot-doc-center-row-antdcol"
-          :span="6"
-          :xs="24"
-          :sm="12"
-          :md="8"
           :lg="8"
+          :md="8"
+          :sm="12"
+          :span="6"
           :xl="6"
+          :xs="24"
           :xxl="4.5"
         >
           <a-card
+            :bordered="false"
             class="dgiot-doc-center-row-antdcol-card ant-card-bordered"
             hoverable
             :title="item.name"
-            :bordered="false"
           >
             <el-image slot="cover" :alt="item.ico" :src="item.ico">
               <div slot="error" class="block image-slot">
-                <vab-empty width="100" height="100px" />
+                <vab-empty height="100px" width="100" />
               </div>
             </el-image>
             <template slot="actions" class="ant-card-actions">

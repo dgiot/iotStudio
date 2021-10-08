@@ -117,8 +117,8 @@
       <el-table-column
         align="center"
         label="序号"
-        sortable
         show-overflow-tooltip
+        sortable
         width="95"
       >
         <template #default="{ $index }">
@@ -144,8 +144,8 @@
       <el-table-column
         align="center"
         label="操作"
-        sortable
         show-overflow-tooltip
+        sortable
         width="85"
       >
         <template #default="{ row }">

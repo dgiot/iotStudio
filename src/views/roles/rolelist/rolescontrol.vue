@@ -3,22 +3,22 @@
     <div class="search">
       <el-input
         v-model="search"
+        clearable
         :placeholder="$translateTitle('concentrator.input')"
         style="width: 200px"
-        clearable
       />
       <el-button
-        type="primary"
         icon="el-icon-search"
         style="margin-left: 20px"
+        type="primary"
         @click="getcontrolrole({ name: search })"
       >
         {{ $translateTitle('developer.search') }}
       </el-button>
       <el-button
-        type="primary"
-        icon="el-icon-plus"
         disabled
+        icon="el-icon-plus"
+        type="primary"
         @click="addcontrol"
       >
         {{ $translateTitle('developer.add') }}
@@ -26,18 +26,18 @@
     </div>
     <el-table
       v-loading="listLoading"
-      size="mini"
-      :height="tableHeight"
-      :data="treeData"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       border
+      :data="treeData"
       default-expand-all
+      :height="tableHeight"
       row-key="objectId"
+      size="mini"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
       <el-table-column
         align="center"
-        show-overflow-tooltip
         class-name="isCheck"
+        show-overflow-tooltip
         type="index"
         width="55"
       />
@@ -79,18 +79,18 @@
       >
         <template #default="{ row }">
           <el-button
+            icon="el-icon-edit"
             size="mini"
             type="success"
-            icon="el-icon-edit"
             @click="handleEdit(row)"
           >
             {{ $translateTitle('developer.edit') }}
           </el-button>
           <el-button
+            disabled
+            icon="el-icon-delete"
             size="mini"
             type="danger"
-            icon="el-icon-delete"
-            disabled
             @click="handleDelete(row)"
           >
             {{ $translateTitle('developer.delete') }}
@@ -100,9 +100,9 @@
     </el-table>
     <vab-Pagination
       v-show="count"
-      :total="count"
-      :page.sync="queryForm.pageNo"
       :limit.sync="queryForm.pageSize"
+      :page.sync="queryForm.pageNo"
+      :total="count"
       @pagination="getcontrolrole"
     />
     <!--编辑权限弹窗-->
@@ -120,8 +120,8 @@
           <el-input
             v-model="form.name"
             autocomplete="off"
-            style="width: 300px"
             disabled
+            style="width: 300px"
           />
         </el-form-item>
         <el-form-item
@@ -140,8 +140,8 @@
         >
           <el-input
             v-model="form.description"
-            :rows="2"
             autocomplete="off"
+            :rows="2"
             style="width: 300px"
             type="textarea"
           />

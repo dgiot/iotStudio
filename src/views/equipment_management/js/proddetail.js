@@ -1,17 +1,18 @@
-import { mapGetters, mapMutations } from 'vuex'
-import profile from '@/views/equipment_management/profile'
-import { getDeviceCountByProduct } from '@/api/Device/index'
-import { postThing, putThing, deleteThing } from '@/api/Product/index'
-import { downBinary } from '@/api/File/index'
-import { getAllunit, getDictCount } from '@/api/Dict/index'
-import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
-import { getRule } from '@/api/Rules'
-import {
-  getProductTemplet,
-  postProductTemplet,
-  putProductTemplet,
-  queryProductTemplet,
-} from '@/api/ProductTemplet'
+/* eslint-disable */
+import { mapGetters, mapMutations } from "vuex";
+import { getDeviceCountByProduct } from "@/api/Device/index";
+import { deleteThing, postThing, putThing } from "@/api/Product/index";
+import { downBinary } from "@/api/File/index";
+import { getAllunit, getDictCount } from "@/api/Dict/index";
+import { getChannelCountByProduct, saveChanne } from "@/api/Channel/index";
+import { getRule } from "@/api/Rules";
+import { postProductTemplet } from "@/api/ProductTemplet";
+import { Compile, subupadte } from "@/api/System/index";
+import { setTimeout } from "timers";
+import { Websocket } from "@/utils/wxscoket.js";
+import wmxdetail from "@/views/equipment_management/component/wmxdetail";
+import { returnLogin } from "@/utils/utilwen";
+
 var editor
 var editor1
 var editor2
@@ -24,15 +25,9 @@ const Base64 = require('js-base64').Base64
 var setdata = ''
 var isallchannel = false
 var isupdatetrue = ''
-import { Compile, subupadte } from '@/api/System/index'
-import { setTimeout } from 'timers'
-import { Websocket } from '@/utils/wxscoket.js'
-import wmxdetail from '@/views/equipment_management/component/wmxdetail'
-import { returnLogin } from '@/utils/utilwen'
 
 export default {
   components: {
-    'dgiot-profile': profile,
     'dgiot-wmx': wmxdetail,
   },
   data() {
@@ -132,7 +127,11 @@ export default {
       }
     }
     return {
-      productInfo: {},
+      productInfo: {
+        decoder: { code: '' },
+        thing: { properties: [] },
+        config: { parser: [], profile: [], basedate: { params: [] } },
+      },
       FromMachine: [{ name: 'ALL' }],
       machineForm: {},
       machine: false,
@@ -544,6 +543,7 @@ export default {
       resourcechannelid: '',
       isreload: 1,
       modifyIndex: -1,
+      ace_editor: '',
       iframeShow: false,
     }
   },
@@ -774,6 +774,21 @@ export default {
           'error',
           'vab-hey-message-error'
         )
+      }
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-10-08 19:24:33
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async seeDecoder(decoder) {
+      try {
+        this.ace_editor = Base64.decode(decoder.code)
+      } catch (error) {
+        console.log(error)
       }
     },
     /**
@@ -2375,7 +2390,11 @@ export default {
         .then((response) => {
           // console.log("response", response)
           if (response) {
-            this.productInfo = response
+            this.productInfo = _.merge(response, {
+              decoder: { code: '' },
+              thing: { properties: [] },
+              config: { parser: [], profile: [], basedate: { params: [] } },
+            })
             this.productName = response.name
             for (var key in response) {
               this.productdetail[key] = response[key]
@@ -2575,7 +2594,6 @@ export default {
             .then((response) => {
               if (response.results && response.results.length >= 1) {
                 this.$message('此协议版本已存在')
-                return
               } else {
                 this.$get_object('Product', this.productId).then((response) => {
                   if (response) {

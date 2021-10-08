@@ -6,13 +6,13 @@
       <el-button
         v-if="!modClosed"
         class="confirm-btn"
-        round
-        plain
-        type="success"
+        :disable="$store.state.loading"
         icon="el-icon-plus"
+        plain
+        round
         size="medium"
         style="float: right"
-        :disable="$store.state.loading"
+        type="success"
         @click="handleOperation"
       >
         {{ $t('rule.create') }}
@@ -20,12 +20,12 @@
       <el-button
         v-else
         class="confirm-btn"
-        round
+        :disable="$store.state.loading"
         plain
-        type="success"
+        round
         size="medium"
         style="float: right"
-        :disable="$store.state.loading"
+        type="success"
         @click="handleModLoad"
       >
         {{ $t('modules.enable') }}
@@ -36,8 +36,8 @@
       v-loading="$store.state.loading"
       border
       :data="topics"
-      :row-key="getRowKeys"
       :expand-row-keys="expands"
+      :row-key="getRowKeys"
       @expand-change="handleExpandChange"
     >
       <el-table-column type="expand">
@@ -46,8 +46,8 @@
             {{ $t('analysis.details') }}
             <el-radio-group
               v-model="topicQos"
-              :prop="props"
               class="topic-qos-radio"
+              :prop="props"
               size="mini"
             >
               <el-radio-button label="all">
@@ -118,16 +118,16 @@
           </el-row>
         </template>
       </el-table-column>
-      <el-table-column prop="topic" :label="$t('topics.topic')" />
-      <el-table-column prop="messageIn" :label="$t('analysis.messageIn')" />
-      <el-table-column prop="messageOut" :label="$t('analysis.messageOut')" />
-      <el-table-column prop="messageDrop" :label="$t('analysis.messageDrop')" />
-      <el-table-column width="180px" :label="$t('oper.oper')">
+      <el-table-column :label="$t('topics.topic')" prop="topic" />
+      <el-table-column :label="$t('analysis.messageIn')" prop="messageIn" />
+      <el-table-column :label="$t('analysis.messageOut')" prop="messageOut" />
+      <el-table-column :label="$t('analysis.messageDrop')" prop="messageDrop" />
+      <el-table-column :label="$t('oper.oper')" width="180px">
         <template slot-scope="props">
           <el-button
-            type="success"
-            size="mini"
             plain
+            size="mini"
+            type="success"
             @click="viewTopicDetails(props.row, props.$index)"
           >
             {{ $t('oper.view') }}
@@ -136,9 +136,9 @@
             <p>{{ $t('oper.confirmDelete') }}</p>
             <div style="text-align: right">
               <el-button
+                class="cache-btn"
                 size="mini"
                 type="text"
-                class="cache-btn"
                 @click="hidePopover"
               >
                 {{ $t('oper.cancel') }}
@@ -151,7 +151,7 @@
                 {{ $t('oper.confirm') }}
               </el-button>
             </div>
-            <el-button slot="reference" size="mini" type="danger" plain>
+            <el-button slot="reference" plain size="mini" type="danger">
               {{ $t('oper.delete') }}
             </el-button>
           </el-popover>
@@ -161,33 +161,33 @@
 
     <el-dialog
       :append-to-body="true"
-      :title="$t('analysis.addTopic')"
-      width="400px"
-      :visible.sync="addVisible"
       class="create-subscribe"
+      :title="$t('analysis.addTopic')"
+      :visible.sync="addVisible"
+      width="400px"
       @keyup.enter.native="handleAdd"
     >
       <el-form
         ref="record"
         class="el-form--public"
+        label-position="top"
         :model="record"
         :rules="rules"
         size="small"
-        label-position="top"
       >
-        <el-form-item prop="topic" :label="$t('subscriptions.topic')">
+        <el-form-item :label="$t('subscriptions.topic')" prop="topic">
           <el-input v-model="record.topic" placeholder="Topic" />
         </el-form-item>
       </el-form>
 
       <div slot="footer">
-        <el-button type="text" class="cache-btn" @click="handleClose">
+        <el-button class="cache-btn" type="text" @click="handleClose">
           {{ $t('oper.cancel') }}
         </el-button>
         <el-button
-          type="success"
           class="confirm-btn"
           :loading="$store.state.loading"
+          type="success"
           @click="handleAdd"
         >
           {{ $t('oper.add') }}

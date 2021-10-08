@@ -1,81 +1,81 @@
 <template>
-  <el-row :gutter="40" class="panel-group">
-    <el-col :xs="8" :sm="8" :lg="5" class="card-panel-col">
+  <el-row class="panel-group" :gutter="40">
+    <el-col class="card-panel-col" :lg="5" :sm="8" :xs="8">
       <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
         <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="shnehe" class-name="card-panel-icon" />
+          <svg-icon class-name="card-panel-icon" icon-class="shnehe" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">审核总数量</div>
           <count-to
-            :start-val="0"
-            :end-val="102400"
-            :duration="2600"
             class="card-panel-num"
+            :duration="2600"
+            :end-val="102400"
+            :start-val="0"
           />
         </div>
       </div>
     </el-col>
-    <el-col :xs="8" :sm="8" :lg="5" class="card-panel-col">
+    <el-col class="card-panel-col" :lg="5" :sm="8" :xs="8">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="message" class-name="card-panel-icon" />
+          <svg-icon class-name="card-panel-icon" icon-class="message" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">已审核数量</div>
           <count-to
-            :start-val="0"
-            :end-val="81212"
-            :duration="3000"
             class="card-panel-num"
+            :duration="3000"
+            :end-val="81212"
+            :start-val="0"
           />
         </div>
       </div>
     </el-col>
-    <el-col :xs="8" :sm="8" :lg="5" class="card-panel-col">
+    <el-col class="card-panel-col" :lg="5" :sm="8" :xs="8">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="money" class-name="card-panel-icon" />
+          <svg-icon class-name="card-panel-icon" icon-class="money" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">审核通过数量</div>
           <count-to
-            :start-val="0"
-            :end-val="9280"
-            :duration="3200"
             class="card-panel-num"
+            :duration="3200"
+            :end-val="9280"
+            :start-val="0"
           />
         </div>
       </div>
     </el-col>
-    <el-col :xs="8" :sm="8" :lg="5" class="card-panel-col">
+    <el-col class="card-panel-col" :lg="5" :sm="8" :xs="8">
       <div class="card-panel" @click="handleSetLineChartData('shoppings')">
         <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="shopping" class-name="card-panel-icon" />
+          <svg-icon class-name="card-panel-icon" icon-class="shopping" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">审核未通过数量</div>
           <count-to
-            :start-val="0"
-            :end-val="13600"
-            :duration="3600"
             class="card-panel-num"
+            :duration="3600"
+            :end-val="13600"
+            :start-val="0"
           />
         </div>
       </div>
     </el-col>
-    <el-col :xs="8" :sm="8" :lg="5" class="card-panel-col">
+    <el-col class="card-panel-col" :lg="5" :sm="8" :xs="8">
       <div class="card-panel" @click="handleSetLineChartData('shoppings')">
         <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="shopping" class-name="card-panel-icon" />
+          <svg-icon class-name="card-panel-icon" icon-class="shopping" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">待审核数量</div>
           <count-to
-            :start-val="0"
-            :end-val="13600"
-            :duration="3600"
             class="card-panel-num"
+            :duration="3600"
+            :end-val="13600"
+            :start-val="0"
           />
         </div>
       </div>

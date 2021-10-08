@@ -12,16 +12,16 @@
       <div class="home_dialog">
         <el-dialog
           :append-to-body="true"
-          width="100vh"
           :title="detail.name"
           :visible.sync="showdeviceFlag"
+          width="100vh"
         >
           <change-Step
             ref="ChangeStep"
             :detail="detail"
-            :step="step"
             :show-footer="isfooter"
             :show-hard="ishard"
+            :step="step"
           />
           <span slot="footer" class="dialog-footer">
             <el-button
@@ -68,21 +68,21 @@
           <el-form
             ref="form"
             class="create-ticker"
-            :model="form"
-            size="medium "
-            :rules="rules"
             label-width="auto"
+            :model="form"
+            :rules="rules"
+            size="medium "
           >
             <el-form-item
-              prop="product"
               :label="$translateTitle('Maintenance.project')"
+              prop="product"
             >
               <el-select
                 v-model="form.product"
-                style="width: 100%"
                 :placeholder="
                   $translateTitle('Maintenance.Please choose the product')
                 "
+                style="width: 100%"
                 @change="prodChange"
               >
                 <el-option
@@ -95,18 +95,18 @@
               </el-select>
             </el-form-item>
             <el-form-item
-              prop="name"
               :label="$translateTitle('Maintenance.Equipment name')"
+              prop="name"
             >
               <el-select
                 v-model="form.name"
-                style="width: 100%"
                 :disabled="!Device.length"
                 :placeholder="
                   Device.length == 0
                     ? $translateTitle('Maintenance.Please choose the product')
                     : $translateTitle('Maintenance.Please select a device')
                 "
+                style="width: 100%"
                 @change="deviceChange"
               >
                 <el-option
@@ -119,8 +119,8 @@
               </el-select>
             </el-form-item>
             <el-form-item
-              prop="type"
               :label="$translateTitle('Maintenance.Ticket type')"
+              prop="type"
             >
               <el-input v-model="form.type" />
             </el-form-item>
@@ -132,21 +132,21 @@
             <el-form-item :label="$translateTitle('Maintenance.photo')">
               <el-upload
                 action="#"
-                list-type="picture-card"
                 :auto-upload="true"
                 :http-request="myUpload"
+                list-type="picture-card"
               >
                 <i slot="default" class="el-icon-plus"></i>
                 <div v-for="(item, index) in form.photo" :key="index">
                   <img
+                    alt=""
                     class="el-upload-list__item-thumbnail"
                     :src="item.url"
-                    alt=""
                   />
                 </div>
               </el-upload>
               <el-dialog :append-to-body="true" :visible.sync="dialogVisible">
-                <img width="100%" :src="dialogImageUrl" alt="" />
+                <img alt="" :src="dialogImageUrl" width="100%" />
               </el-dialog>
             </el-form-item>
           </el-form>
@@ -249,18 +249,18 @@
           <!--          </el-form-item>-->
           <el-form-item>
             <el-button
-              size="mini"
               icon="el-icon-search"
+              size="mini"
               type="primary"
               @click="fetchData"
             >
               {{ $translateTitle('Maintenance.search') }}
             </el-button>
             <el-button
-              size="mini"
-              icon="el-icon-s-promotion"
-              type="primary"
               :disabled="!selectedList.length"
+              icon="el-icon-s-promotion"
+              size="mini"
+              type="primary"
               @click="batchExport(selectedList)"
             >
               {{ $translateTitle('Maintenance.Export') }}
@@ -321,39 +321,39 @@
     <el-table
       ref="tableSort"
       v-loading="listLoading"
-      :height="height"
-      :data="list"
-      stripe
       border
+      :data="list"
+      :height="height"
+      stripe
       @selection-change="changeBox"
     >
       <el-table-column
         align="center"
-        show-overflow-tooltip
         class-name="isCheck"
+        show-overflow-tooltip
         type="selection"
         width="55"
       />
       <el-table-column
-        sortable
-        show-overflow-tooltip
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
         prop="number"
+        show-overflow-tooltip
+        sortable
         width="120"
       />
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket type')"
         prop="type"
         show-overflow-tooltip
+        sortable
       />
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket status')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           {{ getStatus(row.status, row) }}
@@ -361,10 +361,10 @@
       </el-table-column>
 
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.project')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.productname ? row.info.productname : '' }}
@@ -372,30 +372,30 @@
       </el-table-column>
 
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.Equipment name')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.devicename ? row.info.devicename : '' }}
         </template>
       </el-table-column>
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.Initiator')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.createdname ? row.info.createdname : '' }}
         </template>
       </el-table-column>
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.the starting time')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
@@ -404,8 +404,8 @@
       <el-table-column
         align="center"
         fixed="right"
-        width="220"
         :label="$translateTitle('Maintenance.operating')"
+        width="220"
       >
         <template #default="{ row }">
           <el-button
@@ -457,9 +457,9 @@
     </el-table>
     <vab-Pagination
       v-show="total > 0"
-      :total="total"
-      :page.sync="queryForm.pageNo"
       :limit.sync="queryForm.pageSize"
+      :page.sync="queryForm.pageNo"
+      :total="total"
       @pagination="fetchData"
     />
   </div>

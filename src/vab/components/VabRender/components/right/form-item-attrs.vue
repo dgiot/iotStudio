@@ -3,17 +3,17 @@
     <template v-if="VabRender.formItemList[VabRender.currentIndex]">
       <attrs-header
         v-model="keyword"
-        :url="attrLink"
         :title="VabRender.currentFormItemType + ' 组件'"
+        :url="attrLink"
       />
       <ele-form
         v-model="VabRender.formItemList[VabRender.currentIndex].attrs"
-        :form-desc="filteredFormDesc"
         :form-attrs="{ size: 'small' }"
+        :form-desc="filteredFormDesc"
         :is-show-back-btn="false"
         :is-show-submit-btn="false"
-        :span="20"
         label-position="top"
+        :span="20"
       />
     </template>
     <div v-else class="form-item-placeholder">从左侧拖拽添加表单项并点选</div>

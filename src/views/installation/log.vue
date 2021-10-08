@@ -90,9 +90,9 @@
     <!--    </div>-->
     <el-dialog
       :append-to-body="true"
+      :before-close="handleClose"
       :title="$translateTitle('node.joincluster')"
       :visible.sync="dialogVisible"
-      :before-close="handleClose"
       width="30%"
     >
       <span>{{ $translateTitle('node.nodename') }}</span>

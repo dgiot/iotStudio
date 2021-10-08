@@ -42,34 +42,34 @@
       v-loading="listLoading"
       :border="border"
       :data="categoryList"
+      :default-sort="{ prop: 'order', order: 'ascending' }"
       :height="height"
+      row-key="objectId"
       :size="lineHeight"
       :stripe="stripe"
-      row-key="objectId"
-      :default-sort="{ prop: 'order', order: 'ascending' }"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       @selection-change="setSelectRows"
     >
       <el-table-column
         align="center"
         :label="$translateTitle('equipment.serialnumber')"
-        sortable
-        show-overflow-tooltip
-        width="280"
         prop="objectId"
+        show-overflow-tooltip
+        sortable
+        width="280"
       />
       <el-table-column
         align="center"
         :label="$translateTitle('product.name')"
-        sortable
         prop="name"
         show-overflow-tooltip
+        sortable
       />
       <el-table-column
         align="center"
         :label="$translateTitle('developer.operation')"
-        sortable
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           <el-button type="text" @click="handleEdit(row)">

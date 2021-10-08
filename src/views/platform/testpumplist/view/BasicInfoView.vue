@@ -4,11 +4,11 @@
 
     <el-form
       ref="formRef"
+      disabled
       :inline="true"
+      label-width="68px"
       :model="BasicInfoObj"
       size="small"
-      label-width="68px"
-      disabled
     >
       <el-row :gutter="24">
         <el-col :span="8">
@@ -27,26 +27,26 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="水泵型号">
             <el-input
               v-model="BasicInfoObj.xinghao"
-              style="width: 127px"
               class="eipt"
+              style="width: 127px"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="出厂编号">
             <el-input v-model="BasicInfoObj.chuchangbianhao" class="eipt" />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="试验编号">
             <el-input v-model="BasicInfoObj.bianhao" class="eipt" />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="产品编号">
             <el-input v-model="BasicInfoObj.chanpinbianhao" class="eipt" />
           </el-form-item>
@@ -240,8 +240,8 @@
           <el-form-item label="备注" style="display: block; width: 100%">
             <el-input
               v-model="BasicInfoObj.beizhu"
-              :rows="2"
               :autosize="{ minRows: 1, maxRows: 1 }"
+              :rows="2"
               type="textarea"
             />
           </el-form-item>

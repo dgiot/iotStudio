@@ -3,21 +3,21 @@
     <div class="block">
       <el-row :gutter="20">
         <!--第一个tree树-->
-        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+        <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
           <el-table
             ref="refTable"
+            accordion
             :data="datafortable"
             stripe
             style="width: 100%"
-            accordion
             @expand-change="rowExpand"
           >
-            <el-table-column type="expand" label="取证" width="200">
+            <el-table-column label="取证" type="expand" width="200">
               <template slot-scope="props">
                 <el-form
-                  label-position="bottom"
-                  inline
                   class="demo-table-expand"
+                  inline
+                  label-position="bottom"
                   style="margin-bottom: 10px"
                 >
                   <!-- <div>
@@ -60,7 +60,7 @@
                   :data="tableData1"
                   style="width: 100%; text-align: center"
                 >
-                  <el-table-column label="设备名称" align="center">
+                  <el-table-column align="center" label="设备名称">
                     <template slot-scope="scope">
                       <span
                         v-if="scope.row.product.name.indexOf('控制台') != -1"
@@ -77,12 +77,12 @@
                       <span v-else>摄像头</span>
                     </template>
                   </el-table-column>
-                  <el-table-column label="设备编号" align="center">
+                  <el-table-column align="center" label="设备编号">
                     <template slot-scope="scope">
                       <span>{{ scope.row.devaddr }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column label="运行状态" align="center">
+                  <el-table-column align="center" label="运行状态">
                     <template slot-scope="scope">
                       <span
                         v-if="scope.row.status == 'OFFLINE'"
@@ -99,7 +99,7 @@
                       <span v-else style="color: green">在线</span>
                     </template>
                   </el-table-column>
-                  <el-table-column label="操作" align="center" width="200">
+                  <el-table-column align="center" label="操作" width="200">
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
@@ -129,11 +129,11 @@
                 </el-table>
               </template>
             </el-table-column>
-            <el-table-column label="ID" align="center" type="index" />
-            <el-table-column prop="name" label="检验项目" align="center" />
-            <el-table-column prop="title" label="保证值" align="center" />
-            <el-table-column prop="value" label="测试值" align="center" />
-            <el-table-column prop label="评定" align="center" />
+            <el-table-column align="center" label="ID" type="index" />
+            <el-table-column align="center" label="检验项目" prop="name" />
+            <el-table-column align="center" label="保证值" prop="title" />
+            <el-table-column align="center" label="测试值" prop="value" />
+            <el-table-column align="center" label="评定" prop />
           </el-table>
           <!-- <div class="block" style="margin-top:10px;">
             <el-pagination
@@ -147,20 +147,20 @@
           </div>-->
         </el-col>
         <el-col
-          :xs="24"
-          :sm="24"
-          :md="12"
           :lg="12"
-          :xl="12"
+          :md="12"
+          :sm="24"
           style="min-height: 875px; border-left: 1px solid blue"
+          :xl="12"
+          :xs="24"
         >
           <div id="Getdata" style="width: 100%; height: 300px" />
           <el-table
-            :data="Datafile"
             class="tableforfile"
+            :data="Datafile"
             style="width: 100%; text-align: center"
           >
-            <el-table-column label="数据来源" align="center">
+            <el-table-column align="center" label="数据来源">
               <template slot-scope="scope">
                 <span>{{ scope.row.attributes.data.source }}</span>
               </template>
@@ -173,15 +173,15 @@
             <el-table-column align="center" label="内容">
               <template slot-scope="scope">
                 <el-button
-                  type="success"
                   size="mini"
+                  type="success"
                   @click="detail(scope.row.attributes.data.data)"
                 >
                   查 看
                 </el-button>
                 <el-button
-                  type="danger"
                   size="mini"
+                  type="danger"
                   @click="deleteimg(scope.row.id)"
                 >
                   删 除
@@ -194,29 +194,29 @@
     </div>
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogVisible"
       title="提示"
+      :visible.sync="dialogVisible"
       width="40%"
     >
       <div style="margin-top: 10px">
         <el-upload
           ref="upload"
           :action="action"
+          :auto-upload="false"
+          :before-upload="getFilename"
+          class="upload-demo"
           :data="data"
           :limit="1"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
-          :before-upload="getFilename"
           :on-success="responsesuccess"
-          :auto-upload="false"
-          class="upload-demo"
         >
           <el-button slot="trigger" size="small" type="primary">
             选取文件
           </el-button>
           <el-button
-            style="margin-left: 10px"
             size="small"
+            style="margin-left: 10px"
             type="success"
             @click="submitUpload"
           >

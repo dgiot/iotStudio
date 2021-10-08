@@ -3,10 +3,10 @@
     <!-- 每个组件都只有一个form,因此表单的ref属性 不需要修改 -->
     <el-form
       ref="formRef"
-      :inline="true"
-      :model="TestSettingObj"
-      label-width="120px"
       disabled
+      :inline="true"
+      label-width="120px"
+      :model="TestSettingObj"
     >
       <el-row>
         <el-col :span="8">
@@ -72,8 +72,8 @@
             <span class="txt-label">tQ:</span>
             <input
               v-model="curentConditonObj.tQz"
-              :disabled="qConditions != 'other'"
               class="num-inp"
+              :disabled="qConditions != 'other'"
               type="number"
             />
             % &nbsp;&nbsp;
@@ -81,8 +81,8 @@
 
             <input
               v-model="curentConditonObj.tHf"
-              :disabled="qConditions != 'other'"
               class="num-inp"
+              :disabled="qConditions != 'other'"
               type="number"
             />
             % &nbsp;&nbsp;
@@ -90,8 +90,8 @@
 
             <input
               v-model="curentConditonObj.tp_up"
-              :disabled="qConditions != 'other'"
               class="num-inp"
+              :disabled="qConditions != 'other'"
               type="number"
             />
             % &nbsp;&nbsp;
@@ -102,8 +102,8 @@
 
             <input
               v-model="curentConditonObj.tq_down"
-              :disabled="qConditions != 'other'"
               class="num-inp"
+              :disabled="qConditions != 'other'"
               type="number"
             />
             % &nbsp;&nbsp;
@@ -111,8 +111,8 @@
 
             <input
               v-model="curentConditonObj.th_down"
-              :disabled="qConditions != 'other'"
               class="num-inp"
+              :disabled="qConditions != 'other'"
               type="number"
             />
             % &nbsp;&nbsp;
@@ -120,8 +120,8 @@
 
             <input
               v-model="curentConditonObj.te_down"
-              :disabled="qConditions != 'other'"
               class="num-inp"
+              :disabled="qConditions != 'other'"
               type="number"
             />
             % &nbsp;&nbsp;

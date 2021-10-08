@@ -2,9 +2,9 @@
   <div>
     <input
       ref="uploader"
-      type="file"
-      style="display: none"
       :accept="accept"
+      style="display: none"
+      type="file"
       @change="doUpload($event)"
     />
     <div v-if="fileFlag">

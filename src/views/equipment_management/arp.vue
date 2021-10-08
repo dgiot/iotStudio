@@ -4,10 +4,10 @@
       <div class="protolheader">
         <el-form
           ref="formInline"
+          class="demo-form-inline"
           :inline="true"
           :model="formInline"
           :rules="addRules"
-          class="demo-form-inline"
         >
           <el-form-item
             :label="$translateTitle('product.protocolname')"
@@ -32,28 +32,28 @@
           </el-form-item>
           <el-form-item>
             <el-button
-              type="primary"
               size="small"
+              type="primary"
               @click="subAce('formInline', true)"
             >
               {{ $translateTitle('product.preservation') }}
             </el-button>
             <el-button
-              type="primary"
               size="small"
+              type="primary"
               @click="subAce1('formInline')"
             >
               设为公共
             </el-button>
-            <el-button type="primary" size="small" @click="chaxun">
+            <el-button size="small" type="primary" @click="chaxun">
               {{ $translateTitle('product.publicagreementlibrary') }}
             </el-button>
           </el-form-item>
           <el-form-item style="display: block">
-            <el-button type="primary" size="small" @click="protol">
+            <el-button size="small" type="primary" @click="protol">
               {{ $translateTitle('product.compile') }}
             </el-button>
-            <el-button type="success" size="small" @click="updatesubdialog">
+            <el-button size="small" type="success" @click="updatesubdialog">
               热加载
             </el-button>
           </el-form-item>
@@ -62,9 +62,9 @@
       <!--通道热加载-->
       <el-dialog
         :append-to-body="true"
-        :visible.sync="protoldialog"
         :close-on-click-modal="false"
         title="通道热加载"
+        :visible.sync="protoldialog"
         width="50%"
       >
         <el-table
@@ -115,9 +115,9 @@
       <!--公共协议库弹窗-->
       <el-dialog
         :append-to-body="true"
+        :close-on-click-modal="false"
         :title="$translateTitle('product.publicagreementlibrary')"
         :visible.sync="dialogTableVisible"
-        :close-on-click-modal="false"
         width="50%"
       >
         <el-table
@@ -125,50 +125,50 @@
           style="width: 100%; margin-top: 20px; text-align: center"
         >
           <el-table-column
-            :label="$translateTitle('product.protocolname')"
             align="center"
+            :label="$translateTitle('product.protocolname')"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.data.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            :label="$translateTitle('plugins.version')"
             align="center"
+            :label="$translateTitle('plugins.version')"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.data.version }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            :label="$translateTitle('developer.describe')"
             align="center"
+            :label="$translateTitle('developer.describe')"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.data.desc }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" align="center">
+          <el-table-column align="center" label="创建时间">
             <template slot-scope="scope">
               <span>{{ utc2beijing(scope.row.createdAt) }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            :label="$translateTitle('developer.operation')"
             align="center"
+            :label="$translateTitle('developer.operation')"
             width="200"
           >
             <template slot-scope="scope">
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="editordata(scope.row)"
               >
                 {{ $translateTitle('product.clone') }}
               </el-button>
               <el-button
-                type="danger"
                 size="mini"
+                type="danger"
                 @click="deletedata(scope.row.objectId)"
               >
                 {{ $translateTitle('developer.delete') }}
@@ -178,12 +178,12 @@
         </el-table>
         <div class="elpagination" style="padding: 20px 0">
           <el-pagination
-            :page-sizes="[10, 20, 30, 50]"
-            :page-size="decoderlength"
-            :total="decodertotal"
             layout="total, sizes, prev, pager, next, jumper"
-            @size-change="decoderSizeChange"
+            :page-size="decoderlength"
+            :page-sizes="[10, 20, 30, 50]"
+            :total="decodertotal"
             @current-change="devicerCurrentChange"
+            @size-change="decoderSizeChange"
           />
         </div>
       </el-dialog>

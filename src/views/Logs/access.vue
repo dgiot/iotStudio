@@ -71,21 +71,21 @@
       </vab-query-form-top-panel>
     </vab-query-form>
     <el-table
-      ref="dragTable"
       :key="finallyColumns.length + momentKey"
-      class="logs-table"
+      ref="dragTable"
       border
-      resizable
-      highlight-current-row
-      stripe
-      :row-class-name="tableRowClassName"
-      :size="size"
+      class="logs-table"
       :data="logdata"
       :height="height"
+      highlight-current-row
+      resizable
+      :row-class-name="tableRowClassName"
+      :size="size"
+      stripe
     >
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-descriptions class="margin-top" :column="2" :size="size" border>
+          <el-descriptions border class="margin-top" :column="2" :size="size">
             <el-descriptions-item
               v-for="(item, key, index) in props.row.body"
               v-show="key != 'elm'"
@@ -101,19 +101,19 @@
       <el-table-column
         v-for="(item, index) in finallyColumns"
         :key="index"
-        :prop="item"
-        :label="item"
         align="center"
-        sortable
+        :label="item"
+        :prop="item"
         show-overflow-tooltip
+        sortable
       />
       <el-table-column
-        prop="msg.body"
         align="center"
-        sortable
-        show-overflow-tooltip
-        label="msg"
         fixed="right"
+        label="msg"
+        prop="msg.body"
+        show-overflow-tooltip
+        sortable
       />
       <template #empty>
         <vab-empty />
@@ -121,9 +121,9 @@
     </el-table>
     <vab-Pagination
       v-show="queryForm.total > 0"
-      :total="queryForm.total"
-      :page.sync="queryForm.pageNo"
       :limit.sync="queryForm.pageSize"
+      :page.sync="queryForm.pageNo"
+      :total="queryForm.total"
       @pagination="queryTable"
     />
   </div>

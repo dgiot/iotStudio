@@ -43,8 +43,8 @@
           >
             <el-input
               v-model="queryForm.devaddr"
-              :placeholder="$translateTitle('equipment.enterdevicenumber')"
               clearable
+              :placeholder="$translateTitle('equipment.enterdevicenumber')"
             />
           </el-form-item>
           <el-form-item>
@@ -97,24 +97,24 @@
     <el-tabs v-model="activeName" :height="height" @tab-click="changetabs">
       <el-tab-pane :label="$translateTitle('equipment.statuslog')" name="first">
         <el-table
-          ref="dragTable"
           :key="finallyColumns.length + momentKey"
+          ref="dragTable"
           border
-          resizable
-          highlight-current-row
-          stripe
-          :row-class-name="tableRowClassName"
-          size="mini"
           :data="logdata"
           :height="height"
+          highlight-current-row
+          resizable
+          :row-class-name="tableRowClassName"
+          size="mini"
+          stripe
         >
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-descriptions
+                border
                 class="margin-top"
                 :column="2"
                 :size="size"
-                border
               >
                 <el-descriptions-item
                   v-for="(item, key, index) in props.row"
@@ -130,11 +130,11 @@
           <el-table-column
             v-for="(item, index) in finallyColumns"
             :key="index"
-            :prop="item"
-            :label="item"
             align="center"
-            sortable
+            :label="item"
+            :prop="item"
             show-overflow-tooltip
+            sortable
           />
           <template #empty>
             <vab-empty />
@@ -142,9 +142,9 @@
         </el-table>
         <vab-Pagination
           v-show="queryForm.total > 0"
-          :total="queryForm.total"
-          :page.sync="queryForm.pageNo"
           :limit.sync="queryForm.pageSize"
+          :page.sync="queryForm.pageNo"
+          :total="queryForm.total"
           @pagination="queryTable"
         />
       </el-tab-pane>
@@ -153,24 +153,24 @@
         name="second"
       >
         <el-table
-          ref="dragTable"
           :key="finallyColumns.length + momentKey"
+          ref="dragTable"
           border
-          resizable
-          highlight-current-row
-          stripe
-          :row-class-name="tableRowClassName"
-          size="mini"
           :data="logdata"
           :height="height"
+          highlight-current-row
+          resizable
+          :row-class-name="tableRowClassName"
+          size="mini"
+          stripe
         >
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-descriptions
+                border
                 class="margin-top"
                 :column="2"
                 :size="size"
-                border
               >
                 <el-descriptions-item
                   v-for="(item, key, index) in props.row"
@@ -186,11 +186,11 @@
           <el-table-column
             v-for="(item, index) in finallyColumns"
             :key="index"
-            :prop="item"
-            :label="item"
             align="center"
-            sortable
+            :label="item"
+            :prop="item"
             show-overflow-tooltip
+            sortable
           />
           <!--      <el-table-column-->
           <!--        prop="msg"-->
@@ -206,9 +206,9 @@
         </el-table>
         <vab-Pagination
           v-show="queryForm.total > 0"
-          :total="queryForm.total"
-          :page.sync="queryForm.pageNo"
           :limit.sync="queryForm.pageSize"
+          :page.sync="queryForm.pageNo"
+          :total="queryForm.total"
           @pagination="queryTable"
         />
       </el-tab-pane>

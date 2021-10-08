@@ -17,41 +17,41 @@
           <!--       明诚发布注释18 到 27 行-->
           <el-col
             class="hidden-xs-only konva-container-main-allocation"
-            :xs="0"
-            :sm="isDevice ? 0 : 6"
-            :md="isDevice ? 0 : 6"
             :lg="isDevice ? 0 : 4"
+            :md="isDevice ? 0 : 6"
+            :sm="isDevice ? 0 : 6"
             :xl="isDevice ? 0 : 3"
+            :xs="0"
           >
             <Topo-allocation />
           </el-col>
 
           <el-col
-            :xs="isDevice ? 24 : gutter.xs"
-            :sm="isDevice ? 24 : gutter.sm"
-            :md="isDevice ? 24 : gutter.md"
-            :lg="isDevice ? 24 : gutter.lg"
-            :xl="isDevice ? 24 : gutter.xl"
             class="konva-container-main-baseCol"
+            :lg="isDevice ? 24 : gutter.lg"
+            :md="isDevice ? 24 : gutter.md"
+            :sm="isDevice ? 24 : gutter.sm"
+            :xl="isDevice ? 24 : gutter.xl"
+            :xs="isDevice ? 24 : gutter.xs"
           >
             <el-container class="konva-container-main-baseContainer">
               <Topo-base ref="topobase" />
               <div
                 id="konva"
                 ref="konva"
-                style="display: none"
                 class="konva, _center"
+                style="display: none"
               ></div>
             </el-container>
           </el-col>
           <el-col
             class="hidden-xs-only"
             hidden-xs-only
-            :xs="0"
-            :sm="isDevice ? 0 : 6"
-            :md="isDevice ? 0 : 6"
             :lg="isDevice ? 0 : 5"
+            :md="isDevice ? 0 : 6"
+            :sm="isDevice ? 0 : 6"
             :xl="isDevice ? 0 : 3"
+            :xs="0"
           >
             <el-aside class="konva-container-main-operationsSide">
               <TopoOperation ref="operation" @upconfig="saveKonvaitem" />

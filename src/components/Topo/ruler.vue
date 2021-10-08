@@ -2,20 +2,20 @@
   <div
     v-show="rulerToggle"
     id="rulerTool"
+    class="ScaleBox"
+    onselectstart="return false;"
     :style="{
       width: windowWidth + 'px',
       height: windowHeight + 'px',
       position: position,
     }"
-    class="ScaleBox"
-    onselectstart="return false;"
   >
     <div id="levelRuler" class="ScaleRuler_h" @mousedown.stop="levelDragRuler">
       <span
         v-for="(item, index) in xScale"
         :key="index"
-        :style="{ left: index * 50 + 2 + 'px' }"
         class="n"
+        :style="{ left: index * 50 + 2 + 'px' }"
       >
         {{ item.id }}
       </span>
@@ -28,47 +28,47 @@
       <span
         v-for="(item, index) in yScale"
         :key="index"
-        :style="{ top: index * 50 + 2 + 'px' }"
         class="n"
+        :style="{ top: index * 50 + 2 + 'px' }"
       >
         {{ item.id }}
       </span>
     </div>
     <div
       id="levelDottedLine"
-      :style="{ top: verticalDottedTop + 'px' }"
       class="RefDot_h"
+      :style="{ top: verticalDottedTop + 'px' }"
     />
     <div
       id="verticalDottedLine"
-      :style="{ left: levelDottedLeft + 'px' }"
       class="RefDot_v"
+      :style="{ left: levelDottedLeft + 'px' }"
     />
     <div
       v-for="item in levelLineList"
       :id="item.id"
       :key="item.id"
-      :title="item.title"
-      :style="{ top: item.top + 'px' }"
       class="RefLine_h"
+      :style="{ top: item.top + 'px' }"
+      :title="item.title"
       @mousedown="dragLevelLine(item.id)"
     />
     <div
       v-for="item in verticalLineList"
       :id="item.id"
       :key="item.id"
-      :title="item.title"
-      :style="{ left: item.left + 'px' }"
       class="RefLine_v"
+      :style="{ left: item.left + 'px' }"
+      :title="item.title"
       @mousedown="dragVerticalLine(item.id)"
     />
     <div
       id="content"
+      style="padding: 18px"
       :style="{
         left: contentLayout.left + 'px',
         top: contentLayout.top + 'px',
       }"
-      style="padding: 18px"
     >
       <slot />
     </div>

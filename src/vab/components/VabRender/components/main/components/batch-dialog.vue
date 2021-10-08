@@ -1,15 +1,15 @@
 <template>
   <ele-form-dialog
     v-model="formData"
-    :form-desc="formDesc"
-    label-position="left"
-    width="800px"
     :dialog-attrs="{
       'close-on-click-modal': false,
       'append-to-body': true,
     }"
-    :visible="visible"
+    :form-desc="formDesc"
+    label-position="left"
     title="批量添加表单项"
+    :visible="visible"
+    width="800px"
     @request="handleAdd"
     @update:visible="$emit('change')"
   />

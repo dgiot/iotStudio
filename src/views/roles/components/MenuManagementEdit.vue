@@ -8,34 +8,34 @@
     @close="close"
   >
     <el-collapse v-model="activeNames">
-      <el-collapse-item title="菜单参数配置项" name="1">
+      <el-collapse-item name="1" title="菜单参数配置项">
         <menu-collapse />
       </el-collapse-item>
     </el-collapse>
     <el-form
       ref="form"
-      style="margin-top: 20px"
       :inline="true"
+      label-width="100px"
       :model="form"
       :rules="rules"
-      label-width="100px"
+      style="margin-top: 20px"
     >
       <el-form-item v-show="title != '编辑菜单'" label="菜单选择">
         <vab-icon class="el-input-group__prepend" icon="pages-line" />
         <el-cascader
           ref="menuCascader"
           v-model="cascadervalue"
+          clearable
           :options="router"
           :props="{ checkStrictly: true, label: 'title', value: 'title' }"
-          clearable
           @change="handleChange"
         />
       </el-form-item>
       <el-form-item label="name" prop="name">
         <el-input
           v-model="form.name"
-          :readonly="title == '编辑菜单'"
           :disabled="title == '编辑菜单'"
+          :readonly="title == '编辑菜单'"
         >
           <template slot="prepend">
             <vab-icon icon="pages-line" />
@@ -82,7 +82,7 @@
             width="292"
           >
             <template #reference>
-              <el-button size="mini" icon="el-icon-search" />
+              <el-button icon="el-icon-search" size="mini" />
             </template>
             <vab-icon-selector @handle-icon="handleIcon" />
           </el-popover>
@@ -97,8 +97,8 @@
       </el-form-item>
       <el-form-item
         label="隐藏"
-        title="隐藏后将不在菜单列表中展示，但是可以被访问"
         prop="hidden"
+        title="隐藏后将不在菜单列表中展示，但是可以被访问"
       >
         <el-switch v-model="form.meta.hidden" />
       </el-form-item>
@@ -107,15 +107,15 @@
       <!--      </el-form-item>-->
       <el-form-item
         label="固定"
-        title="除首页外,其他页面不建议选择此项"
         prop="noClosable"
+        title="除首页外,其他页面不建议选择此项"
       >
         <el-switch v-model="form.meta.noClosable" />
       </el-form-item>
       <el-form-item
         label="无缓存"
-        title="开启后该页面的数据将不被缓存"
         prop="noKeepAlive"
+        title="开启后该页面的数据将不被缓存"
       >
         <el-switch v-model="form.meta.noKeepAlive" />
       </el-form-item>

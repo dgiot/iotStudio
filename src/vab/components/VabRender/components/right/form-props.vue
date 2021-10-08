@@ -2,17 +2,17 @@
   <div>
     <attrs-header
       v-model="keyword"
-      url="https://www.yuque.com/chaojie-vjiel/vbwzgu/dyw8a7"
       title="表单配置"
+      url="https://www.yuque.com/chaojie-vjiel/vbwzgu/dyw8a7"
     />
     <ele-form
       v-model="VabRender.formPropsData"
-      :form-desc="filteredFormDesc"
       :form-attrs="{ size: 'small' }"
+      :form-desc="filteredFormDesc"
       :is-show-back-btn="false"
       :is-show-submit-btn="false"
-      :span="20"
       label-position="top"
+      :span="20"
     />
   </div>
 </template>

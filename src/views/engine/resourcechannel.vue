@@ -5,9 +5,9 @@
       <el-tab-pane :label="'通道管理' + '(' + total + ')'" name="first">
         <div class="firsttable">
           <el-form
+            class="demo-form-inline"
             :inline="true"
             :model="channelformsearch"
-            class="demo-form-inline"
             size="small"
           >
             <el-form-item>
@@ -93,16 +93,16 @@
               <template slot-scope="scope">
                 <el-button
                   slot="reference"
-                  type="primary"
                   size="mini"
+                  type="primary"
                   @click="editorChannel(scope.row)"
                 >
                   编辑
                 </el-button>
                 <el-button
                   v-if="scope.row.isEnable == false"
-                  type="success"
                   size="mini"
+                  type="success"
                   @click="qyChannel(scope.row, 'enable')"
                 >
                   {{ $translateTitle('developer.enable') }}
@@ -110,15 +110,15 @@
 
                 <el-button
                   v-else
-                  type="danger"
                   size="mini"
+                  type="danger"
                   @click="qyChannel(scope.row, 'disable')"
                 >
                   {{ $translateTitle('developer.prohibit') }}
                 </el-button>
                 <el-button
-                  type="primary"
                   size="mini"
+                  type="primary"
                   @click="updateChannel(scope.row)"
                 >
                   详情
@@ -139,14 +139,14 @@
                       {{ $translateTitle('developer.cancel') }}
                     </el-button>
                     <el-button
-                      type="primary"
                       size="mini"
+                      type="primary"
                       @click="deleteChannel(scope)"
                     >
                       {{ $translateTitle('developer.determine') }}
                     </el-button>
                   </div>
-                  <el-button slot="reference" type="danger" size="mini">
+                  <el-button slot="reference" size="mini" type="danger">
                     {{ $translateTitle('developer.delete') }}
                   </el-button>
                 </el-popover>
@@ -159,14 +159,13 @@
                 <el-button slot="reference" :disabled="scope.row.attributes.status=='OFFLINE'">hover 激活</el-button>
               </el-popover> -->
                 <el-tooltip
-                  :disabled="scope.row.status != 'OFFLINE'"
                   class="item"
-                  effect="dark"
                   content="请先启用通道"
+                  :disabled="scope.row.status != 'OFFLINE'"
+                  effect="dark"
                   placement="top"
                 >
                   <el-button
-                    type="primary"
                     size="mini"
                     style="
                       position: absolute;
@@ -174,13 +173,14 @@
                       height: 10px;
                       opacity: 0;
                     "
+                    type="primary"
                     @click="subProTopic(scope.row)"
                   />
                 </el-tooltip>
                 <el-button
                   :disabled="scope.row.status == 'OFFLINE'"
-                  type="primary"
                   size="mini"
+                  type="primary"
                   @click="subProTopic(scope.row)"
                 >
                   订阅日志
@@ -190,12 +190,12 @@
           </el-table>
           <div class="elpagination" style="margin-top: 20px">
             <el-pagination
-              :page-sizes="[10, 20, 30, 50]"
-              :page-size="length"
-              :total="total"
               layout="total, sizes, prev, pager, next, jumper"
-              @size-change="channelSizeChange"
+              :page-size="length"
+              :page-sizes="[10, 20, 30, 50]"
+              :total="total"
               @current-change="channelCurrentChange"
+              @size-change="channelSizeChange"
             />
           </div>
         </div>
@@ -203,18 +203,18 @@
       <!--弹窗--->
       <el-dialog
         :append-to-body="true"
-        :title="channelupdated + '通道'"
-        :visible.sync="channelForm"
-        :close-on-click-modal="false"
         :before-close="handleClose"
-        width="50%"
+        :close-on-click-modal="false"
+        :title="channelupdated + '通道'"
         top="0"
+        :visible.sync="channelForm"
+        width="50%"
       >
         <el-form
           ref="addchannel"
+          label-width="120px"
           :model="addchannel"
           :rules="addrules"
-          label-width="120px"
         >
           <el-form-item label="通道类型" prop="region">
             <el-select
@@ -248,23 +248,23 @@
                 style="margin: 20px 0; cursor: pointer"
               >
                 <el-card
+                  class="box-card"
                   :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
+                  size="mini"
                   :style="{
                     color:
                       addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                   }"
-                  size="mini"
-                  class="box-card"
                 >
                   <div slot="header" class="clearfix">
                     <span>{{ item.title.zh }}</span>
                     <el-button
                       :disabled="resourceid != ''"
+                      size="mini"
+                      style="float: right"
                       :type="
                         addchannel.region == item.cType ? 'success' : 'primary'
                       "
-                      size="mini"
-                      style="float: right"
                       @click="setCard(item.cType)"
                     >
                       {{ addchannel.region == item.cType ? '已选择' : '选择' }}
@@ -274,8 +274,8 @@
                     <el-row :gutter="24">
                       <el-col :span="12">
                         <img
-                          src="https://imgs.iotku.com/2020/2/21/23efecea9bfdbbf8a132089e251fc6e7.png"
                           class="image"
+                          src="https://imgs.iotku.com/2020/2/21/23efecea9bfdbbf8a132089e251fc6e7.png"
                           style="width: 50px; height: 50px"
                         />
                       </el-col>
@@ -294,8 +294,8 @@
           >
             <el-input
               v-model="addchannel.name"
-              :placeholder="$translateTitle('developer.channelname')"
               autocomplete="off"
+              :placeholder="$translateTitle('developer.channelname')"
             />
           </el-form-item>
 
@@ -315,10 +315,10 @@
             </el-select>
           </el-form-item> -->
           <el-form-item
+            label="所属应用"
             :rules="[
               { required: true, message: '请选择所属应用', trigger: 'blur' },
             ]"
-            label="所属应用"
           >
             <el-input
               v-model="addchannel.applicationtText"
@@ -346,8 +346,8 @@
           <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
             <el-form-item
               :label="item.title.zh"
-              :required="item.required"
               :prop="item.showname"
+              :required="item.required"
             >
               <el-input
                 v-if="item.type == 'string'"
@@ -363,8 +363,8 @@
                 class="notauto"
                 readonly
               >
-                <el-option :value="true" label="是" />
-                <el-option :value="false" label="否" />
+                <el-option label="是" :value="true" />
+                <el-option label="否" :value="false" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -372,9 +372,9 @@
           <el-form-item :label="$translateTitle('developer.describe')">
             <el-input
               v-model="addchannel.desc"
-              :rows="3"
-              :placeholder="$translateTitle('developer.describe')"
               autocomplete="off"
+              :placeholder="$translateTitle('developer.describe')"
+              :rows="3"
               type="textarea"
               @change="inputChange"
             />
@@ -395,8 +395,8 @@
       <!--详情展示-->
       <el-dialog
         :append-to-body="true"
-        :visible.sync="dialogVisible"
         title="通道详情"
+        :visible.sync="dialogVisible"
         width="50%"
       >
         <div>
@@ -427,9 +427,9 @@
       <!--订阅日志-->
       <el-dialog
         :append-to-body="true"
+        :before-close="handleCloseSubdialog"
         :title="channelname + '日志'"
         :visible.sync="subdialog"
-        :before-close="handleCloseSubdialog"
         width="85%"
       >
         <div style="margin-top: 20px">
@@ -444,10 +444,10 @@
         <span slot="footer" class="dialog-footer" style="height: 30px">
           <el-switch
             v-model="value4"
-            style="display: inline-block; margin-right: 10px"
             active-color="#13ce66"
             inactive-color="#ff4949"
             inactive-text="自动刷新"
+            style="display: inline-block; margin-right: 10px"
             @change="stopsub"
           />
         </span>

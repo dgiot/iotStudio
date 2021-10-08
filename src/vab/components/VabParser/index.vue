@@ -15,9 +15,9 @@
           <el-form
             ref="form"
             :inline="true"
-            style="float: left"
             label-width="100px"
             :model="headerInfo"
+            style="float: left"
             @submit.native.prevent
           >
             <el-form-item :label="$translateTitle('product.chinesetitle')">
@@ -62,9 +62,9 @@
             <el-form-item :label="$translateTitle('product.field')">
               <el-select
                 v-model="headerInfo.field"
-                filterable
                 allow-create
                 default-first-option
+                filterable
                 placeholder="请选择"
               >
                 <el-option
@@ -83,9 +83,9 @@
             >
               <el-select
                 v-model="headerInfo.type"
-                filterable
                 allow-create
                 default-first-option
+                filterable
                 :placeholder="$translateTitle('product.type')"
                 @change="changeTable"
               >
@@ -100,8 +100,8 @@
             <el-form-item>
               <el-button
                 v-show="headerInfo && headerInfo.table != 'Notification'"
-                type="text"
                 :disabled="!headerInfo.uid"
+                type="text"
                 @click.native.prevent="goRule(headerInfo)"
               >
                 {{ $translateTitle('rule.rule') }}
@@ -109,8 +109,8 @@
 
               <el-button
                 v-show="headerInfo.table == 'Notification'"
-                type="text"
                 :disabled="!headerInfo.uid"
+                type="text"
                 @click.prevent="goRule(headerInfo, '_start')"
               >
                 {{ $translateTitle('alert._start') }}
@@ -118,8 +118,8 @@
 
               <el-button
                 v-show="headerInfo && headerInfo.table == 'Notification'"
-                type="text"
                 :disabled="!headerInfo.uid"
+                type="text"
                 @click.prevent="goRule(headerInfo, '_stop')"
               >
                 {{ $translateTitle('alert._stop') }}
@@ -136,17 +136,17 @@
         </vab-query-form-top-panel>
         <f-render
           v-show="activeName == true"
-          :loading="loading"
-          :height="parseheight"
           :config="formConfig.config"
+          :height="parseheight"
+          :loading="loading"
           :productid="productid"
           @save="handleSave"
         />
         <vab-render
           v-show="activeName == false"
-          :loading="loading"
-          :height="parseheight"
           :config="formConfig.config"
+          :height="parseheight"
+          :loading="loading"
           :productid="productid"
           @save="handleSave"
         />

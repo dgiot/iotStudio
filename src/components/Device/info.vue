@@ -1,11 +1,11 @@
 <template>
   <div>
     <table
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
       class="mailtable"
       style="width: 100%"
-      border="0"
-      cellspacing="0"
-      cellpadding="0"
     >
       <!-- 设备编号: 所属产品: 安装位置 -->
       <tr>
@@ -73,7 +73,7 @@
       :data="devicedetail.topicData"
       style="width: 100%; text-align: center"
     >
-      <el-table-column label="Topic" align="left">
+      <el-table-column align="left" label="Topic">
         <template slot-scope="scope">
           <span>
             {{
@@ -86,8 +86,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('equipment.operationauthority')"
         align="center"
+        :label="$translateTitle('equipment.operationauthority')"
       >
         <template slot-scope="scope">
           <span v-if="scope.row.type == 'pub'">
@@ -99,9 +99,9 @@
         </template>
       </el-table-column>
       <el-table-column
+        align="center"
         :label="$translateTitle('developer.describe')"
         prop="desc"
-        align="center"
       />
     </el-table>
     <!--    <h4>-->

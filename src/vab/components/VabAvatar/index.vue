@@ -1,12 +1,12 @@
 <template>
   <el-dropdown @command="handleCommand" @visible-change="handleVisibleChange">
     <span class="avatar-dropdown">
-      <el-avatar :src="avatar" class="user-avatar" />
+      <el-avatar class="user-avatar" :src="avatar" />
       <div class="user-name">
         <span class="hidden-xs-only">{{ username }}</span>
         <vab-icon
-          :class="{ 'vab-dropdown-active': active }"
           class="vab-dropdown"
+          :class="{ 'vab-dropdown-active': active }"
           icon="arrow-down-s-line"
         />
       </div>

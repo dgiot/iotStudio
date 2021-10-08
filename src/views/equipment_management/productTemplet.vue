@@ -3,9 +3,9 @@
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="prosecond">
       <el-form
+        class="demo-form-inline"
         :inline="true"
         :model="formInline"
-        class="demo-form-inline"
         size="small"
       >
         <el-form-item :label="$translateTitle('product.classification')">
@@ -50,17 +50,17 @@
       <div class="protable">
         <el-table
           v-loading="listLoading"
-          :height="height"
-          :header-cell-style="{ 'text-align': 'center' }"
           :cell-style="{ 'text-align': 'center' }"
           :data="tableData"
+          :header-cell-style="{ 'text-align': 'center' }"
+          :height="height"
           style="width: 100%"
         >
           <el-table-column
             label="ProductID"
             prop="objectId"
-            sortable
             show-overflow-tooltip
+            sortable
           />
           <el-table-column :label="$translateTitle('product.productname')">
             <template slot-scope="scope">
@@ -73,8 +73,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            width="180"
             :label="$translateTitle('product.addingtime')"
+            width="180"
           >
             <template slot-scope="scope">
               <span>{{ utc2beijing(scope.row.createdAt) }}</span>
@@ -82,14 +82,14 @@
           </el-table-column>
           <el-table-column
             fixed="right"
-            width="340"
             :label="$translateTitle('developer.operation')"
+            width="340"
           >
             <template slot-scope="scope">
               <el-button
-                :underline="false"
-                type="primary"
                 size="mini"
+                type="primary"
+                :underline="false"
                 @click="deviceToDetail(scope.row)"
               >
                 {{ $translateTitle('product.config') }}
@@ -100,17 +100,17 @@
               </el-button>
 
               <el-button
-                :underline="false"
                 size="mini"
                 type="success"
+                :underline="false"
                 @click="editorProduct(scope.row)"
               >
                 {{ $translateTitle('concentrator.edit') }}
               </el-button>
               <el-popover
                 :ref="`popover-${scope.$index}`"
-                style="margin-left: 10px"
                 placement="top"
+                style="margin-left: 10px"
                 width="300"
               >
                 <p>确定删除这个{{ scope.row.name }}产品吗？</p>
@@ -124,8 +124,8 @@
                     {{ $translateTitle('developer.cancel') }}
                   </el-button>
                   <el-button
-                    type="primary"
                     size="mini"
+                    type="primary"
                     @click="makeSure(scope)"
                   >
                     {{ $translateTitle('developer.determine') }}
@@ -141,24 +141,24 @@
       </div>
       <div class="elpagination" style="margin-top: 20px">
         <el-pagination
-          :page-sizes="[10, 20, 30, 50]"
-          :page-size="length"
-          :total="total"
           layout="total, sizes, prev, pager, next, jumper"
-          @size-change="productSizeChange"
+          :page-size="length"
+          :page-sizes="[10, 20, 30, 50]"
+          :total="total"
           @current-change="productCurrentChange"
+          @size-change="productSizeChange"
         />
       </div>
     </div>
     <div class="devproduct-prodialog">
       <!-- 创建产品对话框 ###-->
       <el-drawer
-        :title="moduleTitle"
-        :visible.sync="dialogFormVisible"
-        :close-on-click-modal="false"
         :before-close="handleClose"
+        :close-on-click-modal="false"
         size="60%"
+        :title="moduleTitle"
         top="5vh"
+        :visible.sync="dialogFormVisible"
       >
         <div class="devproduct-prodialog-content">
           <!--产品信息-->
@@ -206,15 +206,15 @@
               >
                 <el-select v-model="form.category" placeholder="请选择">
                   <el-option
-                    :value="treeDataValue"
                     style="height: auto; padding: 0"
+                    :value="treeDataValue"
                   >
                     <el-tree
                       ref="workGroup"
                       :data="categoryTreeData"
+                      default-expand-all
                       :expand-on-click-node="false"
                       node-key="index"
-                      default-expand-all
                     >
                       <div slot-scope="{ node, data }" class="custom-tree-node">
                         <span
@@ -236,9 +236,9 @@
               >
                 <el-input
                   v-model="form.relationApp"
+                  :disabled="custom_status == 'edit' && form.relationApp != ''"
                   :placeholder="$translateTitle('product.pleaseselectyourapp')"
                   readonly
-                  :disabled="custom_status == 'edit' && form.relationApp != ''"
                   @focus="showTree = !showTree"
                 />
                 <div v-if="showTree">
@@ -251,11 +251,11 @@
               </el-form-item>
               <el-form-item :label="$translateTitle('menu.icon')" prop="icon">
                 <div v-if="imageUrl">
-                  <img :src="imageUrl" class="avatar" />
+                  <img class="avatar" :src="imageUrl" />
                   <el-button
-                    type="danger"
                     size="mini"
                     style="vertical-align: text-bottom"
+                    type="danger"
                     @click.stop="deleteImgsrc"
                   >
                     删除
@@ -268,12 +268,11 @@
                 />
                 <form
                   ref="uploadform"
-                  method="POST"
                   enctype="multipart/form-data"
+                  method="POST"
                   style="position: absolute; visibility: hidden"
                 >
                   <input
-                    type="file"
                     style="
                       position: relative;
                       z-index: 5;
@@ -282,6 +281,7 @@
                       cursor: pointer;
                       opacity: 0;
                     "
+                    type="file"
                     @change="upload($event)"
                   />
                 </form>

@@ -3,19 +3,19 @@
     <div class="loginbanner">
       <el-form
         ref="ruleForm2"
+        class="login-form"
+        label-width="100px"
         :model="ruleForm2"
         :rules="rules2"
         status-icon
-        label-width="100px"
-        class="login-form"
       >
         <div class="logo">
-          <img :src="logosrc" alt="logo" style="width: 80px; height: 80px" />
+          <img alt="logo" :src="logosrc" style="width: 80px; height: 80px" />
           <p>{{ title }}</p>
         </div>
 
         <!-- <el-input v-model="ruleForm2.diqu" type="text"></el-input> -->
-        <el-form-item style="border-radius: 0" prop="phone">
+        <el-form-item prop="phone" style="border-radius: 0">
           <span class="svg-container">
             <el-select
               v-model="ruleForm2.value"
@@ -33,12 +33,12 @@
           <el-input
             ref="phonerole"
             v-model="ruleForm2.phone"
+            auto-complete="on"
             :maxlength="11"
             name="phone"
-            type="text"
-            auto-complete="on"
             placeholder="请输入手机号"
             style="width: 250px"
+            type="text"
           />
         </el-form-item>
         <div
@@ -48,7 +48,6 @@
           <span class="svg-container" style="float: left; width: 25%">
             <el-input
               v-model="phonesms"
-              type="text"
               disabled
               style="
                 width: 100%;
@@ -57,19 +56,20 @@
                 border-radius: 5px;
                 border-radius: 0;
               "
+              type="text"
             />
           </span>
           <el-input
             v-model.number="code"
-            type="text"
-            placeholder="请输入验证码"
             class="yzm"
+            placeholder="请输入验证码"
             style="
               float: left;
               width: 50%;
               border: 1px solid #cccccc;
               border-radius: 0;
             "
+            type="text"
           />
           <el-button
             :disabled="sendMsgDisabled"
@@ -89,8 +89,8 @@
         </div>
         <el-form-item style="margin-top: 50px">
           <el-button
-            type="primary"
             style="width: 100%; letter-spacing: 10px"
+            type="primary"
             @click="submitForm('ruleForm2')"
           >
             确 定

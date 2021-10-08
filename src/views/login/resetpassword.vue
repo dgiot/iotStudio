@@ -3,18 +3,18 @@
     <div class="loginbanner">
       <el-form
         ref="ruleForm2"
+        class="login-form"
+        label-width="100px"
         :model="ruleForm2"
         :rules="rules2"
         status-icon
-        label-width="100px"
-        class="login-form"
       >
         <div class="logo">
-          <img :src="logosrc" alt="logo" style="width: 80px; height: 80px" />
+          <img alt="logo" :src="logosrc" style="width: 80px; height: 80px" />
           <p>重置密码</p>
         </div>
 
-        <el-form-item style="border-radius: 0" prop="phone">
+        <el-form-item prop="phone" style="border-radius: 0">
           <span
             class="svg-container"
             style="
@@ -41,12 +41,12 @@
           <el-input
             ref="phonerole"
             v-model="ruleForm2.phone"
+            auto-complete="on"
             :maxlength="11"
             name="phone"
-            type="text"
-            auto-complete="on"
             placeholder="请输入手机号"
             style="width: 250px"
+            type="text"
           />
         </el-form-item>
         <div
@@ -55,16 +55,16 @@
         >
           <el-input
             v-model="code"
-            type="text"
-            placeholder="请输入验证码"
-            class="yzm"
             auto-complete="off"
+            class="yzm"
+            placeholder="请输入验证码"
             style="
               float: left;
               width: 75%;
               border: 1px solid #cccccc;
               border-radius: 0;
             "
+            type="text"
           />
           <el-button
             :disabled="sendMsgDisabled"
@@ -94,11 +94,11 @@
           </span>
           <el-input
             v-model="ruleForm2.password"
-            :type="pwdType"
+            auto-complete="new-password"
             :maxlength="10"
             name="password"
-            auto-complete="new-password"
             placeholder="请输入6-10位数字字母组合"
+            :type="pwdType"
           />
           <span class="show-pwd" @click="showPwd">
             <vab-icon icon="eye" />
@@ -111,10 +111,10 @@
           </span>
           <el-input
             v-model="ruleForm2.checkPass"
-            :type="pwdType"
-            :maxlength="10"
             auto-complete="new-password"
+            :maxlength="10"
             placeholder="请再次输入密码"
+            :type="pwdType"
           />
           <span class="show-pwd" @click="showPwd">
             <vab-icon icon="eye" />
@@ -123,8 +123,8 @@
         <div class="hasuser" style="box-sizing: border-box; padding-left: 22px">
           <!-- <span style="color:#409EFF;font-size:14px;cursor:pointer" @click="login">已有账号登陆</span> -->
           <el-button
-            type="primary"
             style="width: 100%"
+            type="primary"
             @click="resetPassword('ruleForm2')"
           >
             确 定

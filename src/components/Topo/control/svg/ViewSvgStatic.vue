@@ -1,10 +1,10 @@
 <template>
   <svg
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    :width="detail.style.position.w"
     :height="detail.style.position.h"
     style="pointer-events: none"
+    version="1.1"
+    :width="detail.style.position.w"
+    xmlns="http://www.w3.org/2000/svg"
     v-html="svgContent"
   />
 </template>

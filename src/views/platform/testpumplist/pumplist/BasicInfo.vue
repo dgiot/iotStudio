@@ -5,10 +5,10 @@
     <el-form
       ref="formRef"
       :inline="true"
+      label-width="68px"
       :model="BasicInfoObj"
       :rules="formRule"
       size="small"
-      label-width="68px"
     >
       <el-row :gutter="24">
         <el-col :span="8">
@@ -16,8 +16,8 @@
             <el-select
               v-model="BasicInfoObj.name"
               clearable
-              style="width: 300px"
               placeholder="请选择"
+              style="width: 300px"
             >
               <el-option
                 v-for="item in defaultObj.productOpt"
@@ -28,26 +28,26 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="水泵型号">
             <el-input
               v-model="BasicInfoObj.xinghao"
-              style="width: 127px"
               class="eipt"
+              style="width: 127px"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="出厂编号">
             <el-input v-model="BasicInfoObj.chuchangbianhao" class="eipt" />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="试验编号">
             <el-input v-model="BasicInfoObj.bianhao" class="eipt" />
           </el-form-item>
         </el-col>
-        <el-col :span="4" class="ep0">
+        <el-col class="ep0" :span="4">
           <el-form-item label="产品编号">
             <el-input v-model="BasicInfoObj.chanpinbianhao" class="eipt" />
           </el-form-item>
@@ -59,8 +59,8 @@
           <el-form-item label="送样单位">
             <el-select
               v-model="BasicInfoObj.songyangN"
-              placeholder
               class="ep50"
+              placeholder
             >
               <el-option label="利欧集团湖南泵业有限公司" value="shanghai" />
               <el-option
@@ -74,8 +74,8 @@
           <el-form-item label="单位地址">
             <el-select
               v-model="BasicInfoObj.jingxiaoAddr"
-              placeholder
               class="ep50"
+              placeholder
             >
               <el-option
                 label="湖南湘潭九华示范区"
@@ -94,8 +94,8 @@
           <el-form-item label="生产单位">
             <el-select
               v-model="BasicInfoObj.shengchanN"
-              placeholder
               class="ep50"
+              placeholder
             >
               <el-option label="利欧集团湖南泵业有限公司" value="shanghai" />
               <el-option
@@ -109,8 +109,8 @@
           <el-form-item label="单位地址">
             <el-select
               v-model="BasicInfoObj.shengchanAddr"
-              placeholder
               class="ep50"
+              placeholder
             >
               <el-option
                 label="湖南湘潭九华示范区"
@@ -127,7 +127,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="委托单位">
-            <el-select v-model="BasicInfoObj.weituo" placeholder class="ep50">
+            <el-select v-model="BasicInfoObj.weituo" class="ep50" placeholder>
               <el-option label="利欧集团湖南泵业有限公司" value="shanghai" />
               <el-option
                 label="LEO Group PUMP (HUNAN) CO , LTD"
@@ -140,8 +140,8 @@
           <el-form-item label="单位地址">
             <el-select
               v-model="BasicInfoObj.weituoAddr"
-              placeholder
               class="ep50"
+              placeholder
             >
               <el-option
                 label="湖南湘潭九华示范区"
@@ -168,8 +168,8 @@
           <el-form-item label="检验依据">
             <el-select
               v-model="BasicInfoObj.jianyanbiaozhun"
-              placeholder
               class="ep50"
+              placeholder
             >
               <el-option
                 label="湖南湘潭九华示范区"
@@ -188,8 +188,8 @@
           <el-form-item label="抽样地点">
             <el-select
               v-model="BasicInfoObj.chouyangAddr"
-              placeholder
               class="ep50"
+              placeholder
             >
               <el-option label="利欧集团湖南泵业有限公司" value="shanghai" />
               <el-option
@@ -239,8 +239,8 @@
           <el-form-item label="试验日期">
             <el-date-picker
               v-model="BasicInfoObj.shiyanDateTime"
-              type="date"
               format="yyyy 年 MM 月 dd 日"
+              type="date"
             />
           </el-form-item>
         </el-col>
@@ -259,8 +259,8 @@
           <el-form-item label="送样日期">
             <el-date-picker
               v-model="BasicInfoObj.songyangDateTime"
-              type="date"
               format="yyyy 年 MM 月 dd 日"
+              type="date"
             />
           </el-form-item>
         </el-col>
@@ -270,10 +270,10 @@
           <el-form-item label="备注" style="display: block; width: 100%">
             <el-input
               v-model="BasicInfoObj.beizhu"
-              :rows="2"
               :autosize="{ minRows: 1, maxRows: 1 }"
-              type="textarea"
               placeholder="备注"
+              :rows="2"
+              type="textarea"
             />
           </el-form-item>
         </el-col>

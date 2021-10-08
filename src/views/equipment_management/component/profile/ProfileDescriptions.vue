@@ -1,11 +1,11 @@
 <template>
   <div :key="productId">
     <el-descriptions
-      :label-style="{ 'text-align': 'center' }"
-      :content-style="{ 'text-align': 'left' }"
+      border
       class="margin-top"
       :column="2"
-      border
+      :content-style="{ 'text-align': 'left' }"
+      :label-style="{ 'text-align': 'center' }"
     >
       <!--      <el-descriptions-item :label="$translateTitle('home.category')">-->
       <!--        {{ productDetail.netType }}-->
@@ -23,8 +23,8 @@
       </el-descriptions-item>
       <el-descriptions-item :label="$translateTitle('product.physicalmodel')">
         <el-link
-          :type="productDetail.thing.properties.length ? 'success' : 'default'"
           :disabled="productDetail.thing.properties.length ? false : true"
+          :type="productDetail.thing.properties.length ? 'success' : 'default'"
           @click="featProperties(productDetail.thing.properties)"
         >
           {{ productDetail.thing.properties.length || 0 }}
@@ -73,8 +73,8 @@
       <el-descriptions-item>
         <template slot="label">
           <el-link
-            type="warning"
             :disabled="!productDetail.decoder.code.length"
+            type="warning"
             @click="seeDecoder(productDetail)"
           >
             {{ $translateTitle('product.decoder') }}
@@ -85,8 +85,8 @@
     <!--    查看物模型-->
     <el-button
       v-if="productDetail.objectId"
-      type="primary"
       size="small"
+      type="primary"
       @click="checkschema"
     >
       {{ $translateTitle('product.viewobjectmodel') }}
@@ -94,8 +94,8 @@
     <!-- 新增自定义属性 -->
     <el-button
       v-if="productDetail.objectId"
-      type="primary"
       size="small"
+      type="primary"
       @click="createProperty"
     >
       {{ $translateTitle('product.newobjectmodel') }}
@@ -104,10 +104,6 @@
       v-if="!codeFlag"
       :key="tableType"
       v-loading="tableLoading"
-      highlight-current-row
-      height="60vh"
-      size="medium"
-      :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
       :data="
         tableType == 'things'
@@ -118,6 +114,10 @@
           ? dictTableList
           : []
       "
+      :header-cell-style="{ 'text-align': 'center' }"
+      height="60vh"
+      highlight-current-row
+      size="medium"
       style="width: 100%"
     >
       <div v-if="tableType == 'things'">
@@ -132,16 +132,16 @@
               style="box-sizing: border-box; width: 60%; text-align: center"
             >
               <el-table-column
-                :label="$translateTitle('product.identifier')"
                 align="center"
+                :label="$translateTitle('product.identifier')"
               >
                 <template slot-scope="scope1">
                   <span>{{ scope1.row.identifier }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('product.functionaltypes')"
                 align="center"
+                :label="$translateTitle('product.functionaltypes')"
               >
                 <span>
                   {{ $translateTitle('product.attribute') }}
@@ -149,32 +149,32 @@
               </el-table-column>
 
               <el-table-column
+                align="center"
                 :label="$translateTitle('product.functionname')"
                 prop="name"
-                align="center"
               />
               <el-table-column
-                :label="$translateTitle('product.datadefinition')"
                 align="center"
+                :label="$translateTitle('product.datadefinition')"
               />
             </el-table>
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.order')"
-          width="80"
           align="center"
+          :label="$translateTitle('product.order')"
           sortable
+          width="80"
         >
           <template #default="{ row }">
             {{ row.dataForm.order }}
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.Rounds')"
-          width="80"
           align="center"
+          :label="$translateTitle('product.Rounds')"
           sortable
+          width="80"
         >
           <template #default="{ row }">
             {{ row.dataForm.round }}
@@ -182,10 +182,10 @@
         </el-table-column>
 
         <el-table-column
-          :label="$translateTitle('product.Strategy')"
-          width="80"
           align="center"
+          :label="$translateTitle('product.Strategy')"
           sortable
+          width="80"
         >
           <template #default="{ row }">
             {{ row.dataForm.strategy }}
@@ -193,10 +193,10 @@
         </el-table-column>
 
         <el-table-column
-          :label="$translateTitle('product.protocol')"
-          width="80"
           align="center"
+          :label="$translateTitle('product.protocol')"
           sortable
+          width="80"
         >
           <template #default="{ row }">
             {{
@@ -206,28 +206,28 @@
         </el-table-column>
         <el-table-column
           align="center"
-          width="120"
-          sortable
           :label="$translateTitle('product.functionaltypes')"
+          sortable
+          width="120"
         >
           <span>{{ $translateTitle('product.attribute') }}</span>
         </el-table-column>
 
         <el-table-column
           align="center"
-          sortable
           :label="$translateTitle('product.identifier')"
           prop="identifier"
+          sortable
         />
         <el-table-column
           align="center"
-          sortable
           :label="$translateTitle('product.functionname')"
           prop="name"
+          sortable
         />
         <el-table-column
-          :label="$translateTitle('product.datatype')"
           align="center"
+          :label="$translateTitle('product.datatype')"
           sortable
         >
           <template slot-scope="scope">
@@ -236,8 +236,8 @@
         </el-table-column>
         <el-table-column
           align="center"
-          sortable
           :label="$translateTitle('product.datadefinition')"
+          sortable
         >
           <template slot-scope="scope">
             <span
@@ -272,16 +272,16 @@
         </el-table-column>
         <el-table-column
           align="center"
-          width="160"
           :label="$translateTitle('developer.operation')"
+          width="160"
         >
           <template slot-scope="scope">
-            <el-button type="danger" size="mini" @click="deletewmx(scope.row)">
+            <el-button size="mini" type="danger" @click="deletewmx(scope.row)">
               {{ $translateTitle('developer.delete') }}
             </el-button>
             <el-button
-              type="primary"
               size="mini"
+              type="primary"
               @click="wmxDataFill(scope.row, scope.row.index)"
             >
               <!-- 编辑 -->
@@ -292,21 +292,21 @@
       </div>
       <div v-else-if="tableType == 'profile' || tableType == 'parser'">
         <el-table-column
+          align="center"
+          label="uid"
+          prop="uid"
           show-overflow-tooltip
           sortable
-          align="center"
-          prop="uid"
-          label="uid"
         />
         <el-table-column
+          align="center"
+          :label="$translateTitle('product.chinesetitle')"
+          prop="name"
           show-overflow-tooltip
           sortable
-          align="center"
-          prop="name"
-          :label="$translateTitle('product.chinesetitle')"
         >
           <template #default="{ row }">
-            <el-popover trigger="hover" placement="top">
+            <el-popover placement="top" trigger="hover">
               <p>
                 {{ $translateTitle('product.englishtitle') }}:
                 {{ row.enname }}
@@ -338,21 +338,21 @@
           </template>
         </el-table-column>
         <el-table-column
+          align="center"
+          :label="$translateTitle('product.functionaltypes')"
+          prop="type"
           show-overflow-tooltip
           sortable
-          align="center"
-          prop="type"
-          :label="$translateTitle('product.functionaltypes')"
         />
       </div>
       <div v-else-if="tableType == 'basedate.params'">
-        <el-table-column prop="order" label="序号" />
-        <el-table-column prop="identifier" label="标识符" />
-        <el-table-column prop="name" label="功能名称" />
-        <el-table-column prop="type" label="数据类型" />
-        <el-table-column prop="address" label="数据地址" />
-        <el-table-column prop="bytes" label="数据长度" />
-        <el-table-column prop="required" label="是否必填">
+        <el-table-column label="序号" prop="order" />
+        <el-table-column label="标识符" prop="identifier" />
+        <el-table-column label="功能名称" prop="name" />
+        <el-table-column label="数据类型" prop="type" />
+        <el-table-column label="数据地址" prop="address" />
+        <el-table-column label="数据长度" prop="bytes" />
+        <el-table-column label="是否必填" prop="required">
           <template slot-scope="scope">
             <span v-if="scope.row.required">是</span>
             <span v-else>否</span>
@@ -367,8 +367,8 @@
       v-else-if="codeFlag"
       v-model="ace_editor"
       lang="erlang"
-      theme="monokai"
       style="height: 500px"
+      theme="monokai"
     />
     <el-empty v-else :image-size="200" />
   </div>

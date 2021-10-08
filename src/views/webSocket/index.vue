@@ -9,12 +9,12 @@
 <template>
   <div class="webSocket-container">
     <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8">
-        <el-alert type="success" :closable="false">
+      <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
+        <el-alert :closable="false" type="success">
           webSocket连接{{ status }}！
         </el-alert>
         <br />
-        <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-form ref="form" label-width="100px" :model="form" :rules="rules">
           <el-form-item label="地址">
             <el-input v-model="url" disabled />
           </el-form-item>

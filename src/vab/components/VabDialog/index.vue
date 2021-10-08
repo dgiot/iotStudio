@@ -1,20 +1,20 @@
 <template>
   <el-dialog
+    :append-to-body="appendToBody"
+    :before-close="handleClose"
+    :close-on-click-modal="false"
     custom-class="uq-dialog-custom"
+    :destroy-on-close="destroyOnClose"
+    :fullscreen="fullscreen"
+    :modal="modal"
+    :modal-append-to-body="modalAppendToBody"
     :title="$slots.title ? '' : title"
     :visible.sync="visible"
     :width="width"
-    :append-to-body="appendToBody"
-    :modal="modal"
-    :close-on-click-modal="false"
-    :fullscreen="fullscreen"
-    :destroy-on-close="destroyOnClose"
-    :modal-append-to-body="modalAppendToBody"
-    :before-close="handleClose"
-    @open="open"
-    @opened="opened"
     @close="close"
     @closed="closed"
+    @open="open"
+    @opened="opened"
   >
     <template v-if="$slots.title">
       <span slot="title">

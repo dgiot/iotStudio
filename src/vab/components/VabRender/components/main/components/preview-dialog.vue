@@ -1,22 +1,22 @@
 <template>
   <el-dialog
     :append-to-body="true"
-    :visible="visible"
     title="预览"
+    :visible="visible"
     width="90%"
-    @update:visible="$emit('change', $event)"
-    @open="isShowContent = true"
     @closed="isShowContent = false"
+    @open="isShowContent = true"
+    @update:visible="$emit('change', $event)"
   >
     <ele-form
       v-if="isShowContent"
       v-model="formData"
       v-bind="VabRender.formBindProps"
       :form-desc="VabRender.formDesc"
-      :visible="visible"
       :request-fn="handleRequest"
-      @update:visible="$emit('change', $event)"
+      :visible="visible"
       @request-success="handleRequestSuccess"
+      @update:visible="$emit('change', $event)"
     />
   </el-dialog>
 </template>

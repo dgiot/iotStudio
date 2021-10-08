@@ -3,8 +3,8 @@
     <template v-if="!isShowMultiple && show">
       <vue-aliplayer-v2
         ref="VueAliplayerV2"
-        :source="source"
         :options="options"
+        :source="source"
       />
     </template>
     <div v-if="isShowMultiple && show" class="show-multiple">
@@ -13,8 +13,8 @@
           :key="x"
           ref="VueAliplayerV2"
           class="multiple-player"
-          :source="source"
           :options="options"
+          :source="source"
         />
       </template>
     </div>

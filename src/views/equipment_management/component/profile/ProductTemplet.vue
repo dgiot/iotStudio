@@ -1,10 +1,10 @@
 <template>
   <a-drawer
     :append-to-body="true"
-    width="500"
+    class="parserTable"
     direction="rtl"
     :visible="dialogFormVisible"
-    class="parserTable"
+    width="500"
     @close="close"
   >
     <vab-query-form v-show="false">
@@ -49,23 +49,23 @@
       </vab-query-form-top-panel>
     </vab-query-form>
     <el-table
-      :height="$baseTableHeight(0) + 180"
-      :header-cell-style="{ 'text-align': 'center' }"
+      border
       :cell-style="{ 'text-align': 'center' }"
       :data="tableData"
-      border
+      :header-cell-style="{ 'text-align': 'center' }"
+      :height="$baseTableHeight(0) + 180"
       size="mini"
       style="width: 100%"
     >
-      <el-table-column prop="objectId" label="objectId" width="140" />
+      <el-table-column label="objectId" prop="objectId" width="140" />
       <el-table-column
-        prop="name"
         :label="$translateTitle('developer.Templatename')"
+        prop="name"
         width="180"
       />
       <el-table-column
-        :label="$translateTitle('developer.operation')"
         align="center"
+        :label="$translateTitle('developer.operation')"
       >
         <template #default="{ row }">
           <!--          <el-button size="mini" type="success" @click.native="updateTemplate(row)">-->
@@ -83,9 +83,9 @@
     </el-table>
     <vab-Pagination
       v-show="queryForm.total > 0"
-      :total="queryForm.total"
-      :page.sync="queryForm.pageNo"
       :limit.sync="queryForm.pageSize"
+      :page.sync="queryForm.pageNo"
+      :total="queryForm.total"
       @pagination="Industry"
     />
     <template #footer>

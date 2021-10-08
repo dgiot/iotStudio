@@ -6,11 +6,11 @@
     /> -->
     <div style="width: 360px; height: 100vh"></div>
 
-    <div style="width: calc(100% - 360px); padding: 20px" class="u_shieldright">
+    <div class="u_shieldright" style="width: calc(100% - 360px); padding: 20px">
       <el-form
+        class="demo-form-inline"
         :inline="true"
         :model="formInline"
-        class="demo-form-inline"
         size="small"
       >
         <el-form-item label="U盾状态分类">
@@ -32,80 +32,80 @@
         </el-form-item>
       </el-form>
       <div>
-        <el-button type="success" size="small" @click="uShield">
+        <el-button size="small" type="success" @click="uShield">
           U盾扫描
         </el-button>
       </div>
       <div class="blocktable">
         <el-table :data="tableData" style="width: 100%; text-align: center">
-          <el-table-column type="index" label="序号" width="50" />
-          <el-table-column label="U盾序列号" align="center" width="250">
+          <el-table-column label="序号" type="index" width="50" />
+          <el-table-column align="center" label="U盾序列号" width="250">
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.SerialNumber }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" width="300" label="证书拥有者">
+          <el-table-column align="center" label="证书拥有者" width="300">
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.Subject }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" width="300" label="颁发机构">
+          <el-table-column align="center" label="颁发机构" width="300">
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.Issuer }}</span>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            width="300"
             label="数据签名"
             show-overflow-tooltip
+            width="300"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.bstrCertB64 }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" width="150" label="发证时间">
+          <el-table-column align="center" label="发证时间" width="150">
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.beforeDate }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" width="150" label="到期时间">
+          <el-table-column align="center" label="到期时间" width="150">
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.afterDate }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" width="100" label="分配状态" />
-          <el-table-column align="center" width="200" label="授权单位" />
-          <el-table-column align="center" width="200" label="授权个人" />
-          <el-table-column align="center" width="200" label="U盾管理">
+          <el-table-column align="center" label="分配状态" width="100" />
+          <el-table-column align="center" label="授权单位" width="200" />
+          <el-table-column align="center" label="授权个人" width="200" />
+          <el-table-column align="center" label="U盾管理" width="200">
             <template slot-scope="scope">
               <el-button
-                type="primary"
                 icon="el-icon-edit"
                 size="small"
+                type="primary"
                 @click="editorUdun(scope.row)"
               />
-              <el-button type="danger" icon="el-icon-delete" size="small" />
+              <el-button icon="el-icon-delete" size="small" type="danger" />
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div class="blocktable">
         <el-pagination
-          :page-sizes="[10, 20, 30, 50]"
-          :page-size="pagesize"
-          :total="total"
           layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
+          :page-size="pagesize"
+          :page-sizes="[10, 20, 30, 50]"
+          :total="total"
           @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         />
       </div>
     </div>
     <!--U盾弹窗-->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogFormVisible"
       title="U盾设备赋权"
+      :visible.sync="dialogFormVisible"
     >
       <el-form
         ref="ushieldform"
@@ -127,8 +127,8 @@
         <el-row>
           <el-col :span="12">
             <el-form-item
-              :label-width="formLabelWidth"
               label="U盾序列号"
+              :label-width="formLabelWidth"
               prop="unumber"
             >
               <el-input
@@ -139,8 +139,8 @@
               />
             </el-form-item>
             <el-form-item
-              :label-width="formLabelWidth"
               label="证书拥有者"
+              :label-width="formLabelWidth"
               prop="name"
             >
               <el-input
@@ -151,8 +151,8 @@
               />
             </el-form-item>
             <el-form-item
-              :label-width="formLabelWidth"
               label="发证日期"
+              :label-width="formLabelWidth"
               prop="startdate"
             >
               <el-input
@@ -165,8 +165,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              :label-width="formLabelWidth"
               label="颁发机构"
+              :label-width="formLabelWidth"
               prop="bidunit"
             >
               <el-input
@@ -176,7 +176,7 @@
                 readonly
               />
             </el-form-item>
-            <el-form-item :label-width="formLabelWidth" label="到期日期">
+            <el-form-item label="到期日期" :label-width="formLabelWidth">
               <el-input
                 v-model="ushieldform.enddate"
                 autocomplete="off"
@@ -184,14 +184,14 @@
                 readonly
               />
             </el-form-item>
-            <el-form-item :label-width="formLabelWidth" label="Ukey证书">
+            <el-form-item label="Ukey证书" :label-width="formLabelWidth">
               <el-input
                 v-model="ushieldform.ukey"
-                :rows="4"
                 autocomplete="off"
-                type="textarea"
                 placeholder="请输入Ukey证书信息"
                 readonly
+                :rows="4"
+                type="textarea"
               />
             </el-form-item>
           </el-col>
@@ -209,7 +209,7 @@
         </p>
         <el-row v-show="ushieldid != ''">
           <el-col :span="12">
-            <el-form-item :label-width="formLabelWidth" label="授权单位">
+            <el-form-item label="授权单位" :label-width="formLabelWidth">
               <el-select
                 v-model="ushieldform.company"
                 placeholder="请选择通过资质认证的企业"
@@ -224,7 +224,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :label-width="formLabelWidth" label="授权个人">
+            <el-form-item label="授权个人" :label-width="formLabelWidth">
               <el-select
                 v-model="ushieldform.username"
                 autocomplete="off"

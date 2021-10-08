@@ -3,9 +3,9 @@
     <!--新增字典-->
     <a-drawer
       v-if="dictVisible"
-      style="z-index: 999"
       :append-to-body="true"
       :close-on-click-modal="false"
+      style="z-index: 999"
       :title="titleTempDialog"
       :visible="dictVisible"
       width="60%"
@@ -20,8 +20,8 @@
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item
-              :label-width="formLabelWidth"
               label="字典模板名称"
+              :label-width="formLabelWidth"
               prop="name"
             >
               <el-input v-model="dictTempForm.name" autocomplete="off" />
@@ -29,8 +29,8 @@
           </el-col>
           <el-col :span="8">
             <el-form-item
-              :label-width="formLabelWidth"
               label="字典模板类型"
+              :label-width="formLabelWidth"
               prop="cType"
             >
               <el-input v-model="dictTempForm.cType" autocomplete="off" />
@@ -38,28 +38,28 @@
           </el-col>
           <el-col :span="8">
             <el-form-item
-              :label-width="formLabelWidth"
               label="字典模板状态"
+              :label-width="formLabelWidth"
               prop="enable"
             >
-              <el-radio v-model="dictTempForm.enable" label="1" border>
+              <el-radio v-model="dictTempForm.enable" border label="1">
                 启用
               </el-radio>
-              <el-radio v-model="dictTempForm.enable" label="0" border>
+              <el-radio v-model="dictTempForm.enable" border label="0">
                 禁用
               </el-radio>
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-form-item :label-width="formLabelWidth" label="字典模板数据">
+        <el-form-item label="字典模板数据" :label-width="formLabelWidth">
           <el-tabs v-model="elactiveName">
             <el-tab-pane label="Table" name="Table">
               <el-button
-                type="primary"
                 class="mt-3"
-                size="small"
                 icon="el-icon-plus"
+                size="small"
+                type="primary"
                 @click.native="$parent.addRow(dictTempForm.params)"
               >
                 新 增
@@ -70,13 +70,13 @@
                 height="300"
                 style="width: 100%; text-align: center"
               >
-                <el-table-column prop="order" label="序号" />
-                <el-table-column prop="identifier" label="标识符" />
-                <el-table-column prop="name" label="功能名称" />
-                <el-table-column prop="type" label="数据类型" />
-                <el-table-column prop="address" label="数据地址" />
-                <el-table-column prop="bytes" label="数据长度" />
-                <el-table-column prop="required" label="是否必填">
+                <el-table-column label="序号" prop="order" />
+                <el-table-column label="标识符" prop="identifier" />
+                <el-table-column label="功能名称" prop="name" />
+                <el-table-column label="数据类型" prop="type" />
+                <el-table-column label="数据地址" prop="address" />
+                <el-table-column label="数据长度" prop="bytes" />
+                <el-table-column label="是否必填" prop="required">
                   <template slot-scope="scope">
                     <span v-if="scope.row.required">是</span>
                     <span v-else>否</span>
@@ -88,13 +88,13 @@
                 <!--                      <span v-else>否</span>-->
                 <!--                    </template>-->
                 <!--                  </el-table-column>-->
-                <el-table-column label="操作" width="160" align="center">
+                <el-table-column align="center" label="操作" width="160">
                   <template slot-scope="scope">
                     <el-button
-                      size="mini"
-                      type="danger"
                       plain
+                      size="mini"
                       title="删除"
+                      type="danger"
                       @click.native="
                         $parent.delRow(scope.$index, dictTempForm.params)
                       "
@@ -102,10 +102,10 @@
                       删除
                     </el-button>
                     <el-button
-                      size="mini"
-                      type="info"
                       plain
+                      size="mini"
                       title="编辑"
+                      type="info"
                       @click.native="
                         $parent.editRow(
                           scope.row,
@@ -123,19 +123,19 @@
             <el-tab-pane label="Json" name="Json">
               <vab-json-editor
                 v-model="dictTempForm.params"
-                :mode="'code'"
                 lang="zh"
+                :mode="'code'"
                 @has-error="$parent.onError"
               />
             </el-tab-pane>
           </el-tabs>
         </el-form-item>
-        <el-form-item :label-width="formLabelWidth" label="描述">
+        <el-form-item label="描述" :label-width="formLabelWidth">
           <el-input
             v-model="dictTempForm.description"
             :autosize="{ minRows: 2, maxRows: 4 }"
-            type="textarea"
             placeholder="请输入描述"
+            type="textarea"
           />
         </el-form-item>
 
@@ -153,20 +153,20 @@
     <!--新增字典数据-->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="editFlag"
-      :title="titleDict"
-      :close-on-click-modal="false"
       :before-close="$parent.closeDict"
-      width="60%"
+      :close-on-click-modal="false"
+      :title="titleDict"
       top="5vh"
+      :visible.sync="editFlag"
+      width="60%"
       @open="$parent.opendialog('tempparams')"
     >
       <el-form
         ref="tempparams"
-        :model="tempparams"
-        size="mini"
         label-position="left"
         label-width="100px"
+        :model="tempparams"
+        size="mini"
       >
         <el-row :gutter="24">
           <el-col :span="12">
@@ -243,9 +243,9 @@
             <el-form-item :label="$translateTitle('product.unit')">
               <el-select
                 v-model="tempparams.unit"
-                style="width: 100%"
-                :placeholder="$translateTitle('product.unit')"
                 filterable
+                :placeholder="$translateTitle('product.unit')"
+                style="width: 100%"
               >
                 <el-option
                   v-for="(item, index) in allunit"
@@ -311,10 +311,10 @@
         </el-row>
         <el-table
           v-show="tempparams.protocol == 'modbus'"
-          :data="dataList"
           border
-          style="width: 100%"
+          :data="dataList"
           size="small"
+          style="width: 100%"
         >
           <el-table-column
             align="center"
@@ -332,8 +332,8 @@
             <template slot-scope="scope">
               <el-select
                 v-model="tempparams.operatetype"
-                style="width: 100%"
                 placeholder="请选择"
+                style="width: 100%"
               >
                 <el-option
                   v-for="item in [
@@ -413,9 +413,9 @@
         <el-row :gutter="24">
           <el-col :span="12">
             <el-tooltip
-              style="float: left"
               effect="dark"
               placement="right-start"
+              style="float: left"
             >
               <div slot="content">
                 1. 采集值 设备上行数据经采集公式计算后显示 。
@@ -447,17 +447,17 @@
             <el-form-item label="采集公式">
               <el-input
                 v-model="tempparams.collection"
-                style="width: 100%"
                 :rows="1"
+                style="width: 100%"
                 type="textarea"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-tooltip
-              style="float: left"
               effect="dark"
               placement="right-start"
+              style="float: left"
             >
               <div slot="content">
                 1. 设置值 平台下行数据经设置公式计算后设置 。
@@ -497,20 +497,20 @@
         <el-row :gutter="24">
           <el-col :span="12">
             <el-form-item label="必填">
-              <el-radio v-model="tempparams.required" :label="true" border>
+              <el-radio v-model="tempparams.required" border :label="true">
                 是
               </el-radio>
-              <el-radio v-model="tempparams.required" :label="false" border>
+              <el-radio v-model="tempparams.required" border :label="false">
                 否
               </el-radio>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="只读">
-              <el-radio v-model="tempparams.readonly" :label="true" border>
+              <el-radio v-model="tempparams.readonly" border :label="true">
                 是
               </el-radio>
-              <el-radio v-model="tempparams.readonly" :label="false" border>
+              <el-radio v-model="tempparams.readonly" border :label="false">
                 否
               </el-radio>
             </el-form-item>
@@ -519,10 +519,10 @@
         <el-row :gutter="24">
           <el-col :span="12">
             <el-form-item label="列表显示">
-              <el-radio v-model="tempparams.isshow" :label="true" border>
+              <el-radio v-model="tempparams.isshow" border :label="true">
                 是
               </el-radio>
-              <el-radio v-model="tempparams.isshow" :label="false" border>
+              <el-radio v-model="tempparams.isshow" border :label="false">
                 否
               </el-radio>
             </el-form-item>
@@ -551,8 +551,8 @@
             class="notauto"
             readonly
           >
-            <el-option :value="true" label="是" />
-            <el-option :value="false" label="否" />
+            <el-option label="是" :value="true" />
+            <el-option label="否" :value="false" />
           </el-select>
           <el-input
             v-else-if="tempparams.type == 'int'"
@@ -565,10 +565,10 @@
             <el-tab-pane label="Table" name="Table1">
               <!--枚举型添加格式-->
               <el-button
-                type="primary"
                 class="mt-3"
-                size="mini"
                 icon="el-icon-plus"
+                size="mini"
+                type="primary"
                 @click.native="$parent.addDomain"
               >
                 新 增
@@ -577,23 +577,23 @@
                 :data="tempparams.specs"
                 style="width: 100%; text-align: center"
               >
-                <el-table-column label="属性" align="center">
+                <el-table-column align="center" label="属性">
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.attribute" />
                   </template>
                 </el-table-column>
-                <el-table-column label="属性值" align="center">
+                <el-table-column align="center" label="属性值">
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.attributevalue" />
                   </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center">
+                <el-table-column align="center" label="操作">
                   <template slot-scope="scope">
                     <el-button
-                      size="mini"
-                      type="danger"
                       plain
+                      size="mini"
                       title="删除"
+                      type="danger"
                       @click.native="$parent.removeDomain(scope.row)"
                     >
                       删除

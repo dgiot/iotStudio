@@ -1,10 +1,10 @@
 <template>
   <el-dialog
-    width="60%"
     :append-to-body="true"
+    class="parserTable"
     direction="rtl"
     :visible.sync="parserTable"
-    class="parserTable"
+    width="60%"
     @close="$parent.parserTable = !parserTable"
   >
     <div slot="title" class="header-title">
@@ -15,25 +15,25 @@
         {{ $translateTitle('product.preservation') }}
       </el-button>
     </div>
-    <el-table size="mini" :data="parserTables">
+    <el-table :data="parserTables" size="mini">
       <el-table-column
-        width="100"
+        align="center"
+        label="uid"
+        prop="uid"
         show-overflow-tooltip
         sortable
-        align="center"
-        prop="uid"
-        label="uid"
+        width="100"
       />
       <el-table-column
+        align="center"
+        :label="$translateTitle('product.chinesetitle')"
+        prop="name"
         show-overflow-tooltip
         sortable
-        align="center"
-        prop="name"
         width="140"
-        :label="$translateTitle('product.chinesetitle')"
       >
         <template #default="{ row }">
-          <el-popover trigger="hover" placement="top">
+          <el-popover placement="top" trigger="hover">
             <p>
               {{ $translateTitle('product.englishtitle') }}: {{ row.enname }}
             </p>
@@ -64,18 +64,18 @@
         </template>
       </el-table-column>
       <el-table-column
+        align="center"
+        :label="$translateTitle('product.functionaltypes')"
+        prop="type"
         show-overflow-tooltip
         sortable
-        align="center"
-        prop="type"
-        :label="$translateTitle('product.functionaltypes')"
       />
       <el-table-column
-        sortable
         align="center"
-        prop="visible"
-        width="100"
         :label="$translateTitle('product.visible')"
+        prop="visible"
+        sortable
+        width="100"
       >
         <template #default="{ row }">
           <el-switch v-model="row.visible" disabled />
@@ -84,23 +84,23 @@
       <el-table-column
         align="center"
         fixed="right"
-        width="200"
         :label="$translateTitle('developer.operation')"
+        width="200"
       >
         <template slot-scope="scope">
           <el-button type="text" @click="editParse(scope.$index, scope.row)">
             {{ $translateTitle('concentrator.edit') }}
           </el-button>
           <el-button
-            type="text"
             :disabled="!scope.row.config.order"
+            type="text"
             @click="previewParse(scope.row.config)"
           >
             {{ $translateTitle('application.preview') }}
           </el-button>
           <el-button
-            type="text"
             size="small"
+            type="text"
             @click.native.prevent="
               lockingParse(scope.row.uid, scope.$index, parserTables)
             "
@@ -108,9 +108,9 @@
             {{ $translateTitle('application.locking') }}
           </el-button>
           <el-button
-            type="text"
-            size="small"
             :disabled="scope.row.disable"
+            size="small"
+            type="text"
             @click.native.prevent="
               deleteParse(scope.row.uid, scope.$index, parserTables)
             "

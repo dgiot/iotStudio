@@ -5,8 +5,8 @@
         <el-form
           ref="record"
           class="clients-basic-form"
-          :model="record"
           label-suffix=":"
+          :model="record"
         >
           <el-col :span="12">
             <div class="card-subtitle">{{ $t('clients.connectInfo') }}</div>
@@ -20,9 +20,9 @@
             >
               <el-popover
                 v-if="record.clientid.length > 60"
+                :content="record.clientid"
                 placement="top-start"
                 trigger="hover"
-                :content="record.clientid"
               >
                 <span slot="reference">
                   {{ interceptString(record.clientid, 60) }}
@@ -158,8 +158,8 @@
           v-if="showMore"
           ref="record"
           class="clients-basic-form"
-          :model="record"
           label-suffix=":"
+          :model="record"
         >
           <el-row>
             <el-col :span="12">

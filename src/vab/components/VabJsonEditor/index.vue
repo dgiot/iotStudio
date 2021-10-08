@@ -4,8 +4,8 @@
     <div v-if="showBtns !== false" class="jsoneditor-btns">
       <button
         class="json-save-btn"
-        type="button"
         :disabled="error"
+        type="button"
         @click="onSave()"
       >
         {{ locale[lang].save }}

@@ -8,15 +8,15 @@
     <!-- tabindex >= 0 使得双击时聚集该元素 -->
     <div
       ref="text"
-      :contenteditable="canEdit"
       :class="{ canEdit }"
-      :tabindex="element.id"
+      :contenteditable="canEdit"
       :style="{ verticalAlign: element.style.verticalAlign }"
-      @dblclick="setEdit"
-      @paste="clearStyle"
-      @mousedown="handleMousedown"
+      :tabindex="element.id"
       @blur="handleBlur"
+      @dblclick="setEdit"
       @input="handleInput"
+      @mousedown="handleMousedown"
+      @paste="clearStyle"
       v-html="element.propValue"
     ></div>
   </div>

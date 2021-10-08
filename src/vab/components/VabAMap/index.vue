@@ -3,12 +3,12 @@
     <div class="amap-page-container">
       <!-- <el-amap-search-box class="search-box" :search-option="searchOption" :on-search-result="onSearchResult"></el-amap-search-box> -->
       <el-amap
-        vid="amapDemo"
         :center="mapCenter"
-        :zoom="15"
         class="amap-demo"
         :map-style="mapStyle"
         resize-enable
+        vid="amapDemo"
+        :zoom="15"
       >
         <el-amap-marker
           v-for="(marker, i) in markers"

@@ -6,9 +6,9 @@
   >
     <input
       ref="uploader"
-      type="file"
-      style="display: none"
       accept="zip"
+      style="display: none"
+      type="file"
       @change="doUpload($event)"
     />
     <el-table
@@ -22,24 +22,24 @@
     >
       <el-table-column
         align="center"
-        sortable
-        show-overflow-tooltip
         label="className"
         prop="className"
+        show-overflow-tooltip
+        sortable
       />
       <el-table-column
         align="center"
-        sortable
-        show-overflow-tooltip
         label="fields"
+        show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
-          <el-popover trigger="hover" placement="top">
+          <el-popover placement="top" trigger="hover">
             <vab-json-editor
               v-if="row.fields"
               v-model="row.fields"
-              :mode="'code'"
               lang="zh"
+              :mode="'code'"
             />
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">fields</el-tag>

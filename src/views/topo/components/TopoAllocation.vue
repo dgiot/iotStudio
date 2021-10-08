@@ -5,20 +5,20 @@
       <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     </div>
     <el-collapse v-model="activeNames" accordion>
-      <el-collapse-item title="iconfont" name="icon">
+      <el-collapse-item name="icon" title="iconfont">
         <el-row :gutter="20">
           <el-col v-for="item in iconfont.glyphs" :key="item.icon_id" :span="8">
             <i v-svg-drag="{ callback: coordinate }" @mousedown="moveSvg(item)">
               <VabIconfont
-                type="svg"
-                :title="item.name"
                 :name="item.font_class"
+                :title="item.name"
+                type="svg"
               />
             </i>
           </el-col>
         </el-row>
       </el-collapse-item>
-      <el-collapse-item title="图标" name="1">
+      <el-collapse-item name="1" title="图标">
         <el-row :gutter="20">
           <el-col :span="24">
             <vab-query-form>
@@ -28,15 +28,15 @@
                     <el-input v-model="queryForm.title" size="mini">
                       <el-button
                         slot="append"
+                        icon="el-icon-search"
                         native-type="submit"
                         type="primary"
-                        icon="el-icon-search"
                         @click="queryData"
                       />
                       <el-button
                         slot="prepend"
-                        type="success"
                         icon="el-icon-upload"
+                        type="success"
                         @click="uploadCkick()"
                       />
                     </el-input>
@@ -49,8 +49,8 @@
           <el-col v-for="(item, index) in queryIcon" :key="index" :span="8">
             <i @click="$message.info(`you click ${item}`)">
               <el-image
-                style="width: 100%; height: 40px; cursor: pointer"
                 :src="imgHost + item"
+                style="width: 100%; height: 40px; cursor: pointer"
                 @click.native="handleIcon(imgHost + item)"
               />
             </i>

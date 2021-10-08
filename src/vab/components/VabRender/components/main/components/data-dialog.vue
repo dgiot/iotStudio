@@ -1,16 +1,16 @@
 <template>
   <el-dialog
     :append-to-body="true"
-    :visible="visible"
-    title="数据编辑"
     :close-on-click-modal="false"
+    title="数据编辑"
+    :visible="visible"
     @update:visible="$emit('change', $event)"
   >
     <el-alert
-      title="数据必须为对象"
-      type="warning"
       show-icon
       style="margin-bottom: 20px"
+      title="数据必须为对象"
+      type="warning"
     />
     <prism-editor
       v-model="code"
@@ -27,10 +27,10 @@
       </el-button>
       <el-button type="primary">
         <el-link
+          :download="`${Date.now()}.js`"
           :href="fileURL"
           style="color: white"
           :underline="false"
-          :download="`${Date.now()}.js`"
         >
           下载数据
         </el-link>

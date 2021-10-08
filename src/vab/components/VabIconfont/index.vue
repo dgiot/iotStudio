@@ -1,14 +1,14 @@
 <template>
   <svg
     v-if="type == 'svg'"
-    :style="style"
-    :class="iconClass"
-    class="icon svg-icon"
     aria-hidden="true"
+    class="icon svg-icon"
+    :class="iconClass"
+    :style="style"
   >
     <use :xlink:href="`#dgiot-${name}`" />
   </svg>
-  <span v-else-if="type == 'Unicode'" :style="style" :class="iconClass"></span>
+  <span v-else-if="type == 'Unicode'" :class="iconClass" :style="style"></span>
   <i v-else :class="iconClass" :style="style"></i>
 </template>
 

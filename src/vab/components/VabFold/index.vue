@@ -1,7 +1,7 @@
 <template>
   <vab-icon
-    :icon="collapse ? 'menu-unfold-line' : 'menu-fold-line'"
     class="fold-unfold"
+    :icon="collapse ? 'menu-unfold-line' : 'menu-fold-line'"
     @click.native="toggleCollapse"
   />
 </template>

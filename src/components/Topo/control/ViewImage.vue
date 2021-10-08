@@ -3,10 +3,10 @@
     <template v-if="editMode">
       <template v-if="imageURL != ''">
         <img
-          style="width: 100%; height: 100%"
           :src="detail.style.url"
-          @dragstart.prevent
+          style="width: 100%; height: 100%"
           @dragover.prevent
+          @dragstart.prevent
           @drop.prevent
         />
       </template>
@@ -19,10 +19,10 @@
     </template>
     <template v-else>
       <img
-        style="width: 100%; height: 100%"
         :src="imageURL"
-        @dragstart.prevent
+        style="width: 100%; height: 100%"
         @dragover.prevent
+        @dragstart.prevent
         @drop.prevent
       />
     </template>

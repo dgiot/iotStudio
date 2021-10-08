@@ -15,10 +15,10 @@
         </p>
         <el-form
           ref="productform"
-          :model="productform"
-          label-width="120px"
-          size="small"
           class="productform"
+          label-width="120px"
+          :model="productform"
+          size="small"
         >
           <el-row>
             <el-col :span="8">
@@ -70,7 +70,7 @@
           class="devices1"
           style="padding: 10px"
         >
-          <el-form :model="item" label-position="top">
+          <el-form label-position="top" :model="item">
             <el-row style="border-bottom: 1px solid #dddddd">
               <el-col :span="2" style="text-align: right">
                 <span class="svg-container">
@@ -134,7 +134,7 @@
         >
           取证设备信息
         </p>
-        <el-form :model="evidenceform" label-position="top">
+        <el-form label-position="top" :model="evidenceform">
           <div class="devices1" style="padding: 10px">
             <el-row style="border-bottom: 1px solid #dddddd">
               <el-col :span="2" style="text-align: right">
@@ -181,7 +181,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="1">
-                <el-link :underline="false" type="primary">预览</el-link>
+                <el-link type="primary" :underline="false">预览</el-link>
               </el-col>
             </el-row>
           </div>
@@ -231,7 +231,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="1">
-                <el-link :underline="false" type="primary">预览</el-link>
+                <el-link type="primary" :underline="false">预览</el-link>
               </el-col>
             </el-row>
           </div>
@@ -281,7 +281,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="1">
-                <el-link :underline="false" type="primary">预览</el-link>
+                <el-link type="primary" :underline="false">预览</el-link>
               </el-col>
             </el-row>
           </div>
@@ -331,7 +331,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="1">
-                <el-link :underline="false" type="primary">预览</el-link>
+                <el-link type="primary" :underline="false">预览</el-link>
               </el-col>
             </el-row>
           </div>
@@ -348,15 +348,15 @@
         >
           质检报告文件上传
         </p>
-        <el-form :model="reportform" label-width="120px" size="small">
+        <el-form label-width="120px" :model="reportform" size="small">
           <el-form-item label="质检报告:">
             <el-input v-model="reportform.filesrc" placeholder="请输入内容">
               <template slot="append">
                 <el-upload
-                  :limit="1"
-                  class="upload-demo"
-                  action="https://jsonplaceholder.typicode.com/posts/"
                   accept=".PDF"
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  class="upload-demo"
+                  :limit="1"
                 >
                   <el-button size="small" type="primary">选 择</el-button>
                 </el-upload>
@@ -366,9 +366,9 @@
         </el-form>
       </div>
       <div style="text-align: center">
-        <el-button type="primary" size="small">确定</el-button>
-        <el-button type="primary" size="small">提交</el-button>
-        <el-button type="info" size="small">取消</el-button>
+        <el-button size="small" type="primary">确定</el-button>
+        <el-button size="small" type="primary">提交</el-button>
+        <el-button size="small" type="info">取消</el-button>
       </div>
     </div>
     <div class="evidence_right">
@@ -378,10 +378,10 @@
           <div class="content">
             <el-form
               ref="form"
-              :model="form"
-              label-width="100px"
-              size="small"
               label-position="left"
+              label-width="100px"
+              :model="form"
+              size="small"
             >
               <el-form-item label="检验编号">
                 <span>{{ taskform.pump_id }}</span>

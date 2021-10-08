@@ -45,8 +45,8 @@
 
             <el-button
               :disabled="averagePoint == 'lift' || !prescribedPointForm.point"
-              type="primary"
               size="small"
+              type="primary"
               @click="average()"
             >
               流量均分
@@ -78,8 +78,8 @@
 
             <el-button
               :disabled="averagePoint == 'flow' || !prescribedPointForm.point"
-              type="primary"
               size="small"
+              type="primary"
               @click="average()"
             >
               扬程均分
@@ -221,13 +221,13 @@
             <el-table-column lable="序号" type="index" />
             <el-table-column
               v-if="averagePoint == 'flow'"
-              property="flow"
               label="Q(1/s)"
+              property="flow"
             />
             <el-table-column
               v-if="averagePoint == 'lift'"
-              property="lift"
               label="h(m)"
+              property="lift"
             />
           </el-table>
         </el-col>

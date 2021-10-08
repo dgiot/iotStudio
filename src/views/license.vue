@@ -3,8 +3,8 @@
     <div class="licenseleft">
       <el-row>
         <el-col :span="12">
-          <img v-if="isend == false" :src="originimgsrc" alt srcset />
-          <img v-if="isend == true" :src="originimgsrc" alt srcset />
+          <img v-if="isend == false" alt :src="originimgsrc" srcset />
+          <img v-if="isend == true" alt :src="originimgsrc" srcset />
         </el-col>
         <el-col :span="12">
           <div v-if="isend == false" class="originupdate">
@@ -19,11 +19,11 @@
         </el-col>
       </el-row> -->
       <el-row style="margin-top: 50px">
-        <el-col :span="12" class="originupdate">
+        <el-col class="originupdate" :span="12">
           <p>当前时间:</p>
           <span>{{ updatetime }}</span>
         </el-col>
-        <el-col :span="12" class="originupdate">
+        <el-col class="originupdate" :span="12">
           <p>服务器状态</p>
           <span v-if="isarrange == false">未部署</span>
           <span v-else>部署完成</span>
@@ -100,7 +100,7 @@
           </el-row>
 
         </div> -->
-        <el-form ref="form" :model="configdata" label-width="140px">
+        <el-form ref="form" label-width="140px" :model="configdata">
           <el-form-item label="用户名:">
             <span>{{ configdata.hostName }}</span>
           </el-form-item>
@@ -156,16 +156,16 @@
           <el-form-item>
             <el-button
               v-if="dbinstall"
-              type="success"
               style="margin-right: 100px"
+              type="success"
               @click="uploadHub"
             >
               部 署
             </el-button>
             <el-button
               v-else
-              type="success"
               style="margin-right: 100px"
+              type="success"
               @click="uploadDb"
             >
               数据库部署

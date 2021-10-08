@@ -9,27 +9,27 @@
         stripe
         style="width: 100%; text-align: center"
       >
-        <el-table-column label="ID" align="center">
+        <el-table-column align="center" label="ID">
           <template slot-scope="scope">
             <span>{{ scope.row.objectId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="产品名称" align="center">
+        <el-table-column align="center" label="产品名称">
           <template slot-scope="scope">
             <span>{{ scope.row.data.sample }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="检验类别" align="center">
+        <el-table-column align="center" label="检验类别">
           <template slot-scope="scope">
             <span>{{ scope.row.data.category }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="检验标准" align="center">
+        <el-table-column align="center" label="检验标准">
           <template slot-scope="scope">
             <span>{{ scope.row.data.inspection_standard }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button size="mini" @click="handleEdit(scope.row.objectId)">
               详 情
@@ -53,35 +53,35 @@
       </el-table>
       <div class="block">
         <el-pagination
-          :page-sizes="[5, 10, 20]"
-          :page-size="length"
-          :total="total"
           layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
+          :page-size="length"
+          :page-sizes="[5, 10, 20]"
+          :total="total"
           @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         />
       </div>
     </div>
     <!--弹窗-->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogTableVisible"
-      title="模板详情"
-      width="50%"
       style="box-sizing: border-box; padding: 20px"
+      title="模板详情"
+      :visible.sync="dialogTableVisible"
+      width="50%"
     >
-      <el-table :data="gridData" border style="width: 100%; text-align: center">
-        <el-table-column label="id" align="center">
+      <el-table border :data="gridData" style="width: 100%; text-align: center">
+        <el-table-column align="center" label="id">
           <template slot-scope="scope">
             <el-tag size="medium">{{ scope.row.id }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="检验项目" align="center">
+        <el-table-column align="center" label="检验项目">
           <template slot-scope="scope">{{ scope.row.inspecting }}</template>
         </el-table-column>
-        <el-table-column property="title" label="保证值" align="center" />
-        <el-table-column property="value" label="测试值" align="center" />
-        <el-table-column property label="评定" align="center" />
+        <el-table-column align="center" label="保证值" property="title" />
+        <el-table-column align="center" label="测试值" property="value" />
+        <el-table-column align="center" label="评定" property />
       </el-table>
     </el-dialog>
   </div>

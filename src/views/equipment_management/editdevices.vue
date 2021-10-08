@@ -36,9 +36,9 @@
             </vab-query-form-left-panel>
             <vab-query-form-right-panel>
               <vab-help
-                trigger="click"
                 src="https://tech.iotn2n.com/w/docs/details?id=6"
                 title="产品下的所有设备都会继承该产品的 Topic 类"
+                trigger="click"
               />
             </vab-query-form-right-panel>
           </vab-query-form>
@@ -115,8 +115,8 @@
                               "
                             >
                               <el-image
-                                style="width: 60px; height: 60px"
                                 :src="item.imgurl"
+                                style="width: 60px; height: 60px"
                               >
                                 <div
                                   slot="error"
@@ -236,8 +236,8 @@
                 <vab-query-form-top-panel>
                   <el-form
                     :inline="true"
-                    :model="queryForm"
                     :label-width="Device == 'desktop' ? '80px' : '70px'"
+                    :model="queryForm"
                     @submit.native.prevent
                   >
                     <el-form-item
@@ -245,40 +245,40 @@
                     >
                       <el-date-picker
                         v-model="params.startTime"
-                        type="datetime"
                         align="right"
+                        :picker-options="pickerOptionsDay"
+                        :placeholder="$translateTitle('developer.startTime')"
                         size="mini"
                         style="width: 83%"
-                        :placeholder="$translateTitle('developer.startTime')"
-                        :picker-options="pickerOptionsDay"
+                        type="datetime"
                       />
                     </el-form-item>
                     <el-form-item :label="$translateTitle('developer.EndTime')">
                       <el-date-picker
                         v-model="params.endTime"
-                        style="width: 83%"
-                        size="mini"
-                        type="datetime"
                         align="right"
                         :clearable="false"
-                        :placeholder="$translateTitle('developer.EndTime')"
                         :picker-options="pickerOptionsDay"
+                        :placeholder="$translateTitle('developer.EndTime')"
+                        size="mini"
+                        style="width: 83%"
+                        type="datetime"
                       />
                     </el-form-item>
                     <el-form-item :label="$translateTitle('developer.type')">
                       <el-select
                         v-model="params.style"
+                        placeholder="请选择"
                         size="mini"
                         style="width: 90px"
-                        placeholder="请选择"
                         @change="toggleChart"
                       >
                         <el-option
                           v-for="(item, index) in chartType"
                           :key="index"
+                          :disabled="disabledChart.indexOf(item.type) != -1"
                           :label="item.name"
                           :value="item.type"
-                          :disabled="disabledChart.indexOf(item.type) != -1"
                         />
                       </el-select>
                     </el-form-item>
@@ -288,15 +288,15 @@
                     >
                       <el-input-number
                         v-model="params.number"
-                        size="mini"
-                        style="width: 100px"
                         :min="1"
                         placeholder="请输入内容"
+                        size="mini"
+                        style="width: 100px"
                       />
                       <el-select
                         v-model="params.interval"
-                        size="mini"
                         placeholder="请选择"
+                        size="mini"
                         style="width: 70px"
                       >
                         <el-option
@@ -313,9 +313,9 @@
                     >
                       <el-select
                         v-model="params._function"
+                        placeholder="请选择"
                         size="mini"
                         style="width: 100px"
-                        placeholder="请选择"
                       >
                         <el-option
                           v-for="(item, index) in functionarr"
@@ -325,10 +325,10 @@
                         />
                       </el-select>
                       <el-button
-                        size="mini"
-                        type="primary"
                         :disabled="queryFlag"
                         icon="el-icon-search"
+                        size="mini"
+                        type="primary"
                         @click="queryChart"
                       >
                         {{ $translateTitle('developer.search') }}
@@ -340,16 +340,16 @@
               <div :key="chartKey" class="chartsmain">
                 <vabChart
                   ref="charts"
-                  :type="params.style"
-                  :extend="chartExtend"
+                  :after-config="afterConfig"
                   :data="chartData"
+                  :data-empty="dataEmpty"
+                  :data-zoom="chartDataZoom"
+                  :extend="chartExtend"
+                  :loading="loading"
                   :set-option-opts="false"
                   :settings="chartSettings"
-                  :data-zoom="chartDataZoom"
                   :toolbox="toolbox"
-                  :loading="loading"
-                  :after-config="afterConfig"
-                  :data-empty="dataEmpty"
+                  :type="params.style"
                 />
               </div>
               <div class="chartOther">
@@ -358,10 +358,10 @@
                     v-for="(item, index) in chartData.child"
                     v-show="item.columns[1] != '日期'"
                     :key="index"
-                    :xs="xs"
-                    :sm="sm"
                     :md="md"
+                    :sm="sm"
                     :xl="xl"
+                    :xs="xs"
                   >
                     <el-card class="box-card">
                       <div slot="header" class="clearfix">
@@ -381,18 +381,18 @@
 
                       <vabChart
                         ref="charts"
-                        :type="params.style"
-                        height="300px"
-                        :extend="chartExtend"
-                        :legend-visible="false"
+                        :after-config="afterConfig"
                         :data="chartData.child[index]"
+                        :data-empty="dataEmpty"
+                        :data-zoom="chartDataZoom"
+                        :extend="chartExtend"
+                        height="300px"
+                        :legend-visible="false"
+                        :loading="loading"
                         :set-option-opts="false"
                         :settings="chartSettings"
-                        :data-zoom="chartDataZoom"
                         :toolbox="toolbox"
-                        :loading="loading"
-                        :after-config="afterConfig"
-                        :data-empty="dataEmpty"
+                        :type="params.style"
                       />
                     </el-card>
                   </el-col>
@@ -429,9 +429,9 @@
         >
           <div class="childrendevices">
             <el-form
+              class="demo-form-inline"
               :inline="true"
               :model="childrendevices"
-              class="demo-form-inline"
               size="small"
             >
               <el-form-item
@@ -471,7 +471,7 @@
                 </el-button>
               </el-form-item>
               <el-form-item>
-                <el-button type="info" plain>
+                <el-button plain type="info">
                   {{ $translateTitle('equipment.Refresh') }}
                 </el-button>
                 <!-- 添加子设备按钮  -->
@@ -487,10 +487,10 @@
                 style="width: 100%; margin-top: 20px; text-align: center"
                 @selection-change="DevicesSelectionChange"
               >
-                <el-table-column type="selection" align="center" width="55" />
+                <el-table-column align="center" type="selection" width="55" />
                 <el-table-column
-                  :label="$translateTitle('equipment.devicenumber')"
                   align="center"
+                  :label="$translateTitle('equipment.devicenumber')"
                 >
                   <template slot-scope="scope">
                     <span>{{ scope.row.devaddr }}</span>
@@ -498,8 +498,8 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  :label="$translateTitle('equipment.state')"
                   align="center"
+                  :label="$translateTitle('equipment.state')"
                 >
                   <template slot-scope="scope">
                     <span :class="scope.row.status">
@@ -507,7 +507,7 @@
                     </span>
                   </template>
                 </el-table-column>
-                <el-table-column label="子网地址" align="center">
+                <el-table-column align="center" label="子网地址">
                   <template slot-scope="scope">
                     <span>
                       {{
@@ -519,16 +519,16 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  :label="$translateTitle('equipment.product')"
                   align="center"
+                  :label="$translateTitle('equipment.product')"
                 >
                   <template slot-scope="scope">
                     <span type="success">{{ scope.row.productName }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
-                  :label="$translateTitle('equipment.nodetype')"
                   align="center"
+                  :label="$translateTitle('equipment.nodetype')"
                 >
                   <!-- <template slot-scope="scope">
                     <svg-icon
@@ -544,12 +544,12 @@
                   </template> -->
                 </el-table-column>
                 <el-table-column
+                  align="center"
                   :label="
                     $translateTitle('developer.prohibit') +
                     '/' +
                     $translateTitle('developer.enable')
                   "
-                  align="center"
                 >
                   <template slot-scope="scope">
                     <el-switch
@@ -562,8 +562,8 @@
                 </el-table-column>
 
                 <el-table-column
-                  :label="$translateTitle('equipment.lastonlinetime')"
                   align="center"
+                  :label="$translateTitle('equipment.lastonlinetime')"
                 >
                   <template slot-scope="scope">
                     <span v-if="scope.row.lastOnlineTime">
@@ -573,14 +573,14 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  :label="$translateTitle('developer.operation')"
                   align="center"
+                  :label="$translateTitle('developer.operation')"
                 >
                   <template slot-scope="scope">
                     <el-link
-                      :underline="false"
-                      type="primary"
                       icon="el-icon-view"
+                      type="primary"
+                      :underline="false"
                       @click="deviceToDetail(scope.row)"
                     >
                       {{ $translateTitle('equipment.see') }}
@@ -604,8 +604,8 @@
                           {{ $translateTitle('developer.cancel') }}
                         </el-button>
                         <el-button
-                          type="primary"
                           size="mini"
+                          type="primary"
                           @click="makeSure(scope)"
                         >
                           {{ $translateTitle('developer.determine') }}
@@ -613,9 +613,9 @@
                       </div>
                       <el-link
                         slot="reference"
-                        :underline="false"
                         icon="el-icon-delete"
                         type="danger"
+                        :underline="false"
                       >
                         {{ $translateTitle('equipment.RelievingAssociation') }}
                       </el-link>
@@ -626,35 +626,35 @@
             </div>
             <div class="elpagination" style="margin-top: 20px">
               <el-pagination
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="childrenDeviceLength"
-                :total="childrenDeviceTotal"
                 layout="total, sizes, prev, pager, next, jumper"
-                @size-change="childrenDeviceSizeChange"
+                :page-size="childrenDeviceLength"
+                :page-sizes="[10, 20, 30, 50]"
+                :total="childrenDeviceTotal"
                 @current-change="childrenDeviceCurrentChange"
+                @size-change="childrenDeviceSizeChange"
               />
             </div>
           </div>
           <!--添加子设备弹窗-->
           <el-dialog
             :append-to-body="true"
+            :close-on-click-modal="false"
             :title="$t('equipment.addchilddevice')"
             :visible.sync="childDialog"
-            :close-on-click-modal="false"
             width="30%"
           >
             <div class="childdialog">
               <el-form
                 ref="childrenForm"
-                :model="childrenForm"
                 class="demo-form-inline"
+                :model="childrenForm"
               >
                 <el-form-item
                   :label="$translateTitle('equipment.products')"
+                  prop="product"
                   :rules="[
                     { required: true, message: '选择产品', trigger: 'change' },
                   ]"
-                  prop="product"
                 >
                   <el-select
                     v-model="childrenForm.product"
@@ -672,16 +672,16 @@
 
                 <el-form-item
                   :label="$translateTitle('product.equipment')"
+                  prop="device"
                   :rules="[
                     { required: true, message: '选择设备', trigger: 'change' },
                   ]"
-                  prop="device"
                 >
                   <el-select
                     v-model="childrenForm.device"
                     v-el-select-loadmore="loadmore"
-                    :placeholder="$t('product.equipment')"
                     :disabled="!ischange"
+                    :placeholder="$t('product.equipment')"
                   >
                     <el-option
                       v-for="(item, index) in productDevices"
@@ -692,6 +692,8 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item
+                  label="子网地址"
+                  prop="route"
                   :rules="[
                     {
                       required: true,
@@ -699,8 +701,6 @@
                       trigger: 'blur',
                     },
                   ]"
-                  label="子网地址"
-                  prop="route"
                 >
                   <el-input
                     v-model="childrenForm.route"
@@ -727,7 +727,7 @@
           :label="$translateTitle('device.Equipment Directive')"
           name="instruct"
         >
-          <Instruct :product-id="productid" :devices-id="deviceid" />
+          <Instruct :devices-id="deviceid" :product-id="productid" />
         </el-tab-pane>
         <el-tab-pane
           :label="$translateTitle('device.Equipment message')"
@@ -735,8 +735,8 @@
         >
           <scene-log
             v-show="activeName == 'task'"
-            :name="activeName"
             :device-info="deviceInfo"
+            :name="activeName"
           />
         </el-tab-pane>
         <el-tab-pane
@@ -745,9 +745,9 @@
         >
           <device-log
             v-show="activeName == 'trace'"
+            :devaddr="devicedevaddr"
             :is-device-info="true"
             :productid="productId"
-            :devaddr="devicedevaddr"
           />
         </el-tab-pane>
 

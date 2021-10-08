@@ -9,12 +9,12 @@
           </span>
           <vab-editor
             :key="refreshFlag"
-            :value="msg"
             :height="
               isFullscreen
                 ? Number($baseTableHeight(0))
                 : Number($baseTableHeight(0))
             "
+            lang="text"
             :max-lines="
               isFullscreen
                 ? Number($baseTableHeight(0)) / 12
@@ -25,8 +25,8 @@
                 ? Number($baseTableHeight(0)) / 12
                 : Number($baseTableHeight(0)) / 12
             "
-            lang="text"
             theme="gob"
+            :value="msg"
           />
         </a-tab-pane>
         <a-tab-pane key="table">
@@ -36,20 +36,20 @@
           </span>
           <el-table
             v-loading="listLoading"
-            :height="height"
             :data="
               list.slice(
                 (queryForm.pageNo - 1) * queryForm.pageSize,
                 queryForm.pageNo * queryForm.pageSize
               )
             "
+            :height="height"
           >
             <el-table-column
               align="center"
-              sortable
               :label="$translateTitle('home.updatedAt')"
               prop="timestamp"
               show-overflow-tooltip
+              sortable
               width="230px"
             >
               <template #default="{ row }">
@@ -64,10 +64,10 @@
             </el-table-column>
             <el-table-column
               align="center"
-              prop="msg"
-              sortable
               :label="$translateTitle('product.log')"
+              prop="msg"
               show-overflow-tooltip
+              sortable
             >
               <template #default="{ row }">
                 <el-input v-model="row.msg">
@@ -103,15 +103,15 @@
             <vab-query-form>
               <vab-query-form-top-panel>
                 <el-form
-                  size="mini"
                   :inline="true"
                   label-width="120px"
+                  size="mini"
                   @submit.native.prevent
                 >
                   <el-form-item>
                     <span slot="label">
                       {{ $translateTitle('alert.productname') }}
-                      <el-badge :value="product.length" class="item" />
+                      <el-badge class="item" :value="product.length" />
                     </span>
                     <el-select
                       v-model="queryForm.product"
@@ -136,18 +136,18 @@
             style="width: 100%"
           >
             <el-table-column
-              sortable
-              show-overflow-tooltip
               align="center"
               :label="$translateTitle('equipment.devicename')"
               prop="name"
+              show-overflow-tooltip
+              sortable
             />
             <el-table-column
-              sortable
-              show-overflow-tooltip
               align="center"
               :label="$translateTitle('equipment.devicenumber')"
               prop="devaddr"
+              show-overflow-tooltip
+              sortable
             />
             <el-table-column
               align="center"
@@ -170,18 +170,18 @@
       </a-tabs>
       <el-dialog
         append-to-body
+        top="1vh"
         :visible.sync="dialogVisible"
         width="50%"
-        top="1vh"
       >
         <vab-editor
           :key="editorKey"
-          :value="deviceLog"
           :height="
             isFullscreen
               ? Number($baseTableHeight(0))
               : Number($baseTableHeight(0))
           "
+          lang="text"
           :max-lines="
             isFullscreen
               ? Number($baseTableHeight(0)) / 12
@@ -192,8 +192,8 @@
               ? Number($baseTableHeight(0)) / 12
               : Number($baseTableHeight(0)) / 12
           "
-          lang="text"
           theme="gob"
+          :value="deviceLog"
         />
       </el-dialog>
     </div>

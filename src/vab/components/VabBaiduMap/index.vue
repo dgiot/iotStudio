@@ -1,11 +1,11 @@
 <template>
   <div>
     <baidu-map
-      :style="{ height: mapHeight, width: mapWidth }"
       :ak="ak"
-      :scroll-wheel-zoom="scrollWheelZoom"
-      class="baidu_map"
       :center="baiduCenter"
+      class="baidu_map"
+      :scroll-wheel-zoom="scrollWheelZoom"
+      :style="{ height: mapHeight, width: mapWidth }"
       :zoom="sizeZoom"
     >
       <bm-control v-if="controlShow">
@@ -28,13 +28,13 @@
         v-for="(item, index) in markerLocation"
         v-show="markerLocation.length || markerShow"
         :key="index"
-        :dragging="item.true"
+        animation="BMAP_ANIMATION_BOUNCE"
         :content="item.name"
+        :dragging="item.true"
         :position="{
           lng: item.longitude,
           lat: item.latitude,
         }"
-        animation="BMAP_ANIMATION_BOUNCE"
       >
         <bm-label
           v-if="labelShow"
@@ -45,16 +45,16 @@
       </bm-marker>
       <bm-driving
         v-if="drivingShow"
-        :start="drivingStart"
+        :auto-viewport="autoViewport"
         end="drivingEnd"
         :panel="false"
-        :auto-viewport="autoViewport"
+        :start="drivingStart"
         @searchcomplete="_handleSearchComplete"
       />
       <bml-lushu
         v-if="lushuShow"
-        :path="lushupath"
         :icon="icon"
+        :path="lushupath"
         :play="lushuplay"
         :rotation="rotation"
         @stop="_reset"
@@ -77,29 +77,29 @@
       </bml-marker-clusterer>
       <bml-curve-line
         v-if="curveShow"
-        :points="linepoints"
         :editing="editing"
+        :points="linepoints"
         @lineupdate="_updatepoints"
       />
       <bm-view v-if="viewShow" class="map" />
       <bm-walking
         v-if="walkingShow"
-        :start="walkingStart"
-        end="walkingEnd"
         :auto-viewport="walkingViewPort"
+        end="walkingEnd"
         location="walkingLocation"
+        :start="walkingStart"
       />
       <bm-transit
         v-if="transitShow"
-        :start="transitStart"
-        :end="transitEnd"
         :auto-viewport="transitViewport"
+        :end="transitEnd"
         :location="busLocation"
+        :start="transitStart"
       />
       <bm-bus
         v-if="busShow"
-        :keyword="busKeyword"
         :auto-viewport="busViewport"
+        :keyword="busKeyword"
         :location="busLocation"
       />
       <bm-traffic v-if="trafficShow" :predict-date="trafficDate" />
@@ -110,38 +110,38 @@
       />
       <bm-polyline
         v-if="polylineShow"
+        :editing="editing"
         :path="polylinePath"
         :stroke-color="strokeColor"
         :stroke-opacity="strokeOpacity"
         :stroke-weight="strokeWeight"
-        :editing="editing"
         @lineupdate="_updatePolylinePath"
       />
       <bm-polygon
         v-if="polygonShow"
+        :editing="true"
         :path="polygonPath"
         :stroke-color="polygonStrokeColor"
         :stroke-opacity="polygonStrokeOpacity"
         :stroke-weight="polygonStrokeWeight"
-        :editing="true"
         @lineupdate="_updatePolygonPath"
       />
       <bm-circle
         v-if="circleShow"
         :center="circlePathCenter"
+        :editing="true"
         :radius="circlePathRadius"
         stroke-color="blue"
         :stroke-opacity="0.5"
         :stroke-weight="2"
-        :editing="true"
         @lineupdate="_updateCirclePath"
       />
       <bm-ground v-if="groundShow" :bounds="bounds" :image-u-r-l="imageURL" />
       <bm-info-window
         v-if="windowShow"
         :position="infoWindowPosition"
-        :title="infoWindowTitle"
         :show="infoWindowShow"
+        :title="infoWindowTitle"
         @close="_infoWindowClose"
         @open="_infoWindowOpen"
       >
@@ -160,31 +160,31 @@
       <!--      </bm-overlay>-->
       <bm-point-collection
         v-if="collectionShow"
+        color="red"
         :points="collectionPoints"
         shape="BMAP_POINT_SHAPE_STAR"
-        color="red"
         size="BMAP_POINT_SIZE_SMALL"
         @click.native="_clickHandler"
       />
       <bm-local-search
         v-if="searchShow"
-        :keyword="searchKeyword"
         :auto-viewport="true"
+        :keyword="searchKeyword"
         :location="searchLocation"
       />
       <bm-boundary
         v-if="boundaryShow"
         :name="boundaryName"
-        :stroke-weight="2"
         stroke-color="blue"
+        :stroke-weight="2"
       />
 
       <bm-navigation v-if="navShow" anchor="BMAP_ANCHOR_TOP_RIGHT" />
       <bm-geolocation
         v-if="geoShow"
-        :show-address-bar="true"
-        :auto-location="true"
         anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+        :auto-location="true"
+        :show-address-bar="true"
       />
       <bm-copyright
         v-if="copyrightShow"
@@ -419,8 +419,8 @@
       center: {
         type: Object,
         default: () => {
-          lng: 116.404
-          lat: 39.915
+          116.404
+          39.915
         },
       },
       sizeZoom: {
@@ -430,8 +430,8 @@
       panoramaOffset: {
         type: Object,
         default: () => {
-          width: 0
-          height: 0
+          0
+          0
         },
       },
       isOpen: {
@@ -441,15 +441,15 @@
       cityOffset: {
         type: Object,
         default: () => {
-          width: 0
-          height: 0
+          0
+          0
         },
       },
       scaleOffset: {
         type: Object,
         default: () => {
-          width: 0
-          height: 0
+          0
+          0
         },
       },
       mapTypes: {
@@ -459,8 +459,8 @@
       mapTypesOffset: {
         type: Object,
         default: () => {
-          width: 0
-          height: 0
+          0
+          0
         },
       },
       markerLocation: {
@@ -470,15 +470,15 @@
       bmlabelOffset: {
         type: Object,
         default: () => {
-          width: 0
-          height: 0
+          0
+          0
         },
       },
       labelStyle: {
         type: Object,
         default: () => {
-          color: 'red'
-          fontSize: '12px'
+          'red'
+          '12px'
         },
       },
       drivingStart: {
@@ -504,15 +504,15 @@
       icon: {
         type: Array,
         default: () => {
-          url: 'http://api.map.baidu.com/library/LuShu/1.2/examples/car.png'
-          size: {
-            width: 52
-            height: 26
+          'http://api.map.baidu.com/library/LuShu/1.2/examples/car.png'
+          {
+            52
+            26
           }
-          opts: {
-            anchor: {
-              width: 27
-              height: 13
+          {
+            {
+              27
+              13
             }
           }
         },
@@ -597,8 +597,8 @@
       trafficDate: {
         type: Object,
         default: () => {
-          weekday: 7
-          hour: 12
+          7
+          12
         },
       },
       strokeColor: {
@@ -657,25 +657,25 @@
       circlePath: {
         type: Object,
         default: () => {
-          center: {
-            lng: 116.404
-            lat: 39.915
+          {
+            116.404
+            39.915
           }
-          radius: 500
+          500
         },
       },
       circleCenter: {
         type: Object,
         default: () => {
-          lng: 116.404
-          lat: 39.915
+          116.404
+          39.915
         },
       },
       mapCenter: {
         type: Array,
         default: () => {
-          lng: 116.404
-          lat: 39.915
+          116.404
+          39.915
         },
       },
       circleRadius: {
@@ -685,13 +685,13 @@
       bounds: {
         type: Object,
         default: () => {
-          ne: {
-            lng: 110
-            lat: 40
+          {
+            110
+            40
           }
-          sw: {
-            lng: 0
-            lat: 0
+          {
+            0
+            0
           }
         },
       },
@@ -702,8 +702,8 @@
       infoWindowPosition: {
         type: Object,
         default: () => {
-          lng: 116.404
-          lat: 39.915
+          116.404
+          39.915
         },
       },
       infoWindowTitle: {

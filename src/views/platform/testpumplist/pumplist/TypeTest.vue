@@ -82,12 +82,12 @@
         </div>
 
         <div class="type-test-rb-box">
-          <el-button plain type="primary" size="small">类比</el-button>
-          <el-button plain type="primary" size="small">曲线</el-button>
-          <el-button plain type="primary" size="small">开始</el-button>
-          <el-button plain type="primary" size="small">停止</el-button>
-          <el-button plain type="primary" size="small">测试结果</el-button>
-          <el-button plain type="primary" size="small">汽蚀测试</el-button>
+          <el-button plain size="small" type="primary">类比</el-button>
+          <el-button plain size="small" type="primary">曲线</el-button>
+          <el-button plain size="small" type="primary">开始</el-button>
+          <el-button plain size="small" type="primary">停止</el-button>
+          <el-button plain size="small" type="primary">测试结果</el-button>
+          <el-button plain size="small" type="primary">汽蚀测试</el-button>
         </div>
       </el-col>
     </el-row>

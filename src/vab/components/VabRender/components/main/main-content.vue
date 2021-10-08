@@ -12,10 +12,10 @@
           v-if="isRenderFinish"
           :animation="200"
           :disabled="false"
-          :list="VabRender.formItemList"
           group="form"
-          tag="el-row"
+          :list="VabRender.formItemList"
           style="padding-bottom: 80px"
+          tag="el-row"
           @add="handleAdd"
           @end="handleMoveEnd"
           @start="handleMoveStart"
@@ -42,22 +42,22 @@
               >
                 <el-form-item
                   :error="formErrorObj ? formErrorObj[field] : null"
-                  :prop="field"
                   :label="
                     props.isShowLabel && formItem.isShowLabel !== false
                       ? formItem.label
                       : null
                   "
                   :label-width="formItem.labelWidth || undefined"
+                  :prop="field"
                 >
                   <component
                     :is="formItem._type"
                     :ref="field"
                     v-model="formItem.default"
-                    :disabled="props.disabled || formItem._disabled"
                     :desc="formItem"
-                    :options="formItem._options"
+                    :disabled="props.disabled || formItem._disabled"
                     :field="field"
+                    :options="formItem._options"
                   />
                   <div
                     v-if="formItem.tip"

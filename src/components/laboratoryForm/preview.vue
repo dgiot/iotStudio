@@ -13,23 +13,23 @@
       </p>
       <el-form
         ref="laboratoryForm"
+        class="demo-ruleForm"
+        label-width="120px"
         :model="laboratoryForm"
         :rules="laboratoryRule"
-        label-width="120px"
-        class="demo-ruleForm"
         size="small"
       >
         <el-row>
           <el-col :span="12">
             <div class="grid-content bg-purple">
               <el-form-item label="实验室名称" prop="name">
-                <el-input :value="laboratoryForm.name" readonly />
+                <el-input readonly :value="laboratoryForm.name" />
               </el-form-item>
               <el-form-item label="实验室级别" prop="level">
                 <el-select
-                  :value="laboratoryForm.level"
                   placeholder="请选择实验室级别"
                   readonly
+                  :value="laboratoryForm.level"
                 >
                   <el-option label="国家级" value="1" />
                   <el-option label="省级" value="2" />
@@ -39,51 +39,51 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="实验室地址" prop="addr">
-                <el-input :value="laboratoryForm.addr" readonly />
+                <el-input readonly :value="laboratoryForm.addr" />
               </el-form-item>
               <el-form-item label="建设起止日期" required>
                 <el-col :span="11">
                   <el-form-item prop="buildstarttime" style="margin-bottom: 0">
                     <el-date-picker
-                      :value="laboratoryForm.buildstarttime"
-                      type="date"
                       placeholder="选择日期"
-                      style="width: 100%"
                       readonly
+                      style="width: 100%"
+                      type="date"
+                      :value="laboratoryForm.buildstarttime"
                     />
                   </el-form-item>
                 </el-col>
-                <el-col :span="2" class="line">-</el-col>
+                <el-col class="line" :span="2">-</el-col>
                 <el-col :span="11">
                   <el-form-item prop="buildendtime" style="margin-bottom: 0">
                     <el-date-picker
-                      :value="laboratoryForm.buildendtime"
-                      type="date"
                       placeholder="选择日期"
-                      style="width: 100%"
                       readonly
+                      style="width: 100%"
+                      type="date"
+                      :value="laboratoryForm.buildendtime"
                     />
                   </el-form-item>
                 </el-col>
               </el-form-item>
               <el-form-item label="实验室负责人" prop="leadingname">
-                <el-input :value="laboratoryForm.leadingname" readonly />
+                <el-input readonly :value="laboratoryForm.leadingname" />
               </el-form-item>
               <el-form-item label="实验室联系人" prop="linkname">
-                <el-input :value="laboratoryForm.linkname" readonly />
+                <el-input readonly :value="laboratoryForm.linkname" />
               </el-form-item>
               <el-form-item label="实验室照片" required>
                 <el-upload
-                  :show-file-list="false"
-                  :on-success="handleAvatarlaboratory"
+                  action="/iotapi/upload"
                   :before-upload="beforeAvatarlaboratory"
                   class="avatar-uploader"
-                  action="/iotapi/upload"
+                  :on-success="handleAvatarlaboratory"
+                  :show-file-list="false"
                 >
                   <img
                     v-if="laboratoryForm.imgsrc"
-                    :src="fileDomain + laboratoryForm.imgsrc"
                     class="avatar"
+                    :src="fileDomain + laboratoryForm.imgsrc"
                   />
                   <i v-else class="el-icon-plus avatar-uploader-icon" />
                 </el-upload>
@@ -93,13 +93,13 @@
           <el-col :span="12">
             <div class="grid-content bg-purple-light">
               <el-form-item label="主管单位" prop="unit">
-                <el-input :value="laboratoryForm.unit" readonly />
+                <el-input readonly :value="laboratoryForm.unit" />
               </el-form-item>
               <el-form-item label="实验室类别" prop="category">
                 <el-select
-                  :value="laboratoryForm.category"
                   placeholder="请选择实验室类别"
                   readonly
+                  :value="laboratoryForm.category"
                 >
                   <el-option label="主实验室" value="1" />
                   <el-option label="辅助实验室" value="2" />
@@ -107,24 +107,24 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="实验室面积" prop="area">
-                <el-input :value="laboratoryForm.area" readonly>
+                <el-input readonly :value="laboratoryForm.area">
                   <template slot="append">平方</template>
                 </el-input>
               </el-form-item>
               <el-form-item label="最新投运时间">
                 <el-date-picker
-                  :value="laboratoryForm.operationtime"
-                  type="datetime"
-                  readonly
-                  value-format="timestamp"
                   placeholder="选择最新投运时间"
+                  readonly
+                  type="datetime"
+                  :value="laboratoryForm.operationtime"
+                  value-format="timestamp"
                 />
               </el-form-item>
               <el-form-item label="负责人电话" prop="leadingphone">
-                <el-input :value="laboratoryForm.leadingphone" readonly />
+                <el-input readonly :value="laboratoryForm.leadingphone" />
               </el-form-item>
               <el-form-item label="联系人电话" prop="linkphone">
-                <el-input :value="laboratoryForm.linkphone" readonly />
+                <el-input readonly :value="laboratoryForm.linkphone" />
               </el-form-item>
             </div>
           </el-col>
@@ -144,9 +144,9 @@
             <div class="grid-content bg-purple">
               <el-form-item label="实验室认证类型">
                 <el-select
-                  :value="laboratoryForm.region"
                   placeholder="请选择实验室认证类型"
                   readonly
+                  :value="laboratoryForm.region"
                 >
                   <el-option label="CMA" value="CMA" />
                   <el-option label="CNAS" value="CNAS" />
@@ -157,20 +157,20 @@
               </el-form-item>
               <el-form-item label="初次认可">
                 <el-date-picker
-                  :value="laboratoryForm.initialRecognition"
+                  placeholder="选择初次认可时间"
                   readonly
                   type="datetime"
+                  :value="laboratoryForm.initialRecognition"
                   value-format="timestamp"
-                  placeholder="选择初次认可时间"
                 />
               </el-form-item>
               <el-form-item label="资质内容">
                 <el-input
-                  :value="laboratoryForm.desc"
+                  placeholder="请输入证书资质信息"
+                  readonly
                   :rows="8"
                   type="textarea"
-                  readonly
-                  placeholder="请输入证书资质信息"
+                  :value="laboratoryForm.desc"
                 />
               </el-form-item>
             </div>
@@ -178,59 +178,59 @@
           <el-col :span="12">
             <div class="grid-content bg-purple-light">
               <el-form-item label="证书编号" prop="credentialsname">
-                <el-input :value="laboratoryForm.credentialsname" readonly />
+                <el-input readonly :value="laboratoryForm.credentialsname" />
               </el-form-item>
-              <el-form-item required label="签发日期">
+              <el-form-item label="签发日期" required>
                 <el-col :span="11">
                   <el-form-item prop="dateOfIssue" style="margin-bottom: 0">
                     <el-date-picker
-                      :value="laboratoryForm.dateOfIssue"
-                      type="date"
                       placeholder="选择日期"
-                      style="width: 100%"
-                      value-format="timestamp"
                       readonly
+                      style="width: 100%"
+                      type="date"
+                      :value="laboratoryForm.dateOfIssue"
+                      value-format="timestamp"
                     />
                   </el-form-item>
                 </el-col>
                 <el-col :span="11">
                   <el-form-item
+                    label="有效期至"
                     prop="termOfValidity"
                     style="margin-bottom: 0"
-                    label="有效期至"
                   >
                     <el-date-picker
-                      :value="laboratoryForm.termOfValidity"
                       placeholder="选择有效期"
+                      readonly
                       style="width: 100%"
                       type="date"
+                      :value="laboratoryForm.termOfValidity"
                       value-format="timestamp"
-                      readonly
                     />
                   </el-form-item>
                 </el-col>
               </el-form-item>
-              <el-form-item prop="updatedDate" label="更新时间">
+              <el-form-item label="更新时间" prop="updatedDate">
                 <el-date-picker
-                  :value="laboratoryForm.updatedDate"
                   placeholder="选择时间"
-                  type="date"
-                  value-format="timestamp"
                   readonly
+                  type="date"
+                  :value="laboratoryForm.updatedDate"
+                  value-format="timestamp"
                 />
               </el-form-item>
               <el-form-item label="证书电子文件" required>
                 <el-upload
-                  :show-file-list="false"
-                  :on-success="handleAvatarlaboratory"
+                  action="/iotapi/upload"
                   :before-upload="beforeAvatarlaboratory"
                   class="avatar-uploader"
-                  action="/iotapi/upload"
+                  :on-success="handleAvatarlaboratory"
+                  :show-file-list="false"
                 >
                   <img
                     v-if="laboratoryForm.imgsrc1"
-                    :src="fileDomain + laboratoryForm.imgsrc1"
                     class="avatar"
+                    :src="fileDomain + laboratoryForm.imgsrc1"
                   />
                   <i v-else class="el-icon-plus avatar-uploader-icon" />
                 </el-upload>
@@ -243,9 +243,9 @@
     <el-row v-for="(item, index) in otherform" :key="index" :value="item">
       <el-form
         ref="addotherform"
-        :model="item"
-        label-width="120px"
         class="demo-addotherform"
+        label-width="120px"
+        :model="item"
       >
         <p
           style="
@@ -265,30 +265,30 @@
             <el-form-item label="签发日期">
               <el-date-picker
                 v-model="item.dateOfIssue"
-                type="date"
                 placeholder="选择签发日期"
-                value-format="timestamp"
-                style="width: 100%"
                 readonly
+                style="width: 100%"
+                type="date"
+                value-format="timestamp"
               />
             </el-form-item>
             <el-form-item label="初次认可">
               <el-date-picker
                 v-model="item.initialRecognition"
-                type="date"
                 placeholder="选择签发日期"
-                value-format="timestamp"
-                style="width: 100%"
                 readonly
+                style="width: 100%"
+                type="date"
+                value-format="timestamp"
               />
             </el-form-item>
             <el-form-item label="资质内容">
               <el-input
                 v-model="item.desc"
-                :rows="8"
-                type="textarea"
                 placeholder="请输入证书资质信息"
                 readonly
+                :rows="8"
+                type="textarea"
               />
             </el-form-item>
           </div>
@@ -301,33 +301,33 @@
             <el-form-item label="有效期至">
               <el-date-picker
                 v-model="item.termOfValidity"
-                type="date"
                 placeholder="选择有效期至"
-                value-format="timestamp"
                 readonly
                 style="width: 100%"
+                type="date"
+                value-format="timestamp"
               />
             </el-form-item>
             <el-form-item label="更新时间">
               <el-date-picker
                 v-model="item.updatedDate"
-                type="date"
                 placeholder="选择签发更新时间"
-                value-format="timestamp"
                 readonly
                 style="width: 100%"
+                type="date"
+                value-format="timestamp"
               />
             </el-form-item>
             <el-form-item label="证书电子文件" required>
               <el-upload
-                :show-file-list="false"
-                class="avatar-uploader"
                 action="/iotapi/upload"
+                class="avatar-uploader"
+                :show-file-list="false"
               >
                 <img
                   v-if="item.imgsrc"
-                  :src="fileDomain + item.imgsrc"
                   class="avatar"
+                  :src="fileDomain + item.imgsrc"
                 />
                 <i v-else class="el-icon-plus avatar-uploader-icon" />
                 <div

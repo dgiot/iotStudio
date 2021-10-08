@@ -3,12 +3,12 @@
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="12">
+      <el-col :lg="12" :sm="24" :xs="24">
         <div class="chart-wrapper">
           <line-chart :chart-data="lineChartData" />
         </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :lg="12">
+      <el-col :lg="12" :sm="24" :xs="24">
         <div class="chart-wrapper">
           <span>台区用电量排名</span>
           <el-button-group style="float: right">

@@ -3,14 +3,14 @@
     <div class="loginbanner">
       <el-form
         ref="ruleForm2"
+        class="login-form"
+        label-width="100px"
         :model="ruleForm2"
         :rules="rules2"
         status-icon
-        label-width="100px"
-        class="login-form"
       >
         <div class="logo">
-          <img :src="logosrc" alt="logo" style="width: 80px; height: 80px" />
+          <img alt="logo" :src="logosrc" style="width: 80px; height: 80px" />
           <p>{{ title }}</p>
         </div>
 
@@ -20,12 +20,12 @@
           </span>
           <el-input
             v-model="ruleForm2.phone"
-            :maxlength="11"
-            name="phone"
-            type="text"
             auto-complete="on"
             clearable
+            :maxlength="11"
+            name="phone"
             placeholder="请输入手机号"
+            type="text"
           />
         </el-form-item>
         <el-form-item prop="password" required>
@@ -34,10 +34,10 @@
           </span>
           <el-input
             v-model="ruleForm2.password"
-            :type="pwdType"
-            name="password"
             auto-complete="on"
+            name="password"
             placeholder="请输入密码"
+            :type="pwdType"
           />
           <span class="show-pwd" @click="showPwd">
             <vab-icon icon="eye" />
@@ -50,9 +50,9 @@
           </span>
           <el-input
             v-model="ruleForm2.checkPass"
-            :type="pwdType"
             auto-complete="on"
             placeholder="请再次输入密码"
+            :type="pwdType"
           />
           <span class="show-pwd" @click="showPwd">
             <vab-icon icon="eye" />
@@ -61,11 +61,11 @@
         <el-form-item style="margin-top: 50px">
           <el-button
             v-loading.fullscreen.lock="fullscreenLoading"
-            type="primary"
-            style="width: 100%; letter-spacing: 10px"
-            element-loading-text="正在初始化环境,请稍后"
-            element-loading-spinner="el-icon-loading"
             element-loading-background="rgba(0, 0, 0, 0.5)"
+            element-loading-spinner="el-icon-loading"
+            element-loading-text="正在初始化环境,请稍后"
+            style="width: 100%; letter-spacing: 10px"
+            type="primary"
             @click="submitForm('ruleForm2')"
           >
             立即注册

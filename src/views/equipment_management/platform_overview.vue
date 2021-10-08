@@ -12,9 +12,9 @@
       <div class="home_dialog">
         <el-dialog
           :append-to-body="true"
-          width="100vh"
           :title="deviceInfo.name"
           :visible.sync="deviceFlag"
+          width="100vh"
         >
           <info :devicedetail="deviceInfo" />
           <span slot="footer" class="dialog-footer">
@@ -28,32 +28,32 @@
         </el-dialog>
       </div>
       <div
-        :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
         class="map_header"
+        :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
       >
         <div v-show="cardHeight != '0px'" class="map_card">
           <el-row>
             <el-col
               class="card-panel-col"
-              :xs="24"
-              :sm="12"
-              :md="6"
-              :xl="6"
               :lg="6"
+              :md="6"
+              :sm="12"
+              :xl="6"
+              :xs="24"
             >
               <el-card
                 v-loading="loadingConfig['product_count'] == false"
+                class="box-card"
+                element-loading-background="rgba(0, 0, 0, 0.8)"
+                element-loading-spinner="el-icon-loading"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
-                element-loading-spinner="el-icon-loading"
-                element-loading-background="rgba(0, 0, 0, 0.8)"
-                class="box-card"
               >
                 <el-col :span="12">
                   <vab-icon icon="projector-fill" />
                 </el-col>
-                <el-col :span="12" class="card-right">
+                <el-col class="card-right" :span="12">
                   <router-link to="/roles/product">
                     <p>{{ $translateTitle('home.pro_count') }}</p>
                     <p>{{ _product_count }}</p>
@@ -63,23 +63,23 @@
             </el-col>
             <el-col
               class="card-panel-col"
-              :xs="24"
-              :sm="12"
-              :md="6"
-              :xl="6"
               :lg="6"
+              :md="6"
+              :sm="12"
+              :xl="6"
+              :xs="24"
             >
               <el-card
                 v-loading="loadingConfig['app_count'] == false"
+                class="box-card"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
-                class="box-card"
               >
                 <el-col :span="12">
                   <vab-icon icon="apps-fill" />
                 </el-col>
-                <el-col :span="12" class="card-right">
+                <el-col class="card-right" :span="12">
                   <router-link to="/roles/applicationManagement">
                     <p>{{ $translateTitle('home.app_count') }}</p>
                     <p>{{ _app_count }}</p>
@@ -88,24 +88,24 @@
               </el-card>
             </el-col>
             <el-col
-              :xs="24"
-              :sm="12"
-              :md="6"
-              :xl="6"
-              :lg="6"
               class="card-panel-col"
+              :lg="6"
+              :md="6"
+              :sm="12"
+              :xl="6"
+              :xs="24"
             >
               <el-card
                 v-loading="loadingConfig['device_count'] == false"
+                class="box-card"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
-                class="box-card"
               >
                 <el-col :span="12">
                   <vab-icon icon="device-recover-fill" />
                 </el-col>
-                <el-col :span="12" class="card-right">
+                <el-col class="card-right" :span="12">
                   <router-link to="/dashboard/devicelist">
                     <p>{{ $translateTitle('home.dev_count') }}</p>
                     <p>{{ _dev_count }}</p>
@@ -115,23 +115,23 @@
             </el-col>
             <el-col
               class="card-panel-col"
-              :xs="24"
-              :sm="12"
-              :md="6"
-              :xl="6"
               :lg="6"
+              :md="6"
+              :sm="12"
+              :xl="6"
+              :xs="24"
             >
               <el-card
                 v-loading="loadingConfig['warn_count'] == false"
+                class="box-card"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
-                class="box-card"
               >
-                <el-col :span="12" class="card-left">
+                <el-col class="card-left" :span="12">
                   <vab-icon icon="projector-2-fill" />
                 </el-col>
-                <el-col :span="12" class="card-right">
+                <el-col class="card-right" :span="12">
                   <router-link to="/CloudOt/alarm">
                     <p>
                       {{ $translateTitle('equipment.Total number of alarms') }}
@@ -158,16 +158,16 @@
                   @visible-change="change($event)"
                 >
                   <el-option
-                    :value="treeDataValue"
                     style="height: auto; padding: 0"
+                    :value="treeDataValue"
                   >
                     <el-tree
                       ref="workGroup"
                       :data="deptTreeData"
-                      :props="roleProps"
-                      node-key="index"
                       default-expand-all
                       :expand-on-click-node="false"
+                      node-key="index"
+                      :props="roleProps"
                     >
                       <div slot-scope="{ node, data }" class="custom-tree-node">
                         <span
@@ -414,9 +414,9 @@
               <baidu-map
                 id="baidu_map"
                 ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
-                :scroll-wheel-zoom="true"
-                class="baidu_map"
                 :center="{ lng: 106.553838, lat: 29.563216 }"
+                class="baidu_map"
+                :scroll-wheel-zoom="true"
                 :zoom="sizeZoom"
               >
                 <bm-control>
@@ -430,8 +430,8 @@
                     {{ $translateTitle('home.min') }}
                   </el-button>
                   <el-button
-                    size="mini"
                     class="ri-fullscreen-fill"
+                    size="mini"
                     @click="toggleFull()"
                   />
                   <bm-panorama
@@ -451,37 +451,37 @@
                   <div v-for="(item, index) in _tableData" :key="index">
                     <bm-marker
                       :ref="'bm_info' + index"
-                      :position="{
-                        lng: item.location.longitude,
-                        lat: item.location.latitude,
-                      }"
                       :icon="{
                         url: item.iconUrl,
                         size: { width: 100, height: 100 },
+                      }"
+                      :position="{
+                        lng: item.location.longitude,
+                        lat: item.location.latitude,
                       }"
                       @click="showDeatils(item, index)"
                     >
                       <bm-info-window
                         :key="index"
-                        style="display: none"
                         :position="{
                           lng: item.location.longitude,
                           lat: item.location.latitude,
                         }"
                         :show="item.show"
+                        style="display: none"
                         @close="closeInfo(item, index)"
                       >
                         <div
                           v-show="deviceInfo"
-                          style="width: 400px"
                           class="deviceInfo"
+                          style="width: 400px"
                         >
                           <el-row :gutter="24">
                             <el-col :span="8">
                               <el-image
-                                style="width: 120px; height: 120px"
-                                :src="productIco"
                                 :preview-src-list="[`${productIco}`]"
+                                :src="productIco"
+                                style="width: 120px; height: 120px"
                               >
                                 <div slot="error" class="image-slot">
                                   <i
@@ -517,12 +517,12 @@
                                 </el-link>
                                 ：
                                 <el-link
-                                  :underline="false"
                                   :type="
                                     deviceInfo.status === 'ONLINE'
                                       ? 'success'
                                       : 'warning'
                                   "
+                                  :underline="false"
                                 >
                                   {{
                                     deviceInfo.status === 'ONLINE'
@@ -568,9 +568,9 @@
                 </bml-marker-clusterer>
                 <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
                 <bm-geolocation
-                  :show-address-bar="true"
-                  :auto-location="true"
                   anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+                  :auto-location="true"
+                  :show-address-bar="true"
                 />
               </baidu-map>
             </div>
@@ -593,21 +593,21 @@
                           <div class="grid-content bg-purple">
                             <el-table
                               v-if="Product"
-                              :data="Product"
-                              style="width: 100%"
-                              :header-cell-style="{ 'text-align': 'center' }"
                               :cell-style="{ 'text-align': 'center' }"
+                              :data="Product"
+                              :header-cell-style="{ 'text-align': 'center' }"
                               :row-class-name="tableRowClassName"
+                              style="width: 100%"
                             >
                               <el-table-column
-                                width="60"
                                 :label="$translateTitle('menu.icon')"
+                                width="60"
                               >
                                 <template slot-scope="scope">
                                   <el-image
-                                    style="width: 26px; height: 26px"
-                                    :src="scope.row.icon"
                                     :preview-src-list="[`${scope.row.icon}`]"
+                                    :src="scope.row.icon"
+                                    style="width: 26px; height: 26px"
                                   >
                                     <div slot="error" class="image-slot">
                                       <i class="el-icon-picture-outline"></i>
@@ -616,10 +616,10 @@
                                 </template>
                               </el-table-column>
                               <el-table-column
-                                width="120"
-                                prop="name"
                                 :label="$translateTitle('task.productname')"
+                                prop="name"
                                 :show-overflow-tooltip="true"
+                                width="120"
                               >
                                 <template slot-scope="scope">
                                   <span @click="goDevice(scope.row.name)">
@@ -645,7 +645,7 @@
                   </el-card>
                 </div>
 
-                <el-col :xs="24" :sm="24" :md="24" :xl="24">
+                <el-col :md="24" :sm="24" :xl="24" :xs="24">
                   <el-card class="box-card">
                     <div slot="header" class="clearfix">
                       <span>
@@ -661,13 +661,13 @@
                     <div class="text item">
                       <vab-chart
                         ref="charts"
-                        :loading="loading"
-                        height="160px"
-                        type="ring"
-                        :data-empty="!ChartStatus.rows"
                         :data="_ChartStatus"
-                        :settings="chartSettings"
+                        :data-empty="!ChartStatus.rows"
                         :extend="chartExtend"
+                        height="160px"
+                        :loading="loading"
+                        :settings="chartSettings"
+                        type="ring"
                       />
                     </div>
                   </el-card>
@@ -680,7 +680,7 @@
                 <div class="box-card">
                   <el-card>
                     <div slot="header" class="clearfix">
-                      <el-badge :value="_dev_off_count" class="item">
+                      <el-badge class="item" :value="_dev_off_count">
                         <el-button
                           size="small"
                           @click="_goDevice('dev_unline')"
@@ -694,16 +694,16 @@
                         <el-col :span="24">
                           <div class="grid-content bg-purple">
                             <el-table
-                              :data="_offlineData"
-                              class="_el-table"
-                              style="width: 100%"
-                              :header-cell-style="{ 'text-align': 'center' }"
                               :cell-style="{ 'text-align': 'center' }"
+                              class="_el-table"
+                              :data="_offlineData"
+                              :header-cell-style="{ 'text-align': 'center' }"
                               :row-class-name="tableRowClassName"
+                              style="width: 100%"
                             >
                               <el-table-column
-                                prop="name"
                                 :label="$translateTitle('equipment.devicename')"
+                                prop="name"
                               >
                                 <template slot-scope="scope">
                                   <span
@@ -733,7 +733,7 @@
                 <div class="box-card">
                   <el-card>
                     <div slot="header" class="clearfix">
-                      <el-badge :value="_dev_online_count" class="item">
+                      <el-badge class="item" :value="_dev_online_count">
                         <el-button
                           size="small"
                           @click="_goDevice('dev_online')"
@@ -747,16 +747,16 @@
                         <el-col :span="24">
                           <div class="grid-content bg-purple">
                             <el-table
-                              :data="_onlineData"
-                              style="width: 100%"
-                              class="_el-table"
-                              :header-cell-style="{ 'text-align': 'center' }"
                               :cell-style="{ 'text-align': 'center' }"
+                              class="_el-table"
+                              :data="_onlineData"
+                              :header-cell-style="{ 'text-align': 'center' }"
                               :row-class-name="tableRowClassName"
+                              style="width: 100%"
                             >
                               <el-table-column
-                                prop="name"
                                 :label="$translateTitle('equipment.devicename')"
+                                prop="name"
                               >
                                 <template slot-scope="scope">
                                   <span

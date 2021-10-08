@@ -2,7 +2,7 @@
   <div class="player-container">
     <el-row :gutter="24">
       <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
-        <el-card shadow="hover" class="player_card">
+        <el-card class="player_card" shadow="hover">
           <div id="video-container"></div>
         </el-card>
       </el-col>

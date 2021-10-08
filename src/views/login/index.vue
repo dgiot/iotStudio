@@ -11,10 +11,10 @@
       <el-col :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
         <el-form
           ref="form"
-          :model="form"
-          :rules="rules"
           class="login-form"
           label-position="left"
+          :model="form"
+          :rules="rules"
         >
           <div v-if="Default.title" class="title-tips">
             {{ $translateTitle('home.login') }}
@@ -36,8 +36,8 @@
               ref="password"
               v-model.trim="form.password"
               :placeholder="$translateTitle('home.Please enter the password')"
-              :type="passwordType"
               tabindex="2"
+              :type="passwordType"
               @keyup.enter.native="handleLogin"
             >
               <!--              <el-link-->
@@ -76,8 +76,8 @@
             <el-input class="sbMc">
               <el-button
                 slot="append"
-                :loading="loading"
                 class="login-btn"
+                :loading="loading"
                 type="primary"
                 @click.native="handleLogin"
               >

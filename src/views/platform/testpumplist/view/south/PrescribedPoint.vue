@@ -3,9 +3,9 @@
     <!-- 每个组件都只有一个form,因此表单的ref属性 不需要修改 -->
     <el-form
       ref="prescribedPointForm"
+      disabled
       :inline="true"
       :model="prescribedPointForm"
-      disabled
     >
       <el-row>
         <el-col :span="24">

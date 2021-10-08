@@ -6,8 +6,8 @@
   >
     <canvas
       ref="elCanvas"
-      :width="detail.style.position.w"
       :height="detail.style.position.h"
+      :width="detail.style.position.w"
     >
       Your browser does not support the HTML5 canvas tag.
     </canvas>

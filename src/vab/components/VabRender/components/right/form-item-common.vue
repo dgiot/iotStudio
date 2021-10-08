@@ -3,22 +3,22 @@
     <template v-if="VabRender.formItemList[VabRender.currentIndex]">
       <attrs-header
         v-model="keyword"
-        url="https://www.yuque.com/chaojie-vjiel/vbwzgu/iw5dzf"
         title="表单项配置"
+        url="https://www.yuque.com/chaojie-vjiel/vbwzgu/iw5dzf"
       />
       <ele-form
         v-model="VabRender.formItemList[VabRender.currentIndex]"
-        :form-desc="filteredFormDesc"
         :form-attrs="{ size: 'small' }"
+        :form-desc="filteredFormDesc"
         :is-show-back-btn="false"
         :is-show-submit-btn="false"
-        :rules="rules"
+        label-position="top"
         :options-fn="
           VabRender.formBindProps['options-fn'] ||
           VabRender.formBindProps['optionsFn']
         "
+        :rules="rules"
         :span="20"
-        label-position="top"
       >
         <template #rules="{ desc, formData, field, type }">
           <div style="margin-bottom: 20px">

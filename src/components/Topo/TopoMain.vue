@@ -1,32 +1,31 @@
 <template>
   <div class="topo-main">
     <vue-ruler-tool
-      :parent="true"
       :is-scale-revise="true"
+      :parent="true"
       style="width: 100%; height: calc(100% - 40px)"
     >
       <div
         id="surface-edit-layer"
-        tabindex="0"
         class="topo-layer"
         :class="{ 'topo-layer-view-selected': selectedIsLayer }"
         :style="layerStyle"
+        tabindex="0"
         @click="onLayerClick($event)"
-        @mouseup="onLayerMouseup($event)"
-        @mousemove="onLayerMousemove($event)"
-        @mousedown="onLayerMousedown($event)"
-        @keyup.delete="removeItem()"
         @dragover.prevent
         @drop="onDrop"
         @keydown.ctrl.67.stop="copyItem"
         @keydown.ctrl.86.stop="pasteItem"
-        @keydown.ctrl.90.stop="undo"
         @keydown.ctrl.89.stop="redo"
+        @keydown.ctrl.90.stop="undo"
+        @keyup.delete="removeItem()"
+        @mousedown="onLayerMousedown($event)"
+        @mousemove="onLayerMousemove($event)"
+        @mouseup="onLayerMouseup($event)"
       >
         <template v-for="(component, index) in configData.components">
           <div
             :key="component.identifier"
-            tabindex="0"
             class="topo-layer-view"
             :class="{
               'topo-layer-view-selected':
@@ -48,17 +47,18 @@
                 ? `rotate(${component.style.transform}deg)`
                 : 'rotate(0deg)',
             }"
+            tabindex="0"
             @click.stop="clickComponent(index, component, $event)"
-            @mousedown.stop="controlMousedown(component, $event, index)"
-            @keyup.delete="removeItem()"
-            @keydown.up.exact.prevent="moveItems('up')"
-            @keydown.right.exact.prevent="moveItems('right')"
-            @keydown.down.exact.prevent="moveItems('down')"
-            @keydown.left.exact.prevent="moveItems('left')"
             @keydown.ctrl.67.stop="copyItem"
             @keydown.ctrl.86.stop="pasteItem"
-            @keydown.ctrl.90.stop="undo"
             @keydown.ctrl.89.stop="redo"
+            @keydown.ctrl.90.stop="undo"
+            @keydown.down.exact.prevent="moveItems('down')"
+            @keydown.left.exact.prevent="moveItems('left')"
+            @keydown.right.exact.prevent="moveItems('right')"
+            @keydown.up.exact.prevent="moveItems('up')"
+            @keyup.delete="removeItem()"
+            @mousedown.stop="controlMousedown(component, $event, index)"
           >
             <component
               :is="parseView(component)"
@@ -148,28 +148,28 @@
       "
     >
       <el-row :gutter="10">
-        <el-col :xs="8" :push="1" :sm="8" :md="8" :lg="8" :xl="8">
-          <el-button type="primary" disabled @click.native="fullScreen">
+        <el-col :lg="8" :md="8" :push="1" :sm="8" :xl="8" :xs="8">
+          <el-button disabled type="primary" @click.native="fullScreen">
             预览
           </el-button>
           <el-button type="primary" @click.native="printData">
             当前数据
           </el-button>
         </el-col>
-        <el-col :xs="8" :sm="8" :md="8" :lg="8" :xl="8">
+        <el-col :lg="8" :md="8" :sm="8" :xl="8" :xs="8">
           <p style="height: 20px; font-size: 18px; line-height: 20px">
             已选组件个数：{{ selectedComponents.length }}
           </p>
         </el-col>
-        <el-col :xs="8" :pull="1" :sm="8" :md="8" :lg="8" :xl="8">
+        <el-col :lg="8" :md="8" :pull="1" :sm="8" :xl="8" :xs="8">
           <el-slider
             v-model="selectedValue"
-            :min="30"
-            :max="200"
-            :step="1"
             label
             :label-value="`${selectedValue}%`"
+            :max="200"
+            :min="30"
             snap
+            :step="1"
             style="float: right; width: 200px"
           />
         </el-col>

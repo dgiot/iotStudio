@@ -75,7 +75,7 @@
                   />
                 </el-select>
               </el-col>
-              <el-col :span="4" :offset="2">
+              <el-col :offset="2" :span="4">
                 <el-checkbox v-model="TableInfoObj.shifoujieyeweiji">
                   是否接液位计
                 </el-checkbox>
@@ -128,7 +128,7 @@
               <el-col :span="12">
                 <el-input v-model="TableInfoObj.temcl" class="ipw2" />
               </el-col>
-              <el-col :span="4" :offset="2">
+              <el-col :offset="2" :span="4">
                 <el-checkbox v-model="TableInfoObj.shifoujiewenduchuanganqi">
                   是否接温度传感器
                 </el-checkbox>
@@ -158,16 +158,16 @@
           <el-form-item label="振动测量类型" label-width="120px">
             <el-select
               v-model="TableInfoObj.zhendongceliangleixing"
+              class="ipw"
               clearable
               placeholder="请选择"
-              class="ipw"
             >
               <el-option
                 v-for="item in defaultObj.zdcl"
                 :key="item.value"
+                class="ipw"
                 :label="item.label"
                 :value="item.value"
-                class="ipw"
               />
             </el-select>
           </el-form-item>

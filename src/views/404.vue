@@ -5,12 +5,12 @@
         <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
           <div class="pic-error">
             <el-image
-              src="http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/error_images/404.png"
               class="pic-error-parent"
+              src="http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/error_images/404.png"
             />
             <el-image
-              src="http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/error_images/cloud.png"
               class="pic-error-child left"
+              src="http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/error_images/cloud.png"
             />
           </div>
         </el-col>
@@ -24,10 +24,10 @@
               {{ jumpTime }}s&nbsp;{{ btn }}
             </router-link>
             <el-button
-              type="primary"
+              round
               size="medium"
               style="margin-left: 20px"
-              round
+              type="primary"
               @click="logout"
             >
               {{ $translateTitle('退出登录') }}

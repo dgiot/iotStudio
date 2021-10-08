@@ -6,8 +6,8 @@
         :key="source + new Date()"
         autoplay
         controls
-        :width="width"
         :height="height"
+        :width="width"
       ></video>
     </div>
     <!--    <hrm-player-->

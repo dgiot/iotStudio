@@ -7,9 +7,9 @@
           :id="'component' + item.id"
           :key="item.id"
           class="component"
-          :style="item.groupStyle"
-          :prop-value="item.propValue"
           :element="item"
+          :prop-value="item.propValue"
+          :style="item.groupStyle"
         />
       </template>
     </div>

@@ -2,9 +2,9 @@
   <el-table
     ref="multipleTable"
     :data="tableData"
-    :row-style="showRow"
     v-bind="$attrs"
     row-key="objectId"
+    :row-style="showRow"
     v-on="$listeners"
   >
     <slot name="selection" />
@@ -12,13 +12,13 @@
     <el-table-column
       v-for="item in columns"
       :key="item.key"
-      :label="item.label"
-      :width="item.width"
       :align="item.align || 'center'"
       :header-align="item.headerAlign"
+      :label="item.label"
+      :width="item.width"
     >
       <template slot-scope="scope">
-        <slot :scope="scope" :name="item.key">
+        <slot :name="item.key" :scope="scope">
           <template v-if="item.expand">
             <span :style="{ 'padding-left': 20 + 'px' }" />
             <span
@@ -41,8 +41,8 @@
                 scope.row[defaultChildren].length > 0
               "
               v-model="scope.row._select"
-              :style="{ 'padding-left': +scope.row._level * indent + 'px' }"
               :indeterminate="scope.row._select"
+              :style="{ 'padding-left': +scope.row._level * indent + 'px' }"
               @change="handleCheckAllChange(scope.row)"
             />
             <el-checkbox

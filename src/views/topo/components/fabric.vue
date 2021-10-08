@@ -5,7 +5,7 @@
     </div>
     <div class="panel-body">
       <div class="demo">
-        <canvas id="canvas" :width="width" :height="height"></canvas>
+        <canvas id="canvas" :height="height" :width="width"></canvas>
         <div class="draw-btn-group">
           <div
             :class="{ active: drawType == '' }"
@@ -77,8 +77,8 @@
     </div>
     <input
       id="imgInput"
-      type="file"
       accept="image/*"
+      type="file"
       @change="uploadImgChange"
     />
     <img id="img" :src="imgSrc" />

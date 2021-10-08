@@ -4,9 +4,9 @@
       <el-card class="box-card">
         <el-form
           ref="formInline"
+          label-width="80px"
           :model="formInline"
           :rules="formlinerule"
-          label-width="80px"
           size="medium"
         >
           <div class="form-block__title">
@@ -80,10 +80,10 @@
                   @change="getEditor2"
                 />
                 <el-popover
-                  placement="top-start"
-                  width="200"
-                  trigger="hover"
                   content="自定义模拟数据进行 SQL 命令测试，仅用于测试功能"
+                  placement="top-start"
+                  trigger="hover"
+                  width="200"
                 >
                   <i
                     slot="reference"
@@ -97,9 +97,11 @@
 
             <!--中间间隔-->
             <el-col :span="4" />
-            <el-col :span="row2" class="animated fadeInRightBig">
+            <el-col class="animated fadeInRightBig" :span="row2">
               <el-form-item
                 v-show="formInline.sqltest == true"
+                label="clientid"
+                prop="clientid"
                 :rules="[
                   {
                     required: true,
@@ -107,13 +109,13 @@
                     trigger: 'blur',
                   },
                 ]"
-                label="clientid"
-                prop="clientid"
               >
                 <el-input v-model="formInline.clientid" />
               </el-form-item>
               <el-form-item
                 v-show="formInline.sqltest == true"
+                label="username"
+                prop="username"
                 :rules="[
                   {
                     required: true,
@@ -121,13 +123,13 @@
                     trigger: 'blur',
                   },
                 ]"
-                label="username"
-                prop="username"
               >
                 <el-input v-model="formInline.username" />
               </el-form-item>
               <el-form-item
                 v-show="formInline.sqltest == true"
+                label="topic"
+                prop="topic"
                 :rules="[
                   {
                     required: true,
@@ -135,33 +137,31 @@
                     trigger: 'blur',
                   },
                 ]"
-                label="topic"
-                prop="topic"
               >
                 <el-input v-model="formInline.topic" />
               </el-form-item>
               <el-form-item
                 v-if="formInline.sqltest == true"
+                label="qos"
+                prop="qos"
                 :rules="[
                   { required: true, message: 'qos 不能为空', trigger: 'blur' },
                 ]"
-                label="qos"
-                prop="qos"
               >
                 <el-input v-model.number="formInline.qos" />
               </el-form-item>
               <el-form-item
                 v-show="formInline.sqltest == true"
+                label="payload"
+                prop="payload"
                 :rules="[
                   { required: true, message: '请填写payload', trigger: 'blur' },
                 ]"
-                label="payload"
-                prop="payload"
               >
                 <el-input
                   v-model="formInline.payload"
-                  type="text"
                   style="visibility: hidden"
+                  type="text"
                 />
                 <pre
                   id="editor2"
@@ -201,9 +201,9 @@
             <div class="bottomtable" style="padding-left: 20px">
               <div class="tableaction">
                 <el-table
-                  :header-cell-style="{ 'text-align': 'center' }"
                   :cell-style="{ 'text-align': 'center' }"
                   :data="actionData"
+                  :header-cell-style="{ 'text-align': 'center' }"
                   style="width: 100%"
                 >
                   <el-table-column :label="$translateTitle('rule.channel')">
@@ -239,15 +239,15 @@
                   >
                     <template slot-scope="scope">
                       <el-button
-                        type="warning"
                         size="mini"
+                        type="warning"
                         @click="editAisle(scope.row)"
                       >
                         {{ $translateTitle('button.edit') }}
                       </el-button>
                       <el-button
-                        type="danger"
                         size="mini"
+                        type="danger"
                         @click="deleteOneData(scope.$index)"
                       >
                         {{ $translateTitle('button.delete') }}
@@ -257,11 +257,11 @@
                 </el-table>
                 <div>
                   <el-button
-                    type="success"
-                    plain
                     icon="el-icon-circle-plus-outline"
+                    plain
                     size="small"
                     style="margin-top: 20px"
+                    type="success"
                     @click="addresouce"
                   >
                     {{ $translateTitle('rule.Addto') }}
@@ -272,19 +272,19 @@
             <div>
               <el-dialog
                 :append-to-body="true"
-                :title="$translateTitle('rule.ResponseAction')"
-                :visible.sync="dialogFormVisible"
                 :close-on-click-modal="false"
-                width="40%"
+                :title="$translateTitle('rule.ResponseAction')"
                 top="10%"
+                :visible.sync="dialogFormVisible"
+                width="40%"
                 @close="resetForm('params')"
               >
                 <el-form
                   ref="params"
-                  :rules="paramsrules"
                   label-position="left"
                   label-width="140px"
                   :model="params"
+                  :rules="paramsrules"
                 >
                   <el-form-item prop="channel">
                     <span slot="label">
@@ -293,8 +293,8 @@
                         <span>{{ $translateTitle('rule.channel') }}</span>
                         <el-tooltip
                           class="item"
-                          effect="dark"
                           content="重新发布消息到物联网通道"
+                          effect="dark"
                           placement="top-start"
                         >
                           <i class="el-icon-question"></i>
@@ -306,9 +306,9 @@
                       <el-option
                         v-for="item in channellist"
                         :key="item.name"
+                        :disabled="item.name != 'dgiot'"
                         :label="item.title.zh"
                         :value="item.title.zh"
-                        :disabled="item.name != 'dgiot'"
                       >
                         <span style="float: left">
                           <i v-if="item.title">
@@ -322,8 +322,8 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item
-                    prop="resources"
                     :label="$translateTitle('rule.resource')"
+                    prop="resources"
                   >
                     <span slot="label">
                       <span class="span-box">
@@ -331,8 +331,8 @@
                         <span>{{ $translateTitle('rule.resource') }}</span>
                         <el-tooltip
                           class="item"
-                          effect="dark"
                           :content="$translateTitle('rule.resource')"
+                          effect="dark"
                           placement="top-start"
                         >
                           <i class="el-icon-question"></i>
@@ -364,8 +364,8 @@
                         <span>{{ $translateTitle('rule.target_qos') }}</span>
                         <el-tooltip
                           class="item"
-                          effect="dark"
                           content="重新发布消息时用的 QoS 级别, 设置为 -1 以使用原消息中的 QoS"
+                          effect="dark"
                           placement="top-start"
                         >
                           <i class="el-icon-question"></i>
@@ -388,8 +388,8 @@
                         <span>{{ $translateTitle('rule.target_topic') }}</span>
                         <el-tooltip
                           class="item"
-                          effect="dark"
                           content="重新发布消息到哪个主题"
+                          effect="dark"
                           placement="top-start"
                         >
                           <i class="el-icon-question"></i>
@@ -405,8 +405,8 @@
                         <span>{{ $translateTitle('rule.payload_tmpl') }}</span>
                         <el-tooltip
                           class="item"
-                          effect="dark"
                           content="消息内容模板，支持变量"
+                          effect="dark"
                           placement="top-start"
                         >
                           <i class="el-icon-question"></i>
@@ -415,8 +415,8 @@
                     </span>
                     <el-input
                       v-model="params.payload_tmpl"
-                      type="textarea"
                       :rows="2"
+                      type="textarea"
                     />
                   </el-form-item>
                   <el-form-item>

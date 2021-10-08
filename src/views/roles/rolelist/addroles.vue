@@ -4,24 +4,24 @@
     <div class="role-box">
       <el-form
         ref="roleFormObj"
+        label-width="80px"
         :loading="isloading"
         :model="roleFormObj"
         :rules="roleFormRules"
-        label-width="80px"
       >
         <el-form-item v-if="!isStructures" label="父及部门" prop="ParentId">
           <el-select
             v-model="roleFormObj.ParentId"
-            style="width: 100%"
             placeholder="请选择Parent"
+            style="width: 100%"
             @change="handleChangeDeptId($event)"
           >
             <el-option
               v-for="(item, index) in roleList"
               :key="index"
-              :value="item.objectId"
-              :title="item.name + ':' + item.desc"
               :label="item.name"
+              :title="item.name + ':' + item.desc"
+              :value="item.objectId"
             />
           </el-select>
         </el-form-item>
@@ -32,8 +32,8 @@
         <el-form-item label="部门" prop="depname">
           <el-input
             v-model="roleFormObj.depname"
-            style="width: 75%"
             placeholder="请输入部门名称"
+            style="width: 75%"
           />
           <span style="float: right; font-size: 14px; color: #8492a6">
             <el-button
@@ -49,14 +49,14 @@
           <el-select
             v-model="roleFormObj.dictvalue"
             :clearable="clearFlag"
-            style="width: 100%"
             placeholder="请选择角色模版"
+            style="width: 100%"
           >
             <el-option
               v-for="(item, index) in Option.dictOption"
               :key="index"
-              :value="item.key"
               change="changeOption('dict',item.name)"
+              :value="item.key"
             />
           </el-select>
         </el-form-item>

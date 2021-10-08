@@ -35,13 +35,13 @@
 
       <div class="pump_table">
         <el-table
-          :data="tableData"
-          :cell-style="rowClass"
-          :header-cell-style="headClass"
           border
+          :cell-style="rowClass"
+          :data="tableData"
+          :header-cell-style="headClass"
           style="width: 100%"
         >
-          <el-table-column type="index" label="序号" width="50" />
+          <el-table-column label="序号" type="index" width="50" />
           <el-table-column
             label="企业名称"
             prop="data.CompanyAuthentication.abbrname"
@@ -52,8 +52,8 @@
           />
           <el-table-column
             label="法定代表人姓名"
-            width="150"
             prop="data.CompanyAuthentication.businessname"
+            width="150"
           />
 
           <el-table-column
@@ -71,8 +71,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="data.Laboratory.laboratoryInfo.name"
             label="实验室名称"
+            prop="data.Laboratory.laboratoryInfo.name"
           />
 
           <el-table-column label="审核日期">
@@ -106,14 +106,14 @@
             </template>
           </el-table-column>
 
-          <el-table-column width="150" label="审核管理">
+          <el-table-column label="审核管理" width="150">
             <template slot-scope="scope">
-              <el-button type="primary" size="small" @click="lookUp(scope.row)">
+              <el-button size="small" type="primary" @click="lookUp(scope.row)">
                 查看
               </el-button>
               <el-button
-                type="success"
                 size="small"
+                type="success"
                 @click="examine(scope.row)"
               >
                 审核
@@ -124,28 +124,28 @@
       </div>
       <div class="block">
         <el-pagination
-          :page-sizes="[10, 200, 30, 50]"
-          :page-size="pagesize"
-          :total="total"
           layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
+          :page-size="pagesize"
+          :page-sizes="[10, 200, 30, 50]"
+          :total="total"
           @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         />
       </div>
     </div>
     <!--审核弹窗-->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogVisible"
       title="认证审核"
+      :visible.sync="dialogVisible"
       width="40%"
     >
       <div>
         <el-form
           ref="verifyFormRef"
+          label-width="100px"
           :model="verifyForm"
           :rules="verifyFormRules"
-          label-width="100px"
         >
           <el-form-item label="审核状态" prop="status">
             <el-radio-group v-model="verifyForm.status">
@@ -174,8 +174,8 @@
     <el-dialog
       v-if="dialogFormVisible"
       :append-to-body="true"
-      :visible.sync="dialogFormVisible"
       title="企业资质审核"
+      :visible.sync="dialogFormVisible"
       width="80%"
     >
       <el-tabs v-model="activeName">
@@ -201,11 +201,11 @@
                 </el-form-item>
                 <el-form-item label="法人代表身份证">
                   <img
+                    class="avatar"
                     :src="
                       fileDomain +
                       currentRow.data.CompanyAuthentication.contraryimageUrl
                     "
-                    class="avatar"
                   />
                 </el-form-item>
                 <el-form-item label="注册地址">
@@ -255,11 +255,11 @@
                 </el-form-item>
                 <el-form-item label="企业营业执照">
                   <img
+                    class="avatar"
                     :src="
                       fileDomain +
                       currentRow.data.CompanyAuthentication.businesslicense
                     "
-                    class="avatar"
                   />
                 </el-form-item>
                 <el-form-item label="街道地址">
@@ -330,11 +330,11 @@
                 </el-form-item>
                 <el-form-item label="实验室照片">
                   <img
+                    class="avatar"
                     :src="
                       fileDomain +
                       currentRow.data.Laboratory.laboratoryInfo.imgsrc
                     "
-                    class="avatar"
                   />
                 </el-form-item>
                 <el-form-item label="主管单位">
@@ -346,9 +346,9 @@
                 <el-form-item label="实验室类别">
                   <el-select
                     v-model="currentRow.data.Laboratory.laboratoryInfo.category"
-                    style="width: 100px"
                     disabled
                     placeholder="请选择实验室类别"
+                    style="width: 100px"
                   >
                     <el-option label="主实验室" value="1" />
                     <el-option label="辅助实验室" value="2" />
@@ -440,11 +440,11 @@
                 </el-form-item>
                 <el-form-item label="证书电子文件">
                   <img
+                    class="avatar"
                     :src="
                       fileDomain +
                       currentRow.data.Laboratory.laboratoryInfo.imgsrc1
                     "
-                    class="avatar"
                   />
                 </el-form-item>
               </el-col>

@@ -9,7 +9,7 @@
           {{ actionType == 'update' ? '编辑应用' : '新增应用' }}
         </el-breadcrumb-item>
       </el-breadcrumb>
-      <el-button type="primary" plain size="small" @click="handleClickBack">
+      <el-button plain size="small" type="primary" @click="handleClickBack">
         {{ $translateTitle('application.return') }}
       </el-button>
     </div>
@@ -21,22 +21,22 @@
         </p>
       </div>
 
-      <el-form ref="form" :model="form" label-width="180px">
+      <el-form ref="form" label-width="180px" :model="form">
         <!-- 工程名称 -->
         <el-row>
           <el-col :span="12">
             <div class="grid-content bg-purple">
               <el-form-item
-                :rules="[{ required: true, message: '工程单位不能为空' }]"
                 label="工程单位"
                 prop="department"
+                :rules="[{ required: true, message: '工程单位不能为空' }]"
               >
                 <el-input v-model="form.department" placeholder="工程单位" />
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('application.applicationname')"
-                :rules="[{ required: true, message: '工程名称不能为空' }]"
                 prop="name"
+                :rules="[{ required: true, message: '工程名称不能为空' }]"
               >
                 <el-input
                   v-model="form.name"
@@ -47,8 +47,8 @@
               <!-- 工程链接 -->
               <el-form-item
                 :label="$translateTitle('application.applicationlink')"
-                :rules="[{ required: true, message: '工程链接不能为空' }]"
                 prop="productIdentifier"
+                :rules="[{ required: true, message: '工程链接不能为空' }]"
               >
                 <!--         <el-input v-model="form.productIdentifier" placeholder="例：vcon" class="link">
                   <template slot="prepend">{{host}}</template>
@@ -56,8 +56,8 @@
                 -->
                 <el-select
                   v-model="form.productIdentifier"
-                  placeholder="请选择"
                   disabled
+                  placeholder="请选择"
                 >
                   <el-option
                     v-for="item in applicationList"
@@ -70,6 +70,7 @@
               <!-- 所属行业 -->
               <el-form-item
                 :label="$translateTitle('application.industrytype')"
+                prop="category"
                 :rules="[
                   {
                     required: true,
@@ -77,18 +78,18 @@
                     trigger: 'blur',
                   },
                 ]"
-                prop="category"
               >
                 <el-cascader
                   ref="category"
                   v-model="form.category"
+                  clearable
                   :options="treeData"
                   :placeholder="$translateTitle('application.industrytype')"
-                  clearable
                 />
               </el-form-item>
 
               <el-form-item
+                label="所属应用"
                 :rules="[
                   {
                     required: true,
@@ -96,7 +97,6 @@
                     trigger: 'blur',
                   },
                 ]"
-                label="所属应用"
               >
                 <el-input
                   v-model="form.relationApp"
@@ -156,13 +156,13 @@
               >
                 <el-input
                   v-model="form.desc"
-                  :rows="4"
+                  maxlength="300"
                   :placeholder="
                     $translateTitle('application.applicationdescription')
                   "
-                  type="textarea"
-                  maxlength="300"
+                  :rows="4"
                   show-word-limit
+                  type="textarea"
                 />
               </el-form-item>
             </div>
@@ -175,20 +175,20 @@
               >
                 <el-upload
                   ref="upload"
-                  :file-list="form.fileList"
-                  :auto-upload="false"
-                  :limit="1"
-                  :on-success="handleSuccess"
-                  class="upload-demo"
                   action="/upload"
+                  :auto-upload="false"
+                  class="upload-demo"
+                  :file-list="form.fileList"
+                  :limit="1"
                   list-type="picture"
+                  :on-success="handleSuccess"
                 >
                   <el-button slot="trigger" size="small" type="primary">
                     {{ $translateTitle('application.selectfile') }}
                   </el-button>
                   <el-button
-                    style="margin-left: 10px"
                     size="small"
+                    style="margin-left: 10px"
                     type="success"
                     @click="submitUpload"
                   >
@@ -210,20 +210,20 @@
               <el-form-item label="背景图片">
                 <el-upload
                   ref="upload1"
-                  :file-list="form.fileList1"
-                  :auto-upload="false"
-                  :limit="1"
-                  :on-success="handleSuccess1"
-                  class="upload-demo"
                   action="/upload"
+                  :auto-upload="false"
+                  class="upload-demo"
+                  :file-list="form.fileList1"
+                  :limit="1"
                   list-type="picture"
+                  :on-success="handleSuccess1"
                 >
                   <el-button slot="trigger" size="small" type="primary">
                     {{ $translateTitle('application.selectfile') }}
                   </el-button>
                   <el-button
-                    style="margin-left: 10px"
                     size="small"
+                    style="margin-left: 10px"
                     type="success"
                     @click="submitUpload1"
                   >
@@ -249,13 +249,13 @@
               >
                 <el-input
                   v-model="form.copyright"
-                  :rows="3"
+                  maxlength="300"
                   :placeholder="
                     $translateTitle('application.copyrightinformation')
                   "
-                  type="textarea"
-                  maxlength="300"
+                  :rows="3"
                   show-word-limit
+                  type="textarea"
                 />
               </el-form-item>
               <el-form-item
@@ -268,12 +268,12 @@
                   <template slot="prepend">http://</template>
                   <el-button
                     slot="append"
-                    type="primary"
                     style="
                       color: #ffffff;
                       background: #409eff;
                       border-radius: 1px 1px 1px 0;
                     "
+                    type="primary"
                     @click="open12"
                   >
                     {{ $translateTitle('application.preview') }}
@@ -292,6 +292,7 @@
             <div class="grid-content bg-purple">
               <el-form-item
                 :label="$translateTitle('application.applicationaccessscale')"
+                prop="scale"
                 :rules="[
                   {
                     required: true,
@@ -299,7 +300,6 @@
                     trigger: 'change',
                   },
                 ]"
-                prop="scale"
               >
                 <el-select v-model.number="form.scale" clearable>
                   <el-option

@@ -17,22 +17,22 @@
                   <el-form-item :label="$translateTitle('user.department')">
                     <el-select
                       v-model="queryForm.workGroupName"
-                      placeholder="请选择"
                       clearable
+                      placeholder="请选择"
                       @visible-change="change($event)"
                     >
                       <el-option
-                        :value="treeDataValue"
                         style="height: auto; padding: 0"
+                        :value="treeDataValue"
                       >
                         <el-tree
                           ref="workGroup"
                           class="workGroup"
                           :data="roleTree"
-                          :props="roleProps"
-                          node-key="index"
                           default-expand-all
                           :expand-on-click-node="false"
+                          node-key="index"
+                          :props="roleProps"
                         >
                           <div
                             slot-scope="{ node, data }"
@@ -61,18 +61,18 @@
                   <el-form-item :label="$translateTitle('user.rolename')">
                     <el-input
                       v-model="search"
+                      clearable
                       :placeholder="$translateTitle('user.rolename')"
                       size="mini"
-                      clearable
                     />
                   </el-form-item>
 
                   <el-form-item>
                     <el-button
-                      type="primary"
-                      size="mini"
                       icon="el-icon-search"
+                      size="mini"
                       style="margin-left: 20px"
+                      type="primary"
                       @click="getRolesList(0)"
                     >
                       {{ $translateTitle('developer.search') }}
@@ -85,8 +85,8 @@
             </el-button>-->
                     <!-- icon="el-icon-search" -->
                     <el-button
-                      type="primary"
                       size="mini"
+                      type="primary"
                       @click="getRolesList()"
                     >
                       <!-- 所有角色 -->
@@ -99,18 +99,18 @@
           </div>
           <div class="tableroles" style="margin-top: 20px">
             <el-table
+              :data="roleList"
               :height="tableHeight"
               highlight-current-row
-              :data="roleList"
               :row-class-name="tableRowClassName"
               :row-style="selectedHighlight"
-              style="width: 100%; text-align: center"
               size="small"
+              style="width: 100%; text-align: center"
               @row-click="getDetailmenu"
             >
               <el-table-column
-                :label="$translateTitle('user.rolename')"
                 align="center"
+                :label="$translateTitle('user.rolename')"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>
@@ -122,21 +122,21 @@
                 </template>
               </el-table-column>-->
               <el-table-column
-                :label="$translateTitle('user.Remarks')"
                 align="center"
+                :label="$translateTitle('user.Remarks')"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.alias }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="ID" align="center">
+              <el-table-column align="center" label="ID">
                 <template slot-scope="scope">
                   <span>{{ scope.row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('developer.operation')"
                 align="center"
+                :label="$translateTitle('developer.operation')"
               >
                 <template slot-scope="scope">
                   <!-- <el-button size="mini" type="primary" @click.native="handleEdit(scope.row)">分配权限</el-button> -->
@@ -144,9 +144,9 @@
                   <!-- <el-button size="mini" type="primary" >增加用户</el-button> -->
 
                   <el-dropdown
+                    size="mini"
                     split-button
                     type="primary"
-                    size="mini"
                     @click="exportRolerole(scope.row)"
                   >
                     <span class="el-dropdown-link">
@@ -163,8 +163,8 @@
                       </el-dropdown-item>
                       <!-- <el-dropdown-item icon="el-icon-document" @click.native="handleEditrole(scope.row)" >编辑</el-dropdown-item> -->
                       <el-dropdown-item
-                        size="mini"
                         icon="el-icon-delete"
+                        size="mini"
                         @click.native="handleDelete(scope.row)"
                       >
                         <!-- 删除 -->
@@ -179,10 +179,10 @@
             <!--分页-->
             <div class="rightPagination">
               <el-pagination
-                :total="total"
                 layout="prev, pager, next"
-                @size-change="handleSizeChange"
+                :total="total"
                 @current-change="handleCurrentChange"
+                @size-change="handleSizeChange"
               />
             </div>
           </div>
@@ -204,8 +204,8 @@
             <div class="rolecontrol">
               <div>
                 <el-button
-                  type="primary"
                   size="mini"
+                  type="primary"
                   @click="expand('permissionTree', 'isExpand')"
                 >
                   <span v-if="!isExpand">
@@ -214,22 +214,22 @@
                   <span v-else>{{ $translateTitle('button.fold') }}</span>
                 </el-button>
                 <el-button
-                  type="primary"
                   size="mini"
+                  type="primary"
                   @click="checkAll('permissionTree', 'permissionTreeData')"
                 >
                   {{ $translateTitle('button.select all') }}
                 </el-button>
                 <el-button
-                  type="primary"
                   size="mini"
+                  type="primary"
                   @click="inverse('permissionTree', 'permissionTreeData')"
                 >
                   {{ $translateTitle('button.Reverse election') }}
                 </el-button>
                 <el-button
-                  type="primary"
                   size="mini"
+                  type="primary"
                   @click="checkNot('permissionTree')"
                 >
                   {{ $translateTitle('button.unselect all') }}
@@ -237,15 +237,15 @@
               </div>
               <el-tree
                 ref="permissionTree"
+                accordion
                 check-on-click-node
-                :default-expand-all="isExpand"
                 :data="permissionTreeData"
                 :default-checked-keys="rolePermissonList"
-                :expand-on-click-node="false"
-                show-checkbox
-                node-key="objectId"
+                :default-expand-all="isExpand"
                 default-props
-                accordion
+                :expand-on-click-node="false"
+                node-key="objectId"
+                show-checkbox
               >
                 <span slot-scope="{ node }" class="custom-tree-node">
                   <span>{{ node.label }}</span>
@@ -272,8 +272,8 @@
             </p>
             <div>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="expand('menusTree', 'menuExpand')"
               >
                 <span v-if="!menuExpand">
@@ -282,22 +282,22 @@
                 <span v-else>{{ $translateTitle('button.fold') }}</span>
               </el-button>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="checkAll('menusTree', 'menuTreeData')"
               >
                 {{ $translateTitle('button.select all') }}
               </el-button>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="inverse('menusTree', 'menuTreeData')"
               >
                 {{ $translateTitle('button.Reverse election') }}
               </el-button>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="checkNot('menusTree')"
               >
                 {{ $translateTitle('button.unselect all') }}
@@ -306,15 +306,15 @@
             <div class="menucontrol" style="margin-top: 0px">
               <el-tree
                 ref="menusTree"
-                :data="menuTreeData"
-                check-on-click-node
-                :default-expand-all="menuExpand"
-                :default-checked-keys="roleMenuList"
-                :expand-on-click-node="false"
-                show-checkbox
-                node-key="objectId"
-                default-props
                 accordion
+                check-on-click-node
+                :data="menuTreeData"
+                :default-checked-keys="roleMenuList"
+                :default-expand-all="menuExpand"
+                default-props
+                :expand-on-click-node="false"
+                node-key="objectId"
+                show-checkbox
               >
                 <!-- eslint-disable-next-line -->
                 <span slot-scope="{ node, data }" class="custom-tree-node">
@@ -329,13 +329,13 @@
 
     <a-modal
       :footer="null"
-      :visible="centerDialogRole"
       :title="$translateTitle('product.addrole')"
+      :visible="centerDialogRole"
       @cancel="closeDialogRole"
     >
       <addroles
-        ref="addRoleRef"
         :key="$moment().unix()"
+        ref="addRoleRef"
         :dept-data="deptData"
       />
     </a-modal>
@@ -354,20 +354,20 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column :label="$translateTitle('user.name')" align="center">
+        <el-table-column align="center" :label="$translateTitle('user.name')">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('user.Remarks')"
           align="center"
+          :label="$translateTitle('user.Remarks')"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.desc }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="ID" align="center">
+        <el-table-column align="center" label="ID">
           <template slot-scope="scope">
             <span>{{ scope.row.objectId }}</span>
           </template>
@@ -397,8 +397,8 @@
           <el-input
             v-model="form.name"
             autocomplete="off"
-            style="width: 300px"
             disabled
+            style="width: 300px"
           />
         </el-form-item>
         <el-form-item
@@ -417,8 +417,8 @@
         >
           <el-input
             v-model="form.desc"
-            :rows="2"
             autocomplete="off"
+            :rows="2"
             style="width: 300px"
             type="textarea"
           />

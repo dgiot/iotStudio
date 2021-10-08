@@ -4,12 +4,12 @@
     <div class="uploadfile">
       <el-upload
         ref="upload"
-        action=""
-        class="upload-demo"
-        :before-upload="FileRequest"
         :accept="accept"
-        drag
+        action=""
         :auto-upload="false"
+        :before-upload="FileRequest"
+        class="upload-demo"
+        drag
         :on-exceed="handleExceed"
       >
         <i class="el-icon-upload"></i>
@@ -19,8 +19,8 @@
         </div>
       </el-upload>
       <el-button
-        style="margin-left: 10px"
         size="small"
+        style="margin-left: 10px"
         type="success"
         @click.native="submitUpload"
       >
@@ -32,10 +32,10 @@
       <h4 class="tips">{{ tips }}</h4>
       <!--进度条-->
       <el-progress
-        type="line"
-        :percentage="percentage"
         class="progress"
+        :percentage="percentage"
         :show-text="true"
+        type="line"
       />
     </div>
     <!--上传完成提示对话框-->

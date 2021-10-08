@@ -48,9 +48,9 @@
                 <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
                   <el-form
                     ref="userinfo"
-                    :rules="registerRules"
                     label-width="80px"
                     :model="userinfo"
+                    :rules="registerRules"
                   >
                     <el-form-item label="姓名">
                       <el-input v-model="username" />
@@ -107,7 +107,7 @@
                         </el-input>
                       </el-form-item>
                       <el-form-item label="企业logo">
-                        <el-input v-model="companyinfo.logo" readonly disabled>
+                        <el-input v-model="companyinfo.logo" disabled readonly>
                           <template slot="prepend">
                             <vab-icon
                               icon="remixicon-fill"
@@ -143,8 +143,8 @@
                       <el-form-item label="首页背景图">
                         <el-input
                           v-model="companyinfo.backgroundimage"
-                          readonly
                           disabled
+                          readonly
                         >
                           <template slot="prepend">
                             <vab-icon
@@ -164,7 +164,7 @@
                         </el-input>
                       </el-form-item>
                       <el-form-item label="侧边栏展开图">
-                        <el-input v-model="companyinfo._mimg" readonly disabled>
+                        <el-input v-model="companyinfo._mimg" disabled readonly>
                           <template slot="prepend">
                             <vab-icon
                               icon="bank-card-line"
@@ -183,8 +183,8 @@
                       <el-form-item label="侧边栏收起图">
                         <el-input
                           v-model="companyinfo._pcimg"
-                          readonly
                           disabled
+                          readonly
                         >
                           <template slot="prepend">
                             <vab-icon

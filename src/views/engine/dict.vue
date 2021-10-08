@@ -4,18 +4,18 @@
     <div class="dialog">
       <el-dialog
         :append-to-body="true"
-        :visible.sync="add_dict_dialog"
         :close-on-click-modal="false"
         :title="title_dict_dialog"
+        :visible.sync="add_dict_dialog"
         width="40%"
         @open="opendialog('dictForm')"
       >
         <el-form
           ref="dictForm"
-          :model="addDictForm"
-          :rules="rules1"
           class="dict_type"
           label-width="135px"
+          :model="addDictForm"
+          :rules="rules1"
           size="mini"
         >
           <el-row :gutter="20">
@@ -35,16 +35,16 @@
                 <el-select
                   v-model="addDictForm.templateId"
                   :disabled="editDictId == '' ? false : true"
-                  style="width: 100%"
                   :placeholder="$translateTitle('task.Select')"
+                  style="width: 100%"
                   @change="selectChange"
                 >
                   <el-option
                     v-for="item in dictRecord"
                     :key="item.objectId"
+                    :disabled="item.data.name == 'ALL'"
                     :label="item.data.name"
                     :value="item.objectId"
-                    :disabled="item.data.name == 'ALL'"
                   />
                 </el-select>
               </el-form-item>
@@ -53,8 +53,8 @@
               <!-- <el-form-item label="字典名称" title="字典唯一标识" prop="key"> -->
               <el-form-item
                 :label="$translateTitle('developer.dictionaryname')"
-                :title="$translateTitle('developer.dictionaryuniqueID')"
                 prop="key"
+                :title="$translateTitle('developer.dictionaryuniqueID')"
               >
                 <el-input
                   v-model="addDictForm.key"
@@ -71,19 +71,19 @@
                 <el-select
                   v-if="item.type == 'Boolean'"
                   v-model="addDictForm[item.name]"
-                  style="width: 100%"
                   class="notauto"
                   readonly
+                  style="width: 100%"
                 >
                   <!-- <el-option :value="true" label="是" /> -->
                   <el-option
-                    :value="true"
                     :label="$translateTitle('product.yes')"
+                    :value="true"
                   />
                   <!-- <el-option :value="false" label="否" /> -->
                   <el-option
-                    :value="false"
                     :label="$translateTitle('product.no')"
+                    :value="false"
                   />
                 </el-select>
                 <el-input v-else v-model="addDictForm[item.name]" />
@@ -101,6 +101,7 @@
                 label="所属应用"
               > -->
               <el-form-item
+                :label="$translateTitle('application.applicationtype')"
                 :rules1="[
                   {
                     required: true,
@@ -108,7 +109,6 @@
                     trigger: 'blur',
                   },
                 ]"
-                :label="$translateTitle('application.applicationtype')"
               >
                 <!-- <el-input
                   v-model="addDictForm.applicationtText"
@@ -145,11 +145,11 @@
                 :label="$translateTitle('equipment.state')"
                 prop="enable"
               >
-                <el-radio v-model="addDictForm.enable" label="1" border>
+                <el-radio v-model="addDictForm.enable" border label="1">
                   <!-- 启用 -->
                   {{ $translateTitle('developer.enable') }}
                 </el-radio>
-                <el-radio v-model="addDictForm.enable" label="2" border>
+                <el-radio v-model="addDictForm.enable" border label="2">
                   <!-- 废弃 -->
                   {{ $translateTitle('developer.scrap') }}
                 </el-radio>
@@ -168,13 +168,13 @@
             <el-input
               v-model="addDictForm.description"
               :autosize="{ minRows: 2, maxRows: 4 }"
-              type="textarea"
               :placeholder="$translateTitle('concentrator.input')"
+              type="textarea"
             />
           </el-form-item>
           <el-form-item
-            size="mini"
             label-width="0px"
+            size="mini"
             style="text-align: center"
           >
             <el-button
@@ -202,9 +202,9 @@
       </el-dialog>
 
       <a-drawer
-        :visible="dict_temp_dialog"
         :close-on-click-modal="false"
         :title="title_temp_dialog"
+        :visible="dict_temp_dialog"
         width="60%"
         @close="dict_temp_dialog = !dict_temp_dialog"
         @open="opendialog('dictTempForm')"
@@ -225,8 +225,8 @@
           <el-row :gutter="20">
             <el-col :span="8">
               <el-form-item
-                :label-width="formLabelWidth"
                 :label="$translateTitle('developer.dictionarytemplatename')"
+                :label-width="formLabelWidth"
                 prop="name"
               >
                 <el-input v-model="dictTempForm.name" autocomplete="off" />
@@ -240,8 +240,8 @@
               > -->
             <el-col :span="8">
               <el-form-item
-                :label-width="formLabelWidth"
                 :label="$translateTitle('developer.dictionarytemplatetype')"
+                :label-width="formLabelWidth"
                 prop="cType"
               >
                 <el-input v-model="dictTempForm.cType" autocomplete="off" />
@@ -255,15 +255,15 @@
               > -->
             <el-col :span="8">
               <el-form-item
-                :label-width="formLabelWidth"
                 :label="$translateTitle('developer.dictionarytemplatestatus')"
+                :label-width="formLabelWidth"
                 prop="enable"
               >
-                <el-radio v-model="dictTempForm.enable" label="1" border>
+                <el-radio v-model="dictTempForm.enable" border label="1">
                   <!-- 启用 -->
                   {{ $translateTitle('developer.enable') }}
                 </el-radio>
-                <el-radio v-model="dictTempForm.enable" label="0" border>
+                <el-radio v-model="dictTempForm.enable" border label="0">
                   <!-- 禁用 -->
                   {{ $translateTitle('developer.disable') }}
                 </el-radio>
@@ -273,16 +273,16 @@
 
           <!-- <el-form-item :label-width="formLabelWidth" label="字典模板数据"> -->
           <el-form-item
-            :label-width="formLabelWidth"
             :label="$translateTitle('developer.dictionarytemplatedata')"
+            :label-width="formLabelWidth"
           >
             <el-tabs v-model="elactiveName">
               <el-tab-pane label="Table" name="Table">
                 <el-button
-                  type="primary"
                   class="mt-3"
-                  size="small"
                   icon="el-icon-plus"
+                  size="small"
+                  type="primary"
                   @click.native="addRow(dictTempForm.params)"
                 >
                   <!-- 新增 -->
@@ -296,23 +296,23 @@
                 >
                   <!-- <el-table-column prop="name" label="名称" /> -->
                   <el-table-column
-                    prop="name"
                     :label="$translateTitle('equipment.name')"
+                    prop="name"
                   />
                   <!-- <el-table-column prop="type" label="类型" /> -->
                   <el-table-column
-                    prop="type"
                     :label="$translateTitle('rule.Type')"
+                    prop="type"
                   />
                   <!-- <el-table-column prop="order" label="序号" /> -->
                   <el-table-column
-                    prop="order"
                     :label="$translateTitle('equipment.serialnumber')"
+                    prop="order"
                   />
                   <!-- <el-table-column prop="default" label="默认值"> -->
                   <el-table-column
-                    prop="default"
                     :label="$translateTitle('equipment.defaultvalue')"
+                    prop="default"
                   >
                     <template slot-scope="scope">
                       <span
@@ -341,8 +341,8 @@
                   </el-table-column>
                   <!-- <el-table-column prop="required" label="是否必填"> -->
                   <el-table-column
-                    prop="required"
                     :label="$translateTitle('product.isitrequired')"
+                    prop="required"
                   >
                     <template slot-scope="scope">
                       <span v-if="scope.row.required">
@@ -357,8 +357,8 @@
                   </el-table-column>
                   <!-- <el-table-column prop="description" label="中文标题"> -->
                   <el-table-column
-                    prop="description"
                     :label="$translateTitle('product.chinesetitle')"
+                    prop="description"
                   >
                     <template slot-scope="scope">
                       {{ scope.row.title.zh }}
@@ -366,8 +366,8 @@
                   </el-table-column>
                   <!-- <el-table-column prop="description" label="英文标题"> -->
                   <el-table-column
-                    prop="description"
                     :label="$translateTitle('product.englishtitle')"
+                    prop="description"
                   >
                     <template slot-scope="scope">
                       {{ scope.row.title.en }}
@@ -375,8 +375,8 @@
                   </el-table-column>
                   <!-- <el-table-column prop="description" label="中文描述"> -->
                   <el-table-column
-                    prop="description"
                     :label="$translateTitle('product.chinesedescription')"
+                    prop="description"
                   >
                     <template slot-scope="scope">
                       {{ scope.row.description.zh }}
@@ -384,8 +384,8 @@
                   </el-table-column>
                   <!-- <el-table-column prop="description" label="英文描述"> -->
                   <el-table-column
-                    prop="description"
                     :label="$translateTitle('product.englishdescription')"
+                    prop="description"
                   >
                     <template slot-scope="scope">
                       {{ scope.row.description.en }}
@@ -394,9 +394,9 @@
 
                   <!-- <el-table-column label="操作" width="160" align="center"> -->
                   <el-table-column
+                    align="center"
                     :label="$translateTitle('task.Operation')"
                     width="160"
-                    align="center"
                   >
                     <!-- <template slot-scope="scope">
                       <el-button
@@ -410,10 +410,10 @@
                       > -->
                     <template slot-scope="scope">
                       <el-button
-                        size="mini"
-                        type="danger"
                         plain
+                        size="mini"
                         :title="$translateTitle('task.Delete')"
+                        type="danger"
                         @click.native="
                           delRow(scope.$index, dictTempForm.params)
                         "
@@ -431,10 +431,10 @@
                         "
                       > -->
                       <el-button
-                        size="mini"
-                        type="info"
                         plain
+                        size="mini"
                         :title="$translateTitle('task.Edit')"
+                        type="info"
                         @click.native="
                           editRow(scope.row, scope.$index, dictTempForm.params)
                         "
@@ -449,18 +449,18 @@
               <el-tab-pane label="Json" name="Json">
                 <vab-json-editor
                   v-model="dictTempForm.params"
-                  :mode="'code'"
                   lang="zh"
-                  @json-change="onJsonChange"
+                  :mode="'code'"
                   @has-error="onError"
+                  @json-change="onJsonChange"
                 />
               </el-tab-pane>
             </el-tabs>
           </el-form-item>
           <!-- <el-form-item :label-width="formLabelWidth" label="描述"> -->
           <el-form-item
-            :label-width="formLabelWidth"
             :label="$translateTitle('developer.describe')"
+            :label-width="formLabelWidth"
           >
             <!-- <el-input
               v-model="dictTempForm.description"
@@ -471,10 +471,10 @@
             <el-input
               v-model="dictTempForm.description"
               :autosize="{ minRows: 2, maxRows: 4 }"
-              type="textarea"
               :placeholder="
                 $translateTitle('developer.Pleaseenteradescription')
               "
+              type="textarea"
             />
           </el-form-item>
 
@@ -496,19 +496,19 @@
 
       <el-dialog
         :append-to-body="true"
-        :visible.sync="edit_dict_temp_dialog"
-        :title="title_dict_edit_dialog"
         :close-on-click-modal="false"
         size="mini"
+        :title="title_dict_edit_dialog"
+        :visible.sync="edit_dict_temp_dialog"
         @open="opendialog('tempparams')"
       >
         <el-form
           ref="tempparams"
+          class="demo-ruleForm"
+          label-width="70px"
           :model="tempparams"
           size="mini"
           status-icon
-          label-width="70px"
-          class="demo-ruleForm"
         >
           <el-row :gutter="24">
             <el-col :span="5">
@@ -563,11 +563,11 @@
                 :label="$translateTitle('product.mustfill')"
                 label-width="50px"
               >
-                <el-radio v-model="tempparams.required" :label="true" border>
+                <el-radio v-model="tempparams.required" border :label="true">
                   <!-- 是 -->
                   {{ $translateTitle('product.yes') }}
                 </el-radio>
-                <el-radio v-model="tempparams.required" :label="false" border>
+                <el-radio v-model="tempparams.required" border :label="false">
                   <!-- 否 -->
                   {{ $translateTitle('product.no') }}
                 </el-radio>
@@ -601,13 +601,13 @@
             >
               <!-- <el-option :value="true" label="是" /> -->
               <el-option
-                :value="true"
                 :label="$translateTitle('product.yes')"
+                :value="true"
               />
               <!-- <el-option :value="false" label="否" /> -->
               <el-option
-                :value="false"
                 :label="$translateTitle('product.no')"
+                :value="false"
               />
             </el-select>
             <el-input
@@ -654,26 +654,26 @@
         /> -->
         <el-input
           v-model="search_dict"
+          clearable
           :placeholder="
             $translateTitle('developer.pleaseenterdictionarytemplatename')
           "
-          style="width: 200px"
           size="mini"
-          clearable
+          style="width: 200px"
         />
         <el-button
+          icon="el-icon-search"
           size="mini"
           type="primary"
-          icon="el-icon-search"
           @click="searchDict(search_dict)"
         >
           <!-- 搜索 -->
           {{ $translateTitle('task.Search') }}
         </el-button>
         <el-button
+          icon="el-icon-plus"
           size="mini"
           type="primary"
-          icon="el-icon-plus"
           @click="createDictTemp"
         >
           <!-- 创建字典模板 -->
@@ -681,9 +681,9 @@
         </el-button>
         <el-table
           v-loading="listLoading"
-          :header-cell-style="{ 'text-align': 'center' }"
           :cell-style="{ 'text-align': 'center' }"
           :data="dictRecord"
+          :header-cell-style="{ 'text-align': 'center' }"
           :height="height"
           :row-class-name="tableRowClassName"
           style="width: 100%"
@@ -745,9 +745,9 @@
           >
             <template v-if="scope.row.objectId" slot-scope="scope">
               <el-button
+                plain
                 size="mini"
                 type="success"
-                plain
                 @click="editDictTemp(scope.row)"
               >
                 <!-- 编辑 -->
@@ -755,9 +755,9 @@
               </el-button>
               <el-button
                 v-if="scope.row.data.enable == '0'"
+                plain
                 size="mini"
                 type="warning"
-                plain
                 @click="disabledAllDict(scope.row, '1')"
               >
                 <!-- 启用 -->
@@ -765,18 +765,18 @@
               </el-button>
               <el-button
                 v-else
+                plain
                 size="mini"
                 type="warning"
-                plain
                 @click="disabledAllDict(scope.row, '0')"
               >
                 <!-- 禁用 -->
                 {{ $translateTitle('developer.disable') }}
               </el-button>
               <el-button
+                plain
                 size="mini"
                 type="danger"
-                plain
                 @click="deleteDict(scope.row, '字典模板')"
               >
                 <!-- 删除 -->
@@ -795,12 +795,12 @@
         </el-table>
         <div class="elpagination" style="margin-top: 20px; text-align: center">
           <el-pagination
-            :page-sizes="[10, 20, 30, 50]"
-            :page-size="length1"
-            :total="total1"
             layout="total, sizes, prev, pager, next, jumper"
-            @size-change="channelSizeChange1"
+            :page-size="length1"
+            :page-sizes="[10, 20, 30, 50]"
+            :total="total1"
             @current-change="channelCurrentChange1"
+            @size-change="channelSizeChange1"
           />
         </div>
       </el-tab-pane>
@@ -818,9 +818,9 @@
         > -->
         <el-select
           v-model="dictType"
-          style="width: 200px"
-          size="mini"
           :placeholder="$translateTitle('task.Select')"
+          size="mini"
+          style="width: 200px"
           @change="selectDictChange"
         >
           <el-option
@@ -831,9 +831,9 @@
           />
         </el-select>
         <el-button
+          icon="el-icon-plus"
           size="mini"
           type="primary"
-          icon="el-icon-plus"
           @click="showDictDialog"
         >
           <!-- 创建字典 -->
@@ -842,18 +842,18 @@
         <el-table
           v-show="isALL"
           v-loading="listLoading"
-          :header-cell-style="{ 'text-align': 'center' }"
+          border
           :cell-style="{ 'text-align': 'center' }"
           :data="dictData"
-          :row-class-name="tableRowClassName"
+          element-loading-background="rgba(0, 0, 0, 0.8)"
+          element-loading-spinner="el-icon-loading"
           :element-loading-text="
             $translateTitle('developer.loadingdesperately')
           "
-          element-loading-spinner="el-icon-loading"
-          element-loading-background="rgba(0, 0, 0, 0.8)"
-          style="width: 100%"
-          border
+          :header-cell-style="{ 'text-align': 'center' }"
+          :row-class-name="tableRowClassName"
           stripe
+          style="width: 100%"
         >
           <el-table-column
             :label="$translateTitle('developer.indexes')"
@@ -861,24 +861,24 @@
             width="50"
           />
           <el-table-column
-            prop="key"
             :label="$translateTitle('developer.dictionaryname')"
+            prop="key"
           >
             <template slot-scope="scope">
               {{ scope.row.key }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="type"
             :label="$translateTitle('developer.dictionarynumber')"
+            prop="type"
           >
             <template slot-scope="scope">
               {{ scope.row.objectId }}
             </template>
           </el-table-column>
           <el-table-column
-            prop="type"
             :label="$translateTitle('developer.dictionarytype')"
+            prop="type"
           >
             <template slot-scope="scope">
               {{ scope.row.data.templateName }}
@@ -907,9 +907,9 @@
           >
             <template slot-scope="scope">
               <el-button
+                plain
                 size="mini"
                 type="success"
-                plain
                 @click="editAllDict(scope.row)"
               >
                 <!-- 编辑 -->
@@ -917,9 +917,9 @@
               </el-button>
               <el-button
                 v-if="scope.row.data.enable == '0'"
+                plain
                 size="mini"
                 type="warning"
-                plain
                 @click="disabledAllDict(scope.row, '1')"
               >
                 <!-- 启用 -->
@@ -927,18 +927,18 @@
               </el-button>
               <el-button
                 v-else
+                plain
                 size="mini"
                 type="warning"
-                plain
                 @click="disabledAllDict(scope.row, '0')"
               >
                 <!-- 禁用 -->
                 {{ $translateTitle('developer.disable') }}
               </el-button>
               <el-button
+                plain
                 size="mini"
                 type="danger"
-                plain
                 @click="deleteDict(scope.row, '字典')"
               >
                 <!-- 删除 -->
@@ -951,23 +951,23 @@
           v-show="!isALL"
           ref="filterObj"
           v-loading="loading"
-          :header-cell-style="{ 'text-align': 'center' }"
+          border
           :cell-style="{ 'text-align': 'center' }"
+          class="filter_obj"
           :data="dictList"
-          :row-class-name="tableRowClassName"
+          element-loading-background="rgba(0, 0, 0, 0.8)"
+          element-loading-spinner="el-icon-loading"
           :element-loading-text="
             $translateTitle('developer.loadingdesperately')
           "
-          element-loading-spinner="el-icon-loading"
-          element-loading-background="rgba(0, 0, 0, 0.8)"
-          class="filter_obj"
+          :header-cell-style="{ 'text-align': 'center' }"
+          :row-class-name="tableRowClassName"
           style="width: 100%"
-          border
         >
           <el-table-column
             :label="$translateTitle('developer.dictionarytype')"
-            width="150"
             prop="templateName"
+            width="150"
           />
           <template v-for="(item, index) in dialogtempconfig">
             <el-table-column
@@ -995,15 +995,15 @@
             />
           </template>
           <el-table-column
-            :label="$translateTitle('product.commandoperation')"
             fixed="right"
+            :label="$translateTitle('product.commandoperation')"
             width="240"
           >
             <template slot-scope="scope">
               <el-button
+                plain
                 size="mini"
                 type="success"
-                plain
                 @click="editDict(scope.row)"
               >
                 <!-- 编辑 -->
@@ -1011,9 +1011,9 @@
               </el-button>
               <el-button
                 v-if="scope.row.enable == '0'"
+                plain
                 size="mini"
                 type="warning"
-                plain
                 @click="disabledDict(scope.row, '1')"
               >
                 <!-- 启用 -->
@@ -1021,18 +1021,18 @@
               </el-button>
               <el-button
                 v-else
+                plain
                 size="mini"
                 type="warning"
-                plain
                 @click="disabledDict(scope.row, '0')"
               >
                 <!-- 禁用 -->
                 {{ $translateTitle('developer.disable') }}
               </el-button>
               <el-button
+                plain
                 size="mini"
                 type="danger"
-                plain
                 @click="deleteDict(scope.row, '字典')"
               >
                 <!-- 删除 -->
@@ -1047,12 +1047,12 @@
           style="margin-top: 20px; text-align: center"
         >
           <el-pagination
-            :page-sizes="[10, 20, 30, 50]"
-            :page-size="length"
-            :total="total"
             layout="total, sizes, prev, pager, next, jumper"
-            @size-change="channelSizeChange"
+            :page-size="length"
+            :page-sizes="[10, 20, 30, 50]"
+            :total="total"
             @current-change="channelCurrentChange"
+            @size-change="channelSizeChange"
           />
         </div>
       </el-tab-pane>

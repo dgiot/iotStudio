@@ -1,12 +1,12 @@
 <template>
   <div
+    class="area"
     :style="{
       left: start.x + 'px',
       top: start.y + 'px',
       width: width + 'px',
       height: height + 'px',
     }"
-    class="area"
   ></div>
 </template>
 

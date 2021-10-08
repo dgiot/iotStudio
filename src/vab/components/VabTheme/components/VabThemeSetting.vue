@@ -1,15 +1,15 @@
 <template>
   <div v-show="path == 'Userinfo'">
     <el-button
-      type="success"
+      circle
+      class="setting-btn"
       icon="el-icon-setting"
       size="mini"
-      circle
       :style="{
         right: showThemeSetting == true ? '72px' : '0px',
         display: device == 'mobile' ? 'none' : 'block',
       }"
-      class="setting-btn"
+      type="success"
       @click.native="changeThemeSetting(showThemeSetting)"
     />
     <ul v-if="showThemeSetting" class="vab-theme-setting">

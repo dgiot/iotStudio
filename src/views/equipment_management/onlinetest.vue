@@ -2,7 +2,7 @@
   <div class="onlinetest">
     <div class="onlinetest_top">
       <div>
-        <el-form :model="devices" :inline="true" size="mini">
+        <el-form :inline="true" :model="devices" size="mini">
           <el-form-item label="请选择设备">
             <el-select v-model="devices.productid" @change="selsectProduct">
               <el-option
@@ -45,21 +45,21 @@
         <span style="display: inline-block; font-size: 20px; font-weight: 900">
           实时日志
         </span>
-        <span :class="status" class="status" />
+        <span class="status" :class="status" />
         <!-- <span style="font-size:14px;color:grey">(未激活)真实设备</span> -->
         <div style="float: right">
           <el-switch
             v-model="value4"
-            style="display: inline-block; margin-right: 10px"
             active-color="#13ce66"
             inactive-color="#ff4949"
             inactive-text="自动刷新"
+            style="display: inline-block; margin-right: 10px"
             @change="isInterval"
           />
-          <el-button type="primary" size="mini" @click="sendTrueInterval">
+          <el-button size="mini" type="primary" @click="sendTrueInterval">
             刷新
           </el-button>
-          <el-button type="primary" size="mini" @click="clearTopic">
+          <el-button size="mini" type="primary" @click="clearTopic">
             清屏
           </el-button>
         </div>
@@ -95,9 +95,9 @@
             <div>
               <div class="editorheader">
                 <el-form
-                  :model="editor1"
                   :inline="true"
                   label-width="80px"
+                  :model="editor1"
                   size="mini"
                 >
                   <el-form-item label="调试功能">
@@ -108,23 +108,23 @@
                       <el-option
                         v-for="(item, index) in dataslist"
                         :key="index"
-                        :value="item.objectId"
                         :label="item.data.name"
+                        :value="item.objectId"
                       />
                     </el-select>
                   </el-form-item>
                   <el-form-item>
                     <el-button
-                      type="primary"
-                      icon="el-icon-plus"
                       circle
+                      icon="el-icon-plus"
+                      type="primary"
                       @click="addMessage"
                     />
                     <el-button
-                      :disabled="editor1.function == ''"
-                      type="danger"
-                      icon="el-icon-delete"
                       circle
+                      :disabled="editor1.function == ''"
+                      icon="el-icon-delete"
+                      type="danger"
                       @click="deleteMessage"
                     />
                   </el-form-item>
@@ -132,15 +132,15 @@
                     <el-tooltip
                       v-if="editor1.function == ''"
                       class="item"
-                      effect="dark"
                       content="请选择功能"
+                      effect="dark"
                       placement="top-start"
                     >
                       <span>
                         <el-button
                           :disabled="editor1.function == ''"
-                          type="primary"
                           size="mini"
+                          type="primary"
                           @click="sendMessage1"
                         >
                           发送指令
@@ -150,26 +150,26 @@
                     <el-button
                       v-else
                       :disabled="editor1.function == ''"
-                      type="primary"
                       size="mini"
+                      type="primary"
                       @click="sendMessage1"
                     >
                       发送指令
                     </el-button>
                     <el-button
                       :disabled="editor1.function == ''"
-                      type="primary"
                       icon="el-icon-edit"
                       size="mini"
+                      type="primary"
                       @click="editorMessage"
                     >
                       更新
                     </el-button>
                     <el-button
                       :disabled="editor1.function == ''"
-                      type="info"
                       plain
                       size="mini"
+                      type="info"
                     >
                       重置
                     </el-button>
@@ -193,33 +193,33 @@
             <div v-if="isactive == true" class="editor2show animated fadeIn">
               <el-button-group>
                 <el-button
-                  :type="primary1 == 1 ? 'primary' : 'info'"
-                  size="mini"
                   plain
+                  size="mini"
+                  :type="primary1 == 1 ? 'primary' : 'info'"
                   @click="primary1 = 1"
                 >
                   属性上报
                 </el-button>
                 <el-button
-                  :type="primary1 == 2 ? 'primary' : 'info'"
-                  size="mini"
                   plain
+                  size="mini"
+                  :type="primary1 == 2 ? 'primary' : 'info'"
                   @click="primary1 = 2"
                 >
                   事件上报
                 </el-button>
                 <el-button
-                  :type="primary1 == 3 ? 'primary' : 'info'"
-                  size="mini"
                   plain
+                  size="mini"
+                  :type="primary1 == 3 ? 'primary' : 'info'"
                   @click="functionClick"
                 >
                   属性调试
                 </el-button>
                 <el-button
-                  :type="primary1 == 4 ? 'primary' : 'info'"
-                  size="mini"
                   plain
+                  size="mini"
+                  :type="primary1 == 4 ? 'primary' : 'info'"
                   @click="primary1 = 4"
                 >
                   服务调用
@@ -236,19 +236,19 @@
                   <!--属性上报内容-->
                   <div class="primary1content" />
                   <div class="primary1bottom">
-                    <el-button type="primary" size="mini">推送</el-button>
-                    <el-button type="info" size="mini" plain>
+                    <el-button size="mini" type="primary">推送</el-button>
+                    <el-button plain size="mini" type="info">
                       策略推送
                     </el-button>
                     <el-button
-                      type="info"
-                      size="mini"
                       plain
+                      size="mini"
+                      type="info"
                       @click="isactive = false"
                     >
                       关闭虚拟设备
                     </el-button>
-                    <el-button type="info" size="mini" plain>
+                    <el-button plain size="mini" type="info">
                       查看数据
                     </el-button>
                   </div>
@@ -267,8 +267,8 @@
                   暂无数据
                 </div>
                 <div>
-                  <el-button type="primary" size="small">编辑物模型</el-button>
-                  <el-button type="info" size="small" @click="isactive = false">
+                  <el-button size="small" type="primary">编辑物模型</el-button>
+                  <el-button size="small" type="info" @click="isactive = false">
                     关闭设备
                   </el-button>
                 </div>
@@ -276,9 +276,9 @@
               <div v-show="primary1 == 3 || primary1 == 4" class="primary3">
                 <div class="editorheader">
                   <el-form
-                    :model="editor2"
                     :inline="true"
                     label-width="80px"
+                    :model="editor2"
                     size="mini"
                   >
                     <el-form-item label="调试功能">
@@ -307,25 +307,25 @@
                   <el-tooltip
                     v-if="editor2.function == ''"
                     class="item"
-                    effect="dark"
                     content="请选择功能"
+                    effect="dark"
                     placement="top-start"
                   >
                     <span>
                       <el-button
                         :disabled="editor2.function == ''"
-                        type="info"
                         plain
                         size="mini"
+                        type="info"
                       >
                         发送指令
                       </el-button>
                     </span>
                   </el-tooltip>
-                  <el-button v-else type="info" plain size="mini">
+                  <el-button v-else plain size="mini" type="info">
                     发送指令
                   </el-button>
-                  <el-button type="info" plain size="mini">重置</el-button>
+                  <el-button plain size="mini" type="info">重置</el-button>
                 </div>
               </div>
             </div>
@@ -345,7 +345,7 @@
                 <br />
                 这样可以不依赖真实设备快速开发应用
               </div>
-              <el-button type="primary" size="mini" @click="isactive = true">
+              <el-button size="mini" type="primary" @click="isactive = true">
                 启动真实设备
               </el-button>
             </div>
@@ -355,12 +355,12 @@
     </div>
     <el-dialog
       :append-to-body="true"
-      :visible.sync="messageDialogVisible"
       :close-on-click-modal="false"
       title="新建功能"
+      :visible.sync="messageDialogVisible"
       width="50%"
     >
-      <el-form :model="messageform" :inline="true" size="small">
+      <el-form :inline="true" :model="messageform" size="small">
         <el-form-item label="功能名称">
           <el-input v-model="messageform.name" type="text" />
         </el-form-item>

@@ -10,17 +10,17 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" size="small" @click="getAppMange(0)">
+          <el-button size="small" type="primary" @click="getAppMange(0)">
             {{ $translateTitle('application.search') }}
           </el-button>
         </el-form-item>
       </el-form>
     </vab-query-form-top-panel>
     <el-table
-      :header-cell-style="{ 'text-align': 'center' }"
       :cell-style="{ 'text-align': 'center' }"
-      :height="tableHeight"
       :data="tableData"
+      :header-cell-style="{ 'text-align': 'center' }"
+      :height="tableHeight"
       style="width: 100%"
     >
       <!-- 应用标识 -->
@@ -35,8 +35,8 @@
       />
       <!-- 应用单位 -->
       <el-table-column
-        prop="userUnit"
         :label="$translateTitle('developer.Applicationunit')"
+        prop="userUnit"
       />
       <!-- 服务规模 -->
       <el-table-column
@@ -55,10 +55,10 @@
         prop="creation_time"
       />
       <el-table-column
+        flex="right"
         :label="$translateTitle('developer.operation')"
         prop="operation"
         width="350"
-        flex="right"
       >
         <template slot-scope="scope">
           <el-popover
@@ -77,35 +77,35 @@
               >
                 {{ $translateTitle('developer.cancel') }}
               </el-button>
-              <el-button type="primary" size="mini" @click="makeSure(scope)">
+              <el-button size="mini" type="primary" @click="makeSure(scope)">
                 {{ $translateTitle('developer.determine') }}
               </el-button>
             </div>
             <el-link
               slot="reference"
-              :underline="false"
               icon="el-icon-delete"
               type="danger"
+              :underline="false"
             >
               {{ $translateTitle('developer.delete') }}
             </el-link>
           </el-popover>
           <el-button
-            type="text"
-            size="small"
             icon="el-icon-edit"
+            size="small"
+            type="text"
             @click="handleClickUpdate(scope)"
           >
             {{ $translateTitle('developer.edit') }}
           </el-button>
-          <el-button type="text" size="small" @click="Gotoproduct(scope)">
+          <el-button size="small" type="text" @click="Gotoproduct(scope)">
             <i class="el-icon-s-management" />
             <!-- 管理 -->
             {{ $translateTitle('leftbar.management') }}
           </el-button>
           <el-link
-            :underline="false"
             type="primary"
+            :underline="false"
             @click="applicationDeployment(scope.row)"
           >
             <!-- 部署 -->
@@ -116,12 +116,12 @@
     </el-table>
     <el-pagination
       :current-page="page.currentPage"
-      :page-sizes="page.pageSizes"
-      :page-size="page.pageSize"
-      :total="page.total"
       layout="total, sizes, prev, pager, next, jumper"
-      @size-change="handleSizeChange"
+      :page-size="page.pageSize"
+      :page-sizes="page.pageSizes"
+      :total="page.total"
       @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
     />
   </div>
 </template>

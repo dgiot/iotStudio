@@ -13,10 +13,10 @@
       </p>
       <el-form
         ref="laboratoryForm"
+        class="demo-ruleForm"
+        label-width="120px"
         :model="laboratoryForm"
         :rules="laboratoryRule"
-        label-width="120px"
-        class="demo-ruleForm"
         size="small"
       >
         <el-row>
@@ -45,20 +45,20 @@
                   <el-form-item prop="buildstarttime" style="margin-bottom: 0">
                     <el-date-picker
                       v-model="laboratoryForm.buildstarttime"
-                      type="date"
                       placeholder="选择日期"
                       style="width: 100%"
+                      type="date"
                     />
                   </el-form-item>
                 </el-col>
-                <el-col :span="2" class="line">-</el-col>
+                <el-col class="line" :span="2">-</el-col>
                 <el-col :span="11">
                   <el-form-item prop="buildendtime" style="margin-bottom: 0">
                     <el-date-picker
                       v-model="laboratoryForm.buildendtime"
-                      type="date"
                       placeholder="选择日期"
                       style="width: 100%"
+                      type="date"
                     />
                   </el-form-item>
                 </el-col>
@@ -73,18 +73,17 @@
               <el-form-item label="实验室照片">
                 <img
                   v-if="laboratoryForm.imgsrc"
-                  :src="fileDomain + laboratoryForm.imgsrc"
                   class="avatar"
+                  :src="fileDomain + laboratoryForm.imgsrc"
                 />
                 <i v-else class="el-icon-plus avatar-uploader-icon" />
                 <form
                   ref="uploadform"
-                  method="POST"
                   enctype="multipart/form-data"
+                  method="POST"
                   style="position: absolute"
                 >
                   <input
-                    type="file"
                     style="
                       position: relative;
                       top: -100px;
@@ -94,6 +93,7 @@
                       cursor: pointer;
                       opacity: 0;
                     "
+                    type="file"
                     @change="upload($event)"
                   />
                 </form>
@@ -123,9 +123,9 @@
               <el-form-item label="最新投运时间">
                 <el-date-picker
                   v-model="laboratoryForm.operationtime"
+                  placeholder="选择最新投运时间"
                   type="datetime"
                   value-format="timestamp"
-                  placeholder="选择最新投运时间"
                 />
               </el-form-item>
               <!-- prop="leadingphone" -->
@@ -167,17 +167,17 @@
               <el-form-item label="初次认可">
                 <el-date-picker
                   v-model="laboratoryForm.initialRecognition"
+                  placeholder="选择初次认可时间"
                   type="datetime"
                   value-format="timestamp"
-                  placeholder="选择初次认可时间"
                 />
               </el-form-item>
               <el-form-item label="资质内容">
                 <el-input
                   v-model="laboratoryForm.desc"
+                  placeholder="请输入证书资质信息"
                   :rows="8"
                   type="textarea"
-                  placeholder="请输入证书资质信息"
                 />
               </el-form-item>
             </div>
@@ -187,23 +187,23 @@
               <el-form-item label="证书编号" prop="credentialsname">
                 <el-input v-model="laboratoryForm.credentialsname" />
               </el-form-item>
-              <el-form-item required label="签发日期">
+              <el-form-item label="签发日期" required>
                 <el-col :span="11">
                   <el-form-item prop="dateOfIssue" style="margin-bottom: 0">
                     <el-date-picker
                       v-model="laboratoryForm.dateOfIssue"
-                      type="date"
                       placeholder="选择日期"
                       style="width: 100%"
+                      type="date"
                       value-format="timestamp"
                     />
                   </el-form-item>
                 </el-col>
                 <el-col :span="11">
                   <el-form-item
+                    label="有效期至"
                     prop="termOfValidity"
                     style="margin-bottom: 0"
-                    label="有效期至"
                   >
                     <el-date-picker
                       v-model="laboratoryForm.termOfValidity"
@@ -215,7 +215,7 @@
                   </el-form-item>
                 </el-col>
               </el-form-item>
-              <el-form-item prop="updatedDate" label="更新时间">
+              <el-form-item label="更新时间" prop="updatedDate">
                 <el-date-picker
                   v-model="laboratoryForm.updatedDate"
                   placeholder="选择时间"
@@ -227,18 +227,17 @@
               <el-form-item label="证书电子文件">
                 <img
                   v-if="laboratoryForm.imgsrc1"
-                  :src="fileDomain + laboratoryForm.imgsrc1"
                   class="avatar"
+                  :src="fileDomain + laboratoryForm.imgsrc1"
                 />
                 <i v-else class="el-icon-plus avatar-uploader-icon" />
                 <form
                   ref="uploadform"
-                  method="POST"
                   enctype="multipart/form-data"
+                  method="POST"
                   style="position: absolute"
                 >
                   <input
-                    type="file"
                     style="
                       position: relative;
                       top: -100px;
@@ -248,6 +247,7 @@
                       cursor: pointer;
                       opacity: 0;
                     "
+                    type="file"
                     @change="upload($event, 'other')"
                   />
                 </form>
@@ -256,7 +256,7 @@
           </el-col>
         </el-row>
       </el-form>
-      <el-form :inline="true" :model="otherForm" label-width="120px">
+      <el-form :inline="true" label-width="120px" :model="otherForm">
         <el-row>
           <el-col :span="12">
             <el-form-item>
@@ -287,17 +287,17 @@
     </div>
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogVisible"
       title="其他资质添加"
+      :visible.sync="dialogVisible"
       width="60%"
     >
       <div class="dialogform">
         <el-form
           ref="addotherform"
+          class="demo-addotherform"
+          label-width="120px"
           :model="addotherform"
           :rules="otheformrule"
-          label-width="120px"
-          class="demo-addotherform"
         >
           <el-row>
             <p
@@ -318,27 +318,27 @@
                 <el-form-item label="签发日期" prop="dateOfIssue">
                   <el-date-picker
                     v-model="addotherform.dateOfIssue"
-                    type="date"
                     placeholder="选择签发日期"
-                    value-format="timestamp"
                     style="width: 100%"
+                    type="date"
+                    value-format="timestamp"
                   />
                 </el-form-item>
                 <el-form-item label="初次认可" prop="initialRecognition">
                   <el-date-picker
                     v-model="addotherform.initialRecognition"
-                    type="date"
                     placeholder="选择签发日期"
-                    value-format="timestamp"
                     style="width: 100%"
+                    type="date"
+                    value-format="timestamp"
                   />
                 </el-form-item>
                 <el-form-item label="资质内容">
                   <el-input
                     v-model="addotherform.desc"
+                    placeholder="请输入证书资质信息"
                     :rows="8"
                     type="textarea"
-                    placeholder="请输入证书资质信息"
                   />
                 </el-form-item>
               </div>
@@ -351,36 +351,35 @@
                 <el-form-item label="有效期至" prop="termOfValidity">
                   <el-date-picker
                     v-model="addotherform.termOfValidity"
-                    type="date"
                     placeholder="选择有效期至"
-                    value-format="timestamp"
                     style="width: 100%"
+                    type="date"
+                    value-format="timestamp"
                   />
                 </el-form-item>
                 <el-form-item label="更新时间" prop="updatedDate">
                   <el-date-picker
                     v-model="addotherform.updatedDate"
-                    type="date"
                     placeholder="选择签发更新时间"
-                    value-format="timestamp"
                     style="width: 100%"
+                    type="date"
+                    value-format="timestamp"
                   />
                 </el-form-item>
                 <el-form-item label="证书电子文件" required>
                   <img
                     v-if="addotherform.imgsrc"
-                    :src="fileDomain + addotherform.imgsrc"
                     class="avatar"
+                    :src="fileDomain + addotherform.imgsrc"
                   />
                   <i v-else class="el-icon-plus avatar-uploader-icon" />
                   <form
                     ref="uploadform"
-                    method="POST"
                     enctype="multipart/form-data"
+                    method="POST"
                     style="position: absolute"
                   >
                     <input
-                      type="file"
                       style="
                         position: relative;
                         top: -100px;
@@ -390,6 +389,7 @@
                         cursor: pointer;
                         opacity: 0;
                       "
+                      type="file"
                       @change="upload($event, 'otherform')"
                     />
                   </form>
@@ -407,13 +407,13 @@
                   <el-button
                     v-show="addotherform.imgsrc != ''"
                     size="small"
-                    type="danger"
                     style="
                       position: absolute;
                       top: 150px;
                       left: 200px;
                       margin-left: 0;
                     "
+                    type="danger"
                     @click.native="addotherform.imgsrc = ''"
                   >
                     删除

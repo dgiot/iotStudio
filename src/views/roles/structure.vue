@@ -5,21 +5,21 @@
     <div class="adduserDiadlog">
       <a-drawer
         v-loading="isloading"
-        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
-        element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.8)"
-        :visible.sync="adduserDiadlog"
+        element-loading-spinner="el-icon-loading"
+        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
         :title="$translateTitle('user.newusers')"
+        :visible.sync="adduserDiadlog"
         width="600px"
         @close="adduserDiadlog = !adduserDiadlog"
       >
         <el-form
           ref="userInfoFormRef"
+          class="demo-ruleForm"
+          label-width="160px"
           :model="userInfoForm"
           :rules="userFormRules"
           status-icon
-          label-width="160px"
-          class="demo-ruleForm"
         >
           <el-form-item
             :label="$translateTitle('developer.departmentselection')"
@@ -27,15 +27,15 @@
           >
             <el-select
               v-model="userInfoForm.departmentid"
-              style="width: 75%"
               :placeholder="$translateTitle('product.selectdepartment')"
+              style="width: 75%"
             >
               <el-option
                 v-for="item in deptOption"
                 :key="item.objectId"
-                :value="item.objectId"
-                :title="item.name + ':' + item.desc"
                 :label="item.name"
+                :title="item.name + ':' + item.desc"
+                :value="item.objectId"
               />
             </el-select>
             <span style="float: right; font-size: 14px; color: #8492a6">
@@ -50,15 +50,15 @@
           <el-form-item v-if="centerDialogRole" label-width="78px">
             <addroles
               ref="addRoleRef"
-              :is-structures="isStructures"
               :dept-data="deptOption[0]"
+              :is-structures="isStructures"
             />
           </el-form-item>
           <el-form-item :label="$translateTitle('user.name1')" prop="nick">
             <el-input
               v-model="userInfoForm.nick"
-              :placeholder="$translateTitle('product.eqwords')"
               auto-complete="off"
+              :placeholder="$translateTitle('product.eqwords')"
             />
           </el-form-item>
 
@@ -69,23 +69,23 @@
           >
             <el-input
               v-model="userInfoForm.phone"
+              auto-complete="off"
               :maxlength="11"
               :placeholder="$translateTitle('product.enterphonenumber')"
-              auto-complete="off"
             />
           </el-form-item>
           <el-form-item :label="$translateTitle('user.email')" prop="email">
             <el-input
               v-model="userInfoForm.email"
-              :placeholder="$translateTitle('product.enteremail')"
               auto-complete="off"
+              :placeholder="$translateTitle('product.enteremail')"
             />
           </el-form-item>
           <el-form-item :label="$translateTitle('user.account')" prop="account">
             <el-input
               v-model="userInfoForm.account"
-              :placeholder="$translateTitle('product.enteraccount')"
               auto-complete="off"
+              :placeholder="$translateTitle('product.enteraccount')"
             />
           </el-form-item>
 
@@ -144,7 +144,7 @@
       </a-drawer>
     </div>
     <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+      <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
         <!--表格渲染-->
         <div class="tabContent">
           <el-row :gutter="24">
@@ -160,22 +160,22 @@
                     <el-form-item :label="$translateTitle('user.department')">
                       <el-select
                         v-model="queryForm.workGroupName"
-                        placeholder="请选择"
                         clearable
+                        placeholder="请选择"
                         @visible-change="change($event)"
                       >
                         <el-option
-                          :value="treeDataValue"
                           style="height: auto; padding: 0"
+                          :value="treeDataValue"
                         >
                           <el-tree
                             :key="upKey"
                             ref="workGroup"
                             :data="deptTreeData"
-                            :props="roleProps"
-                            node-key="index"
                             default-expand-all
                             :expand-on-click-node="false"
+                            node-key="index"
+                            :props="roleProps"
                           >
                             <div
                               slot-scope="{ node, data }"
@@ -222,8 +222,8 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    :show-overflow-tooltip="true"
                     :label="$translateTitle('user.email')"
+                    :show-overflow-tooltip="true"
                   >
                     <template slot-scope="scope">
                       <div>{{ scope.row.email }}</div>
@@ -238,8 +238,8 @@
                   </el-table-column>
 
                   <el-table-column
-                    :show-overflow-tooltip="true"
                     :label="$translateTitle('user.createdtime')"
+                    :show-overflow-tooltip="true"
                   >
                     <template slot-scope="scope">
                       <span>
@@ -249,23 +249,23 @@
                   </el-table-column>
 
                   <el-table-column
-                    :label="$translateTitle('developer.operation')"
                     align="center"
+                    :label="$translateTitle('developer.operation')"
                     width="400"
                   >
                     <template slot-scope="scope">
                       <el-button
-                        type="success"
                         :disabled="scope.row.objectId !== objectId"
                         size="small"
+                        type="success"
                         @click="handleEditor(scope.row)"
                       >
                         {{ $translateTitle('developer.edit') }}
                       </el-button>
                       <el-button
-                        type="danger"
-                        size="small"
                         :disabled="!curDepartmentId"
+                        size="small"
+                        type="danger"
                         @click="handleDetele(scope.row)"
                       >
                         {{ $translateTitle('developer.delete') }}
@@ -280,11 +280,11 @@
                   </el-table-column>
 
                   <el-table-column
+                    align="center"
                     :label="
                       $translateTitle('user.Disable') +
                       $translateTitle('user.account')
                     "
-                    align="center"
                     width="140px"
                   >
                     <template slot-scope="scope">
@@ -300,8 +300,8 @@
                         <el-switch
                           v-model="scope.row.emailVerified"
                           active-color="#13ce66"
-                          inactive-color="#ff4949"
                           :active-text="$translateTitle('user.Enable')"
+                          inactive-color="#ff4949"
                           :inactive-text="$translateTitle('user.Disable')"
                           @change="
                             disableRow(
@@ -323,9 +323,9 @@
       <!--分配角色-->
       <el-dialog
         :append-to-body="true"
+        :close-on-click-modal="false"
         :title="$translateTitle('user.assignroles')"
         :visible.sync="roleacl"
-        :close-on-click-modal="false"
       >
         <el-table
           ref="multipleTable"
@@ -335,20 +335,20 @@
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" />
-          <el-table-column :label="$translateTitle('user.name')" align="center">
+          <el-table-column align="center" :label="$translateTitle('user.name')">
             <template slot-scope="scope">
               <span>{{ scope.row.alias }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            :label="$translateTitle('developer.describe')"
             align="center"
+            :label="$translateTitle('developer.describe')"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.desc }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="ID" align="center">
+          <el-table-column align="center" label="ID">
             <template slot-scope="scope">
               <span>{{ scope.row.objectId }}</span>
             </template>

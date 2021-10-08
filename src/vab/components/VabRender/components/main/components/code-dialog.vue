@@ -1,8 +1,8 @@
 <template>
   <el-dialog
     :append-to-body="true"
-    :visible="visible"
     title="代码"
+    :visible="visible"
     @update:visible="$emit('change', $event)"
   >
     <el-radio-group v-model="showType">
@@ -11,10 +11,10 @@
     </el-radio-group>
     <prism-editor
       class="vab-render-code"
-      :value="code"
       :highlight="highlighter"
       line-numbers
       readonly
+      :value="code"
     />
     <div style="margin-top: 20px; text-align: center">
       <el-button type="primary" @click.native="handleCopyCode">
@@ -23,10 +23,10 @@
       <!-- 下载 TODO 检测移入事件 -->
       <el-button type="primary">
         <el-link
+          :download="`${Date.now()}.vue`"
           :href="fileURL"
           style="color: white"
           :underline="false"
-          :download="`${Date.now()}.vue`"
         >
           下载文件
         </el-link>

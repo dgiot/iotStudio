@@ -60,9 +60,9 @@
                       item.tag.appconfig.secret.substr(24)
                     }}
                     <el-button
+                      round
                       size="samll"
                       style="position: absolute; top: 30px; margin-left: 10px"
-                      round
                       @click="xianshi(item.objectId)"
                     >
                       <!-- 完整密钥 -->
@@ -114,31 +114,31 @@
         </el-row>
       </el-card>
       <el-pagination
-        :page-sizes="[1, 5, 10]"
-        :page-size="pagesize"
-        :total="total"
         layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
+        :page-size="pagesize"
+        :page-sizes="[1, 5, 10]"
+        :total="total"
         @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
       />
     </div>
 
     <!--新建弹框-->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       :title="$translateTitle('developer.addapp')"
+      :visible.sync="dialogVisible"
       width="55%"
     >
       <div
         v-loading="loading"
         class="block"
-        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
-        element-loading-spinner="el-icon-loading"
         element-loading-background="rgba(0, 0, 0, 0.8)"
+        element-loading-spinner="el-icon-loading"
+        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
       >
-        <el-form ref="form" :rules="Rule" :model="form" label-width="120px">
+        <el-form ref="form" label-width="120px" :model="form" :rules="Rule">
           <!-- <el-form-item label="平台">
                 <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
                   <el-option v-for="(item,index) in selectapp" :key="index" :label="item.attributes.subtitle" :value="item.id"></el-option>
@@ -150,11 +150,11 @@
           >
             <el-input
               v-model="form.desc"
-              style="width: 80%"
               :placheholder="
                 $translateTitle('product.enter1') +
                 $translateTitle('application.applicationname')
               "
+              style="width: 80%"
             />
           </el-form-item>
           <el-form-item
@@ -162,9 +162,9 @@
           >
             <el-input
               v-model="form.time"
-              type="number"
-              style="width: 80%"
               :placheholder="$translateTitle('product.enterapptime')"
+              style="width: 80%"
+              type="number"
             />
             <span style="margin-left: 5px">
               <!-- 秒 -->
@@ -174,11 +174,11 @@
           <el-form-item :label="$translateTitle('product.Wordpreviewserver')">
             <el-input
               v-model="form.wordpreview"
-              style="width: 80%"
               :placheholder="
                 $translateTitle('product.enter1') +
                 $translateTitle('product.Wordpreviewserver')
               "
+              style="width: 80%"
             />
           </el-form-item>
           <el-form-item
@@ -186,11 +186,11 @@
           >
             <el-input
               v-model="form.wordproduct"
-              style="width: 80%"
               :placheholder="
                 $translateTitle('product.enter1') +
                 $translateTitle('product.Wordproductionserver')
               "
+              style="width: 80%"
             />
           </el-form-item>
 
@@ -200,8 +200,8 @@
           >
             <el-input
               v-model="form.file"
-              style="width: 80%"
               :placheholder="$translateTitle('product.enter1') + url"
+              style="width: 80%"
             />
           </el-form-item>
 
@@ -211,35 +211,35 @@
           >
             <el-input
               v-model="form.topo"
-              style="width: 80%"
               placheholder="$translateTitle('product.enter1') + url"
+              style="width: 80%"
             />
           </el-form-item>
 
           <el-form-item label="Graphql API" prop="graphql">
             <el-input
               v-model="form.graphql"
-              style="width: 80%"
               placheholder="$translateTitle('product.enter1') + url"
+              style="width: 80%"
             />
           </el-form-item>
 
           <el-form-item label="Restful API" prop="rest">
             <el-input
               v-model="form.rest"
-              style="width: 80%"
               placheholder="$translateTitle('product.enter1') + url"
+              style="width: 80%"
             />
           </el-form-item>
 
           <el-form-item label="home">
             <el-input
               v-model="form.home"
-              style="width: 80%"
               :placheholder="
                 $translateTitle('product.enter1') +
                 $translateTitle('developer.path')
               "
+              style="width: 80%"
             />
           </el-form-item>
         </el-form>
@@ -266,21 +266,21 @@
     > -->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="update"
       :close-on-click-modal="false"
       :title="
         $translateTitle('product.modify') +
         $translateTitle('product.Applicationinformation')
       "
+      :visible.sync="update"
       width="55%"
     >
       <div class="block">
-        <el-form ref="form1" :rules="Rule" :model="form1" label-width="170px">
+        <el-form ref="form1" label-width="170px" :model="form1" :rules="Rule">
           <!-- <el-form-item label="应用名称" prop="desc">
             <el-input v-model="form1.desc" style="width:80%" />
           </el-form-item> -->
           <el-form-item :label="$translateTitle('application.Accesskey')">
-            <el-input v-model="form1.secret" style="width: 80%" readonly>
+            <el-input v-model="form1.secret" readonly style="width: 80%">
               <el-button
                 slot="append"
                 icon="el-icon-refresh-right"
@@ -293,9 +293,9 @@
           >
             <el-input
               v-model="form1.time"
-              type="number"
-              style="width: 80%"
               :placheholder="$translateTitle('product.enterapptime')"
+              style="width: 80%"
+              type="number"
             />
             <span style="margin-left: 5px">
               <!-- 秒 -->
@@ -305,11 +305,11 @@
           <el-form-item :label="$translateTitle('product.Wordpreviewserver')">
             <el-input
               v-model="form1.wordpreview"
-              style="width: 80%"
               :placheholder="
                 $translateTitle('product.enter1') +
                 $translateTitle('product.Wordpreviewserver')
               "
+              style="width: 80%"
             />
           </el-form-item>
           <el-form-item
@@ -317,11 +317,11 @@
           >
             <el-input
               v-model="form1.wordproduct"
-              style="width: 80%"
               :placheholder="
                 $translateTitle('product.enter1') +
                 $translateTitle('product.Wordproductionserver')
               "
+              style="width: 80%"
             />
           </el-form-item>
 
@@ -331,8 +331,8 @@
           >
             <el-input
               v-model="form1.file"
-              style="width: 80%"
               placheholder="$translateTitle('product.enter1') + url"
+              style="width: 80%"
             />
           </el-form-item>
 
@@ -342,35 +342,35 @@
           >
             <el-input
               v-model="form1.topo"
-              style="width: 80%"
               placheholder="$translateTitle('product.enter1') + url"
+              style="width: 80%"
             />
           </el-form-item>
 
           <el-form-item label="Graphql API" prop="graphql">
             <el-input
               v-model="form1.graphql"
-              style="width: 80%"
               placheholder="$translateTitle('product.enter1') + url"
+              style="width: 80%"
             />
           </el-form-item>
 
           <el-form-item label="Restful API" prop="rest">
             <el-input
               v-model="form1.rest"
-              style="width: 80%"
               placheholder="$translateTitle('product.enter1') + url"
+              style="width: 80%"
             />
           </el-form-item>
 
           <el-form-item label="home">
             <el-input
               v-model="form1.home"
-              style="width: 80%"
               :placheholder="
                 $translateTitle('product.enter1') +
                 $translateTitle('developer.path')
               "
+              style="width: 80%"
             />
           </el-form-item>
         </el-form>

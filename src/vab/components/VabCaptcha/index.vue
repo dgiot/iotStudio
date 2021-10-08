@@ -15,9 +15,9 @@
       <v-group
         ref="moveGroup"
         :config="Config.moveGroup"
-        @mouseover="moveGroupMouseOver"
-        @mouseout="moveGroupMouseOut"
         @mousedown="moveGroupMouseDown"
+        @mouseout="moveGroupMouseOut"
+        @mouseover="moveGroupMouseOver"
         @mouseup="moveGroupStop"
       >
         <v-rect ref="moveRect" :config="Config.moveRect" />

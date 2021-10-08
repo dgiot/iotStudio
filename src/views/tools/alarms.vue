@@ -9,21 +9,21 @@
     </div>
     <el-table v-loading="loading" border :data="currentTableData">
       <el-table-column
-        prop="name"
         :label="$translateTitle('analysis.alarmName')"
+        prop="name"
       />
       <el-table-column
-        prop="message"
-        min-width="140px"
         :label="$translateTitle('analysis.alarmMessage')"
+        min-width="140px"
+        prop="message"
         show-overflow-tooltip
       >
         <template slot-scope="{ row }">
           <el-popover
+            :open-delay="500"
             placement="top"
             trigger="hover"
             width="160"
-            :open-delay="500"
           >
             <div v-for="(value, label) in row.details" :key="label">
               {{ label }}: {{ value }}
@@ -36,14 +36,14 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="node"
-        min-width="60px"
         :label="$translateTitle('clients.node')"
+        min-width="60px"
+        prop="node"
         show-overflow-tooltip
       />
       <el-table-column
-        prop="activate_at"
         :label="$translateTitle('analysis.activateAt')"
+        prop="activate_at"
       >
         <template slot-scope="{ row }">
           {{ dateFormat(row.activate_at) }}
@@ -52,7 +52,7 @@
       <el-table-column>
         <span slot="header">
           {{ $translateTitle('analysis.duration') }}
-          <el-popover trigger="hover" placement="top">
+          <el-popover placement="top" trigger="hover">
             {{ $translateTitle('analysis.durationTips') }}
             <i slot="reference" class="el-icon-question"></i>
           </el-popover>
@@ -63,8 +63,8 @@
       </el-table-column>
       <el-table-column
         fixed="right"
-        width="120px"
         :label="$translateTitle('oper.oper')"
+        width="120px"
       >
         <template slot-scope="{ row, $index, _self }">
           <el-popover
@@ -75,9 +75,9 @@
             <p>{{ $translateTitle('analysis.confirmDeactivate') }}</p>
             <div style="text-align: right">
               <el-button
+                class="cache-btn"
                 size="mini"
                 type="text"
-                class="cache-btn"
                 @click="_self.$refs[`popover-${$index}`].doClose()"
               >
                 {{ $translateTitle('oper.cancel') }}
@@ -90,7 +90,7 @@
                 {{ $translateTitle('oper.confirm') }}
               </el-button>
             </div>
-            <el-button slot="reference" size="mini" type="danger" plain>
+            <el-button slot="reference" plain size="mini" type="danger">
               {{ $translateTitle('analysis.deactivate') }}
             </el-button>
           </el-popover>
@@ -102,10 +102,10 @@
       {{ $translateTitle('analysis.historicalAlarm') }}
       <el-button
         class="table-oper"
+        :disabled="!historicalTableData.length"
+        plain
         size="mini"
         type="danger"
-        plain
-        :disabled="!historicalTableData.length"
         @click="handleClearAll"
       >
         {{ $translateTitle('analysis.clearAll') }}
@@ -113,21 +113,21 @@
     </div>
     <el-table v-loading="loading" border :data="historicalTableData">
       <el-table-column
-        prop="name"
         :label="$translateTitle('analysis.alarmName')"
+        prop="name"
       />
       <el-table-column
-        prop="message"
-        min-width="140px"
         :label="$translateTitle('analysis.alarmMessage')"
+        min-width="140px"
+        prop="message"
         show-overflow-tooltip
       >
         <template slot-scope="{ row }">
           <el-popover
+            :open-delay="500"
             placement="top"
             trigger="hover"
             width="160"
-            :open-delay="500"
           >
             <div v-for="(value, label) in row.details" :key="label">
               {{ label }}: {{ value }}
@@ -140,22 +140,22 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="node"
-        min-width="60px"
         :label="$translateTitle('clients.node')"
+        min-width="60px"
+        prop="node"
         show-overflow-tooltip
       />
       <el-table-column
-        prop="activate_at"
         :label="$translateTitle('analysis.activateAt')"
+        prop="activate_at"
       >
         <template slot-scope="{ row }">
           {{ dateFormat(row.activate_at) }}
         </template>
       </el-table-column>
       <el-table-column
-        prop="deactivate_at"
         :label="$translateTitle('analysis.deactivateAt')"
+        prop="deactivate_at"
       >
         <template slot-scope="{ row }">
           {{ dateFormat(row.deactivate_at) }}

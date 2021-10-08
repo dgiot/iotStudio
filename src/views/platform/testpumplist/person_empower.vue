@@ -1,9 +1,9 @@
 <template>
   <div class="person_empower">
     <el-steps :active="active" simple>
-      <el-step title="1填写个人基本信息" icon="el-icon-upload" />
-      <el-step title="2正在审核" icon="el-icon-s-unfold" />
-      <el-step title="3审核结果" icon="el-icon-s-check" />
+      <el-step icon="el-icon-upload" title="1填写个人基本信息" />
+      <el-step icon="el-icon-s-unfold" title="2正在审核" />
+      <el-step icon="el-icon-s-check" title="3审核结果" />
     </el-steps>
     <div v-if="active == 1" class="empower1">
       <h3
@@ -19,9 +19,9 @@
       <div class="empowerform">
         <el-form
           ref="powerform"
+          label-width="120px"
           :model="powerform"
           :rules="powerrules"
-          label-width="120px"
         >
           <el-row>
             <!--左侧-->
@@ -32,8 +32,8 @@
               <el-form-item label="出生日期" prop="birthday">
                 <el-date-picker
                   v-model="powerform.birthday"
-                  type="date"
                   placeholder="选择出生日期"
+                  type="date"
                   value-format="timestamp"
                 />
               </el-form-item>
@@ -53,18 +53,17 @@
                 <el-col :span="11">
                   <img
                     v-if="powerform.frontimageUrl"
-                    :src="fileDomain + powerform.frontimageUrl"
                     class="avatar"
+                    :src="fileDomain + powerform.frontimageUrl"
                   />
                   <i v-else class="el-icon-plus avatar-uploader-icon" />
                   <form
                     ref="uploadform"
-                    method="POST"
                     enctype="multipart/form-data"
+                    method="POST"
                     style="position: absolute"
                   >
                     <input
-                      type="file"
                       style="
                         position: relative;
                         top: -200px;
@@ -74,6 +73,7 @@
                         cursor: pointer;
                         opacity: 0;
                       "
+                      type="file"
                       @change="upload($event, 'front')"
                     />
                   </form>
@@ -93,34 +93,33 @@
                   <el-button
                     v-show="powerform.frontimageUrl != ''"
                     size="small"
-                    type="danger"
                     style="
                       position: absolute;
                       top: 150px;
                       left: 200px;
                       margin-left: 0;
                     "
+                    type="danger"
                     @click="powerform.frontimageUrl = ''"
                   >
                     删除
                   </el-button>
                 </el-col>
-                <el-col :span="2" class="line" />
+                <el-col class="line" :span="2" />
                 <el-col :span="11" style="position: relative">
                   <img
                     v-if="powerform.contraryimageUrl"
-                    :src="fileDomain + powerform.contraryimageUrl"
                     class="avatar"
+                    :src="fileDomain + powerform.contraryimageUrl"
                   />
                   <i v-else class="el-icon-plus avatar-uploader-icon" />
                   <form
                     ref="uploadform"
-                    method="POST"
                     enctype="multipart/form-data"
+                    method="POST"
                     style="position: absolute"
                   >
                     <input
-                      type="file"
                       style="
                         position: relative;
                         top: -200px;
@@ -130,6 +129,7 @@
                         cursor: pointer;
                         opacity: 0;
                       "
+                      type="file"
                       @change="upload($event, 'contrary')"
                     />
                   </form>
@@ -149,13 +149,13 @@
                   <el-button
                     v-show="powerform.contraryimageUrl != ''"
                     size="small"
-                    type="danger"
                     style="
                       position: absolute;
                       top: 150px;
                       left: 190px;
                       margin-left: 0;
                     "
+                    type="danger"
                     @click="powerform.contraryimageUrl = ''"
                   >
                     删除
@@ -198,18 +198,17 @@
               <el-form-item label="职业资质" required>
                 <img
                   v-if="powerform.joblicenseUrl"
-                  :src="fileDomain + powerform.joblicenseUrl"
                   class="avatar"
+                  :src="fileDomain + powerform.joblicenseUrl"
                 />
                 <i v-else class="el-icon-plus avatar-uploader-icon" />
                 <form
                   ref="uploadform"
-                  method="POST"
                   enctype="multipart/form-data"
+                  method="POST"
                   style="position: absolute"
                 >
                   <input
-                    type="file"
                     style="
                       position: relative;
                       top: -200px;
@@ -219,6 +218,7 @@
                       cursor: pointer;
                       opacity: 0;
                     "
+                    type="file"
                     @change="upload($event, 'joblicenseUrl')"
                   />
                 </form>
@@ -238,13 +238,13 @@
                 <el-button
                   v-show="powerform.joblicenseUrl != ''"
                   size="small"
-                  type="danger"
                   style="
                     position: absolute;
                     top: 150px;
                     left: 200px;
                     margin-left: 0;
                   "
+                  type="danger"
                   @click="powerform.joblicenseUrl = ''"
                 >
                   删除
@@ -277,11 +277,11 @@
               <el-form-item label="培训经历">
                 <el-input
                   v-model="powerform.training_experience"
-                  :rows="4"
-                  type="textarea"
-                  placeholder="请输入培训经历"
                   maxlength="300"
+                  placeholder="请输入培训经历"
+                  :rows="4"
                   show-word-limit
+                  type="textarea"
                 />
               </el-form-item>
             </el-col>
@@ -289,8 +289,8 @@
               <el-form-item label="开始时间">
                 <el-date-picker
                   v-model="powerform.start_time"
-                  type="date"
                   placeholder="选择开始时间"
+                  type="date"
                   value-format="timestamp"
                 />
               </el-form-item>
@@ -306,9 +306,9 @@
               >
                 <el-input
                   v-model="powerform.practitioners_experience"
+                  placeholder="请输入个人水泵检测相关从业经历"
                   :rows="4"
                   type="textarea"
-                  placeholder="请输入个人水泵检测相关从业经历"
                 />
               </el-form-item>
             </el-col>
@@ -320,9 +320,9 @@
           <span>{{ ['', '提交审核', '提交更新', '确定'][phase] }}</span>
         </el-button>
         <el-button
-          ng-show="phase > 1"
           icon="el-icon-arrow-right
 "
+          ng-show="phase > 1"
           @click="active = 2"
         >
           下一步

@@ -3,57 +3,57 @@
     <el-dialog
       :key="key"
       append-to-body
-      width="400px"
       :title="
         form.type == 'add'
           ? $translateTitle('article.New category')
           : $translateTitle('article.edit category')
       "
       :visible.sync="dialogFormVisible"
+      width="400px"
       @close="handleClose"
     >
       <el-form ref="form" :model="form" :rules="rules">
         <el-form-item
-          prop="name"
           :label="$translateTitle('article.name')"
           :label-width="formLabelWidth"
+          prop="name"
         >
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
         <el-form-item
           v-show="form.parent.objectId.includes('article')"
-          prop="category"
           :label="$translateTitle('article.category')"
           :label-width="formLabelWidth"
+          prop="category"
         >
           <el-input v-model="form.category" autocomplete="off" />
         </el-form-item>
         <el-form-item
           v-show="form.parent.objectId.includes('article')"
-          prop="ico"
           :label="$translateTitle('article.Icon')"
           :label-width="formLabelWidth"
+          prop="ico"
         >
           <el-input v-model="form.ico" autocomplete="off" />
         </el-form-item>
         <el-form-item
-          prop="order"
           :label="$translateTitle('article.order')"
           :label-width="formLabelWidth"
+          prop="order"
         >
           <el-input-number
             v-model="form.order"
-            style="width: 100%"
-            :step="1"
-            :min="0"
             autocomplete="off"
+            :min="0"
+            :step="1"
+            style="width: 100%"
           />
         </el-form-item>
         <el-form-item
           v-show="false"
-          prop="parent.objectId"
           :label="$translateTitle('article.parent')"
           :label-width="formLabelWidth"
+          prop="parent.objectId"
         >
           <el-input v-model="form.parent.objectId" autocomplete="off" />
         </el-form-item>

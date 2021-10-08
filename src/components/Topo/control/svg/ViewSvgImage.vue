@@ -1,11 +1,11 @@
 <template>
   <embed
-    :src="svgURL"
-    :width="detail.style.position.w"
     :height="detail.style.position.h"
+    pluginspage="http://www.adobe.com/svg/viewer/install/"
+    :src="svgURL"
     style="pointer-events: none"
     type="image/svg+xml"
-    pluginspage="http://www.adobe.com/svg/viewer/install/"
+    :width="detail.style.position.w"
   />
   <!-- <iframe :src="svgURL" :width="detail.style.position.w" :height="detail.style.position.h" >
 </iframe> -->

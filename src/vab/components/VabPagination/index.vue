@@ -1,16 +1,16 @@
 <template>
-  <div :class="{ hidden: hidden }" class="pagination-container">
+  <div class="pagination-container" :class="{ hidden: hidden }">
     <el-pagination
       :key="momentKey"
       :background="background"
       :current-page.sync="currentPage"
-      :page-size.sync="pageSize"
       :layout="layout"
+      :page-size.sync="pageSize"
       :page-sizes="pageSizes"
       :total="total"
       v-bind="$attrs"
-      @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
     />
   </div>
 </template>

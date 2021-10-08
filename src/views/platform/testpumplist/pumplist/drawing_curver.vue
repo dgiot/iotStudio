@@ -24,8 +24,8 @@
               </el-button>
             </div>
             <el-table
-              :data="Dataavange"
               border
+              :data="Dataavange"
               style="width: 100%; height: 100%; margin-top: 10px"
             >
               <el-table-column :label="'流量\n(m³/h)'" prop="flow" />
@@ -56,15 +56,15 @@
           "
           style="width: 100%"
         >
-          <el-table-column prop="flow" label="流量" />
-          <el-table-column prop="head" label="扬程" />
-          <el-table-column prop="power" label="功率" />
-          <el-table-column prop="power_factor" label="功率因数" />
-          <el-table-column prop="pressure_in" label="进口压力" />
-          <el-table-column prop="pressure_out" label="出口压力" />
-          <el-table-column prop="current" label="电流" />
-          <el-table-column prop="effect" label="机组效率" />
-          <el-table-column prop="speed" label="转速" />
+          <el-table-column label="流量" prop="flow" />
+          <el-table-column label="扬程" prop="head" />
+          <el-table-column label="功率" prop="power" />
+          <el-table-column label="功率因数" prop="power_factor" />
+          <el-table-column label="进口压力" prop="pressure_in" />
+          <el-table-column label="出口压力" prop="pressure_out" />
+          <el-table-column label="电流" prop="current" />
+          <el-table-column label="机组效率" prop="effect" />
+          <el-table-column label="转速" prop="speed" />
           <el-table-column label="传输时间">
             <template slot-scope="scope">
               <span>{{ timestampToTime(scope.row.timestamp) }}</span>
@@ -73,14 +73,14 @@
         </el-table>
         <div class="block" style="margin-top: 15px">
           <el-pagination
-            :current-page="currentPage"
-            :page-sizes="[1, 5, 10, 20]"
-            :page-size="pageSize"
-            :total="tableData.length"
             align="center"
+            :current-page="currentPage"
             layout="total, sizes, prev, pager, next, jumper"
-            @size-change="handleSizeChange"
+            :page-size="pageSize"
+            :page-sizes="[1, 5, 10, 20]"
+            :total="tableData.length"
             @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
           />
         </div>
       </el-tab-pane>

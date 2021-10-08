@@ -37,13 +37,13 @@
           <el-form-item :label="$translateTitle('device.action')">
             <el-switch
               v-model="queryForm.action"
-              style="display: block"
               active-color="#13ce66"
-              inactive-color="#ff4949"
-              inactive-value="stop"
-              active-value="start"
               :active-text="$translateTitle('device.start')"
+              active-value="start"
+              inactive-color="#ff4949"
               :inactive-text="$translateTitle('device.stop')"
+              inactive-value="stop"
+              style="display: block"
             />
           </el-form-item>
           <el-form-item>
@@ -107,6 +107,7 @@
               ? Number($baseTableHeight(0)) + 80
               : Number($baseTableHeight(0)) + 40
           "
+          lang="json"
           :max-lines="
             isFullscreen
               ? Number($baseTableHeight(0) + 80) / 12
@@ -117,7 +118,6 @@
               ? Number($baseTableHeight(0) + 80) / 12
               : Number($baseTableHeight(0) - 80) / 12
           "
-          lang="json"
           theme="gob"
         />
       </a-tab-pane>
@@ -127,42 +127,42 @@
           {{ $translateTitle('Logs.table') }}
         </span>
         <el-table
-          ref="dragTable"
           :key="finallyColumns.length + momentKey"
-          class="logs-table"
+          ref="dragTable"
           border
-          resizable
-          highlight-current-row
-          default-expand-all
-          stripe
-          :row-class-name="tableRowClassName"
+          class="logs-table"
           :data="scroketMsg"
+          default-expand-all
           :height="height"
+          highlight-current-row
+          resizable
+          :row-class-name="tableRowClassName"
+          stripe
         >
           <el-table-column
-            width="160"
-            prop="time"
             align="center"
-            sortable
-            show-overflow-tooltip
-            label="time"
             fixed="left"
+            label="time"
+            prop="time"
+            show-overflow-tooltip
+            sortable
+            width="160"
           />
           <el-table-column
             v-for="(item, index) in finallyColumns"
             :key="index"
-            :prop="item"
-            :label="item"
             align="center"
+            :label="item"
+            :prop="item"
+            show-overflow-tooltip
             sortable
             :width="
               w80.includes(item) ? 80 : Wh120.includes(item) ? 120 : 'auto'
             "
-            show-overflow-tooltip
           />
           <el-table-column type="expand">
             <template slot-scope="props">
-              <el-descriptions class="margin-top" :column="2" border>
+              <el-descriptions border class="margin-top" :column="2">
                 <el-descriptions-item>
                   <template slot="label">
                     <i v-copy="props.row.msg" class="el-icon-copy-document"></i>
@@ -186,9 +186,9 @@
         </el-table>
         <vab-Pagination
           v-show="queryForm.total > 0"
-          :total="queryForm.total"
-          :page.sync="queryForm.pageNo"
           :limit.sync="queryForm.pageSize"
+          :page.sync="queryForm.pageNo"
+          :total="queryForm.total"
           @pagination="queryTable"
         />
       </a-tab-pane>

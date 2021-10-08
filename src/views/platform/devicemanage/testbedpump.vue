@@ -13,9 +13,9 @@
     <div style="width: calc(100% - 360px); padding: 20px">
       <div class="bedtop">
         <el-form
+          class="demo-form-inline"
           :inline="true"
           :model="formInline"
-          class="demo-form-inline"
           size="small"
         >
           <el-form-item label="检测台状态">
@@ -50,51 +50,51 @@
       <div class="bedtable">
         <el-table
           ref="multipleTable"
+          border
           :data="bedData"
           style="width: 100%; text-align: center"
-          border
           @selection-change="handleSelectionBed"
         >
           <el-table-column type="selection" width="55" />
           <el-table-column
-            type="index"
-            prop="index"
-            label="序号"
-            width="50"
             align="center"
+            label="序号"
+            prop="index"
+            type="index"
+            width="50"
           />
 
           <el-table-column
+            align="center"
             label="检测台名称"
             prop="basedata.name"
-            align="center"
             width="200"
           />
           <el-table-column
+            align="center"
             label="所属实验室"
             prop="basedata.laboratory"
-            align="center"
             width="150"
           />
           <el-table-column
+            align="center"
             label="检测台编号"
             prop="basedata.number"
-            align="center"
             width="150"
           />
           <el-table-column
+            align="center"
             label="检测台型号"
             prop="basedata.model"
-            align="center"
             width="150"
           />
           <el-table-column
+            align="center"
             label="生产厂家"
             prop="basedata.factory"
-            align="center"
             width="200"
           />
-          <el-table-column label="健康状况" align="center">
+          <el-table-column align="center" label="健康状况">
             <template slot-scope="scope">
               <p v-if="scope.row.basedata">
                 <span v-if="scope.row.basedata.state == 'healthy'">健康</span>
@@ -106,7 +106,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="状态" align="center">
+          <el-table-column align="center" label="状态">
             <template slot-scope="scope">
               <span v-if="scope.row.status == 'init'" style="color: green">
                 运行中
@@ -116,7 +116,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="编辑" align="center" width="300">
+          <el-table-column align="center" label="编辑" width="300">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -147,12 +147,12 @@
       <!--分页-->
       <div class="block" style="margin-top: 20px">
         <el-pagination
-          :page-sizes="[1, 5, 10]"
-          :page-size="pagesize"
-          :total="total"
           layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
+          :page-size="pagesize"
+          :page-sizes="[1, 5, 10]"
+          :total="total"
           @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         />
       </div>
 
@@ -168,7 +168,7 @@
             <el-input v-model="testbedname" style="width: 200px" />
           </div>
           <div class="devicecompany">
-            <el-form :model="devicelist" :inline="true">
+            <el-form :inline="true" :model="devicelist">
               <el-form-item label="检测单位:">
                 <el-select
                   v-model="devicelist.departmentid"
@@ -196,13 +196,13 @@
           </div>
           <el-table
             ref="multipleTable"
+            border
             :data="devicesData"
             style="width: 100%; text-align: center"
-            border
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" align="center" width="100" />
-            <el-table-column label="设备类别" align="center">
+            <el-table-column align="center" type="selection" width="100" />
+            <el-table-column align="center" label="设备类别">
               <template slot-scope="scope">
                 <span v-if="scope.row.attributes.basedata.type == 'DTU'">
                   控制器
@@ -213,12 +213,12 @@
                 <span v-else>摄像头</span>
               </template>
             </el-table-column>
-            <el-table-column label="设备编号" align="center">
+            <el-table-column align="center" label="设备编号">
               <template slot-scope="scope">
                 <span>{{ scope.row.attributes.devaddr }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="当前状态" align="center">
+            <el-table-column align="center" label="当前状态">
               <template slot-scope="scope">
                 <span
                   v-if="scope.row.attributes.basedata.status == 'offline'"
@@ -237,12 +237,12 @@
           </el-table>
           <div class="block" style="margin-top: 20px">
             <el-pagination
-              :page-sizes="[10, 20, 50]"
-              :page-size="devicepagesize"
-              :total="devicetotal"
               layout="total, sizes, prev, pager, next, jumper"
-              @size-change="handleDeviceSizeChange"
+              :page-size="devicepagesize"
+              :page-sizes="[10, 20, 50]"
+              :total="devicetotal"
               @current-change="handleDeviceCurrentChange"
+              @size-change="handleDeviceSizeChange"
             />
           </div>
           <span slot="footer" class="dialog-footer">
@@ -276,33 +276,33 @@
         </div>
         <el-table
           ref="multipleTable"
+          border
           :data="bedDevicesData"
           style="width: 100%; margin-top: 20px; text-align: center"
-          border
         >
-          <el-table-column label="设备类别" align="center">
+          <el-table-column align="center" label="设备类别">
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="网络设备编号" align="center">
+          <el-table-column align="center" label="网络设备编号">
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.devaddr }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="设备厂商" align="center">
+          <el-table-column align="center" label="设备厂商">
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.factory }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="通信协议" align="center">
+          <el-table-column align="center" label="通信协议">
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.agreement }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="网络层级" align="center" />
+          <el-table-column align="center" label="网络层级" />
 
-          <el-table-column label="设备状态" align="center">
+          <el-table-column align="center" label="设备状态">
             <template slot-scope="scope">
               <span
                 v-if="scope.row.attributes.basedata.status == 'offline'"
@@ -318,8 +318,8 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column label="投运时间" align="center" />
-          <el-table-column label="操作" align="center" />
+          <el-table-column align="center" label="投运时间" />
+          <el-table-column align="center" label="操作" />
         </el-table>
       </el-card>
       <el-card class="box-card">
@@ -336,23 +336,23 @@
           @selection-change="deviceSelect"
         >
           <el-table-column type="selection" width="55" />
-          <el-table-column label="传感器名称" align="center">
+          <el-table-column align="center" label="传感器名称">
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="传感器编码" align="center">
+          <el-table-column align="center" label="传感器编码">
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.devaddr }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="设备厂家" align="center" />
-          <el-table-column label="设备型号" align="center" />
-          <el-table-column label="设备协议" align="center" />
-          <el-table-column label="网络层级" align="center" />
-          <el-table-column label="内网编号" align="center" />
-          <el-table-column label="最新采集时间" align="center" />
-          <el-table-column label="当前状态" align="center">
+          <el-table-column align="center" label="设备厂家" />
+          <el-table-column align="center" label="设备型号" />
+          <el-table-column align="center" label="设备协议" />
+          <el-table-column align="center" label="网络层级" />
+          <el-table-column align="center" label="内网编号" />
+          <el-table-column align="center" label="最新采集时间" />
+          <el-table-column align="center" label="当前状态">
             <template slot-scope="scope">
               <span
                 v-if="scope.row.attributes.basedata.status == 'offline'"
@@ -390,10 +390,10 @@
       <div>
         <el-form
           ref="addbedFormRef"
+          class="demo-ruleForm"
+          label-width="100px"
           :model="addbedForm"
           :rules="addbedFormrule"
-          label-width="100px"
-          class="demo-ruleForm"
         >
           <el-row>
             <el-col :span="12">
@@ -410,19 +410,18 @@
                 <el-form-item label="控制台信息">
                   <img
                     v-if="addbedForm.imgsrc"
-                    :src="addbedForm.imgsrc"
                     class="avatar"
+                    :src="addbedForm.imgsrc"
                   />
 
                   <i v-else class="el-icon-plus avatar-uploader-icon" />
                   <form
                     ref="uploadform"
-                    method="POST"
                     enctype="multipart/form-data"
+                    method="POST"
                     style="position: absolute"
                   >
                     <input
-                      type="file"
                       style="
                         position: relative;
                         top: -200px;
@@ -432,6 +431,7 @@
                         cursor: pointer;
                         opacity: 0;
                       "
+                      type="file"
                       @change="upload($event)"
                     />
                   </form>
@@ -459,7 +459,7 @@
                     v-model="addbedForm.laboratory"
                     placeholder="请选择所属实验室"
                   >
-                    <el-option key="99" :value="99" label="实验室1" />
+                    <el-option key="99" label="实验室1" :value="99" />
 
                     <el-option
                       v-for="(item, index) in departmentList"
@@ -540,15 +540,15 @@
     <!--检测台配置-->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="disposeVisible"
       title="提示"
+      :visible.sync="disposeVisible"
       width="50%"
     >
       <div>
         <el-form
+          class="demo-form-inline"
           :inline="true"
           :model="bedForm"
-          class="demo-form-inline"
           size="small"
         >
           <el-form-item>

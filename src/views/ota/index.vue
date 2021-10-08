@@ -3,8 +3,8 @@
     <div class="dialog">
       <el-dialog
         :append-to-body="true"
-        :visible.sync="popoverVisible"
         top="5vh"
+        :visible.sync="popoverVisible"
         width="40vh"
       >
         <div class="leftTree">
@@ -14,10 +14,10 @@
           </p>
           <el-tree
             :data="deptTreeData"
-            :props="roleProps"
+            default-expand-all
             :expand-on-click-node="false"
             node-key="index"
-            default-expand-all
+            :props="roleProps"
           >
             <!-- @node-click="handleNodeClick" -->
             <!-- eslint-disable-next-line -->
@@ -36,24 +36,24 @@
       </el-dialog>
       <el-dialog
         :append-to-body="true"
-        :visible.sync="mapDialog"
         top="5vh"
+        :visible.sync="mapDialog"
         width="80vh"
       >
         <baidu-map
           ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
           :center="center"
-          :zoom="zoom"
-          :scroll-wheel-zoom="true"
           :map-click="false"
+          :scroll-wheel-zoom="true"
           style="height: 80vh"
-          @ready="handler"
+          :zoom="zoom"
           @click="mapClick"
+          @ready="handler"
         >
           <bm-marker
-            :position="center"
-            :dragging="true"
             animation="BMAP_ANIMATION_BOUNCE"
+            :dragging="true"
+            :position="center"
           >
             <bm-label
               :content="deviceId"
@@ -66,9 +66,9 @@
       </el-dialog>
       <el-dialog
         :append-to-body="true"
-        :visible.sync="InfoDialog"
         :title="devicedetail.name"
         top="5vh"
+        :visible.sync="InfoDialog"
         width="80%"
       >
         <info :devicedetail="devicedetail" />
@@ -95,11 +95,11 @@
       </el-dialog>
       <el-dialog
         :append-to-body="true"
-        :visible.sync="stateDialog"
+        :before-close="CloseState"
         :title="stateDialog.name"
         top="5vh"
+        :visible.sync="stateDialog"
         width="80%"
-        :before-close="CloseState"
       >
         <deviceState :devicedetail="stateDetail" @ParserSave="ParserSave" />
         <span slot="footer" class="dialog-footer">
@@ -148,7 +148,7 @@
         <!--              </li>-->
         <!--            </ul>-->
         <el-row>
-          <el-col :xs="24" :sm="24" :md="8" :xl="8">
+          <el-col :md="8" :sm="24" :xl="8" :xs="24">
             <el-card class="box-card">
               <div slot="header" class="clearfix">
                 <span>
@@ -162,16 +162,16 @@
               </div>
               <div class="text item">
                 <ve-ring
-                  height="140px"
-                  :data-empty="!chartOnlone.rows"
                   :data="chartOnlone"
-                  :settings="chartSettings"
+                  :data-empty="!chartOnlone.rows"
                   :extend="chartExtend"
+                  height="140px"
+                  :settings="chartSettings"
                 />
               </div>
             </el-card>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :xl="8">
+          <el-col :md="8" :sm="24" :xl="8" :xs="24">
             <el-card class="box-card">
               <div slot="header" class="clearfix">
                 <span>
@@ -185,14 +185,14 @@
               </div>
               <div class="text item">
                 <ve-ring
-                  height="140px"
-                  :data-empty="!chartwaring.rows"
                   :data="chartwaring"
+                  :data-empty="!chartwaring.rows"
+                  height="140px"
                 />
               </div>
             </el-card>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :xl="8">
+          <el-col :md="8" :sm="24" :xl="8" :xs="24">
             <el-card class="box-card">
               <div slot="header" class="clearfix">
                 <span>{{ $translateTitle('equipment.Products') }}</span>
@@ -204,42 +204,42 @@
               </div>
               <div class="text item">
                 <ve-ring
-                  height="140px"
-                  :data-empty="!chartProduct.rows"
                   :data="chartProduct"
+                  :data-empty="!chartProduct.rows"
+                  height="140px"
                 />
               </div>
             </el-card>
           </el-col>
         </el-row>
       </div>
-      <div style="margin-top: 20px" class="equdevices">
+      <div class="equdevices" style="margin-top: 20px">
         <vab-query-form>
           <vab-query-form-top-panel>
             <el-form
               :inline="true"
-              :model="queryForm"
               label-width="100px"
+              :model="queryForm"
               @submit.native.prevent
             >
               <el-form-item :label="$translateTitle('equipment.Department')">
                 <el-select
                   v-model="queryForm.workGroupName"
-                  placeholder="请选择"
                   clearable
+                  placeholder="请选择"
                   @visible-change="change($event)"
                 >
                   <el-option
-                    :value="treeDataValue"
                     style="height: auto; padding: 0"
+                    :value="treeDataValue"
                   >
                     <el-tree
                       ref="workGroup"
                       :data="deptTreeData"
-                      :props="roleProps"
+                      default-expand-all
                       :expand-on-click-node="false"
                       node-key="index"
-                      default-expand-all
+                      :props="roleProps"
                     >
                       <div slot-scope="{ node, data }" class="custom-tree-node">
                         <span
@@ -330,42 +330,42 @@
 
                   <el-button
                     slot="append"
-                    size="mini"
                     icon="el-icon-search"
+                    size="mini"
                     @click="getDevices(0)"
                   />
                 </el-input>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" size="small" @click="addDeviceForm">
+                <el-button size="small" type="primary" @click="addDeviceForm">
                   {{ $translateTitle('equipment.adddevice') }}
                 </el-button>
               </el-form-item>
               <el-form-item style="display: none">
                 <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
                 <el-button
+                  class="selectdetail"
                   :disabled="multipleTable.length == 0"
                   size="small"
                   type="primary"
-                  class="selectdetail"
                   @click="deleteDevcie"
                 >
                   {{ $translateTitle('developer.delete') }}
                 </el-button>
                 <el-button
+                  class="selectdetail"
                   :disabled="multipleTable.length == 0"
                   size="small"
                   type="primary"
-                  class="selectdetail"
                   @click="unactiveDevice(false)"
                 >
                   {{ $translateTitle('developer.prohibit') }}
                 </el-button>
                 <el-button
+                  class="selectdetail"
                   :disabled="multipleTable.length == 0"
                   size="small"
                   type="primary"
-                  class="selectdetail"
                   @click="unactiveDevice(true)"
                 >
                   {{ $translateTitle('developer.enable') }}
@@ -390,10 +390,10 @@
               style="width: 100%; margin-top: 20px; text-align: center"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column type="selection" align="center" width="55" />
+              <el-table-column align="center" type="selection" width="55" />
               <el-table-column
-                :label="$translateTitle('equipment.devicenumber')"
                 align="center"
+                :label="$translateTitle('equipment.devicenumber')"
                 width="100"
               >
                 <template slot-scope="scope">
@@ -401,8 +401,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('equipment.name')"
                 align="center"
+                :label="$translateTitle('equipment.name')"
               >
                 <template slot-scope="scope">
                   <span style="margin: 0; color: green">
@@ -411,8 +411,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('equipment.state')"
                 align="center"
+                :label="$translateTitle('equipment.state')"
                 width="80"
               >
                 <template slot-scope="scope">
@@ -466,8 +466,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('equipment.product')"
                 align="center"
+                :label="$translateTitle('equipment.product')"
                 width="200"
               >
                 <template slot-scope="scope">
@@ -477,8 +477,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('developer.Company')"
                 align="center"
+                :label="$translateTitle('developer.Company')"
                 width="100"
               >
                 <template slot-scope="scope">
@@ -488,12 +488,12 @@
                 </template>
               </el-table-column>
               <el-table-column
+                align="center"
                 :label="
                   $translateTitle('developer.enable') +
                   '/' +
                   $translateTitle('developer.prohibit')
                 "
-                align="center"
                 width="100"
               >
                 <template slot-scope="scope">
@@ -515,54 +515,54 @@
                 </template>
               </el-table-column>
               <el-table-column
-                width="500"
-                :label="$translateTitle('developer.operation')"
                 align="center"
+                :label="$translateTitle('developer.operation')"
+                width="500"
               >
                 <template slot-scope="scope">
-                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
+                  <vab-icon icon="map-pin-range-line" style="color: #1890ff" />
                   <el-link
-                    :underline="false"
                     type="primary"
+                    :underline="false"
                     @click="showInfo(scope.row)"
                   >
                     {{ $translateTitle('equipment.info') }}
                   </el-link>
 
                   <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px"
                     icon="el-icon-view"
+                    style="margin: 0 10px"
+                    type="primary"
+                    :underline="false"
                     @click="deviceToDetail(scope.row)"
                   >
                     {{ $translateTitle('equipment.see') }}
                   </el-link>
-                  <vab-icon style="color: #1890ff" icon="file-transfer-line" />
+                  <vab-icon icon="file-transfer-line" style="color: #1890ff" />
 
                   <el-link
-                    :underline="false"
-                    type="primary"
                     style="margin: 0 10px"
+                    type="primary"
+                    :underline="false"
                     @click="showTree(scope.row.objectId, scope.row.Company)"
                   >
                     {{ $translateTitle('equipment.move') }}
                   </el-link>
 
                   <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px 0 0"
                     icon="el-icon-edit"
+                    style="margin: 0 10px 0 0"
+                    type="primary"
+                    :underline="false"
                     @click="editorDevice(scope.row)"
                   >
                     {{ $translateTitle('concentrator.edit') }}
                   </el-link>
                   <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px 0 0"
                     icon="el-icon-s-flag                    "
+                    style="margin: 0 10px 0 0"
+                    type="primary"
+                    :underline="false"
                     @click="konvaDevice(scope.row)"
                   >
                     {{ $translateTitle('concentrator.konva') }}
@@ -587,8 +587,8 @@
                         {{ $translateTitle('developer.cancel') }}
                       </el-button>
                       <el-button
-                        type="primary"
                         size="mini"
+                        type="primary"
                         @click="makeSure(scope)"
                       >
                         {{ $translateTitle('developer.determine') }}
@@ -596,9 +596,9 @@
                     </div>
                     <el-link
                       slot="reference"
-                      :underline="false"
                       icon="el-icon-delete"
                       type="danger"
+                      :underline="false"
                     >
                       {{ $translateTitle('developer.delete') }}
                     </el-link>
@@ -615,10 +615,10 @@
               style="width: 100%"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column type="selection" align="center" width="55" />
+              <el-table-column align="center" type="selection" width="55" />
               <el-table-column
-                :label="$translateTitle('equipment.devicenumber')"
                 align="center"
+                :label="$translateTitle('equipment.devicenumber')"
                 width="100"
               >
                 <template slot-scope="scope">
@@ -626,8 +626,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('equipment.name')"
                 align="center"
+                :label="$translateTitle('equipment.name')"
               >
                 <template slot-scope="scope">
                   <span style="margin: 0; color: green">
@@ -636,8 +636,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('equipment.state')"
                 align="center"
+                :label="$translateTitle('equipment.state')"
                 width="70"
               >
                 <template slot-scope="scope">
@@ -680,8 +680,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('equipment.product')"
                 align="center"
+                :label="$translateTitle('equipment.product')"
               >
                 <template slot-scope="scope">
                   <span v-if="scope.row.product && scope.row.product.name">
@@ -690,8 +690,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('developer.Company')"
                 align="center"
+                :label="$translateTitle('developer.Company')"
               >
                 <template slot-scope="scope">
                   <span>
@@ -701,12 +701,12 @@
               </el-table-column>
 
               <el-table-column
+                align="center"
                 :label="
                   $translateTitle('developer.enable') +
                   '/' +
                   $translateTitle('developer.prohibit')
                 "
-                align="center"
                 width="80"
               >
                 <template slot-scope="scope">
@@ -773,44 +773,44 @@
                 </template>
               </el-table-column>
               <el-table-column
+                align="center"
                 fixed="right"
                 :label="$translateTitle('developer.operation')"
-                align="center"
                 width="400"
               >
                 <template slot-scope="scope">
-                  <vab-icon style="color: #1890ff" icon="map-pin-range-line" />
+                  <vab-icon icon="map-pin-range-line" style="color: #1890ff" />
                   <el-link
-                    :underline="false"
-                    type="primary"
                     :disabled="!scope.row.location"
+                    type="primary"
+                    :underline="false"
                     @click="showMap(scope.row.location, scope.row.objectId)"
                   >
                     {{ $translateTitle('equipment.location') }}
                   </el-link>
                   <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px"
                     icon="el-icon-view"
+                    style="margin: 0 10px"
+                    type="primary"
+                    :underline="false"
                     @click="deviceToDetail(scope.row)"
                   >
                     {{ $translateTitle('equipment.see') }}
                   </el-link>
-                  <vab-icon style="color: #1890ff" icon="file-transfer-line" />
+                  <vab-icon icon="file-transfer-line" style="color: #1890ff" />
 
                   <el-link
-                    :underline="false"
                     type="primary"
+                    :underline="false"
                     @click="showTree(scope.row.objectId, scope.row.Company)"
                   >
                     {{ $translateTitle('equipment.move') }}
                   </el-link>
                   <el-link
-                    :underline="false"
-                    type="primary"
-                    style="margin: 0 10px 0 0"
                     icon="el-icon-edit"
+                    style="margin: 0 10px 0 0"
+                    type="primary"
+                    :underline="false"
                     @click="editorDevice(scope.row)"
                   >
                     {{ $translateTitle('concentrator.edit') }}
@@ -835,8 +835,8 @@
                         {{ $translateTitle('developer.cancel') }}
                       </el-button>
                       <el-button
-                        type="primary"
                         size="mini"
+                        type="primary"
                         @click="makeSure(scope)"
                       >
                         {{ $translateTitle('developer.determine') }}
@@ -844,9 +844,9 @@
                     </div>
                     <el-link
                       slot="reference"
-                      :underline="false"
                       icon="el-icon-delete"
                       type="danger"
+                      :underline="false"
                     >
                       {{ $translateTitle('developer.delete') }}
                     </el-link>
@@ -856,12 +856,12 @@
             </el-table>
             <div class="elpagination" style="margin-top: 30px">
               <el-pagination
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="devicelength"
-                :total="devicetotal"
                 layout="total, sizes, prev, pager, next, jumper"
-                @size-change="deviceSizeChange"
+                :page-size="devicelength"
+                :page-sizes="[10, 20, 30, 50]"
+                :total="devicetotal"
                 @current-change="deviceCurrentChange"
+                @size-change="deviceSizeChange"
               />
             </div>
           </div>
@@ -879,9 +879,9 @@
         <el-tab-pane :label="$translateTitle('equipment.map')" name="second">
           <baidu-map
             ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
-            :scroll-wheel-zoom="true"
-            class="map"
             :center="{ lng: 116.404, lat: 39.915 }"
+            class="map"
+            :scroll-wheel-zoom="true"
             style="height: 57vh"
             :zoom="sizeZoom"
           >
@@ -909,13 +909,13 @@
             <bm-marker
               v-for="item in tableData"
               :key="item.objectId"
+              animation="BMAP_ANIMATION_BOUNCE"
               :content="item.name"
+              :dragging="true"
               :position="{
                 lng: item.location.longitude,
                 lat: item.location.latitude,
               }"
-              :dragging="true"
-              animation="BMAP_ANIMATION_BOUNCE"
             >
               <bm-label
                 :content="item.name"
@@ -926,19 +926,19 @@
             </bm-marker>
             <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
             <bm-geolocation
-              :show-address-bar="true"
-              :auto-location="true"
               anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+              :auto-location="true"
+              :show-address-bar="true"
             />
           </baidu-map>
         </el-tab-pane>
       </el-tabs>
       <el-dialog
         :append-to-body="true"
+        :before-close="handleClose"
+        :close-on-click-modal="false"
         :title="$translateTitle('product.edit') + equipmentEditor"
         :visible.sync="devicedialogVisible"
-        :close-on-click-modal="false"
-        :before-close="handleClose"
         width="50%"
       >
         <div slot="title" class="header-title">
@@ -956,9 +956,9 @@
         <div class="devicecontent">
           <el-form
             ref="deviceform"
+            label-width="150px"
             :model="deviceform"
             :rules="rules"
-            label-width="150px"
           >
             <el-row :gutter="20">
               <el-col :span="12">
@@ -1044,25 +1044,25 @@
                   <el-select
                     v-if="item.type == 'bool'"
                     v-model="deviceform[item.identifier]"
-                    style="width: 100%"
                     class="notauto"
                     :disabled="item.readonly"
+                    style="width: 100%"
                   >
                     <el-option
-                      :value="true"
                       :label="$translateTitle('product.yes')"
+                      :value="true"
                     />
                     <el-option
-                      :value="false"
                       :label="$translateTitle('product.no')"
+                      :value="false"
                     />
                   </el-select>
                   <el-select
                     v-else-if="item.type == 'enum'"
                     v-model="deviceform[item.identifier]"
-                    style="width: 100%"
                     class="notauto"
                     :disabled="item.readonly"
+                    style="width: 100%"
                   >
                     <el-option
                       v-for="(spec, index1) in item.specs"
@@ -1078,8 +1078,8 @@
                   <!--                      />-->
                   <el-input
                     v-else-if="item.readonly"
-                    :value="deviceform[item.identifier] + item.unit"
                     :disabled="item.readonly"
+                    :value="deviceform[item.identifier] + item.unit"
                   />
                   <el-input
                     v-else
@@ -1121,14 +1121,14 @@
       <el-dialog
         v-drag-dialog
         :append-to-body="true"
-        :visible.sync="bmapdialogVisible"
-        :close-on-click-modal="false"
         :before-close="handleClosebmap"
+        :close-on-click-modal="false"
         :title="$translateTitle('developer.equipmentinstallationaddress')"
+        :visible.sync="bmapdialogVisible"
         width="50%"
       >
         <div>
-          <el-form :model="bmapform" :inline="true" size="small">
+          <el-form :inline="true" :model="bmapform" size="small">
             <!-- <el-form-item label="地址">
               <el-input v-model="bmapform.location" placeholder="请输入市或者县名称"></el-input>
             </el-form-item>-->
@@ -1148,29 +1148,29 @@
           <baidu-map
             ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
             :center="center"
-            :zoom="zoom"
-            :scroll-wheel-zoom="true"
             :map-click="false"
+            :scroll-wheel-zoom="true"
             style="height: 300px"
-            @ready="handler"
+            :zoom="zoom"
             @click="mapClick"
+            @ready="handler"
           >
             <!-- 必须给容器指高度，不然地图将显示在一个高度为0的容器中，看不到 -->
             <!-- <bml-marker-clusterer :averageCenter="true">
             <bm-marker :position="{lng: center.lng, lat: center.lat}"></bm-marker>
             </bml-marker-clusterer>-->
             <bm-local-search
-              :keyword="bmapform.keyword"
               :auto-viewport="true"
+              :keyword="bmapform.keyword"
               :location="bmapform.location"
-              zoom="12.8"
               style="display: none"
+              zoom="12.8"
             />
             <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
             <bm-geolocation
-              :show-address-bar="true"
-              :auto-location="true"
               anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+              :auto-location="true"
+              :show-address-bar="true"
             />
             <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT" />
             <!-- <bm-marker :position="center" style="display:none">

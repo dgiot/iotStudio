@@ -2,9 +2,9 @@
   <div class="TaskFormBasic">
     <el-form
       ref="formRef"
+      label-width="120px"
       :model="addDetectionTaskform"
       :rules="formRule"
-      label-width="120px"
     >
       <el-divider content-position="left" style="color: blue">
         检测任务基本信息
@@ -19,8 +19,8 @@
             <el-form-item label="任务名称：" prop="task_name">
               <el-input
                 v-model="addDetectionTaskform.task_name"
-                style="width: 100%"
                 placeholder="请输入任务名称"
+                style="width: 100%"
               />
             </el-form-item>
 
@@ -30,8 +30,8 @@
             <el-form-item label="质检项目" prop="reportId">
               <el-select
                 v-model="addDetectionTaskform.selectDefault"
-                style="width: 100%"
                 placeholder="质检项目"
+                style="width: 100%"
                 @change="changeReport"
               >
                 <el-option

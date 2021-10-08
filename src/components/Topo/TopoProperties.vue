@@ -37,25 +37,25 @@
         <div v-show="tabIndex == 0">
           <table style="display: none">
             <tr>
-              <td width="50%" style="padding: 5px 0px; background-color: #eee">
+              <td style="padding: 5px 0px; background-color: #eee" width="50%">
                 属性
               </td>
-              <td width="50%" style="padding: 5px 0px; background-color: #eee">
+              <td style="padding: 5px 0px; background-color: #eee" width="50%">
                 值
               </td>
             </tr>
           </table>
-          <div separator no-border>
-            <div label="Position" default-opened>
+          <div no-border separator>
+            <div default-opened label="Position">
               <table>
                 <tr>
                   <td width="50%">X</td>
                   <td width="50%">
                     <el-input
                       v-model.number.lazy="configObject.style.position.x"
-                      type="number"
-                      suffix="px"
                       style="padding-right: 5px"
+                      suffix="px"
+                      type="number"
                     />
                   </td>
                 </tr>
@@ -64,9 +64,9 @@
                   <td>
                     <el-input
                       v-model.number.lazy="configObject.style.position.y"
-                      type="number"
-                      suffix="px"
                       style="padding-right: 5px"
+                      suffix="px"
+                      type="number"
                     />
                   </td>
                 </tr>
@@ -75,9 +75,9 @@
                   <td>
                     <el-input
                       v-model.number.lazy="configObject.style.position.w"
-                      type="number"
-                      suffix="px"
                       style="padding-right: 5px"
+                      suffix="px"
+                      type="number"
                     />
                   </td>
                 </tr>
@@ -86,25 +86,25 @@
                   <td>
                     <el-input
                       v-model.number.lazy="configObject.style.position.h"
-                      type="number"
-                      suffix="px"
                       style="padding-right: 5px"
+                      suffix="px"
+                      type="number"
                     />
                   </td>
                 </tr>
               </table>
             </div>
 
-            <div label="Border" default-opened>
+            <div default-opened label="Border">
               <table>
                 <tr>
                   <td width="50%">BorderWidth</td>
                   <td width="50%">
                     <el-input
                       v-model.number.lazy="configObject.style.borderWidth"
-                      type="number"
-                      suffix="px"
                       style="padding-right: 5px"
+                      suffix="px"
+                      type="number"
                     />
                   </td>
                 </tr>
@@ -122,8 +122,8 @@
                   <td>
                     <el-input
                       v-model="configObject.style.borderColor"
-                      filled
                       class="my-input"
+                      filled
                     >
                       <template #append>
                         <!--                        <q-icon name="colorize" class="cursor-pointer">-->
@@ -141,7 +141,7 @@
               </table>
             </div>
 
-            <div label="Base" default-opened>
+            <div default-opened label="Base">
               <table>
                 <tr>
                   <td width="50%">Visible</td>
@@ -169,9 +169,9 @@
                   <td>
                     <el-input
                       v-model.number.lazy="configObject.style.transform"
-                      type="number"
-                      suffix="deg"
                       style="padding-right: 5px"
+                      suffix="deg"
+                      type="number"
                     />
                   </td>
                 </tr>
@@ -180,8 +180,8 @@
                   <td>
                     <el-input
                       v-model="configObject.style.backColor"
-                      filled
                       class="my-input"
+                      filled
                     >
                       <template #append>
                         <!--                        <q-icon name="colorize" class="cursor-pointer">-->
@@ -227,8 +227,8 @@
                   <td>
                     <el-input
                       v-model="configObject.style.foreColor"
-                      filled
                       class="my-input"
+                      filled
                     >
                       <template #append>
                         <!--                        <q-icon name="colorize" class="cursor-pointer">-->
@@ -257,9 +257,9 @@
                   <td>
                     <el-input
                       v-model.number.lazy="configObject.style.fontSize"
-                      type="number"
-                      suffix="px"
                       style="padding-right: 5px"
+                      suffix="px"
+                      type="number"
                     />
                   </td>
                 </tr>
@@ -277,9 +277,9 @@
                   <td>
                     <el-input
                       v-model.number.lazy="configObject.style.lineWidth"
-                      type="number"
-                      suffix="px"
                       style="padding-right: 5px"
+                      suffix="px"
+                      type="number"
                     />
                   </td>
                 </tr>
@@ -297,8 +297,8 @@
             <!-- 目前只有虚线有动画 -->
             <div
               v-if="configObject.type == 'dashed'"
-              label="动画"
               default-opened
+              label="动画"
             >
               <table class="data-tb">
                 <tr>
@@ -317,9 +317,9 @@
                     <td>
                       <el-input
                         v-model.number.lazy="configObject.style.dotSpace"
-                        type="number"
-                        suffix="px"
                         class="suffix"
+                        suffix="px"
+                        type="number"
                       />
                     </td>
                   </tr>
@@ -328,9 +328,9 @@
                     <td>
                       <el-input
                         v-model.number.lazy="configObject.style.dotWidth"
-                        type="number"
-                        suffix="px"
                         class="suffix"
+                        suffix="px"
+                        type="number"
                       />
                     </td>
                   </tr>
@@ -370,10 +370,10 @@
                         v-model="event.type"
                         emit-value
                         map-options
-                        option-label="label"
                         :option-disable="
                           (item) => (item === null ? true : item.cannotSelect)
                         "
+                        option-label="label"
                         :options="[
                           { label: '点击', value: 'click' },
                           { label: '双击', value: 'dblclick' },
@@ -398,10 +398,10 @@
                         v-model="event.action"
                         emit-value
                         map-options
-                        option-label="label"
                         :option-disable="
                           (item) => (item === null ? true : item.cannotSelect)
                         "
+                        option-label="label"
                         :options="[
                           {
                             label: '打开链接',
@@ -429,13 +429,13 @@
                     <td>
                       <el-select
                         v-model="event.showItems"
-                        filled
                         emit-value
-                        multiple
-                        use-chips
+                        filled
                         map-options
+                        multiple
                         option-label="label"
                         :options="generateTargetComponentOptions()"
+                        use-chips
                       />
                     </td>
                   </tr>
@@ -444,13 +444,13 @@
                     <td>
                       <el-select
                         v-model="event.hideItems"
-                        filled
                         emit-value
-                        multiple
-                        use-chips
+                        filled
                         map-options
+                        multiple
                         option-label="label"
                         :options="generateTargetComponentOptions()"
+                        use-chips
                       />
                     </td>
                   </tr>

@@ -11,8 +11,8 @@
       <section class="center">
         <div
           class="content"
-          @drop="handleDrop"
           @dragover="handleDragOver"
+          @drop="handleDrop"
           @mousedown="handleMouseDown"
           @mouseup="deselectCurComponent"
         >

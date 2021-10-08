@@ -15,27 +15,27 @@
         <ele-form
           v-model="alertConfig.config"
           v-bind="alertConfig.config"
-          :request-fn="handleSubmit"
           :config="formConfig"
           pure
+          :request-fn="handleSubmit"
           @request-success="handleSuccess(alertConfig)"
         />
       </el-dialog>
       <el-dialog
         v-drag
         :append-to-body="true"
-        width="50vh"
         :visible.sync="dynamicformView"
+        width="50vh"
       >
         <el-form>
-          <el-form-item label-width="200" label="设备名称">
+          <el-form-item label="设备名称" label-width="200">
             <span>{{ devicename }}</span>
           </el-form-item>
         </el-form>
         <el-form
           v-for="item in dynamicformInfo"
-          ref="dynamicformInfo"
           :key="item.key"
+          ref="dynamicformInfo"
         >
           <el-form-item :label="item.key">
             <el-link type="success">{{ item.value }}</el-link>
@@ -48,8 +48,8 @@
               <el-radio v-model="status" label="2">误报</el-radio>
             </el-form-item>
             <el-form-item
-              label-width="200"
               :label="$translateTitle('alert.Alarm handling')"
+              label-width="200"
             >
               <el-input v-model="process" type="textarea" />
             </el-form-item>
@@ -121,8 +121,8 @@
           </el-form-item>
           <el-form-item>
             <el-button
-              icon="el-icon-delete"
               :disabled="!selectedList.length"
+              icon="el-icon-delete"
               type="danger"
               @click="fetchDelete(selectedList)"
             >
@@ -141,39 +141,39 @@
     >
       <el-table-column
         align="center"
-        show-overflow-tooltip
         class-name="isCheck"
+        show-overflow-tooltip
         type="selection"
         width="55"
       />
 
       <el-table-column
-        sortablesortable
         align="center"
         :label="$translateTitle('alert.alert number')"
         prop="objectId"
+        show-overflow-tooltip
+        sortablesortable
         width="120"
-        show-overflow-tooltip
       />
       <el-table-column
-        sortable
         align="center"
-        prop="productname"
         :label="$translateTitle('alert.productname')"
+        prop="productname"
         show-overflow-tooltip
+        sortable
       />
       <el-table-column
-        sortable
         align="center"
-        prop="devicename"
         :label="$translateTitle('alert.devicename')"
+        prop="devicename"
         show-overflow-tooltip
+        sortable
       />
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('equipment.createdAt')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
@@ -181,13 +181,13 @@
       </el-table-column>
 
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('alert.Alarm status')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
-          <el-tag :type="row.alertstatus ? 'danger' : 'success'" effect="dark">
+          <el-tag effect="dark" :type="row.alertstatus ? 'danger' : 'success'">
             {{
               row.alertstatus
                 ? $translateTitle('alert.start')
@@ -197,13 +197,13 @@
         </template>
       </el-table-column>
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('alert.Alarm handling')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
-          <el-link :type="row.status == 1 ? 'success' : 'info'" effect="dark">
+          <el-link effect="dark" :type="row.status == 1 ? 'success' : 'info'">
             {{
               row.status == 1
                 ? $translateTitle('Maintenance.Processed')
@@ -215,11 +215,11 @@
         </template>
       </el-table-column>
       <el-table-column
-        sortable
         align="center"
-        prop="process"
         :label="$translateTitle('alert.process')"
+        prop="process"
         show-overflow-tooltip
+        sortable
       />
       <el-table-column
         align="center"
@@ -261,8 +261,8 @@
           <!--            {{ $translateTitle('Maintenance.deal with') }}-->
           <!--          </el-button>-->
           <el-button
-            type="danger"
             size="mini"
+            type="danger"
             @click="handleDelete(row.objectId)"
           >
             {{ $translateTitle('Maintenance.delete') }}
@@ -275,9 +275,9 @@
     </el-table>
     <VabPagination
       v-show="total"
-      :total="total"
-      :page.sync="queryForm.pageNo"
       :limit.sync="queryForm.pageSize"
+      :page.sync="queryForm.pageNo"
+      :total="total"
       @pagination="fetchData"
     />
   </div>

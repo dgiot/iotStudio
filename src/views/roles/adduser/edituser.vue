@@ -6,10 +6,10 @@
     </div>
     <el-form
       ref="ruleForm2"
+      class="demo-ruleForm"
+      label-width="100px"
       :model="ruleForm2"
       status-icon
-      label-width="100px"
-      class="demo-ruleForm"
     >
       <el-form-item :label="$translateTitle('user.account')" prop="account">
         <el-input
@@ -43,13 +43,13 @@
       <el-form-item :label="$translateTitle('developer.departmentselection')">
         <el-cascader
           v-model="ruleForm2.departmentid"
-          :props="treeprops"
-          :options="data"
-          :show-all-levels="false"
-          style="width: 600px"
-          :placeholder="$translateTitle('product.selectdepartment')"
           auto-complete="off"
           change-on-select
+          :options="data"
+          :placeholder="$translateTitle('product.selectdepartment')"
+          :props="treeprops"
+          :show-all-levels="false"
+          style="width: 600px"
         />
       </el-form-item>
       <el-form-item>

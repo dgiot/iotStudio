@@ -20,9 +20,9 @@
       ></span>
       <el-popover
         v-if="clientId.length > 90"
+        :content="clientId"
         placement="top-start"
         trigger="hover"
-        :content="clientId"
       >
         <span slot="reference">{{ interceptString(clientId, 90) }}</span>
       </el-popover>
@@ -53,9 +53,9 @@
       >
         <vab-clients-subscriptions
           :client-id="clientId"
-          :table-data="subscriptionsData"
-          :reload="loadSubscription"
           :mountpoint="mountpoint"
+          :reload="loadSubscription"
+          :table-data="subscriptionsData"
         />
       </el-tab-pane>
     </el-tabs>

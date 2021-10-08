@@ -4,10 +4,10 @@
       <vab-icon class-name="size-icon" icon-class="size" />
     </div>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item :disabled="size === 'medium'" command="medium">
+      <el-dropdown-item command="medium" :disabled="size === 'medium'">
         Medium
       </el-dropdown-item>
-      <el-dropdown-item :disabled="size === 'small'" command="small">
+      <el-dropdown-item command="small" :disabled="size === 'small'">
         Small
       </el-dropdown-item>
     </el-dropdown-menu>

@@ -1,8 +1,8 @@
 <template>
   <div
     class="wresize-panel-3"
-    @mouseup="onMouseup($event)"
     @mousemove="onMousemove($event)"
+    @mouseup="onMouseup($event)"
   >
     <div class="wresize-panel-left" :style="{ width: divLeft.width + 'px' }">
       <slot name="left"></slot>

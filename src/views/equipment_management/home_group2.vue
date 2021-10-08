@@ -2,23 +2,23 @@
   <div class="devproduct devproduct-container">
     <input
       ref="uploader"
-      type="file"
-      style="display: none"
       accept="zip"
+      style="display: none"
+      type="file"
       @change="doUpload($event)"
     />
     <el-dialog
       :append-to-body="true"
+      style="margin: 0 auto"
+      top="1vh"
       :visible.sync="dialogVisible"
       width="90%"
-      top="1vh"
-      style="margin: 0 auto"
     >
       <VabParser
-        :productid="productid"
+        :dict="parserDict"
         :form-config="formConfig"
         :parserindex="editIndex"
-        :dict="parserDict"
+        :productid="productid"
         @ParserSave="saveParse"
       />
       <!--      <span slot="footer" class="dialog-footer">-->
@@ -33,8 +33,8 @@
     </el-dialog>
     <el-dialog
       :append-to-body="true"
-      :visible.sync="parserTable"
       class="parserTable"
+      :visible.sync="parserTable"
     >
       <div slot="title" class="header-title parserTable">
         <el-button
@@ -50,36 +50,36 @@
           {{ $translateTitle('product.preservation') }}
         </el-button>
       </div>
-      <el-table :height="height" :data="parserTableList.parser">
+      <el-table :data="parserTableList.parser" :height="height">
         <el-table-column
-          sortable
           align="center"
-          prop="name"
           :label="$translateTitle('product.chinesetitle')"
+          prop="name"
+          sortable
         />
         <el-table-column
-          sortable
           align="center"
-          prop="enname"
           :label="$translateTitle('product.englishtitle')"
+          prop="enname"
+          sortable
         />
         <el-table-column
-          sortable
           align="center"
           :label="$translateTitle('leftbar.settings')"
           show-overflow-tooltip
+          sortable
         >
           <template #default="{ row }">
-            <el-button type="primary" plain @click="editParse(row.$index, row)">
+            <el-button plain type="primary" @click="editParse(row.$index, row)">
               {{ $translateTitle('concentrator.edit') }}
             </el-button>
-            <el-button type="success" plain @click="previewParse(row.config)">
+            <el-button plain type="success" @click="previewParse(row.config)">
               {{ $translateTitle('application.preview') }}
             </el-button>
             <el-button
-              type="danger"
               plain
               size="small"
+              type="danger"
               @click.native.prevent="
                 deleteParse(row.$index, parserTableList.parser)
               "
@@ -93,9 +93,9 @@
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="prosecond">
       <el-form
+        class="demo-form-inline"
         :inline="true"
         :model="formInline"
-        class="demo-form-inline"
         size="small"
       >
         <el-form-item>
@@ -125,17 +125,17 @@
       <div class="protable">
         <el-table
           v-loading="listLoading"
-          :height="height"
-          :header-cell-style="{ 'text-align': 'center' }"
           :cell-style="{ 'text-align': 'center' }"
           :data="proTableData"
+          :header-cell-style="{ 'text-align': 'center' }"
+          :height="height"
           style="width: 100%"
         >
           <el-table-column
             label="ProductID"
             prop="objectId"
-            sortable
             show-overflow-tooltip
+            sortable
           />
           <el-table-column :label="$translateTitle('product.productname')">
             <template slot-scope="scope">
@@ -148,8 +148,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            width="120"
             :label="$translateTitle('product.nodetype')"
+            width="120"
           >
             <template slot-scope="scope">
               <span v-if="scope.row.nodeType == 3">
@@ -171,8 +171,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            width="180"
             :label="$translateTitle('product.addingtime')"
+            width="180"
           >
             <template slot-scope="scope">
               <span>{{ utc2beijing(scope.row.createdAt) }}</span>
@@ -180,22 +180,22 @@
           </el-table-column>
           <el-table-column
             fixed="right"
-            width="340"
             :label="$translateTitle('developer.operation')"
+            width="340"
           >
             <template slot-scope="scope">
               <el-button
-                :underline="false"
-                type="primary"
                 size="mini"
+                type="primary"
+                :underline="false"
                 @click="deviceToDetail(scope.row)"
               >
                 {{ $translateTitle('product.config') }}
               </el-button>
               <el-button
-                :underline="false"
                 size="mini"
                 type="warning"
+                :underline="false"
                 @click="editorDict(scope.row.objectId)"
               >
                 {{ $translateTitle('product.dict') }}
@@ -206,17 +206,17 @@
               </el-button>
 
               <el-button
-                :underline="false"
                 size="mini"
                 type="success"
+                :underline="false"
                 @click="editorProduct(scope.row)"
               >
                 {{ $translateTitle('concentrator.edit') }}
               </el-button>
               <el-popover
                 :ref="`popover-${scope.$index}`"
-                style="margin-left: 10px"
                 placement="top"
+                style="margin-left: 10px"
                 width="300"
               >
                 <p>确定删除这个{{ scope.row.name }}产品吗？</p>
@@ -230,8 +230,8 @@
                     {{ $translateTitle('developer.cancel') }}
                   </el-button>
                   <el-button
-                    type="primary"
                     size="mini"
+                    type="primary"
                     @click="makeSure(scope)"
                   >
                     {{ $translateTitle('developer.determine') }}
@@ -270,12 +270,12 @@
       </div>
       <div class="elpagination" style="margin-top: 20px">
         <el-pagination
-          :page-sizes="[10, 20, 30, 50]"
-          :page-size="length"
-          :total="total"
           layout="total, sizes, prev, pager, next, jumper"
-          @size-change="productSizeChange"
+          :page-size="length"
+          :page-sizes="[10, 20, 30, 50]"
+          :total="total"
           @current-change="productCurrentChange"
+          @size-change="productSizeChange"
         />
         <!--        <dgiot-pagination-->
         <!--          v-show="total > 0"-->
@@ -290,12 +290,12 @@
       <!-- 创建产品对话框 ###-->
       <el-drawer
         append-to-body
-        :title="moduleTitle"
-        :visible.sync="dialogFormVisible"
-        :close-on-click-modal="false"
         :before-close="handleClose"
+        :close-on-click-modal="false"
         size="60%"
+        :title="moduleTitle"
         top="5vh"
+        :visible.sync="dialogFormVisible"
       >
         <div class="devproduct-prodialog-content">
           <!--产品信息-->
@@ -371,8 +371,8 @@
                       </template>
                       <el-icon
                         slot="append"
-                        size="mini"
                         class="el-icon-edit el-input__icon"
+                        size="mini"
                         @click.native="handlecateClick"
                       />
                     </el-input>
@@ -380,8 +380,8 @@
                 </el-row>
               </el-form-item>
               <el-form-item
-                prop="tdchannel"
                 :label="$translateTitle('product.Storage channel')"
+                prop="tdchannel"
               >
                 <el-select
                   v-model="form.tdchannel"
@@ -403,8 +403,8 @@
                 </el-select>
               </el-form-item>
               <el-form-item
-                prop="taskchannel"
                 :label="$translateTitle('product.taskchannel')"
+                prop="taskchannel"
               >
                 <el-select
                   v-model="form.taskchannel"
@@ -427,15 +427,15 @@
               </el-form-item>
 
               <el-form-item
-                prop="otherchannel"
                 :label="$translateTitle('product.Acquisition channel')"
+                prop="otherchannel"
               >
                 <el-select
                   v-model="form.otherchannel"
-                  value-key="objectId"
                   multiple
                   :placeholder="$translateTitle('task.Select')"
                   style="width: 100%"
+                  value-key="objectId"
                   @click.native="getResource('otherchannel', '1')"
                 >
                   <el-option
@@ -452,9 +452,9 @@
               >
                 <el-input
                   v-model="form.relationApp"
+                  :disabled="custom_status == 'edit' && form.relationApp != ''"
                   :placeholder="$translateTitle('product.pleaseselectyourapp')"
                   readonly
-                  :disabled="custom_status == 'edit' && form.relationApp != ''"
                   @focus="showTree = !showTree"
                 />
                 <div v-if="showTree">
@@ -528,11 +528,11 @@
               <!--              </el-form-item>-->
               <el-form-item :label="$translateTitle('menu.icon')" prop="icon">
                 <div v-if="imageUrl">
-                  <img :src="imageUrl" class="avatar" />
+                  <img class="avatar" :src="imageUrl" />
                   <el-button
-                    type="danger"
                     size="mini"
                     style="vertical-align: text-bottom"
+                    type="danger"
                     @click.stop="deleteImgsrc"
                   >
                     删除
@@ -545,12 +545,11 @@
                 />
                 <form
                   ref="uploadform"
-                  method="POST"
                   enctype="multipart/form-data"
+                  method="POST"
                   style="position: absolute; visibility: hidden"
                 >
                   <input
-                    type="file"
                     style="
                       position: relative;
                       z-index: 5;
@@ -559,6 +558,7 @@
                       cursor: pointer;
                       opacity: 0;
                     "
+                    type="file"
                     @change="upload($event)"
                   />
                 </form>
@@ -583,8 +583,8 @@
         </div>
         <el-drawer
           :append-to-body="true"
-          :visible.sync="cascaderDrawer"
           size="35%"
+          :visible.sync="cascaderDrawer"
         >
           <div>
             <el-row :gutter="20">
@@ -633,9 +633,9 @@
                       </el-form-item>
                       <el-form-item label-width="0">
                         <el-button
+                          class="el-icon-search"
                           native-type="submit"
                           type="primary"
-                          class="el-icon-search"
                           @click="queryProdut({})"
                         />
                       </el-form-item>
@@ -645,21 +645,21 @@
               </el-col>
             </el-row>
             <el-table
-              :height="$baseTableHeight(0) + 40"
-              :header-cell-style="{ 'text-align': 'center' }"
+              border
               :cell-style="{ 'text-align': 'center' }"
               :data="tableData"
-              border
+              :header-cell-style="{ 'text-align': 'center' }"
+              :height="$baseTableHeight(0) + 40"
               size="mini"
               style="width: 100%"
             >
               <el-table-column
-                :label="$translateTitle('developer.Templatename')"
                 align="center"
+                :label="$translateTitle('developer.Templatename')"
               >
                 <template #default="{ row }">
                   {{ row.name }}
-                  <el-popover placement="left" width="800" trigger="click">
+                  <el-popover placement="left" trigger="click" width="800">
                     <dgiot-profile ref="profile" :is-product="true" />
                     <i
                       slot="reference"
@@ -670,12 +670,12 @@
                 </template>
               </el-table-column>
               <el-table-column
-                prop="netType"
                 :label="$translateTitle('department.category')"
+                prop="netType"
               />
               <el-table-column
-                :label="$translateTitle('developer.operation')"
                 align="center"
+                :label="$translateTitle('developer.operation')"
               >
                 <template #default="{ row }">
                   <el-button
@@ -690,23 +690,23 @@
             </el-table>
             <vab-Pagination
               v-show="queryForm.total > 0"
-              :total="queryForm.total"
-              :page.sync="queryForm.pageNo"
               :limit.sync="queryForm.pageSize"
+              :page.sync="queryForm.pageNo"
+              :total="queryForm.total"
               @pagination="categorytree"
             />
           </div>
         </el-drawer>
       </el-drawer>
-      <el-dialog top="1vh" :append-to-body="true" :visible.sync="dialogProfile">
+      <el-dialog :append-to-body="true" top="1vh" :visible.sync="dialogProfile">
         <dgiot-profile ref="dialogProfile" :is-product="true" />
       </el-dialog>
       <!--新增字典-->
       <a-drawer
         v-if="dictVisible"
-        style="z-index: 999"
         :append-to-body="true"
         :close-on-click-modal="false"
+        style="z-index: 999"
         :title="title_temp_dialog"
         :visible="dictVisible"
         width="60%"
@@ -721,8 +721,8 @@
           <el-row :gutter="20">
             <el-col :span="8">
               <el-form-item
-                :label-width="formLabelWidth"
                 label="字典模板名称"
+                :label-width="formLabelWidth"
                 prop="name"
               >
                 <el-input v-model="dictTempForm.name" autocomplete="off" />
@@ -730,8 +730,8 @@
             </el-col>
             <el-col :span="8">
               <el-form-item
-                :label-width="formLabelWidth"
                 label="字典模板类型"
+                :label-width="formLabelWidth"
                 prop="cType"
               >
                 <el-input v-model="dictTempForm.cType" autocomplete="off" />
@@ -739,28 +739,28 @@
             </el-col>
             <el-col :span="8">
               <el-form-item
-                :label-width="formLabelWidth"
                 label="字典模板状态"
+                :label-width="formLabelWidth"
                 prop="enable"
               >
-                <el-radio v-model="dictTempForm.enable" label="1" border>
+                <el-radio v-model="dictTempForm.enable" border label="1">
                   启用
                 </el-radio>
-                <el-radio v-model="dictTempForm.enable" label="0" border>
+                <el-radio v-model="dictTempForm.enable" border label="0">
                   禁用
                 </el-radio>
               </el-form-item>
             </el-col>
           </el-row>
 
-          <el-form-item :label-width="formLabelWidth" label="字典模板数据">
+          <el-form-item label="字典模板数据" :label-width="formLabelWidth">
             <el-tabs v-model="elactiveName">
               <el-tab-pane label="Table" name="Table">
                 <el-button
-                  type="primary"
                   class="mt-3"
-                  size="small"
                   icon="el-icon-plus"
+                  size="small"
+                  type="primary"
                   @click.native="addRow(dictTempForm.params)"
                 >
                   新 增
@@ -771,13 +771,13 @@
                   :height="height"
                   style="width: 100%; text-align: center"
                 >
-                  <el-table-column prop="order" label="序号" />
-                  <el-table-column prop="identifier" label="标识符" />
-                  <el-table-column prop="name" label="功能名称" />
-                  <el-table-column prop="type" label="数据类型" />
-                  <el-table-column prop="address" label="数据地址" />
-                  <el-table-column prop="bytes" label="数据长度" />
-                  <el-table-column prop="required" label="是否必填">
+                  <el-table-column label="序号" prop="order" />
+                  <el-table-column label="标识符" prop="identifier" />
+                  <el-table-column label="功能名称" prop="name" />
+                  <el-table-column label="数据类型" prop="type" />
+                  <el-table-column label="数据地址" prop="address" />
+                  <el-table-column label="数据长度" prop="bytes" />
+                  <el-table-column label="是否必填" prop="required">
                     <template slot-scope="scope">
                       <span v-if="scope.row.required">是</span>
                       <span v-else>否</span>
@@ -789,13 +789,13 @@
                   <!--                      <span v-else>否</span>-->
                   <!--                    </template>-->
                   <!--                  </el-table-column>-->
-                  <el-table-column label="操作" width="160" align="center">
+                  <el-table-column align="center" label="操作" width="160">
                     <template slot-scope="scope">
                       <el-button
-                        size="mini"
-                        type="danger"
                         plain
+                        size="mini"
                         title="删除"
+                        type="danger"
                         @click.native="
                           delRow(scope.$index, dictTempForm.params)
                         "
@@ -803,10 +803,10 @@
                         删除
                       </el-button>
                       <el-button
-                        size="mini"
-                        type="info"
                         plain
+                        size="mini"
                         title="编辑"
+                        type="info"
                         @click.native="
                           editRow(scope.row, scope.$index, dictTempForm.params)
                         "
@@ -820,19 +820,19 @@
               <el-tab-pane label="Json" name="Json">
                 <vab-json-editor
                   v-model="dictTempForm.params"
-                  :mode="'code'"
                   lang="zh"
+                  :mode="'code'"
                   @has-error="onError"
                 />
               </el-tab-pane>
             </el-tabs>
           </el-form-item>
-          <el-form-item :label-width="formLabelWidth" label="描述">
+          <el-form-item label="描述" :label-width="formLabelWidth">
             <el-input
               v-model="dictTempForm.description"
               :autosize="{ minRows: 2, maxRows: 4 }"
-              type="textarea"
               placeholder="请输入描述"
+              type="textarea"
             />
           </el-form-item>
 
@@ -850,20 +850,20 @@
       <!--新增字典数据-->
       <el-dialog
         :append-to-body="true"
-        :visible.sync="edit_dict_temp_dialog"
-        :title="title_dict_edit_dialog"
-        :close-on-click-modal="false"
         :before-close="closeDict"
-        width="60%"
+        :close-on-click-modal="false"
+        :title="title_dict_edit_dialog"
         top="5vh"
+        :visible.sync="edit_dict_temp_dialog"
+        width="60%"
         @open="opendialog('tempparams')"
       >
         <el-form
           ref="tempparams"
-          :model="tempparams"
-          size="mini"
           label-position="left"
           label-width="100px"
+          :model="tempparams"
+          size="mini"
         >
           <el-row :gutter="24">
             <el-col :span="12">
@@ -940,9 +940,9 @@
               <el-form-item :label="$translateTitle('product.unit')">
                 <el-select
                   v-model="tempparams.unit"
-                  style="width: 100%"
-                  :placeholder="$translateTitle('product.unit')"
                   filterable
+                  :placeholder="$translateTitle('product.unit')"
+                  style="width: 100%"
                 >
                   <el-option
                     v-for="(item, index) in allunit"
@@ -1008,11 +1008,11 @@
           </el-row>
           <el-table
             v-show="tempparams.protocol == 'modbus'"
-            :data="dataList"
             border
+            :data="dataList"
             :height="height"
-            style="width: 100%"
             size="small"
+            style="width: 100%"
           >
             <el-table-column
               align="center"
@@ -1030,8 +1030,8 @@
               <template slot-scope="scope">
                 <el-select
                   v-model="tempparams.operatetype"
-                  style="width: 100%"
                   placeholder="请选择"
+                  style="width: 100%"
                 >
                   <el-option
                     v-for="item in [
@@ -1112,9 +1112,9 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-tooltip
-                style="float: left"
                 effect="dark"
                 placement="right-start"
+                style="float: left"
               >
                 <div slot="content">
                   1. 采集值 设备上行数据经采集公式计算后显示 。
@@ -1146,17 +1146,17 @@
               <el-form-item label="采集公式">
                 <el-input
                   v-model="tempparams.collection"
-                  style="width: 100%"
                   :rows="1"
+                  style="width: 100%"
                   type="textarea"
                 />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-tooltip
-                style="float: left"
                 effect="dark"
                 placement="right-start"
+                style="float: left"
               >
                 <div slot="content">
                   1. 设置值 平台下行数据经设置公式计算后设置 。
@@ -1196,20 +1196,20 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item label="必填">
-                <el-radio v-model="tempparams.required" :label="true" border>
+                <el-radio v-model="tempparams.required" border :label="true">
                   是
                 </el-radio>
-                <el-radio v-model="tempparams.required" :label="false" border>
+                <el-radio v-model="tempparams.required" border :label="false">
                   否
                 </el-radio>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="只读">
-                <el-radio v-model="tempparams.readonly" :label="true" border>
+                <el-radio v-model="tempparams.readonly" border :label="true">
                   是
                 </el-radio>
-                <el-radio v-model="tempparams.readonly" :label="false" border>
+                <el-radio v-model="tempparams.readonly" border :label="false">
                   否
                 </el-radio>
               </el-form-item>
@@ -1218,10 +1218,10 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item label="列表显示">
-                <el-radio v-model="tempparams.isshow" :label="true" border>
+                <el-radio v-model="tempparams.isshow" border :label="true">
                   是
                 </el-radio>
-                <el-radio v-model="tempparams.isshow" :label="false" border>
+                <el-radio v-model="tempparams.isshow" border :label="false">
                   否
                 </el-radio>
               </el-form-item>
@@ -1250,8 +1250,8 @@
               class="notauto"
               readonly
             >
-              <el-option :value="true" label="是" />
-              <el-option :value="false" label="否" />
+              <el-option label="是" :value="true" />
+              <el-option label="否" :value="false" />
             </el-select>
             <el-input
               v-else-if="tempparams.type == 'int'"
@@ -1264,36 +1264,36 @@
               <el-tab-pane label="Table" name="Table1">
                 <!--枚举型添加格式-->
                 <el-button
-                  type="primary"
                   class="mt-3"
-                  size="mini"
                   icon="el-icon-plus"
+                  size="mini"
+                  type="primary"
                   @click.native="addDomain"
                 >
                   新 增
                 </el-button>
                 <el-table
-                  :height="height"
                   :data="tempparams.specs"
+                  :height="height"
                   style="width: 100%; text-align: center"
                 >
-                  <el-table-column label="属性" align="center">
+                  <el-table-column align="center" label="属性">
                     <template slot-scope="scope">
                       <el-input v-model="scope.row.attribute" />
                     </template>
                   </el-table-column>
-                  <el-table-column label="属性值" align="center">
+                  <el-table-column align="center" label="属性值">
                     <template slot-scope="scope">
                       <el-input v-model="scope.row.attributevalue" />
                     </template>
                   </el-table-column>
-                  <el-table-column label="操作" align="center">
+                  <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
                       <el-button
-                        size="mini"
-                        type="danger"
                         plain
+                        size="mini"
                         title="删除"
+                        type="danger"
                         @click.native="removeDomain(scope.row)"
                       >
                         删除
@@ -1315,24 +1315,24 @@
     <div class="import-dialog">
       <el-dialog
         :append-to-body="true"
-        :visible.sync="importDialogShow"
         title="导入产品"
+        :visible.sync="importDialogShow"
         width="25%"
       >
         <el-form ref="uploadProForm" :model="formPro">
           <el-upload
             ref="fileUpload"
-            :action="uploadAction"
-            :data="uploadData"
-            :headers="uploadHeaders"
-            :file-list="fileList"
-            :on-change="handleChange"
-            :with-credentials="true"
-            :auto-upload="false"
-            :on-success="handleUploadSuccess"
-            :on-error="handleUploadError"
-            class="upload-demo"
             accept=".xls, .xlsx, .zip"
+            :action="uploadAction"
+            :auto-upload="false"
+            class="upload-demo"
+            :data="uploadData"
+            :file-list="fileList"
+            :headers="uploadHeaders"
+            :on-change="handleChange"
+            :on-error="handleUploadError"
+            :on-success="handleUploadSuccess"
+            :with-credentials="true"
           >
             <el-button slot="trigger" size="small" type="primary">
               选泽文件
@@ -1343,8 +1343,8 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button
-            size="small"
             class="btn-left"
+            size="small"
             type="primary"
             @click="submitUpload"
           >
@@ -1352,8 +1352,8 @@
           </el-button>
 
           <el-button
-            size="small"
             class="btn-right"
+            size="small"
             @click="importDialogShow = false"
           >
             取 消

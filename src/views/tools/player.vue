@@ -31,7 +31,7 @@
         <!--            <el-button type="primary" plain @click="Play()">播放</el-button>-->
         <!--          </el-col>-->
         <!--        </el-row>-->
-        <el-card shadow="hover" class="player_card">
+        <el-card class="player_card" shadow="hover">
           <!--          <vab-player-->
           <!--            ref="vabPlayer"-->
           <!--            :autoplay="mp4Play"-->
@@ -43,10 +43,10 @@
           <vab-aliplayer
             ref="vabPlayer"
             :autoplay="mp4Play"
+            :height="height"
             :playsource="flvsrc"
             :type="type"
             :width="width"
-            :height="height"
           />
         </el-card>
       </el-col>

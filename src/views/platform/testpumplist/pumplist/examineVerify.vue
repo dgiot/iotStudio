@@ -48,24 +48,24 @@
         </div>
 
         <el-row :gutter="24">
-          <el-col :span="20" :offset="2">
+          <el-col :offset="2" :span="20">
             <div>
               <h3 style="text-align: center">实验数据</h3>
               <el-table
                 ref="importListTable"
                 :cell-style="headClass"
-                :header-cell-style="headClass"
                 :data="currentTestData"
+                :header-cell-style="headClass"
                 size="mini"
                 style="width: 100%; height: 53vh"
               >
                 <!-- <el-table-column prop="id" label="ID" /> -->
 
-                <el-table-column prop="Q2" label="流量" />
+                <el-table-column label="流量" prop="Q2" />
 
-                <el-table-column prop="H2" label="扬程" />
-                <el-table-column prop="W2" label="功率" />
-                <el-table-column prop="Eff" label="效率" />
+                <el-table-column label="扬程" prop="H2" />
+                <el-table-column label="功率" prop="W2" />
+                <el-table-column label="效率" prop="Eff" />
               </el-table>
               <div
                 v-show="userRoles.org_type != '中心厂家检测员'"
@@ -126,16 +126,16 @@
     <!--审核弹窗-->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="verifyDialogVisible"
       title="审核"
+      :visible.sync="verifyDialogVisible"
       width="40%"
     >
       <div>
         <el-form
           ref="verifyFormRef"
+          label-width="100px"
           :model="verifyForm"
           :rules="verifyFormRules"
-          label-width="100px"
         >
           <el-form-item label="审核状态" prop="status">
             <el-radio-group v-model="verifyForm.status">

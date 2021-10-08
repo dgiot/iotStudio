@@ -3,11 +3,11 @@
   <div class="topo-header">
     <div class="topo-header-drawer">
       <el-drawer
-        :with-header="false"
-        size="40%"
-        :visible.sync="drawer"
         append-to-body
         direction="rtl"
+        size="40%"
+        :visible.sync="drawer"
+        :with-header="false"
       >
         <!--        <websocket :topic="topic" />-->
       </el-drawer>
@@ -81,8 +81,8 @@
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
             <a
               class="ant-dropdown-link"
-              @keyup.delete="removeFn()"
               @click="removeFn()"
+              @keyup.delete="removeFn()"
             >
               <a-icon type="delete" />
               <p>{{ $translateTitle('konva.delete') }}</p>
@@ -90,7 +90,7 @@
           </a-dropdown>
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
             <a class="ant-dropdown-link" @click="saveTopo">
-              <a-icon type="save" theme="filled" />
+              <a-icon theme="filled" type="save" />
               <p>{{ $translateTitle('konva.save') }}</p>
             </a>
           </a-dropdown>
@@ -118,9 +118,9 @@
           <!--            @click="handFullscreen"-->
           <!--          />-->
           <vab-help
-            trigger="click"
             src="https://tech.iotn2n.com/w/docs/details?id=6"
             title="组态文档"
+            trigger="click"
           />
         </vab-query-form-right-panel>
       </vab-query-form>

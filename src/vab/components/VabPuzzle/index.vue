@@ -5,30 +5,29 @@
     :class="['vue-puzzle-vcode', { show_: show }]"
     @mousedown="onCloseMouseDown"
     @mouseup="onCloseMouseUp"
-    @touchstart="onCloseMouseDown"
     @touchend="onCloseMouseUp"
+    @touchstart="onCloseMouseDown"
   >
     <div class="vue-auth-box_" @mousedown.stop @touchstart.stop>
       <div class="auth-body_" :style="`height: ${canvasHeight}px`">
         <!-- 主图，有缺口 -->
         <canvas
           ref="canvas1"
-          :width="canvasWidth"
           :height="canvasHeight"
           :style="`width:${canvasWidth}px;height:${canvasHeight}px`"
+          :width="canvasWidth"
         />
         <!-- 成功后显示的完整图 -->
         <canvas
           ref="canvas3"
           :class="['auth-canvas3_', { show: isSuccess }]"
-          :width="canvasWidth"
           :height="canvasHeight"
           :style="`width:${canvasWidth}px;height:${canvasHeight}px`"
+          :width="canvasWidth"
         />
         <!-- 小图 -->
         <canvas
           ref="canvas2"
-          :width="puzzleBaseSize"
           class="auth-canvas2_"
           :height="canvasHeight"
           :style="`width:${puzzleBaseSize}px;height:${canvasHeight}px;transform:translateX(${
@@ -37,6 +36,7 @@
             (puzzleBaseSize - sliderBaseSize) *
               ((styleWidth - sliderBaseSize) / (canvasWidth - sliderBaseSize))
           }px)`"
+          :width="puzzleBaseSize"
         />
         <div :class="['loading-box_', { hide_: !loading }]">
           <div class="loading-gif_">

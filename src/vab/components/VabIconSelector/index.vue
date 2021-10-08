@@ -9,11 +9,11 @@
             </el-form-item>
             <el-form-item label-width="0">
               <el-button
+                circle
+                icon="el-icon-search"
                 native-type="submit"
                 size="mini"
                 type="primary"
-                icon="el-icon-search"
-                circle
                 @click.native="queryData"
               />
             </el-form-item>

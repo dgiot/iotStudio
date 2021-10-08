@@ -2,15 +2,15 @@
   <div>
     <svg
       v-if="isscreen == true"
-      t="1508738709248"
       class="screenfull-svg"
-      viewBox="0 0 1024 1024"
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      p-id="2069"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      width="32"
       height="32"
+      p-id="2069"
+      t="1508738709248"
+      version="1.1"
+      viewBox="0 0 1024 1024"
+      width="32"
+      xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
       @click="click"
     >
       <path
@@ -32,14 +32,14 @@
     </svg>
     <svg
       v-if="isscreen == false"
-      t="1563880671008"
       class="screenfull-svg"
-      viewBox="0 0 1028 1024"
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      p-id="5283"
-      width="32"
       height="32"
+      p-id="5283"
+      t="1563880671008"
+      version="1.1"
+      viewBox="0 0 1028 1024"
+      width="32"
+      xmlns="http://www.w3.org/2000/svg"
       @click="click"
     >
       <path

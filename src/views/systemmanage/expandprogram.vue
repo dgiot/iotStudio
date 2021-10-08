@@ -2,17 +2,17 @@
   <div class="things-parse">
     <el-dialog
       :append-to-body="true"
-      :visible.sync="apiDialog"
       :title="$translateTitle('product.newapi')"
+      :visible.sync="apiDialog"
       width="30%"
     >
       <el-form
         ref="formLabelAlign"
-        :rules="rules"
-        :model="formLabelAlign"
-        size="mini"
         label-position="left"
         label-width="170px"
+        :model="formLabelAlign"
+        :rules="rules"
+        size="mini"
       >
         <!-- <el-form-item label="模块名称" prop="name"> -->
         <el-form-item
@@ -42,8 +42,8 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button
-          type="primary"
           size="mini"
+          type="primary"
           @click="submitFormApi('formLabelAlign')"
         >
           <!-- 创建 -->
@@ -83,10 +83,10 @@
           <!-- ----------------------which mod--------------------------------- -->
           <!-- ----------------------which mod--------------------------------- -->
           <el-table-column
-            label="mod"
-            width="120"
-            :show-overflow-tooltip="true"
             align="center"
+            label="mod"
+            :show-overflow-tooltip="true"
+            width="120"
           >
             <template slot-scope="scope">
               <span style="margin-left: 10px">{{ scope.row.mod }}</span>
@@ -94,8 +94,8 @@
           </el-table-column>
           <!-- <el-table-column label="操作" align="center"> -->
           <el-table-column
-            :label="$translateTitle('task.Operation')"
             align="center"
+            :label="$translateTitle('task.Operation')"
           >
             <template slot-scope="scope">
               <!-- <el-button
@@ -120,8 +120,8 @@
               > -->
               <el-button
                 size="mini"
-                type="primary"
                 :title="$translateTitle('product.pub')"
+                type="primary"
                 @click="
                   handleRelease(scope.$index, scope.row.type, scope.row.mod)
                 "
@@ -138,8 +138,8 @@
               > -->
               <el-button
                 size="mini"
-                type="danger"
                 :title="$translateTitle('equipment.Offtheshelf')"
+                type="danger"
                 @click="
                   handleDelete(scope.$index, scope.row.type, scope.row.mod)
                 "
@@ -202,7 +202,7 @@
 
             <!-- <el-tab-pane label="测试" name="swagger"> -->
             <el-tab-pane :label="$translateTitle('rule.Test')" name="swagger">
-              <iframe :src="swaggerPath" width="100%" height="700vh" />
+              <iframe height="700vh" :src="swaggerPath" width="100%" />
             </el-tab-pane>
           </el-tabs>
         </div>

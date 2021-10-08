@@ -7,16 +7,16 @@
             <div class="search">
               <el-button
                 icon="el-icon-s-tools"
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="toggleExpandAll(isdefaultExpandAll)"
               >
                 <!-- 展开/收起菜单 -->
                 {{ $translateTitle('product.Expandcollapsemenu') }}
               </el-button>
               <el-button
-                size="mini"
                 icon="el-icon-plus"
+                size="mini"
                 type="info"
                 @click="handleEdit({}, 'one')"
               >
@@ -24,8 +24,8 @@
                 {{ $translateTitle('product.Newfirstlevelmenu') }}
               </el-button>
               <el-button
-                size="mini"
                 icon="el-icon-upload"
+                size="mini"
                 type="success"
                 @click="centerUploadBox('Importmenu')"
               >
@@ -33,8 +33,8 @@
                 {{ $translateTitle('product.Importmenu') }}
               </el-button>
               <el-button
-                size="mini"
                 icon="el-icon-upload"
+                size="mini"
                 type="warning"
                 @click="centerUploadBox('Export')"
               >
@@ -45,8 +45,8 @@
                 v-show="false"
                 id="fileExport"
                 ref="inputer"
-                value="上传菜单"
                 type="file"
+                value="上传菜单"
                 @change="handleFileChange"
               />
               <!-- <el-button type="primary" icon="el-icon-plus" @click="dialogVisible=true">新增一级菜单</el-button> -->
@@ -56,14 +56,14 @@
         <el-table
           v-if="refreshTable"
           v-loading="listLoading"
-          :data="treeData"
-          size="mini"
-          :height="tableHeight"
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           border
-          :default-sort="{ prop: 'order', order: 'ascending' }"
+          :data="treeData"
           :default-expand-all="isdefaultExpandAll"
+          :default-sort="{ prop: 'order', order: 'ascending' }"
+          :height="tableHeight"
           row-key="objectId"
+          size="mini"
+          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
           <el-table-column
             align="center"
@@ -85,21 +85,21 @@
           <el-table-column
             align="center"
             :label="$translateTitle('developer.path')"
-            width="220"
             prop="url"
             show-overflow-tooltip
+            width="220"
           />
           <el-table-column
             align="center"
             :label="$translateTitle('menu.sort')"
-            sortable
             prop="orderBy"
+            sortable
           />
           <el-table-column
             align="center"
             :label="'vue ' + $translateTitle('developer.filepath')"
-            width="400"
             show-overflow-tooltip
+            width="400"
           >
             <template #default="{ row }">
               <span>
@@ -109,8 +109,8 @@
           </el-table-column>
           <el-table-column
             align="center"
-            show-overflow-tooltip
             :label="$translateTitle('developer.redirect')"
+            show-overflow-tooltip
             width="200"
           >
             <template #default="{ row }">
@@ -126,13 +126,13 @@
             :width="200"
           >
             <template #default="{ row }">
-              <el-popover trigger="hover" placement="top">
+              <el-popover placement="top" trigger="hover">
                 <p>
                   <!-- 是否隐藏： -->
                   {{ $translateTitle('product.Hideornot') + ':' }}
                   <el-tag
-                    type="success"
                     :title="$translateTitle('product.Hideornot')"
+                    type="success"
                   >
                     {{
                       row.meta.hidden
@@ -150,12 +150,12 @@
                   }}
                   <el-tag
                     v-if="row.meta"
-                    type="info"
                     :title="
                       $translateTitle(
                         'product.Whetherthecurrentroutecanclosemultipletabs'
                       )
                     "
+                    type="info"
                   >
                     {{
                       row.meta.noClosable
@@ -187,39 +187,39 @@
             </template>
           </el-table-column>
           <el-table-column
-            width="220px"
+            align="center"
             fixed="right"
             :label="$translateTitle('developer.operation')"
-            align="center"
+            width="220px"
           >
             <template #default="{ row }">
               <el-button
-                size="mini"
-                type="primary"
                 icon="el-icon-plus"
+                size="mini"
                 :title="$translateTitle('menu.childrenmenu')"
+                type="primary"
                 @click="handleEdit(row, 'addChildMenu')"
               />
               <el-button
-                size="mini"
-                type="success"
                 icon="el-icon-edit"
+                size="mini"
                 :title="$translateTitle('developer.edit')"
+                type="success"
                 @click="handleEdit(row, 'editMenu')"
               />
               <el-button
-                size="mini"
-                type="danger"
                 icon="el-icon-delete"
+                size="mini"
                 :title="$translateTitle('developer.delete') + row.meta.title"
+                type="danger"
                 @click="handleDelete(row)"
               />
             </template>
           </el-table-column>
           <template #empty>
             <el-image
-              src="http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/empty_images/data_empty.png"
               class="vab-data-empty"
+              src="http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/empty_images/data_empty.png"
             />
           </template>
         </el-table>

@@ -7,15 +7,15 @@
             v-show="dashboardrul != '' && dashboardrul"
             id="iframe"
             class="iframe"
-            width="100%"
-            height="700"
             frameborder="0"
+            height="700"
+            width="100%"
           />
         </a-tab-pane>
         <a-tab-pane
           key="chart"
-          :tab="$translateTitle('equipment.chart')"
           force-render
+          :tab="$translateTitle('equipment.chart')"
         >
           <empty />
         </a-tab-pane>

@@ -1,5 +1,5 @@
 <template>
-  <div :id="playerId" :style="playStyle" class="prism-player" />
+  <div :id="playerId" class="prism-player" :style="playStyle" />
 </template>
 
 <script>

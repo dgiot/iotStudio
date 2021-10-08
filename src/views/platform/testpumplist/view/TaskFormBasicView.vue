@@ -21,10 +21,10 @@
 
     <el-form
       ref="formRef"
+      disabled
+      label-width="120px"
       :model="addDetectionTaskform"
       :rules="formRule"
-      label-width="120px"
-      disabled
     >
       <el-divider content-position="left" style="color: blue">
         检测任务基本信息

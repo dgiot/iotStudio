@@ -1,6 +1,6 @@
 <template>
   <div class="topo-toolbox">
-    <div highlight separator class="full-height">
+    <div class="full-height" highlight separator>
       <template v-for="(group, index1) in toolbox">
         <div :key="index1" :icon="group.icon" :label="group.title">
           <div class="toolbox-group">

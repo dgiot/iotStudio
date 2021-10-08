@@ -5,16 +5,16 @@
       <div class="unvisible">
         <el-upload
           ref="upload"
-          class="upload-demo"
-          style="display: none"
           action="https://jsonplaceholder.typicode.com/posts/"
+          :before-remove="beforeRemove"
+          class="upload-demo"
+          :file-list="fileList"
+          :limit="1"
+          multiple
+          :on-exceed="handleExceed"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="1"
-          :on-exceed="handleExceed"
-          :file-list="fileList"
+          style="display: none"
         >
           <el-button size="small" type="primary">点击上传</el-button>
         </el-upload>
@@ -25,11 +25,11 @@
       >
         <el-form
           v-for="(item, key, index) in Shapeconfig.attrs"
-          ref="numberValidateForm"
           :key="index"
+          ref="numberValidateForm"
+          class="demo-ruleForm"
           :disabled="disabledForm"
           label-width="80px"
-          class="demo-ruleForm"
         >
           <el-form-item :label="$translateTitle(`konva.${key}`)">
             <!--            判断不同的数据类型,显示不同的控件-->
@@ -42,8 +42,8 @@
                 v-if="key == 'fill'"
                 slot="append"
                 v-model="Shapeconfig.attrs[key]"
-                size="mini"
                 show-alpha
+                size="mini"
               />
             </el-input>
 
@@ -55,9 +55,9 @@
             <el-switch
               v-if="$loadsh.isBoolean(Shapeconfig.attrs[key])"
               v-model="Shapeconfig.attrs[key]"
-              style="width: 100%"
               :active-text="$translateTitle(`konva.draggable`)"
               :inactive-text="$translateTitle(`konva.undraggable`)"
+              style="width: 100%"
             />
           </el-form-item>
         </el-form>
@@ -123,21 +123,21 @@
       <div class="TopoArom">
         <el-dialog
           :append-to-body="true"
-          :title="wmxSituation + '自定义属性'"
-          :visible.sync="wmxdialogVisible"
           :before-close="wmxhandleClose"
           :close-on-click-modal="false"
-          width="60%"
+          :title="wmxSituation + '自定义属性'"
           top="5vh"
+          :visible.sync="wmxdialogVisible"
+          width="60%"
         >
           <wmxdetail
             ref="sizeForm"
             :size-form1="sizeForm"
             @addDomain="addDomain"
             @removeDomain="removeDomain"
-            @wmxhandleClose="wmxhandleClose"
             @submitForm="submitForm"
             @updataForm="updataForm"
+            @wmxhandleClose="wmxhandleClose"
           />
         </el-dialog>
       </div>

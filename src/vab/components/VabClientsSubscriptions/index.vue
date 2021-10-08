@@ -8,19 +8,19 @@
 
         <el-col class="oper-btn-group" :span="12">
           <el-button
-            size="mini"
-            type="success"
             icon="el-icon-refresh"
             plain
+            size="mini"
+            type="success"
             @click.native="reload"
           >
             {{ $t('oper.refresh') }}
           </el-button>
           <el-button
-            size="mini"
-            type="success"
             icon="el-icon-plus"
             plain
+            size="mini"
+            type="success"
             @click.native="open"
           >
             {{ $t('clients.addSubs') }}
@@ -30,18 +30,18 @@
 
       <el-table
         v-loading="$store.state.loading"
-        class="client-sub-table"
         border
+        class="client-sub-table"
         :data="tableData"
       >
-        <el-table-column prop="topic" :label="$t('subscriptions.topic')" />
-        <el-table-column prop="qos" :label="$t('subscriptions.qoS')" />
-        <el-table-column width="120px" :label="$t('oper.oper')">
+        <el-table-column :label="$t('subscriptions.topic')" prop="topic" />
+        <el-table-column :label="$t('subscriptions.qoS')" prop="qos" />
+        <el-table-column :label="$t('oper.oper')" width="120px">
           <template slot-scope="{ row }">
             <el-button
+              plain
               size="mini"
               type="danger"
-              plain
               @click.native="handleUnsub(row)"
             >
               {{ $t('oper.unsubscribe') }}
@@ -53,42 +53,42 @@
 
     <el-dialog
       :append-to-body="true"
-      :title="$t('clients.addSubs')"
-      width="400px"
-      :visible.sync="addVisible"
       class="create-subscribe"
+      :title="$t('clients.addSubs')"
+      :visible.sync="addVisible"
+      width="400px"
       @keyup.enter.native="handleAdd"
     >
       <el-form
         ref="record"
         class="el-form--public"
+        label-position="top"
         :model="record"
         :rules="rules"
         size="small"
-        label-position="top"
       >
-        <el-form-item prop="topic" :label="$t('subscriptions.topic')">
+        <el-form-item :label="$t('subscriptions.topic')" prop="topic">
           <el-input v-model="record.topic" placeholder="Topic" />
         </el-form-item>
-        <el-form-item prop="qos" label="QoS">
+        <el-form-item label="QoS" prop="qos">
           <vab-emq-select
             v-model="record.qos"
             class="el-select--public"
+            :field="{ list: [0, 1, 2] }"
             popper-class="el-select--public"
             size="small"
-            :field="{ list: [0, 1, 2] }"
           />
         </el-form-item>
       </el-form>
 
       <div slot="footer">
-        <el-button type="text" class="cache-btn" @click.native="handleClose">
+        <el-button class="cache-btn" type="text" @click.native="handleClose">
           {{ $t('oper.cancel') }}
         </el-button>
         <el-button
-          type="success"
           class="confirm-btn"
           :loading="$store.state.loading"
+          type="success"
           @click.native="handleAdd"
         >
           {{ $t('oper.add') }}

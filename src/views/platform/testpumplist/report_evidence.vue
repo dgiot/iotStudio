@@ -30,11 +30,11 @@
           审核列表管理
         </p>
         <el-form
-          :inline="true"
-          :model="formInline"
           class="demo-form-inline"
-          size="small"
+          :inline="true"
           label-width="100px"
+          :model="formInline"
+          size="small"
         >
           <el-form-item label="审核状态">
             <el-select v-model="formInline.region" placeholder="审核状态">
@@ -45,16 +45,16 @@
           <el-form-item label="申请开始时间">
             <el-date-picker
               v-model="formInline.starttime"
-              type="datetime"
               placeholder="请选择日期时间"
+              type="datetime"
               value-format="timestamp"
             />
           </el-form-item>
           <el-form-item label="结束时间">
             <el-date-picker
               v-model="formInline.endtime"
-              type="datetime"
               placeholder="请选择日期时间"
+              type="datetime"
               value-format="timestamp"
             />
           </el-form-item>
@@ -86,106 +86,106 @@
         </el-form>
       </div>
       <el-table :data="tableData" style="width: 100%; text-align: center">
-        <el-table-column type="index" label="序号" align="center" width="50" />
+        <el-table-column align="center" label="序号" type="index" width="50" />
         <el-table-column
-          prop="date"
-          label="检测取证编号"
           align="center"
+          label="检测取证编号"
+          prop="date"
           width="180"
         />
         <el-table-column
-          prop="name"
-          label="委托方"
           align="center"
+          label="委托方"
+          prop="name"
           width="200"
         />
         <el-table-column
-          prop="address"
           align="center"
           label="所属地址"
+          prop="address"
           width="200"
         />
         <el-table-column
-          prop="name"
+          align="center"
           label="委托人联系方式"
-          align="center"
+          prop="name"
           width="200"
         />
         <el-table-column
-          prop="name"
+          align="center"
           label="水泵类型"
-          align="center"
+          prop="name"
           width="200"
         />
         <el-table-column
-          prop="name"
+          align="center"
           label="水泵型号"
-          align="center"
+          prop="name"
           width="200"
         />
         <el-table-column
-          prop="name"
+          align="center"
           label="检测单位"
-          align="center"
+          prop="name"
           width="200"
         />
         <el-table-column
-          prop="name"
+          align="center"
           label="检测标准"
-          align="center"
+          prop="name"
           width="200"
         />
         <el-table-column
-          prop="name"
+          align="center"
           label="检测实验室"
-          align="center"
+          prop="name"
           width="200"
         />
         <el-table-column
-          prop="name"
+          align="center"
           label="检测台体"
-          align="center"
+          prop="name"
           width="200"
         />
         <el-table-column
-          prop="name"
+          align="center"
           label="审核提交时间"
-          align="center"
+          prop="name"
           width="200"
         />
         <el-table-column
-          prop="name"
+          align="center"
           label="审核状态"
-          align="center"
+          prop="name"
           width="200"
         />
         <el-table-column
-          prop="name"
+          align="center"
           label="审核人员"
-          align="center"
+          prop="name"
           width="200"
         />
-        <el-table-column prop="name" label="备注" align="center" width="200" />
+        <el-table-column align="center" label="备注" prop="name" width="200" />
         <el-table-column
-          prop="name"
-          label="检测取证审核"
           align="center"
+          label="检测取证审核"
+          prop="name"
           width="200"
         >
           <template slot-scope="scope">
-            <el-link :underline="false" type="primary" size="small">
+            <el-link size="small" type="primary" :underline="false">
               <svg-icon
                 icon-class="chakan"
                 style="width: 1.5rem; height: 1.5rem"
               />
             </el-link>
-            <el-link :underline="false" type="primary" size="small">
+            <el-link size="small" type="primary" :underline="false">
               <svg-icon
                 icon-class="shenhe"
                 style="width: 1.5rem; height: 1.5rem"
               />
             </el-link>
-            <el-link :underline="false" type="primary" size="small">
+            <el-link size="small" type="primary" :underline="false">
               <svg-icon
                 icon-class="chexiao"
                 style="width: 1.5rem; height: 1.5rem"
@@ -196,13 +196,13 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        :total="400"
-        style="margin-top: 20px"
         layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
+        :page-size="100"
+        :page-sizes="[100, 200, 300, 400]"
+        style="margin-top: 20px"
+        :total="400"
         @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
       />
     </div>
   </div>

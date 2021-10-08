@@ -5,18 +5,18 @@
   >
     <div>
       <el-input v-model="search" style="width: 150px" />
-      <el-button type="primary" size="mini">搜索</el-button>
-      <el-button type="primary" size="mini" @click.native="reset">
+      <el-button size="mini" type="primary">搜索</el-button>
+      <el-button size="mini" type="primary" @click.native="reset">
         重置
       </el-button>
       <el-tree
         ref="tree"
-        :props="defaultProps"
         :expand-on-click-node="false"
         :highlight-current="true"
-        :load="getOrgList"
         lazy
+        :load="getOrgList"
         node-key="objectId"
+        :props="defaultProps"
         style="margin-top: 20px"
         @node-click="handleNodeClick"
       >

@@ -3,9 +3,9 @@
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <el-form
       ref="addchannel"
-      :rules="addrules"
       label-width="auto"
       :model="addchannel"
+      :rules="addrules"
       size="mini"
     >
       <div class="dialog-footer" style="margin: 15px">
@@ -20,15 +20,15 @@
         <el-form-item label="通道类型" prop="region">
           <el-select
             v-model="addchannel.region"
-            style="display: block"
             placeholder="通道类型"
+            style="display: block"
             @change="removeauto"
           >
             <el-option
               v-for="(item, index) in channelregion"
               :key="index"
-              style="display: block"
               :label="item.title.zh"
+              style="display: block"
               :value="item.cType"
             />
           </el-select>
@@ -40,9 +40,9 @@
           >
             <el-input
               v-model="addchannel.name"
-              style="float: left"
-              :placeholder="$translateTitle('developer.channelname')"
               autocomplete="off"
+              :placeholder="$translateTitle('developer.channelname')"
+              style="float: left"
             />
           </el-form-item>
         </el-col>
@@ -55,8 +55,8 @@
             />
             <div v-if="showTree" class="device-tree">
               <el-tree
-                default-expand-all
                 :data="allApps"
+                default-expand-all
                 :props="defaultProps"
                 @node-click="handleNodeClick"
               />
@@ -67,8 +67,8 @@
           <el-form-item
             v-show="item.showname != 'ico'"
             :label="item.title.zh"
-            :required="item.required"
             :prop="item.showname"
+            :required="item.required"
           >
             <el-tooltip effect="dark" placement="right-start">
               <div slot="content">
@@ -93,12 +93,12 @@
             <el-select
               v-else-if="item.type == 'boolean'"
               v-model="addchannel[item.showname]"
-              style="width: 98%"
               class="notauto"
               readonly
+              style="width: 98%"
             >
-              <el-option :value="true" label="是" />
-              <el-option :value="false" label="否" />
+              <el-option label="是" :value="true" />
+              <el-option label="否" :value="false" />
             </el-select>
             <el-select
               v-else-if="item.type == 'enum'"
@@ -119,9 +119,9 @@
           <el-form-item :label="$translateTitle('developer.describe')">
             <el-input
               v-model="addchannel.desc"
-              :rows="3"
-              :placeholder="$translateTitle('developer.describe')"
               autocomplete="off"
+              :placeholder="$translateTitle('developer.describe')"
+              :rows="3"
               type="textarea"
             />
           </el-form-item>
@@ -146,13 +146,13 @@
               style="padding: 10px; margin: 0px; cursor: pointer"
             >
               <el-card
+                class="box-card"
                 :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
+                size="mini"
                 :style="{
                   color:
                     addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                 }"
-                size="mini"
-                class="box-card"
               >
                 <!--                <div slot="header" class="clearfix">-->
                 <!--                  <el-button-->
@@ -172,12 +172,12 @@
                   <el-row :gutter="24">
                     <el-col :span="6">
                       <img
+                        class="image"
                         :src="
                           item.params.ico.default
                             ? item.params.ico.default
                             : 'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/logo/logo.png'
                         "
-                        class="image"
                         style="width: 50px; height: 50px"
                       />
                     </el-col>

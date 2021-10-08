@@ -5,8 +5,8 @@
       <el-select
         v-model="nodeName"
         class="select-radius"
-        :placeholder="$translateTitle('select.placeholder')"
         :disabled="$store.state.loading"
+        :placeholder="$translateTitle('select.placeholder')"
         @change="loadListeners"
       >
         <el-option
@@ -19,24 +19,24 @@
     </div>
     <el-table v-loading="$store.state.loading" border :data="listeners">
       <el-table-column
+        :label="$translateTitle('listeners.protocol')"
         prop="protocol"
         width="240"
-        :label="$translateTitle('listeners.protocol')"
       />
       <el-table-column
-        prop="listen_on"
-        min-width="240"
         :label="$translateTitle('listeners.listenOn')"
+        min-width="240"
+        prop="listen_on"
       />
       <el-table-column
-        prop="max_conns"
-        min-width="180"
         :label="$translateTitle('listeners.maxConnections')"
+        min-width="180"
+        prop="max_conns"
       />
       <el-table-column
-        prop="current_conns"
-        min-width="120"
         :label="$translateTitle('listeners.currentConnections')"
+        min-width="120"
+        prop="current_conns"
       />
     </el-table>
   </div>

@@ -2,13 +2,13 @@
   <!-- 新增校检 -->
   <ele-form-dialog
     v-model="formData"
-    :form-desc="formDesc"
-    :visible="visible"
     :dialog-attrs="{
       'append-to-body': true,
     }"
     :form-btns="formBtns"
+    :form-desc="formDesc"
     title="新增校检规则"
+    :visible="visible"
     @request="handleAddRule"
     @update:visible="toggleDialog"
   />

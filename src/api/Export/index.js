@@ -16,6 +16,7 @@ export async function ExportMenu(params) {
     },
   })
 }
+
 /**
  * @description 导入菜单
  * @param params
@@ -45,6 +46,7 @@ export async function ExportParse(className, params) {
   // })
   const _token = store.getters['user/token']
   console.log('_token', _token)
+  // eslint-disable-next-line no-undef
   return axios
     .post(`iotapi/export_data?classname=${className}`, params, {
       responseType: 'blob',
@@ -56,6 +58,7 @@ export async function ExportParse(className, params) {
     })
     .catch((err) => console.log(err))
 }
+
 /**
  * @description 导入Parse
  * @param params

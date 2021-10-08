@@ -1,8 +1,8 @@
 <template>
   <div
     class="wresize-panel-2"
-    @mouseup="onMouseup($event)"
     @mousemove="onMousemove($event)"
+    @mouseup="onMouseup($event)"
   >
     <template v-if="fixedWidthMode == 'left'">
       <div class="wresize-panel-left" :style="{ width: divLeft.width + 'px' }">

@@ -1,19 +1,19 @@
 <template>
   <el-select
-    :value="rawValue"
     v-bind="$attrs"
     class="emq-select"
+    :value="rawValue"
     v-on="$listeners"
   >
     <slot>
       <el-option
         v-for="(item, i) in options"
         :key="i"
-        :value="item[fieldName.value]"
-        :label="item[fieldName.label]"
         :disabled="isDisabled(item)"
+        :label="item[fieldName.label]"
+        :value="item[fieldName.value]"
       >
-        <slot name="option" :item="item"></slot>
+        <slot :item="item" name="option"></slot>
       </el-option>
     </slot>
   </el-select>

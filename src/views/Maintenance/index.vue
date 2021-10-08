@@ -11,15 +11,15 @@
     <div class="ticker-dialog">
       <el-dialog
         :append-to-body="true"
-        width="100vh"
         :title="detail.name"
         :visible.sync="deviceFlag"
+        width="100vh"
       >
         <change-info
           :detail="detail"
-          :step="step"
-          :show-hard="ishard"
           :show-footer="isfooter"
+          :show-hard="ishard"
+          :step="step"
         />
         <!--        <span slot="footer" class="dialog-footer">-->
         <!--          <el-button @click="deviceFlag = false">-->
@@ -95,9 +95,9 @@
               {{ $translateTitle('Maintenance.search') }}
             </el-button>
             <el-button
+              :disabled="!selectedList.length"
               icon="el-icon-folder-checked"
               type="primary"
-              :disabled="!selectedList.length"
               @click="Export(selectedList)"
             >
               {{ $translateTitle('Maintenance.Export') }}
@@ -115,32 +115,32 @@
     >
       <el-table-column
         align="center"
-        show-overflow-tooltip
         class-name="isCheck"
+        show-overflow-tooltip
         type="selection"
         width="55"
       />
       <el-table-column
-        sortablesortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
         prop="number"
-        width="120"
         show-overflow-tooltip
+        sortablesortable
+        width="120"
       />
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket type')"
         prop="type"
-        width="140"
         show-overflow-tooltip
+        sortable
+        width="140"
       />
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.Ticket status')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           {{ getStatus(row.status) }}
@@ -148,10 +148,10 @@
       </el-table-column>
 
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.project')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.productname ? row.info.productname : '' }}
@@ -159,30 +159,30 @@
       </el-table-column>
 
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.Equipment name')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.devicename ? row.info.devicename : '' }}
         </template>
       </el-table-column>
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.Initiator')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.createdname ? row.info.createdname : '' }}
         </template>
       </el-table-column>
       <el-table-column
-        sortable
         align="center"
         :label="$translateTitle('Maintenance.the starting time')"
         show-overflow-tooltip
+        sortable
       >
         <template #default="{ row }">
           {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
@@ -222,9 +222,9 @@
     </el-table>
     <VabPagination
       v-show="total"
-      :total="total"
-      :page.sync="queryForm.pageNo"
       :limit.sync="queryForm.pageSize"
+      :page.sync="queryForm.pageNo"
+      :total="total"
       @pagination="fetchData"
     />
   </div>

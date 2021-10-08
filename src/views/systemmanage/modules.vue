@@ -3,16 +3,16 @@
   <div class="modules">
     <el-dialog
       :append-to-body="true"
-      :visible.sync="edit_module"
       title="修改物模型"
+      :visible.sync="edit_module"
       width="17%"
     >
       <el-form
         ref="editForm"
+        class="demo-editForm"
+        label-width="100px"
         :model="editForm"
         :rules="rules"
-        label-width="100px"
-        class="demo-editForm"
       >
         <el-form-item label="产品名称" prop="name">
           <el-input v-model="editForm.name" />
@@ -37,16 +37,16 @@
 
     <el-dialog
       :append-to-body="true"
-      :visible.sync="add_module"
       title="新增物模型"
+      :visible.sync="add_module"
       width="17%"
     >
       <el-form
         ref="moduleForm"
+        class="demo-moduleForm"
+        label-width="100px"
         :model="moduleForm"
         :rules="rules"
-        label-width="100px"
-        class="demo-moduleForm"
       >
         <el-form-item label="产品名称" prop="name">
           <el-input v-model="moduleForm.name" />
@@ -72,9 +72,9 @@
       <el-row :gutter="24">
         <el-col :span="20">
           <el-button
+            icon="el-icon-plus"
             size="mini"
             type="primary"
-            icon="el-icon-plus"
             @click="add_module = true"
           >
             新增
@@ -88,9 +88,9 @@
           >
             <el-button
               slot="append"
+              icon="el-icon-search"
               size="mini"
               type="primary"
-              icon="el-icon-search"
               @click="searchModule(searchText)"
             >
               搜索
@@ -108,10 +108,10 @@
               !search || data.name.toLowerCase().includes(search.toLowerCase())
           )
         "
-        max-height="583"
         element-loading-background="rgba(0, 0, 0, 0.5)"
-        element-loading-text="数据正在加载中"
         element-loading-spinner="el-icon-loading"
+        element-loading-text="数据正在加载中"
+        max-height="583"
         style="width: 100%; min-height: 583px"
       >
         <el-table-column label="objectId" prop="objectId" />
@@ -130,8 +130,8 @@
           <template slot="header" slot-scope="scope">
             <el-input
               v-model="search"
-              size="mini"
               placeholder="输入关键字搜索"
+              size="mini"
             />
           </template>
           <template slot-scope="scope">
@@ -152,12 +152,12 @@
     <footer>
       <el-pagination
         :current-page="currentPage"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="10"
-        :total="pageTotal"
         layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
+        :page-size="10"
+        :page-sizes="[10, 20, 50, 100]"
+        :total="pageTotal"
         @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
       />
     </footer>
     Parse

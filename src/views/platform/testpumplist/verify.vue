@@ -41,8 +41,8 @@
     </div>
 
     <!-- type="flex"  -->
-    <div :style="evidenceCSS" class="evidence-box">
-      <el-row :gutter="20" class="info-box-item" type="flex" align="middle">
+    <div class="evidence-box" :style="evidenceCSS">
+      <el-row align="middle" class="info-box-item" :gutter="20" type="flex">
         <!-- 音频 -->
         <el-col :span="2">
           <i class="el-icon-microphone" />
@@ -76,21 +76,21 @@
         </el-col>
       </el-row>
 
-      <el-row :gutter="20" class="info-box-item large" align="middle">
+      <el-row align="middle" class="info-box-item large" :gutter="20">
         <!-- 视频 -->
         <el-col :span="10">
           <div
-            :style="mediaBoxCss"
-            :class="{ isplay: currentVideoUrl }"
             class="media-box"
+            :class="{ isplay: currentVideoUrl }"
+            :style="mediaBoxCss"
           >
             <video
               v-if="currentVideoUrl"
-              :style="mediaBoxCss"
-              :src="fileDomain + currentVideoUrl"
-              controls="controls"
-              type="video/mp4"
               autoplay="autoplay"
+              controls="controls"
+              :src="fileDomain + currentVideoUrl"
+              :style="mediaBoxCss"
+              type="video/mp4"
             />
             <p>&nbsp;</p>
           </div>
@@ -134,15 +134,15 @@
         <el-col :span="10">
           <!-- <el-col :span="18"> -->
           <div
-            :style="mediaBoxCss"
-            :class="{ isplay: currentImageUrl }"
             class="media-box"
+            :class="{ isplay: currentImageUrl }"
+            :style="mediaBoxCss"
           >
             <!-- style="width: 100%; height: 100%" -->
             <img
               v-if="currentImageUrl"
-              :style="mediaBoxCss"
               :src="fileDomain + currentImageUrl"
+              :style="mediaBoxCss"
             />
           </div>
           <!--        </el-col>
@@ -159,8 +159,8 @@
             <p style="font-size: 32px; text-align: center">
               <el-tooltip
                 class="item"
-                effect="dark"
                 content="点击查看文件"
+                effect="dark"
                 placement="top-start"
               >
                 <el-button @click="pdfDialogVisible = true">
@@ -186,16 +186,16 @@
 
     <el-dialog
       :append-to-body="true"
-      :visible.sync="pdfDialogVisible"
       title="取证文件查看"
+      :visible.sync="pdfDialogVisible"
       width="60%"
     >
       <div class="pdf-box">
         <iframe
           v-if="currentFileUrl"
+          frameborder="0"
           :src="fileDomain + currentFileUrl"
           style="width: 100%; min-height: 500px"
-          frameborder="0"
         />
 
         <p v-show="!currentFileUrl" style="font-size: 20px; text-align: center">
@@ -212,17 +212,17 @@
 
     <el-dialog
       :append-to-body="true"
-      :visible.sync="curveDialogVisible"
       :close-on-click-modal="false"
       title="性能曲线"
+      :visible.sync="curveDialogVisible"
       width="70%"
     >
       <PerformanceCurveNew ref="PerformanceCurveNew" />
 
       <span slot="footer" class="dialog-footer">
         <el-button
-          type="primary"
           size="small"
+          type="primary"
           @click="curveDialogVisible = false"
         >
           确 定

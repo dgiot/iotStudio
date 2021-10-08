@@ -8,13 +8,13 @@
       <a-col :span="4">
         <div class="dgiot-doc-tree">
           <a-tree
-            :show-icon="true"
-            :block-node="true"
-            :show-line="true"
-            :default-expand-all="true"
             :auto-expand-parent="true"
+            :block-node="true"
+            :default-expand-all="true"
             :default-expanded-keys="selectedKeys"
             :default-selected-keys="selectedKeys"
+            :show-icon="true"
+            :show-line="true"
             :tree-data="docDetails"
             @click="onSelect"
           >

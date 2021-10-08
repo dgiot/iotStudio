@@ -8,9 +8,9 @@
         <el-form
           ref="form"
           class="create-ticker"
+          label-width="auto"
           :model="form"
           size="medium "
-          label-width="auto"
         >
           <el-row :gutter="24">
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
@@ -50,15 +50,15 @@
               <el-form-item
                 :label="$translateTitle('Maintenance.photo') + ': '"
               >
-                <el-carousel :interval="2000" type="card" height="200px">
+                <el-carousel height="200px" :interval="2000" type="card">
                   <el-carousel-item
                     v-for="(item, index) in form.info.photo"
                     :key="index"
                   >
                     <img
+                      :alt="item"
                       :src="item"
                       style="width: 100%; height: 100%"
-                      :alt="item"
                       :title="item"
                     />
                   </el-carousel-item>
@@ -74,12 +74,12 @@
               >
                 <el-input
                   v-model="form.info.step2.Remarks"
-                  type="textarea"
                   :placeholder="
                     $translateTitle(
                       'Maintenance.Please record the processing content in detail!'
                     )
                   "
+                  type="textarea"
                 />
               </el-form-item>
             </el-col>
@@ -87,9 +87,9 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane
-        style="height: 90%; overflow-x: hidden; overflow-y: auto"
         :label="$translateTitle('Maintenance.work process')"
         name="second"
+        style="height: 90%; overflow-x: hidden; overflow-y: auto"
       >
         <el-card shadow="hover">
           <template #header>
@@ -107,8 +107,8 @@
             <el-timeline-item
               v-for="item in form.info.timeline"
               :key="item.timestamp"
-              :timestamp="item.timestamp"
               placement="top"
+              :timestamp="item.timestamp"
             >
               <el-card>
                 <h4>{{ item.h4 }}</h4>

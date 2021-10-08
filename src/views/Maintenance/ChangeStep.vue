@@ -2,9 +2,9 @@
   <div v-if="detail" class="changeInfo">
     <el-row
       v-show="showHard == true"
-      type="flex"
       class="row-bg"
       justify="space-around"
+      type="flex"
     >
       <el-col :span="6">
         <div class="grid-content bg-purple">
@@ -26,10 +26,10 @@
     </el-row>
     <el-steps
       v-show="showHard == true"
-      class="steps"
       :active="step"
-      simple
+      class="steps"
       finish-status="success"
+      simple
     >
       <el-step :title="$translateTitle('Maintenance.To be assigned')" />
       <el-step :title="$translateTitle('Maintenance.Assigned')" />
@@ -40,27 +40,27 @@
       v-if="step === 1"
       ref="step1"
       :detail="detail"
-      :step="step"
-      :show-hard="showHard"
       :show-footer="showFooter"
+      :show-hard="showHard"
+      :step="step"
       @change-step="handleSetStep"
     />
     <step2
       v-if="step === 2"
       ref="step2"
       :detail="detail"
-      :step="step"
-      show-hard="showHard"
       :show-footer="showFooter"
+      show-hard="showHard"
+      :step="step"
       @change-step="handleSetStep"
     />
     <step3
       v-if="step === 3"
       ref="step3"
       :detail="detail"
-      :step="step"
-      show-hard="showHard"
       :show-footer="showFooter"
+      show-hard="showHard"
+      :step="step"
       @change-step="handleSetStep"
     />
     <Step4

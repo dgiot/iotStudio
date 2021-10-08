@@ -29,8 +29,8 @@
               v-for="(animate, index) in item.children"
               :key="index"
               class="animate"
-              @mouseover="hoverPreviewAnimate = animate.value"
               @click="addAnimation(animate)"
+              @mouseover="hoverPreviewAnimate = animate.value"
             >
               <div
                 :class="[

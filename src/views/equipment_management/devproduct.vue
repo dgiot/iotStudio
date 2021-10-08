@@ -11,9 +11,9 @@
       >
         <div class="prosecond">
           <el-form
+            class="demo-form-inline"
             :inline="true"
             :model="formInline"
-            class="demo-form-inline"
             size="small"
           >
             <el-form-item>
@@ -53,7 +53,7 @@
           </el-form>
           <div class="protable">
             <el-table :data="proTableData" style="width: 100%">
-              <el-table-column prop="objectId" label="ProductID" />
+              <el-table-column label="ProductID" prop="objectId" />
               <el-table-column :label="$translateTitle('product.productname')">
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>
@@ -92,9 +92,9 @@
               >
                 <template slot-scope="scope">
                   <el-link
-                    :underline="false"
-                    type="primary"
                     icon="el-icon-view"
+                    type="primary"
+                    :underline="false"
                     @click="deviceToDetail(scope.row)"
                   >
                     <!-- 配置 -->
@@ -119,8 +119,8 @@
                         {{ $translateTitle('developer.cancel') }}
                       </el-button>
                       <el-button
-                        type="primary"
                         size="mini"
+                        type="primary"
                         @click="makeSure(scope)"
                       >
                         {{ $translateTitle('developer.determine') }}
@@ -128,34 +128,34 @@
                     </div>
                     <el-link
                       slot="reference"
-                      :underline="false"
                       icon="el-icon-delete"
                       type="danger"
+                      :underline="false"
                     >
                       {{ $translateTitle('developer.delete') }}
                     </el-link>
                   </el-popover>
                   <el-link
-                    :underline="false"
                     icon="el-icon-attract"
                     type="primary"
+                    :underline="false"
                     @click="GoTodevices(scope.row)"
                   >
                     {{ $translateTitle('product.equipment') }}
                   </el-link>
                   <el-link
-                    :underline="false"
                     icon="el-icon-edit"
                     type="success"
+                    :underline="false"
                     @click="editorProduct(scope.row)"
                   >
                     <!-- 编辑 -->
                     {{ $translateTitle('concentrator.edit') }}
                   </el-link>
                   <el-link
-                    :underline="false"
                     icon="el-icon-s-promotion"
                     type="primary"
+                    :underline="false"
                     @click="proudctView(scope.row)"
                   >
                     <!-- 运行组态 -->
@@ -167,12 +167,12 @@
           </div>
           <div class="elpagination" style="margin-top: 20px">
             <el-pagination
-              :page-sizes="[10, 20, 30, 50]"
-              :page-size="length"
-              :total="total"
               layout="total, sizes, prev, pager, next, jumper"
-              @size-change="productSizeChange"
+              :page-size="length"
+              :page-sizes="[10, 20, 30, 50]"
+              :total="total"
               @current-change="productCurrentChange"
+              @size-change="productSizeChange"
             />
           </div>
         </div>
@@ -182,12 +182,12 @@
       <!-- 创建产品对话框 ###-->
       <el-dialog
         :append-to-body="true"
-        :title="$translateTitle('product.createproduct')"
-        :visible.sync="dialogFormVisible"
-        :close-on-click-modal="false"
         :before-close="handleClose"
-        width="40%"
+        :close-on-click-modal="false"
+        :title="$translateTitle('product.createproduct')"
         top="5vh"
+        :visible.sync="dialogFormVisible"
+        width="40%"
       >
         <div class="content">
           <!--产品信息-->
@@ -245,6 +245,7 @@
                 label="所属应用"
               > -->
               <el-form-item
+                :label="$translateTitle('application.applicationtype')"
                 :rules="[
                   {
                     required: true,
@@ -252,7 +253,6 @@
                     trigger: 'blur',
                   },
                 ]"
-                :label="$translateTitle('application.applicationtype')"
               >
                 <el-select
                   v-model="form.relationApp"
@@ -340,14 +340,14 @@
                     v-for="(item, index) in channel"
                     :key="index"
                     :label="index + 1 + ':' + item.label"
-                    :value="item.value"
                     :title="'当前第' + (index + 1) + '项'"
+                    :value="item.value"
                   />
                 </el-select>
               </el-form-item>
               <!-- <el-form-item label="产品模型"> -->
               <el-form-item :label="$translateTitle('developer.productmodel')">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <img v-if="imageUrl" class="avatar" :src="imageUrl" />
                 <i
                   v-else
                   v-loading="loading"
@@ -355,12 +355,11 @@
                 />
                 <form
                   ref="uploadform"
-                  method="POST"
                   enctype="multipart/form-data"
+                  method="POST"
                   style="position: absolute"
                 >
                   <input
-                    type="file"
                     style="
                       position: relative;
                       top: -100px;
@@ -370,14 +369,15 @@
                       cursor: pointer;
                       opacity: 0;
                     "
+                    type="file"
                     @change="upload($event)"
                   />
                 </form>
                 <el-button
                   v-if="imageUrl"
-                  type="danger"
                   size="mini"
                   style="vertical-align: text-bottom"
+                  type="danger"
                   @click="deleteImgsrc"
                 >
                   <!-- 删除 -->
@@ -410,8 +410,8 @@
   :append-to-body="true" :visible.sync="importDialogShow" title="导入产品" width="25%"> -->
       <el-dialog
         :append-to-body="true"
-        :visible.sync="importDialogShow"
         :title="$translateTitle('product.importpro')"
+        :visible.sync="importDialogShow"
         width="25%"
       >
         <el-form ref="uploadProForm" :model="formPro">
@@ -425,17 +425,17 @@
           -->
           <el-upload
             ref="fileUpload"
-            :action="uploadAction"
-            :data="uploadData"
-            :headers="uploadHeaders"
-            :file-list="fileList"
-            :on-change="handleChange"
-            :with-credentials="true"
-            :auto-upload="false"
-            :on-success="handleUploadSuccess"
-            :on-error="handleUploadError"
-            class="upload-demo"
             accept=".xls, .xlsx, .zip"
+            :action="uploadAction"
+            :auto-upload="false"
+            class="upload-demo"
+            :data="uploadData"
+            :file-list="fileList"
+            :headers="uploadHeaders"
+            :on-change="handleChange"
+            :on-error="handleUploadError"
+            :on-success="handleUploadSuccess"
+            :with-credentials="true"
           >
             <el-button slot="trigger" size="small" type="primary">
               <!-- 选择文件 -->
@@ -447,8 +447,8 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button
-            size="small"
             class="btn-left"
+            size="small"
             type="primary"
             @click="submitUpload"
           >
@@ -457,8 +457,8 @@
           </el-button>
 
           <el-button
-            size="small"
             class="btn-right"
+            size="small"
             @click="importDialogShow = false"
           >
             <!-- 取消 -->

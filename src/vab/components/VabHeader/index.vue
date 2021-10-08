@@ -12,9 +12,9 @@
               :active-text-color="variables['menu-color-active']"
               :background-color="variables['menu-background']"
               :default-active="activeMenu"
-              :text-color="variables['menu-color']"
               menu-trigger="hover"
               mode="horizontal"
+              :text-color="variables['menu-color']"
             >
               <template v-for="route in handleRoutes">
                 <vab-menu

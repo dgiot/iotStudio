@@ -15,7 +15,7 @@
         :label="$translateTitle('category.sort')"
         prop="order"
       >
-        <el-input-number v-model="form.order" style="width: 100%" :min="0" />
+        <el-input-number v-model="form.order" :min="0" style="width: 100%" />
       </el-form-item>
     </el-form>
     <template #footer>

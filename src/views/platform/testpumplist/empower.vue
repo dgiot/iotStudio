@@ -1,9 +1,9 @@
 <template>
   <div class="empower">
     <el-steps :active="allactive" simple>
-      <el-step title="填写认证信息" icon="el-icon-edit" />
-      <el-step title="填写实验室信息" icon="el-icon-upload" />
-      <el-step title="审核结果" icon="el-icon-picture" />
+      <el-step icon="el-icon-edit" title="填写认证信息" />
+      <el-step icon="el-icon-upload" title="填写实验室信息" />
+      <el-step icon="el-icon-picture" title="审核结果" />
     </el-steps>
 
     <!--认证企业新增-->
@@ -12,9 +12,9 @@
         <el-card shadow="always">
           <el-form
             ref="formrules"
+            label-width="140px"
             :model="enterpriseForm"
             :rules="formrules"
-            label-width="140px"
           >
             <el-row>
               <!--左边表单-->
@@ -42,18 +42,17 @@
                     <el-col :span="11">
                       <img
                         v-if="enterpriseForm.frontimageUrl"
-                        :src="fileDomain + enterpriseForm.frontimageUrl"
                         class="avatar"
+                        :src="fileDomain + enterpriseForm.frontimageUrl"
                       />
                       <i v-else class="el-icon-plus avatar-uploader-icon" />
                       <form
                         ref="uploadform"
-                        method="POST"
                         enctype="multipart/form-data"
+                        method="POST"
                         style="position: absolute"
                       >
                         <input
-                          type="file"
                           style="
                             position: relative;
                             top: -200px;
@@ -63,6 +62,7 @@
                             cursor: pointer;
                             opacity: 0;
                           "
+                          type="file"
                           @change="upload($event, 'front')"
                         />
                       </form>
@@ -81,34 +81,33 @@
                       <el-button
                         v-show="enterpriseForm.frontimageUrl != ''"
                         size="small"
-                        type="danger"
                         style="
                           position: absolute;
                           top: 150px;
                           left: 200px;
                           margin-left: 0;
                         "
+                        type="danger"
                         @click="enterpriseForm.frontimageUrl = ''"
                       >
                         删除
                       </el-button>
                     </el-col>
-                    <el-col :span="2" class="line">-</el-col>
+                    <el-col class="line" :span="2">-</el-col>
                     <el-col :span="11" style="position: relative">
                       <img
                         v-if="enterpriseForm.contraryimageUrl"
-                        :src="fileDomain + enterpriseForm.contraryimageUrl"
                         class="avatar"
+                        :src="fileDomain + enterpriseForm.contraryimageUrl"
                       />
                       <i v-else class="el-icon-plus avatar-uploader-icon" />
                       <form
                         ref="uploadform"
-                        method="POST"
                         enctype="multipart/form-data"
+                        method="POST"
                         style="position: absolute"
                       >
                         <input
-                          type="file"
                           style="
                             position: relative;
                             top: -200px;
@@ -118,6 +117,7 @@
                             cursor: pointer;
                             opacity: 0;
                           "
+                          type="file"
                           @change="upload($event, 'contrary')"
                         />
                       </form>
@@ -137,13 +137,13 @@
                       <el-button
                         v-show="enterpriseForm.contraryimageUrl != ''"
                         size="small"
-                        type="danger"
                         style="
                           position: absolute;
                           top: 150px;
                           left: 190px;
                           margin-left: 0;
                         "
+                        type="danger"
                         @click="enterpriseForm.contraryimageUrl = ''"
                       >
                         删除
@@ -181,11 +181,11 @@
                   <el-form-item label="企业描述">
                     <el-input
                       v-model="enterpriseForm.businessdesc"
-                      :rows="4"
-                      type="textarea"
-                      placeholder="请输入企业描述信息"
                       maxlength="300"
+                      placeholder="请输入企业描述信息"
+                      :rows="4"
                       show-word-limit
+                      type="textarea"
                     />
                   </el-form-item>
                 </div>
@@ -216,8 +216,8 @@
                   <el-form-item label="企业营业执照" required>
                     <img
                       v-if="enterpriseForm.businesslicense"
-                      :src="fileDomain + enterpriseForm.businesslicense"
                       class="avatar"
+                      :src="fileDomain + enterpriseForm.businesslicense"
                     />
                     <i
                       v-else
@@ -226,12 +226,11 @@
                     />
                     <form
                       ref="uploadform"
-                      method="POST"
                       enctype="multipart/form-data"
+                      method="POST"
                       style="position: absolute"
                     >
                       <input
-                        type="file"
                         style="
                           position: relative;
                           top: -200px;
@@ -241,6 +240,7 @@
                           cursor: pointer;
                           opacity: 0;
                         "
+                        type="file"
                         @change="upload($event, 'business')"
                       />
                     </form>
@@ -259,13 +259,13 @@
                     <el-button
                       v-show="enterpriseForm.businesslicense != ''"
                       size="small"
-                      type="danger"
                       style="
                         position: absolute;
                         top: 150px;
                         left: 200px;
                         margin-left: 0;
                       "
+                      type="danger"
                       @click="enterpriseForm.businesslicense = ''"
                     >
                       删除
@@ -293,11 +293,11 @@
                   <el-form-item label="经营范围" prop="businessscope">
                     <el-input
                       v-model="enterpriseForm.businessscope"
-                      :rows="4"
-                      type="textarea"
-                      placeholder="请输入企业经营范围信息"
                       maxlength="300"
+                      placeholder="请输入企业经营范围信息"
+                      :rows="4"
                       show-word-limit
+                      type="textarea"
                     />
                   </el-form-item>
                 </div>
@@ -305,7 +305,7 @@
             </el-row>
           </el-form>
           <div style="text-align: center">
-            <el-button type="primary" style="margin-top: 12px" @click="next(2)">
+            <el-button style="margin-top: 12px" type="primary" @click="next(2)">
               下一步
             </el-button>
             <el-button type="info">取消</el-button>
@@ -357,13 +357,13 @@
                 提交更新
               </el-button>
 
-              <el-button type="info" plain @click="allactive = 1">
+              <el-button plain type="info" @click="allactive = 1">
                 上一步
               </el-button>
               <el-button
                 v-show="phase == 2"
-                type="info"
                 plain
+                type="info"
                 @click="allactive = 3"
               >
                 审核结果
@@ -412,7 +412,7 @@
           预计3到5个工作日完成，请耐心等待，谢谢您的配合和理解
         </p>
         <p>
-          <el-button type="info" plain @click="allactive = 2">返回</el-button>
+          <el-button plain type="info" @click="allactive = 2">返回</el-button>
 
           <!--     <el-button type="primary" @click.native="cancelAdd">
             填写新的企业资质
@@ -424,18 +424,18 @@
     <!--其他资质弹窗-->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogVisible"
       :before-close="handleClose"
       title="其他资质添加"
+      :visible.sync="dialogVisible"
       width="60%"
     >
       <div class="dialogform">
         <el-form
           ref="addotherform"
+          class="demo-addotherform"
+          label-width="120px"
           :model="addotherform"
           :rules="otheformrule"
-          label-width="120px"
-          class="demo-addotherform"
         >
           <el-row>
             <p
@@ -456,27 +456,27 @@
                 <el-form-item label="签发日期" prop="dateOfIssue">
                   <el-date-picker
                     v-model="addotherform.dateOfIssue"
-                    type="date"
                     placeholder="选择签发日期"
-                    value-format="timestamp"
                     style="width: 100%"
+                    type="date"
+                    value-format="timestamp"
                   />
                 </el-form-item>
                 <el-form-item label="初次认可" prop="initialRecognition">
                   <el-date-picker
                     v-model="addotherform.initialRecognition"
-                    type="date"
                     placeholder="选择签发日期"
-                    value-format="timestamp"
                     style="width: 100%"
+                    type="date"
+                    value-format="timestamp"
                   />
                 </el-form-item>
                 <el-form-item label="资质内容">
                   <el-input
                     v-model="addotherform.desc"
+                    placeholder="请输入证书资质信息"
                     :rows="8"
                     type="textarea"
-                    placeholder="请输入证书资质信息"
                   />
                 </el-form-item>
               </div>
@@ -489,19 +489,19 @@
                 <el-form-item label="有效期至" prop="termOfValidity">
                   <el-date-picker
                     v-model="addotherform.termOfValidity"
-                    type="date"
                     placeholder="选择有效期至"
-                    value-format="timestamp"
                     style="width: 100%"
+                    type="date"
+                    value-format="timestamp"
                   />
                 </el-form-item>
                 <el-form-item label="更新时间" prop="updatedDate">
                   <el-date-picker
                     v-model="addotherform.updatedDate"
-                    type="date"
                     placeholder="选择签发更新时间"
-                    value-format="timestamp"
                     style="width: 100%"
+                    type="date"
+                    value-format="timestamp"
                   />
                 </el-form-item>
                 <el-form-item label="证书电子文件" required>
@@ -509,14 +509,14 @@
                   :before-upload="beforeAvatarUploadOther"-->
 
                   <el-upload
-                    :show-file-list="false"
-                    class="avatar-uploader"
                     action="/iotapi/upload"
+                    class="avatar-uploader"
+                    :show-file-list="false"
                   >
                     <img
                       v-if="addotherform.imgsrc"
-                      :src="fileDomain + addotherform.imgsrc"
                       class="avatar"
+                      :src="fileDomain + addotherform.imgsrc"
                     />
                     <i v-else class="el-icon-plus avatar-uploader-icon" />
                     <div
@@ -534,13 +534,13 @@
                   <el-button
                     v-show="addotherform.imgsrc != ''"
                     size="small"
-                    type="danger"
                     style="
                       position: absolute;
                       top: 150px;
                       left: 200px;
                       margin-left: 0;
                     "
+                    type="danger"
                     @click="addotherform.imgsrc = ''"
                   >
                     删除

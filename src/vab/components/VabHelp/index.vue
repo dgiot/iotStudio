@@ -2,14 +2,14 @@
   <div
     :key="src"
     ref="custom-table"
-    :class="{ 'vab-fullscreen': isFullscreen }"
     class="VabHelp"
+    :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <el-popover
       v-model="visible"
       :placement="fatherPlacement"
-      :width="width"
       :trigger="trigger"
+      :width="width"
     >
       <el-tooltip slot="reference" :placement="childPlacement">
         <div slot="content">
@@ -17,9 +17,9 @@
           <br />
           {{ $translateTitle('alert.For details, please refer to') }}
           <a-popconfirm
-            :placement="fatherPlacement"
-            :ok-text="okText ? okText : setOkText"
             :cancel-text="cancelText ? cancelText : setCancelText"
+            :ok-text="okText ? okText : setOkText"
+            :placement="fatherPlacement"
           >
             <!--            <vab-icon-->
             <!--              slot="icon"-->
@@ -29,10 +29,10 @@
             <!--            />-->
             <template slot="title">
               <iframe
-                :height="isFullscreen ? '100vh' : height"
-                :width="isFullscreen ? '100vh' : width"
-                :src="src"
                 frameborder="0"
+                :height="isFullscreen ? '100vh' : height"
+                :src="src"
+                :width="isFullscreen ? '100vh' : width"
               ></iframe>
             </template>
             <el-link type="primary">
@@ -40,7 +40,7 @@
             </el-link>
           </a-popconfirm>
         </div>
-        <el-button icon="el-icon-question" circle />
+        <el-button circle icon="el-icon-question" />
       </el-tooltip>
     </el-popover>
   </div>

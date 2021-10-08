@@ -3,33 +3,33 @@
     <div class="_dialog">
       <el-dialog
         :append-to-body="true"
+        class="_shape"
         :visible.sync="ShapeVisible"
         width="100vh"
-        class="_shape"
       >
         <span v-if="tabsName == 'ShapeJson'" slot="footer"></span>
       </el-dialog>
     </div>
     <div
+      class="_header"
       :style="{
         display: headevisible ? 'block' : 'none',
       }"
-      class="_header"
     >
       <topo-header
         ref="topoheader"
-        :productid="productid"
         :drawerflag="drawer"
+        :productid="productid"
         :stop-mqtt="stop_Mqtt"
         :value="value"
+        @ImageTable="ImageTable"
         @messageData="set_mqttflag"
         @removeShape="removeShape"
-        @ImageTable="ImageTable"
         @uploadFinish="uploadFinishs"
       />
     </div>
     <div class="_mian">
-      <el-row :gutter="gutter" class="_row">
+      <el-row class="_row" :gutter="gutter">
         <transition name="fade">
           <el-col v-show="showTable" :span="leftrow">
             <div class="_left">
@@ -37,33 +37,33 @@
             </div>
           </el-col>
         </transition>
-        <el-col :span="24 - rightrow" class="_konvarow">
+        <el-col class="_konvarow" :span="24 - rightrow">
           <!--          <topo-base ref="topobase" />-->
           <div id="konva" ref="konva" :class="konvaClass"></div>
 
           <div
             v-show="!isDevice && productid"
+            class="_info"
             :style="{
               display: infoFlag ? 'block' : 'block',
             }"
-            class="_info"
           >
             <el-row :gutter="10" style="text-align: center">
               <el-col :span="24">
                 <el-button
-                  type="success"
-                  plain
                   :disabled="productid.length < 1"
                   icon="el-icon-s-management"
+                  plain
+                  type="success"
                   @click="regulate('save')"
                 >
                   {{ $translateTitle('konva.save') }}
                 </el-button>
 
                 <el-button
-                  type="success"
                   icon="el-icon-arrow-up"
                   plain
+                  type="success"
                   @click="regulate('top')"
                 >
                   {{
@@ -74,9 +74,9 @@
                 </el-button>
 
                 <el-button
-                  type="success"
                   icon="el-icon-arrow-right"
                   plain
+                  type="success"
                   @click="regulate('right')"
                 >
                   {{
@@ -105,10 +105,10 @@
         <el-col :span="rightrow">
           <topo-operation
             ref="operation"
+            @clearImg="clearImg"
+            @handleCloseSub="handleCloseSub"
             @upImg="upProduct"
             @upconfig="saveKonvaitem"
-            @handleCloseSub="handleCloseSub"
-            @clearImg="clearImg"
           />
         </el-col>
       </el-row>

@@ -3,9 +3,9 @@
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="firsttable">
       <el-form
+        class="demo-form-inline"
         :inline="true"
         :model="channelformsearch"
-        class="demo-form-inline"
         size="small"
       >
         <el-form-item>
@@ -29,38 +29,38 @@
       <el-table
         ref="tableRef"
         v-loading="listLoading"
-        row-key="objectId"
-        :header-cell-style="{ 'text-align': 'center' }"
         :cell-style="{ 'text-align': 'center' }"
         :data="tableData"
+        :header-cell-style="{ 'text-align': 'center' }"
         :height="height"
         :row-class-name="getChannelEnable"
+        row-key="objectId"
         style="width: 100%"
       >
         <el-table-column
-          sortable
+          :label="$translateTitle('developer.channelnumber')"
           prop="objectId"
           show-overflow-tooltip
+          sortable
           width="150"
-          :label="$translateTitle('developer.channelnumber')"
         />
         <el-table-column
-          prop="name"
-          sortable
-          show-overflow-tooltip
-          width="160"
           :label="$translateTitle('developer.channelname')"
+          prop="name"
+          show-overflow-tooltip
+          sortable
+          width="160"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          sortable
+          :label="$translateTitle('developer.channeltype')"
           prop="type"
           show-overflow-tooltip
+          sortable
           width="180"
-          :label="$translateTitle('developer.channeltype')"
         >
           <template slot-scope="scope">
             <span v-if="scope.row.type == 1">
@@ -76,11 +76,11 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="cType"
-          sortable
-          show-overflow-tooltip
-          width="140"
           :label="$translateTitle('websocket.port')"
+          prop="cType"
+          show-overflow-tooltip
+          sortable
+          width="140"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.config.port }}</span>
@@ -88,11 +88,11 @@
         </el-table-column>
 
         <el-table-column
-          prop="cType"
-          sortable
-          show-overflow-tooltip
-          width="140"
           :label="$translateTitle('developer.servicetype')"
+          prop="cType"
+          show-overflow-tooltip
+          sortable
+          width="140"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.cType }}</span>
@@ -100,11 +100,11 @@
         </el-table-column>
 
         <el-table-column
-          sortable
-          show-overflow-tooltip
-          width="100"
-          prop="status"
           :label="$translateTitle('developer.channelstatus')"
+          prop="status"
+          show-overflow-tooltip
+          sortable
+          width="100"
         >
           <template slot-scope="scope">
             <span v-if="scope.row.status == 'ONLINE'" style="color: green">
@@ -129,15 +129,15 @@
         <!--          </template>-->
         <!--        </el-table-column>-->
         <el-table-column
-          width="120"
-          show-overflow-tooltip
-          prop="isEnable"
-          sortable
           :label="
             $translateTitle('developer.enable') +
             '/' +
             $translateTitle('developer.disable')
           "
+          prop="isEnable"
+          show-overflow-tooltip
+          sortable
+          width="120"
         >
           <template slot-scope="scope">
             <el-tooltip
@@ -158,14 +158,14 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="desc"
-          sortable
-          show-overflow-tooltip
           :label="$translateTitle('developer.describe')"
+          prop="desc"
+          show-overflow-tooltip
+          sortable
         />
         <el-table-column
-          :label="$translateTitle('developer.operation')"
           fixed="right"
+          :label="$translateTitle('developer.operation')"
           width="240"
         >
           <template slot-scope="scope">
@@ -178,14 +178,13 @@
                 <el-button slot="reference" :disabled="scope.row.attributes.status=='OFFLINE'">hover 激活</el-button>
               </el-popover> -->
             <el-tooltip
-              :disabled="scope.row.status != 'OFFLINE'"
               class="item"
-              effect="dark"
               content="请先启用通道"
+              :disabled="scope.row.status != 'OFFLINE'"
+              effect="dark"
               placement="top"
             >
               <el-button
-                type="primary"
                 size="mini"
                 style="
                   position: absolute;
@@ -193,13 +192,14 @@
                   height: 10px;
                   opacity: 0;
                 "
+                type="primary"
                 @click="subProTopic(scope.row)"
               />
             </el-tooltip>
             <el-button
               :disabled="scope.row.status == 'OFFLINE'"
-              type="info"
               size="mini"
+              type="info"
               @click="subProTopic(scope.row)"
             >
               <!-- 订阅日志 -->
@@ -207,8 +207,8 @@
             </el-button>
             <el-button
               slot="reference"
-              type="primary"
               size="mini"
+              type="primary"
               @click="editorChannel(scope.row)"
             >
               <!-- 编辑 -->
@@ -225,8 +225,8 @@
             <el-popover
               :ref="`popover-${scope.$index}`"
               placement="top"
-              width="300"
               style="margin-left: 10px"
+              width="300"
             >
               <!-- <p>确定删除这个{{ scope.row.name }}通道吗？</p> -->
               <p>
@@ -251,7 +251,7 @@
                   {{ $translateTitle('developer.determine') }}
                 </el-button>
               </div>
-              <el-button slot="reference" type="danger" size="mini">
+              <el-button slot="reference" size="mini" type="danger">
                 {{ $translateTitle('developer.delete') }}
               </el-button>
             </el-popover>
@@ -269,29 +269,29 @@
       <div class="elpagination">
         <el-pagination
           :key="length + 'key' + total"
-          :page-sizes="[5, 10, 20, 30, 50]"
-          :page-size="length"
-          :total="total"
           layout="total, sizes, prev, pager, next, jumper"
-          @size-change="channelSizeChange"
+          :page-size="length"
+          :page-sizes="[5, 10, 20, 30, 50]"
+          :total="total"
           @current-change="channelCurrentChange"
+          @size-change="channelSizeChange"
         />
       </div>
     </div>
     <!--弹窗--->
     <el-dialog
       :append-to-body="true"
-      :title="channelupdated + '通道'"
-      :visible.sync="channelForm"
       :before-close="handleClose"
-      width="50%"
+      :title="channelupdated + '通道'"
       top="10vh"
+      :visible.sync="channelForm"
+      width="50%"
     >
       <el-form
         ref="addchannel"
+        label-width="auto"
         :model="addchannel"
         :rules="addrules"
-        label-width="auto"
       >
         <el-form-item
           :label="$translateTitle('developer.channeltype')"
@@ -335,22 +335,22 @@
               <el-card
                 v-if="item.params.ico && item.params.ico.default"
                 v-show="addchannel.region == item.cType"
+                class="box-card"
                 :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
+                size="mini"
                 :style="{
                   display: addchannel.region == item.cType ? 'block' : 'none',
                   color:
                     addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                 }"
-                size="mini"
-                class="box-card"
               >
                 <div slot="header" class="clearfix">
                   <span>{{ item.title.zh }}</span>
                   <el-button
                     :disabled="resourceid != ''"
-                    type="success"
                     size="mini"
                     style="float: right"
+                    type="success"
                     @click="setCard(item.cType)"
                   >
                     <!-- 已选 -->
@@ -361,10 +361,10 @@
                   <el-row :gutter="24">
                     <el-col :span="12">
                       <img
+                        class="image"
                         :src="
                           item.params.ico.default ? item.params.ico.default : ''
                         "
-                        class="image"
                         style="width: 50px; height: 50px"
                       />
                     </el-col>
@@ -383,13 +383,13 @@
         >
           <el-input
             v-model="addchannel.name"
-            :placeholder="$translateTitle('developer.channelname')"
             autocomplete="off"
+            :placeholder="$translateTitle('developer.channelname')"
           />
         </el-form-item>
         <el-form-item
-          prop="applicationtText"
           :label="$translateTitle('application.applicationtype')"
+          prop="applicationtText"
         >
           <el-input
             v-model="addchannel.applicationtText"
@@ -409,8 +409,8 @@
         <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
           <el-form-item
             :label="item.title.zh"
-            :required="item.required"
             :prop="item.showname"
+            :required="item.required"
           >
             <el-tooltip effect="dark" placement="right-start">
               <div slot="content">
@@ -446,25 +446,25 @@
             <el-select
               v-else-if="item.type == 'boolean'"
               v-model="addchannel[item.showname]"
-              style="width: 96%"
               class="notauto"
+              style="width: 96%"
             >
               <!-- <el-option :value="true" label="是" />
               <el-option :value="false" label="否" /> -->
               <el-option
-                :value="true"
                 :label="$translateTitle('product.yes')"
+                :value="true"
               />
               <el-option
-                :value="false"
                 :label="$translateTitle('product.no')"
+                :value="false"
               />
             </el-select>
             <el-select
               v-else-if="item.type == 'enum'"
               v-model="addchannel[item.showname]"
-              style="width: 96%"
               class="notauto"
+              style="width: 96%"
             >
               <el-option
                 v-for="(item1, index1) in item.enum"
@@ -480,9 +480,9 @@
           <el-form-item :label="$translateTitle('developer.describe')">
             <el-input
               v-model="addchannel.desc"
-              :rows="3"
-              :placeholder="$translateTitle('developer.describe')"
               autocomplete="off"
+              :placeholder="$translateTitle('developer.describe')"
+              :rows="3"
               type="textarea"
               @change="inputChange"
             />
@@ -503,8 +503,8 @@
   :append-to-body="true" :visible.sync="dialogVisible" title="通道详情" width="50%"> -->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogVisible"
       :title="$translateTitle('equipment.channeldetails')"
+      :visible.sync="dialogVisible"
       width="50%"
     >
       <div>
@@ -534,25 +534,25 @@
       </span>
     </el-dialog>
     <a-drawer
-      width="80%"
+      :append-to-body="true"
       placement="right"
       :title="channelname + '日志'"
-      :append-to-body="true"
       :visible="subdialog"
+      width="80%"
       @close="handleCloseSubdialog(pubtopic)"
     >
       <mqtt-log
         :channel-id="channelname"
-        :refresh-key="refreshFlag"
-        :msg="submessage"
         :list="msgList"
+        :msg="submessage"
         :product="channelInfo"
+        :refresh-key="refreshFlag"
       />
     </a-drawer>
     <el-dialog
       custom-class="dgiot_dialog"
-      :visible.sync="channelDialog"
       :show-close="false"
+      :visible.sync="channelDialog"
       width="50%"
     >
       <vab-query-form>
@@ -568,46 +568,46 @@
       </vab-query-form>
 
       <el-table
-        height="60vh"
         :data="channelInfo"
+        height="60vh"
         stripe
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="index" align="center" />
+        <el-table-column align="center" type="index" />
         <el-table-column type="selection" width="50" />
         <el-table-column
-          prop="name"
-          sortable
           align="center"
-          show-overflow-tooltip
           :label="$translateTitle('developer.channelname')"
+          prop="name"
+          show-overflow-tooltip
+          sortable
         />
         <el-table-column
+          align="center"
+          :label="$translateTitle('developer.servicetype')"
           prop="devType"
           show-overflow-tooltip
           sortable
-          :label="$translateTitle('developer.servicetype')"
-          align="center"
         />
         <el-table-column
+          align="center"
+          :label="$translateTitle('developer.describe')"
           prop="desc"
           show-overflow-tooltip
-          align="center"
           sortable
-          :label="$translateTitle('developer.describe')"
         />
         <el-table-column
-          prop="objectId"
-          sortable
-          show-overflow-tooltip
           align="center"
           :label="$translateTitle('developer.operation')"
+          prop="objectId"
+          show-overflow-tooltip
+          sortable
         >
           <template #default="{ row }">
             <el-button
-              type="danger"
               size="mini"
+              type="danger"
               @click="deleteRelation(channelInfo, row.objectId)"
             >
               {{ $translateTitle('developer.remove') }}
@@ -617,12 +617,12 @@
       </el-table>
       <el-pagination
         :current-page="pagination.currentPage"
-        :page-sizes="pagination.sizes"
-        :page-size="pagination.size"
         :layout="pagination.layout"
+        :page-size="pagination.size"
+        :page-sizes="pagination.sizes"
         :total="pagination.total"
-        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
       />
     </el-dialog>
   </div>

@@ -3,15 +3,15 @@
     <el-row :gutter="20">
       <el-col :span="6">
         <el-table
+          border
           :data="roletempList"
+          highlight-current-row
           :row-class-name="tableRowClassName"
           :row-style="selectedHighlight"
           size="small"
-          border
-          highlight-current-row
           @row-click="getDetailmenu"
         >
-          <el-table-column :label="$translateTitle('user.name')" align="center">
+          <el-table-column align="center" :label="$translateTitle('user.name')">
             <template slot-scope="scope">
               <span>{{ scope.row.data.name }}</span>
               <span>( {{ scope.row.key }} )</span>
@@ -19,9 +19,9 @@
           </el-table-column>
 
           <el-table-column
+            align="center"
             :label="$translateTitle('developer.operation')"
             width="180"
-            align="center"
           >
             <template slot-scope="scope">
               <el-button
@@ -62,8 +62,8 @@
             </p>
             <div>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="expand('permissionTree', 'isExpand')"
               >
                 <span v-if="!isExpand">
@@ -72,22 +72,22 @@
                 <span v-else>{{ $translateTitle('button.fold') }}</span>
               </el-button>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="checkAll('permissionTree', 'permissionTreeData')"
               >
                 {{ $translateTitle('button.select all') }}
               </el-button>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="inverse('permissionTree', 'permissionTreeData')"
               >
                 {{ $translateTitle('button.Reverse election') }}
               </el-button>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="checkNot('permissionTree')"
               >
                 {{ $translateTitle('button.unselect all') }}
@@ -96,15 +96,15 @@
             <div class="rolecontrol">
               <el-tree
                 ref="permissionTree"
+                accordion
                 check-on-click-node
-                :default-expand-all="isExpand"
                 :data="permissionTreeData"
                 :default-checked-keys="rolePermissonList"
-                :expand-on-click-node="false"
-                show-checkbox
-                node-key="name"
+                :default-expand-all="isExpand"
                 default-props
-                accordion
+                :expand-on-click-node="false"
+                node-key="name"
+                show-checkbox
               >
                 <span slot-scope="{ node }" class="custom-tree-node">
                   <span>{{ node.label }}</span>
@@ -128,8 +128,8 @@
             </p>
             <div>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="expand('menusTree', 'menuExpand')"
               >
                 <span v-if="!menuExpand">
@@ -138,22 +138,22 @@
                 <span v-else>{{ $translateTitle('button.fold') }}</span>
               </el-button>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="checkAll('menusTree', 'menuTreeData')"
               >
                 {{ $translateTitle('button.select all') }}
               </el-button>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="inverse('menusTree', 'menuTreeData')"
               >
                 {{ $translateTitle('button.Reverse election') }}
               </el-button>
               <el-button
-                type="primary"
                 size="mini"
+                type="primary"
                 @click="checkNot('menusTree')"
               >
                 {{ $translateTitle('button.unselect all') }}
@@ -162,15 +162,15 @@
             <div class="menucontrol">
               <el-tree
                 ref="menusTree"
-                :data="menuTreeData"
-                check-on-click-node
-                :default-expand-all="menuExpand"
-                :default-checked-keys="roleMenuList"
-                :expand-on-click-node="false"
-                show-checkbox
-                node-key="objectId"
-                default-props
                 accordion
+                check-on-click-node
+                :data="menuTreeData"
+                :default-checked-keys="roleMenuList"
+                :default-expand-all="menuExpand"
+                default-props
+                :expand-on-click-node="false"
+                node-key="objectId"
+                show-checkbox
               >
                 <!-- eslint-disable-next-line -->
                 <span slot-scope="{ node, data }" class="custom-tree-node">
@@ -194,14 +194,14 @@
           </p>
         </div>
         <div class="tags">
-          <el-form ref="form" :rules="Rule" :model="form" label-width="170px">
+          <el-form ref="form" label-width="170px" :model="form" :rules="Rule">
             <!-- <el-form-item label="平台">
                     <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
                       <el-option v-for="(item,index) in selectapp" :key="index" :label="item.attributes.subtitle" :value="item.id"></el-option>
                    </el-select>
               </el-form-item>-->
             <el-form-item :label="$translateTitle('application.Accesskey')">
-              <el-input v-model="form.secret" style="width: 80%" readonly>
+              <el-input v-model="form.secret" readonly style="width: 80%">
                 <el-button
                   slot="append"
                   icon="el-icon-refresh-right"
@@ -214,9 +214,9 @@
             >
               <el-input
                 v-model="form.expires"
-                type="number"
-                style="width: 80%"
                 :placheholder="$translateTitle('product.enterapptime')"
+                style="width: 80%"
+                type="number"
               />
               <span style="margin-left: 5px">
                 <!-- 秒 -->
@@ -226,11 +226,11 @@
             <el-form-item :label="$translateTitle('product.Wordpreviewserver')">
               <el-input
                 v-model="form.wordpreview"
-                style="width: 80%"
                 :placheholder="
                   $translateTitle('product.enter1') +
                   $translateTitle('product.Wordpreviewserver')
                 "
+                style="width: 80%"
               />
             </el-form-item>
             <el-form-item
@@ -238,11 +238,11 @@
             >
               <el-input
                 v-model="form.wordproduct"
-                style="width: 80%"
                 :placheholder="
                   $translateTitle('product.enter1') +
                   $translateTitle('product.Wordproductionserver')
                 "
+                style="width: 80%"
               />
             </el-form-item>
             <el-form-item
@@ -251,8 +251,8 @@
             >
               <el-input
                 v-model="form.file"
-                style="width: 80%"
                 :placheholder="$translateTitle('product.enter1') + 'url'"
+                style="width: 80%"
               />
             </el-form-item>
 
@@ -262,35 +262,35 @@
             >
               <el-input
                 v-model="form.topo"
-                style="width: 80%"
                 :placheholder="$translateTitle('product.enter1') + 'url'"
+                style="width: 80%"
               />
             </el-form-item>
 
             <el-form-item label="Graphql API" prop="graphql">
               <el-input
                 v-model="form.graphql"
-                style="width: 80%"
                 :placheholder="$translateTitle('product.enter1') + 'url'"
+                style="width: 80%"
               />
             </el-form-item>
 
             <el-form-item label="Restful API" prop="rest">
               <el-input
                 v-model="form.rest"
-                style="width: 80%"
                 :placheholder="$translateTitle('product.enter1') + 'url'"
+                style="width: 80%"
               />
             </el-form-item>
 
             <el-form-item label="home">
               <el-input
                 v-model="form.home"
-                style="width: 80%"
                 :placheholder="
                   $translateTitle('product.enter1') +
                   $translateTitle('developer.path')
                 "
+                style="width: 80%"
               />
             </el-form-item>
           </el-form>

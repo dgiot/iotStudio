@@ -6,7 +6,7 @@
         <span style="fonty-size: 16px">基本信息</span>
       </div>
       <div class="box-form">
-        <el-form :model="engineform" label-width="80px">
+        <el-form label-width="80px" :model="engineform">
           <el-form-item label="触发事件:">
             <span>{{ engineform.region }}</span>
           </el-form-item>
@@ -30,11 +30,11 @@
           :default-sort="{ prop: 'date', order: 'descending' }"
           style="width: 100%"
         >
-          <el-table-column prop="node" label="节点" />
-          <el-table-column prop="matched" label="已命中" sortable width="180" />
-          <el-table-column prop="speed" label="命中速度" sortable width="180" />
-          <el-table-column prop="speed_max" label="最大命中速度" />
-          <el-table-column prop="speed_last5m" label="5分钟平均速度" />
+          <el-table-column label="节点" prop="node" />
+          <el-table-column label="已命中" prop="matched" sortable width="180" />
+          <el-table-column label="命中速度" prop="speed" sortable width="180" />
+          <el-table-column label="最大命中速度" prop="speed_max" />
+          <el-table-column label="5分钟平均速度" prop="speed_last5m" />
         </el-table>
       </div>
     </el-card>
@@ -45,14 +45,14 @@
       </div>
       <div class="box-table">
         <el-table :data="rulesdata" style="width: 100%">
-          <el-table-column prop="name" label="类型" width="180" />
+          <el-table-column label="类型" prop="name" width="180" />
           <el-table-column label="参数">
             <template slot-scope="scope">
               <!-- <el-input type="textarea" :value="JSON.stringify(scope.row.params,null,4)" rows="5" cols="10" readonly></el-input> -->
               <span>{{ scope.row.params }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="度量指标" align="center">
+          <el-table-column align="center" label="度量指标">
             <template slot-scope="scope">
               <ul>
                 <li v-for="(items, index) in scope.row.metrics" :key="index">

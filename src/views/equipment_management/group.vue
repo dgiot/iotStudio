@@ -4,7 +4,7 @@
       <el-container>
         <el-main>
           <div class="main">
-            <el-drawer :visible.sync="drawer" direction="ltr">
+            <el-drawer direction="ltr" :visible.sync="drawer">
               <div v-if="showTree" class="tree">
                 搜索 :
                 <el-input
@@ -15,15 +15,15 @@
 
                 <el-tree
                   ref="tree"
-                  :data="treeData"
-                  :props="defaultProps"
-                  :allow-drop="allowDrop"
                   :allow-drag="allowDrag"
-                  :filter-node-method="filterNode"
-                  default-expand-all
+                  :allow-drop="allowDrop"
                   class="treeitems"
-                  node-key="id"
+                  :data="treeData"
+                  default-expand-all
                   draggable
+                  :filter-node-method="filterNode"
+                  node-key="id"
+                  :props="defaultProps"
                   @node-drop="handleDrop"
                 >
                   <span slot-scope="{ node, data }" class="custom-tree-node">
@@ -37,20 +37,20 @@
                     >
                       <i
                         class="el-icon-plus"
-                        title="新增"
                         style="color: #67c23a"
+                        title="新增"
                         @click.stop="append(data)"
                       />
                       <i
                         class="el-icon-delete"
-                        title="删除"
                         style="color: red"
+                        title="删除"
                         @click.stop="deletes(data)"
                       />
                       <i
                         class="el-icon-edit"
-                        title="编辑"
                         style="color: #909399"
+                        title="编辑"
                         @click.stop="rename(data)"
                       />
                     </span>
@@ -91,10 +91,10 @@
     </el-container>
     <el-dialog
       :append-to-body="true"
-      :visible="centerDialogRole"
-      title="添加角色"
-      width="35%"
       center
+      title="添加角色"
+      :visible="centerDialogRole"
+      width="35%"
       @close="closeDialogRole"
     >
       <addroles ref="addRoleRef" />

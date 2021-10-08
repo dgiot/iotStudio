@@ -4,24 +4,24 @@
       <div class="engineheader">
         <el-button
           :disabled="alarmsRuleId.length > 0 && engineData.length > 0"
-          type="primary"
           icon="el-icon-plus"
-          style="float: right"
           size="small"
+          style="float: right"
+          type="primary"
           @click="addEngine"
         >
           {{ $translateTitle('developer.add') }}
         </el-button>
       </div>
       <el-table
-        :height="height"
-        :data="engineData"
         :cell-class-name="getRowindex"
+        :data="engineData"
+        :height="height"
         style="width: 100%; text-align: center"
       >
         <el-table-column
-          label="ID"
           align="center"
+          label="ID"
           show-overflow-tooltip
           width="180"
         >
@@ -31,8 +31,8 @@
         </el-table-column>
         <!-- <el-table-column label="主题" align="center"> -->
         <el-table-column
-          :label="$translateTitle('leftbar.topics')"
           align="center"
+          :label="$translateTitle('leftbar.topics')"
           show-overflow-tooltip
           width="200"
         >
@@ -41,15 +41,15 @@
           </template>
         </el-table-column>
         <el-table-column
-          show-overflow-tooltip
-          width="200"
-          prop="rawsql"
           align="center"
           label="SQL"
+          prop="rawsql"
+          show-overflow-tooltip
+          width="200"
         />
         <el-table-column
-          :label="$translateTitle('rule.ResponseAction')"
           align="center"
+          :label="$translateTitle('rule.ResponseAction')"
         >
           <template slot-scope="scope">
             <p v-for="(item, index) in scope.row.actions" :key="index">
@@ -77,31 +77,31 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('developer.operation')"
           align="center"
           fixed="right"
+          :label="$translateTitle('developer.operation')"
           width="210"
         >
           <template slot-scope="scope">
             <el-button
-              type="success"
               size="mini"
+              type="success"
               @click="detailRules(scope.row.id)"
             >
               <!-- 查看 -->
               {{ $translateTitle('equipment.see') }}
             </el-button>
             <el-button
-              type="primary"
               size="mini"
+              type="primary"
               @click="editRule(scope.row.id)"
             >
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
             </el-button>
             <el-button
-              type="danger"
               size="mini"
+              type="danger"
               @click="deleteRule(scope.row.id)"
             >
               <!-- 删除 -->
@@ -112,12 +112,12 @@
       </el-table>
       <div class="block">
         <el-pagination
-          :page-sizes="[10, 20, 30, 50]"
-          :page-size="pagesize"
-          :total="total"
           layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
+          :page-size="pagesize"
+          :page-sizes="[10, 20, 30, 50]"
+          :total="total"
           @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
         />
       </div>
     </div>

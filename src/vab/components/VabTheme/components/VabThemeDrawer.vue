@@ -1,15 +1,15 @@
 <template>
   <el-drawer
-    :title="$translateTitle('主题配置')"
-    :visible.sync="drawerVisible"
     append-to-body
     custom-class="vab-drawer"
     direction="rtl"
     size="280px"
+    :title="$translateTitle('主题配置')"
+    :visible.sync="drawerVisible"
   >
     <el-scrollbar class="theme-scrollbar">
       <div class="el-drawer__body">
-        <el-form ref="form" :model="theme" label-position="left">
+        <el-form ref="form" label-position="left" :model="theme">
           <el-divider content-position="left">
             <vab-icon icon="settings-3-line" />
             {{ $translateTitle('常用设置') }}

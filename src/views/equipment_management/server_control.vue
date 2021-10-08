@@ -19,16 +19,16 @@
         {{ $translateTitle('developer.Serverdeployment') }}
       </h3>
       <el-form
+        class="demo-form-inline"
         :inline="true"
         :model="formInline"
-        class="demo-form-inline"
         size="small"
       >
         <el-form-item style="float: left">
           <el-button
-            type="success"
             class="el-icon-download"
             :disabled="appid && appid.length == 0"
+            type="success"
             @click="downlictool()"
           >
             <!-- 下载引导脚本 -->
@@ -52,14 +52,14 @@
             v-model="formInline.region"
             :placeholder="$translateTitle('equipment.runningstate')"
           >
-            <el-option :value="1" :label="$translateTitle('zetadevices.all')" />
+            <el-option :label="$translateTitle('zetadevices.all')" :value="1" />
             <el-option
-              :value="true"
               :label="$translateTitle('zetadevices.online')"
+              :value="true"
             />
             <el-option
-              :value="false"
               :label="$translateTitle('zetadevices.offline')"
+              :value="false"
             />
           </el-select>
         </el-form-item>
@@ -115,21 +115,21 @@
     </div>
     <div class="servertable">
       <el-table
-        :height="height"
         :data="tableData"
+        :height="height"
         style="width: 100%; text-align: center"
       >
         <!-- <el-table-column label="编号" type="index" width="50" align="center" /> -->
         <el-table-column
+          align="center"
           :label="$translateTitle('equipment.number')"
           type="index"
           width="80"
-          align="center"
         />
         <!-- <el-table-column label="客户名称" align="center" width="100"> -->
         <el-table-column
-          :label="$translateTitle('user.Customername')"
           align="center"
+          :label="$translateTitle('user.Customername')"
           width="150"
         >
           <template slot-scope="scope">
@@ -138,8 +138,8 @@
         </el-table-column>
         <!-- <el-table-column label="客户应用" align="center" width="200"> -->
         <el-table-column
-          :label="$translateTitle('user.Customerapplication')"
           align="center"
+          :label="$translateTitle('user.Customerapplication')"
           width="200"
         >
           <template slot-scope="scope">
@@ -148,8 +148,8 @@
         </el-table-column>
         <!-- <el-table-column label="版本" align="center" width="100"> -->
         <el-table-column
-          :label="$translateTitle('plugins.version')"
           align="center"
+          :label="$translateTitle('plugins.version')"
           width="100"
         >
           <template slot-scope="scope">
@@ -160,8 +160,8 @@
         </el-table-column>
         <!-- <el-table-column label="服务器IP" align="center" width="150"> -->
         <el-table-column
-          :label="$translateTitle('resource.server') + ' IP'"
           align="center"
+          :label="$translateTitle('resource.server') + ' IP'"
           width="150"
         >
           <template slot-scope="scope">
@@ -182,12 +182,12 @@
         </el-table-column>
         <!-- <el-table-column label="服务器配置" align="center" width="150"> -->
         <el-table-column
-          :label="$translateTitle('product.Serverconfiguration')"
           align="center"
+          :label="$translateTitle('product.Serverconfiguration')"
           width="150"
         >
           <template v-if="scope.row.private_ip" slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
+            <el-popover placement="top" trigger="hover">
               <p>
                 {{ $translateTitle('equipment.ipaddress') }}:
                 {{ scope.row.private_ip }}
@@ -219,8 +219,8 @@
         </el-table-column>
         <!-- 机器码 -->
         <el-table-column
-          :label="$translateTitle('product.Machinecode')"
           align="center"
+          :label="$translateTitle('product.Machinecode')"
           show-overflow-tooltip
           width="200"
         >
@@ -230,8 +230,8 @@
         </el-table-column>
         <!-- 授权码 -->
         <el-table-column
-          :label="$translateTitle('developer.authcode')"
           align="center"
+          :label="$translateTitle('developer.authcode')"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.license }}</span>
@@ -239,8 +239,8 @@
         </el-table-column>
         <!-- 连接状态 -->
         <el-table-column
-          :label="$translateTitle('concentrator.connection')"
           align="center"
+          :label="$translateTitle('concentrator.connection')"
           width="100"
         >
           <template slot-scope="scope">
@@ -256,8 +256,8 @@
         </el-table-column>
         <!-- 部署情况 -->
         <el-table-column
-          :label="$translateTitle('developer.Deployment')"
           align="center"
+          :label="$translateTitle('developer.Deployment')"
           width="100"
         >
           <template slot-scope="scope">
@@ -287,8 +287,8 @@
         </el-table-column>
         <!-- 操作 -->
         <el-table-column
-          :label="$translateTitle('node.operation')"
           align="center"
+          :label="$translateTitle('node.operation')"
           width="500"
         >
           <template slot-scope="scope">
@@ -300,9 +300,9 @@
               {{ $translateTitle('application.detail') }}
             </el-button>
             <el-button
+              icon="el-icon-s-operation"
               size="mini"
               type="primary"
-              icon="el-icon-s-operation"
               @click="addserver(scope.row)"
             >
               <!-- 在线安装 -->
@@ -338,28 +338,28 @@
     </div>
     <div class="serverpagina">
       <el-pagination
-        :page-sizes="[10, 20, 30, 50]"
-        :page-size="pagesize"
-        :total="total"
         layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
+        :page-size="pagesize"
+        :page-sizes="[10, 20, 30, 50]"
+        :total="total"
         @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
       />
     </div>
     <!--新增编辑弹窗-->
     <!-- 服务部署 -->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogFormVisible"
       :close-on-click-modal="false"
       :title="$translateTitle('developer.Servicedeployment')"
+      :visible.sync="dialogFormVisible"
     >
       <el-form
         ref="ruleForm"
+        class="demo-ruleForm"
+        label-width="100px"
         :model="ruleForm"
         :rules="rules"
-        label-width="100px"
-        class="demo-ruleForm"
       >
         <!-- <el-form-item label="设备规模" prop="name">
           <el-input v-model.number="ruleForm.name">
@@ -498,13 +498,13 @@
     <!-- 详情 -->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       :title="$translateTitle('product.details')"
+      :visible.sync="dialogVisible"
       width="50%"
     >
       <div>
-        <el-input v-model="licensedetail" :rows="20" type="textarea" readonly />
+        <el-input v-model="licensedetail" readonly :rows="20" type="textarea" />
       </div>
       <span slot="footer" class="dialog-footer">
         <!-- <el-button @click="dialogVisible = false">取 消</el-button>
@@ -515,17 +515,17 @@
     <!-- 服务器配置 -->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="serverdialogVisible"
       :close-on-click-modal="false"
       :title="$translateTitle('product.Serverconfiguration')"
+      :visible.sync="serverdialogVisible"
       width="50%"
     >
       <el-form
         ref="serverForm"
+        class="demo-serverForm"
+        label-width="150px"
         :model="serverForm"
         :rules="serverrules"
-        label-width="150px"
-        class="demo-serverForm"
       >
         <!-- 用户名称 -->
         <el-form-item
@@ -597,7 +597,7 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="2" class="line">-</el-col>
+          <el-col class="line" :span="2">-</el-col>
           <el-col :span="11">
             <el-form-item prop="serverg">
               <el-input v-model.number="serverForm.serverg">
@@ -678,8 +678,8 @@
         </el-form-item>
         <el-form-item
           :label="$translateTitle('zetadevices.onlinestate')"
-          prop="online"
           :label-width="50"
+          prop="online"
         >
           <span v-if="serverForm.online" style="color: #13ce66">
             <!-- 在线 -->
@@ -711,8 +711,8 @@
     <!-- 在线升级 -->
     <el-dialog
       :append-to-body="true"
-      :visible.sync="dialogOnline"
       :title="$translateTitle('zetadevices.Onlineupgrade')"
+      :visible.sync="dialogOnline"
     >
       <el-form ref="onlineform" :model="onlineform" :rules="onlineformrule">
         <!-- 版本号 -->
@@ -723,11 +723,11 @@
         >
           <el-input
             v-model="onlineform.name"
+            autocomplete="off"
             :placeholder="
               $translateTitle('product.enter1') +
               $translateTitle('plugins.version')
             "
-            autocomplete="off"
           />
         </el-form-item>
       </el-form>

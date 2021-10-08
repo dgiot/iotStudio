@@ -17,21 +17,21 @@
     <Shape
       v-for="(item, index) in componentData"
       :key="item.id"
-      :default-style="item.style"
-      :style="getShapeStyle(item.style)"
       :active="item.id === (curComponent || {}).id"
+      :class="{ lock: item.isLock }"
+      :default-style="item.style"
       :element="item"
       :index="index"
-      :class="{ lock: item.isLock }"
+      :style="getShapeStyle(item.style)"
     >
       <component
         :is="item.component"
         v-if="item.component != 'v-text'"
         :id="'component' + item.id"
         class="component"
-        :style="getComponentStyle(item.style)"
-        :prop-value="item.propValue"
         :element="item"
+        :prop-value="item.propValue"
+        :style="getComponentStyle(item.style)"
       />
 
       <component
@@ -39,9 +39,9 @@
         v-else
         :id="'component' + item.id"
         class="component"
-        :style="getComponentStyle(item.style)"
-        :prop-value="item.propValue"
         :element="item"
+        :prop-value="item.propValue"
+        :style="getComponentStyle(item.style)"
         @input="handleInput"
       />
     </Shape>
@@ -50,7 +50,7 @@
     <!-- 标线 -->
     <MarkLine />
     <!-- 选中区域 -->
-    <Area v-show="isShowArea" :start="start" :width="width" :height="height" />
+    <Area v-show="isShowArea" :height="height" :start="start" :width="width" />
   </div>
 </template>
 

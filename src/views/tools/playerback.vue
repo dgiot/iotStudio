@@ -6,16 +6,16 @@
           <el-col :span="23">
             <el-input
               v-model="flvsrc"
+              class="input-with-select"
               :disabled="$route.query.url"
               placeholder="请输入内容"
-              class="input-with-select"
             >
               <el-select
                 slot="append"
                 v-model="type"
                 :disabled="$route.query.type"
-                style="width: 200px"
                 placeholder="请选择視頻流格式"
+                style="width: 200px"
                 @change="changeType"
               >
                 <el-option
@@ -28,17 +28,17 @@
             </el-input>
           </el-col>
           <el-col :span="1">
-            <el-button type="primary" plain @click="Play()">播放</el-button>
+            <el-button plain type="primary" @click="Play()">播放</el-button>
           </el-col>
         </el-row>
-        <el-card shadow="hover" class="player_card">
+        <el-card class="player_card" shadow="hover">
           <vab-player
             ref="vabPlayer"
             :autoplay="mp4Play"
+            :height="height"
             :source="flvsrc"
             :type="type"
             :width="width"
-            :height="height"
           />
         </el-card>
       </el-col>

@@ -1,17 +1,17 @@
 <template>
   <div class="appmarage appmarage-container">
     <div class="header">
-      <el-button type="primary" size="small" @click="checkupdateall">
+      <el-button size="small" type="primary" @click="checkupdateall">
         {{ $translateTitle('plugins.checkupdate') }}
       </el-button>
     </div>
     <div class="block" style="margin-top: 10px">
       <el-table
-        :height="height"
         :data="tableData.slice((start - 1) * length, start * length)"
+        :height="height"
         style="width: 100%; text-align: center"
       >
-        <el-table-column label="App" align="center">
+        <el-table-column align="center" label="App">
           <template slot-scope="scope">
             <span
               :style="{ color: scope.row.active == true ? 'green' : 'red' }"
@@ -21,20 +21,20 @@
           </template>
         </el-table-column>
         <el-table-column
+          align="center"
           :label="$translateTitle('plugins.version')"
           prop="version"
-          align="center"
           sortable
         />
         <el-table-column
+          align="center"
           :label="$translateTitle('developer.describe')"
           prop="desc"
-          align="center"
           sortable
         />
         <el-table-column
-          :label="$translateTitle('developer.operation')"
           align="right"
+          :label="$translateTitle('developer.operation')"
         >
           <!-- eslint-disable-next-line -->
           <template slot="header" slot-scope="scope">
@@ -48,9 +48,9 @@
           <template slot-scope="scope">
             <el-button
               v-if="scope.row.active == false"
-              type="info"
-              size="small"
               plain
+              size="small"
+              type="info"
               @click="startup(scope.row.app)"
             >
               <div
@@ -67,9 +67,9 @@
             </el-button>
             <el-button
               v-if="scope.row.active == true"
-              type="info"
-              size="small"
               plain
+              size="small"
+              type="info"
               @click="stopup(scope.row.app)"
             >
               <div
@@ -85,9 +85,9 @@
               {{ $translateTitle('plugins.stop') }}
             </el-button>
             <el-button
-              type="info"
-              size="small"
               plain
+              size="small"
+              type="info"
               @click="checkupdate(scope.row.app)"
             >
               {{ $translateTitle('plugins.checkupdate') }}
@@ -98,21 +98,21 @@
     </div>
     <div class="block">
       <el-pagination
-        :page-sizes="[10, 25, 50, 100]"
-        :page-size="length"
-        :total="total"
         background
         layout="total, sizes, prev, pager, next, jumper"
+        :page-size="length"
+        :page-sizes="[10, 25, 50, 100]"
         style="margin-top: 30px"
-        @size-change="handleSizeChange"
+        :total="total"
         @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
       />
     </div>
     <el-dialog
       :append-to-body="true"
+      :before-close="handleClose"
       :title="$translateTitle('plugins.modulelist')"
       :visible.sync="dialogVisible"
-      :before-close="handleClose"
       width="40%"
     >
       <div>
@@ -122,28 +122,28 @@
           style="width: 100%; margin-top: 20px; text-align: center"
         >
           <el-table-column
+            align="center"
             :label="$translateTitle('plugins.modulename')"
             prop="path"
             sortable
-            align="center"
           />
           <el-table-column
+            align="center"
             :label="$translateTitle('plugins.ischange')"
             prop="is_changed"
             sortable
-            align="center"
           />
         </el-table>
         <div class="block">
           <el-pagination
-            :page-sizes="[10, 25, 50, 100]"
-            :page-size="length1"
-            :total="total1"
             background
             layout="total, sizes, prev, pager, next, jumper"
+            :page-size="length1"
+            :page-sizes="[10, 25, 50, 100]"
             style="margin-top: 30px"
-            @size-change="handleSizeChange1"
+            :total="total1"
             @current-change="handleCurrentChange1"
+            @size-change="handleSizeChange1"
           />
         </div>
       </div>

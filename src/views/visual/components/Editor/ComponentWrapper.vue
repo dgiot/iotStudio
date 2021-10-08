@@ -3,9 +3,9 @@
     <component
       :is="config.component"
       class="component"
-      :style="getStyle(config.style)"
-      :prop-value="config.propValue"
       :element="config"
+      :prop-value="config.propValue"
+      :style="getStyle(config.style)"
     />
   </div>
 </template>
