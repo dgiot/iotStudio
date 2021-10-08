@@ -1,12 +1,8 @@
 import { mapGetters, mapMutations } from 'vuex'
 import profile from '@/views/equipment_management/profile'
 import { getDeviceCountByProduct } from '@/api/Device/index'
-import {
-  queryProduct,
-  postThing,
-  putThing,
-  deleteThing,
-} from '@/api/Product/index'
+import { postThing, putThing, deleteThing } from '@/api/Product/index'
+import { downBinary } from '@/api/File/index'
 import { getAllunit, getDictCount } from '@/api/Dict/index'
 import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
 import { getRule } from '@/api/Rules'
@@ -581,8 +577,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.$refs._tabs.$children[0].$refs.tabs[3].style.display = 'none'
-      console.log(this.$refs._tabs.$children[0].$refs)
-      console.log(this.$refs._tabs.$children[0].$refs.tabs)
     })
     this.Industry()
     this.getAllunit()
@@ -747,15 +741,32 @@ export default {
           this.$baseMessage('请求出错', err.error, 3000)
         })
     },
-    async exportProduct() {
-      const params = {
-        name: this.productName,
-      }
-      const res = await queryProduct(params)
-      if (res) {
-        window.open(
-          window.location.origin + '/product?name=' + this.productName,
-          '_blank'
+    /**
+     *
+     * @param
+     * @returns
+     */
+    async exportProduct(productName) {
+      try {
+        const params = {
+          name: productName,
+        }
+        const loading = this.$baseColorfullLoading()
+        const res = await downBinary('iotapi/product', params)
+        console.log(res)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+        this.$downBinary(res)
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
         )
       }
     },

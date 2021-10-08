@@ -221,7 +221,6 @@ function convertRes2Blob(response) {
   // 提取文件名
   const filename =
     response.headers['content-disposition'].match(/filename=(.*)/)[1]
-  console.log('fileName', filename)
   // 将二进制流转为blob
   const blob = new Blob([response.data], {
     type: 'application/octet-stream',
@@ -248,6 +247,26 @@ function convertRes2Blob(response) {
     // 释放blob URL地址
     window.URL.revokeObjectURL(blobURL)
   }
+}
+
+/**
+ *
+ * @param res
+ * @document https://blog.csdn.net/Cris_are/article/details/108173681
+ */
+function downBinary(res) {
+  const { data, headers } = res
+  let blob = new Blob([data], { type: headers['content-type'] }) // 这里标识下载文件类型
+  console.log(blob, res.data)
+  let downloadElement = document.createElement('a')
+  let href = window.URL.createObjectURL(blob) // 创建下载的链接
+  downloadElement.href = href
+  downloadElement.download =
+    headers['content-disposition'].match(/filename=(.*)/)[1] // 下载后文件名
+  document.body.appendChild(downloadElement)
+  downloadElement.click() // 点击下载
+  document.body.removeChild(downloadElement) // 下载完成移除元素
+  window.URL.revokeObjectURL(href) // 释放掉blob对象
 }
 
 // 针对数组、对象的深拷贝
@@ -498,5 +517,6 @@ export default {
     Vue.prototype.$dgiotRdate = rdate
     Vue.prototype.$getMqttEventId = getMqttEventId
     Vue.prototype.$getTopicEventId = getTopicEventId
+    Vue.prototype.$downBinary = downBinary
   },
 }

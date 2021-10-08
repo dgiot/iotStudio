@@ -122,3 +122,24 @@ export function exlout(params) {
     })
     .catch((err) => console.log(err))
 }
+
+/**
+ *
+ * @param url
+ * @param params
+ * @return {Promise<*>}
+ * @description 请求二进制数据文件
+ */
+export async function downBinary(url, params) {
+  return axios
+    .get(url, {
+      params,
+      headers: {
+        sessionToken: store.getters['user/token'],
+        Accept: 'application/json',
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      responseType: 'blob',
+    })
+    .catch((err) => console.log(err))
+}
