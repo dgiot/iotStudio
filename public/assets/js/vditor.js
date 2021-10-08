@@ -1,5 +1,5 @@
 /*!
- * Vditor v3.8.6 - A markdown editor written in TypeScript.
+ * Vditor v3.8.7 - A markdown editor written in TypeScript.
  *
  * MIT License
  *
@@ -1797,12 +1797,8 @@ diff_match_patch.prototype.patch_make = function (a, opt_b, opt_c) {
   if (typeof a == 'string' && typeof opt_b == 'string' && typeof opt_c == 'undefined') {
     // Method 1: text1, text2
     // Compute diffs from text1 and text2.
-    text1 =
-    /** @type {string} */
-    a;
-    diffs = this.diff_main(text1,
-    /** @type {string} */
-    opt_b, true);
+    text1 = a;
+    diffs = this.diff_main(text1, opt_b, true);
 
     if (diffs.length > 2) {
       this.diff_cleanupSemantic(diffs);
@@ -1811,27 +1807,17 @@ diff_match_patch.prototype.patch_make = function (a, opt_b, opt_c) {
   } else if (a && typeof a == 'object' && typeof opt_b == 'undefined' && typeof opt_c == 'undefined') {
     // Method 2: diffs
     // Compute text1 from diffs.
-    diffs =
-    /** @type {!Array.<!diff_match_patch.Diff>} */
-    a;
+    diffs = a;
     text1 = this.diff_text1(diffs);
   } else if (typeof a == 'string' && opt_b && typeof opt_b == 'object' && typeof opt_c == 'undefined') {
     // Method 3: text1, diffs
-    text1 =
-    /** @type {string} */
-    a;
-    diffs =
-    /** @type {!Array.<!diff_match_patch.Diff>} */
-    opt_b;
+    text1 = a;
+    diffs = opt_b;
   } else if (typeof a == 'string' && typeof opt_b == 'string' && opt_c && typeof opt_c == 'object') {
     // Method 4: text1, text2, diffs
     // text2 is not used.
-    text1 =
-    /** @type {string} */
-    a;
-    diffs =
-    /** @type {!Array.<!diff_match_patch.Diff>} */
-    opt_c;
+    text1 = a;
+    diffs = opt_c;
   } else {
     throw new Error('Unknown call format to patch_make.');
   }
@@ -2890,7 +2876,7 @@ var Vditor = /** @class */ (function () {
 /* harmony export */   "H": () => (/* binding */ _VDITOR_VERSION),
 /* harmony export */   "g": () => (/* binding */ Constants)
 /* harmony export */ });
-var _VDITOR_VERSION = "3.8.6";
+var _VDITOR_VERSION = "3.8.7";
 
 var Constants = /** @class */ (function () {
     function Constants() {
@@ -2916,7 +2902,7 @@ var Constants = /** @class */ (function () {
         "swift", "ini", "typescript", "vbnet", "yaml",
         "ada", "clojure", "dart", "erb", "fortran", "gradle", "haskell", "julia", "julia-repl", "lisp", "matlab",
         "pgsql", "powershell", "sql_more", "stata", "cmake", "mathematica"];
-    Constants.CDN = "https://cdn.jsdelivr.net/npm/vditor@" + "3.8.6";
+    Constants.CDN = "https://cdn.jsdelivr.net/npm/vditor@" + "3.8.7";
     Constants.MARKDOWN_OPTIONS = {
         autoSpace: false,
         codeBlockPreview: true,
@@ -9825,10 +9811,14 @@ var listToggle = function (vditor, range, type, cancel) {
                 var element = void 0;
                 if (type === "list") {
                     element = document.createElement("ul");
+                    element.setAttribute("data-marker", "*");
                 }
                 else {
                     element = document.createElement("ol");
+                    element.setAttribute("data-marker", "1.");
                 }
+                element.setAttribute("data-block", "0");
+                element.setAttribute("data-tight", itemElement.parentElement.getAttribute("data-tight"));
                 element.innerHTML = itemElement.parentElement.innerHTML;
                 itemElement.parentElement.parentNode.replaceChild(element, itemElement.parentElement);
             }
@@ -10908,6 +10898,7 @@ var paste = function (vditor, event, callback) { return fixBrowserBehavior_await
                 if (doc.body) {
                     textHTML = doc.body.innerHTML;
                 }
+                textHTML = Lute.Sanitize(textHTML);
                 vditor.wysiwyg.getComments(vditor);
                 height = vditor[vditor.currentMode].element.scrollHeight;
                 code = processPasteCode(textHTML, textPlain, vditor.currentMode);
@@ -15350,12 +15341,12 @@ var Vditor = /** @class */ (function (_super) {
         });
     };
     return Vditor;
-}(method.default));
+}(method["default"]));
 /* harmony default export */ const src = (Vditor);
 
 })();
 
-__webpack_exports__ = __webpack_exports__.default;
+__webpack_exports__ = __webpack_exports__["default"];
 /******/ 	return __webpack_exports__;
 /******/ })()
 ;

@@ -25,6 +25,7 @@ const {
   webpackBanner,
   webpackBarName,
   cdnUrl,
+  localUrl,
   ignoreCdn,
   Keywords,
   Description,
@@ -178,29 +179,26 @@ module.exports = {
         return options
       })
     config.plugin('html').tap((args) => {
-      var _staticUrl = cdnUrl
+      var _staticUrl = useCdn || process.env.useCdn ? cdnUrl : localUrl
       // if (useCdn || process.env.NODE_ENV !== 'development') {
-      if (useCdn || process.env.useCdn) {
-        const { css, js } = cdnUrl
-        _staticUrl = { css: [], js: [] }
-        css.forEach((_css) => {
-          let i =
-            _css.substring(_css.lastIndexOf('/') + 1).indexOf('.css') != -1
-              ? '/assets/css/' + _css.substring(_css.lastIndexOf('/') + 1)
-              : '/assets/css/' +
-                _css.substring(_css.lastIndexOf('/') + 1) +
-                '.css'
-          _staticUrl.css.push(i)
-        })
-        js.forEach((_js) => {
-          let i =
-            _js.substring(_js.lastIndexOf('/') + 1).indexOf('.js') != -1
-              ? '/assets/js/' + _js.substring(_js.lastIndexOf('/') + 1)
-              : '/assets/js/' + _js.substring(_js.lastIndexOf('/') + 1) + '.js'
-          _staticUrl.js.push(i)
-        })
-        console.log(_staticUrl)
-      }
+      const { css, js } = _staticUrl
+      _staticUrl = { css: [], js: [] }
+      css.forEach((_css) => {
+        let i =
+          _css.substring(_css.lastIndexOf('/') + 1).indexOf('.css') != -1
+            ? '/assets/css/' + _css.substring(_css.lastIndexOf('/') + 1)
+            : '/assets/css/' +
+              _css.substring(_css.lastIndexOf('/') + 1) +
+              '.css'
+        _staticUrl.css.push(i)
+      })
+      js.forEach((_js) => {
+        let i =
+          _js.substring(_js.lastIndexOf('/') + 1).indexOf('.js') != -1
+            ? '/assets/js/' + _js.substring(_js.lastIndexOf('/') + 1)
+            : '/assets/js/' + _js.substring(_js.lastIndexOf('/') + 1) + '.js'
+        _staticUrl.js.push(i)
+      })
       args[0].staticUrl = _staticUrl
       return args
     })
