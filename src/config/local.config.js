@@ -30,6 +30,8 @@ let localUrl = {
   ],
   js: [
     'vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
+    'vue-baidu-map.js',
+    'mqttws31.js',
     'vue-router.min.js',
     'vue-i18n.min.js',
     'cos-js-sdk-v5.min.js',
@@ -50,7 +52,6 @@ let localUrl = {
     'mode-python.js',
     'vuedraggable.umd.min.js',
     'qs.js',
-    'mqttws31.js',
     'konva.min.js',
     'vue-konva.min.js',
     'mock.js',

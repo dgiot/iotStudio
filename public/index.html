@@ -12,36 +12,36 @@
   <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="<%= BASE_URL %>assets/images/icons/ms-icon-144x144.png">
-  <link rel="manifest" href="<%= BASE_URL %>manifest.json">
-  <link rel="manifest" href="<%= BASE_URL %>manifest.webmanifest" crossorigin="use-credentials">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="manifest" href="<%= BASE_URL %>manifest.json">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="manifest" href="<%= BASE_URL %>manifest.webmanifest" crossorigin="use-credentials">
   <!-- 引入样式 -->
   <% for(var css of htmlWebpackPlugin.options.staticUrl.css) { %>
-  <link rel="stylesheet" href="<%=css%>" />
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="stylesheet" href="<%=css%>" />
   <% } %>
-  <link href="<%= BASE_URL %>assets/images/icons/favicon.ico" rel="icon" />
-  <link href="<%= BASE_URL %>assets/images/iconfont/iconfont.css" rel="stylesheet" />
-  <link rel="apple-touch-icon" sizes="57x57" href="<%= BASE_URL %>assets/images/icons/apple-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="<%= BASE_URL %>assets/images/icons/apple-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="<%= BASE_URL %>assets/images/icons/apple-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="<%= BASE_URL %>assets/images/icons/apple-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="<%= BASE_URL %>assets/images/icons/apple-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="<%= BASE_URL %>assets/images/icons/apple-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="<%= BASE_URL %>assets/images/icons/apple-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="<%= BASE_URL %>assets/images/icons/apple-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="<%= BASE_URL %>assets/images/icons/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="<%= BASE_URL %>android-icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="<%= BASE_URL %>assets/images/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="<%= BASE_URL %>assets/images/icons/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="<%= BASE_URL %>assets/images/icons/favicon-16x16.png">
-  <link rel="apple-touch-icon" sizes="57x57" href="<%= BASE_URL %>assets/images/icons/apple-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="<%= BASE_URL %>assets/images/icons/apple-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="<%= BASE_URL %>assets/images/icons/apple-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="<%= BASE_URL %>assets/images/icons/apple-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="<%= BASE_URL %>assets/images/icons/apple-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="<%= BASE_URL %>assets/images/icons/apple-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="<%= BASE_URL %>assets/images/icons/apple-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="<%= BASE_URL %>assets/images/icons/apple-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="<%= BASE_URL %>assets/images/icons/apple-icon-180x180.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" href="<%= BASE_URL %>assets/images/icons/favicon.ico" rel="icon" />
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" href="<%= BASE_URL %>assets/images/iconfont/iconfont.css" rel="stylesheet" />
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="57x57" href="<%= BASE_URL %>assets/images/icons/apple-icon-57x57.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="60x60" href="<%= BASE_URL %>assets/images/icons/apple-icon-60x60.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="72x72" href="<%= BASE_URL %>assets/images/icons/apple-icon-72x72.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="76x76" href="<%= BASE_URL %>assets/images/icons/apple-icon-76x76.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="114x114" href="<%= BASE_URL %>assets/images/icons/apple-icon-114x114.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="120x120" href="<%= BASE_URL %>assets/images/icons/apple-icon-120x120.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="144x144" href="<%= BASE_URL %>assets/images/icons/apple-icon-144x144.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="152x152" href="<%= BASE_URL %>assets/images/icons/apple-icon-152x152.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="180x180" href="<%= BASE_URL %>assets/images/icons/apple-icon-180x180.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="icon" type="image/png" sizes="192x192" href="<%= BASE_URL %>android-icon-192x192.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="icon" type="image/png" sizes="32x32" href="<%= BASE_URL %>assets/images/icons/favicon-32x32.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="icon" type="image/png" sizes="96x96" href="<%= BASE_URL %>assets/images/icons/favicon-96x96.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="icon" type="image/png" sizes="16x16" href="<%= BASE_URL %>assets/images/icons/favicon-16x16.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="57x57" href="<%= BASE_URL %>assets/images/icons/apple-icon-57x57.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="60x60" href="<%= BASE_URL %>assets/images/icons/apple-icon-60x60.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="72x72" href="<%= BASE_URL %>assets/images/icons/apple-icon-72x72.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="76x76" href="<%= BASE_URL %>assets/images/icons/apple-icon-76x76.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="114x114" href="<%= BASE_URL %>assets/images/icons/apple-icon-114x114.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="120x120" href="<%= BASE_URL %>assets/images/icons/apple-icon-120x120.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="144x144" href="<%= BASE_URL %>assets/images/icons/apple-icon-144x144.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="152x152" href="<%= BASE_URL %>assets/images/icons/apple-icon-152x152.png">
+  <link version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" rel="apple-touch-icon" sizes="180x180" href="<%= BASE_URL %>assets/images/icons/apple-icon-180x180.png">
 </head>
 <body>
 <noscript>
@@ -60,13 +60,11 @@
   </div>
 </div>
 <!-- 引入JS -->
-<!-- 百度地图需要在前面加载 -->
-<script charset="utf-8" src="<%= BASE_URL %>assets/js/vue-baidu-map.js"></script>
 <% for(var js of htmlWebpackPlugin.options.staticUrl.js) { %>
-<script charset="utf-8" src="<%=js%>"></script>
+<script charset="utf-8" version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" src="<%=js%>"></script>
 <% } %>
 </body>
-<script charset="utf-8" src="<%= BASE_URL %>assets/images/iconfont/iconfont.js"></script>
+<script charset="utf-8" version="<%= VUE_APP_VERSION %>" auth="<%= VUE_APP_AUTHOR %>" time="<%= VUE_APP_UPDATE_TIME %>" src="<%= BASE_URL %>assets/images/iconfont/iconfont.js"></script>
 <!--  百度统计挂掉了-->
 <!--  <script charset="utf-8" src='https://hm.baidu.com/hm.js?a0f8b01930320b849a92a00e0c6da990'></script>-->
 <!--  <script>-->

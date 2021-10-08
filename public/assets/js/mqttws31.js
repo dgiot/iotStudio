@@ -54,11 +54,11 @@
  * Example:
  *
  * <code><pre>
-client = new Paho.MQTT.Client(location.hostname, Number(location.port), "clientId");
-client.onConnectionLost = onConnectionLost;
-client.onMessageArrived = onMessageArrived;
-client.connect({onSuccess:onConnect});
-function onConnect() {
+ client = new Paho.MQTT.Client(location.hostname, Number(location.port), "clientId");
+ client.onConnectionLost = onConnectionLost;
+ client.onMessageArrived = onMessageArrived;
+ client.connect({onSuccess:onConnect});
+ function onConnect() {
   // Once a connection has been made, make a subscription and send a message.
   console.log("onConnect");
   client.subscribe("/World");
@@ -66,11 +66,11 @@ function onConnect() {
   message.destinationName = "/World";
   client.send(message);
 };
-function onConnectionLost(responseObject) {
+ function onConnectionLost(responseObject) {
   if (responseObject.errorCode !== 0)
 	console.log("onConnectionLost:"+responseObject.errorMessage);
 };
-function onMessageArrived(message) {
+ function onMessageArrived(message) {
   console.log("onMessageArrived:"+message.payloadString);
   client.disconnect();
 };
@@ -78,9 +78,7 @@ function onMessageArrived(message) {
  * @namespace Paho.MQTT
  */
 
-if (typeof Paho === 'undefined') {
-  Paho = {}
-}
+if (typeof Paho === 'undefined') Paho = {}
 
 Paho.MQTT = (function (global) {
   // Private variables below, these are only visible inside the function closure
@@ -2138,33 +2136,33 @@ Paho.MQTT = (function (global) {
     }
 
     /**
-		 * Unsubscribe for messages, stop receiving messages sent to destinations described by the filter.
-		 *
-		 * @name Paho.MQTT.Client#unsubscribe
-		 * @function
-		 * @param {string} filter - describing the destinations to receive messages from.
-		 * @param {object} unsubscribeOptions - used to control the subscription
-		 * @param {object} unsubscribeOptions.invocationContext - passed to the onSuccess callback
-		                                      or onFailure callback.
-		 * @param {function} unsubscribeOptions.onSuccess - called when the unsubscribe acknowledgement has been received from the server.
-		 *                                    A single response object parameter is passed to the
-		 *                                    onSuccess callback containing the following fields:
-		 *                                    <ol>
-		 *                                    <li>invocationContext - if set in the unsubscribeOptions.
-		 *                                    </ol>
-		 * @param {function} unsubscribeOptions.onFailure called when the unsubscribe request has failed or timed out.
-		 *                                    A single response object parameter is passed to the onFailure callback containing the following fields:
-		 *                                    <ol>
-		 *                                    <li>invocationContext - if set in the unsubscribeOptions.
-		 *                                    <li>errorCode - a number indicating the nature of the error.
-		 *                                    <li>errorMessage - text describing the error.
-		 *                                    </ol>
-		 * @param {number} unsubscribeOptions.timeout - which, if present, determines the number of seconds
-		 *                                    after which the onFailure callback is called. The presence of
-		 *                                    a timeout does not prevent the onSuccess callback from being
-		 *                                    called when the unsubscribe completes
-		 * @throws {InvalidState} if the client is not in connected state.
-		 */
+     * Unsubscribe for messages, stop receiving messages sent to destinations described by the filter.
+     *
+     * @name Paho.MQTT.Client#unsubscribe
+     * @function
+     * @param {string} filter - describing the destinations to receive messages from.
+     * @param {object} unsubscribeOptions - used to control the subscription
+     * @param {object} unsubscribeOptions.invocationContext - passed to the onSuccess callback
+     or onFailure callback.
+     * @param {function} unsubscribeOptions.onSuccess - called when the unsubscribe acknowledgement has been received from the server.
+     *                                    A single response object parameter is passed to the
+     *                                    onSuccess callback containing the following fields:
+     *                                    <ol>
+     *                                    <li>invocationContext - if set in the unsubscribeOptions.
+     *                                    </ol>
+     * @param {function} unsubscribeOptions.onFailure called when the unsubscribe request has failed or timed out.
+     *                                    A single response object parameter is passed to the onFailure callback containing the following fields:
+     *                                    <ol>
+     *                                    <li>invocationContext - if set in the unsubscribeOptions.
+     *                                    <li>errorCode - a number indicating the nature of the error.
+     *                                    <li>errorMessage - text describing the error.
+     *                                    </ol>
+     * @param {number} unsubscribeOptions.timeout - which, if present, determines the number of seconds
+     *                                    after which the onFailure callback is called. The presence of
+     *                                    a timeout does not prevent the onSuccess callback from being
+     *                                    called when the unsubscribe completes
+     * @throws {InvalidState} if the client is not in connected state.
+     */
     this.unsubscribe = function (filter, unsubscribeOptions) {
       if (typeof filter !== 'string') throw new Error('Invalid argument:' + filter)
       unsubscribeOptions = unsubscribeOptions || {}
