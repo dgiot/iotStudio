@@ -176,7 +176,7 @@
                         :src="
                           item.params.ico.default
                             ? item.params.ico.default
-                            : 'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/logo/logo.png'
+                            : require('../../../public/assets/images/logo/logo.png')
                         "
                         style="width: 50px; height: 50px"
                       />
@@ -212,6 +212,7 @@
 </template>
 
 <script>
+  import defaultLogo from '../../../public/assets/images/logo/logo.png'
   import { resourceTypes, putResourceTypes } from '@/api/Rules'
   import { postChannel } from '@/api/Channel'
   import { mapActions, mapGetters } from 'vuex'
@@ -471,8 +472,7 @@
             item.params.ico = {
               title: { en: 'channel ICO', zh: '通道ICO' },
               description: { en: 'channel ICO', zh: '通道ICO' },
-              default:
-                'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/logo/logo.png',
+              default: defaultLogo,
             }
           }
         })

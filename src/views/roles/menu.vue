@@ -219,7 +219,9 @@
           <template #empty>
             <el-image
               class="vab-data-empty"
-              src="http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/empty_images/data_empty.png"
+              :src="
+                require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+              "
             />
           </template>
         </el-table>

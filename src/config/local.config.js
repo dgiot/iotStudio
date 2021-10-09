@@ -27,6 +27,7 @@ let localUrl = {
     'prism-tomorrow.css',
     'prismeditor.min.css',
     'vue2-perfect-scrollbar.min.css',
+    'aliplayer-min.css',
   ],
   js: [
     'vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools

@@ -452,7 +452,8 @@
                     <bm-marker
                       :ref="'bm_info' + index"
                       :icon="{
-                        url: item.iconUrl,
+                        url:
+                          item.icon == 1 ? icoPath.icoPath1 : icoPath.icoPath2,
                         size: { width: 100, height: 100 },
                       }"
                       :position="{
@@ -787,6 +788,8 @@
   </div>
 </template>
 <script>
+  import icoPath1 from '../../../public/assets/images/Device/1.png'
+  import icoPath2 from '../../../public/assets/images/Device/2.png'
   import { queryProduct } from '@/api/Product'
   import { getDevice, putDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
@@ -848,6 +851,10 @@
       }
 
       return {
+        icoPath: {
+          icoPath1: icoPath1,
+          icoPath2: icoPath2,
+        },
         router: '',
         topicKey: '',
         loadingConfig: {
@@ -1193,9 +1200,9 @@
                   : item.icon === '1'
                   ? 'blue'
                   : 'red'
-              item.iconUrl = `https://dgiot-1253666439.file.myqcloud.com/shuwa_tech/zh/frontend/web/Device/${
-                item.icon
-              }.png?${new Date().getTime()}`
+              // item.iconUrl = require(`@/assets/images/Device/${
+              //   item.icon
+              // }.png?${new Date().getTime()}\``)
             })
             this.set_tableData(this.tableData)
             this.$forceUpdate()

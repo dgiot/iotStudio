@@ -641,7 +641,7 @@
   import { subupadte } from '@/api/System/index'
   import { resourceTypes } from '@/api/Rules'
   import { mapGetters } from 'vuex'
-
+  import defaultLogo from '../../../public/assets/images/logo/logo.png'
   var subdialog
   import VabInput from '@/vab/components/VabInput/input'
 
@@ -1008,8 +1008,7 @@
             item.params.ico = {
               title: { en: 'channel ICO', zh: '通道ICO' },
               description: { en: 'channel ICO', zh: '通道ICO' },
-              default:
-                'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/logo/logo.png',
+              default: defaultLogo,
             }
           }
         })

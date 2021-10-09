@@ -6,12 +6,15 @@
           <div class="pic-error">
             <el-image
               class="pic-error-parent"
-              src="http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/error_images/403.png"
+              :src="
+                require('../../public/assets/images/platform/assets/error_images/403.png')
+              "
             />
             <el-image
               class="pic-error-child left"
-              src="
-            http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/error_images/cloud.png"
+              :src="
+                require('../../public/assets/images/platform/assets/error_images/403.png')
+              "
             />
           </div>
         </el-col>

@@ -116,6 +116,7 @@
   </div>
 </template>
 <script lang="js">
+  import backgroundImage from '../../../public/assets/images/shuwa_tech/zh/blog/study/opc/nf_taiti.png'
   import { uuid } from '@/utils'
   import { requireModule } from '@/utils/file'
   import { createState } from '@/utils/konva'
@@ -223,8 +224,7 @@
         // )
       },
       _initCreate() {
-        let background =
-          'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/blog/study/opc/nf_taiti.png'
+        let background = backgroundImage
         this.$refs.konva.style.backgroundImage = `url(${background})`
       },
       // set_mqttflag

@@ -106,6 +106,7 @@
 </template>
 
 <script>
+  import backgroundImage from '../../../public/assets/images/platform/assets/login_images/background.jpg'
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/validate'
   import { SiteDefault } from '@/api/License'
@@ -139,8 +140,7 @@
           than: this.$translateTitle('home.Password cannot be less than'),
           Bit: this.$translateTitle('home.Bit'),
         },
-        backgroundImage:
-          'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
+        backgroundImage: backgroundImage,
         nodeEnv: process.env.NODE_ENV,
         form: {
           username: '',

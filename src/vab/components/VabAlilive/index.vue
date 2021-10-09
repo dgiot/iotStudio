@@ -464,7 +464,3 @@
     },
   }
 </script>
-
-<style>
-  @import url('https://g.alicdn.com/de/prismplayer/2.8.1/skins/default/aliplayer-min.css');
-</style>

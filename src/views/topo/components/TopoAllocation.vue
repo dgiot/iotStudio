@@ -73,6 +73,10 @@
 </template>
 
 <script>
+  const path = require('path')
+  const imgHost = path.join(__dirname, '../../../../public/assets/images/dgiot_release/topo/')
+  // import imgHost from '../../../../public/assets/images/dgiot_release/topo/'
+  console.log(imgHost)
   import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
   import { getSvgPath } from '@/utils/konva'
@@ -87,8 +91,7 @@
         iconfont,
         busData: { coordinate: {}, paths: [] },
         accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF',
-        imgHost:
-          'https://dgiot-1253666439.file.myqcloud.com/dgiot_release/topo/',
+        imgHost: imgHost,
         icon: '24-hours-fill',
         layout: 'total, prev, next',
         total: 0,

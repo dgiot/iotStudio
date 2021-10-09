@@ -120,10 +120,11 @@ const state = () => ({
   setBackgroundimage: getToken('backgroundimage'),
   avatar: getToken('avatar'),
   Copyright: getToken('Copyright'),
-  logo: getToken('logo') || 'http://www.iotn2n.com/favicon.ico?1558342112',
-  backgroundimage:
-    getToken('backgroundimage') ||
-    'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg',
+  // logo: getToken('logo') ||
+  logo: `./favicon.ico?t=${new Date().getTime()}`,
+  // backgroundimage:
+  //   getToken('backgroundimage') ||
+  backgroundimage: '/assets/images/platform/assets/login_images/background.jpg',
   objectId: getToken('objectId'),
 })
 const getters = {

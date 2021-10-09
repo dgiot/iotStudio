@@ -225,7 +225,7 @@
     min-height: 700px;
     margin: 0 auto;
     text-align: center;
-    background: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/background.jpg')
+    background: url('../../../public/assets/images/platform/assets/login_images/background.jpg')
       center center fixed no-repeat;
     background-size: cover;
 
