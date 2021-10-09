@@ -106,11 +106,11 @@
     methods: {
       async Mqtt(md5Info) {
         const { VUE_APP_URL, NODE_ENV } = process.env
-        const { host, protocol } = location
+        const { hostname, protocol } = location
         this.option = {
           keepalive: 60,
           clientId: 'dgiot_mqtt_' + md5(this.token),
-          ip: NODE_ENV == 'development' ? VUE_APP_URL.split('//')[1] : host,
+          ip: NODE_ENV == 'development' ? VUE_APP_URL.split('//')[1] : hostname,
           isSSL: protocol === 'https:' ? true : false,
           port: protocol == 'http:' ? 8083 : 8084,
           userName: md5Info.username,
