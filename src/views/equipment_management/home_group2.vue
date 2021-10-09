@@ -2797,10 +2797,10 @@
   }
 
   .devproduct ::v-deep .el-dialog__wrapper .el-dialog__header,
-    //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
-    //  display: none;
-    //}
-  .devproduct .parserTable {
+  //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
+  //  display: none;
+  //}
+.devproduct .parserTable {
     display: block;
   }
 
@@ -2879,7 +2879,7 @@
   }
 
   /* .devproduct .el-icon-close{
-  position:absolute;
-  right:0;
-  } */
+position:absolute;
+right:0;
+} */
 </style>

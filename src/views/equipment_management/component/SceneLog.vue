@@ -6,22 +6,22 @@
           v-if="!$loadsh.isEmpty(queryForm)"
           ref="form"
           :inline="true"
-          label-width="80px"
+          label-width="50px"
           :model="queryForm"
           @submit.native.prevent
         >
-          <el-form-item :label="$translateTitle('device.level')">
-            <el-select v-model="queryForm.level">
-              <el-option
-                v-for="item in leverData"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
-                {{ item }}
-              </el-option>
-            </el-select>
-          </el-form-item>
+          <!--          <el-form-item :label="$translateTitle('device.level')">-->
+          <!--            <el-select v-model="queryForm.level">-->
+          <!--              <el-option-->
+          <!--                v-for="item in leverData"-->
+          <!--                :key="item"-->
+          <!--                :label="item"-->
+          <!--                :value="item"-->
+          <!--              >-->
+          <!--                {{ item }}-->
+          <!--              </el-option>-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
           <el-form-item :label="$translateTitle('device.tracetype')">
             <el-select v-model="queryForm.tracetype">
               <el-option
@@ -44,15 +44,16 @@
               :inactive-text="$translateTitle('device.stop')"
               inactive-value="stop"
               style="display: block"
+              @change="starttrace"
             />
           </el-form-item>
           <el-form-item>
-            <el-button
-              icon="el-icon-search"
-              native-type="submit"
-              type="primary"
-              @click="queryTable({})"
-            />
+            <!--            <el-button-->
+            <!--              icon="el-icon-search"-->
+            <!--              native-type="submit"-->
+            <!--              type="primary"-->
+            <!--              @click="queryTable({})"-->
+            <!--            />-->
             <el-button
               style="margin: 0 10px 10px 10px !important"
               type="success"
@@ -363,6 +364,11 @@
             }, 1500)
           },
         })
+      },
+      starttrace(val) {
+        console.log('aaa', val)
+        this.queryForm.action = val
+        this.queryTable()
       },
       queryTable() {
         this.scroketMsg = []

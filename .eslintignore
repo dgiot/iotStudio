@@ -6,6 +6,8 @@ node_modules
 release
 readme
 src/views/platform/testpumplist/pumplist/key-labelText.md
+src/views/equipment_management/home_group2.vue
+src/views/equipment_management/component/SceneLog.vue
 .npmrc
 .yarnrc
 .cz-config.js

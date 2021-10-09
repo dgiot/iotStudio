@@ -1558,11 +1558,14 @@
               vm.machinelist = machine
               vm.thirdtbKey = moment(new Date()).valueOf()
               console.log('this.machinelist', vm.machinelist)
+            } else {
+              this.updateTrue(false)
+              this.isupdate = false
             }
           })
           .catch((error) => {
             console.log('update error 清除timer', error)
-            window.clearInterval(vm.timer)
+            this.updateTrue(false)
             this.isupdate = false
           })
       },
