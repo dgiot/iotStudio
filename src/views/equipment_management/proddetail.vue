@@ -862,7 +862,7 @@
             :visible.sync="wmxdialogVisible"
             width="60%"
           >
-            <dgiot-wmxdetail
+            <dgiot-wmx
               ref="sizeForm"
               :size-form1="sizeForm"
               @addDomain="addDomain"

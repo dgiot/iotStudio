@@ -11,3 +11,5 @@ src/views/equipment_management/component/SceneLog.vue
 .npmrc
 .yarnrc
 .cz-config.js
+*.vue
+*.js

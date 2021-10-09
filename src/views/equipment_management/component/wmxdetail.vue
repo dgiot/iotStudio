@@ -1345,7 +1345,7 @@
           isshow: [
             {
               required: true,
-              message: '请选择是否显示',
+              message: '请选择是否存储',
               trigger: 'change',
             },
           ],

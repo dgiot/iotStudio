@@ -166,7 +166,7 @@
           <el-table-column :label="$translateTitle('home.category')">
             <template slot-scope="scope">
               <span>
-                {{ scope.row.category }}
+                {{ scope.row.netType }}
               </span>
             </template>
           </el-table-column>
@@ -314,7 +314,6 @@
                 "
               />
             </div>
-
             <el-form
               :key="form.type"
               ref="form"
@@ -466,24 +465,6 @@
                   />
                 </div>
               </el-form-item>
-              <!--              <el-form-item-->
-              <!--                prop="storageStrategy"-->
-              <!--                :label="$translateTitle('product.Storage strategy')"-->
-              <!--              >-->
-              <!--                <el-select-->
-              <!--                  v-model="form.storageStrategy"-->
-              <!--                  :placeholder="$translateTitle('task.Select')"-->
-              <!--                  style="width: 100%"-->
-              <!--                  @click.native="getResource('otherchannel', '1')"-->
-              <!--                >-->
-              <!--                  <el-option-->
-              <!--                    v-for="item in storageArr"-->
-              <!--                    :key="item"-->
-              <!--                    :label="item"-->
-              <!--                    :value="item"-->
-              <!--                  />-->
-              <!--                </el-select>-->
-              <!--              </el-form-item>-->
               <el-form-item
                 :label="$translateTitle('product.devicetype')"
                 prop="nodeType"
@@ -500,33 +481,6 @@
                   </el-radio>
                 </el-radio-group>
               </el-form-item>
-              <!-- <el-form-item label="是否接入网关" v-show="form.resource=='网关'">
-                     <el-radio-group v-model="form.isshow">
-                          <el-radio label="是"></el-radio>
-                          <el-radio label="否"></el-radio>
-                      </el-radio-group>
-                </el-form-item>-->
-
-              <!--              <el-form-item prop="netType">-->
-              <!--                <span slot="label">-->
-              <!--                  {{ $translateTitle('product.networking') }}-->
-              <!--                  <el-badge :value="channel.length" class="item" />-->
-              <!--                </span>-->
-
-              <!--                <el-select-->
-              <!--                  v-model="form.netType"-->
-              <!--                  style="width: 100%"-->
-              <!--                  :placeholder="$translateTitle('product.selectgateway')"-->
-              <!--                >-->
-              <!--                  <el-option-->
-              <!--                    v-for="(item, index) in channel"-->
-              <!--                    :key="index"-->
-              <!--                    :label="index + 1 + ':' + item.label"-->
-              <!--                    :value="item.value"-->
-              <!--                    :title="'当前第' + (index + 1) + '项'"-->
-              <!--                  />-->
-              <!--                </el-select>-->
-              <!--              </el-form-item>-->
               <el-form-item :label="$translateTitle('menu.icon')" prop="icon">
                 <div v-if="imageUrl">
                   <img class="avatar" :src="imageUrl" />
@@ -2166,7 +2120,7 @@
       chooseTemplate(row) {
         this.selectedRow = row
         this.form.category = row.category
-        this.form.netType = row.netType
+        this.form.netType = row.netType + "/" + row.name
         this.cascaderDrawer = !this.cascaderDrawer
       },
       // 关闭dialog 事件
@@ -2355,8 +2309,10 @@
         // this.form.relationApp = ''
         this.dialogFormVisible = true
         this.productid = row.objectId
-        this.getIndustryParent(row.category, this.categoryList)
+        // this.getIndustryParent(row.category, this.categoryList)
         this.form.desc = row.desc
+        this.form.category = row.category
+        this.form.type = row.config.type
         this.form.name = row.name
         this.form.nodeType = row.nodeType
         this.form.tdchannel = row.channel ? row.channel.tdchannel : ''
@@ -2430,12 +2386,11 @@
           icon: this.imageUrl,
           devType: this.form.devType,
           desc: this.form.desc,
+          config:{
+            type: this.form.type,
+          }
         }
         this.$refs.form.validate((valid) => {
-          // console.log(this.$refs.form)
-          // console.log(this.form)
-          // console.log(valid)
-          // return
           if (valid) {
             // 判断是新增产品还是修改
             if (this.custom_status === 'add') {
@@ -2458,7 +2413,7 @@
                 topics = [],
                 thing = {},
                 decoder = {},
-                category = this.form.category,
+                category = Number(this.form.type)==0?'5ca6049839':this.form.category,
                 channel = {
                   tdchannel: this.form.tdchannel,
                   taskchannel: this.form.taskchannel,
