@@ -583,6 +583,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.$refs._tabs.$children[0].$refs.tabs[3].style.display = 'none'
+      Websocket.subscribe({topic: 'log/channel/#' ,qos: 2, })
     })
     this.Industry()
     this.getAllunit()
