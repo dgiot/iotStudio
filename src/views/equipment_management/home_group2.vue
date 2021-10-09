@@ -316,6 +316,7 @@
             </div>
 
             <el-form
+              :key="form.type"
               ref="form"
               :label-width="
                 $translateTitle('product.productname') == '产品名称'
@@ -339,7 +340,7 @@
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.classification')"
-                prop="category"
+                :prop="form.type == 0 ? '' : 'category'"
               >
                 <el-row :gutter="24">
                   <el-col :span="10">
@@ -1373,7 +1374,6 @@
   import { delProduct, getProduct, putProduct } from '@/api/Product'
   import { getAllunit } from '@/api/Dict/index'
   import { queryDevice } from '@/api/Device/index'
-  import { export_txt_to_zip } from '@/utils/Export2Zip.js'
   import { getServer } from '@/api/Role/index'
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
@@ -2508,8 +2508,8 @@
               } = this.selectedRow
 
               // type为1 继承 this.selectedRow 的参数
-              if (this.form.type == 1) {
-              }
+              // if (this.form.type == 1) {
+              // }
               // 继承select的属性
               var addparams = {
                 category,

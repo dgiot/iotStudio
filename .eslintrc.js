@@ -13,8 +13,8 @@ module.exports = {
     },
   },
   rules: {
-    'no-unused-vars': 2,
-    'no-undef': 2,
+    'no-unused-vars': 'off',
+    'no-undef': 'off',
     'no-console': 'off',
     'no-debugger': 'off',
     'vue/no-v-html': 'off',

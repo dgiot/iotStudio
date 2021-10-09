@@ -564,7 +564,7 @@
       // alert('father')
       const { project = '' } = this.$route.query
       this.formInline.productname = project
-      this.categorylist()
+      this.querycategorylist()
       this.featchTable()
       this.queryProduttemp({})
     },
@@ -584,7 +584,7 @@
         }
         this.$baseEventBus.$emit('reload-router-view')
       },
-      async categorylist() {
+      async querycategorylist() {
         const parsms = {
           order: 'createdAt',
           keys: 'count(*)',
@@ -592,13 +592,16 @@
         }
         const { results } = await queryCategory(parsms)
         this.categoryList = results
-        this.categoryChange({ name: '所有领域' })
-        console.log('this', this.categoryList)
+        // if (results)
+        //   this.$nextTick(() => {
+        //     // this.categoryChange({ name: '所有领域' })
+        //   })
       },
       async StepsListRowClick(params) {
         var productDetail = {}
         var isLoading = true
         try {
+          // eslint-disable-next-line no-constant-condition
           const loading = true
             ? (isLoading = false)
             : this.$baseColorfullLoading()
@@ -634,6 +637,8 @@
       },
       categoryChange(data) {
         const loading = this.$baseColorfullLoading()
+        console.log(this.formInline.category)
+        this.categorysonList = []
         let params = {
           order: 'createdAt',
           where: {},
@@ -831,7 +836,7 @@
           console.log(error)
           this.$message.error(`${error}`)
         }
-        console.log(this.DbaTable)
+        // console.log(this.DbaTable)
       },
       uploadCkick() {
         this.loading = true
@@ -1601,7 +1606,7 @@
           sizeForm.type == 'int' ||
           sizeForm.type == 'long'
         ) {
-          let obj1 = {
+          var obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
               specs: {
@@ -1621,7 +1626,7 @@
             delete obj.dataForm.slaveid
           }
         } else if (sizeForm.type == 'image') {
-          var obj1 = {
+          obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
               imagevalue: sizeForm.imagevalue,
@@ -1630,7 +1635,7 @@
           }
           Object.assign(obj, obj1)
         } else if (sizeForm.type == 'bool') {
-          var obj1 = {
+          obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
               specs: {
@@ -1646,7 +1651,7 @@
             var newkey = items['attribute']
             specs[newkey] = items['attributevalue']
           })
-          var obj1 = {
+          obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
               specs: specs,
@@ -1654,7 +1659,7 @@
           }
           Object.assign(obj, obj1)
         } else if (sizeForm.type == 'struct') {
-          var obj1 = {
+          obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
               specs: sizeForm.struct,
@@ -1662,7 +1667,7 @@
           }
           Object.assign(obj, obj1)
         } else if (sizeForm.type == 'text') {
-          var obj1 = {
+          obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
               size: sizeForm.string,
@@ -1671,7 +1676,7 @@
           }
           Object.assign(obj, obj1)
         } else if (sizeForm.type == 'date') {
-          var obj1 = {
+          obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
               specs: {},
@@ -1679,7 +1684,7 @@
           }
           Object.assign(obj, obj1)
         } else if (sizeForm.type == 'geopoint') {
-          var obj1 = {
+          obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
               gpstype: sizeForm.gpstype,
