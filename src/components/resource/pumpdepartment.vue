@@ -146,8 +146,9 @@
           node.data.isvcon == false
         ) {
           this.data = []
-          var Department = Parse.Object.extend('PumpDepartment')
-          var department = new Parse.Query(Department)
+          var DepartmentAll = Parse.Object.extend('PumpDepartment')
+          // eslint-disable-next-line no-redeclare
+          var department = new Parse.Query(DepartmentAll)
           department.equalTo('ParentId', node.data.objectId)
           department.ascending('org_type')
           department.limit(10000)

@@ -39,6 +39,7 @@ const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
 const FileManagerPlugin = require('filemanager-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 process.env.VUE_APP_TITLE = title
@@ -138,6 +139,7 @@ module.exports = {
         },
       },
       plugins: [
+        new HardSourceWebpackPlugin(),
         new Webpack.ProvidePlugin(providePlugin),
         new WebpackBar({
           name: webpackBarName,

@@ -31,8 +31,6 @@ export async function query_object(tabclass, params) {
  * @param {*} tabclass  表名 必传 不可为空
  * @param {*} params    对应参数 必传  可为{}
  */
-{
-}
 export async function query_object_header(tabclass, params, headers) {
   if (tabclass && params) {
     return request({

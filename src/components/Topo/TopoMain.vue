@@ -288,6 +288,7 @@
         this.moveItem.startY = event.pageY
         //记录初始信息--move
         for (var key in this.selectedComponentMap) {
+          // eslint-disable-next-line no-redeclare
           var component = this.selectedComponentMap[key]
           component.style.temp = {}
           component.style.temp.position = {}
@@ -368,7 +369,9 @@
           })
         } else if (this.flag == 'move') {
           //移动组件
+          // eslint-disable-next-line no-redeclare
           var dx = event.pageX - this.moveItem.startX,
+            // eslint-disable-next-line no-redeclare
             dy = event.pageY - this.moveItem.startY
           for (var key in this.selectedComponentMap) {
             var component = this.selectedComponentMap[key]

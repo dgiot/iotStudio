@@ -3,7 +3,7 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: ['plugin:vue/recommended', 'eslint:recommended', '@vue/prettier'],
+  extends: ['plugin:vue/recommended', '@vue/prettier'],
   parser: 'vue-eslint-parser',
   parserOptions: {
     sourceType: 'module',
@@ -17,6 +17,7 @@ module.exports = {
     'no-undef': 'off',
     'no-console': 'off',
     'no-debugger': 'off',
+    'vue/no-template-shadow': 'off',
     'vue/no-v-html': 'off',
     'vue/html-self-closing': [
       'error',

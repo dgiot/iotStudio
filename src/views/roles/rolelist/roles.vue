@@ -1,5 +1,3 @@
-<!-- eslint-disable-next-line -->
-
 <template>
   <div class="roles dgiot-container">
     <el-row :gutter="20">

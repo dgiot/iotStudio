@@ -317,6 +317,7 @@ const actions = {
    * @param {*} {}
    * @param {*} tokenData
    */
+  // eslint-disable-next-line no-empty-pattern
   async socialLogin({}, tokenData) {
     const { data } = await socialLogin(tokenData)
     const token = data[tokenName]

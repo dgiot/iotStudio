@@ -61,6 +61,7 @@ export function UploadImg(params) {
     'auth_token',
   ]
   var result = isParamsKey.every((e) => {
+    // eslint-disable-next-line no-prototype-builtins
     return params.hasOwnProperty(`${e}`)
   })
   let url = ''

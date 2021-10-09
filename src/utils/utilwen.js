@@ -170,6 +170,7 @@ export function deepClone(originObject) {
   if (originObject && typeof originObject === 'object') {
     for (var key in originObject) {
       // 如果子属性为引用数据类型，递归复制
+      // eslint-disable-next-line no-prototype-builtins
       if (originObject.hasOwnProperty(key)) {
         if (originObject[key] && typeof originObject[key] === 'object') {
           deepObject[key] = deepClone(originObject[key])

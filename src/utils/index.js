@@ -490,17 +490,19 @@ export function randomHexColor() {
  * @description 生成从minNum到maxNum的随机数
  */
 export function randomNum(minNum, maxNum) {
+  let res
   switch (arguments.length) {
     case 1:
-      return parseInt(Math.random() * minNum + 1, 10)
+      res = parseInt(Math.random() * minNum + 1, 10)
       break
     case 2:
-      return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
+      res = parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
       break
     default:
-      return 0
+      res = 0
       break
   }
+  return res
 }
 
 /**
@@ -594,6 +596,7 @@ export function clone(obj) {
 export function deepCopy(obj) {
   let result = Array.isArray(obj) ? [] : {}
   for (let key in obj) {
+    // eslint-disable-next-line no-prototype-builtins
     if (obj.hasOwnProperty(key)) {
       if (typeof obj[key] === 'object') {
         result[key] = deepCopy(obj[key]) //递归复制

@@ -42,7 +42,6 @@ export function CloundFile(objectid) {
     method: 'get',
     params: {
       objectid,
-      objectid,
     },
   })
 }

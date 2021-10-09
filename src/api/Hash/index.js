@@ -27,6 +27,7 @@ function toMd5(string) {
 function verifyRule(classNmae, keys, data) {
   let results = true
   for (const key in keys) {
+    // eslint-disable-next-line no-prototype-builtins
     if (!data.hasOwnProperty(keys[key])) {
       Message({
         message: `class为 ${classNmae} 的 key不符合: ${keys[key]}`,
@@ -36,6 +37,7 @@ function verifyRule(classNmae, keys, data) {
       })
       console.warn(`class为 ${classNmae} 的 key不符合:`, keys[key])
     }
+    // eslint-disable-next-line no-prototype-builtins
     results = results && data.hasOwnProperty(keys[key])
   }
   return results
@@ -64,7 +66,7 @@ export async function getHashClass(classNmae, data) {
       else {
         response = errorRes
       }
-      return response
+      // return response
       break
     case 'Device':
       keys = ['productid', 'devaddr']
@@ -73,7 +75,7 @@ export async function getHashClass(classNmae, data) {
       else {
         response = errorRes
       }
-      return response
+      // return response
       break
     case 'Evidence':
       keys = ['ukey', 'timestamp']
@@ -82,7 +84,7 @@ export async function getHashClass(classNmae, data) {
       else {
         response = errorRes
       }
-      return response
+      // return response
       break
     case 'Channel':
       keys = ['name', 'type', 'ctype']
@@ -91,7 +93,7 @@ export async function getHashClass(classNmae, data) {
       else {
         response = errorRes
       }
-      return response
+      // return response
       break
     case 'Dict':
       keys = ['key', 'type']
@@ -100,7 +102,7 @@ export async function getHashClass(classNmae, data) {
       else {
         response = errorRes
       }
-      return response
+      // return response
       break
     case 'Instruct':
       keys = ['deviceid', 'pn', 'di']
@@ -109,7 +111,7 @@ export async function getHashClass(classNmae, data) {
       else {
         response = errorRes
       }
-      return response
+      // return response
       break
     case 'Menu':
       keys = ['name', 'url']
@@ -118,7 +120,7 @@ export async function getHashClass(classNmae, data) {
       else {
         response = errorRes
       }
-      return response
+      // return response
       break
     case 'Permission':
       keys = ['name']
@@ -127,7 +129,7 @@ export async function getHashClass(classNmae, data) {
       else {
         response = errorRes
       }
-      return response
+      // return response
       break
     case 'Crond':
       keys = ['name']
@@ -136,7 +138,7 @@ export async function getHashClass(classNmae, data) {
       else {
         response = errorRes
       }
-      return response
+      // return response
       break
     default:
       Message({
@@ -147,4 +149,5 @@ export async function getHashClass(classNmae, data) {
       })
       return errorRes
   }
+  return response
 }

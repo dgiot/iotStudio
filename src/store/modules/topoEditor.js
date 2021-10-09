@@ -73,6 +73,7 @@ const mutations = {
           return a - b
         })
         //逆向循环删除
+        // eslint-disable-next-line no-redeclare
         for (var i = keys.length - 1; i >= 0; i--) {
           state.topoData.components.splice(keys[i], 1)
         }
@@ -81,6 +82,7 @@ const mutations = {
         var dx = command.dx,
           dy = command.dy
         for (var key in command.items) {
+          // eslint-disable-next-line no-redeclare
           var component = command.items[key]
           component.style.position.x = component.style.position.x + dx
           component.style.position.y = component.style.position.y + dy
@@ -89,9 +91,11 @@ const mutations = {
       case 'copy-add':
         debugger
         this.commit('topoEditor/clearSelectedComponent')
+        // eslint-disable-next-line no-redeclare
         var fuid = uid
         for (let i = 0; i < command.items.length; i++) {
           var t = command.items[i]
+          // eslint-disable-next-line no-redeclare
           var component = deepCopy(t)
           component.identifier = fuid()
           component.name = component.type + state.topoData.components.length
@@ -138,6 +142,7 @@ const mutations = {
         var dx = command.dx,
           dy = command.dy
         for (var key in state.selectedComponentMap) {
+          // eslint-disable-next-line no-redeclare
           var component = state.selectedComponentMap[key]
           component.style.position.x = component.style.position.x - dx
           component.style.position.y = component.style.position.y - dy

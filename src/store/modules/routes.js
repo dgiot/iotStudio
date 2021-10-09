@@ -85,15 +85,15 @@ const actions = {
       if (item.children && item.meta) {
         item.children.forEach((i, k) => {
           if (i.meta) {
-            i.name = i.name
+            // i.name = i.name
             i.path = i.url
             i.component = i.meta.component
             i.hidden = i.meta.hidden || false
             i.meta.noKeepAlive = i.meta.noKeepAlive || false
             i.menuHidden = i.meta.menuHidden || false
             i.alwaysShow = i.meta.alwaysShow || false
-            i.meta.title = i.meta.title
-            i.meta.icon = i.meta.icon
+            // i.meta.title = i.meta.title
+            // i.meta.icon = i.meta.icon
           }
         })
       }
