@@ -2934,8 +2934,8 @@ export default {
     // 订阅日志
     subProTopic(row) {
       this.subdialog = true
-      this.subdialogid = row.id
-      this.channelname = row.id
+      this.subdialogid = row.objectId
+      this.channelname = row.objectId
       setTimeout(() => {
         subdialog = ace.edit('subdialog')
         subdialog.session.setMode('ace/mode/text') // 设置语言
@@ -2948,11 +2948,11 @@ export default {
         })
       })
       var info = {
-        topic: 'log/channel/' + row.id + '/' + this.productId,
+        topic: 'log/channel/' + row.objectId + '/' + this.productId,
         qos: 2,
       }
       var channeltopic = new RegExp(
-        'log/channel/' + row.id + '/' + this.productId
+        'log/channel/' + row.objectId + '/' + this.productId
       )
       var submessage = ''
       var _this = this
@@ -2975,7 +2975,7 @@ export default {
           // console.log(info);
           // console.log("订阅成功");
           var sendInfo = {
-            topic: 'channel/' + row.id + '/' + _this.productId,
+            topic: 'channel/' + row.objectId + '/' + _this.productId,
             text: text0,
             retained: true,
             qos: 2,
