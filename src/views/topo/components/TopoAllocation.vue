@@ -74,7 +74,10 @@
 
 <script>
   const path = require('path')
-  const imgHost = path.join(__dirname, '../../../../public/assets/images/dgiot_release/topo/')
+  const imgHost = path.join(
+    __dirname,
+    '../../../../public/assets/images/dgiot_release/topo/'
+  )
   // import imgHost from '../../../../public/assets/images/dgiot_release/topo/'
   console.log(imgHost)
   import { getMaterial } from '@/api/Material'
