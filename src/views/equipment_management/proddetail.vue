@@ -1,20 +1,19 @@
-<!--eslint-disable -->
 <template>
   <div class="editproduct">
     <div class="editheader">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/roles/product' }">
-          {{ $translateTitle("route.产品管理") }}
+          {{ $translateTitle('route.产品管理') }}
         </el-breadcrumb-item>
         <el-breadcrumb-item>
-          {{ $translateTitle("route.产品详情") }}
+          {{ $translateTitle('route.产品详情') }}
         </el-breadcrumb-item>
       </el-breadcrumb>
       <div class="product">
         <ul>
           <li>
             <!-- <span>产品名称:</span> -->
-            {{ $translateTitle("product.productname") }}:
+            {{ $translateTitle('product.productname') }}:
             <span>{{ productName }}</span>
           </li>
           <li>
@@ -22,37 +21,37 @@
             <span v-if="isshow == false">
               ********************
               <el-link
-                :underline="false"
                 style="margin-left: 5px; cursor: pointer"
                 type="primary"
+                :underline="false"
                 @click="isshow = true"
               >
-                {{ $translateTitle("product.display") }}
+                {{ $translateTitle('product.display') }}
               </el-link>
             </span>
             <span v-else>
               {{ ProductSecret }}
               <el-link
-                :underline="false"
                 style="margin-left: 5px; cursor: pointer"
                 type="primary"
+                :underline="false"
                 @click="isshow = false"
               >
-                {{ $translateTitle("product.hidden") }}
+                {{ $translateTitle('product.hidden') }}
               </el-link>
             </span>
           </li>
           <li>
-            <span>{{ $translateTitle("product.numberofequipment") }}:</span>
+            <span>{{ $translateTitle('product.numberofequipment') }}:</span>
             <span>
               {{ form.ProductAll }}
               <el-link
-                :underline="false"
                 style="margin-left: 10px; font-size: 16px"
                 type="primary"
+                :underline="false"
                 @click.native="goToDevices"
               >
-                {{ $translateTitle("product.gotoequipment") }}
+                {{ $translateTitle('product.gotoequipment') }}
               </el-link>
             </span>
           </li>
@@ -96,14 +95,14 @@
                     type="primary"
                     @click.native="exportProduct(productName)"
                   >
-                    {{ $translateTitle("product.exportpro") }}
+                    {{ $translateTitle('product.exportpro') }}
                   </el-button>
                   <el-button
                     size="small"
                     type="primary"
                     @click.native="setTemplate(productInfo)"
                   >
-                    {{ $translateTitle("product.Set as template") }}
+                    {{ $translateTitle('product.Set as template') }}
                   </el-button>
                 </div>
               </vab-query-form-left-panel>
@@ -117,12 +116,14 @@
             </vab-query-form>
             <div>
               <el-descriptions
-                v-loading="productName== ''"
-                :column="3"
-                :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
+                v-loading="productName == ''"
                 border
+                :column="3"
                 element-loading-background="rgba(0, 0, 0, 0.8)"
                 element-loading-spinner="el-icon-loading"
+                :element-loading-text="
+                  $translateTitle('developer.Waitingtoreturn')
+                "
                 size="small"
               >
                 <el-descriptions-item
@@ -134,10 +135,10 @@
                   :label="$translateTitle('product.nodetype')"
                 >
                   <td v-if="productdetail.nodeType == 1" class="notbottom">
-                    {{ $translateTitle("product.gateway") }}
+                    {{ $translateTitle('product.gateway') }}
                   </td>
                   <td v-else class="notbottom">
-                    {{ $translateTitle("product.equipment") }}
+                    {{ $translateTitle('product.equipment') }}
                   </td>
                 </el-descriptions-item>
                 <el-descriptions-item
@@ -161,18 +162,18 @@
                     >
                       <i class="el-icon-question" />
                     </el-tooltip>
-                    {{ $translateTitle("product.dynamicregistration") }}
+                    {{ $translateTitle('product.dynamicregistration') }}
                   </template>
                   <span v-if="dynamicReg == false" style="color: #cccccc">
-                    {{ $translateTitle("product.close") }}
+                    {{ $translateTitle('product.close') }}
                   </span>
-                  <span v-else>{{ $translateTitle("product.open") }}</span>
+                  <span v-else>{{ $translateTitle('product.open') }}</span>
                   <el-switch
                     v-model="dynamicReg"
-                    :active-value="true"
-                    :inactive-value="false"
                     active-color="#5eb058"
+                    :active-value="true"
                     inactive-color="#cccccc"
+                    :inactive-value="false"
                     @change="handelUpdate($event, dynamicReg)"
                   />
                 </el-descriptions-item>
@@ -181,12 +182,12 @@
                 >
                   <td v-if="productdetail.netType == 'CELLULAR'">
                     <!-- 蜂窝(2G/3G/4G) -->
-                    {{ $translateTitle("product.honeycomb") }}(2G/3G/4G)
+                    {{ $translateTitle('product.honeycomb') }}(2G/3G/4G)
                   </td>
                   <td v-else-if="productdetail.netType == 'WIFI'">WiFi</td>
                   <td v-else-if="productdetail.netType == 'ETHERNET'">
                     <!-- 以太网 -->
-                    {{ $translateTitle("product.ethernet") }}
+                    {{ $translateTitle('product.ethernet') }}
                   </td>
                   <td v-else-if="productdetail.netType == 'LORA'">LoRaWAN</td>
                   <td v-else>{{ productdetail.netType }}</td>
@@ -194,25 +195,29 @@
                 <el-descriptions-item
                   :label="$translateTitle('developer.describe')"
                 >
-                  {{ productdetail.desc || "" }}
+                  {{ productdetail.desc || '' }}
                 </el-descriptions-item>
-                <el-descriptions-item :label="$translateTitle('product.physicalmodel')">
-
-                  <el-button :disabled="productInfo.thing.properties.length ==0" type="text"
-                             @click="activeName = 'third'">
+                <el-descriptions-item
+                  :label="$translateTitle('product.physicalmodel')"
+                >
+                  <el-button
+                    :disabled="productInfo.thing.properties.length == 0"
+                    type="text"
+                    @click="activeName = 'third'"
+                  >
                     {{ productInfo.thing.properties.length || 0 }}
                   </el-button>
                 </el-descriptions-item>
-                <el-descriptions-item :label="$translateTitle('product.parser')">
+                <el-descriptions-item
+                  :label="$translateTitle('product.parser')"
+                >
                   {{ productInfo.config.parser.length || 0 }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                   <template slot="label">
-                    {{ $translateTitle("product.profile") }}
+                    {{ $translateTitle('product.profile') }}
                   </template>
-                  <el-link
-                    type="primary"
-                  >
+                  <el-link type="primary">
                     {{ productInfo.config.profile.length || 0 }}
                   </el-link>
                 </el-descriptions-item>
@@ -244,7 +249,7 @@
                     type="primary"
                     @click.native="topicdialogVisible = true"
                   >
-                    {{ $translateTitle("product.customtopicclass") }}
+                    {{ $translateTitle('product.customtopicclass') }}
                   </el-button>
                 </div>
               </vab-query-form-left-panel>
@@ -268,31 +273,31 @@
               <el-table-column align="left" label="Topic">
                 <template slot-scope="scope">
                   <span>
-                    {{ scope.row.topic.replace("\$\{ProductId\}", productId) }}
+                    {{ scope.row.topic.replace('\$\{ProductId\}', productId) }}
                   </span>
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('product.operationauthority')"
                 align="center"
+                :label="$translateTitle('product.operationauthority')"
               >
                 <template slot-scope="scope">
                   <span v-if="scope.row.type == 'pub'">
-                    {{ $translateTitle("product.pub") }}
+                    {{ $translateTitle('product.pub') }}
                   </span>
                   <span v-if="scope.row.type == 'sub'">
-                    {{ $translateTitle("product.sub") }}
+                    {{ $translateTitle('product.sub') }}
                   </span>
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('developer.describe')"
                 align="center"
+                :label="$translateTitle('developer.describe')"
                 prop="desc"
               />
               <el-table-column
-                :label="$translateTitle('developer.operation')"
                 align="center"
+                :label="$translateTitle('developer.operation')"
               >
                 <template slot-scope="scope">
                   <el-button
@@ -301,7 +306,7 @@
                     type="primary"
                     @click.native="updatetopic(scope.row, scope.$index)"
                   >
-                    {{ $translateTitle("developer.edit") }}
+                    {{ $translateTitle('developer.edit') }}
                   </el-button>
                   <!--                  <el-popover-->
                   <!--                    :ref="`popover-${scope.$index}`"-->
@@ -334,7 +339,7 @@
                     type="danger"
                     @click.native="deletetopic(scope, scope.$index)"
                   >
-                    {{ $translateTitle("developer.delete") }}
+                    {{ $translateTitle('developer.delete') }}
                   </el-button>
                   <!--                  </el-popover>-->
                 </template>
@@ -342,10 +347,10 @@
             </el-table>
             <div class="elpagination" style="margin-top: 20px">
               <el-pagination
+                layout="total, sizes, prev, pager, next, jumper"
                 :page-size="topiclength"
                 :page-sizes="[10, 20, 30, 50]"
                 :total="topicData.length"
-                layout="total, sizes, prev, pager, next, jumper"
                 @current-change="topicCurrentChange"
                 @size-change="topicSizeChange"
               />
@@ -369,14 +374,14 @@
                 "
               >
                 <i class="el-icon-warning" />
-                {{ $translateTitle("product.text2") }}
+                {{ $translateTitle('product.text2') }}
               </div>
               <div class="topicform">
                 <el-form ref="topicform" :model="topicform" :rules="topicrule">
                   <el-form-item label="Topic类：" prop="topic">
                     <el-input v-model="topicform.topic">
                       <template slot="prepend">
-                        {{ "thing/" + productId + "/${DevAddr}/" }}
+                        {{ 'thing/' + productId + '/${DevAddr}/' }}
                       </template>
                     </el-input>
                   </el-form-item>
@@ -410,13 +415,13 @@
             </div>
             <span slot="footer" class="dialog-footer">
               <el-button @click.native="topicdialogVisible = false">
-                {{ $translateTitle("developer.cancel") }}
+                {{ $translateTitle('developer.cancel') }}
               </el-button>
               <el-button
                 type="primary"
                 @click.native="subTopic('topicform', topicform.isupdated)"
               >
-                {{ $translateTitle("developer.determine") }}
+                {{ $translateTitle('developer.determine') }}
               </el-button>
             </span>
           </el-dialog>
@@ -436,9 +441,9 @@
             <div>
               <el-form
                 ref="sizeForm"
-                :model="machineForm"
                 label-position="left"
                 label-width="80px"
+                :model="machineForm"
                 size="mini"
               >
                 <el-row :gutter="24">
@@ -459,10 +464,10 @@
                 type="primary"
                 @click.native="machine = false"
               >
-                {{ $translateTitle("developer.cancel") }}
+                {{ $translateTitle('developer.cancel') }}
               </el-button>
               <el-button size="mini" @click.native="savemachine(machineForm)">
-                {{ $translateTitle("developer.determine") }}
+                {{ $translateTitle('developer.determine') }}
               </el-button>
             </span>
           </el-dialog>
@@ -477,9 +482,9 @@
                   </vab-query-form-top-panel>
                 </vab-query-form>
                 <el-table
+                  border
                   :data="FromMachine"
                   :row-class-name="tableRowClassName"
-                  border
                   style="width: 60vh; overflow: auto"
                   @row-click="clickmachine"
                 >
@@ -514,7 +519,7 @@
                         <!-- 物模型采集公式 -->
                         {{
                           $translateTitle(
-                            "product.collectionformulaofobjectmodel"
+                            'product.collectionformulaofobjectmodel'
                           )
                         }}
                       </el-button>
@@ -523,7 +528,7 @@
                         type="primary"
                         @click.native="checkschema"
                       >
-                        {{ $translateTitle("product.viewobjectmodel") }}
+                        {{ $translateTitle('product.viewobjectmodel') }}
                       </el-button>
 
                       <!-- 新增自定义属性 -->
@@ -532,7 +537,7 @@
                         type="primary"
                         @click.native="createProperty"
                       >
-                        {{ $translateTitle("product.newcustomattribute") }}
+                        {{ $translateTitle('product.newcustomattribute') }}
                       </el-button>
                       <!-- 新建标准属性 -->
                       <el-button
@@ -540,12 +545,13 @@
                         type="primary"
                         @click.native="addcategory"
                       >
-                        {{ $translateTitle("product.newstandardattribute") }}
+                        {{ $translateTitle('product.newstandardattribute') }}
                       </el-button>
                     </div>
                   </vab-query-form-right-panel>
                 </vab-query-form>
                 <el-table
+                  border
                   :data="
                     wmxData.slice(
                       (wmxstart - 1) * wmxPageSize,
@@ -555,7 +561,6 @@
                   :default-expand-all="false"
                   :default-sort="{ prop: 'date', order: 'descending' }"
                   :row-class-name="getRowClass"
-                  border
                   row-key="identifier"
                   style="width: 100%; margin-top: 10px"
                 >
@@ -574,30 +579,30 @@
                         "
                       >
                         <el-table-column
-                          :label="$translateTitle('product.identifier')"
                           align="center"
+                          :label="$translateTitle('product.identifier')"
                         >
                           <template slot-scope="scope1">
                             <span>{{ scope1.row.identifier }}</span>
                           </template>
                         </el-table-column>
                         <el-table-column
-                          :label="$translateTitle('product.functionaltypes')"
                           align="center"
+                          :label="$translateTitle('product.functionaltypes')"
                         >
                           <span>
-                            {{ $translateTitle("product.attribute") }}
+                            {{ $translateTitle('product.attribute') }}
                           </span>
                         </el-table-column>
 
                         <el-table-column
-                          :label="$translateTitle('product.functionname')"
                           align="center"
+                          :label="$translateTitle('product.functionname')"
                           prop="name"
                         />
                         <el-table-column
-                          :label="$translateTitle('product.datadefinition')"
                           align="center"
+                          :label="$translateTitle('product.datadefinition')"
                         >
                           <template slot-scope="scope2">
                             <span>{{ scope2.row.dataType.type }}</span>
@@ -608,8 +613,8 @@
                   </el-table-column>
 
                   <el-table-column
-                    :label="$translateTitle('product.order')"
                     align="center"
+                    :label="$translateTitle('product.order')"
                     width="60"
                   >
                     <template #default="{ row }">
@@ -617,14 +622,14 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    :label="$translateTitle('product.devicetype')"
                     align="center"
+                    :label="$translateTitle('product.devicetype')"
                     prop="devicetype"
                     width="80"
                   />
                   <el-table-column
-                    :label="$translateTitle('product.Rounds')"
                     align="center"
+                    :label="$translateTitle('product.Rounds')"
                     width="60"
                   >
                     <template #default="{ row }">
@@ -633,8 +638,8 @@
                   </el-table-column>
 
                   <el-table-column
-                    :label="$translateTitle('product.Strategy')"
                     align="center"
+                    :label="$translateTitle('product.Strategy')"
                     width="80"
                   >
                     <template #default="{ row }">
@@ -643,8 +648,8 @@
                   </el-table-column>
 
                   <el-table-column
-                    :label="$translateTitle('product.protocol')"
                     align="center"
+                    :label="$translateTitle('product.protocol')"
                     width="80"
                   >
                     <template #default="{ row }">
@@ -652,27 +657,27 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    :label="$translateTitle('product.functionaltypes')"
                     align="center"
+                    :label="$translateTitle('product.functionaltypes')"
                     width="90"
                   >
-                    <span>{{ $translateTitle("product.attribute") }}</span>
+                    <span>{{ $translateTitle('product.attribute') }}</span>
                   </el-table-column>
 
                   <el-table-column
-                    :label="$translateTitle('product.identifier')"
                     align="center"
+                    :label="$translateTitle('product.identifier')"
                     prop="identifier"
                     width="100"
                   />
                   <el-table-column
-                    :label="$translateTitle('product.functionname')"
                     align="center"
+                    :label="$translateTitle('product.functionname')"
                     prop="name"
                   />
                   <el-table-column
-                    :label="$translateTitle('product.datatype')"
                     align="center"
+                    :label="$translateTitle('product.datatype')"
                     width="90"
                   >
                     <template slot-scope="scope">
@@ -680,8 +685,8 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    :label="$translateTitle('product.datadefinition')"
                     align="center"
+                    :label="$translateTitle('product.datadefinition')"
                   >
                     <template slot-scope="scope">
                       <span
@@ -693,18 +698,18 @@
                         "
                       >
                         {{
-                          $translateTitle("product.rangeofvalues") +
+                          $translateTitle('product.rangeofvalues') +
                           scope.row.dataType.specs.min +
-                          "~" +
+                          '~' +
                           scope.row.dataType.specs.max
                         }}
                       </span>
                       <span v-else-if="scope.row.dataType.type == 'string'">
                         {{
-                          $translateTitle("product.datalength") +
-                          ":" +
+                          $translateTitle('product.datalength') +
+                          ':' +
                           scope.row.dataType.size +
-                          $translateTitle("product.byte")
+                          $translateTitle('product.byte')
                         }}
                       </span>
                       <span v-else-if="scope.row.dataType.type == 'date'" />
@@ -715,8 +720,8 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    :label="$translateTitle('developer.operation')"
                     align="center"
+                    :label="$translateTitle('developer.operation')"
                     width="160"
                   >
                     <template slot-scope="scope">
@@ -725,7 +730,7 @@
                         type="danger"
                         @click.native="deletewmx(scope.row)"
                       >
-                        {{ $translateTitle("developer.delete") }}
+                        {{ $translateTitle('developer.delete') }}
                       </el-button>
                       <el-button
                         size="mini"
@@ -733,18 +738,18 @@
                         @click.native="wmxDataFill(scope.row, scope.row.index)"
                       >
                         <!-- 编辑 -->
-                        {{ $translateTitle("task.Edit") }}
+                        {{ $translateTitle('task.Edit') }}
                       </el-button>
                     </template>
                   </el-table-column>
                 </el-table>
                 <!--功能定义分页-->
                 <el-pagination
+                  layout="total, sizes, prev, pager, next, jumper"
                   :page-size="wmxPageSize"
                   :page-sizes="[10, 20, 30, 50]"
-                  :total="wmxData.length"
-                  layout="total, sizes, prev, pager, next, jumper"
                   style="margin-top: 10px"
+                  :total="wmxData.length"
                   @current-change="wmxCurrentChange"
                   @size-change="wmxSizeChange"
                 />
@@ -763,7 +768,7 @@
             <div>
               <div style="margin: 20px 0">
                 <label for>
-                  {{ $translateTitle("product.classification") }}
+                  {{ $translateTitle('product.classification') }}
                 </label>
                 <el-cascader
                   v-model="category"
@@ -775,7 +780,7 @@
                   type="primary"
                   @click.native="getPropData(0)"
                 >
-                  {{ $translateTitle("developer.search") }}
+                  {{ $translateTitle('developer.search') }}
                 </el-button>
               </div>
               <div style="margin-top: 10px; text-align: center">
@@ -789,24 +794,24 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    :label="$translateTitle('product.identifier')"
                     align="center"
+                    :label="$translateTitle('product.identifier')"
                   >
                     <template slot-scope="scope">
                       <span>{{ scope.row.type }}</span>
                     </template>
                   </el-table-column>
                   <el-table-column
-                    :label="$translateTitle('product.applicabletype')"
                     align="center"
+                    :label="$translateTitle('product.applicabletype')"
                   >
                     <template slot-scope="scope">
                       <span>{{ scope.row.data.CategoryName }}</span>
                     </template>
                   </el-table-column>
                   <el-table-column
-                    :label="$translateTitle('developer.operation')"
                     align="center"
+                    :label="$translateTitle('developer.operation')"
                   >
                     <template slot-scope="scope">
                       <el-button
@@ -814,7 +819,7 @@
                         type="primary"
                         @click.native="addProCategory(scope.row)"
                       >
-                        {{ $translateTitle("product.add") }}
+                        {{ $translateTitle('product.add') }}
                       </el-button>
                     </template>
                   </el-table-column>
@@ -823,12 +828,12 @@
 
               <div>
                 <el-pagination
+                  layout="total, sizes, prev, pager, next, jumper"
                   :page-size="productlength"
                   :page-sizes="[10, 20, 30, 50]"
-                  :total="producttotal"
-                  layout="total, sizes, prev, pager, next, jumper"
                   small
                   style="margin-top: 10px"
+                  :total="producttotal"
                   @current-change="productCurrentChange"
                   @size-change="productSizeChange"
                 />
@@ -836,14 +841,14 @@
             </div>
             <span slot="footer" class="dialog-footer">
               <el-button size="mini" @click.native="originwmx = false">
-                {{ $translateTitle("developer.cancel") }}
+                {{ $translateTitle('developer.cancel') }}
               </el-button>
               <el-button
                 size="mini"
                 type="primary"
                 @click.native="originwmx = false"
               >
-                {{ $translateTitle("developer.determine") }}
+                {{ $translateTitle('developer.determine') }}
               </el-button>
             </span>
           </el-dialog>
@@ -853,8 +858,8 @@
             :before-close="wmxhandleClose"
             :close-on-click-modal="false"
             :title="wmxSituation + '自定义属性'"
-            :visible.sync="wmxdialogVisible"
             top="5vh"
+            :visible.sync="wmxdialogVisible"
             width="60%"
           >
             <dgiot-wmxdetail
@@ -871,8 +876,8 @@
             :append-to-body="true"
             :close-on-click-modal="false"
             :title="$translateTitle('product.addparameter')"
-            :visible.sync="structdialog"
             top="15vh"
+            :visible.sync="structdialog"
             width="40%"
           >
             <div class="structheader">
@@ -984,18 +989,18 @@
                   <el-form-item label="步长" prop="step">
                     <el-input
                       v-model="structform.step"
+                      controls-position="right"
                       :min="0"
                       :precision="2"
                       :step="0.01"
-                      controls-position="right"
                     />
                   </el-form-item>
 
                   <el-form-item :label="$translateTitle('product.unit')">
                     <el-select
                       v-model="structform.unit"
-                      :placeholder="$translateTitle('product.unit')"
                       filterable
+                      :placeholder="$translateTitle('product.unit')"
                     >
                       <el-option
                         v-for="(item, index) in allunit"
@@ -1016,10 +1021,10 @@
                         <el-form-item>
                           <el-input
                             v-model="structform.truevalue"
+                            class="inputnumber"
                             :placeholder="
                               $translateTitle('product.attributevalue')
                             "
-                            class="inputnumber"
                             readonly
                             type="number"
                           />
@@ -1030,8 +1035,8 @@
                         <el-form-item prop="true">
                           <el-input
                             v-model="structform.true"
-                            :placeholder="$translateTitle('product.egopen')"
                             class="inputnumber"
+                            :placeholder="$translateTitle('product.egopen')"
                           />
                         </el-form-item>
                       </el-col>
@@ -1041,10 +1046,10 @@
                         <el-form-item>
                           <el-input
                             v-model="structform.falsevalue"
+                            class="inputnumber"
                             :placeholder="
                               $translateTitle('product.attributevalue')
                             "
-                            class="inputnumber"
                             readonly
                             type="number"
                           />
@@ -1055,8 +1060,8 @@
                         <el-form-item prop="true">
                           <el-input
                             v-model="structform.false"
-                            :placeholder="$translateTitle('product.egclost')"
                             class="inputnumber"
+                            :placeholder="$translateTitle('product.egclost')"
                           />
                         </el-form-item>
                       </el-col>
@@ -1082,7 +1087,7 @@
                         />
                       </el-form-item>
                     </el-col>
-                    <el-col :span="2" class="line">-</el-col>
+                    <el-col class="line" :span="2">-</el-col>
                     <el-col :span="9">
                       <el-form-item
                         :label="$translateTitle('product.attribute') + index"
@@ -1095,26 +1100,26 @@
                         />
                       </el-form-item>
                     </el-col>
-                    <el-col :span="2" class="line" />
-                    <el-col :span="4" class="line">
+                    <el-col class="line" :span="2" />
+                    <el-col class="line" :span="4">
                       <el-link
-                        :underline="false"
                         icon="el-icon-minus"
                         style="margin-top: 30px; margin-left: 5px"
                         type="primary"
+                        :underline="false"
                         @click.prevent="removeDomain1(item)"
                       >
-                        {{ $translateTitle("developer.delete") }}
+                        {{ $translateTitle('developer.delete') }}
                       </el-link>
                     </el-col>
                   </el-form-item>
                   <el-link
-                    :underline="false"
                     icon="el-icon-plus"
                     type="primary"
+                    :underline="false"
                     @click.native="addDomain1"
                   >
-                    {{ $translateTitle("product.add") }}
+                    {{ $translateTitle('product.add') }}
                   </el-link>
                 </div>
                 <div v-if="structform.type == 'string'">
@@ -1124,7 +1129,7 @@
                   >
                     <el-input v-model.number="structform.string" type="number">
                       <template slot="append">
-                        {{ $translateTitle("product.byte") }}
+                        {{ $translateTitle('product.byte') }}
                       </template>
                     </el-input>
                   </el-form-item>
@@ -1141,10 +1146,10 @@
                 >
                   <el-radio-group v-model="structform.isread" size="medium">
                     <el-radio label="rw">
-                      {{ $translateTitle("product.readandwrite") }}
+                      {{ $translateTitle('product.readandwrite') }}
                     </el-radio>
                     <el-radio label="r">
-                      {{ $translateTitle("product.onlyread") }}
+                      {{ $translateTitle('product.onlyread') }}
                     </el-radio>
                   </el-radio-group>
                 </el-form-item>
@@ -1152,13 +1157,13 @@
             </div>
             <span slot="footer" class="dialog-footer">
               <el-button @click.native="structdialog = false">
-                {{ $translateTitle("developer.cancel") }}
+                {{ $translateTitle('developer.cancel') }}
               </el-button>
               <el-button
                 type="primary"
                 @click.native="submitStruct('structform')"
               >
-                {{ $translateTitle("developer.determine") }}
+                {{ $translateTitle('developer.determine') }}
               </el-button>
             </span>
           </el-dialog>
@@ -1176,10 +1181,10 @@
           <div class="protolheader">
             <el-form
               ref="formInline"
+              class="demo-form-inline"
               :inline="true"
               :model="formInline"
               :rules="addRules"
-              class="demo-form-inline"
             >
               <el-form-item
                 :label="$translateTitle('product.protocolname')"
@@ -1208,7 +1213,7 @@
                   type="primary"
                   @click.native="subAce('formInline', true)"
                 >
-                  {{ $translateTitle("product.preservation") }}
+                  {{ $translateTitle('product.preservation') }}
                 </el-button>
                 <el-button
                   size="small"
@@ -1216,15 +1221,15 @@
                   @click.native="subAce1('formInline')"
                 >
                   <!-- 设为公共 -->
-                  {{ $translateTitle("product.setaspublic") }}
+                  {{ $translateTitle('product.setaspublic') }}
                 </el-button>
                 <el-button size="small" type="primary" @click.native="chaxun">
-                  {{ $translateTitle("product.publicagreementlibrary") }}
+                  {{ $translateTitle('product.publicagreementlibrary') }}
                 </el-button>
               </el-form-item>
               <el-form-item style="display: block">
                 <el-button size="small" type="primary" @click.native="protol">
-                  {{ $translateTitle("product.compile") }}
+                  {{ $translateTitle('product.compile') }}
                 </el-button>
                 <el-button
                   size="small"
@@ -1232,7 +1237,7 @@
                   @click.native="updatesubdialog"
                 >
                   <!-- 热加载 -->
-                  {{ $translateTitle("product.thermalloading") }}
+                  {{ $translateTitle('product.thermalloading') }}
                 </el-button>
               </el-form-item>
             </el-form>
@@ -1278,7 +1283,7 @@
                 :label="$translateTitle('developer.channeladdr')"
               >
                 <template slot-scope="scope">
-                  <span>{{ "channel/" + scope.row.objectId }}</span>
+                  <span>{{ 'channel/' + scope.row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -1286,10 +1291,10 @@
               >
                 <template slot-scope="scope">
                   <span v-if="scope.row.type == 1">
-                    {{ $translateTitle("developer.collectionchannel") }}
+                    {{ $translateTitle('developer.collectionchannel') }}
                   </span>
                   <span v-else>
-                    {{ $translateTitle("developer.resourcechannel") }}
+                    {{ $translateTitle('developer.resourcechannel') }}
                   </span>
                 </template>
               </el-table-column>
@@ -1304,7 +1309,7 @@
             <div slot="footer" class="dialog-footer">
               <el-button type="primary" @click.native="updateAllChannel">
                 <!-- 确定 -->
-                {{ $translateTitle("developer.determine") }}
+                {{ $translateTitle('developer.determine') }}
               </el-button>
             </div>
           </el-dialog>
@@ -1321,24 +1326,24 @@
               style="width: 100%; margin-top: 20px; text-align: center"
             >
               <el-table-column
-                :label="$translateTitle('product.protocolname')"
                 align="center"
+                :label="$translateTitle('product.protocolname')"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.data.name }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('plugins.version')"
                 align="center"
+                :label="$translateTitle('plugins.version')"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.data.version }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('developer.describe')"
                 align="center"
+                :label="$translateTitle('developer.describe')"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.data.desc }}</span>
@@ -1346,16 +1351,16 @@
               </el-table-column>
               <!-- <el-table-column label="创建时间" align="center"> -->
               <el-table-column
-                :label="$translateTitle('equipment.createdAt')"
                 align="center"
+                :label="$translateTitle('equipment.createdAt')"
               >
                 <template slot-scope="scope">
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('developer.operation')"
                 align="center"
+                :label="$translateTitle('developer.operation')"
                 width="200"
               >
                 <template slot-scope="scope">
@@ -1364,24 +1369,24 @@
                     type="primary"
                     @click.native="editordata(scope.row)"
                   >
-                    {{ $translateTitle("product.clone") }}
+                    {{ $translateTitle('product.clone') }}
                   </el-button>
                   <el-button
                     size="mini"
                     type="danger"
                     @click.native="deletedata(scope.row.objectId)"
                   >
-                    {{ $translateTitle("developer.delete") }}
+                    {{ $translateTitle('developer.delete') }}
                   </el-button>
                 </template>
               </el-table-column>
             </el-table>
             <div class="elpagination" style="padding: 20px 0">
               <el-pagination
+                layout="total, sizes, prev, pager, next, jumper"
                 :page-size="decoderlength"
                 :page-sizes="[10, 20, 30, 50]"
                 :total="decodertotal"
-                layout="total, sizes, prev, pager, next, jumper"
                 @current-change="devicerCurrentChange"
                 @size-change="decoderSizeChange"
               />
@@ -1407,7 +1412,7 @@
                 border-top: 1px solid #dddddd;
               "
             >
-              <span>{{ $translateTitle("product.controloutput") }}</span>
+              <span>{{ $translateTitle('product.controloutput') }}</span>
             </div>
             <pre
               id="editor2"
@@ -1433,7 +1438,7 @@
                   type="primary"
                   @click.native="showAllChannel"
                 >
-                  {{ $translateTitle("developer.createchannel") }}
+                  {{ $translateTitle('developer.createchannel') }}
                 </el-button>
               </div>
             </vab-query-form-left-panel>
@@ -1469,7 +1474,7 @@
                 :label="$translateTitle('developer.channeladdr')"
               >
                 <template slot-scope="scope">
-                  <span>{{ "channel/" + scope.row.objectId }}</span>
+                  <span>{{ 'channel/' + scope.row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -1477,11 +1482,11 @@
               >
                 <template slot-scope="scope">
                   <span v-if="scope.row.type == 1">
-                    {{ $translateTitle("developer.collectionchannel") }}
+                    {{ $translateTitle('developer.collectionchannel') }}
                   </span>
                   <span v-else-if="scope.row.type == 3">
                     <!-- 任务通道 -->
-                    {{ $translateTitle("developer.missionchannel") }}
+                    {{ $translateTitle('developer.missionchannel') }}
                   </span>
                 </template>
               </el-table-column>
@@ -1502,7 +1507,7 @@
                     type="danger"
                     @click.native="deleteRelation(scope.row)"
                   >
-                    {{ $translateTitle("developer.remove") }}
+                    {{ $translateTitle('developer.remove') }}
                   </el-button>
                   <el-button
                     size="mini"
@@ -1510,7 +1515,7 @@
                     @click.native="subProTopic(scope.row)"
                   >
                     <!-- 订阅日志 -->
-                    {{ $translateTitle("product.subscriptionlog") }}
+                    {{ $translateTitle('product.subscriptionlog') }}
                   </el-button>
                   <el-button
                     size="mini"
@@ -1518,17 +1523,17 @@
                     @click.native="updatesub(scope.row)"
                   >
                     <!-- 重载配置 -->
-                    {{ $translateTitle("product.overloadconfiguration") }}
+                    {{ $translateTitle('product.overloadconfiguration') }}
                   </el-button>
                 </template>
               </el-table-column>
             </el-table>
             <div class="elpagination" style="margin-top: 20px">
               <el-pagination
+                layout="total, sizes, prev, pager, next, jumper"
                 :page-size="channellength"
                 :page-sizes="[10, 20, 30, 50]"
                 :total="channeltotal"
-                layout="total, sizes, prev, pager, next, jumper"
                 @current-change="channelCurrentChange"
                 @size-change="channelSizeChange"
               />
@@ -1559,8 +1564,8 @@
                   @show="questionModel"
                 > -->
                 <el-popover
-                  :title="$translateTitle('developer.tipsforcustomdatamodel')"
                   placement="right"
+                  :title="$translateTitle('developer.tipsforcustomdatamodel')"
                   trigger="hover"
                   width="600"
                   @show="questionModel"
@@ -1577,7 +1582,7 @@
                     type="primary"
                   >
                     <!-- 自定义数据模型帮助 -->
-                    {{ $translateTitle("developer.customizedatamodelhelp") }}
+                    {{ $translateTitle('developer.customizedatamodelhelp') }}
                   </el-button>
                 </el-popover>
                 <el-button
@@ -1586,7 +1591,7 @@
                   type="primary"
                   @click.native="resourceShowAllChannel"
                 >
-                  {{ $translateTitle("developer.createchannel") }}
+                  {{ $translateTitle('developer.createchannel') }}
                 </el-button>
               </div>
             </vab-query-form-left-panel>
@@ -1623,7 +1628,7 @@
                 :label="$translateTitle('developer.channeladdr')"
               >
                 <template slot-scope="scope">
-                  <span>{{ "channel/" + scope.row.objectId }}</span>
+                  <span>{{ 'channel/' + scope.row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -1631,10 +1636,10 @@
               >
                 <template slot-scope="scope">
                   <span v-if="scope.row.type == 1">
-                    {{ $translateTitle("developer.collectionchannel") }}
+                    {{ $translateTitle('developer.collectionchannel') }}
                   </span>
                   <span v-else>
-                    {{ $translateTitle("developer.resourcechannel") }}
+                    {{ $translateTitle('developer.resourcechannel') }}
                   </span>
                 </template>
               </el-table-column>
@@ -1655,7 +1660,7 @@
                     type="danger"
                     @click.native="deleteRelation(scope.row)"
                   >
-                    {{ $translateTitle("developer.remove") }}
+                    {{ $translateTitle('developer.remove') }}
                   </el-button>
                   <el-button
                     size="mini"
@@ -1663,7 +1668,7 @@
                     @click.native="subProTopic(scope.row)"
                   >
                     <!-- 订阅日志 -->
-                    {{ $translateTitle("product.subscriptionlog") }}
+                    {{ $translateTitle('product.subscriptionlog') }}
                   </el-button>
 
                   <el-button
@@ -1672,7 +1677,7 @@
                     @click.native="customize(scope.row)"
                   >
                     <!-- 自定义模型 -->
-                    {{ $translateTitle("product.custommodel") }}
+                    {{ $translateTitle('product.custommodel') }}
                   </el-button>
 
                   <!-- <el-button type="primary" size="mini" @click.native="customize(scope.row)">自定义模型</el-button> -->
@@ -1681,10 +1686,10 @@
             </el-table>
             <div class="elpagination" style="margin-top: 20px">
               <el-pagination
+                layout="total, sizes, prev, pager, next, jumper"
                 :page-size="resourcelength"
                 :page-sizes="[10, 20, 30, 50]"
                 :total="resourcetotal"
-                layout="total, sizes, prev, pager, next, jumper"
                 @current-change="resourcechannelCurrentChange"
                 @size-change="resourcechannelSizeChange"
               />
@@ -1804,7 +1809,7 @@
       <span slot="footer" class="dialog-footer" style="height: 30px">
         <el-button type="primary" @click.native="preserve">
           <!-- 更新 -->
-          {{ $translateTitle("equipment.update") }}
+          {{ $translateTitle('equipment.update') }}
         </el-button>
       </span>
     </el-dialog>
@@ -1836,20 +1841,20 @@
           </el-table-column>
           <el-table-column :label="$translateTitle('developer.channeladdr')">
             <template slot-scope="scope">
-              <span>{{ "channel/" + scope.row.objectId }}</span>
+              <span>{{ 'channel/' + scope.row.objectId }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$translateTitle('developer.channeltype')">
             <template slot-scope="scope">
               <span v-if="scope.row.type == 1">
-                {{ $translateTitle("developer.collectionchannel") }}
+                {{ $translateTitle('developer.collectionchannel') }}
               </span>
               <span v-else-if="scope.row.type == 2">
-                {{ $translateTitle("developer.resourcechannel") }}
+                {{ $translateTitle('developer.resourcechannel') }}
               </span>
               <span v-else>
                 <!-- 任务通道 -->
-                {{ $translateTitle("developer.missionchannel") }}
+                {{ $translateTitle('developer.missionchannel') }}
               </span>
             </template>
           </el-table-column>
@@ -1865,17 +1870,17 @@
                 type="primary"
                 @click.native="addProductChannel(scope.row.objectId)"
               >
-                {{ $translateTitle("developer.add") }}
+                {{ $translateTitle('developer.add') }}
               </el-button>
             </template>
           </el-table-column>
         </el-table>
         <div class="elpagination" style="margin-top: 20px">
           <el-pagination
+            layout="total, sizes, prev, pager, next, jumper"
             :page-size="allChannellength"
             :page-sizes="[10, 20, 30, 50]"
             :total="allChanneltotal"
-            layout="total, sizes, prev, pager, next, jumper"
             @current-change="allChannelCurrentChange"
             @size-change="allChannelSizeChange"
           />
@@ -1921,8 +1926,8 @@
       :before-close="closeWuDialog"
       :close-on-click-modal="false"
       :show-close="false"
-      :visible.sync="resourcedialogFormVisible"
       top="1vh"
+      :visible.sync="resourcedialogFormVisible"
       width="90%"
     >
       <el-form ref="resourceform" :model="resourceform">
@@ -1960,11 +1965,11 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="closeWuDialog">
           <!-- 退 出 -->
-          {{ $translateTitle("product.quit") }}
+          {{ $translateTitle('product.quit') }}
         </el-button>
         <el-button type="primary" @click.native="addData">
           <!-- 保 存 -->
-          {{ $translateTitle("product.preservation") }}
+          {{ $translateTitle('product.preservation') }}
         </el-button>
       </div>
     </el-dialog>
@@ -1986,7 +1991,7 @@
           @click.native="exportDialogShow = false"
         >
           <!-- 关闭 -->
-          {{ $translateTitle("tagsView.close") }}
+          {{ $translateTitle('tagsView.close') }}
         </el-button>
       </div>
     </el-dialog>
@@ -2014,8 +2019,8 @@
         <el-col :span="6">
           <div class="diaCollLeftCls">
             <el-menu
-              :default-active="activeIndex"
               class="el-menu-vertical-demo"
+              :default-active="activeIndex"
             >
               <template v-for="(item, index) in wmxData">
                 <el-menu-item
@@ -2026,18 +2031,18 @@
                   <ol v-if="item.dataType.specs">
                     {{
                       item.identifier +
-                      "&nbsp; &nbsp; &nbsp; &nbsp; " +
+                      '&nbsp; &nbsp; &nbsp; &nbsp; ' +
                       item.name +
-                      "&nbsp; &nbsp; &nbsp; &nbsp; 取值范围" +
+                      '&nbsp; &nbsp; &nbsp; &nbsp; 取值范围' +
                       item.dataType.specs.min +
-                      "~" +
+                      '~' +
                       item.dataType.specs.max
                     }}
                   </ol>
                   <ol v-else>
                     {{
                       item.identifier +
-                      "&nbsp; &nbsp; &nbsp; &nbsp; " +
+                      '&nbsp; &nbsp; &nbsp; &nbsp; ' +
                       item.name
                     }}
                   </ol>
@@ -2064,15 +2069,15 @@
                 <el-row style="margin: 10px">
                   <el-button type="success">
                     <!-- 测试 -->
-                    {{ $translateTitle("rule.Test") }}
+                    {{ $translateTitle('rule.Test') }}
                   </el-button>
                   <el-button type="info" @click.native="onReductionTap(index)">
                     <!-- 还原 -->
-                    {{ $translateTitle("product.reduction") }}
+                    {{ $translateTitle('product.reduction') }}
                   </el-button>
                   <el-button type="primary" @click.native="onSaveTap(index)">
                     <!-- 保存 -->
-                    {{ $translateTitle("product.preservation") }}
+                    {{ $translateTitle('product.preservation') }}
                   </el-button>
                 </el-row>
                 <pre

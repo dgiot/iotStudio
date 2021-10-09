@@ -1,3 +1,4 @@
+<!--eslint-disable-->
 <template>
   <div class="editdevices">
     <div class="editheader">
@@ -761,6 +762,7 @@
     </div>
   </div>
 </template>
+<!--eslint-disable-->
 <script>
   import info from '@/components/Device/info'
   import SceneLog from '@/views/equipment_management/component/SceneLog'
@@ -786,16 +788,14 @@
   ]
   import { mapGetters } from 'vuex'
   import {
-    getTdDevice,
     getDabDevice,
     getCardDevice,
     getDevice,
     queryDevice,
   } from '@/api/Device/index.js'
-  import { utc2beijing, timestampToTime } from '@/utils/index'
+  import { utc2beijing } from '@/utils/index'
   import Instruct from '../devicemanage/instruct_manage'
   import chartType from '@/api/Mock/Chart'
-  var dataobj = {}
   export default {
     components: {
       Instruct,

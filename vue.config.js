@@ -26,7 +26,6 @@ const {
   webpackBarName,
   cdnUrl,
   localUrl,
-  ignoreCdn,
   Keywords,
   Description,
   dateTime,
@@ -40,7 +39,7 @@ const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
 const FileManagerPlugin = require('filemanager-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 process.env.VUE_APP_TITLE = title
 process.env.VUE_APP_AUTHOR = author

@@ -10,11 +10,15 @@
       <!-- 设备编号: 所属产品: 安装位置 -->
       <tr>
         <td class="cloumn">
+          {{ $translateTitle('konva.id') + ':' }}
+        </td>
+        <td>{{ devicedetail.objectId }}</td>
+        <td class="cloumn">
           {{ $translateTitle('equipment.devicenumber') + ':' }}
         </td>
         <td>{{ devicedetail.devaddr }}</td>
         <td class="cloumn">
-          {{ $translateTitle('equipment.installationlocation') }}
+          {{ $translateTitle('equipment.installationlocation') + ':' }}
         </td>
         <td>
           {{ devicedetail.detail ? devicedetail.detail.address : '' }}
@@ -48,10 +52,6 @@
         <td>
           {{ $moment(devicedetail.updatedAt).format('YYYY-MM-DD HH:mm:ss') }}
         </td>
-      </tr>
-      <tr>
-        <!-- <td class="cloumn">{{$t('equipment.subordinatenode')+':'}}</td>
-        <td>{{devicedetail.node}}</td>-->
         <td class="cloumn">
           {{ $translateTitle('equipment.nodetype') + ':' }}
         </td>
@@ -59,6 +59,11 @@
           {{ $translateTitle('product.equipment') }}
         </td>
         <td v-else>{{ $translateTitle('product.gateway') }}</td>
+      </tr>
+      <tr>
+        <!-- <td class="cloumn">{{$t('equipment.subordinatenode')+':'}}</td>
+        <td>{{devicedetail.node}}</td>-->
+
         <td class="cloumn">
           {{ $translateTitle('developer.describe') + ':' }}
         </td>

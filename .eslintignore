@@ -8,3 +8,4 @@ readme
 src/views/platform/testpumplist/pumplist/key-labelText.md
 .npmrc
 .yarnrc
+.cz-config.js
