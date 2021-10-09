@@ -196,7 +196,7 @@
     </a-tabs>
   </div>
 </template>
-
+<!--eslint-disable-->
 <script>
   import { postTrace } from '@/api/System'
   export default {

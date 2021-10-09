@@ -725,13 +725,13 @@
         </el-tab-pane>
         <el-tab-pane
           v-if="isshowchild"
-          :label="$translateTitle('device.Equipment Directive')"
+          :label="$translateTitle('device.instruct')"
           name="instruct"
         >
           <Instruct :devices-id="deviceid" :product-id="productid" />
         </el-tab-pane>
         <el-tab-pane
-          :label="$translateTitle('device.Equipment message')"
+          :label="$translateTitle('device.trace')"
           name="task"
         >
           <scene-log
@@ -741,7 +741,7 @@
           />
         </el-tab-pane>
         <el-tab-pane
-          :label="$translateTitle('device.Equipment log')"
+          :label="$translateTitle('device.log')"
           name="trace"
         >
           <device-log
@@ -753,7 +753,7 @@
         </el-tab-pane>
 
         <el-tab-pane
-          :label="$translateTitle('device.Equipment alert settings')"
+          :label="$translateTitle('device.alert')"
           name="alert"
         >
           <vab-empty />

@@ -1365,6 +1365,7 @@
     <VabRender v-show="false" :config="config" :loading="true" />
   </div>
 </template>
+<!--eslint-disable-->
 <script>
   // import Pagination from '@dgiot/dgiot-component/src/components/Pagination'
   import profile from '@/views/equipment_management/profile'

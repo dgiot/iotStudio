@@ -324,6 +324,7 @@
     </el-drawer>
   </div>
 </template>
+<!--eslint-disable-->
 <script>
   import { queryCategory } from '@/api/Category'
   const context = require.context('./component/profile', true, /\.vue$/)
