@@ -1,16 +1,6 @@
 <!--eslint-disable-->
 <template>
   <div class="editdevices">
-    <div class="editheader">
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/dashboard/devicelist' }">
-          {{ $translateTitle('route.设备管理') }}
-        </el-breadcrumb-item>
-        <el-breadcrumb-item>
-          {{ $translateTitle('route.设备详情') }}
-        </el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
     <div>
       <el-tabs v-model="activeName" @tab-click="tabHandleClick">
         <el-tab-pane
@@ -1164,10 +1154,10 @@
       this.params.style = this.chartType[0].type
       console.log(' this.params.style', this.params.style)
       if (this.$route.query.deviceid) {
-        const deviceid = this.$route.query.deviceid
-        this.getDeviceDetail(deviceid)
+        this.deviceid = this.$route.query.deviceid
+        this.getDeviceDetail( this.deviceid)
         this.initChart()
-        this.getDeviceInfo(deviceid)
+        this.getDeviceInfo(this.deviceid)
         window.addEventListener('resize', this.resizeTheChart)
       }
       this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
@@ -1456,7 +1446,6 @@
       // 详情
       async getDeviceDetail(deviceid) {
         const vm = this
-        vm.deviceid = deviceid
         vm.ischildren = vm.$route.query.ischildren
         const params = {
           limit: 1,
@@ -1843,6 +1832,9 @@
 </script>
 <style scoped lang="scss">
   ::v-deep {
+    .el-tabs__header {
+      margin: 0;
+    }
     .el-icon-time {
       display: none;
     }
@@ -1870,7 +1862,7 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    padding: 20px;
+    padding: 0 20px;
   }
   .editdevices .OFFLINE {
     color: red;

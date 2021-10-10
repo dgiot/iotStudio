@@ -4,7 +4,7 @@
 var proxy = [
   {
     path: 'iotapi',
-    target: 'http://prod.iotn2n.com',
+    target: 'http://192.168.1.4:5080',
   },
   {
     path: 'group1',

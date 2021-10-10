@@ -244,6 +244,8 @@
           'device_statuslog',
           'transparent',
           'event',
+          'tcp_send',
+          'tcp_receive',
           'readProperty',
           'writeProperty',
           'reportProperty',
@@ -479,7 +481,7 @@
 </script>
 <style scoped lang="scss">
   .logs {
-    height: calc(100vh - #{$base-top-bar-height} * 5.2) !important;
+    //height: calc(100vh - #{$base-top-bar-height} * 5.2) !important;
 
     ::v-deep {
       .item-time {
