@@ -233,7 +233,7 @@
         height: this.$baseTableHeight(0),
         logdata: [],
         momentKey: moment(new Date()).valueOf(),
-        checkList: ['topic', 'time', 'pid', 'peername'],
+        checkList: ['topic', 'pid', 'peername'],
         logcolumns: [
           'topic',
           'time',
@@ -304,7 +304,7 @@
       },
     },
     mounted() {
-      this.router = this.$dgiotBus.router(this.$route.fullPath)
+      this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
     },
     created() {},
     beforeCreate() {}, //生命周期 - 创建之前
@@ -392,6 +392,9 @@
             this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
           }
         })
+        if (this.queryForm.action == 'stop'){
+          this.MqttUnbscribe()
+        }
         //   :
         const loading = this.$baseColorfullLoading()
         const { level, action, order, deviceid, tracetype } = this.queryForm
@@ -448,6 +451,13 @@
         }
         this.momentKey = moment(new Date()).valueOf()
       },
+      MqttUnbscribe(){
+        this.$dgiotBus.$emit(
+          'MqttUnbscribe',
+          this.topicKey,
+          this.subtopic
+        )
+      }
     },
   }
 </script>

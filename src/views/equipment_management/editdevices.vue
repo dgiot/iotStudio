@@ -891,6 +891,7 @@
         },
       }
       return {
+        router: '',
         chartKey: moment(new Date()).valueOf(),
         machinelist: {},
         thirdtbKey: moment(new Date()).valueOf(),
@@ -1168,9 +1169,11 @@
         this.getDeviceInfo(deviceid)
         window.addEventListener('resize', this.resizeTheChart)
       }
+      this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
     },
     // 清除定时器
-    destroyed() {
+    destroyed: function () {
+      this.Unbscribe()
       window.clearInterval(this.timer)
       this.timer = null
     },
@@ -1178,6 +1181,16 @@
       window.removeEventListener('resize', this.resizeTheChart)
     },
     methods: {
+      Unbscribe(){
+        const subtopic =
+          'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
+        const topicKey = this.$dgiotBus.topicKey(this.router, subtopic)
+        this.$dgiotBus.$emit(
+          'MqttUnbscribe',
+          topicKey,
+          subtopic
+        )
+      },
       async getDeviceInfo(deviceid) {
         const resultes = await getDevice(deviceid)
         var ProductId = ''
