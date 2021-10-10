@@ -33,7 +33,7 @@ const {
   useCdn,
   isPwa,
   pwaConfig,
-  isSmp
+  isSmp,
 } = require('./src/config')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
@@ -136,9 +136,7 @@ function getChainWebpack(config) {
         {
           filename: '[path][base].gz[query]',
           algorithm: 'gzip',
-          test: new RegExp(
-            '\\.(' + productionGzipExtensions.join('|') + ')$'
-          ),
+          test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
           threshold: 8192,
           minRatio: 0.8,
         },
@@ -164,7 +162,7 @@ const resolve = (dir) => {
   return path.join(__dirname, dir)
 }
 const proxyStatic = {}
-const cssExport =  {
+const cssExport = {
   requireModuleExtension: true,
   sourceMap: true,
   loaderOptions: {
@@ -190,7 +188,7 @@ const cssExport =  {
     }&t=${new Date().getTime()}`,
   },
 }
-const configure =  {
+const configure = {
   externals: {
     bcrypt: 'bcrypt',
     'be-full': 'BeFull',
@@ -302,5 +300,5 @@ module.exports = {
   },
   runtimeCompiler: true,
   productionSourceMap: false,
-  css:  cssExport
+  css: cssExport,
 }

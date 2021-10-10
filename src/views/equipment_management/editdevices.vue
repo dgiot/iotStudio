@@ -1256,7 +1256,6 @@
       },
       resizeTheChart() {
         let charts = this.$refs[`charts`]
-        console.log('charts', charts)
         if (charts instanceof Array) {
           charts.forEach((chart) => {
             chart.$children[0].resize()
@@ -1485,8 +1484,10 @@
             let resData = JSON.parse(
               JSON.stringify(vm.$objGet(resultes, 'product.thing.properties'))
             )
-            this.Update()
+            console.log(resData,'resData')
+            vm.Update()
             let array = []
+            if(!resData) return
             resData.forEach((item) => {
               if (item.devicetype) {
                 array.push(item.devicetype)

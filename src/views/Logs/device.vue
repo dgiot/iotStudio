@@ -11,6 +11,19 @@
         >
           <el-form-item
             class="item-time"
+            :label="$translateTitle('device.Log type')"
+          >
+            <el-select v-model="queryForm.domain" multiple placeholder="请选择">
+              <el-option
+                v-for="item in domainOptions"
+                :key="item"
+                :label="$translateTitle(`deviceLog.${item}`)"
+                :value="item"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            class="item-time"
             :label="$translateTitle('Maintenance.times')"
           >
             <el-date-picker
@@ -32,7 +45,7 @@
                 v-for="(item, index) in proTableData"
                 v-show="item.objectId != 0"
                 :key="index"
-                :label="item.name"
+                :label="$translateTitle(`deviceLog.${item.name}`)"
                 :value="item.objectId"
               />
             </el-select>
@@ -75,7 +88,7 @@
                       :disabled="item.disableCheck === true"
                       :label="item"
                     >
-                      {{ item }}
+                      {{ $translateTitle(`deviceLog.${item}`) }}
                     </el-checkbox>
                   </div>
                 </vue-draggable>
@@ -94,125 +107,65 @@
         </el-form>
       </vab-query-form-top-panel>
     </vab-query-form>
-    <el-tabs v-model="activeName" :height="height" @tab-click="changetabs">
-      <el-tab-pane :label="$translateTitle('equipment.statuslog')" name="first">
-        <el-table
-          :key="finallyColumns.length + momentKey"
-          ref="dragTable"
-          border
-          :data="logdata"
-          :height="height"
-          highlight-current-row
-          resizable
-          :row-class-name="tableRowClassName"
-          size="mini"
-          stripe
-        >
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <el-descriptions
-                border
-                class="margin-top"
-                :column="2"
-                :size="size"
-              >
-                <el-descriptions-item
-                  v-for="(item, key, index) in props.row"
-                  :key="index"
-                  :label="key"
-                  label-class-name="my-label"
-                >
-                  {{ item }}
-                </el-descriptions-item>
-              </el-descriptions>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-for="(item, index) in finallyColumns"
-            :key="index"
-            align="center"
-            :label="item"
-            :prop="item"
-            show-overflow-tooltip
-            sortable
-          />
-          <template #empty>
-            <vab-empty />
-          </template>
-        </el-table>
-        <vab-Pagination
-          v-show="queryForm.total > 0"
-          :limit.sync="queryForm.pageSize"
-          :page.sync="queryForm.pageNo"
-          :total="queryForm.total"
-          @pagination="queryTable"
-        />
-      </el-tab-pane>
-      <el-tab-pane
-        :label="$translateTitle('equipment.operationlog')"
-        name="second"
-      >
-        <el-table
-          :key="finallyColumns.length + momentKey"
-          ref="dragTable"
-          border
-          :data="logdata"
-          :height="height"
-          highlight-current-row
-          resizable
-          :row-class-name="tableRowClassName"
-          size="mini"
-          stripe
-        >
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <el-descriptions
-                border
-                class="margin-top"
-                :column="2"
-                :size="size"
-              >
-                <el-descriptions-item
-                  v-for="(item, key, index) in props.row"
-                  :key="index"
-                  :label="key"
-                  label-class-name="my-label"
-                >
-                  {{ item }}
-                </el-descriptions-item>
-              </el-descriptions>
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-for="(item, index) in finallyColumns"
-            :key="index"
-            align="center"
-            :label="item"
-            :prop="item"
-            show-overflow-tooltip
-            sortable
-          />
-          <!--      <el-table-column-->
-          <!--        prop="msg"-->
-          <!--        align="center"-->
-          <!--        sortable-->
-          <!--        show-overflow-tooltip-->
-          <!--        label="msg"-->
-          <!--        fixed="right"-->
-          <!--      />-->
-          <template #empty>
-            <vab-empty />
-          </template>
-        </el-table>
-        <vab-Pagination
-          v-show="queryForm.total > 0"
-          :limit.sync="queryForm.pageSize"
-          :page.sync="queryForm.pageNo"
-          :total="queryForm.total"
-          @pagination="queryTable"
-        />
-      </el-tab-pane>
-    </el-tabs>
+    <el-table
+      :key="finallyColumns.length + momentKey"
+      ref="dragTable"
+      border
+      :data="logdata"
+      :height="height"
+      highlight-current-row
+      resizable
+      :row-class-name="tableRowClassName"
+      size="mini"
+      stripe
+    >
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-descriptions border class="margin-top" :column="2" :size="size">
+            <el-descriptions-item
+              v-for="(item, key, index) in props.row"
+              :key="index"
+              :label="$translateTitle(`deviceLog.${key}`)"
+              label-class-name="my-label"
+            >
+              {{ item }}
+            </el-descriptions-item>
+          </el-descriptions>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$translateTitle('device.Log type')">
+        <template #default="{ row }">
+          {{ $translateTitle(`deviceLog.${row.domain}`) }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-for="(item, index) in finallyColumns"
+        :key="index"
+        align="center"
+        :label="$translateTitle(`deviceLog.${item}`)"
+        :prop="item"
+        show-overflow-tooltip
+        sortable
+      />
+      <!--      <el-table-column-->
+      <!--        prop="msg"-->
+      <!--        align="center"-->
+      <!--        sortable-->
+      <!--        show-overflow-tooltip-->
+      <!--        label="msg"-->
+      <!--        fixed="right"-->
+      <!--      />-->
+      <template #empty>
+        <vab-empty />
+      </template>
+    </el-table>
+    <vab-Pagination
+      v-show="queryForm.total > 0"
+      :limit.sync="queryForm.pageSize"
+      :page.sync="queryForm.pageNo"
+      :total="queryForm.total"
+      @pagination="queryTable"
+    />
   </div>
 </template>
 
@@ -239,14 +192,55 @@
     data() {
       return {
         size: '',
+        domainOptions: [
+          'device_statuslog',
+          'event',
+          'readProperty',
+          'writeProperty',
+          'reportProperty',
+          'child',
+          'childReply',
+          'functionInvoke',
+          'readPropertyReply',
+          'writePropertyReply',
+          'functionReply',
+          'register',
+          'unregister',
+          'offline',
+          'online',
+          'other',
+          'parse_api',
+        ],
         isFullscreen: false,
-        height: this.$baseTableHeight(0),
+        height: this.$baseTableHeight(2),
         logdata: [],
         momentKey: moment(new Date()).valueOf(),
-        checkList: ['time', 'productname', 'devicename', 'status'],
-        logcolumns: ['time', 'productname', 'devicename', 'status'],
+        checkList: [
+          'devaddr',
+          'time',
+          'username',
+          'productname',
+          'devicename',
+          'status',
+          'protocol',
+          'thingname',
+          'identifier',
+          'value',
+        ],
+        logcolumns: [
+          'devaddr',
+          'time',
+          'username',
+          'productname',
+          'devicename',
+          'status',
+          'protocol',
+          'thingname',
+          'identifier',
+          'value',
+        ],
         proTableData: [],
-        activeName: 'first',
+        activeName: 'second',
         queryForm: {
           total: 0,
           count: 'objectId',
@@ -259,7 +253,7 @@
           pid: '',
           mfa: '',
           topic: '',
-          domain: 'device_statuslog',
+          domain: [],
           searchDate: [
             moment().subtract('days', 7).format('YYYY-MM-DD'),
             moment(new Date()).format('YYYY-MM-DD'),
@@ -354,41 +348,8 @@
           },
         })
       },
-      changetabs(tab) {
-        this.checkList = []
-        this.logcolumns = []
-        if (tab.name == 'second') {
-          this.queryForm.domain = 'device_operationlog'
-          ;(this.checkList = [
-            'time',
-            'username',
-            'productname',
-            'devicename',
-            'status',
-            'protocol',
-            'thingname',
-            'identifier',
-            'value',
-          ]),
-            (this.logcolumns = [
-              'time',
-              'username',
-              'productname',
-              'devicename',
-              'status',
-              'protocol',
-              'thingname',
-              'identifier',
-              'value',
-            ])
-        } else {
-          this.queryForm.domain = 'device_statuslog'
-          ;(this.checkList = ['time', 'productname', 'devicename', 'status']),
-            (this.logcolumns = ['time', 'productname', 'devicename', 'status'])
-        }
-        this.queryTable({})
-      },
       async queryTable(args = {}) {
+        console.log(this.queryForm.domain)
         if (!args.limit) {
           args = this.queryForm
         }
@@ -400,15 +361,16 @@
             skip: args.skip,
             order: args.order,
             count: this.queryForm.count,
-            keys: 'time,msg',
+            // keys: 'time,msg,domain',
             include: '',
             where: {
-              domain: this.queryForm.domain
-                ? {
-                    $all: this.queryForm.domain.split(
-                      /,(?=(?:[^']*(?:'[^']*')?[^']*)*$)/
-                    ),
-                  }
+              domain: this.queryForm.domain.length
+                ? // ? {
+                  //     $all: this.queryForm.domain.split(
+                  //       /,(?=(?:[^']*(?:'[^']*')?[^']*)*$)/
+                  //     ),
+                  //   }
+                  { $in: this.queryForm.domain }
                 : { $ne: '' },
               createdAt: {
                 $gte: {
@@ -460,7 +422,7 @@
 </script>
 <style scoped lang="scss">
   .logs {
-    height: calc(100vh - #{$base-top-bar-height} * 2.7) !important;
+    height: calc(100vh - #{$base-top-bar-height} * 5.2) !important;
 
     ::v-deep {
       .item-time {
