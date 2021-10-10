@@ -107,7 +107,7 @@
         </el-form>
       </vab-query-form-top-panel>
     </vab-query-form>
-    <el-dialog append-to-body :visible.sync="preDialog" width="30%">
+    <el-dialog append-to-body :visible.sync="preDialog">
       <vab-editor
         :key="refreshFlag"
         v-model="msg"
@@ -129,10 +129,6 @@
         "
         theme="gob"
       />
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="preDialog = false">取 消</el-button>
-        <el-button type="primary" @click="preDialog = false">确 定</el-button>
-      </span>
     </el-dialog>
     <el-table
       :key="finallyColumns.length + momentKey"

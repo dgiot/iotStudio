@@ -34,6 +34,7 @@ const {
   isPwa,
   pwaConfig,
   isSmp,
+  cdn,
 } = require('./src/config')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
@@ -45,6 +46,8 @@ const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const smp = new SpeedMeasurePlugin()
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
+const regUrl =
+  /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
 process.env.VUE_APP_TITLE = title
 process.env.VUE_APP_AUTHOR = author
 process.env.VUE_APP_UPDATE_TIME = dateTime
@@ -53,6 +56,7 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
+const staticUrl = regUrl.test(cdn) ? `${cdn}/assets/` : '/assets/'
 function getChainWebpack(config) {
   config.plugin('html').tap((args) => {
     var _staticUrl = useCdn || process.env.useCdn ? cdnUrl : localUrl
@@ -62,15 +66,15 @@ function getChainWebpack(config) {
     css.forEach((_css) => {
       let i =
         _css.substring(_css.lastIndexOf('/') + 1).indexOf('.css') != -1
-          ? `/assets/css/${_css.substring(_css.lastIndexOf('/') + 1)}`
-          : `/assets/css/${_css.substring(_css.lastIndexOf('/') + 1)}.css`
+          ? `${staticUrl}css/${_css.substring(_css.lastIndexOf('/') + 1)}`
+          : `${staticUrl}css/${_css.substring(_css.lastIndexOf('/') + 1)}.css`
       _staticUrl.css.push(i)
     })
     js.forEach((_js) => {
       let i =
         _js.substring(_js.lastIndexOf('/') + 1).indexOf('.js') != -1
-          ? `/assets/js/${_js.substring(_js.lastIndexOf('/') + 1)}`
-          : `/assets/js/${_js.substring(_js.lastIndexOf('/') + 1)}.js`
+          ? `${staticUrl}js/${_js.substring(_js.lastIndexOf('/') + 1)}`
+          : `${staticUrl}js/${_js.substring(_js.lastIndexOf('/') + 1)}.js`
       _staticUrl.js.push(i)
     })
     args[0].staticUrl = _staticUrl

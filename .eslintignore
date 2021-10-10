@@ -5,6 +5,3 @@ dist
 node_modules
 release
 readme
-.npmrc
-.yarnrc
-.cz-config.js

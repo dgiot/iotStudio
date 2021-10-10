@@ -246,6 +246,7 @@
         return name
       },
       async initShuwa() {
+        console.log(process.env.cdnUrl, 'process.env')
         console.log(`VUE_APP_URL is ${process.env.VUE_APP_URL}`)
         console.log(`NODE_ENV is ${process.env.NODE_ENV}`)
         if (this.backgroundimage) {

@@ -47,7 +47,7 @@
           </el-col>
 
           <el-col v-for="(item, index) in queryIcon" :key="index" :span="8">
-            <i @click="$message.info(`you click ${item}`)">
+            <i>
               <el-image
                 :src="imgHost + item"
                 style="width: 100%; height: 40px; cursor: pointer"
@@ -73,11 +73,16 @@
 </template>
 
 <script>
+  const regUrl =
+    /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
+  const { cdn } = require('../../../config')
   const path = require('path')
-  const imgHost = path.join(
-    __dirname,
-    '../../../../public/assets/images/dgiot_release/topo/'
-  )
+  const imgHost = regUrl.test(cdn)
+    ? `${cdn}/assets/images/dgiot_release/topo/`
+    : path.join(
+        __dirname,
+        '../../../../public/assets/images/dgiot_release/topo/'
+      )
   // import imgHost from '../../../../public/assets/images/dgiot_release/topo/'
   console.log(imgHost)
   import { getMaterial } from '@/api/Material'
