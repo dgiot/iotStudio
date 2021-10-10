@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 0 20px">
+  <div class="proddetail proddetail-container">
     <div class="editheader">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/roles/product' }">
@@ -268,7 +268,7 @@
                   topicstart * topiclength
                 )
               "
-              :height="$baseTableHeight(2)"
+              :height="$baseTableHeight(3)"
               style="width: 100%; text-align: center"
             >
               <el-table-column align="left" label="Topic">
@@ -493,7 +493,7 @@
                 <el-table
                   border
                   :data="FromMachine"
-                  :height="$baseTableHeight(2)"
+                  :height="$baseTableHeight(3)"
                   :row-class-name="tableRowClassName"
                   style="width: 60vh; overflow: auto"
                   @row-click="clickmachine"
@@ -578,7 +578,7 @@
                   "
                   :default-expand-all="false"
                   :default-sort="{ prop: 'date', order: 'descending' }"
-                  :height="$baseTableHeight(2)"
+                  :height="$baseTableHeight(3)"
                   :row-class-name="getRowClass"
                   row-key="identifier"
                   style="width: 100%; margin-top: 10px"
@@ -1512,7 +1512,7 @@
           <div>
             <el-table
               :data="channelData"
-              :height="$baseTableHeight(2)"
+              :height="$baseTableHeight(3)"
               :row-class-name="getChannelEnable"
               style="width: 100%"
             >
@@ -1675,7 +1675,7 @@
           <div>
             <el-table
               :data="resourcechannelData"
-              :height="$baseTableHeight(2)"
+              :height="$baseTableHeight(3)"
               :row-class-name="getChannelEnable"
               style="width: 100%"
             >
