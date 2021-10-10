@@ -245,6 +245,7 @@ export default {
       objectId: '设备Id',
       ACL: '角色权限',
       device_statuslog: '设备状态日志',
+      transparent: '透传报文',
       event: '事件上报',
       readProperty: '属性读取',
       writeProperty: '属性修改',

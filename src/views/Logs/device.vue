@@ -242,6 +242,7 @@
         size: '',
         domainOptions: [
           'device_statuslog',
+          'transparent',
           'event',
           'readProperty',
           'writeProperty',
