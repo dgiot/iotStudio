@@ -2414,7 +2414,8 @@
                 topics = [],
                 thing = {},
                 decoder = {},
-                category = Number(this.form.type)==0?'5ca6049839':this.form.category,
+                category = Number(this.form.type) == 0 ? '5ca6049839' : this.form.category,
+                netType = Number(this.form.type) == 0 ? 'DGIoT网关' : this.form.netType,
                 channel = {
                   tdchannel: this.form.tdchannel,
                   taskchannel: this.form.taskchannel,
@@ -2470,6 +2471,7 @@
               // 继承select的属性
               var addparams = {
                 category,
+                netType,
                 productSecret,
                 ACL: setAcl,
                 topics,
