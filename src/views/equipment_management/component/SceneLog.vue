@@ -387,7 +387,7 @@
         this.$dgiotBus.$off(`${this.topicKey}`)
         this.$dgiotBus.$on(`${this.topicKey}`, (Msg) => {
           if (Msg.payload) {
-            this.scroketMsg.push(JSON.parse(Msg.payload))
+            this.scroketMsg.unshift(JSON.parse(Msg.payload))
             this.logMqtt.key = this.topicKey
             this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
           }
