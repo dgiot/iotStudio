@@ -56,7 +56,7 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
-const staticUrl = regUrl.test(cdn) ? `${cdn}/assets/` : '/assets/'
+const staticUrl = cdn ? `${cdn}/assets/` : '/assets/'
 function getChainWebpack(config) {
   config.plugin('html').tap((args) => {
     var _staticUrl = useCdn || process.env.useCdn ? cdnUrl : localUrl
@@ -184,12 +184,8 @@ const cssExport = {
     },
   },
   extract: {
-    filename: `assets/css/[name].dgiot.css?v=${
-      process.env.VUE_APP_VERSION
-    }&t=${new Date().getTime()}`,
-    chunkFilename: `assets/css/[name].dgiot.css?v=${
-      process.env.VUE_APP_VERSION
-    }&t=${new Date().getTime()}`,
+    filename: `output/assets/css/[name].dgiot.css?v=${process.env.VUE_APP_VERSION}&t=${dateTime}`,
+    chunkFilename: `output/assets/css/[name].dgiot.css?v=${process.env.VUE_APP_VERSION}&t=${dateTime}`,
   },
 }
 const configure = {
@@ -259,12 +255,8 @@ const configure = {
   ],
   output: {
     // 输出重构  打包编译后的 文件名称  【模块名称.版本号】
-    filename: `assets/js/[name].dgiot.js?v=${
-      process.env.VUE_APP_VERSION
-    }&t=${new Date().getTime()}`,
-    chunkFilename: `assets/js/[name].dgiot.js?v=${
-      process.env.VUE_APP_VERSION
-    }&t=${new Date().getTime()}`,
+    filename: `output/assets/js/[name].dgiot.js?v=${process.env.VUE_APP_VERSION}&t=${dateTime}`,
+    chunkFilename: `output/assets/js/[name].dgiot.js?v=${process.env.VUE_APP_VERSION}&t=${dateTime}`,
   },
 }
 const pwa = isPwa ? pwaConfig : {}

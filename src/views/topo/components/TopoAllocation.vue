@@ -77,7 +77,7 @@
     /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
   const { cdn } = require('../../../config')
   const path = require('path')
-  const imgHost = regUrl.test(cdn)
+  const imgHost = cdn
     ? `${cdn}/assets/images/dgiot_release/topo/`
     : path.join(
         __dirname,
