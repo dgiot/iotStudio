@@ -12,7 +12,7 @@
     "start:cdn": "cross-env useCdn=true  && yarn downCdn && yarn downIconfront &&  vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "serve:cdn": "cross-env useCdn=true  &&  yarn downCdn && yarn downIconfront && vue-cli-service serve",
-    "delTemp": "rimraf dist/example dist/assets/css dist/assets/js",
+    "delTemp": "rimraf dist/example dist/assets/css dist/assets/js report.html swagger.json",
     "build": "yarn swagger && vue-cli-service build --report && sleep 5 && cp -r swagger.json dist && cd dist && rimraf manifest.webmanifest && cp -i manifest.json manifest.webmanifest",
     "build:cdn": "yarn downCdn && yarn downIconfront && cross-env useCdn=true  && vue-cli-service build --report && yarn swagger && cp -r swagger.json dist && cd dist && rimraf manifest.webmanifest && cp -i manifest.json manifest.webmanifest",
     "build:report": "yarn downCdn && yarn downIconfront &&  vue-cli-service build --report && yarn swagger && cp -r swagger.json dist && cd dist && rimraf manifest.webmanifest &&  cp -i manifest.json manifest.webmanifest",

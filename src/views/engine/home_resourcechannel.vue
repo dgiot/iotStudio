@@ -169,44 +169,17 @@
           width="240"
         >
           <template slot-scope="scope">
-            <!-- <el-popover
-                placement="top-start"
-                title="标题"
-                width="200"
-                trigger="hover"
-                content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
-                <el-button slot="reference" :disabled="scope.row.attributes.status=='OFFLINE'">hover 激活</el-button>
-              </el-popover> -->
-            <el-tooltip
-              class="item"
-              content="请先启用通道"
-              :disabled="scope.row.status != 'OFFLINE'"
-              effect="dark"
-              placement="top"
-            >
-              <el-button
-                size="mini"
-                style="
-                  position: absolute;
-                  width: 100px;
-                  height: 10px;
-                  opacity: 0;
-                "
-                type="primary"
-                @click="subProTopic(scope.row)"
-              />
-            </el-tooltip>
             <el-button
               :disabled="scope.row.status == 'OFFLINE'"
               size="mini"
-              type="info"
+              :title="scope.row.status == 'ONLINE' ? '' : '请先启用通道'"
+              type="success"
               @click="subProTopic(scope.row)"
             >
               <!-- 订阅日志 -->
               {{ $translateTitle('product.log') }}
             </el-button>
             <el-button
-              slot="reference"
               size="mini"
               type="primary"
               @click="editorChannel(scope.row)"
