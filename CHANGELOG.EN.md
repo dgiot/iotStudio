@@ -1,3 +1,34 @@
+## [4.3.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.5...v4.3.6) (2021-10-10)
+
+
+### Bug Fixes
+
+* **.eslintrc.js:** eslint fix ([8623168](https://github.com/dgiot/dgiot-dashboard/commit/8623168e37063ce6e55e5da2f52fccdcdda65a6d))
+* **public/assets/js:** sourceMap ([e5edf99](https://github.com/dgiot/dgiot-dashboard/commit/e5edf99f5afe95cabe9c97ff5d9144c3f97934e4))
+* **src/config/local.config.js:** load local static files ([ef08667](https://github.com/dgiot/dgiot-dashboard/commit/ef086678d25fcc4431e4e94028af854630ea3480))
+* **src/vab/components/vabnav/index.vue:** mqtt connect ([0955da8](https://github.com/dgiot/dgiot-dashboard/commit/0955da8785302bf8cae306240d39cf544cca9921))
+
+
+### Features
+
+* **src/views/logs/device.vue:** log ([ddc50c3](https://github.com/dgiot/dgiot-dashboard/commit/ddc50c3d13772d046377c6831ff517244950c54b))
+* category ([1280841](https://github.com/dgiot/dgiot-dashboard/commit/1280841088397c19beb827ed007f61ab3f72e13d))
+* **devi:** device ([7b1ad54](https://github.com/dgiot/dgiot-dashboard/commit/7b1ad5471f13536011d3699a1413d5a2246c27d8))
+* **src/components/device/info.vue:** device id ([915db63](https://github.com/dgiot/dgiot-dashboard/commit/915db63d5a8eef2cb1e9580c364945d3101a5db5))
+* **src/config/local.config.js:** vue-baidu-map.js ([85405cd](https://github.com/dgiot/dgiot-dashboard/commit/85405cd72232a3e9af881503f4c9f48d15be5dc5))
+* **src/views/equipment_management/home_group2.vue:** optimize template data for repeated queries ([6bbfbfa](https://github.com/dgiot/dgiot-dashboard/commit/6bbfbfa55a10556ed45c9f6c14ce4815e009cb0c))
+* **src/views/equipment_management/js/proddetail.js:** downBinary ([cf2d50d](https://github.com/dgiot/dgiot-dashboard/commit/cf2d50dde26635caf39e8e6aa50508884c2168df))
+* **src/views/equipment_management/js/proddetail.js:** mqtt  logs ([d33fe27](https://github.com/dgiot/dgiot-dashboard/commit/d33fe27689f4cb7bc57245c0bf61e4d56d4c5e7e))
+* **src/views/equipment_management/js/proddetail.js:** websocket subscribe ([3ef564d](https://github.com/dgiot/dgiot-dashboard/commit/3ef564d75b90bf53f803874560c6068a39308022))
+* add producttemp ([a8b571d](https://github.com/dgiot/dgiot-dashboard/commit/a8b571d5f623c92e1b7bae3ab954fff6398da960))
+* introduce dgiot profile ([f005c46](https://github.com/dgiot/dgiot-dashboard/commit/f005c460bc6ea52a42724155f6a0237feca934aa))
+* proddetail ([98f933c](https://github.com/dgiot/dgiot-dashboard/commit/98f933cc11eca3eaf34f7163e58969e3e43b4cc4))
+* trace ([44174e1](https://github.com/dgiot/dgiot-dashboard/commit/44174e192267466b4f8616fcd2e0797c4bf045eb))
+* **src/views/equipment_management/js/proddetail.js:** productTemplet ([fb93eca](https://github.com/dgiot/dgiot-dashboard/commit/fb93ecac6d0d7539335a40e3971cd2fb0c97fd01))
+* **src/views/equipment_management/proddetail.vue:** details ([27ce555](https://github.com/dgiot/dgiot-dashboard/commit/27ce5558b1cd1d5ac437786bbfd721ffc2a0a022))
+
+
+
 ## [4.3.5](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.4...v4.3.5) (2021-09-30)
 
 

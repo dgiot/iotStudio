@@ -747,6 +747,7 @@
           <device-log
             v-show="activeName == 'trace'"
             :devaddr="devicedevaddr"
+            :clientid="deviceid"
             :is-device-info="true"
             :productid="productId"
           />

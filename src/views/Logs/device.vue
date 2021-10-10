@@ -107,11 +107,43 @@
         </el-form>
       </vab-query-form-top-panel>
     </vab-query-form>
+    <el-dialog append-to-body :visible.sync="preDialog" width="30%">
+      <vab-editor
+        :key="refreshFlag"
+        v-model="msg"
+        :height="
+          isFullscreen
+            ? Number($baseTableHeight(1))
+            : Number($baseTableHeight(1))
+        "
+        lang="json"
+        :max-lines="
+          isFullscreen
+            ? Number($baseTableHeight(1)) / 12
+            : Number($baseTableHeight(1)) / 12
+        "
+        :min-lines="
+          isFullscreen
+            ? Number($baseTableHeight(1)) / 12
+            : Number($baseTableHeight(1)) / 12
+        "
+        theme="gob"
+      />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="preDialog = false">取 消</el-button>
+        <el-button type="primary" @click="preDialog = false">确 定</el-button>
+      </span>
+    </el-dialog>
     <el-table
       :key="finallyColumns.length + momentKey"
       ref="dragTable"
+      v-loading="loading"
       border
+      class="block"
       :data="logdata"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+      element-loading-spinner="el-icon-loading"
+      :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
       :height="height"
       highlight-current-row
       resizable
@@ -133,7 +165,10 @@
           </el-descriptions>
         </template>
       </el-table-column>
-      <el-table-column :label="$translateTitle('device.Log type')">
+      <el-table-column
+        align="center"
+        :label="$translateTitle('device.Log type')"
+      >
         <template #default="{ row }">
           {{ $translateTitle(`deviceLog.${row.domain}`) }}
         </template>
@@ -155,6 +190,16 @@
       <!--        label="msg"-->
       <!--        fixed="right"-->
       <!--      />-->
+      <el-table-column
+        align="center"
+        :label="$translateTitle('concentrator.operation')"
+      >
+        <template #default="{ row }">
+          <el-button type="text" @click="showDetail(row)">
+            {{ $translateTitle('concentrator.detail') }}
+          </el-button>
+        </template>
+      </el-table-column>
       <template #empty>
         <vab-empty />
       </template>
@@ -184,6 +229,10 @@
         type: String,
         default: '',
       },
+      clientid: {
+        type: String,
+        default: '',
+      },
       isDeviceInfo: {
         type: Boolean,
         default: true,
@@ -191,6 +240,9 @@
     },
     data() {
       return {
+        preDialog: false,
+        msg: '',
+        loading: false,
         size: '',
         domainOptions: [
           'device_statuslog',
@@ -214,22 +266,13 @@
         isFullscreen: false,
         height: this.$baseTableHeight(2),
         logdata: [],
+        refreshFlag: moment(new Date()).valueOf(),
         momentKey: moment(new Date()).valueOf(),
-        checkList: [
-          'devaddr',
-          'time',
-          'username',
-          'productname',
-          'devicename',
-          'status',
-          'protocol',
-          'thingname',
-          'identifier',
-          'value',
-        ],
+        checkList: ['time', 'msg'],
         logcolumns: [
           'devaddr',
           'time',
+          'msg',
           'username',
           'productname',
           'devicename',
@@ -279,7 +322,7 @@
     created() {},
     mounted() {
       if (this.productid) this.queryForm.productid = this.productid
-      if (this.devaddr) this.queryForm.devaddr = this.devaddr
+      if (this.deviceid) this.queryForm.clientid = this.deviceid
       this.queryTable({})
       this.rowDrop()
       this.queryProduct()
@@ -348,7 +391,18 @@
           },
         })
       },
+      /**
+       * @desc 显示设备日志详情
+       * @param row
+       */
+      showDetail(row) {
+        this.preDialog = true
+        console.log(row)
+        this.msg = JSON.stringify(row, null, 2)
+        this.refreshFlag = moment(new Date()).valueOf()
+      },
       async queryTable(args = {}) {
+        this.loading = true
         console.log(this.queryForm.domain)
         if (!args.limit) {
           args = this.queryForm
@@ -384,20 +438,25 @@
               },
             },
           }
-          if (this.queryForm.devaddr) {
-            params.where.devaddr = this.queryForm.devaddr
+          // if (this.queryForm.devaddr) {
+          //   params.where.devaddr = this.queryForm.devaddr // 传 设备地址，但设备地址会重复
+          // }
+          if (this.queryForm.deviceid) {
+            params.where.clientid = this.queryForm.deviceid // 查设备日志 传设备id
           }
-          if (this.queryForm.productid) {
-            params.where.productid = this.queryForm.productid
-          }
+          // if (this.queryForm.productid) {
+          //   params.where.productid = this.queryForm.productid
+          // }
           const { results = [], count: total = 0 } = await queryLog(params)
           results.forEach((item) => {
             item.time = this.$moment(
               Number(item.time.toString().substring(0, 13))
             ).format('YYYY-MM-DD HH:mm:ss')
-            var msg = JSON.parse(item.msg)
-            for (let k in msg) {
-              item[k] = msg[k]
+            if (item.type != 'text') {
+              const msg = JSON.parse(item.msg)
+              for (let k in msg) {
+                item[k] = msg[k]
+              }
             }
           })
           this.logdata = results
@@ -416,6 +475,7 @@
             'vab-hey-message-error'
           )
         }
+        this.loading = false
       },
     },
   }
