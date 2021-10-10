@@ -1,5 +1,5 @@
 <template>
-  <div class="editproduct">
+  <div style="padding: 0 20px">
     <div class="editheader">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/roles/product' }">
@@ -268,6 +268,7 @@
                   topicstart * topiclength
                 )
               "
+              :height="$baseTableHeight(2)"
               style="width: 100%; text-align: center"
             >
               <el-table-column align="left" label="Topic">
@@ -344,6 +345,14 @@
                   <!--                  </el-popover>-->
                 </template>
               </el-table-column>
+              <template #empty>
+                <el-image
+                  class="vab-data-empty"
+                  :src="
+                    require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                  "
+                />
+              </template>
             </el-table>
             <div class="elpagination" style="margin-top: 20px">
               <el-pagination
@@ -484,6 +493,7 @@
                 <el-table
                   border
                   :data="FromMachine"
+                  :height="$baseTableHeight(2)"
                   :row-class-name="tableRowClassName"
                   style="width: 60vh; overflow: auto"
                   @row-click="clickmachine"
@@ -505,6 +515,14 @@
                     label="设备类型"
                     prop="name"
                   />
+                  <template #empty>
+                    <el-image
+                      class="vab-data-empty"
+                      :src="
+                        require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                      "
+                    />
+                  </template>
                 </el-table>
               </el-col>
               <el-col :lg="20" :md="19" :sm="18" :xl="21" :xs="24">
@@ -560,6 +578,7 @@
                   "
                   :default-expand-all="false"
                   :default-sort="{ prop: 'date', order: 'descending' }"
+                  :height="$baseTableHeight(2)"
                   :row-class-name="getRowClass"
                   row-key="identifier"
                   style="width: 100%; margin-top: 10px"
@@ -608,6 +627,14 @@
                             <span>{{ scope2.row.dataType.type }}</span>
                           </template>
                         </el-table-column>
+                        <template #empty>
+                          <el-image
+                            class="vab-data-empty"
+                            :src="
+                              require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                            "
+                          />
+                        </template>
                       </el-table>
                     </template>
                   </el-table-column>
@@ -742,6 +769,14 @@
                       </el-button>
                     </template>
                   </el-table-column>
+                  <template #empty>
+                    <el-image
+                      class="vab-data-empty"
+                      :src="
+                        require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                      "
+                    />
+                  </template>
                 </el-table>
                 <!--功能定义分页-->
                 <el-pagination
@@ -823,6 +858,14 @@
                       </el-button>
                     </template>
                   </el-table-column>
+                  <template #empty>
+                    <el-image
+                      class="vab-data-empty"
+                      :src="
+                        require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                      "
+                    />
+                  </template>
                 </el-table>
               </div>
 
@@ -1305,6 +1348,14 @@
                   <span>{{ scope.row.cType }}</span>
                 </template>
               </el-table-column>
+              <template #empty>
+                <el-image
+                  class="vab-data-empty"
+                  :src="
+                    require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                  "
+                />
+              </template>
             </el-table>
             <div slot="footer" class="dialog-footer">
               <el-button type="primary" @click.native="updateAllChannel">
@@ -1380,6 +1431,14 @@
                   </el-button>
                 </template>
               </el-table-column>
+              <template #empty>
+                <el-image
+                  class="vab-data-empty"
+                  :src="
+                    require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                  "
+                />
+              </template>
             </el-table>
             <div class="elpagination" style="padding: 20px 0">
               <el-pagination
@@ -1453,6 +1512,7 @@
           <div>
             <el-table
               :data="channelData"
+              :height="$baseTableHeight(2)"
               :row-class-name="getChannelEnable"
               style="width: 100%"
             >
@@ -1527,6 +1587,14 @@
                   </el-button>
                 </template>
               </el-table-column>
+              <template #empty>
+                <el-image
+                  class="vab-data-empty"
+                  :src="
+                    require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                  "
+                />
+              </template>
             </el-table>
             <div class="elpagination" style="margin-top: 20px">
               <el-pagination
@@ -1607,6 +1675,7 @@
           <div>
             <el-table
               :data="resourcechannelData"
+              :height="$baseTableHeight(2)"
               :row-class-name="getChannelEnable"
               style="width: 100%"
             >
@@ -1683,6 +1752,14 @@
                   <!-- <el-button type="primary" size="mini" @click.native="customize(scope.row)">自定义模型</el-button> -->
                 </template>
               </el-table-column>
+              <template #empty>
+                <el-image
+                  class="vab-data-empty"
+                  :src="
+                    require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                  "
+                />
+              </template>
             </el-table>
             <div class="elpagination" style="margin-top: 20px">
               <el-pagination
@@ -1874,6 +1951,14 @@
               </el-button>
             </template>
           </el-table-column>
+          <template #empty>
+            <el-image
+              class="vab-data-empty"
+              :src="
+                require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+              "
+            />
+          </template>
         </el-table>
         <div class="elpagination" style="margin-top: 20px">
           <el-pagination
