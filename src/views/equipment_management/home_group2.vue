@@ -469,7 +469,7 @@
                 :label="$translateTitle('product.devicetype')"
                 prop="nodeType"
               >
-                <el-radio-group v-model="form.nodeType" @change="changeNode">
+                <el-radio-group v-model="form.nodeType">
                   <el-radio :label="3">
                     {{ $translateTitle('product.direct') }}
                   </el-radio>
@@ -2324,7 +2324,8 @@
         this.form.netType = row.netType
         this.form.devType = row.devType
         this.form.productSecret = row.productSecret
-        this.changeNode(row.nodeType, 0)
+        this.form.nodeType = row.nodeType
+        // this.changeNode(row.nodeType, 0)
         if (row.icon) {
           this.imageUrl = row.icon
         }
