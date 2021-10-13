@@ -728,6 +728,7 @@
             v-show="activeName == 'task'"
             :device-info="deviceInfo"
             :name="activeName"
+            ref="SceneLog"
           />
         </el-tab-pane>
         <el-tab-pane
@@ -737,7 +738,7 @@
           <device-log
             v-show="activeName == 'trace'"
             :devaddr="devicedevaddr"
-            :clientid="deviceid"
+            :deviceid="deviceid"
             :is-device-info="true"
             :productid="productId"
           />
@@ -1370,6 +1371,8 @@
           this.getDevices()
         } else if (tab.name == 'third') {
           this.queryChart()
+        } else if (tab.name == 'task'){
+          this.$refs.SceneLog.get_topic()
         }
       },
       timestampToTime(timestamp) {

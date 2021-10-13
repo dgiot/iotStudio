@@ -1279,7 +1279,7 @@
           this.$dgiotBus.$emit(
             `MqttPublish`,
             this.pubtopic,
-            JSON.parse(JSON.stringify({ action: 'start_logger' })),
+            JSON.stringify({ action: 'start_logger' }),
             0,
             false
           )
@@ -1290,7 +1290,7 @@
         this.$dgiotBus.$emit(
           `MqttPublish`,
           pubtopic,
-          JSON.parse(JSON.stringify({ action: 'stop_logger' })),
+          JSON.stringify({ action: 'stop_logger' }),
           0,
           false
         )

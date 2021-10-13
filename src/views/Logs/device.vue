@@ -225,7 +225,7 @@
         type: String,
         default: '',
       },
-      clientid: {
+      deviceid: {
         type: String,
         default: '',
       },
@@ -321,7 +321,7 @@
     created() {},
     mounted() {
       if (this.productid) this.queryForm.productid = this.productid
-      if (this.deviceid) this.queryForm.clientid = this.deviceid
+      if (this.deviceid) this.queryForm.deviceid = this.deviceid
       this.queryTable({})
       this.rowDrop()
       this.queryProduct()
@@ -417,6 +417,7 @@
             // keys: 'time,msg,domain',
             include: '',
             where: {
+              deviceid: this.deviceid ? this.deviceid : '',
               domain: this.queryForm.domain.length
                 ? // ? {
                   //     $all: this.queryForm.domain.split(
@@ -440,9 +441,9 @@
           // if (this.queryForm.devaddr) {
           //   params.where.devaddr = this.queryForm.devaddr // 传 设备地址，但设备地址会重复
           // }
-          if (this.queryForm.deviceid) {
-            params.where.clientid = this.queryForm.deviceid // 查设备日志 传设备id
-          }
+          // if (this.queryForm.deviceid) {
+          //   params.where.deviceid = this.queryForm.deviceid // 查设备日志 传设备id
+          // }
           // if (this.queryForm.productid) {
           //   params.where.productid = this.queryForm.productid
           // }

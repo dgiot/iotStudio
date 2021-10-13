@@ -226,6 +226,8 @@ export default {
       alert: '告警设置',
       tracetype: '类型',
       instruct: '设备指令',
+      sendinstruct: '指令下发',
+      topic: 'topic',
       task: '设备任务',
       'Scene log': '场景日志',
       log: '日志管理',
