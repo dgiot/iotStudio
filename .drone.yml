@@ -16,7 +16,7 @@ steps:
       # - git checkout $DRONE_BRANCH
 
   - name: 编译源代码[Npm] docker
-    image: node:12.22.6-alpine3.12
+    image: node:12.22.7-alpine3.12
     volumes:
       - name: package-nodejs
         path: /package-nodejs
