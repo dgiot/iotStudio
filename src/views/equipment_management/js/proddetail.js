@@ -668,7 +668,7 @@ export default {
         order: 0,
         protocol: 'normal',
         operatetype: 'readCoils',
-        originaltype: 'int',
+        originaltype: 'short16_AB',
         slaveid: '0X10',
         collection: '%s',
         control: '%d',

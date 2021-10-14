@@ -236,9 +236,17 @@
                 </el-descriptions-item>
                 <el-descriptions-item>
                   <template slot="label">
-                    {{ $translateTitle('product.profile') }}
+                    <el-link
+                      type="success"
+                      @click="feateditorParser1(productInfo, 'profile', true)"
+                    >
+                      {{ $translateTitle('product.profile') }}
+                    </el-link>
                   </template>
-                  <el-link type="primary">
+                  <el-link
+                    type="primary"
+                    @click="feateditorParser1(productInfo, 'profile', false)"
+                  >
                     {{ productInfo.config.profile.length || 0 }}
                   </el-link>
                 </el-descriptions-item>

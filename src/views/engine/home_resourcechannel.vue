@@ -1043,7 +1043,7 @@
           this.addchannel = {}
           this.channelForm = false
           this.resourceid = ''
-          this.Get_Re_Channel(0)
+          this.Get_Re_Channel(this.start)
         }
       },
 
@@ -1059,7 +1059,7 @@
               message: '删除成功',
             })
             scope._self.$refs[`popover-${scope.$index}`].doClose()
-            this.Get_Re_Channel(0)
+            this.Get_Re_Channel(this.start)
           })
           .catch((e) => {
             console.log(e.error)
