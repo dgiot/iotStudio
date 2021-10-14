@@ -13,8 +13,8 @@
     "serve": "vue-cli-service serve",
     "serve:cdn": "cross-env useCdn=true  &&  yarn downCdn && yarn downIconfront && vue-cli-service serve",
     "pure:build": "vue-cli-service build && rimraf dist/example dist/assets/css dist/assets/js",
-    "build": "yarn swagger && vue-cli-service build --report && cp -r swagger.json dist && cd dist && rimraf manifest.webmanifest && cp -i manifest.json manifest.webmanifest",
-    "build:cdn": "yarn downCdn && yarn downIconfront && cross-env useCdn=true  && vue-cli-service build --report && yarn swagger && cp -r swagger.json dist && cd dist && rimraf manifest.webmanifest && cp -i manifest.json manifest.webmanifest",
+    "build": "yarn swagger && vue-cli-service build --report && yarn cp",
+    "build:cdn": "yarn downCdn && yarn downIconfront && cross-env useCdn=true  && vue-cli-service build --report && yarn swagger && yarn cp",
     "build:report": "yarn downCdn && yarn downIconfront &&  vue-cli-service build --report && yarn swagger && cp -r swagger.json dist && cd dist && rimraf manifest.webmanifest &&  cp -i manifest.json manifest.webmanifest",
     "build:cdn:report": "cross-env useCdn=true && vue-cli-service build --report",
     "lint": "vue-cli-service lint",
@@ -40,7 +40,8 @@
     "copy:config": "rimraf src/config/developer.config.js && cp src/config/developer.lock.js src/config/developer.config.js && echo 'copy config done'",
     "dgiot:install": "yarn global add rimraf && rimraf node_modules/.bin && rimraf node_modules/.cache && rimraf node_modules/.yarn-integrity  && rimraf node_modules && rimraf yarn.lock && yarn",
     "downCdn": "node utils/downCdn.js",
-    "downIconfront": "node utils/downIconfront.js"
+    "downIconfront": "node utils/downIconfront.js",
+    "cp": "node utils/cp.js"
   },
   "repository": {
     "type": "git",
@@ -62,6 +63,7 @@
     "register-service-worker": "1.7.2",
     "resize-detector": "0.3.0",
     "rimraf": "3.0.2",
+    "shelljs": "^0.8.4",
     "url-loader": "4.1.1",
     "vab-icons": "git+https://github.com.cnpmjs.org/zxcasvw/vab-icons.git",
     "vue-ele-form-data-editor": "0.1.6",
