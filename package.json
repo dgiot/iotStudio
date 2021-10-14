@@ -54,7 +54,7 @@
     "@femessage/el-data-table": "^1.23.0",
     "@femessage/el-form-renderer": "^1.23.0",
     "@vue/cli-plugin-pwa": "^4.5.13",
-    "axios": "^0.22.0",
+    "axios": "0.23.0",
     "core-js": "^3.16.4",
     "cross-env": "^7.0.3",
     "element-ui": "^2.15.5",
