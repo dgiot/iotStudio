@@ -750,9 +750,6 @@
       },
       editorParser(config, type, flag) {
         const { objectId, thing = {} } = this.productDetail
-        console.log('flag', flag)
-        console.log('objectId', objectId)
-        console.log('thing', thing)
         var _sourceDict = []
         var _sourceModule = []
         var _sourceField = []
