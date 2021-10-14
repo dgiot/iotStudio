@@ -343,10 +343,7 @@
               >
                 <el-row :gutter="24">
                   <el-col :span="10">
-                    <el-radio-group
-                      v-model="form.type"
-                      :disabled="custom_status == 'edit'"
-                    >
+                    <el-radio-group v-model="form.type">
                       <el-radio :label="1">
                         {{ $translateTitle('product.Standard category') }}
                       </el-radio>
@@ -356,11 +353,7 @@
                     </el-radio-group>
                   </el-col>
                   <el-col v-if="form.type == 1" :span="13" style="padding: 0">
-                    <el-input
-                      v-model="form.netType"
-                      :disabled="custom_status == 'edit'"
-                      readonly
-                    >
+                    <el-input v-model="form.netType" readonly>
                       <template v-if="form.netType" slot="prepend">
                         <el-link
                           :disabled="custom_status == 'edit'"
@@ -385,17 +378,12 @@
               >
                 <el-select
                   v-model="form.tdchannel"
-                  :disabled="custom_status == 'edit'"
+                  :disabled="custom_status == 'edit' && form.tdchannel != ''"
                   :placeholder="$translateTitle('task.Select')"
                   style="width: 100%"
-                  @click.native="getResource('tdchannel', '2', 'TD')"
                 >
                   <el-option
-                    v-for="item in getChannel(
-                      channelResource,
-                      channeltype,
-                      cType
-                    )"
+                    v-for="item in tdchannelList"
                     :key="item.objectId"
                     :label="item.name"
                     :value="item.objectId"
@@ -408,17 +396,12 @@
               >
                 <el-select
                   v-model="form.taskchannel"
-                  :disabled="custom_status == 'edit'"
+                  :disabled="custom_status == 'edit' && form.taskchannel != ''"
                   :placeholder="$translateTitle('task.Select')"
                   style="width: 100%"
-                  @click.native="getResource('taskchannel', '2', 'INSTRUCT')"
                 >
                   <el-option
-                    v-for="item in getChannel(
-                      channelResource,
-                      channeltype,
-                      cType
-                    )"
+                    v-for="item in taskchannelList"
                     :key="item.objectId"
                     :label="item.name"
                     :value="item.objectId"
@@ -436,10 +419,9 @@
                   :placeholder="$translateTitle('task.Select')"
                   style="width: 100%"
                   value-key="objectId"
-                  @click.native="getResource('otherchannel', '1')"
                 >
                   <el-option
-                    v-for="item in getChannel(channelResource, channeltype)"
+                    v-for="item in otherchannelList"
                     :key="item.objectId"
                     :label="item.name"
                     :value="item.objectId"
@@ -1479,6 +1461,9 @@
           roles: [],
           relationApp: '',
         },
+        taskchannelList:[],
+        tdchannelList:[],
+        otherchannelList:[],
         formPro: {
           name: '',
           url: '',
@@ -1682,7 +1667,7 @@
       },
       getChannel(channelResource, type, cType) {
         let res = {}
-        if (!this.cType) {
+        if (cType == '') {
           res = channelResource.filter(function (item) {
             return item.type == type
           })
@@ -1702,6 +1687,9 @@
         }
         const { results } = await queryChannel(params)
         this.channelResource = results
+        this.taskchannelList = this.getChannel(results, '2', 'INSTRUCT')
+        this.tdchannelList = this.getChannel(results, '2', 'TD')
+        this.otherchannelList = this.getChannel(results, '1', '')
       },
       async referenceHandle(row) {
         await this.$refs.profile.StepsListRowClick(row)
@@ -2312,15 +2300,14 @@
         // this.getIndustryParent(row.category, this.categoryList)
         this.form.desc = row.desc
         this.form.category = row.category
-        this.form.type = row.config.type
+        this.form.config = row.config
         this.form.name = row.name
         this.form.nodeType = row.nodeType
-        this.form.tdchannel = row.channel ? row.channel.tdchannel : ''
-        this.form.taskchannel = row.channel ? row.channel.taskchannel : ''
-        this.form.otherchannel = row.channel ? row.channel.otherchannel : []
-        this.form.storageStrategy = row.channel
-          ? row.channel.storageStrategy
-          : ''
+        this.$set(this.form, 'type', row.channel ? row.channel.type : '')
+        this.$set(this.form, 'tdchannel', row.channel ? row.channel.tdchannel : '')
+        this.$set(this.form, 'taskchannel',row.channel ? row.channel.taskchannel : '')
+        this.$set(this.form, 'otherchannel',row.channel ? row.channel.otherchannel : [])
+        this.$set(this.form, 'storageStrategy',row.channel ? row.channel.storageStrategy : '')
         this.form.netType = row.netType
         this.form.devType = row.devType
         this.form.productSecret = row.productSecret
@@ -2337,8 +2324,8 @@
             this.form.relationApp = key ? key.substr(5) : ''
           }
         }
-        console.log(rows)
-        console.log(this.form.relationApp)
+        console.log('row', row)
+        console.log('form', this.form)
         // this.selectApp(this.form.relationApp)
       },
       async categorytree() {
@@ -2387,9 +2374,6 @@
           icon: this.imageUrl,
           devType: this.form.devType,
           desc: this.form.desc,
-          config:{
-            type: this.form.type,
-          }
         }
         this.$refs.form.validate((valid) => {
           if (valid) {
@@ -2417,13 +2401,13 @@
                 category = Number(this.form.type) == 0 ? '5ca6049839' : this.form.category,
                 netType = Number(this.form.type) == 0 ? 'DGIoT网关' : this.form.netType,
                 channel = {
+                  type: this.form.type,
                   tdchannel: this.form.tdchannel,
                   taskchannel: this.form.taskchannel,
                   otherchannel: this.form.otherchannel,
                   storageStrategy: this.form.storageStrategy,
                 },
                 config = {
-                  type: this.form.type,
                   konva: {
                     Stage: {
                       attrs: {
@@ -2464,11 +2448,6 @@
                 },
                 icon = '',
               } = this.selectedRow
-
-              // type为1 继承 this.selectedRow 的参数
-              // if (this.form.type == 1) {
-              // }
-              // 继承select的属性
               var addparams = {
                 category,
                 netType,
@@ -2488,6 +2467,7 @@
               // console.log(this.custom_row)
               var editparams = {
                 channel: {
+                  type: this.form.type,
                   category: this.form.category,
                   tdchannel: this.form.tdchannel,
                   taskchannel: this.form.taskchannel,

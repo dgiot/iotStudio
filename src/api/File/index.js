@@ -64,12 +64,12 @@ export function UploadImg(params) {
     // eslint-disable-next-line no-prototype-builtins
     return params.hasOwnProperty(`${e}`)
   })
-  let url = ''
+  let url = 'group1/upload'
   const { NODE_ENV = 'development' } = process.env
   console.log('formData', formData)
-  NODE_ENV == 'development'
-    ? (url = 'http://flow.hzmctech.com/group1/upload')
-    : (url = 'group1/upload')
+  // NODE_ENV == 'development'
+  //   ? (url = 'http://flow.hzmctech.com/group1/upload')
+  //   : (url = 'group1/upload')
   // formData.append('auth_token', 'r:44f639018ab7251d2b2730a55c49103f')
   // return request({
   //   url: 'group1/upload',

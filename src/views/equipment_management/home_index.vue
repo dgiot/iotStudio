@@ -1380,11 +1380,9 @@
 <script>
   import { mapGetters, mapMutations } from 'vuex'
   import { get_object } from '@/api/shuwa_parse'
-  import { queryDict } from '@/api/Direct/index.js'
   import { batch, Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
-  import { getProduct, putProduct, queryProduct } from '@/api/Product/index'
-  import { tableDict, RunData } from '@/api/Global/device'
+  import { getProduct, queryProduct } from '@/api/Product/index'
   import deviceState from '@/components/Device/deviceState'
   import {
     BmNavigation,
@@ -1824,9 +1822,7 @@
           count: 'objectId',
           order: '-updatedAt',
           // keys: 'name',
-          where: {
-            category: 'IotHub',
-          },
+          where: {},
         })
         this.proTableData = results
 
