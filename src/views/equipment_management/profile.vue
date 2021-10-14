@@ -562,7 +562,12 @@
       },
     },
     mounted() {
-      // alert('father')
+      this.$baseEventBus.$off('profileDialog')
+      this.$baseEventBus.$on('profileDialog', ({config, type, flag, productInfo}) => {
+        this.productDetail = productInfo
+        this.editorParser(config, type, flag)
+
+      })
       const { project = '' } = this.$route.query
       this.formInline.productname = project
       this.querycategorylist()
@@ -746,8 +751,8 @@
       editorParser(config, type, flag) {
         const { objectId, thing = {} } = this.productDetail
         console.log('flag', flag)
-        // this.tableLoading = true
-        // setTimeout(() => (this.tableLoading = false), 800)
+        console.log('objectId', objectId)
+        console.log('thing', thing)
         var _sourceDict = []
         var _sourceModule = []
         var _sourceField = []
@@ -756,7 +761,7 @@
         this.editDictTempId = objectId
         this.parserType = type
         this.tableType = type
-        this.productConfig = config
+        this.productConfig = _.merge({basedate:{params:{}}},config)
         var isArr = ['parser', 'profile', 'basedate.params']
         if (isArr.includes(type)) {
           console.log('type', type)

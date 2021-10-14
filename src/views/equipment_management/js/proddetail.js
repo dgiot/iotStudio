@@ -12,7 +12,7 @@ import { setTimeout } from "timers";
 import { Websocket } from "@/utils/wxscoket.js";
 import wmxdetail from "@/views/equipment_management/component/wmxdetail";
 import { returnLogin } from "@/utils/utilwen";
-
+import profile from "@/views/equipment_management/profile";
 var editor
 var editor1
 var editor2
@@ -29,6 +29,7 @@ var isupdatetrue = ''
 export default {
   components: {
     'dgiot-wmx': wmxdetail,
+    'dgiot-profile':profile,
   },
   data() {
     var validCode = (rule, value, callback) => {
@@ -127,6 +128,7 @@ export default {
       }
     }
     return {
+      codeFlag: false,
       productInfo: {
         decoder: { code: '' },
         thing: { properties: [] },
@@ -609,6 +611,11 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
+    feateditorParser1(config, type, flag) {
+      let productInfo = this.productInfo
+      this.$baseEventBus.$emit('profileDialog', ({config, type, flag, productInfo}))
+      // this.codeFlag = false
+    },
     ...mapMutations({
       setSizeForm: 'konva/setSizeForm',
     }),

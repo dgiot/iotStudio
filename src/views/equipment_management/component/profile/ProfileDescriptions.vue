@@ -441,6 +441,8 @@
       },
       feateditorParser(config, type, flag) {
         this.codeFlag = false
+        console.log('type', type)
+        console.log('dfasf', this.$parent.$parent.$parent)
         this.$parent.$parent.$parent.editorParser(config, type, flag)
       },
       createProperty() {

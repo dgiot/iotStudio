@@ -1,6 +1,7 @@
 <template>
   <div class="proddetail proddetail-container">
     <div class="editheader">
+      <dgiot-profile v-show="false" :product-info="productInfo" />
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/roles/product' }">
           {{ $translateTitle('route.产品管理') }}
@@ -211,7 +212,27 @@
                 <el-descriptions-item
                   :label="$translateTitle('product.parser')"
                 >
-                  {{ productInfo.config.parser.length || 0 }}
+                  <!--                  {{ productInfo.config.parser.length || 0 }}-->
+                  <template slot="label">
+                    <el-link
+                      type="success"
+                      @click.native="
+                        feateditorParser1(productInfo, 'parser', true)
+                      "
+                    >
+                      {{ $translateTitle('product.parser') }}
+                    </el-link>
+                  </template>
+                  <el-link
+                    :type="
+                      productInfo.config.parser.length ? 'success' : 'default'
+                    "
+                    @click.native="
+                      feateditorParser1(productInfo, 'parser', false)
+                    "
+                  >
+                    {{ productInfo.config.parser.length || 0 }}
+                  </el-link>
                 </el-descriptions-item>
                 <el-descriptions-item>
                   <template slot="label">
