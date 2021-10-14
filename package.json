@@ -93,7 +93,7 @@
     "hard-source-webpack-plugin": "^0.13.1",
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
-    "monaco-editor": "^0.25.2",
+    "monaco-editor": "0.29.1",
     "prettier": "^2.3.2",
     "raw-loader": "^4.0.2",
     "sass": "~1.32.13",
