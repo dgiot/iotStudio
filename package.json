@@ -96,7 +96,7 @@
     "monaco-editor": "^0.25.2",
     "prettier": "^2.3.2",
     "raw-loader": "^4.0.2",
-    "sass": "~1.32.13",
+    "sass": "1.43.2",
     "sass-loader": "^10.2.0",
     "script-loader": "^0.7.2",
     "speed-measure-webpack-plugin": "^1.5.0",
