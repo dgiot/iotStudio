@@ -1,7 +1,7 @@
 <template>
   <div
-    class="konva konva-container"
-    :class="{ 'vab-fullscreen': isFullscreen }"
+    class="konva"
+    :class="{ 'vab-fullscreen': isFullscreen, 'konva-fullscreen': isDevice }"
   >
     <!--    <vab-xterm />-->
     <el-container class="konva-container">
@@ -907,10 +907,20 @@
   }
 </script>
 <style lang="scss" scoped>
+  .konva-fullscreen {
+    height: calc(100vh - #{$base-top-bar-height}* 3) !important;
+    .konva-container {
+      .konva-container-main {
+        height: calc(
+          100vh - #{$base-top-bar-height}* 3 - #{$base-padding} * 2
+        ) !important;
+      }
+    }
+  }
   .konva {
     height: calc(100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2);
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: hidden;
     background: $base-color-white;
     transition: $base-transition;
     &-container {

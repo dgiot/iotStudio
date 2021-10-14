@@ -1,5 +1,5 @@
 <template>
-  <div class="topoBase">
+  <div class="topoBase" :class="{ 'topoBase-fullscreen': isDevice }">
     <div id="kevCurrent" :key="konvaKey" class="konvaTest"></div>
     <div id="current1"></div>
   </div>
@@ -31,6 +31,13 @@
         defaultJson:
           '{"attrs":{"width":2382,"height":1200,"draggable":true},"className":"Stage","children":[{"attrs":{"hitGraphEnabled":false},"className":"Layer","children":[{"attrs":{},"className":"Image"},{"attrs":{"source":"https://konvajs.org/assets/yoda.jpg"},"className":"Image"}]},{"attrs":{},"className":"Layer","children":[{"attrs":{"draggable":true,"x":306,"y":303,"transformsEnabled":"position"},"className":"Group","children":[{"attrs":{"radius":20,"stroke":"#231fff","strokeWidth":4,"fill":"#ffffff"},"className":"Circle"},{"attrs":{"text":"1","fontSize":14,"originX":"center","originY":"center","fill":"#231fff","x":-5,"y":-5},"className":"Text"},{"attrs":{"data":"M.91,0H29.09A.91.91,0,0,1,30,.91v243a.88.88,0,0,1-.26.63L15.65,258.86a.9.9,0,0,1-1.3,0L.26,244.52a.88.88,0,0,1-.26-.63V.91A.91.91,0,0,1,.91,0Z","originX":"center","originY":"bottom","x":10,"y":15,"angle":-30,"fill":"#231fff","scaleX":0.15,"scaleY":0.15,"rotation":-30},"className":"Path"}]},{"attrs":{"draggable":true,"x":490,"y":557,"transformsEnabled":"position"},"className":"Group","children":[{"attrs":{"radius":20,"stroke":"#231fff","strokeWidth":4,"fill":"#ffffff"},"className":"Circle"},{"attrs":{"text":"2","fontSize":14,"originX":"center","originY":"center","fill":"#231fff","x":-5,"y":-5},"className":"Text"},{"attrs":{"data":"M.91,0H29.09A.91.91,0,0,1,30,.91v243a.88.88,0,0,1-.26.63L15.65,258.86a.9.9,0,0,1-1.3,0L.26,244.52a.88.88,0,0,1-.26-.63V.91A.91.91,0,0,1,.91,0Z","originX":"center","originY":"bottom","x":10,"y":15,"angle":-30,"fill":"#231fff","scaleX":0.15,"scaleY":0.15,"rotation":-30},"className":"Path"}]}]}]}',
       }
+    },
+    computed: {
+      isDevice: function () {
+        return this.$route.query.type == 'device' || this.$route.query.deviceid
+          ? true
+          : false
+      },
     },
     mounted() {
       // const json = {
@@ -264,7 +271,21 @@
         height: calc(
           100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 100px
         ) !important;
-        overflow: auto !important;
+        //overflow: auto !important;
+      }
+    }
+  }
+  .topoBase-fullscreen {
+    height: calc(
+      100vh - #{$base-top-bar-height}* 3 - #{$base-padding} * 2
+    ) !important;
+    ::v-deep {
+      .konvajs-content {
+        width: 100%;
+        height: calc(
+          100vh - #{$base-top-bar-height}* 3 - #{$base-padding} * 2
+        ) !important;
+        //overflow: auto !important;
       }
     }
   }
