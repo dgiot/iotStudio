@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@babel/helper-plugin-utils": "^7.14.5",
-    "@dgiot/dgiot-component": "^0.0.2",
+    "@dgiot/dgiot-component": "0.0.3",
     "@dgiot/dgiot-mqtt-dashboard": "^1.1.4",
     "@femessage/data-list": "^1.4.0",
     "@femessage/el-data-table": "^1.23.0",
