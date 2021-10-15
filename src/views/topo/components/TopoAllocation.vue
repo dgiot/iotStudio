@@ -74,10 +74,11 @@
 
 <script>
   const regUrl =
-    /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
-  const { cdn } = require('../../../config')
+    /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
+  // const { cdn } = require('../../../config')
+  const cdn = process.env.CDN_URL
   const path = require('path')
-  const imgHost = cdn
+  const imgHost = regUrl.test(cdn)
     ? `${cdn}/assets/images/dgiot_release/topo/`
     : path.join(
         __dirname,
