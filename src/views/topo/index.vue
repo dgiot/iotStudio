@@ -34,7 +34,7 @@
             :xl="isDevice ? 24 : gutter.xl"
             :xs="isDevice ? 24 : gutter.xs"
           >
-            <el-container class="konva-container-main-baseContainer">
+            <el-container class="konva-container-baseCol-baseContainer">
               <Topo-base ref="topobase" />
               <div
                 id="konva"
@@ -911,14 +911,12 @@
     height: calc(100vh - #{$base-top-bar-height}* 3) !important;
     .konva-container {
       .konva-container-main {
-        height: calc(
-          100vh - #{$base-top-bar-height}* 3 - #{$base-padding} * 2
-        ) !important;
+        height: calc(100vh - #{$base-top-bar-height}* 3) !important;
       }
     }
   }
   .konva {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2);
+    height: calc(100vh - #{$base-top-bar-height}* 2.7);
     overflow-x: hidden;
     overflow-y: hidden;
     background: $base-color-white;
@@ -930,9 +928,7 @@
         border-bottom: 1px solid #e5e5e5;
       }
       &-main {
-        height: calc(
-          100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 70px
-        ) !important;
+        height: calc(100vh - #{$base-top-bar-height}* 2.7 - 10px) !important;
         padding: 0 !important;
         &-allocation {
         }

@@ -260,9 +260,7 @@
 <style scoped lang="scss">
   .topoBase {
     width: 100%;
-    height: calc(
-      100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 90px
-    ) !important;
+    height: calc(100vh - #{$base-top-bar-height}* 3.7) !important;
     padding: 0;
     margin: 0;
     ::v-deep {
@@ -276,9 +274,7 @@
     }
   }
   .topoBase-fullscreen {
-    height: calc(
-      100vh - #{$base-top-bar-height}* 3 - #{$base-padding} * 2
-    ) !important;
+    height: calc(100vh - #{$base-top-bar-height}* 3) !important;
     ::v-deep {
       .konvajs-content {
         width: 100%;

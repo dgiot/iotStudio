@@ -860,7 +860,7 @@
 </script>
 <style lang="scss" scoped>
 .operation {
-  height: calc(100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 100px) !important;
+  height: calc(100vh - #{$base-top-bar-height}* 3.5) !important;
   overflow: auto;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -868,7 +868,7 @@
 }
 
 ::v-deep .jsoneditor-vue {
-  height: calc(100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 200px) !important;
+  height: calc(100vh - #{$base-top-bar-height}* 3.5) !important;
   overflow: auto;
 }
 ::v-deep .el-tabs__nav-wrap

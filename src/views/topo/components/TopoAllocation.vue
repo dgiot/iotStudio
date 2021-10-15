@@ -214,9 +214,7 @@
 </script>
 <style lang="scss" scope>
   .icon-selector-popper {
-    height: calc(
-      100vh - #{$base-top-bar-height}* 4 - #{$base-padding} * 2 - 25px
-    );
+    height: calc(100vh - #{$base-top-bar-height}* 3.5);
     margin-left: 10px;
     overflow-x: hidden;
     overflow-y: scroll;
