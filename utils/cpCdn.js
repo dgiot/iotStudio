@@ -7,16 +7,24 @@
 // * @Description: 此脚本是为了兼容windows下的cp命令
 // * @FilePath: utils\cp.js
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/
+const path = require('path')
 const shell = require('shelljs')
 // https://www.npmjs.com/package/shelljs
-function moveDist() {
+/**
+ *
+ * @param target 要复制的文件路径
+ * @param root 根路径
+ * @param filename 文件名
+ */
+function moveEnv(target, root, filename) {
   shell.exec(
-    'cp -r swagger.json dist && cd dist && rm -rf manifest.webmanifest && cp -i manifest.json manifest.webmanifest',
+    `cp -r ${path.join(__dirname, target)} ${path.join(
+      __dirname,
+      root
+    )}/${filename}`,
     (code, stdout, stderr) => {
       console.log('Exit code:', code)
-      console.log('Program output:', stdout)
-      console.log('Program stderr:', stderr)
     }
   )
 }
-moveDist()
+moveEnv('../envcdn', '../', '.env')

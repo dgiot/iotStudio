@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 // * @Author: h7ml
 // * @Date: 2021-10-14 14:55:34
 // * @LastEditors: vivi
@@ -8,15 +7,23 @@
 // * @FilePath: utils\cp.js
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/
 const shell = require('shelljs')
+const path = require('path')
 // https://www.npmjs.com/package/shelljs
-function moveDist() {
+/**
+ *
+ * @param target 要复制的文件路径
+ * @param root 根路径
+ * @param filename 文件名
+ */
+function moveEnv(target, root, filename) {
   shell.exec(
-    'cp -r swagger.json dist && cd dist && rm -rf manifest.webmanifest && cp -i manifest.json manifest.webmanifest',
+    `cp -r ${path.join(__dirname, target)} ${path.join(
+      __dirname,
+      root
+    )}/${filename}`,
     (code, stdout, stderr) => {
       console.log('Exit code:', code)
-      console.log('Program output:', stdout)
-      console.log('Program stderr:', stderr)
     }
   )
 }
-moveDist()
+moveEnv('../envlocal', '../', '.env')

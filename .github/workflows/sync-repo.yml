@@ -1,4 +1,4 @@
-name: Gitee repos mirror periodic job
+name: sync-repo
 
 on:
   push:
@@ -8,12 +8,9 @@ on:
     - cron:  '0 1 * * *'
 
 jobs:
-  build:
-
+  sync-repo:
     runs-on: ubuntu-latest
-
     steps:
-
     - name: Mirror the Github organization repos to Gitee.
       uses: Yikun/hub-mirror-action@v1.1
       with:

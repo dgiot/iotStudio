@@ -46,8 +46,7 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const smp = new SpeedMeasurePlugin()
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
-const regUrl =
-  /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
+const regUrl = /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
 process.env.VUE_APP_TITLE = title
 process.env.VUE_APP_AUTHOR = author
 process.env.VUE_APP_UPDATE_TIME = dateTime
@@ -56,7 +55,13 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
-const staticUrl = cdn ? `${cdn}/assets/` : '/assets/'
+// process.env.CDN_URL = process.env.CDN_URL
+const staticUrl = regUrl.test(process.env.CDN_URL)
+  ? `${process.env.CDN_URL}/assets/`
+  : '/assets/'
+if (process.env.CDN_URL)
+  console.log(`当前使用了cdn,cdn资源链接地址为${process.env.CDN_URL}`)
+else console.log(`当前未使用cdn,可能会导致打包体积过大`)
 function getChainWebpack(config) {
   config.plugin('html').tap((args) => {
     var _staticUrl = useCdn || process.env.useCdn ? cdnUrl : localUrl

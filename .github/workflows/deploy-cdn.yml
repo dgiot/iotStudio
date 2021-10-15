@@ -1,0 +1,26 @@
+name: deploy-cdn
+
+on:
+  push
+
+jobs:
+  deploy-cdn:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - name: install
+        run: yarn
+      - name: build:cdn
+        run:  yarn build:cdn
+      - name: Deploy static to github pagese 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          BRANCH: cdn-pages
+          FOLDER: dist
