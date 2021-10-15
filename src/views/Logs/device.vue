@@ -323,6 +323,8 @@
     mounted() {
       if (this.productid) this.queryForm.productid = this.productid
       if (this.deviceid) this.queryForm.deviceid = this.deviceid
+      if (this.$route.query.deviceid)
+        this.queryForm.deviceid = this.$route.query.deviceid
       this.queryTable({})
       this.rowDrop()
       this.queryProduct()
