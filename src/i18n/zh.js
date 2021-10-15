@@ -521,7 +521,7 @@ export default {
       alias: '别名',
       selectdepartment: '请选择部门',
       enterpwa: '请再次输入密码',
-      entermmzh: '请输入6-10位数字字母组合',
+      entermmzh: '请输入4-10位数字字母组合',
       enteraccount: '请输入账号',
       enteremail: '请输入邮箱',
       enterphonenumber: '请输入手机号',

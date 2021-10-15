@@ -390,10 +390,10 @@
         if (value === '') {
           callback(new Error('请输入密码'))
         } else {
-          // if (!/^\w{6,10}$/.test(value)) {
-          //   // if (!/^([\w]|[.]){6,10}$/.test(value)) {
-          //   callback(new Error("密码格式不正确"));
-          // }
+          if (!/^\w{4,10}$/.test(value)) {
+            // if (!/^([\w]|[.]){6,10}$/.test(value)) {
+            callback(new Error('密码长度必须大于4位'))
+          }
           callback()
         }
       }
