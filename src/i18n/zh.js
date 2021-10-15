@@ -247,6 +247,7 @@ export default {
       objectId: '设备Id',
       ACL: '角色权限',
       device_statuslog: '设备状态日志',
+      device_operationlog: '设备操作日志',
       tcp_send: 'Tcp下行报文',
       tcp_receive: 'Tcp上行报文',
       transparent: '透传报文',

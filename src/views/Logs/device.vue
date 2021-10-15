@@ -242,6 +242,7 @@
         size: '',
         domainOptions: [
           'device_statuslog',
+          'device_operationlog',
           'transparent',
           'event',
           'tcp_send',
