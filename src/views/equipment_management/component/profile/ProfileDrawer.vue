@@ -148,6 +148,7 @@
         this.$parent.addParse(table)
       },
       saveParse(table) {
+        console.log('Preservation', table)
         this.$parent.saveParse(table)
       },
       editParse(index, row) {

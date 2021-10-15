@@ -613,6 +613,7 @@ export default {
   methods: {
     feateditorParser1(config, type, flag) {
       let productInfo = this.productInfo
+      this.parserType = type
       this.$baseEventBus.$emit('profileDialog', ({config, type, flag, productInfo}))
       // this.codeFlag = false
     },

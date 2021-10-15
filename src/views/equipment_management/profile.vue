@@ -563,10 +563,12 @@
     },
     mounted() {
       this.$baseEventBus.$off('profileDialog')
-      this.$baseEventBus.$on('profileDialog', ({config, type, flag, productInfo}) => {
+      this.$baseEventBus.$on('profileDialog', ({config, type, flag, productInfo,parserType}) => {
         this.productDetail = productInfo
+        this.productInfo = productInfo
+        this.parserType = type
+        this.productConfig = _.merge({basedate:{params:{}}},config)
         this.editorParser(config, type, flag)
-
       })
       const { project = '' } = this.$route.query
       this.formInline.productname = project
@@ -800,17 +802,15 @@
         localStorage.setItem('_sourceModule', _sourceModule)
         localStorage.setItem('_sourceField', _sourceField)
         this.decoderTableList = {}
-        console.log(' this.tableType ', this.tableType)
+        console.log('this.tableType ', this.tableType)
       },
       async saveParse(list, type = -1, mark = true) {
-        console.log('this.productConfig', this.productConfig)
-        const parserType = this.productConfig[`${this.parserType}`]
+        const parserType = this.productConfig.config[`${this.parserType}`]
         if (type + 1 > 0) {
           parserType[type] = _.merge({}, list)
         } else {
-          this.productConfig[`${this.parserType}`] = list
+          this.productConfig.config[`${this.parserType}`] = list
         }
-        console.log('this.productConfig', this.productConfig, parserType)
         try {
           const res = await putProduct(this.parserFromId, {
             config: this.productConfig.config,
