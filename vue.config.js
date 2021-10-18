@@ -59,9 +59,7 @@ process.env.proxy = proxy
 const staticUrl = regUrl.test(process.env.CDN_URL)
   ? `${process.env.CDN_URL}/assets/`
   : '/assets/'
-if (process.env.CDN_URL)
-  console.log(`当前使用了cdn,cdn资源链接地址为${process.env.CDN_URL}`)
-else console.log(`当前未使用cdn,可能会导致打包体积过大`)
+
 function getChainWebpack(config) {
   config.plugin('html').tap((args) => {
     var _staticUrl = useCdn || process.env.useCdn ? cdnUrl : localUrl
@@ -102,6 +100,9 @@ function getChainWebpack(config) {
   })
   // https://blog.csdn.net/weixin_34294049/article/details/97278751
   config.when(process.env.NODE_ENV === 'production', (config) => {
+    if (process.env.CDN_URL)
+      console.log(`当前使用了cdn,cdn资源链接地址为${process.env.CDN_URL}`)
+    else console.log(`当前未使用cdn,可能会导致打包体积过大`)
     config.performance.set('hints', false)
     config.plugins.delete('prefetch')
     config.devtool('none')
@@ -167,6 +168,7 @@ function getChainWebpack(config) {
       ])
   })
 }
+
 const resolve = (dir) => {
   return path.join(__dirname, dir)
 }
