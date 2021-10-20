@@ -9,6 +9,7 @@
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/
 const path = require('path')
 const shell = require('shelljs')
+
 // https://www.npmjs.com/package/shelljs
 /**
  *
@@ -23,8 +24,9 @@ function moveEnv(target, root, filename) {
       root
     )}/${filename}`,
     (code, stdout, stderr) => {
-      console.log('Exit code:', code)
+      console.log('已成功设置cdn资源服务器地址=====>', process.env.CDN_URL)
     }
   )
 }
+
 moveEnv('../envcdn', '../', '.env')

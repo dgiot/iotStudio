@@ -74,17 +74,17 @@ let localUrl = {
     'js-cookie.js',
     'index.js',
     'moment.min.js',
-    'xlsx.min.js',
+    // 'xlsx.min.js', 加载速度慢 暂时用不上
     'screenfull.js',
     'jsplumb.min.js',
     'jsencrypt.min.js',
     'vuedraggable.umd.min.js',
     'app.js',
-    'codemirror.js',
+    // 'codemirror.js', 加载速度慢 暂时用不上
     'javascript.js',
     'json-lint.js',
-    'vue-codemirror.js',
-    'FileSaver.min.js',
+    // 'vue-codemirror.js', 加载速度慢 暂时用不上
+    // 'FileSaver.min.js', 加载速度慢 暂时用不上
     'index.js',
     'jsoneditor.min.js',
     'vue-flv-player.umd.min.js',
@@ -104,14 +104,14 @@ let localUrl = {
     'ace-builds.js',
     'resize-observer-polyfill.js',
     'vditor.js',
-    'fabric.js',
+    // 'fabric.js', 加载速度慢 暂时用不上
     'aliplayer-min.js',
-    'xterm.js',
-    'xterm-addon-fit.js',
-    'xterm-addon-attach.js',
+    // 'xterm.js', 加载速度慢 暂时用不上
+    // 'xterm-addon-fit.js',
+    // 'xterm-addon-attach.js',
     'vue-aliplayer-v2.js',
-    'rutilsjs.js',
-    'rdatejs.js',
+    // 'rutilsjs.js',加载速度慢 暂时用不上
+    // 'rdatejs.js',加载速度慢 暂时用不上
     'bcryptjs.js',
   ],
 }

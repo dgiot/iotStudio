@@ -1,11 +1,11 @@
 <template>
   <div class="topoBase" :class="{ 'topoBase-fullscreen': isDevice }">
     <div id="kevCurrent" :key="konvaKey" class="konvaTest"></div>
-    <div id="current1"></div>
   </div>
 </template>
 
 <script>
+  // eslint-disable
   var width = window.innerWidth
   var height = window.innerHeight
   export default {
@@ -257,29 +257,32 @@
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .topoBase {
     width: 100%;
-    height: calc(100vh - #{$base-top-bar-height}* 3.7) !important;
+    height: calc(100vh - #{$base-top-bar-height} * 3.7) !important;
     padding: 0;
     margin: 0;
+
     ::v-deep {
       .konvajs-content {
         width: 100%;
         height: calc(
-          100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 100px
+          100vh - #{$base-top-bar-height} * 2.7 - #{$base-padding} * 2 - 100px
         ) !important;
         //overflow: auto !important;
       }
     }
   }
+
   .topoBase-fullscreen {
-    height: calc(100vh - #{$base-top-bar-height}* 3) !important;
+    height: calc(100vh - #{$base-top-bar-height} * 3) !important;
+
     ::v-deep {
       .konvajs-content {
         width: 100%;
         height: calc(
-          100vh - #{$base-top-bar-height}* 3 - #{$base-padding} * 2
+          100vh - #{$base-top-bar-height} * 3 - #{$base-padding} * 2
         ) !important;
         //overflow: auto !important;
       }
