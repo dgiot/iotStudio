@@ -31,7 +31,10 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="水泵型号">
             <el-input
               v-model="BasicInfoObj.chanpinxh"
@@ -40,24 +43,41 @@
             />
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="出厂编号">
-            <el-input v-model="BasicInfoObj.chuchangbh" class="eipt" />
+            <el-input
+              v-model="BasicInfoObj.chuchangbh"
+              class="eipt"
+            />
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="报告编号">
-            <el-input v-model="BasicInfoObj.bianhao" class="eipt" />
+            <el-input
+              v-model="BasicInfoObj.bianhao"
+              class="eipt"
+            />
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="8">
+        <el-col
+          class="ep0"
+          :span="8"
+        >
           <el-form-item label="大气压">
             <el-input
               v-model="BasicInfoObj.daqiya"
               class="eipt"
               style="width: 200px"
             >
-              <template slot="append">标准大气压</template>
+              <template slot="append">
+                标准大气压
+              </template>
             </el-input>
           </el-form-item>
         </el-col>
@@ -97,37 +117,67 @@
         </el-col>
       </el-row>
       <el-row :gutter="24">
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="气温">
             <el-input
               v-model="BasicInfoObj.qiwen"
               class="eipt"
               style="width: 127px"
             >
-              <template slot="append">℃</template>
+              <template slot="append">
+                ℃
+              </template>
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="水温">
-            <el-input v-model="BasicInfoObj.shuiwen" class="eipt">
-              <template slot="append">℃</template>
+            <el-input
+              v-model="BasicInfoObj.shuiwen"
+              class="eipt"
+            >
+              <template slot="append">
+                ℃
+              </template>
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="湿度">
-            <el-input v-model="BasicInfoObj.shidu" class="eipt">
-              <template slot="append">%</template>
+            <el-input
+              v-model="BasicInfoObj.shidu"
+              class="eipt"
+            >
+              <template slot="append">
+                %
+              </template>
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="样品等级">
-            <el-input v-model="BasicInfoObj.yangpindengji" class="eipt" />
+            <el-input
+              v-model="BasicInfoObj.yangpindengji"
+              class="eipt"
+            />
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="生产日期">
             <el-date-picker
               v-model="BasicInfoObj.shengchangData"
@@ -158,7 +208,10 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="检测人员">
             <el-input
               v-model="BasicInfoObj.jianceren"
@@ -167,19 +220,37 @@
             />
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="批准人">
-            <el-input v-model="BasicInfoObj.pizhunren" class="eipt" />
+            <el-input
+              v-model="BasicInfoObj.pizhunren"
+              class="eipt"
+            />
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="审核人">
-            <el-input v-model="BasicInfoObj.shenheren" class="eipt" />
+            <el-input
+              v-model="BasicInfoObj.shenheren"
+              class="eipt"
+            />
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="检验性质">
-            <el-input v-model="BasicInfoObj.jianyanxingzhi" class="eipt" />
+            <el-input
+              v-model="BasicInfoObj.jianyanxingzhi"
+              class="eipt"
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -205,12 +276,18 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="检验项目">
-            <el-input v-model="BasicInfoObj.jianyanxiangmu" placeholder />
+            <el-input
+              v-model="BasicInfoObj.jianyanxiangmu"
+              placeholder
+            />
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="联系电话">
-            <el-input v-model="BasicInfoObj.lianxidh" placeholder />
+            <el-input
+              v-model="BasicInfoObj.lianxidh"
+              placeholder
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -244,7 +321,10 @@
               filterable
               placeholder
             >
-              <el-option label="温岭市大溪镇" value="温岭市大溪镇" />
+              <el-option
+                label="温岭市大溪镇"
+                value="温岭市大溪镇"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -279,7 +359,10 @@
               filterable
               placeholder
             >
-              <el-option label="温岭市大溪镇" value="温岭市大溪镇" />
+              <el-option
+                label="温岭市大溪镇"
+                value="温岭市大溪镇"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -303,7 +386,11 @@
         >
           <el-row>
             <el-col :span="2">
-              <el-tooltip class="item" effect="dark" placement="top-start">
+              <el-tooltip
+                class="item"
+                effect="dark"
+                placement="top-start"
+              >
                 <div slot="content">
                   检验依据类型,例如
                   <br />
@@ -374,7 +461,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="抽样基数" style="width: 100%">
+          <el-form-item
+            label="抽样基数"
+            style="width: 100%"
+          >
             <el-input
               v-model="BasicInfoObj.chouyangjishu"
               style="width: 100%"
@@ -382,7 +472,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="抽样日期" style="width: 100%">
+          <el-form-item
+            label="抽样日期"
+            style="width: 100%"
+          >
             <el-date-picker
               v-model="BasicInfoObj.chouyangData"
               format="yyyy 年 MM 月 dd 日"
@@ -394,12 +487,21 @@
       </el-row>
       <el-row>
         <el-col :span="6">
-          <el-form-item label="抽样数量" style="width: 100%">
-            <el-input v-model="BasicInfoObj.chouyangNum" style="width: 100%" />
+          <el-form-item
+            label="抽样数量"
+            style="width: 100%"
+          >
+            <el-input
+              v-model="BasicInfoObj.chouyangNum"
+              style="width: 100%"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="到样日期" style="width: 100%">
+          <el-form-item
+            label="到样日期"
+            style="width: 100%"
+          >
             <el-date-picker
               v-model="BasicInfoObj.daoyangData"
               format="yyyy 年 MM 月 dd 日"
@@ -409,7 +511,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="检验日期" style="width: 100%">
+          <el-form-item
+            label="检验日期"
+            style="width: 100%"
+          >
             <el-date-picker
               v-model="BasicInfoObj.jianyanData"
               format="yyyy 年 MM 月 dd 日"
@@ -419,7 +524,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="样品状况" style="width: 100%">
+          <el-form-item
+            label="样品状况"
+            style="width: 100%"
+          >
             <el-input v-model="BasicInfoObj.yangpinzhuangtai" />
           </el-form-item>
         </el-col>
@@ -433,7 +541,9 @@
         <el-col :span="6">
           <el-form-item label="电机效率">
             <el-input v-model="BasicInfoObj.xiaolv">
-              <template slot="append">%</template>
+              <template slot="append">
+                %
+              </template>
             </el-input>
           </el-form-item>
         </el-col>
@@ -486,7 +596,10 @@
       </el-row>
       <el-row>
         <el-col :span="6">
-          <el-form-item label="验收等级" style="display: block; width: 100%">
+          <el-form-item
+            label="验收等级"
+            style="display: block; width: 100%"
+          >
             <el-input v-model="BasicInfoObj.yanshoudengji" />
           </el-form-item>
         </el-col>
@@ -510,7 +623,10 @@
       </el-row>
       <el-row class="beizhu1">
         <el-col :span="24">
-          <el-form-item label="备注" style="display: block; width: 100%">
+          <el-form-item
+            label="备注"
+            style="display: block; width: 100%"
+          >
             <el-input
               v-model="BasicInfoObj.beizhu"
               :autosize="{ minRows: 1, maxRows: 1 }"

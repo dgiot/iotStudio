@@ -3,7 +3,13 @@
     <div class="block">
       <el-row :gutter="20">
         <!--第一个tree树-->
-        <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+        <el-col
+          :lg="12"
+          :md="12"
+          :sm="24"
+          :xl="12"
+          :xs="24"
+        >
           <el-table
             ref="refTable"
             accordion
@@ -12,7 +18,11 @@
             style="width: 100%"
             @expand-change="rowExpand"
           >
-            <el-table-column label="取证" type="expand" width="200">
+            <el-table-column
+              label="取证"
+              type="expand"
+              width="200"
+            >
               <template slot-scope="props">
                 <el-form
                   class="demo-table-expand"
@@ -60,7 +70,10 @@
                   :data="tableData1"
                   style="width: 100%; text-align: center"
                 >
-                  <el-table-column align="center" label="设备名称">
+                  <el-table-column
+                    align="center"
+                    label="设备名称"
+                  >
                     <template slot-scope="scope">
                       <span
                         v-if="scope.row.product.name.indexOf('控制台') != -1"
@@ -77,12 +90,18 @@
                       <span v-else>摄像头</span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="center" label="设备编号">
+                  <el-table-column
+                    align="center"
+                    label="设备编号"
+                  >
                     <template slot-scope="scope">
                       <span>{{ scope.row.devaddr }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="center" label="运行状态">
+                  <el-table-column
+                    align="center"
+                    label="运行状态"
+                  >
                     <template slot-scope="scope">
                       <span
                         v-if="scope.row.status == 'OFFLINE'"
@@ -96,10 +115,17 @@
                       >
                         忙碌
                       </span>
-                      <span v-else style="color: green">在线</span>
+                      <span
+                        v-else
+                        style="color: green"
+                      >在线</span>
                     </template>
                   </el-table-column>
-                  <el-table-column align="center" label="操作" width="200">
+                  <el-table-column
+                    align="center"
+                    label="操作"
+                    width="200"
+                  >
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
@@ -129,11 +155,31 @@
                 </el-table>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="ID" type="index" />
-            <el-table-column align="center" label="检验项目" prop="name" />
-            <el-table-column align="center" label="保证值" prop="title" />
-            <el-table-column align="center" label="测试值" prop="value" />
-            <el-table-column align="center" label="评定" prop />
+            <el-table-column
+              align="center"
+              label="ID"
+              type="index"
+            />
+            <el-table-column
+              align="center"
+              label="检验项目"
+              prop="name"
+            />
+            <el-table-column
+              align="center"
+              label="保证值"
+              prop="title"
+            />
+            <el-table-column
+              align="center"
+              label="测试值"
+              prop="value"
+            />
+            <el-table-column
+              align="center"
+              label="评定"
+              prop
+            />
           </el-table>
           <!-- <div class="block" style="margin-top:10px;">
             <el-pagination
@@ -154,23 +200,35 @@
           :xl="12"
           :xs="24"
         >
-          <div id="Getdata" style="width: 100%; height: 300px" />
+          <div
+            id="Getdata"
+            style="width: 100%; height: 300px"
+          />
           <el-table
             class="tableforfile"
             :data="Datafile"
             style="width: 100%; text-align: center"
           >
-            <el-table-column align="center" label="数据来源">
+            <el-table-column
+              align="center"
+              label="数据来源"
+            >
               <template slot-scope="scope">
                 <span>{{ scope.row.attributes.data.source }}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="最近更新时间">
+            <el-table-column
+              align="center"
+              label="最近更新时间"
+            >
               <template slot-scope="scope">
                 <span>{{ utc2beijing(scope.row.attributes.createdAt) }}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="内容">
+            <el-table-column
+              align="center"
+              label="内容"
+            >
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -211,7 +269,11 @@
           :on-remove="handleRemove"
           :on-success="responsesuccess"
         >
-          <el-button slot="trigger" size="small" type="primary">
+          <el-button
+            slot="trigger"
+            size="small"
+            type="primary"
+          >
             选取文件
           </el-button>
           <el-button
@@ -222,14 +284,24 @@
           >
             上传到服务器
           </el-button>
-          <el-button size="small" type="primary" @click.native="importdata">
+          <el-button
+            size="small"
+            type="primary"
+            @click.native="importdata"
+          >
             提 交
           </el-button>
         </el-upload>
       </div>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="deleteFile">取 消</el-button>
-        <el-button type="primary" @click.native="deleteFile">确 定</el-button>
+        <el-button
+          type="primary"
+          @click.native="deleteFile"
+        >确 定</el-button>
       </span>
     </el-dialog>
   </div>

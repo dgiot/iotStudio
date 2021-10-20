@@ -148,20 +148,47 @@
       "
     >
       <el-row :gutter="10">
-        <el-col :lg="8" :md="8" :push="1" :sm="8" :xl="8" :xs="8">
-          <el-button disabled type="primary" @click.native="fullScreen">
+        <el-col
+          :lg="8"
+          :md="8"
+          :push="1"
+          :sm="8"
+          :xl="8"
+          :xs="8"
+        >
+          <el-button
+            disabled
+            type="primary"
+            @click.native="fullScreen"
+          >
             预览
           </el-button>
-          <el-button type="primary" @click.native="printData">
+          <el-button
+            type="primary"
+            @click.native="printData"
+          >
             当前数据
           </el-button>
         </el-col>
-        <el-col :lg="8" :md="8" :sm="8" :xl="8" :xs="8">
+        <el-col
+          :lg="8"
+          :md="8"
+          :sm="8"
+          :xl="8"
+          :xs="8"
+        >
           <p style="height: 20px; font-size: 18px; line-height: 20px">
             已选组件个数：{{ selectedComponents.length }}
           </p>
         </el-col>
-        <el-col :lg="8" :md="8" :pull="1" :sm="8" :xl="8" :xs="8">
+        <el-col
+          :lg="8"
+          :md="8"
+          :pull="1"
+          :sm="8"
+          :xl="8"
+          :xs="8"
+        >
           <el-slider
             v-model="selectedValue"
             label

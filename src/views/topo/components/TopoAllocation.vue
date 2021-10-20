@@ -2,13 +2,30 @@
 <template>
   <div class="icon-selector-popper">
     <div class="dialog">
-      <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+      <vab-input
+        ref="uploadFinish"
+        @fileInfo="fileInfo"
+      />
     </div>
-    <el-collapse v-model="activeNames" accordion>
-      <el-collapse-item name="icon" title="iconfont">
+    <el-collapse
+      v-model="activeNames"
+      accordion
+    >
+      <el-collapse-item
+        name="icon"
+        title="iconfont"
+      >
         <el-row :gutter="20">
-          <el-col v-for="item in iconfont.glyphs" :key="item.icon_id" :span="8">
-            <i v-svg-drag="{ callback: coordinate }" @mousedown="moveSvg(item)">
+          <el-col
+            v-for="(item, index) in iconfont.glyphs"
+            v-show="index <= 11"
+            :key="item.icon_id"
+            :span="8"
+          >
+            <i
+              v-svg-drag="{ callback: coordinate }"
+              @mousedown="moveSvg(item)"
+            >
               <VabIconfont
                 :name="item.font_class"
                 :title="item.name"
@@ -18,14 +35,24 @@
           </el-col>
         </el-row>
       </el-collapse-item>
-      <el-collapse-item name="1" title="图标">
+      <el-collapse-item
+        name="1"
+        title="图标"
+      >
         <el-row :gutter="20">
           <el-col :span="24">
             <vab-query-form>
               <vab-query-form-top-panel>
-                <el-form :inline="true" label-width="0" @submit.native.prevent>
+                <el-form
+                  :inline="true"
+                  label-width="0"
+                  @submit.native.prevent
+                >
                   <el-form-item label="">
-                    <el-input v-model="queryForm.title" size="mini">
+                    <el-input
+                      v-model="queryForm.title"
+                      size="mini"
+                    >
                       <el-button
                         slot="append"
                         icon="el-icon-search"
@@ -46,7 +73,12 @@
             </vab-query-form>
           </el-col>
 
-          <el-col v-for="(item, index) in queryIcon" :key="index" :span="8">
+          <el-col
+            v-for="(item, index) in queryIcon"
+            v-show="index <= 11"
+            :key="index"
+            :span="8"
+          >
             <i>
               <el-image
                 :src="imgHost + item"
@@ -98,7 +130,10 @@
     data() {
       return {
         iconfont,
-        busData: { coordinate: {}, paths: [] },
+        busData: {
+          coordinate: {},
+          paths: [],
+        },
         accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF',
         imgHost: imgHost,
         icon: '24-hours-fill',
@@ -132,7 +167,10 @@
     activated() {},
     methods: {
       coordinate(e) {
-        const _coordinate = { x: e.pageX, y: e.pageY }
+        const _coordinate = {
+          x: e.pageX,
+          y: e.pageY,
+        }
         this.busData.coordinate = _coordinate
       },
 
@@ -215,19 +253,22 @@
 </script>
 <style lang="scss" scope>
   .icon-selector-popper {
-    height: calc(100vh - #{$base-top-bar-height}* 3.5);
+    height: calc(100vh - #{$base-top-bar-height} * 3.5);
     margin-left: 10px;
     overflow-x: hidden;
     overflow-y: scroll;
+
     .el—card {
       height: 40px !important;
       padding: 10px;
     }
+
     .el-collapse-item__header {
       display: block;
       margin: 0 auto;
       text-align: center;
     }
+
     .el-card__body {
       position: relative;
       display: flex;

@@ -9,7 +9,11 @@
         :model="roleFormObj"
         :rules="roleFormRules"
       >
-        <el-form-item v-if="!isStructures" label="父及部门" prop="ParentId">
+        <el-form-item
+          v-if="!isStructures"
+          label="父及部门"
+          prop="ParentId"
+        >
           <el-select
             v-model="roleFormObj.ParentId"
             placeholder="请选择Parent"
@@ -29,7 +33,10 @@
         <!--        <el-form-item label="角色名" prop="name">-->
         <!--          <el-input v-model="roleFormObj.name" />-->
         <!--        </el-form-item>-->
-        <el-form-item label="部门" prop="depname">
+        <el-form-item
+          label="部门"
+          prop="depname"
+        >
           <el-input
             v-model="roleFormObj.depname"
             placeholder="请输入部门名称"
@@ -45,7 +52,10 @@
             </el-button>
           </span>
         </el-form-item>
-        <el-form-item label="岗位" prop="dictvalue">
+        <el-form-item
+          label="岗位"
+          prop="dictvalue"
+        >
           <el-select
             v-model="roleFormObj.dictvalue"
             :clearable="clearFlag"
@@ -60,11 +70,25 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="!isStructures" label="备注">
-          <el-input v-model="roleFormObj.description" type="textarea" />
+        <el-form-item
+          v-if="!isStructures"
+          label="备注"
+        >
+          <el-input
+            v-model="roleFormObj.description"
+            type="textarea"
+          />
         </el-form-item>
-        <el-form-item v-if="!isStructures" class="el_btn">
-          <el-button type="warning" @click.native="resetFrom()">重置</el-button>
+        <el-form-item
+          v-if="!isStructures"
+          class="el_btn"
+        >
+          <el-button
+            type="warning"
+            @click.native="resetFrom()"
+          >
+            重置
+          </el-button>
 
           <el-button
             v-if="insert == 0 || insert == 1"

@@ -1,5 +1,8 @@
 <template>
-  <div ref="flvPlayer" class="player">
+  <div
+    ref="flvPlayer"
+    class="player"
+  >
     <div>
       <video
         id="videoElement"

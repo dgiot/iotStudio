@@ -27,7 +27,10 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="水泵型号">
             <el-input
               v-model="BasicInfoObj.xinghao"
@@ -36,19 +39,37 @@
             />
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="出厂编号">
-            <el-input v-model="BasicInfoObj.chuchangbianhao" class="eipt" />
+            <el-input
+              v-model="BasicInfoObj.chuchangbianhao"
+              class="eipt"
+            />
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="试验编号">
-            <el-input v-model="BasicInfoObj.bianhao" class="eipt" />
+            <el-input
+              v-model="BasicInfoObj.bianhao"
+              class="eipt"
+            />
           </el-form-item>
         </el-col>
-        <el-col class="ep0" :span="4">
+        <el-col
+          class="ep0"
+          :span="4"
+        >
           <el-form-item label="产品编号">
-            <el-input v-model="BasicInfoObj.chanpinbianhao" class="eipt" />
+            <el-input
+              v-model="BasicInfoObj.chanpinbianhao"
+              class="eipt"
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -56,8 +77,14 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="送样单位">
-            <el-select v-model="BasicInfoObj.songyangN" class="ep50">
-              <el-option label="利欧集团湖南泵业有限公司" value="shanghai" />
+            <el-select
+              v-model="BasicInfoObj.songyangN"
+              class="ep50"
+            >
+              <el-option
+                label="利欧集团湖南泵业有限公司"
+                value="shanghai"
+              />
               <el-option
                 label="LEO Group PUMP (HUNAN) CO , LTD"
                 value="beijing"
@@ -67,7 +94,10 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="单位地址">
-            <el-select v-model="BasicInfoObj.jingxiaoAddr" class="ep50">
+            <el-select
+              v-model="BasicInfoObj.jingxiaoAddr"
+              class="ep50"
+            >
               <el-option
                 label="湖南湘潭九华示范区"
                 value="湖南湘潭九华示范区"
@@ -83,8 +113,14 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="生产单位">
-            <el-select v-model="BasicInfoObj.shengchanN" class="ep50">
-              <el-option label="利欧集团湖南泵业有限公司" value="shanghai" />
+            <el-select
+              v-model="BasicInfoObj.shengchanN"
+              class="ep50"
+            >
+              <el-option
+                label="利欧集团湖南泵业有限公司"
+                value="shanghai"
+              />
               <el-option
                 label="LEO Group PUMP (HUNAN) CO , LTD"
                 value="beijing"
@@ -94,7 +130,10 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="单位地址">
-            <el-select v-model="BasicInfoObj.shengchanAddr" class="ep50">
+            <el-select
+              v-model="BasicInfoObj.shengchanAddr"
+              class="ep50"
+            >
               <el-option
                 label="湖南湘潭九华示范区"
                 value="湖南湘潭九华示范区"
@@ -110,8 +149,14 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="委托单位">
-            <el-select v-model="BasicInfoObj.weituo" class="ep50">
-              <el-option label="利欧集团湖南泵业有限公司" value="shanghai" />
+            <el-select
+              v-model="BasicInfoObj.weituo"
+              class="ep50"
+            >
+              <el-option
+                label="利欧集团湖南泵业有限公司"
+                value="shanghai"
+              />
               <el-option
                 label="LEO Group PUMP (HUNAN) CO , LTD"
                 value="beijing"
@@ -121,7 +166,10 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="单位地址">
-            <el-select v-model="BasicInfoObj.weituoAddr" class="ep50">
+            <el-select
+              v-model="BasicInfoObj.weituoAddr"
+              class="ep50"
+            >
               <el-option
                 label="湖南湘潭九华示范区"
                 value="湖南湘潭九华示范区"
@@ -145,7 +193,10 @@
         </el-col> -->
         <el-col :span="12">
           <el-form-item label="检验依据">
-            <el-select v-model="BasicInfoObj.jianyanbiaozhun" class="ep50">
+            <el-select
+              v-model="BasicInfoObj.jianyanbiaozhun"
+              class="ep50"
+            >
               <el-option
                 label="湖南湘潭九华示范区"
                 value="湖南湘潭九华示范区"
@@ -161,8 +212,14 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="抽样地点">
-            <el-select v-model="BasicInfoObj.chouyangAddr" class="ep50">
-              <el-option label="利欧集团湖南泵业有限公司" value="shanghai" />
+            <el-select
+              v-model="BasicInfoObj.chouyangAddr"
+              class="ep50"
+            >
+              <el-option
+                label="利欧集团湖南泵业有限公司"
+                value="shanghai"
+              />
               <el-option
                 label="LEO Group PUMP (HUNAN) CO , LTD"
                 value="beijing"
@@ -172,7 +229,10 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="抽样基数">
-            <el-input v-model="BasicInfoObj.chouyangjishu" class="ep50" />
+            <el-input
+              v-model="BasicInfoObj.chouyangjishu"
+              class="ep50"
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -185,7 +245,9 @@
         <el-col :span="6">
           <el-form-item label="电机效率">
             <el-input v-model="BasicInfoObj.xiaolv">
-              <template slot="append">%</template>
+              <template slot="append">
+                %
+              </template>
             </el-input>
           </el-form-item>
         </el-col>
@@ -237,7 +299,10 @@
       </el-row>
       <el-row class="beizhu1">
         <el-col :span="24">
-          <el-form-item label="备注" style="display: block; width: 100%">
+          <el-form-item
+            label="备注"
+            style="display: block; width: 100%"
+          >
             <el-input
               v-model="BasicInfoObj.beizhu"
               :autosize="{ minRows: 1, maxRows: 1 }"

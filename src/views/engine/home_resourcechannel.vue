@@ -1,6 +1,9 @@
 <template>
   <div class="resourcechannel resourcechannel-container">
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+    <vab-input
+      ref="uploadFinish"
+      @fileInfo="fileInfo"
+    />
     <div class="firsttable">
       <el-form
         class="demo-form-inline"
@@ -15,12 +18,18 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click.native="Get_Re_Channel(0)">
+          <el-button
+            type="primary"
+            @click.native="Get_Re_Channel(0)"
+          >
             {{ $translateTitle('developer.search') }}
           </el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click.native="addchanneltype">
+          <el-button
+            type="primary"
+            @click.native="addchanneltype"
+          >
             {{ $translateTitle('developer.selectchannel') }}
           </el-button>
         </el-form-item>
@@ -107,11 +116,17 @@
           width="100"
         >
           <template slot-scope="scope">
-            <span v-if="scope.row.status == 'ONLINE'" style="color: green">
+            <span
+              v-if="scope.row.status == 'ONLINE'"
+              style="color: green"
+            >
               <!-- 在线 -->
               {{ $translateTitle('product.online') }}
             </span>
-            <span v-else style="color: red">
+            <span
+              v-else
+              style="color: red"
+            >
               <!-- 离线 -->
               {{ $translateTitle('product.offline') }}
             </span>
@@ -131,8 +146,8 @@
         <el-table-column
           :label="
             $translateTitle('developer.enable') +
-            '/' +
-            $translateTitle('developer.disable')
+              '/' +
+              $translateTitle('developer.disable')
           "
           prop="isEnable"
           show-overflow-tooltip
@@ -224,7 +239,11 @@
                   {{ $translateTitle('developer.determine') }}
                 </el-button>
               </div>
-              <el-button slot="reference" size="mini" type="danger">
+              <el-button
+                slot="reference"
+                size="mini"
+                type="danger"
+              >
                 {{ $translateTitle('developer.delete') }}
               </el-button>
             </el-popover>
@@ -317,7 +336,10 @@
                     addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                 }"
               >
-                <div slot="header" class="clearfix">
+                <div
+                  slot="header"
+                  class="clearfix"
+                >
                   <span>{{ item.title.zh }}</span>
                   <el-button
                     :disabled="resourceid != ''"
@@ -379,17 +401,27 @@
           </div>
         </el-form-item>
 
-        <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
+        <el-col
+          v-for="(item, index) in arrlist"
+          :key="index"
+          :span="12"
+        >
           <el-form-item
             :label="item.title.zh"
             :prop="item.showname"
             :required="item.required"
           >
-            <el-tooltip effect="dark" placement="right-start">
+            <el-tooltip
+              effect="dark"
+              placement="right-start"
+            >
               <div slot="content">
                 {{ item.description.zh }}
               </div>
-              <i class="el-icon-question" style="float: left" />
+              <i
+                class="el-icon-question"
+                style="float: left"
+              />
             </el-tooltip>
             <el-input
               v-if="item.type == 'string'"
@@ -462,11 +494,20 @@
           </el-form-item>
         </div>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button style="margin-right: 20px" @click="handleClose">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          style="margin-right: 20px"
+          @click="handleClose"
+        >
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click.native="addchannelForm('addchannel')">
+        <el-button
+          type="primary"
+          @click.native="addchannelForm('addchannel')"
+        >
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </div>
@@ -482,25 +523,50 @@
     >
       <div>
         <el-row>
-          <el-col :span="12">ID:</el-col>
-          <el-col :span="12">{{ resourceid }}</el-col>
+          <el-col :span="12">
+            ID:
+          </el-col>
+          <el-col :span="12">
+            {{ resourceid }}
+          </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">Resource Type:</el-col>
-          <el-col :span="12">{{ resoucetype }}</el-col>
+          <el-col :span="12">
+            Resource Type:
+          </el-col>
+          <el-col :span="12">
+            {{ resoucetype }}
+          </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">Description:</el-col>
-          <el-col :span="12">{{ description }}</el-col>
+          <el-col :span="12">
+            Description:
+          </el-col>
+          <el-col :span="12">
+            {{ description }}
+          </el-col>
         </el-row>
 
-        <el-row v-for="(key, value) in detailchannel" :key="key">
-          <el-col :span="12">{{ value }}</el-col>
-          <el-col :span="12">{{ key }}</el-col>
+        <el-row
+          v-for="(key, value) in detailchannel"
+          :key="key"
+        >
+          <el-col :span="12">
+            {{ value }}
+          </el-col>
+          <el-col :span="12">
+            {{ key }}
+          </el-col>
         </el-row>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click.native="dialogVisible = false">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click.native="dialogVisible = false"
+        >
           <!-- 确定 -->
           {{ $translateTitle('developer.determine') }}
         </el-button>
@@ -547,8 +613,14 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column align="center" type="index" />
-        <el-table-column type="selection" width="50" />
+        <el-table-column
+          align="center"
+          type="index"
+        />
+        <el-table-column
+          type="selection"
+          width="50"
+        />
         <el-table-column
           align="center"
           :label="$translateTitle('developer.channelname')"

@@ -12,13 +12,20 @@
       width="400px"
       @close="handleClose"
     >
-      <el-form ref="form" :model="form" :rules="rules">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+      >
         <el-form-item
           :label="$translateTitle('article.name')"
           :label-width="formLabelWidth"
           prop="name"
         >
-          <el-input v-model="form.name" autocomplete="off" />
+          <el-input
+            v-model="form.name"
+            autocomplete="off"
+          />
         </el-form-item>
         <el-form-item
           v-show="form.parent.objectId.includes('article')"
@@ -26,7 +33,10 @@
           :label-width="formLabelWidth"
           prop="category"
         >
-          <el-input v-model="form.category" autocomplete="off" />
+          <el-input
+            v-model="form.category"
+            autocomplete="off"
+          />
         </el-form-item>
         <el-form-item
           v-show="form.parent.objectId.includes('article')"
@@ -34,7 +44,10 @@
           :label-width="formLabelWidth"
           prop="ico"
         >
-          <el-input v-model="form.ico" autocomplete="off" />
+          <el-input
+            v-model="form.ico"
+            autocomplete="off"
+          />
         </el-form-item>
         <el-form-item
           :label="$translateTitle('article.order')"
@@ -55,10 +68,16 @@
           :label-width="formLabelWidth"
           prop="parent.objectId"
         >
-          <el-input v-model="form.parent.objectId" autocomplete="off" />
+          <el-input
+            v-model="form.parent.objectId"
+            autocomplete="off"
+          />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="dialogFormVisible = false">
           {{ $translateTitle('button.cancel') }}
         </el-button>

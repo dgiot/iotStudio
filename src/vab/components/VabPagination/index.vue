@@ -1,5 +1,8 @@
 <template>
-  <div class="pagination-container" :class="{ hidden: hidden }">
+  <div
+    class="pagination-container"
+    :class="{ hidden: hidden }"
+  >
     <el-pagination
       :key="momentKey"
       :background="background"

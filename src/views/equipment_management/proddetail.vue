@@ -1,7 +1,10 @@
 <template>
   <div class="proddetail proddetail-container">
     <div class="editheader">
-      <dgiot-profile v-show="false" :product-info="productInfo" />
+      <dgiot-profile
+        v-show="false"
+        :product-info="productInfo"
+      />
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/roles/product' }">
           {{ $translateTitle('route.产品管理') }}
@@ -68,7 +71,10 @@
                   height: auto;
                 "
               >
-                <div slot="error" class="image-slot">
+                <div
+                  slot="error"
+                  class="image-slot"
+                >
                   <i class="el-icon-picture-outline" />
                 </div>
               </el-image>
@@ -78,7 +84,11 @@
       </div>
     </div>
     <div>
-      <el-tabs ref="_tabs" v-model="activeName" @tab-click="handleClick">
+      <el-tabs
+        ref="_tabs"
+        v-model="activeName"
+        @tab-click="handleClick"
+      >
         <!--产品信息-->
         <el-tab-pane
           :label="$translateTitle('product.productinformation')"
@@ -135,10 +145,16 @@
                 <el-descriptions-item
                   :label="$translateTitle('product.nodetype')"
                 >
-                  <td v-if="productdetail.nodeType == 1" class="notbottom">
+                  <td
+                    v-if="productdetail.nodeType == 1"
+                    class="notbottom"
+                  >
                     {{ $translateTitle('product.gateway') }}
                   </td>
-                  <td v-else class="notbottom">
+                  <td
+                    v-else
+                    class="notbottom"
+                  >
                     {{ $translateTitle('product.equipment') }}
                   </td>
                 </el-descriptions-item>
@@ -165,7 +181,10 @@
                     </el-tooltip>
                     {{ $translateTitle('product.dynamicregistration') }}
                   </template>
-                  <span v-if="dynamicReg == false" style="color: #cccccc">
+                  <span
+                    v-if="dynamicReg == false"
+                    style="color: #cccccc"
+                  >
                     {{ $translateTitle('product.close') }}
                   </span>
                   <span v-else>{{ $translateTitle('product.open') }}</span>
@@ -185,13 +204,19 @@
                     <!-- 蜂窝(2G/3G/4G) -->
                     {{ $translateTitle('product.honeycomb') }}(2G/3G/4G)
                   </td>
-                  <td v-else-if="productdetail.netType == 'WIFI'">WiFi</td>
+                  <td v-else-if="productdetail.netType == 'WIFI'">
+                    WiFi
+                  </td>
                   <td v-else-if="productdetail.netType == 'ETHERNET'">
                     <!-- 以太网 -->
                     {{ $translateTitle('product.ethernet') }}
                   </td>
-                  <td v-else-if="productdetail.netType == 'LORA'">LoRaWAN</td>
-                  <td v-else>{{ productdetail.netType }}</td>
+                  <td v-else-if="productdetail.netType == 'LORA'">
+                    LoRaWAN
+                  </td>
+                  <td v-else>
+                    {{ productdetail.netType }}
+                  </td>
                 </el-descriptions-item>
                 <el-descriptions-item
                   :label="$translateTitle('developer.describe')"
@@ -300,7 +325,10 @@
               :height="$baseTableHeight(3)"
               style="width: 100%; text-align: center"
             >
-              <el-table-column align="left" label="Topic">
+              <el-table-column
+                align="left"
+                label="Topic"
+              >
                 <template slot-scope="scope">
                   <span>
                     {{ scope.row.topic.replace('\$\{ProductId\}', productId) }}
@@ -383,7 +411,10 @@
                 />
               </template>
             </el-table>
-            <div class="elpagination" style="margin-top: 20px">
+            <div
+              class="elpagination"
+              style="margin-top: 20px"
+            >
               <el-pagination
                 layout="total, sizes, prev, pager, next, jumper"
                 :page-size="topiclength"
@@ -415,8 +446,15 @@
                 {{ $translateTitle('product.text2') }}
               </div>
               <div class="topicform">
-                <el-form ref="topicform" :model="topicform" :rules="topicrule">
-                  <el-form-item label="Topic类：" prop="topic">
+                <el-form
+                  ref="topicform"
+                  :model="topicform"
+                  :rules="topicrule"
+                >
+                  <el-form-item
+                    label="Topic类："
+                    prop="topic"
+                  >
                     <el-input v-model="topicform.topic">
                       <template slot="prepend">
                         {{ 'thing/' + productId + '/${DevAddr}/' }}
@@ -446,12 +484,18 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item :label="$translateTitle('developer.describe')">
-                    <el-input v-model="topicform.desc" type="textarea" />
+                    <el-input
+                      v-model="topicform.desc"
+                      type="textarea"
+                    />
                   </el-form-item>
                 </el-form>
               </div>
             </div>
-            <span slot="footer" class="dialog-footer">
+            <span
+              slot="footer"
+              class="dialog-footer"
+            >
               <el-button @click.native="topicdialogVisible = false">
                 {{ $translateTitle('developer.cancel') }}
               </el-button>
@@ -496,7 +540,10 @@
                 </el-row>
               </el-form>
             </div>
-            <span slot="footer" class="dialog-footer">
+            <span
+              slot="footer"
+              class="dialog-footer"
+            >
               <el-button
                 size="mini"
                 type="primary"
@@ -504,17 +551,29 @@
               >
                 {{ $translateTitle('developer.cancel') }}
               </el-button>
-              <el-button size="mini" @click.native="savemachine(machineForm)">
+              <el-button
+                size="mini"
+                @click.native="savemachine(machineForm)"
+              >
                 {{ $translateTitle('developer.determine') }}
               </el-button>
             </span>
           </el-dialog>
           <div>
             <el-row :gutter="24">
-              <el-col :lg="4" :md="5" :sm="6" :xl="3" :xs="24">
+              <el-col
+                :lg="4"
+                :md="5"
+                :sm="6"
+                :xl="3"
+                :xs="24"
+              >
                 <vab-query-form class="query-form">
                   <vab-query-form-top-panel>
-                    <el-button type="primary" @click.native="addMachine">
+                    <el-button
+                      type="primary"
+                      @click.native="addMachine"
+                    >
                       添加类型
                     </el-button>
                   </vab-query-form-top-panel>
@@ -554,7 +613,13 @@
                   </template>
                 </el-table>
               </el-col>
-              <el-col :lg="20" :md="19" :sm="18" :xl="21" :xs="24">
+              <el-col
+                :lg="20"
+                :md="19"
+                :sm="18"
+                :xl="21"
+                :xs="24"
+              >
                 <vab-query-form class="query-form">
                   <vab-query-form-right-panel style="width: 100%">
                     <div class="stripe-panel">
@@ -748,24 +813,24 @@
                       <span
                         v-if="
                           scope.row.dataType.specs &&
-                          (scope.row.dataType.type == 'double' ||
-                            scope.row.dataType.type == 'float' ||
-                            scope.row.dataType.type == 'int')
+                            (scope.row.dataType.type == 'double' ||
+                              scope.row.dataType.type == 'float' ||
+                              scope.row.dataType.type == 'int')
                         "
                       >
                         {{
                           $translateTitle('product.rangeofvalues') +
-                          scope.row.dataType.specs.min +
-                          '~' +
-                          scope.row.dataType.specs.max
+                            scope.row.dataType.specs.min +
+                            '~' +
+                            scope.row.dataType.specs.max
                         }}
                       </span>
                       <span v-else-if="scope.row.dataType.type == 'string'">
                         {{
                           $translateTitle('product.datalength') +
-                          ':' +
-                          scope.row.dataType.size +
-                          $translateTitle('product.byte')
+                            ':' +
+                            scope.row.dataType.size +
+                            $translateTitle('product.byte')
                         }}
                       </span>
                       <span v-else-if="scope.row.dataType.type == 'date'" />
@@ -852,7 +917,10 @@
                   :data="PropData"
                   style="width: 100%; text-align: center"
                 >
-                  <el-table-column align="center" label="ID">
+                  <el-table-column
+                    align="center"
+                    label="ID"
+                  >
                     <template slot-scope="scope">
                       <span>{{ scope.row.data.SuperId }}</span>
                     </template>
@@ -911,8 +979,14 @@
                 />
               </div>
             </div>
-            <span slot="footer" class="dialog-footer">
-              <el-button size="mini" @click.native="originwmx = false">
+            <span
+              slot="footer"
+              class="dialog-footer"
+            >
+              <el-button
+                size="mini"
+                @click.native="originwmx = false"
+              >
                 {{ $translateTitle('developer.cancel') }}
               </el-button>
               <el-button
@@ -1014,7 +1088,10 @@
                 </el-row>
 
                 <div>
-                  <el-form-item label="数据标识" required>
+                  <el-form-item
+                    label="数据标识"
+                    required
+                  >
                     <el-col :span="11">
                       <el-form-item prop="dis">
                         <el-input
@@ -1023,7 +1100,9 @@
                         />
                       </el-form-item>
                     </el-col>
-                    <el-col :span="2">-</el-col>
+                    <el-col :span="2">
+                      -
+                    </el-col>
                     <el-col :span="11">
                       <el-form-item>
                         <el-input
@@ -1036,7 +1115,10 @@
                 </div>
 
                 <div>
-                  <el-form-item label="取值范围" required>
+                  <el-form-item
+                    label="取值范围"
+                    required
+                  >
                     <el-col :span="12">
                       <el-form-item prop="startnumber">
                         <el-input
@@ -1058,7 +1140,10 @@
                     </el-col>
                   </el-form-item>
 
-                  <el-form-item label="步长" prop="step">
+                  <el-form-item
+                    label="步长"
+                    prop="step"
+                  >
                     <el-input
                       v-model="structform.step"
                       controls-position="right"
@@ -1102,7 +1187,9 @@
                           />
                         </el-form-item>
                       </el-col>
-                      <el-col :span="2">-</el-col>
+                      <el-col :span="2">
+                        -
+                      </el-col>
                       <el-col :span="11">
                         <el-form-item prop="true">
                           <el-input
@@ -1127,7 +1214,9 @@
                           />
                         </el-form-item>
                       </el-col>
-                      <el-col :span="2">-</el-col>
+                      <el-col :span="2">
+                        -
+                      </el-col>
                       <el-col :span="11">
                         <el-form-item prop="true">
                           <el-input
@@ -1159,7 +1248,12 @@
                         />
                       </el-form-item>
                     </el-col>
-                    <el-col class="line" :span="2">-</el-col>
+                    <el-col
+                      class="line"
+                      :span="2"
+                    >
+                      -
+                    </el-col>
                     <el-col :span="9">
                       <el-form-item
                         :label="$translateTitle('product.attribute') + index"
@@ -1172,8 +1266,14 @@
                         />
                       </el-form-item>
                     </el-col>
-                    <el-col class="line" :span="2" />
-                    <el-col class="line" :span="4">
+                    <el-col
+                      class="line"
+                      :span="2"
+                    />
+                    <el-col
+                      class="line"
+                      :span="4"
+                    >
                       <el-link
                         icon="el-icon-minus"
                         style="margin-top: 30px; margin-left: 5px"
@@ -1199,7 +1299,10 @@
                     :label="$translateTitle('product.datalength')"
                     prop="string"
                   >
-                    <el-input v-model.number="structform.string" type="number">
+                    <el-input
+                      v-model.number="structform.string"
+                      type="number"
+                    >
                       <template slot="append">
                         {{ $translateTitle('product.byte') }}
                       </template>
@@ -1209,14 +1312,20 @@
                 <!--date类型添加格式-->
                 <div v-if="structform.type == 'date'">
                   <el-form-item :label="$translateTitle('product.timeformat')">
-                    <el-input v-model="structform.date" readonly />
+                    <el-input
+                      v-model="structform.date"
+                      readonly
+                    />
                   </el-form-item>
                 </div>
                 <el-form-item
                   :label="$translateTitle('product.readandwritetype')"
                   prop="isread"
                 >
-                  <el-radio-group v-model="structform.isread" size="medium">
+                  <el-radio-group
+                    v-model="structform.isread"
+                    size="medium"
+                  >
                     <el-radio label="rw">
                       {{ $translateTitle('product.readandwrite') }}
                     </el-radio>
@@ -1227,7 +1336,10 @@
                 </el-form-item>
               </el-form>
             </div>
-            <span slot="footer" class="dialog-footer">
+            <span
+              slot="footer"
+              class="dialog-footer"
+            >
               <el-button @click.native="structdialog = false">
                 {{ $translateTitle('developer.cancel') }}
               </el-button>
@@ -1295,12 +1407,20 @@
                   <!-- 设为公共 -->
                   {{ $translateTitle('product.setaspublic') }}
                 </el-button>
-                <el-button size="small" type="primary" @click.native="chaxun">
+                <el-button
+                  size="small"
+                  type="primary"
+                  @click.native="chaxun"
+                >
                   {{ $translateTitle('product.publicagreementlibrary') }}
                 </el-button>
               </el-form-item>
               <el-form-item style="display: block">
-                <el-button size="small" type="primary" @click.native="protol">
+                <el-button
+                  size="small"
+                  type="primary"
+                  @click.native="protol"
+                >
                   {{ $translateTitle('product.compile') }}
                 </el-button>
                 <el-button
@@ -1336,7 +1456,10 @@
               style="width: 100%"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column type="selection" width="55" />
+              <el-table-column
+                type="selection"
+                width="55"
+              />
               <el-table-column
                 :label="$translateTitle('developer.channelnumber')"
               >
@@ -1386,8 +1509,14 @@
                 />
               </template>
             </el-table>
-            <div slot="footer" class="dialog-footer">
-              <el-button type="primary" @click.native="updateAllChannel">
+            <div
+              slot="footer"
+              class="dialog-footer"
+            >
+              <el-button
+                type="primary"
+                @click.native="updateAllChannel"
+              >
                 <!-- 确定 -->
                 {{ $translateTitle('developer.determine') }}
               </el-button>
@@ -1469,7 +1598,10 @@
                 />
               </template>
             </el-table>
-            <div class="elpagination" style="padding: 20px 0">
+            <div
+              class="elpagination"
+              style="padding: 20px 0"
+            >
               <el-pagination
                 layout="total, sizes, prev, pager, next, jumper"
                 :page-size="decoderlength"
@@ -1625,7 +1757,10 @@
                 />
               </template>
             </el-table>
-            <div class="elpagination" style="margin-top: 20px">
+            <div
+              class="elpagination"
+              style="margin-top: 20px"
+            >
               <el-pagination
                 layout="total, sizes, prev, pager, next, jumper"
                 :page-size="channellength"
@@ -1671,7 +1806,10 @@
                     id="editorinsert"
                     class="ace_editor"
                     style="min-height: 400px"
-                  ><el-input class="ace_text-input" type="textarea" /></pre>
+                  ><el-input
+class="ace_text-input"
+                             type="textarea"
+/></pre>
                   <el-button
                     slot="reference"
                     icon="el-icon-question"
@@ -1790,7 +1928,10 @@
                 />
               </template>
             </el-table>
-            <div class="elpagination" style="margin-top: 20px">
+            <div
+              class="elpagination"
+              style="margin-top: 20px"
+            >
               <el-pagination
                 layout="total, sizes, prev, pager, next, jumper"
                 :page-size="resourcelength"
@@ -1910,10 +2051,20 @@
           id="editor1"
           class="ace_editor"
           style="min-height: 400px"
-        ><textarea class="ace_text-input" style="overflow:scroll" /></pre>
+        ><textarea
+class="ace_text-input"
+                   style="overflow:scroll"
+        /></pre>
       </div>
-      <span slot="footer" class="dialog-footer" style="height: 30px">
-        <el-button type="primary" @click.native="preserve">
+      <span
+        slot="footer"
+        class="dialog-footer"
+        style="height: 30px"
+      >
+        <el-button
+          type="primary"
+          @click.native="preserve"
+        >
           <!-- 更新 -->
           {{ $translateTitle('equipment.update') }}
         </el-button>
@@ -1934,7 +2085,11 @@
       :visible.sync="innerVisible"
     >
       <div class="addchannel">
-        <el-table :data="allchannelData" height="400" style="width: 100%">
+        <el-table
+          :data="allchannelData"
+          height="400"
+          style="width: 100%"
+        >
           <el-table-column :label="$translateTitle('developer.channelnumber')">
             <template slot-scope="scope">
               <span>{{ scope.row.objectId }}</span>
@@ -1989,7 +2144,10 @@
             />
           </template>
         </el-table>
-        <div class="elpagination" style="margin-top: 20px">
+        <div
+          class="elpagination"
+          style="margin-top: 20px"
+        >
           <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
             :page-size="allChannellength"
@@ -2016,12 +2174,19 @@
           class="ace_editor"
           style="width: 100%; min-height: 300px"
         >
-                      <textarea class="ace_text-input" style="overflow:scroll" />
+                      <textarea
+class="ace_text-input"
+style="overflow:scroll"
+/>
         </pre>
       </div>
 
       <!-- </div> -->
-      <span slot="footer" class="dialog-footer" style="height: 30px">
+      <span
+        slot="footer"
+        class="dialog-footer"
+        style="height: 30px"
+      >
         <el-switch
           v-model="value4"
           active-color="#13ce66"
@@ -2044,7 +2209,10 @@
       :visible.sync="resourcedialogFormVisible"
       width="90%"
     >
-      <el-form ref="resourceform" :model="resourceform">
+      <el-form
+        ref="resourceform"
+        :model="resourceform"
+      >
         <div class="wumoxing">
           <el-row>
             <el-col :span="8">
@@ -2055,7 +2223,10 @@
                     id="editormodel"
                     class="ace_editor"
                     style="min-height: 600px"
-                  ><el-input class="ace_text-input" type="textarea" /></pre>
+                  ><el-input
+class="ace_text-input"
+                             type="textarea"
+                  /></pre>
                 </el-form-item>
               </div>
             </el-col>
@@ -2069,19 +2240,28 @@
                     id="editorcreate"
                     class="ace_editor"
                     style="min-height: 600px"
-                  ><el-input class="ace_text-input" type="textarea" /></pre>
+                  ><el-input
+class="ace_text-input"
+                             type="textarea"
+                  /></pre>
                 </el-form-item>
               </div>
             </el-col>
           </el-row>
         </div>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click.native="closeWuDialog">
           <!-- 退 出 -->
           {{ $translateTitle('product.quit') }}
         </el-button>
-        <el-button type="primary" @click.native="addData">
+        <el-button
+          type="primary"
+          @click.native="addData"
+        >
           <!-- 保 存 -->
           {{ $translateTitle('product.preservation') }}
         </el-button>
@@ -2098,7 +2278,10 @@
     >
       <!-- <p class="export-p">  <a :href="exportUrl" :download="exportNameDownload">文件下载 </a></p>       -->
 
-      <div slot="footer" class="dialog-footer">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button
           class="btn-right"
           size="small"
@@ -2145,19 +2328,19 @@
                   <ol v-if="item.dataType.specs">
                     {{
                       item.identifier +
-                      '&nbsp; &nbsp; &nbsp; &nbsp; ' +
-                      item.name +
-                      '&nbsp; &nbsp; &nbsp; &nbsp; 取值范围' +
-                      item.dataType.specs.min +
-                      '~' +
-                      item.dataType.specs.max
+                        '&nbsp; &nbsp; &nbsp; &nbsp; ' +
+                        item.name +
+                        '&nbsp; &nbsp; &nbsp; &nbsp; 取值范围' +
+                        item.dataType.specs.min +
+                        '~' +
+                        item.dataType.specs.max
                     }}
                   </ol>
                   <ol v-else>
                     {{
                       item.identifier +
-                      '&nbsp; &nbsp; &nbsp; &nbsp; ' +
-                      item.name
+                        '&nbsp; &nbsp; &nbsp; &nbsp; ' +
+                        item.name
                     }}
                   </ol>
                 </el-menu-item>
@@ -2185,11 +2368,17 @@
                     <!-- 测试 -->
                     {{ $translateTitle('rule.Test') }}
                   </el-button>
-                  <el-button type="info" @click.native="onReductionTap(index)">
+                  <el-button
+                    type="info"
+                    @click.native="onReductionTap(index)"
+                  >
                     <!-- 还原 -->
                     {{ $translateTitle('product.reduction') }}
                   </el-button>
-                  <el-button type="primary" @click.native="onSaveTap(index)">
+                  <el-button
+                    type="primary"
+                    @click.native="onSaveTap(index)"
+                  >
                     <!-- 保存 -->
                     {{ $translateTitle('product.preservation') }}
                   </el-button>

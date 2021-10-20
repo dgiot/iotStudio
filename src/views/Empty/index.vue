@@ -14,7 +14,10 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <el-input v-model="queryForm.title" placeholder="标题" />
+            <el-input
+              v-model="queryForm.title"
+              placeholder="标题"
+            />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -44,10 +47,14 @@
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <div class="stripe-panel">
-          <el-checkbox v-model="stripe">斑马纹</el-checkbox>
+          <el-checkbox v-model="stripe">
+            斑马纹
+          </el-checkbox>
         </div>
         <div class="border-panel">
-          <el-checkbox v-model="border">边框（可拉伸列）</el-checkbox>
+          <el-checkbox v-model="border">
+            边框（可拉伸列）
+          </el-checkbox>
         </div>
         <el-button
           style="margin: 0 10px 10px 0 !important"
@@ -65,21 +72,39 @@
           trigger="hover"
         >
           <el-radio-group v-model="lineHeight">
-            <el-radio label="medium">大</el-radio>
-            <el-radio label="small">中</el-radio>
-            <el-radio label="mini">小</el-radio>
+            <el-radio label="medium">
+              大
+            </el-radio>
+            <el-radio label="small">
+              中
+            </el-radio>
+            <el-radio label="mini">
+              小
+            </el-radio>
           </el-radio-group>
           <template #reference>
-            <el-button style="margin: 0 10px 10px 0 !important" type="primary">
+            <el-button
+              style="margin: 0 10px 10px 0 !important"
+              type="primary"
+            >
               <vab-icon icon="line-height" />
               表格尺寸
             </el-button>
           </template>
         </el-popover>
-        <el-popover popper-class="custom-table-checkbox" trigger="hover">
+        <el-popover
+          popper-class="custom-table-checkbox"
+          trigger="hover"
+        >
           <el-checkbox-group v-model="checkList">
-            <vab-draggable v-bind="dragOptions" :list="columns">
-              <div v-for="(item, index) in columns" :key="item + index">
+            <vab-draggable
+              v-bind="dragOptions"
+              :list="columns"
+            >
+              <div
+                v-for="(item, index) in columns"
+                :key="item + index"
+              >
                 <vab-icon icon="drag-drop-line" />
                 <el-checkbox
                   :disabled="item.disableCheck === true"
@@ -113,7 +138,11 @@
       :stripe="stripe"
       @selection-change="setSelectRows"
     >
-      <el-table-column align="center" type="selection" width="55" />
+      <el-table-column
+        align="center"
+        type="selection"
+        width="55"
+      />
       <el-table-column
         align="center"
         label="序号"
@@ -135,7 +164,10 @@
       >
         <template #default="{ row }">
           <span v-if="item.label === '评级'">
-            <el-rate v-model="row.rate" disabled />
+            <el-rate
+              v-model="row.rate"
+              disabled
+            />
           </span>
           <span v-else>{{ row[item.prop] }}</span>
         </template>
@@ -149,8 +181,18 @@
         width="85"
       >
         <template #default="{ row }">
-          <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-          <el-button type="text" @click="handleDelete(row)">删除</el-button>
+          <el-button
+            type="text"
+            @click="handleEdit(row)"
+          >
+            编辑
+          </el-button>
+          <el-button
+            type="text"
+            @click="handleDelete(row)"
+          >
+            删除
+          </el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -171,7 +213,10 @@
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <table-edit ref="edit" @fetch-data="fetchData" />
+    <table-edit
+      ref="edit"
+      @fetch-data="fetchData"
+    />
   </div>
 </template>
 

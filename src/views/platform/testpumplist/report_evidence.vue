@@ -19,14 +19,20 @@
     >
       <div class="righttop">
         <p style="font-size: 20px">
-          <svg-icon icon-class="shenhe1" style="width: 2rem; height: 2rem" />
+          <svg-icon
+            icon-class="shenhe1"
+            style="width: 2rem; height: 2rem"
+          />
           审核总体概括
         </p>
         <panel-group @handleSetLineChartData="handleSetLineChartData" />
       </div>
       <div>
         <p style="margin: 0 0 10px 0; font-size: 20px">
-          <svg-icon icon-class="shenhe2" style="width: 2rem; height: 2rem" />
+          <svg-icon
+            icon-class="shenhe2"
+            style="width: 2rem; height: 2rem"
+          />
           审核列表管理
         </p>
         <el-form
@@ -37,9 +43,18 @@
           size="small"
         >
           <el-form-item label="审核状态">
-            <el-select v-model="formInline.region" placeholder="审核状态">
-              <el-option label="区域一" value="shanghai" />
-              <el-option label="区域二" value="beijing" />
+            <el-select
+              v-model="formInline.region"
+              placeholder="审核状态"
+            >
+              <el-option
+                label="区域一"
+                value="shanghai"
+              />
+              <el-option
+                label="区域二"
+                value="beijing"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="申请开始时间">
@@ -59,7 +74,10 @@
             />
           </el-form-item>
           <el-form-item label="企业名称">
-            <el-input v-model="formInline.unit" placeholder="按企业名称查找" />
+            <el-input
+              v-model="formInline.unit"
+              placeholder="按企业名称查找"
+            />
           </el-form-item>
           <el-form-item label="检测人员">
             <el-input
@@ -80,13 +98,31 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click.native="onSubmit">查询</el-button>
-            <el-button type="primary" @click.native="onSubmit">重置</el-button>
+            <el-button
+              type="primary"
+              @click.native="onSubmit"
+            >
+              查询
+            </el-button>
+            <el-button
+              type="primary"
+              @click.native="onSubmit"
+            >
+              重置
+            </el-button>
           </el-form-item>
         </el-form>
       </div>
-      <el-table :data="tableData" style="width: 100%; text-align: center">
-        <el-table-column align="center" label="序号" type="index" width="50" />
+      <el-table
+        :data="tableData"
+        style="width: 100%; text-align: center"
+      >
+        <el-table-column
+          align="center"
+          label="序号"
+          type="index"
+          width="50"
+        />
         <el-table-column
           align="center"
           label="检测取证编号"
@@ -165,7 +201,12 @@
           prop="name"
           width="200"
         />
-        <el-table-column align="center" label="备注" prop="name" width="200" />
+        <el-table-column
+          align="center"
+          label="备注"
+          prop="name"
+          width="200"
+        />
         <el-table-column
           align="center"
           label="检测取证审核"
@@ -173,19 +214,31 @@
           width="200"
         >
           <template slot-scope="scope">
-            <el-link size="small" type="primary" :underline="false">
+            <el-link
+              size="small"
+              type="primary"
+              :underline="false"
+            >
               <svg-icon
                 icon-class="chakan"
                 style="width: 1.5rem; height: 1.5rem"
               />
             </el-link>
-            <el-link size="small" type="primary" :underline="false">
+            <el-link
+              size="small"
+              type="primary"
+              :underline="false"
+            >
               <svg-icon
                 icon-class="shenhe"
                 style="width: 1.5rem; height: 1.5rem"
               />
             </el-link>
-            <el-link size="small" type="primary" :underline="false">
+            <el-link
+              size="small"
+              type="primary"
+              :underline="false"
+            >
               <svg-icon
                 icon-class="chexiao"
                 style="width: 1.5rem; height: 1.5rem"

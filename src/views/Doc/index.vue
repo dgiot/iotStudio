@@ -42,7 +42,10 @@
       </vab-query-form>
     </div>
     <div class="dgiot-doc-center">
-      <a-row class="dgiot-doc-center-row" :gutter="24">
+      <a-row
+        class="dgiot-doc-center-row"
+        :gutter="24"
+      >
         <a-col
           v-for="item in HomePageForDetails"
           :key="item.objectId"
@@ -61,27 +64,50 @@
             hoverable
             :title="item.name"
           >
-            <el-image slot="cover" :alt="item.ico" :src="item.ico">
-              <div slot="error" class="block image-slot">
-                <vab-empty height="100px" width="100" />
+            <el-image
+              slot="cover"
+              :alt="item.ico"
+              :src="item.ico"
+            >
+              <div
+                slot="error"
+                class="block image-slot"
+              >
+                <vab-empty
+                  height="100px"
+                  width="100"
+                />
               </div>
             </el-image>
-            <template slot="actions" class="ant-card-actions">
+            <template
+              slot="actions"
+              class="ant-card-actions"
+            >
               <a-icon
                 key="edit"
                 type="edit"
                 @click="newCategory('edit', item)"
               />
-              <a-icon key="delete" type="delete" @click="deletDoc(item)" />
+              <a-icon
+                key="delete"
+                type="delete"
+                @click="deletDoc(item)"
+              />
             </template>
-            <el-button type="success" @click.native="goChild(item)">
+            <el-button
+              type="success"
+              @click.native="goChild(item)"
+            >
               {{ $translateTitle('article.view') }}
             </el-button>
             <!--            {{ $moment(Number(item.created_at)).format('YYYY-MM-DD HH:mm:ss') }}-->
           </a-card>
         </a-col>
       </a-row>
-      <el-empty v-show="HomePageForDetails.length == 0" :image-size="200" />
+      <el-empty
+        v-show="HomePageForDetails.length == 0"
+        :image-size="200"
+      />
     </div>
   </div>
 </template>

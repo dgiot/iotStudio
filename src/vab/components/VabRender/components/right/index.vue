@@ -1,6 +1,10 @@
 <template>
   <div class="vab-render-right">
-    <el-tabs v-model="activeTab" class="vab-render-header" :stretch="true">
+    <el-tabs
+      v-model="activeTab"
+      class="vab-render-header"
+      :stretch="true"
+    >
       <el-tab-pane
         v-for="tab of VabRender.rightTabs"
         :key="tab.name"
@@ -8,7 +12,10 @@
         :name="tab.name"
       />
     </el-tabs>
-    <perfect-scrollbar ref="scroll" class="vab-render-scrollarea">
+    <perfect-scrollbar
+      ref="scroll"
+      class="vab-render-scrollarea"
+    >
       <component
         :is="tab.name"
         v-for="tab of VabRender.rightTabs"

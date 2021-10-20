@@ -1,5 +1,8 @@
 <template>
-  <div class="logs logs-container" :class="{ 'vab-fullscreen': isFullscreen }">
+  <div
+    class="logs logs-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
+  >
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form
@@ -24,7 +27,10 @@
             />
           </el-form-item>
           <el-form-item label="level">
-            <el-select v-model="queryForm.level" clearable>
+            <el-select
+              v-model="queryForm.level"
+              clearable
+            >
               <el-option
                 v-for="item in leverData"
                 :key="item"
@@ -35,27 +41,67 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-show="!fold" label="pid">
-            <el-input v-model="queryForm.pid" clearable />
+          <el-form-item
+            v-show="!fold"
+            label="pid"
+          >
+            <el-input
+              v-model="queryForm.pid"
+              clearable
+            />
           </el-form-item>
-          <el-form-item v-show="!fold" label="domain">
-            <el-input v-model="queryForm.domain" clearable />
+          <el-form-item
+            v-show="!fold"
+            label="domain"
+          >
+            <el-input
+              v-model="queryForm.domain"
+              clearable
+            />
           </el-form-item>
-          <el-form-item v-show="!fold" label="mfa">
-            <el-input v-model="queryForm.mfa" clearable />
+          <el-form-item
+            v-show="!fold"
+            label="mfa"
+          >
+            <el-input
+              v-model="queryForm.mfa"
+              clearable
+            />
           </el-form-item>
 
-          <el-form-item v-show="!fold" label="clientid">
-            <el-input v-model="queryForm.clientid" clearable />
+          <el-form-item
+            v-show="!fold"
+            label="clientid"
+          >
+            <el-input
+              v-model="queryForm.clientid"
+              clearable
+            />
           </el-form-item>
-          <el-form-item v-show="!fold" label="topic">
-            <el-input v-model="queryForm.topic" clearable />
+          <el-form-item
+            v-show="!fold"
+            label="topic"
+          >
+            <el-input
+              v-model="queryForm.topic"
+              clearable
+            />
           </el-form-item>
-          <el-form-item v-show="!fold" label="peername" label-width="80px">
-            <el-input v-model="queryForm.peername" clearable />
+          <el-form-item
+            v-show="!fold"
+            label="peername"
+            label-width="80px"
+          >
+            <el-input
+              v-model="queryForm.peername"
+              clearable
+            />
           </el-form-item>
           <el-form-item>
-            <el-button type="text" @click="fold = !fold">
+            <el-button
+              type="text"
+              @click="fold = !fold"
+            >
               <span v-if="fold">
                 {{ $translateTitle('Maintenance.Unfold') }}
               </span>
@@ -86,8 +132,14 @@
 
             <el-popover trigger="hover">
               <el-checkbox-group v-model="checkList">
-                <vue-draggable v-bind="dragOptions" :list="logcolumns">
-                  <div v-for="(item, index) in logcolumns" :key="item + index">
+                <vue-draggable
+                  v-bind="dragOptions"
+                  :list="logcolumns"
+                >
+                  <div
+                    v-for="(item, index) in logcolumns"
+                    :key="item + index"
+                  >
                     <vab-icon icon="drag-drop-line" />
                     <el-checkbox
                       :disabled="item.disableCheck === true"
@@ -146,10 +198,17 @@
       />
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-descriptions border class="margin-top" :column="2">
+          <el-descriptions
+            border
+            class="margin-top"
+            :column="2"
+          >
             <el-descriptions-item>
               <template slot="label">
-                <i v-copy="props.row.msg" class="el-icon-copy-document"></i>
+                <i
+                  v-copy="props.row.msg"
+                  class="el-icon-copy-document"
+                ></i>
               </template>
               {{ props.row.msg }}
             </el-descriptions-item>

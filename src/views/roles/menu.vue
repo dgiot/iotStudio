@@ -1,7 +1,13 @@
 <template>
   <div class="menu dgiot-container">
     <el-row>
-      <el-col :lg="24" :md="24" :sm="2244" :xl="24" :xs="24">
+      <el-col
+        :lg="24"
+        :md="24"
+        :sm="2244"
+        :xl="24"
+        :xs="24"
+      >
         <vab-query-form>
           <vab-query-form-top-panel :span="12">
             <div class="search">
@@ -126,7 +132,10 @@
             :width="200"
           >
             <template #default="{ row }">
-              <el-popover placement="top" trigger="hover">
+              <el-popover
+                placement="top"
+                trigger="hover"
+              >
                 <p>
                   <!-- 是否隐藏： -->
                   {{ $translateTitle('product.Hideornot') + ':' }}
@@ -178,9 +187,15 @@
                     }}
                   </el-tag>
                 </p>
-                <div slot="reference" class="name-wrapper">
+                <div
+                  slot="reference"
+                  class="name-wrapper"
+                >
                   <el-tag size="medium">
-                    <vab-icon v-if="row.meta.icon" :icon="row.meta.icon" />
+                    <vab-icon
+                      v-if="row.meta.icon"
+                      :icon="row.meta.icon"
+                    />
                   </el-tag>
                 </div>
               </el-popover>
@@ -227,7 +242,10 @@
         </el-table>
       </el-col>
     </el-row>
-    <edit ref="edit" @fetch-data="fetchData" />
+    <edit
+      ref="edit"
+      @fetch-data="fetchData"
+    />
   </div>
 </template>
 

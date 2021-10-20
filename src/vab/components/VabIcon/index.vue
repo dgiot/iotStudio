@@ -1,5 +1,9 @@
 <template>
-  <i aria-hidden="true" class="icon" :class="'ri-' + icon"></i>
+  <i
+    aria-hidden="true"
+    class="icon"
+    :class="'ri-' + icon"
+  ></i>
 </template>
 
 <script>

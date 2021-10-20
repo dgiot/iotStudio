@@ -1,9 +1,18 @@
 <template>
   <div class="nodelist">
     <div class="operation">
-      <el-button icon="el-icon-search" type="primary" />
-      <el-button icon="el-icon-delete" type="danger" />
-      <el-button icon="el-icon-date" type="danger" />
+      <el-button
+        icon="el-icon-search"
+        type="primary"
+      />
+      <el-button
+        icon="el-icon-delete"
+        type="danger"
+      />
+      <el-button
+        icon="el-icon-date"
+        type="danger"
+      />
     </div>
   </div>
 </template>

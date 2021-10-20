@@ -129,7 +129,10 @@
 
                 <el-popover trigger="hover">
                   <el-checkbox-group v-model="checkList">
-                    <vue-draggable v-bind="dragOptions" :list="logcolumns">
+                    <vue-draggable
+                      v-bind="dragOptions"
+                      :list="logcolumns"
+                    >
                       <div
                         v-for="(item, index) in logcolumns"
                         :key="item + index"
@@ -225,7 +228,10 @@
                 show-overflow-tooltip
                 sortable
               />
-              <template #empty class="el_table_empty">
+              <template
+                #empty
+                class="el_table_empty"
+              >
                 <vab-empty />
               </template>
             </el-table>

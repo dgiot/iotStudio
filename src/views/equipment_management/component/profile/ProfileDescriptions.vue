@@ -65,7 +65,10 @@
       <!--      组态完善之后再加-->
       <el-descriptions-item v-if="false">
         <template slot="label">
-          <el-link type="warning" @click="goKonva(productDetail.objectId)">
+          <el-link
+            type="warning"
+            @click="goKonva(productDetail.objectId)"
+          >
             {{ $translateTitle('concentrator.konva') }}
           </el-link>
         </template>
@@ -109,10 +112,10 @@
         tableType == 'things'
           ? things
           : tableType == 'profile' || tableType == 'parser'
-          ? parserTableList
-          : tableType == 'basedate.params'
-          ? dictTableList
-          : []
+            ? parserTableList
+            : tableType == 'basedate.params'
+              ? dictTableList
+              : []
       "
       :header-cell-style="{ 'text-align': 'center' }"
       height="60vh"
@@ -243,24 +246,24 @@
             <span
               v-if="
                 scope.row.dataType.specs &&
-                (scope.row.dataType.type == 'double' ||
-                  scope.row.dataType.type == 'float' ||
-                  scope.row.dataType.type == 'int')
+                  (scope.row.dataType.type == 'double' ||
+                    scope.row.dataType.type == 'float' ||
+                    scope.row.dataType.type == 'int')
               "
             >
               {{
                 $translateTitle('product.rangeofvalues') +
-                scope.row.dataType.specs.min +
-                '~' +
-                scope.row.dataType.specs.max
+                  scope.row.dataType.specs.min +
+                  '~' +
+                  scope.row.dataType.specs.max
               }}
             </span>
             <span v-else-if="scope.row.dataType.type == 'string'">
               {{
                 $translateTitle('product.datalength') +
-                ':' +
-                scope.row.dataType.size +
-                $translateTitle('product.byte')
+                  ':' +
+                  scope.row.dataType.size +
+                  $translateTitle('product.byte')
               }}
             </span>
             <span v-else-if="scope.row.dataType.type == 'date'" />
@@ -276,7 +279,11 @@
           width="160"
         >
           <template slot-scope="scope">
-            <el-button size="mini" type="danger" @click="deletewmx(scope.row)">
+            <el-button
+              size="mini"
+              type="danger"
+              @click="deletewmx(scope.row)"
+            >
               {{ $translateTitle('developer.delete') }}
             </el-button>
             <el-button
@@ -306,7 +313,10 @@
           sortable
         >
           <template #default="{ row }">
-            <el-popover placement="top" trigger="hover">
+            <el-popover
+              placement="top"
+              trigger="hover"
+            >
               <p>
                 {{ $translateTitle('product.englishtitle') }}:
                 {{ row.enname }}
@@ -331,8 +341,13 @@
                 {{ $translateTitle('product.class') }}:
                 {{ row.field }}
               </p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ row.name }}</el-tag>
+              <div
+                slot="reference"
+                class="name-wrapper"
+              >
+                <el-tag size="medium">
+                  {{ row.name }}
+                </el-tag>
               </div>
             </el-popover>
           </template>
@@ -346,13 +361,34 @@
         />
       </div>
       <div v-else-if="tableType == 'basedate.params'">
-        <el-table-column label="序号" prop="order" />
-        <el-table-column label="标识符" prop="identifier" />
-        <el-table-column label="功能名称" prop="name" />
-        <el-table-column label="数据类型" prop="type" />
-        <el-table-column label="数据地址" prop="address" />
-        <el-table-column label="数据长度" prop="bytes" />
-        <el-table-column label="是否必填" prop="required">
+        <el-table-column
+          label="序号"
+          prop="order"
+        />
+        <el-table-column
+          label="标识符"
+          prop="identifier"
+        />
+        <el-table-column
+          label="功能名称"
+          prop="name"
+        />
+        <el-table-column
+          label="数据类型"
+          prop="type"
+        />
+        <el-table-column
+          label="数据地址"
+          prop="address"
+        />
+        <el-table-column
+          label="数据长度"
+          prop="bytes"
+        />
+        <el-table-column
+          label="是否必填"
+          prop="required"
+        >
           <template slot-scope="scope">
             <span v-if="scope.row.required">是</span>
             <span v-else>否</span>
@@ -370,7 +406,10 @@
       style="height: 500px"
       theme="monokai"
     />
-    <el-empty v-else :image-size="200" />
+    <el-empty
+      v-else
+      :image-size="200"
+    />
   </div>
 </template>
 <script>

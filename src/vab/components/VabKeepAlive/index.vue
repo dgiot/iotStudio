@@ -1,5 +1,8 @@
 <template>
-  <keep-alive :include="cachedRoutes" :max="keepAliveMaxNum">
+  <keep-alive
+    :include="cachedRoutes"
+    :max="keepAliveMaxNum"
+  >
     <router-view :key="key" />
   </keep-alive>
 </template>

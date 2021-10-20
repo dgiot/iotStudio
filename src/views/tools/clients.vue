@@ -43,8 +43,15 @@
       </el-button>
     </div>
 
-    <el-tabs v-model="activeName" class="normal-tabs" type="card">
-      <el-tab-pane :label="$translateTitle('clients.basicInfo')" name="basic">
+    <el-tabs
+      v-model="activeName"
+      class="normal-tabs"
+      type="card"
+    >
+      <el-tab-pane
+        :label="$translateTitle('clients.basicInfo')"
+        name="basic"
+      >
         <vab-clients-basic :record="basicRecord" />
       </el-tab-pane>
       <el-tab-pane

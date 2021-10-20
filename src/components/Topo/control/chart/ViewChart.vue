@@ -1,5 +1,10 @@
 <template>
-  <div ref="chartView" class="view-chart">Click to bind data.</div>
+  <div
+    ref="chartView"
+    class="view-chart"
+  >
+    Click to bind data.
+  </div>
 </template>
 
 <script>

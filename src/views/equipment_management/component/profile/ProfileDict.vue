@@ -24,7 +24,10 @@
               :label-width="formLabelWidth"
               prop="name"
             >
-              <el-input v-model="dictTempForm.name" autocomplete="off" />
+              <el-input
+                v-model="dictTempForm.name"
+                autocomplete="off"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -33,7 +36,10 @@
               :label-width="formLabelWidth"
               prop="cType"
             >
-              <el-input v-model="dictTempForm.cType" autocomplete="off" />
+              <el-input
+                v-model="dictTempForm.cType"
+                autocomplete="off"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -42,19 +48,33 @@
               :label-width="formLabelWidth"
               prop="enable"
             >
-              <el-radio v-model="dictTempForm.enable" border label="1">
+              <el-radio
+                v-model="dictTempForm.enable"
+                border
+                label="1"
+              >
                 启用
               </el-radio>
-              <el-radio v-model="dictTempForm.enable" border label="0">
+              <el-radio
+                v-model="dictTempForm.enable"
+                border
+                label="0"
+              >
                 禁用
               </el-radio>
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-form-item label="字典模板数据" :label-width="formLabelWidth">
+        <el-form-item
+          label="字典模板数据"
+          :label-width="formLabelWidth"
+        >
           <el-tabs v-model="elactiveName">
-            <el-tab-pane label="Table" name="Table">
+            <el-tab-pane
+              label="Table"
+              name="Table"
+            >
               <el-button
                 class="mt-3"
                 icon="el-icon-plus"
@@ -70,13 +90,34 @@
                 height="300"
                 style="width: 100%; text-align: center"
               >
-                <el-table-column label="序号" prop="order" />
-                <el-table-column label="标识符" prop="identifier" />
-                <el-table-column label="功能名称" prop="name" />
-                <el-table-column label="数据类型" prop="type" />
-                <el-table-column label="数据地址" prop="address" />
-                <el-table-column label="数据长度" prop="bytes" />
-                <el-table-column label="是否必填" prop="required">
+                <el-table-column
+                  label="序号"
+                  prop="order"
+                />
+                <el-table-column
+                  label="标识符"
+                  prop="identifier"
+                />
+                <el-table-column
+                  label="功能名称"
+                  prop="name"
+                />
+                <el-table-column
+                  label="数据类型"
+                  prop="type"
+                />
+                <el-table-column
+                  label="数据地址"
+                  prop="address"
+                />
+                <el-table-column
+                  label="数据长度"
+                  prop="bytes"
+                />
+                <el-table-column
+                  label="是否必填"
+                  prop="required"
+                >
                   <template slot-scope="scope">
                     <span v-if="scope.row.required">是</span>
                     <span v-else>否</span>
@@ -88,7 +129,11 @@
                 <!--                      <span v-else>否</span>-->
                 <!--                    </template>-->
                 <!--                  </el-table-column>-->
-                <el-table-column align="center" label="操作" width="160">
+                <el-table-column
+                  align="center"
+                  label="操作"
+                  width="160"
+                >
                   <template slot-scope="scope">
                     <el-button
                       plain
@@ -120,7 +165,10 @@
                 </el-table-column>
               </el-table>
             </el-tab-pane>
-            <el-tab-pane label="Json" name="Json">
+            <el-tab-pane
+              label="Json"
+              name="Json"
+            >
               <vab-json-editor
                 v-model="dictTempForm.params"
                 lang="zh"
@@ -130,7 +178,10 @@
             </el-tab-pane>
           </el-tabs>
         </el-form-item>
-        <el-form-item label="描述" :label-width="formLabelWidth">
+        <el-form-item
+          label="描述"
+          :label-width="formLabelWidth"
+        >
           <el-input
             v-model="dictTempForm.description"
             :autosize="{ minRows: 2, maxRows: 4 }"
@@ -139,14 +190,19 @@
           />
         </el-form-item>
 
-        <el-form-item size="mini" style="text-align: center">
+        <el-form-item
+          size="mini"
+          style="text-align: center"
+        >
           <el-button
             type="primary"
             @click="$parent.onJsonSave('dictTempForm', dictTempForm)"
           >
             提交
           </el-button>
-          <el-button @click="$parent.dictVisible = false">取消</el-button>
+          <el-button @click="$parent.dictVisible = false">
+            取消
+          </el-button>
         </el-form-item>
       </el-form>
     </a-drawer>
@@ -170,7 +226,10 @@
       >
         <el-row :gutter="24">
           <el-col :span="12">
-            <el-form-item label="序号" prop="order">
+            <el-form-item
+              label="序号"
+              prop="order"
+            >
               <el-input v-model.number="tempparams.order" />
             </el-form-item>
           </el-col>
@@ -232,7 +291,10 @@
                   :label="$translateTitle('product.string')"
                   value="string"
                 />
-                <el-option label="switch" value="switch" />
+                <el-option
+                  label="switch"
+                  value="switch"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -279,7 +341,10 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
+        <el-row
+          v-show="tempparams.protocol == 'modbus'"
+          :gutter="24"
+        >
           <el-col :span="12">
             <el-form-item label="数据格式">
               <el-select
@@ -327,7 +392,11 @@
               <span v-show="false">{{ scope.row }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="寄存器状态" min-width="120">
+          <el-table-column
+            align="center"
+            label="寄存器状态"
+            min-width="120"
+          >
             <!--关键代码-->
             <template slot-scope="scope">
               <el-select
@@ -395,10 +464,16 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-row v-show="tempparams.protocol != 'modbus'" :gutter="24">
+        <el-row
+          v-show="tempparams.protocol != 'modbus'"
+          :gutter="24"
+        >
           <el-col :span="12">
             <el-form-item label="数据地址">
-              <el-input v-model="tempparams.address" placeholder="数据地址" />
+              <el-input
+                v-model="tempparams.address"
+                placeholder="数据地址"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -497,20 +572,36 @@
         <el-row :gutter="24">
           <el-col :span="12">
             <el-form-item label="必填">
-              <el-radio v-model="tempparams.required" border :label="true">
+              <el-radio
+                v-model="tempparams.required"
+                border
+                :label="true"
+              >
                 是
               </el-radio>
-              <el-radio v-model="tempparams.required" border :label="false">
+              <el-radio
+                v-model="tempparams.required"
+                border
+                :label="false"
+              >
                 否
               </el-radio>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="只读">
-              <el-radio v-model="tempparams.readonly" border :label="true">
+              <el-radio
+                v-model="tempparams.readonly"
+                border
+                :label="true"
+              >
                 是
               </el-radio>
-              <el-radio v-model="tempparams.readonly" border :label="false">
+              <el-radio
+                v-model="tempparams.readonly"
+                border
+                :label="false"
+              >
                 否
               </el-radio>
             </el-form-item>
@@ -519,10 +610,18 @@
         <el-row :gutter="24">
           <el-col :span="12">
             <el-form-item label="列表显示">
-              <el-radio v-model="tempparams.isshow" border :label="true">
+              <el-radio
+                v-model="tempparams.isshow"
+                border
+                :label="true"
+              >
                 是
               </el-radio>
-              <el-radio v-model="tempparams.isshow" border :label="false">
+              <el-radio
+                v-model="tempparams.isshow"
+                border
+                :label="false"
+              >
                 否
               </el-radio>
             </el-form-item>
@@ -530,12 +629,18 @@
         </el-row>
         <el-row :gutter="24">
           <el-col :span="12">
-            <el-form-item v-if="tempparams.type == 'switch'" label="开">
+            <el-form-item
+              v-if="tempparams.type == 'switch'"
+              label="开"
+            >
               <el-input v-model="tempparams.activevalue" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="tempparams.type == 'switch'" label="关">
+            <el-form-item
+              v-if="tempparams.type == 'switch'"
+              label="关"
+            >
               <el-input v-model="tempparams.inactivevalue" />
             </el-form-item>
           </el-col>
@@ -551,18 +656,33 @@
             class="notauto"
             readonly
           >
-            <el-option label="是" :value="true" />
-            <el-option label="否" :value="false" />
+            <el-option
+              label="是"
+              :value="true"
+            />
+            <el-option
+              label="否"
+              :value="false"
+            />
           </el-select>
           <el-input
             v-else-if="tempparams.type == 'int'"
             v-model.number="tempparams.default"
           />
-          <el-input v-else v-model="tempparams.default" />
+          <el-input
+            v-else
+            v-model="tempparams.default"
+          />
         </el-form-item>
-        <el-form-item v-if="tempparams.type == 'enum'" label="Enum数据">
+        <el-form-item
+          v-if="tempparams.type == 'enum'"
+          label="Enum数据"
+        >
           <el-tabs v-model="elactiveName1">
-            <el-tab-pane label="Table" name="Table1">
+            <el-tab-pane
+              label="Table"
+              name="Table1"
+            >
               <!--枚举型添加格式-->
               <el-button
                 class="mt-3"
@@ -577,17 +697,26 @@
                 :data="tempparams.specs"
                 style="width: 100%; text-align: center"
               >
-                <el-table-column align="center" label="属性">
+                <el-table-column
+                  align="center"
+                  label="属性"
+                >
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.attribute" />
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="属性值">
+                <el-table-column
+                  align="center"
+                  label="属性值"
+                >
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.attributevalue" />
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="操作">
+                <el-table-column
+                  align="center"
+                  label="操作"
+                >
                   <template slot-scope="scope">
                     <el-button
                       plain

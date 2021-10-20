@@ -5,7 +5,10 @@
     @mouseup="onMouseup($event)"
   >
     <template v-if="fixedWidthMode == 'left'">
-      <div class="wresize-panel-left" :style="{ width: divLeft.width + 'px' }">
+      <div
+        class="wresize-panel-left"
+        :style="{ width: divLeft.width + 'px' }"
+      >
         <slot name="left"></slot>
       </div>
 
@@ -15,12 +18,18 @@
         @mousedown="onMouseDownLeft($event)"
       ></div>
 
-      <div class="wresize-panel-right" :style="{ left: divRight.left + 'px' }">
+      <div
+        class="wresize-panel-right"
+        :style="{ left: divRight.left + 'px' }"
+      >
         <slot name="right"></slot>
       </div>
     </template>
     <template v-else>
-      <div class="wresize-panel-left" :style="{ right: divLeft.right + 'px' }">
+      <div
+        class="wresize-panel-left"
+        :style="{ right: divLeft.right + 'px' }"
+      >
         <slot name="left"></slot>
       </div>
 

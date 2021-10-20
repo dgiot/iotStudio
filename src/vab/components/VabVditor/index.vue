@@ -29,7 +29,10 @@
       :key="setKey"
       name="description"
     />
-    <el-empty v-show="value == 'temp'" :image-size="200" />
+    <el-empty
+      v-show="value == 'temp'"
+      :image-size="200"
+    />
   </div>
 </template>
 <script>

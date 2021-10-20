@@ -13,22 +13,36 @@
       :visible.sync="dialogTableVisible"
       width="70%"
     >
-      <el-table border :data="errorLogs">
+      <el-table
+        border
+        :data="errorLogs"
+      >
         <el-table-column label="报错路由">
           <template #default="{ row }">
-            <a :href="row.url" target="_blank">
+            <a
+              :href="row.url"
+              target="_blank"
+            >
               <el-tag type="success">{{ row.url }}</el-tag>
             </a>
           </template>
         </el-table-column>
         <el-table-column label="错误信息">
           <template #default="{ row }">
-            <el-tag type="danger">{{ decodeUnicode(row.err.message) }}</el-tag>
+            <el-tag type="danger">
+              {{ decodeUnicode(row.err.message) }}
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="错误详情" width="120">
+        <el-table-column
+          label="错误详情"
+          width="120"
+        >
           <template #default="{ row }">
-            <el-popover placement="top-start" trigger="hover">
+            <el-popover
+              placement="top-start"
+              trigger="hover"
+            >
               {{ row.err.stack }}
               <template #reference>
                 <el-button>查看</el-button>
@@ -36,7 +50,10 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="380">
+        <el-table-column
+          label="操作"
+          width="380"
+        >
           <template #default="{ row }">
             <a
               v-for="(item, index) in searchList"
@@ -52,8 +69,15 @@
         </el-table-column>
       </el-table>
       <template #footer>
-        <el-button @click.native="dialogTableVisible = false">取 消</el-button>
-        <el-button type="danger" @click.native="clearAll">暂不显示</el-button>
+        <el-button @click.native="dialogTableVisible = false">
+          取 消
+        </el-button>
+        <el-button
+          type="danger"
+          @click.native="clearAll"
+        >
+          暂不显示
+        </el-button>
       </template>
     </el-dialog>
   </div>

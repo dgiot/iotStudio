@@ -2,7 +2,13 @@
   <div class="error-container">
     <div class="error-content">
       <el-row :gutter="20">
-        <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+        <el-col
+          :lg="12"
+          :md="12"
+          :sm="24"
+          :xl="12"
+          :xs="24"
+        >
           <div class="pic-error">
             <el-image
               class="pic-error-parent"
@@ -19,12 +25,27 @@
           </div>
         </el-col>
 
-        <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+        <el-col
+          :lg="12"
+          :md="12"
+          :sm="24"
+          :xl="12"
+          :xs="24"
+        >
           <div class="bullshit">
-            <div class="bullshit-oops">{{ oops }}</div>
-            <div class="bullshit-headline">{{ headline }}</div>
-            <div class="bullshit-info">{{ info }}</div>
-            <router-link class="bullshit-return-home" to="/">
+            <div class="bullshit-oops">
+              {{ oops }}
+            </div>
+            <div class="bullshit-headline">
+              {{ headline }}
+            </div>
+            <div class="bullshit-info">
+              {{ info }}
+            </div>
+            <router-link
+              class="bullshit-return-home"
+              to="/"
+            >
               {{ jumpTime }}s&nbsp;{{ btn }}
             </router-link>
             <el-button

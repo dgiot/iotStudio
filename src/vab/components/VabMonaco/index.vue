@@ -1,5 +1,8 @@
 <template>
-  <div :id="`monaco-${id}`" class="monaco-view"></div>
+  <div
+    :id="`monaco-${id}`"
+    class="monaco-view"
+  ></div>
 </template>
 
 <script>

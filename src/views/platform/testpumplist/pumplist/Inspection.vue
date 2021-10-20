@@ -13,7 +13,10 @@
           :model="task_form"
           :rules="formRule"
         >
-          <el-divider content-position="left" style="color: blue">
+          <el-divider
+            content-position="left"
+            style="color: blue"
+          >
             <!-- 基本信息 -->
             {{ $translateTitle('concentrator.basicinformation') }}
           </el-divider>
@@ -29,7 +32,7 @@
                     v-model="task_form.name"
                     :placeholder="
                       $translateTitle('product.enter1') +
-                      $translateTitle('task.Taskname')
+                        $translateTitle('task.Taskname')
                     "
                   />
                 </el-form-item>
@@ -100,7 +103,7 @@
                     v-model="task_form.basedata.info.devInfo.name"
                     :placeholder="
                       $translateTitle('task.Select') +
-                      $translateTitle('product.testplatform')
+                        $translateTitle('product.testplatform')
                     "
                     style="width: 100%"
                     @change="changeBed"
@@ -130,12 +133,18 @@
           </el-row>
         </el-form>
 
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="add_taskdialog = false">
             <!-- 取消 -->
             {{ $translateTitle('developer.cancel') }}
           </el-button>
-          <el-button type="primary" @click.native="submiTask('task_form')">
+          <el-button
+            type="primary"
+            @click.native="submiTask('task_form')"
+          >
             <!-- 确定 -->
             {{ $translateTitle('developer.determine') }}
           </el-button>
@@ -150,8 +159,13 @@
           :label="$translateTitle('product.Underreview') + '(' + total + ')'"
         >
           <el-row>
-            <el-col :span="12">&nbsp;</el-col>
-            <el-col :span="12" style="text-align: right">
+            <el-col :span="12">
+&nbsp;
+            </el-col>
+            <el-col
+              :span="12"
+              style="text-align: right"
+            >
               <p>
                 <el-button
                   icon="el-icon-plus"
@@ -167,8 +181,15 @@
           </el-row>
 
           <div class="tasklist">
-            <el-table border :data="taskList.undoneData" stripe>
-              <el-table-column label="id" type="index" />
+            <el-table
+              border
+              :data="taskList.undoneData"
+              stripe
+            >
+              <el-table-column
+                label="id"
+                type="index"
+              />
               <!-- <el-table-column label="任务模板" align="center" prop="basedata.inspection_number" /> -->
 
               <!-- <el-table-column
@@ -278,7 +299,7 @@
                         $translateTitle('product.testing'),
                         $translateTitle('product.finishtest'),
                       ][scope.row.basedata.testStatus] ||
-                      $translateTitle('product.notested')
+                        $translateTitle('product.notested')
                     }}
                   </span>
                 </template>
@@ -328,7 +349,7 @@
                   <el-button
                     v-show="
                       scope.row.basedata.testStatus > 0 &&
-                      scope.row.basedata.testStatus < 2
+                        scope.row.basedata.testStatus < 2
                     "
                     size="mini"
                     type="primary"
@@ -369,7 +390,10 @@
                 </template>
               </el-table-column>
 
-              <el-table-column align="center" width="320">
+              <el-table-column
+                align="center"
+                width="320"
+              >
                 <template slot-scope="scope">
                   <el-dropdown>
                     <el-button size="small">
@@ -419,8 +443,15 @@
         <el-tab-pane
           :label="$translateTitle('product.finishreview') + '(' + total1 + ')'"
         >
-          <el-table border :data="taskList.doneData" stripe>
-            <el-table-column label="id" type="index" />
+          <el-table
+            border
+            :data="taskList.doneData"
+            stripe
+          >
+            <el-table-column
+              label="id"
+              type="index"
+            />
             <!-- <el-table-column label="任务模板" align="center" prop="basedata.inspection_number" /> -->
 
             <el-table-column
@@ -489,7 +520,11 @@
               </template>
             </el-table-column>
 
-            <el-table-column align="center" label="状态" width="160">
+            <el-table-column
+              align="center"
+              label="状态"
+              width="160"
+            >
               <template slot-scope="scope">
                 <!-- verifyStatus 0 未审核, 1 审核通过 2 审核不通过 -->
 
@@ -510,7 +545,7 @@
                       $translateTitle('product.testing'),
                       $translateTitle('product.finishtest'),
                     ][scope.row.basedata.testStatus] ||
-                    $translateTitle('product.notested')
+                      $translateTitle('product.notested')
                   }}
                 </span>
               </template>

@@ -24,7 +24,11 @@
         node-key="id"
         :props="elTreedefaultProps"
       >
-        <div slot-scope="{ node, data }" class="custom-tree-node" title="L1">
+        <div
+          slot-scope="{ node, data }"
+          class="custom-tree-node"
+          title="L1"
+        >
           <!-- :class="{ selected: data.objectId == currentFactoryId }" -->
           <div
             class="factory-item"

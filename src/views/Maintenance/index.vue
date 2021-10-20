@@ -195,7 +195,11 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <el-button size="mini" type="primary" @click.native="showInfo(row)">
+          <el-button
+            size="mini"
+            type="primary"
+            @click.native="showInfo(row)"
+          >
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
           <!--          <el-button v-show="row.status == 0" type="success">-->

@@ -46,7 +46,10 @@
       </a-col>
       <a-col :span="20">
         <div class="text">
-          <vab-vditor ref="vditor" :value="productDetail.data" />
+          <vab-vditor
+            ref="vditor"
+            :value="productDetail.data"
+          />
         </div>
       </a-col>
     </a-row>

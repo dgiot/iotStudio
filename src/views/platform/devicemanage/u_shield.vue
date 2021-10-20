@@ -6,7 +6,10 @@
     /> -->
     <div style="width: 360px; height: 100vh"></div>
 
-    <div class="u_shieldright" style="width: calc(100% - 360px); padding: 20px">
+    <div
+      class="u_shieldright"
+      style="width: calc(100% - 360px); padding: 20px"
+    >
       <el-form
         class="demo-form-inline"
         :inline="true"
@@ -14,42 +17,90 @@
         size="small"
       >
         <el-form-item label="U盾状态分类">
-          <el-select v-model="formInline.status" placeholder="U盾状态分类">
-            <el-option label="全部" value="all" />
+          <el-select
+            v-model="formInline.status"
+            placeholder="U盾状态分类"
+          >
+            <el-option
+              label="全部"
+              value="all"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="应用实验室">
-          <el-select v-model="formInline.laboratory" placeholder="应用实验室">
-            <el-option label="全部" value="all" />
+          <el-select
+            v-model="formInline.laboratory"
+            placeholder="应用实验室"
+          >
+            <el-option
+              label="全部"
+              value="all"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="U盾编号">
-          <el-input v-model="formInline.unumber" placeholder="U盾编号" />
+          <el-input
+            v-model="formInline.unumber"
+            placeholder="U盾编号"
+          />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click.native="onSubmit">查询</el-button>
-          <el-button type="primary" @click.native="reseting">查询</el-button>
+          <el-button
+            type="primary"
+            @click.native="onSubmit"
+          >
+            查询
+          </el-button>
+          <el-button
+            type="primary"
+            @click.native="reseting"
+          >
+            查询
+          </el-button>
         </el-form-item>
       </el-form>
       <div>
-        <el-button size="small" type="success" @click="uShield">
+        <el-button
+          size="small"
+          type="success"
+          @click="uShield"
+        >
           U盾扫描
         </el-button>
       </div>
       <div class="blocktable">
-        <el-table :data="tableData" style="width: 100%; text-align: center">
-          <el-table-column label="序号" type="index" width="50" />
-          <el-table-column align="center" label="U盾序列号" width="250">
+        <el-table
+          :data="tableData"
+          style="width: 100%; text-align: center"
+        >
+          <el-table-column
+            label="序号"
+            type="index"
+            width="50"
+          />
+          <el-table-column
+            align="center"
+            label="U盾序列号"
+            width="250"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.SerialNumber }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="证书拥有者" width="300">
+          <el-table-column
+            align="center"
+            label="证书拥有者"
+            width="300"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.Subject }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="颁发机构" width="300">
+          <el-table-column
+            align="center"
+            label="颁发机构"
+            width="300"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.Issuer }}</span>
             </template>
@@ -64,20 +115,44 @@
               <span>{{ scope.row.attributes.basedata.bstrCertB64 }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="发证时间" width="150">
+          <el-table-column
+            align="center"
+            label="发证时间"
+            width="150"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.beforeDate }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="到期时间" width="150">
+          <el-table-column
+            align="center"
+            label="到期时间"
+            width="150"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.attributes.basedata.afterDate }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="分配状态" width="100" />
-          <el-table-column align="center" label="授权单位" width="200" />
-          <el-table-column align="center" label="授权个人" width="200" />
-          <el-table-column align="center" label="U盾管理" width="200">
+          <el-table-column
+            align="center"
+            label="分配状态"
+            width="100"
+          />
+          <el-table-column
+            align="center"
+            label="授权单位"
+            width="200"
+          />
+          <el-table-column
+            align="center"
+            label="授权个人"
+            width="200"
+          />
+          <el-table-column
+            align="center"
+            label="U盾管理"
+            width="200"
+          >
             <template slot-scope="scope">
               <el-button
                 icon="el-icon-edit"
@@ -85,7 +160,11 @@
                 type="primary"
                 @click="editorUdun(scope.row)"
               />
-              <el-button icon="el-icon-delete" size="small" type="danger" />
+              <el-button
+                icon="el-icon-delete"
+                size="small"
+                type="danger"
+              />
             </template>
           </el-table-column>
         </el-table>
@@ -176,7 +255,10 @@
                 readonly
               />
             </el-form-item>
-            <el-form-item label="到期日期" :label-width="formLabelWidth">
+            <el-form-item
+              label="到期日期"
+              :label-width="formLabelWidth"
+            >
               <el-input
                 v-model="ushieldform.enddate"
                 autocomplete="off"
@@ -184,7 +266,10 @@
                 readonly
               />
             </el-form-item>
-            <el-form-item label="Ukey证书" :label-width="formLabelWidth">
+            <el-form-item
+              label="Ukey证书"
+              :label-width="formLabelWidth"
+            >
               <el-input
                 v-model="ushieldform.ukey"
                 autocomplete="off"
@@ -209,7 +294,10 @@
         </p>
         <el-row v-show="ushieldid != ''">
           <el-col :span="12">
-            <el-form-item label="授权单位" :label-width="formLabelWidth">
+            <el-form-item
+              label="授权单位"
+              :label-width="formLabelWidth"
+            >
               <el-select
                 v-model="ushieldform.company"
                 placeholder="请选择通过资质认证的企业"
@@ -224,7 +312,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="授权个人" :label-width="formLabelWidth">
+            <el-form-item
+              label="授权个人"
+              :label-width="formLabelWidth"
+            >
               <el-select
                 v-model="ushieldform.username"
                 autocomplete="off"
@@ -241,9 +332,19 @@
           </el-col>
         </el-row>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click.native="addUshield">确 定</el-button>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="dialogFormVisible = false">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click.native="addUshield"
+        >
+          确 定
+        </el-button>
       </div>
     </el-dialog>
   </div>

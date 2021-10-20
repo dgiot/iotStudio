@@ -12,7 +12,10 @@
       type="success"
       @click.native="changeThemeSetting(showThemeSetting)"
     />
-    <ul v-if="showThemeSetting" class="vab-theme-setting">
+    <ul
+      v-if="showThemeSetting"
+      class="vab-theme-setting"
+    >
       <li @click="handleOpenTheme">
         <a>
           <vab-icon icon="brush-2-line" />

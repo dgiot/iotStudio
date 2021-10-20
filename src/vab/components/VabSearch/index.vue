@@ -1,8 +1,18 @@
 <template>
   <span v-if="theme.showSearch">
-    <vab-icon icon="search-line" @click.native="openDialog" />
-    <el-dialog :append-to-body="true" :visible.sync="dialogVisible" width="40%">
-      <el-form :model="queryForm" @submit.native.prevent>
+    <vab-icon
+      icon="search-line"
+      @click.native="openDialog"
+    />
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="dialogVisible"
+      width="40%"
+    >
+      <el-form
+        :model="queryForm"
+        @submit.native.prevent
+      >
         <el-form-item label-width="0">
           <el-autocomplete
             v-model="queryForm.searchWord"

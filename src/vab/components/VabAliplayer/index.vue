@@ -1,5 +1,8 @@
 <template>
-  <div ref="VabAliplayer" class="VabAliplayer">
+  <div
+    ref="VabAliplayer"
+    class="VabAliplayer"
+  >
     <template v-if="!isShowMultiple && show">
       <vue-aliplayer-v2
         ref="VueAliplayerV2"
@@ -7,7 +10,10 @@
         :source="source"
       />
     </template>
-    <div v-if="isShowMultiple && show" class="show-multiple">
+    <div
+      v-if="isShowMultiple && show"
+      class="show-multiple"
+    >
       <template v-for="x in 5">
         <vue-aliplayer-v2
           :key="x"
@@ -18,8 +24,16 @@
         />
       </template>
     </div>
-    <p v-if="!show" class="remove-text">播放器已销毁!</p>
-    <div v-if="!show" class="player-btns">
+    <p
+      v-if="!show"
+      class="remove-text"
+    >
+      播放器已销毁!
+    </p>
+    <div
+      v-if="!show"
+      class="player-btns"
+    >
       <template v-if="!isShowMultiple && show">
         <span @click="play()">播放</span>
         <span @click="pause()">暂停</span>

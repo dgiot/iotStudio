@@ -3,7 +3,7 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: ['plugin:vue/recommended', '@vue/prettier'],
+  extends: ['plugin:vue/recommended'],
   parser: 'vue-eslint-parser',
   parserOptions: {
     sourceType: 'module',
@@ -19,6 +19,7 @@ module.exports = {
     'no-debugger': 'off',
     'vue/no-template-shadow': 'off',
     'vue/no-v-html': 'off',
+    'vue/attributes-order': 0,
     'vue/html-self-closing': [
       'error',
       {
@@ -74,25 +75,25 @@ module.exports = {
       },
     ],
     // Vue属性排序
-    'vue/attributes-order': [
-      'warn',
-      {
-        order: [
-          'DEFINITION',
-          'LIST_RENDERING',
-          'CONDITIONALS',
-          'RENDER_MODIFIERS',
-          'GLOBAL',
-          'UNIQUE',
-          'TWO_WAY_BINDING',
-          'OTHER_DIRECTIVES',
-          'OTHER_ATTR',
-          'EVENTS',
-          'CONTENT',
-        ],
-        alphabetical: true, //字母顺序
-      },
-    ],
+    // 'vue/attributes-order': [
+    //   'warn',
+    //   {
+    //     order: [
+    //       'DEFINITION',
+    //       'LIST_RENDERING',
+    //       'CONDITIONALS',
+    //       'RENDER_MODIFIERS',
+    //       'GLOBAL',
+    //       'UNIQUE',
+    //       'TWO_WAY_BINDING',
+    //       'OTHER_DIRECTIVES',
+    //       'OTHER_ATTR',
+    //       'EVENTS',
+    //       'CONTENT',
+    //     ],
+    //     alphabetical: false, //字母顺序
+    //   },
+    // ],
   },
   overrides: [
     {

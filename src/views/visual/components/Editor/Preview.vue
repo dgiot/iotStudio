@@ -1,6 +1,14 @@
 <template>
-  <div v-if="show" class="bg">
-    <el-button class="close" @click="close">关闭</el-button>
+  <div
+    v-if="show"
+    class="bg"
+  >
+    <el-button
+      class="close"
+      @click="close"
+    >
+      关闭
+    </el-button>
     <div class="canvas-container">
       <div
         class="canvas"

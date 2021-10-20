@@ -25,8 +25,16 @@
       <!--        </el-button>-->
       <!--      </span>-->
     </el-dialog>
-    <el-dialog v-drag-dialog append-to-body :visible.sync="parserView">
-      <f-render v-model="formConfig" :config="formConfig" pure />
+    <el-dialog
+      v-drag-dialog
+      append-to-body
+      :visible.sync="parserView"
+    >
+      <f-render
+        v-model="formConfig"
+        :config="formConfig"
+        pure
+      />
     </el-dialog>
 
     <div class="prosecond">
@@ -102,7 +110,14 @@
         </vab-query-form-top-panel>
       </vab-query-form>
       <el-row :gutter="24">
-        <el-col v-show="!isProduct" :lg="4" :md="5" :sm="6" :xl="3" :xs="12">
+        <el-col
+          v-show="!isProduct"
+          :lg="4"
+          :md="5"
+          :sm="6"
+          :xl="3"
+          :xs="12"
+        >
           <ul
             class="infinite-list"
             style="overflow: auto"
@@ -153,7 +168,10 @@
               </el-table-column>
             </el-table>
           </div>
-          <div class="elpagination" style="margin-top: 20px">
+          <div
+            class="elpagination"
+            style="margin-top: 20px"
+          >
             <el-pagination
               layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
@@ -202,7 +220,10 @@
       :title-dict="title_dict_edit_dialog"
       :title-temp-dialog="title_temp_dialog"
     />
-    <product-templet ref="templet" @fetch-data="searchProduct(0)" />
+    <product-templet
+      ref="templet"
+      @fetch-data="searchProduct(0)"
+    />
   </div>
 </template>
 <script>

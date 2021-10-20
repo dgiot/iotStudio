@@ -38,7 +38,11 @@
         />
       </pattern>
     </defs>
-    <rect fill="url(#grid)" height="100%" width="100%" />
+    <rect
+      fill="url(#grid)"
+      height="100%"
+      width="100%"
+    />
   </svg>
 </template>
 

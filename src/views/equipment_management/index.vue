@@ -61,7 +61,10 @@
                 text-align: center;
               "
             >
-              <div slot="error" class="image-slot">
+              <div
+                slot="error"
+                class="image-slot"
+              >
                 <i class="el-icon-picture-outline" />
               </div>
             </el-image>
@@ -71,19 +74,32 @@
     </div>
     <div class="equtabs">
       <!--tabs第一个标签页-->
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane :label="$translateTitle('route.设备管理')" name="first">
+      <el-tabs
+        v-model="activeName"
+        @tab-click="handleClick"
+      >
+        <el-tab-pane
+          :label="$translateTitle('route.设备管理')"
+          name="first"
+        >
           <div>
             <div>
               <el-button size="small">
                 {{ $translateTitle('equipment.batchaddition') }}
               </el-button>
-              <el-button size="small" type="primary" @click="addDeviceForm">
+              <el-button
+                size="small"
+                type="primary"
+                @click="addDeviceForm"
+              >
                 {{ $translateTitle('equipment.adddevice') }}
               </el-button>
             </div>
           </div>
-          <div class="equdevices" style="margin-top: 20px">
+          <div
+            class="equdevices"
+            style="margin-top: 20px"
+          >
             <!--            <el-select-->
             <!--              v-model="equvalue"-->
             <!--              :disabled="!productenable"-->
@@ -98,7 +114,11 @@
             <!--                :value="item.id"-->
             <!--              />-->
             <!--            </el-select>-->
-            <el-select v-model="selectdevice" class="selectdetail" size="small">
+            <el-select
+              v-model="selectdevice"
+              class="selectdetail"
+              size="small"
+            >
               <el-option :value="$translateTitle('equipment.devicename')" />
               <el-option :value="$translateTitle('equipment.devicenumber')" />
             </el-select>
@@ -162,13 +182,17 @@
               style="width: 100%; margin-top: 20px; text-align: center"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column align="center" type="selection" width="55" />
+              <el-table-column
+                align="center"
+                type="selection"
+                width="55"
+              />
               <el-table-column
                 align="center"
                 :label="
                   $translateTitle('equipment.devicenumber') +
-                  '/' +
-                  $translateTitle('equipment.name')
+                    '/' +
+                    $translateTitle('equipment.name')
                 "
                 prop="name"
                 show-overflow-tooltip
@@ -176,7 +200,9 @@
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>
-                  <p style="margin: 0; color: green">{{ scope.row.devaddr }}</p>
+                  <p style="margin: 0; color: green">
+                    {{ scope.row.devaddr }}
+                  </p>
                 </template>
               </el-table-column>
               <el-table-column
@@ -230,7 +256,7 @@
                   <span
                     v-if="
                       scope.row.status != 'OFFLINE' &&
-                      scope.row.status != 'ONLINE'
+                        scope.row.status != 'ONLINE'
                     "
                     :class="scope.row.status"
                   >
@@ -284,8 +310,8 @@
                 align="center"
                 :label="
                   $translateTitle('developer.enable') +
-                  '/' +
-                  $translateTitle('developer.prohibit')
+                    '/' +
+                    $translateTitle('developer.prohibit')
                 "
                 prop="enable"
                 show-overflow-tooltip
@@ -374,7 +400,11 @@
                         {{ $translateTitle('developer.determine') }}
                       </el-button>
                     </div>
-                    <el-link slot="reference" type="danger" :underline="false">
+                    <el-link
+                      slot="reference"
+                      type="danger"
+                      :underline="false"
+                    >
                       {{ $translateTitle('developer.delete') }}
                     </el-link>
                   </el-popover>
@@ -393,7 +423,10 @@
                 </template>
               </el-table-column>
             </el-table>
-            <div class="elpagination" style="margin-top: 20px">
+            <div
+              class="elpagination"
+              style="margin-top: 20px"
+            >
               <el-pagination
                 layout="total, sizes, prev, pager, next, jumper"
                 :page-size="devicelength"
@@ -409,7 +442,10 @@
           :label="$translateTitle('equipment.batchmanagement')"
           name="second"
         >
-          <el-table :data="pctableData" style="width: 100%; text-align: center">
+          <el-table
+            :data="pctableData"
+            style="width: 100%; text-align: center"
+          >
             <el-table-column
               align="center"
               :label="$translateTitle('equipment.serialnumber')"
@@ -438,7 +474,11 @@
                 <span>{{ utc2beijing(scope.row.createdAt) }}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="操作" width="300">
+            <el-table-column
+              align="center"
+              label="操作"
+              width="300"
+            >
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -475,7 +515,10 @@
         :visible.sync="devicedialogVisible"
         width="50%"
       >
-        <div slot="title" class="header-title">
+        <div
+          slot="title"
+          class="header-title"
+        >
           <span class="title-name">
             {{ '设备' + equipmentEditor }}
             <el-tooltip
@@ -510,8 +553,15 @@
               :label="$translateTitle('equipment.batchname')"
               prop="batchId"
             >
-              <el-input v-model="deviceform.batchId" disabled>
-                <i slot="suffix" class="el-icon-plus" @click="addDeviceBatch" />
+              <el-input
+                v-model="deviceform.batchId"
+                disabled
+              >
+                <i
+                  slot="suffix"
+                  class="el-icon-plus"
+                  @click="addDeviceBatch"
+                />
               </el-input>
             </el-form-item>
             <!-- <el-form-item label="节点类型" prop="nodeType">
@@ -527,7 +577,10 @@
               :label="$translateTitle('product.productname')"
               prop="productName"
             >
-              <el-input v-model="deviceform.productName" readonly />
+              <el-input
+                v-model="deviceform.productName"
+                readonly
+              />
             </el-form-item>
             <el-form-item :label="$translateTitle('equipment.assetnumber')">
               <el-input v-model="deviceform.assetNum" />
@@ -554,7 +607,10 @@
             <el-form-item
               :label="$translateTitle('equipment.installationlocation')"
             >
-              <el-input v-model="deviceform.address" @focus="updateLocation" />
+              <el-input
+                v-model="deviceform.address"
+                @focus="updateLocation"
+              />
             </el-form-item>
             <el-form-item :label="$translateTitle('developer.describe')">
               <el-input
@@ -565,8 +621,14 @@
             </el-form-item>
           </el-form>
         </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click.native="submitForm('deviceform')">
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            type="primary"
+            @click.native="submitForm('deviceform')"
+          >
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="handleClose">
@@ -693,7 +755,11 @@
         width="50%"
       >
         <div>
-          <el-form :inline="true" :model="bmapform" size="small">
+          <el-form
+            :inline="true"
+            :model="bmapform"
+            size="small"
+          >
             <!-- <el-form-item label="地址">
               <el-input v-model="bmapform.location" placeholder="请输入市或者县名称"></el-input>
             </el-form-item>-->
@@ -704,7 +770,10 @@
               <el-button type="primary" @click.native="addressSure">搜 索</el-button>
             </el-form-item>-->
             <el-form-item label="选中地址">
-              <el-input v-model="bmapform.address" readonly />
+              <el-input
+                v-model="bmapform.address"
+                readonly
+              />
             </el-form-item>
           </el-form>
           <!-- <label>地址：<input v-model="bmapfrom.keyword"></label> -->
@@ -743,8 +812,14 @@
             </bm-marker>-->
           </baidu-map>
         </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click.native="addressSure">
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            type="primary"
+            @click.native="addressSure"
+          >
             保 存
           </el-button>
           <el-button @click="bmapdialogVisible = false">取 消</el-button>

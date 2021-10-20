@@ -1,5 +1,8 @@
 <template>
-  <div :class="className" :style="{ height: height, width: width }" />
+  <div
+    :class="className"
+    :style="{ height: height, width: width }"
+  />
 </template>
 
 <script>

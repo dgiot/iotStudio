@@ -3,7 +3,9 @@
     <el-row>
       <el-col :span="10">
         <el-row>
-          <el-col :span="6">当前规定点信息</el-col>
+          <el-col :span="6">
+            当前规定点信息
+          </el-col>
 
           <el-col :span="18">
             <!--       <table class="table_default1">
@@ -31,7 +33,12 @@
                 <th>NPSH(m)</th>
               </tr>
               <tr>
-                <td v-for="(val, index) in 6" :key="index">{{ val }}</td>
+                <td
+                  v-for="(val, index) in 6"
+                  :key="index"
+                >
+                  {{ val }}
+                </td>
               </tr>
             </table>
           </el-col>
@@ -58,7 +65,12 @@
                   <th>电压(V)</th>
                 </tr>
                 <tr>
-                  <td v-for="(val, index) in 10" :key="index">{{ val }}</td>
+                  <td
+                    v-for="(val, index) in 10"
+                    :key="index"
+                  >
+                    {{ val }}
+                  </td>
                 </tr>
               </table>
             </el-col>
@@ -82,12 +94,48 @@
         </div>
 
         <div class="type-test-rb-box">
-          <el-button plain size="small" type="primary">类比</el-button>
-          <el-button plain size="small" type="primary">曲线</el-button>
-          <el-button plain size="small" type="primary">开始</el-button>
-          <el-button plain size="small" type="primary">停止</el-button>
-          <el-button plain size="small" type="primary">测试结果</el-button>
-          <el-button plain size="small" type="primary">汽蚀测试</el-button>
+          <el-button
+            plain
+            size="small"
+            type="primary"
+          >
+            类比
+          </el-button>
+          <el-button
+            plain
+            size="small"
+            type="primary"
+          >
+            曲线
+          </el-button>
+          <el-button
+            plain
+            size="small"
+            type="primary"
+          >
+            开始
+          </el-button>
+          <el-button
+            plain
+            size="small"
+            type="primary"
+          >
+            停止
+          </el-button>
+          <el-button
+            plain
+            size="small"
+            type="primary"
+          >
+            测试结果
+          </el-button>
+          <el-button
+            plain
+            size="small"
+            type="primary"
+          >
+            汽蚀测试
+          </el-button>
         </div>
       </el-col>
     </el-row>

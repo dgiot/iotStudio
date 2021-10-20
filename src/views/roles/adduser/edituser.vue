@@ -1,6 +1,9 @@
 <template>
   <div class="edituser">
-    <div class="admin" style="margin-bottom: 20px">
+    <div
+      class="admin"
+      style="margin-bottom: 20px"
+    >
       <!-- 编辑用户 -->
       {{ $translateTitle('developer.edituser') }}
     </div>
@@ -11,26 +14,38 @@
       :model="ruleForm2"
       status-icon
     >
-      <el-form-item :label="$translateTitle('user.account')" prop="account">
+      <el-form-item
+        :label="$translateTitle('user.account')"
+        prop="account"
+      >
         <el-input
           v-model="ruleForm2.account"
           :placeholder="$translateTitle('product.enteraccount')"
         />
       </el-form-item>
-      <el-form-item :label="$translateTitle('product.phone')" prop="phone">
+      <el-form-item
+        :label="$translateTitle('product.phone')"
+        prop="phone"
+      >
         <el-input
           v-model="ruleForm2.phone"
           :maxlength="11"
           :placeholder="$translateTitle('product.enterphonenumber')"
         />
       </el-form-item>
-      <el-form-item :label="$translateTitle('user.email')" prop="email">
+      <el-form-item
+        :label="$translateTitle('user.email')"
+        prop="email"
+      >
         <el-input
           v-model="ruleForm2.email"
           :placeholder="$translateTitle('product.enteremail')"
         />
       </el-form-item>
-      <el-form-item :label="$translateTitle('user.name1')" prop="username">
+      <el-form-item
+        :label="$translateTitle('user.name1')"
+        prop="username"
+      >
         <el-input
           v-model="ruleForm2.username"
           :maxlength="5"
@@ -53,7 +68,10 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click.native="submit_edituser(ruleForm2)">
+        <el-button
+          type="primary"
+          @click.native="submit_edituser(ruleForm2)"
+        >
           <!-- 保存 -->
           {{ $translateTitle('product.preservation') }}
         </el-button>

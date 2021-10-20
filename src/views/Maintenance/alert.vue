@@ -11,7 +11,11 @@
 <template>
   <div class="mycontainer">
     <div class="ticker-dialog">
-      <el-dialog v-drag :append-to-body="true" :visible.sync="parserView">
+      <el-dialog
+        v-drag
+        :append-to-body="true"
+        :visible.sync="parserView"
+      >
         <ele-form
           v-model="alertConfig.config"
           v-bind="alertConfig.config"
@@ -28,7 +32,10 @@
         width="50vh"
       >
         <el-form>
-          <el-form-item label="设备名称" label-width="200">
+          <el-form-item
+            label="设备名称"
+            label-width="200"
+          >
             <span>{{ devicename }}</span>
           </el-form-item>
         </el-form>
@@ -38,26 +45,43 @@
           ref="dynamicformInfo"
         >
           <el-form-item :label="item.key">
-            <el-link type="success">{{ item.value }}</el-link>
+            <el-link type="success">
+              {{ item.value }}
+            </el-link>
           </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer">
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-form>
             <el-form-item :label="$translateTitle('alert.Alarm status')">
-              <el-radio v-model="status" label="1">已处理</el-radio>
-              <el-radio v-model="status" label="2">误报</el-radio>
+              <el-radio
+                v-model="status"
+                label="1"
+              >已处理</el-radio>
+              <el-radio
+                v-model="status"
+                label="2"
+              >误报</el-radio>
             </el-form-item>
             <el-form-item
               :label="$translateTitle('alert.Alarm handling')"
               label-width="200"
             >
-              <el-input v-model="process" type="textarea" />
+              <el-input
+                v-model="process"
+                type="textarea"
+              />
             </el-form-item>
           </el-form>
           <el-button @click="dynamicformView = false">
             {{ $translateTitle('button.cancel') }}
           </el-button>
-          <el-button type="primary" @click.native="submitAlert(alertId)">
+          <el-button
+            type="primary"
+            @click.native="submitAlert(alertId)"
+          >
             {{ $translateTitle('button.submit') }}
           </el-button>
         </span>
@@ -187,7 +211,10 @@
         sortable
       >
         <template #default="{ row }">
-          <el-tag effect="dark" :type="row.alertstatus ? 'danger' : 'success'">
+          <el-tag
+            effect="dark"
+            :type="row.alertstatus ? 'danger' : 'success'"
+          >
             {{
               row.alertstatus
                 ? $translateTitle('alert.start')
@@ -203,13 +230,16 @@
         sortable
       >
         <template #default="{ row }">
-          <el-link effect="dark" :type="row.status == 1 ? 'success' : 'info'">
+          <el-link
+            effect="dark"
+            :type="row.status == 1 ? 'success' : 'info'"
+          >
             {{
               row.status == 1
                 ? $translateTitle('Maintenance.Processed')
                 : row.status == 0
-                ? $translateTitle('Maintenance.Untreated')
-                : $translateTitle('Maintenance.Distort')
+                  ? $translateTitle('Maintenance.Untreated')
+                  : $translateTitle('Maintenance.Distort')
             }}
           </el-link>
         </template>

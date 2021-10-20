@@ -13,7 +13,10 @@
         :label="item[fieldName.label]"
         :value="item[fieldName.value]"
       >
-        <slot :item="item" name="option"></slot>
+        <slot
+          :item="item"
+          name="option"
+        ></slot>
       </el-option>
     </slot>
   </el-select>

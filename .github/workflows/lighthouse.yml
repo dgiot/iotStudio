@@ -1,0 +1,26 @@
+name: "Auditing"
+on:
+  push:
+    branches:
+      - master
+jobs:
+  lighthouse-stdout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "prod"
+        uses: jakejarvis/lighthouse-action@master
+        with:
+          url: "https://prod.iotn2n.com/"
+      - name: "iotn2n"
+        uses: jakejarvis/lighthouse-action@master
+        with:
+          url: "https://prod.iotn2n.com/"
+      - name: "cdn"
+        uses: jakejarvis/lighthouse-action@master
+        with:
+          url: "https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/dgiot_release/dashboardCdn/assets/js/vue.js"
+      - name: "Upload results as an artifact"
+        uses: actions/upload-artifact@master
+        with:
+          name: lighthouse-report
+          path: "./report"

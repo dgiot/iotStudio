@@ -41,7 +41,11 @@
           :header-cell-style="headClass"
           style="width: 100%"
         >
-          <el-table-column label="序号" type="index" width="50" />
+          <el-table-column
+            label="序号"
+            type="index"
+            width="50"
+          />
           <el-table-column
             label="企业名称"
             prop="data.CompanyAuthentication.abbrname"
@@ -81,9 +85,15 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="审核状态" width="100">
+          <el-table-column
+            label="审核状态"
+            width="100"
+          >
             <template slot-scope="scope">
-              <el-tag v-if="scope.row.data.verifyStatus == 0" type="info">
+              <el-tag
+                v-if="scope.row.data.verifyStatus == 0"
+                type="info"
+              >
                 待审核
               </el-tag>
               <el-tag
@@ -100,15 +110,25 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="审核意见" width="200">
+          <el-table-column
+            label="审核意见"
+            width="200"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.data.suggestion }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column label="审核管理" width="150">
+          <el-table-column
+            label="审核管理"
+            width="150"
+          >
             <template slot-scope="scope">
-              <el-button size="small" type="primary" @click="lookUp(scope.row)">
+              <el-button
+                size="small"
+                type="primary"
+                @click="lookUp(scope.row)"
+              >
                 查看
               </el-button>
               <el-button
@@ -147,14 +167,26 @@
           :model="verifyForm"
           :rules="verifyFormRules"
         >
-          <el-form-item label="审核状态" prop="status">
+          <el-form-item
+            label="审核状态"
+            prop="status"
+          >
             <el-radio-group v-model="verifyForm.status">
-              <el-radio :label="0">待审核</el-radio>
-              <el-radio :label="2">审核未通过</el-radio>
-              <el-radio :label="1">审核通过</el-radio>
+              <el-radio :label="0">
+                待审核
+              </el-radio>
+              <el-radio :label="2">
+                审核未通过
+              </el-radio>
+              <el-radio :label="1">
+                审核通过
+              </el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="审核意见" prop="suggestion">
+          <el-form-item
+            label="审核意见"
+            prop="suggestion"
+          >
             <el-input
               v-model="verifyForm.suggestion"
               :rows="4"
@@ -163,9 +195,15 @@
           </el-form-item>
         </el-form>
       </div>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click.native="submitForm('verifyFormRef')">
+        <el-button
+          type="primary"
+          @click.native="submitForm('verifyFormRef')"
+        >
           提 交
         </el-button>
       </span>
@@ -179,8 +217,14 @@
       width="80%"
     >
       <el-tabs v-model="activeName">
-        <el-tab-pane label="认证信息" name="first">
-          <el-form label-width="160px" size="mini">
+        <el-tab-pane
+          label="认证信息"
+          name="first"
+        >
+          <el-form
+            label-width="160px"
+            size="mini"
+          >
             <el-row>
               <!--左侧-->
               <el-col :span="12">
@@ -204,7 +248,7 @@
                     class="avatar"
                     :src="
                       fileDomain +
-                      currentRow.data.CompanyAuthentication.contraryimageUrl
+                        currentRow.data.CompanyAuthentication.contraryimageUrl
                     "
                   />
                 </el-form-item>
@@ -219,7 +263,7 @@
                   <el-input
                     v-text="
                       currentRow.data.CompanyAuthentication.businessduration +
-                      '年'
+                        '年'
                     "
                   />
                 </el-form-item>
@@ -258,7 +302,7 @@
                     class="avatar"
                     :src="
                       fileDomain +
-                      currentRow.data.CompanyAuthentication.businesslicense
+                        currentRow.data.CompanyAuthentication.businesslicense
                     "
                   />
                 </el-form-item>
@@ -281,8 +325,14 @@
             </el-row>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="实验室信息" name="third">
-          <el-form label-width="120px" size="mini">
+        <el-tab-pane
+          label="实验室信息"
+          name="third"
+        >
+          <el-form
+            label-width="120px"
+            size="mini"
+          >
             <el-row>
               <!--左侧-->
               <el-col :span="12">
@@ -297,11 +347,26 @@
                     disabled
                     style="width: 100px"
                   >
-                    <el-option label="国家级" value="1" />
-                    <el-option label="省级" value="2" />
-                    <el-option label="地市级" value="3" />
-                    <el-option label="县(区)级" value="4" />
-                    <el-option label="其他" value="5" />
+                    <el-option
+                      label="国家级"
+                      value="1"
+                    />
+                    <el-option
+                      label="省级"
+                      value="2"
+                    />
+                    <el-option
+                      label="地市级"
+                      value="3"
+                    />
+                    <el-option
+                      label="县(区)级"
+                      value="4"
+                    />
+                    <el-option
+                      label="其他"
+                      value="5"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="实验室地址">
@@ -333,7 +398,7 @@
                     class="avatar"
                     :src="
                       fileDomain +
-                      currentRow.data.Laboratory.laboratoryInfo.imgsrc
+                        currentRow.data.Laboratory.laboratoryInfo.imgsrc
                     "
                   />
                 </el-form-item>
@@ -350,9 +415,18 @@
                     placeholder="请选择实验室类别"
                     style="width: 100px"
                   >
-                    <el-option label="主实验室" value="1" />
-                    <el-option label="辅助实验室" value="2" />
-                    <el-option label="其他" value="3" />
+                    <el-option
+                      label="主实验室"
+                      value="1"
+                    />
+                    <el-option
+                      label="辅助实验室"
+                      value="2"
+                    />
+                    <el-option
+                      label="其他"
+                      value="3"
+                    />
                   </el-select>
                 </el-form-item>
 
@@ -443,7 +517,7 @@
                     class="avatar"
                     :src="
                       fileDomain +
-                      currentRow.data.Laboratory.laboratoryInfo.imgsrc1
+                        currentRow.data.Laboratory.laboratoryInfo.imgsrc1
                     "
                   />
                 </el-form-item>
@@ -452,9 +526,17 @@
           </el-form>
         </el-tab-pane>
       </el-tabs>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click.native="dialogFormVisible = false">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="dialogFormVisible = false">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click.native="dialogFormVisible = false"
+        >
           确 定
         </el-button>
       </div>

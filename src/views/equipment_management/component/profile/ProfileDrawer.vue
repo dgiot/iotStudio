@@ -7,15 +7,27 @@
     width="60%"
     @close="$parent.parserTable = !parserTable"
   >
-    <div slot="title" class="header-title">
-      <el-button type="primary" @click.native.prevent="addParse(parserTables)">
+    <div
+      slot="title"
+      class="header-title"
+    >
+      <el-button
+        type="primary"
+        @click.native.prevent="addParse(parserTables)"
+      >
         {{ $translateTitle('product.newlyadded') }}
       </el-button>
-      <el-button type="success" @click.native.prevent="saveParse(parserTables)">
+      <el-button
+        type="success"
+        @click.native.prevent="saveParse(parserTables)"
+      >
         {{ $translateTitle('product.preservation') }}
       </el-button>
     </div>
-    <el-table :data="parserTables" size="mini">
+    <el-table
+      :data="parserTables"
+      size="mini"
+    >
       <el-table-column
         align="center"
         label="uid"
@@ -33,7 +45,10 @@
         width="140"
       >
         <template #default="{ row }">
-          <el-popover placement="top" trigger="hover">
+          <el-popover
+            placement="top"
+            trigger="hover"
+          >
             <p>
               {{ $translateTitle('product.englishtitle') }}: {{ row.enname }}
             </p>
@@ -57,8 +72,13 @@
               {{ $translateTitle('product.class') }}:
               {{ row.field }}
             </p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ row.name }}</el-tag>
+            <div
+              slot="reference"
+              class="name-wrapper"
+            >
+              <el-tag size="medium">
+                {{ row.name }}
+              </el-tag>
             </div>
           </el-popover>
         </template>
@@ -78,7 +98,10 @@
         width="100"
       >
         <template #default="{ row }">
-          <el-switch v-model="row.visible" disabled />
+          <el-switch
+            v-model="row.visible"
+            disabled
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -88,7 +111,10 @@
         width="200"
       >
         <template slot-scope="scope">
-          <el-button type="text" @click="editParse(scope.$index, scope.row)">
+          <el-button
+            type="text"
+            @click="editParse(scope.$index, scope.row)"
+          >
             {{ $translateTitle('concentrator.edit') }}
           </el-button>
           <el-button

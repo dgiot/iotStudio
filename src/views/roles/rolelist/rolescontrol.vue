@@ -147,11 +147,17 @@
           />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="roleEdit = false">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click.native="updaterole">
+        <el-button
+          type="primary"
+          @click.native="updaterole"
+        >
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </div>

@@ -22,7 +22,7 @@
               clearable
               :placeholder="
                 $translateTitle('alert.please enter') +
-                $translateTitle('alert.product name')
+                  $translateTitle('alert.product name')
               "
               @clear="Industry"
             >
@@ -57,7 +57,11 @@
       size="mini"
       style="width: 100%"
     >
-      <el-table-column label="objectId" prop="objectId" width="140" />
+      <el-table-column
+        label="objectId"
+        prop="objectId"
+        width="140"
+      />
       <el-table-column
         :label="$translateTitle('developer.Templatename')"
         prop="name"
@@ -92,7 +96,10 @@
       <el-button @click="close">
         {{ $translateTitle('category.cancel') }}
       </el-button>
-      <el-button type="primary" @click.native="save(form.mark)">
+      <el-button
+        type="primary"
+        @click.native="save(form.mark)"
+      >
         {{ $translateTitle('category.submit') }}
       </el-button>
     </template>

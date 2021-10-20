@@ -1,5 +1,8 @@
 <template>
-  <div class="logs logs-container" :class="{ 'vab-fullscreen': isFullscreen }">
+  <div
+    class="logs logs-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
+  >
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form
@@ -44,8 +47,14 @@
 
             <el-popover trigger="hover">
               <el-checkbox-group v-model="checkList">
-                <vue-draggable v-bind="dragOptions" :list="logcolumns">
-                  <div v-for="(item, index) in logcolumns" :key="item + index">
+                <vue-draggable
+                  v-bind="dragOptions"
+                  :list="logcolumns"
+                >
+                  <div
+                    v-for="(item, index) in logcolumns"
+                    :key="item + index"
+                  >
                     <vab-icon icon="drag-drop-line" />
                     <el-checkbox
                       :disabled="item.disableCheck === true"
@@ -85,7 +94,12 @@
     >
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-descriptions border class="margin-top" :column="2" :size="size">
+          <el-descriptions
+            border
+            class="margin-top"
+            :column="2"
+            :size="size"
+          >
             <el-descriptions-item
               v-for="(item, key, index) in props.row.body"
               v-show="key != 'elm'"

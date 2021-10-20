@@ -1,7 +1,13 @@
 <template>
-  <el-dropdown @command="handleCommand" @visible-change="handleVisibleChange">
+  <el-dropdown
+    @command="handleCommand"
+    @visible-change="handleVisibleChange"
+  >
     <span class="avatar-dropdown">
-      <el-avatar class="user-avatar" :src="avatar" />
+      <el-avatar
+        class="user-avatar"
+        :src="avatar"
+      />
       <div class="user-name">
         <span class="hidden-xs-only">{{ username }}</span>
         <vab-icon

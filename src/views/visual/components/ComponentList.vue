@@ -1,5 +1,8 @@
 <template>
-  <div class="component-list" @dragstart="handleDragStart">
+  <div
+    class="component-list"
+    @dragstart="handleDragStart"
+  >
     <div
       v-for="(item, index) in componentList"
       :key="index"
@@ -7,7 +10,10 @@
       :data-index="index"
       draggable
     >
-      <span class="iconfont" :class="'icon-' + item.icon"></span>
+      <span
+        class="iconfont"
+        :class="'icon-' + item.icon"
+      ></span>
       <span>{{ item.label }}</span>
     </div>
   </div>

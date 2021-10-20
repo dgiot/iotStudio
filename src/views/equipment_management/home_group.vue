@@ -15,7 +15,10 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click.native="searchProduct(0)">
+          <el-button
+            type="primary"
+            @click.native="searchProduct(0)"
+          >
             {{ $translateTitle('developer.search') }}
           </el-button>
         </el-form-item>
@@ -28,7 +31,10 @@
             {{ $translateTitle('product.createproduct') }}
           </el-button>
 
-          <el-button type="primary" @click.native="addgroup">
+          <el-button
+            type="primary"
+            @click.native="addgroup"
+          >
             <!-- 新增 -->
             {{ $translateTitle('product.newlyadded') }}
           </el-button>
@@ -49,7 +55,10 @@
           :header-cell-style="{ 'text-align': 'center' }"
           style="width: 100%"
         >
-          <el-table-column label="ProductID" prop="objectId" />
+          <el-table-column
+            label="ProductID"
+            prop="objectId"
+          />
           <el-table-column :label="$translateTitle('product.productname')">
             <template slot-scope="scope">
               <span>{{ scope.row.name }}</span>
@@ -61,7 +70,10 @@
             </template>
           </el-table-column>
           <el-table-column :label="$translateTitle('product.nodetype')">
-            <template slot-scope="scope" style="text-align: center">
+            <template
+              slot-scope="scope"
+              style="text-align: center"
+            >
               <span v-if="scope.row.nodeType == 1">
                 {{ $translateTitle('product.gateway') }}
               </span>
@@ -155,7 +167,11 @@
                     {{ $translateTitle('developer.determine') }}
                   </el-button>
                 </div>
-                <el-button slot="reference" size="mini" type="danger">
+                <el-button
+                  slot="reference"
+                  size="mini"
+                  type="danger"
+                >
                   {{ $translateTitle('developer.delete') }}
                 </el-button>
               </el-popover>
@@ -170,7 +186,10 @@
               >编 辑</el-link> -->
         </el-table>
       </div>
-      <div class="elpagination" style="margin-top: 20px">
+      <div
+        class="elpagination"
+        style="margin-top: 20px"
+      >
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
           :page-size="length"
@@ -208,12 +227,19 @@
               />
             </div>
 
-            <el-form ref="ruleForm" :model="form" :rules="rules">
+            <el-form
+              ref="ruleForm"
+              :model="form"
+              :rules="rules"
+            >
               <el-form-item
                 :label="$translateTitle('product.productname')"
                 prop="name"
               >
-                <el-input v-model="form.name" autocomplete="off" />
+                <el-input
+                  v-model="form.name"
+                  autocomplete="off"
+                />
               </el-form-item>
               <!-- <el-form-item label="产品分组" prop="devType"> -->
               <el-form-item
@@ -221,7 +247,10 @@
                 prop="devType"
               >
                 <!-- <el-form-item :label=" $translateTitle('product.productidentification')" prop="devType"> -->
-                <el-input v-model="form.devType" autocomplete="off" />
+                <el-input
+                  v-model="form.devType"
+                  autocomplete="off"
+                />
               </el-form-item>
 
               <!--        <el-form-item :label=" $translateTitle('product.classification')" prop="category">
@@ -274,7 +303,10 @@
             </el-form>
           </div>
           <!--节点类型-->
-          <div class="contenttwo" style="margin-top: 20px">
+          <div
+            class="contenttwo"
+            style="margin-top: 20px"
+          >
             <div style="display: flex">
               <span>{{ $translateTitle('product.nodetype') }}</span>
               <p
@@ -288,12 +320,19 @@
               />
             </div>
 
-            <el-form ref="ruleForm" :model="form" :rules="rules">
+            <el-form
+              ref="ruleForm"
+              :model="form"
+              :rules="rules"
+            >
               <el-form-item
                 :label="$translateTitle('product.nodetype')"
                 prop="nodeType"
               >
-                <el-radio-group v-model="form.nodeType" @change="changeNode">
+                <el-radio-group
+                  v-model="form.nodeType"
+                  @change="changeNode"
+                >
                   <el-radio :label="0">
                     {{ $translateTitle('product.equipment') }}
                   </el-radio>
@@ -315,7 +354,10 @@
             </el-form>
           </div>
           <!--连网方式-->
-          <div class="contentthird" style="margin-top: 20px">
+          <div
+            class="contentthird"
+            style="margin-top: 20px"
+          >
             <div style="display: flex">
               <span>
                 {{ $translateTitle('product.networkinganddescription') }}
@@ -330,13 +372,17 @@
                 "
               />
             </div>
-            <el-form ref="ruleForm" :model="form" :rules="rules">
+            <el-form
+              ref="ruleForm"
+              :model="form"
+              :rules="rules"
+            >
               <el-form-item
                 :label="
                   $translateTitle('product.networking') +
-                  '(共' +
-                  channel.length +
-                  '项)'
+                    '(共' +
+                    channel.length +
+                    '项)'
                 "
                 prop="netType"
               >
@@ -355,7 +401,11 @@
               </el-form-item>
               <!-- <el-form-item label="产品模型"> -->
               <el-form-item :label="$translateTitle('product.productmodel')">
-                <img v-if="imageUrl" class="avatar" :src="imageUrl" />
+                <img
+                  v-if="imageUrl"
+                  class="avatar"
+                  :src="imageUrl"
+                />
                 <i
                   v-else
                   v-loading="loading"
@@ -396,14 +446,23 @@
                 :label="$translateTitle('developer.describe')"
                 prop="desc"
               >
-                <el-input v-model="form.desc" type="textarea" />
+                <el-input
+                  v-model="form.desc"
+                  type="textarea"
+                />
               </el-form-item>
             </el-form>
           </div>
         </div>
 
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click.native="submitForm('ruleForm')">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            type="primary"
+            @click.native="submitForm('ruleForm')"
+          >
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="dialogFormVisible = false">
@@ -456,8 +515,14 @@
             </el-col>
           </el-row>
         </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click.native="addDeviceGroup()">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            type="primary"
+            @click.native="addDeviceGroup()"
+          >
             <!-- 新增 -->
             {{ $translateTitle('product.newlyadded') }}
           </el-button>
@@ -478,7 +543,10 @@
         :visible.sync="importDialogShow"
         width="25%"
       >
-        <el-form ref="uploadProForm" :model="formPro">
+        <el-form
+          ref="uploadProForm"
+          :model="formPro"
+        >
           <!--   <el-row :gutter="20">
   <el-col :span="12">
      <el-input  placeholder=" " size="small" v-model="formPro.name" :disabled="true"> </el-input>
@@ -501,7 +569,11 @@
             :on-success="handleUploadSuccess"
             :with-credentials="true"
           >
-            <el-button slot="trigger" size="small" type="primary">
+            <el-button
+              slot="trigger"
+              size="small"
+              type="primary"
+            >
               <!-- 选择文件 -->
               {{ $translateTitle('application.selectfiles') }}
             </el-button>
@@ -509,7 +581,10 @@
 
           <!-- </el-row> -->
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button
             class="btn-left"
             size="small"

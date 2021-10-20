@@ -1,6 +1,13 @@
 <template>
-  <div class="topoBase" :class="{ 'topoBase-fullscreen': isDevice }">
-    <div id="kevCurrent" :key="konvaKey" class="konvaTest"></div>
+  <div
+    class="topoBase"
+    :class="{ 'topoBase-fullscreen': isDevice }"
+  >
+    <div
+      id="kevCurrent"
+      :key="konvaKey"
+      class="konvaTest"
+    ></div>
   </div>
 </template>
 

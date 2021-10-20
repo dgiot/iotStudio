@@ -78,7 +78,7 @@
             <el-form-item
               :label="
                 $translateTitle('rule.rule') +
-                $translateTitle('product.identifier')
+                  $translateTitle('product.identifier')
               "
             >
               <el-select

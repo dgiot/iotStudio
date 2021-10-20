@@ -1,6 +1,8 @@
 <!-- 组件说明 -->
 <template>
-  <div class="topics">{{ pageTitle }}</div>
+  <div class="topics">
+    {{ pageTitle }}
+  </div>
 </template>
 
 <script>

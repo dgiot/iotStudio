@@ -7,7 +7,10 @@
  * @Description:
 -->
 <template>
-  <el-menu-item :index="itemOrMenu.path" @click.native="handleLink">
+  <el-menu-item
+    :index="itemOrMenu.path"
+    @click.native="handleLink"
+  >
     <vab-icon
       v-if="itemOrMenu.meta && itemOrMenu.meta.icon"
       :icon="itemOrMenu.meta.icon"

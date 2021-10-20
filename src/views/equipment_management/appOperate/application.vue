@@ -19,7 +19,10 @@
         <el-row :gutter="24">
           <el-col :span="4">
             <div class="grid-content bg-purple">
-              <i class="iconfont icon-yingyong" style="color: #666666" />
+              <i
+                class="iconfont icon-yingyong"
+                style="color: #666666"
+              />
               <p>{{ item.name }}</p>
             </div>
           </el-col>
@@ -51,13 +54,15 @@
                     <i class="el-icon-question" />
                   </el-tooltip>
                 </dt>
-                <dd v-if="item.isshow">{{ item.tag.appconfig.secret }}</dd>
+                <dd v-if="item.isshow">
+                  {{ item.tag.appconfig.secret }}
+                </dd>
                 <dd v-if="!item.isshow">
                   <i v-if="item.tag.appconfig.secret">
                     {{
                       item.tag.appconfig.secret.substr(0, 4) +
-                      '********************' +
-                      item.tag.appconfig.secret.substr(24)
+                        '********************' +
+                        item.tag.appconfig.secret.substr(24)
                     }}
                     <el-button
                       round
@@ -75,8 +80,12 @@
                   {{ $translateTitle('task.Applicationname') }}
                   <i class="el-icon-s-promotion" />
                 </dt>
-                <dd v-if="item.name">{{ item.name }}</dd>
-                <dd v-else>-</dd>
+                <dd v-if="item.name">
+                  {{ item.name }}
+                </dd>
+                <dd v-else>
+                  -
+                </dd>
               </dl>
             </div>
           </el-col>
@@ -89,13 +98,19 @@
                 </strong>
               </p>
               <p class="editor">
-                <el-link type="primary" @click.native="updateapp(item)">
+                <el-link
+                  type="primary"
+                  @click.native="updateapp(item)"
+                >
                   <!-- 修改应用 -->
                   {{ $translateTitle('developer.Modifyapplication') }}
                 </el-link>
               </p>
               <p class="editor">
-                <el-link type="primary" @click.native="nodeDeployment(item)">
+                <el-link
+                  type="primary"
+                  @click.native="nodeDeployment(item)"
+                >
                   <!-- 节点部署 -->
                   {{ $translateTitle('developer.Nodedeployment') }}
                 </el-link>
@@ -138,7 +153,12 @@
         element-loading-spinner="el-icon-loading"
         :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
       >
-        <el-form ref="form" label-width="120px" :model="form" :rules="Rule">
+        <el-form
+          ref="form"
+          label-width="120px"
+          :model="form"
+          :rules="Rule"
+        >
           <!-- <el-form-item label="平台">
                 <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
                   <el-option v-for="(item,index) in selectapp" :key="index" :label="item.attributes.subtitle" :value="item.id"></el-option>
@@ -152,7 +172,7 @@
               v-model="form.desc"
               :placheholder="
                 $translateTitle('product.enter1') +
-                $translateTitle('application.applicationname')
+                  $translateTitle('application.applicationname')
               "
               style="width: 80%"
             />
@@ -176,7 +196,7 @@
               v-model="form.wordpreview"
               :placheholder="
                 $translateTitle('product.enter1') +
-                $translateTitle('product.Wordpreviewserver')
+                  $translateTitle('product.Wordpreviewserver')
               "
               style="width: 80%"
             />
@@ -188,7 +208,7 @@
               v-model="form.wordproduct"
               :placheholder="
                 $translateTitle('product.enter1') +
-                $translateTitle('product.Wordproductionserver')
+                  $translateTitle('product.Wordproductionserver')
               "
               style="width: 80%"
             />
@@ -216,7 +236,10 @@
             />
           </el-form-item>
 
-          <el-form-item label="Graphql API" prop="graphql">
+          <el-form-item
+            label="Graphql API"
+            prop="graphql"
+          >
             <el-input
               v-model="form.graphql"
               placheholder="$translateTitle('product.enter1') + url"
@@ -224,7 +247,10 @@
             />
           </el-form-item>
 
-          <el-form-item label="Restful API" prop="rest">
+          <el-form-item
+            label="Restful API"
+            prop="rest"
+          >
             <el-input
               v-model="form.rest"
               placheholder="$translateTitle('product.enter1') + url"
@@ -237,19 +263,25 @@
               v-model="form.home"
               :placheholder="
                 $translateTitle('product.enter1') +
-                $translateTitle('developer.path')
+                  $translateTitle('developer.path')
               "
               style="width: 80%"
             />
           </el-form-item>
         </el-form>
       </div>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="dialogVisible = false">
           <!-- 取消 -->
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click.native="Define('form')">
+        <el-button
+          type="primary"
+          @click.native="Define('form')"
+        >
           <!-- 确定 -->
           {{ $translateTitle('developer.determine') }}
         </el-button>
@@ -269,18 +301,27 @@
       :close-on-click-modal="false"
       :title="
         $translateTitle('product.modify') +
-        $translateTitle('product.Applicationinformation')
+          $translateTitle('product.Applicationinformation')
       "
       :visible.sync="update"
       width="55%"
     >
       <div class="block">
-        <el-form ref="form1" label-width="170px" :model="form1" :rules="Rule">
+        <el-form
+          ref="form1"
+          label-width="170px"
+          :model="form1"
+          :rules="Rule"
+        >
           <!-- <el-form-item label="应用名称" prop="desc">
             <el-input v-model="form1.desc" style="width:80%" />
           </el-form-item> -->
           <el-form-item :label="$translateTitle('application.Accesskey')">
-            <el-input v-model="form1.secret" readonly style="width: 80%">
+            <el-input
+              v-model="form1.secret"
+              readonly
+              style="width: 80%"
+            >
               <el-button
                 slot="append"
                 icon="el-icon-refresh-right"
@@ -307,7 +348,7 @@
               v-model="form1.wordpreview"
               :placheholder="
                 $translateTitle('product.enter1') +
-                $translateTitle('product.Wordpreviewserver')
+                  $translateTitle('product.Wordpreviewserver')
               "
               style="width: 80%"
             />
@@ -319,7 +360,7 @@
               v-model="form1.wordproduct"
               :placheholder="
                 $translateTitle('product.enter1') +
-                $translateTitle('product.Wordproductionserver')
+                  $translateTitle('product.Wordproductionserver')
               "
               style="width: 80%"
             />
@@ -347,7 +388,10 @@
             />
           </el-form-item>
 
-          <el-form-item label="Graphql API" prop="graphql">
+          <el-form-item
+            label="Graphql API"
+            prop="graphql"
+          >
             <el-input
               v-model="form1.graphql"
               placheholder="$translateTitle('product.enter1') + url"
@@ -355,7 +399,10 @@
             />
           </el-form-item>
 
-          <el-form-item label="Restful API" prop="rest">
+          <el-form-item
+            label="Restful API"
+            prop="rest"
+          >
             <el-input
               v-model="form1.rest"
               placheholder="$translateTitle('product.enter1') + url"
@@ -368,19 +415,25 @@
               v-model="form1.home"
               :placheholder="
                 $translateTitle('product.enter1') +
-                $translateTitle('developer.path')
+                  $translateTitle('developer.path')
               "
               style="width: 80%"
             />
           </el-form-item>
         </el-form>
       </div>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="update = false">
           <!-- 取消 -->
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click.native="updatedDefine('form1')">
+        <el-button
+          type="primary"
+          @click.native="updatedDefine('form1')"
+        >
           <!-- 确定 -->
           {{ $translateTitle('developer.determine') }}
         </el-button>

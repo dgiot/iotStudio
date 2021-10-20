@@ -6,8 +6,16 @@
     width="300px"
     @close="close"
   >
-    <el-form ref="form" label-width="80px" :model="form" :rules="rules">
-      <el-form-item :label="$translateTitle('category.name')" prop="name">
+    <el-form
+      ref="form"
+      label-width="80px"
+      :model="form"
+      :rules="rules"
+    >
+      <el-form-item
+        :label="$translateTitle('category.name')"
+        prop="name"
+      >
         <el-input v-model.trim="form.name" />
       </el-form-item>
       <el-form-item
@@ -15,14 +23,21 @@
         :label="$translateTitle('category.sort')"
         prop="order"
       >
-        <el-input-number v-model="form.order" :min="0" style="width: 100%" />
+        <el-input-number
+          v-model="form.order"
+          :min="0"
+          style="width: 100%"
+        />
       </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="close">
         {{ $translateTitle('category.cancel') }}
       </el-button>
-      <el-button type="primary" @click.native="save(form.mark)">
+      <el-button
+        type="primary"
+        @click.native="save(form.mark)"
+      >
         {{ $translateTitle('category.submit') }}
       </el-button>
     </template>

@@ -4,11 +4,16 @@
     :class="['vue-countdown-component', { theme2: theme !== 1 }, { ie: isIE }]"
   >
     <template v-for="(item, index) in timeArray">
-      <div :key="index" :class="['time-box']">
+      <div
+        :key="index"
+        :class="['time-box']"
+      >
         <!-- 底层基础div -->
         <div class="base">
           {{ item }}
-          <div class="base-b">{{ timeArrayT[index] }}</div>
+          <div class="base-b">
+            {{ timeArrayT[index] }}
+          </div>
         </div>
         <!-- 翻页动画div -->
         <div
@@ -17,7 +22,9 @@
         >
           {{ timeArrayT[index] }}
         </div>
-        <div :class="['back', { anime: isAnimate[index] }]">{{ item }}</div>
+        <div :class="['back', { anime: isAnimate[index] }]">
+          {{ item }}
+        </div>
       </div>
       <!-- 文字 -->
       <div

@@ -1,10 +1,24 @@
 <template>
   <div class="register-container">
     <el-row>
-      <el-col :lg="14" :md="11" :sm="24" :xl="14" :xs="24">
-        <div style="color: transparent">占位符</div>
+      <el-col
+        :lg="14"
+        :md="11"
+        :sm="24"
+        :xl="14"
+        :xs="24"
+      >
+        <div style="color: transparent">
+          占位符
+        </div>
       </el-col>
-      <el-col :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
+      <el-col
+        :lg="9"
+        :md="12"
+        :sm="24"
+        :xl="9"
+        :xs="24"
+      >
         <el-form
           ref="registerForm"
           class="register-form"
@@ -12,7 +26,9 @@
           :rules="registerRules"
           size="mini"
         >
-          <div class="title-tips">{{ $translateTitle('注册') }}</div>
+          <div class="title-tips">
+            {{ $translateTitle('注册') }}
+          </div>
           <el-form-item prop="username">
             <el-input
               v-model.trim="form.username"
@@ -39,7 +55,10 @@
               </template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="phoneCode" style="position: relative">
+          <el-form-item
+            prop="phoneCode"
+            style="position: relative"
+          >
             <el-input
               v-model.trim="form.phoneCode"
               :placeholder="$translateTitle('请输入手机验证码')"
@@ -80,7 +99,10 @@
             </el-button>
 
             <span>
-              <router-link style="float: left" to="/login">
+              <router-link
+                style="float: left"
+                to="/login"
+              >
                 <div style="margin-top: 20px">
                   {{ $translateTitle('登录') }}
                 </div>
@@ -97,8 +119,16 @@
           </el-form-item>
         </el-form>
       </el-col>
-      <el-col :lg="1" :md="1" :sm="24" :xl="1" :xs="24">
-        <div style="color: transparent">占位符</div>
+      <el-col
+        :lg="1"
+        :md="1"
+        :sm="24"
+        :xl="1"
+        :xs="24"
+      >
+        <div style="color: transparent">
+          占位符
+        </div>
       </el-col>
     </el-row>
   </div>

@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="jsoneditor-vue"></div>
-    <div v-if="showBtns !== false" class="jsoneditor-btns">
+    <div
+      v-if="showBtns !== false"
+      class="jsoneditor-btns"
+    >
       <button
         class="json-save-btn"
         :disabled="error"

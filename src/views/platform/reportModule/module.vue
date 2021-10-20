@@ -1,7 +1,11 @@
 <template>
   <div class="module">
     <div id="editor_holder" />
-    <el-button style="margin-top: 20px" type="primary" @click="addmodule">
+    <el-button
+      style="margin-top: 20px"
+      type="primary"
+      @click="addmodule"
+    >
       保 存
     </el-button>
   </div>

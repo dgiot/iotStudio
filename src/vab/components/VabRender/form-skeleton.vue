@@ -1,7 +1,13 @@
 <template>
   <div class="form-skeleton">
-    <div v-for="item of 4" :key="item" class="form-skeleton-item">
-      <div class="form-skeleton-label skeleton-animation">xxx</div>
+    <div
+      v-for="item of 4"
+      :key="item"
+      class="form-skeleton-item"
+    >
+      <div class="form-skeleton-label skeleton-animation">
+        xxx
+      </div>
       <div class="form-skeleton-component skeleton-animation"></div>
     </div>
   </div>

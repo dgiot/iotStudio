@@ -38,7 +38,10 @@
       </vab-query-form-top-panel>
     </vab-query-form>
 
-    <el-table v-loading="listLoading" :data="list">
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+    >
       <el-table-column
         align="center"
         label="日志类型"
@@ -69,7 +72,11 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="登录IP" prop="ip" />
+      <el-table-column
+        align="center"
+        label="登录IP"
+        prop="ip"
+      />
       <el-table-column
         align="center"
         label="访问时间"

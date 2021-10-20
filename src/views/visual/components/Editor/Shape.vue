@@ -10,7 +10,10 @@
       class="iconfont icon-xiangyouxuanzhuan"
       @mousedown="handleRotate"
     ></span>
-    <span v-show="element.isLock" class="iconfont icon-suo"></span>
+    <span
+      v-show="element.isLock"
+      class="iconfont icon-suo"
+    ></span>
     <div
       v-for="item in isActive() ? pointList : []"
       :key="item"

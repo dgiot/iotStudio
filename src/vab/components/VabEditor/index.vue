@@ -1,5 +1,8 @@
 <template>
-  <div class="VabEditor" :style="styleObject"></div>
+  <div
+    class="VabEditor"
+    :style="styleObject"
+  ></div>
 </template>
 
 <script>

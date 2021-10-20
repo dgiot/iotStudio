@@ -11,7 +11,10 @@
           size="small"
           @row-click="getDetailmenu"
         >
-          <el-table-column align="center" :label="$translateTitle('user.name')">
+          <el-table-column
+            align="center"
+            :label="$translateTitle('user.name')"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.data.name }}</span>
               <span>( {{ scope.row.key }} )</span>
@@ -106,7 +109,10 @@
                 node-key="name"
                 show-checkbox
               >
-                <span slot-scope="{ node }" class="custom-tree-node">
+                <span
+                  slot-scope="{ node }"
+                  class="custom-tree-node"
+                >
                   <span>{{ node.label }}</span>
                 </span>
               </el-tree>
@@ -194,14 +200,23 @@
           </p>
         </div>
         <div class="tags">
-          <el-form ref="form" label-width="170px" :model="form" :rules="Rule">
+          <el-form
+            ref="form"
+            label-width="170px"
+            :model="form"
+            :rules="Rule"
+          >
             <!-- <el-form-item label="平台">
                     <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
                       <el-option v-for="(item,index) in selectapp" :key="index" :label="item.attributes.subtitle" :value="item.id"></el-option>
                    </el-select>
               </el-form-item>-->
             <el-form-item :label="$translateTitle('application.Accesskey')">
-              <el-input v-model="form.secret" readonly style="width: 80%">
+              <el-input
+                v-model="form.secret"
+                readonly
+                style="width: 80%"
+              >
                 <el-button
                   slot="append"
                   icon="el-icon-refresh-right"
@@ -228,7 +243,7 @@
                 v-model="form.wordpreview"
                 :placheholder="
                   $translateTitle('product.enter1') +
-                  $translateTitle('product.Wordpreviewserver')
+                    $translateTitle('product.Wordpreviewserver')
                 "
                 style="width: 80%"
               />
@@ -240,7 +255,7 @@
                 v-model="form.wordproduct"
                 :placheholder="
                   $translateTitle('product.enter1') +
-                  $translateTitle('product.Wordproductionserver')
+                    $translateTitle('product.Wordproductionserver')
                 "
                 style="width: 80%"
               />
@@ -267,7 +282,10 @@
               />
             </el-form-item>
 
-            <el-form-item label="Graphql API" prop="graphql">
+            <el-form-item
+              label="Graphql API"
+              prop="graphql"
+            >
               <el-input
                 v-model="form.graphql"
                 :placheholder="$translateTitle('product.enter1') + 'url'"
@@ -275,7 +293,10 @@
               />
             </el-form-item>
 
-            <el-form-item label="Restful API" prop="rest">
+            <el-form-item
+              label="Restful API"
+              prop="rest"
+            >
               <el-input
                 v-model="form.rest"
                 :placheholder="$translateTitle('product.enter1') + 'url'"
@@ -288,7 +309,7 @@
                 v-model="form.home"
                 :placheholder="
                   $translateTitle('product.enter1') +
-                  $translateTitle('developer.path')
+                    $translateTitle('developer.path')
                 "
                 style="width: 80%"
               />

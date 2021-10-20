@@ -6,8 +6,12 @@
     @update:visible="$emit('change', $event)"
   >
     <el-radio-group v-model="showType">
-      <el-radio label="vab-render">vab-render方式</el-radio>
-      <el-radio label="vue-ele-form">vue-ele-form方式</el-radio>
+      <el-radio label="vab-render">
+        vab-render方式
+      </el-radio>
+      <el-radio label="vue-ele-form">
+        vue-ele-form方式
+      </el-radio>
     </el-radio-group>
     <prism-editor
       class="vab-render-code"
@@ -17,7 +21,10 @@
       :value="code"
     />
     <div style="margin-top: 20px; text-align: center">
-      <el-button type="primary" @click.native="handleCopyCode">
+      <el-button
+        type="primary"
+        @click.native="handleCopyCode"
+      >
         复制代码
       </el-button>
       <!-- 下载 TODO 检测移入事件 -->
@@ -31,7 +38,9 @@
           下载文件
         </el-link>
       </el-button>
-      <el-button @click.native="$emit('change', false)">关闭弹窗</el-button>
+      <el-button @click.native="$emit('change', false)">
+        关闭弹窗
+      </el-button>
     </div>
   </el-dialog>
 </template>

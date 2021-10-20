@@ -1,7 +1,7 @@
 <template>
   <div
-    class="konva"
     :class="{ 'vab-fullscreen': isFullscreen, 'konva-fullscreen': isDevice }"
+    class="konva"
   >
     <!--    <vab-xterm />-->
     <el-container class="konva-container">
@@ -16,23 +16,23 @@
         <el-row :gutter="gutter.gutter">
           <!--       明诚发布注释18 到 27 行-->
           <el-col
-            class="hidden-xs-only konva-container-main-allocation"
             :lg="isDevice ? 0 : 4"
             :md="isDevice ? 0 : 6"
             :sm="isDevice ? 0 : 6"
             :xl="isDevice ? 0 : 3"
             :xs="0"
+            class="hidden-xs-only konva-container-main-allocation"
           >
             <Topo-allocation />
           </el-col>
 
           <el-col
-            class="konva-container-main-baseCol"
             :lg="isDevice ? 24 : gutter.lg"
             :md="isDevice ? 24 : gutter.md"
             :sm="isDevice ? 24 : gutter.sm"
             :xl="isDevice ? 24 : gutter.xl"
             :xs="isDevice ? 24 : gutter.xs"
+            class="konva-container-main-baseCol"
           >
             <el-container class="konva-container-baseCol-baseContainer">
               <Topo-base ref="topobase" />
@@ -45,16 +45,19 @@
             </el-container>
           </el-col>
           <el-col
-            class="hidden-xs-only"
-            hidden-xs-only
             :lg="isDevice ? 0 : 5"
             :md="isDevice ? 0 : 6"
             :sm="isDevice ? 0 : 6"
             :xl="isDevice ? 0 : 3"
             :xs="0"
+            class="hidden-xs-only"
+            hidden-xs-only
           >
             <el-aside class="konva-container-main-operationsSide">
-              <TopoOperation ref="operation" @upconfig="saveKonvaitem" />
+              <TopoOperation
+                ref="operation"
+                @upconfig="saveKonvaitem"
+              />
             </el-aside>
           </el-col>
         </el-row>
@@ -66,11 +69,11 @@
   import 'element-ui/lib/theme-chalk/display.css'
   import { requireModule } from '@/utils/file'
   import { mapGetters, mapMutations } from 'vuex'
-  import { uuid } from '@/utils'
+  import { isBase64, uuid } from '@/utils'
   import { createState } from '@/utils/konva'
-  import { isBase64, isImage } from '@/utils'
   import { _getTopo } from '@/api/Topo'
   import { putProduct, queryProduct } from '@/api/Product'
+
   export default {
     components: {
       ...requireModule(require.context('./components', true, /\.vue$/)),
@@ -125,7 +128,7 @@
       this.$dgiotBus.$emit(
         'MqttUnbscribe',
         this.$dgiotBus.topicKey(this.router + this.topotopic),
-        this.topotopic
+        this.topotopic,
       )
     },
     created() {
@@ -230,9 +233,10 @@
             }
           })
         }
-        _this.stage.find('Transformer').map((_Transformer) => {
-          console.log(_Transformer, '_Transformer')
-        })
+        _this.stage.find('Transformer')
+          .map((_Transformer) => {
+            console.log(_Transformer, '_Transformer')
+          })
         const tabInfo = {
           topoid: topoid,
           lab: lab,
@@ -242,7 +246,7 @@
         }
         console.groupCollapsed(
           '%cTopo delete info',
-          'color:#009a61; font-size: 28px; font-weight: 300'
+          'color:#009a61; font-size: 28px; font-weight: 300',
         )
         console.table(tabInfo)
         console.groupEnd()
@@ -253,11 +257,13 @@
         Layer.batchDraw()
         _this.$refs.topobase.createTopo(
           _this.stage.toJSON(),
-          moment(new Date()).valueOf()
+          moment(new Date())
+            .valueOf(),
         )
         _this.setGraphNow('')
-        if (node.attrs.id == _this.$refs['operation'].Shapeconfig.attrs.id)
+        if (node.attrs.id == _this.$refs['operation'].Shapeconfig.attrs.id) {
           _this.$refs['operation'].Shapeconfig = []
+        }
         _this.updataTopo(this.productid)
       },
       async updataTopo(productid = '') {
@@ -274,15 +280,22 @@
         await putProduct(this.productid, params)
           .then((res) => {
             // this.handleCloseSub()
-            if (productid)
+            if (productid) {
               this.$message.success(this.$translateTitle('产品组态更新成功'))
+            }
           })
           .catch((e) => {
             this.$message.error(this.$translateTitle(`${e.error}`))
           })
       },
       // saveKonvaitem
-      saveKonvaitem(config, ShapeConfig = { index: 1, opacity: 1 }) {
+      saveKonvaitem(
+        config,
+        ShapeConfig = {
+          index: 1,
+          opacity: 1,
+        },
+      ) {
         // 首先找到他的类型
         const type = config.className
         let _this = this
@@ -318,7 +331,7 @@
                 duration: 1,
                 zIndex: ShapeConfig.zIndex,
                 easing: Konva.Easings.ElasticEaseOut,
-              }).play()
+              }).play(),
             )
           }
         })
@@ -338,7 +351,7 @@
                 duration: 1,
                 zIndex: ShapeConfig.zIndex,
                 easing: Konva.Easings.ElasticEaseOut,
-              }).play()
+              }).play(),
             )
           }
         })
@@ -352,7 +365,7 @@
                 Opacity: 0.8,
                 duration: 1,
                 easing: Konva.Easings.ElasticEaseOut,
-              }).play()
+              }).play(),
             )
           }
         })
@@ -366,7 +379,7 @@
                 Opacity: 0.8,
                 duration: 1,
                 easing: Konva.Easings.ElasticEaseOut,
-              }).play()
+              }).play(),
             )
           }
         })
@@ -383,7 +396,8 @@
         }
         _this.$refs.topobase.createTopo(
           _this.stage.toJSON(),
-          moment(new Date()).valueOf()
+          moment(new Date())
+            .valueOf(),
         )
         // console.clear()
         console.info(`updata type is ${_this.kovaUpType}`)
@@ -416,7 +430,8 @@
         Layer.batchDraw()
         _this.$refs.topobase.createTopo(
           _this.stage.toJSON(),
-          moment(new Date()).valueOf()
+          moment(new Date())
+            .valueOf(),
         )
         // 更新到数据库
         // this.upTopo()
@@ -445,12 +460,18 @@
         if (_this.$route.query.type == 'device') {
           _this.productid = _this.$route.query.deviceid
         }
-        const { productid, devaddr = undefined } = _this.$route.query
+        const {
+          productid,
+          devaddr = undefined,
+        } = _this.$route.query
         let params = {
           productid: productid,
           devaddr: devaddr,
         }
-        const { message = '', data } = await _getTopo(params)
+        const {
+          message = '',
+          data,
+        } = await _getTopo(params)
         // 绘制前不光需要获取到组态数据，还需要获取产品数据
         const { results = [] } = await queryProduct({
           where: { objectId: _this.$route.query.productid },
@@ -461,7 +482,7 @@
           // console.log(this.$refs['edrawer'].$refs, 'edrawer')
           _this.$refs['operation']
             ? (_this.$refs['operation'].productconfig = results[0])
-            : console.log(" _this.$refs['operation']", _this.$refs['operation'])
+            : console.log(' _this.$refs[\'operation\']', _this.$refs['operation'])
           console.error(data.Stage.attrs.id)
           _this.globalStageid = data.Stage.attrs.id
           _this.createKonva(data, _this.globalStageid, 'create')
@@ -509,7 +530,7 @@
                       node: shape,
                       duration: 1,
                       easing: Konva.Easings.ElasticEaseOut,
-                    }).play()
+                    }).play(),
                   )
                 } else {
                   updataId.push(i.id)
@@ -588,13 +609,16 @@
           const type = _this.flag
           console.log('params', _this.drawParams)
           const _group = _this.stage.find('Group')[0]
-          const { offsetX, offsetY } = e.evt
+          const {
+            offsetX,
+            offsetY,
+          } = e.evt
           var state = createState(
             type,
             offsetX,
             offsetY,
             color,
-            _this.drawParams
+            _this.drawParams,
           )
           console.log('createState', state)
           _group.add(state)
@@ -604,7 +628,8 @@
           _this.setDraw(false)
           _this.$refs.topobase.createTopo(
             _this.stage.toJSON(),
-            moment(new Date()).valueOf()
+            moment(new Date())
+              .valueOf(),
           )
           _this.updataTopo()
         })
@@ -631,11 +656,12 @@
               console.log(e, 'Text dblclick')
               console.log(_this.stage.find('Transformer'), _this.stage.find())
               _this.stage.find('Transformer')?.length
-                ? _this.stage.find('Transformer').destroy()
+                ? _this.stage.find('Transformer')
+                  .destroy()
                 : console.log(
-                    "_this.stage.find('Transformer')",
-                    _this.stage.find('Transformer')
-                  )
+                  '_this.stage.find(\'Transformer\')',
+                  _this.stage.find('Transformer'),
+                )
               // 在画布上创建具有绝对位置的textarea
 
               // 首先，我们需要为textarea找到位置
@@ -644,7 +670,8 @@
               let textPosition = this.getAbsolutePosition()
 
               // 然后让我们在页面上找到stage容器的位置
-              let stageBox = _this.stage.container().getBoundingClientRect()
+              let stageBox = _this.stage.container()
+                .getBoundingClientRect()
 
               // 因此textarea的位置将是上面位置的和
               console.log('eeeeeeeeeeeeeeeee', e)
@@ -776,7 +803,7 @@
               e.target.x(),
               e.target.y(),
               id,
-              e
+              e,
             )
             node.attrs.x = e.target.x()
             node.attrs.y = e.target.y()
@@ -852,7 +879,8 @@
         // console.clear()
         _this.$refs.topobase.createTopo(
           _this.stage.toJSON(),
-          moment(new Date()).valueOf()
+          moment(new Date())
+            .valueOf(),
         )
         _this.subtopic = `thing/${_this.productid}/post`
         _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)
@@ -877,7 +905,12 @@
        */
       scaleCanvas(
         Layer,
-        { x = 1, y = 1, zoomLevelX = 1, zoomLevelY = 1 } = args
+        {
+          x = 1,
+          y = 1,
+          zoomLevelX = 1,
+          zoomLevelY = 1,
+        } = args,
       ) {
         // Layer.x(x)
         // Layer.y(y)
@@ -908,59 +941,73 @@
 </script>
 <style lang="scss" scoped>
   .konva-fullscreen {
-    height: calc(100vh - #{$base-top-bar-height}* 3) !important;
+    height: calc(100vh - #{$base-top-bar-height} * 3) !important;
+
     .konva-container {
       .konva-container-main {
-        height: calc(100vh - #{$base-top-bar-height}* 3) !important;
+        height: calc(100vh - #{$base-top-bar-height} * 3) !important;
       }
     }
   }
+
   .konva {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7);
+    height: calc(100vh - #{$base-top-bar-height} * 2.7);
     overflow-x: hidden;
     overflow-y: hidden;
     background: $base-color-white;
     transition: $base-transition;
+
     &-container {
       &-header {
         white-space: nowrap;
         background-color: #fff;
         border-bottom: 1px solid #e5e5e5;
       }
+
       &-main {
-        height: calc(100vh - #{$base-top-bar-height}* 2.7 - 10px) !important;
+        height: calc(100vh - #{$base-top-bar-height} * 2.7 - 10px) !important;
         padding: 0 !important;
+
         &-allocation {
         }
+
         &-baseCol {
           padding: 0 !important;
           margin: 0;
           overflow: auto;
+
           &-baseContainer {
             height: calc(
-              100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 90px
+              100vh - #{$base-top-bar-height} * 2.7 - #{$base-padding} * 2 -
+              90px
             ) !important;
           }
         }
+
         &-operationsSide {
           width: auto !important;
         }
       }
+
       ::v-deep {
         .el-header {
           height: 50px !important;
         }
+
         .el-row {
           padding: 0 !important;
           margin: 0 !important;
+
           .el-col {
             padding: 0 !important;
             margin: 0 !important;
           }
         }
+
         .hidden-xs-only {
           border: 1px solid #ddd !important;
         }
+
         .el-aside {
           color: #333 !important;
         }

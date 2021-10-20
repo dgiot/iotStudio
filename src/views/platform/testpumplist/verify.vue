@@ -41,8 +41,16 @@
     </div>
 
     <!-- type="flex"  -->
-    <div class="evidence-box" :style="evidenceCSS">
-      <el-row align="middle" class="info-box-item" :gutter="20" type="flex">
+    <div
+      class="evidence-box"
+      :style="evidenceCSS"
+    >
+      <el-row
+        align="middle"
+        class="info-box-item"
+        :gutter="20"
+        type="flex"
+      >
         <!-- 音频 -->
         <el-col :span="2">
           <i class="el-icon-microphone" />
@@ -62,9 +70,17 @@
 
         <el-col :span="2">
           <div class="m-list">
-            <el-button size="small" @click="showCurve">曲线</el-button>
+            <el-button
+              size="small"
+              @click="showCurve"
+            >
+              曲线
+            </el-button>
 
-            <el-select v-model="mediaIndex.audio" placeholder="请选择">
+            <el-select
+              v-model="mediaIndex.audio"
+              placeholder="请选择"
+            >
               <el-option
                 v-for="(item, index) in categories.audio"
                 :key="index"
@@ -76,7 +92,11 @@
         </el-col>
       </el-row>
 
-      <el-row align="middle" class="info-box-item large" :gutter="20">
+      <el-row
+        align="middle"
+        class="info-box-item large"
+        :gutter="20"
+      >
         <!-- 视频 -->
         <el-col :span="10">
           <div
@@ -103,7 +123,10 @@
               视频
               <i class="el-icon-film" />
             </p>
-            <el-select v-model="mediaIndex.video" placeholder="请选择">
+            <el-select
+              v-model="mediaIndex.video"
+              placeholder="请选择"
+            >
               <el-option
                 v-for="(item, index) in categories.video"
                 :key="index"
@@ -119,7 +142,10 @@
               图片
               <i class="el-icon-right" />
             </p>
-            <el-select v-model="mediaIndex.image" placeholder="请选择">
+            <el-select
+              v-model="mediaIndex.image"
+              placeholder="请选择"
+            >
               <el-option
                 v-for="(item, index) in categories.image"
                 :key="index"
@@ -171,7 +197,10 @@
                 </el-button>
               </el-tooltip>
             </p>
-            <el-select v-model="mediaIndex.file" placeholder="请选择">
+            <el-select
+              v-model="mediaIndex.file"
+              placeholder="请选择"
+            >
               <el-option
                 v-for="(item, index) in categories.file"
                 :key="index"
@@ -198,13 +227,22 @@
           style="width: 100%; min-height: 500px"
         />
 
-        <p v-show="!currentFileUrl" style="font-size: 20px; text-align: center">
+        <p
+          v-show="!currentFileUrl"
+          style="font-size: 20px; text-align: center"
+        >
           当前没有选定文件
         </p>
       </div>
 
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click.native="pdfDialogVisible = false">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click.native="pdfDialogVisible = false"
+        >
           确 定
         </el-button>
       </span>
@@ -219,7 +257,10 @@
     >
       <PerformanceCurveNew ref="PerformanceCurveNew" />
 
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button
           size="small"
           type="primary"

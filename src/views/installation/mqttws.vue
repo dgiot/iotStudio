@@ -1,9 +1,25 @@
 <template>
   <div id="mqttws">
-    <input id="msg" v-model="msg" type="text" />
-    <input type="button" value="Send" @click="send" />
-    <input type="button" value="Start" @click="start" />
-    <input type="button" value="Stop" @click="stop" />
+    <input
+      id="msg"
+      v-model="msg"
+      type="text"
+    />
+    <input
+      type="button"
+      value="Send"
+      @click="send"
+    />
+    <input
+      type="button"
+      value="Start"
+      @click="start"
+    />
+    <input
+      type="button"
+      value="Stop"
+      @click="stop"
+    />
   </div>
 </template>
 <script>

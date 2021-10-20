@@ -3,11 +3,24 @@
     <div class="licenseleft">
       <el-row>
         <el-col :span="12">
-          <img v-if="isend == false" alt :src="originimgsrc" srcset />
-          <img v-if="isend == true" alt :src="originimgsrc" srcset />
+          <img
+            v-if="isend == false"
+            alt
+            :src="originimgsrc"
+            srcset
+          />
+          <img
+            v-if="isend == true"
+            alt
+            :src="originimgsrc"
+            srcset
+          />
         </el-col>
         <el-col :span="12">
-          <div v-if="isend == false" class="originupdate">
+          <div
+            v-if="isend == false"
+            class="originupdate"
+          >
             <p>部署配置</p>
             <span>请完成配置后进行部署</span>
           </div>
@@ -19,11 +32,17 @@
         </el-col>
       </el-row> -->
       <el-row style="margin-top: 50px">
-        <el-col class="originupdate" :span="12">
+        <el-col
+          class="originupdate"
+          :span="12"
+        >
           <p>当前时间:</p>
           <span>{{ updatetime }}</span>
         </el-col>
-        <el-col class="originupdate" :span="12">
+        <el-col
+          class="originupdate"
+          :span="12"
+        >
           <p>服务器状态</p>
           <span v-if="isarrange == false">未部署</span>
           <span v-else>部署完成</span>
@@ -32,15 +51,22 @@
     </div>
     <div class="licenseright">
       <div class="righttop">
-        <p style="font-size: 20px">部署进度</p>
-        <el-steps :active="active" finish-status="success">
+        <p style="font-size: 20px">
+          部署进度
+        </p>
+        <el-steps
+          :active="active"
+          finish-status="success"
+        >
           <el-step title="基础服务部署" />
           <el-step title="数据库部署" />
           <el-step title="完成" />
         </el-steps>
       </div>
       <div class="rightcenter">
-        <p style="font-size: 20px; color: #67c23a">机器信息</p>
+        <p style="font-size: 20px; color: #67c23a">
+          机器信息
+        </p>
         <!-- <div class="rightcomputer">
           <el-row>
             <el-col :span="12">
@@ -100,7 +126,11 @@
           </el-row>
 
         </div> -->
-        <el-form ref="form" label-width="140px" :model="configdata">
+        <el-form
+          ref="form"
+          label-width="140px"
+          :model="configdata"
+        >
           <el-form-item label="用户名:">
             <span>{{ configdata.hostName }}</span>
           </el-form-item>
@@ -148,9 +178,18 @@
               v-model="configdata.standard"
               placeholder="请输入服务版本"
             >
-              <el-option label="标准版" value="standard" />
-              <el-option label="企业版" value="enterprise" />
-              <el-option label="旗舰版" value="ultimate" />
+              <el-option
+                label="标准版"
+                value="standard"
+              />
+              <el-option
+                label="企业版"
+                value="enterprise"
+              />
+              <el-option
+                label="旗舰版"
+                value="ultimate"
+              />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -170,7 +209,12 @@
             >
               数据库部署
             </el-button>
-            <el-button type="primary" @click.native="update">刷新</el-button>
+            <el-button
+              type="primary"
+              @click.native="update"
+            >
+              刷新
+            </el-button>
           </el-form-item>
         </el-form>
       </div>

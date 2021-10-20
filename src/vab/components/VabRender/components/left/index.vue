@@ -25,7 +25,9 @@
           class="vab-render-comp"
           @click="handleDoubleClick(item)"
         >
-          <div class="vab-render-comp-title">{{ item.type }}</div>
+          <div class="vab-render-comp-title">
+            {{ item.type }}
+          </div>
           <div>{{ item.label }}</div>
         </li>
       </vue-draggable>

@@ -22,7 +22,10 @@
       </span>
     </template>
     <slot />
-    <span slot="footer" class="dialog-footer">
+    <span
+      slot="footer"
+      class="dialog-footer"
+    >
       <slot name="footer" />
     </span>
   </el-dialog>

@@ -2,15 +2,24 @@
   <div class="topo-editor">
     <WresizePanel3 class="full-height">
       <template #left>
-        <TopoToolbox ref="topoToolbox" class="topo-toolbox" />
+        <TopoToolbox
+          ref="topoToolbox"
+          class="topo-toolbox"
+        />
       </template>
 
       <template #center>
-        <TopoMain ref="topoMain" class="topo-main" />
+        <TopoMain
+          ref="topoMain"
+          class="topo-main"
+        />
       </template>
 
       <template #right>
-        <TopoProperties ref="topoProperties" class="topo-properties" />
+        <TopoProperties
+          ref="topoProperties"
+          class="topo-properties"
+        />
       </template>
     </WresizePanel3>
   </div>

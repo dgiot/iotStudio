@@ -29,15 +29,24 @@
               :is-custom-svg="item.meta.isCustomSvg"
             />
             <!--  如果没有图标那么取第二级的图标 -->
-            <vab-icon v-else :icon="item.parentIcon" />
+            <vab-icon
+              v-else
+              :icon="item.parentIcon"
+            />
           </template>
           <span>{{ $translateTitle(`route.${item.meta.title}`) }}</span>
         </span>
       </el-tab-pane>
     </el-tabs>
 
-    <el-dropdown @command="handleCommand" @visible-change="handleVisibleChange">
-      <span class="vab-tabs-more" :class="{ 'vab-tabs-more-active': active }">
+    <el-dropdown
+      @command="handleCommand"
+      @visible-change="handleVisibleChange"
+    >
+      <span
+        class="vab-tabs-more"
+        :class="{ 'vab-tabs-more-active': active }"
+      >
         <span class="vab-tabs-more-icon">
           <i class="box box-t"></i>
           <i class="box box-b"></i>
@@ -104,7 +113,10 @@
         <vab-icon icon="arrow-right-line" />
         <span>{{ $translateTitle('关闭右侧') }}</span>
       </li>
-      <li class="el-dropdown-menu__item" @click="closeAllTabs">
+      <li
+        class="el-dropdown-menu__item"
+        @click="closeAllTabs"
+      >
         <vab-icon icon="close-line" />
         <span>{{ $translateTitle('关闭全部') }}</span>
       </li>

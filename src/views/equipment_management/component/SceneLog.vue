@@ -1,5 +1,8 @@
 <template>
-  <div class="logs logs-container" :class="{ 'vab-fullscreen': isFullscreen }">
+  <div
+    class="logs logs-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
+  >
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form
@@ -47,10 +50,19 @@
                 "
               />
             </el-button>
-            <el-popover v-show="scroketMsg.length" trigger="hover">
+            <el-popover
+              v-show="scroketMsg.length"
+              trigger="hover"
+            >
               <el-checkbox-group v-model="checkList">
-                <vue-draggable v-bind="dragOptions" :list="logcolumns">
-                  <div v-for="(item, index) in logcolumns" :key="item + index">
+                <vue-draggable
+                  v-bind="dragOptions"
+                  :list="logcolumns"
+                >
+                  <div
+                    v-for="(item, index) in logcolumns"
+                    :key="item + index"
+                  >
                     <vab-icon icon="drag-drop-line" />
                     <el-checkbox
                       :disabled="item.disableCheck === true"
@@ -72,7 +84,10 @@
               </template>
             </el-popover>
           </el-form-item>
-          <el-form-item :label="$translateTitle('device.topic')" prop="product">
+          <el-form-item
+            :label="$translateTitle('device.topic')"
+            prop="product"
+          >
             <el-select v-model="instructtopic">
               <el-option
                 v-for="(item, index) in producttopic"
@@ -89,7 +104,10 @@
             <el-input v-model="instruct" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="sendinstruct()">
+            <el-button
+              type="primary"
+              @click="sendinstruct()"
+            >
               {{ $translateTitle('device.sendinstruct') }}
             </el-button>
           </el-form-item>
@@ -156,10 +174,17 @@
           />
           <el-table-column type="expand">
             <template slot-scope="props">
-              <el-descriptions border class="margin-top" :column="2">
+              <el-descriptions
+                border
+                class="margin-top"
+                :column="2"
+              >
                 <el-descriptions-item>
                   <template slot="label">
-                    <i v-copy="props.row.msg" class="el-icon-copy-document"></i>
+                    <i
+                      v-copy="props.row.msg"
+                      class="el-icon-copy-document"
+                    ></i>
                   </template>
                   {{ props.row.msg }}
                 </el-descriptions-item>

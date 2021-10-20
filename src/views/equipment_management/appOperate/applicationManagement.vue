@@ -1,7 +1,11 @@
 <template>
   <div id="application dgiot-container">
     <vab-query-form-top-panel>
-      <el-form ref="form" :inline="true" label-width="0">
+      <el-form
+        ref="form"
+        :inline="true"
+        label-width="0"
+      >
         <el-form-item>
           <el-input
             v-model="name"
@@ -10,7 +14,11 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button size="small" type="primary" @click="getAppMange(0)">
+          <el-button
+            size="small"
+            type="primary"
+            @click="getAppMange(0)"
+          >
             {{ $translateTitle('application.search') }}
           </el-button>
         </el-form-item>
@@ -77,7 +85,11 @@
               >
                 {{ $translateTitle('developer.cancel') }}
               </el-button>
-              <el-button size="mini" type="primary" @click="makeSure(scope)">
+              <el-button
+                size="mini"
+                type="primary"
+                @click="makeSure(scope)"
+              >
                 {{ $translateTitle('developer.determine') }}
               </el-button>
             </div>
@@ -98,7 +110,11 @@
           >
             {{ $translateTitle('developer.edit') }}
           </el-button>
-          <el-button size="small" type="text" @click="Gotoproduct(scope)">
+          <el-button
+            size="small"
+            type="text"
+            @click="Gotoproduct(scope)"
+          >
             <i class="el-icon-s-management" />
             <!-- 管理 -->
             {{ $translateTitle('leftbar.management') }}

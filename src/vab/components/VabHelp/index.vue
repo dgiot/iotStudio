@@ -11,7 +11,10 @@
       :trigger="trigger"
       :width="width"
     >
-      <el-tooltip slot="reference" :placement="childPlacement">
+      <el-tooltip
+        slot="reference"
+        :placement="childPlacement"
+      >
         <div slot="content">
           {{ title }}
           <br />
@@ -40,7 +43,10 @@
             </el-link>
           </a-popconfirm>
         </div>
-        <el-button circle icon="el-icon-question" />
+        <el-button
+          circle
+          icon="el-icon-question"
+        />
       </el-tooltip>
     </el-popover>
   </div>

@@ -2,7 +2,10 @@
   <div class="resourcechannel">
     <h3>通道管理</h3>
     <el-tabs v-model="activeName">
-      <el-tab-pane :label="'通道管理' + '(' + total + ')'" name="first">
+      <el-tab-pane
+        :label="'通道管理' + '(' + total + ')'"
+        name="first"
+      >
         <div class="firsttable">
           <el-form
             class="demo-form-inline"
@@ -17,12 +20,18 @@
               />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click.native="Get_Re_Channel(0)">
+              <el-button
+                type="primary"
+                @click.native="Get_Re_Channel(0)"
+              >
                 {{ $translateTitle('developer.search') }}
               </el-button>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click.native="addchanneltype">
+              <el-button
+                type="primary"
+                @click.native="addchanneltype"
+              >
                 {{ $translateTitle('developer.selectchannel') }}
               </el-button>
             </el-form-item>
@@ -66,10 +75,16 @@
               :label="$translateTitle('developer.channelstatus')"
             >
               <template slot-scope="scope">
-                <span v-if="scope.row.status == 'ONLINE'" style="color: green">
+                <span
+                  v-if="scope.row.status == 'ONLINE'"
+                  style="color: green"
+                >
                   在线
                 </span>
-                <span v-else style="color: red">离线</span>
+                <span
+                  v-else
+                  style="color: red"
+                >离线</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -146,7 +161,11 @@
                       {{ $translateTitle('developer.determine') }}
                     </el-button>
                   </div>
-                  <el-button slot="reference" size="mini" type="danger">
+                  <el-button
+                    slot="reference"
+                    size="mini"
+                    type="danger"
+                  >
                     {{ $translateTitle('developer.delete') }}
                   </el-button>
                 </el-popover>
@@ -188,7 +207,10 @@
               </template>
             </el-table-column>
           </el-table>
-          <div class="elpagination" style="margin-top: 20px">
+          <div
+            class="elpagination"
+            style="margin-top: 20px"
+          >
             <el-pagination
               layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
@@ -216,7 +238,10 @@
           :model="addchannel"
           :rules="addrules"
         >
-          <el-form-item label="通道类型" prop="region">
+          <el-form-item
+            label="通道类型"
+            prop="region"
+          >
             <el-select
               v-model="addchannel.region"
               disabled
@@ -256,7 +281,10 @@
                       addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                   }"
                 >
-                  <div slot="header" class="clearfix">
+                  <div
+                    slot="header"
+                    class="clearfix"
+                  >
                     <span>{{ item.title.zh }}</span>
                     <el-button
                       :disabled="resourceid != ''"
@@ -343,7 +371,11 @@
             </div>
           </el-form-item>
 
-          <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
+          <el-col
+            v-for="(item, index) in arrlist"
+            :key="index"
+            :span="12"
+          >
             <el-form-item
               :label="item.title.zh"
               :prop="item.showname"
@@ -363,8 +395,14 @@
                 class="notauto"
                 readonly
               >
-                <el-option label="是" :value="true" />
-                <el-option label="否" :value="false" />
+                <el-option
+                  label="是"
+                  :value="true"
+                />
+                <el-option
+                  label="否"
+                  :value="false"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -380,7 +418,10 @@
             />
           </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="handleClose">
             {{ $translateTitle('developer.cancel') }}
           </el-button>
@@ -401,25 +442,50 @@
       >
         <div>
           <el-row>
-            <el-col :span="12">ID:</el-col>
-            <el-col :span="12">{{ resourceid }}</el-col>
+            <el-col :span="12">
+              ID:
+            </el-col>
+            <el-col :span="12">
+              {{ resourceid }}
+            </el-col>
           </el-row>
           <el-row>
-            <el-col :span="12">Resource Type:</el-col>
-            <el-col :span="12">{{ resoucetype }}</el-col>
+            <el-col :span="12">
+              Resource Type:
+            </el-col>
+            <el-col :span="12">
+              {{ resoucetype }}
+            </el-col>
           </el-row>
           <el-row>
-            <el-col :span="12">Description:</el-col>
-            <el-col :span="12">{{ description }}</el-col>
+            <el-col :span="12">
+              Description:
+            </el-col>
+            <el-col :span="12">
+              {{ description }}
+            </el-col>
           </el-row>
 
-          <el-row v-for="(key, value) in detailchannel" :key="key">
-            <el-col :span="12">{{ value }}</el-col>
-            <el-col :span="12">{{ key }}</el-col>
+          <el-row
+            v-for="(key, value) in detailchannel"
+            :key="key"
+          >
+            <el-col :span="12">
+              {{ value }}
+            </el-col>
+            <el-col :span="12">
+              {{ key }}
+            </el-col>
           </el-row>
         </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click.native="dialogVisible = false">
+        <span
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            type="primary"
+            @click.native="dialogVisible = false"
+          >
             确 定
           </el-button>
         </span>
@@ -438,10 +504,17 @@
             class="ace_editor"
             style="width: 100%; min-height: 300px"
           >
-                      <textarea class="ace_text-input" style="overflow:scroll"/>
+                      <textarea
+class="ace_text-input"
+style="overflow:scroll"
+/>
           </pre>
         </div>
-        <span slot="footer" class="dialog-footer" style="height: 30px">
+        <span
+          slot="footer"
+          class="dialog-footer"
+          style="height: 30px"
+        >
           <el-switch
             v-model="value4"
             active-color="#13ce66"

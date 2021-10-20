@@ -4,9 +4,21 @@
     style="padding-left: 10px; border-left: 38px solid #1579bf"
   >
     <div>
-      <el-input v-model="search" style="width: 150px" />
-      <el-button size="mini" type="primary">搜索</el-button>
-      <el-button size="mini" type="primary" @click.native="reset">
+      <el-input
+        v-model="search"
+        style="width: 150px"
+      />
+      <el-button
+        size="mini"
+        type="primary"
+      >
+        搜索
+      </el-button>
+      <el-button
+        size="mini"
+        type="primary"
+        @click.native="reset"
+      >
         重置
       </el-button>
       <el-tree

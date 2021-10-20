@@ -13,7 +13,10 @@
         style="position: relative; top: 20px; left: 101px"
         @click="remove"
       ></i>
-      <img :src="url" style="width: 100px; height: 100px" />
+      <img
+        :src="url"
+        style="width: 100px; height: 100px"
+      />
     </div>
   </div>
 </template>

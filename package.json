@@ -9,7 +9,7 @@
     "dev": "npm run rmEnv  && vue-cli-service serve",
     "dev:cdn": "npm run rmEnv && npm run cp:cdn && vue-cli-service serve",
     "start": "npm run rmEnv & && vue-cli-service serve",
-    "start:cdn": "npm run rmEnv && npm run cp:cdn && vue-cli-service serve",
+    "start:cdn": " cross-env useCdn=true npm run rmEnv && npm run cp:cdn && vue-cli-service serve",
     "serve": "npm run rmEnv && vue-cli-service serve",
     "pure:build": "npm run rmEnv && vue-cli-service build && rimraf dist/example dist/assets/css dist/assets/js",
     "build": "npm run rmEnv && vue-cli-service build && rimraf dist/example dist/assets/css dist/assets/js",
@@ -47,7 +47,9 @@
     "rmEnv": "rimraf .env",
     "cp:local": "node utils/cpLocal.js",
     "cp:cdn": "node utils/cpCdn.js",
-    "local:server": "node utils/server.js"
+    "local:server": "node utils/server.js",
+    "lighthouse": "node utils/lighthouse.js",
+    "prod": "lighthouse https://prod.iotn2n.com/"
   },
   "repository": {
     "type": "git",
@@ -65,6 +67,7 @@
     "core-js": "3.18.3",
     "cross-env": "7.0.3",
     "element-ui": "2.15.6",
+    "konva": "^8.2.2",
     "mini-css-extract-plugin": "2.4.2",
     "pushstate-server": "^3.1.0",
     "register-service-worker": "1.7.2",
@@ -89,6 +92,7 @@
     "body-parser": "1.19.0",
     "chalk": "4.1.2",
     "chokidar": "3.5.2",
+    "chrome-launcher": "^0.14.1",
     "commitizen": "4.2.4",
     "compression-webpack-plugin": "6.1.1",
     "cz-conventional-changelog": "3.3.0",
@@ -99,6 +103,7 @@
     "filemanager-webpack-plugin": "6.1.7",
     "hard-source-webpack-plugin": "0.13.1",
     "husky": "7.0.2",
+    "lighthouse": "^8.5.1",
     "lint-staged": "11.2.3",
     "monaco-editor": "0.29.1",
     "prettier": "2.4.1",

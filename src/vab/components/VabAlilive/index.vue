@@ -1,5 +1,9 @@
 <template>
-  <div :id="playerId" class="prism-player" :style="playStyle" />
+  <div
+    :id="playerId"
+    class="prism-player"
+    :style="playStyle"
+  />
 </template>
 
 <script>

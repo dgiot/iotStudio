@@ -1,7 +1,11 @@
 <!-- 组件说明 -->
 <template>
   <div class="operation">
-    <el-tabs v-if="Shapeconfig.attrs" v-model="activeName" stretch>
+    <el-tabs
+      v-if="Shapeconfig.attrs"
+      v-model="activeName"
+      stretch
+    >
       <div class="unvisible">
         <el-upload
           ref="upload"
@@ -16,7 +20,12 @@
           :on-remove="handleRemove"
           style="display: none"
         >
-          <el-button size="small" type="primary">点击上传</el-button>
+          <el-button
+            size="small"
+            type="primary"
+          >
+            点击上传
+          </el-button>
         </el-upload>
       </div>
       <el-tab-pane
@@ -68,7 +77,10 @@
           >
             {{ $translateTitle('developer.edit') }}
           </el-button>
-          <el-button type="info" @click.native="saveKonvaitem(Shapeconfig)">
+          <el-button
+            type="info"
+            @click.native="saveKonvaitem(Shapeconfig)"
+          >
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button

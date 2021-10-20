@@ -1,17 +1,27 @@
 <template>
   <div class="appmarage appmarage-container">
     <div class="header">
-      <el-button size="small" type="primary" @click="checkupdateall">
+      <el-button
+        size="small"
+        type="primary"
+        @click="checkupdateall"
+      >
         {{ $translateTitle('plugins.checkupdate') }}
       </el-button>
     </div>
-    <div class="block" style="margin-top: 10px">
+    <div
+      class="block"
+      style="margin-top: 10px"
+    >
       <el-table
         :data="tableData.slice((start - 1) * length, start * length)"
         :height="height"
         style="width: 100%; text-align: center"
       >
-        <el-table-column align="center" label="App">
+        <el-table-column
+          align="center"
+          label="App"
+        >
           <template slot-scope="scope">
             <span
               :style="{ color: scope.row.active == true ? 'green' : 'red' }"
@@ -147,11 +157,21 @@
           />
         </div>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button style="float: left" @click="dialogVisible = false">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          style="float: left"
+          @click="dialogVisible = false"
+        >
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button style="float: right" type="primary" @click.native="reupload">
+        <el-button
+          style="float: right"
+          type="primary"
+          @click.native="reupload"
+        >
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>

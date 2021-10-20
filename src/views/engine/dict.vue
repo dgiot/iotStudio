@@ -62,7 +62,11 @@
                 />
               </el-form-item>
             </el-col>
-            <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
+            <el-col
+              v-for="(item, index) in arrlist"
+              :key="index"
+              :span="12"
+            >
               <el-form-item
                 :label="item.title.zh"
                 :prop="item.name"
@@ -86,10 +90,16 @@
                     :value="false"
                   />
                 </el-select>
-                <el-input v-else v-model="addDictForm[item.name]" />
+                <el-input
+                  v-else
+                  v-model="addDictForm[item.name]"
+                />
               </el-form-item>
             </el-col>
-            <el-col :span="12" style="z-index: 99999">
+            <el-col
+              :span="12"
+              style="z-index: 99999"
+            >
               <!-- <el-form-item
                 :rules1="[
                   {
@@ -130,7 +140,10 @@
                     />
                   </template>
                 </el-input>
-                <div v-if="showTree" class="device-tree">
+                <div
+                  v-if="showTree"
+                  class="device-tree"
+                >
                   <el-tree
                     :data="allApps"
                     :props="defaultProps"
@@ -139,17 +152,28 @@
                 </div>
               </el-form-item>
             </el-col>
-            <el-col :span="12" style="height: 47px">
+            <el-col
+              :span="12"
+              style="height: 47px"
+            >
               <!-- <el-form-item label="状态" prop="enable"> -->
               <el-form-item
                 :label="$translateTitle('equipment.state')"
                 prop="enable"
               >
-                <el-radio v-model="addDictForm.enable" border label="1">
+                <el-radio
+                  v-model="addDictForm.enable"
+                  border
+                  label="1"
+                >
                   <!-- 启用 -->
                   {{ $translateTitle('developer.enable') }}
                 </el-radio>
-                <el-radio v-model="addDictForm.enable" border label="2">
+                <el-radio
+                  v-model="addDictForm.enable"
+                  border
+                  label="2"
+                >
                   <!-- 废弃 -->
                   {{ $translateTitle('developer.scrap') }}
                 </el-radio>
@@ -229,7 +253,10 @@
                 :label-width="formLabelWidth"
                 prop="name"
               >
-                <el-input v-model="dictTempForm.name" autocomplete="off" />
+                <el-input
+                  v-model="dictTempForm.name"
+                  autocomplete="off"
+                />
               </el-form-item>
             </el-col>
             <!-- <el-col :span="8">
@@ -244,7 +271,10 @@
                 :label-width="formLabelWidth"
                 prop="cType"
               >
-                <el-input v-model="dictTempForm.cType" autocomplete="off" />
+                <el-input
+                  v-model="dictTempForm.cType"
+                  autocomplete="off"
+                />
               </el-form-item>
             </el-col>
             <!-- <el-col :span="8">
@@ -259,11 +289,19 @@
                 :label-width="formLabelWidth"
                 prop="enable"
               >
-                <el-radio v-model="dictTempForm.enable" border label="1">
+                <el-radio
+                  v-model="dictTempForm.enable"
+                  border
+                  label="1"
+                >
                   <!-- 启用 -->
                   {{ $translateTitle('developer.enable') }}
                 </el-radio>
-                <el-radio v-model="dictTempForm.enable" border label="0">
+                <el-radio
+                  v-model="dictTempForm.enable"
+                  border
+                  label="0"
+                >
                   <!-- 禁用 -->
                   {{ $translateTitle('developer.disable') }}
                 </el-radio>
@@ -277,7 +315,10 @@
             :label-width="formLabelWidth"
           >
             <el-tabs v-model="elactiveName">
-              <el-tab-pane label="Table" name="Table">
+              <el-tab-pane
+                label="Table"
+                name="Table"
+              >
                 <el-button
                   class="mt-3"
                   icon="el-icon-plus"
@@ -318,7 +359,7 @@
                       <span
                         v-if="
                           scope.row.default == true &&
-                          scope.row.type == 'Boolean'
+                            scope.row.type == 'Boolean'
                         "
                       >
                         <!-- 是 -->
@@ -327,7 +368,7 @@
                       <span
                         v-else-if="
                           scope.row.default == false &&
-                          scope.row.type == 'Boolean'
+                            scope.row.type == 'Boolean'
                         "
                       >
                         <!-- 否 -->
@@ -446,7 +487,10 @@
                   </el-table-column>
                 </el-table>
               </el-tab-pane>
-              <el-tab-pane label="Json" name="Json">
+              <el-tab-pane
+                label="Json"
+                name="Json"
+              >
                 <vab-json-editor
                   v-model="dictTempForm.params"
                   lang="zh"
@@ -478,7 +522,10 @@
             />
           </el-form-item>
 
-          <el-form-item size="mini" style="text-align: center">
+          <el-form-item
+            size="mini"
+            style="text-align: center"
+          >
             <el-button
               type="primary"
               @click.native="onJsonSave('dictTempForm')"
@@ -518,7 +565,10 @@
                 label-width="50px"
                 prop="name"
               >
-                <el-input v-model="tempparams.name" autocomplete="off" />
+                <el-input
+                  v-model="tempparams.name"
+                  autocomplete="off"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="5">
@@ -563,11 +613,19 @@
                 :label="$translateTitle('product.mustfill')"
                 label-width="50px"
               >
-                <el-radio v-model="tempparams.required" border :label="true">
+                <el-radio
+                  v-model="tempparams.required"
+                  border
+                  :label="true"
+                >
                   <!-- 是 -->
                   {{ $translateTitle('product.yes') }}
                 </el-radio>
-                <el-radio v-model="tempparams.required" border :label="false">
+                <el-radio
+                  v-model="tempparams.required"
+                  border
+                  :label="false"
+                >
                   <!-- 否 -->
                   {{ $translateTitle('product.no') }}
                 </el-radio>
@@ -579,14 +637,20 @@
             :label="$translateTitle('product.chinesetitle')"
             prop="title"
           >
-            <el-input v-model="tempparams.title.zh" autocomplete="off" />
+            <el-input
+              v-model="tempparams.title.zh"
+              autocomplete="off"
+            />
           </el-form-item>
           <!-- <el-form-item label="英文标题" prop="title"> -->
           <el-form-item
             :label="$translateTitle('product.englishtitle')"
             prop="title"
           >
-            <el-input v-model="tempparams.title.en" autocomplete="off" />
+            <el-input
+              v-model="tempparams.title.en"
+              autocomplete="off"
+            />
           </el-form-item>
           <!-- <el-form-item label="默认值" prop="default"> -->
           <el-form-item
@@ -614,24 +678,36 @@
               v-else-if="tempparams.type == 'Number'"
               v-model.number="tempparams.default"
             />
-            <el-input v-else v-model="tempparams.default" />
+            <el-input
+              v-else
+              v-model="tempparams.default"
+            />
           </el-form-item>
           <!-- <el-form-item label="中文描述" prop="title"> -->
           <el-form-item
             :label="$translateTitle('product.chinesedescription')"
             prop="title"
           >
-            <el-input v-model="tempparams.description.zh" autocomplete="off" />
+            <el-input
+              v-model="tempparams.description.zh"
+              autocomplete="off"
+            />
           </el-form-item>
           <!-- <el-form-item label="英文描述" prop="title"> -->
           <el-form-item
             :label="$translateTitle('product.englishdescription')"
             prop="title"
           >
-            <el-input v-model="tempparams.description.en" autocomplete="off" />
+            <el-input
+              v-model="tempparams.description.en"
+              autocomplete="off"
+            />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click.native="submitFormTempDict()">
+            <el-button
+              type="primary"
+              @click.native="submitFormTempDict()"
+            >
               <!-- 提交 -->
               {{ $translateTitle('application.submit') }}
             </el-button>
@@ -697,7 +773,10 @@
             :label="$translateTitle('developer.dictionarytemplatenumber')"
             width="200"
           >
-            <template v-if="scope.row.objectId" slot-scope="scope">
+            <template
+              v-if="scope.row.objectId"
+              slot-scope="scope"
+            >
               {{ scope.row.objectId }}
             </template>
           </el-table-column>
@@ -722,11 +801,17 @@
             width="200"
           >
             <template slot-scope="scope">
-              <el-tag v-if="scope.row.data.enable == '1'" type="success">
+              <el-tag
+                v-if="scope.row.data.enable == '1'"
+                type="success"
+              >
                 <!-- 启用 -->
                 {{ $translateTitle('developer.enable') }}
               </el-tag>
-              <el-tag v-else type="warning">
+              <el-tag
+                v-else
+                type="warning"
+              >
                 <!-- 禁用 -->
                 {{ $translateTitle('developer.disable') }}
               </el-tag>
@@ -743,7 +828,10 @@
             :label="$translateTitle('task.Operation')"
             width="500"
           >
-            <template v-if="scope.row.objectId" slot-scope="scope">
+            <template
+              v-if="scope.row.objectId"
+              slot-scope="scope"
+            >
               <el-button
                 plain
                 size="mini"
@@ -793,7 +881,10 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="elpagination" style="margin-top: 20px; text-align: center">
+        <div
+          class="elpagination"
+          style="margin-top: 20px; text-align: center"
+        >
           <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
             :page-size="length1"
@@ -886,11 +977,17 @@
           </el-table-column>
           <el-table-column :label="$translateTitle('concentrator.status')">
             <template slot-scope="scope">
-              <el-tag v-if="scope.row.data.enable == '1'" type="success">
+              <el-tag
+                v-if="scope.row.data.enable == '1'"
+                type="success"
+              >
                 <!-- 启用 -->
                 {{ $translateTitle('developer.enable') }}
               </el-tag>
-              <el-tag v-else type="warning">
+              <el-tag
+                v-else
+                type="warning"
+              >
                 <!-- 废弃 -->
                 {{ $translateTitle('developer.scrap') }}
               </el-tag>

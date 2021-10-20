@@ -1,12 +1,28 @@
 <template>
-  <el-row class="panel-group" :gutter="40">
-    <el-col class="card-panel-col" :lg="5" :sm="8" :xs="8">
-      <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
+  <el-row
+    class="panel-group"
+    :gutter="40"
+  >
+    <el-col
+      class="card-panel-col"
+      :lg="5"
+      :sm="8"
+      :xs="8"
+    >
+      <div
+        class="card-panel"
+        @click="handleSetLineChartData('newVisitis')"
+      >
         <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon class-name="card-panel-icon" icon-class="shnehe" />
+          <svg-icon
+            class-name="card-panel-icon"
+            icon-class="shnehe"
+          />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">审核总数量</div>
+          <div class="card-panel-text">
+            审核总数量
+          </div>
           <count-to
             class="card-panel-num"
             :duration="2600"
@@ -16,13 +32,26 @@
         </div>
       </div>
     </el-col>
-    <el-col class="card-panel-col" :lg="5" :sm="8" :xs="8">
-      <div class="card-panel" @click="handleSetLineChartData('messages')">
+    <el-col
+      class="card-panel-col"
+      :lg="5"
+      :sm="8"
+      :xs="8"
+    >
+      <div
+        class="card-panel"
+        @click="handleSetLineChartData('messages')"
+      >
         <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon class-name="card-panel-icon" icon-class="message" />
+          <svg-icon
+            class-name="card-panel-icon"
+            icon-class="message"
+          />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">已审核数量</div>
+          <div class="card-panel-text">
+            已审核数量
+          </div>
           <count-to
             class="card-panel-num"
             :duration="3000"
@@ -32,13 +61,26 @@
         </div>
       </div>
     </el-col>
-    <el-col class="card-panel-col" :lg="5" :sm="8" :xs="8">
-      <div class="card-panel" @click="handleSetLineChartData('purchases')">
+    <el-col
+      class="card-panel-col"
+      :lg="5"
+      :sm="8"
+      :xs="8"
+    >
+      <div
+        class="card-panel"
+        @click="handleSetLineChartData('purchases')"
+      >
         <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon class-name="card-panel-icon" icon-class="money" />
+          <svg-icon
+            class-name="card-panel-icon"
+            icon-class="money"
+          />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">审核通过数量</div>
+          <div class="card-panel-text">
+            审核通过数量
+          </div>
           <count-to
             class="card-panel-num"
             :duration="3200"
@@ -48,13 +90,26 @@
         </div>
       </div>
     </el-col>
-    <el-col class="card-panel-col" :lg="5" :sm="8" :xs="8">
-      <div class="card-panel" @click="handleSetLineChartData('shoppings')">
+    <el-col
+      class="card-panel-col"
+      :lg="5"
+      :sm="8"
+      :xs="8"
+    >
+      <div
+        class="card-panel"
+        @click="handleSetLineChartData('shoppings')"
+      >
         <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon class-name="card-panel-icon" icon-class="shopping" />
+          <svg-icon
+            class-name="card-panel-icon"
+            icon-class="shopping"
+          />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">审核未通过数量</div>
+          <div class="card-panel-text">
+            审核未通过数量
+          </div>
           <count-to
             class="card-panel-num"
             :duration="3600"
@@ -64,13 +119,26 @@
         </div>
       </div>
     </el-col>
-    <el-col class="card-panel-col" :lg="5" :sm="8" :xs="8">
-      <div class="card-panel" @click="handleSetLineChartData('shoppings')">
+    <el-col
+      class="card-panel-col"
+      :lg="5"
+      :sm="8"
+      :xs="8"
+    >
+      <div
+        class="card-panel"
+        @click="handleSetLineChartData('shoppings')"
+      >
         <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon class-name="card-panel-icon" icon-class="shopping" />
+          <svg-icon
+            class-name="card-panel-icon"
+            icon-class="shopping"
+          />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">待审核数量</div>
+          <div class="card-panel-text">
+            待审核数量
+          </div>
           <count-to
             class="card-panel-num"
             :duration="3600"

@@ -1,7 +1,17 @@
 <template>
-  <div ref="slider" class="slider">
-    <div class="process" :style="{ width }"></div>
-    <div ref="trunk" class="thunk" :style="{ left }">
+  <div
+    ref="slider"
+    class="slider"
+  >
+    <div
+      class="process"
+      :style="{ width }"
+    ></div>
+    <div
+      ref="trunk"
+      class="thunk"
+      :style="{ left }"
+    >
       <div class="block"></div>
       <div class="tips">
         <span>{{ scale * 100 }}</span>

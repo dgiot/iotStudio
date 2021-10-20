@@ -2,11 +2,17 @@
   <div class="clients-subscriptions">
     <el-card class="el-card--self tabs-card">
       <el-row>
-        <el-col class="card-subtitle" :span="12">
+        <el-col
+          class="card-subtitle"
+          :span="12"
+        >
           {{ $t('clients.currentSubs') }}
         </el-col>
 
-        <el-col class="oper-btn-group" :span="12">
+        <el-col
+          class="oper-btn-group"
+          :span="12"
+        >
           <el-button
             icon="el-icon-refresh"
             plain
@@ -34,9 +40,18 @@
         class="client-sub-table"
         :data="tableData"
       >
-        <el-table-column :label="$t('subscriptions.topic')" prop="topic" />
-        <el-table-column :label="$t('subscriptions.qoS')" prop="qos" />
-        <el-table-column :label="$t('oper.oper')" width="120px">
+        <el-table-column
+          :label="$t('subscriptions.topic')"
+          prop="topic"
+        />
+        <el-table-column
+          :label="$t('subscriptions.qoS')"
+          prop="qos"
+        />
+        <el-table-column
+          :label="$t('oper.oper')"
+          width="120px"
+        >
           <template slot-scope="{ row }">
             <el-button
               plain
@@ -67,10 +82,19 @@
         :rules="rules"
         size="small"
       >
-        <el-form-item :label="$t('subscriptions.topic')" prop="topic">
-          <el-input v-model="record.topic" placeholder="Topic" />
+        <el-form-item
+          :label="$t('subscriptions.topic')"
+          prop="topic"
+        >
+          <el-input
+            v-model="record.topic"
+            placeholder="Topic"
+          />
         </el-form-item>
-        <el-form-item label="QoS" prop="qos">
+        <el-form-item
+          label="QoS"
+          prop="qos"
+        >
           <vab-emq-select
             v-model="record.qos"
             class="el-select--public"
@@ -82,7 +106,11 @@
       </el-form>
 
       <div slot="footer">
-        <el-button class="cache-btn" type="text" @click="handleClose">
+        <el-button
+          class="cache-btn"
+          type="text"
+          @click="handleClose"
+        >
           {{ $t('oper.cancel') }}
         </el-button>
         <el-button

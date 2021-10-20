@@ -8,8 +8,15 @@
       </v-group>
       <!-- 遮罩层组 -->
       <v-group :config="Config.group">
-        <v-rect ref="coverRect" :config="Config.coverRect" />
-        <v-text v-if="success" ref="coverText" :config="Config.coverText" />
+        <v-rect
+          ref="coverRect"
+          :config="Config.coverRect"
+        />
+        <v-text
+          v-if="success"
+          ref="coverText"
+          :config="Config.coverText"
+        />
       </v-group>
       <!-- 滑块组 -->
       <v-group
@@ -20,13 +27,25 @@
         @mouseover="moveGroupMouseOver"
         @mouseup="moveGroupStop"
       >
-        <v-rect ref="moveRect" :config="Config.moveRect" />
+        <v-rect
+          ref="moveRect"
+          :config="Config.moveRect"
+        />
         <!-- 验证成功组 -->
-        <v-group v-if="success" :config="Config.group">
-          <v-circle ref="succCircle" :config="Config.succCircle" />
+        <v-group
+          v-if="success"
+          :config="Config.group"
+        >
+          <v-circle
+            ref="succCircle"
+            :config="Config.succCircle"
+          />
           <v-line :config="Config.succLine" />
         </v-group>
-        <v-group v-else :config="Config.moveGroup_l">
+        <v-group
+          v-else
+          :config="Config.moveGroup_l"
+        >
           <v-line :config="Config.moveLine1" />
           <v-line :config="Config.moveLine2" />
         </v-group>

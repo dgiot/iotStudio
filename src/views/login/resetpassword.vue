@@ -10,11 +10,18 @@
         status-icon
       >
         <div class="logo">
-          <img alt="logo" :src="logosrc" style="width: 80px; height: 80px" />
+          <img
+            alt="logo"
+            :src="logosrc"
+            style="width: 80px; height: 80px"
+          />
           <p>重置密码</p>
         </div>
 
-        <el-form-item prop="phone" style="border-radius: 0">
+        <el-form-item
+          prop="phone"
+          style="border-radius: 0"
+        >
           <span
             class="svg-container"
             style="
@@ -88,7 +95,10 @@
             auto-complete="off"
             style="wdith:0;height:0;"
         ></el-input>-->
-        <el-form-item prop="password" required>
+        <el-form-item
+          prop="password"
+          required
+        >
           <span class="svg-container">
             <vab-icon icon="password" />
           </span>
@@ -100,12 +110,18 @@
             placeholder="请输入6-10位数字字母组合"
             :type="pwdType"
           />
-          <span class="show-pwd" @click="showPwd">
+          <span
+            class="show-pwd"
+            @click="showPwd"
+          >
             <vab-icon icon="eye" />
           </span>
         </el-form-item>
 
-        <el-form-item prop="checkPass" required>
+        <el-form-item
+          prop="checkPass"
+          required
+        >
           <span class="svg-container">
             <vab-icon icon="password" />
           </span>
@@ -116,11 +132,17 @@
             placeholder="请再次输入密码"
             :type="pwdType"
           />
-          <span class="show-pwd" @click="showPwd">
+          <span
+            class="show-pwd"
+            @click="showPwd"
+          >
             <vab-icon icon="eye" />
           </span>
         </el-form-item>
-        <div class="hasuser" style="box-sizing: border-box; padding-left: 22px">
+        <div
+          class="hasuser"
+          style="box-sizing: border-box; padding-left: 22px"
+        >
           <!-- <span style="color:#409EFF;font-size:14px;cursor:pointer" @click="login">已有账号登陆</span> -->
           <el-button
             style="width: 100%"

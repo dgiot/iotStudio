@@ -5,7 +5,11 @@
     </div>
     <div class="panel-body">
       <div class="demo">
-        <canvas id="canvas" :height="height" :width="width"></canvas>
+        <canvas
+          id="canvas"
+          :height="height"
+          :width="width"
+        ></canvas>
         <div class="draw-btn-group">
           <div
             :class="{ active: drawType == '' }"
@@ -63,13 +67,22 @@
           >
             <i class="draw-icon icon-pentagram"></i>
           </div>
-          <div title="从文件选择图片上传" @click="uploadImg">
+          <div
+            title="从文件选择图片上传"
+            @click="uploadImg"
+          >
             <i class="draw-icon icon-img"></i>
           </div>
-          <div title="加载背景图" @click="loadExpImg">
+          <div
+            title="加载背景图"
+            @click="loadExpImg"
+          >
             <i class="draw-icon icon-back"></i>
           </div>
-          <div title="保存" @click="save">
+          <div
+            title="保存"
+            @click="save"
+          >
             <i class="draw-icon icon-save"></i>
           </div>
         </div>
@@ -81,7 +94,10 @@
       type="file"
       @change="uploadImgChange"
     />
-    <img id="img" :src="imgSrc" />
+    <img
+      id="img"
+      :src="imgSrc"
+    />
     <img
       id="expImg"
       src="https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/exp.jpg"

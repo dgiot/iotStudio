@@ -1,8 +1,15 @@
 <template>
   <div class="PerformanceDataCurve">
-    <h3 style="text-align: center">性能曲线</h3>
+    <h3 style="text-align: center">
+      性能曲线
+    </h3>
     <p><br /></p>
-    <div ref="chartViewTop" class="view-chart-box">Click to bind data.</div>
+    <div
+      ref="chartViewTop"
+      class="view-chart-box"
+    >
+      Click to bind data.
+    </div>
   </div>
 </template>
 <script>

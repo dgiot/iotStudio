@@ -8,8 +8,16 @@
   >
     <use :xlink:href="`#dgiot-${name}`" />
   </svg>
-  <span v-else-if="type == 'Unicode'" :class="iconClass" :style="style"></span>
-  <i v-else :class="iconClass" :style="style"></i>
+  <span
+    v-else-if="type == 'Unicode'"
+    :class="iconClass"
+    :style="style"
+  ></span>
+  <i
+    v-else
+    :class="iconClass"
+    :style="style"
+  ></i>
 </template>
 
 <script>

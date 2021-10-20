@@ -1,7 +1,12 @@
 <template>
   <div class="reportmodule">
     <div class="add">
-      <el-button type="primary" @click.native="addmodule">新 增</el-button>
+      <el-button
+        type="primary"
+        @click.native="addmodule"
+      >
+        新 增
+      </el-button>
     </div>
     <div class="reportlist">
       <el-table
@@ -9,29 +14,47 @@
         stripe
         style="width: 100%; text-align: center"
       >
-        <el-table-column align="center" label="ID">
+        <el-table-column
+          align="center"
+          label="ID"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.objectId }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="产品名称">
+        <el-table-column
+          align="center"
+          label="产品名称"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.data.sample }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="检验类别">
+        <el-table-column
+          align="center"
+          label="检验类别"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.data.category }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="检验标准">
+        <el-table-column
+          align="center"
+          label="检验标准"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.data.inspection_standard }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作">
+        <el-table-column
+          align="center"
+          label="操作"
+        >
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.row.objectId)">
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.row.objectId)"
+            >
               详 情
             </el-button>
             <el-button
@@ -70,18 +93,44 @@
       :visible.sync="dialogTableVisible"
       width="50%"
     >
-      <el-table border :data="gridData" style="width: 100%; text-align: center">
-        <el-table-column align="center" label="id">
+      <el-table
+        border
+        :data="gridData"
+        style="width: 100%; text-align: center"
+      >
+        <el-table-column
+          align="center"
+          label="id"
+        >
           <template slot-scope="scope">
-            <el-tag size="medium">{{ scope.row.id }}</el-tag>
+            <el-tag size="medium">
+              {{ scope.row.id }}
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="检验项目">
-          <template slot-scope="scope">{{ scope.row.inspecting }}</template>
+        <el-table-column
+          align="center"
+          label="检验项目"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.inspecting }}
+          </template>
         </el-table-column>
-        <el-table-column align="center" label="保证值" property="title" />
-        <el-table-column align="center" label="测试值" property="value" />
-        <el-table-column align="center" label="评定" property />
+        <el-table-column
+          align="center"
+          label="保证值"
+          property="title"
+        />
+        <el-table-column
+          align="center"
+          label="测试值"
+          property="value"
+        />
+        <el-table-column
+          align="center"
+          label="评定"
+          property
+        />
       </el-table>
     </el-dialog>
   </div>

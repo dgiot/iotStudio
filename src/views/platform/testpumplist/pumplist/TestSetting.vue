@@ -31,7 +31,10 @@
         </el-col>
       </el-row>
 
-      <el-divider content-position="left" style="color: blue">
+      <el-divider
+        content-position="left"
+        style="color: blue"
+      >
         合格条件设置
       </el-divider>
 
@@ -61,8 +64,14 @@
               allow-create
               @change="qConditionsChange"
             >
-              <el-option label="GB/T3216-2016" value="GB/T3216-2016" />
-              <el-option label="其他" value="other" />
+              <el-option
+                label="GB/T3216-2016"
+                value="GB/T3216-2016"
+              />
+              <el-option
+                label="其他"
+                value="other"
+              />
             </el-select>
           </el-form-item>
         </el-col>
@@ -129,7 +138,10 @@
         </el-col>
       </el-row>
 
-      <el-divider content-position="left" style="color: blue">
+      <el-divider
+        content-position="left"
+        style="color: blue"
+      >
         稳定条件设置
       </el-divider>
 
@@ -139,20 +151,35 @@
             v-model="TestSettingObj.StabilitySetting.FlowHeadEfficiency"
             allow-create
           >
-            <el-option label="GB/T3216-2016" value="GB/T3216-2016" />
-            <el-option label="其他" value="other" />
+            <el-option
+              label="GB/T3216-2016"
+              value="GB/T3216-2016"
+            />
+            <el-option
+              label="其他"
+              value="other"
+            />
           </el-select>
         </el-form-item>
 
         <el-form-item label="转速">
           <el-select v-model="TestSettingObj.StabilitySetting.Speed">
-            <el-option label="GB/T3216-2016" value="GB/T3216-2016" />
-            <el-option label="其他" value="other" />
+            <el-option
+              label="GB/T3216-2016"
+              value="GB/T3216-2016"
+            />
+            <el-option
+              label="其他"
+              value="other"
+            />
           </el-select>
         </el-form-item>
       </el-row>
 
-      <el-divider content-position="left" style="color: blue">
+      <el-divider
+        content-position="left"
+        style="color: blue"
+      >
         波动范围设置
       </el-divider>
 
@@ -162,7 +189,9 @@
             v-model="TestSettingObj.FluctuationSetting.CurrentValue"
             type="text"
           >
-            <template slot="append">%</template>
+            <template slot="append">
+              %
+            </template>
           </el-input>
         </el-form-item>
 
@@ -171,14 +200,21 @@
             v-model="TestSettingObj.FluctuationSetting.SetValue"
             type="text"
           >
-            <template slot="append">%</template>
+            <template slot="append">
+              %
+            </template>
           </el-input>
         </el-form-item>
 
-        <el-button size="small">同步</el-button>
+        <el-button size="small">
+          同步
+        </el-button>
       </el-row>
 
-      <el-divider content-position="left" style="color: blue">
+      <el-divider
+        content-position="left"
+        style="color: blue"
+      >
         参数设置
       </el-divider>
       <el-row>

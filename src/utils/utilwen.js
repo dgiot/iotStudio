@@ -2,41 +2,33 @@ import i18n from '@/i18n'
 import Bus from './eventBus'
 import dgiotBus from '@dgiot/dgiot-mqtt-dashboard/src/utils/bus'
 import dgiotMixin from '@dgiot/dgiot-mqtt-dashboard/src/mixins/mqtt'
-
-Vue.use(dgiotBus)
-Vue.mixin(dgiotMixin)
-Vue.use(Bus)
-
-import { getToken, setToken, removeToken } from './vuex'
+import { getToken, removeToken, setToken } from './vuex'
 import globalConfig from './globalConfig'
 import store from '@/store'
 import { Message } from 'element-ui'
-const Headers = {
-  sessionToken: store ? store.getters['user/token'] : '',
-}
 import {
-  query_object,
-  get_object,
-  del_object,
-  update_object,
   create_object,
+  del_object,
+  get_object,
+  query_object,
   query_object_header,
   shuwa_batch,
+  update_object,
 } from '@/api/shuwa_parse'
 
 import {
-  getBatchNumer,
-  postDict,
-  getIndustry,
   delDict,
+  getBatchNumer,
+  getIndustry,
+  postDict,
   putDict,
 } from '@/api/Dict/index'
 import {
-  queryDevice,
-  postDevice,
-  putDevice,
   delDevice,
   getDevice,
+  postDevice,
+  putDevice,
+  queryDevice,
 } from '@/api/Device/index'
 import { queryProduct } from '@/api/Product/index'
 import { getMqttEventId, getTopicEventId } from '@/utils'
@@ -48,6 +40,15 @@ import { getMqttEventId, getTopicEventId } from '@/utils'
  * @returns {*}
  */
 import o2Log from './o2Console'
+
+Vue.use(dgiotBus)
+Vue.mixin(dgiotMixin)
+Vue.use(Bus)
+
+const Headers = {
+  sessionToken: store ? store.getters['user/token'] : '',
+}
+
 function moreHttp(option) {
   let arr = [],
     keys = []
@@ -142,6 +143,7 @@ function timestampToTime(timestamp, full) {
     return Y + M + D
   }
 }
+
 export function translateTitle(title) {
   let pageTitle = ''
   if (i18n.te(`vabI18n.${title}`)) {
@@ -164,6 +166,7 @@ export function aclObj(roles) {
   })
   return aclObj
 }
+
 // 针对数组、对象的深拷贝
 export function deepClone(originObject) {
   var deepObject = Array.isArray(originObject) ? [] : {}
@@ -293,6 +296,7 @@ export function ajax(url, method, datas) {
     })
   })
 }
+
 export function globalUrl(hostname = window.location.hostname, localHost) {
   var result = localHost.some((i) => {
     return hostname.indexOf(i) > -1
@@ -414,7 +418,12 @@ export function throttle(func, wait = 500, options) {
   //container.onmousemove = throttle(getUserAction, 1000);
   var timeout, context, args
   var previous = 0
-  if (!options) options = { leading: false, trailing: true }
+  if (!options) {
+    options = {
+      leading: false,
+      trailing: true,
+    }
+  }
 
   var later = function () {
     previous = options.leading === false ? 0 : new Date().getTime()
@@ -515,9 +524,9 @@ export default {
     Vue.prototype.$bus = Bus
     Vue.prototype.$o2Log = o2Log
     // https://shufei021.github.io/rutils/library/
-    Vue.prototype.$dgiotUtils = rutils
+    // Vue.prototype.$dgiotUtils = rutils
     // https://shufei021.github.io/rdate/
-    Vue.prototype.$dgiotRdate = rdate
+    // Vue.prototype.$dgiotRdate = rdate
     Vue.prototype.$getMqttEventId = getMqttEventId
     Vue.prototype.$getTopicEventId = getTopicEventId
     Vue.prototype.$downBinary = downBinary

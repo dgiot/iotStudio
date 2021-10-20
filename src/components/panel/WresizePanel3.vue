@@ -4,7 +4,10 @@
     @mousemove="onMousemove($event)"
     @mouseup="onMouseup($event)"
   >
-    <div class="wresize-panel-left" :style="{ width: divLeft.width + 'px' }">
+    <div
+      class="wresize-panel-left"
+      :style="{ width: divLeft.width + 'px' }"
+    >
       <slot name="left"></slot>
     </div>
 
@@ -27,7 +30,10 @@
       @mousedown="onMouseDownRight($event)"
     ></div>
 
-    <div class="wresize-panel-right" :style="{ width: divRight.width + 'px' }">
+    <div
+      class="wresize-panel-right"
+      :style="{ width: divRight.width + 'px' }"
+    >
       <slot name="right"></slot>
     </div>
   </div>

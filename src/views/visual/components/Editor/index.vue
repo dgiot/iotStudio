@@ -50,7 +50,12 @@
     <!-- 标线 -->
     <MarkLine />
     <!-- 选中区域 -->
-    <Area v-show="isShowArea" :height="height" :start="start" :width="width" />
+    <Area
+      v-show="isShowArea"
+      :height="height"
+      :start="start"
+      :width="width"
+    />
   </div>
 </template>
 

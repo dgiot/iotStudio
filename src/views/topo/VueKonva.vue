@@ -7,7 +7,10 @@
         :visible.sync="ShapeVisible"
         width="100vh"
       >
-        <span v-if="tabsName == 'ShapeJson'" slot="footer"></span>
+        <span
+          v-if="tabsName == 'ShapeJson'"
+          slot="footer"
+        ></span>
       </el-dialog>
     </div>
     <div
@@ -29,17 +32,30 @@
       />
     </div>
     <div class="_mian">
-      <el-row class="_row" :gutter="gutter">
+      <el-row
+        class="_row"
+        :gutter="gutter"
+      >
         <transition name="fade">
-          <el-col v-show="showTable" :span="leftrow">
+          <el-col
+            v-show="showTable"
+            :span="leftrow"
+          >
             <div class="_left">
               <topo-allocation />
             </div>
           </el-col>
         </transition>
-        <el-col class="_konvarow" :span="24 - rightrow">
+        <el-col
+          class="_konvarow"
+          :span="24 - rightrow"
+        >
           <!--          <topo-base ref="topobase" />-->
-          <div id="konva" ref="konva" :class="konvaClass"></div>
+          <div
+            id="konva"
+            ref="konva"
+            :class="konvaClass"
+          ></div>
 
           <div
             v-show="!isDevice && productid"
@@ -48,7 +64,10 @@
               display: infoFlag ? 'block' : 'block',
             }"
           >
-            <el-row :gutter="10" style="text-align: center">
+            <el-row
+              :gutter="10"
+              style="text-align: center"
+            >
               <el-col :span="24">
                 <el-button
                   :disabled="productid.length < 1"

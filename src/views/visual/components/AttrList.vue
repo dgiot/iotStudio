@@ -58,7 +58,10 @@
         v-if="curComponent && !excludes.includes(curComponent.component)"
         label="内容"
       >
-        <el-input v-model="curComponent.propValue" type="textarea" />
+        <el-input
+          v-model="curComponent.propValue"
+          type="textarea"
+        />
       </el-form-item>
     </el-form>
   </div>

@@ -1,28 +1,56 @@
 <template>
-  <el-badge v-if="theme.showNotice" :value="badge">
-    <el-popover placement="bottom" trigger="hover" width="300">
+  <el-badge
+    v-if="theme.showNotice"
+    :value="badge"
+  >
+    <el-popover
+      placement="bottom"
+      trigger="hover"
+      width="300"
+    >
       <template #reference>
         <vab-icon icon="notification-line" />
       </template>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane :label="$translateTitle('通知')" name="notice">
+      <el-tabs
+        v-model="activeName"
+        @tab-click="handleClick"
+      >
+        <el-tab-pane
+          :label="$translateTitle('通知')"
+          name="notice"
+        >
           <div class="notice-list">
             <el-scrollbar>
               <ul>
-                <li v-for="(item, index) in list" :key="index">
-                  <el-avatar :size="45" :src="item.image" />
+                <li
+                  v-for="(item, index) in list"
+                  :key="index"
+                >
+                  <el-avatar
+                    :size="45"
+                    :src="item.image"
+                  />
                   <span v-html="item.notice" />
                 </li>
               </ul>
             </el-scrollbar>
           </div>
         </el-tab-pane>
-        <el-tab-pane :label="$translateTitle('邮件')" name="email">
+        <el-tab-pane
+          :label="$translateTitle('邮件')"
+          name="email"
+        >
           <div class="notice-list">
             <el-scrollbar>
               <ul>
-                <li v-for="(item, index) in list" :key="index">
-                  <el-avatar :size="45" :src="item.image" />
+                <li
+                  v-for="(item, index) in list"
+                  :key="index"
+                >
+                  <el-avatar
+                    :size="45"
+                    :src="item.image"
+                  />
                   <span>{{ item.email }}</span>
                 </li>
               </ul>
@@ -30,7 +58,10 @@
           </div>
         </el-tab-pane>
       </el-tabs>
-      <div class="notice-clear" @click="handleClearNotice">
+      <div
+        class="notice-clear"
+        @click="handleClearNotice"
+      >
         <el-button type="text">
           <vab-icon icon="close-circle-line" />
           <span>{{ $translateTitle('清空消息') }}</span>

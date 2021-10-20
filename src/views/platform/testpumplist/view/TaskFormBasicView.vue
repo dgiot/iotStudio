@@ -26,13 +26,19 @@
       :model="addDetectionTaskform"
       :rules="formRule"
     >
-      <el-divider content-position="left" style="color: blue">
+      <el-divider
+        content-position="left"
+        style="color: blue"
+      >
         检测任务基本信息
       </el-divider>
       <el-row>
         <el-col :span="12">
           <div class="grid-content bg-purple">
-            <el-form-item label="任务名称：" prop="task_name">
+            <el-form-item
+              label="任务名称："
+              prop="task_name"
+            >
               <el-input
                 v-model="addDetectionTaskform.task_name"
                 style="width: 100%"
@@ -42,7 +48,10 @@
             <!-- 修改为新增的reportId  -->
 
             <!-- 该字段并不真的使用 -->
-            <el-form-item label="质检项目" prop="reportId">
+            <el-form-item
+              label="质检项目"
+              prop="reportId"
+            >
               <el-select
                 v-model="addDetectionTaskform.selectDefault"
                 style="width: 100%"
@@ -61,7 +70,10 @@
         <!--右边的地方-->
         <el-col :span="12">
           <div class="grid-content bg-purple-light">
-            <el-form-item label="开始时间：" prop="starttime">
+            <el-form-item
+              label="开始时间："
+              prop="starttime"
+            >
               <el-date-picker
                 v-model="addDetectionTaskform.starttime"
                 type="datetime"
@@ -69,7 +81,10 @@
               />
             </el-form-item>
 
-            <el-form-item label="结束时间：" prop="endtime">
+            <el-form-item
+              label="结束时间："
+              prop="endtime"
+            >
               <el-date-picker
                 v-model="addDetectionTaskform.endtime"
                 type="datetime"
@@ -79,7 +94,10 @@
           </div>
         </el-col>
       </el-row>
-      <el-divider content-position="left" style="color: blue">
+      <el-divider
+        content-position="left"
+        style="color: blue"
+      >
         检测资源信息
       </el-divider>
 
@@ -89,7 +107,10 @@
         </el-col>
         <el-col :span="12">
           <div class="grid-content bg-purple-light">
-            <el-form-item label="测试台体" prop="bedname">
+            <el-form-item
+              label="测试台体"
+              prop="bedname"
+            >
               <el-select
                 v-model="addDetectionTaskform.bedIndex"
                 @change="changeBed"

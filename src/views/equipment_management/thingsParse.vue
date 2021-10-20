@@ -9,7 +9,10 @@
           style="width: 100%"
           @current-change="handleCurrentChange"
         >
-          <el-table-column label="ID" prop="objectId" />
+          <el-table-column
+            label="ID"
+            prop="objectId"
+          />
           <!-- <el-table-column prop="name" label="产品名称" /> -->
           <el-table-column
             :label="$translateTitle('task.productname')"
@@ -63,13 +66,25 @@
                 <!-- 设为公共 -->
                 {{ $translateTitle('product.setaspublic') }}
               </el-button>
-              <el-button size="small" type="primary" @click="chaxun">
+              <el-button
+                size="small"
+                type="primary"
+                @click="chaxun"
+              >
                 {{ $translateTitle('product.publicagreementlibrary') }}
               </el-button>
-              <el-button size="small" type="primary" @click="protol">
+              <el-button
+                size="small"
+                type="primary"
+                @click="protol"
+              >
                 {{ $translateTitle('product.compile') }}
               </el-button>
-              <el-button size="small" type="success" @click="updatesubdialog">
+              <el-button
+                size="small"
+                type="success"
+                @click="updatesubdialog"
+              >
                 <!-- 热加载 -->
                 {{ $translateTitle('product.thermalloading') }}
               </el-button>
@@ -98,7 +113,10 @@
             style="width: 100%"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="55" />
+            <el-table-column
+              type="selection"
+              width="55"
+            />
             <el-table-column
               :label="$translateTitle('developer.channelnumber')"
             >
@@ -132,9 +150,15 @@
               </template>
             </el-table-column>
           </el-table>
-          <div slot="footer" class="dialog-footer">
+          <div
+            slot="footer"
+            class="dialog-footer"
+          >
             <!-- <el-button type="primary" @click.native="updateAllChannel">确定</el-button> -->
-            <el-button type="primary" @click.native="updateAllChannel">
+            <el-button
+              type="primary"
+              @click.native="updateAllChannel"
+            >
               <!-- 确定 -->
               {{ $translateTitle('developer.determine') }}
             </el-button>
@@ -208,7 +232,10 @@
               </template>
             </el-table-column>
           </el-table>
-          <div class="elpagination" style="padding: 20px 0">
+          <div
+            class="elpagination"
+            style="padding: 20px 0"
+          >
             <el-pagination
               layout="total, sizes, prev, pager, next, jumper"
               :page-size="decoderlength"

@@ -14,21 +14,36 @@
         :model="editForm"
         :rules="rules"
       >
-        <el-form-item label="产品名称" prop="name">
+        <el-form-item
+          label="产品名称"
+          prop="name"
+        >
           <el-input v-model="editForm.name" />
         </el-form-item>
-        <el-form-item label="产品类型" prop="devType">
+        <el-form-item
+          label="产品类型"
+          prop="devType"
+        >
           <el-input v-model="editForm.devType" />
         </el-form-item>
-        <el-form-item label="所属分类" prop="category">
+        <el-form-item
+          label="所属分类"
+          prop="category"
+        >
           <el-cascader
             v-model="editForm.category"
             :options="categoryListOptions"
           />
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click.native="editPostForm('editForm')">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click.native="editPostForm('editForm')"
+        >
           修改
         </el-button>
         <el-button @click="resetForm('editForm')">重置</el-button>
@@ -48,21 +63,36 @@
         :model="moduleForm"
         :rules="rules"
       >
-        <el-form-item label="产品名称" prop="name">
+        <el-form-item
+          label="产品名称"
+          prop="name"
+        >
           <el-input v-model="moduleForm.name" />
         </el-form-item>
-        <el-form-item label="产品类型" prop="devType">
+        <el-form-item
+          label="产品类型"
+          prop="devType"
+        >
           <el-input v-model="moduleForm.devType" />
         </el-form-item>
-        <el-form-item label="所属分类" prop="category">
+        <el-form-item
+          label="所属分类"
+          prop="category"
+        >
           <el-cascader
             v-model="moduleForm.category"
             :options="categoryListOptions"
           />
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click.native="submitForm('moduleForm')">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click.native="submitForm('moduleForm')"
+        >
           立即创建
         </el-button>
         <el-button @click="resetForm('moduleForm')">重置</el-button>
@@ -114,16 +144,28 @@
         max-height="583"
         style="width: 100%; min-height: 583px"
       >
-        <el-table-column label="objectId" prop="objectId" />
+        <el-table-column
+          label="objectId"
+          prop="objectId"
+        />
         <el-table-column label="产品名称">
-          <template slot-scope="scope">{{ scope.row.data.name }}</template>
+          <template slot-scope="scope">
+            {{ scope.row.data.name }}
+          </template>
         </el-table-column>
         <el-table-column label="产品类型">
-          <template slot-scope="scope">{{ scope.row.data.devType }}</template>
+          <template slot-scope="scope">
+            {{ scope.row.data.devType }}
+          </template>
         </el-table-column>
-        <el-table-column label="key" prop="key" />
+        <el-table-column
+          label="key"
+          prop="key"
+        />
         <el-table-column label="所属分类">
-          <template slot-scope="scope">{{ scope.row.data.category }}</template>
+          <template slot-scope="scope">
+            {{ scope.row.data.category }}
+          </template>
         </el-table-column>
         <el-table-column align="right">
           <!-- eslint-disable-next-line -->
@@ -135,7 +177,10 @@
             />
           </template>
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.$index, scope.row)"
+            >
               修改
             </el-button>
             <el-button

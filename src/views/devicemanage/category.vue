@@ -14,7 +14,10 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <el-input v-model="queryForm.name" clearable />
+            <el-input
+              v-model="queryForm.name"
+              clearable
+            />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -72,13 +75,22 @@
         sortable
       >
         <template #default="{ row }">
-          <el-button type="text" @click="handleEdit(row)">
+          <el-button
+            type="text"
+            @click="handleEdit(row)"
+          >
             {{ $translateTitle('button.edit') }}
           </el-button>
-          <el-button type="text" @click="handleAddChild(row)">
+          <el-button
+            type="text"
+            @click="handleAddChild(row)"
+          >
             {{ $translateTitle('category.Add subcategory') }}
           </el-button>
-          <el-button type="text" @click="handleDelete(row.objectId)">
+          <el-button
+            type="text"
+            @click="handleDelete(row.objectId)"
+          >
             {{ $translateTitle('button.delete') }}
           </el-button>
         </template>
@@ -92,7 +104,10 @@
         />
       </template>
     </el-table>
-    <categoryEdit ref="edit" @fetch-data="fetchData" />
+    <categoryEdit
+      ref="edit"
+      @fetch-data="fetchData"
+    />
   </div>
 </template>
 

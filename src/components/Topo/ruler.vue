@@ -10,7 +10,11 @@
       position: position,
     }"
   >
-    <div id="levelRuler" class="ScaleRuler_h" @mousedown.stop="levelDragRuler">
+    <div
+      id="levelRuler"
+      class="ScaleRuler_h"
+      @mousedown.stop="levelDragRuler"
+    >
       <span
         v-for="(item, index) in xScale"
         :key="index"

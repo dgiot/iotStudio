@@ -18,7 +18,10 @@
       :width="item.width"
     >
       <template slot-scope="scope">
-        <slot :name="item.key" :scope="scope">
+        <slot
+          :name="item.key"
+          :scope="scope"
+        >
           <template v-if="item.expand">
             <span :style="{ 'padding-left': 20 + 'px' }" />
             <span
@@ -38,7 +41,7 @@
             <el-checkbox
               v-if="
                 scope.row[defaultChildren] &&
-                scope.row[defaultChildren].length > 0
+                  scope.row[defaultChildren].length > 0
               "
               v-model="scope.row._select"
               :indeterminate="scope.row._select"

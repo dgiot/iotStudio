@@ -1,5 +1,8 @@
 <template>
-  <div id="VabXterm" class="VabXterm" />
+  <div
+    id="VabXterm"
+    class="VabXterm"
+  />
 </template>
 <script>
   // import { Terminal } from 'xterm'

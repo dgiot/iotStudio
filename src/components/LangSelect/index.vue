@@ -5,13 +5,22 @@
     @command="handleSetLanguage"
   >
     <div>
-      <vab-icon class-name="international-icon" icon-class="language" />
+      <vab-icon
+        class-name="international-icon"
+        icon-class="language"
+      />
     </div>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item command="zh" :disabled="language === 'zh'">
+      <el-dropdown-item
+        command="zh"
+        :disabled="language === 'zh'"
+      >
         中文
       </el-dropdown-item>
-      <el-dropdown-item command="en" :disabled="language === 'en'">
+      <el-dropdown-item
+        command="en"
+        :disabled="language === 'en'"
+      >
         English
       </el-dropdown-item>
     </el-dropdown-menu>

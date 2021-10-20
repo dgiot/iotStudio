@@ -1,5 +1,8 @@
 <template>
-  <div class="vue-admin-beautiful-wrapper" :class="classObj">
+  <div
+    class="vue-admin-beautiful-wrapper"
+    :class="classObj"
+  >
     <component
       :is="'vab-layout-' + theme.layout"
       :collapse="collapse"

@@ -17,7 +17,11 @@
         />
       </el-select>
     </div>
-    <el-table v-loading="$store.state.loading" border :data="listeners">
+    <el-table
+      v-loading="$store.state.loading"
+      border
+      :data="listeners"
+    >
       <el-table-column
         :label="$translateTitle('listeners.protocol')"
         prop="protocol"

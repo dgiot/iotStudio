@@ -96,12 +96,21 @@
       width="30%"
     >
       <span>{{ $translateTitle('node.nodename') }}</span>
-      <el-input v-model="form.nodename" type="text" />
-      <span slot="footer" class="dialog-footer">
+      <el-input
+        v-model="form.nodename"
+        type="text"
+      />
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="dialogVisible = false">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click.native="join">
+        <el-button
+          type="primary"
+          @click.native="join"
+        >
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>

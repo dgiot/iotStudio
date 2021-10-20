@@ -1,7 +1,10 @@
 <template>
   <div class="log log-container">
     <div>
-      <a-tabs default-active-key="editor" @change="stopchannel">
+      <a-tabs
+        default-active-key="editor"
+        @change="stopchannel"
+      >
         <a-tab-pane key="editor">
           <span slot="tab">
             <vab-icon icon="aspect-ratio-fill" />
@@ -80,7 +83,10 @@
               </template>
             </el-table-column>
             <template #empty>
-              <a-empty class="vab-data-empty" :description="false" />
+              <a-empty
+                class="vab-data-empty"
+                :description="false"
+              />
             </template>
           </el-table>
           <el-pagination
@@ -94,7 +100,10 @@
           />
         </a-tab-pane>
 
-        <a-tab-pane key="device" :disabled="!product.length">
+        <a-tab-pane
+          key="device"
+          :disabled="!product.length"
+        >
           <span slot="tab">
             <vab-icon icon="traffic-light-line" />
             {{ $translateTitle('system.Accurate log') }}
@@ -111,7 +120,10 @@
                   <el-form-item>
                     <span slot="label">
                       {{ $translateTitle('alert.productname') }}
-                      <el-badge class="item" :value="product.length" />
+                      <el-badge
+                        class="item"
+                        :value="product.length"
+                      />
                     </span>
                     <el-select
                       v-model="queryForm.product"
@@ -154,7 +166,10 @@
               :label="$translateTitle('product.log')"
             >
               <template #default="{ row }">
-                <el-button type="text" @click="subscriptionlog(row.devaddr)">
+                <el-button
+                  type="text"
+                  @click="subscriptionlog(row.devaddr)"
+                >
                   {{ $translateTitle('product.subscriptionlog') }}
                 </el-button>
               </template>

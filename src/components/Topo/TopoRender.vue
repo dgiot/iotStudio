@@ -1,5 +1,9 @@
 <template>
-  <div v-if="configData.layer" class="topo-render" :style="layerStyle">
+  <div
+    v-if="configData.layer"
+    class="topo-render"
+    :style="layerStyle"
+  >
     <template v-for="(component, index) in configData.components">
       <div
         v-show="

@@ -1,8 +1,16 @@
 <template>
   <div class="topo-toolbox">
-    <div class="full-height" highlight separator>
+    <div
+      class="full-height"
+      highlight
+      separator
+    >
       <template v-for="(group, index1) in toolbox">
-        <div :key="index1" :icon="group.icon" :label="group.title">
+        <div
+          :key="index1"
+          :icon="group.icon"
+          :label="group.title"
+        >
           <div class="toolbox-group">
             <template v-for="(value, index) in group.items">
               <div
@@ -16,14 +24,21 @@
                   <div class="toolbox-item-icon">
                     <i :class="value.icon"></i>
                   </div>
-                  <div class="toolbox-item-text">{{ value.text }}</div>
+                  <div class="toolbox-item-text">
+                    {{ value.text }}
+                  </div>
                 </template>
                 <!-- 阿里巴巴矢量图标 -->
                 <template v-else-if="value.isFontIcon === 1">
                   <div class="item-icon">
-                    <i class="icon iconfont" :class="value.icon"></i>
+                    <i
+                      class="icon iconfont"
+                      :class="value.icon"
+                    ></i>
                   </div>
-                  <div class="toolbox-item-text">{{ value.text }}</div>
+                  <div class="toolbox-item-text">
+                    {{ value.text }}
+                  </div>
                 </template>
                 <template v-else>
                   <div class="toolbox-item-icon">
@@ -33,7 +48,9 @@
                       style="width: 40px; height: 40px"
                     />
                   </div>
-                  <div class="toolbox-item-text">{{ value.text }}</div>
+                  <div class="toolbox-item-text">
+                    {{ value.text }}
+                  </div>
                 </template>
               </div>
             </template>

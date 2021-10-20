@@ -7,7 +7,11 @@
     <div class="table-title">
       {{ $translateTitle('analysis.currentAlarms') }}
     </div>
-    <el-table v-loading="loading" border :data="currentTableData">
+    <el-table
+      v-loading="loading"
+      border
+      :data="currentTableData"
+    >
       <el-table-column
         :label="$translateTitle('analysis.alarmName')"
         prop="name"
@@ -25,10 +29,16 @@
             trigger="hover"
             width="160"
           >
-            <div v-for="(value, label) in row.details" :key="label">
+            <div
+              v-for="(value, label) in row.details"
+              :key="label"
+            >
               {{ label }}: {{ value }}
             </div>
-            <span slot="reference" class="details">
+            <span
+              slot="reference"
+              class="details"
+            >
               <i class="iconfont icon-bangzhu"></i>
             </span>
           </el-popover>
@@ -52,9 +62,15 @@
       <el-table-column>
         <span slot="header">
           {{ $translateTitle('analysis.duration') }}
-          <el-popover placement="top" trigger="hover">
+          <el-popover
+            placement="top"
+            trigger="hover"
+          >
             {{ $translateTitle('analysis.durationTips') }}
-            <i slot="reference" class="el-icon-question"></i>
+            <i
+              slot="reference"
+              class="el-icon-question"
+            ></i>
           </el-popover>
         </span>
         <template slot-scope="{ row }">
@@ -90,7 +106,12 @@
                 {{ $translateTitle('oper.confirm') }}
               </el-button>
             </div>
-            <el-button slot="reference" plain size="mini" type="danger">
+            <el-button
+              slot="reference"
+              plain
+              size="mini"
+              type="danger"
+            >
               {{ $translateTitle('analysis.deactivate') }}
             </el-button>
           </el-popover>
@@ -111,7 +132,11 @@
         {{ $translateTitle('analysis.clearAll') }}
       </el-button>
     </div>
-    <el-table v-loading="loading" border :data="historicalTableData">
+    <el-table
+      v-loading="loading"
+      border
+      :data="historicalTableData"
+    >
       <el-table-column
         :label="$translateTitle('analysis.alarmName')"
         prop="name"
@@ -129,10 +154,16 @@
             trigger="hover"
             width="160"
           >
-            <div v-for="(value, label) in row.details" :key="label">
+            <div
+              v-for="(value, label) in row.details"
+              :key="label"
+            >
               {{ label }}: {{ value }}
             </div>
-            <span slot="reference" class="details">
+            <span
+              slot="reference"
+              class="details"
+            >
               <i class="iconfont icon-bangzhu"></i>
             </span>
           </el-popover>

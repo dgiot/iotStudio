@@ -58,7 +58,11 @@
                   id="editor1"
                   class="ace_editor"
                   style="min-height: 300px"
-                ><el-input v-model="formInline.enginesql" class="ace_text-input" type="textarea"/></pre>
+                ><el-input
+v-model="formInline.enginesql"
+                           class="ace_text-input"
+type="textarea"
+                /></pre>
               </el-form-item>
               <!--备注-->
               <el-form-item :label="$translateTitle('rule.rule Id')">
@@ -69,7 +73,10 @@
                 />
               </el-form-item>
               <el-form-item :label="$translateTitle('rule.Remarks')">
-                <el-input v-model="formInline.remarks" type="text" />
+                <el-input
+                  v-model="formInline.remarks"
+                  type="text"
+                />
               </el-form-item>
               <!--SQL测试-->
               <el-form-item :label="$translateTitle('rule.SQLtest')">
@@ -97,7 +104,10 @@
 
             <!--中间间隔-->
             <el-col :span="4" />
-            <el-col class="animated fadeInRightBig" :span="row2">
+            <el-col
+              class="animated fadeInRightBig"
+              :span="row2"
+            >
               <el-form-item
                 v-show="formInline.sqltest == true"
                 label="clientid"
@@ -167,9 +177,16 @@
                   id="editor2"
                   class="ace_editor"
                   style="min-height: 300px"
-                ><el-input v-model="formInline.payload" class="ace_text-input" type="textarea"/></pre>
+                ><el-input
+v-model="formInline.payload"
+                           class="ace_text-input"
+type="textarea"
+                /></pre>
               </el-form-item>
-              <el-form-item v-show="formInline.sqltest == true" label=" ">
+              <el-form-item
+                v-show="formInline.sqltest == true"
+                label=" "
+              >
                 <el-button
                   type="success"
                   @click.native="testRule('formInline')"
@@ -198,7 +215,10 @@
                 {{ $translateTitle('rule.Processing') }}
               </div>
             </div>
-            <div class="bottomtable" style="padding-left: 20px">
+            <div
+              class="bottomtable"
+              style="padding-left: 20px"
+            >
               <div class="tableaction">
                 <el-table
                   :cell-style="{ 'text-align': 'center' }"

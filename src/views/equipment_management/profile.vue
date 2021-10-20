@@ -37,10 +37,20 @@
           id="editor1"
           class="ace_editor"
           style="min-height: 400px"
-        ><textarea class="ace_text-input" style="overflow:scroll"/></pre>
+        ><textarea
+class="ace_text-input"
+                   style="overflow:scroll"
+        /></pre>
       </div>
-      <span slot="footer" class="dialog-footer" style="height: 30px">
-        <el-button type="primary" @click="preserve">
+      <span
+        slot="footer"
+        class="dialog-footer"
+        style="height: 30px"
+      >
+        <el-button
+          type="primary"
+          @click="preserve"
+        >
           <!-- 更新 -->
           {{ $translateTitle('equipment.update') }}
         </el-button>
@@ -67,9 +77,20 @@
       <!--        </el-button>-->
       <!--      </span>-->
     </el-dialog>
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
-    <el-dialog v-drag-dialog append-to-body :visible.sync="parserView">
-      <f-render v-model="formConfig" :config="formConfig" pure />
+    <vab-input
+      ref="uploadFinish"
+      @fileInfo="fileInfo"
+    />
+    <el-dialog
+      v-drag-dialog
+      append-to-body
+      :visible.sync="parserView"
+    >
+      <f-render
+        v-model="formConfig"
+        :config="formConfig"
+        pure
+      />
     </el-dialog>
 
     <div class="prosecond">
@@ -145,7 +166,13 @@
         </vab-query-form-top-panel>
       </vab-query-form>
       <el-row :gutter="24">
-        <el-col :lg="4" :md="5" :sm="6" :xl="3" :xs="12">
+        <el-col
+          :lg="4"
+          :md="5"
+          :sm="6"
+          :xl="3"
+          :xs="12"
+        >
           <ul
             class="infinite-list"
             style="overflow: auto"
@@ -171,7 +198,13 @@
             </li>
           </ul>
         </el-col>
-        <el-col :lg="4" :md="6" :sm="6" :xl="3" :xs="12">
+        <el-col
+          :lg="4"
+          :md="6"
+          :sm="6"
+          :xl="3"
+          :xs="12"
+        >
           <div class="protable">
             <el-table
               ref="multipleTable"
@@ -196,7 +229,10 @@
               </el-table-column>
             </el-table>
           </div>
-          <div class="elpagination" style="margin-top: 20px">
+          <div
+            class="elpagination"
+            style="margin-top: 20px"
+          >
             <el-pagination
               layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
@@ -207,7 +243,13 @@
             />
           </div>
         </el-col>
-        <el-col :lg="16" :md="13" :sm="12" :xl="18" :xs="24">
+        <el-col
+          :lg="16"
+          :md="13"
+          :sm="12"
+          :xl="18"
+          :xs="24"
+        >
           <profile-descriptions
             ref="ProfileDescription"
             :decoder-table-list="decoderTableList"
@@ -239,7 +281,10 @@
       :title-dict="title_dict_edit_dialog"
       :title-temp-dialog="title_temp_dialog"
     />
-    <product-templet ref="templet" @fetch-data="queryProduttemp({})" />
+    <product-templet
+      ref="templet"
+      @fetch-data="queryProduttemp({})"
+    />
     <el-drawer
       append-to-body
       :before-close="handleClose"
@@ -252,23 +297,40 @@
       <div class="devproduct-prodialog-content">
         <!--产品信息-->
         <div class="contentone">
-          <el-form ref="form" label-width="150px" :model="form" :rules="rules">
+          <el-form
+            ref="form"
+            label-width="150px"
+            :model="form"
+            :rules="rules"
+          >
             <el-form-item
               :label="$translateTitle('product.Producttemplatename')"
               prop="name"
             >
-              <el-input v-model="form.name" autocomplete="off" />
+              <el-input
+                v-model="form.name"
+                autocomplete="off"
+              />
             </el-form-item>
 
             <el-form-item
               :label="$translateTitle('product.classification')"
               prop="netType"
             >
-              <el-input v-model="form.netType" readonly />
+              <el-input
+                v-model="form.netType"
+                readonly
+              />
             </el-form-item>
-            <el-form-item :label="$translateTitle('menu.icon')" prop="icon">
+            <el-form-item
+              :label="$translateTitle('menu.icon')"
+              prop="icon"
+            >
               <div v-if="imageUrl">
-                <img class="avatar" :src="imageUrl" />
+                <img
+                  class="avatar"
+                  :src="imageUrl"
+                />
                 <el-button
                   size="mini"
                   style="vertical-align: text-bottom"
@@ -308,13 +370,19 @@
               :label="$translateTitle('developer.describe')"
               prop="desc"
             >
-              <el-input v-model="form.desc" type="textarea" />
+              <el-input
+                v-model="form.desc"
+                type="textarea"
+              />
             </el-form-item>
           </el-form>
         </div>
       </div>
       <div class="devproduct-prodialog-footer">
-        <el-button type="primary" @click.native="submitForm()">
+        <el-button
+          type="primary"
+          @click.native="submitForm()"
+        >
           {{ $translateTitle('developer.determine') }}
         </el-button>
         <el-button @click="handleCloseDialogForm()">

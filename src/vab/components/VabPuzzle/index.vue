@@ -8,8 +8,15 @@
     @touchend="onCloseMouseUp"
     @touchstart="onCloseMouseDown"
   >
-    <div class="vue-auth-box_" @mousedown.stop @touchstart.stop>
-      <div class="auth-body_" :style="`height: ${canvasHeight}px`">
+    <div
+      class="vue-auth-box_"
+      @mousedown.stop
+      @touchstart.stop
+    >
+      <div
+        class="auth-body_"
+        :style="`height: ${canvasHeight}px`"
+      >
         <!-- 主图，有缺口 -->
         <canvas
           ref="canvas1"
@@ -34,7 +41,7 @@
             styleWidth -
             sliderBaseSize -
             (puzzleBaseSize - sliderBaseSize) *
-              ((styleWidth - sliderBaseSize) / (canvasWidth - sliderBaseSize))
+            ((styleWidth - sliderBaseSize) / (canvasWidth - sliderBaseSize))
           }px)`"
           :width="puzzleBaseSize"
         />
@@ -60,11 +67,20 @@
               : `-${canvasHeight * 0.578}px`
           }) skew(-30deg, 0);`"
         ></div>
-        <img class="reset_" :src="resetSvg" @click="reset" />
+        <img
+          class="reset_"
+          :src="resetSvg"
+          @click="reset"
+        />
       </div>
       <div class="auth-control_">
-        <div class="range-box" :style="`height:${sliderBaseSize}px`">
-          <div class="range-text">{{ sliderText }}</div>
+        <div
+          class="range-box"
+          :style="`height:${sliderBaseSize}px`"
+        >
+          <div class="range-text">
+            {{ sliderText }}
+          </div>
           <div
             ref="range-slider"
             class="range-slider"

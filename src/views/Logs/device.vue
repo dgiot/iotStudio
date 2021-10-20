@@ -1,5 +1,8 @@
 <template>
-  <div class="logs logs-container" :class="{ 'vab-fullscreen': isFullscreen }">
+  <div
+    class="logs logs-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
+  >
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form
@@ -13,7 +16,11 @@
             class="item-time"
             :label="$translateTitle('device.Log type')"
           >
-            <el-select v-model="queryForm.domain" multiple placeholder="请选择">
+            <el-select
+              v-model="queryForm.domain"
+              multiple
+              placeholder="请选择"
+            >
               <el-option
                 v-for="item in domainOptions"
                 :key="item"
@@ -40,7 +47,10 @@
             v-show="!isDeviceInfo"
             :label="$translateTitle('equipment.Products')"
           >
-            <el-select v-model="queryForm.productid" clearable>
+            <el-select
+              v-model="queryForm.productid"
+              clearable
+            >
               <el-option
                 v-for="(item, index) in proTableData"
                 v-show="item.objectId != 0"
@@ -81,8 +91,14 @@
 
             <el-popover trigger="hover">
               <el-checkbox-group v-model="checkList">
-                <vue-draggable v-bind="dragOptions" :list="logcolumns">
-                  <div v-for="(item, index) in logcolumns" :key="item + index">
+                <vue-draggable
+                  v-bind="dragOptions"
+                  :list="logcolumns"
+                >
+                  <div
+                    v-for="(item, index) in logcolumns"
+                    :key="item + index"
+                  >
                     <vab-icon icon="drag-drop-line" />
                     <el-checkbox
                       :disabled="item.disableCheck === true"
@@ -107,7 +123,10 @@
         </el-form>
       </vab-query-form-top-panel>
     </vab-query-form>
-    <el-dialog append-to-body :visible.sync="preDialog">
+    <el-dialog
+      append-to-body
+      :visible.sync="preDialog"
+    >
       <vab-editor
         :key="refreshFlag"
         v-model="msg"
@@ -149,7 +168,12 @@
     >
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-descriptions border class="margin-top" :column="2" :size="size">
+          <el-descriptions
+            border
+            class="margin-top"
+            :column="2"
+            :size="size"
+          >
             <el-descriptions-item
               v-for="(item, key, index) in props.row"
               :key="index"
@@ -191,7 +215,10 @@
         :label="$translateTitle('concentrator.operation')"
       >
         <template #default="{ row }">
-          <el-button type="text" @click="showDetail(row)">
+          <el-button
+            type="text"
+            @click="showDetail(row)"
+          >
             {{ $translateTitle('concentrator.detail') }}
           </el-button>
         </template>

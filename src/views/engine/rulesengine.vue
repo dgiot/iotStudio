@@ -52,13 +52,19 @@
           :label="$translateTitle('rule.ResponseAction')"
         >
           <template slot-scope="scope">
-            <p v-for="(item, index) in scope.row.actions" :key="index">
+            <p
+              v-for="(item, index) in scope.row.actions"
+              :key="index"
+            >
               {{ item.name }}
             </p>
           </template>
         </el-table-column>
         <!-- <el-table-column align="center" label="已命中"> -->
-        <el-table-column align="center" :label="$translateTitle('product.hit')">
+        <el-table-column
+          align="center"
+          :label="$translateTitle('product.hit')"
+        >
           <template slot-scope="scope">
             <span>{{ matched(scope.row.metrics) }}</span>
           </template>

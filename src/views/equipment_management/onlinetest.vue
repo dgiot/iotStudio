@@ -2,9 +2,16 @@
   <div class="onlinetest">
     <div class="onlinetest_top">
       <div>
-        <el-form :inline="true" :model="devices" size="mini">
+        <el-form
+          :inline="true"
+          :model="devices"
+          size="mini"
+        >
           <el-form-item label="请选择设备">
-            <el-select v-model="devices.productid" @change="selsectProduct">
+            <el-select
+              v-model="devices.productid"
+              @change="selsectProduct"
+            >
               <el-option
                 v-for="(item, index) in productlist"
                 :key="index"
@@ -37,7 +44,12 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click.native="subTopic">订阅</el-button>
+            <el-button
+              type="primary"
+              @click.native="subTopic"
+            >
+              订阅
+            </el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -45,7 +57,10 @@
         <span style="display: inline-block; font-size: 20px; font-weight: 900">
           实时日志
         </span>
-        <span class="status" :class="status" />
+        <span
+          class="status"
+          :class="status"
+        />
         <!-- <span style="font-size:14px;color:grey">(未激活)真实设备</span> -->
         <div style="float: right">
           <el-switch
@@ -56,10 +71,18 @@
             style="display: inline-block; margin-right: 10px"
             @change="isInterval"
           />
-          <el-button size="mini" type="primary" @click="sendTrueInterval">
+          <el-button
+            size="mini"
+            type="primary"
+            @click="sendTrueInterval"
+          >
             刷新
           </el-button>
-          <el-button size="mini" type="primary" @click="clearTopic">
+          <el-button
+            size="mini"
+            type="primary"
+            @click="clearTopic"
+          >
             清屏
           </el-button>
         </div>
@@ -69,7 +92,10 @@
             class="ace_editor"
             style="width: 100%; min-height: 300px"
           >
-            <textarea class="ace_text-input" style="overflow:scroll"/>
+            <textarea
+class="ace_text-input"
+style="overflow:scroll"
+/>
           </pre>
         </div>
       </div>
@@ -183,14 +209,17 @@
                 id="editor1"
                 class="ace_editor"
                 style="min-height: 300px"
-              ><textarea class="ace_text-input"/></pre>
+              ><textarea class="ace_text-input" /></pre>
             </div>
           </div>
         </el-tab-pane>
         <!--第二个tab页-->
         <el-tab-pane label="调试虚拟设备">
           <div class="editor2header">
-            <div v-if="isactive == true" class="editor2show animated fadeIn">
+            <div
+              v-if="isactive == true"
+              class="editor2show animated fadeIn"
+            >
               <el-button-group>
                 <el-button
                   plain
@@ -226,18 +255,36 @@
                 </el-button>
               </el-button-group>
               <!--属性上报-->
-              <div v-show="primary1 == 1" class="primary1">
-                <el-form :model="primary1form" size="mini">
+              <div
+                v-show="primary1 == 1"
+                class="primary1"
+              >
+                <el-form
+                  :model="primary1form"
+                  size="mini"
+                >
                   <el-form-item label="lightStatus">
                     <el-select v-model="primary1form.status">
-                      <el-option label="11111" value="2222" />
+                      <el-option
+                        label="11111"
+                        value="2222"
+                      />
                     </el-select>
                   </el-form-item>
                   <!--属性上报内容-->
                   <div class="primary1content" />
                   <div class="primary1bottom">
-                    <el-button size="mini" type="primary">推送</el-button>
-                    <el-button plain size="mini" type="info">
+                    <el-button
+                      size="mini"
+                      type="primary"
+                    >
+                      推送
+                    </el-button>
+                    <el-button
+                      plain
+                      size="mini"
+                      type="info"
+                    >
                       策略推送
                     </el-button>
                     <el-button
@@ -248,14 +295,21 @@
                     >
                       关闭虚拟设备
                     </el-button>
-                    <el-button plain size="mini" type="info">
+                    <el-button
+                      plain
+                      size="mini"
+                      type="info"
+                    >
                       查看数据
                     </el-button>
                   </div>
                 </el-form>
               </div>
               <!--事件上报-->
-              <div v-show="primary1 == 2" class="primary2 animated fadeInUp">
+              <div
+                v-show="primary1 == 2"
+                class="primary2 animated fadeInUp"
+              >
                 <div
                   style="
                     margin-top: 20px;
@@ -267,13 +321,25 @@
                   暂无数据
                 </div>
                 <div>
-                  <el-button size="small" type="primary">编辑物模型</el-button>
-                  <el-button size="small" type="info" @click="isactive = false">
+                  <el-button
+                    size="small"
+                    type="primary"
+                  >
+                    编辑物模型
+                  </el-button>
+                  <el-button
+                    size="small"
+                    type="info"
+                    @click="isactive = false"
+                  >
                     关闭设备
                   </el-button>
                 </div>
               </div>
-              <div v-show="primary1 == 3 || primary1 == 4" class="primary3">
+              <div
+                v-show="primary1 == 3 || primary1 == 4"
+                class="primary3"
+              >
                 <div class="editorheader">
                   <el-form
                     :inline="true"
@@ -283,10 +349,16 @@
                   >
                     <el-form-item label="调试功能">
                       <el-select v-model="editor2.function">
-                        <el-option label="11111" value="2222" />
+                        <el-option
+                          label="11111"
+                          value="2222"
+                        />
                       </el-select>
                     </el-form-item>
-                    <div v-if="primary1 == 3" style="display: inline-block">
+                    <div
+                      v-if="primary1 == 3"
+                      style="display: inline-block"
+                    >
                       <el-form-item label="功能">
                         <el-select v-model="editor2.method">
                           <el-option />
@@ -302,7 +374,7 @@
                   id="editor2"
                   class="ace_editor"
                   style="min-height: 300px"
-                ><textarea class="ace_text-input"/></pre>
+                ><textarea class="ace_text-input" /></pre>
                 <div>
                   <el-tooltip
                     v-if="editor2.function == ''"
@@ -322,16 +394,32 @@
                       </el-button>
                     </span>
                   </el-tooltip>
-                  <el-button v-else plain size="mini" type="info">
+                  <el-button
+                    v-else
+                    plain
+                    size="mini"
+                    type="info"
+                  >
                     发送指令
                   </el-button>
-                  <el-button plain size="mini" type="info">重置</el-button>
+                  <el-button
+                    plain
+                    size="mini"
+                    type="info"
+                  >
+                    重置
+                  </el-button>
                 </div>
               </div>
             </div>
             <!--第二个tab-->
-            <div v-else class="editor2hidden animated fadeInDown">
-              <div style="margin-top: 20px; font-size: 20px">调试虚拟设备</div>
+            <div
+              v-else
+              class="editor2hidden animated fadeInDown"
+            >
+              <div style="margin-top: 20px; font-size: 20px">
+                调试虚拟设备
+              </div>
               <div
                 style="
                   margin-top: 8px;
@@ -345,7 +433,11 @@
                 <br />
                 这样可以不依赖真实设备快速开发应用
               </div>
-              <el-button size="mini" type="primary" @click="isactive = true">
+              <el-button
+                size="mini"
+                type="primary"
+                @click="isactive = true"
+              >
                 启动真实设备
               </el-button>
             </div>
@@ -360,9 +452,16 @@
       :visible.sync="messageDialogVisible"
       width="50%"
     >
-      <el-form :inline="true" :model="messageform" size="small">
+      <el-form
+        :inline="true"
+        :model="messageform"
+        size="small"
+      >
         <el-form-item label="功能名称">
-          <el-input v-model="messageform.name" type="text" />
+          <el-input
+            v-model="messageform.name"
+            type="text"
+          />
         </el-form-item>
       </el-form>
 
@@ -371,10 +470,16 @@
         id="message"
         class="ace_editor"
         style="min-height: 300px"
-      ><textarea class="ace_text-input"/></pre>
-      <span slot="footer" class="dialog-footer">
+      ><textarea class="ace_text-input" /></pre>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="messageDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click.native="addCmd">确 定</el-button>
+        <el-button
+          type="primary"
+          @click.native="addCmd"
+        >确 定</el-button>
       </span>
     </el-dialog>
   </div>

@@ -14,9 +14,18 @@
           anchor="BMAP_ANCHOR_TOP_LEFT"
           :offset="panoramaOffset"
         />
-        <bm-overview-map v-if="overviewShow" :is-open="isOpen" />
-        <bm-scale v-if="scaleShow" :offset="scaleOffset" />
-        <bm-city-list v-if="cityShow" :offset="cityOffset" />
+        <bm-overview-map
+          v-if="overviewShow"
+          :is-open="isOpen"
+        />
+        <bm-scale
+          v-if="scaleShow"
+          :offset="scaleOffset"
+        />
+        <bm-city-list
+          v-if="cityShow"
+          :offset="cityOffset"
+        />
         <bm-map-type
           v-if="maptypeShow"
           anchor="BMAP_ANCHOR_TOP_LEFT"
@@ -81,7 +90,10 @@
         :points="linepoints"
         @lineupdate="_updatepoints"
       />
-      <bm-view v-if="viewShow" class="map" />
+      <bm-view
+        v-if="viewShow"
+        class="map"
+      />
       <bm-walking
         v-if="walkingShow"
         :auto-viewport="walkingViewPort"
@@ -102,7 +114,10 @@
         :keyword="busKeyword"
         :location="busLocation"
       />
-      <bm-traffic v-if="trafficShow" :predict-date="trafficDate" />
+      <bm-traffic
+        v-if="trafficShow"
+        :predict-date="trafficDate"
+      />
       <bm-tile
         v-if="tileShow"
         :is-transparent-png="true"
@@ -136,7 +151,11 @@
         :stroke-weight="2"
         @lineupdate="_updateCirclePath"
       />
-      <bm-ground v-if="groundShow" :bounds="bounds" :image-u-r-l="imageURL" />
+      <bm-ground
+        v-if="groundShow"
+        :bounds="bounds"
+        :image-u-r-l="imageURL"
+      />
       <bm-info-window
         v-if="windowShow"
         :position="infoWindowPosition"
@@ -145,8 +164,13 @@
         @close="_infoWindowClose"
         @open="_infoWindowOpen"
       >
-        <p v-if="textShow" v-text="infoWindowContents"></p>
-        <button @click="_infoWindowclear">Clear</button>
+        <p
+          v-if="textShow"
+          v-text="infoWindowContents"
+        ></p>
+        <button @click="_infoWindowclear">
+          Clear
+        </button>
       </bm-info-window>
       <!--      <bm-overlay-->
       <!--        v-if="overlayShow"-->
@@ -179,7 +203,10 @@
         :stroke-weight="2"
       />
 
-      <bm-navigation v-if="navShow" anchor="BMAP_ANCHOR_TOP_RIGHT" />
+      <bm-navigation
+        v-if="navShow"
+        anchor="BMAP_ANCHOR_TOP_RIGHT"
+      />
       <bm-geolocation
         v-if="geoShow"
         anchor="BMAP_ANCHOR_BOTTOM_RIGHT"

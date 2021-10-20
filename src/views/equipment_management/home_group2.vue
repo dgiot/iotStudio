@@ -28,15 +28,25 @@
       <!--        </el-button>-->
       <!--      </span>-->
     </el-dialog>
-    <el-dialog :append-to-body="true" :visible.sync="parserView">
-      <f-render v-model="formConfig" :config="formConfig" pure />
+    <el-dialog
+      :append-to-body="true"
+      :visible.sync="parserView"
+    >
+      <f-render
+        v-model="formConfig"
+        :config="formConfig"
+        pure
+      />
     </el-dialog>
     <el-dialog
       :append-to-body="true"
       class="parserTable"
       :visible.sync="parserTable"
     >
-      <div slot="title" class="header-title parserTable">
+      <div
+        slot="title"
+        class="header-title parserTable"
+      >
         <el-button
           type="primary"
           @click.native.prevent="addParse(parserTableList)"
@@ -50,7 +60,10 @@
           {{ $translateTitle('product.preservation') }}
         </el-button>
       </div>
-      <el-table :data="parserTableList.parser" :height="height">
+      <el-table
+        :data="parserTableList.parser"
+        :height="height"
+      >
         <el-table-column
           align="center"
           :label="$translateTitle('product.chinesetitle')"
@@ -70,10 +83,18 @@
           sortable
         >
           <template #default="{ row }">
-            <el-button plain type="primary" @click="editParse(row.$index, row)">
+            <el-button
+              plain
+              type="primary"
+              @click="editParse(row.$index, row)"
+            >
               {{ $translateTitle('concentrator.edit') }}
             </el-button>
-            <el-button plain type="success" @click="previewParse(row.config)">
+            <el-button
+              plain
+              type="success"
+              @click="previewParse(row.config)"
+            >
               {{ $translateTitle('application.preview') }}
             </el-button>
             <el-button
@@ -90,7 +111,10 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+    <vab-input
+      ref="uploadFinish"
+      @fileInfo="fileInfo"
+    />
     <div class="prosecond">
       <el-form
         class="demo-form-inline"
@@ -106,18 +130,30 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click.native="searchProduct(0)">
+          <el-button
+            type="primary"
+            @click.native="searchProduct(0)"
+          >
             {{ $translateTitle('developer.search') }}
           </el-button>
         </el-form-item>
         <el-form-item style="float: right; text-align: right">
-          <el-button type="primary" @click.native="addproduct">
+          <el-button
+            type="primary"
+            @click.native="addproduct"
+          >
             {{ $translateTitle('product.createproduct') }}
           </el-button>
-          <el-button type="primary" @click.native="exportpro">
+          <el-button
+            type="primary"
+            @click.native="exportpro"
+          >
             {{ $translateTitle('product.exportpro') }}
           </el-button>
-          <el-button type="primary" @click.native="handleImport()">
+          <el-button
+            type="primary"
+            @click.native="handleImport()"
+          >
             {{ $translateTitle('product.importpro') }}
           </el-button>
         </el-form-item>
@@ -201,7 +237,10 @@
                 {{ $translateTitle('product.dict') }}
               </el-button>
 
-              <el-button size="mini" @click="goKonva(scope.row.objectId)">
+              <el-button
+                size="mini"
+                @click="goKonva(scope.row.objectId)"
+              >
                 {{ $translateTitle('concentrator.konva') }}
               </el-button>
 
@@ -237,7 +276,11 @@
                     {{ $translateTitle('developer.determine') }}
                   </el-button>
                 </div>
-                <el-button slot="reference" size="mini" type="danger">
+                <el-button
+                  slot="reference"
+                  size="mini"
+                  type="danger"
+                >
                   {{ $translateTitle('developer.delete') }}
                 </el-button>
               </el-popover>
@@ -268,7 +311,10 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="elpagination" style="margin-top: 20px">
+      <div
+        class="elpagination"
+        style="margin-top: 20px"
+      >
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
           :page-size="length"
@@ -329,13 +375,19 @@
                 :label="$translateTitle('product.productname')"
                 prop="name"
               >
-                <el-input v-model="form.name" autocomplete="off" />
+                <el-input
+                  v-model="form.name"
+                  autocomplete="off"
+                />
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.productgrouping')"
                 prop="devType"
               >
-                <el-input v-model="form.devType" autocomplete="off" />
+                <el-input
+                  v-model="form.devType"
+                  autocomplete="off"
+                />
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.classification')"
@@ -352,9 +404,19 @@
                       </el-radio>
                     </el-radio-group>
                   </el-col>
-                  <el-col v-if="form.type == 1" :span="13" style="padding: 0">
-                    <el-input v-model="form.netType" readonly>
-                      <template v-if="form.netType" slot="prepend">
+                  <el-col
+                    v-if="form.type == 1"
+                    :span="13"
+                    style="padding: 0"
+                  >
+                    <el-input
+                      v-model="form.netType"
+                      readonly
+                    >
+                      <template
+                        v-if="form.netType"
+                        slot="prepend"
+                      >
                         <el-link
                           :disabled="custom_status == 'edit'"
                           @click.native="handleIconClick"
@@ -463,9 +525,15 @@
                   </el-radio>
                 </el-radio-group>
               </el-form-item>
-              <el-form-item :label="$translateTitle('menu.icon')" prop="icon">
+              <el-form-item
+                :label="$translateTitle('menu.icon')"
+                prop="icon"
+              >
                 <div v-if="imageUrl">
-                  <img class="avatar" :src="imageUrl" />
+                  <img
+                    class="avatar"
+                    :src="imageUrl"
+                  />
                   <el-button
                     size="mini"
                     style="vertical-align: text-bottom"
@@ -505,13 +573,19 @@
                 :label="$translateTitle('developer.describe')"
                 prop="desc"
               >
-                <el-input v-model="form.desc" type="textarea" />
+                <el-input
+                  v-model="form.desc"
+                  type="textarea"
+                />
               </el-form-item>
             </el-form>
           </div>
         </div>
         <div class="devproduct-prodialog-footer">
-          <el-button type="primary" @click.native="submitForm()">
+          <el-button
+            type="primary"
+            @click.native="submitForm()"
+          >
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="handleCloseDialogForm()">
@@ -596,8 +670,15 @@
               >
                 <template #default="{ row }">
                   {{ row.name }}
-                  <el-popover placement="left" trigger="click" width="800">
-                    <dgiot-profile ref="profile" :is-product="true" />
+                  <el-popover
+                    placement="left"
+                    trigger="click"
+                    width="800"
+                  >
+                    <dgiot-profile
+                      ref="profile"
+                      :is-product="true"
+                    />
                     <i
                       slot="reference"
                       class="el-icon-info"
@@ -635,8 +716,15 @@
           </div>
         </el-drawer>
       </el-drawer>
-      <el-dialog :append-to-body="true" top="1vh" :visible.sync="dialogProfile">
-        <dgiot-profile ref="dialogProfile" :is-product="true" />
+      <el-dialog
+        :append-to-body="true"
+        top="1vh"
+        :visible.sync="dialogProfile"
+      >
+        <dgiot-profile
+          ref="dialogProfile"
+          :is-product="true"
+        />
       </el-dialog>
       <!--新增字典-->
       <a-drawer
@@ -662,7 +750,10 @@
                 :label-width="formLabelWidth"
                 prop="name"
               >
-                <el-input v-model="dictTempForm.name" autocomplete="off" />
+                <el-input
+                  v-model="dictTempForm.name"
+                  autocomplete="off"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -671,7 +762,10 @@
                 :label-width="formLabelWidth"
                 prop="cType"
               >
-                <el-input v-model="dictTempForm.cType" autocomplete="off" />
+                <el-input
+                  v-model="dictTempForm.cType"
+                  autocomplete="off"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -680,19 +774,33 @@
                 :label-width="formLabelWidth"
                 prop="enable"
               >
-                <el-radio v-model="dictTempForm.enable" border label="1">
+                <el-radio
+                  v-model="dictTempForm.enable"
+                  border
+                  label="1"
+                >
                   启用
                 </el-radio>
-                <el-radio v-model="dictTempForm.enable" border label="0">
+                <el-radio
+                  v-model="dictTempForm.enable"
+                  border
+                  label="0"
+                >
                   禁用
                 </el-radio>
               </el-form-item>
             </el-col>
           </el-row>
 
-          <el-form-item label="字典模板数据" :label-width="formLabelWidth">
+          <el-form-item
+            label="字典模板数据"
+            :label-width="formLabelWidth"
+          >
             <el-tabs v-model="elactiveName">
-              <el-tab-pane label="Table" name="Table">
+              <el-tab-pane
+                label="Table"
+                name="Table"
+              >
                 <el-button
                   class="mt-3"
                   icon="el-icon-plus"
@@ -708,13 +816,34 @@
                   :height="height"
                   style="width: 100%; text-align: center"
                 >
-                  <el-table-column label="序号" prop="order" />
-                  <el-table-column label="标识符" prop="identifier" />
-                  <el-table-column label="功能名称" prop="name" />
-                  <el-table-column label="数据类型" prop="type" />
-                  <el-table-column label="数据地址" prop="address" />
-                  <el-table-column label="数据长度" prop="bytes" />
-                  <el-table-column label="是否必填" prop="required">
+                  <el-table-column
+                    label="序号"
+                    prop="order"
+                  />
+                  <el-table-column
+                    label="标识符"
+                    prop="identifier"
+                  />
+                  <el-table-column
+                    label="功能名称"
+                    prop="name"
+                  />
+                  <el-table-column
+                    label="数据类型"
+                    prop="type"
+                  />
+                  <el-table-column
+                    label="数据地址"
+                    prop="address"
+                  />
+                  <el-table-column
+                    label="数据长度"
+                    prop="bytes"
+                  />
+                  <el-table-column
+                    label="是否必填"
+                    prop="required"
+                  >
                     <template slot-scope="scope">
                       <span v-if="scope.row.required">是</span>
                       <span v-else>否</span>
@@ -726,7 +855,11 @@
                   <!--                      <span v-else>否</span>-->
                   <!--                    </template>-->
                   <!--                  </el-table-column>-->
-                  <el-table-column align="center" label="操作" width="160">
+                  <el-table-column
+                    align="center"
+                    label="操作"
+                    width="160"
+                  >
                     <template slot-scope="scope">
                       <el-button
                         plain
@@ -754,7 +887,10 @@
                   </el-table-column>
                 </el-table>
               </el-tab-pane>
-              <el-tab-pane label="Json" name="Json">
+              <el-tab-pane
+                label="Json"
+                name="Json"
+              >
                 <vab-json-editor
                   v-model="dictTempForm.params"
                   lang="zh"
@@ -764,7 +900,10 @@
               </el-tab-pane>
             </el-tabs>
           </el-form-item>
-          <el-form-item label="描述" :label-width="formLabelWidth">
+          <el-form-item
+            label="描述"
+            :label-width="formLabelWidth"
+          >
             <el-input
               v-model="dictTempForm.description"
               :autosize="{ minRows: 2, maxRows: 4 }"
@@ -773,14 +912,19 @@
             />
           </el-form-item>
 
-          <el-form-item size="mini" style="text-align: center">
+          <el-form-item
+            size="mini"
+            style="text-align: center"
+          >
             <el-button
               type="primary"
               @click.native="onJsonSave('dictTempForm')"
             >
               提交
             </el-button>
-            <el-button @click="dictVisible = false">取消</el-button>
+            <el-button @click="dictVisible = false">
+              取消
+            </el-button>
           </el-form-item>
         </el-form>
       </a-drawer>
@@ -804,7 +948,10 @@
         >
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-form-item label="序号" prop="order">
+              <el-form-item
+                label="序号"
+                prop="order"
+              >
                 <el-input v-model.number="tempparams.order" />
               </el-form-item>
             </el-col>
@@ -866,7 +1013,10 @@
                     :label="$translateTitle('product.string')"
                     value="string"
                   />
-                  <el-option label="switch" value="switch" />
+                  <el-option
+                    label="switch"
+                    value="switch"
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -913,7 +1063,10 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
+          <el-row
+            v-show="tempparams.protocol == 'modbus'"
+            :gutter="24"
+          >
             <el-col :span="12">
               <el-form-item label="数据格式">
                 <el-select
@@ -962,7 +1115,11 @@
                 <span v-show="false">{{ scope.row }}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="寄存器状态" min-width="120">
+            <el-table-column
+              align="center"
+              label="寄存器状态"
+              min-width="120"
+            >
               <!--关键代码-->
               <template slot-scope="scope">
                 <el-select
@@ -1011,7 +1168,7 @@
             <el-table-column
               v-if="
                 tempparams.operatetype == 'writeCoils' ||
-                tempparams.operatetype == 'writeHregs'
+                  tempparams.operatetype == 'writeHregs'
               "
               align="center"
               label="寄存器个数"
@@ -1023,7 +1180,11 @@
                 <span v-show="false">{{ scope.row.slaveid }}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" label="写入字节数" min-width="120">
+            <el-table-column
+              align="center"
+              label="写入字节数"
+              min-width="120"
+            >
               <!--关键代码-->
               <template slot-scope="scope">
                 <el-input v-model="tempparams.bytes" />
@@ -1031,10 +1192,16 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-row v-show="tempparams.protocol != 'modbus'" :gutter="24">
+          <el-row
+            v-show="tempparams.protocol != 'modbus'"
+            :gutter="24"
+          >
             <el-col :span="12">
               <el-form-item label="数据地址">
-                <el-input v-model="tempparams.address" placeholder="数据地址" />
+                <el-input
+                  v-model="tempparams.address"
+                  placeholder="数据地址"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -1133,20 +1300,36 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item label="必填">
-                <el-radio v-model="tempparams.required" border :label="true">
+                <el-radio
+                  v-model="tempparams.required"
+                  border
+                  :label="true"
+                >
                   是
                 </el-radio>
-                <el-radio v-model="tempparams.required" border :label="false">
+                <el-radio
+                  v-model="tempparams.required"
+                  border
+                  :label="false"
+                >
                   否
                 </el-radio>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="只读">
-                <el-radio v-model="tempparams.readonly" border :label="true">
+                <el-radio
+                  v-model="tempparams.readonly"
+                  border
+                  :label="true"
+                >
                   是
                 </el-radio>
-                <el-radio v-model="tempparams.readonly" border :label="false">
+                <el-radio
+                  v-model="tempparams.readonly"
+                  border
+                  :label="false"
+                >
                   否
                 </el-radio>
               </el-form-item>
@@ -1155,10 +1338,18 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item label="列表显示">
-                <el-radio v-model="tempparams.isshow" border :label="true">
+                <el-radio
+                  v-model="tempparams.isshow"
+                  border
+                  :label="true"
+                >
                   是
                 </el-radio>
-                <el-radio v-model="tempparams.isshow" border :label="false">
+                <el-radio
+                  v-model="tempparams.isshow"
+                  border
+                  :label="false"
+                >
                   否
                 </el-radio>
               </el-form-item>
@@ -1166,12 +1357,18 @@
           </el-row>
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-form-item v-if="tempparams.type == 'switch'" label="开">
+              <el-form-item
+                v-if="tempparams.type == 'switch'"
+                label="开"
+              >
                 <el-input v-model="tempparams.activevalue" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item v-if="tempparams.type == 'switch'" label="关">
+              <el-form-item
+                v-if="tempparams.type == 'switch'"
+                label="关"
+              >
                 <el-input v-model="tempparams.inactivevalue" />
               </el-form-item>
             </el-col>
@@ -1187,18 +1384,33 @@
               class="notauto"
               readonly
             >
-              <el-option label="是" :value="true" />
-              <el-option label="否" :value="false" />
+              <el-option
+                label="是"
+                :value="true"
+              />
+              <el-option
+                label="否"
+                :value="false"
+              />
             </el-select>
             <el-input
               v-else-if="tempparams.type == 'int'"
               v-model.number="tempparams.default"
             />
-            <el-input v-else v-model="tempparams.default" />
+            <el-input
+              v-else
+              v-model="tempparams.default"
+            />
           </el-form-item>
-          <el-form-item v-if="tempparams.type == 'enum'" label="Enum数据">
+          <el-form-item
+            v-if="tempparams.type == 'enum'"
+            label="Enum数据"
+          >
             <el-tabs v-model="elactiveName1">
-              <el-tab-pane label="Table" name="Table1">
+              <el-tab-pane
+                label="Table"
+                name="Table1"
+              >
                 <!--枚举型添加格式-->
                 <el-button
                   class="mt-3"
@@ -1214,17 +1426,26 @@
                   :height="height"
                   style="width: 100%; text-align: center"
                 >
-                  <el-table-column align="center" label="属性">
+                  <el-table-column
+                    align="center"
+                    label="属性"
+                  >
                     <template slot-scope="scope">
                       <el-input v-model="scope.row.attribute" />
                     </template>
                   </el-table-column>
-                  <el-table-column align="center" label="属性值">
+                  <el-table-column
+                    align="center"
+                    label="属性值"
+                  >
                     <template slot-scope="scope">
                       <el-input v-model="scope.row.attributevalue" />
                     </template>
                   </el-table-column>
-                  <el-table-column align="center" label="操作">
+                  <el-table-column
+                    align="center"
+                    label="操作"
+                  >
                     <template slot-scope="scope">
                       <el-button
                         plain
@@ -1242,7 +1463,10 @@
             </el-tabs>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click.native="submitFormTempDict()">
+            <el-button
+              type="primary"
+              @click.native="submitFormTempDict()"
+            >
               提交
             </el-button>
           </el-form-item>
@@ -1256,7 +1480,10 @@
         :visible.sync="importDialogShow"
         width="25%"
       >
-        <el-form ref="uploadProForm" :model="formPro">
+        <el-form
+          ref="uploadProForm"
+          :model="formPro"
+        >
           <el-upload
             ref="fileUpload"
             accept=".xls, .xlsx, .zip"
@@ -1271,14 +1498,21 @@
             :on-success="handleUploadSuccess"
             :with-credentials="true"
           >
-            <el-button slot="trigger" size="small" type="primary">
+            <el-button
+              slot="trigger"
+              size="small"
+              type="primary"
+            >
               选泽文件
             </el-button>
           </el-upload>
 
           <!-- </el-row> -->
         </el-form>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button
             class="btn-left"
             size="small"
@@ -1298,7 +1532,11 @@
         </div>
       </el-dialog>
     </div>
-    <VabRender v-show="false" :config="config" :loading="true" />
+    <VabRender
+      v-show="false"
+      :config="config"
+      :loading="true"
+    />
   </div>
 </template>
 <!--eslint-disable-->

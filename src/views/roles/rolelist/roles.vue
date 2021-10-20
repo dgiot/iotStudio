@@ -1,7 +1,10 @@
 <template>
   <div class="roles dgiot-container">
     <el-row :gutter="20">
-      <el-col :span="14" :xs="8">
+      <el-col
+        :span="14"
+        :xs="8"
+      >
         <div class="rightTable">
           <div class="search">
             <vab-query-form style="margin-top: 20px">
@@ -95,7 +98,10 @@
               </vab-query-form-top-panel>
             </vab-query-form>
           </div>
-          <div class="tableroles" style="margin-top: 20px">
+          <div
+            class="tableroles"
+            style="margin-top: 20px"
+          >
             <el-table
               :data="roleList"
               :height="tableHeight"
@@ -127,7 +133,10 @@
                   <span>{{ scope.row.alias }}</span>
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="ID">
+              <el-table-column
+                align="center"
+                label="ID"
+              >
                 <template slot-scope="scope">
                   <span>{{ scope.row.objectId }}</span>
                 </template>
@@ -186,7 +195,10 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="10" :xs="16">
+      <el-col
+        :span="10"
+        :xs="16"
+      >
         <!--菜单-->
         <div class="rolefooter">
           <div class="footerleft">
@@ -245,7 +257,10 @@
                 node-key="objectId"
                 show-checkbox
               >
-                <span slot-scope="{ node }" class="custom-tree-node">
+                <span
+                  slot-scope="{ node }"
+                  class="custom-tree-node"
+                >
                   <span>{{ node.label }}</span>
                 </span>
                 <span>
@@ -301,7 +316,10 @@
                 {{ $translateTitle('button.unselect all') }}
               </el-button>
             </div>
-            <div class="menucontrol" style="margin-top: 0px">
+            <div
+              class="menucontrol"
+              style="margin-top: 0px"
+            >
               <el-tree
                 ref="menusTree"
                 accordion
@@ -351,8 +369,14 @@
         style="width: 100%; text-align: center"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" />
-        <el-table-column align="center" :label="$translateTitle('user.name')">
+        <el-table-column
+          type="selection"
+          width="55"
+        />
+        <el-table-column
+          align="center"
+          :label="$translateTitle('user.name')"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
@@ -365,17 +389,26 @@
             <span>{{ scope.row.desc }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="ID">
+        <el-table-column
+          align="center"
+          label="ID"
+        >
           <template slot-scope="scope">
             <span>{{ scope.row.objectId }}</span>
           </template>
         </el-table-column>
       </el-table>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="centerDialogVisible = false">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click.native="addacl">
+        <el-button
+          type="primary"
+          @click.native="addacl"
+        >
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>
@@ -422,11 +455,17 @@
           />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="roleEdit = false">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button type="primary" @click.native="updaterole">
+        <el-button
+          type="primary"
+          @click.native="updaterole"
+        >
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </div>

@@ -1,6 +1,9 @@
 <template>
   <div>
-    <el-tab-pane label="物解析" name="fourth">
+    <el-tab-pane
+      label="物解析"
+      name="fourth"
+    >
       <div class="protolheader">
         <el-form
           ref="formInline"
@@ -45,15 +48,27 @@
             >
               设为公共
             </el-button>
-            <el-button size="small" type="primary" @click="chaxun">
+            <el-button
+              size="small"
+              type="primary"
+              @click="chaxun"
+            >
               {{ $translateTitle('product.publicagreementlibrary') }}
             </el-button>
           </el-form-item>
           <el-form-item style="display: block">
-            <el-button size="small" type="primary" @click="protol">
+            <el-button
+              size="small"
+              type="primary"
+              @click="protol"
+            >
               {{ $translateTitle('product.compile') }}
             </el-button>
-            <el-button size="small" type="success" @click="updatesubdialog">
+            <el-button
+              size="small"
+              type="success"
+              @click="updatesubdialog"
+            >
               热加载
             </el-button>
           </el-form-item>
@@ -74,7 +89,10 @@
           style="width: 100%"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="55" />
+          <el-table-column
+            type="selection"
+            width="55"
+          />
           <el-table-column :label="$translateTitle('developer.channelnumber')">
             <template slot-scope="scope">
               <span>{{ scope.row.objectId }}</span>
@@ -106,8 +124,14 @@
             </template>
           </el-table-column>
         </el-table>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click.native="updateAllChannel">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
+          <el-button
+            type="primary"
+            @click.native="updateAllChannel"
+          >
             确定
           </el-button>
         </div>
@@ -148,7 +172,10 @@
               <span>{{ scope.row.data.desc }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="创建时间">
+          <el-table-column
+            align="center"
+            label="创建时间"
+          >
             <template slot-scope="scope">
               <span>{{ utc2beijing(scope.row.createdAt) }}</span>
             </template>
@@ -176,7 +203,10 @@
             </template>
           </el-table-column>
         </el-table>
-        <div class="elpagination" style="padding: 20px 0">
+        <div
+          class="elpagination"
+          style="padding: 20px 0"
+        >
           <el-pagination
             layout="total, sizes, prev, pager, next, jumper"
             :page-size="decoderlength"

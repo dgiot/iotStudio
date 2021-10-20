@@ -1,6 +1,9 @@
 <template>
   <div class="standard">
-    <div class="devicesright" style="padding: 20px">
+    <div
+      class="devicesright"
+      style="padding: 20px"
+    >
       <el-form
         v-show="false"
         class="demo-form-inline"
@@ -9,12 +12,21 @@
         size="small"
       >
         <el-form-item label="标准类型">
-          <el-select v-model="formInline.model" placeholder="选择标准类型">
-            <el-option label="性能检测" value="性能检测" />
+          <el-select
+            v-model="formInline.model"
+            placeholder="选择标准类型"
+          >
+            <el-option
+              label="性能检测"
+              value="性能检测"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="标准类别">
-          <el-select v-model="formInline.standard" placeholder="选择标准类别">
+          <el-select
+            v-model="formInline.standard"
+            placeholder="选择标准类别"
+          >
             <el-option
               v-for="(item, index) in standard"
               :key="index"
@@ -24,17 +36,32 @@
           </el-select>
         </el-form-item>
         <el-form-item label="检测名称">
-          <el-input v-model="formInline.name" placeholder="请输入检测名称" />
+          <el-input
+            v-model="formInline.name"
+            placeholder="请输入检测名称"
+          />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click.native="getStandardFromDict(0)">
+          <el-button
+            type="primary"
+            @click.native="getStandardFromDict(0)"
+          >
             查询
           </el-button>
-          <el-button type="primary" @click.native="reset">重置</el-button>
+          <el-button
+            type="primary"
+            @click.native="reset"
+          >
+            重置
+          </el-button>
         </el-form-item>
       </el-form>
       <div class="adddevices">
-        <el-button size="small" type="primary" @click="addStandard">
+        <el-button
+          size="small"
+          type="primary"
+          @click="addStandard"
+        >
           新增检测标准
         </el-button>
         <!-- <el-button type="danger" size="small">删除</el-button> -->
@@ -47,31 +74,66 @@
           tooltip-effect="dark"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="55" />
-          <el-table-column label="序号" type="index" width="50" />
-          <el-table-column label="检测标准名称" prop="data.name" width="200" />
-          <el-table-column label="标准类型" prop="data.model" />
-          <el-table-column label="适用产品" prop="data.product" width="200" />
-          <el-table-column label="标准类别" prop="data.standard" width="200" />
+          <el-table-column
+            type="selection"
+            width="55"
+          />
+          <el-table-column
+            label="序号"
+            type="index"
+            width="50"
+          />
+          <el-table-column
+            label="检测标准名称"
+            prop="data.name"
+            width="200"
+          />
+          <el-table-column
+            label="标准类型"
+            prop="data.model"
+          />
+          <el-table-column
+            label="适用产品"
+            prop="data.product"
+            width="200"
+          />
+          <el-table-column
+            label="标准类别"
+            prop="data.standard"
+            width="200"
+          />
           <el-table-column
             label="标准发行单位"
             prop="data.client"
             width="250"
           />
 
-          <el-table-column label="标准发行时间" width="150">
+          <el-table-column
+            label="标准发行时间"
+            width="150"
+          >
             <template slot-scope="scope">
               <span>{{ $timestampToTime(scope.row.data.start_time) }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="备注" prop="data.desc" width="220" />
-          <el-table-column label="创建时间" width="150">
+          <el-table-column
+            label="备注"
+            prop="data.desc"
+            width="220"
+          />
+          <el-table-column
+            label="创建时间"
+            width="150"
+          >
             <template slot-scope="scope">
               <span>{{ $timestampToTime(scope.row.createdAt) }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column label="检测标准管理" width="200">
+          <el-table-column
+            label="检测标准管理"
+            width="200"
+          >
             <template slot-scope="scope">
               <!--          <el-button @click="editorReport(scope.row)" size="small" icon="el-icon-edit">编辑</el-button>
               <el-button
@@ -107,7 +169,10 @@
                     子项新增
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <router-link target="_blank" to="/pdf/download">
+                    <router-link
+                      target="_blank"
+                      to="/pdf/download"
+                    >
                       下载
                     </router-link>
                   </el-dropdown-item>
@@ -189,11 +254,17 @@
                   v-model="standardFormModel.model"
                   placeholder="选择标准类型"
                 >
-                  <el-option label="性能检测" value="性能检测" />
+                  <el-option
+                    label="性能检测"
+                    value="性能检测"
+                  />
                 </el-select>
               </el-form-item>
 
-              <el-form-item label="备注信息" :label-width="formLabelWidth">
+              <el-form-item
+                label="备注信息"
+                :label-width="formLabelWidth"
+              >
                 <el-input
                   v-model="standardFormModel.desc"
                   placeholder="请输入标准备注信息"
@@ -242,7 +313,10 @@
                   placeholder="请输入标准发行单位"
                 />
               </el-form-item>
-              <el-form-item label="标准发行时间" :label-width="formLabelWidth">
+              <el-form-item
+                label="标准发行时间"
+                :label-width="formLabelWidth"
+              >
                 <el-date-picker
                   v-model="standardFormModel.start_time"
                   placeholder="选择日期"
@@ -261,7 +335,12 @@
                   placeholder="请输入内容"
                 >
                   <template slot="append">
-                    <el-button size="small" type="primary">点击上传</el-button>
+                    <el-button
+                      size="small"
+                      type="primary"
+                    >
+                      点击上传
+                    </el-button>
                     <form
                       ref="uploadform"
                       enctype="multipart/form-data"
@@ -289,7 +368,10 @@
           </el-row>
         </el-form>
       </div>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button
           type="primary"
@@ -344,7 +426,10 @@
               <el-input v-model="domain.title" />
             </el-form-item>
           </el-col>
-          <el-col :span="4" style="float: right">
+          <el-col
+            :span="4"
+            style="float: right"
+          >
             <el-button
               size="small"
               style="margin-left: 5px"
@@ -356,10 +441,15 @@
           </el-col>
         </el-row>
         <el-form-item>
-          <el-button @click="addDomain">新增子项</el-button>
+          <el-button @click="addDomain">
+            新增子项
+          </el-button>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="dialogReport = false">取 消</el-button>
         <el-button
           type="primary"
@@ -396,9 +486,20 @@
           type="index"
           width="50"
         />
-        <el-table-column align="center" label="名称" prop="name" />
-        <el-table-column align="center" label="保证值" prop="title" />
-        <el-table-column align="center" label="操作">
+        <el-table-column
+          align="center"
+          label="名称"
+          prop="name"
+        />
+        <el-table-column
+          align="center"
+          label="保证值"
+          prop="title"
+        />
+        <el-table-column
+          align="center"
+          label="操作"
+        >
           <template slot-scope="scope">
             <el-button
               size="small"
@@ -410,7 +511,10 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="block" style="margin-top: 15px">
+      <div
+        class="block"
+        style="margin-top: 15px"
+      >
         <el-pagination
           align="center"
           layout="total, sizes, prev, pager, next, jumper"
@@ -421,9 +525,15 @@
           @size-change="handleChildSizeChange"
         />
       </div>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="dialogTableVisible = false">取 消</el-button>
-        <el-button type="primary" @click.native="ReportChildrenDelete">
+        <el-button
+          type="primary"
+          @click.native="ReportChildrenDelete"
+        >
           确 定
         </el-button>
       </span>

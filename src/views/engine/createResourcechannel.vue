@@ -1,6 +1,9 @@
 <template>
   <div class="createResourcechannel">
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+    <vab-input
+      ref="uploadFinish"
+      @fileInfo="fileInfo"
+    />
     <el-form
       ref="addchannel"
       label-width="auto"
@@ -8,16 +11,25 @@
       :rules="addrules"
       size="mini"
     >
-      <div class="dialog-footer" style="margin: 15px">
+      <div
+        class="dialog-footer"
+        style="margin: 15px"
+      >
         <el-button @click="handleClose">
           {{ $translateTitle('developer.back') }}
         </el-button>
-        <el-button type="primary" @click.native="addchannelForm('addchannel')">
+        <el-button
+          type="primary"
+          @click.native="addchannelForm('addchannel')"
+        >
           {{ $translateTitle('developer.create') }}
         </el-button>
       </div>
       <el-row>
-        <el-form-item label="通道类型" prop="region">
+        <el-form-item
+          label="通道类型"
+          prop="region"
+        >
           <el-select
             v-model="addchannel.region"
             placeholder="通道类型"
@@ -47,13 +59,19 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="所属应用" prop="applicationtText">
+          <el-form-item
+            label="所属应用"
+            prop="applicationtText"
+          >
             <el-input
               v-model="addchannel.applicationtText"
               readonly
               @focus="showTree = !showTree"
             />
-            <div v-if="showTree" class="device-tree">
+            <div
+              v-if="showTree"
+              class="device-tree"
+            >
               <el-tree
                 :data="allApps"
                 default-expand-all
@@ -63,18 +81,28 @@
             </div>
           </el-form-item>
         </el-col>
-        <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
+        <el-col
+          v-for="(item, index) in arrlist"
+          :key="index"
+          :span="12"
+        >
           <el-form-item
             v-show="item.showname != 'ico'"
             :label="item.title.zh"
             :prop="item.showname"
             :required="item.required"
           >
-            <el-tooltip effect="dark" placement="right-start">
+            <el-tooltip
+              effect="dark"
+              placement="right-start"
+            >
               <div slot="content">
                 {{ item.description.zh }}
               </div>
-              <i class="el-icon-question" style="float: left" />
+              <i
+                class="el-icon-question"
+                style="float: left"
+              />
             </el-tooltip>
             <el-input
               v-if="item.type == 'string'"
@@ -97,8 +125,14 @@
               readonly
               style="width: 98%"
             >
-              <el-option label="是" :value="true" />
-              <el-option label="否" :value="false" />
+              <el-option
+                label="是"
+                :value="true"
+              />
+              <el-option
+                label="否"
+                :value="false"
+              />
             </el-select>
             <el-select
               v-else-if="item.type == 'enum'"
@@ -168,7 +202,10 @@
                 <!--                  </el-button>-->
                 <!--                  <p>{{ item.title.zh }}</p>-->
                 <!--                </div>-->
-                <div class="text item" @click="setCard(item.cType)">
+                <div
+                  class="text item"
+                  @click="setCard(item.cType)"
+                >
                   <el-row :gutter="24">
                     <el-col :span="6">
                       <img

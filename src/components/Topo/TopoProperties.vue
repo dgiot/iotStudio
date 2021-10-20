@@ -37,19 +37,33 @@
         <div v-show="tabIndex == 0">
           <table style="display: none">
             <tr>
-              <td style="padding: 5px 0px; background-color: #eee" width="50%">
+              <td
+                style="padding: 5px 0px; background-color: #eee"
+                width="50%"
+              >
                 属性
               </td>
-              <td style="padding: 5px 0px; background-color: #eee" width="50%">
+              <td
+                style="padding: 5px 0px; background-color: #eee"
+                width="50%"
+              >
                 值
               </td>
             </tr>
           </table>
-          <div no-border separator>
-            <div default-opened label="Position">
+          <div
+            no-border
+            separator
+          >
+            <div
+              default-opened
+              label="Position"
+            >
               <table>
                 <tr>
-                  <td width="50%">X</td>
+                  <td width="50%">
+                    X
+                  </td>
                   <td width="50%">
                     <el-input
                       v-model.number.lazy="configObject.style.position.x"
@@ -95,10 +109,15 @@
               </table>
             </div>
 
-            <div default-opened label="Border">
+            <div
+              default-opened
+              label="Border"
+            >
               <table>
                 <tr>
-                  <td width="50%">BorderWidth</td>
+                  <td width="50%">
+                    BorderWidth
+                  </td>
                   <td width="50%">
                     <el-input
                       v-model.number.lazy="configObject.style.borderWidth"
@@ -141,10 +160,15 @@
               </table>
             </div>
 
-            <div default-opened label="Base">
+            <div
+              default-opened
+              label="Base"
+            >
               <table>
                 <tr>
-                  <td width="50%">Visible</td>
+                  <td width="50%">
+                    Visible
+                  </td>
                   <td width="50%">
                     <el-select
                       v-model="configObject.style.visible"
@@ -199,7 +223,7 @@
                 <tr
                   v-if="
                     configObject.style.url != undefined &&
-                    configObject.style.url != null
+                      configObject.style.url != null
                   "
                 >
                   <td>URL</td>
@@ -340,12 +364,17 @@
           </div>
         </div>
         <div v-show="tabIndex == 1">
-          <div class="not-surpport">根据实际系统设计</div>
+          <div class="not-surpport">
+            根据实际系统设计
+          </div>
         </div>
         <div v-show="tabIndex == 2">
           <template v-if="configObject && configObject.action">
             <template v-for="(event, index) in configObject.action">
-              <div :key="index" style="margin-top: 10px">
+              <div
+                :key="index"
+                style="margin-top: 10px"
+              >
                 <div
                   style="
                     padding: 5px;
@@ -364,7 +393,9 @@
                 </div>
                 <table>
                   <tr>
-                    <td width="50%">事件</td>
+                    <td width="50%">
+                      事件
+                    </td>
                     <td width="50%">
                       <el-select
                         v-model="event.type"
@@ -472,7 +503,9 @@
     <template v-if="isLayer">
       <table style="margin-top: 10px">
         <tr>
-          <td width="40%">BackColor</td>
+          <td width="40%">
+            BackColor
+          </td>
           <td>
             <el-input v-model.lazy="topoData.layer.backColor" />
           </td>
@@ -486,7 +519,10 @@
         <tr>
           <td>分辨率</td>
           <td>
-            <el-select v-model="layerWH" :options="whOptions" />
+            <el-select
+              v-model="layerWH"
+              :options="whOptions"
+            />
           </td>
         </tr>
         <tr v-if="layerWH == 'custom'">

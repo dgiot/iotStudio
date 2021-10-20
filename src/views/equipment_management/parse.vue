@@ -34,20 +34,31 @@
         sortable
       >
         <template #default="{ row }">
-          <el-popover placement="top" trigger="hover">
+          <el-popover
+            placement="top"
+            trigger="hover"
+          >
             <vab-json-editor
               v-if="row.fields"
               v-model="row.fields"
               lang="zh"
               :mode="'code'"
             />
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">fields</el-tag>
+            <div
+              slot="reference"
+              class="name-wrapper"
+            >
+              <el-tag size="medium">
+                fields
+              </el-tag>
             </div>
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作">
+      <el-table-column
+        align="center"
+        label="操作"
+      >
         <template #default="{ row }">
           <el-button
             size="mini"

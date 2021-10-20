@@ -12,7 +12,10 @@
         <!--        <websocket :topic="topic" />-->
       </el-drawer>
     </div>
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+    <vab-input
+      ref="uploadFinish"
+      @fileInfo="fileInfo"
+    />
     <div class="topo-header-top">
       <vab-query-form class="topo-header-top-query">
         <vab-query-form-left-panel class="topo-header-top-query-left-panel">
@@ -55,7 +58,10 @@
           <!--          </a-dropdown>-->
 
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">
+            <a
+              class="ant-dropdown-link"
+              @click="(e) => e.preventDefault()"
+            >
               <a-icon type="edit" />
               <p>
                 {{ $translateTitle('konva.edit') }}
@@ -64,16 +70,24 @@
             <a-menu slot="overlay">
               <!--              <a-menu-item @click="flagFn('pencil')">铅笔</a-menu-item>-->
               <a-menu-item>
-                <el-link @click="flagFn('ellipse')">椭圆-空心</el-link>
+                <el-link @click="flagFn('ellipse')">
+                  椭圆-空心
+                </el-link>
               </a-menu-item>
               <a-menu-item>
-                <el-link @click="flagFn('rect')">矩形</el-link>
+                <el-link @click="flagFn('rect')">
+                  矩形
+                </el-link>
               </a-menu-item>
               <a-menu-item>
-                <el-link @click="flagFn('rectH')">矩形-空心</el-link>
+                <el-link @click="flagFn('rectH')">
+                  矩形-空心
+                </el-link>
               </a-menu-item>
               <a-menu-item>
-                <el-link @click="flagFn('text')">文字</el-link>
+                <el-link @click="flagFn('text')">
+                  文字
+                </el-link>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -89,13 +103,22 @@
             </a>
           </a-dropdown>
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a class="ant-dropdown-link" @click="saveTopo">
-              <a-icon theme="filled" type="save" />
+            <a
+              class="ant-dropdown-link"
+              @click="saveTopo"
+            >
+              <a-icon
+                theme="filled"
+                type="save"
+              />
               <p>{{ $translateTitle('konva.save') }}</p>
             </a>
           </a-dropdown>
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a v-copyText="copyText" class="ant-dropdown-link">
+            <a
+              v-copyText="copyText"
+              class="ant-dropdown-link"
+            >
               <a-icon type="share-alt" />
               <p>{{ $translateTitle('konva.share') }}</p>
             </a>

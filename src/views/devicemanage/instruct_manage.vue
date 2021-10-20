@@ -15,7 +15,12 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click.native="Instruct(0)">查询</el-button>
+          <el-button
+            type="primary"
+            @click.native="Instruct(0)"
+          >
+            查询
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -28,13 +33,27 @@
         >
           新增指令
         </el-button>
-        <el-button size="small" type="danger" @click="deleteAll">
+        <el-button
+          size="small"
+          type="danger"
+          @click="deleteAll"
+        >
           删 除
         </el-button>
       </div>
       <div>
-        <el-button size="small" type="success">启 用</el-button>
-        <el-button size="small" type="warning">禁 用</el-button>
+        <el-button
+          size="small"
+          type="success"
+        >
+          启 用
+        </el-button>
+        <el-button
+          size="small"
+          type="warning"
+        >
+          禁 用
+        </el-button>
       </div>
     </div>
     <div class="instruct_table">
@@ -45,8 +64,16 @@
         tooltip-effect="dark"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" />
-        <el-table-column align="center" label="指令名称" sortable width="200">
+        <el-table-column
+          type="selection"
+          width="55"
+        />
+        <el-table-column
+          align="center"
+          label="指令名称"
+          sortable
+          width="200"
+        >
           <template slot-scope="scope">
             {{ scope.row.name }}
           </template>
@@ -54,37 +81,90 @@
         <!-- <el-table-column  label="指令编号" align="center" width="120">
             <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>-->
-        <el-table-column align="center" label="指令类型" width="100">
+        <el-table-column
+          align="center"
+          label="指令类型"
+          width="100"
+        >
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.op == 'Read'" type="primary">读</el-tag>
-            <el-tag v-else type="success">写</el-tag>
+            <el-tag
+              v-if="scope.row.op == 'Read'"
+              type="primary"
+            >
+              读
+            </el-tag>
+            <el-tag
+              v-else
+              type="success"
+            >
+              写
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="指令标识">
-          <template slot-scope="scope">{{ scope.row.di }}</template>
+        <el-table-column
+          align="center"
+          label="指令标识"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.di }}
+          </template>
         </el-table-column>
-        <el-table-column align="center" label="指令序号" prop="order" />
-        <el-table-column align="center" label="超时时长">
+        <el-table-column
+          align="center"
+          label="指令序号"
+          prop="order"
+        />
+        <el-table-column
+          align="center"
+          label="超时时长"
+        >
           <template slot-scope="scope">
             {{ scope.row.duration + '秒' }}
           </template>
         </el-table-column>
-        <el-table-column align="center" label="子网编号" width="200">
-          <template slot-scope="scope">{{ scope.row.pn }}</template>
+        <el-table-column
+          align="center"
+          label="子网编号"
+          width="200"
+        >
+          <template slot-scope="scope">
+            {{ scope.row.pn }}
+          </template>
         </el-table-column>
-        <el-table-column align="center" label="生效轮次">
+        <el-table-column
+          align="center"
+          label="生效轮次"
+        >
           <template slot-scope="scope">
             {{ scope.row.rotation }}
           </template>
         </el-table-column>
 
-        <el-table-column align="center" label="是否启用" width="100">
+        <el-table-column
+          align="center"
+          label="是否启用"
+          width="100"
+        >
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.enable" type="success">是</el-tag>
-            <el-tag v-else type="danger">否</el-tag>
+            <el-tag
+              v-if="scope.row.enable"
+              type="success"
+            >
+              是
+            </el-tag>
+            <el-tag
+              v-else
+              type="danger"
+            >
+              否
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="操作" width="200">
+        <el-table-column
+          align="center"
+          label="操作"
+          width="200"
+        >
           <template slot-scope="scope">
             <el-button
               size="small"
@@ -121,7 +201,12 @@
       :visible.sync="dialogFormVisible"
       @open="openDialog"
     >
-      <el-form ref="form" :model="form" :rules="formrule" size="small">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="formrule"
+        size="small"
+      >
         <h4>&nbsp;&nbsp;指令信息</h4>
         <el-row>
           <el-col :span="12">
@@ -141,9 +226,18 @@
               :label-width="formLabelWidth"
               prop="type"
             >
-              <el-select v-model="form.type" placeholder="请选择操作类型">
-                <el-option label="读" value="r" />
-                <el-option label="写" value="w" />
+              <el-select
+                v-model="form.type"
+                placeholder="请选择操作类型"
+              >
+                <el-option
+                  label="读"
+                  value="r"
+                />
+                <el-option
+                  label="写"
+                  value="w"
+                />
               </el-select>
             </el-form-item>
             <el-form-item
@@ -152,8 +246,12 @@
               prop="enable"
             >
               <el-radio-group v-model="form.enable">
-                <el-radio :label="true">是</el-radio>
-                <el-radio :label="false">否</el-radio>
+                <el-radio :label="true">
+                  是
+                </el-radio>
+                <el-radio :label="false">
+                  否
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -201,7 +299,9 @@
                 autocomplete="off"
                 placeholder="请输入超时时长"
               >
-                <template slot="append">秒</template>
+                <template slot="append">
+                  秒
+                </template>
               </el-input>
             </el-form-item>
             <el-form-item
@@ -259,15 +359,25 @@
                 autocomplete="off"
                 placeholder="请输入发送间隔"
               >
-                <template slot="append">秒</template>
+                <template slot="append">
+                  秒
+                </template>
               </el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click.native="check('form')">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="dialogFormVisible = false">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click.native="check('form')"
+        >
           确 定
         </el-button>
       </div>

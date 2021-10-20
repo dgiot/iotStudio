@@ -80,10 +80,10 @@ let localUrl = {
     'jsencrypt.min.js',
     'vuedraggable.umd.min.js',
     'app.js',
-    // 'codemirror.js', 加载速度慢 暂时用不上
+    'codemirror.js',
     'javascript.js',
     'json-lint.js',
-    // 'vue-codemirror.js', 加载速度慢 暂时用不上
+    'vue-codemirror.js',
     // 'FileSaver.min.js', 加载速度慢 暂时用不上
     'index.js',
     'jsoneditor.min.js',
@@ -110,7 +110,7 @@ let localUrl = {
     // 'xterm-addon-fit.js',
     // 'xterm-addon-attach.js',
     'vue-aliplayer-v2.js',
-    // 'rutilsjs.js',加载速度慢 暂时用不上
+    // 'rutilsjs.js',
     // 'rdatejs.js',加载速度慢 暂时用不上
     'bcryptjs.js',
   ],

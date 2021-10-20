@@ -1,8 +1,12 @@
 <template>
   <div class="animation-list">
     <div class="div-animation">
-      <el-button @click="isShowAnimation = true">添加动画</el-button>
-      <el-button @click="previewAnimate">预览动画</el-button>
+      <el-button @click="isShowAnimation = true">
+        添加动画
+      </el-button>
+      <el-button @click="previewAnimate">
+        预览动画
+      </el-button>
       <div>
         <el-tag
           v-for="(tag, index) in curComponent.animations"

@@ -8,7 +8,10 @@
 -->
 <template>
   <div>
-    <div ref="platform" class="platform">
+    <div
+      ref="platform"
+      class="platform"
+    >
       <div class="home_dialog">
         <el-dialog
           :append-to-body="true"
@@ -17,11 +20,17 @@
           width="100vh"
         >
           <info :devicedetail="deviceInfo" />
-          <span slot="footer" class="dialog-footer">
+          <span
+            slot="footer"
+            class="dialog-footer"
+          >
             <el-button @click="deviceFlag = false">
               {{ $translateTitle('developer.cancel') }}
             </el-button>
-            <el-button type="primary" @click.native="deviceFlag = false">
+            <el-button
+              type="primary"
+              @click.native="deviceFlag = false"
+            >
               {{ $translateTitle('developer.determine') }}
             </el-button>
           </span>
@@ -31,7 +40,10 @@
         class="map_header"
         :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
       >
-        <div v-show="cardHeight != '0px'" class="map_card">
+        <div
+          v-show="cardHeight != '0px'"
+          class="map_card"
+        >
           <el-row>
             <el-col
               class="card-panel-col"
@@ -53,7 +65,10 @@
                 <el-col :span="12">
                   <vab-icon icon="projector-fill" />
                 </el-col>
-                <el-col class="card-right" :span="12">
+                <el-col
+                  class="card-right"
+                  :span="12"
+                >
                   <router-link to="/roles/product">
                     <p>{{ $translateTitle('home.pro_count') }}</p>
                     <p>{{ _product_count }}</p>
@@ -79,7 +94,10 @@
                 <el-col :span="12">
                   <vab-icon icon="apps-fill" />
                 </el-col>
-                <el-col class="card-right" :span="12">
+                <el-col
+                  class="card-right"
+                  :span="12"
+                >
                   <router-link to="/roles/applicationManagement">
                     <p>{{ $translateTitle('home.app_count') }}</p>
                     <p>{{ _app_count }}</p>
@@ -105,7 +123,10 @@
                 <el-col :span="12">
                   <vab-icon icon="device-recover-fill" />
                 </el-col>
-                <el-col class="card-right" :span="12">
+                <el-col
+                  class="card-right"
+                  :span="12"
+                >
                   <router-link to="/dashboard/devicelist">
                     <p>{{ $translateTitle('home.dev_count') }}</p>
                     <p>{{ _dev_count }}</p>
@@ -128,10 +149,16 @@
                   $translateTitle('developer.Waitingtoreturn')
                 "
               >
-                <el-col class="card-left" :span="12">
+                <el-col
+                  class="card-left"
+                  :span="12"
+                >
                   <vab-icon icon="projector-2-fill" />
                 </el-col>
-                <el-col class="card-right" :span="12">
+                <el-col
+                  class="card-right"
+                  :span="12"
+                >
                   <router-link to="/CloudOt/alarm">
                     <p>
                       {{ $translateTitle('equipment.Total number of alarms') }}
@@ -169,7 +196,10 @@
                       node-key="index"
                       :props="roleProps"
                     >
-                      <div slot-scope="{ node, data }" class="custom-tree-node">
+                      <div
+                        slot-scope="{ node, data }"
+                        class="custom-tree-node"
+                      >
                         <span
                           :class="{
                             selected: data.objectId == curDepartmentId,
@@ -270,12 +300,27 @@
         </vab-query-form>
       </div>
       <el-row :row="24">
-        <el-col :span="leftRow" :xs="24">
+        <el-col
+          :span="leftRow"
+          :xs="24"
+        >
           <el-row :span="24">
-            <div class="chart_map" style="position: relative">
-              <div v-show="false" class="card_left">
-                <el-row class="card_left-row" :gutter="24">
-                  <el-col class="card_left-row-col" :span="6">
+            <div
+              class="chart_map"
+              style="position: relative"
+            >
+              <div
+                v-show="false"
+                class="card_left"
+              >
+                <el-row
+                  class="card_left-row"
+                  :gutter="24"
+                >
+                  <el-col
+                    class="card_left-row-col"
+                    :span="6"
+                  >
                     <Card
                       class="card_left-row-col-card"
                       style="background-color: #ffad33; border-color: #ffad33"
@@ -292,7 +337,11 @@
                       </div>
                     </Card>
                   </el-col>
-                  <el-col class="card_left-row-col" :offset="2" :span="6">
+                  <el-col
+                    class="card_left-row-col"
+                    :offset="2"
+                    :span="6"
+                  >
                     <Card
                       class="card_left-row-col-card"
                       style="background-color: #19be6b; border-color: #19be6b"
@@ -309,7 +358,11 @@
                       </div>
                     </Card>
                   </el-col>
-                  <el-col class="card_left-row-col" :offset="2" :span="6">
+                  <el-col
+                    class="card_left-row-col"
+                    :offset="2"
+                    :span="6"
+                  >
                     <Card
                       class="card_left-row-col-card"
                       style="background-color: #f16643; border-color: #f16643"
@@ -420,13 +473,22 @@
                 :zoom="sizeZoom"
               >
                 <bm-control>
-                  <el-button size="mini" @click="sizeZoom = 19">
+                  <el-button
+                    size="mini"
+                    @click="sizeZoom = 19"
+                  >
                     {{ $translateTitle('home.max') }}
                   </el-button>
-                  <el-button size="mini" @click="sizeZoom = 10">
+                  <el-button
+                    size="mini"
+                    @click="sizeZoom = 10"
+                  >
                     {{ $translateTitle('home.restore') }}
                   </el-button>
-                  <el-button size="mini" @click="sizeZoom = 3">
+                  <el-button
+                    size="mini"
+                    @click="sizeZoom = 3"
+                  >
                     {{ $translateTitle('home.min') }}
                   </el-button>
                   <el-button
@@ -448,7 +510,10 @@
                   />
                 </bm-control>
                 <bml-marker-clusterer :average-center="true">
-                  <div v-for="(item, index) in _tableData" :key="index">
+                  <div
+                    v-for="(item, index) in _tableData"
+                    :key="index"
+                  >
                     <bm-marker
                       :ref="'bm_info' + index"
                       :icon="{
@@ -484,7 +549,10 @@
                                 :src="productIco"
                                 style="width: 120px; height: 120px"
                               >
-                                <div slot="error" class="image-slot">
+                                <div
+                                  slot="error"
+                                  class="image-slot"
+                                >
                                   <i
                                     class="el-icon-picture-outline empty"
                                     style="width: 100px; height: 100px"
@@ -577,13 +645,25 @@
             </div>
           </el-row>
         </el-col>
-        <el-col :span="24 - leftRow" :xs="24">
+        <el-col
+          :span="24 - leftRow"
+          :xs="24"
+        >
           <div class="home_card">
-            <el-tabs v-model="activeName" @tab-click="resizeTheChart">
-              <el-tab-pane :label="$translateTitle('home.info')" name="first">
+            <el-tabs
+              v-model="activeName"
+              @tab-click="resizeTheChart"
+            >
+              <el-tab-pane
+                :label="$translateTitle('home.info')"
+                name="first"
+              >
                 <div class="box-card">
                   <el-card>
-                    <div slot="header" class="clearfix">
+                    <div
+                      slot="header"
+                      class="clearfix"
+                    >
                       <el-button>
                         {{ $translateTitle('home.info') }}
                       </el-button>
@@ -610,7 +690,10 @@
                                     :src="scope.row.icon"
                                     style="width: 26px; height: 26px"
                                   >
-                                    <div slot="error" class="image-slot">
+                                    <div
+                                      slot="error"
+                                      class="image-slot"
+                                    >
                                       <i class="el-icon-picture-outline"></i>
                                     </div>
                                   </el-image>
@@ -646,9 +729,17 @@
                   </el-card>
                 </div>
 
-                <el-col :md="24" :sm="24" :xl="24" :xs="24">
+                <el-col
+                  :md="24"
+                  :sm="24"
+                  :xl="24"
+                  :xs="24"
+                >
                   <el-card class="box-card">
-                    <div slot="header" class="clearfix">
+                    <div
+                      slot="header"
+                      class="clearfix"
+                    >
                       <span>
                         {{ $translateTitle('equipment.Equipment Overview') }}
                       </span>
@@ -680,8 +771,14 @@
               >
                 <div class="box-card">
                   <el-card>
-                    <div slot="header" class="clearfix">
-                      <el-badge class="item" :value="_dev_off_count">
+                    <div
+                      slot="header"
+                      class="clearfix"
+                    >
+                      <el-badge
+                        class="item"
+                        :value="_dev_off_count"
+                      >
                         <el-button
                           size="small"
                           @click="_goDevice('dev_unline')"
@@ -710,8 +807,8 @@
                                   <span
                                     :title="
                                       scope.row.name +
-                                      $translateTitle('home.Last online time') +
-                                      scope.row.updatedAt
+                                        $translateTitle('home.Last online time') +
+                                        scope.row.updatedAt
                                     "
                                     @click="showInfo(scope.row.objectId)"
                                   >
@@ -733,8 +830,14 @@
               >
                 <div class="box-card">
                   <el-card>
-                    <div slot="header" class="clearfix">
-                      <el-badge class="item" :value="_dev_online_count">
+                    <div
+                      slot="header"
+                      class="clearfix"
+                    >
+                      <el-badge
+                        class="item"
+                        :value="_dev_online_count"
+                      >
                         <el-button
                           size="small"
                           @click="_goDevice('dev_online')"
@@ -763,8 +866,8 @@
                                   <span
                                     :title="
                                       scope.row.name +
-                                      $translateTitle('home.Last online time') +
-                                      scope.row.updatedAt
+                                        $translateTitle('home.Last online time') +
+                                        scope.row.updatedAt
                                     "
                                     @click="showInfo(scope.row.objectId)"
                                   >

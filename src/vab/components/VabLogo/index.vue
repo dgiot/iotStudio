@@ -10,7 +10,11 @@
         <!-- 使用内置svg示例 -->
         <!-- <vab-icon v-if="logo" :icon="logo" is-default-svg /> -->
         <!-- 使用自定义svg示例 -->
-        <vab-icon v-if="logo" :icon="logo" is-custom-svg />
+        <vab-icon
+          v-if="logo"
+          :icon="logo"
+          is-custom-svg
+        />
       </span>
       <span
         class="title"

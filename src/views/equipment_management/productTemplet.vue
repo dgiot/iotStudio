@@ -1,6 +1,9 @@
 <template>
   <div class="devproduct devproduct-container">
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+    <vab-input
+      ref="uploadFinish"
+      @fileInfo="fileInfo"
+    />
     <div class="prosecond">
       <el-form
         class="demo-form-inline"
@@ -31,18 +34,30 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="searchProduct(0)">
+          <el-button
+            type="primary"
+            @click="searchProduct(0)"
+          >
             {{ $translateTitle('developer.search') }}
           </el-button>
         </el-form-item>
         <el-form-item style="float: right; text-align: right">
-          <el-button type="primary" @click="addproduct">
+          <el-button
+            type="primary"
+            @click="addproduct"
+          >
             {{ $translateTitle('product.createproduct') }}
           </el-button>
-          <el-button type="primary" @click="exportpro">
+          <el-button
+            type="primary"
+            @click="exportpro"
+          >
             {{ $translateTitle('product.exportpro') }}
           </el-button>
-          <el-button type="primary" @click="handleImport()">
+          <el-button
+            type="primary"
+            @click="handleImport()"
+          >
             {{ $translateTitle('product.importpro') }}
           </el-button>
         </el-form-item>
@@ -95,7 +110,10 @@
                 {{ $translateTitle('product.config') }}
               </el-button>
 
-              <el-button size="mini" @click="goKonva(scope.row.objectId)">
+              <el-button
+                size="mini"
+                @click="goKonva(scope.row.objectId)"
+              >
                 {{ $translateTitle('concentrator.konva') }}
               </el-button>
 
@@ -131,7 +149,11 @@
                     {{ $translateTitle('developer.determine') }}
                   </el-button>
                 </div>
-                <el-button slot="reference" size="mini" type="danger">
+                <el-button
+                  slot="reference"
+                  size="mini"
+                  type="danger"
+                >
                   {{ $translateTitle('developer.delete') }}
                 </el-button>
               </el-popover>
@@ -139,7 +161,10 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="elpagination" style="margin-top: 20px">
+      <div
+        class="elpagination"
+        style="margin-top: 20px"
+      >
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
           :page-size="length"
@@ -192,19 +217,28 @@
                 :label="$translateTitle('product.productname')"
                 prop="name"
               >
-                <el-input v-model="form.name" autocomplete="off" />
+                <el-input
+                  v-model="form.name"
+                  autocomplete="off"
+                />
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.productgrouping')"
                 prop="devType"
               >
-                <el-input v-model="form.devType" autocomplete="off" />
+                <el-input
+                  v-model="form.devType"
+                  autocomplete="off"
+                />
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.classification')"
                 prop="category"
               >
-                <el-select v-model="form.category" placeholder="请选择">
+                <el-select
+                  v-model="form.category"
+                  placeholder="请选择"
+                >
                   <el-option
                     style="height: auto; padding: 0"
                     :value="treeDataValue"
@@ -216,7 +250,10 @@
                       :expand-on-click-node="false"
                       node-key="index"
                     >
-                      <div slot-scope="{ node, data }" class="custom-tree-node">
+                      <div
+                        slot-scope="{ node, data }"
+                        class="custom-tree-node"
+                      >
                         <span
                           :class="{
                             selected: false,
@@ -249,9 +286,15 @@
                   />
                 </div>
               </el-form-item>
-              <el-form-item :label="$translateTitle('menu.icon')" prop="icon">
+              <el-form-item
+                :label="$translateTitle('menu.icon')"
+                prop="icon"
+              >
                 <div v-if="imageUrl">
-                  <img class="avatar" :src="imageUrl" />
+                  <img
+                    class="avatar"
+                    :src="imageUrl"
+                  />
                   <el-button
                     size="mini"
                     style="vertical-align: text-bottom"
@@ -291,13 +334,19 @@
                 :label="$translateTitle('developer.describe')"
                 prop="desc"
               >
-                <el-input v-model="form.desc" type="textarea" />
+                <el-input
+                  v-model="form.desc"
+                  type="textarea"
+                />
               </el-form-item>
             </el-form>
           </div>
         </div>
         <div class="devproduct-prodialog-footer">
-          <el-button type="primary" @click="submitForm()">
+          <el-button
+            type="primary"
+            @click="submitForm()"
+          >
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="handleCloseDialogForm()">
@@ -306,7 +355,11 @@
         </div>
       </el-drawer>
     </div>
-    <VabRender v-show="false" :config="config" :loading="true" />
+    <VabRender
+      v-show="false"
+      :config="config"
+      :loading="true"
+    />
   </div>
 </template>
 <script>

@@ -53,12 +53,21 @@
               <el-radio-button label="all">
                 {{ $t('analysis.all') }}
               </el-radio-button>
-              <el-radio-button label="qos0">QoS 0</el-radio-button>
-              <el-radio-button label="qos1">QoS 1</el-radio-button>
-              <el-radio-button label="qos2">QoS 2</el-radio-button>
+              <el-radio-button label="qos0">
+                QoS 0
+              </el-radio-button>
+              <el-radio-button label="qos1">
+                QoS 1
+              </el-radio-button>
+              <el-radio-button label="qos2">
+                QoS 2
+              </el-radio-button>
             </el-radio-group>
           </div>
-          <el-row class="expand-body" :gutter="20">
+          <el-row
+            class="expand-body"
+            :gutter="20"
+          >
             <el-col :span="8">
               <div class="message-card in">
                 <div>
@@ -118,11 +127,26 @@
           </el-row>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('topics.topic')" prop="topic" />
-      <el-table-column :label="$t('analysis.messageIn')" prop="messageIn" />
-      <el-table-column :label="$t('analysis.messageOut')" prop="messageOut" />
-      <el-table-column :label="$t('analysis.messageDrop')" prop="messageDrop" />
-      <el-table-column :label="$t('oper.oper')" width="180px">
+      <el-table-column
+        :label="$t('topics.topic')"
+        prop="topic"
+      />
+      <el-table-column
+        :label="$t('analysis.messageIn')"
+        prop="messageIn"
+      />
+      <el-table-column
+        :label="$t('analysis.messageOut')"
+        prop="messageOut"
+      />
+      <el-table-column
+        :label="$t('analysis.messageDrop')"
+        prop="messageDrop"
+      />
+      <el-table-column
+        :label="$t('oper.oper')"
+        width="180px"
+      >
         <template slot-scope="props">
           <el-button
             plain
@@ -132,7 +156,11 @@
           >
             {{ $t('oper.view') }}
           </el-button>
-          <el-popover placement="right" trigger="click" :value="popoverVisible">
+          <el-popover
+            placement="right"
+            trigger="click"
+            :value="popoverVisible"
+          >
             <p>{{ $t('oper.confirmDelete') }}</p>
             <div style="text-align: right">
               <el-button
@@ -151,7 +179,12 @@
                 {{ $t('oper.confirm') }}
               </el-button>
             </div>
-            <el-button slot="reference" plain size="mini" type="danger">
+            <el-button
+              slot="reference"
+              plain
+              size="mini"
+              type="danger"
+            >
               {{ $t('oper.delete') }}
             </el-button>
           </el-popover>
@@ -175,13 +208,23 @@
         :rules="rules"
         size="small"
       >
-        <el-form-item :label="$t('subscriptions.topic')" prop="topic">
-          <el-input v-model="record.topic" placeholder="Topic" />
+        <el-form-item
+          :label="$t('subscriptions.topic')"
+          prop="topic"
+        >
+          <el-input
+            v-model="record.topic"
+            placeholder="Topic"
+          />
         </el-form-item>
       </el-form>
 
       <div slot="footer">
-        <el-button class="cache-btn" type="text" @click="handleClose">
+        <el-button
+          class="cache-btn"
+          type="text"
+          @click="handleClose"
+        >
           {{ $t('oper.cancel') }}
         </el-button>
         <el-button

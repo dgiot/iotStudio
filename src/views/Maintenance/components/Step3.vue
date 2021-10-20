@@ -13,7 +13,13 @@
           size="medium "
         >
           <el-row :gutter="24">
-            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+            <el-col
+              :lg="12"
+              :md="12"
+              :sm="24"
+              :xl="12"
+              :xs="24"
+            >
               <el-form-item
                 :label="$translateTitle('Maintenance.project') + ': '"
               >
@@ -21,7 +27,13 @@
                 <span>{{ form.info.productname }}</span>
               </el-form-item>
             </el-col>
-            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+            <el-col
+              :lg="12"
+              :md="12"
+              :sm="24"
+              :xl="12"
+              :xs="24"
+            >
               <el-form-item
                 :label="$translateTitle('Maintenance.Equipment name') + ': '"
               >
@@ -29,7 +41,13 @@
                 <span>{{ form.info.devicename }}</span>
               </el-form-item>
             </el-col>
-            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+            <el-col
+              :lg="12"
+              :md="12"
+              :sm="24"
+              :xl="12"
+              :xs="24"
+            >
               <el-form-item
                 :label="$translateTitle('Maintenance.Initiator') + ': '"
               >
@@ -37,7 +55,13 @@
                 <span>{{ form.info.createdname }}</span>
               </el-form-item>
             </el-col>
-            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+            <el-col
+              :lg="24"
+              :md="24"
+              :sm="24"
+              :xl="24"
+              :xs="24"
+            >
               <el-form-item
                 :label="
                   $translateTitle('Maintenance.Ticket description') + ': '
@@ -46,11 +70,21 @@
                 {{ form.info.description }}
               </el-form-item>
             </el-col>
-            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+            <el-col
+              :lg="24"
+              :md="24"
+              :sm="24"
+              :xl="24"
+              :xs="24"
+            >
               <el-form-item
                 :label="$translateTitle('Maintenance.photo') + ': '"
               >
-                <el-carousel height="200px" :interval="2000" type="card">
+                <el-carousel
+                  height="200px"
+                  :interval="2000"
+                  type="card"
+                >
                   <el-carousel-item
                     v-for="(item, index) in form.info.photo"
                     :key="index"
@@ -66,7 +100,10 @@
               </el-form-item>
             </el-col>
 
-            <el-col v-if="showFooter" :span="24">
+            <el-col
+              v-if="showFooter"
+              :span="24"
+            >
               <el-form-item
                 :label="
                   $translateTitle('Maintenance.Evaluation description') + ': '
@@ -93,7 +130,10 @@
       >
         <el-card shadow="hover">
           <template #header>
-            <el-radio-group v-model="reverse" class="card-header-radio">
+            <el-radio-group
+              v-model="reverse"
+              class="card-header-radio"
+            >
               <el-radio :label="true">
                 {{ $translateTitle('Maintenance.Positive order') }}
               </el-radio>

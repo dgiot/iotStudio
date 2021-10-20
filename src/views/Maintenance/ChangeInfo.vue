@@ -1,5 +1,8 @@
 <template>
-  <div v-if="detail" class="changeInfo">
+  <div
+    v-if="detail"
+    class="changeInfo"
+  >
     <el-row
       v-show="showHard == true"
       class="row-bg"
@@ -73,7 +76,10 @@
       @change-step="handleSetStep"
     />
   </div>
-  <div v-else class="empty">
+  <div
+    v-else
+    class="empty"
+  >
     <vab-empty />
   </div>
 </template>

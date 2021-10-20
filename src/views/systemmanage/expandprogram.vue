@@ -40,7 +40,10 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button
           size="mini"
           type="primary"
@@ -49,7 +52,10 @@
           <!-- 创建 -->
           {{ $translateTitle('developer.create') }}
         </el-button>
-        <el-button size="mini" @click="apiDialog = false">
+        <el-button
+          size="mini"
+          @click="apiDialog = false"
+        >
           <!-- 取消 -->
           {{ $translateTitle('developer.cancel') }}
         </el-button>
@@ -57,7 +63,10 @@
     </el-dialog>
     <el-row :gutter="24">
       <el-col :span="7">
-        <el-button type="primary" @click.native="addApi">
+        <el-button
+          type="primary"
+          @click.native="addApi"
+        >
           <!-- 新增Api -->
           {{ $translateTitle('product.newapi') }}
         </el-button>
@@ -153,16 +162,25 @@
       <el-col :span="17">
         <!-- <el-tab-pane label="物解析" name="fourth"> -->
         <div class="protolheader">
-          <el-tabs v-model="activeName" size="mini">
+          <el-tabs
+            v-model="activeName"
+            size="mini"
+          >
             <!-- <el-tab-pane label="设计" name="design"> -->
             <el-tab-pane
               :label="$translateTitle('product.Design')"
               name="design"
             >
-              <VabJsonEditor ref="jsonEdit" v-model="itemSwagger" />
+              <VabJsonEditor
+                ref="jsonEdit"
+                v-model="itemSwagger"
+              />
             </el-tab-pane>
             <!-- <el-tab-pane label="编码" name="code"> -->
-            <el-tab-pane :label="$translateTitle('product.code')" name="code">
+            <el-tab-pane
+              :label="$translateTitle('product.code')"
+              name="code"
+            >
               <el-form
                 ref="thingsParseModel"
                 :inline="true"
@@ -201,8 +219,15 @@
             </el-tab-pane>
 
             <!-- <el-tab-pane label="测试" name="swagger"> -->
-            <el-tab-pane :label="$translateTitle('rule.Test')" name="swagger">
-              <iframe height="700vh" :src="swaggerPath" width="100%" />
+            <el-tab-pane
+              :label="$translateTitle('rule.Test')"
+              name="swagger"
+            >
+              <iframe
+                height="700vh"
+                :src="swaggerPath"
+                width="100%"
+              />
             </el-tab-pane>
           </el-tabs>
         </div>

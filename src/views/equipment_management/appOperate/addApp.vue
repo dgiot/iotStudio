@@ -9,7 +9,12 @@
           {{ actionType == 'update' ? '编辑应用' : '新增应用' }}
         </el-breadcrumb-item>
       </el-breadcrumb>
-      <el-button plain size="small" type="primary" @click="handleClickBack">
+      <el-button
+        plain
+        size="small"
+        type="primary"
+        @click="handleClickBack"
+      >
         {{ $translateTitle('application.return') }}
       </el-button>
     </div>
@@ -21,7 +26,11 @@
         </p>
       </div>
 
-      <el-form ref="form" label-width="180px" :model="form">
+      <el-form
+        ref="form"
+        label-width="180px"
+        :model="form"
+      >
         <!-- 工程名称 -->
         <el-row>
           <el-col :span="12">
@@ -31,7 +40,10 @@
                 prop="department"
                 :rules="[{ required: true, message: '工程单位不能为空' }]"
               >
-                <el-input v-model="form.department" placeholder="工程单位" />
+                <el-input
+                  v-model="form.department"
+                  placeholder="工程单位"
+                />
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('application.applicationname')"
@@ -183,7 +195,11 @@
                   list-type="picture"
                   :on-success="handleSuccess"
                 >
-                  <el-button slot="trigger" size="small" type="primary">
+                  <el-button
+                    slot="trigger"
+                    size="small"
+                    type="primary"
+                  >
                     {{ $translateTitle('application.selectfile') }}
                   </el-button>
                   <el-button
@@ -198,7 +214,10 @@
                   <span v-show="form.img != ''">
                     {{ $translateTitle('developer.path') }}:{{ form.img }}
                   </span>
-                  <div slot="tip" class="el-upload__tip">
+                  <div
+                    slot="tip"
+                    class="el-upload__tip"
+                  >
                     {{
                       $translateTitle(
                         'application.onlyJPG/PNGfilescanbeuploadedandnomorethan500kb'
@@ -218,7 +237,11 @@
                   list-type="picture"
                   :on-success="handleSuccess1"
                 >
-                  <el-button slot="trigger" size="small" type="primary">
+                  <el-button
+                    slot="trigger"
+                    size="small"
+                    type="primary"
+                  >
                     {{ $translateTitle('application.selectfile') }}
                   </el-button>
                   <el-button
@@ -233,7 +256,10 @@
                   <span v-show="form.img1 != ''">
                     {{ $translateTitle('developer.path') }}:{{ form.img1 }}
                   </span>
-                  <div slot="tip" class="el-upload__tip">
+                  <div
+                    slot="tip"
+                    class="el-upload__tip"
+                  >
                     {{
                       $translateTitle(
                         'application.onlyJPG/PNGfilescanbeuploadedandnomorethan500kb'
@@ -265,7 +291,9 @@
                   v-model="form.dashboard"
                   :placeholder="$translateTitle('application.monitoringpanel')"
                 >
-                  <template slot="prepend">http://</template>
+                  <template slot="prepend">
+                    http://
+                  </template>
                   <el-button
                     slot="append"
                     style="
@@ -301,7 +329,10 @@
                   },
                 ]"
               >
-                <el-select v-model.number="form.scale" clearable>
+                <el-select
+                  v-model.number="form.scale"
+                  clearable
+                >
                   <el-option
                     v-for="item in form.scaleDate"
                     :key="item.id"

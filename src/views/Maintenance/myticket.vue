@@ -23,7 +23,10 @@
             :show-hard="ishard"
             :step="step"
           />
-          <span slot="footer" class="dialog-footer">
+          <span
+            slot="footer"
+            class="dialog-footer"
+          >
             <el-button
               v-show="detail.status == 0"
               @click="set_deviceFlag(false)"
@@ -37,7 +40,10 @@
             >
               {{ $translateTitle('Maintenance.Dispatch') }}
             </el-button>
-            <el-button v-show="detail.status == 1" @click="backChange(detail)">
+            <el-button
+              v-show="detail.status == 1"
+              @click="backChange(detail)"
+            >
               {{ $translateTitle('Maintenance.back') }}
             </el-button>
 
@@ -133,7 +139,10 @@
             <el-form-item
               :label="$translateTitle('Maintenance.Ticket description')"
             >
-              <el-input v-model="form.description" type="textarea" />
+              <el-input
+                v-model="form.description"
+                type="textarea"
+              />
             </el-form-item>
             <el-form-item :label="$translateTitle('Maintenance.photo')">
               <el-upload
@@ -142,8 +151,14 @@
                 :http-request="myUpload"
                 list-type="picture-card"
               >
-                <i slot="default" class="el-icon-plus"></i>
-                <div v-for="(item, index) in form.photo" :key="index">
+                <i
+                  slot="default"
+                  class="el-icon-plus"
+                ></i>
+                <div
+                  v-for="(item, index) in form.photo"
+                  :key="index"
+                >
                   <img
                     alt=""
                     class="el-upload-list__item-thumbnail"
@@ -151,13 +166,26 @@
                   />
                 </div>
               </el-upload>
-              <el-dialog :append-to-body="true" :visible.sync="dialogVisible">
-                <img alt="" :src="dialogImageUrl" width="100%" />
+              <el-dialog
+                :append-to-body="true"
+                :visible.sync="dialogVisible"
+              >
+                <img
+                  alt=""
+                  :src="dialogImageUrl"
+                  width="100%"
+                />
               </el-dialog>
             </el-form-item>
           </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click.native="submitForm('form')">
+          <div
+            slot="footer"
+            class="dialog-footer"
+          >
+            <el-button
+              type="primary"
+              @click.native="submitForm('form')"
+            >
               {{ $translateTitle('Maintenance.Create now') }}
             </el-button>
             <el-button @click="resetForm('form')">
@@ -262,7 +290,11 @@
             <!--            </el-button>-->
           </el-form-item>
           <el-form-item>
-            <el-button size="mini" type="text" @click="handleFold">
+            <el-button
+              size="mini"
+              type="text"
+              @click="handleFold"
+            >
               <span v-if="fold">
                 {{ $translateTitle('Maintenance.Unfold') }}
               </span>

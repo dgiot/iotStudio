@@ -10,12 +10,19 @@
         status-icon
       >
         <div class="logo">
-          <img alt="logo" :src="logosrc" style="width: 80px; height: 80px" />
+          <img
+            alt="logo"
+            :src="logosrc"
+            style="width: 80px; height: 80px"
+          />
           <p>{{ title }}</p>
         </div>
 
         <!-- <el-input v-model="ruleForm2.diqu" type="text"></el-input> -->
-        <el-form-item prop="phone" style="border-radius: 0">
+        <el-form-item
+          prop="phone"
+          style="border-radius: 0"
+        >
           <span class="svg-container">
             <el-select
               v-model="ruleForm2.value"
@@ -45,7 +52,10 @@
           class="yzm"
           style="height: 50px; margin-bottom: 20px; margin-left: 20px"
         >
-          <span class="svg-container" style="float: left; width: 25%">
+          <span
+            class="svg-container"
+            style="float: left; width: 25%"
+          >
             <el-input
               v-model="phonesms"
               disabled

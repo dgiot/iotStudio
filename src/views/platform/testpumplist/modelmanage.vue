@@ -21,7 +21,7 @@
                     clearable
                     :placeholder="
                       $translateTitle('product.enter1') +
-                      $translateTitle('product.itemname')
+                        $translateTitle('product.itemname')
                     "
                   />
                 </el-form-item>
@@ -34,7 +34,11 @@
                     <!-- 查询 -->
                     {{ $translateTitle('concentrator.search') }}
                   </el-button>
-                  <el-button size="small" type="primary" @click="addStandard">
+                  <el-button
+                    size="small"
+                    type="primary"
+                    @click="addStandard"
+                  >
                     <!-- 新增质检项目 -->
                     {{ $translateTitle('product.newlyadded')
                     }}{{ $translateTitle('developer.qualityinspectionitems') }}
@@ -77,7 +81,11 @@
               type="index"
               width="120"
             />
-            <el-table-column align="center" label="ID" width="200">
+            <el-table-column
+              align="center"
+              label="ID"
+              width="200"
+            >
               <template slot-scope="scope">
                 <span>{{ scope.row.objectId }}</span>
               </template>
@@ -87,7 +95,9 @@
               align="center"
               :label="$translateTitle('product.itemname')"
             >
-              <template slot-scope="scope">{{ scope.row.name }}</template>
+              <template slot-scope="scope">
+                {{ scope.row.name }}
+              </template>
             </el-table-column>
 
             <!-- <el-table-column label="类型" align="center"> -->
@@ -96,7 +106,9 @@
               :label="$translateTitle('rule.Type')"
             >
               <template slot-scope="scope">
-                <el-tag type="success">{{ scope.row.devType }}</el-tag>
+                <el-tag type="success">
+                  {{ scope.row.devType }}
+                </el-tag>
               </template>
             </el-table-column>
 
@@ -178,7 +190,11 @@
           width="60%"
         >
           <div class="addContent">
-            <el-form ref="reportForm" :model="reportForm" :rules="rules">
+            <el-form
+              ref="reportForm"
+              :model="reportForm"
+              :rules="rules"
+            >
               <el-row :gutter="12">
                 <el-col :span="12">
                   <el-form-item
@@ -243,7 +259,10 @@
                     :label-width="formLabelWidth"
                     prop="name"
                   >
-                    <el-input v-model="reportForm.name" placeholder="" />
+                    <el-input
+                      v-model="reportForm.name"
+                      placeholder=""
+                    />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -257,7 +276,10 @@
                     :label-width="formLabelWidth"
                     prop="devTypeText"
                   >
-                    <el-input v-model="reportForm.devTypeText" placeholder="" />
+                    <el-input
+                      v-model="reportForm.devTypeText"
+                      placeholder=""
+                    />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -298,7 +320,10 @@
 
                     <el-col :span="4">
                       <div>
-                        <label class="img-uploader-label" for="inputId" />
+                        <label
+                          class="img-uploader-label"
+                          for="inputId"
+                        />
                         <input
                           id="inputId"
                           ref="input"
@@ -359,13 +384,19 @@
               </el-row>
             </el-form>
           </div>
-          <span slot="footer" class="dialog-footer">
+          <span
+            slot="footer"
+            class="dialog-footer"
+          >
             <span
               v-if="dictoptions.length == 0"
               class="left"
               style="float: left"
             >
-              <el-link type="primary" @click.native="createDict()">
+              <el-link
+                type="primary"
+                @click.native="createDict()"
+              >
                 暂无报告模板字典,点击前去新建报告模板字典
               </el-link>
             </span>
@@ -390,13 +421,19 @@
           :visible.sync="dialogChildrenForm"
           width="30%"
         >
-          <el-form ref="childrenFormRef" :model="childrenform">
+          <el-form
+            ref="childrenFormRef"
+            :model="childrenform"
+          >
             <!-- <el-form-item :label-width="formLabelWidth" label="模版名称"> -->
             <el-form-item
               :label="$translateTitle('developer.Templatename')"
               :label-width="formLabelWidth"
             >
-              <el-input v-model="childrenform.name" autocomplete="off" />
+              <el-input
+                v-model="childrenform.name"
+                autocomplete="off"
+              />
             </el-form-item>
 
             <!-- <el-form-item :label-width="formLabelWidth" label="模版模型"> -->
@@ -410,7 +447,10 @@
                 :src="fileDomain + childrenform.imageSrc"
               />
 
-              <i v-else class="el-icon-plus avatar-uploader-icon" />
+              <i
+                v-else
+                class="el-icon-plus avatar-uploader-icon"
+              />
               <form
                 ref="uploadform"
                 enctype="multipart/form-data"
@@ -444,12 +484,18 @@
               />
             </el-form-item>
           </el-form>
-          <div slot="footer" class="dialog-footer">
+          <div
+            slot="footer"
+            class="dialog-footer"
+          >
             <el-button @click="dialogChildrenForm = false">
               <!-- 取消 -->
               {{ $translateTitle('developer.cancel') }}
             </el-button>
-            <el-button type="primary" @click.native="addStandardChildren">
+            <el-button
+              type="primary"
+              @click.native="addStandardChildren"
+            >
               <!-- 确定 -->
               {{ $translateTitle('developer.determine') }}
             </el-button>

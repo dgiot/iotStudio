@@ -4,8 +4,14 @@
       <el-container>
         <el-main>
           <div class="main">
-            <el-drawer direction="ltr" :visible.sync="drawer">
-              <div v-if="showTree" class="tree">
+            <el-drawer
+              direction="ltr"
+              :visible.sync="drawer"
+            >
+              <div
+                v-if="showTree"
+                class="tree"
+              >
                 搜索 :
                 <el-input
                   v-model="filterText"
@@ -26,11 +32,20 @@
                   :props="defaultProps"
                   @node-drop="handleDrop"
                 >
-                  <span slot-scope="{ node, data }" class="custom-tree-node">
+                  <span
+                    slot-scope="{ node, data }"
+                    class="custom-tree-node"
+                  >
                     <span v-if="data.roles.seen == true">
-                      <el-input v-model="editLabel" style="width: 80%" />
+                      <el-input
+                        v-model="editLabel"
+                        style="width: 80%"
+                      />
                     </span>
-                    <span v-else style="color: #409eff">{{ node.label }}</span>
+                    <span
+                      v-else
+                      style="color: #409eff"
+                    >{{ node.label }}</span>
                     <span
                       v-if="data.roles.seen == false"
                       style="margin-left: 5px"

@@ -51,7 +51,11 @@
         {{ $translateTitle(handleGroupTitle) }}
       </el-divider>
       <template v-for="route in handlePartialRoutes">
-        <vab-menu v-if="!route.hidden" :key="route.path" :item="route" />
+        <vab-menu
+          v-if="!route.hidden"
+          :key="route.path"
+          :item="route"
+        />
       </template>
     </el-menu>
   </el-scrollbar>

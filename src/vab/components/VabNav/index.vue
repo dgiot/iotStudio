@@ -1,7 +1,13 @@
 <template>
   <div class="vab-nav">
     <el-row :gutter="15">
-      <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="4">
+      <el-col
+        :lg="12"
+        :md="12"
+        :sm="12"
+        :xl="12"
+        :xs="4"
+      >
         <div class="left-panel">
           <vab-fold />
           <el-tabs
@@ -26,10 +32,19 @@
               </template>
             </el-tab-pane>
           </el-tabs>
-          <vab-breadcrumb v-else class="hidden-xs-only" />
+          <vab-breadcrumb
+            v-else
+            class="hidden-xs-only"
+          />
         </div>
       </el-col>
-      <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="20">
+      <el-col
+        :lg="12"
+        :md="12"
+        :sm="12"
+        :xl="12"
+        :xs="20"
+      >
         <div class="right-panel">
           <vab-error-log />
           <vab-search />

@@ -16,7 +16,12 @@
         :span="20"
       />
     </template>
-    <div v-else class="form-item-placeholder">从左侧拖拽添加表单项并点选</div>
+    <div
+      v-else
+      class="form-item-placeholder"
+    >
+      从左侧拖拽添加表单项并点选
+    </div>
   </div>
 </template>
 

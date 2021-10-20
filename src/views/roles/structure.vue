@@ -47,14 +47,20 @@
               </a-button>
             </span>
           </el-form-item>
-          <el-form-item v-if="centerDialogRole" label-width="78px">
+          <el-form-item
+            v-if="centerDialogRole"
+            label-width="78px"
+          >
             <addroles
               ref="addRoleRef"
               :dept-data="deptOption[0]"
               :is-structures="isStructures"
             />
           </el-form-item>
-          <el-form-item :label="$translateTitle('user.name1')" prop="nick">
+          <el-form-item
+            :label="$translateTitle('user.name1')"
+            prop="nick"
+          >
             <el-input
               v-model="userInfoForm.nick"
               auto-complete="off"
@@ -74,14 +80,20 @@
               :placeholder="$translateTitle('product.enterphonenumber')"
             />
           </el-form-item>
-          <el-form-item :label="$translateTitle('user.email')" prop="email">
+          <el-form-item
+            :label="$translateTitle('user.email')"
+            prop="email"
+          >
             <el-input
               v-model="userInfoForm.email"
               auto-complete="off"
               :placeholder="$translateTitle('product.enteremail')"
             />
           </el-form-item>
-          <el-form-item :label="$translateTitle('user.account')" prop="account">
+          <el-form-item
+            :label="$translateTitle('user.account')"
+            prop="account"
+          >
             <el-input
               v-model="userInfoForm.account"
               auto-complete="off"
@@ -144,7 +156,13 @@
       </a-drawer>
     </div>
     <el-row :gutter="20">
-      <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+      <el-col
+        :lg="24"
+        :md="24"
+        :sm="24"
+        :xl="24"
+        :xs="24"
+      >
         <!--表格渲染-->
         <div class="tabContent">
           <el-row :gutter="24">
@@ -283,7 +301,7 @@
                     align="center"
                     :label="
                       $translateTitle('user.Disable') +
-                      $translateTitle('user.account')
+                        $translateTitle('user.account')
                     "
                     width="140px"
                   >
@@ -291,7 +309,7 @@
                       <el-tooltip
                         :content="
                           $translateTitle('user.Current state') +
-                          scope.row.emailVerified
+                            scope.row.emailVerified
                             ? $translateTitle('user.Enable')
                             : $translateTitle('user.Disable')
                         "
@@ -334,8 +352,14 @@
           size="mini"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="selection" width="55" />
-          <el-table-column align="center" :label="$translateTitle('user.name')">
+          <el-table-column
+            type="selection"
+            width="55"
+          />
+          <el-table-column
+            align="center"
+            :label="$translateTitle('user.name')"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.alias }}</span>
             </template>
@@ -348,17 +372,26 @@
               <span>{{ scope.row.desc }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" label="ID">
+          <el-table-column
+            align="center"
+            label="ID"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.objectId }}</span>
             </template>
           </el-table-column>
         </el-table>
-        <div slot="footer" class="dialog-footer">
+        <div
+          slot="footer"
+          class="dialog-footer"
+        >
           <el-button @click="roleacl = false">
             {{ $translateTitle('developer.cancel') }}
           </el-button>
-          <el-button type="primary" @click.native="adduseracl">
+          <el-button
+            type="primary"
+            @click.native="adduseracl"
+          >
             {{ $translateTitle('developer.determine') }}
           </el-button>
         </div>

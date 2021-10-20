@@ -15,13 +15,21 @@
                 v-model="prescribedPointForm.point"
                 placeholder="请选择个数"
               >
-                <el-option v-for="i in 20" :key="i" :label="i" :value="i" />
+                <el-option
+                  v-for="i in 20"
+                  :key="i"
+                  :label="i"
+                  :value="i"
+                />
               </el-select>
             </el-form-item>
           </div>
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-radio v-model="averagePoint" label="flow">
+              <el-radio
+                v-model="averagePoint"
+                label="flow"
+              >
                 流量作为均分点
               </el-radio>
 
@@ -52,7 +60,10 @@
             </el-col>
             <el-col :span="12">
               <div>
-                <el-radio v-model="averagePoint" label="lift">
+                <el-radio
+                  v-model="averagePoint"
+                  label="lift"
+                >
                   扬程作为均分点
                 </el-radio>
               </div>
@@ -81,15 +92,25 @@
           <el-row>
             <el-col :span="4">
               <el-form-item label="规定流量(小流量)：">
-                <el-input v-model="prescribedPointForm.edllxlll" size="small">
-                  <template slot="append">m/s</template>
+                <el-input
+                  v-model="prescribedPointForm.edllxlll"
+                  size="small"
+                >
+                  <template slot="append">
+                    m/s
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="规定扬程：">
-                <el-input v-model="prescribedPointForm.edllgdyc" size="small">
-                  <template slot="append">mm</template>
+                <el-input
+                  v-model="prescribedPointForm.edllgdyc"
+                  size="small"
+                >
+                  <template slot="append">
+                    mm
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -100,7 +121,9 @@
                   v-model="prescribedPointForm.edllzhougv1"
                   size="small"
                 >
-                  <template slot="append">W</template>
+                  <template slot="append">
+                    W
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -116,8 +139,13 @@
 
             <el-col :span="4">
               <el-form-item label="气蚀余量：">
-                <el-input v-model="prescribedPointForm.edllqishi1" size="small">
-                  <template slot="append">M</template>
+                <el-input
+                  v-model="prescribedPointForm.edllqishi1"
+                  size="small"
+                >
+                  <template slot="append">
+                    M
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -126,31 +154,51 @@
           <el-row>
             <el-col :span="4">
               <el-form-item label="额定转速：">
-                <el-input v-model="prescribedPointForm.edllzs" size="small">
-                  <template slot="append">m/s</template>
+                <el-input
+                  v-model="prescribedPointForm.edllzs"
+                  size="small"
+                >
+                  <template slot="append">
+                    m/s
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="轴承温升">
-                <el-input v-model="prescribedPointForm.edllzcws" size="small">
-                  <template slot="append">℃</template>
+                <el-input
+                  v-model="prescribedPointForm.edllzcws"
+                  size="small"
+                >
+                  <template slot="append">
+                    ℃
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="振动">
-                <el-input v-model="prescribedPointForm.edllzd" size="small">
-                  <template slot="append">mm/s</template>
+                <el-input
+                  v-model="prescribedPointForm.edllzd"
+                  size="small"
+                >
+                  <template slot="append">
+                    mm/s
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="噪声">
-                <el-input v-model="prescribedPointForm.edllzsheng" size="small">
-                  <template slot="append">dB(A)</template>
+                <el-input
+                  v-model="prescribedPointForm.edllzsheng"
+                  size="small"
+                >
+                  <template slot="append">
+                    dB(A)
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -160,15 +208,25 @@
           <el-row>
             <el-col :span="4">
               <el-form-item label="规定流量(额定流量)： ">
-                <el-input v-model="prescribedPointForm.edllxlll2" size="small">
-                  <template slot="append">m/s</template>
+                <el-input
+                  v-model="prescribedPointForm.edllxlll2"
+                  size="small"
+                >
+                  <template slot="append">
+                    m/s
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="规定扬程：">
-                <el-input v-model="prescribedPointForm.edllgdyc2" size="small">
-                  <template slot="append">mm</template>
+                <el-input
+                  v-model="prescribedPointForm.edllgdyc2"
+                  size="small"
+                >
+                  <template slot="append">
+                    mm
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -179,7 +237,9 @@
                   v-model="prescribedPointForm.edllzhougv12"
                   size="small"
                 >
-                  <template slot="append">W</template>
+                  <template slot="append">
+                    W
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -199,7 +259,9 @@
                   v-model="prescribedPointForm.edllqishi12"
                   size="small"
                 >
-                  <template slot="append">M</template>
+                  <template slot="append">
+                    M
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -207,23 +269,38 @@
           <el-row>
             <el-col :span="4">
               <el-form-item label="额定转速：">
-                <el-input v-model="prescribedPointForm.edllzs2" size="small">
-                  <template slot="append">m/s</template>
+                <el-input
+                  v-model="prescribedPointForm.edllzs2"
+                  size="small"
+                >
+                  <template slot="append">
+                    m/s
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="轴承温升">
-                <el-input v-model="prescribedPointForm.edllzcws2" size="small">
-                  <template slot="append">℃</template>
+                <el-input
+                  v-model="prescribedPointForm.edllzcws2"
+                  size="small"
+                >
+                  <template slot="append">
+                    ℃
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="振动">
-                <el-input v-model="prescribedPointForm.edllzd2" size="small">
-                  <template slot="append">mm/s</template>
+                <el-input
+                  v-model="prescribedPointForm.edllzd2"
+                  size="small"
+                >
+                  <template slot="append">
+                    mm/s
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -234,7 +311,9 @@
                   v-model="prescribedPointForm.edllzsheng2"
                   size="small"
                 >
-                  <template slot="append">dB(A)</template>
+                  <template slot="append">
+                    dB(A)
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -244,15 +323,25 @@
           <el-row>
             <el-col :span="4">
               <el-form-item label="规定流量(大流量)：">
-                <el-input v-model="prescribedPointForm.edllxlll3" size="small">
-                  <template slot="append">m/s</template>
+                <el-input
+                  v-model="prescribedPointForm.edllxlll3"
+                  size="small"
+                >
+                  <template slot="append">
+                    m/s
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="规定扬程：">
-                <el-input v-model="prescribedPointForm.edllgdyc3" size="small">
-                  <template slot="append">mm</template>
+                <el-input
+                  v-model="prescribedPointForm.edllgdyc3"
+                  size="small"
+                >
+                  <template slot="append">
+                    mm
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -263,7 +352,9 @@
                   v-model="prescribedPointForm.edllzhougv13"
                   size="small"
                 >
-                  <template slot="append">W</template>
+                  <template slot="append">
+                    W
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -282,7 +373,9 @@
                   v-model="prescribedPointForm.edllqishi13"
                   size="small"
                 >
-                  <template slot="append">M</template>
+                  <template slot="append">
+                    M
+                  </template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -291,31 +384,51 @@
 
         <el-col :span="4">
           <el-form-item label="额定转速：">
-            <el-input v-model="prescribedPointForm.edllzs3" size="small">
-              <template slot="append">m/s</template>
+            <el-input
+              v-model="prescribedPointForm.edllzs3"
+              size="small"
+            >
+              <template slot="append">
+                m/s
+              </template>
             </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="4">
           <el-form-item label="轴承温升">
-            <el-input v-model="prescribedPointForm.edllzcws3" size="small">
-              <template slot="append">℃</template>
+            <el-input
+              v-model="prescribedPointForm.edllzcws3"
+              size="small"
+            >
+              <template slot="append">
+                ℃
+              </template>
             </el-input>
           </el-form-item>
         </el-col>
 
         <el-col :span="4">
           <el-form-item label="振动">
-            <el-input v-model="prescribedPointForm.edllzd3" size="small">
-              <template slot="append">mm/s</template>
+            <el-input
+              v-model="prescribedPointForm.edllzd3"
+              size="small"
+            >
+              <template slot="append">
+                mm/s
+              </template>
             </el-input>
           </el-form-item>
         </el-col>
 
         <el-col :span="4">
           <el-form-item label="噪声">
-            <el-input v-model="prescribedPointForm.edllzsheng3" size="small">
-              <template slot="append">dB(A)</template>
+            <el-input
+              v-model="prescribedPointForm.edllzsheng3"
+              size="small"
+            >
+              <template slot="append">
+                dB(A)
+              </template>
             </el-input>
           </el-form-item>
         </el-col>

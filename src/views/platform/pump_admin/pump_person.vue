@@ -43,10 +43,23 @@
           stripe
           style="width: 100%; text-align: center"
         >
-          <el-table-column label="序号" type="index" width="50" />
-          <el-table-column label="企业名称" prop="data.name" />
-          <el-table-column label="姓名" prop="data.name" />
-          <el-table-column label="企业职务" prop="data.job" />
+          <el-table-column
+            label="序号"
+            type="index"
+            width="50"
+          />
+          <el-table-column
+            label="企业名称"
+            prop="data.name"
+          />
+          <el-table-column
+            label="姓名"
+            prop="data.name"
+          />
+          <el-table-column
+            label="企业职务"
+            prop="data.job"
+          />
           <el-table-column label="出生日期">
             <template slot-scope="scope">
               <span>
@@ -93,7 +106,10 @@
 
           <el-table-column label="审核状态">
             <template slot-scope="scope">
-              <el-tag v-if="scope.row.data.verifyStatus == 0" type="info">
+              <el-tag
+                v-if="scope.row.data.verifyStatus == 0"
+                type="info"
+              >
                 待审核
               </el-tag>
               <el-tag
@@ -124,9 +140,16 @@
               <span v-else />
             </template>
           </el-table-column>
-          <el-table-column label="审核管理" width="180px">
+          <el-table-column
+            label="审核管理"
+            width="180px"
+          >
             <template slot-scope="scope">
-              <el-button size="small" type="primary" @click="lookUp(scope.row)">
+              <el-button
+                size="small"
+                type="primary"
+                @click="lookUp(scope.row)"
+              >
                 查看
               </el-button>
               <el-button
@@ -158,7 +181,10 @@
       :visible.sync="dialogFormVisible"
       width="80%"
     >
-      <el-form label-width="120px" size="mini">
+      <el-form
+        label-width="120px"
+        size="mini"
+      >
         <el-row>
           <!--左侧-->
           <el-col :span="12">
@@ -235,9 +261,17 @@
           </el-col>
         </el-row>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click.native="dialogFormVisible = false">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="dialogFormVisible = false">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click.native="dialogFormVisible = false"
+        >
           确 定
         </el-button>
       </div>
@@ -257,14 +291,26 @@
           :model="verifyForm"
           :rules="verifyFormRules"
         >
-          <el-form-item label="审核状态" prop="status">
+          <el-form-item
+            label="审核状态"
+            prop="status"
+          >
             <el-radio-group v-model="verifyForm.status">
-              <el-radio :label="0">审核中</el-radio>
-              <el-radio :label="2">审核未通过</el-radio>
-              <el-radio :label="1">审核通过</el-radio>
+              <el-radio :label="0">
+                审核中
+              </el-radio>
+              <el-radio :label="2">
+                审核未通过
+              </el-radio>
+              <el-radio :label="1">
+                审核通过
+              </el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="审核意见" prop="suggestion">
+          <el-form-item
+            label="审核意见"
+            prop="suggestion"
+          >
             <el-input
               v-model="verifyForm.suggestion"
               :rows="4"
@@ -283,7 +329,10 @@
           </h3>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="U盾序列号" prop="unumber">
+              <el-form-item
+                label="U盾序列号"
+                prop="unumber"
+              >
                 <el-input
                   v-model="verifyForm.unumber"
                   placeholder="请输入U盾序列号"
@@ -291,7 +340,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="U盾KEY值" prop="ukey">
+              <el-form-item
+                label="U盾KEY值"
+                prop="ukey"
+              >
                 <el-input
                   v-model="verifyForm.ukey"
                   placeholder="请输入U盾KEY值"
@@ -301,9 +353,15 @@
           </el-row>
         </el-form>
       </div>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click.native="submitForm('verifyFormRef')">
+        <el-button
+          type="primary"
+          @click.native="submitForm('verifyFormRef')"
+        >
           提 交
         </el-button>
       </span>

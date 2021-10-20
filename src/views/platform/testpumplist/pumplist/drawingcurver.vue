@@ -3,9 +3,17 @@
     <el-tabs type="border-card">
       <el-tab-pane label="特性曲线">
         <div style="border-bottom: 1px solid #cccccc">
-          <div id="echarts" style="width: 100%; height: 400px" />
+          <div
+            id="echarts"
+            style="width: 100%; height: 400px"
+          />
           <div style="width: 100%; margin-bottom: 20px; text-align: center">
-            <el-button type="primary" @click.native="Getdata">采 集</el-button>
+            <el-button
+              type="primary"
+              @click.native="Getdata"
+            >
+              采 集
+            </el-button>
           </div>
         </div>
 
@@ -13,13 +21,25 @@
           id="bottom"
           style="display: flex; width: 100%; height: 400px; margin-top: 20px"
         >
-          <div id="bottomleft" style="width: 70%; height: 100%" />
-          <div id="bottomright" style="width: 30%; height: 100%">
+          <div
+            id="bottomleft"
+            style="width: 70%; height: 100%"
+          />
+          <div
+            id="bottomright"
+            style="width: 30%; height: 100%"
+          >
             <div class="caozuo">
-              <el-button type="success" @click.native="updatedcurver">
+              <el-button
+                type="success"
+                @click.native="updatedcurver"
+              >
                 绘 图
               </el-button>
-              <el-button type="success" @click.native="supportdata">
+              <el-button
+                type="success"
+                @click.native="supportdata"
+              >
                 提 交
               </el-button>
             </div>
@@ -28,10 +48,22 @@
               :data="Dataavange"
               style="width: 100%; height: 100%; margin-top: 10px"
             >
-              <el-table-column :label="'流量\n(m³/h)'" prop="flow" />
-              <el-table-column :label="'扬程\n(m)'" prop="head" />
-              <el-table-column :label="'输入功率\n(kW)'" prop="power" />
-              <el-table-column :label="'机组效率\nη(%)'" prop="effect" />
+              <el-table-column
+                :label="'流量\n(m³/h)'"
+                prop="flow"
+              />
+              <el-table-column
+                :label="'扬程\n(m)'"
+                prop="head"
+              />
+              <el-table-column
+                :label="'输入功率\n(kW)'"
+                prop="power"
+              />
+              <el-table-column
+                :label="'机组效率\nη(%)'"
+                prop="effect"
+              />
               <el-table-column label="操作">
                 <template slot-scope="scope">
                   <el-button
@@ -47,7 +79,10 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="测试监控">
-        <el-button type="primary" @click.native="Getimgdata">
+        <el-button
+          type="primary"
+          @click.native="Getimgdata"
+        >
           查看图片
         </el-button>
         <el-table
@@ -59,22 +94,52 @@
           "
           style="width: 100%; margin-top: 10px"
         >
-          <el-table-column label="流量" prop="flow" />
-          <el-table-column label="扬程" prop="head" />
-          <el-table-column label="功率" prop="power" />
-          <el-table-column label="功率因数" prop="power_factor" />
-          <el-table-column label="进口压力" prop="pressure_in" />
-          <el-table-column label="出口压力" prop="pressure_out" />
-          <el-table-column label="电流" prop="current" />
-          <el-table-column label="机组效率" prop="effect" />
-          <el-table-column label="转速" prop="speed" />
+          <el-table-column
+            label="流量"
+            prop="flow"
+          />
+          <el-table-column
+            label="扬程"
+            prop="head"
+          />
+          <el-table-column
+            label="功率"
+            prop="power"
+          />
+          <el-table-column
+            label="功率因数"
+            prop="power_factor"
+          />
+          <el-table-column
+            label="进口压力"
+            prop="pressure_in"
+          />
+          <el-table-column
+            label="出口压力"
+            prop="pressure_out"
+          />
+          <el-table-column
+            label="电流"
+            prop="current"
+          />
+          <el-table-column
+            label="机组效率"
+            prop="effect"
+          />
+          <el-table-column
+            label="转速"
+            prop="speed"
+          />
           <el-table-column label="传输时间">
             <template slot-scope="scope">
               <span>{{ timestampToTime(scope.row.timestamp) }}</span>
             </template>
           </el-table-column>
         </el-table>
-        <div class="block" style="margin-top: 15px">
+        <div
+          class="block"
+          style="margin-top: 15px"
+        >
           <el-pagination
             align="center"
             :current-page="currentPage"

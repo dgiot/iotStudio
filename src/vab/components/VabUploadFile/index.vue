@@ -28,8 +28,13 @@
       </el-button>
     </div>
     <!--遮罩层-->
-    <div v-if="loading" class="loading">
-      <h4 class="tips">{{ tips }}</h4>
+    <div
+      v-if="loading"
+      class="loading"
+    >
+      <h4 class="tips">
+        {{ tips }}
+      </h4>
       <!--进度条-->
       <el-progress
         class="progress"
@@ -46,8 +51,14 @@
       width="30%"
     >
       <span>文件上传成功</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click.native="ensure">确 定</el-button>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click.native="ensure"
+        >确 定</el-button>
       </span>
     </el-dialog>
   </div>

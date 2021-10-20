@@ -22,19 +22,40 @@
         <el-row>
           <el-col :span="12">
             <div class="grid-content bg-purple">
-              <el-form-item label="实验室名称" prop="name">
+              <el-form-item
+                label="实验室名称"
+                prop="name"
+              >
                 <el-input v-model="laboratoryForm.name" />
               </el-form-item>
-              <el-form-item label="实验室级别" prop="level">
+              <el-form-item
+                label="实验室级别"
+                prop="level"
+              >
                 <el-select
                   v-model="laboratoryForm.level"
                   placeholder="请选择实验室级别"
                 >
-                  <el-option label="国家级" value="1" />
-                  <el-option label="省级" value="2" />
-                  <el-option label="地市级" value="3" />
-                  <el-option label="县(区)级" value="4" />
-                  <el-option label="其他" value="5" />
+                  <el-option
+                    label="国家级"
+                    value="1"
+                  />
+                  <el-option
+                    label="省级"
+                    value="2"
+                  />
+                  <el-option
+                    label="地市级"
+                    value="3"
+                  />
+                  <el-option
+                    label="县(区)级"
+                    value="4"
+                  />
+                  <el-option
+                    label="其他"
+                    value="5"
+                  />
                 </el-select>
               </el-form-item>
               <el-form-item label="实验室地址">
@@ -42,7 +63,10 @@
               </el-form-item>
               <el-form-item label="建设起止日期">
                 <el-col :span="11">
-                  <el-form-item prop="buildstarttime" style="margin-bottom: 0">
+                  <el-form-item
+                    prop="buildstarttime"
+                    style="margin-bottom: 0"
+                  >
                     <el-date-picker
                       v-model="laboratoryForm.buildstarttime"
                       placeholder="选择日期"
@@ -51,9 +75,17 @@
                     />
                   </el-form-item>
                 </el-col>
-                <el-col class="line" :span="2">-</el-col>
+                <el-col
+                  class="line"
+                  :span="2"
+                >
+                  -
+                </el-col>
                 <el-col :span="11">
-                  <el-form-item prop="buildendtime" style="margin-bottom: 0">
+                  <el-form-item
+                    prop="buildendtime"
+                    style="margin-bottom: 0"
+                  >
                     <el-date-picker
                       v-model="laboratoryForm.buildendtime"
                       placeholder="选择日期"
@@ -63,10 +95,16 @@
                   </el-form-item>
                 </el-col>
               </el-form-item>
-              <el-form-item label="实验室负责人" prop="leadingname">
+              <el-form-item
+                label="实验室负责人"
+                prop="leadingname"
+              >
                 <el-input v-model="laboratoryForm.leadingname" />
               </el-form-item>
-              <el-form-item label="实验室联系人" prop="linkname">
+              <el-form-item
+                label="实验室联系人"
+                prop="linkname"
+              >
                 <el-input v-model="laboratoryForm.linkname" />
               </el-form-item>
               <!-- <el-form-item label="实验室照片" required> -->
@@ -76,7 +114,10 @@
                   class="avatar"
                   :src="fileDomain + laboratoryForm.imgsrc"
                 />
-                <i v-else class="el-icon-plus avatar-uploader-icon" />
+                <i
+                  v-else
+                  class="el-icon-plus avatar-uploader-icon"
+                />
                 <form
                   ref="uploadform"
                   enctype="multipart/form-data"
@@ -102,22 +143,39 @@
           </el-col>
           <el-col :span="12">
             <div class="grid-content bg-purple-light">
-              <el-form-item label="主管单位" prop="unit">
+              <el-form-item
+                label="主管单位"
+                prop="unit"
+              >
                 <el-input v-model="laboratoryForm.unit" />
               </el-form-item>
-              <el-form-item label="实验室类别" prop="category">
+              <el-form-item
+                label="实验室类别"
+                prop="category"
+              >
                 <el-select
                   v-model="laboratoryForm.category"
                   placeholder="请选择实验室类别"
                 >
-                  <el-option label="主实验室" value="1" />
-                  <el-option label="辅助实验室" value="2" />
-                  <el-option label="其他" value="3" />
+                  <el-option
+                    label="主实验室"
+                    value="1"
+                  />
+                  <el-option
+                    label="辅助实验室"
+                    value="2"
+                  />
+                  <el-option
+                    label="其他"
+                    value="3"
+                  />
                 </el-select>
               </el-form-item>
               <el-form-item label="实验室面积">
                 <el-input v-model="laboratoryForm.area">
-                  <template slot="append">平方</template>
+                  <template slot="append">
+                    平方
+                  </template>
                 </el-input>
               </el-form-item>
               <el-form-item label="最新投运时间">
@@ -157,11 +215,20 @@
                   v-model="laboratoryForm.region"
                   placeholder="请选择实验室认证类型"
                 >
-                  <el-option label="CMA" value="CMA" />
-                  <el-option label="CNAS" value="CNAS" />
+                  <el-option
+                    label="CMA"
+                    value="CMA"
+                  />
+                  <el-option
+                    label="CNAS"
+                    value="CNAS"
+                  />
                 </el-select>
               </el-form-item>
-              <el-form-item label="发证机关" prop="licencsIssuing">
+              <el-form-item
+                label="发证机关"
+                prop="licencsIssuing"
+              >
                 <el-input v-model="laboratoryForm.licencsIssuing" />
               </el-form-item>
               <el-form-item label="初次认可">
@@ -184,12 +251,21 @@
           </el-col>
           <el-col :span="12">
             <div class="grid-content bg-purple-light">
-              <el-form-item label="证书编号" prop="credentialsname">
+              <el-form-item
+                label="证书编号"
+                prop="credentialsname"
+              >
                 <el-input v-model="laboratoryForm.credentialsname" />
               </el-form-item>
-              <el-form-item label="签发日期" required>
+              <el-form-item
+                label="签发日期"
+                required
+              >
                 <el-col :span="11">
-                  <el-form-item prop="dateOfIssue" style="margin-bottom: 0">
+                  <el-form-item
+                    prop="dateOfIssue"
+                    style="margin-bottom: 0"
+                  >
                     <el-date-picker
                       v-model="laboratoryForm.dateOfIssue"
                       placeholder="选择日期"
@@ -215,7 +291,10 @@
                   </el-form-item>
                 </el-col>
               </el-form-item>
-              <el-form-item label="更新时间" prop="updatedDate">
+              <el-form-item
+                label="更新时间"
+                prop="updatedDate"
+              >
                 <el-date-picker
                   v-model="laboratoryForm.updatedDate"
                   placeholder="选择时间"
@@ -230,7 +309,10 @@
                   class="avatar"
                   :src="fileDomain + laboratoryForm.imgsrc1"
                 />
-                <i v-else class="el-icon-plus avatar-uploader-icon" />
+                <i
+                  v-else
+                  class="el-icon-plus avatar-uploader-icon"
+                />
                 <form
                   ref="uploadform"
                   enctype="multipart/form-data"
@@ -256,7 +338,11 @@
           </el-col>
         </el-row>
       </el-form>
-      <el-form :inline="true" label-width="120px" :model="otherForm">
+      <el-form
+        :inline="true"
+        label-width="120px"
+        :model="otherForm"
+      >
         <el-row>
           <el-col :span="12">
             <el-form-item>
@@ -269,12 +355,18 @@
               />
             </el-form-item>
             <el-form-item v-show="otherForm.other != ''">
-              <el-button type="primary" @click.native="addOther">
+              <el-button
+                type="primary"
+                @click.native="addOther"
+              >
                 确定
               </el-button>
             </el-form-item>
             <el-form-item v-show="otherForm.other != ''">
-              <el-button type="primary" @click.native="otherForm.other = ''">
+              <el-button
+                type="primary"
+                @click.native="otherForm.other = ''"
+              >
                 取消
               </el-button>
             </el-form-item>
@@ -312,10 +404,16 @@
             <!--证书认证上-->
             <el-col :span="12">
               <div class="grid-content bg-purple">
-                <el-form-item label="证书编号" prop="name">
+                <el-form-item
+                  label="证书编号"
+                  prop="name"
+                >
                   <el-input v-model="addotherform.name" />
                 </el-form-item>
-                <el-form-item label="签发日期" prop="dateOfIssue">
+                <el-form-item
+                  label="签发日期"
+                  prop="dateOfIssue"
+                >
                   <el-date-picker
                     v-model="addotherform.dateOfIssue"
                     placeholder="选择签发日期"
@@ -324,7 +422,10 @@
                     value-format="timestamp"
                   />
                 </el-form-item>
-                <el-form-item label="初次认可" prop="initialRecognition">
+                <el-form-item
+                  label="初次认可"
+                  prop="initialRecognition"
+                >
                   <el-date-picker
                     v-model="addotherform.initialRecognition"
                     placeholder="选择签发日期"
@@ -345,10 +446,16 @@
             </el-col>
             <el-col :span="12">
               <div class="grid-content bg-purple-light">
-                <el-form-item label="发证机关" prop="licencsIssuing">
+                <el-form-item
+                  label="发证机关"
+                  prop="licencsIssuing"
+                >
                   <el-input v-model="addotherform.licencsIssuing" />
                 </el-form-item>
-                <el-form-item label="有效期至" prop="termOfValidity">
+                <el-form-item
+                  label="有效期至"
+                  prop="termOfValidity"
+                >
                   <el-date-picker
                     v-model="addotherform.termOfValidity"
                     placeholder="选择有效期至"
@@ -357,7 +464,10 @@
                     value-format="timestamp"
                   />
                 </el-form-item>
-                <el-form-item label="更新时间" prop="updatedDate">
+                <el-form-item
+                  label="更新时间"
+                  prop="updatedDate"
+                >
                   <el-date-picker
                     v-model="addotherform.updatedDate"
                     placeholder="选择签发更新时间"
@@ -366,13 +476,19 @@
                     value-format="timestamp"
                   />
                 </el-form-item>
-                <el-form-item label="证书电子文件" required>
+                <el-form-item
+                  label="证书电子文件"
+                  required
+                >
                   <img
                     v-if="addotherform.imgsrc"
                     class="avatar"
                     :src="fileDomain + addotherform.imgsrc"
                   />
-                  <i v-else class="el-icon-plus avatar-uploader-icon" />
+                  <i
+                    v-else
+                    class="el-icon-plus avatar-uploader-icon"
+                  />
                   <form
                     ref="uploadform"
                     enctype="multipart/form-data"
@@ -424,8 +540,14 @@
           </el-row>
         </el-form>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click.native="updateOther('addotherform')">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button
+          type="primary"
+          @click.native="updateOther('addotherform')"
+        >
           确 定
         </el-button>
       </span>

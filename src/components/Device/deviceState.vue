@@ -1,15 +1,24 @@
 <template>
   <div class="runData">
-    <div v-if="_tableDict" class="devicedetail">
+    <div
+      v-if="_tableDict"
+      class="devicedetail"
+    >
       <el-row class="runData_row">
         <el-col
           v-for="(item, index) in _tableDict"
           :key="index"
-          class="runData_col"
           :span="4"
+          class="runData_col"
         >
-          <el-card class="box-card" shadow="hover">
-            <div slot="header" class="clearfix">
+          <el-card
+            class="box-card"
+            shadow="hover"
+          >
+            <div
+              slot="header"
+              class="clearfix"
+            >
               <span>{{ item.name }}</span>
               <el-button
                 icon="el-icon-refresh"
@@ -36,15 +45,17 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
-/* eslint-disable */
-import { mapGetters, mapMutations } from 'vuex'
+  /* eslint-disable */
+  /* eslint-disable */
+  import { mapGetters, mapMutations } from 'vuex'
+
   export default {
     name: 'DeviceState',
     props: {
       devicedetail: {
         type: Object,
-        default: () => {},
+        default: () => {
+        },
       },
     },
     data() {
@@ -72,16 +83,18 @@ import { mapGetters, mapMutations } from 'vuex'
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .runData {
     height: 50%;
     overflow-y: auto;
+
     .devicedetail {
       width: 100%;
       height: 100%;
 
       .runData_row {
         width: 100%;
+
         .runData_col {
           margin: 10px;
           font-size: 14px;

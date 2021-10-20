@@ -9,20 +9,43 @@
 <template>
   <div class="webSocket-container">
     <el-row :gutter="20">
-      <el-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24">
-        <el-alert :closable="false" type="success">
+      <el-col
+        :lg="8"
+        :md="12"
+        :sm="24"
+        :xl="8"
+        :xs="24"
+      >
+        <el-alert
+          :closable="false"
+          type="success"
+        >
           webSocket连接{{ status }}！
         </el-alert>
         <br />
-        <el-form ref="form" label-width="100px" :model="form" :rules="rules">
+        <el-form
+          ref="form"
+          label-width="100px"
+          :model="form"
+          :rules="rules"
+        >
           <el-form-item label="地址">
-            <el-input v-model="url" disabled />
+            <el-input
+              v-model="url"
+              disabled
+            />
           </el-form-item>
-          <el-form-item label="消息" prop="message">
+          <el-form-item
+            label="消息"
+            prop="message"
+          >
             <el-input v-model="form.message" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click.native="submit">
+            <el-button
+              type="primary"
+              @click.native="submit"
+            >
               发送消息
             </el-button>
           </el-form-item>

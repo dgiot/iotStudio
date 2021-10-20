@@ -1,7 +1,9 @@
 <template>
   <div class="forensics">
     <div class="fortop1">
-      <p class="header">二次取证管理</p>
+      <p class="header">
+        二次取证管理
+      </p>
       <div class="top1content">
         <el-tabs>
           <el-tab-pane label="实时数据">
@@ -16,13 +18,22 @@
                 <el-row>
                   <el-col :span="12">
                     <div>
-                      <el-form-item class="inline" label="选择控制台:">
+                      <el-form-item
+                        class="inline"
+                        label="选择控制台:"
+                      >
                         <el-select
                           v-model="actualform.region"
                           placeholder="选择实验室"
                         >
-                          <el-option label="区域一" value="shanghai" />
-                          <el-option label="区域二" value="beijing" />
+                          <el-option
+                            label="区域一"
+                            value="shanghai"
+                          />
+                          <el-option
+                            label="区域二"
+                            value="beijing"
+                          />
                         </el-select>
                       </el-form-item>
                       <el-form-item
@@ -34,8 +45,14 @@
                           v-model="actualform.region"
                           placeholder="选择控制台"
                         >
-                          <el-option label="区域一" value="shanghai" />
-                          <el-option label="区域二" value="beijing" />
+                          <el-option
+                            label="区域一"
+                            value="shanghai"
+                          />
+                          <el-option
+                            label="区域二"
+                            value="beijing"
+                          />
                         </el-select>
                       </el-form-item>
                       <el-form-item label="取证页面:">
@@ -74,7 +91,10 @@
                             label="指标值"
                             prop="name"
                           />
-                          <el-table-column align="center" label="指标管理">
+                          <el-table-column
+                            align="center"
+                            label="指标管理"
+                          >
                             <template slot-scope="scope">
                               <el-button
                                 size="mini"
@@ -83,7 +103,10 @@
                               >
                                 编辑
                               </el-button>
-                              <el-button size="mini" type="danger">
+                              <el-button
+                                size="mini"
+                                type="danger"
+                              >
                                 删除
                               </el-button>
                             </template>
@@ -118,8 +141,14 @@
                     </div>
                   </el-col>
                 </el-row>
-                <div class="sssjbutton" style="text-align: center">
-                  <el-button style="margin: 0 40px" type="primary">
+                <div
+                  class="sssjbutton"
+                  style="text-align: center"
+                >
+                  <el-button
+                    style="margin: 0 40px"
+                    type="primary"
+                  >
                     启动
                   </el-button>
                   <el-button>停止</el-button>
@@ -127,7 +156,9 @@
               </el-form>
             </div>
             <div class="fortop2">
-              <p class="header">参数配置</p>
+              <p class="header">
+                参数配置
+              </p>
               <el-form
                 ref="attributeform"
                 class="demo-attributeform"
@@ -140,7 +171,9 @@
                     <div class="grid-content bg-purple">
                       <el-form-item label="采集频率:">
                         <el-input v-model.number="attributeform.rate">
-                          <template slot="append">秒</template>
+                          <template slot="append">
+                            秒
+                          </template>
                         </el-input>
                       </el-form-item>
                       <el-form-item label="保存格式:">
@@ -187,7 +220,9 @@
                     <div class="grid-content bg-purple-light">
                       <el-form-item label="采集时长:">
                         <el-input v-model.number="attributeform.rate">
-                          <template slot="append">分钟</template>
+                          <template slot="append">
+                            分钟
+                          </template>
                         </el-input>
                       </el-form-item>
                       <el-form-item
@@ -235,15 +270,24 @@
               size="small"
             >
               <el-form-item label="控制台编号">
-                <el-input v-model="formInline.user" placeholder="控制台编号" />
+                <el-input
+                  v-model="formInline.user"
+                  placeholder="控制台编号"
+                />
               </el-form-item>
               <el-form-item label="数据为0显示">
                 <el-select
                   v-model="formInline.region"
                   placeholder="数据为0显示"
                 >
-                  <el-option label="是" :value="true" />
-                  <el-option label="否" :value="false" />
+                  <el-option
+                    label="是"
+                    :value="true"
+                  />
+                  <el-option
+                    label="否"
+                    :value="false"
+                  />
                 </el-select>
               </el-form-item>
               <el-form-item label="采集开始时间">
@@ -265,8 +309,12 @@
                 />
               </el-form-item>
               <el-form-item>
-                <el-button type="primary">查询</el-button>
-                <el-button type="primary">重置</el-button>
+                <el-button type="primary">
+                  查询
+                </el-button>
+                <el-button type="primary">
+                  重置
+                </el-button>
               </el-form-item>
             </el-form>
             <el-table
@@ -274,18 +322,60 @@
               :data="tableData"
               style="width: 100%; text-align: center"
             >
-              <el-table-column label="序号" type="index" width="50" />
-              <el-table-column label="控制台编号" prop="date" />
-              <el-table-column align="center" label="转速" prop="name" />
-              <el-table-column align="center" label="扭矩" prop="address" />
-              <el-table-column align="center" label="流量" prop="name" />
-              <el-table-column align="center" label="进口压力" prop="name" />
-              <el-table-column align="center" label="电流" prop="name" />
-              <el-table-column align="center" label="电机功率" prop="name" />
-              <el-table-column align="center" label="实时水温" prop="name" />
-              <el-table-column align="center" label="采集时间" prop="name" />
+              <el-table-column
+                label="序号"
+                type="index"
+                width="50"
+              />
+              <el-table-column
+                label="控制台编号"
+                prop="date"
+              />
+              <el-table-column
+                align="center"
+                label="转速"
+                prop="name"
+              />
+              <el-table-column
+                align="center"
+                label="扭矩"
+                prop="address"
+              />
+              <el-table-column
+                align="center"
+                label="流量"
+                prop="name"
+              />
+              <el-table-column
+                align="center"
+                label="进口压力"
+                prop="name"
+              />
+              <el-table-column
+                align="center"
+                label="电流"
+                prop="name"
+              />
+              <el-table-column
+                align="center"
+                label="电机功率"
+                prop="name"
+              />
+              <el-table-column
+                align="center"
+                label="实时水温"
+                prop="name"
+              />
+              <el-table-column
+                align="center"
+                label="采集时间"
+                prop="name"
+              />
             </el-table>
-            <div class="block" style="margin-top: 20px">
+            <div
+              class="block"
+              style="margin-top: 20px"
+            >
               <el-pagination
                 layout="total, sizes, prev, pager, next, jumper"
                 :page-size="pagesize"
@@ -317,13 +407,28 @@
         >
           当前指标:转速
         </p>
-        <el-form-item label="指标名称" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off">
-            <el-button slot="append" icon="el-icon-lock" />
+        <el-form-item
+          label="指标名称"
+          :label-width="formLabelWidth"
+        >
+          <el-input
+            v-model="form.name"
+            autocomplete="off"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-lock"
+            />
           </el-input>
         </el-form-item>
-        <el-form-item label="指标数据选定" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off">
+        <el-form-item
+          label="指标数据选定"
+          :label-width="formLabelWidth"
+        >
+          <el-input
+            v-model="form.name"
+            autocomplete="off"
+          >
             <el-button
               slot="append"
               style="color: white; background: #971fdc"
@@ -339,16 +444,36 @@
             </el-button>
           </el-input>
         </el-form-item>
-        <el-form-item label="选择单位" :label-width="formLabelWidth">
-          <el-select v-model="form.region" placeholder="请选择单位">
-            <el-option label="区域一" value="shanghai" />
-            <el-option label="区域二" value="beijing" />
+        <el-form-item
+          label="选择单位"
+          :label-width="formLabelWidth"
+        >
+          <el-select
+            v-model="form.region"
+            placeholder="请选择单位"
+          >
+            <el-option
+              label="区域一"
+              value="shanghai"
+            />
+            <el-option
+              label="区域二"
+              value="beijing"
+            />
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click.native="dialogFormVisible = false">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="dialogFormVisible = false">
+          取 消
+        </el-button>
+        <el-button
+          type="primary"
+          @click.native="dialogFormVisible = false"
+        >
           确 定
         </el-button>
       </div>
