@@ -14,7 +14,11 @@ jobs:
       - name: "iotn2n"
         uses: jakejarvis/lighthouse-action@master
         with:
-          url: "https://prod.iotn2n.com/"
+          url: "https://www.iotn2n.com/"
+      - name: "gh-page"
+        uses: jakejarvis/lighthouse-action@master
+        with:
+          url: "https://dgiot.github.io/dgiot-dashboard/"
       - name: "cdn"
         uses: jakejarvis/lighthouse-action@master
         with:
