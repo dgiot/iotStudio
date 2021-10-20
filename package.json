@@ -111,7 +111,7 @@
     "stylelint-config-prettier": "9.0.3",
     "stylelint-config-recess-order": "2.5.0",
     "svg-sprite-loader": "6.0.9",
-    "vue-eslint-parser": "7.11.0",
+    "vue-eslint-parser": "8.0.0",
     "vue-template-compiler": "2.6.14",
     "webpackbar": "5.0.0-3"
   },
