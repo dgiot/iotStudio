@@ -68,7 +68,7 @@
     "cross-env": "7.0.3",
     "element-ui": "2.15.6",
     "konva": "^8.2.2",
-    "mini-css-extract-plugin": "2.4.2",
+    "mini-css-extract-plugin": "2.4.3",
     "pushstate-server": "^3.1.0",
     "register-service-worker": "1.7.2",
     "resize-detector": "0.3.0",
