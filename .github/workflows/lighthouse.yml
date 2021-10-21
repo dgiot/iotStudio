@@ -4,27 +4,26 @@ on:
     branches:
       - master
 jobs:
-  lighthouse-stdout:
+  lighthouse:
     runs-on: ubuntu-latest
     steps:
-      - name: "prod"
-        uses: jakejarvis/lighthouse-action@master
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
         with:
-          url: "https://prod.iotn2n.com/"
-      - name: "iotn2n"
-        uses: jakejarvis/lighthouse-action@master
+          node-version: 12.x
+
+      - name: Install and build
+        run: |
+          yarn install
+          yarn build:cdn
+      - name: Audit with lighthouse CI
+        uses: treosh/lighthouse-ci-action@v2
         with:
-          url: "https://www.iotn2n.com/"
-      - name: "gh-page"
-        uses: jakejarvis/lighthouse-action@master
-        with:
-          url: "https://dgiot.github.io/dgiot-dashboard/"
-      - name: "cdn"
-        uses: jakejarvis/lighthouse-action@master
-        with:
-          url: "https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/dgiot_release/dashboardCdn/assets/js/vue.js"
-      - name: "Upload results as an artifact"
-        uses: actions/upload-artifact@master
-        with:
-          name: lighthouse-report
-          path: "./report"
+          # Configuración para auditar sobre un sito estático
+          # Lee más en:
+          # treosh/lg-ci-action options https://github.com/marketplace/actions/lighthouse-ci-action
+          runs: 5
+          uploadArtifacts: true
+          configPath: './.github/workflows/setup/lighthouse-audit.json'
