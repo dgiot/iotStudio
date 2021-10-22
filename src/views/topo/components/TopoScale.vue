@@ -67,7 +67,7 @@
        */
       setSize(type) {
         localStorage.setItem('konvaBg', 'https://t7.baidu.com/it/u=4036010509,3445021118&fm=193&f=GIF')
-        type === 'out' ? this.setSale(this.scale - 10 >= 40 ? this.scale - 10 : this.scale) : this.setSale(this.scale + 10)
+        type === 'out' ? this.setSale(this.scale - 10 >= 40 ? this.scale - 10 : this.scale) : this.setSale(this.scale + 10 <= 200 ? this.scale + 10 : this.scale)
         // 测试改变底图
         // setTimeout(() => {
         // const bgNode = topo.layer.findOne('#bg')

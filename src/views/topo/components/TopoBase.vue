@@ -28,7 +28,6 @@
   // eslint-disable
   import TopoScale from './TopoScale'
   import { mapActions, mapGetters } from 'vuex'
-  import { createKonvaDom } from '@/utils/konva/core'
 
   var width = window.innerWidth
   var height = window.innerHeight
@@ -94,6 +93,7 @@
     computed: {
       ...mapGetters({
         Sale: 'topo/konvaSale',
+        initKonva: 'topo/initKonva',
       }),
       isDevice: function () {
         return this.$route.query.type == 'device' || this.$route.query.deviceid
@@ -338,7 +338,9 @@
         })
       },
       createTopo(json) {
-        createKonvaDom('kevCurrent', json)
+        this.$nextTick(() => {
+          this.initKonva('kevCurrent', json)
+        })
         console.clear()
         // this.konvajson = json
         // const stage = topo.konva.Node.create(json, 'kevCurrent')
@@ -364,6 +366,7 @@
 
 <style lang="scss" scoped>
   .topoBase {
+    overflow: auto;
     width: 100%;
     height: calc(100vh - #{$base-top-bar-height} * 3.7) !important;
     padding: 0;
@@ -382,6 +385,7 @@
 
   .topoBase-fullscreen {
     height: calc(100vh - #{$base-top-bar-height} * 3) !important;
+    overflow: auto;
 
     ::v-deep {
       .konvajs-content {
