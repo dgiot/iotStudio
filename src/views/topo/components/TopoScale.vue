@@ -66,7 +66,18 @@
        * @param type
        */
       setSize(type) {
+        localStorage.setItem('konvaBg', 'https://t7.baidu.com/it/u=4036010509,3445021118&fm=193&f=GIF')
         type === 'out' ? this.setSale(this.scale - 10 >= 40 ? this.scale - 10 : this.scale) : this.setSale(this.scale + 10)
+        // 测试改变底图
+        // setTimeout(() => {
+        // const bgNode = topo.layer.findOne('#bg')
+        // const setImg = new Image()
+        // setImg.src = localStorage.getItem('konvaBg')
+        // bgNode.setAttrs({
+        //   image: setImg,
+        // })
+        // console.log('change image bg')
+        // }, 1000)
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }

@@ -19,7 +19,7 @@ jobs:
           yarn install
           yarn build:cdn
       - name: Audit with lighthouse CI
-        uses: treosh/lighthouse-ci-action@v8
+        uses: treosh/lighthouse-ci-action@v2
         with:
           # Configuración para auditar sobre un sito estático
           # Lee más en:

@@ -3,7 +3,17 @@
     <div
       :class=" {'topoBase-fullscreen': isDevice }"
       class="topoBase"
+      @contextmenu="showMenu"
     >
+      <vue-context-menu
+        :context-menu-data="contextMenuData"
+        @copy="copy"
+        @deleteSahpe="deleteSahpe"
+        @moveDown="moveDown"
+        @moveToBottom="moveToBottom"
+        @moveToTop="moveToTop"
+        @moveUp="moveUp"
+      />
       <topo-scale style="display: inline-block;position:fixed;" />
       <div
         id="kevCurrent"
@@ -41,6 +51,40 @@
     components: { TopoScale },
     data() {
       return {
+        contextMenuData: {
+          menuName: 'demo',
+          //菜单显示的位置
+          axis: {
+            x: null,
+            y: null,
+          },
+          //菜单选项
+          menulists: [{
+            fnHandler: 'moveUp', //绑定事件
+            icoName: 'fa fa-home fa-fw', //icon图标
+            btnName: '上移', //菜单名称
+          }, {
+            fnHandler: 'moveDown',
+            icoName: 'fa fa-minus-square-o  fa-fw',
+            btnName: '下移',
+          }, {
+            fnHandler: 'moveToTop',
+            icoName: 'fa fa-minus-square-o  fa-fw',
+            btnName: '置于顶层',
+          }, {
+            fnHandler: 'moveToBottom',
+            icoName: 'fa fa-minus-square-o  fa-fw',
+            btnName: '置于底层',
+          }, {
+            fnHandler: 'copy',
+            icoName: 'fa fa-minus-square-o  fa-fw',
+            btnName: '复制',
+          }, {
+            fnHandler: 'deleteSahpe',
+            icoName: 'fa fa-minus-square-o  fa-fw',
+            btnName: '删除',
+          }],
+        },
         stage: {},
         konvajson: {},
         defaultJson:
@@ -247,6 +291,52 @@
       ...mapActions({
         setKonva: 'topo/Sale',
       }),
+      showMenu() {
+        event.preventDefault()
+        var x = event.clientX
+        var y = event.clientY
+        // Get the current location
+        this.contextMenuData.axis = {
+          x,
+          y,
+        }
+      },
+      copy() {
+        this.$message({
+          type: 'success',
+          message: '拷贝节点!',
+        })
+      },
+      deleteSahpe() {
+        this.$message({
+          type: 'success',
+          message: '删除节点!',
+        })
+      },
+      moveToBottom() {
+        this.$message({
+          type: 'success',
+          message: '置底节点!',
+        })
+      },
+      moveDown() {
+        this.$message({
+          type: 'success',
+          message: '节点下移!',
+        })
+      },
+      moveToTop() {
+        this.$message({
+          type: 'success',
+          message: '置顶节点!',
+        })
+      },
+      moveUp() {
+        this.$message({
+          type: 'success',
+          message: '节点上移!',
+        })
+      },
       createTopo(json) {
         createKonvaDom('kevCurrent', json)
         console.clear()

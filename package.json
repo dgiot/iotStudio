@@ -76,6 +76,7 @@
     "shelljs": "0.8.4",
     "url-loader": "4.1.1",
     "vab-icons": "git+https://github.com.cnpmjs.org/zxcasvw/vab-icons.git",
+    "vue-contextmenu": "^1.5.10",
     "vue-ele-form-data-editor": "0.1.6",
     "vue-ele-form-dynamic": "0.4.3"
   },

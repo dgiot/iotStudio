@@ -34,12 +34,39 @@ export function createKonvaDom(attr, json, setattrs = konvaAttr) {
   })
   topo.layer = new Konva.Layer({})
   topo.stage = konvaDom
+  // 设置背景图片 不可被拖动 不可被点击
+  const imageObj = new Image()
+  imageObj.onload = function () {
+    const bgCanvas = new Konva.Image({
+      id: 'bg',
+      image: imageObj,
+      width: setattrs.width ? setattrs.width : konvaAttr.width,
+      height: setattrs.height ? setattrs.height : konvaAttr.height,
+    })
+    // add the shape to the layer
+    topo.layer.add(bgCanvas)
+  }
+  imageObj.src = localStorage.getItem('konvaBg') ? localStorage.getItem('konvaBg') : 'https://konvajs.org/assets/darth-vader.jpg'
+  // 图片置于底层
+  //https://github.com/jiechud/fast-image-editor/blob/3d1feb9e8d1a809f79bd57fc85bf8568c5ba99e8/src/core/Canvas.ts#L178
+  setTimeout(() => {
+    const bgNode = topo.layer.findOne('#bg')
+    // https://konvajs.org/api/Konva.Node.html#setAttrs
+    console.log(bgNode.attrs, 'bgNode')
+    bgNode.moveToBottom() // TODO: 放到最底层
+  }, 800)
   // 辅助线
   topo.layer.on('dragmove', (e) => {
     console.log('e 辅助线', e)
   })
-  konvaDom.on('click', (e) => {
-    console.log('e konvaDom', e)
+  topo.layer.on('click', (e) => {
+    console.log('e click konvaDom', e.target)
+    e.target.attrs.draggable = true
+    topo.layer.draw()
+  })
+  topo.layer.on('mousedown', (e) => {
+    console.log('e mousedown', e)
+    e.draggable = true
   })
   topo.layer.on('dragend', (e) => {
     console.log('e dragend', e)
@@ -52,6 +79,8 @@ export function createKonvaDom(attr, json, setattrs = konvaAttr) {
     fill: 'green',
     stroke: 'black',
     strokeWidth: 4,
+    draggable: true,
+    id: 'greenTest',
   })
   Rect.scale({
     x: setattrs.scaleX ? setattrs.scaleX : 1,
