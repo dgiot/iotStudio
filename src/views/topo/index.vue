@@ -132,7 +132,7 @@
     },
     methods: {
       ...mapActions({
-        setKonva: 'topo/setKonva',
+        initKonva: 'topo/initKonva',
       }),
       createdVuexKonva() {
         // 判断konva 的节点
@@ -308,6 +308,7 @@
             },
           ],
         }
+        this.initKonva('kevCurrent', json)
         this.$refs.topobase.createTopo(json)
         // 往节点里加东西
       },

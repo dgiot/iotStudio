@@ -93,7 +93,6 @@
     computed: {
       ...mapGetters({
         Sale: 'topo/konvaSale',
-        initKonva: 'topo/initKonva',
       }),
       isDevice: function () {
         return this.$route.query.type == 'device' || this.$route.query.deviceid
@@ -290,6 +289,7 @@
     methods: {
       ...mapActions({
         setKonva: 'topo/Sale',
+        initKonva: 'topo/initKonva',
       }),
       showMenu() {
         event.preventDefault()
@@ -338,9 +338,7 @@
         })
       },
       createTopo(json) {
-        this.$nextTick(() => {
-          this.initKonva('kevCurrent', json)
-        })
+        // this.initKonva('kevCurrent', json)
         console.clear()
         // this.konvajson = json
         // const stage = topo.konva.Node.create(json, 'kevCurrent')

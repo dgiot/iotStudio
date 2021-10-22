@@ -258,7 +258,7 @@ const getters = {
 const mutations = {
   initKonva(state, id, json) {
     //  初始化konva
-    state.initKonva = createKonvaDom('id', json)
+    state.initKonva = createKonvaDom(id, json)
   },
   setSale(state, size) {
     topo.konvaAttr.scale = size
