@@ -45,6 +45,7 @@
         <el-button
           size="mini"
           type="primary"
+          @click.native="createdThing()"
         >
           {{ $translateTitle('topo.Add text content') }}
         </el-button>
@@ -178,6 +179,11 @@
 </template>
 
 <script>
+  import createThing from '@/utils/konva/createThing'
+  import { getMaterial } from '@/api/Material'
+  import { mapMutations } from 'vuex'
+  import { getSvgPath } from '@/utils/konva'
+
   const regUrl =
     /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
   // const { cdn } = require('../../../config')
@@ -192,9 +198,6 @@
   // https://blog.csdn.net/u010007013/article/details/102674042
   // import imgHost from '../../../../public/assets/images/dgiot_release/topo/'
   console.log(imgHost, process.env.BASE_URL, process.env)
-  import { getMaterial } from '@/api/Material'
-  import { mapMutations } from 'vuex'
-  import { getSvgPath } from '@/utils/konva'
   //   20210821112723
   //   https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json
   // const iconfont = require('https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json')
@@ -232,6 +235,10 @@
     computed: {},
     created() {
       this.fetchData()
+      this.$dgiotBus.$off(location.hash)
+      this.$dgiotBus.$on(location.hash, (args) => {
+        console.log(args, 'args')
+      })
     },
     mounted() {
     },
@@ -264,6 +271,19 @@
         console.info(`getSvgPath function return ${paths}`)
         this.busData.paths = paths
         this.$baseEventBus.$emit('busTopo', 'path', this.busData)
+      },
+      /**
+       *
+       * @param type
+       */
+      createdText(type) {
+        //  调用vuex的新增文本控件
+        const res = createThing({
+          productid: 'productid',
+          thingid: 'thingid',
+        })
+        console.log(res)
+
       },
       uploadCkick(type) {
         this.upImgType = type
@@ -318,7 +338,7 @@
           //  直接设置背景图的地址
           console.log('set konva bg', res.url)
           localStorage.setItem('konvaBg', res.url)
-          //  然后重新绘制一下
+          //  然后重新绘制一下 使用vuex topo
         }
       },
       handleIcon(url) {
