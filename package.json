@@ -64,7 +64,7 @@
     "@femessage/el-form-renderer": "1.23.0",
     "@vue/cli-plugin-pwa": "4.5.14",
     "axios": "0.23.0",
-    "core-js": "3.18.3",
+    "core-js": "3.19.0",
     "cross-env": "7.0.3",
     "element-ui": "2.15.6",
     "konva": "^8.2.2",
