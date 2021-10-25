@@ -16,14 +16,14 @@
         <el-row :gutter="gutter.gutter">
           <!--       明诚发布注释18 到 27 行-->
           <el-col
-            :lg="isDevice ? 0 : 4"
-            :md="isDevice ? 0 : 6"
-            :sm="isDevice ? 0 : 6"
+            :lg="isDevice ? 0 : 3"
+            :md="isDevice ? 0 : 3"
+            :sm="isDevice ? 0 : 4"
             :xl="isDevice ? 0 : 3"
             :xs="0"
             class="hidden-xs-only konva-container-main-allocation"
           >
-            <Topo-allocation />
+            <Topo-tabs />
           </el-col>
 
           <el-col
@@ -45,7 +45,7 @@
             </el-container>
           </el-col>
           <el-col
-            :lg="isDevice ? 0 : 5"
+            :lg="isDevice ? 0 : 4"
             :md="isDevice ? 0 : 6"
             :sm="isDevice ? 0 : 6"
             :xl="isDevice ? 0 : 3"
@@ -82,10 +82,10 @@
         gutter: {
           gutter: 24,
           xs: 24,
-          sm: 12,
-          md: 12,
-          lg: 15,
-          xl: 18,
+          sm: 15,
+          md: 15,
+          lg: 17,
+          xl: 20,
         },
         productid: this.$route.query.productid || '',
       }

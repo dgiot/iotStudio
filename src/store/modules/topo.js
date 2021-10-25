@@ -5,6 +5,7 @@
 // * @Description: 将konva封装到自己的js里 方便管理
 // * @FilePath: src\utils\konva\core\index.js
 // * @DocumentLink: https://konvajs.org/docs/index.html
+// * @Demo http://39.97.252.98:3000
 import konva from 'konva'
 import { uuid } from '@/utils'
 
