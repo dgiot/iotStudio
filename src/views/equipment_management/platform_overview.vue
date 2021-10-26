@@ -464,9 +464,10 @@
                   </div>
                 </Card>
               </div>
+              <!--                :center="{ lng: 106.553838, lat: 29.563216 }"-->
               <baidu-map
                 id="baidu_map"
-                :center="{ lng: 106.553838, lat: 29.563216 }"
+                :center="{ lng: 120.187273, lat: 30.334877 }"
                 :scroll-wheel-zoom="true"
                 :zoom="sizeZoom"
                 ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
@@ -504,7 +505,7 @@
                   <bm-scale :offset="{ width: 260, height: 0 }" />
                   <bm-city-list :offset="{ width: 330, height: 0 }" />
                   <bm-map-type
-                    :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
+                    :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"
                     :offset="{ width: 400, height: 0 }"
                     anchor="BMAP_ANCHOR_TOP_LEFT"
                   />
@@ -1016,7 +1017,8 @@
         treeDataValue: '',
         deptTreeData: [],
         show: false,
-        sizeZoom: 6,
+        // sizeZoom: 6,
+        sizeZoom: 19,
         tableData: [],
         offlineData: [],
         onlineData: [],
@@ -1794,6 +1796,12 @@
       .card-panel-col:nth-child(6) .el-card {
         background: #2090ff;
       }
+
+      .card-panel-col .el-card {
+        background: #2090ff !important;
+        opacity: 0.7
+      }
+
     }
 
     .el-card__body {

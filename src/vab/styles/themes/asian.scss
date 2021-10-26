@@ -1,58 +1,78 @@
 /**
- * @description 绿荫草场主题
+ * @description 亚运主题色  组件框的色系： 渐变#000000 不透明度70% #1289DD 不透明度50% 渐变角度90度 整体不透明度40%
  */
 
-.vab-theme-green {
-  $base-menu-background: #16181d;
-  $base-color-blue: #009688;
+body.vab-theme-asian {
+  $base-menu-background: #fff;
+  $base-color-blue: #f34d37;
   $base-color-blue-light: mix($base-color-white, $base-color-blue, 90%);
-
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #000000), color-stop(100%, #1289DD)) !important;
+  opacity: 0.85;
+  filter: alpha(opacity=85); /* IE8 及其更早版本 */
+  @import '../default.scss';
   @mixin container {
+    color: #515a6e !important;
     background: $base-menu-background !important;
   }
 
-  @mixin container-common {
-    background: #20222a !important;
+  @mixin container-column {
+    color: #515a6e !important;
+    background: #f7f9ff !important;
   }
 
   @mixin active {
     &:hover {
-      color: $base-color-white !important;
-      background-color: $base-color-blue !important;
+      color: $base-color-blue !important;
+      background-color: $base-color-blue-light !important;
     }
 
     &.is-active {
-      color: $base-color-white !important;
-      background-color: $base-color-blue !important;
+      color: $base-color-blue !important;
+      background-color: $base-color-blue-light !important;
     }
   }
 
+  .logo-container-common,
+  .logo-container-vertical,
   .logo-container-horizontal,
-  .logo-container-vertical {
+  .logo-container-comprehensive,
+  .logo-container-float {
     @include container;
-  }
 
-  .logo-container-comprehensive {
-    @include container;
-  }
-
-  .logo-container-column {
-    .logo {
+    .title,
+    .vab-icon {
       @include container;
     }
   }
 
-  .column-bar-container.el-scrollbar {
+  .logo-container-column {
+    @include container;
+
+    .title {
+      @include container;
+    }
+
+    .logo,
+    .vab-icon {
+      @include container-column;
+    }
+  }
+
+  .vab-column-bar-container {
     .el-tabs {
+      @include container-column;
+
       .el-tabs__nav-wrap.is-left {
-        @include container;
+        background: #f7faff !important;
       }
 
+      .el-tabs__item,
       .el-tabs__nav {
-        @include container;
+        @include container-column;
       }
 
-      .el-tabs__item.is-active {
+      .el-tabs__header .el-tabs__item.is-active {
+        color: $base-color-white !important;
         background: $base-color-blue !important;
       }
     }
@@ -70,15 +90,32 @@
         background-color: $base-color-blue-light !important;
       }
     }
-  }
 
-  .column-bar-container-card.el-scrollbar {
-    .el-tabs {
-      .el-tabs__item.is-active {
-        background: transparent !important;
+    &-card {
+      .el-tabs {
+        .el-tabs__header .el-tabs__item {
+          &.is-active {
+            background: transparent !important;
 
-        .column-grid {
-          background: $base-color-blue !important;
+            .vab-column-grid {
+              background: $base-color-blue !important;
+            }
+          }
+        }
+      }
+    }
+
+    &-arrow {
+      .el-tabs {
+        .el-tabs__item {
+          &.is-active {
+            color: $base-color-black !important;
+            background: transparent !important;
+
+            .vab-column-grid {
+              background: transparent !important;
+            }
+          }
         }
       }
     }
@@ -86,7 +123,9 @@
 
   .vab-layout-vertical,
   .vab-layout-horizontal,
-  .vab-layout-comprehensive {
+  .vab-layout-comprehensive,
+  .vab-layout-common,
+  .vab-layout-float {
     .el-menu {
       @include container;
 
@@ -102,6 +141,7 @@
     .vab-side-bar,
     .comprehensive-bar-container {
       @include container;
+      box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08) !important;
 
       .el-menu-item {
         @include active;
@@ -109,24 +149,15 @@
     }
   }
 
-  .vab-layout-common {
-    .el-menu {
-      @include container-common;
-
+  .vab-layout-float {
+    .el-scrollbar__view .el-menu--collapse.el-menu li.el-submenu.is-active {
       .el-submenu__title {
-        @include container-common;
+        background-color: transparent !important;
       }
 
-      .el-menu-item {
-        @include container-common;
-      }
-    }
-
-    .vab-side-bar {
-      @include container-common;
-
-      .el-menu-item {
-        @include active;
+      > .el-submenu__title {
+        color: $base-color-blue !important;
+        background-color: $base-color-blue-light !important;
       }
     }
   }
@@ -134,20 +165,39 @@
   .vab-header {
     @include container;
 
+    .right-panel {
+      .user-name,
+      .user-name *,
+      > i,
+      > div > i,
+      > span > i,
+      > div > span > i,
+      > svg,
+      > div > svg,
+      > span > svg,
+      > div > span > svg {
+        @include container;
+      }
+    }
+
     .vab-main {
       @include container;
 
-      .right-panel {
-        .el-menu.el-menu {
-          &--horizontal {
-            .el-submenu,
-            .el-menu-item {
-              @include active;
+      .ri-notification-line {
+        color: #515a6e !important;
+      }
 
-              &.is-active {
-                background-color: $base-color-blue !important;
-              }
+      .el-menu {
+        &--horizontal {
+          .el-menu-item {
+            &.is-active {
+              @include active;
             }
+          }
+
+          .el-submenu,
+          .el-menu-item {
+            @include active;
           }
         }
       }
@@ -156,6 +206,7 @@
 
   .vab-tabs {
     &-more {
+      &-active,
       &:hover {
         .vab-tabs-more-icon {
           .box:before,
@@ -171,7 +222,7 @@
         .el-tabs__item {
           &.is-active {
             color: $base-color-blue !important;
-            background: $base-color-blue-light !important;
+            background: $base-color-blue-light-9 !important;
             border: 1px solid $base-color-blue !important;
           }
 
@@ -186,7 +237,7 @@
       .el-tabs__header {
         .el-tabs__item {
           &.is-active {
-            background: $base-color-blue-light !important;
+            background: $base-color-blue-light-9 !important;
           }
 
           &:after {
@@ -194,7 +245,7 @@
           }
 
           &:hover {
-            background: $base-color-blue-light !important;
+            background: $base-color-blue-light-9 !important;
           }
         }
       }
@@ -205,11 +256,11 @@
         .el-tabs__item {
           &.is-active {
             color: $base-color-blue !important;
-            background: $base-color-blue-light !important;
+            background: $base-color-blue-light-9 !important;
 
             &:hover {
               color: $base-color-blue !important;
-              background: $base-color-blue-light !important;
+              background: $base-color-blue-light-9 !important;
             }
           }
 
@@ -218,27 +269,6 @@
           }
         }
       }
-    }
-  }
-
-  .vab-nav {
-    .el-tabs__item.is-active,
-    .el-tabs__item:hover {
-      color: $base-color-blue !important;
-    }
-
-    .el-tabs__active-bar {
-      background-color: $base-color-blue !important;
-    }
-  }
-
-  #nprogress {
-    .bar {
-      background: $base-color-blue !important;
-    }
-
-    .peg {
-      box-shadow: 0 0 10px $base-color-blue, 0 0 5px $base-color-blue !important;
     }
   }
 }
