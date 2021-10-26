@@ -38,14 +38,6 @@
             <!-- 新增 -->
             {{ $translateTitle('product.newlyadded') }}
           </el-button>
-          <!-- <el-button type="primary" @click.native="goTopoview">{{  $translateTitle('product.topoview') }}</el-button>
-          <el-button type="primary" @click.native="exportpro">{{  $translateTitle('product.exportpro') }}</el-button>
-          <el-button type="primary" @click.native="importDialogShow = true">{{  $translateTitle('product.importpro') }}</el-button> -->
-
-          <!-- <el-button
-                type="primary"
-                @click="test"
-              >测试</el-button>-->
         </el-form-item>
       </el-form>
       <div class="protable">
@@ -88,7 +80,7 @@
           </el-table-column>
           <el-table-column :label="$translateTitle('product.classification')">
             <template slot-scope="scope">
-              <span>{{ getCategory(scope.row.category) }}</span>
+              <span>{{ scope.row.category }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$translateTitle('product.addingtime')">
@@ -104,19 +96,17 @@
             <template slot-scope="scope">
               <el-button
                 size="mini"
-                type="success"
-                @click="proudctView(scope.row)"
+                type="primary"
+                :underline="false"
+                @click="deviceToDetail(scope.row)"
               >
-                <!-- 运行组态 -->
-                {{ $translateTitle('product.monitorconfiguration') }}
+                {{ $translateTitle('product.config') }}
               </el-button>
               <el-button
                 size="mini"
-                type="primary"
-                @click="proudctEdit(scope.row)"
+                @click="goKonva(scope.row.objectId)"
               >
-                <!-- 编辑组态 -->
-                {{ $translateTitle('product.editconfiguration') }}
+                {{ $translateTitle('concentrator.konva') }}
               </el-button>
               <el-button
                 size="mini"
@@ -124,21 +114,6 @@
                 @click="GoTodevices(scope.row)"
               >
                 {{ $translateTitle('product.equipment') }}
-              </el-button>
-              <!-- <el-link
-                :underline="false"
-                :disabled="scope.row.config.config.cloneState == true"
-                icon="el-icon-link"
-                type="primary"
-                @click="proudctClone(scope.row)"
-              >备份</el-link> -->
-              <el-button
-                size="mini"
-                type="warning"
-                @click="deviceToDetail(scope.row)"
-              >
-                <!-- 配置 -->
-                {{ $translateTitle('product.config') }}
               </el-button>
               <el-popover
                 :ref="`popover-${scope.$index}`"
@@ -732,16 +707,6 @@
       this.projectName = ''
     },
     methods: {
-      getCategory(key) {
-        // console.log(key)
-        let name = ''
-        this.category.filter((item) => {
-          if (item.type == key) {
-            name = item.data.CategoryName
-          }
-        })
-        return name
-      },
       // 新增虚拟设备
       addDeviceGroup() {
         this.$refs['addGroup'].validate((valid) => {
@@ -1078,6 +1043,14 @@
           path: '/roles/detailproduct',
           query: {
             id: row.objectId,
+          },
+        })
+      },
+      goKonva(id) {
+        this.$router.push({
+          path: '/Topo?productid',
+          query: {
+            productid: id,
           },
         })
       },

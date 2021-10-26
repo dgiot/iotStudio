@@ -1,37 +1,20 @@
 <template>
-  <div>
+  <div
+    class="topoBase"
+    :class="{ 'topoBase-fullscreen': isDevice }"
+  >
     <div
-      :class=" {'topoBase-fullscreen': isDevice }"
-      class="topoBase"
-      @contextmenu="showMenu"
-    >
-      <vue-context-menu
-        :context-menu-data="contextMenuData"
-        @copy="copy"
-        @deleteSahpe="deleteSahpe"
-        @moveDown="moveDown"
-        @moveToBottom="moveToBottom"
-        @moveToTop="moveToTop"
-        @moveUp="moveUp"
-      />
-      <topo-scale style="display: inline-block;position:fixed;" />
-      <div
-        id="kevCurrent"
-        :key="Sale"
-        class="konvaTest"
-      ></div>
-    </div>
+      id="kevCurrent"
+      :key="konvaKey"
+      class="konvaTest"
+    ></div>
+    <div id="current1"></div>
   </div>
 </template>
 
 <script>
-  // eslint-disable
-  import TopoScale from './TopoScale'
-  import { mapActions, mapGetters } from 'vuex'
-
   var width = window.innerWidth
   var height = window.innerHeight
-
   export default {
     name: 'KonvaTest',
     prop: {
@@ -47,60 +30,22 @@
       //   default: moment(new Date()).valueOf(),
       // },
     },
-    components: { TopoScale },
     data() {
       return {
-        contextMenuData: {
-          menuName: 'demo',
-          //菜单显示的位置
-          axis: {
-            x: null,
-            y: null,
-          },
-          //菜单选项
-          menulists: [{
-            fnHandler: 'moveUp', //绑定事件
-            icoName: 'fa fa-home fa-fw', //icon图标
-            btnName: '上移', //菜单名称
-          }, {
-            fnHandler: 'moveDown',
-            icoName: 'fa fa-minus-square-o  fa-fw',
-            btnName: '下移',
-          }, {
-            fnHandler: 'moveToTop',
-            icoName: 'fa fa-minus-square-o  fa-fw',
-            btnName: '置于顶层',
-          }, {
-            fnHandler: 'moveToBottom',
-            icoName: 'fa fa-minus-square-o  fa-fw',
-            btnName: '置于底层',
-          }, {
-            fnHandler: 'copy',
-            icoName: 'fa fa-minus-square-o  fa-fw',
-            btnName: '复制',
-          }, {
-            fnHandler: 'deleteSahpe',
-            icoName: 'fa fa-minus-square-o  fa-fw',
-            btnName: '删除',
-          }],
-        },
         stage: {},
+        konvaKey: moment(new Date()).valueOf(),
         konvajson: {},
         defaultJson:
           '{"attrs":{"width":2382,"height":1200,"draggable":true},"className":"Stage","children":[{"attrs":{"hitGraphEnabled":false},"className":"Layer","children":[{"attrs":{},"className":"Image"},{"attrs":{"source":"https://konvajs.org/assets/yoda.jpg"},"className":"Image"}]},{"attrs":{},"className":"Layer","children":[{"attrs":{"draggable":true,"x":306,"y":303,"transformsEnabled":"position"},"className":"Group","children":[{"attrs":{"radius":20,"stroke":"#231fff","strokeWidth":4,"fill":"#ffffff"},"className":"Circle"},{"attrs":{"text":"1","fontSize":14,"originX":"center","originY":"center","fill":"#231fff","x":-5,"y":-5},"className":"Text"},{"attrs":{"data":"M.91,0H29.09A.91.91,0,0,1,30,.91v243a.88.88,0,0,1-.26.63L15.65,258.86a.9.9,0,0,1-1.3,0L.26,244.52a.88.88,0,0,1-.26-.63V.91A.91.91,0,0,1,.91,0Z","originX":"center","originY":"bottom","x":10,"y":15,"angle":-30,"fill":"#231fff","scaleX":0.15,"scaleY":0.15,"rotation":-30},"className":"Path"}]},{"attrs":{"draggable":true,"x":490,"y":557,"transformsEnabled":"position"},"className":"Group","children":[{"attrs":{"radius":20,"stroke":"#231fff","strokeWidth":4,"fill":"#ffffff"},"className":"Circle"},{"attrs":{"text":"2","fontSize":14,"originX":"center","originY":"center","fill":"#231fff","x":-5,"y":-5},"className":"Text"},{"attrs":{"data":"M.91,0H29.09A.91.91,0,0,1,30,.91v243a.88.88,0,0,1-.26.63L15.65,258.86a.9.9,0,0,1-1.3,0L.26,244.52a.88.88,0,0,1-.26-.63V.91A.91.91,0,0,1,.91,0Z","originX":"center","originY":"bottom","x":10,"y":15,"angle":-30,"fill":"#231fff","scaleX":0.15,"scaleY":0.15,"rotation":-30},"className":"Path"}]}]}]}',
       }
     },
     computed: {
-      ...mapGetters({
-        Sale: 'topo/konvaSale',
-      }),
       isDevice: function () {
         return this.$route.query.type == 'device' || this.$route.query.deviceid
           ? true
           : false
       },
     },
-    watch: {},
     mounted() {
       // const json = {
       //   attrs: {
@@ -274,7 +219,6 @@
       //     },
       //   ],
       // }
-      // this.createTopo(json)
       // const stage = Konva.Node.create(json, 'container')
       //
       // stage.find('Image').forEach((node) => {
@@ -287,109 +231,62 @@
       // })
     },
     methods: {
-      ...mapActions({
-        setKonva: 'topo/Sale',
-        initKonva: 'topo/initKonva',
-      }),
-      showMenu() {
-        event.preventDefault()
-        var x = event.clientX
-        var y = event.clientY
-        // Get the current location
-        this.contextMenuData.axis = {
-          x,
-          y,
+      createTopo(json, key) {
+        // console.clear()
+        this.konvaKey = key
+        this.konvajson = json
+        const stage = Konva.Node.create(json, 'kevCurrent')
+        this.stage = stage.toJSON()
+        stage.find('Image').forEach((node) => {
+          const img = new Image()
+          img.src = node.getAttr('source')
+          img.onload = () => {
+            node.image(img)
+            stage.batchDraw()
+          }
+        })
+        this.$message.success('successfully')
+        this.konvaKey = moment(new Date()).valueOf()
+        const tabInfo = {
+          json: json,
+          konvaKey: this.konvaKey,
+          konvajson: this.konvajson,
+          stage: stage.toJSON(),
         }
-      },
-      copy() {
-        this.$message({
-          type: 'success',
-          message: '拷贝节点!',
-        })
-      },
-      deleteSahpe() {
-        this.$message({
-          type: 'success',
-          message: '删除节点!',
-        })
-      },
-      moveToBottom() {
-        this.$message({
-          type: 'success',
-          message: '置底节点!',
-        })
-      },
-      moveDown() {
-        this.$message({
-          type: 'success',
-          message: '节点下移!',
-        })
-      },
-      moveToTop() {
-        this.$message({
-          type: 'success',
-          message: '置顶节点!',
-        })
-      },
-      moveUp() {
-        this.$message({
-          type: 'success',
-          message: '节点上移!',
-        })
-      },
-      createTopo(json) {
-        // this.initKonva('kevCurrent', json)
-        console.clear()
-        // this.konvajson = json
-        // const stage = topo.konva.Node.create(json, 'kevCurrent')
-        // this.stage = topo.stage.toJSON()
-        // this.$message.success('successfully')
-        // const tabInfo = {
-        //   json: json,
-        //   Sale: this.Sale,
-        //   konvajson: this.konvajson,
-        //   stage: stage.toJSON(),
-        // }
-        // console.groupCollapsed(
-        //   '%cTopobase info',
-        //   'color:#009a61; font-size: 28px; font-weight: 300',
-        // )
-        // console.table(tabInfo)
-        // console.groupEnd()
-        // console.log(tabInfo)
+        console.groupCollapsed(
+          '%cTopobase info',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.table(tabInfo)
+        console.groupEnd()
       },
     },
   }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
   .topoBase {
-    overflow: auto;
     width: 100%;
-    height: calc(100vh - #{$base-top-bar-height} * 3.7) !important;
+    height: calc(100vh - #{$base-top-bar-height}* 3.7) !important;
     padding: 0;
     margin: 0;
-
     ::v-deep {
       .konvajs-content {
         width: 100%;
         height: calc(
-          100vh - #{$base-top-bar-height} * 2.7 - #{$base-padding} * 2 - 100px
+          100vh - #{$base-top-bar-height}* 2.7 - #{$base-padding} * 2 - 100px
         ) !important;
         //overflow: auto !important;
       }
     }
   }
-
   .topoBase-fullscreen {
-    height: calc(100vh - #{$base-top-bar-height} * 3) !important;
-    overflow: auto;
-
+    height: calc(100vh - #{$base-top-bar-height}* 3) !important;
     ::v-deep {
       .konvajs-content {
         width: 100%;
         height: calc(
-          100vh - #{$base-top-bar-height} * 3 - #{$base-padding} * 2
+          100vh - #{$base-top-bar-height}* 3 - #{$base-padding} * 2
         ) !important;
         //overflow: auto !important;
       }

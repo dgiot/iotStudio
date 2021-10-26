@@ -702,12 +702,6 @@ export default {
     scripttips: {
       Pleaseinputproduct: '请输入产品',
     },
-    topo: {
-      'Upload background': '上传背景',
-      'Add text content': '添加文本',
-      'Add configuration tag': '添加标记',
-      'image': '图片',
-    },
     application: {
       locking: '锁定',
       submit: '提交',

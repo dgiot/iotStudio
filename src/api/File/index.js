@@ -1,6 +1,8 @@
 import request from '@/utils/request'
 import store from '@/store'
 import { Message } from 'element-ui'
+import { ExportParse } from '@/api/Export'
+
 export function Upload({ file }) {
   return request({
     url: 'upload',
@@ -8,6 +10,51 @@ export function Upload({ file }) {
     params: {
       file,
     },
+  })
+}
+
+// 配置管理API
+export function file_reload(params) {
+  return request({
+    url: 'file_reload',
+    method: 'post',
+    params: params,
+  })
+}
+
+// 文件信息统计
+export function file_stat(params) {
+  return request({
+    url: 'file_stat',
+    method: 'get',
+    params: params,
+  })
+}
+
+// 获取文件列表
+export function list_dir(params) {
+  return request({
+    url: 'list_dir',
+    method: 'get',
+    params: params,
+  })
+}
+
+// 获取文件信息
+export function file_info(params) {
+  return request({
+    url: 'file_info',
+    method: 'get',
+    params: params,
+  })
+}
+
+// 删除文件
+export function Delete(params) {
+  return request({
+    url: 'file_info',
+    method: 'Delete',
+    params: params,
   })
 }
 
@@ -23,18 +70,8 @@ export function Upload({ file }) {
  * @return {*}
  * @constructor
  */
-export function UploadImg(params) {
+export async function UploadImg(params) {
   if (!_.isObject(params)) Message.error('上传参数必须为对象')
-  // const p = {
-  //   file,
-  //   scene = 'default',
-  //   filename,
-  //   output = 'json',
-  //   path
-  //   code,
-  //   submit = 'json',
-  //   auth_token = store.getters['user/token'],
-  // }
   params = _.merge(
     {
       auth_token: store.getters['user/token'],
@@ -46,11 +83,13 @@ export function UploadImg(params) {
     },
     params
   )
-  console.log(params, 'params', result)
+  console.log(params, 'params')
   var formData = new FormData()
+  params.path = 'dgiot_file/' + params.path
   for (let key in params) {
     formData.append(key, params[key])
   }
+  console.log('formData', formData)
   const isParamsKey = [
     'file',
     'scene',
@@ -60,53 +99,37 @@ export function UploadImg(params) {
     'submit',
     'auth_token',
   ]
+  await DeleteImg(params)
   var result = isParamsKey.every((e) => {
     // eslint-disable-next-line no-prototype-builtins
     return params.hasOwnProperty(`${e}`)
   })
-  let url = 'group1/upload'
+  console.log(process.env.VUE_APP_URL)
+  let url = 'upload'
   const { NODE_ENV = 'development' } = process.env
-  console.log('formData', formData)
-  // NODE_ENV == 'development'
-  //   ? (url = 'http://flow.hzmctech.com/group1/upload')
-  //   : (url = 'group1/upload')
-  // formData.append('auth_token', 'r:44f639018ab7251d2b2730a55c49103f')
-  // return request({
-  //   url: 'group1/upload',
-  //   ...config,
-  //   method: 'post',
-  //   data: formData,
-  // })
+
+  NODE_ENV == 'development'
+    ? (url = `${process.env.VUE_APP_URL}/upload`)
+    : (url = 'upload')
   if (result) {
     return axios
       .post(url, formData, {
         Accept: 'application/json',
         'Content-Type': 'application/json; charset=utf-8',
       })
-      .catch((err) => console.log(err))
+      .catch((e) => {
+        console.log(e)
+        return { data: {} }
+      })
   } else {
     Message.error('上传参数不正确')
-    return false
+    return { data: {} }
   }
 }
 
-// 需要返回整体 所以不能用该方法
-
-// export function exlout(config) {
-//   return request({
-//     url: 'excelController/exlout',
-//     method: 'post',
-//     data: config,
-//     headers: {
-//       withCredentials: true,
-//       responseType: 'blob',
-//       produrl: '/dgiotproxy/shuwa_report/',
-//       devurl: 'group2/',
-//       proxy: true,
-//     },
-//     // responseType: 'blob',
-//   })
-// }
+async function DeleteImg(params) {
+  return await Delete({ path: 'files/' + params.path + params.filename })
+}
 
 /*
  * @params {string} url 请求地址

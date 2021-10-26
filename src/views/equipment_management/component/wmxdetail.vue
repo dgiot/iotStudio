@@ -142,6 +142,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+              {{ sizeForm.ico }}
               <el-col :span="12">
                 <el-form-item
                   label="图标"
@@ -149,12 +150,14 @@
                 >
                   <el-avatar
                     :size="100"
-                    :src="sizeForm.ico"
+                    :src="$FileServe + sizeForm.ico"
                     @click.native="uploadCkick('userinfo.avatar')"
                   />
                   <vab-input
                     ref="uploadFinish"
+                    :params="inputParams"
                     @fileInfo="fileInfo"
+                    @files="files"
                   />
                 </el-form-item>
               </el-col>
@@ -1319,6 +1322,7 @@
         }
       }
       return {
+        inputParams: {},
         dataList: [{}],
         dataType: mockModules.mockModules.dataType,
         options: [
@@ -1501,8 +1505,8 @@
         console.log(type)
       },
       fileInfo(info) {
-        console.log('uploadFinish', info)
-        this.sizeForm.ico = info.url
+        console.error('========================', info)
+        this.sizeForm.ico = info.path
       },
       uploadCkick(type) {
         this.upNodeType = type
@@ -1510,6 +1514,20 @@
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
           new MouseEvent('click')
         )
+        this.inputParams = {
+          file: '',
+          scene: 'app',
+          path: 'devicething/ico/',
+          filename: '',
+        }
+      },
+      files(file, type) {
+        this.inputParams.filename = `${this.$route.query.id}.${
+          this.sizeForm.identifier
+            ? this.sizeForm.identifier
+            : moment().format('x')
+        }.${type}`
+        this.inputParams.file = file
       },
       ...mapMutations({
         setSizeForm: 'konva/setSizeForm',

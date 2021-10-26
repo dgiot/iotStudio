@@ -6,7 +6,7 @@
     <span class="avatar-dropdown">
       <el-avatar
         class="user-avatar"
-        :src="avatar"
+        :src="$FileServe + avatar"
       />
       <div class="user-name">
         <span class="hidden-xs-only">{{ username }}</span>

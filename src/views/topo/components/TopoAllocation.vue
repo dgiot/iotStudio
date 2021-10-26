@@ -17,8 +17,7 @@
       >
         <el-row :gutter="20">
           <el-col
-            v-for="(item, index) in iconfont.glyphs"
-            v-show="index <= 11"
+            v-for="item in iconfont.glyphs"
             :key="item.icon_id"
             :span="8"
           >
@@ -75,7 +74,6 @@
 
           <el-col
             v-for="(item, index) in queryIcon"
-            v-show="index <= 11"
             :key="index"
             :span="8"
           >
@@ -113,12 +111,11 @@
   const imgHost = regUrl.test(cdn)
     ? `${cdn}/assets/images/dgiot_release/topo/`
     : path.join(
-      __dirname,
-      `${process.env.BASE_URL}/assets/images/dgiot_release/topo/`,
-    )
-  // https://blog.csdn.net/u010007013/article/details/102674042
+        __dirname,
+        '../../../../public/assets/images/dgiot_release/topo/'
+      )
   // import imgHost from '../../../../public/assets/images/dgiot_release/topo/'
-  console.log(imgHost, process.env.BASE_URL, process.env)
+  console.log(imgHost)
   import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
   import { getSvgPath } from '@/utils/konva'
@@ -131,10 +128,7 @@
     data() {
       return {
         iconfont,
-        busData: {
-          coordinate: {},
-          paths: [],
-        },
+        busData: { coordinate: {}, paths: [] },
         accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF',
         imgHost: imgHost,
         icon: '24-hours-fill',
@@ -158,28 +152,17 @@
     created() {
       this.fetchData()
     },
-    mounted() {
-    },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    mounted() {},
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       coordinate(e) {
-        const _coordinate = {
-          x: e.pageX,
-          y: e.pageY,
-        }
+        const _coordinate = { x: e.pageX, y: e.pageY }
         this.busData.coordinate = _coordinate
       },
 
@@ -192,7 +175,7 @@
       },
       uploadCkick() {
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
       },
       ...mapMutations({
@@ -211,10 +194,7 @@
       // },
 
       async fetchData() {
-        const {
-          data,
-          totalCount,
-        } = await getMaterial(this.queryForm)
+        const { data, totalCount } = await getMaterial(this.queryForm)
         this.queryIcon = data
         this.total = totalCount
       },
@@ -251,7 +231,7 @@
             _this.$translateTitle('图片加载完成,可双击画图区域填充'),
             'success',
             false,
-            'vab-hey-message-success',
+            'vab-hey-message-success'
           )
         }
         _this.setFlag('image')
@@ -265,22 +245,19 @@
 </script>
 <style lang="scss" scope>
   .icon-selector-popper {
-    height: calc(100vh - #{$base-top-bar-height} * 3.5);
+    height: calc(100vh - #{$base-top-bar-height}* 3.5);
     margin-left: 10px;
     overflow-x: hidden;
     overflow-y: scroll;
-
     .el—card {
       height: 40px !important;
       padding: 10px;
     }
-
     .el-collapse-item__header {
       display: block;
       margin: 0 auto;
       text-align: center;
     }
-
     .el-card__body {
       position: relative;
       display: flex;

@@ -479,6 +479,7 @@
     queryRole,
     roleMenu,
     saveRole,
+    queryRoledepartment,
   } from '@/api/Role/index'
   import { mapGetters, mapMutations } from 'vuex'
   import addroles from '@/views/roles/rolelist/addroles'
@@ -705,18 +706,29 @@
       this.dialogVisible = false
     },
     //删除角色
-    handleDelete(row) {
-
-      this.$confirm(this.$translateTitle('user.This operation will permanently delete this role, do you want to continue?'), this.$translateTitle('user.prompt'), {
-        confirmButtonText: this.$translateTitle('developer.determine'),
-        cancelButtonText: this.$translateTitle('developer.cancel'),
-        type: 'warning',
-      })
-        .then(() => {
-          this.delConfirm(row.objectId)
+     async handleDelete(row) {
+      const params = {
+        name: row.name,
+      }
+      const { users } = await queryRoledepartment(params)
+      if (users.length > 0) {
+        this.$message({
+            type: 'warning',
+            message: '请先删除该角色下的用户',
         })
-        .catch(() => {
+        return
+      } else {
+        this.$confirm(this.$translateTitle('user.This operation will permanently delete this role, do you want to continue?'), this.$translateTitle('user.prompt'), {
+          confirmButtonText: this.$translateTitle('developer.determine'),
+          cancelButtonText: this.$translateTitle('developer.cancel'),
+          type: 'warning',
         })
+          .then(() => {
+            this.delConfirm(row.objectId)
+          })
+          .catch(() => {
+          })
+      }
     },
     // 二次确认删除
     async delConfirm(objectId) {

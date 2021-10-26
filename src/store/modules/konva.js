@@ -70,10 +70,4 @@ const actions = {
     commit('setDrawParams', params)
   },
 }
-export default {
-  state,
-  getters,
-  mutations,
-  actions,
-}
-
+export default { state, getters, mutations, actions }

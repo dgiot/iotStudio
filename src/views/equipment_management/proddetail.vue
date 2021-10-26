@@ -63,7 +63,7 @@
             <div class="block">
               <el-image
                 v-if="productimg"
-                :src="productimg"
+                :src="$FileServe + productimg"
                 style="
                   position: relative;
                   top: -40px;

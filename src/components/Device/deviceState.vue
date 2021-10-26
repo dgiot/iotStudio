@@ -8,8 +8,8 @@
         <el-col
           v-for="(item, index) in _tableDict"
           :key="index"
-          :span="4"
           class="runData_col"
+          :span="4"
         >
           <el-card
             class="box-card"
@@ -45,17 +45,15 @@
   </div>
 </template>
 <script>
-  /* eslint-disable */
-  /* eslint-disable */
-  import { mapGetters, mapMutations } from 'vuex'
-
+/* eslint-disable */
+/* eslint-disable */
+import { mapGetters, mapMutations } from 'vuex'
   export default {
     name: 'DeviceState',
     props: {
       devicedetail: {
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
     },
     data() {
@@ -83,18 +81,16 @@
     },
   }
 </script>
-<style lang="scss" scoped>
+<style scoped lang="scss">
   .runData {
     height: 50%;
     overflow-y: auto;
-
     .devicedetail {
       width: 100%;
       height: 100%;
 
       .runData_row {
         width: 100%;
-
         .runData_col {
           margin: 10px;
           font-size: 14px;

@@ -44,19 +44,13 @@
           {{ $translateTitle('equipment.createdAt') + ':' }}
         </td>
         <td>
-          {{
-            $moment(devicedetail.createdAt)
-              .format('YYYY-MM-DD HH:mm:ss')
-          }}
+          {{ $moment(devicedetail.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </td>
         <td class="cloumn">
           {{ $translateTitle('equipment.lastonlinetime') + ':' }}
         </td>
         <td>
-          {{
-            $moment(devicedetail.updatedAt)
-              .format('YYYY-MM-DD HH:mm:ss')
-          }}
+          {{ $moment(devicedetail.updatedAt).format('YYYY-MM-DD HH:mm:ss') }}
         </td>
         <td class="cloumn">
           {{ $translateTitle('equipment.nodetype') + ':' }}
@@ -95,15 +89,15 @@
             {{
               scope.row.topic.replace(
                 '\${ProductId}\/${DevAddr\}',
-                devicedetail.productid + '/' + devicedetail.devaddr,
+                devicedetail.productid + '/' + devicedetail.devaddr
               )
             }}
           </span>
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('equipment.operationauthority')"
         align="center"
+        :label="$translateTitle('equipment.operationauthority')"
       >
         <template slot-scope="scope">
           <span v-if="scope.row.type == 'pub'">
@@ -115,8 +109,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('developer.describe')"
         align="center"
+        :label="$translateTitle('developer.describe')"
         prop="desc"
       />
     </el-table>
@@ -139,15 +133,13 @@
     props: {
       devicedetail: {
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
     },
     data() {
       return {}
     },
-    created() {
-    },
+    created() {},
   }
 </script>
 <style>
@@ -159,7 +151,6 @@
     border-right: 1px solid #ebecec;
     border-bottom: 1px solid #ebecec;
   }
-
   .mailtable td {
     box-sizing: border-box;
     padding: 15px;

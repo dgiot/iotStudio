@@ -113,7 +113,9 @@
     </el-dialog>
     <vab-input
       ref="uploadFinish"
+      :params="inputParams"
       @fileInfo="fileInfo"
+      @files="files"
     />
     <div class="prosecond">
       <el-form
@@ -532,7 +534,7 @@
                 <div v-if="imageUrl">
                   <img
                     class="avatar"
-                    :src="imageUrl"
+                    :src="$FileServe + imageUrl"
                   />
                   <el-button
                     size="mini"
@@ -1570,6 +1572,7 @@
     },
     data() {
       return {
+        inputParams: {},
         storageArr: [
           '默认-行式存储',
           '默认-列式存储',
@@ -1977,11 +1980,21 @@
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
           new MouseEvent('click')
         )
+        this.inputParams = {
+          file: '',
+          scene: 'app',
+          path: 'product/ico/',
+          filename: '',
+        }
       },
       fileInfo(info) {
         console.log('info', info)
-        this.imageUrl = info.url
+        this.imageUrl = info.path
         this.loading = false
+      },
+      files(file, type) {
+        this.inputParams.filename = `${this.productid}.${type}`
+        this.inputParams.file = file
       },
       async getAllunit() {
         this.allunit = []

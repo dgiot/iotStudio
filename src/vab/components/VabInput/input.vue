@@ -58,46 +58,27 @@
       doUpload(event) {
         let file = event.target.files[0]
         const name = event.target.files[0].name
-        console.log('file', file, event.target, event, name)
         const type = name.split('.').pop().toLowerCase()
-        console.log('type', type)
-        let config = {
-          onUploadProgress: (progressEvent) => {
-            //progressEvent.loaded:已上传文件大小
-            //progressEvent.total:被上传文件的总大小
-            let complete =
-              (progressEvent.loaded / progressEvent.total).toFixed(2) * 100
-            this.percentage = complete
-            // if (this.percentage >= 100) {
-            //   this.dialogVisible = true
-            // }
-          },
-          headers: {
-            proxy: true, // 是否开启代理
-            produrl: '/dgiotproxy/shuwa_file/', // 开启代理后的真实上传路径
-            devurl: 'group1/',
-            'Content-Type': 'multipart/form-data',
-          },
-        }
         this.$emit('files', file, type)
-        let extension = file.name.substring(file.name.lastIndexOf('.') + 1)
-
-        const params = {
-          file: file,
-          // scene: 'ticket',
-          path: `${moment().format('x')}.${extension}`,
-          filename: `${moment().format('x')}.${extension}`,
-        }
+        const params = this.params
         console.log('extension', params)
-        UploadImg(params)
-          .then((res) => {
-            //将生成的url传递给父组件
-            this.$emit('fileInfo', res.data)
-            console.log('上传成功的回调', res)
-          })
-          .catch((e) => {
-            console.log('出错了', e)
-          })
+        try {
+          UploadImg(params)
+            .then((res) => {
+              //将生成的url传递给父组件
+              res.data.path =
+                res.data.path + `?timestamp=${new Date().getTime()}`
+              res.data.timestamp = new Date().getTime()
+              res.data.Date = new Date()
+              this.$emit('fileInfo', res.data)
+              console.log('上传成功的回调', res.data)
+            })
+            .catch((e) => {
+              console.log('出错了', e)
+            })
+        } catch (e) {
+          console.log(e)
+        }
       },
       //文件删除操作
       remove() {

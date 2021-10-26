@@ -13,7 +13,7 @@
             <div class="personal-center-user-info">
               <el-avatar
                 :size="100"
-                :src="avatar"
+                :src="$FileServe + avatar"
                 @click.native="uploadCkick('userinfo.avatar')"
               />
               <vab-input
@@ -360,26 +360,27 @@
         console.log('uploadFinish', info)
         let type = this.upNodeType
         console.log('upNodeType', this[type])
-        this[type] = info.url
+        this[type] = info.path
         switch (type) {
           case 'userinfo.avatar':
-            this.userinfo.avatar = info.url
-            this.setAvatar(info.url)
+            this.userinfo.avatar = info.path
+            this.setAvatar(info.path)
             break
           case 'companyinfo._pcimg':
-            this.set_pcimg(info.url)
-            this.companyinfo._pcimg = info.url
+            this.set_pcimg(info.path)
+            this.companyinfo._pcimg = info.path
             break
           case 'companyinfo._mimg':
-            this.companyinfo._mimg = info.url
-            this.set_mimg(info.url)
+            this.companyinfo._mimg = info.path
+            this.set_mimg(info.path)
             break
           case 'companyinfo.logo':
-            this.companyinfo.logo = info.url
-            this.setlogo(info.url)
+            this.companyinfo.logo = info.path
+            this.setlogo(info.path)
             break
           case 'companyinfo.backgroundimage':
-            this.setBackgroundimage(info.url)
+            this.companyinfo.backgroundimage = info.path
+            this.setBackgroundimage(info.path)
             putProject(this.Default.objectId, { background: info.url })
               .then((res) => {
                 console.log(res)
@@ -414,31 +415,7 @@
           this.$refs['userinfo'].validateField('phone')
           return
         }
-        if (
-          this.companyinfo.logo.length == 0 &&
-          !isUrl(this.companyinfo.logo)
-        ) {
-          this.$baseMessage(
-            this.$translateTitle('logo链接地址非url类型'),
-            'error',
-            false,
-            'vab-hey-message-error'
-          )
-          return
-        }
-        if (
-          this.companyinfo.backgroundimage.length == 0 &&
-          !isUrl(this.companyinfo.backgroundimage)
-        ) {
-          this.$baseMessage(
-            this.$translateTitle('背景图链接地址非url类型'),
-            'error',
-            false,
-            'vab-hey-message-error'
-          )
-          return
-        }
-
+        console.log('this.companyinfo===========', this.companyinfo)
         let pamams = {
           tag: {
             companyinfo: this.companyinfo,
@@ -469,12 +446,19 @@
         )
         this.inputParams = {
           file: '',
+          scene: 'app',
           path: 'user/profile/',
-          filename: `${this.ObjectId}.${type}`,
+          filename: `${this.ObjectId}_${this.upNodeType.replace(
+            '.',
+            '_'
+          )}.${type}`,
         }
       },
       files(file, type) {
-        this.inputParams.filename = `${this.ObjectId}.${type}`
+        this.inputParams.filename = `${this.ObjectId}_${this.upNodeType.replace(
+          '.',
+          '_'
+        )}.${type}`
         this.inputParams.file = file
       },
       async queryUserInfo(ObjectId) {
