@@ -48,7 +48,7 @@
         $('.logo-container .appendLogo').remove()
         if (pictureSwitch == true && collapse == true) {
           $('.logo-container').append(
-            `<img src=${img} class="appendLogo" style="width: 100%" />`
+            `<img src=${this.$FileServe + img} class="appendLogo" style="width: 100%" />`
           )
           $('.logo-container .router-link-active').css({
             display: 'none',
@@ -62,7 +62,7 @@
         if (pictureSwitch == true) {
           $('.logo-container .appendLogo').remove()
           $('.logo-container').append(
-            `<img src=${img} class="appendLogo" style="width: 100%" />`
+            `<img src=${this.$FileServe + img} class="appendLogo" style="width: 100%" />`
           )
           $('.logo-container .router-link-active').css({
             display: 'none',
