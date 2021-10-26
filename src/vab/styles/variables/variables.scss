@@ -10,8 +10,21 @@ $base-color-black: #515a6e;
 $base-color-yellow: #ffba00;
 $base-color-orange: #ff6700;
 $base-color-red: #ff4d4f;
+$base-color-grey: rgba(0, 0, 0, 0.65);
 $base-color-gray: rgba(0, 0, 0, 0.65);
 $base-color-background: #f6f8f9;
+
+$base-color-text-primary: #303133;
+$base-color-text-regular: #606266;
+$base-color-text-secondary: #909399;
+$base-color-text-placeholder: #c0c4cc;
+$base-border-color-base: #dcdfe6;
+$base-border-color-light: #e4e7ed;
+$base-border-color-lighter: #ebeef5;
+$base-border-color-extra-light: #f2f6fc;
+$base-background-color-base: #f5f7fa;
+
+
 //默认层级
 $base-z-index: 1999;
 //分栏最左侧菜单背景色
@@ -71,12 +84,12 @@ $base-left-menu-width: 266px;
 //纵向左侧导航未折叠右侧内容的宽度
 $base-right-content-width: calc(100% - #{$base-left-menu-width});
 //纵向左侧导航已折叠的宽度
-$base-left-menu-width-min: 65px;
+$base-left-menu-width-min: 64px;
 //纵向左侧导航已折叠右侧内容的宽度
 $base-right-content-width-min: calc(100% - #{$base-left-menu-width-min});
 //默认动画
 $base-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), border 0s,
-  color 0.1s, font-size 0s;
+color 0.1s, font-size 0s;
 //默认动画长
 $base-transition-time: 0.3s;
 //footer 的高度

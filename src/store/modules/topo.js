@@ -25,85 +25,19 @@ let EventKey = 'clickNode'
  */
 export function createKonvaDom(attr, json, setattrs = konvaAttr) {
   const { hash } = location
-  console.log('当前路由hash', hash)
-  if (!hash.includes('Topo')) return false
-  console.log(setattrs)
-  const _json = {
-    'attrs': {
-      'width': 1200,
-      'height': 700,
-      'draggable': true,
-    },
-    'className': 'Stage',
-    'children': [
-      {
-        'attrs': {},
-        'className': 'Layer',
-        'children': [
-          {
-            'attrs': {
-              'id': 'bg',
-              'width': 1200,
-              'height': 700,
-              'type': 'bg-image',
-              'src': 'http://39.97.252.98:3000/thumb/2.png',
-            },
-            'className': 'Image',
-          },
-          {
-            'attrs': {
-              'draggable': true,
-              'x': 306,
-              'y': 303,
-              'transformsEnabled': 'position',
-            },
-            'className': 'Group',
-            'children': [
-              {
-                'attrs': {
-                  'name': 'thing',
-                  'x': 100,
-                  'y': 100,
-                  'draggable': true,
-                },
-                'className': 'Label',
-                'children': [
-                  {
-                    'attrs': {
-                      'name': 'click',
-                    },
-                    'className': 'Tag',
-                  },
-                  {
-                    'attrs': {
-                      'id': '9528ac1c5d_flow_text',
-                      'text': 'dgiot',
-                      'fontSize': 50,
-                      'lineHeight': 1.2,
-                      'padding': 10,
-                      'fill': 'green',
-                    },
-                    'className': 'Text',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  }
-
-  const stage = Konva.Node.create(_json, 'dgiot')
+  // if (!hash.includes('Topo') || $(`${attr}`).length === 0) return false
+  console.log($(`${attr}`))
+  console.table(json)
+  const stage = Konva.Node.create(json, attr)
   const layer = stage.findOne('Layer')
-
   stage.find('Image')
     .forEach((node) => {
       const img = new Image()
       img.src = node.getAttr('src')
       img.onload = () => {
         node.image(img)
-        node.moveToBottom()
+        // 只将背景图置底
+        if (node.getAttr('id') == 'bg') node.moveToBottom()
         stage.batchDraw()
       }
     })
@@ -134,10 +68,9 @@ export function createKonvaDom(attr, json, setattrs = konvaAttr) {
   topo.layer = layer
   topo.stage = konvaDom
   // 辅助线
-// 重绘
-  topo.layer.draw()
   console.log('将传入的json添加到layer里', json)
   topo.stage.add(topo.layer)
+
 }
 
 export function createdText(config) {
@@ -193,8 +126,6 @@ function updateCanvasAttr(scale) {
     scaleX: scale,
     scaleY: scale,
   }))
-  // 重绘
-  topo.layer.draw()
 }
 
 function createPathDom(type, config) {
@@ -205,7 +136,7 @@ function createPathDom(type, config) {
 const state = () => ({
   Sale: topo.konvaAttr.scale ? topo.konvaAttr.scale : 300,
   konva: topo.konva,
-  initKonva: createKonvaDom('dgiot', {}),
+  initKonva: {},
   // 当前操作的组态
   activeShape: {},
   //  添加的图元
@@ -217,9 +148,10 @@ const getters = {
   createdText: (config) => createdText(config),
 }
 const mutations = {
-  initKonva(state, id, json) {
+  initKonva(state, args) {
+    console.log('vuex', state, args.id, args.data)
     //  初始化konva
-    state.initKonva = createKonvaDom(id, json)
+    state.initKonva = createKonvaDom(args.id, args.data)
   },
   setSale(state, size) {
     topo.konvaAttr.scale = size
@@ -241,8 +173,6 @@ const mutations = {
       scaleX: size * 0.01,
       scaleY: size * 0.01,
     })
-    // 重绘
-    topo.layer.draw()
     state.Sale = size
     console.error('缩放大小', topo.konvaAttr.scale)
     console.table('topo', topo)
@@ -262,8 +192,8 @@ const mutations = {
   },
 }
 const actions = {
-  initKonva({ commit }, id, data) {
-    commit('initKonva', id, data)
+  initKonva({ commit }, args) {
+    commit('initKonva', args)
   },
   createdText({ commit }, config) {
     commit('createdText', config)
