@@ -37,8 +37,8 @@
         </el-dialog>
       </div>
       <div
-        class="map_header"
         :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
+        class="map_header"
       >
         <div
           v-show="cardHeight != '0px'"
@@ -46,28 +46,28 @@
         >
           <el-row>
             <el-col
-              class="card-panel-col"
               :lg="6"
               :md="6"
               :sm="12"
               :xl="6"
               :xs="24"
+              class="card-panel-col"
             >
               <el-card
                 v-loading="loadingConfig['product_count'] == false"
-                class="box-card"
-                element-loading-background="rgba(0, 0, 0, 0.8)"
-                element-loading-spinner="el-icon-loading"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
+                class="box-card"
+                element-loading-background="rgba(0, 0, 0, 0.8)"
+                element-loading-spinner="el-icon-loading"
               >
                 <el-col :span="12">
                   <vab-icon icon="projector-fill" />
                 </el-col>
                 <el-col
-                  class="card-right"
                   :span="12"
+                  class="card-right"
                 >
                   <router-link to="/roles/product">
                     <p>{{ $translateTitle('home.pro_count') }}</p>
@@ -77,26 +77,26 @@
               </el-card>
             </el-col>
             <el-col
-              class="card-panel-col"
               :lg="6"
               :md="6"
               :sm="12"
               :xl="6"
               :xs="24"
+              class="card-panel-col"
             >
               <el-card
                 v-loading="loadingConfig['app_count'] == false"
-                class="box-card"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
+                class="box-card"
               >
                 <el-col :span="12">
                   <vab-icon icon="apps-fill" />
                 </el-col>
                 <el-col
-                  class="card-right"
                   :span="12"
+                  class="card-right"
                 >
                   <router-link to="/roles/applicationManagement">
                     <p>{{ $translateTitle('home.app_count') }}</p>
@@ -106,26 +106,26 @@
               </el-card>
             </el-col>
             <el-col
-              class="card-panel-col"
               :lg="6"
               :md="6"
               :sm="12"
               :xl="6"
               :xs="24"
+              class="card-panel-col"
             >
               <el-card
                 v-loading="loadingConfig['device_count'] == false"
-                class="box-card"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
+                class="box-card"
               >
                 <el-col :span="12">
                   <vab-icon icon="device-recover-fill" />
                 </el-col>
                 <el-col
-                  class="card-right"
                   :span="12"
+                  class="card-right"
                 >
                   <router-link to="/dashboard/devicelist">
                     <p>{{ $translateTitle('home.dev_count') }}</p>
@@ -135,29 +135,29 @@
               </el-card>
             </el-col>
             <el-col
-              class="card-panel-col"
               :lg="6"
               :md="6"
               :sm="12"
               :xl="6"
               :xs="24"
+              class="card-panel-col"
             >
               <el-card
                 v-loading="loadingConfig['warn_count'] == false"
-                class="box-card"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
+                class="box-card"
               >
                 <el-col
-                  class="card-left"
                   :span="12"
+                  class="card-left"
                 >
                   <vab-icon icon="projector-2-fill" />
                 </el-col>
                 <el-col
-                  class="card-right"
                   :span="12"
+                  class="card-right"
                 >
                   <router-link to="/CloudOt/alarm">
                     <p>
@@ -174,8 +174,8 @@
           <vab-query-form-top-panel>
             <el-form
               :inline="true"
-              label-width="100px"
               :model="queryForm"
+              label-width="100px"
               @submit.native.prevent
             >
               <el-form-item :label="$translateTitle('user.department')">
@@ -185,16 +185,16 @@
                   @visible-change="change($event)"
                 >
                   <el-option
-                    style="height: auto; padding: 0"
                     :value="treeDataValue"
+                    style="height: auto; padding: 0"
                   >
                     <el-tree
                       ref="workGroup"
                       :data="deptTreeData"
-                      default-expand-all
                       :expand-on-click-node="false"
-                      node-key="index"
                       :props="roleProps"
+                      default-expand-all
+                      node-key="index"
                     >
                       <div
                         slot-scope="{ node, data }"
@@ -314,12 +314,12 @@
                 class="card_left"
               >
                 <el-row
-                  class="card_left-row"
                   :gutter="24"
+                  class="card_left-row"
                 >
                   <el-col
-                    class="card_left-row-col"
                     :span="6"
+                    class="card_left-row-col"
                   >
                     <Card
                       class="card_left-row-col-card"
@@ -338,9 +338,9 @@
                     </Card>
                   </el-col>
                   <el-col
-                    class="card_left-row-col"
                     :offset="2"
                     :span="6"
+                    class="card_left-row-col"
                   >
                     <Card
                       class="card_left-row-col-card"
@@ -359,9 +359,9 @@
                     </Card>
                   </el-col>
                   <el-col
-                    class="card_left-row-col"
                     :offset="2"
                     :span="6"
+                    class="card_left-row-col"
                   >
                     <Card
                       class="card_left-row-col-card"
@@ -385,7 +385,7 @@
               </div>
               <div
                 class="card"
-                style="position: absolute; right: 100px; z-index: 10086"
+                style="position: absolute; right: 100px; z-index: 1000"
               >
                 <p
                   style="
@@ -466,11 +466,11 @@
               </div>
               <baidu-map
                 id="baidu_map"
-                ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
                 :center="{ lng: 106.553838, lat: 29.563216 }"
-                class="baidu_map"
                 :scroll-wheel-zoom="true"
                 :zoom="sizeZoom"
+                ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
+                class="baidu_map"
               >
                 <bm-control>
                   <el-button
@@ -497,16 +497,16 @@
                     @click="toggleFull()"
                   />
                   <bm-panorama
-                    anchor="BMAP_ANCHOR_TOP_LEFT"
                     :offset="{ width: 500, height: 0 }"
+                    anchor="BMAP_ANCHOR_TOP_LEFT"
                   />
                   <bm-overview-map :is-open="true" />
                   <bm-scale :offset="{ width: 260, height: 0 }" />
                   <bm-city-list :offset="{ width: 330, height: 0 }" />
                   <bm-map-type
-                    anchor="BMAP_ANCHOR_TOP_LEFT"
                     :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
                     :offset="{ width: 400, height: 0 }"
+                    anchor="BMAP_ANCHOR_TOP_LEFT"
                   />
                 </bm-control>
                 <bml-marker-clusterer :average-center="true">
@@ -637,9 +637,9 @@
                 </bml-marker-clusterer>
                 <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
                 <bm-geolocation
-                  anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
                   :auto-location="true"
                   :show-address-bar="true"
+                  anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
                 />
               </baidu-map>
             </div>
@@ -701,8 +701,8 @@
                               </el-table-column>
                               <el-table-column
                                 :label="$translateTitle('task.productname')"
-                                prop="name"
                                 :show-overflow-tooltip="true"
+                                prop="name"
                                 width="120"
                               >
                                 <template slot-scope="scope">
@@ -756,9 +756,9 @@
                         :data="_ChartStatus"
                         :data-empty="!ChartStatus.rows"
                         :extend="chartExtend"
-                        height="160px"
                         :loading="loading"
                         :settings="chartSettings"
+                        height="160px"
                         type="ring"
                       />
                     </div>
@@ -776,8 +776,8 @@
                       class="clearfix"
                     >
                       <el-badge
-                        class="item"
                         :value="_dev_off_count"
+                        class="item"
                       >
                         <el-button
                           size="small"
@@ -793,10 +793,10 @@
                           <div class="grid-content bg-purple">
                             <el-table
                               :cell-style="{ 'text-align': 'center' }"
-                              class="_el-table"
                               :data="_offlineData"
                               :header-cell-style="{ 'text-align': 'center' }"
                               :row-class-name="tableRowClassName"
+                              class="_el-table"
                               style="width: 100%"
                             >
                               <el-table-column
@@ -835,8 +835,8 @@
                       class="clearfix"
                     >
                       <el-badge
-                        class="item"
                         :value="_dev_online_count"
+                        class="item"
                       >
                         <el-button
                           size="small"
@@ -852,10 +852,10 @@
                           <div class="grid-content bg-purple">
                             <el-table
                               :cell-style="{ 'text-align': 'center' }"
-                              class="_el-table"
                               :data="_onlineData"
                               :header-cell-style="{ 'text-align': 'center' }"
                               :row-class-name="tableRowClassName"
+                              class="_el-table"
                               style="width: 100%"
                             >
                               <el-table-column
@@ -894,29 +894,27 @@
   import icoPath1 from '../../../public/assets/images/Device/1.png'
   import icoPath2 from '../../../public/assets/images/Device/2.png'
   import { queryProduct } from '@/api/Product'
-  import { getDevice, putDevice } from '@/api/Device'
+  import { getDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import Category from '@/api/Mock/Category'
-  import { Roletree, getToken } from '@/api/Menu'
+  import { getToken, Roletree } from '@/api/Menu'
   import { StartDashboard } from '@/api/Dashboard'
   import { isBase64 } from '@/utils'
   import info from '@/components/Device/info'
   import queryParams from '@/api/Mock/Dashboard'
-  import { uuid } from '@/utils'
   import {
-    BmNavigation,
     BaiduMap,
-    BmGeolocation,
     BmCityList,
-    BmMarker,
-    // BmLabel,
     BmControl,
-    BmPanorama,
-    BmOverviewMap,
-    BmMapType,
-    BmScale,
-    BmlMarkerClusterer,
+    BmGeolocation,
     BmInfoWindow,
+    BmlMarkerClusterer,
+    BmMapType,
+    BmMarker,
+    BmNavigation,
+    BmOverviewMap,
+    BmPanorama,
+    BmScale,
   } from 'vue-baidu-map'
 
   export default {
@@ -972,8 +970,14 @@
         ChartStatus: {
           columns: ['状态', '数量'],
           rows: [
-            { 状态: '在线', 数量: 0 },
-            { 状态: '离线', 数量: 0 },
+            {
+              状态: '在线',
+              数量: 0,
+            },
+            {
+              状态: '离线',
+              数量: 0,
+            },
           ],
         },
         clientId: 'dgiot_clientId_',
@@ -1079,7 +1083,8 @@
         limit: true,
       },
     },
-    created() {},
+    created() {
+    },
     mounted() {
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.initDgiotMqtt()
@@ -1104,15 +1109,24 @@
         this.getRoletree()
         this.getProduct()
       },
-      async getWarnCount(params = { count: '*', where: {} }) {
+      async getWarnCount(params = {
+        count: '*',
+        where: {},
+      }) {
         params.where['createdAt'] = {
           $gt: {
             __type: 'Date',
-            iso: moment().subtract(1, 'days').format('YYYY-MM-DD'),
+            iso: moment()
+              .subtract(1, 'days')
+              .format('YYYY-MM-DD'),
           },
         }
         params.where['updatedAt'] = {
-          $lt: { __type: 'Date', iso: moment(new Date()).format('YYYY-MM-DD') },
+          $lt: {
+            __type: 'Date',
+            iso: moment(new Date())
+              .format('YYYY-MM-DD'),
+          },
         }
         try {
           const { count = 0 } = await this.$query_object('Maintenance', params)
@@ -1141,7 +1155,10 @@
           }, 2000)
         }
       },
-      tableRowClassName({ row, rowIndex }) {
+      tableRowClassName({
+        row,
+        rowIndex,
+      }) {
         if (rowIndex === 1) {
           return 'warning-row'
         } else if (rowIndex === 2) {
@@ -1239,7 +1256,7 @@
         ]
         this.deviceInfo.product.topics
           ? (this.deviceInfo.topicData =
-              this.deviceInfo.product.topics.concat(_toppic))
+            this.deviceInfo.product.topics.concat(_toppic))
           : (this.deviceInfo.topicData = _toppic)
         this.deviceFlag = true
       },
@@ -1301,8 +1318,8 @@
                 item.icon === '0'
                   ? 'yellow'
                   : item.icon === '1'
-                  ? 'blue'
-                  : 'red'
+                    ? 'blue'
+                    : 'red'
               // item.iconUrl = require(`@/assets/images/Device/${
               //   item.icon
               // }.png?${new Date().getTime()}\``)
@@ -1322,43 +1339,69 @@
       toggleCard(height) {
         // console.log('cardHeight', height)
         if (height != '0px') {
-          $('.map_card').css({ height: '0px' })
+          $('.map_card')
+            .css({ height: '0px' })
           this.cardHeight = '0px'
         } else {
-          $('.map_card').css({ height: '98px' })
+          $('.map_card')
+            .css({ height: '98px' })
           this.cardHeight = '98px'
         }
       },
       toggleLeftWidth(width) {
         // console.log(width, 'width')
         if (width != '0px') {
-          $('.vab-side-bar').css({ width: '0px' })
-          $('.vab-main').css({ 'margin-left': '0px' })
+          $('.vab-side-bar')
+            .css({ width: '0px' })
+          $('.vab-main')
+            .css({ 'margin-left': '0px' })
           this.leftWidth = '0px'
         } else {
-          $('.vab-side-bar').css({ width: '200px' })
-          $('.vab-main').css({ 'margin-left': '200px' })
+          $('.vab-side-bar')
+            .css({ width: '200px' })
+          $('.vab-main')
+            .css({ 'margin-left': '200px' })
           this.leftWidth = '200px'
         }
       },
       setPadding(top) {
         // console.log(top, 'top')
         if (top != '0px') {
-          $('.fixed').css({ 'padding-top': '0px' })
-          $('.fixed-header').css({ height: '0px', display: 'none' })
-          $('.vab-tabs').css({ 'nim-height': '0px' })
-          $('.baidu_map').css({ height: 'calc(78vh + 90px + 140px)' })
-          $('_el-table').css({ height: 'calc(78vh + 90px + 140px)' })
-          $('.el-tabs').css({ height: 'calc(78vh + 90px + 140px)' })
-          $('section').css({ height: 'calc(100vh - 60px* 2.7 + 110px)' })
+          $('.fixed')
+            .css({ 'padding-top': '0px' })
+          $('.fixed-header')
+            .css({
+              height: '0px',
+              display: 'none',
+            })
+          $('.vab-tabs')
+            .css({ 'nim-height': '0px' })
+          $('.baidu_map')
+            .css({ height: 'calc(78vh + 90px + 140px)' })
+          $('_el-table')
+            .css({ height: 'calc(78vh + 90px + 140px)' })
+          $('.el-tabs')
+            .css({ height: 'calc(78vh + 90px + 140px)' })
+          $('section')
+            .css({ height: 'calc(100vh - 60px* 2.7 + 110px)' })
         } else {
-          $('.fixed').css({ 'padding-top': '110px' })
-          $('.fixed-header').css({ height: '110px', display: 'block' })
-          $('.vab-tabs').css({ 'nim-height': '50px' })
-          $('.baidu_map').css({ height: 'calc(78vh - 20px)' })
-          $('_el-table').css({ height: 'calc(78vh)' })
-          $('.el-tabs').css({ height: 'calc(78vh - 20px)' })
-          $('section').css({ height: 'calc(100vh - 60px* 2.7)' })
+          $('.fixed')
+            .css({ 'padding-top': '110px' })
+          $('.fixed-header')
+            .css({
+              height: '110px',
+              display: 'block',
+            })
+          $('.vab-tabs')
+            .css({ 'nim-height': '50px' })
+          $('.baidu_map')
+            .css({ height: 'calc(78vh - 20px)' })
+          $('_el-table')
+            .css({ height: 'calc(78vh)' })
+          $('.el-tabs')
+            .css({ height: 'calc(78vh - 20px)' })
+          $('section')
+            .css({ height: 'calc(100vh - 60px* 2.7)' })
         }
         // this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
         //   'padding-top'
@@ -1421,23 +1464,26 @@
       change(e) {
         // console.log(e)
         if (e) {
-          $('.el-tree').css({
-            height: '100px',
-            display: 'block',
-            'overflow-x': 'auto',
-          })
+          $('.el-tree')
+            .css({
+              height: '100px',
+              display: 'block',
+              'overflow-x': 'auto',
+            })
         }
       },
       async handleNodeClick(data, node) {
         const aclRole = this._role.map((r) => {
           return r.name
         })
-        $('.el-tree').css({
-          height: '0px',
-          display: 'none',
-          'overflow-x': 'auto',
-        })
-        $('.el-select-dropdown').css({ display: 'none' })
+        $('.el-tree')
+          .css({
+            height: '0px',
+            display: 'none',
+            'overflow-x': 'auto',
+          })
+        $('.el-select-dropdown')
+          .css({ display: 'none' })
         this.queryForm.workGroupName = data.label
         this.treeDataValue = data.label
         // console.log(this.treeDataValue)
@@ -1454,7 +1500,10 @@
         this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
 
         // 点击的公司名
-        const { name, objectId } = data
+        const {
+          name,
+          objectId,
+        } = data
         this.curDepartmentId = objectId
         this.subtopic = `dashboard/${this.token}/post`
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
@@ -1466,7 +1515,8 @@
         })
         StartDashboard(queryParams)
       },
-      handleChange() {},
+      handleChange() {
+      },
       handleClickVisit(project) {
         this.$router.push({
           path: '/Topo',
@@ -1527,8 +1577,8 @@
             } else {
               this.$message.info(
                 this.$translateTitle(
-                  'equipment.The device is not bound to the video address yet'
-                )
+                  'equipment.The device is not bound to the video address yet',
+                ),
               )
               return false
             }
@@ -1550,18 +1600,21 @@
   .platform {
     .map_header {
       height: auto;
+
       .workGroupTreeShow {
         height: 100px;
         overflow: auto;
         overflow-y: scroll;
       }
     }
+
     .deviceInfo {
       p {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+
       .empty {
         display: block;
         width: 100px;
@@ -1569,6 +1622,7 @@
         margin: 20px 7px;
         text-align: center;
       }
+
       .upload {
         margin: 0 auto;
         font-size: 24px !important;
@@ -1576,21 +1630,25 @@
         cursor: pointer;
       }
     }
+
     box-sizing: border-box;
     width: 100%;
     //height: calc(100vh - #{$base-top-bar-height}* 3 - 25px);
     padding: 10px;
     background-size: 100%;
+
     .chart_map {
       .card_left {
         position: absolute;
         bottom: 60px;
         left: 10px;
-        z-index: 10086;
+        z-index: 1000;
         color: black;
+
         &-row {
           &-col {
             color: black;
+
             &-card {
               width: 40px;
               height: 40px;
@@ -1599,8 +1657,10 @@
               color: black;
               border-radius: 50%;
               opacity: 0.89;
+
               ::v-deep .ivu-card-body {
                 padding: 0 !important;
+
                 p {
                   margin-top: 6px;
                   margin-left: -5px;
@@ -1611,10 +1671,12 @@
           }
         }
       }
+
       .card {
         .ivu-card,
         .ivu-card-bordered {
           font-size: 18px;
+
           .ivu-card-body {
             div {
               display: flex;
@@ -1630,86 +1692,110 @@
           }
         }
       }
+
       .baidu_map {
         height: calc(78vh - 20px);
       }
+
       margin: 8px;
     }
+
     .home_card {
       ::v-deep {
         ._el-table {
           height: calc(78vh - 60px);
         }
+
         .el-tabs {
           height: calc(78vh - 20px);
           overflow-x: auto;
         }
       }
+
       //margin: 20px;
       //.box-card {
       //  height: 50%;
       //}
     }
+
     .box-card {
       //background: red;
       margin: 5px;
+
       i {
         color: #fff;
       }
+
       .el-row {
         margin-bottom: 20px;
+
         &:last-child {
           margin-bottom: 0;
         }
       }
+
       .el-col {
         border-radius: 4px;
       }
+
       .bg-purple-dark {
         background: #99a9bf;
       }
+
       .bg-purple {
       }
+
       .bg-purple-light {
         background: #e5e9f2;
       }
+
       .grid-content {
         border-radius: 4px;
       }
+
       .row-bg {
         height: 40px;
         padding: 10px 0;
         background-color: #f9fafc;
       }
     }
+
     ::v-deep {
       .has-gutter {
         //display: none;
       }
+
       .el-badge {
         margin: 0;
       }
     }
+
     .map_card ::v-deep .el-row {
       .card-panel-col:nth-child(1) .el-card {
         background: #673bb7;
       }
+
       .card-panel-col:nth-child(2) .el-card {
         background: #8bc24a;
       }
+
       .card-panel-col:nth-child(3) .el-card {
         background: #00bcd5;
       }
+
       .card-panel-col:nth-child(4) .el-card {
         background: #ea1e63;
       }
+
       .card-panel-col:nth-child(5) .el-card {
         background: #ff4c4f;
       }
+
       .card-panel-col:nth-child(6) .el-card {
         background: #2090ff;
       }
     }
+
     .el-card__body {
       div {
         p {
@@ -1717,26 +1803,31 @@
         }
       }
     }
+
     .clearfix {
       ont-weight: bolder;
       text-align: center;
     }
+
     .card-left {
       font-size: 80px;
       color: white;
     }
+
     .card-right p:first-child {
       padding: 5px;
       margin: 0px;
       font-weight: bolder;
       white-space: nowrap;
     }
+
     .card-right p {
       font-size: 20px;
       color: #fff;
       white-space: nowrap;
     }
   }
+
   .text {
     font-size: 14px;
   }
@@ -1744,6 +1835,7 @@
   .item {
     margin-bottom: 20px;
   }
+
   i {
     display: block !important;
     width: 50px;

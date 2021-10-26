@@ -1,18 +1,18 @@
 <template>
   <el-drawer
+    :title="$translateTitle('主题配置')"
+    :visible.sync="drawerVisible"
     append-to-body
     custom-class="vab-drawer"
     direction="rtl"
     size="280px"
-    :title="$translateTitle('主题配置')"
-    :visible.sync="drawerVisible"
   >
     <el-scrollbar class="theme-scrollbar">
       <div class="el-drawer__body">
         <el-form
           ref="form"
-          label-position="left"
           :model="theme"
+          label-position="left"
         >
           <el-divider content-position="left">
             <vab-icon icon="settings-3-line" />
@@ -77,19 +77,56 @@
                 value="default"
               />
               <el-option
-                key="ocean"
-                :label="$translateTitle('海洋之心')"
-                value="ocean"
+                key="asian"
+                :label="$translateTitle('亚运')"
+                value="asian"
               />
               <el-option
                 key="green"
-                :label="$translateTitle('绿荫草场')"
+                :label="$translateTitle('绿荫')"
                 value="green"
               />
               <el-option
                 key="white"
-                :label="$translateTitle('碰触纯白')"
+                :label="$translateTitle('纯白')"
                 value="white"
+              />
+
+              <el-option
+                key="blue-black"
+                :label="$translateTitle('蓝黑')"
+                value="blue-black"
+              />
+              <el-option
+                key="blue-white"
+                :label="$translateTitle('蓝白')"
+                value="blue-white"
+              />
+              <el-option
+                key="green-black"
+                :label="$translateTitle('绿黑')"
+                value="green-black"
+              />
+              <el-option
+                key="green-white"
+                :label="$translateTitle('绿白')"
+                value="green-white"
+              />
+              <!-- 红黑、红白主题完成群文档任务免费获取 -->
+              <el-option
+                key="red-black"
+                :label="$translateTitle('红黑')"
+                value="red-black"
+              />
+              <el-option
+                key="red-white"
+                :label="$translateTitle('红白')"
+                value="red-white"
+              />
+              <el-option
+                key="ocean"
+                :label="$translateTitle('渐变')"
+                value="ocean"
               />
             </el-select>
           </el-form-item>
@@ -239,6 +276,7 @@
 <script>
   import { mapActions, mapGetters } from 'vuex'
   import { putUser } from '@/api/User'
+
   export default {
     name: 'VabThemeDrawer',
     data() {
@@ -285,10 +323,12 @@
       })
       this.setTheme()
     },
-    mounted() {},
+    mounted() {
+    },
     methods: {
       ...mapActions({
         saveTheme: 'settings/saveTheme',
+        setTag: 'settings/setTag',
         resetTheme: 'settings/resetTheme',
         togglePicture: 'settings/togglePicture',
       }),
@@ -303,26 +343,26 @@
         this.drawerVisible = false
       },
       async handleSaveTheme(theme) {
-        this.tag = Object.assign(this.tag, { theme: theme })
+        this.setTag(_.merge(this.tag, { theme: theme }))
         console.log(this.tag, 'this.tag')
-        const pamams = {
+        const params = {
           tag: this.tag,
         }
-        await putUser(this.objectId, pamams)
+        await putUser(this.objectId, params)
           .then((res) => {
             console.log(res)
             this.$message.success(
               this.$translateTitle(
-                'title.Theme configuration saved successfully'
-              )
+                'title.Theme configuration saved successfully',
+              ),
             )
           })
           .catch((e) => {
             console.log(e)
             this.$message.success(
               this.$translateTitle(
-                'title.Theme configuration saved error' + e.error
-              )
+                'title.Theme configuration saved error' + e.error,
+              ),
             )
           })
         await this.saveTheme(theme)
@@ -332,21 +372,33 @@
         const loading = this.$baseColorfullLoading(0)
         // 随机换肤重置移除主题，防止代码更新影响样式
         await this.resetTheme()
-        const themeNameArray = ['default', 'ocean', 'green', 'white']
+        const themeNameArray = [
+          'default',
+          'asian',
+          'green',
+          'white',
+          'blue-black',
+          'blue-white',
+          'green-black',
+          'green-white',
+          'red-black',
+          'red-white',
+          'ocean',
+        ]
         this.theme.themeName = _.sample(
-          _.pull(themeNameArray, [this.theme.themeName])
+          _.pull(themeNameArray, [this.theme.themeName]),
         )
         const columnStyleArray = ['vertical', 'horizontal', 'card']
         this.theme.columnStyle = _.sample(
-          _.pull(columnStyleArray, [this.theme.columnStyle])
+          _.pull(columnStyleArray, [this.theme.columnStyle]),
         )
         const tabsBarStyleArray = ['card', 'smart', 'smooth']
         this.theme.tabsBarStyle = _.sample(
-          _.pull(tabsBarStyleArray, [this.theme.tabsBarStyle])
+          _.pull(tabsBarStyleArray, [this.theme.tabsBarStyle]),
         )
         const showTabsBarIconArray = [true, false]
         this.theme.showTabsBarIcon = _.sample(
-          _.pull(showTabsBarIconArray, [this.theme.showTabsBarIcon])
+          _.pull(showTabsBarIconArray, [this.theme.showTabsBarIcon]),
         )
         if (this.device === 'desktop') {
           const layoutArray = [
@@ -357,7 +409,9 @@
             'common',
           ]
           this.theme.layout = _.sample(_.pull(layoutArray, [this.theme.layout]))
-        } else this.theme.layout = 'vertical'
+        } else {
+          this.theme.layout = 'vertical'
+        }
         await this.setTheme()
         await this.saveTheme(this.theme)
         setTimeout(() => {
@@ -366,7 +420,7 @@
       },
       setTheme() {
         document.getElementsByTagName(
-          'body'
+          'body',
         )[0].className = `vab-theme-${this.theme.themeName}`
       },
     },
