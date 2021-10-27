@@ -14,7 +14,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v1
         with:
-          node-version: "12.0"
+          node-version: 12.x
       # https://leoku.top/blog/ci-cd-with-github-actions-to-deploy-on-github-pages/
       # 设置缓存依赖，加快下次安装依赖的速度
       - name: Cache node modules
