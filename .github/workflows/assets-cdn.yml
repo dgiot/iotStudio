@@ -20,26 +20,26 @@ jobs:
           pnpm config set registry https://registry.npm.taobao.org
           pnpm -v
           pnpm config get registry
-      #      - name: Cache pnpm-store
-      #        id: cache-pnpm-store
-      #        uses: actions/cache@v1
-      #        with:
-      #          path: ~/.pnpm-store
-      #          key: ${{ runner.os }}-pnpm-store
-      #      - name: Cache node_modules
-      #        id: cache-node-modules
-      #        uses: actions/cache@v1
-      #        with:
-      #          path: node_modules
-      #          key: ${{ hashFiles('**/package.json') }}-pnpm
+      - name: Cache pnpm-store
+        id: cache-pnpm-store
+        uses: actions/cache@v1
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ hashFiles('**/package.json') }}-pnpm
       - name: Setup node
         uses: actions/setup-node@v1
         with:
           node-version: 14.15.4
-      #          cache: pnpm
+          cache: pnpm
       # 安装依赖
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm i --lockfile-only
 
       # 构建文件
       - name: Generate files
