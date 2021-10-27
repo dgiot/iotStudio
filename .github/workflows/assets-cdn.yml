@@ -34,7 +34,7 @@ jobs:
           cache: pnpm
       # 安装依赖
       - name: Install dependencies
-        run: pnpm run install
+        run: pnpm install
 
       # 构建文件
       - name: Generate files
