@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+
+      # 设置缓存依赖，加快下次安装依赖的速度
+      - name: Cache node modules
+        uses: actions/cache@v2.1.3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+
+      # 安装依赖
+      - name: Install dependencies
+        run: pnpm install
+
+      # 构建文件
+      - name: Generate files
+        run: pnpm build
+
+      - name: Upload COS
+        uses: zkqiang/tencent-cos-action@v0.1.0
+        with:
+          # https://github:com/marketplace/actions/tencent-cos-action:
+          # https://cloud.tencent.com/document/product/436/10976#.E6.8C.87.E5.AE.9A-bucket-.E5.92.8C-region-.E7.9A.84.E5.91.BD.E4.BB.A4
+          args: delete -r -f /dgiot_release/dashboardCdn/dgiot-dashboard/ && upload -r ./dist/ /dgiot_release/dashboardCdn/dgiot-dashboard/
+          secret_id: ${{ secrets.SECRET_ID }}
+          secret_key: ${{ secrets.SECRET_KEY }}
+          bucket: ${{ secrets.BUCKET }}
+          region: ap-shanghai
