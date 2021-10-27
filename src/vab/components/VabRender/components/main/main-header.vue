@@ -46,6 +46,7 @@
   import BatchDialog from './components/batch-dialog'
 
   export default {
+    name: 'VabRenderMainHeader',
     components: {
       PreviewDialog,
       DataDialog,
@@ -60,7 +61,7 @@
           this.$set(
             this.operationBtns[key],
             'visible',
-            !this.operationBtns[key].visible
+            !this.operationBtns[key].visible,
           )
         }
       }

@@ -12,8 +12,8 @@
         :form-desc="filteredFormDesc"
         :is-show-back-btn="false"
         :is-show-submit-btn="false"
-        label-position="top"
         :span="20"
+        label-position="top"
       />
     </template>
     <div
@@ -31,6 +31,7 @@
   import AttrsHeader from './components/attrs-header.vue'
 
   export default {
+    name: 'VabRenderRightFormItemAttrs',
     components: { AttrsHeader },
     mixins: [searchMixin],
     inject: ['VabRender'],
@@ -60,9 +61,10 @@
             _source == '产品字典'
               ? (_sourceOption = localStorage.getItem('_sourceDict') || [])
               : (_sourceOption = localStorage.getItem('_sourceModule') || [])
-            JSON.parse(_sourceOption).map((e) => {
-              _sourceField.push(e.field)
-            })
+            JSON.parse(_sourceOption)
+              .map((e) => {
+                _sourceField.push(e.field)
+              })
             console.log(_sourceField)
             this.setRender(JSON.parse(_sourceOption), _sourceField)
 

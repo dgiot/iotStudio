@@ -1,8 +1,8 @@
 <template>
   <el-dialog
     :append-to-body="true"
-    title="代码"
     :visible="visible"
+    title="代码"
     @update:visible="$emit('change', $event)"
   >
     <el-radio-group v-model="showType">
@@ -14,11 +14,11 @@
       </el-radio>
     </el-radio-group>
     <prism-editor
-      class="vab-render-code"
       :highlight="highlighter"
+      :value="code"
+      class="vab-render-code"
       line-numbers
       readonly
-      :value="code"
     />
     <div style="margin-top: 20px; text-align: center">
       <el-button
@@ -32,8 +32,8 @@
         <el-link
           :download="`${Date.now()}.vue`"
           :href="fileURL"
-          style="color: white"
           :underline="false"
+          style="color: white"
         >
           下载文件
         </el-link>
@@ -48,11 +48,12 @@
 <script>
   import VabRenderTpl from './tpl/vab-render'
   import EleFormTpl from './tpl/vue-ele-form'
-
-  const indentString = require('indent-string')
   import { reomveQuotes } from '../../../utils'
 
+  const indentString = require('indent-string')
+
   export default {
+    name: 'VabRenderMainCodeDialog',
     components: {
       PrismEditor,
     },
@@ -102,8 +103,9 @@
         this.code = tpl(
           indentString(
             reomveQuotes(this.VabRender.getFormConfigStr()),
-            6
-          ).trim()
+            6,
+          )
+            .trim(),
         )
       },
       // 高亮代码

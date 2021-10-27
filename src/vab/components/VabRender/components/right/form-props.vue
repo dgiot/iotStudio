@@ -11,8 +11,8 @@
       :form-desc="filteredFormDesc"
       :is-show-back-btn="false"
       :is-show-submit-btn="false"
-      label-position="top"
       :span="20"
+      label-position="top"
     />
   </div>
 </template>
@@ -21,7 +21,9 @@
   import searchMixin from './components/search-mixin'
   import AttrsHeader from './components/attrs-header.vue'
   import { changeFormDescLabel } from '../../utils'
+
   export default {
+    name: 'VabRenderRightFormProps',
     components: { AttrsHeader },
     mixins: [searchMixin],
     inject: ['VabRender'],

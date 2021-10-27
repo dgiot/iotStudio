@@ -18,9 +18,9 @@
     <el-form
       ref="form"
       :inline="true"
-      label-width="100px"
       :model="form"
       :rules="rules"
+      label-width="100px"
       style="margin-top: 20px"
     >
       <el-form-item
@@ -34,9 +34,9 @@
         <el-cascader
           ref="menuCascader"
           v-model="cascadervalue"
-          clearable
           :options="router"
           :props="{ checkStrictly: true, label: 'title', value: 'title' }"
+          clearable
           @change="handleChange"
         />
       </el-form-item>
@@ -95,27 +95,24 @@
         </el-input>
       </el-form-item>
       <el-form-item
-        label="图标"
+        label="icon图标"
         prop="meta.icon"
       >
         <el-input
           v-model="form.meta.icon"
-          size="mini"
+          style="cursor:pointer"
+          suffix-icon="el-icon-upload2"
+          @click.native="uploadIcon(form)"
         >
-          <template slot="prepend">
-            <vab-icon :icon="form.meta.icon" />
-          </template>
           <el-popover
-            slot="append"
+            slot="prepend"
             popper-class="icon-selector-popper"
+            size="mini"
             trigger="click"
             width="292"
           >
             <template #reference>
-              <el-button
-                icon="el-icon-search"
-                size="mini"
-              />
+              <vab-icon :icon="form.meta.icon" />
             </template>
             <vab-icon-selector @handle-icon="handleIcon" />
           </el-popover>
@@ -184,9 +181,10 @@
 
 <script>
   import VabIconSelector from '@/vab/components/VabIconSelector'
-  import { putMenu, postMenu } from '@/api/Menu'
+  import { postMenu, putMenu } from '@/api/Menu'
   import menuCollapse from './menuCollapse.vue'
   import router from '@/router/router'
+
   export default {
     name: 'MenuManagementEdit',
     components: {
@@ -253,7 +251,11 @@
               message: 'name,用做页面缓存,首字母大写,不可重复',
               trigger: 'blur',
             },
-            { type: 'string', message: 'name类型为string', trigger: 'blur' },
+            {
+              type: 'string',
+              message: 'name类型为string',
+              trigger: 'blur',
+            },
             {
               type: 'string',
               pattern: /^[A-Z][A-z0-9]*$/,
@@ -303,7 +305,8 @@
         dialogFormVisible: false,
       }
     },
-    created() {},
+    created() {
+    },
     mounted() {
       router.forEach((r) => {
         r.title = r.meta.title
@@ -316,6 +319,9 @@
       console.log('router', router)
     },
     methods: {
+      uploadIcon(item) {
+        console.log(item)
+      },
       handleChange(value) {
         const obj = this.$refs['menuCascader'].getCheckedNodes()
         console.log(obj[0].data)
@@ -330,8 +336,8 @@
           type == 'addChildMenu'
             ? '新增子菜单'
             : type == 'one'
-            ? '新增一级菜单'
-            : '编辑菜单'
+              ? '新增一级菜单'
+              : '编辑菜单'
         if (type == 'addChildMenu') {
           this.form = {
             orderBy: row.orderBy * 10 + 1, // 如果是新增子菜单

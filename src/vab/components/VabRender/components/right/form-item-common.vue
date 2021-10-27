@@ -12,13 +12,13 @@
         :form-desc="filteredFormDesc"
         :is-show-back-btn="false"
         :is-show-submit-btn="false"
-        label-position="top"
         :options-fn="
           VabRender.formBindProps['options-fn'] ||
             VabRender.formBindProps['optionsFn']
         "
         :rules="rules"
         :span="20"
+        label-position="top"
       >
         <template #rules="{ desc, formData, field, type }">
           <div style="margin-bottom: 20px">
@@ -56,6 +56,7 @@
   import FormItemRules from './components/form-item-rules.vue'
 
   export default {
+    name: 'VabRenderRightFormCommon',
     components: {
       AttrsHeader,
       FormItemRules,

@@ -9,6 +9,7 @@
   import MainContent from './main-content'
 
   export default {
+    name: 'VabRenderMain',
     components: {
       MainHeader,
       MainContent,

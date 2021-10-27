@@ -2,8 +2,8 @@
   <div class="vab-render-right">
     <el-tabs
       v-model="activeTab"
-      class="vab-render-header"
       :stretch="true"
+      class="vab-render-header"
     >
       <el-tab-pane
         v-for="tab of VabRender.rightTabs"
@@ -33,6 +33,7 @@
   import FormItemCommon from './form-item-common.vue'
 
   export default {
+    name: 'VabRenderRight',
     components: {
       FormProps,
       FormItemAttrs,
@@ -61,27 +62,34 @@
     width: 310px;
     height: 100%;
   }
+
   .vab-render-right .form-item-placeholder {
     height: 300px;
     line-height: 300px;
     color: #909399;
     text-align: center;
   }
+
   .vab-render-right .el-tabs__header {
     padding-top: 20px;
   }
+
   .vab-render-right .el-tabs__nav-wrap {
     padding: 0 15px;
   }
+
   .vab-render-right .el-tabs__item {
     padding: 0 10px;
   }
+
   .vab-render-right .el-tabs__nav-wrap::after {
     height: 0;
   }
+
   .vab-render-right .el-tabs__active-bar {
     height: 1px !important;
   }
+
   .vab-render-right .vab-render-right-content {
     padding: 20px 0;
   }

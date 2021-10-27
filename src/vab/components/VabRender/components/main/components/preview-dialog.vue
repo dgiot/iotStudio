@@ -1,8 +1,8 @@
 <template>
   <el-dialog
     :append-to-body="true"
-    title="预览"
     :visible="visible"
+    title="预览"
     width="90%"
     @closed="isShowContent = false"
     @open="isShowContent = true"
@@ -11,10 +11,10 @@
     <ele-form
       v-if="isShowContent"
       v-model="formData"
-      v-bind="VabRender.formBindProps"
       :form-desc="VabRender.formDesc"
       :request-fn="handleRequest"
       :visible="visible"
+      v-bind="VabRender.formBindProps"
       @request-success="handleRequestSuccess"
       @update:visible="$emit('change', $event)"
     />
@@ -23,6 +23,7 @@
 
 <script>
   export default {
+    name: 'VabRenderMainpreviewDialog',
     inject: ['VabRender'],
     props: {
       visible: {
@@ -47,7 +48,7 @@
     methods: {
       handleRequest(data) {
         // eslint-disable-next-line
-      console.log(data);
+        console.log(data)
         return Promise.resolve(data)
       },
       handleRequestSuccess() {

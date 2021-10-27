@@ -12,8 +12,8 @@
           v-if="isRenderFinish"
           :animation="200"
           :disabled="false"
-          group="form"
           :list="VabRender.formItemList"
+          group="form"
           style="padding-bottom: 80px"
           tag="el-row"
           @add="handleAdd"
@@ -32,12 +32,12 @@
               <el-col
                 v-if="formItem._vif"
                 :key="field"
-                v-bind="formItem._colAttrs"
-                class="form-item"
                 :class="{
                   'ele-form-col--break': formItem.break,
                   'form-item-active': VabRender.currentIndex === index,
                 }"
+                class="form-item"
+                v-bind="formItem._colAttrs"
                 @click.native="handleFormItemClick(index)"
               >
                 <el-form-item
@@ -83,6 +83,7 @@
 
 <script>
   export default {
+    name: 'VabRenderMainContent',
     inject: ['VabRender'],
     data() {
       return {
@@ -163,6 +164,7 @@
     text-align: center;
     background-color: white;
   }
+
   /* 表单项 */
   .main-content .form-item {
     position: relative;
@@ -172,6 +174,7 @@
     background: white;
     border: 1px dashed rgba(0, 0, 0, 0);
   }
+
   /* 表单项激活时 */
   .main-content .form-item-active {
     border: 1px dashed #409eff;
