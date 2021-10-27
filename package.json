@@ -75,7 +75,7 @@
     "vue-ele-form-dynamic": "0.4.3"
   },
   "devDependencies": {
-    "mini-css-extract-plugin": "2.4.2",
+    "mini-css-extract-plugin": "2.4.3",
     "url-loader": "4.1.1",
     "core-js": "3.18.3",
     "cross-env": "7.0.3",
