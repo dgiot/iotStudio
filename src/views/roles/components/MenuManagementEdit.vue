@@ -7,6 +7,12 @@
     width="70%"
     @close="close"
   >
+    <vab-input
+      ref="uploadFinish"
+      :params="inputParams"
+      @fileInfo="fileInfo"
+      @files="files"
+    />
     <el-collapse v-model="activeNames">
       <el-collapse-item
         name="1"
@@ -112,7 +118,22 @@
             width="292"
           >
             <template #reference>
-              <vab-icon :icon="form.meta.icon" />
+              <el-image
+                v-if="form.meta.icon && form.meta.icon.includes('dgiot')"
+                :src="$FileServe + form.meta.icon"
+                style="width:16px;height:16px"
+              >
+                <img
+                  slot="error"
+                  :src="$FileServe + form.meta.icon"
+                  :title="$FileServe + form.meta.icon"
+                  style="width:16px;height:16px"
+                >
+              </el-image>
+              <vab-icon
+                v-else
+                :icon="form.meta.icon"
+              />
             </template>
             <vab-icon-selector @handle-icon="handleIcon" />
           </el-popover>
@@ -184,6 +205,7 @@
   import { postMenu, putMenu } from '@/api/Menu'
   import menuCollapse from './menuCollapse.vue'
   import router from '@/router/router'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'MenuManagementEdit',
@@ -194,6 +216,7 @@
     data() {
       return {
         router,
+        inputParams: {},
         cascadervalue: [],
         jsonModel: {
           hidden: true, //是否显示在菜单中显示隐藏路由（默认值：false）
@@ -305,7 +328,10 @@
         dialogFormVisible: false,
       }
     },
-    created() {
+    computed: {
+      ...mapGetters({
+        ObjectId: 'user/objectId',
+      }),
     },
     mounted() {
       router.forEach((r) => {
@@ -320,7 +346,25 @@
     },
     methods: {
       uploadIcon(item) {
-        console.log(item)
+        console.log(item, this.form)
+        // 触发子组件的点击事件
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click'),
+        )
+        this.inputParams = {
+          file: '',
+          scene: 'app',
+          path: 'user/profile/',
+          filename: `${this.ObjectId}_${this.form.name}`,
+        }
+      },
+      fileInfo({ path = '' } = img) {
+        console.log(path)
+        this.form.meta.icon = path
+      },
+      files(file) {
+        this.inputParams.filename = `${this.ObjectId}_${this.form.name}`
+        this.inputParams.file = file
       },
       handleChange(value) {
         const obj = this.$refs['menuCascader'].getCheckedNodes()

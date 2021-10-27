@@ -38,6 +38,7 @@
             <el-select
               v-model="theme.layout"
               :disabled="device === 'mobile'"
+              @click="setLayout(theme.layout)"
             >
               <el-option
                 key="column"
@@ -331,6 +332,7 @@
         setTag: 'settings/setTag',
         resetTheme: 'settings/resetTheme',
         togglePicture: 'settings/togglePicture',
+        setLayout: 'settings/setLayout',
       }),
       togglePic(e) {
         this.togglePicture(e)

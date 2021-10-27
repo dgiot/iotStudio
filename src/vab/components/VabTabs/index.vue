@@ -3,10 +3,10 @@
     <vab-fold v-if="layout === 'common'" />
     <el-tabs
       v-model="tabActive"
-      class="vab-tabs-content"
       :class="{
         ['vab-tabs-content-' + theme.tabsBarStyle]: true,
       }"
+      class="vab-tabs-content"
       type="card"
       @tab-click="handleTabClick"
       @tab-remove="handleTabRemove"
@@ -23,8 +23,21 @@
           @contextmenu.prevent="openMenu($event, item)"
         >
           <template v-if="theme.showTabsBarIcon">
+            <el-image
+              v-if="item.meta.icon && item.meta.icon.includes('dgiot')"
+              :alt="$FileServe"
+              :src="$FileServe + item.meta.icon"
+              style="width:16px;height:16px"
+            >
+              <img
+                slot="error"
+                :src="$FileServe + item.meta.icon"
+                :title="$FileServe + item.meta.icon"
+                style="width:16px;height:16px"
+              >
+            </el-image>
             <vab-icon
-              v-if="item.meta && item.meta.icon"
+              v-else-if="!item.meta.icon.includes('dgiot')"
               :icon="item.meta.icon"
               :is-custom-svg="item.meta.isCustomSvg"
             />
@@ -44,8 +57,8 @@
       @visible-change="handleVisibleChange"
     >
       <span
-        class="vab-tabs-more"
         :class="{ 'vab-tabs-more-active': active }"
+        class="vab-tabs-more"
       >
         <span class="vab-tabs-more-icon">
           <i class="box box-t"></i>
@@ -83,31 +96,31 @@
     </el-dropdown>
     <ul
       v-if="visible"
-      class="contextmenu el-dropdown-menu el-dropdown-menu--small"
       :style="{ left: left + 'px', top: top + 'px' }"
+      class="contextmenu el-dropdown-menu el-dropdown-menu--small"
     >
       <li
-        class="el-dropdown-menu__item"
         :class="{ 'is-disabled': visitedRoutes.length === 1 }"
+        class="el-dropdown-menu__item"
         @click="closeOthersTabs"
       >
         <vab-icon icon="close-line" />
         <span>{{ $translateTitle('关闭其他') }}</span>
       </li>
       <li
-        class="el-dropdown-menu__item"
         :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }"
+        class="el-dropdown-menu__item"
         @click="closeLeftTabs"
       >
         <vab-icon icon="arrow-left-line" />
         <span>{{ $translateTitle('关闭左侧') }}</span>
       </li>
       <li
-        class="el-dropdown-menu__item"
         :class="{
           'is-disabled':
             visitedRoutes.indexOf(hoverRoute) === visitedRoutes.length - 1,
         }"
+        class="el-dropdown-menu__item"
         @click="closeRightTabs"
       >
         <vab-icon icon="arrow-right-line" />
@@ -163,8 +176,11 @@
         immediate: true,
       },
       visible(value) {
-        if (value) document.body.addEventListener('click', this.closeMenu)
-        else document.body.removeEventListener('click', this.closeMenu)
+        if (value) {
+          document.body.addEventListener('click', this.closeMenu)
+        } else {
+          document.body.removeEventListener('click', this.closeMenu)
+        }
       },
     },
     created() {
@@ -180,8 +196,9 @@
         delAllVisitedRoutes: 'tabs/delAllVisitedRoutes',
       }),
       handleTabClick(tab) {
-        if (!this.isActive(tab.name))
+        if (!this.isActive(tab.name)) {
           this.$router.push(this.visitedRoutes[tab.index])
+        }
       },
       handleVisibleChange(val) {
         this.active = val
@@ -200,8 +217,9 @@
        */
       async addTabs(tag, init = false) {
         let parentIcon = ''
-        if (tag.matched && tag.matched.length > 1)
+        if (tag.matched && tag.matched.length > 1) {
           parentIcon = tag.matched[1].meta.icon
+        }
         if (tag.name && tag.meta && tag.meta.tabHidden !== true) {
           const path = handleActivePath(tag, true)
           await this.addVisitedRoute({
@@ -249,8 +267,9 @@
         if (this.hoverRoute) {
           await this.$router.push(this.hoverRoute)
           await this.delOthersVisitedRoutes(this.hoverRoute.path)
-        } else
+        } else {
           await this.delOthersVisitedRoutes(handleActivePath(this.$route, true))
+        }
         await this.closeMenu()
       },
       /**
@@ -261,8 +280,9 @@
         if (this.hoverRoute) {
           await this.$router.push(this.hoverRoute)
           await this.delLeftVisitedRoutes(this.hoverRoute.path)
-        } else
+        } else {
           await this.delLeftVisitedRoutes(handleActivePath(this.$route, true))
+        }
         await this.closeMenu()
       },
       /**
@@ -273,8 +293,9 @@
         if (this.hoverRoute) {
           await this.$router.push(this.hoverRoute)
           await this.delRightVisitedRoutes(this.hoverRoute.path)
-        } else
+        } else {
           await this.delRightVisitedRoutes(handleActivePath(this.$route, true))
+        }
         await this.closeMenu()
       },
       /**
@@ -291,8 +312,11 @@
        */
       toLastTab() {
         const latestView = this.visitedRoutes.slice(-1)[0]
-        if (latestView) this.$router.push(latestView)
-        else this.$router.push('/')
+        if (latestView) {
+          this.$router.push(latestView)
+        } else {
+          this.$router.push('/')
+        }
       },
       isActive(path) {
         return path === handleActivePath(this.$route, true)
@@ -305,8 +329,11 @@
         const offsetWidth = this.$el.offsetWidth
         const maxLeft = Math.round(offsetWidth)
         const left = Math.round(e.clientX - offsetLeft)
-        if (left > maxLeft) this.left = maxLeft
-        else this.left = left
+        if (left > maxLeft) {
+          this.left = maxLeft
+        } else {
+          this.left = left
+        }
         this.top = Math.round(e.clientY - 80)
         this.hoverRoute = item
         this.hoverRoute.fullPath = item.path
@@ -525,29 +552,35 @@
           height: 0;
           content: '';
         }
+
         .vab-tabs-more-icon {
           transform: rotate(90deg);
+
           .box-t {
             &:before {
               transform: rotate(45deg);
             }
           }
+
           .box:before,
           .box:after {
             background: $base-color-blue;
           }
         }
       }
+
       &-icon {
         display: inline-block;
         color: #9a9a9a;
         cursor: pointer;
         transition: transform 0.3s ease-out;
+
         .box {
           position: relative;
           display: block;
           width: 14px;
           height: 8px;
+
           &:before {
             position: absolute;
             top: 0;
@@ -557,6 +590,7 @@
             content: '';
             background: #9a9a9a;
           }
+
           &:after {
             position: absolute;
             top: 0;
@@ -567,6 +601,7 @@
             background: #9a9a9a;
           }
         }
+
         .box-t {
           &:before {
             transition: transform 0.3s ease-out 0.3s;
