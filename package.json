@@ -44,6 +44,7 @@
     "downCdn": "node utils/downCdn.js",
     "downIconfront": "node utils/downIconfront.js",
     "cp": "node utils/cp.js",
+    "cp:git": "rimraf github && cp -r .git github",
     "rmEnv": "rimraf .env",
     "cp:local": "node utils/cpLocal.js",
     "cp:cdn": "node utils/cpCdn.js",

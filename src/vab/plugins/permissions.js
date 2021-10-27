@@ -15,12 +15,7 @@ import VabProgress from 'nprogress'
 // import 'nprogress/nprogress.css'
 import getPageTitle from '@/utils/pageTitle'
 import { toLoginRoute } from '@/utils/routes'
-import {
-  authentication,
-  loginInterception,
-  routesWhiteList,
-  supportVisit,
-} from '@/config'
+import { authentication, loginInterception, routesWhiteList, supportVisit } from '@/config'
 
 VabProgress.configure({
   easing: 'ease',
@@ -31,11 +26,12 @@ VabProgress.configure({
 router.beforeEach(async (to, from, next) => {
   store.dispatch('routes/setRoutesOpenTime', {
     router: to.meta.component,
-    timestamp: moment(new Date()).valueOf(),
+    timestamp: moment(new Date())
+      .valueOf(),
   })
-  if (to.name == '404') {
-    return false
-  }
+  // if (to.name == '404') {
+  //   return false
+  // }
   const { showProgressBar } = store.getters['settings/theme']
   if (showProgressBar) VabProgress.start()
   let hasToken = store.getters['user/token']
@@ -52,7 +48,9 @@ router.beforeEach(async (to, from, next) => {
           path: '/dashboard',
         })
         if (showProgressBar) VabProgress.done()
-      } else next()
+      } else {
+        next()
+      }
     } else {
       try {
         if (loginInterception) {
@@ -61,7 +59,9 @@ router.beforeEach(async (to, from, next) => {
           // await store.dispatch('user/getDefault')
         }
         // config/setting.config.js loginInterception为false(关闭登录拦截时)时，创建虚拟角色
-        else await store.dispatch('user/setVirtualRoles')
+        else {
+          await store.dispatch('user/setVirtualRoles')
+        }
         // 根据路由模式获取路由并根据权限过滤
         await store.dispatch('routes/setRoutes', authentication)
         next({
@@ -83,8 +83,12 @@ router.beforeEach(async (to, from, next) => {
           ...to,
           replace: true,
         })
-      } else next()
-    } else next(toLoginRoute(to))
+      } else {
+        next()
+      }
+    } else {
+      next(toLoginRoute(to))
+    }
   }
 })
 router.afterEach((to) => {

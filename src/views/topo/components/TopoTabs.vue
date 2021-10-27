@@ -372,16 +372,16 @@
   }
 
   .ant-tabs .ant-tabs-left-content {
-    margin-top: 20px !important;
     padding-left: 0;
+    margin-top: 20px !important;
     text-align: center;
   }
 
 </style>
 <style lang="scss" scope>
   .icon-selector-popper {
-    margin-left: 0px;
     height: calc(100vh - #{$base-top-bar-height} * 3.5);
+    margin-left: 0px;
     overflow-x: hidden;
     overflow-y: scroll;
 

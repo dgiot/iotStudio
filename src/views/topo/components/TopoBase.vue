@@ -14,7 +14,7 @@
         @moveToTop="moveToTop"
         @moveUp="moveUp"
       />
-      <topo-scale style="display: inline-block;position:fixed;" />
+      <topo-scale style="position:fixed;display: inline-block;" />
       <div
         id="kevCurrent"
         :key="Sale"
@@ -364,11 +364,11 @@
 
 <style lang="scss" scoped>
   .topoBase {
-    overflow: auto;
     width: 100%;
     height: calc(100vh - #{$base-top-bar-height} * 3.7) !important;
     padding: 0;
     margin: 0;
+    overflow: auto;
 
     ::v-deep {
       .konvajs-content {

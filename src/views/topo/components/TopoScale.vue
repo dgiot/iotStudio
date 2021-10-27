@@ -85,8 +85,8 @@
 <style lang="scss" scoped>
   .TopoScale-container {
     position: relative;
-    cursor: pointer;
     z-index: 2020;
+    cursor: pointer;
 
     &-content {
       display: flex;

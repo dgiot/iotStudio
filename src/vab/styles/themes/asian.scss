@@ -7,8 +7,8 @@ body.vab-theme-asian {
   $base-color-blue: #f34d37;
   $base-color-blue-light: mix($base-color-white, $base-color-blue, 90%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #000000), color-stop(100%, #1289DD)) !important;
-  opacity: 0.85;
-  filter: alpha(opacity=85); /* IE8 及其更早版本 */
+  filter: alpha(opacity=95); /* IE8 及其更早版本 */
+  opacity: 0.95;
   @import '../default.scss';
   @mixin container {
     color: #515a6e !important;

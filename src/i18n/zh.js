@@ -1120,6 +1120,9 @@ export default {
       error: '出错',
       existed: '已存在',
       'Loading desperately': '加载中',
+      'sign out': '退出登录',
+      'return to previous page': '返回上一页',
+      'Exit home': '返回首页',
     },
     alert: {
       _start: '告警产生',
