@@ -36,7 +36,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.15.4
-          cache: pnpm
+      #          cache: pnpm
       # 安装依赖
       - name: Install dependencies
         run: pnpm install
