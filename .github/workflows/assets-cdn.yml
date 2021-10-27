@@ -14,7 +14,12 @@ jobs:
       # https://leoku.top/blog/ci-cd-with-github-actions-to-deploy-on-github-pages/
       # 设置缓存依赖，加快下次安装依赖的速度
       - name: install pnpm
-        run: npm install -g pnpm &&  pnpm -v
+        run: |
+          npm install -g pnpm
+          npm config set registry https://registry.npm.taobao.org
+          pnpm config set registry https://registry.npm.taobao.org
+          pnpm -v
+          pnpm config get registry
       - name: Cache pnpm-store
         id: cache-pnpm-store
         uses: actions/cache@v1
