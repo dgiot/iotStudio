@@ -1,4 +1,4 @@
-name: "Auditing"
+name: "auditing"
 on:
   push:
     branches:

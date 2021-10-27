@@ -1,4 +1,4 @@
-name: Continuos Integration with Github
+name: docker
 
 on:
   push:

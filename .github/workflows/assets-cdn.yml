@@ -25,11 +25,11 @@ jobs:
 
       # 安装依赖
       - name: Install dependencies
-        run: yarn install
+        run: npm install -g pnpm && pnpm -v && pnpm run install
 
       # 构建文件
       - name: Generate files
-        run: pnpm build
+        run: pnpm run build
 
       - name: Upload COS
         uses: zkqiang/tencent-cos-action@v0.1.0
