@@ -441,6 +441,7 @@ export default {
       Reporttemplate: '报告模板',
     },
     product: {
+      'device manufacturer': '设备厂家',
       'Standard category': '标准品类',
       'Custom category': '自定义品类',
       'Please enter the category name': '请输入产品名称',
@@ -552,6 +553,7 @@ export default {
       yes: '是',
       no: '否',
       pleaseselectyourapp: '请选择所属应用',
+      pleaseselectyourcate: '请选择所属分类',
       selected: '已选',
       qdsczg: '确定删除这个',
       reduction: '还原',
@@ -583,6 +585,7 @@ export default {
       productgrouping: '产品分组',
       nodetype: '节点类型',
       classification: '所属分类',
+      producttemplet: '所属产品模板',
       addingtime: '添加时间',
       equipment: '网关子设备',
       details: '详情',

@@ -142,7 +142,6 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              {{ sizeForm.ico }}
               <el-col :span="12">
                 <el-form-item
                   label="图标"

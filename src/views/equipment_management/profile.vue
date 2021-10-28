@@ -77,10 +77,6 @@ class="ace_text-input"
       <!--        </el-button>-->
       <!--      </span>-->
     </el-dialog>
-    <vab-input
-      ref="uploadFinish"
-      @fileInfo="fileInfo"
-    />
     <el-dialog
       v-drag-dialog
       append-to-body
@@ -142,13 +138,6 @@ class="ace_text-input"
           </el-form>
 
           <el-button
-            size="mini"
-            type="primary"
-            @click="$refs['templet'].showEdit()"
-          >
-            {{ $translateTitle('product.Product template') }}
-          </el-button>
-          <el-button
             v-show="!$loadsh.isEmpty(productDetail)"
             size="mini"
             type="primary"
@@ -185,7 +174,7 @@ class="ace_text-input"
               disabled
               @click.stop="categorysonChange(item, index)"
             >
-              <el-link :type="linkType == index ? 'success' : ''">
+              <el-link :type="linkType == item.name ? 'success' : ''">
                 {{ item.name }}&nbsp;&nbsp;&nbsp;
               </el-link>
               <el-button
@@ -199,10 +188,10 @@ class="ace_text-input"
           </ul>
         </el-col>
         <el-col
-          :lg="4"
+          :lg="10"
           :md="6"
           :sm="6"
-          :xl="3"
+          :xl="5"
           :xs="12"
         >
           <div class="protable">
@@ -221,10 +210,43 @@ class="ace_text-input"
               <el-table-column
                 :label="$translateTitle('product.productname')"
                 show-overflow-tooltip
-                sortable
+                width="80"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('product.classification')"
+                show-overflow-tooltip
+                width="80"
+              >
+                <template slot-scope="scope">
+                  <span>{{ scope.row.name }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                fixed="right"
+                :label="$translateTitle('developer.operation')"
+                width="145"
+              >
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    type="success"
+                    :underline="false"
+                    @click.stop="editproducttemp(scope.row)"
+                  >
+                    {{ $translateTitle('concentrator.edit') }}
+                  </el-button>
+                  <el-button
+                    slot="reference"
+                    size="mini"
+                    type="danger"
+                    @click.stop="deleteproducttemp(scope.row)"
+                  >
+                    {{ $translateTitle('developer.delete') }}
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -244,10 +266,10 @@ class="ace_text-input"
           </div>
         </el-col>
         <el-col
-          :lg="16"
+          :lg="10"
           :md="13"
-          :sm="12"
-          :xl="18"
+          :sm="18"
+          :xl="16"
           :xs="24"
         >
           <profile-descriptions
@@ -312,15 +334,22 @@ class="ace_text-input"
                 autocomplete="off"
               />
             </el-form-item>
-
             <el-form-item
               :label="$translateTitle('product.classification')"
-              prop="netType"
             >
               <el-input
-                v-model="form.netType"
-                readonly
+                :disabled="addflag"
+                v-model="form.categoryname"
+                :placeholder="$translateTitle('product.pleaseselectyourcate')"
+                @focus="showTree = !showTree"
               />
+              <div v-if="showTree">
+                <el-tree
+                  :data="categorytree"
+                  :props="defaultProps"
+                  @node-click="handleNodeClick"
+                />
+              </div>
             </el-form-item>
             <el-form-item
               :label="$translateTitle('menu.icon')"
@@ -329,7 +358,7 @@ class="ace_text-input"
               <div v-if="imageUrl">
                 <img
                   class="avatar"
-                  :src="imageUrl"
+                  :src="$FileServe + imageUrl"
                 />
                 <el-button
                   size="mini"
@@ -343,7 +372,7 @@ class="ace_text-input"
               <i
                 v-else
                 class="el-icon-plus avatar-uploader-icon"
-                @click="uploadCkick"
+                @click="uploadCkick('producttemp_ico')"
               />
               <form
                 ref="uploadform"
@@ -366,6 +395,12 @@ class="ace_text-input"
               </form>
               <br />
             </el-form-item>
+            <vab-input
+              ref="uploadFinish"
+              :params="inputParams"
+              @fileInfo="fileInfo"
+              @files="files"
+            />
             <el-form-item
               :label="$translateTitle('developer.describe')"
               prop="desc"
@@ -378,7 +413,10 @@ class="ace_text-input"
           </el-form>
         </div>
       </div>
-      <div class="devproduct-prodialog-footer">
+      <div
+        class="devproduct-prodialog-footer"
+        style="text-align: center"
+      >
         <el-button
           type="primary"
           @click.native="submitForm()"
@@ -394,7 +432,7 @@ class="ace_text-input"
 </template>
 <!--eslint-disable-->
 <script>
-  import { queryCategory } from '@/api/Category'
+import {getCategory, queryCategory} from '@/api/Category'
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
   context.keys().forEach((fileName) => {
@@ -410,6 +448,7 @@ class="ace_text-input"
   import { getHashClass } from '@/api/Hash'
   import { getTable } from '@/api/Dba'
   import {
+    delProductTemplet,
     getProductTemplet,
     postProductTemplet,
     putProductTemplet,
@@ -419,6 +458,7 @@ class="ace_text-input"
   import { uuid } from '@/utils'
   import wmxdetail from './component/wmxdetail'
   import { setTimeout } from 'timers'
+  import {post_tree} from "@/api/Data";
   var editor1
   export default {
     components: { ...res_components, wmxdetail },
@@ -437,7 +477,7 @@ class="ace_text-input"
           thing: { properties: [] },
           config: { parser: [], profile: [], basedate: { params: [] } },
         },
-        linkType: 0,
+        linkType: '',
         productOptions: [],
         DbaTable: [],
         parserView: false,
@@ -510,6 +550,8 @@ class="ace_text-input"
         formLabelWidth: '120px',
         dialogFormVisible: false,
         importDialogShow: false,
+        categorytree: [],
+        inputParams: {},
         form: {
           name: '',
           decoder: {},
@@ -591,7 +633,6 @@ class="ace_text-input"
         Parserzh: '',
         parseren: '',
         loading: false,
-        allApps: [],
         categoryList: [],
         categorysonList: [],
         queryForm: {
@@ -603,6 +644,7 @@ class="ace_text-input"
         projectid: '',
         allTableDate: [],
         showTree: false,
+        addflag: true,
         //物模型
         wmxdialogVisible: false,
         schemadialogVisible: false,
@@ -631,7 +673,7 @@ class="ace_text-input"
     },
     mounted() {
       this.$baseEventBus.$off('profileDialog')
-      this.$baseEventBus.$on('profileDialog', ({config, type, flag, productInfo,parserType}) => {
+      this.$baseEventBus.$on('profileDialog', ({config, type, flag, productInfo, parserType}) => {
         this.productDetail = productInfo
         this.productInfo = productInfo
         this.parserType = type
@@ -668,10 +710,10 @@ class="ace_text-input"
         }
         const { results } = await queryCategory(parsms)
         this.categoryList = results
-        // if (results)
-        //   this.$nextTick(() => {
-        //     // this.categoryChange({ name: '所有领域' })
-        //   })
+        if (results && this.$route.fullPath == '/dashboard/profile')
+          this.$nextTick(() => {
+            this.categoryChange({ name: '所有领域' })
+          })
       },
       async StepsListRowClick(params) {
         var productDetail = {}
@@ -708,15 +750,16 @@ class="ace_text-input"
         this.$refs.ProfileDescription.productDetail = productDetail
       },
       clearCategory() {
-        this.linkType = -1
+        this.linkType = ''
         this.queryProduttemp({})
       },
       categoryChange(data) {
+        this.linkType = data.name
         const loading = this.$baseColorfullLoading()
-        console.log(this.formInline.category)
         this.categorysonList = []
         let params = {
           order: 'createdAt',
+          include: 'parent',
           where: {},
         }
         if (data.name == '所有领域') {
@@ -726,39 +769,95 @@ class="ace_text-input"
           })
         } else {
           params.where = {
-            parent: {
-              className: 'Category',
-              objectId: data.objectId,
-              __type: 'Pointer',
-            },
+            parent: data.objectId,
           }
           queryCategory(params).then((res) => {
-            this.categorysonList = res.results
-            this.categorysonList.push(data)
+            // this.categorysonList.push(data)
+            this.categorysonList = [data].concat(res.results)
           })
         }
         loading.close()
       },
       categorysonChange(data, index) {
-        this.linkType = index
+        this.linkType = data.name
         this.queryProduttemp({ category: data.objectId })
       },
       addproducttemp(data) {
-        this.form.netType = data.name
-        this.form.category = data.objectId
+        console.log('fff', data)
+        this.fetchData()
+        this.addflag = true
+        this.form = {
+          name: '',
+          decoder: {},
+          thing: {},
+          config: {},
+          nodeType: 0,
+          netType: '',
+          categoryname: data.name,
+          categoryid: data.objectId,
+        }
         this.dialogFormVisible = true
+        this.producttempId = moment(new Date()).valueOf().toString()
+      },
+      editproducttemp(row) {
+        console.log('row', row)
+        this.fetchData()
+        this.addflag = false
+        this.form = row
+        this.producttempId = row.objectId
+        this.$set(this.form, 'categoryname', row.category.name)
+        this.dialogFormVisible = true
+      },
+      deleteproducttemp(row) {
+        delProductTemplet(row.objectId).then(res=>{
+          if (res) {
+            this.$message({
+              type: 'success',
+              message: '产品模板删除成功',
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '产品模板删除失败',
+            })
+          }
+          this.queryProduttemp({ category: row.category.objectId })
+        })
+      },
+      handleNodeClick(data) {
+        this.$set(this.form, 'categoryid', data.objectId)
+        this.$set(this.form, 'categoryname', data.name)
+        this.showTree = !this.showTree
+      },
+      async fetchData() {
+        let name = this.queryForm.name.length
+          ? '{ "$regex": "' + this.queryForm.name + '"}'
+          : '{ "$ne": "null" }'
+        let params = {
+          class: 'Category',
+          filter:
+            '{"order": "createdAt","keys":["parent","name","level"],"where":{"level": {"$gte": 1}, "name":' +
+            name +
+            '}}',
+          parent: 'parent',
+        }
+        const { results = [] } = await post_tree(params)
+        this.categorytree = results
       },
       async queryProduttemp(args) {
         const loading = this.$baseColorfullLoading()
         let params = {
           order: '-createdAt',
           keys: 'count(*)',
+          include: 'category,name',
           where: {
-            category: args.category ? args.category : { $ne: null },
             name: this.queryForm.name
               ? { $regex: this.queryForm.name, $options: 'i' }
               : { $ne: null },
           },
+        }
+        if(args.category){
+          params.where.category = args.category
         }
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
@@ -909,17 +1008,27 @@ class="ace_text-input"
         }
         // console.log(this.DbaTable)
       },
-      uploadCkick() {
+      uploadCkick(type) {
         this.loading = true
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
           new MouseEvent('click')
         )
+        this.inputParams = {
+          file: '',
+          scene: 'app',
+          path: 'producttemp/ico/',
+          filename: `${this.producttempId}.${type}`,
+        }
       },
       fileInfo(info) {
         console.log('info', info)
-        this.imageUrl = info.url
+        this.imageUrl = info.path
         this.loading = false
+      },
+      files(file, type) {
+        this.inputParams.filename = `${this.producttempId}.${type}`
+        this.inputParams.file = file
       },
       async getAllunit() {
         this.allunit = []
@@ -1056,7 +1165,6 @@ class="ace_text-input"
         })
       },
       deleteImgsrc() {
-        // event.stopPropagation()
         this.imageUrl = ''
       },
       handleClose() {
@@ -1078,15 +1186,18 @@ class="ace_text-input"
         }
         var params = {
           name: this.form.name,
-          category: this.form.category,
-          netType: this.form.netType,
-          icon: this.imageUrl,
-          desc: this.form.desc,
-          ACL: setAcl,
+          category: {
+            objectId: this.form.categoryid,
+            __type: 'Pointer',
+            className: 'Category',
+          },
+          icon: this.imageUrl ? this.imageUrl : '',
+          desc: this.form.desc ? this.form.desc : '',
         }
         this.$refs.form.validate((valid) => {
           if (valid) {
-            if (this.custom_status === 'add') {
+            if (this.addflag) {
+              params.ACL = setAcl
               console.log('params', params)
               postProductTemplet(params).then((res) => {
                 if (res.objectId) {
@@ -1100,11 +1211,13 @@ class="ace_text-input"
                     message: '产品模板创建失败',
                   })
                 }
+                this.queryProduttemp({ category: this.form.categoryid })
                 this.dialogFormVisible = false
               })
             } else {
               putProductTemplet(this.producttempId, params).then((res) => {
-                if (res.objectId) {
+                console.log('resresresres', res)
+                if (res.updatedAt) {
                   this.$message({
                     type: 'success',
                     message: '产品模板修改成功',
@@ -1115,6 +1228,7 @@ class="ace_text-input"
                     message: '产品模板修改失败',
                   })
                 }
+                this.queryProduttemp({ category: this.form.categoryid })
                 this.dialogFormVisible = false
               })
             }
@@ -1305,7 +1419,7 @@ class="ace_text-input"
         //   1
         // )
         const params = {
-          productid: this.productId,
+          productid: this.producttempId,
           item: row,
         }
         deleteThing(params).then((res) => {

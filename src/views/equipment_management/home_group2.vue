@@ -21,12 +21,6 @@
         :productid="productid"
         @ParserSave="saveParse"
       />
-      <!--      <span slot="footer" class="dialog-footer">-->
-      <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
-      <!--        <el-button type="primary" @click.native="dialogVisible = false">-->
-      <!--          确 定-->
-      <!--        </el-button>-->
-      <!--      </span>-->
     </el-dialog>
     <el-dialog
       :append-to-body="true"
@@ -180,14 +174,8 @@
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('product.productgrouping')">
-            <template slot-scope="scope">
-              <span>{{ scope.row.devType }}</span>
-            </template>
-          </el-table-column>
           <el-table-column
             :label="$translateTitle('product.nodetype')"
-            width="120"
           >
             <template slot-scope="scope">
               <span v-if="scope.row.nodeType == 3">
@@ -201,16 +189,22 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('home.category')">
+          <el-table-column :label="$translateTitle('product.classification')">
             <template slot-scope="scope">
               <span>
-                {{ scope.row.netType }}
+                {{ scope.row.category ? scope.row.category.name : '' }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column :label="$translateTitle('product.producttemplet')">
+            <template slot-scope="scope">
+              <span>
+                {{ scope.row.producttemplet ? scope.row.producttemplet.name : '' }}
               </span>
             </template>
           </el-table-column>
           <el-table-column
             :label="$translateTitle('product.addingtime')"
-            width="180"
           >
             <template slot-scope="scope">
               <span>{{ utc2beijing(scope.row.createdAt) }}</span>
@@ -286,29 +280,6 @@
                   {{ $translateTitle('developer.delete') }}
                 </el-button>
               </el-popover>
-              <!--                  <el-button-->
-              <!--                    :underline="false"-->
-              <!--                    icon="el-icon-s-promotion"-->
-              <!--                    type="primary"-->
-              <!--                    @click="proudctView(scope.row)"-->
-              <!--                  >-->
-              <!--                    运行组态-->
-              <!--                  </el-button>-->
-              <!--                  <el-button-->
-              <!--                    :underline="false"-->
-              <!--                    icon="el-icon-link"-->
-              <!--                    type="primary"-->
-              <!--                    @click="proudctEdit(scope.row)"-->
-              <!--                  >-->
-              <!--                    编辑组态-->
-              <!--                  </el-button>-->
-              <!-- <el-button
-                    :disabled="scope.row.config.config.cloneState == true"
-                    :underline="false"
-                    icon="el-icon-link"
-                    type="primary"
-                    @click="proudctClone(scope.row)"
-                  >备份</el-button> -->
             </template>
           </el-table-column>
         </el-table>
@@ -325,13 +296,6 @@
           @current-change="productCurrentChange"
           @size-change="productSizeChange"
         />
-        <!--        <dgiot-pagination-->
-        <!--          v-show="total > 0"-->
-        <!--          :total="total"-->
-        <!--          :page.sync="queryForm.pageNo"-->
-        <!--          :limit.sync="queryForm.pageSize"-->
-        <!--          @pagination="searchProduct"-->
-        <!--        />-->
       </div>
     </div>
     <div class="devproduct-prodialog">
@@ -383,8 +347,8 @@
                 />
               </el-form-item>
               <el-form-item
-                :label="$translateTitle('product.productgrouping')"
-                prop="devType"
+                :label="$translateTitle('product.device manufacturer')"
+                prop="name"
               >
                 <el-input
                   v-model="form.devType"
@@ -393,10 +357,12 @@
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.classification')"
-                :prop="form.type == 0 ? '' : 'category'"
+                :prop="form.type == 0 ? '' : 'categoryname'"
               >
                 <el-row :gutter="24">
-                  <el-col :span="10">
+                  <el-col
+                    :span="10"
+                  >
                     <el-radio-group v-model="form.type">
                       <el-radio :label="1">
                         {{ $translateTitle('product.Standard category') }}
@@ -407,25 +373,13 @@
                     </el-radio-group>
                   </el-col>
                   <el-col
-                    v-if="form.type == 1"
                     :span="13"
                     style="padding: 0"
                   >
                     <el-input
-                      v-model="form.netType"
+                      v-model="form.categoryname"
                       readonly
                     >
-                      <template
-                        v-if="form.netType"
-                        slot="prepend"
-                      >
-                        <el-link
-                          :disabled="custom_status == 'edit'"
-                          @click.native="handleIconClick"
-                        >
-                          {{ form.netType }}
-                        </el-link>
-                      </template>
                       <el-icon
                         slot="append"
                         class="el-icon-edit el-input__icon"
@@ -512,7 +466,7 @@
                 </div>
               </el-form-item>
               <el-form-item
-                :label="$translateTitle('product.devicetype')"
+                :label="$translateTitle('product.nodetype')"
                 prop="nodeType"
               >
                 <el-radio-group v-model="form.nodeType">
@@ -526,6 +480,22 @@
                     {{ $translateTitle('product.equipment') }}
                   </el-radio>
                 </el-radio-group>
+              </el-form-item>
+              <el-form-item
+                :label="$translateTitle('product.networking')"
+                prop="netType"
+              >
+                <el-select
+                  v-model="form.netType"
+                  :placeholder="$translateTitle('product.selectgateway')"
+                >
+                  <el-option
+                    v-for="(item, index) in channel"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('menu.icon')"
@@ -548,7 +518,7 @@
                 <i
                   v-else
                   class="el-icon-plus avatar-uploader-icon"
-                  @click="uploadCkick"
+                  @click="uploadCkick('product_ico')"
                 />
                 <form
                   ref="uploadform"
@@ -561,7 +531,7 @@
                       position: relative;
                       z-index: 5;
                       width: 100px;
-                      height: 100px;
+                      height:   100px;
                       cursor: pointer;
                       opacity: 0;
                     "
@@ -594,9 +564,10 @@
             {{ $translateTitle('developer.cancel') }}
           </el-button>
         </div>
+        <!-- 分类对话框 ###-->
         <el-drawer
           :append-to-body="true"
-          size="35%"
+          size="40%"
           :visible.sync="cascaderDrawer"
         >
           <div>
@@ -606,11 +577,7 @@
                   <vab-query-form-top-panel>
                     <el-form
                       :inline="true"
-                      :label-width="
-                        $translateTitle('product.productname') == '产品名称'
-                          ? '100px'
-                          : '160px'
-                      "
+                      label-width="100px"
                       @submit.native.prevent
                     >
                       <el-form-item
@@ -632,16 +599,12 @@
                       </el-form-item>
 
                       <el-form-item
-                        :label="$translateTitle('product.productname')"
+                        :label="$translateTitle('developer.Templatename')"
                       >
                         <el-input
                           v-model="queryForm.name"
                           clearable
-                          :placeholder="
-                            $translateTitle(
-                              'product.Please enter the category name'
-                            )
-                          "
+                          placeholder="请输入模板名称"
                         />
                       </el-form-item>
                       <el-form-item label-width="0">
@@ -691,8 +654,12 @@
               </el-table-column>
               <el-table-column
                 :label="$translateTitle('department.category')"
-                prop="netType"
-              />
+                prop="categoryname"
+              >
+                <template slot-scope="scope">
+                  {{ scope.row.category.name }}
+                </template>
+              </el-table-column>
               <el-table-column
                 align="center"
                 :label="$translateTitle('developer.operation')"
@@ -1557,7 +1524,7 @@
   import Category from '@/api/Mock/Category'
   import { ExportParse, ImportParse } from '@/api/Export'
   import { queryProductTemplet } from '@/api/ProductTemplet'
-  import { queryCategory } from '@/api/Category'
+  import {getCategory, queryCategory} from '@/api/Category'
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
   context.keys().forEach((fileName) => {
@@ -1698,6 +1665,8 @@
           desc: '',
           netType: '',
           devType: '',
+          categoryid: '',
+          producttempid: '',
           productSecret: '',
           roles: [],
           relationApp: '',
@@ -1752,7 +1721,7 @@
               trigger: 'blur',
             },
           ],
-          category: [
+          categoryname: [
             {
               required: true,
               message: '请选择所属分类',
@@ -1785,7 +1754,7 @@
         ruleoptions: [],
         channel: [
           {
-            label: '蜂窝(2G/3G/4G)(直连)',
+            label: '蜂窝(2G/3G/4G)',
             value: 'CELLULAR',
           },
           {
@@ -1941,12 +1910,12 @@
         if (!args.limit) {
           args = this.queryForm
         }
-        console.log('args', args)
         let params = {
           limit: args.limit,
           order: args.order,
           skip: args.skip,
           keys: args.keys,
+          include: 'category',
           where: {
             category: categorys ? { $in: categorys } : { $ne: null },
             name: args.name
@@ -1954,7 +1923,6 @@
               : { $ne: null },
           },
         }
-        console.log('params', params)
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
           loading.close()
@@ -1974,7 +1942,7 @@
           },
         })
       },
-      uploadCkick() {
+      uploadCkick(type) {
         this.loading = true
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
@@ -1984,7 +1952,7 @@
           file: '',
           scene: 'app',
           path: 'product/ico/',
-          filename: '',
+          filename: `${this.productid}.${type}`,
         }
       },
       fileInfo(info) {
@@ -2127,96 +2095,6 @@
         this.$set(this.form, 'relationApp', data.name)
         this.showTree = !this.showTree
       },
-      changeNode(val, first) {
-        if (first != 0) {
-          this.form.netType = ''
-        }
-
-        if (val == 0) {
-          this.channel = [
-            {
-              label: '蜂窝(2G/3G/4G)',
-              value: 'CELLULAR',
-            },
-            {
-              label: 'NB-IOT通道',
-              value: 'NB-IOT',
-            },
-            {
-              label: 'BLE(低功耗蓝牙)',
-              value: 'Bluetooth',
-            },
-            {
-              label: '5G通道',
-              value: '5G',
-            },
-            {
-              label: 'WIFI通道',
-              value: 'WIFI',
-            },
-            {
-              label: 'ZigBee通道',
-              value: 'ZigBee',
-            },
-            {
-              label: 'LoRa(WAN)',
-              value: 'LoRaWAN',
-            },
-            {
-              label: 'Modbus',
-              value: 'Modbus',
-            },
-            {
-              label: 'OPC UA',
-              value: ' OPC UA',
-            },
-            {
-              label: 'ZETA通道',
-              value: 'ZETA',
-            },
-            {
-              label: '网线连接',
-              value: '网线连接',
-            },
-
-            {
-              label: '自定义',
-              value: 'OTHER',
-            },
-          ]
-        } else {
-          this.channel = [
-            {
-              label: '蜂窝(2G/3G/4G)',
-              value: 'CELLULAR',
-            },
-            {
-              label: '5G通道',
-              value: '5G',
-            },
-            {
-              label: 'WIFI通道',
-              value: 'WIFI',
-            },
-            {
-              label: 'NB-IOT通道',
-              value: 'NB-IOT',
-            },
-            {
-              label: 'LoRaWAN',
-              value: 'LoRaWAN',
-            },
-            {
-              label: '网线连接',
-              value: '网线连接',
-            },
-            {
-              label: '自定义',
-              value: 'OTHER',
-            },
-          ]
-        }
-      },
       selectApp(val) {
         if (!val) {
           return
@@ -2309,7 +2187,7 @@
             order: '-updatedAt',
             limit: this.length,
             skip: this.start,
-            // keys: 'updatedAt,category,desc,name,devType,netType,nodeType,icon,channel',
+            include: 'category,producttemplet',
             where: {
               name: this.formInline.productname.length
                 ? { $regex: this.formInline.productname }
@@ -2334,9 +2212,6 @@
             this.listLoading = false
             this.proTableData = results
             this.total = count
-            // this.$dgiotBus.$emit('MqttSubscribe', {
-            //   topic: this.$route.name,
-            // })
           }
           this.getApps()
         } catch (error) {
@@ -2356,11 +2231,19 @@
         this.dialogFormVisible = false
       },
       // 选择产品模板
-      chooseTemplate(row) {
+     async chooseTemplate(row) {
+        const res = await this.getcategoryname(row.category)
         this.selectedRow = row
-        this.form.category = row.category
-        this.form.netType = row.netType + "/" + row.name
+        this.$set(this.form, 'categoryid', row.category.objectId)
+        this.$set(this.form, 'categoryname', res + "/" + row.name)
+        this.$set(this.form, 'producttempid', row.objectId)
+        this.form.thing = row.thing ? row.thing : {}
         this.cascaderDrawer = !this.cascaderDrawer
+      },
+     async getcategoryname(category){
+      const {name} = await getCategory(category.parent.objectId)
+      const returnName = name == '所有领域' ? category.name : name + '/' + category.name
+      return returnName
       },
       // 关闭dialog 事件
       handleCloseDialogForm() {
@@ -2396,6 +2279,7 @@
           relationApp: this.allApps[0].name,
           roles: [],
         }
+        this.productid = moment(new Date()).valueOf().toString()
         this.dialogFormVisible = true
       },
       getParent(id, origin, returnarr) {
@@ -2477,34 +2361,6 @@
       deleteParse(index, rows) {
         rows.splice(index, 1)
       },
-      // async editorParser(ObjectId) {
-      //   const { config = {}, thing = {} } = await getProduct(ObjectId)
-      //   this.productid = ObjectId
-      //   this.ParserConfig = config
-      //   this.parserDict = _.merge(thing, config)
-      //   this.formConfig = this.ParserConfig.parser
-      //     ? this.ParserConfig.parser
-      //     : {}
-      //   this.dialogVisible = true
-      // },
-      // async ParserSave(parse, ObjectId) {
-      //   this.ParserConfig.parser = parse
-      //   const params = {
-      //     config: this.ParserConfig,
-      //   }
-      //   try {
-      //     let { updatedAt } = await putProduct(ObjectId, params)
-      //     console.log(updatedAt)
-      //     this.$message.success(
-      //       this.$translateTitle('user.Save the template successfully')
-      //     )
-      //   } catch (e) {
-      //     this.$message.error(
-      //       this.$translateTitle('user.Save the template error') + `${e}`
-      //     )
-      //   }
-      //   this.dialogVisible = false
-      // },
       async editorDict(ObjectId) {
         this.getAllunit()
         const row = await getProduct(ObjectId)
@@ -2544,13 +2400,11 @@
         this.moduleTitle = this.$translateTitle('product.editproduct')
         this.custom_status = 'edit'
         this.custom_row = row
-        // this.form.roles = [];
-        // this.form.relationApp = ''
         this.dialogFormVisible = true
         this.productid = row.objectId
-        // this.getIndustryParent(row.category, this.categoryList)
         this.form.desc = row.desc
         this.form.category = row.category
+        this.form.producttemplet = row.producttemplet
         this.form.config = row.config
         this.form.name = row.name
         this.form.nodeType = row.nodeType
@@ -2561,9 +2415,9 @@
         this.$set(this.form, 'storageStrategy',row.channel ? row.channel.storageStrategy : '')
         this.form.netType = row.netType
         this.form.devType = row.devType
+        this.form.categoryname = row.category ? row.category.name : ''
         this.form.productSecret = row.productSecret
         this.form.nodeType = row.nodeType
-        // this.changeNode(row.nodeType, 0)
         if (row.icon) {
           this.imageUrl = row.icon
         }
@@ -2571,13 +2425,11 @@
         for (var key in row.ACL) {
           rows.push(key)
           if (key.includes('role')) {
-            console.log(key, 'key')
             this.form.relationApp = key ? key.substr(5) : ''
           }
         }
         console.log('row', row)
         console.log('form', this.form)
-        // this.selectApp(this.form.relationApp)
       },
       async categorytree() {
         const parsms = {
@@ -2617,7 +2469,6 @@
         }
       },
       submitForm() {
-        var params = {}
         var initparams = {
           name: this.form.name,
           nodeType: this.form.nodeType,
@@ -2625,6 +2476,24 @@
           icon: this.imageUrl,
           devType: this.form.devType,
           desc: this.form.desc,
+          thing: this.form.thing,
+          category : {
+            objectId: Number(this.form.type) == 0 ? '5ca6049839' : this.form.categoryid,
+            __type: 'Pointer',
+            className: 'Category',
+          },
+          producttemplet : {
+            objectId: Number(this.form.type) == 0 ? '0' : this.form.producttempid,
+            __type: 'Pointer',
+            className: 'ProductTemplet',
+          },
+          channel : {
+            type: this.form.type,
+            tdchannel: this.form.tdchannel,
+            taskchannel: this.form.taskchannel,
+            otherchannel: this.form.otherchannel,
+            storageStrategy: this.form.storageStrategy,
+          },
         }
         this.$refs.form.validate((valid) => {
           if (valid) {
@@ -2645,20 +2514,12 @@
               setAcl['*'] = {
                 read: true,
               }
-              const {
-                topics = [],
-                thing = {},
-                decoder = {},
-                category = Number(this.form.type) == 0 ? '5ca6049839' : this.form.category,
-                netType = Number(this.form.type) == 0 ? 'DGIoT网关' : this.form.netType,
-                channel = {
-                  type: this.form.type,
-                  tdchannel: this.form.tdchannel,
-                  taskchannel: this.form.taskchannel,
-                  otherchannel: this.form.otherchannel,
-                  storageStrategy: this.form.storageStrategy,
-                },
-                config = {
+              const addparams = {
+                productSecret: productSecret,
+                ACL: setAcl,
+                topics : [],
+                decoder : {},
+                config : {
                   konva: {
                     Stage: {
                       attrs: {
@@ -2697,37 +2558,13 @@
                     },
                   },
                 },
-                icon = '',
-              } = this.selectedRow
-              var addparams = {
-                category,
-                netType,
-                productSecret,
-                ACL: setAcl,
-                topics,
-                thing,
-                channel,
-                dynamicReg: false,
-                config,
-                decoder,
-                icon,
-              }
+              },
               params = _.merge(initparams, addparams)
+              console.log('createProduct', params)
               this.createProduct(params)
             } else {
-              // console.log(this.custom_row)
-              var editparams = {
-                channel: {
-                  type: this.form.type,
-                  category: this.form.category,
-                  tdchannel: this.form.tdchannel,
-                  taskchannel: this.form.taskchannel,
-                  otherchannel: this.form.otherchannel,
-                  storageStrategy: this.form.storageStrategy,
-                },
-              }
-              params = _.merge(initparams, editparams)
-              this.editProduct(params)
+              console.log('editProduct', initparams)
+              this.editProduct(initparams)
             }
           } else {
             this.$message('必填项未填')

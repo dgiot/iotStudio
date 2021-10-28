@@ -60,25 +60,25 @@
             </span>
           </li>
           <li>
-            <div>
-              <el-image
-                :preview-src-list="[$FileServe + productimg]"
-                v-if="productimg"
-                :src="$FileServe + productimg"
-                style="
-                  max-width: 20px;
-                  height: auto;
-                  max-height: 20px;
-                "
-              >
-                <div
-                  slot="error"
-                  class="image-slot"
-                >
-                  <i class="el-icon-picture-outline" />
-                </div>
-              </el-image>
-            </div>
+            <!--            <div class="block">-->
+            <!--              <el-image-->
+            <!--                v-if="productimg"-->
+            <!--                :src="$FileServe + productimg"-->
+            <!--                style="-->
+            <!--                  position: relative;-->
+            <!--                  top: -40px;-->
+            <!--                  max-width: 200px;-->
+            <!--                  height: auto;-->
+            <!--                "-->
+            <!--              >-->
+            <!--                <div-->
+            <!--                  slot="error"-->
+            <!--                  class="image-slot"-->
+            <!--                >-->
+            <!--                  <i class="el-icon-picture-outline" />-->
+            <!--                </div>-->
+            <!--              </el-image>-->
+            <!--            </div>-->
           </li>
         </ul>
       </div>
