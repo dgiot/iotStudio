@@ -16,10 +16,9 @@ jobs:
       - name: install pnpm
         run: |
           npm install -g pnpm
-          npm config set registry https://registry.npm.taobao.org
           pnpm config set registry https://registry.npm.taobao.org
           pnpm -v
-          pnpm install -g rimraf
+          pnpm install -g rimraf @vue/cli-service
           pnpm config get registry
       - name: Cache pnpm-store
         id: cache-pnpm-store

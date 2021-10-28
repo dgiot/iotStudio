@@ -54,13 +54,20 @@
       @selection-change="setSelectRows"
     >
       <el-table-column
-        align="center"
-        :label="$translateTitle('equipment.serialnumber')"
-        prop="objectId"
+        type="index"
+        width="50"
         show-overflow-tooltip
         sortable
-        width="280"
+        align="center"
+        prop="name"
       />
+      <!--      <el-table-column-->
+      <!--        align="center"-->
+      <!--        :label="$translateTitle('device.level')"-->
+      <!--        prop="level"-->
+      <!--        show-overflow-tooltip-->
+      <!--        sortable-->
+      <!--      />-->
       <el-table-column
         align="center"
         :label="$translateTitle('product.name')"
@@ -75,12 +82,12 @@
         sortable
       >
         <template #default="{ row }">
-          <el-button
-            type="text"
-            @click="handleEdit(row)"
-          >
-            {{ $translateTitle('button.edit') }}
-          </el-button>
+          <!--          <el-button-->
+          <!--            type="text"-->
+          <!--            @click="handleEdit(row)"-->
+          <!--          >-->
+          <!--            {{ $translateTitle('button.edit') }}-->
+          <!--          </el-button>-->
           <el-button
             type="text"
             @click="handleAddChild(row)"
@@ -123,7 +130,7 @@
         infoData: 'Category',
         isFullscreen: false,
         border: true,
-        height: this.$baseTableHeight(0) - 20,
+        height: this.$baseTableHeight(0) + 40,
         stripe: false,
         lineHeight: 'medium',
         categoryList: [],
@@ -227,7 +234,7 @@
         let params = {
           class: 'Category',
           filter:
-            '{"order": "createdAt","keys":["parent","name","level"],"where":{"level": {"$gte": 1}, "name":' +
+            '{"order": "createdAt","keys":["parent","name","level","createdAt"],"where":{"level": {"$gte": 1}, "name":' +
             name +
             '}}',
           parent: 'parent',

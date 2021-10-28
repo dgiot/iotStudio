@@ -5,14 +5,14 @@
         v-show="false"
         :product-info="productInfo"
       />
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/roles/product' }">
-          {{ $translateTitle('route.产品管理') }}
-        </el-breadcrumb-item>
-        <el-breadcrumb-item>
-          {{ $translateTitle('route.产品详情') }}
-        </el-breadcrumb-item>
-      </el-breadcrumb>
+      <!--      <el-breadcrumb separator-class="el-icon-arrow-right">-->
+      <!--        <el-breadcrumb-item :to="{ path: '/roles/product' }">-->
+      <!--          {{ $translateTitle('route.产品管理') }}-->
+      <!--        </el-breadcrumb-item>-->
+      <!--        <el-breadcrumb-item>-->
+      <!--          {{ $translateTitle('route.产品详情') }}-->
+      <!--        </el-breadcrumb-item>-->
+      <!--      </el-breadcrumb>-->
       <div class="product">
         <ul>
           <li>
@@ -34,7 +34,7 @@
               </el-link>
             </span>
             <span v-else>
-              {{ ProductSecret }}
+              <span v-copyText="ProductSecret">{{ ProductSecret }}</span>
               <el-link
                 style="margin-left: 5px; cursor: pointer"
                 type="primary"
@@ -60,15 +60,15 @@
             </span>
           </li>
           <li>
-            <div class="block">
+            <div>
               <el-image
+                :preview-src-list="[$FileServe + productimg]"
                 v-if="productimg"
                 :src="$FileServe + productimg"
                 style="
-                  position: relative;
-                  top: -40px;
-                  max-width: 200px;
+                  max-width: 20px;
                   height: auto;
+                  max-height: 20px;
                 "
               >
                 <div
@@ -322,7 +322,7 @@
                   topicstart * topiclength
                 )
               "
-              :height="$baseTableHeight(3)"
+              :height="$baseTableHeight(2)"
               style="width: 100%; text-align: center"
             >
               <el-table-column
@@ -581,7 +581,7 @@
                 <el-table
                   border
                   :data="FromMachine"
-                  :height="$baseTableHeight(3)"
+                  :height="$baseTableHeight(2)"
                   :row-class-name="tableRowClassName"
                   style="width: 60vh; overflow: auto"
                   @row-click="clickmachine"
@@ -672,7 +672,7 @@
                   "
                   :default-expand-all="false"
                   :default-sort="{ prop: 'date', order: 'descending' }"
-                  :height="$baseTableHeight(3)"
+                  :height="$baseTableHeight(2)"
                   :row-class-name="getRowClass"
                   row-key="identifier"
                   style="width: 100%; margin-top: 10px"
@@ -1673,7 +1673,7 @@
           <div>
             <el-table
               :data="channelData"
-              :height="$baseTableHeight(3)"
+              :height="$baseTableHeight(2)"
               :row-class-name="getChannelEnable"
               style="width: 100%"
             >
@@ -1842,7 +1842,7 @@ class="ace_text-input"
           <div>
             <el-table
               :data="resourcechannelData"
-              :height="$baseTableHeight(3)"
+              :height="$baseTableHeight(2)"
               :row-class-name="getChannelEnable"
               style="width: 100%"
             >

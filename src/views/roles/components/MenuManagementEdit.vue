@@ -114,7 +114,7 @@
             slot="prepend"
             popper-class="icon-selector-popper"
             size="mini"
-            trigger="click"
+            trigger="hover"
             width="292"
           >
             <template #reference>
@@ -216,6 +216,7 @@
     data() {
       return {
         router,
+        visible:false,
         inputParams: {},
         cascadervalue: [],
         jsonModel: {
