@@ -2418,10 +2418,12 @@ export default {
             this.dynamicReg = response.dynamicReg
             this.productdetail.isshow = 0
 
-            this.$get_object('Category', this.productdetail.category.objectId).then(cat=>{
-              console.log('catcat', cat)
-              this.$set(this.productdetail, 'categoryname', cat.name)
-            })
+            if(this.productdetail.category){
+              this.$get_object('Category', this.productdetail.category.objectId).then(cat=>{
+                console.log('catcat', cat)
+                this.$set(this.productdetail, 'categoryname', cat.name)
+              })
+            }
 
             this.form.Productname = response.name
             this.ProductSecret = response.productSecret

@@ -2091,7 +2091,6 @@
         this.$message('非Json数据类型')
       },
       handleNodeClick(data) {
-        console.log(data, 'data')
         this.$set(this.form, 'relationApp', data.name)
         this.showTree = !this.showTree
       },
@@ -2278,6 +2277,7 @@
           productSecret: '',
           relationApp: this.allApps[0].name,
           roles: [],
+          categoryname: '',
         }
         this.productid = moment(new Date()).valueOf().toString()
         this.dialogFormVisible = true
