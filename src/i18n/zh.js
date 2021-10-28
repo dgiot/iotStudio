@@ -706,6 +706,9 @@ export default {
       Pleaseinputproduct: '请输入产品',
     },
     topo: {
+      "tag":"标记",
+      'topo':'组态',
+      'thing':'物模型',
       'Upload background': '上传背景',
       'Add text content': '添加文本',
       'Add configuration tag': '添加标记',

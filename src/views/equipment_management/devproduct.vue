@@ -1161,7 +1161,7 @@
   .devproduct .prosecond {
     box-sizing: border-box;
     width: 100%;
-    padding: 20px 10px;
+    /*padding: 20px 10px;*/
   }
   .devproduct .el-dialog {
     margin-top: 5vh;

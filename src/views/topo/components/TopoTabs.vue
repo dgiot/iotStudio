@@ -47,7 +47,7 @@
         <el-button
           size="mini"
           type="primary"
-          @click.native="createdThing()"
+          @click.native="createText({productid:$route.query.productid,text:'单击修改文本'})"
         >
           {{ $translateTitle('topo.Add text content') }}
         </el-button>
@@ -308,6 +308,7 @@
         setFlag: 'konva/setFlag',
         setDrawParams: 'konva/setDrawParams',
         setKonvaBg: 'topo/setKonvaBg',
+        createText: 'topo/createText',
       }),
       // mousedown(item) {
       //   this.$emit('fatherMousedown', item)

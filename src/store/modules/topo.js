@@ -7,12 +7,20 @@
 // * @DocumentLink: https://konvajs.org/docs/index.html
 // * @Demo http://39.97.252.98:3000
 import konva from 'konva'
-// konva画布默认参数
+
+/**
+ * @description konva画布默认参数
+ * @type {{width: number, scale: number, height: number}}
+ */
 let konvaAttr = {
   width: 1200, // 布局宽度
   height: 700, // 布局宽度
   scale: 100, // 缩放比例
 }
+/**
+ *
+ * @type {{clickItem: {}, konva: ({mutations: {setPointStart(*, *): void, setGraphColor(*, *): void, setFlag(*, *): void, setDrawing(*, *): void, setGraphNow(*, *): void, setDrawParams(*, *): void, setSizeForm(*, *): void, setDraw(*, *): void}, state: function(): {sizeForm: {}, pointStart: [], flag: null, drawing: boolean, graphNow: null, graphColor: string, draw: [], drawParams: {}}, getters: {sizeForm: function(*): *, pointStart: function(*): *, flag: function(*): *, drawing: function(*): *, graphNow: function(*): *, graphColor: function(*): *, draw: function(*): *, drawParams: function(*): *}, actions: {setPointStart({commit: *}, *=): void, setGraphColor({commit: *}, *=): void, setFlag({commit: *}, *=): void, setDrawing({commit: *}, *=): void, setGraphNow({commit: *}, *=): void, setDrawParams({commit: *}, *=): void, setSizeForm({commit: *}, *=): void, setDraw({commit: *}, *=): void}}|*), Transformer: *, stage: *, data: *[], contextmenu: {}, listener: (function(): string), toDataURL: string, konvaAttr: {width: number, scale: number, height: number}, activeShape: {}, Konvajson: {}, layer: *}}
+ */
 var topo = {
   konva,
   konvaAttr: konvaAttr,
@@ -20,41 +28,60 @@ var topo = {
   stage: konva.stage,
   layer: konva.layer,
   Konvajson: {},
-  Transformer: konva.Transformer,
+  clickItem:{},
+  contextmenu:{},
+    Transformer: konva.Transformer,
   data: [],
   listener: function () {
     return 'listener res'
   },
+  toDataURL:''
 }
 window.topo = topo
+
 import addNodeEvent from '@/utils/konva/common'
-// EventKey 操作konva对象的属性
+
+/**
+ * @description EventKey 操作konva对象的属性
+ * @type {string}
+ */
 let EventKey = 'clickNode'
 
-// 创建konva
 /**
- *
- * @param attr
- * @param json
+ * @description 生成随机数
+ * @param max
+ * @param min
+ * @return {number}
  */
-export function createKonvaDom(args) {
+function randomXy(max,min){
+  return Math.floor(Math.random()*(max-min+1)+min);
+}
+
+/**
+ * @description 将konva组态模块方法封装到统一管理
+ * @param args
+ * @constructor
+ */
+export function KonvaBus(args) {
   const {
     type,
     attr = 'kevCurrent',
     json,
+    productid='',
     setattrs = konvaAttr,
     src = '',
+    removeNode,
+    text='单击修改文字'
   } = args
-  console.log('createKonvaDom type is ' + type)
+  console.log('KonvaBus type is ' + type)
   console.log(args)
   const { hash } = location
   // if (!hash.includes('Topo') || $(`${attr}`).length === 0) return false
   console.log($(`${attr}`))
-  console.table(json)
   var stage = Konva.Node.create(json, attr)
   var layer = stage.findOne('Layer')
   console.log(layer)
-  if (type == 'selectBg') {
+  if (type === 'selectBg') {
     // console.error(src ,bg)
     const bg = layer.findOne('bg')
     if (bg?.length) {
@@ -83,7 +110,63 @@ export function createKonvaDom(args) {
       // layer.findOne('bg').moveToBottom()
       // stage.batchDraw()
     }
+  }else if(type ==='createText'){
+    console.log(text)
+    const complexText = new Konva.Text({
+      x: randomXy(100,50),
+      y: randomXy(70,30),
+      text:text,
+      fontSize: 18,
+      fontFamily: 'Calibri',
+      fill: '#555',
+      width: 300,
+      padding: 20,
+      align: 'center',
+      draggable:true,
+      "attrs":{
+      "id":productid+"_flow",
+        "name":"thing",
+        x: randomXy(300,10),
+        y: randomXy(170,30),
+        "draggable":true
+    },
+      "className":"Label",
+      "children":[
+      {
+        "attrs":{
+          "name":"mousemove"
+        },
+        "className":"Tag"
+      },
+      {
+        "attrs":{
+          "id":"9528ac1c5d_flow_text",
+          "text":"dgiot",
+          "fontSize":50,
+          "lineHeight":1.2,
+          "padding":10,
+          "fill":"green"
+        },
+        "className":"Text"
+      }
+    ]
+    });
+    console.error(complexText)
+    layer.add(complexText)
+  }else{
+    console.log(type,"type")
   }
+  stage.find('Text').forEach((node) => {
+    console.log('Text',node)
+    node.on('contextmenu',e=>{
+      topo.contextmenu = e.target
+      console.log('contextmenu',e.target)
+    })
+    node.on('click',e=>{
+      topo.clickItem = e.target
+      console.log('click',e)
+    })
+  })
   stage.find('Image').forEach((node) => {
     const img = new Image()
     if (node.getAttr('src')) {
@@ -93,6 +176,14 @@ export function createKonvaDom(args) {
       console.log('设置konva图片地址', img.src)
       img.onload = () => {
         node.image(img)
+        node.on('contextmenu',e=>{
+          topo.contextmenu = e.target
+          console.log('img contextmenu',e.target)
+        })
+        node.on('click',e=>{
+          topo.clickItem = e.target
+          console.log('img click',e.target)
+        })
         // 只将背景图置底
         if (node.getAttr('id') == 'bg') {
           console.log('设置背景图片置底')
@@ -118,6 +209,12 @@ export function createKonvaDom(args) {
 
     console.log('node..', node, Konva)
   })
+  if(type === 'removeNode') {
+    console.error('removeNode',removeNode)
+    removeNode.remove()
+    removeNode.destroy()
+    stage.batchDraw()
+  }
   const konvaDom = new Konva.Stage({
     container: attr,
     // width: setattrs.width ? setattrs.width : konvaAttr.width,
@@ -129,48 +226,125 @@ export function createKonvaDom(args) {
   topo.json = stage
   topo.layer = layer
   topo.stage = konvaDom
-  // 辅助线
   console.log(topo)
-  console.log('将传入的json添加到layer里', topo.Konvajson)
+  // console.log('将传入的json添加到layer里', topo.Konvajson)
   topo.stage.add(topo.layer)
+  topo.toDataURL= konvaDom.toDataURL()
 }
 
-export function createdText(config) {
-  return {}
-}
-
-// window.onload = isKonvaDom('kevCurrent')
+/**
+ * @description 设置背景图
+ * @param src
+ */
 function selectBg(src) {
   const bgSrc = src.includes('http')
     ? localStorage.getItem('konvaBg')
     : localStorage.getItem('fileServer') + src
   // const bg = topo.layer.findOne('#bg')
-  createKonvaDom({
+  KonvaBus({
     type: 'selectBg',
     src: bgSrc,
     json: topo.Konvajson,
   })
-  // console.error(src ,bg)
-  // if (bg?.length) {
-  //   console.log(bg[0])
-  //   bg.setAttrs({'src':bgSrc})
-  //   // this.emit('clickNode', bg[0].attrs)
-  // }else{
-  //   var imageObj = new Image();
-  //   imageObj.onload = function () {
-  //     var yoda = new Konva.Image({
-  //       id:'bg',
-  //       image: imageObj,
-  //       width: konvaAttr.width,
-  //       height: konvaAttr.height,
-  //     });
-  //     topo.layer.add(yoda);
-  //     topo.stage.batchDraw()
-  //   };
-  //   imageObj.src =bgSrc
-  // }
 }
 
+/**
+ * @description 组态置顶
+ * @document https://konvajs.org/api/Konva.Rect.html#moveToTop__anchor
+ */
+function moveToTop() {
+  KonvaBus({
+    type: 'moveToTop',
+    productid,
+    text,
+    json: topo.Konvajson,
+  })
+}
+
+/**
+ * @description 组态置底
+ * @document https://konvajs.org/api/Konva.Rect.html#moveToBottom__anchor
+ */
+function moveToBottom() {
+  KonvaBus({
+    type: 'moveToBottom',
+    productid,
+    text,
+    json: topo.Konvajson,
+  })
+}
+
+/**
+ * @description 组态上移
+ * @document https://konvajs.org/api/Konva.Rect.html#moveDown__anchor
+ */
+function moveDown() {
+  KonvaBus({
+    type: 'moveDown',
+    productid,
+    text,
+    json: topo.Konvajson,
+  })
+}
+
+/**
+ * @description 组态下移
+ * @document https://konvajs.org/api/Konva.Rect.html#moveUp__anchor
+ */
+function moveUp() {
+  KonvaBus({
+    type: 'moveUp',
+    productid,
+    text,
+    json: topo.Konvajson,
+  })
+}
+
+/**
+ * @description 设置层级
+ * @document https://konvajs.org/api/Konva.Rect.html#zIndex__anchor
+ */
+function setZIndex() {
+  KonvaBus({
+    type: 'ZIndex',
+    productid,
+    text,
+    json: topo.Konvajson,
+  })
+}
+
+/**
+ * @description 创建文本
+ * @document https://konvajs.org/docs/shapes/Text.html
+ * @param productid
+ * @param text
+ */
+function createText({ productid,text }){
+  KonvaBus({
+    type: 'createText',
+    productid,
+    text,
+    json: topo.Konvajson,
+  })
+}
+
+/**
+ * @description 删除节点
+ * @document https://konvajs.org/api/Konva.Container.html#remove
+ */
+function removeNode(){
+  KonvaBus({
+    type: 'removeNode',
+    removeNode: topo.contextmenu,
+    json: topo.Konvajson,
+  })
+  // topo.contextmenu.remove()
+  // topo.contextmenu.destroy()
+  // this.$message({
+  //   type: 'success',
+  //   message: '删除节点!',
+  // })
+}
 function updateCanvasAttr(scale) {
   const { width, height } = topo.konvaAttr
   const newWidth = scale / 100
@@ -198,10 +372,6 @@ function updateCanvasAttr(scale) {
   )
 }
 
-function createPathDom(type, config) {
-  const layer = topo.layer
-  return layer
-}
 const state = () => ({
   Sale: topo.konvaAttr.scale ? topo.konvaAttr.scale : 300,
   konva: topo.konva,
@@ -209,20 +379,17 @@ const state = () => ({
   initKonva: {},
   // 当前操作的组态
   activeShape: {},
-  //  添加的图元
-  topoPath: createPathDom(),
 })
 const getters = {
   konvaBg: (state) => state.konvaBg,
   Sale: (state) => state.Sale,
   activeShape: (state) => state.activeShape,
-  createdText: (config) => createdText(config),
 }
 const mutations = {
   initKonva(state, args) {
     console.log('vuex', state, args.id, args.data)
     //  初始化konva
-    state.initKonva = createKonvaDom({
+    state.initKonva = KonvaBus({
       type: 'created',
       attr: args.id,
       json: args.data,
@@ -239,7 +406,7 @@ const mutations = {
       scale: size,
     }
     topo.konvaAttr = canvasAttr
-    createKonvaDom({
+    KonvaBus({
       type: 'setSale',
       id: 'kevCurrent',
       width: newWidth,
@@ -252,11 +419,6 @@ const mutations = {
     console.error('缩放大小', topo.konvaAttr.scale)
     console.table('topo', topo)
   },
-  createdText(state, config) {
-    //
-    state.createdText = config
-    console.log('createdText')
-  },
   setKonva(state, attr) {
     state.konva = attr
     topo.konva = attr
@@ -264,6 +426,12 @@ const mutations = {
   setKonvaBg(state, bg) {
     state.konvaBg = bg
     selectBg(bg)
+  },
+  createText(state, args) {
+    createText(args)
+  },
+  removeNode(state, args) {
+    removeNode(args)
   },
   activeShape(state, shape) {
     state.activeShape = shape
@@ -274,11 +442,14 @@ const actions = {
   setKonvaBg({ commit }, bg) {
     commit('setKonvaBg', bg)
   },
+  removeNode({ commit }, args) {
+    commit('removeNode', args)
+  },
+  createText({ commit }, args) {
+    commit('createText', args)
+  },
   initKonva({ commit }, args) {
     commit('initKonva', args)
-  },
-  createdText({ commit }, config) {
-    commit('createdText', config)
   },
   setSale({ commit }, size) {
     commit('setSale', size)
