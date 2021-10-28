@@ -22,13 +22,13 @@ jobs:
           pnpm config get registry
       - name: Cache pnpm-store
         id: cache-pnpm-store
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-pnpm-store
       - name: Cache node_modules
         id: cache-node-modules
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: node_modules
           key: ${{ hashFiles('**/package.json') }}-pnpm
