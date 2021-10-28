@@ -221,6 +221,14 @@
                     "src": "https://konvajs.org/assets/yoda.jpg"
                   },
                   "className": "Image"
+                },
+                {
+                  "attrs": {
+                    "id":"bg",
+                    "draggable": false,
+                    "src": "/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361"
+                  },
+                  "className": "Image"
                 }
               ]
             }

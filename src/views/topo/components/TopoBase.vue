@@ -66,7 +66,7 @@
 <script>
   // eslint-disable
   import TopoScale from './TopoScale'
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapActions, mapGetters, mapMutations } from 'vuex'
 
   var width = window.innerWidth
   var height = window.innerHeight
@@ -344,10 +344,17 @@
       // })
     },
     methods: {
+      ...mapMutations({
+        removeNode: 'topo/removeNode',
+        moveToTop: 'topo/moveToTop',
+        moveToBottom: 'topo/moveToBottom',
+        moveDown: 'topo/moveDown',
+        moveUp: 'topo/moveUp',
+        setZIndex: 'topo/setZIndex',
+      }),
       ...mapActions({
         setKonva: 'topo/Sale',
         initKonva: 'topo/initKonva',
-        removeNode: 'topo/removeNode',
       }),
       showMenu() {
         event.preventDefault()
@@ -368,30 +375,30 @@
       deleteSahpe() {
         this.removeNode()
       },
-      moveToBottom() {
-        this.$message({
-          type: 'success',
-          message: '置底节点!',
-        })
-      },
-      moveDown() {
-        this.$message({
-          type: 'success',
-          message: '节点下移!',
-        })
-      },
-      moveToTop() {
-        this.$message({
-          type: 'success',
-          message: '置顶节点!',
-        })
-      },
-      moveUp() {
-        this.$message({
-          type: 'success',
-          message: '节点上移!',
-        })
-      },
+      // moveToBottom() {
+      //   this.$message({
+      //     type: 'success',
+      //     message: '置底节点!',
+      //   })
+      // },
+      // moveDown() {
+      //   this.$message({
+      //     type: 'success',
+      //     message: '节点下移!',
+      //   })
+      // },
+      // moveToTop() {
+      //   this.$message({
+      //     type: 'success',
+      //     message: '置顶节点!',
+      //   })
+      // },
+      // moveUp() {
+      //   this.$message({
+      //     type: 'success',
+      //     message: '节点上移!',
+      //   })
+      // },
       getPicture(){
         const link = document.createElement('a')
         link.href = topo.toDataURL

@@ -7,7 +7,7 @@
 // * @DocumentLink: https://konvajs.org/docs/index.html
 // * @Demo http://39.97.252.98:3000
 import konva from 'konva'
-
+import addNodeEvent from '@/utils/konva/common'
 /**
  * @description konva画布默认参数
  * @type {{width: number, scale: number, height: number}}
@@ -17,6 +17,11 @@ let konvaAttr = {
   height: 700, // 布局宽度
   scale: 100, // 缩放比例
 }
+/**
+ * @description 鼠标右键操作项
+ * @type {string[]}
+ */
+const Layering =['moveDown','moveToBottom','moveToTop','moveUp']
 /**
  *
  * @type {{clickItem: {}, konva: ({mutations: {setPointStart(*, *): void, setGraphColor(*, *): void, setFlag(*, *): void, setDrawing(*, *): void, setGraphNow(*, *): void, setDrawParams(*, *): void, setSizeForm(*, *): void, setDraw(*, *): void}, state: function(): {sizeForm: {}, pointStart: [], flag: null, drawing: boolean, graphNow: null, graphColor: string, draw: [], drawParams: {}}, getters: {sizeForm: function(*): *, pointStart: function(*): *, flag: function(*): *, drawing: function(*): *, graphNow: function(*): *, graphColor: function(*): *, draw: function(*): *, drawParams: function(*): *}, actions: {setPointStart({commit: *}, *=): void, setGraphColor({commit: *}, *=): void, setFlag({commit: *}, *=): void, setDrawing({commit: *}, *=): void, setGraphNow({commit: *}, *=): void, setDrawParams({commit: *}, *=): void, setSizeForm({commit: *}, *=): void, setDraw({commit: *}, *=): void}}|*), Transformer: *, stage: *, data: *[], contextmenu: {}, listener: (function(): string), toDataURL: string, konvaAttr: {width: number, scale: number, height: number}, activeShape: {}, Konvajson: {}, layer: *}}
@@ -38,8 +43,6 @@ var topo = {
   toDataURL:''
 }
 window.topo = topo
-
-import addNodeEvent from '@/utils/konva/common'
 
 /**
  * @description EventKey 操作konva对象的属性
@@ -71,6 +74,7 @@ export function KonvaBus(args) {
     setattrs = konvaAttr,
     src = '',
     removeNode,
+    node,
     text='单击修改文字'
   } = args
   console.log('KonvaBus type is ' + type)
@@ -153,6 +157,11 @@ export function KonvaBus(args) {
     });
     console.error(complexText)
     layer.add(complexText)
+  }else if(Layering.indexOf(type) >0){
+    // https://github.dev/fastdgiot/vue-konva-demo
+    console.error('Layering',type,node, node[`${type}`]())
+    node[`${type}`]()
+    layer.draw()
   }else{
     console.log(type,"type")
   }
@@ -162,10 +171,11 @@ export function KonvaBus(args) {
       topo.contextmenu = e.target
       console.log('contextmenu',e.target)
     })
-    node.on('click',e=>{
-      topo.clickItem = e.target
-      console.log('click',e)
-    })
+    // node.on('click',e=>{
+    //   topo.clickItem = e.target
+    //   console.log('click',e)
+    //
+    // })
   })
   stage.find('Image').forEach((node) => {
     const img = new Image()
@@ -199,6 +209,7 @@ export function KonvaBus(args) {
     if (node.getAttr('name') == 'thing') {
       const nodeTags = node.getChildren()
       nodeTags.forEach((tag) => {
+        console.log("all tag",tag)
         const event = tag.getAttr('name')
         if (event) {
           addNodeEvent(addNodeEvent(node.getAttr('name'), event, node))
@@ -255,8 +266,7 @@ function selectBg(src) {
 function moveToTop() {
   KonvaBus({
     type: 'moveToTop',
-    productid,
-    text,
+    node: topo.contextmenu,
     json: topo.Konvajson,
   })
 }
@@ -268,8 +278,7 @@ function moveToTop() {
 function moveToBottom() {
   KonvaBus({
     type: 'moveToBottom',
-    productid,
-    text,
+    node: topo.contextmenu,
     json: topo.Konvajson,
   })
 }
@@ -281,8 +290,7 @@ function moveToBottom() {
 function moveDown() {
   KonvaBus({
     type: 'moveDown',
-    productid,
-    text,
+    node: topo.contextmenu,
     json: topo.Konvajson,
   })
 }
@@ -294,8 +302,7 @@ function moveDown() {
 function moveUp() {
   KonvaBus({
     type: 'moveUp',
-    productid,
-    text,
+    node: topo.contextmenu,
     json: topo.Konvajson,
   })
 }
@@ -307,8 +314,7 @@ function moveUp() {
 function setZIndex() {
   KonvaBus({
     type: 'ZIndex',
-    productid,
-    text,
+    node: topo.contextmenu,
     json: topo.Konvajson,
   })
 }
@@ -433,6 +439,21 @@ const mutations = {
   removeNode(state, args) {
     removeNode(args)
   },
+  moveToTop(state, args) {
+    moveToTop(args)
+  },
+  moveToBottom(state, args) {
+    moveToBottom(args)
+  },
+  moveDown(state, args) {
+    moveDown(args)
+  },
+  moveUp(state, args) {
+    moveUp(args)
+  },
+  setZIndex(state, index) {
+    setZIndex(index)
+  },
   activeShape(state, shape) {
     state.activeShape = shape
     topo.activeShape = shape
@@ -441,6 +462,21 @@ const mutations = {
 const actions = {
   setKonvaBg({ commit }, bg) {
     commit('setKonvaBg', bg)
+  },
+  moveUp({ commit }, args) {
+    commit('moveUp', args)
+  },
+  setZIndex({ commit }, index) {
+    commit('setZIndex', index)
+  },
+  moveDown({ commit }, args) {
+    commit('moveDown', args)
+  },
+  moveToBottom({ commit }, args) {
+    commit('moveToBottom', args)
+  },
+  moveToTop({ commit }, args) {
+    commit('moveToTop', args)
   },
   removeNode({ commit }, args) {
     commit('removeNode', args)

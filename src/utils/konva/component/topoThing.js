@@ -1,6 +1,9 @@
 const topoThing = {
   on(args) {
-    console.log(args)
+  },
+  create() {
+    const topo = {}
+    return topo
   },
 }
 
