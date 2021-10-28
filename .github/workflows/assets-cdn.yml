@@ -18,7 +18,7 @@ jobs:
           npm install -g yarn
           yarn config set registry https://registry.npm.taobao.org
           yarn -v
-          yarn install -g rimraf @vue/cli-service
+          yarn global add rimraf @vue/cli-service
           yarn config get registry
       #      - name: Cache pnpm-store
       #        id: cache-pnpm-store
