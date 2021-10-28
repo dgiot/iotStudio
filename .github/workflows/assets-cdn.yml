@@ -15,35 +15,35 @@ jobs:
       # 设置缓存依赖，加快下次安装依赖的速度
       - name: install pnpm
         run: |
-          npm install -g pnpm
-          pnpm config set registry https://registry.npm.taobao.org
-          pnpm -v
-          pnpm install -g rimraf @vue/cli-service
-          pnpm config get registry
-      - name: Cache pnpm-store
-        id: cache-pnpm-store
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-store
-      - name: Cache node_modules
-        id: cache-node-modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: ${{ hashFiles('**/package.json') }}-pnpm
+          npm install -g yarn
+          yarn config set registry https://registry.npm.taobao.org
+          yarn -v
+          yarn install -g rimraf @vue/cli-service
+          yarn config get registry
+      #      - name: Cache pnpm-store
+      #        id: cache-pnpm-store
+      #        uses: actions/cache@v1
+      #        with:
+      #          path: ~/.pnpm-store
+      #          key: ${{ runner.os }}-pnpm-store
+      #      - name: Cache node_modules
+      #        id: cache-node-modules
+      #        uses: actions/cache@v1
+      #        with:
+      #          path: node_modules
+      #          key: ${{ hashFiles('**/package.json') }}-pnpm
       - name: Setup node
         uses: actions/setup-node@v1
         with:
           node-version: 14.15.4
-          cache: pnpm
+          cache: yarn
       # 安装依赖
       - name: Install dependencies
-        run: pnpm i --lockfile-only
+        run: yarn install
 
       # 构建文件
       - name: Generate files
-        run: pnpm run build
+        run: yarn build
 
       - name: Upload COS
         uses: zkqiang/tencent-cos-action@v0.1.0
