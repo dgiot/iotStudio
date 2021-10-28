@@ -196,13 +196,13 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('product.producttemplet')">
-            <template slot-scope="scope">
-              <span>
-                {{ scope.row.producttemplet ? scope.row.producttemplet.name : '' }}
-              </span>
-            </template>
-          </el-table-column>
+          <!--          <el-table-column :label="$translateTitle('product.producttemplet')">-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <span>-->
+          <!--                {{ scope.row.producttemplet ? scope.row.producttemplet.name : '' }}-->
+          <!--              </span>-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
           <el-table-column
             :label="$translateTitle('product.addingtime')"
           >

@@ -172,7 +172,7 @@ class="ace_text-input"
               :key="index"
               class="infinite-list-item"
               disabled
-              @click.stop="categorysonChange(item, index)"
+              @click.stop="categorysonChange(item)"
             >
               <el-link :type="linkType == item.name ? 'success' : ''">
                 {{ item.name }}&nbsp;&nbsp;&nbsp;
@@ -222,7 +222,7 @@ class="ace_text-input"
                 width="80"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.name }}</span>
+                  <span>{{ scope.row.category?scope.row.category.name:'' }}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -778,12 +778,11 @@ import {getCategory, queryCategory} from '@/api/Category'
         }
         loading.close()
       },
-      categorysonChange(data, index) {
+      categorysonChange(data) {
         this.linkType = data.name
         this.queryProduttemp({ category: data.objectId })
       },
       addproducttemp(data) {
-        console.log('fff', data)
         this.fetchData()
         this.addflag = true
         this.form = {
@@ -805,7 +804,8 @@ import {getCategory, queryCategory} from '@/api/Category'
         this.addflag = false
         this.form = row
         this.producttempId = row.objectId
-        this.$set(this.form, 'categoryname', row.category.name)
+        this.$set(this.form, 'categoryname', row.category?row.category.name:'')
+        this.$set(this.form, 'categoryid', row.category?row.category.objectId:'')
         this.dialogFormVisible = true
       },
       deleteproducttemp(row) {

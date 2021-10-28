@@ -167,7 +167,7 @@
                 <el-descriptions-item
                   :label="$translateTitle('product.classification')"
                 >
-                  {{ productdetail.category }}
+                  {{ productdetail.categoryname }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                   <template slot="label">

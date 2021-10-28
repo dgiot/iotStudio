@@ -2397,7 +2397,7 @@ export default {
       this.queryDeviceCount(this.productId)
       this.$get_object('Product', this.productId)
         .then((response) => {
-          // console.log("response", response)
+          console.log("response", response)
           if (response) {
             this.productInfo = _.merge(response, {
               decoder: { code: '' },
@@ -2417,6 +2417,12 @@ export default {
             this.productdetail.id = response.id
             this.dynamicReg = response.dynamicReg
             this.productdetail.isshow = 0
+
+            this.$get_object('Category', this.productdetail.category.objectId).then(cat=>{
+              console.log('catcat', cat)
+              this.$set(this.productdetail, 'categoryname', cat.name)
+            })
+
             this.form.Productname = response.name
             this.ProductSecret = response.productSecret
             this.form.Productkey = this.productId
