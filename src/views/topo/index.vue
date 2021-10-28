@@ -173,6 +173,131 @@
           // set backgroundImage
         }
         console.error(data.Stage)
+        data.Stage = {
+          "attrs": {
+            "width": 2382,
+            "height": 1684,
+            "draggable": true
+          },
+          "className": "Stage",
+          "children": [
+            {
+              "attrs": {
+                "hitGraphEnabled": false
+              },
+              "className": "Layer",
+              "children": [
+                {
+                  "attrs": {
+                    "draggable": true,
+                    "x": 306,
+                    "y": 303,
+                    "transformsEnabled": "position"
+                  },
+                  "className": "Group",
+                  "children": [
+                    {
+                      "attrs": {
+                        "radius": 20,
+                        "stroke": "#231fff",
+                        "strokeWidth": 4,
+                        "fill": "#ffffff"
+                      },
+                      "className": "Circle"
+                    },
+                    {
+                      "attrs": {
+                        "text": "1",
+                        "fontSize": 14,
+                        "originX": "center",
+                        "originY": "center",
+                        "fill": "#231fff",
+                        "x": -5,
+                        "y": -5
+                      },
+                      "className": "Text"
+                    },
+                    {
+                      "attrs": {
+                        "data": "M.91,0H29.09A.91.91,0,0,1,30,.91v243a.88.88,0,0,1-.26.63L15.65,258.86a.9.9,0,0,1-1.3,0L.26,244.52a.88.88,0,0,1-.26-.63V.91A.91.91,0,0,1,.91,0Z",
+                        "originX": "center",
+                        "originY": "bottom",
+                        "x": 10,
+                        "y": 15,
+                        "angle": -30,
+                        "fill": "#231fff",
+                        "scaleX": 0.15,
+                        "scaleY": 0.15,
+                        "rotation": -30
+                      },
+                      "className": "Path"
+                    }
+                  ]
+                },
+                {
+                  "attrs": {
+                    "draggable": true,
+                    "x": 120,
+                    "y": 157,
+                    "transformsEnabled": "position"
+                  },
+                  "className": "Group",
+                  "children": [
+                    {
+                      "attrs": {
+                        "radius": 20,
+                        "stroke": "#231fff",
+                        "strokeWidth": 4,
+                        "fill": "#ffffff"
+                      },
+                      "className": "Circle"
+                    },
+                    {
+                      "attrs": {
+                        x: 2,
+                        y: 1,
+                        text:
+                          "COMPLEX TEXT\n\nAll the world's a stage, and all the men and women merely players. They have their exits and their entrances.",
+                        fontSize: 18,
+                        fontFamily: 'Calibri',
+                        fill: '#555',
+                        width: 300,
+                        padding: 20,
+                        align: 'center',
+                      },
+                      "className": "Text"
+                    },
+                    {
+                      "attrs": {
+                        "data": "M.91,0H29.09A.91.91,0,0,1,30,.91v243a.88.88,0,0,1-.26.63L15.65,258.86a.9.9,0,0,1-1.3,0L.26,244.52a.88.88,0,0,1-.26-.63V.91A.91.91,0,0,1,.91,0Z",
+                        "originX": "center",
+                        "originY": "bottom",
+                        "x": 10,
+                        "y": 15,
+                        "angle": -30,
+                        "fill": "#231fff",
+                        "scaleX": 0.15,
+                        "scaleY": 0.15,
+                        "rotation": -30
+                      },
+                      "className": "Path"
+                    }
+                  ]
+                },
+                {
+                  "attrs": {},
+                  "className": "Image"
+                },
+                {
+                  "attrs": {
+                    "src": "https://konvajs.org/assets/yoda.jpg"
+                  },
+                  "className": "Image"
+                }
+              ]
+            }
+          ]
+        }
         this.initKonva({
           data: data
             .Stage,

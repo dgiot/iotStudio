@@ -32,10 +32,12 @@ import Directives from './directives/index.js'
 // Vue.prototype.$confirm = MessageBox.confirm
 // Vue.prototype.$message = Message
 // Vue.prototype.$axios = axios
-
+import VueContextMenu from 'vue-contextmenu'
 Vue.component('VabIcon', VabIcon)
 Vue.use(Directives)
 Vue.use(utilwen)
+Vue.use(VueContextMenu)
+
 // 加载主题
 const requireTheme = require.context('./styles/themes', false, /\.scss$/)
 requireTheme.keys()

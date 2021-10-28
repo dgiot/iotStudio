@@ -309,8 +309,8 @@
         .el-tabs__item {
           height: auto;
           padding: 0;
-          text-align: center;
           color: $base-color-white;
+          text-align: center;
 
           .el-image {
             display: block;

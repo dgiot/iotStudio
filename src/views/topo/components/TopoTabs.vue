@@ -3,8 +3,10 @@
   <div class="icon-selector-popper">
     <div class="dialog">
       <vab-input
+        :params="inputParams"
         ref="uploadFinish"
         @fileInfo="fileInfo"
+        @files="files"
       />
     </div>
     <a-tabs
@@ -206,6 +208,7 @@
     name: 'TopoTabs',
     data() {
       return {
+        inputParams: {},
         upImgType: 'bg',
         tabPosition: 'left',
         iconfont,
@@ -290,10 +293,21 @@
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
           new MouseEvent('click'),
         )
+        this.inputParams = {
+          file: '',
+          scene: 'app',
+          path: 'product/topo/',
+          filename: `${this.$route.query.productid}_bg`,
+        }
+      },
+      files(file, type) {
+        this.inputParams.filename = `${this.$route.query.productid}_bg`
+        this.inputParams.file = file
       },
       ...mapMutations({
         setFlag: 'konva/setFlag',
         setDrawParams: 'konva/setDrawParams',
+        setKonvaBg: 'topo/setKonvaBg',
       }),
       // mousedown(item) {
       //   this.$emit('fatherMousedown', item)
@@ -329,15 +343,15 @@
         this.queryForm.pageNo = 1
         this.fetchData()
       },
-      fileInfo(res) {
+    async fileInfo(res) {
         console.log(res)
-        this.dialogVisible = !this.dialogVisible
         if (this.upImgType === 'img') {
-          this.handleIcon(res.url)
+          await this.handleIcon(res.url)
         } else {
           //  直接设置背景图的地址
-          console.log('set konva bg', res.url)
-          localStorage.setItem('konvaBg', res.url)
+          console.log('set konva bg', res.path)
+          localStorage.setItem('konvaBg', res.path)
+         await this.setKonvaBg(res.path)
           //  然后重新绘制一下 使用vuex topo
         }
       },
