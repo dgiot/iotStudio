@@ -179,14 +179,14 @@
               attrs: {
                 width: 1200,
                 height: 700,
-                draggable: true,
+                draggable: false,
               },
               className: 'Stage',
               children: [
                 {
                   attrs: {
                     id: 'Layer_1',
-                    draggable: true,
+                    draggable: false,
                   },
                   className: 'Layer',
                   children: [

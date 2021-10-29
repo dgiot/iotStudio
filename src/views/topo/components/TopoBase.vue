@@ -415,6 +415,9 @@
         console.log(topo.contextmenu)
         this.thingDialog = ! this.thingDialog
       },
+      updataTopo(){
+
+      },
       createTopo(json) {
         // this.initKonva('kevCurrent', json)
         console.clear()
