@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import { getProduct } from '@/api/Product'
+  import { getProduct ,putProduct} from '@/api/Product'
   export default {
     name: 'Thing',
     components: {},
@@ -45,6 +45,9 @@
     },
     computed: {},
     mounted() {
+      this.$baseEventBus.$on('busUpdata', () => {
+        this.updataTopo()
+      })
       this.$dgiotBus.off(this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'))
       this.$dgiotBus.on(
         this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'),
@@ -67,6 +70,20 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      async updataTopo(){
+        const loading = this.$baseLoading()
+        try{
+          const params = {
+            thing: topo.Konvajson
+          }
+          this.$message.success(this.$translateTitle('user.update completed'))
+          const res = await putProduct(this.$route.query.productid,params)
+          loading.close()
+        }catch (e) {
+          loading.close()
+          console.log(e)
+        }
+      },
     async  bindTopo(args) {
       const loading = this.$baseLoading()
       this.thingArgs = {
