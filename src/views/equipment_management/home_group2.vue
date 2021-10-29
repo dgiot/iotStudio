@@ -2525,39 +2525,38 @@
                 config : {
                   konva: {
                     Stage: {
-                      attrs: {
-                        x: 14,
-                        y: 29,
-                        id: 'current1',
-                        width: 1868,
-                        height: 469,
-                        draggable: true,
-                        listening: true,
+                      "attrs": {
+                        "width": 1200,
+                        "height": 700,
+                        "draggable": true
                       },
-                      children: [
+                      "className": "Stage",
+                      "children": [
                         {
-                          attrs: {
-                            draggable: true,
-                            listening: true,
-                            id: 'Layer_' + Mock.mock('@string'),
+                          "attrs": {
+                            "id":"Layer_1",
+                            "draggable": true,
                           },
-                          children: [
+                          "className": "Layer",
+                          "children": [
                             {
-                              attrs: {
-                                draggable: true,
-                                listening: true,
-                                id: 'Group_' + Mock.mock('@string'),
-                                width: 2000,
-                                height: 2000,
-                              },
-                              children: [],
-                              className: 'Group',
+                              "className": "Label",
+                              "children": [
+                              ]
                             },
-                          ],
-                          className: 'Layer',
-                        },
-                      ],
-                      className: 'Stage',
+                            {
+                              "attrs": {
+                                "id":"bg",
+                                width: 1200, // 布局宽度
+                                height: 700, // 布局高度
+                                "draggable": false,
+                                "src": "https://cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361"
+                              },
+                              "className": "Image"
+                            }
+                          ]
+                        }
+                      ]
                     },
                   },
                 },

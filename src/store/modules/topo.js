@@ -8,6 +8,7 @@
 // * @Demo http://39.97.252.98:3000
 import konva from 'konva'
 import addNodeEvent from '@/utils/konva/common'
+import dgiotBus from '@dgiot/dgiot-mqtt-dashboard/src/utils/bus'
 /**
  * @description konva画布默认参数
  * @type {{width: number, scale: number, height: number}}
@@ -224,14 +225,14 @@ export function KonvaBus(args) {
     }
   })
   stage.find('Label').forEach((node) => {
-    console.log(node, node.attrs)
+    console.warn('Label',node, node.attrs)
     if (node.getAttr('name') == 'thing') {
       const nodeTags = node.getChildren()
       nodeTags.forEach((tag) => {
-        console.log("all tag",tag)
         const event = tag.getAttr('name')
+        console.warn("all tag",tag,event)
         if (event) {
-          addNodeEvent(addNodeEvent(node.getAttr('name'), event, node))
+          addNodeEvent(addNodeEvent(node.getAttr('name'), `${event}`, node))
         }
       })
       console.log()

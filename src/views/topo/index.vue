@@ -1,3 +1,4 @@
+<!--eslint-disable-->
 <template>
   <div
     :class="{ 'vab-fullscreen': isFullscreen, 'konva-fullscreen': isDevice }"
@@ -54,10 +55,7 @@
             hidden-xs-only
           >
             <el-aside class="konva-container-main-operationsSide">
-              <TopoOperation
-                ref="operation"
-                @upconfig="saveKonvaitem"
-              />
+              <TopoOperation ref="operation" @upconfig="saveKonvaitem" />
             </el-aside>
           </el-col>
         </el-row>
@@ -126,121 +124,97 @@
       this.$dgiotBus.$emit(
         'MqttUnbscribe',
         this.$dgiotBus.topicKey(this.router + this.topotopic),
-        this.topotopic,
+        this.topotopic
       )
     },
-    created() {
-    },
+    created() {},
     methods: {
       ...mapActions({
         initKonva: 'topo/initKonva',
       }),
-      saveKonvaitem() {
-
-      },
+      saveKonvaitem() {},
       async handleMqtt() {
         let _this = this
         if (_this.$route.query.type == 'device') {
           _this.productid = _this.$route.query.deviceid
         }
-        const {
-          productid,
-          devaddr = undefined,
-        } = _this.$route.query
-        let params = {
-          productid: productid,
-          devaddr: devaddr,
-        }
-        const {
-          message = '',
-          data,
-        } = await _getTopo(params)
-        // 绘制前不光需要获取到组态数据，还需要获取产品数据
-        const { results = [] } = await queryProduct({
-          where: { objectId: _this.$route.query.productid },
-        })
-        _this.productconfig = results[0]
-        console.log(_this.productconfig)
-        if (message == 'SUCCESS') {
-          // console.log(this.$refs['edrawer'].$refs, 'edrawer')
-          _this.$refs['operation']
-            ? (_this.$refs['operation'].productconfig = results[0])
-            : console.log(' _this.$refs[\'operation\']', _this.$refs['operation'])
-          _this.globalStageid = data.Stage.attrs.id
-          // _this.createKonva(data, _this.globalStageid, 'create')
-          _this.paramsconfig = { konva: data }
-          //
-          // set backgroundImage
-        }
-        // console.error(data.Stage)
-        data.Stage = {
-          "attrs": {
-            "width": 2382,
-            "height": 1684,
-            "draggable": true
-          },
-          "className": "Stage",
-          "children": [
-            {
-              "attrs": {
-                "id":"Layer_1",
-                "draggable": true,
+        const loading = this.$baseColorfullLoading(3)
+        try {
+          const { productid, devaddr = undefined } = _this.$route.query
+          let params = {
+            productid: productid,
+            devaddr: devaddr,
+          }
+          const { message = '', data } = await _getTopo(params)
+          // 绘制前不光需要获取到组态数据，还需要获取产品数据
+          const { results = [] } = await queryProduct({
+            where: { objectId: _this.$route.query.productid },
+          })
+          _this.productconfig = results[0]
+          console.log(_this.productconfig)
+          if (message == 'SUCCESS') {
+            // console.log(this.$refs['edrawer'].$refs, 'edrawer')
+            _this.$refs['operation']
+              ? (_this.$refs['operation'].productconfig = results[0])
+              : console.log(
+                  " _this.$refs['operation']",
+                  _this.$refs['operation']
+                )
+            _this.globalStageid = data.Stage.attrs.id
+            // _this.createKonva(data, _this.globalStageid, 'create')
+            _this.paramsconfig = { konva: data }
+            //
+            // set backgroundImage
+          }
+          loading.close()
+          console.log('topo info msg', data.Stage)
+          this.initKonva({
+            data: data.Stage,
+            id: 'kevCurrent',
+          })
+        } catch (e) {
+          loading.close()
+          const data = {
+            Stage: {
+              attrs: {
+                width: 1200,
+                height: 700,
+                draggable: true,
               },
-              "className": "Layer",
-              "children": [
+              className: 'Stage',
+              children: [
                 {
-                  "attrs": {
-                    "id":"Group_1",
-                    "draggable": true,
-                    "x": 306,
-                    "y": 303,
-                    "transformsEnabled": "position"
+                  attrs: {
+                    id: 'Layer_1',
+                    draggable: true,
                   },
-                  "className": "Group",
-                  "children": [
+                  className: 'Layer',
+                  children: [
                     {
-                      "attrs": {
-                        "id":"test_1",
-                        "draggable": true,
-                        "text": "温度",
-                        "fontSize": 14,
-                        "originX": "center",
-                        "originY": "center",
-                        "fill": "#231fff",
-                        "x": -5,
-                        "y": -5
-                      },
-                      "className": "Text"
+                      className: 'Label',
+                      children: [],
                     },
-                  ]
+                    {
+                      attrs: {
+                        id: 'bg',
+                        width: 1200, // 布局宽度
+                        height: 700, // 布局高度
+                        draggable: false,
+                        src: 'https://cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361',
+                      },
+                      className: 'Image',
+                    },
+                  ],
                 },
-                {
-                  "attrs": {
-                    "id":"img_1",
-                    "draggable": true,
-                    "src": "https://konvajs.org/assets/yoda.jpg"
-                  },
-                  "className": "Image"
-                },
-                {
-                  "attrs": {
-                    "id":"bg",
-                    width: 1200, // 布局宽度
-                    height: 700, // 布局高度
-                    "draggable": false,
-                    "src": "/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361"
-                  },
-                  "className": "Image"
-                }
-              ]
-            }
-          ]
+              ],
+            },
+          }
+          this.initKonva({
+            data: data.Stage,
+            id: 'kevCurrent',
+          })
+          console.log('topo info msg 没有组态 给个默认的', e)
         }
-        this.initKonva({
-          data: data
-            .Stage,
-          id: 'kevCurrent',
-        })
       },
     },
   }
@@ -285,7 +259,7 @@
           &-baseContainer {
             height: calc(
               100vh - #{$base-top-bar-height} * 2.7 - #{$base-padding} * 2 -
-              90px
+                90px
             ) !important;
           }
         }
