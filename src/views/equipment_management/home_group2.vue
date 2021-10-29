@@ -2479,7 +2479,7 @@
           icon: this.imageUrl,
           devType: this.form.devType,
           desc: this.form.desc,
-          thing: this.form.thing,
+          thing: this.form.thing ? this.form.thing : {},
           category : {
             objectId: Number(this.form.type) == 0 ? '5ca6049839' : this.form.categoryid,
             __type: 'Pointer',

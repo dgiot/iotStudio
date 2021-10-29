@@ -273,6 +273,7 @@ class="ace_text-input"
           :xs="24"
         >
           <profile-descriptions
+            :thing-key="thingKey"
             ref="ProfileDescription"
             :decoder-table-list="decoderTableList"
             :dict-table-list="dictTableList"
@@ -472,6 +473,7 @@ import {getCategory, queryCategory} from '@/api/Category'
         things: [],
         tableType: 'things',
         multipleTable: [],
+        thingKey: moment(new Date()).valueOf().toString(),
         productDetail: {
           decoder: { code: '' },
           thing: { properties: [] },
@@ -649,6 +651,7 @@ import {getCategory, queryCategory} from '@/api/Category'
         wmxdialogVisible: false,
         schemadialogVisible: false,
         wmxSituation: '新增',
+        modifyIndex: -1,
       }
     },
     computed: {
@@ -1413,34 +1416,29 @@ import {getCategory, queryCategory} from '@/api/Category'
           attributevalue: '',
         })
       },
-      deletewmx(row) {
-        // this.productdetail.thing.properties.splice(
-        //   (this.wmxstart - 1) * this.wmxPageSize + index,
-        //   1
-        // )
-        const params = {
-          productid: this.producttempId,
-          item: row,
+      deletewmx(index) {
+        this.productDetail.thing.properties.splice(index, 1)
+        let data = {
+          thing: { properties: this.productDetail.thing.properties },
         }
-        deleteThing(params).then((res) => {
-          console.log('删除', res)
-          if (res.code == 200) {
+        putProductTemplet(this.producttempId, data).then((res) => {
+          if (res.updatedAt) {
             this.$message({
               type: 'success',
               message: '删除成功',
             })
-            this.getProDetail()
           } else {
             this.$message({
               type: 'warning',
-              message: '删除失败 ' + res.msg,
+              message: '删除失败',
             })
           }
-        })
+        }).catch((e) => {
+            console.log(e)
+          })
       },
       wmxDataFill(rowData, index) {
         this.modifyIndex = index
-        // console.log("rowData ", rowData);
         this.wmxdialogVisible = true
         this.wmxSituation = '编辑'
         var obj = {}
@@ -1756,6 +1754,7 @@ import {getCategory, queryCategory} from '@/api/Category'
       },
       // 物模型提交
       submitFormwmx(sizeForm) {
+        console.log('sizeForm', sizeForm)
         var obj = {
           name: sizeForm.name,
           devicetype: sizeForm.devicetype,
@@ -1804,12 +1803,6 @@ import {getCategory, queryCategory} from '@/api/Category'
             },
           }
           Object.assign(obj, obj1)
-          // 去除多余的属性
-          if (!this.showNewItem) {
-            delete obj.dataForm.operatetype
-            delete obj.dataForm.originaltype
-            delete obj.dataForm.slaveid
-          }
         } else if (sizeForm.type == 'image') {
           obj1 = {
             dataType: {
@@ -1881,10 +1874,17 @@ import {getCategory, queryCategory} from '@/api/Category'
         delete obj.index
         console.log('obj', obj)
         // 检测到
+        // if (this.wmxSituation == '新增') {
+          // console.log("新增");
         if (this.wmxSituation == '新增') {
           // console.log("新增");
           this.productDetail.thing.properties.unshift(obj)
-          console.log('新增', this.productDetail.thing.properties)
+        } else if (this.wmxSituation == '编辑') {
+          // console.log("编辑", obj);
+          this.productDetail.thing.properties[this.modifyIndex] = obj
+          this.thingKey = moment(new Date()).valueOf().toString()
+        }
+          console.log(this.wmxSituation, this.productDetail.thing.properties)
           let data = {
             thing: { properties: this.productDetail.thing.properties },
           }
@@ -1902,7 +1902,7 @@ import {getCategory, queryCategory} from '@/api/Category'
               })
             }
           })
-        }
+        // }
         this.wmxdialogVisible = false
       },
       // 查看物模型模板

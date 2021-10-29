@@ -123,7 +123,10 @@
       size="medium"
       style="width: 100%"
     >
-      <div v-if="tableType == 'things'">
+      <div
+        :key="tableType+thingKey"
+        v-if="tableType == 'things'"
+      >
         <el-table-column type="expand">
           <template
             v-if="scope.row.dataType.type == 'struct'"
@@ -282,14 +285,14 @@
             <el-button
               size="mini"
               type="danger"
-              @click="deletewmx(scope.row)"
+              @click="deletewmx(scope.$index)"
             >
               {{ $translateTitle('developer.delete') }}
             </el-button>
             <el-button
               size="mini"
               type="primary"
-              @click="wmxDataFill(scope.row, scope.row.index)"
+              @click="wmxDataFill(scope.row, scope.$index)"
             >
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
@@ -417,6 +420,11 @@
   export default {
     name: 'ProfileDescriptions',
     props: {
+      thingKey: {
+        required: true,
+        type: String,
+        default: '',
+      },
       productId: {
         required: true,
         type: String,
