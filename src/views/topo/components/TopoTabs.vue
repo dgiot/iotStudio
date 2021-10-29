@@ -199,7 +199,7 @@
     )
   // https://blog.csdn.net/u010007013/article/details/102674042
   // import imgHost from '../../../../public/assets/images/dgiot_release/topo/'
-  console.log(imgHost, process.env.BASE_URL, process.env)
+  // console.log(imgHost, process.env.BASE_URL, process.env)
   //   20210821112723
   //   https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json
   // const iconfont = require('https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json')

@@ -225,6 +225,8 @@
                 {
                   "attrs": {
                     "id":"bg",
+                    width: 1200, // 布局宽度
+                    height: 700, // 布局高度
                     "draggable": false,
                     "src": "/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361"
                   },

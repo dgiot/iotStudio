@@ -1257,7 +1257,7 @@
 <script>
   import mockModules from '@/api/Mock/Modules'
 
-  console.log('dataType', mockModules)
+  // console.log('dataType', mockModules)
   import { getAllunit } from '@/api/Dict/index'
   import { mapGetters, mapMutations } from 'vuex'
   import { putProject } from '@/api/Project'

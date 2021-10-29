@@ -14,7 +14,7 @@ import addNodeEvent from '@/utils/konva/common'
  */
 let konvaAttr = {
   width: 1200, // 布局宽度
-  height: 700, // 布局宽度
+  height: 700, // 布局高度
   scale: 100, // 缩放比例
 }
 /**
@@ -71,11 +71,17 @@ export function KonvaBus(args) {
     attr = 'kevCurrent',
     json,
     productid='',
-    setattrs = konvaAttr,
+    setattrs = topo.konvaAttr,
     src = '',
     removeNode,
     node,
-    text='单击修改文字'
+    text='单击修改文字',
+    saleInfo = {
+      width:konvaAttr.width,
+      height:konvaAttr.height,
+      scaleX:1,
+      scaleY:1
+    }
   } = args
   console.log('KonvaBus type is ' + type)
   console.log(args)
@@ -102,8 +108,10 @@ export function KonvaBus(args) {
           id: 'bg',
           src,
           image: imageObj,
-          width: konvaAttr.width,
-          height: konvaAttr.height,
+          width: setattrs.width,
+          height: setattrs.height,
+            scaleX: saleInfo.scaleX,
+            scaleY: saleInfo.scaleY,
         })
         layer.add(yoda)
         console.log('setBg', layer, yoda)
@@ -125,6 +133,8 @@ export function KonvaBus(args) {
       fill: '#555',
       width: 300,
       padding: 20,
+      scaleX: saleInfo.scaleX,
+      scaleY: saleInfo.scaleY,
       align: 'center',
       draggable:true,
       "attrs":{
@@ -162,11 +172,20 @@ export function KonvaBus(args) {
     console.error('Layering',type,node, node[`${type}`]())
     node[`${type}`]()
     layer.draw()
+  } else if(type ==='setSale'){
+    console.log('缩放',saleInfo)
+    // updateCanvasAttr(scaleX)
+    stage.batchDraw()
+    layer.batchDraw()
   }else{
     console.log(type,"type")
   }
   stage.find('Text').forEach((node) => {
     console.log('Text',node)
+    node.setAttrs({
+      scaleX: saleInfo.scaleX,
+      scaleY: saleInfo.scaleY,
+    })
     node.on('contextmenu',e=>{
       topo.contextmenu = e.target
       console.log('contextmenu',e.target)
@@ -230,8 +249,10 @@ export function KonvaBus(args) {
     container: attr,
     // width: setattrs.width ? setattrs.width : konvaAttr.width,
     // height: setattrs.height ? setattrs.height : konvaAttr.height,
-    width: 1200,
-    height: 700,
+    width: saleInfo.width,
+    height: saleInfo.height,
+    scaleX: saleInfo.scaleX,
+    scaleY: saleInfo.scaleY,
   })
   topo.Konvajson = stage.toJSON()
   topo.json = stage
@@ -360,22 +381,39 @@ function updateCanvasAttr(scale) {
     height: height,
     scale: scale,
   }
-  topo.konvaAttr = canvasAttr
-  topo.stage.setAttrs({
-    width: newWidth,
-    height: newHeight,
-    scaleX: scale,
-    scaleY: scale,
-  })
+  // topo.konvaAttr = canvasAttr
+  // topo.stage.setAttrs({
+  //   width: newWidth,
+  //   height: newHeight,
+  //   scaleX: scale,
+  //   scaleY: scale,
+  // })
+  // topo.layer.setAttrs({
+  //   width: newWidth,
+  //   height: newHeight,
+  //   scaleX: scale,
+  //   scaleY: scale,
+  // })
+  // const layChildren = topo.layer.children
+  // layChildren.forEach((child) =>{
+  //   child.setAttrs({
+  //       width: newWidth,
+  //       height: newHeight,
+  //       scaleX: scale,
+  //       scaleY: scale,
+  //     })
+  //   console.log(child)
+  // })
+  // topo.layer.draw()
   //
-  console.log(
-    topo.stage.setAttrs({
-      width: newWidth,
-      height: newHeight,
-      scaleX: scale,
-      scaleY: scale,
-    })
-  )
+  // console.log(
+  //   topo.stage.setAttrs({
+  //     width: newWidth,
+  //     height: newHeight,
+  //     scaleX: scale,
+  //     scaleY: scale,
+  //   })
+  // )
 }
 
 const state = () => ({
@@ -415,11 +453,13 @@ const mutations = {
     KonvaBus({
       type: 'setSale',
       id: 'kevCurrent',
-      width: newWidth,
       json: topo.Konvajson,
-      height: newHeight,
+      saleInfo:{
+      width: newWidth,
+        height: newHeight,
       scaleX: size * 0.01,
       scaleY: size * 0.01,
+    }
     })
     state.Sale = size
     console.error('缩放大小', topo.konvaAttr.scale)
