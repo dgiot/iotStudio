@@ -156,6 +156,8 @@
       </el-form>
       <div class="protable">
         <el-table
+          border
+          size="mini"
           v-loading="listLoading"
           :cell-style="{ 'text-align': 'center' }"
           :data="proTableData"
@@ -189,13 +191,13 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('product.classification')">
-            <template slot-scope="scope">
-              <span>
-                {{ scope.row.category ? scope.row.category.name : '' }}
-              </span>
-            </template>
-          </el-table-column>
+          <!--          <el-table-column :label="$translateTitle('product.classification')">-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <span>-->
+          <!--                {{ scope.row.category ? scope.row.category.name : '' }}-->
+          <!--              </span>-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
           <!--          <el-table-column :label="$translateTitle('product.producttemplet')">-->
           <!--            <template slot-scope="scope">-->
           <!--              <span>-->
@@ -212,8 +214,9 @@
           </el-table-column>
           <el-table-column
             fixed="right"
+            ref="rightCol"
             :label="$translateTitle('developer.operation')"
-            width="340"
+            width="360"
           >
             <template slot-scope="scope">
               <el-button

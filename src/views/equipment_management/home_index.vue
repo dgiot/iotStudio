@@ -1,5 +1,5 @@
 <template>
-  <div class="equipment">
+  <div class="equipment equipment-container">
     <div class="dialog">
       <el-dialog
         :append-to-body="true"
@@ -72,8 +72,9 @@
         width="80%"
       >
         <el-tabs
+          size="mini"
           v-model="activeparseTbas"
-          type="card"
+          type="border-card"
           @tab-click="handleTabClick"
         >
           <el-tab-pane
@@ -171,192 +172,191 @@
       <!--          </li>-->
       <!--        </ul>-->
       <!--      </div>-->
-      <div class="equdevices">
-        <vab-query-form>
-          <vab-query-form-top-panel>
-            <el-form
-              :inline="true"
-              label-width="100px"
-              :model="queryForm"
-              @submit.native.prevent
-            >
-              <el-form-item :label="$translateTitle('equipment.Department')">
-                <el-select
-                  v-model="queryForm.workGroupName"
-                  placeholder="请选择"
-                  @visible-change="change($event)"
-                >
-                  <el-option
-                    style="height: auto; padding: 0"
-                    :value="treeDataValue"
-                  >
-                    <el-tree
-                      ref="workGroup"
-                      :data="deptTreeData"
-                      default-expand-all
-                      :expand-on-click-node="false"
-                      node-key="index"
-                      :props="roleProps"
-                    >
-                      <div
-                        slot-scope="{ node, data }"
-                        class="custom-tree-node"
-                      >
-                        <span
-                          :class="{
-                            selected: data.objectId == curDepartmentId,
-                          }"
-                          @click="handleNodeClick(data, node)"
-                        >
-                          {{ node.label }}
-                        </span>
-                      </div>
-                    </el-tree>
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item :label="$translateTitle('equipment.Products')">
-                <el-select
-                  v-model="equvalue"
-                  clearable
-                  :disabled="!productenable"
-                  @change="selectProdChange"
-                >
-                  <el-option
-                    v-for="(item, index) in proTableData"
-                    v-show="item.objectId != 0"
-                    :key="index"
-                    :label="item.name"
-                    :value="item.objectId"
-                  />
-                </el-select>
-              </el-form-item>
-              <!-- <el-select
-              v-model="onlinedevices"
-              placeholder="请选择状态"
-              class="selectdetail"
-              size="small"
-              clearable
-            > -->
-              <el-form-item :label="$translateTitle('equipment.device status')">
-                <el-select
-                  v-model="onlinedevices"
-                  clearable
-                  style="width: 100px"
-                >
-                  <!-- <el-option value="在线" /> -->
-                  <el-option :value="$translateTitle('zetadevices.online')" />
-                  <!-- <el-option value="离线" /> -->
-                  <el-option :value="$translateTitle('zetadevices.offline')" />
-                </el-select>
-              </el-form-item>
-              <el-form-item :label="$translateTitle('equipment.condition')">
-                <el-input
-                  v-if="selectdevice == $translateTitle('equipment.devicename')"
-                  v-model="deviceinput"
-                  :placeholder="$translateTitle('equipment.enterproductname')"
-                >
-                  <el-select
-                    slot="prepend"
-                    v-model="selectdevice"
-                    style="width: 140px"
-                  >
-                    <el-option
-                      :value="$translateTitle('equipment.devicename')"
-                    />
-                    <el-option
-                      :value="$translateTitle('equipment.devicenumber')"
-                    />
-                  </el-select>
-
-                  <el-button
-                    slot="append"
-                    icon="el-icon-search"
-                    size="mini"
-                    @click="getDevices({ start: 0 })"
-                  />
-                </el-input>
-                <el-input
-                  v-else
-                  v-model="deviceinput"
-                  :placeholder="$translateTitle('equipment.enterdevicenumber')"
-                >
-                  <el-select
-                    slot="prepend"
-                    v-model="selectdevice"
-                    style="width: 120px"
-                  >
-                    <el-option
-                      :value="$translateTitle('equipment.devicename')"
-                    />
-                    <el-option
-                      :value="$translateTitle('equipment.devicenumber')"
-                    />
-                  </el-select>
-
-                  <el-button
-                    slot="append"
-                    icon="el-icon-search"
-                    size="mini"
-                    @click="getDevices({ start: 0 })"
-                  />
-                </el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  size="small"
-                  type="primary"
-                  @click="addDeviceForm"
-                >
-                  {{ $translateTitle('equipment.adddevice') }}
-                </el-button>
-                <el-button
-                  :disabled="!selectedList.length"
-                  size="small"
-                  type="danger"
-                  @click="handleDelete(selectedList, 1)"
-                >
-                  {{ $translateTitle('Maintenance.batch deletion') }}
-                </el-button>
-              </el-form-item>
-              <el-form-item style="display: none">
-                <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
-                <el-button
-                  class="selectdetail"
-                  :disabled="multipleTable.length == 0"
-                  size="small"
-                  type="primary"
-                  @click="deleteDevcie"
-                >
-                  {{ $translateTitle('developer.delete') }}
-                </el-button>
-                <el-button
-                  class="selectdetail"
-                  :disabled="multipleTable.length == 0"
-                  size="small"
-                  type="primary"
-                  @click="unactiveDevice(false)"
-                >
-                  {{ $translateTitle('developer.prohibit') }}
-                </el-button>
-                <el-button
-                  class="selectdetail"
-                  :disabled="multipleTable.length == 0"
-                  size="small"
-                  type="primary"
-                  @click="unactiveDevice(true)"
-                >
-                  {{ $translateTitle('developer.enable') }}
-                </el-button>
-                <el-button size="small">
-                  {{ $translateTitle('equipment.batchaddition') }}
-                </el-button>
-              </el-form-item>
-            </el-form>
-          </vab-query-form-top-panel>
-        </vab-query-form>
-      </div>
       <el-tabs v-model="activeName">
+        <div class="equdevices">
+          <vab-query-form>
+            <vab-query-form-top-panel>
+              <el-form
+                :inline="true"
+                label-width="100px"
+                :model="queryForm"
+                @submit.native.prevent
+              >
+                <el-form-item :label="$translateTitle('equipment.Department')">
+                  <el-select
+                    v-model="queryForm.workGroupName"
+                    placeholder="请选择"
+                    @visible-change="change($event)"
+                  >
+                    <el-option
+                      style="height: auto; padding: 0"
+                      :value="treeDataValue"
+                    >
+                      <el-tree
+                        ref="workGroup"
+                        :data="deptTreeData"
+                        default-expand-all
+                        :expand-on-click-node="false"
+                        node-key="index"
+                        :props="roleProps"
+                      >
+                        <div
+                          slot-scope="{ node, data }"
+                          class="custom-tree-node"
+                        >
+                          <span
+                            :class="{
+                              selected: data.objectId == curDepartmentId,
+                            }"
+                            @click="handleNodeClick(data, node)"
+                          >
+                            {{ node.label }}
+                          </span>
+                        </div>
+                      </el-tree>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item :label="$translateTitle('equipment.Products')">
+                  <el-select
+                    v-model="equvalue"
+                    clearable
+                    :disabled="!productenable"
+                    @change="selectProdChange"
+                  >
+                    <el-option
+                      v-for="(item, index) in proTableData"
+                      v-show="item.objectId != 0"
+                      :key="index"
+                      :label="item.name"
+                      :value="item.objectId"
+                    />
+                  </el-select>
+                </el-form-item>
+                <!-- <el-select
+                v-model="onlinedevices"
+                placeholder="请选择状态"
+                class="selectdetail"
+                size="small"
+                clearable
+              > -->
+                <el-form-item :label="$translateTitle('equipment.device status')">
+                  <el-select
+                    v-model="onlinedevices"
+                    clearable
+                    style="width: 100px"
+                  >
+                    <!-- <el-option value="在线" /> -->
+                    <el-option :value="$translateTitle('zetadevices.online')" />
+                    <!-- <el-option value="离线" /> -->
+                    <el-option :value="$translateTitle('zetadevices.offline')" />
+                  </el-select>
+                </el-form-item>
+                <el-form-item :label="$translateTitle('equipment.condition')">
+                  <el-input
+                    v-if="selectdevice == $translateTitle('equipment.devicename')"
+                    v-model="deviceinput"
+                    :placeholder="$translateTitle('equipment.enterproductname')"
+                  >
+                    <el-select
+                      slot="prepend"
+                      v-model="selectdevice"
+                      style="width: 140px"
+                    >
+                      <el-option
+                        :value="$translateTitle('equipment.devicename')"
+                      />
+                      <el-option
+                        :value="$translateTitle('equipment.devicenumber')"
+                      />
+                    </el-select>
+                    <i
+                      style="cursor: pointer; lineHeight: 32px; color: #606266"
+                      slot="suffix"
+                      class="el-icon-search"
+                      @click="getDevices({ start: 0 })"
+                    ></i>
+                  </el-input>
+                  <el-input
+                    v-else
+                    v-model="deviceinput"
+                    :placeholder="$translateTitle('equipment.enterdevicenumber')"
+                  >
+                    <el-select
+                      slot="prepend"
+                      v-model="selectdevice"
+                      style="width: 120px"
+                    >
+                      <el-option
+                        :value="$translateTitle('equipment.devicename')"
+                      />
+                      <el-option
+                        :value="$translateTitle('equipment.devicenumber')"
+                      />
+                    </el-select>
+
+                    <el-button
+                      slot="append"
+                      icon="el-icon-search"
+                      size="mini"
+                      @click="getDevices({ start: 0 })"
+                    />
+                  </el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button
+                    size="small"
+                    type="primary"
+                    class="el-icon-plus"
+                    :title="$translateTitle('equipment.adddevice')"
+                    @click="addDeviceForm"
+                  />
+                  <el-button
+                    :disabled="!selectedList.length"
+                    size="small"
+                    type="danger"
+                    class="el-icon-delete"
+                    :title="$translateTitle('aintenance.batch deletion')"
+                    @click="handleDelete(selectedList, 1)"
+                  />
+                </el-form-item>
+                <el-form-item style="display: none">
+                  <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
+                  <el-button
+                    class="selectdetail"
+                    :disabled="multipleTable.length == 0"
+                    size="small"
+                    type="primary"
+                    @click="deleteDevcie"
+                  >
+                    {{ $translateTitle('developer.delete') }}
+                  </el-button>
+                  <el-button
+                    class="selectdetail"
+                    :disabled="multipleTable.length == 0"
+                    size="small"
+                    type="primary"
+                    @click="unactiveDevice(false)"
+                  >
+                    {{ $translateTitle('developer.prohibit') }}
+                  </el-button>
+                  <el-button
+                    class="selectdetail"
+                    :disabled="multipleTable.length == 0"
+                    size="small"
+                    type="primary"
+                    @click="unactiveDevice(true)"
+                  >
+                    {{ $translateTitle('developer.enable') }}
+                  </el-button>
+                  <el-button size="small">
+                    {{ $translateTitle('equipment.batchaddition') }}
+                  </el-button>
+                </el-form-item>
+              </el-form>
+            </vab-query-form-top-panel>
+          </vab-query-form>
+        </div>
         <el-tab-pane
           :label="$translateTitle('equipment.list')"
           name="first"
@@ -903,7 +903,7 @@
             :center="{ lng: 116.404, lat: 39.915 }"
             class="map"
             :scroll-wheel-zoom="true"
-            style="height: 57vh"
+            style="height: 67vh"
             :zoom="sizeZoom"
           >
             <bm-control>
@@ -1530,7 +1530,7 @@
         editRow: {},
         selectedList: [],
         formData: {},
-        height: this.$baseTableHeight(0) - 90,
+        height: this.$baseTableHeight(0) - 120,
         topicData: [],
         InfoDialog: false,
         devicedetail: {},
@@ -3028,10 +3028,9 @@
   }
   .equtabs {
     //height: calc(120vh - #{$base-top-bar-height} * 4);
-    margin: 20px;
     overflow-x: hidden;
     overflow-y: scroll;
-
+    margin-top: -40px;
     .equ_header {
       box-sizing: border-box;
       width: 100%;
@@ -3090,8 +3089,8 @@
 
   .equipment .el-tabs__content {
     box-sizing: border-box;
-    padding: 20px;
-    background: #f4f4f4;
+    padding:0;
+    //background: #f4f4f4;
   }
 
   .equipment #pane-first {
