@@ -14,16 +14,12 @@
       class="icon-selector-tabs"
       default-active-key="1"
     >
-      <a-tab-pane
-        key="1"
-      >
+      <a-tab-pane key="1">
         <span
           slot="tab"
           :title="$translateTitle('topo.Upload background')"
         >
-          <vab-icon
-            icon="image-2-fill"
-          />
+          <vab-icon icon="image-2-fill" />
         </span>
         <el-button
           size="mini"
@@ -33,35 +29,32 @@
           {{ $translateTitle('topo.Upload background') }}
         </el-button>
       </a-tab-pane>
-      <a-tab-pane
-        key="2"
-      >
+      <a-tab-pane key="2">
         <span
           slot="tab"
           :title="$translateTitle('topo.Add text content')"
         >
-          <vab-icon
-            icon="text"
-          />
+          <vab-icon icon="text" />
         </span>
         <el-button
           size="mini"
           type="primary"
-          @click.native="createText({productid:$route.query.productid,text:'单击修改文本'})"
+          @click.native="
+            createText({
+              productid: $route.query.productid,
+              text: '单击修改文本',
+            })
+          "
         >
           {{ $translateTitle('topo.Add text content') }}
         </el-button>
       </a-tab-pane>
-      <a-tab-pane
-        key="3"
-      >
+      <a-tab-pane key="3">
         <span
           slot="tab"
           :title="$translateTitle('topo.Add configuration tag')"
         >
-          <vab-icon
-            icon="caravan-line"
-          />
+          <vab-icon icon="caravan-line" />
         </span>
         <el-button
           size="mini"
@@ -70,9 +63,7 @@
           {{ $translateTitle('topo.Add configuration tag') }}
         </el-button>
       </a-tab-pane>
-      <a-tab-pane
-        key="4"
-      >
+      <a-tab-pane key="4">
         <span
           slot="tab"
           :title="$translateTitle('topo.image')"
@@ -183,7 +174,7 @@
 <script>
   import createThing from '@/utils/konva/createThing'
   import { getMaterial } from '@/api/Material'
-  import { mapMutations } from 'vuex'
+  import { mapMutations, mapActions } from 'vuex'
   import { getSvgPath } from '@/utils/konva'
 
   const regUrl =
@@ -194,9 +185,9 @@
   const imgHost = regUrl.test(cdn)
     ? `${cdn}/assets/images/dgiot_release/topo/`
     : path.join(
-      __dirname,
-      `${process.env.BASE_URL}/assets/images/dgiot_release/topo/`,
-    )
+        __dirname,
+        `${process.env.BASE_URL}/assets/images/dgiot_release/topo/`
+      )
   // https://blog.csdn.net/u010007013/article/details/102674042
   // import imgHost from '../../../../public/assets/images/dgiot_release/topo/'
   // console.log(imgHost, process.env.BASE_URL, process.env)
@@ -243,22 +234,14 @@
         console.log(args, 'args')
       })
     },
-    mounted() {
-    },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    mounted() {},
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       coordinate(e) {
         const _coordinate = {
@@ -286,12 +269,11 @@
           thingid: 'thingid',
         })
         console.log(res)
-
       },
       uploadCkick(type) {
         this.upImgType = type
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
         this.inputParams = {
           file: '',
@@ -307,8 +289,10 @@
       ...mapMutations({
         setFlag: 'konva/setFlag',
         setDrawParams: 'konva/setDrawParams',
-        setKonvaBg: 'topo/setKonvaBg',
         createText: 'topo/createText',
+      }),
+      ...mapActions({
+        setKonvaBg: 'topo/setKonvaBg',
       }),
       // mousedown(item) {
       //   this.$emit('fatherMousedown', item)
@@ -322,10 +306,7 @@
       // },
 
       async fetchData() {
-        const {
-          data,
-          totalCount,
-        } = await getMaterial(this.queryForm)
+        const { data, totalCount } = await getMaterial(this.queryForm)
         this.queryIcon = data
         this.total = totalCount
       },
@@ -344,15 +325,15 @@
         this.queryForm.pageNo = 1
         this.fetchData()
       },
-    async fileInfo(res) {
+      async fileInfo(res) {
         console.log(res)
         if (this.upImgType === 'img') {
           await this.handleIcon(res.url)
         } else {
           //  直接设置背景图的地址
-          console.log('set konva bg', res.path)
+          console.log('set konva bg', localStorage.getItem('fileServer') + res.path)
           localStorage.setItem('konvaBg', res.path)
-         await this.setKonvaBg(res.path)
+          await this.setKonvaBg(res.path)
           //  然后重新绘制一下 使用vuex topo
         }
       },
@@ -369,7 +350,7 @@
             _this.$translateTitle('图片加载完成,可双击画图区域填充'),
             'success',
             false,
-            'vab-hey-message-success',
+            'vab-hey-message-success'
           )
         }
         _this.setFlag('image')
@@ -382,8 +363,9 @@
   }
 </script>
 <style>
-  .ant-tabs .ant-tabs-left-bar .ant-tabs-tab, .ant-tabs .ant-tabs-right-bar .ant-tabs-tab {
-    padding: 10px 8px
+  .ant-tabs .ant-tabs-left-bar .ant-tabs-tab,
+  .ant-tabs .ant-tabs-right-bar .ant-tabs-tab {
+    padding: 10px 8px;
   }
 
   .ant-tabs .ant-tabs-left-content {
@@ -391,7 +373,6 @@
     margin-top: 20px !important;
     text-align: center;
   }
-
 </style>
 <style lang="scss" scope>
   .icon-selector-popper {

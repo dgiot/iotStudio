@@ -37,6 +37,7 @@
     components: {},
     data() {
       return {
+        productconfig:{},
         thingDialog: false,
         infoData: 'Thing',
         thingArgs: {},
@@ -74,7 +75,7 @@
         const loading = this.$baseLoading()
         try{
           const params = {
-            thing: topo.Konvajson
+            config: _.merge(this.productconfig, {konva:JSON.parse(topo.Konvajson) })
           }
           this.$message.success(this.$translateTitle('user.update completed'))
           const res = await putProduct(this.$route.query.productid,params)
@@ -93,9 +94,10 @@
         text: args.text,
       }
       try {
-        const { thing={} } = await getProduct(args.id.split('_')[0])
+        const { thing={},config } = await getProduct(args.id.split('_')[0])
         // 显示物模型弹窗
         this.thingDialog = true
+        this.productconfig = config
         console.log(thing)
         loading.close()
       }catch (e) {

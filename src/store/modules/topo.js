@@ -203,7 +203,7 @@ export function KonvaBus(args) {
       img.src = node.getAttr('src').includes('http')
         ? node.getAttr('src')
         : localStorage.getItem('fileServer') + node.getAttr('src')
-      console.log('设置konva图片地址', img.src)
+      console.log('设置konva图片地址/n', img.src)
       img.onload = () => {
         node.image(img)
         node.on('contextmenu',e=>{
