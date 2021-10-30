@@ -24,7 +24,7 @@ function moveEnv(target, root, filename) {
       root
     )}/${filename}`,
     (code, stdout, stderr) => {
-      console.log('已成功设置cdn资源服务器地址=====>', process.env.CDN_URL)
+      console.log('已成功设置cdn资源服务器地址',)
     }
   )
 }

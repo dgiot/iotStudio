@@ -40,14 +40,14 @@
           size="mini"
           type="primary"
           @click.native="
-            createText({
+            createThing({
               productid: $route.query.productid,
-              text: '单击修改文本',
             })
           "
         >
           {{ $translateTitle('topo.Add text content') }}
         </el-button>
+        <Thing />
       </a-tab-pane>
       <a-tab-pane key="3">
         <span
@@ -172,11 +172,13 @@
 </template>
 
 <script>
+
   import createThing from '@/utils/konva/createThing'
   import { getMaterial } from '@/api/Material'
   import { mapMutations, mapActions } from 'vuex'
   import { getSvgPath } from '@/utils/konva'
-
+  import Thing from '@/views/topo/components/Thing'
+  import TopoScale from '@/views/topo/components/TopoScale'
   const regUrl =
     /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
   // const { cdn } = require('../../../config')
@@ -197,6 +199,7 @@
   const iconfont = require('./iconfont.json')
   export default {
     name: 'TopoTabs',
+    components: { Thing },
     data() {
       return {
         inputParams: {},
@@ -289,7 +292,7 @@
       ...mapMutations({
         setFlag: 'konva/setFlag',
         setDrawParams: 'konva/setDrawParams',
-        createText: 'topo/createText',
+        createThing: 'topo/createThing',
       }),
       ...mapActions({
         setKonvaBg: 'topo/setKonvaBg',
@@ -331,7 +334,7 @@
           await this.handleIcon(res.url)
         } else {
           //  直接设置背景图的地址
-          console.log('set konva bg', localStorage.getItem('fileServer') + res.path)
+          console.error('set konva bg \n', localStorage.getItem('fileServer') + res.path)
           localStorage.setItem('konvaBg', res.path)
           await this.setKonvaBg(res.path)
           //  然后重新绘制一下 使用vuex topo

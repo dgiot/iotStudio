@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Thing />
     <el-dialog
       :title="$translateTitle('topo.topo') + $translateTitle('topo.tag')"
       :visible.sync="tagDialog"
@@ -70,7 +69,6 @@
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   var width = window.innerWidth
   var height = window.innerHeight
-  import Thing from '@/views/topo/components/Thing'
   export default {
     name: 'KonvaTest',
     prop: {
@@ -86,7 +84,7 @@
       //   default: moment(new Date()).valueOf(),
       // },
     },
-    components: { TopoScale,Thing },
+    components: { TopoScale },
     data() {
       return {
         contextMenuData: {

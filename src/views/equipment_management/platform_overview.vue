@@ -917,7 +917,7 @@
     BmPanorama,
     BmScale,
   } from 'vue-baidu-map'
-
+  window.dgiotEnv = process.env
   export default {
     name: 'Index',
     components: {

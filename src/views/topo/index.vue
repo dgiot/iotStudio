@@ -66,7 +66,7 @@
 <script>
   import 'element-ui/lib/theme-chalk/display.css'
   import { requireModule } from '@/utils/file'
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapMutations, mapGetters } from 'vuex'
   import { _getTopo } from '@/api/Topo'
   import { queryProduct } from '@/api/Product'
 
@@ -129,12 +129,46 @@
     },
     created() {},
     methods: {
-      ...mapActions({
+      ...mapMutations({
         initKonva: 'topo/initKonva',
       }),
       saveKonvaitem() {},
       async handleMqtt() {
         let _this = this
+        const Stage = {
+          attrs: {
+            id:'kevCurrent',
+            width: 1200,
+              height: 700,
+              draggable: false,
+          },
+          className: 'Stage',
+            children: [
+            {
+              attrs: {
+                id: 'Layer_1',
+                draggable: false,
+              },
+              className: 'Layer',
+              children: [
+                {
+                  className: 'Label',
+                  children: [],
+                },
+                {
+                  attrs: {
+                    id: 'bg',
+                    width: 1200, // 布局宽度
+                    height: 700, // 布局高度
+                    draggable: false,
+                    src: 'https://cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361',
+                  },
+                  className: 'Image',
+                },
+              ],
+            },
+          ],
+        }
         if (_this.$route.query.type == 'device') {
           _this.productid = _this.$route.query.deviceid
         }
@@ -145,7 +179,7 @@
             productid: productid,
             devaddr: devaddr,
           }
-          const { message = '', data } = await _getTopo(params)
+          const { message = '', data={} } = await _getTopo(params)
           // 绘制前不光需要获取到组态数据，还需要获取产品数据
           const { results = [] } = await queryProduct({
             where: { objectId: _this.$route.query.productid },
@@ -164,56 +198,27 @@
             // _this.createKonva(data, _this.globalStageid, 'create')
             _this.paramsconfig = { konva: data }
             //
-            // set backgroundImage
+            console.log('topo info msg 请求数据有组态 就设置这个组态为请求回来的组态', data.Stage)
+            await this.initKonva({
+              data: data.Stage,
+              id: 'kevCurrent',
+            })
+          }else{
+            console.log('topo info msg 请求数据没有组态 就设置这个组态为默认', Stage)
+            await this.initKonva({
+              data: Stage,
+              id: 'kevCurrent',
+            })
           }
           loading.close()
-          console.log('topo info msg', data.Stage)
-          this.initKonva({
-            data: data.Stage,
-            id: 'kevCurrent',
-          })
+
         } catch (e) {
-          loading.close()
-          const data = {
-            Stage: {
-              attrs: {
-                width: 1200,
-                height: 700,
-                draggable: false,
-              },
-              className: 'Stage',
-              children: [
-                {
-                  attrs: {
-                    id: 'Layer_1',
-                    draggable: false,
-                  },
-                  className: 'Layer',
-                  children: [
-                    {
-                      className: 'Label',
-                      children: [],
-                    },
-                    {
-                      attrs: {
-                        id: 'bg',
-                        width: 1200, // 布局宽度
-                        height: 700, // 布局高度
-                        draggable: false,
-                        src: 'https://cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361',
-                      },
-                      className: 'Image',
-                    },
-                  ],
-                },
-              ],
-            },
-          }
-          this.initKonva({
-            data: data.Stage,
+          await this.initKonva({
+            data: Stage,
             id: 'kevCurrent',
           })
-          console.log('topo info msg 没有组态 给个默认的', e)
+          console.log('topo info msg 组态请求出错', e)
+          loading.close()
         }
       },
     },

@@ -27,6 +27,7 @@
         >确 定</el-button>
       </span>
     </el-dialog>
+    {{ thingData }}
   </div>
 </template>
 
@@ -37,6 +38,7 @@
     components: {},
     data() {
       return {
+        thingData:[],
         productconfig:{},
         thingDialog: false,
         infoData: 'Thing',
@@ -99,6 +101,7 @@
         this.thingDialog = true
         this.productconfig = config
         console.log(thing)
+        this.thingData = thing
         loading.close()
       }catch (e) {
         loading.close()

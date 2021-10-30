@@ -271,7 +271,7 @@
                       />
                     </el-select>
                     <i
-                      style="cursor: pointer; lineHeight: 32px; color: #606266"
+                      style=" color: #606266;cursor: pointer; lineHeight: 32px"
                       slot="suffix"
                       class="el-icon-search"
                       @click="getDevices({ start: 0 })"
@@ -3027,10 +3027,10 @@
     }
   }
   .equtabs {
+    margin-top: -40px;
     //height: calc(120vh - #{$base-top-bar-height} * 4);
     overflow-x: hidden;
     overflow-y: scroll;
-    margin-top: -40px;
     .equ_header {
       box-sizing: border-box;
       width: 100%;

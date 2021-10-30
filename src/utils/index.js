@@ -1,4 +1,13 @@
 /**
+ * @description 生成随机数
+ * @param max
+ * @param min
+ * @return {number}
+ */
+export function randomXy(max,min){
+  return Math.floor(Math.random()*(max-min+1)+min);
+}
+/**
  * @description 格式化时间
  * @param time
  * @param cFormat
