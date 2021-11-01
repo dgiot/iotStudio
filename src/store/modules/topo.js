@@ -56,33 +56,35 @@ export async function KonvaBus(args) {
   // if (!hash.includes('Topo') || $(`${attr}`).length === 0) return false
   var stage = Konva.Node.create(json, attr)
   var layer = Konva.Node.create(json, attr).findOne('Layer')
-  const bg = layer.findOne('bg')
-  if (bg?.length) {
-    bg.moveToBottom()
-    console.log("topo log: \n"+'设置背景图\n',bg.getAttrs('src'))
-    stage.batchDraw()
-    // this.emit('clickNode', bg[0].attrs)
-  } else if(Layering.indexOf(type) >0){
-    // https://github.dev/fastdgiot/vue-konva-demo
-    console.error('Layering',type,node, node[`${type}`]())
-    node[`${type}`]()
-    layer.draw()
-  } else if(type ==='setSale'){
-    console.log('缩放',saleInfo)
-    // updateCanvasAttr(scaleX)
-    stage.batchDraw()
-    layer.batchDraw()
-  }else{
-    console.log(type,"type")
-  }
-  if(type === 'removeNode') {
-    console.error('removeNode',removeNode)
-    removeNode.remove()
-    removeNode.destroy()
-    stage.batchDraw()
-  }
+  // const bg = layer.findOne('bg')
+  // if (bg?.length) {
+  //   bg.moveToBottom()
+  //   console.log("topo log: \n"+'设置背景图\n',bg.getAttrs('src'))
+  //   stage.batchDraw()
+  //   // this.emit('clickNode', bg[0].attrs)
+  // }
+  // if(Layering.indexOf(type) >0){
+  //   // https://github.dev/fastdgiot/vue-konva-demo
+  //   console.error('Layering',type,node, node[`${type}`]())
+  //   node[`${type}`]()
+  //   layer.draw()
+  // } else if(type ==='setSale'){
+  //   console.log('缩放',saleInfo)
+  //   // updateCanvasAttr(scaleX)
+  //   stage.batchDraw()
+  //   layer.batchDraw()
+  // }else{
+  //   console.log(type,"type")
+  // }
+  // if(type === 'removeNode') {
+  //   console.error('removeNode',removeNode)
+  //   removeNode.remove()
+  //   removeNode.destroy()
+  //   stage.batchDraw()
+  // }
   // stageSettings(stage,layer,args)
   addNodeEvent({ type:'handleChildren',stage,layer,args:canvas.handlerArgs })
+  stage.batchDraw()
   const konvaDom = new Konva.Stage({
     container: attr,
     // width: setattrs.width ? setattrs.width : konvaAttr.width,
@@ -114,54 +116,58 @@ const getters = {
   activeShape: (state) => state.activeShape,
 }
 const mutations = {
-  async initKonva(state, args) {
-    console.log('vuex mutations  log \n', state, args)
+   initKonva(state, args) {
     //  初始化konva
-   await KonvaBus({
-      type: 'createKonva',
-      attr: args.id,
-      json: args.data,
-    })
+     KonvaBus({
+       type: 'createKonva',
+       attr: args.id,
+       json: args.data
+     })
   },
   setSale(state, size) {
+    // 长与宽的比例是12:7
+    // 比例值是1200/700 1.7142857142857142
     canvas.konvaAttr.scale = size
     const { width, height } = canvas.konvaAttr
-    const newWidth = (width * size) / 100
-    const newHeight = (width * size) / 100
+    const newWidth = width * size / 100
+    const newHeight = width * size / 100 * 1200/700
+    const saleInfo = {
+      width: newWidth,
+        height: newHeight,
+        scaleX: size * 0.01,
+        scaleY: size * 0.01,
+    }
     const canvasAttr = {
       width: width,
       height: height,
       scale: size,
+      saleInfo
     }
     canvas.konvaAttr = canvasAttr
     KonvaBus({
       type: 'setSale',
       id: 'kevCurrent',
       json: canvas.Konvajson,
-      saleInfo:{
-      width: newWidth,
-        height: newHeight,
-      scaleX: size * 0.01,
-      scaleY: size * 0.01,
-    }
+      saleInfo
     })
     state.Sale = size
     console.error('缩放大小', canvas.konvaAttr.scale)
-    console.table('canvas', canvas)
+    console.error('konvaAttr', canvas.konvaAttr)
   },
   setKonva(state, attr) {
     state.konva = attr
     canvas.konva = attr
   },
   setKonvaBg(state, bg) {
-    addNodeEvent({ type:'setTopoBg',src:bg,...canvas.handlerArgs })
+    addNodeEvent(_.merge(
+      canvas.handlerArgs,{type:'setTopoBg',src:bg}
+    ))
   },
-  createThing(state, args) {
-    const simpleText = addNodeEvent({type:'createThing',productid:args.productid, saleInfo: {
+  createThing(state, thing) {
+    const simpleText = addNodeEvent({type:'createThing',thing,saleInfo: {
         scaleX: 100 * 0.01,
         scaleY: 100 * 0.01,
       }, randomXy})
-    console.error(simpleText)
     canvas.layer.add(simpleText)
     canvas.layer.batchDraw()
     canvas.stage.batchDraw()

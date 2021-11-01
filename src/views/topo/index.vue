@@ -76,6 +76,7 @@
     },
     data() {
       return {
+        Stage: {},
         router: '',
         topicKey: '',
         isFullscreen: false,
@@ -117,8 +118,73 @@
     },
     watch: {},
     mounted() {
+      const Stage = {
+        attrs: {
+          id: 'kevCurrent',
+          width: 1200,
+          height: 700,
+        },
+        className: 'Stage',
+        children: [
+          {
+            attrs: {
+              id: 'Layer_Thing',
+              draggable: false,
+            },
+            className: 'Layer',
+            children: [
+              {
+                attrs: {
+                  id: 'bg',
+                  width: 1200,
+                  height: 700,
+                  draggable: false,
+                  src: 'https://cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361',
+                },
+                className: 'Image',
+              },
+              {
+                attrs: {
+                  id: this.productid + '_flow',
+                  name: 'thing',
+                  x: 100,
+                  y: 100,
+                },
+                className: 'Label',
+                children: [
+                  {
+                    attrs: {
+                      draggable: true,
+                      name: 'dblclick',
+                    },
+                    className: 'Tag',
+                  },
+                  {
+                    attrs: {
+                      draggable: true,
+                      id: this.productid + '_flow_text',
+                      text: 'dgiot',
+                      fontSize: 50,
+                      lineHeight: 1.2,
+                      padding: 10,
+                      fill: 'yellow',
+                    },
+                    draggable: true,
+                    className: 'Text',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      }
+      this.Stage = localStorage.getItem('konvaStale')
+        ? localStorage.getItem('konvaStale')
+        : Stage
       this.router = this.$dgiotBus.router(this.$route.fullPath)
-      this.handleMqtt()
+      this.$nextTick(()=>{
+        this.handleMqtt()
+      })
     },
     destroyed() {
       this.$dgiotBus.$emit(
@@ -131,61 +197,28 @@
     methods: {
       ...mapMutations({
         initKonva: 'topo/initKonva',
+        createThing: 'topo/createThing',
       }),
       saveKonvaitem() {},
       async handleMqtt() {
         let _this = this
-        const Stage = {
-          attrs: {
-            id:'kevCurrent',
-            width: 1200,
-              height: 700,
-              draggable: false,
-          },
-          className: 'Stage',
-            children: [
-            {
-              attrs: {
-                id: 'Layer_1',
-                draggable: false,
-              },
-              className: 'Layer',
-              children: [
-                {
-                  className: 'Label',
-                  children: [],
-                },
-                {
-                  attrs: {
-                    id: 'bg',
-                    width: 1200, // 布局宽度
-                    height: 700, // 布局高度
-                    draggable: false,
-                    src: 'https://cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361',
-                  },
-                  className: 'Image',
-                },
-              ],
-            },
-          ],
-        }
         if (_this.$route.query.type == 'device') {
           _this.productid = _this.$route.query.deviceid
         }
-        const loading = this.$baseColorfullLoading(3)
+        const loading = _this.$baseColorfullLoading(3)
         try {
           const { productid, devaddr = undefined } = _this.$route.query
           let params = {
             productid: productid,
             devaddr: devaddr,
           }
-          const { message = '', data={} } = await _getTopo(params)
+          const { message = '', data = {} } = await _getTopo(params)
           // 绘制前不光需要获取到组态数据，还需要获取产品数据
           const { results = [] } = await queryProduct({
             where: { objectId: _this.$route.query.productid },
           })
           _this.productconfig = results[0]
-          console.log(_this.productconfig)
+          // console.log(_this.productconfig)
           if (message == 'SUCCESS') {
             // console.log(this.$refs['edrawer'].$refs, 'edrawer')
             _this.$refs['operation']
@@ -198,28 +231,37 @@
             // _this.createKonva(data, _this.globalStageid, 'create')
             _this.paramsconfig = { konva: data }
             //
-            console.log('topo info msg 请求数据有组态 就设置这个组态为请求回来的组态', data.Stage)
-            await this.initKonva({
+            console.log(
+              'topo info msg 请求数据有组态 就设置这个组态为请求回来的组态',
+              data.Stage
+            )
+            await _this.initKonva({
               data: data.Stage,
               id: 'kevCurrent',
             })
-          }else{
-            console.log('topo info msg 请求数据没有组态 就设置这个组态为默认', Stage)
-            await this.initKonva({
-              data: Stage,
+          } else {
+            console.log(
+              'topo info msg 请求数据没有组态 就设置这个组态为默认',
+              this.Stage
+            )
+            await _this.initKonva({
+              data: this.Stage,
               id: 'kevCurrent',
             })
           }
           loading.close()
-
         } catch (e) {
           await this.initKonva({
-            data: Stage,
+            data: this.Stage,
             id: 'kevCurrent',
           })
           console.log('topo info msg 组态请求出错', e)
           loading.close()
         }
+        setTimeout(() => {
+          // 默认创建一个,解决原有读取的text 组态无法使用事件问题
+          _this.createThing({productid:_this.$route.query.productid,hidden:true})
+        }, 800)
       },
     },
   }

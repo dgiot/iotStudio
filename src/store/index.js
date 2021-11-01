@@ -24,3 +24,4 @@ const store = new Vuex.Store({
   // plugins: [createLogger()],
 })
 export default store
+window.store = store

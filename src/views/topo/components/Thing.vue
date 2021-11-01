@@ -13,9 +13,17 @@
       append-to-body
       :title="$translateTitle('topo.topo') + $translateTitle('topo.thing')"
       :visible.sync="thingDialog"
-      width="50%"
+      top="5vh"
     >
-      {{ thingArgs }}
+      <wmxdetail
+        ref="sizeForm"
+        :size-form1="sizeForm"
+        @addDomain="addDomain"
+        @removeDomain="removeDomain"
+        @submitForm="submitForm"
+        @updataForm="updataForm"
+        @wmxhandleClose="wmxhandleClose"
+      />
       <span
         slot="footer"
         class="dialog-footer"
@@ -27,15 +35,17 @@
         >确 定</el-button>
       </span>
     </el-dialog>
-    {{ thingData }}
   </div>
 </template>
 
 <script>
-  import { getProduct ,putProduct} from '@/api/Product'
+  import wmxdetail from "@/views/equipment_management/component/wmxdetail";
+  import { getProduct, putProduct, putThing } from '@/api/Product'
+  import { edit_konva_thing } from '@/api/Topo'
+  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   export default {
     name: 'Thing',
-    components: {},
+    components: {wmxdetail},
     data() {
       return {
         thingData:[],
@@ -46,13 +56,17 @@
         text:"text"
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters({
+        sizeForm: 'konva/sizeForm',
+      }),
+    },
     mounted() {
       this.$baseEventBus.$on('busUpdata', () => {
         this.updataTopo()
       })
-      this.$dgiotBus.off(this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'))
-      this.$dgiotBus.on(
+      dgiotBus.off(this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'))
+      dgiotBus.on(
         this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'),
         (args) => {
           console.log(args)
@@ -73,6 +87,194 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      ...mapMutations({
+        setSizeForm: 'konva/setSizeForm',
+      }),
+      wmxhandleClose() {
+        this.wmxdialogVisible = false
+        this.Shapeconfig = {}
+        this.setSizeForm({})
+        this.$dgiotBus.$emit('refresh',this.$route)
+      },
+      updataForm(from) {
+        console.log('子组件改变的值')
+        console.log(from)
+        this.setSizeForm(from)
+      },
+      // 提交
+      submitForm(sizeForm) {
+        console.log('sizeForm', sizeForm)
+        var obj = {
+          name: sizeForm.name,
+          devicetype: sizeForm.devicetype,
+          dataForm: {
+            round: sizeForm.round,
+            data: sizeForm.dinumber,
+            address: sizeForm.dis,
+            rate: sizeForm.rate,
+            offset: sizeForm.offset,
+            order: sizeForm.order,
+            protocol: sizeForm.protocol,
+            operatetype: sizeForm.operatetype,
+            originaltype: sizeForm.originaltype,
+            slaveid: sizeForm.slaveid,
+            collection: sizeForm.collection,
+            control: sizeForm.control,
+            strategy: sizeForm.strategy,
+            iscount: sizeForm.iscount,
+            countstrategy: sizeForm.countstrategy,
+            countround: sizeForm.countround,
+            countcollection: sizeForm.countcollection,
+          },
+          ico: sizeForm.ico,
+          required: true,
+          accessMode: sizeForm.isread,
+          isshow: sizeForm.isshow,
+          identifier: sizeForm.identifier,
+        }
+        // 提交之前需要先判断类型
+        if (
+          sizeForm.type == 'float' ||
+          sizeForm.type == 'double' ||
+          sizeForm.type == 'int' ||
+          sizeForm.type == 'long'
+        ) {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              specs: {
+                max: sizeForm.endnumber,
+                min: sizeForm.startnumber,
+                step: sizeForm.step,
+                unit: sizeForm.unit == '' ? '' : sizeForm.unit,
+              },
+            },
+          }
+          Object.assign(obj, obj1)
+          // 去除多余的属性
+          if (!this.showNewItem) {
+            delete obj.dataForm.operatetype
+            delete obj.dataForm.originaltype
+            delete obj.dataForm.slaveid
+          }
+        }else if (sizeForm.type == 'image') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              imagevalue: sizeForm.imagevalue,
+              specs: {},
+            },
+          }
+          Object.assign(obj, obj1)
+        }  else if (sizeForm.type == 'bool') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              specs: {
+                0: sizeForm.false,
+                1: sizeForm.true,
+              },
+            },
+          }
+          Object.assign(obj, obj1)
+        } else if (sizeForm.type == 'enum') {
+          var specs = {}
+          sizeForm.struct.map((items) => {
+            var newkey = items['attribute']
+            specs[newkey] = items['attributevalue']
+          })
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              specs: specs,
+            },
+          }
+          Object.assign(obj, obj1)
+        } else if (sizeForm.type == 'struct') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              specs: sizeForm.struct,
+            },
+          }
+          Object.assign(obj, obj1)
+        } else if (sizeForm.type == 'string') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              size: sizeForm.string,
+            },
+          }
+          Object.assign(obj, obj1)
+        } else if (sizeForm.type == 'text') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              size: sizeForm.string,
+              specs: {},
+            },
+          }
+          Object.assign(obj, obj1)
+        } else if (sizeForm.type == 'date') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+            },
+          }
+          Object.assign(obj, obj1)
+        } else if (sizeForm.type == 'geopoint') {
+          var obj1 = {
+            dataType: {
+              type: sizeForm.type.toLowerCase(),
+              gpstype: sizeForm.gpstype,
+              specs: {},
+            },
+          }
+          Object.assign(obj, obj1)
+        }
+        let data = {
+          item: obj,
+          productid: this.$route.query.productid,
+        }
+        putThing(data).then((res) => {
+          console.log('编辑', res)
+          if (res.code == 200) {
+            this.$message({
+              type: 'success',
+              message: '编辑成功',
+            })
+            let params = {
+              identifier: obj.identifier,
+              name: obj.name,
+              productid: this.$route.query.productid,
+              shapeid: this.Shapeconfig.attrs.id,
+            }
+            edit_konva_thing(params).then((res) => {
+              console.log(res)
+              this.handleCloseSub()
+            })
+            this.wmxhandleClose()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '编辑失败' + res.msg,
+            })
+          }
+        })
+      },
+      // 删除枚举型
+      removeDomain(item) {
+        var index = this.sizeForm.struct.indexOf(item)
+        if (index !== -1) {
+          this.sizeForm.struct.splice(index, 1)
+        }
+      },
+      addDomain() {
+        this.sizeForm.struct.push({
+          attribute: '',
+          attributevalue: '',
+        })
+      },
       async updataTopo(){
         const loading = this.$baseLoading()
         try{

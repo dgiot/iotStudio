@@ -25,6 +25,7 @@ const canvas = {
   activeShape: {},
   stage: konva.stage,
   layer: konva.layer,
+  bgNode:{},
   randomXy,
   Konvajson: {},
   clickItem:{},

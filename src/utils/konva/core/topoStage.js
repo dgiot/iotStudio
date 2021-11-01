@@ -14,25 +14,22 @@ const topoStage = {
     console.info(args)
     console.groupEnd()
     const {stage,layer, saleInfo } = args
-    console.log('文本处理：',stage.find('Text'))
-    stage.find('Text').forEach((node) => {
-      // node.setAttrs({
-      //   scaleX: args.saleInfo.scaleX,
-      //   scaleY: args.saleInfo.scaleY,
-      // })
-      node.on('contextmenu',e=>{
-        canvas.contextmenu = e.target
-        console.log('contextmenu',e.target)
-      })
-      node.on('click',e=>{
-        canvas.clickItem = e.target
-        console.log('click',e)
-
-      })
+    stage.find('Label').forEach((node) => {
+      console.warn('Label',node, node.attrs)
+      if (node.getAttr('name') == 'thing') {
+        const nodeTags = node.getChildren()
+        nodeTags.forEach((tag) => {
+          const event = tag.getAttr('name')
+          if (event) {
+            console.error('图元处理 \n',"all tag",tag,event,tag.getAttr('name'))
+            addNodeEvent({ type: node.getAttr('name'),event:`${event}`, node:node })
+          }
+        })
+      }
     })
     stage.find('Image').forEach((node) => {
-      console.log('图片处理：',node)
       const img = new Image()
+      console.log('图片处理：',node)
       if (node.getAttr('src')) {
         img.src = node.getAttr('src').includes('http')
           ? node.getAttr('src') +randomXy(300,10)
@@ -50,29 +47,28 @@ const topoStage = {
           })
           // 只将背景图置底
           if (node.getAttr('id') == 'bg') {
-            console.log('组态背景图处理 \n', img.src)
+            canvas.bgNode = node
             addNodeEvent({ type:'bgMoveToBottom',bgNode:node,layer,stage })
           }
           stage.batchDraw()
         }
       }
     })
-    stage.find('Label').forEach((node) => {
-      console.warn('Label',node, node.attrs)
-      if (node.getAttr('name') == 'thing') {
-        const nodeTags = node.getChildren()
-        nodeTags.forEach((tag) => {
-          const event = tag.getAttr('name')
-          console.log('图元处理 \n')
-          console.warn("all tag",tag,event)
-          if (event) {
-            addNodeEvent({ type: node.getAttr('name'),event:`${event}`, node:node })
-          }
-        })
-        console.log()
-      }
-
-      console.log('node..', node, Konva)
+    console.log('文本处理：',stage.find('Text'))
+    stage.find('Text').forEach((node) => {
+      if(node.getAttr('hidden') === true) node.hide()
+      // node.setAttrs({
+      //   scaleX: args.saleInfo.scaleX,
+      //   scaleY: args.saleInfo.scaleY,
+      // })
+      node.on('contextmenu',e=>{
+        canvas.contextmenu = e.target
+        console.log('contextmenu',e.target)
+      })
+      node.on('click',e=>{
+        canvas.clickItem = e.target
+        console.log('click',e)
+      })
     })
   }
 }

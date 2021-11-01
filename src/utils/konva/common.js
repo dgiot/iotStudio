@@ -2,9 +2,9 @@ import topoThing from './core/topoThing'
 import topoVideo from './core/topoVideo'
 import topoBg from './core/topoBg'
 import topoStage from '@/utils/konva/core/topoStage'
-
-function createThing(productid, saleInfo, randomXy) {
-  return topoThing.create(productid, saleInfo, randomXy)
+import canvas from '@/utils/konva/core/canvas'
+function createThing(thing, saleInfo, randomXy) {
+  return topoThing.create(thing, saleInfo, randomXy)
 }
 
 /**
@@ -15,18 +15,9 @@ function createThing(productid, saleInfo, randomXy) {
  * @return {*}
  */
 function thingEVent(type, event, node) {
-  return node.on(event, (e) => {
-    if (type === 'thing') {
-      topoThing.on({
-        node,
-      })
-      const busTopicKey = window.dgiotBus.topicKey('dgiot_thing', 'dgiotThing')
-      const msg = {
-        type: 'bind_topo',
-        id: node.getAttr('id'),
-        text: node.findOne('Text').getAttr('text'),
-      }
-      dgiotBus.emit(busTopicKey, msg)
+  return node.on(`${event}`, (e) => {
+    if (type == 'thing') {
+      topoThing.on(node)
     }
     if (type == 'video') {
       topoVideo.on({
@@ -43,7 +34,16 @@ function thingEVent(type, event, node) {
  * @description topo eventBus 消息路由函数方法
  */
 function addNodeEvent(args) {
-  const { type, event, node, productid, saleInfo, randomXy } = args
+  console.groupCollapsed(
+    `%cKonvaBus ${args.type}`,
+    'color:#009a61; font-size: 28px; font-weight: 300'
+  )
+  console.info(
+    'addNodeEvent args:',
+    '\n:' + args,
+  )
+  console.groupEnd()
+  const { type, event, node, thing, saleInfo, randomXy } = args
   /*
    * @event = ['click','dblclick']
    * @document https://konvajs.org/docs/overview.html#Events
@@ -52,39 +52,10 @@ function addNodeEvent(args) {
   if (type) {
     switch (type) {
       case 'createThing':
-        console.groupCollapsed(
-          '%cKonvaBus common createThing',
-          'color:#009a61; font-size: 28px; font-weight: 300'
-        )
-        console.info(
-          'addNodeEvent msg:',
-          '\ntype:' + type,
-          '\nproductid:' + productid,
-          '\nsaleInfo:',
-          saleInfo,
-          '\nrandomXy' + randomXy
-        )
-        console.groupEnd()
-        return createThing(productid, saleInfo, randomXy)
+        return createThing(thing, saleInfo, randomXy)
         break
       case 'thing':
-        console.groupCollapsed(
-          '%cKonvaBus common thingEVent',
-          'color:#009a61; font-size: 28px; font-weight: 300'
-        )
-        console.info(
-          'addNodeEvent msg:',
-          '\ntype:' + type,
-          '\nevent:' + event,
-          '\nnode:' + node,
-          '\ne' + e,
-          '\ntype' + type,
-          '\nid' + node.getAttr('id'),
-          '\ngetChildren' + node.findOne('Text'),
-          '\nText' + node.findOne('Text').getAttr('text')
-        )
-        console.groupEnd()
-        thingEVent(type, event, node)
+        return  thingEVent(type, event, node)
         break
       case 'bgMoveToBottom':
         return topoBg.bgMoveToBottom(args)
@@ -93,12 +64,6 @@ function addNodeEvent(args) {
         return topoBg.setTopoBg(args)
         break
       case 'handleChildren':
-        console.groupCollapsed(
-          '%cKonvaBus common handleChildren',
-          'color:#009a61; font-size: 28px; font-weight: 300'
-        )
-        console.info(args)
-        console.groupEnd()
         return topoStage.handleChildren(args)
         break
     }

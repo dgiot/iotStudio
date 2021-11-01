@@ -15,7 +15,6 @@
 <script>
   import { mapActions, mapGetters } from 'vuex'
   import VabProgress from 'nprogress'
-  import * as utils from '@/utils/vuex'
 
   export default {
     name: 'VabAppMain',

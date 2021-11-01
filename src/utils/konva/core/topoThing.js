@@ -1,23 +1,34 @@
 import Konva from 'konva'
 import { uuid } from '@/utils'
-
+import addNodeEvent from '@/utils/konva/common'
 /**
  * @description 组态物模型公共函数
  * @type {{create(*, *, *): Text, on(*)}}
  */
 const topoThing = {
-  on(args) {},
+  on(args) {
+    const params = {
+      busTopicKey: dgiotBus.topicKey('dgiot_thing', 'dgiotThing'),
+      msg: {
+        type: 'bind_topo',
+        id: args.getAttr('id'),
+        text: args.findOne('Text').getAttr('text'),
+      },
+    }
+    console.log(params)
+    dgiotBus.emit(params.busTopicKey,params.msg)
+  },
   /**
    * @description 创建文本
    * @document https://konvajs.org/docs/shapes/Text.html
    * @param productid
    * @param text
    */
-  create(productid, saleInfo, randomXy) {
+  create(thing, saleInfo, randomXy) {
     const topoThing = new Konva.Text({
       x: randomXy(100, 50),
       y: randomXy(70, 30),
-      text: `${productid}_${uuid(3)}`,
+      text: `${thing.productid}_${uuid(3)}`,
       fontSize: 18,
       fontFamily: 'Calibri',
       fill: '#555',
@@ -28,7 +39,8 @@ const topoThing = {
       align: 'center',
       draggable: true,
       attrs: {
-        id: `${productid}_${uuid(4)}`,
+        hidden: thing.hidden,
+        id: `${thing.productid}_${uuid(4)}`,
         name: 'thing',
         x: randomXy(300, 10),
         y: randomXy(170, 30),
@@ -44,7 +56,7 @@ const topoThing = {
         },
         {
           attrs: {
-            id: `${productid}_${uuid(5)}`,
+            id: `${thing.productid}_${uuid(5)}`,
             text: 'dgiot',
             fontSize: 50,
             lineHeight: 1.2,
@@ -55,8 +67,24 @@ const topoThing = {
         },
       ],
     })
-    return topoThing;
+    return topoThing
   },
+  /**
+   * @description 绑定组态
+   */
+  bindTopo() {},
+  /**
+   * @description 保存组态
+   */
+  saveTopo() {},
+  /**
+   * @description 处理设备界面进入组态 设置组态不可点击移动等属性
+   */
+  deviceThing() {},
+  /**
+   * @description 更新组态
+   */
+  upTopo() {},
 }
 
 export default topoThing

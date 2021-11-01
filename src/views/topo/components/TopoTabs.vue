@@ -175,7 +175,7 @@
 
   import createThing from '@/utils/konva/createThing'
   import { getMaterial } from '@/api/Material'
-  import { mapMutations, mapActions } from 'vuex'
+  import { mapMutations } from 'vuex'
   import { getSvgPath } from '@/utils/konva'
   import Thing from '@/views/topo/components/Thing'
   import TopoScale from '@/views/topo/components/TopoScale'
@@ -232,10 +232,10 @@
     computed: {},
     created() {
       this.fetchData()
-      this.$dgiotBus.$off(location.hash)
-      this.$dgiotBus.$on(location.hash, (args) => {
-        console.log(args, 'args')
-      })
+      // this.$dgiotBus.$off(location.hash)
+      // this.$dgiotBus.$on(location.hash, (args) => {
+      //   console.log(args, 'args')
+      // })
     },
     mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前
@@ -293,8 +293,6 @@
         setFlag: 'konva/setFlag',
         setDrawParams: 'konva/setDrawParams',
         createThing: 'topo/createThing',
-      }),
-      ...mapActions({
         setKonvaBg: 'topo/setKonvaBg',
       }),
       // mousedown(item) {
@@ -334,9 +332,9 @@
           await this.handleIcon(res.url)
         } else {
           //  直接设置背景图的地址
-          console.error('set konva bg \n', localStorage.getItem('fileServer') + res.path)
           localStorage.setItem('konvaBg', res.path)
           await this.setKonvaBg(res.path)
+          console.error('set konva bg \n', localStorage.getItem('fileServer') + res.path)
           //  然后重新绘制一下 使用vuex topo
         }
       },
