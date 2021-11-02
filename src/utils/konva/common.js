@@ -1,12 +1,12 @@
 import topoThing from './core/topoThing'
 import topoVideo from './core/topoVideo'
 import topoBg from './core/topoBg'
+import topoImage from './core/topoImage'
 import topoStage from '@/utils/konva/core/topoStage'
 import canvas from '@/utils/konva/core/canvas'
 function createThing(thing, saleInfo, randomXy) {
   return topoThing.create(thing, saleInfo, randomXy)
 }
-
 /**
  * @description 组态事件处理
  * @param type
@@ -65,6 +65,9 @@ function addNodeEvent(args) {
         break
       case 'handleChildren':
         return topoStage.handleChildren(args)
+        break
+      case 'handleImage':
+        return topoImage.handleImage(args)
         break
     }
   }

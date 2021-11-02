@@ -84,6 +84,7 @@ export async function KonvaBus(args) {
   // }
   // stageSettings(stage,layer,args)
   addNodeEvent({ type:'handleChildren',stage,layer,args:canvas.handlerArgs })
+  addNodeEvent({ type:'handleImage',stage:stage,layer:layer,args:canvas.handlerArgs })
   stage.batchDraw()
   const konvaDom = new Konva.Stage({
     container: attr,
@@ -169,8 +170,8 @@ const mutations = {
         scaleY: 100 * 0.01,
       }, randomXy})
     canvas.layer.add(simpleText)
-    canvas.layer.batchDraw()
-    canvas.stage.batchDraw()
+    // canvas.layer.batchDraw()
+    // canvas.stage.batchDraw()
     addNodeEvent({ type:'handleChildren',stage:canvas.stage,layer:canvas.layer,args:canvas.handlerArgs })
   },
   removeNode(state, args) {

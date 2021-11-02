@@ -6,14 +6,13 @@ import addNodeEvent from '@/utils/konva/common'
  */
 const topoStage = {
   handleChildren(args) {
-    const {randomXy} = canvas
     console.groupCollapsed(
       '%ctopoStage handleChildren',
       'color:#009a61; font-size: 28px; font-weight: 300'
     )
     console.info(args)
     console.groupEnd()
-    const {stage,layer, saleInfo } = args
+    const {stage } = args
     stage.find('Label').forEach((node) => {
       console.warn('Label',node, node.attrs)
       if (node.getAttr('name') == 'thing') {
@@ -25,33 +24,6 @@ const topoStage = {
             addNodeEvent({ type: node.getAttr('name'),event:`${event}`, node:node })
           }
         })
-      }
-    })
-    stage.find('Image').forEach((node) => {
-      const img = new Image()
-      console.log('图片处理：',node)
-      if (node.getAttr('src')) {
-        img.src = node.getAttr('src').includes('http')
-          ? node.getAttr('src') +randomXy(300,10)
-          : localStorage.getItem('fileServer') + node.getAttr('src') +randomXy(300,10)
-        console.log('图片路径处理 \n', img.src)
-        img.onload = () => {
-          node.image(img)
-          node.on('contextmenu',e=>{
-            canvas.contextmenu = e.target
-            console.log('img contextmenu',e.target)
-          })
-          node.on('click',e=>{
-            canvas.clickItem = e.target
-            console.log('img click',e.target)
-          })
-          // 只将背景图置底
-          if (node.getAttr('id') == 'bg') {
-            canvas.bgNode = node
-            addNodeEvent({ type:'bgMoveToBottom',bgNode:node,layer,stage })
-          }
-          stage.batchDraw()
-        }
       }
     })
     console.log('文本处理：',stage.find('Text'))
@@ -67,7 +39,7 @@ const topoStage = {
       })
       node.on('click',e=>{
         canvas.clickItem = e.target
-        console.log('click',e)
+        console.log('click',e.target.attrs)
       })
     })
   }

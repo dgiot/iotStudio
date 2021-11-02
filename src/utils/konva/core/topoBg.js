@@ -36,7 +36,6 @@ const topoBg = {
       })
       layer.add(yoda)
       console.log('setBg', layer, yoda)
-      console.log('topo log: \n' + '设置背景图\n', bgSrc)
       yoda.zIndex(-211111)
       yoda.moveToBottom()
       stage.batchDraw()

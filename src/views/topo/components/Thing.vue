@@ -65,8 +65,8 @@
       this.$baseEventBus.$on('busUpdata', () => {
         this.updataTopo()
       })
-      dgiotBus.off(this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'))
-      dgiotBus.on(
+      // this.$baseEventBus.$off(this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'))
+      this.$baseEventBus.$on(
         this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'),
         (args) => {
           console.log(args)
