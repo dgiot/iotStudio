@@ -86,7 +86,7 @@
           sm: 15,
           md: 15,
           lg: 17,
-          xl: 20,
+          xl: 18,
         },
         productid: this.$route.query.productid || '',
       }
@@ -164,7 +164,7 @@
                       draggable: true,
                       id: this.productid + '_flow_text',
                       text: 'dgiot',
-                      fontSize: 50,
+                      fontSize: 24,
                       lineHeight: 1.2,
                       padding: 10,
                       fill: 'yellow',
@@ -258,10 +258,10 @@
           console.log('topo info msg 组态请求出错', e)
           loading.close()
         }
-        setTimeout(() => {
-          // 默认创建一个,解决原有读取的text 组态无法使用事件问题
-          _this.createThing({productid:_this.$route.query.productid,hidden:true})
-        }, 800)
+        setTimeout(async() => {
+        //   // 默认创建一个,解决原有读取的text 组态无法使用事件问题
+         await _this.createThing({productid:_this.$route.query.productid,hidden:true})
+        }, 1200)
       },
     },
   }

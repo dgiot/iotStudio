@@ -17,7 +17,7 @@ const topoThing = {
       },
     }
     // console.log(params,Vue.prototype.$dgiotBus.emit(params.busTopicKey,params.msg))
-    Vue.prototype.$baseEventBus.$emit(params.busTopicKey,params.msg)
+    Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   /**
    * @description 创建文本
@@ -68,7 +68,51 @@ const topoThing = {
         },
       ],
     })
-    return topoThing
+    console.log('topoThing')
+    console.log(topoThing)
+    // return topoThing
+
+    var simpleLabel = new Konva.Label({
+      name: 'thing',
+      x: randomXy(640, 10),
+      y: randomXy(640, 10),
+      id: thing.productid + '_flow',
+      attrs: {
+        id: thing.productid + '_flow',
+        name: 'thing',
+        x: randomXy(640, 10),
+        y: randomXy(640, 10),
+      },
+    })
+
+    simpleLabel.add(
+      new Konva.Text({
+        hidden: thing.hidden ? thing.hidden : false,
+        fill: 'yellow',
+        attrs: {
+          draggable: true,
+          id: thing.productid + '_flow_text',
+          text: 'dgiot' + '_flow_text' + uuid(5),
+          fontSize: 24,
+          lineHeight: 1.2,
+          padding: 10,
+          fill: 'yellow',
+        },
+      })
+    )
+
+    simpleLabel.add(
+      new Konva.Tag({
+        attrs: {
+          draggable: true,
+          name: 'dblclick',
+        },
+      })
+    )
+
+    console.log('simpleLabel')
+    console.log(simpleLabel)
+    return simpleLabel
   },
   /**
    * @description 绑定组态

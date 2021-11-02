@@ -17,8 +17,14 @@ const topoStage = {
       console.warn('Label',node, node.attrs)
       if (node.getAttr('name') == 'thing') {
         const nodeTags = node.getChildren()
+        console.error(nodeTags)
         nodeTags.forEach((tag) => {
+          console.error(tag)
           const event = tag.getAttr('name')
+          tag.on('click',e=>{
+            canvas.clickItem = e.target
+            console.log('tag click',e.target.attrs)
+          })
           if (event) {
             console.error('图元处理 \n',"all tag",tag,event,tag.getAttr('name'))
             addNodeEvent({ type: node.getAttr('name'),event:`${event}`, node:node })

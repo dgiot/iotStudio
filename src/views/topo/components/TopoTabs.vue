@@ -9,18 +9,11 @@
         @files="files"
       />
     </div>
-    <a-tabs
-      :tab-position="tabPosition"
-      class="icon-selector-tabs"
-      default-active-key="1"
-    >
-      <a-tab-pane key="1">
-        <span
-          slot="tab"
-          :title="$translateTitle('topo.Upload background')"
-        >
-          <vab-icon icon="image-2-fill" />
-        </span>
+    <a-collapse accordion>
+      <a-collapse-panel
+        key="1"
+        :header="$translateTitle('topo.Upload background')"
+      >
         <el-button
           size="mini"
           type="primary"
@@ -28,48 +21,40 @@
         >
           {{ $translateTitle('topo.Upload background') }}
         </el-button>
-      </a-tab-pane>
-      <a-tab-pane key="2">
-        <span
-          slot="tab"
-          :title="$translateTitle('topo.Add text content')"
-        >
-          <vab-icon icon="text" />
-        </span>
+      </a-collapse-panel>
+      <a-collapse-panel
+        key="2"
+        :header="$translateTitle('topo.Add text content')"
+      >
         <el-button
           size="mini"
           type="primary"
           @click.native="
             createThing({
               productid: $route.query.productid,
+              hidden: false,
             })
           "
         >
           {{ $translateTitle('topo.Add text content') }}
         </el-button>
         <Thing />
-      </a-tab-pane>
-      <a-tab-pane key="3">
-        <span
-          slot="tab"
-          :title="$translateTitle('topo.Add configuration tag')"
-        >
-          <vab-icon icon="caravan-line" />
-        </span>
+      </a-collapse-panel>
+      <a-collapse-panel
+        key="3"
+        :header="$translateTitle('topo.Add configuration tag')"
+      >
         <el-button
           size="mini"
           type="primary"
         >
           {{ $translateTitle('topo.Add configuration tag') }}
         </el-button>
-      </a-tab-pane>
-      <a-tab-pane key="4">
-        <span
-          slot="tab"
-          :title="$translateTitle('topo.image')"
-        >
-          <vab-icon icon="image-add-line" />
-        </span>
+      </a-collapse-panel>
+      <a-collapse-panel
+        key="4"
+        :header="$translateTitle('topo.image')"
+      >
         <div>
           <el-collapse
             v-model="activeNames"
@@ -166,13 +151,12 @@
             </el-collapse-item>
           </el-collapse>
         </div>
-      </a-tab-pane>
-    </a-tabs>
+      </a-collapse-panel>
+    </a-collapse>
   </div>
 </template>
 
 <script>
-
   import createThing from '@/utils/konva/createThing'
   import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
@@ -334,7 +318,10 @@
           //  直接设置背景图的地址
           localStorage.setItem('konvaBg', res.path)
           await this.setKonvaBg(res.path)
-          console.error('set konva bg \n', localStorage.getItem('fileServer') + res.path)
+          console.error(
+            'set konva bg \n',
+            localStorage.getItem('fileServer') + res.path
+          )
           //  然后重新绘制一下 使用vuex topo
         }
       },
@@ -364,14 +351,7 @@
   }
 </script>
 <style>
-  .ant-tabs .ant-tabs-left-bar .ant-tabs-tab,
-  .ant-tabs .ant-tabs-right-bar .ant-tabs-tab {
-    padding: 10px 8px;
-  }
-
-  .ant-tabs .ant-tabs-left-content {
-    padding-left: 0;
-    margin-top: 20px !important;
+  .ant-collapse-content-box{
     text-align: center;
   }
 </style>
