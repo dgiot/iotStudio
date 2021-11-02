@@ -13,6 +13,20 @@ const topoStage = {
     console.info(args)
     console.groupEnd()
     const {stage } = args
+    stage.find("Star").forEach((node)=>{
+      console.log(node,'Star')
+      node.setAttrs({
+        x: 5,
+        fill: 'red'
+      });
+      const bgSrc = node.getAttr('src').includes('//')
+        ? node.getAttr('src')
+        : localStorage.getItem('fileServer') + node.getAttr('src').includes('//')
+      localStorage.setItem('konvaBg',bgSrc)
+      // node.destroy()
+      canvas.bgNode = node
+      addNodeEvent({ type:'bgMoveToBottom',bgNode:node,layer:args.layer,stage:args.stage })
+    })
     stage.find('Label').forEach((node) => {
       console.warn('Label',node, node.attrs)
       if (node.getAttr('name') == 'thing') {

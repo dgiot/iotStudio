@@ -278,8 +278,9 @@
       async updataTopo(){
         const loading = this.$baseLoading()
         try{
+          localStorage.setItem('konvaStale',canvas.stage.toJSON())
           const params = {
-            config: _.merge(this.productconfig, {konva:JSON.parse(topo.Konvajson) })
+            config: _.merge(this.productconfig, {konva:JSON.parse(canvas.stage.toJSON()) })
           }
           this.$message.success(this.$translateTitle('user.update completed'))
           const res = await putProduct(this.$route.query.productid,params)

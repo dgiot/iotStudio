@@ -10,9 +10,10 @@ const topoImage = {
     const {stage,layer, saleInfo } = args
     const img = new Image()
     stage.find('Image').forEach((node) => {
-      console.log('图片处理：',node)
+      console.error('handleImage --------------------图片处理：',node)
+      if(node.getAttr('id'))
       if (node.getAttr('src')) {
-        img.src = node.getAttr('src').includes('http')
+        img.src = node.getAttr('src').includes('//')
           ? node.getAttr('src') +randomXy(300,10)
           : localStorage.getItem('fileServer') + node.getAttr('src') +randomXy(300,10)
         img.onload = () => {

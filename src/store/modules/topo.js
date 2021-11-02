@@ -160,9 +160,11 @@ const mutations = {
     canvas.konva = attr
   },
   setKonvaBg(state, bg) {
-    addNodeEvent(_.merge(
-      canvas.handlerArgs,{type:'setTopoBg',src:bg}
-    ))
+     const args = _.merge(
+       canvas.handlerArgs,{type:'setTopoBg',src:bg}
+     )
+    console.log('konva logs',args)
+    addNodeEvent(args)
   },
   createThing(state, thing) {
     const simpleText = addNodeEvent({type:'createThing',thing,saleInfo: {
@@ -199,6 +201,7 @@ const mutations = {
 }
 const actions = {
   setKonvaBg({ commit }, bg) {
+    localStorage.setItem('konvaBg',bg)
     commit('setKonvaBg', bg)
   },
   moveUp({ commit }, args) {

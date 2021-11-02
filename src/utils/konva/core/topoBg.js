@@ -14,7 +14,7 @@ const topoBg = {
    * @param stage
    */
   bgMoveToBottom({ bgNode, layer, stage } = args) {
-    const bgSrc = bgNode.getAttr('src')
+    const bgSrc = localStorage.getItem('konvaBg')
     const {
       randomXy,
       handlerArgs: { saleInfo },

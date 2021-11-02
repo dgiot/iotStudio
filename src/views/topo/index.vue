@@ -136,10 +136,11 @@
               {
                 attrs: {
                   id: 'bg',
+                  type: 'bg-image',
                   width: 1200,
                   height: 700,
                   draggable: false,
-                  src: 'https://cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361',
+                  src: '//cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361',
                 },
                 className: 'Image',
               },

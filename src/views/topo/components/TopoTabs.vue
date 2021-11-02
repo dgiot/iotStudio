@@ -12,7 +12,7 @@
     <a-collapse accordion>
       <a-collapse-panel
         key="1"
-        :header="$translateTitle('topo.Upload background')"
+        :header="$translateTitle('topo.background')"
       >
         <el-button
           size="mini"
@@ -21,10 +21,11 @@
         >
           {{ $translateTitle('topo.Upload background') }}
         </el-button>
+        <Background />
       </a-collapse-panel>
       <a-collapse-panel
         key="2"
-        :header="$translateTitle('topo.Add text content')"
+        :header="$translateTitle('topo.text')"
       >
         <el-button
           size="mini"
@@ -42,7 +43,7 @@
       </a-collapse-panel>
       <a-collapse-panel
         key="3"
-        :header="$translateTitle('topo.Add configuration tag')"
+        :header="$translateTitle('topo.tag')"
       >
         <el-button
           size="mini"
@@ -162,6 +163,7 @@
   import { mapMutations } from 'vuex'
   import { getSvgPath } from '@/utils/konva'
   import Thing from '@/views/topo/components/Thing'
+  import Background from '@/views/topo/components/Background'
   import TopoScale from '@/views/topo/components/TopoScale'
   const regUrl =
     /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
@@ -183,7 +185,7 @@
   const iconfont = require('./iconfont.json')
   export default {
     name: 'TopoTabs',
-    components: { Thing },
+    components: { Thing,Background },
     data() {
       return {
         inputParams: {},
