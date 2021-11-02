@@ -91,7 +91,7 @@
     "chrome-launcher": "^0.14.1",
     "commitizen": "4.2.4",
     "compression-webpack-plugin": "6.1.1",
-    "core-js": "3.18.3",
+    "core-js": "3.19.1",
     "cross-env": "7.0.3",
     "cz-conventional-changelog": "3.3.0",
     "cz-customizable": "6.3.0",
