@@ -63,25 +63,25 @@ export async function KonvaBus(args) {
   //   stage.batchDraw()
   //   // this.emit('clickNode', bg[0].attrs)
   // }
-  // if(Layering.indexOf(type) >0){
-  //   // https://github.dev/fastdgiot/vue-konva-demo
-  //   console.error('Layering',type,node, node[`${type}`]())
-  //   node[`${type}`]()
-  //   layer.draw()
-  // } else if(type ==='setSale'){
-  //   console.log('缩放',saleInfo)
-  //   // updateCanvasAttr(scaleX)
-  //   stage.batchDraw()
-  //   layer.batchDraw()
-  // }else{
-  //   console.log(type,"type")
-  // }
-  // if(type === 'removeNode') {
-  //   console.error('removeNode',removeNode)
-  //   removeNode.remove()
-  //   removeNode.destroy()
-  //   stage.batchDraw()
-  // }
+  if(Layering.indexOf(type) >0){
+    // https://github.dev/fastdgiot/vue-konva-demo
+    console.error('Layering',type,node, node[`${type}`]())
+    node[`${type}`]()
+    layer.draw()
+  } else if(type ==='setSale'){
+    console.log('缩放',saleInfo)
+    // updateCanvasAttr(scaleX)
+    stage.batchDraw()
+    layer.batchDraw()
+  }else{
+    console.log(type,"type")
+  }
+  if(type === 'removeNode') {
+    console.error('removeNode',removeNode)
+    removeNode.remove()
+    removeNode.destroy()
+    stage.batchDraw()
+  }
   // stageSettings(stage,layer,args)
   addNodeEvent({ type:'handleChildren',stage,layer,args:canvas.handlerArgs })
   addNodeEvent({ type:'handleImage',stage:stage,layer:layer,args:canvas.handlerArgs })

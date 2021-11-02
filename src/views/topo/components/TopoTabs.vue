@@ -17,7 +17,7 @@
         <el-button
           size="mini"
           type="primary"
-          @click="uploadCkick('bg')"
+          @click.native="uploadCkick('bg')"
         >
           {{ $translateTitle('topo.Upload background') }}
         </el-button>
@@ -25,7 +25,7 @@
       </a-collapse-panel>
       <a-collapse-panel
         key="2"
-        :header="$translateTitle('topo.text')"
+        :header="$translateTitle('product.physicalmodel')"
       >
         <el-button
           size="mini"
@@ -43,14 +43,15 @@
       </a-collapse-panel>
       <a-collapse-panel
         key="3"
-        :header="$translateTitle('topo.tag')"
+        :header="$translateTitle('topo.evidence')"
       >
-        <el-button
-          size="mini"
-          type="primary"
-        >
-          {{ $translateTitle('topo.Add configuration tag') }}
-        </el-button>
+        <!--        <el-button-->
+        <!--          size="mini"-->
+        <!--          type="primary"-->
+        <!--        >-->
+        <!--          {{ $translateTitle('topo.Add configuration tag') }}-->
+        <!--        </el-button>-->
+        <Evidence />
       </a-collapse-panel>
       <a-collapse-panel
         key="4"
@@ -86,7 +87,7 @@
               </el-row>
             </el-collapse-item>
             <el-collapse-item
-              name="1"
+              name="image"
               title="图标"
             >
               <el-row :gutter="20">
@@ -164,6 +165,7 @@
   import { getSvgPath } from '@/utils/konva'
   import Thing from '@/views/topo/components/Thing'
   import Background from '@/views/topo/components/Background'
+  import Evidence from '@/views/topo/components/TopoEvidence'
   import TopoScale from '@/views/topo/components/TopoScale'
   const regUrl =
     /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
@@ -185,7 +187,7 @@
   const iconfont = require('./iconfont.json')
   export default {
     name: 'TopoTabs',
-    components: { Thing,Background },
+    components: { Thing, Background, Evidence },
     data() {
       return {
         inputParams: {},
@@ -353,7 +355,7 @@
   }
 </script>
 <style>
-  .ant-collapse-content-box{
+  .ant-collapse-content-box {
     text-align: center;
   }
 </style>

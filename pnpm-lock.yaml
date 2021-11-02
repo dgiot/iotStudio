@@ -74,6 +74,7 @@ dependencies:
   '@femessage/el-form-renderer': registry.npmmirror.com/@femessage/el-form-renderer/1.23.0
   '@vue/cli-plugin-pwa': registry.npmmirror.com/@vue/cli-plugin-pwa/4.5.14_@vue+cli-service@4.5.14
   axios: registry.npmmirror.com/axios/0.23.0
+  deepmerge: registry.npmmirror.com/deepmerge/4.2.2
   element-ui: registry.nlark.com/element-ui/2.15.6
   ip: 1.1.5
   konva: registry.npmmirror.com/konva/8.2.3
@@ -5535,7 +5536,7 @@ packages:
     version: 0.0.19
     dependencies:
       core-js: registry.npmmirror.com/core-js/3.18.3
-      remixicon: registry.npmmirror.com/remixicon/2.5.0
+      remixicon: registry.nlark.com/remixicon/2.5.0
       vue: registry.npmmirror.com/vue/2.6.14
     dev: false
 
@@ -5597,6 +5598,8 @@ packages:
       '@babel/helper-optimise-call-expression': registry.nlark.com/@babel/helper-optimise-call-expression/7.15.4
       '@babel/helper-replace-supers': registry.nlark.com/@babel/helper-replace-supers/7.15.4
       '@babel/helper-split-export-declaration': registry.nlark.com/@babel/helper-split-export-declaration/7.15.4
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/helper-create-regexp-features-plugin/7.14.5_@babel+core@7.15.8:
@@ -5735,6 +5738,8 @@ packages:
       '@babel/helper-optimise-call-expression': registry.nlark.com/@babel/helper-optimise-call-expression/7.15.4
       '@babel/traverse': registry.nlark.com/@babel/traverse/7.15.4
       '@babel/types': registry.nlark.com/@babel/types/7.15.6
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/helper-simple-access/7.15.4:
@@ -5798,6 +5803,8 @@ packages:
       '@babel/template': registry.nlark.com/@babel/template/7.15.4
       '@babel/traverse': registry.nlark.com/@babel/traverse/7.15.4
       '@babel/types': registry.nlark.com/@babel/types/7.15.6
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/highlight/7.14.5:
@@ -5837,6 +5844,8 @@ packages:
       '@babel/core': registry.npmmirror.com/@babel/core/7.15.8
       '@babel/helper-create-class-features-plugin': registry.nlark.com/@babel/helper-create-class-features-plugin/7.15.4_@babel+core@7.15.8
       '@babel/helper-plugin-utils': registry.nlark.com/@babel/helper-plugin-utils/7.14.5
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/plugin-proposal-class-static-block/7.15.4_@babel+core@7.15.8:
@@ -5852,6 +5861,8 @@ packages:
       '@babel/helper-create-class-features-plugin': registry.nlark.com/@babel/helper-create-class-features-plugin/7.15.4_@babel+core@7.15.8
       '@babel/helper-plugin-utils': registry.nlark.com/@babel/helper-plugin-utils/7.14.5
       '@babel/plugin-syntax-class-static-block': registry.nlark.com/@babel/plugin-syntax-class-static-block/7.14.5_@babel+core@7.15.8
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/plugin-proposal-dynamic-import/7.14.5_@babel+core@7.15.8:
@@ -5996,6 +6007,8 @@ packages:
       '@babel/core': registry.npmmirror.com/@babel/core/7.15.8
       '@babel/helper-create-class-features-plugin': registry.nlark.com/@babel/helper-create-class-features-plugin/7.15.4_@babel+core@7.15.8
       '@babel/helper-plugin-utils': registry.nlark.com/@babel/helper-plugin-utils/7.14.5
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/plugin-proposal-private-property-in-object/7.15.4_@babel+core@7.15.8:
@@ -6012,6 +6025,8 @@ packages:
       '@babel/helper-create-class-features-plugin': registry.nlark.com/@babel/helper-create-class-features-plugin/7.15.4_@babel+core@7.15.8
       '@babel/helper-plugin-utils': registry.nlark.com/@babel/helper-plugin-utils/7.14.5
       '@babel/plugin-syntax-private-property-in-object': registry.nlark.com/@babel/plugin-syntax-private-property-in-object/7.14.5_@babel+core@7.15.8
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/plugin-proposal-unicode-property-regex/7.14.5_@babel+core@7.15.8:
@@ -6164,6 +6179,8 @@ packages:
       '@babel/helper-replace-supers': registry.nlark.com/@babel/helper-replace-supers/7.15.4
       '@babel/helper-split-export-declaration': registry.nlark.com/@babel/helper-split-export-declaration/7.15.4
       globals: registry.nlark.com/globals/11.12.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/plugin-transform-computed-properties/7.14.5_@babel+core@7.15.8:
@@ -6299,6 +6316,8 @@ packages:
       '@babel/helper-module-transforms': registry.npmmirror.com/@babel/helper-module-transforms/7.15.8
       '@babel/helper-plugin-utils': registry.nlark.com/@babel/helper-plugin-utils/7.14.5
       babel-plugin-dynamic-import-node: 2.3.3
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/plugin-transform-modules-commonjs/7.15.4_@babel+core@7.15.8:
@@ -6315,6 +6334,8 @@ packages:
       '@babel/helper-plugin-utils': registry.nlark.com/@babel/helper-plugin-utils/7.14.5
       '@babel/helper-simple-access': registry.nlark.com/@babel/helper-simple-access/7.15.4
       babel-plugin-dynamic-import-node: 2.3.3
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/plugin-transform-modules-systemjs/7.15.4_@babel+core@7.15.8:
@@ -6332,6 +6353,8 @@ packages:
       '@babel/helper-plugin-utils': registry.nlark.com/@babel/helper-plugin-utils/7.14.5
       '@babel/helper-validator-identifier': registry.nlark.com/@babel/helper-validator-identifier/7.15.7
       babel-plugin-dynamic-import-node: 2.3.3
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/plugin-transform-modules-umd/7.14.5_@babel+core@7.15.8:
@@ -6346,6 +6369,8 @@ packages:
       '@babel/core': registry.npmmirror.com/@babel/core/7.15.8
       '@babel/helper-module-transforms': registry.npmmirror.com/@babel/helper-module-transforms/7.15.8
       '@babel/helper-plugin-utils': registry.nlark.com/@babel/helper-plugin-utils/7.14.5
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/plugin-transform-named-capturing-groups-regex/7.14.9_@babel+core@7.15.8:
@@ -6386,6 +6411,8 @@ packages:
       '@babel/core': registry.npmmirror.com/@babel/core/7.15.8
       '@babel/helper-plugin-utils': registry.nlark.com/@babel/helper-plugin-utils/7.14.5
       '@babel/helper-replace-supers': registry.nlark.com/@babel/helper-replace-supers/7.15.4
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.nlark.com/@babel/plugin-transform-parameters/7.15.4_@babel+core@7.15.8:
@@ -9736,6 +9763,12 @@ packages:
       unified: registry.nlark.com/unified/9.2.2
     dev: true
 
+  registry.nlark.com/remixicon/2.5.0:
+    resolution: {integrity: sha1-teJFiUoVUKojeT+V2s6tv5atGkE=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/remixicon/download/remixicon-2.5.0.tgz}
+    name: remixicon
+    version: 2.5.0
+    dev: false
+
   registry.nlark.com/resolve-dir/1.0.1:
     resolution: {integrity: sha1-eaQGRMNivoLybv/nOcm7U4IEb0M=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/resolve-dir/download/resolve-dir-1.0.1.tgz}
     name: resolve-dir
@@ -10759,6 +10792,8 @@ packages:
       '@babel/template': registry.nlark.com/@babel/template/7.15.4
       '@babel/traverse': registry.nlark.com/@babel/traverse/7.15.4
       '@babel/types': registry.nlark.com/@babel/types/7.15.6
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.npmmirror.com/@babel/parser/7.15.8:
@@ -10797,6 +10832,8 @@ packages:
       '@babel/helper-create-class-features-plugin': registry.nlark.com/@babel/helper-create-class-features-plugin/7.15.4_@babel+core@7.15.8
       '@babel/helper-plugin-utils': registry.nlark.com/@babel/helper-plugin-utils/7.14.5
       '@babel/plugin-syntax-decorators': registry.nlark.com/@babel/plugin-syntax-decorators/7.14.5_@babel+core@7.15.8
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   registry.npmmirror.com/@babel/plugin-transform-runtime/7.15.8_@babel+core@7.15.8:
@@ -12966,12 +13003,6 @@ packages:
       mdast-util-to-markdown: registry.nlark.com/mdast-util-to-markdown/0.6.5
     dev: true
 
-  registry.npmmirror.com/remixicon/2.5.0:
-    resolution: {integrity: sha1-teJFiUoVUKojeT+V2s6tv5atGkE=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/remixicon/download/remixicon-2.5.0.tgz}
-    name: remixicon
-    version: 2.5.0
-    dev: false
-
   registry.npmmirror.com/renderkid/2.0.7:
     resolution: {integrity: sha1-Rk8namvc7mBvShWZP5sp/HTKhgk=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/renderkid/download/renderkid-2.0.7.tgz}
     name: renderkid
@@ -13379,7 +13410,7 @@ packages:
     dev: true
 
   registry.npmmirror.com/vue-loader/16.8.2_webpack@4.46.0:
-    resolution: {integrity: sha1-eFUtZVggepPwnk+2iwaNRJZOt0A=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-loader/download/vue-loader-16.8.2.tgz}
+    resolution: {integrity: sha1-eFUtZVggepPwnk+2iwaNRJZOt0A=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-loader/download/vue-loader-16.8.2.tgz?cache=0&sync_timestamp=1635233125998&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fvue-loader%2Fdownload%2Fvue-loader-16.8.2.tgz}
     id: registry.npmmirror.com/vue-loader/16.8.2
     name: vue-loader
     version: 16.8.2
@@ -13394,10 +13425,24 @@ packages:
     dev: true
     optional: true
 
+  registry.npmmirror.com/vue-material-design-icons/4.13.0:
+    resolution: {integrity: sha1-i6szNcT5BnmUk9XeUtr+2FPaoYY=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-material-design-icons/download/vue-material-design-icons-4.13.0.tgz}
+    name: vue-material-design-icons
+    version: 4.13.0
+    dev: false
+
   registry.npmmirror.com/vue/2.6.14:
     resolution: {integrity: sha1-5RqlJQJQ1Wmj+606ilpofWA24jU=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue/download/vue-2.6.14.tgz}
     name: vue
     version: 2.6.14
+    dev: false
+
+  registry.npmmirror.com/vuetify/2.5.10:
+    resolution: {integrity: sha1-Flyz3p2/+8lLx3WqL2mOufqJ6r4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vuetify/download/vuetify-2.5.10.tgz}
+    name: vuetify
+    version: 2.5.10
+    peerDependencies:
+      vue: ^2.6.4
     dev: false
 
   registry.npmmirror.com/vuex-persistedstate/4.1.0_vuex@3.6.2:

@@ -37,7 +37,7 @@ Vue.component('VabIcon', VabIcon)
 Vue.use(Directives)
 Vue.use(utilwen)
 Vue.use(VueContextMenu)
-
+Vue.use(Vuetify)
 // 加载主题
 const requireTheme = require.context('./styles/themes', false, /\.scss$/)
 requireTheme.keys()
