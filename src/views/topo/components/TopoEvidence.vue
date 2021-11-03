@@ -9,8 +9,66 @@
 * @api https://github.com/material-components/material-web/tree/ae060177fac6ab2d7987a49ff9f34f0de2c335af/packages/icon-button
 * @DocumentLink:
 -->
+<!--eslint-disable-->
 <template>
   <div class="TopoEvidence">
+    <el-dialog
+      append-to-body
+      :title="$translateTitle('topo.topo') + $translateTitle('topo.thing')"
+      :visible.sync="evidenceDialog"
+      top="5vh"
+    >
+      <el-card class="box-card" shadow="hover" v-if="evidence.id">
+        <div class="clearfix" slot="header">
+          <i class="material-icons">
+            {{ evidence.node.attrs.icon }}
+          </i>
+          <el-button style="float: right; padding: 3px 0" type="text">
+            {{ evidence.id ? evidence.id.split('_')[0] : '' }}
+          </el-button>
+        </div>
+        <div>
+          类型的图元处理逻辑
+          <br />
+          对应数据 {{ evidence.dgiotData }}
+          <div v-if="evidence.node.attrs.icon === 'timeline'">
+            <vabChart
+              ref="charts"
+              :after-config="afterConfig"
+              :data="chartData"
+              :data-zoom="chartDataZoom"
+              :extend="chartExtend"
+              :loading="loading"
+              :set-option-opts="false"
+              :settings="chartSettings"
+              :toolbox="toolbox"
+              type="line"
+            />
+          </div>
+          <div v-else-if="evidence.node.attrs.icon === 'live_tv'"></div>
+          <div v-else-if="evidence.node.attrs.icon === 'personal_video'"></div>
+          <div v-else-if="evidence.node.attrs.icon === 'volume_up'"></div>
+          <div v-else-if="evidence.node.attrs.icon === 'image'">
+            <el-image
+              style="width: 100px; height: 100px"
+              :src="url"
+              :preview-src-list="srcList"
+            ></el-image>
+          </div>
+          <div v-else-if="evidence.node.attrs.icon === 'archive'"></div>
+          <div v-else>
+            无该类型取证类型
+            {{ evidence }}
+          </div>
+        </div>
+      </el-card>
+      <span class="dialog-footer" slot="footer">
+        <el-button @click="evidenceDialog = false">取 消</el-button>
+        <el-button @click="evidenceDialog = false" type="primary">
+          确 定
+        </el-button>
+      </span>
+    </el-dialog>
     <div class="TopoEvidence-content">
       <div
         class="TopoEvidence-content-icons"
@@ -20,7 +78,7 @@
         <i
           v-dragBox
           draggable
-          @click="evidenceHandle(item,index)"
+          @click="evidenceHandle(item, index)"
           class="material-icons"
         >
           {{ item.icon }}
@@ -38,8 +96,8 @@
     directives: {
       dragBox: function (el) {
         let dragBox = el //获取当前元素
-        dragBox.onclick=(e)=>{
-          console.log(e,'点击的节点')
+        dragBox.onclick = (e) => {
+          // console.log(e,'点击的节点')
         }
         dragBox.onmousedown = (e) => {
           //算出鼠标相对元素的位置
@@ -66,6 +124,81 @@
     },
     data() {
       return {
+        url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+        srcList: [
+          'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
+          'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg',
+        ],
+        loading: false,
+        evidence: {},
+        chartSettings: {},
+        chartExtend: {
+          series: {
+            barMaxWidth: 35,
+          },
+          dataZoom: [
+            // 鼠标滚轮滚动
+            // {
+            //   type: 'inside',
+            // },
+            // 坐标轴滚动
+            {
+              type: 'slider',
+              show: true,
+              xAxisIndex: [0],
+              left: '9%',
+              bottom: -5,
+              start: 10,
+              end: 90, //初始化滚动条
+            },
+          ],
+          grid: {
+            right: 40,
+          },
+        },
+        dataEmpty: true,
+        chartDataZoom: [{ type: 'slider' }],
+        chartData: {
+          columns: ['日期', '销售额'],
+          rows: [
+            { 日期: '1月1日', 销售额: 123 },
+            { 日期: '1月2日', 销售额: 1223 },
+            { 日期: '1月3日', 销售额: 2123 },
+            { 日期: '1月4日', 销售额: 4123 },
+            { 日期: '1月5日', 销售额: 3123 },
+            { 日期: '1月6日', 销售额: 7123 },
+          ],
+        },
+        toolbox: {
+          orient: 'vertical',
+          right: -5,
+          feature: {
+            dataZoom: {
+              yAxisIndex: 'none',
+            },
+            magicType: {
+              type: [
+                'line',
+                'bar',
+                'histogram',
+                'pie',
+                'ring',
+                'waterfall',
+                'funnel',
+                'radar',
+                'heatmap',
+                'scatter',
+                'candle',
+                'stack',
+              ],
+            },
+            dataView: { show: true, readOnly: false },
+            saveAsImage: { show: true },
+            restore: { show: true },
+          },
+        },
+        thingData: [],
+        evidenceDialog: false,
         coordinate: {
           client: {},
           elePosition: {},
@@ -98,19 +231,32 @@
         ],
       }
     },
+    mounted() {
+      this.$baseEventBus.$on(
+        this.$dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
+        (msg) => {
+          this.dgiotEvidence(msg)
+        }
+      )
+    },
     methods: {
       ...mapMutations({
         createdEvidence: 'topo/createdEvidence',
       }),
-      evidenceHandle(icon,index) {
+      afterConfig(options) {
+        options.tooltip.showDelay = 500
+        return options
+      },
+      async dgiotEvidence(args) {
+        this.evidenceDialog = true
+        this.evidence = args
+      },
+      evidenceHandle(icon, index) {
         this.createdEvidence(
-          _.merge(
-            icon,
-            {
-              index:index,
-              productid: this.$route.query.productid
-            }
-          )
+          _.merge(icon, {
+            index: index,
+            productid: this.$route.query.productid,
+          })
         )
       },
     },

@@ -25,35 +25,36 @@
         @wmxhandleClose="wmxhandleClose"
       />
       <span
-        slot="footer"
         class="dialog-footer"
+        slot="footer"
       >
         <el-button @click="thingDialog = false">取 消</el-button>
         <el-button
-          type="primary"
           @click="thingDialog = false"
-        >确 定</el-button>
+          type="primary"
+        >
+          确 定
+        </el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-  import wmxdetail from "@/views/equipment_management/component/wmxdetail";
+  import wmxdetail from '@/views/equipment_management/component/wmxdetail'
   import { getProduct, putProduct, putThing } from '@/api/Product'
   import { edit_konva_thing } from '@/api/Topo'
   import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   export default {
     name: 'Thing',
-    components: {wmxdetail},
+    components: { wmxdetail },
     data() {
       return {
-        thingData:[],
-        productconfig:{},
+        productconfig: {},
         thingDialog: false,
         infoData: 'Thing',
         thingArgs: {},
-        text:"text"
+        text: 'text',
       }
     },
     computed: {
@@ -94,7 +95,7 @@
         this.wmxdialogVisible = false
         this.Shapeconfig = {}
         this.setSizeForm({})
-        this.$dgiotBus.$emit('refresh',this.$route)
+        this.$dgiotBus.$emit('refresh', this.$route)
       },
       updataForm(from) {
         console.log('子组件改变的值')
@@ -157,7 +158,7 @@
             delete obj.dataForm.originaltype
             delete obj.dataForm.slaveid
           }
-        }else if (sizeForm.type == 'image') {
+        } else if (sizeForm.type == 'image') {
           var obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
@@ -166,7 +167,7 @@
             },
           }
           Object.assign(obj, obj1)
-        }  else if (sizeForm.type == 'bool') {
+        } else if (sizeForm.type == 'bool') {
           var obj1 = {
             dataType: {
               type: sizeForm.type.toLowerCase(),
@@ -275,41 +276,43 @@
           attributevalue: '',
         })
       },
-      async updataTopo(){
+      async updataTopo() {
         const loading = this.$baseLoading()
-        try{
-          localStorage.setItem('konvaStale',canvas.stage.toJSON())
+        try {
+          localStorage.setItem('konvaStale', canvas.stage.toJSON())
           const params = {
-            config: _.merge(this.productconfig, {konva:{Stage:JSON.parse(canvas.stage.toJSON())} })
+            config: _.merge(this.productconfig, {
+              konva: { Stage: JSON.parse(canvas.stage.toJSON()) },
+            }),
           }
           this.$message.success(this.$translateTitle('user.update completed'))
-          const res = await putProduct(this.$route.query.productid,params)
+          const res = await putProduct(this.$route.query.productid, params)
           loading.close()
-        }catch (e) {
+        } catch (e) {
           loading.close()
           console.log(e)
         }
       },
-    async  bindTopo(args) {
-      const loading = this.$baseLoading()
-      this.thingArgs = {
-        args: args,
-        id: args.id,
-        productid: args.id.split('_')[0],
-        text: args.text,
-      }
-      try {
-        const { thing={},config } = await getProduct(args.id.split('_')[0])
-        // 显示物模型弹窗
-        this.thingDialog = true
-        this.productconfig = config
-        console.log(thing)
-        this.thingData = thing
-        loading.close()
-      }catch (e) {
-        loading.close()
-        console.log(e)
-      }
+      async bindTopo(args) {
+        const loading = this.$baseLoading()
+        this.thingArgs = {
+          args: args,
+          id: args.id,
+          productid: args.id.split('_')[0],
+          text: args.text,
+        }
+        try {
+          const { thing = {}, config } = await getProduct(args.id.split('_')[0])
+          // 显示物模型弹窗
+          this.thingDialog = true
+          this.productconfig = config
+          console.log(thing)
+          this.thingData = thing
+          loading.close()
+        } catch (e) {
+          loading.close()
+          console.log(e)
+        }
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }

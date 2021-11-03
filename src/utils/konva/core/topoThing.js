@@ -7,6 +7,19 @@ import Vue from 'vue'
  * @type {{create(*, *, *): Text, on(*)}}
  */
 const topoThing = {
+  evidence(args){
+    const params = {
+      busTopicKey: dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
+      msg: {
+        type: 'bind_evidence',
+        id: args.getAttr('id'),
+        dgiotData: args.getAttr('dgiotData'),
+        node:args,
+      },
+    }
+    console.log(params)
+    Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
+  },
   on(args) {
     const params = {
       busTopicKey: dgiotBus.topicKey('dgiot_thing', 'dgiotThing'),
@@ -19,6 +32,19 @@ const topoThing = {
     // console.log(params,Vue.prototype.$dgiotBus.emit(params.busTopicKey,params.msg))
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
+  contextMenu(args){
+    if(canvas.Layering.indexOf(args.handler) >0){
+      const contextNode = canvas.clickItem
+      if(!_.isEmpty(contextNode)){
+        contextNode[`${args.handler}`]()
+      }
+      canvas.clickItem = {}
+      // if(args.handler === 'remove') contextNode.destroy()
+    }else{
+      console.log(args)
+    }
+    console.log("contextMenucontextMenucontextMenu",args)
+  },
   /**
    * @description 创建文本
    * @document https://konvajs.org/docs/shapes/Text.html
@@ -26,9 +52,13 @@ const topoThing = {
    * @param text
    */
   create(thing, saleInfo, randomXy) {
-    const topoThing = new Konva.Text({
+    const Axis ={
       x: randomXy(100, 50),
       y: randomXy(70, 30),
+    }
+    const topoThing = new Konva.Text({
+      x: Axis.x,
+      y: Axis.y,
       text: `${thing.productid}_${uuid(3)}`,
       // fontSize: 18,
       fontFamily: 'Calibri',
@@ -43,8 +73,8 @@ const topoThing = {
         hidden: thing.hidden,
         id: `${thing.productid}_${uuid(4)}`,
         name: 'thing',
-        x: randomXy(300, 10),
-        y: randomXy(170, 30),
+        x: Axis.x,
+        y: Axis.y,
         draggable: true,
       },
       className: 'Label',
@@ -74,14 +104,14 @@ const topoThing = {
 
     var simpleLabel = new Konva.Label({
       name: 'thing',
-      x: randomXy(640, 10),
-      y: randomXy(640, 10),
+      x: Axis.x,
+      y: Axis.y,
       id: thing.productid + '_flow',
       attrs: {
         id: thing.productid + '_flow',
         name: 'thing',
-        x: randomXy(640, 10),
-        y: randomXy(640, 10),
+        x: Axis.x,
+        y: Axis.y,
       },
     })
 
@@ -114,11 +144,15 @@ const topoThing = {
   },
   createdEvidence(args) {
     console.info('createdEvidence', args.path)
-
-    var simpEvidence = new Konva.Label({
-      name: 'evidence',
+    const Axis ={
       x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
       y: 600 + canvas.randomXy(40, 10),
+    }
+    var simpEvidence = new Konva.Label({
+      name: 'evidence',
+      icon:  args.path.icon,
+      x: Axis.x,
+      y: Axis.y,
       id: `${args.path.productid}_evidence_${canvas.randomXy(40, 10)}_${
         args.path.icon
       }`,
@@ -127,8 +161,8 @@ const topoThing = {
           args.path.icon
         }`,
         name: 'evidence',
-        x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
-        y: 600 + canvas.randomXy(40, 10),
+        x: Axis.x,
+        y: Axis.y,
       },
     })
     // https://konvajs.org/api/Konva.Path.html#Path__anchor
@@ -137,10 +171,15 @@ const topoThing = {
       id: `${args.path.productid}_evidence_${canvas.randomXy(40, 10)}_${
         args.path.icon
       }`,
-      x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
-      y: 600 + canvas.randomXy(40, 10),
+      dgiotData: [],
+      icon:  args.path.icon,
+      x: Axis.x,
+      y: Axis.y,
+      width:36,
+      height:36,
       draggable: true,
       data: args.path.path,
+      handler:"dblclick",
       fill: 'black',
       size: 36,
       scale: {
@@ -158,6 +197,7 @@ const topoThing = {
         },
       })
     )
+    console.log(evidencePath)
     return evidencePath
   },
   /**

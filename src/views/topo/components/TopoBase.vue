@@ -43,15 +43,13 @@
     >
       <vue-context-menu
         :context-menu-data="contextMenuData"
-        @copy="copy"
-        @deleteSahpe="deleteSahpe"
-        @moveDown="moveDown"
-        @moveToBottom="moveToBottom"
-        @moveToTop="moveToTop"
-        @moveUp="moveUp"
-        @getPicture="getPicture"
-        @tag="topoTag"
-        @thing="topoThing"
+        @copy="contextMenu('copy')"
+        @deleteSahpe="contextMenu('remove')"
+        @moveDown="contextMenu('moveDown')"
+        @moveToBottom="contextMenu('moveToBottom')"
+        @moveToTop="contextMenu('moveToTop')"
+        @moveUp="contextMenu('moveUp')"
+        @getPicture="contextMenu('getPicture')"
       />
       <topo-scale style="position:fixed;display: inline-block;" />
       <div
@@ -101,16 +99,16 @@
               icoName: 'fa fa-up fa-fw', //icon图标
               btnName: '导出', //菜单名称
             },
-            {
-              fnHandler: 'tag', //绑定事件
-              icoName: 'fa fa-home fa-fw', //icon图标
-              btnName: '标记', //菜单名称
-            },
-            {
-              fnHandler: 'thing', //绑定事件
-              icoName: 'fa fa-home fa-fw', //icon图标
-              btnName: '物模型', //菜单名称
-            },
+            // {
+            //   fnHandler: 'tag', //绑定事件
+            //   icoName: 'fa fa-home fa-fw', //icon图标
+            //   btnName: '标记', //菜单名称
+            // },
+            // {
+            //   fnHandler: 'thing', //绑定事件
+            //   icoName: 'fa fa-home fa-fw', //icon图标
+            //   btnName: '物模型', //菜单名称
+            // },
             {
             fnHandler: 'moveUp', //绑定事件
             icoName: 'fa fa-home fa-fw', //icon图标
@@ -122,16 +120,18 @@
           }, {
             fnHandler: 'moveToTop',
             icoName: 'fa fa-minus-square-o  fa-fw',
-            btnName: '置于顶层',
+            btnName: '置顶',
           }, {
             fnHandler: 'moveToBottom',
             icoName: 'fa fa-minus-square-o  fa-fw',
-            btnName: '置于底层',
-          }, {
-            fnHandler: 'copy',
-            icoName: 'fa fa-minus-square-o  fa-fw',
-            btnName: '复制',
-          }, {
+            btnName: '置底',
+          },
+          //   {
+          //   fnHandler: 'copy',
+          //   icoName: 'fa fa-minus-square-o  fa-fw',
+          //   btnName: '复制',
+          // },
+            {
             fnHandler: 'deleteSahpe',
             icoName: 'fa fa-minus-square-o  fa-fw',
             btnName: '删除',
@@ -157,198 +157,10 @@
     },
     watch: {},
     mounted() {
-      // const json = {
-      //   attrs: {
-      //     width: 2382,
-      //     height: 1200,
-      //     draggable: true,
-      //   },
-      //   className: 'Stage',
-      //   children: [
-      //     {
-      //       attrs: {
-      //         hitGraphEnabled: false,
-      //       },
-      //       className: 'Layer',
-      //       children: [
-      //         {
-      //           attrs: {},
-      //           className: 'Image',
-      //         },
-      //         {
-      //           attrs: {
-      //             source: 'https://konvajs.org/assets/yoda.jpg',
-      //           },
-      //           className: 'Image',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       attrs: {},
-      //       className: 'Layer',
-      //       children: [
-      //         {
-      //           attrs: {
-      //             data: 'M358.4 307.2h307.2v61.44H358.4z',
-      //             originX: 'center',
-      //             originY: 'bottom',
-      //             id: '#icon-biaoqian-0',
-      //             x: 10,
-      //             y: 15,
-      //             angle: -30,
-      //             fill: '#FFDA00',
-      //             scaleX: 0.15,
-      //             scaleY: 0.15,
-      //             rotation: 0,
-      //           },
-      //           className: 'Path',
-      //         },
-      //         {
-      //           attrs: {
-      //             data: 'M798.72 153.6H184.32v716.8l61.44-35.47136 266.24-153.71264 266.24 153.71264L839.68 870.4V153.6h-40.96zM573.44 645.74464l-61.44-35.47136-61.44 35.47136-204.8 118.24128V215.04h532.48v548.94592L573.44 645.74464z',
-      //             originX: 'center',
-      //             originY: 'bottom',
-      //             id: '#icon-biaoqian-1',
-      //             x: 10,
-      //             y: 15,
-      //             angle: -30,
-      //             fill: '#4DC400',
-      //             scaleX: 0.15,
-      //             scaleY: 0.15,
-      //             rotation: 0,
-      //           },
-      //           className: 'Path',
-      //         },
-      //         {
-      //           attrs: {
-      //             draggable: true,
-      //             x: 306,
-      //             y: 303,
-      //             transformsEnabled: 'position',
-      //           },
-      //           className: 'Group',
-      //           children: [
-      //             {
-      //               attrs: {
-      //                 data: 'M317.44 291.84h389.12v61.44H317.44zM317.44 404.48h389.12v61.44H317.44zM317.44 517.12h245.76v61.44H317.44z',
-      //                 originX: 'center',
-      //                 originY: 'bottom',
-      //                 id: '#icon-bianjixiugai-0',
-      //                 x: 10,
-      //                 y: 15,
-      //                 angle: -30,
-      //                 fill: '#FFDA00',
-      //                 scaleX: 0.15,
-      //                 scaleY: 0.15,
-      //                 rotation: 0,
-      //               },
-      //               className: 'Path',
-      //             },
-      //             {
-      //               attrs: {
-      //                 data: 'M184.32 153.6v716.8h307.2v-61.44H245.76V215.04h532.48v179.2h61.44V153.6z',
-      //                 originX: 'center',
-      //                 originY: 'bottom',
-      //                 id: '#icon-bianjixiugai-1',
-      //                 x: 10,
-      //                 y: 15,
-      //                 angle: -30,
-      //                 fill: '#4DC400',
-      //                 scaleX: 0.15,
-      //                 scaleY: 0.15,
-      //                 rotation: 0,
-      //               },
-      //               className: 'Path',
-      //             },
-      //             {
-      //               attrs: {
-      //                 data: 'M591.90272 787.4048l194.56-336.97792 53.20704 30.72-194.56 336.97792zM637.06112 832.55296l-53.20704-30.72L559.2576 870.4h40.96z',
-      //                 originX: 'center',
-      //                 originY: 'bottom',
-      //                 id: '#icon-bianjixiugai-2',
-      //                 x: 10,
-      //                 y: 15,
-      //                 angle: -30,
-      //                 fill: '#FFDA00',
-      //                 scaleX: 0.15,
-      //                 scaleY: 0.15,
-      //                 rotation: 0,
-      //               },
-      //               className: 'Path',
-      //             },
-      //           ],
-      //         },
-      //         {
-      //           attrs: {
-      //             draggable: true,
-      //             x: 490,
-      //             y: 557,
-      //             transformsEnabled: 'position',
-      //           },
-      //           className: 'Group',
-      //           children: [
-      //             {
-      //               attrs: {
-      //                 radius: 20,
-      //                 stroke: '#231fff',
-      //                 strokeWidth: 4,
-      //                 fill: '#ffffff',
-      //               },
-      //               className: 'Circle',
-      //             },
-      //             {
-      //               attrs: {
-      //                 text: '2',
-      //                 fontSize: 14,
-      //                 originX: 'center',
-      //                 originY: 'center',
-      //                 fill: '#231fff',
-      //                 x: -5,
-      //                 y: -5,
-      //               },
-      //               className: 'Text',
-      //             },
-      //             {
-      //               attrs: {
-      //                 data: '',
-      //                 originX: 'center',
-      //                 originY: 'bottom',
-      //                 x: 10,
-      //                 y: 15,
-      //                 angle: -30,
-      //                 fill: '#231fff',
-      //                 scaleX: 0.15,
-      //                 scaleY: 0.15,
-      //                 rotation: -30,
-      //               },
-      //               className: 'Path',
-      //             },
-      //           ],
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // }
-      // this.createTopo(json)
-      // const stage = Konva.Node.create(json, 'container')
-      //
-      // stage.find('Image').forEach((node) => {
-      //   const img = new Image()
-      //   img.src = node.getAttr('source')
-      //   img.onload = () => {
-      //     node.image(img)
-      //     stage.batchDraw()
-      //   }
-      // })
     },
     methods: {
       ...mapMutations({
-        removeNode: 'topo/removeNode',
-        moveToTop: 'topo/moveToTop',
-        moveToBottom: 'topo/moveToBottom',
-        moveDown: 'topo/moveDown',
-        moveUp: 'topo/moveUp',
-        setZIndex: 'topo/setZIndex',
+        contextMenu: 'topo/contextMenu',
       }),
       ...mapActions({
         setKonva: 'topo/Sale',
@@ -364,39 +176,6 @@
           y,
         }
       },
-      copy() {
-        this.$message({
-          type: 'success',
-          message: '拷贝节点!',
-        })
-      },
-      deleteSahpe() {
-        this.removeNode()
-      },
-      // moveToBottom() {
-      //   this.$message({
-      //     type: 'success',
-      //     message: '置底节点!',
-      //   })
-      // },
-      // moveDown() {
-      //   this.$message({
-      //     type: 'success',
-      //     message: '节点下移!',
-      //   })
-      // },
-      // moveToTop() {
-      //   this.$message({
-      //     type: 'success',
-      //     message: '置顶节点!',
-      //   })
-      // },
-      // moveUp() {
-      //   this.$message({
-      //     type: 'success',
-      //     message: '节点上移!',
-      //   })
-      // },
       getPicture(){
         const link = document.createElement('a')
         link.href = topo.toDataURL
@@ -404,38 +183,6 @@
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
-      },
-      topoTag(){
-        console.log(topo.contextmenu)
-        this.tagDialog = ! this.tagDialog
-      },
-      topoThing(){
-        console.log(topo.contextmenu)
-        this.thingDialog = ! this.thingDialog
-      },
-      updataTopo(){
-
-      },
-      createTopo(json) {
-        // this.initKonva('kevCurrent', json)
-        console.clear()
-        // this.konvajson = json
-        // const stage = topo.konva.Node.create(json, 'kevCurrent')
-        // this.stage = topo.stage.toJSON()
-        // this.$message.success('successfully')
-        // const tabInfo = {
-        //   json: json,
-        //   Sale: this.Sale,
-        //   konvajson: this.konvajson,
-        //   stage: stage.toJSON(),
-        // }
-        // console.groupCollapsed(
-        //   '%cTopobase info',
-        //   'color:#009a61; font-size: 28px; font-weight: 300',
-        // )
-        // console.table(tabInfo)
-        // console.groupEnd()
-        // console.log(tabInfo)
       },
     },
   }

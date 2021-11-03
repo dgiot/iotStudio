@@ -2,7 +2,8 @@ import canvas from '@/utils/konva/core/canvas'
 import addNodeEvent from '@/utils/konva/common'
 let info = {
   tagevent:[],
-  tag:[]
+  tag:[],
+  evidence:[]
 }
 /**
  * @description 组态Stage公共函数
@@ -56,12 +57,17 @@ const topoStage = {
         console.log('contextmenu',e.target)
       })
       node.on('click',e=>{
+        canvas.contextmenu={}
         canvas.clickItem = e.target
         console.log('click',e.target.attrs)
       })
     })
     stage.find('Path').forEach((node) => {
       info['Path'] = stage.find('Path')
+      if (node.getAttr('name') == 'evidence'){
+        info['evidence'].push(node)
+        addNodeEvent({ type: node.getAttr('name'),node:node })
+      }
       // node.setAttrs({
       //   scaleX: args.saleInfo.scaleX,
       //   scaleY: args.saleInfo.scaleY,
@@ -72,6 +78,7 @@ const topoStage = {
       })
       node.on('click',e=>{
         canvas.clickItem = e.target
+        canvas.contextmenu={}
         console.log('click',e.target.attrs)
       })
     })
@@ -79,7 +86,7 @@ const topoStage = {
       '%ctopoStage log',
       'color:#009a61; font-size: 28px; font-weight: 300'
     )
-    console.info(args)
+    console.info(info)
     console.groupEnd()
   }
 }

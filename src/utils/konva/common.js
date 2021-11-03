@@ -19,6 +19,9 @@ function thingEVent(type, event, node) {
     if (type == 'thing') {
       topoThing.on(node)
     }
+    if (type == 'evidence') {
+      topoThing.evidence(node)
+    }
     if (type == 'video') {
       topoVideo.on({
         node,
@@ -26,6 +29,7 @@ function thingEVent(type, event, node) {
     }
   })
 }
+
 /**
  *
  * @param type lable组件类型
@@ -51,26 +55,32 @@ function addNodeEvent(args) {
    */
   if (type) {
     switch (type) {
-      case 'createThing':
-        return createThing(thing, saleInfo, randomXy)
-        break
-      case 'thing':
-        return  thingEVent(type, event, node)
-        break
-      case 'bgMoveToBottom':
-        return topoBg.bgMoveToBottom(args)
-        break
-      case 'setTopoBg':
-        return topoBg.setTopoBg(args)
-        break
-      case 'handleChildren':
+      case 'handleChildren': // 公共图元处理函数
         return topoStage.handleChildren(args)
         break
-      case 'handleImage':
+      case 'createdEvidence': // 创建取证图元
+        return topoThing.createdEvidence(args)
+        break
+      case 'createThing': // 创建物模型
+        return createThing(thing, saleInfo, randomXy)
+        break
+      case 'thing': // 物模型图元处理
+        return  thingEVent(type, event, node)
+        break
+      case 'evidence': // 取证类型图元处理
+        return  thingEVent(type, node.getAttr('handler'),node)
+        break
+      case 'handleImage': // 图片类图元处理函数
         return topoImage.handleImage(args)
         break
-      case 'createdEvidence':
-        return topoThing.createdEvidence(args)
+      case 'bgMoveToBottom': //背景置底
+        return topoBg.bgMoveToBottom(args)
+        break
+      case 'setTopoBg': // 设置背景
+        return topoBg.setTopoBg(args)
+        break
+      case 'contextMenu': // 右键菜单
+        return topoThing.contextMenu(args)
         break
     }
   }

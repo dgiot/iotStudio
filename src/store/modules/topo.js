@@ -160,6 +160,9 @@ const mutations = {
     state.konva = attr
     canvas.konva = attr
   },
+  contextMenu(state, handler) {
+    addNodeEvent({ type:'contextMenu',stage:canvas.stage,layer:canvas.layer,args:canvas.handlerArgs,contextmenu:canvas.contextmenu,handler })
+  },
   createdEvidence(state, Evidence) {
     state.createdEvidence = Evidence
     const simpleEvidence  = addNodeEvent(_.merge(
@@ -246,6 +249,9 @@ const actions = {
   },
   setKonva({ commit }, attr) {
     commit('setSale', attr)
+  },
+  contextMenu({ commit }, attr) {
+    commit('contextMenu', attr)
   },
 }
 export default {

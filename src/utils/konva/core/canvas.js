@@ -18,7 +18,7 @@ let EventKey = 'clickNode'
  * @description 鼠标右键操作项
  * @type {string[]}
  */
-const Layering =['moveDown','moveToBottom','moveToTop','moveUp']
+const Layering =['moveDown','moveToBottom','moveToTop','moveUp','remove']
 const canvas = {
   konva,
   konvaAttr: konvaAttr,

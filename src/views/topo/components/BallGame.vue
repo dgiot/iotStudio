@@ -217,11 +217,11 @@
 
 <style lang="scss">
   .container {
+    position: relative;
+    display: flex;
+    justify-content: center;
     width: 100%;
     height: 100%;
-    display: flex;
-    position: relative;
-    justify-content: center;
 
     .content {
       width: 800px;
