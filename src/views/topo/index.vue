@@ -69,6 +69,7 @@
   import { mapMutations, mapGetters } from 'vuex'
   import { _getTopo } from '@/api/Topo'
   import { queryProduct } from '@/api/Product'
+  import canvas from '@/utils/konva/core/canvas'
 
   export default {
     components: {
@@ -188,7 +189,7 @@
       })
     },
     destroyed() {
-      localStorage.setItem('konvaStale',JSON.stringify(this.initstage))
+      localStorage.setItem('konvaStale',JSON.stringify(canvas.stageJson))
       this.$dgiotBus.$emit(
         'MqttUnbscribe',
         this.$dgiotBus.topicKey(this.router + this.topotopic),

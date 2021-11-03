@@ -109,30 +109,56 @@ const topoThing = {
         },
       })
     )
-
-    console.log('simpleLabel')
     console.log(simpleLabel)
     return simpleLabel
   },
-  createdEvidence(args){
-    // https://konvajs.org/api/Konva.Path.html#Path__anchor
-    var path = new Konva.Path({
-      name:"evidence",
-      x: canvas.randomXy(640, 100),
-      y: canvas.randomXy(640, 100),
-      draggable:true,
-      data:
-        'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-18.2.3,4.352-22.33c7.5.0.3.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.8.2.33.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
-      fill: 'black',
-      // scale: {
-      //   x: 2,
-      //   y: 2,
-      // },
-    });
+  createdEvidence(args) {
+    console.info('createdEvidence', args.path)
 
-    // add the layer to the stage
-    canvas.layer.add(path);
-    console.error('111111111111',path,args)
+    var simpEvidence = new Konva.Label({
+      name: 'evidence',
+      x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
+      y: 600 + canvas.randomXy(40, 10),
+      id: `${args.path.productid}_evidence_${canvas.randomXy(40, 10)}_${
+        args.path.icon
+      }`,
+      attrs: {
+        id: `${args.path.productid}_evidence_${canvas.randomXy(40, 10)}_${
+          args.path.icon
+        }`,
+        name: 'evidence',
+        x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
+        y: 600 + canvas.randomXy(40, 10),
+      },
+    })
+    // https://konvajs.org/api/Konva.Path.html#Path__anchor
+    const evidencePath = new Konva.Path({
+      name: 'evidence',
+      id: `${args.path.productid}_evidence_${canvas.randomXy(40, 10)}_${
+        args.path.icon
+      }`,
+      x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
+      y: 600 + canvas.randomXy(40, 10),
+      draggable: true,
+      data: args.path.path,
+      fill: 'black',
+      size: 36,
+      scale: {
+        x: 2,
+        y: 2,
+      },
+    })
+    simpEvidence.add(evidencePath)
+
+    simpEvidence.add(
+      new Konva.Tag({
+        attrs: {
+          draggable: true,
+          name: 'dblclick',
+        },
+      })
+    )
+    return evidencePath
   },
   /**
    * @description 绑定组态

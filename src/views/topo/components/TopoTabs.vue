@@ -9,6 +9,7 @@
         @files="files"
       />
     </div>
+    <Thing />
     <a-collapse accordion>
       <a-collapse-panel
         key="1"
@@ -39,7 +40,6 @@
         >
           {{ $translateTitle('topo.Add text content') }}
         </el-button>
-        <Thing />
       </a-collapse-panel>
       <a-collapse-panel
         key="3"

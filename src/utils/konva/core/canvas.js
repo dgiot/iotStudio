@@ -38,6 +38,15 @@ const canvas = {
   listener: function () {
     return 'listener res'
   },
+  create:(json,attr='kevCurrent')=> {
+   return  Konva.Node.create(json, attr)
+  },
+  layerJson:()=> {
+    return  canvas.layer.toJSON()
+  },
+  stageJson:()=> {
+    return  canvas.stage.toJSON()
+  },
   toDataURL:''
 }
 export default canvas

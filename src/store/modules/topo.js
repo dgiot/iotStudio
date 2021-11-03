@@ -162,10 +162,13 @@ const mutations = {
   },
   createdEvidence(state, Evidence) {
     state.createdEvidence = Evidence
-    const args = _.merge(
+    const simpleEvidence  = addNodeEvent(_.merge(
       canvas.handlerArgs,{type:'createdEvidence',path:Evidence}
-    )
-    addNodeEvent(args)
+    ))
+    canvas.layer.add(simpleEvidence)
+    canvas.layer.batchDraw()
+    canvas.stage.batchDraw()
+    addNodeEvent({ type:'handleChildren',stage:canvas.stage,layer:canvas.layer,args:canvas.handlerArgs })
   },
   setKonvaBg(state, bg) {
      const args = _.merge(
