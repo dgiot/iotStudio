@@ -89,6 +89,67 @@
           xl: 18,
         },
         productid: this.$route.query.productid || '',
+        initstage: {
+          attrs: {
+            id: 'kevCurrent',
+            width: 1200,
+            height: 700,
+          },
+          className: 'Stage',
+          children: [
+            {
+              attrs: {
+                id: 'Layer_Thing',
+                draggable: false,
+              },
+              className: 'Layer',
+              children: [
+                {
+                  attrs: {
+                    id: 'bg',
+                    type: 'bg-image',
+                    width: 1200,
+                    height: 700,
+                    draggable: false,
+                    src: '//cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361',
+                  },
+                  className: 'Image',
+                },
+                {
+                  attrs: {
+                    id: this.productid + '_flow',
+                    name: 'thing',
+                    x: 100,
+                    y: 100,
+                  },
+                  className: 'Label',
+                  children: [
+                    {
+                      attrs: {
+                        draggable: true,
+                        name: 'dblclick',
+                      },
+                      className: 'Tag',
+                    },
+                    {
+                      attrs: {
+                        draggable: true,
+                        id: this.productid + '_flow_text',
+                        text: 'dgiot',
+                        fontSize: 24,
+                        lineHeight: 1.2,
+                        padding: 10,
+                        fill: 'yellow',
+                      },
+                      draggable: true,
+                      className: 'Text',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
       }
     },
     computed: {
@@ -118,76 +179,16 @@
     },
     watch: {},
     mounted() {
-      const Stage = {
-        attrs: {
-          id: 'kevCurrent',
-          width: 1200,
-          height: 700,
-        },
-        className: 'Stage',
-        children: [
-          {
-            attrs: {
-              id: 'Layer_Thing',
-              draggable: false,
-            },
-            className: 'Layer',
-            children: [
-              {
-                attrs: {
-                  id: 'bg',
-                  type: 'bg-image',
-                  width: 1200,
-                  height: 700,
-                  draggable: false,
-                  src: '//cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361',
-                },
-                className: 'Image',
-              },
-              {
-                attrs: {
-                  id: this.productid + '_flow',
-                  name: 'thing',
-                  x: 100,
-                  y: 100,
-                },
-                className: 'Label',
-                children: [
-                  {
-                    attrs: {
-                      draggable: true,
-                      name: 'dblclick',
-                    },
-                    className: 'Tag',
-                  },
-                  {
-                    attrs: {
-                      draggable: true,
-                      id: this.productid + '_flow_text',
-                      text: 'dgiot',
-                      fontSize: 24,
-                      lineHeight: 1.2,
-                      padding: 10,
-                      fill: 'yellow',
-                    },
-                    draggable: true,
-                    className: 'Text',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      }
       this.Stage = localStorage.getItem('konvaStale')
         ? localStorage.getItem('konvaStale')
-        : Stage
+        : this.initstage
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.$nextTick(()=>{
         this.handleMqtt()
       })
     },
     destroyed() {
+      localStorage.setItem('konvaStale',JSON.stringify(this.initstage))
       this.$dgiotBus.$emit(
         'MqttUnbscribe',
         this.$dgiotBus.topicKey(this.router + this.topotopic),
@@ -241,6 +242,7 @@
               id: 'kevCurrent',
             })
           } else {
+            this.$message.info('暂无组态。显示默认组态')
             console.log(
               'topo info msg 请求数据没有组态 就设置这个组态为默认',
               this.Stage

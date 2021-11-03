@@ -164,6 +164,7 @@
   import { mapMutations } from 'vuex'
   import { getSvgPath } from '@/utils/konva'
   import Thing from '@/views/topo/components/Thing'
+  // import TopoThing from '@/views/topo/components/TopoThing'
   import Background from '@/views/topo/components/Background'
   import Evidence from '@/views/topo/components/TopoEvidence'
   import TopoScale from '@/views/topo/components/TopoScale'

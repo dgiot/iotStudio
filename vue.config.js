@@ -3,7 +3,7 @@
  */
 // prod /data/dgiot/lib/dgiot_api-4.3.0/priv/www
 // flow /data/dgiot/lib/dgiot_api-1.6.4/priv/www
-// local D:\msys64\home\vivi\dgiot_dashboard\dist
+// local D:\msys64\home\h7ml\dgiot_dashboard\dist
 
 /**
  * @description vue.config.js全局配置

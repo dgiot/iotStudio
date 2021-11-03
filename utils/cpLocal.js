@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // * @Author: h7ml
 // * @Date: 2021-10-14 14:55:34
-// * @LastEditors: vivi
+// * @LastEditors: h7ml
 // * @LastEditTime: 2021-10-14 14:55:34
 // * @Description: 此脚本是为了兼容windows下的cp命令
 // * @FilePath: utils\cp.js

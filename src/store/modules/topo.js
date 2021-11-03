@@ -108,13 +108,14 @@ const state = () => ({
   Sale: canvas.konvaAttr.scale ? canvas.konvaAttr.scale : 300,
   konva: canvas.konva,
   konvaBg: localStorage.getItem('konvaBg'),
-  // 当前操作的组态
+  createdEvidence: {},
   activeShape: {},
 })
 const getters = {
   konvaBg: (state) => state.konvaBg,
   Sale: (state) => state.Sale,
   activeShape: (state) => state.activeShape,
+  createdEvidence: (state) => state.createdEvidence,
 }
 const mutations = {
    initKonva(state, args) {
@@ -159,11 +160,17 @@ const mutations = {
     state.konva = attr
     canvas.konva = attr
   },
+  createdEvidence(state, Evidence) {
+    state.createdEvidence = Evidence
+    const args = _.merge(
+      canvas.handlerArgs,{type:'createdEvidence',path:Evidence}
+    )
+    addNodeEvent(args)
+  },
   setKonvaBg(state, bg) {
      const args = _.merge(
        canvas.handlerArgs,{type:'setTopoBg',src:bg}
      )
-    console.log('konva logs',args)
     addNodeEvent(args)
   },
   createThing(state, thing) {
@@ -200,6 +207,9 @@ const mutations = {
   },
 }
 const actions = {
+  createdEvidence({ commit }, evidence) {
+    commit('createdEvidence', evidence)
+  },
   setKonvaBg({ commit }, bg) {
     localStorage.setItem('konvaBg',bg)
     commit('setKonvaBg', bg)

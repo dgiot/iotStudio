@@ -1,48 +1,72 @@
 <!--
-* @Author: vivi
+* @Author: h7ml
 * @Date: 2021-11-02 19:55:00
-* @LastEditors: vivi
+* @LastEditors: h7ml
 * @LastEditTime: 2021-11-02 19:55:00
-* @Description:
+* @Description: 物模型取证组件
 * @FilePath: src\views\topo\components\TopoEvidence.vue
+* @document https://fonts.google.com/icons?selected=Material+Icons
+* @api https://github.com/material-components/material-web/tree/ae060177fac6ab2d7987a49ff9f34f0de2c335af/packages/icon-button
 * @DocumentLink:
 -->
 <template>
-  <div class="TopoEvidence-container">
+  <div class="TopoEvidence">
     <div class="TopoEvidence-content">
+      <div
+        class="TopoEvidence-content-icons"
+        v-for="(item,index) in materialIcons"
+        :key="index"
+      >
+        <i
+          draggable
+          @click="evidenceHandle(item)"
+          class="material-icons"
+        >
+          {{ item }}
+        </i>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   export default {
     name: 'TopoEvidence',
     components: {
     },
     data() {
       return {
-        infoData: 'TopoEvidence',
+        materialIcons:['timeline','live_tv','personal_video','volume_up','image','archive']
       }
     },
-    computed: {},
-    mounted() {},
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
-    methods: {}, //如果页面有keep-alive缓存功能，这个函数会触发
+    methods: {
+      ...mapMutations({
+        createdEvidence: 'topo/createdEvidence',
+      }),
+      evidenceHandle(icon){
+        console.log(icon)
+        this.createdEvidence(icon)
+      }
+    }
   }
 </script>
+<style>
+  .material-icons{
+    font-size: 48px !important;
+    cursor: pointer;
+  }
+</style>
 <style lang="scss" scoped>
-  //.TopoEvidence-container {
-  //  width: 100%;
-  //  height: 100%;
-  //  &-container {
-  //    width: 100%;
-  //    height: 100%;
-  //  }
-  //}
+  .TopoEvidence {
+    width: 100%;
+    height: 100%;
+    &--content {
+      width: 100%;
+      height: 100%;
+      .material-icons{
+        font-size: 48px !important;
+      }
+    }
+  }
 </style>

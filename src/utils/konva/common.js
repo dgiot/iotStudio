@@ -69,6 +69,9 @@ function addNodeEvent(args) {
       case 'handleImage':
         return topoImage.handleImage(args)
         break
+      case 'createdEvidence':
+        return topoThing.createdEvidence(args)
+        break
     }
   }
 }

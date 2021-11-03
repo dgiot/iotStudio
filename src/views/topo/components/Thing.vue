@@ -280,7 +280,7 @@
         try{
           localStorage.setItem('konvaStale',canvas.stage.toJSON())
           const params = {
-            config: _.merge(this.productconfig, {konva:JSON.parse(canvas.stage.toJSON()) })
+            config: _.merge(this.productconfig, {konva:{Stage:JSON.parse(canvas.stage.toJSON())} })
           }
           this.$message.success(this.$translateTitle('user.update completed'))
           const res = await putProduct(this.$route.query.productid,params)
