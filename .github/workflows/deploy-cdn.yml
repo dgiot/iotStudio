@@ -1,23 +1,31 @@
 name: deploy-cdn
-
 on:
-  push
+  push:
+    branches:
+      - master
 
 jobs:
   deploy-cdn:
     runs-on: ubuntu-20.04
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Use Node
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
         with:
-          node-version: '12'
-      - name: install
-        run: yarn
-      - name: build:cdn
-        run:  yarn build:cdn
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.3.0
+          run_install: false
+      - run: pnpm config set registry https://registry.npm.taobao.org
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm build:cdn
       - name: Deploy static to github pagese 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:

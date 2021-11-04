@@ -6,7 +6,7 @@
  * @FilePath: \dgiot-dashboard\babel.config.js
  * @Description:
  */
-let plugins = ['dynamic-import-node']
+let plugins = ['dynamic-import-node','@babel/plugin-transform-runtime']
 if (process.env.NODE_ENV !== 'development')
   plugins.push('transform-remove-console')
 
