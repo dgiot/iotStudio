@@ -34,6 +34,7 @@ const {
   isPwa,
   pwaConfig,
   isSmp,
+  ogConfig,
   cdn,
 } = require('./src/config')
 const { version, author } = require('./package.json')
@@ -81,6 +82,7 @@ function getChainWebpack(config) {
       _staticUrl.js.push(i)
     })
     args[0].staticUrl = _staticUrl
+    args[0].ogConfig = ogConfig
     return args
   })
   config.resolve.symlinks(true)
