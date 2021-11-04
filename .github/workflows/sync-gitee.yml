@@ -1,7 +1,9 @@
-name: Sync to Gitee
+name: Sync to Gitee page
 
 on:
   push:
+    branches:
+      - cdn-pages
   schedule:
     - cron: "0 21 * * *"
 
@@ -9,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Sync to Gitee
+      - name: Sync to Gitee page
         uses: wearerequired/git-mirror-action@master
         env:
           # 在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
@@ -18,7 +20,7 @@ jobs:
           # GitHub 源仓库地址
           source-repo: git@github.com:dgiot/dgiot-dashboard.git
           # Gitee 目标仓库地址
-          destination-repo: git@gitee.com:dgiiot/dgiot-dashboard.git
+          destination-repo: git@gitee.com:dgiot-dashboard/dgiot-dashboard.git
 
       # 绕过手机验证码：https://github.com/yanglbme/gitee-pages-action/issues/6#issuecomment-664812675
       - name: Build Gitee Pages
@@ -29,6 +31,6 @@ jobs:
           # Gitee 密码
           gitee-password: ${{ secrets.GITEE_PASSWORD }}
           # Gitee 仓库
-          gitee-repo: dgiiot/dgiot-dashboard
+          gitee-repo: dgiot-dashboard/dgiot-dashboard
           # 要部署的分支
           branch: cdn-pages

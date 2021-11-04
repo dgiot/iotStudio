@@ -21,7 +21,7 @@
             className: 'w-full',
             tpl: '<div class="flex justify-between"><div>顶部区域左侧</div><div>顶部区域右侧</div></div>',
           },
-          api: '/pages/site.json',
+          api: '/assets/pages/site.json',
         },
       }
     },
