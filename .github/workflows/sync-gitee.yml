@@ -2,6 +2,7 @@ name: Sync to Gitee
 
 on:
   push:
+    branches
   schedule:
     - cron: "0 21 * * *"
 
