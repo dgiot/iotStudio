@@ -6,10 +6,8 @@ specifiers:
   '@commitlint/config-conventional': 13.2.0
   '@dgiot/dgiot-component': 0.0.3
   '@dgiot/dgiot-mqtt-dashboard': 1.1.5
-  '@femessage/data-list': 1.4.0
-  '@femessage/el-data-table': 1.23.0
-  '@femessage/el-form-renderer': 1.23.0
   '@material/icon-button': ^13.0.0
+  '@vue/babel-helper-vue-jsx-merge-props': 1.2.1
   '@vue/cli-plugin-babel': 4.5.14
   '@vue/cli-plugin-eslint': 4.5.14
   '@vue/cli-plugin-pwa': 4.5.14
@@ -51,6 +49,7 @@ specifiers:
   q: ^1.5.1
   qs: ^6.5.1
   raw-loader: 4.0.2
+  react-dom: ^16.8.6
   register-service-worker: 1.7.2
   resize-detector: 0.3.0
   rimraf: 3.0.2
@@ -77,10 +76,8 @@ dependencies:
   '@babel/helper-plugin-utils': registry.nlark.com/@babel/helper-plugin-utils/7.14.5
   '@dgiot/dgiot-component': registry.npmmirror.com/@dgiot/dgiot-component/0.0.3
   '@dgiot/dgiot-mqtt-dashboard': registry.npmmirror.com/@dgiot/dgiot-mqtt-dashboard/1.1.5
-  '@femessage/data-list': registry.npmmirror.com/@femessage/data-list/1.4.0
-  '@femessage/el-data-table': registry.npmmirror.com/@femessage/el-data-table/1.23.0
-  '@femessage/el-form-renderer': registry.npmmirror.com/@femessage/el-form-renderer/1.23.0
   '@material/icon-button': registry.npmmirror.com/@material/icon-button/13.0.0
+  '@vue/babel-helper-vue-jsx-merge-props': 1.2.1
   '@vue/cli-plugin-pwa': registry.npmmirror.com/@vue/cli-plugin-pwa/4.5.14_@vue+cli-service@4.5.14
   amis: registry.npmmirror.com/amis/1.4.0
   axios: registry.npmmirror.com/axios/0.23.0
@@ -91,13 +88,14 @@ dependencies:
   konva: registry.npmmirror.com/konva/8.2.3
   q: 1.5.1
   qs: 6.10.1
+  react-dom: registry.npmmirror.com/react-dom/16.14.0
   register-service-worker: 1.7.2
   resize-detector: 0.3.0
   vab-icons: github.com.cnpmjs.org/zxcasvw/vab-icons/9b6a93942880ee21594110bf55310b7b097d9beb
   vue-contextmenu: registry.npmmirror.com/vue-contextmenu/1.5.10
   vue-ele-form-data-editor: registry.npmmirror.com/vue-ele-form-data-editor/0.1.6
   vue-ele-form-dynamic: registry.npmmirror.com/vue-ele-form-dynamic/0.4.3
-  vuera: registry.npmmirror.com/vuera/0.2.7
+  vuera: registry.npmmirror.com/vuera/0.2.7_react-dom@16.14.0
 
 devDependencies:
   '@commitlint/cli': registry.npmmirror.com/@commitlint/cli/13.2.1
@@ -331,7 +329,6 @@ packages:
 
   /@vue/babel-helper-vue-jsx-merge-props/1.2.1:
     resolution: {integrity: sha1-MWJKelBfsU2h1YAjclpMXycOaoE=, tarball: '@vue/babel-helper-vue-jsx-merge-props/download/@vue/babel-helper-vue-jsx-merge-props-1.2.1.tgz'}
-    dev: true
 
   /@vue/babel-helper-vue-transform-on/1.0.2:
     resolution: {integrity: sha1-m5xpHNBvyFUiGiR1w8yDHXdLx9w=, tarball: '@vue/babel-helper-vue-transform-on/download/@vue/babel-helper-vue-transform-on-1.0.2.tgz'}
@@ -2597,7 +2594,7 @@ packages:
       depd: 1.1.2
       inherits: 2.0.3
       setprototypeof: 1.1.0
-      statuses: 1.5.0
+      statuses: 1.4.0
     dev: true
 
   /http-errors/1.7.2:
@@ -3160,6 +3157,7 @@ packages:
 
   /lodash.clonedeep/4.5.0:
     resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=, tarball: lodash.clonedeep/download/lodash.clonedeep-4.5.0.tgz}
+    dev: true
 
   /lodash.debounce/4.0.8:
     resolution: {integrity: sha1-gteb/zCmfEAF/9XiUVMArZyk168=, tarball: lodash.debounce/download/lodash.debounce-4.0.8.tgz}
@@ -3182,10 +3180,6 @@ packages:
     resolution: {integrity: sha1-Cwih3PaDl8OXhVwyOXg4Mt90A9E=, tarball: lodash.groupby/download/lodash.groupby-4.6.0.tgz}
     dev: false
 
-  /lodash.includes/4.3.0:
-    resolution: {integrity: sha1-YLuYqHy5I8aMoeUTJUgzFISfVT8=, tarball: lodash.includes/download/lodash.includes-4.3.0.tgz}
-    dev: false
-
   /lodash.isboolean/3.0.3:
     resolution: {integrity: sha1-bC4XHbKiV82WgC/UOwGyDV9YcPY=, tarball: lodash.isboolean/download/lodash.isboolean-3.0.3.tgz}
     dev: false
@@ -3202,6 +3196,7 @@ packages:
 
   /lodash.kebabcase/4.1.1:
     resolution: {integrity: sha1-hImxyw0p/4gZXM7KRI/21swpXDY=, tarball: lodash.kebabcase/download/lodash.kebabcase-4.1.1.tgz}
+    dev: true
 
   /lodash.map/4.6.0:
     resolution: {integrity: sha1-dx7Hg540c9nEzeKLGTlMNWL09tM=, tarball: lodash.map/download/lodash.map-4.6.0.tgz}
@@ -3220,6 +3215,7 @@ packages:
 
   /lodash.set/4.3.2:
     resolution: {integrity: sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=, tarball: lodash.set/download/lodash.set-4.3.2.tgz}
+    dev: true
 
   /lodash.template/4.5.0:
     resolution: {integrity: sha1-+XYZXPPzR9DV9SSDVp/oAxzM6Ks=, tarball: lodash.template/download/lodash.template-4.5.0.tgz}
@@ -7904,28 +7900,10 @@ packages:
     version: 3.5.0
     dev: false
 
-  registry.nlark.com/lodash.has/4.5.2:
-    resolution: {integrity: sha1-0Z9NwQlQWMzL4rDN9O4P5Ko3yGI=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/lodash.has/download/lodash.has-4.5.2.tgz}
-    name: lodash.has
-    version: 4.5.2
-    dev: false
-
-  registry.nlark.com/lodash.isempty/4.4.0:
-    resolution: {integrity: sha1-b4bL7di+TsmHvpqvM8loTbGzHn4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/lodash.isempty/download/lodash.isempty-4.4.0.tgz}
-    name: lodash.isempty
-    version: 4.4.0
-    dev: false
-
   registry.nlark.com/lodash.isundefined/3.0.1:
     resolution: {integrity: sha1-I+89lTVWUgOmbO/VuDD4SJEa+0g=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/lodash.isundefined/download/lodash.isundefined-3.0.1.tgz}
     name: lodash.isundefined
     version: 3.0.1
-    dev: false
-
-  registry.nlark.com/lodash.values/4.3.0:
-    resolution: {integrity: sha1-o6bCsOvsxcLLocF+bmIP6BtT00c=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/lodash.values/download/lodash.values-4.3.0.tgz}
-    name: lodash.values
-    version: 4.3.0
     dev: false
 
   registry.nlark.com/markdown-it/12.2.0:
@@ -11290,48 +11268,6 @@ packages:
       lodash.uniq: 4.5.0
     dev: false
 
-  registry.npmmirror.com/@femessage/data-list/1.4.0:
-    resolution: {integrity: sha1-063zKSmqPpJ4BVVgAJD0/C0kPrE=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@femessage/data-list/download/@femessage/data-list-1.4.0.tgz}
-    name: '@femessage/data-list'
-    version: 1.4.0
-    engines: {node: '>= 4.0.0', npm: '>= 3.0.0'}
-    dependencies:
-      lodash.get: 4.4.2
-      vue-infinite-loading: registry.npmmirror.com/vue-infinite-loading/2.4.5
-    transitivePeerDependencies:
-      - vue
-    dev: false
-
-  registry.npmmirror.com/@femessage/el-data-table/1.23.0:
-    resolution: {integrity: sha1-ksnQ3/on5WEXW21YWy/zniPn7k4=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@femessage/el-data-table/download/@femessage/el-data-table-1.23.0.tgz}
-    name: '@femessage/el-data-table'
-    version: 1.23.0
-    engines: {node: '>= 8.3.0', npm: '>= 3.0.0'}
-    dependencies:
-      lodash.get: 4.4.2
-      lodash.isempty: registry.nlark.com/lodash.isempty/4.4.0
-      lodash.kebabcase: 4.1.1
-      lodash.values: registry.nlark.com/lodash.values/4.3.0
-    dev: false
-
-  registry.npmmirror.com/@femessage/el-form-renderer/1.23.0:
-    resolution: {integrity: sha1-LUdE4NXYE20OKOL8mR2FpmWCpXQ=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@femessage/el-form-renderer/download/@femessage/el-form-renderer-1.23.0.tgz}
-    name: '@femessage/el-form-renderer'
-    version: 1.23.0
-    engines: {node: '>= 4.0.0', npm: '>= 3.0.0'}
-    dependencies:
-      lodash.clonedeep: 4.5.0
-      lodash.frompairs: registry.npmmirror.com/lodash.frompairs/4.0.1
-      lodash.get: 4.4.2
-      lodash.has: registry.nlark.com/lodash.has/4.5.2
-      lodash.includes: 4.3.0
-      lodash.isequal: 4.5.0
-      lodash.isplainobject: 4.0.6
-      lodash.kebabcase: 4.1.1
-      lodash.set: 4.3.2
-      lodash.topairs: registry.npmmirror.com/lodash.topairs/4.3.0
-    dev: false
-
   registry.npmmirror.com/@hapi/hoek/8.5.1:
     resolution: {integrity: sha1-/elgZMpEbeyMVajC8TCVewcMbgY=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@hapi/hoek/download/@hapi/hoek-8.5.1.tgz}
     name: '@hapi/hoek'
@@ -13264,22 +13200,10 @@ packages:
     name: lodash.difference
     version: 4.5.0
 
-  registry.npmmirror.com/lodash.frompairs/4.0.1:
-    resolution: {integrity: sha1-vE5SB/onV8E25XNhTpZkUGsrG9I=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lodash.frompairs/download/lodash.frompairs-4.0.1.tgz}
-    name: lodash.frompairs
-    version: 4.0.1
-    dev: false
-
   registry.npmmirror.com/lodash.isnil/4.0.0:
     resolution: {integrity: sha1-SeKM1VkBNFjIFMVHnTxmOiG/qmw=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lodash.isnil/download/lodash.isnil-4.0.0.tgz}
     name: lodash.isnil
     version: 4.0.0
-    dev: false
-
-  registry.npmmirror.com/lodash.topairs/4.3.0:
-    resolution: {integrity: sha1-O23qo31g+xFnE8RsXxfqGQ7EjWQ=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lodash.topairs/download/lodash.topairs-4.3.0.tgz}
-    name: lodash.topairs
-    version: 4.3.0
     dev: false
 
   registry.npmmirror.com/log-update/4.0.0:
@@ -13985,6 +13909,19 @@ packages:
       react-onclickoutside: registry.npmmirror.com/react-onclickoutside/6.12.0_react-dom@16.14.0+react@16.14.0
     dev: false
 
+  registry.npmmirror.com/react-dom/16.14.0:
+    resolution: {integrity: sha1-etg47Cmnd/s8dcOhkPZhz5Kri4k=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/react-dom/download/react-dom-16.14.0.tgz}
+    name: react-dom
+    version: 16.14.0
+    peerDependencies:
+      react: ^16.14.0
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      prop-types: 15.7.2
+      scheduler: registry.npmmirror.com/scheduler/0.19.1
+    dev: false
+
   registry.npmmirror.com/react-dom/16.14.0_react@16.14.0:
     resolution: {integrity: sha1-etg47Cmnd/s8dcOhkPZhz5Kri4k=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/react-dom/download/react-dom-16.14.0.tgz}
     id: registry.npmmirror.com/react-dom/16.14.0
@@ -14598,14 +14535,6 @@ packages:
       semver: 6.3.0
     dev: true
 
-  registry.npmmirror.com/vue-infinite-loading/2.4.5:
-    resolution: {integrity: sha1-zCD9QK9/IBiABkQ8mbYEcM8d4bM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-infinite-loading/download/vue-infinite-loading-2.4.5.tgz}
-    name: vue-infinite-loading
-    version: 2.4.5
-    peerDependencies:
-      vue: ^2.6.10
-    dev: false
-
   registry.npmmirror.com/vue-loader/15.9.8_679359cdb69c218f2f8f476b2ba08796:
     resolution: {integrity: sha1-Sw9gKvr2aplr4eU0+5YJ3EqxDmE=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-loader/download/vue-loader-15.9.8.tgz?cache=0&sync_timestamp=1636036049738&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fvue-loader%2Fdownload%2Fvue-loader-15.9.8.tgz}
     id: registry.npmmirror.com/vue-loader/15.9.8
@@ -14655,14 +14584,17 @@ packages:
     version: 2.6.14
     dev: false
 
-  registry.npmmirror.com/vuera/0.2.7:
+  registry.npmmirror.com/vuera/0.2.7_react-dom@16.14.0:
     resolution: {integrity: sha1-gEasmnzpYbHIH4Qhizvk6qp7qUA=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vuera/download/vuera-0.2.7.tgz}
+    id: registry.npmmirror.com/vuera/0.2.7
     name: vuera
     version: 0.2.7
     peerDependencies:
       react: '>= 15.2.0'
       react-dom: '>= 15.2.0'
       vue: '>= 2.2'
+    dependencies:
+      react-dom: registry.npmmirror.com/react-dom/16.14.0
     dev: false
 
   registry.npmmirror.com/vuex-persistedstate/4.1.0_vuex@3.6.2:
