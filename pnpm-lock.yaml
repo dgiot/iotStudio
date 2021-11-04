@@ -21,6 +21,7 @@ specifiers:
   '@vue/eslint-config-prettier': 6.0.0
   amis: ^1.0.15-beta.9
   axios: 0.23.0
+  babel-helper-vue-jsx-merge-props: ^2.0.3
   babel-plugin-transform-remove-console: 6.9.4
   body-parser: 1.19.0
   chalk: 4.1.2
@@ -40,6 +41,7 @@ specifiers:
   filemanager-webpack-plugin: 6.1.7
   hard-source-webpack-plugin: 0.13.1
   husky: 7.0.2
+  indent-string: ^4.0.0
   ip: ^1.1.5
   konva: ^8.2.2
   lighthouse: ^8.5.1
@@ -50,6 +52,7 @@ specifiers:
   pushstate-server: ^3.1.0
   qs: ^6.5.1
   raw-loader: 4.0.2
+  react-dom: ^16.8.6
   register-service-worker: 1.7.2
   resize-detector: 0.3.0
   rimraf: 3.0.2
@@ -84,17 +87,20 @@ dependencies:
   '@vue/cli-plugin-pwa': registry.npmmirror.com/@vue/cli-plugin-pwa/4.5.14_@vue+cli-service@4.5.14
   amis: registry.npmmirror.com/amis/1.4.0
   axios: registry.npmmirror.com/axios/0.23.0
+  babel-helper-vue-jsx-merge-props: 2.0.3
   element-ui: registry.nlark.com/element-ui/2.15.6
+  indent-string: 4.0.0
   ip: 1.1.5
   konva: registry.npmmirror.com/konva/8.2.3
   qs: 6.10.1
+  react-dom: registry.npmmirror.com/react-dom/16.14.0
   register-service-worker: 1.7.2
   resize-detector: 0.3.0
   vab-icons: github.com.cnpmjs.org/zxcasvw/vab-icons/9b6a93942880ee21594110bf55310b7b097d9beb
   vue-contextmenu: registry.npmmirror.com/vue-contextmenu/1.5.10
   vue-ele-form-data-editor: registry.npmmirror.com/vue-ele-form-data-editor/0.1.6
   vue-ele-form-dynamic: registry.npmmirror.com/vue-ele-form-dynamic/0.4.3
-  vuera: registry.npmmirror.com/vuera/0.2.7
+  vuera: registry.npmmirror.com/vuera/0.2.7_react-dom@16.14.0
 
 devDependencies:
   '@babel/plugin-transform-runtime': registry.npmmirror.com/@babel/plugin-transform-runtime/7.16.0
@@ -2704,7 +2710,6 @@ packages:
   /indent-string/4.0.0:
     resolution: {integrity: sha1-Yk+PRJfWGbLZdoUx1Y9BIoVNclE=, tarball: indent-string/download/indent-string-4.0.0.tgz}
     engines: {node: '>=8'}
-    dev: true
 
   /indexes-of/1.0.1:
     resolution: {integrity: sha1-8w9xbI4r00bHtn0985FVZqfAVgc=, tarball: indexes-of/download/indexes-of-1.0.1.tgz}
@@ -13296,7 +13301,7 @@ packages:
     dev: true
 
   registry.npmmirror.com/loader-utils/0.2.17:
-    resolution: {integrity: sha1-+G5jdNQyBabmxg6RlvF8Apm/s0g=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/loader-utils/download/loader-utils-0.2.17.tgz?cache=0&sync_timestamp=1636036897565&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-0.2.17.tgz}
+    resolution: {integrity: sha1-+G5jdNQyBabmxg6RlvF8Apm/s0g=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/loader-utils/download/loader-utils-0.2.17.tgz?cache=0&sync_timestamp=1636038308349&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-0.2.17.tgz}
     name: loader-utils
     version: 0.2.17
     dependencies:
@@ -13307,7 +13312,7 @@ packages:
     dev: true
 
   registry.npmmirror.com/loader-utils/1.4.0:
-    resolution: {integrity: sha1-xXm140yzSxp07cbB+za/o3HVphM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/loader-utils/download/loader-utils-1.4.0.tgz?cache=0&sync_timestamp=1636036897565&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-1.4.0.tgz}
+    resolution: {integrity: sha1-xXm140yzSxp07cbB+za/o3HVphM=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/loader-utils/download/loader-utils-1.4.0.tgz?cache=0&sync_timestamp=1636038308349&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-1.4.0.tgz}
     name: loader-utils
     version: 1.4.0
     engines: {node: '>=4.0.0'}
@@ -13317,7 +13322,7 @@ packages:
       json5: 1.0.1
 
   registry.npmmirror.com/loader-utils/2.0.1:
-    resolution: {integrity: sha1-O41DhvQjeNZDTTLXvAjnpS05V14=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/loader-utils/download/loader-utils-2.0.1.tgz?cache=0&sync_timestamp=1636036897565&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-2.0.1.tgz}
+    resolution: {integrity: sha1-O41DhvQjeNZDTTLXvAjnpS05V14=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/loader-utils/download/loader-utils-2.0.1.tgz?cache=0&sync_timestamp=1636038308349&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-2.0.1.tgz}
     name: loader-utils
     version: 2.0.1
     engines: {node: '>=8.9.0'}
@@ -14060,6 +14065,19 @@ packages:
       react-onclickoutside: registry.npmmirror.com/react-onclickoutside/6.12.0_react-dom@16.14.0+react@16.14.0
     dev: false
 
+  registry.npmmirror.com/react-dom/16.14.0:
+    resolution: {integrity: sha1-etg47Cmnd/s8dcOhkPZhz5Kri4k=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/react-dom/download/react-dom-16.14.0.tgz}
+    name: react-dom
+    version: 16.14.0
+    peerDependencies:
+      react: ^16.14.0
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      prop-types: 15.7.2
+      scheduler: registry.npmmirror.com/scheduler/0.19.1
+    dev: false
+
   registry.npmmirror.com/react-dom/16.14.0_react@16.14.0:
     resolution: {integrity: sha1-etg47Cmnd/s8dcOhkPZhz5Kri4k=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/react-dom/download/react-dom-16.14.0.tgz}
     id: registry.npmmirror.com/react-dom/16.14.0
@@ -14730,14 +14748,17 @@ packages:
     version: 2.6.14
     dev: false
 
-  registry.npmmirror.com/vuera/0.2.7:
+  registry.npmmirror.com/vuera/0.2.7_react-dom@16.14.0:
     resolution: {integrity: sha1-gEasmnzpYbHIH4Qhizvk6qp7qUA=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vuera/download/vuera-0.2.7.tgz}
+    id: registry.npmmirror.com/vuera/0.2.7
     name: vuera
     version: 0.2.7
     peerDependencies:
       react: '>= 15.2.0'
       react-dom: '>= 15.2.0'
       vue: '>= 2.2'
+    dependencies:
+      react-dom: registry.npmmirror.com/react-dom/16.14.0
     dev: false
 
   registry.npmmirror.com/vuex-persistedstate/4.1.0_vuex@3.6.2:
