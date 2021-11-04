@@ -31,4 +31,4 @@ jobs:
           # Gitee 仓库
           gitee-repo: dgiiot/dgiot-dashboard
           # 要部署的分支
-          branch: gh-pages
+          branch: cdn-pages

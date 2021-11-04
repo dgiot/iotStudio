@@ -2,7 +2,7 @@
   <div
     ref="container"
     class="login-container"
-    :style="{ backgroundImage: 'url(' + backgroundImage + ')' }"
+    :style="{ backgroundImage: 'url(' +locationPath+backgroundImage + ')' }"
   >
     <el-row>
       <el-col
@@ -167,6 +167,7 @@
         else callback()
       }
       return {
+        locationPath:location.href.split('/#')[0],
         info: {
           empty: this.$translateTitle('home.Username can not be empty'),
           than: this.$translateTitle('home.Password cannot be less than'),
