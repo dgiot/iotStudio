@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'v*'
+  repository_dispatch:
+    types: docker
 jobs:
   build:
     runs-on: ubuntu-latest
