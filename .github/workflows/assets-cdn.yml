@@ -11,46 +11,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: master
-      # https://leoku.top/blog/ci-cd-with-github-actions-to-deploy-on-github-pages/
-      # 设置缓存依赖，加快下次安装依赖的速度
-      - name: install pnpm
-        run: |
-          npm install -g yarn
-          yarn config set registry https://registry.npm.taobao.org
-          yarn -v
-          yarn global add rimraf @vue/cli-service
-          yarn config get registry
-      #      - name: Cache pnpm-store
-      #        id: cache-pnpm-store
-      #        uses: actions/cache@v1
-      #        with:
-      #          path: ~/.pnpm-store
-      #          key: ${{ runner.os }}-pnpm-store
-      #      - name: Cache node_modules
-      #        id: cache-node-modules
-      #        uses: actions/cache@v1
-      #        with:
-      #          path: node_modules
-      #          key: ${{ hashFiles('**/package.json') }}-pnpm
-      - name: Setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14.15.4
-          cache: yarn
-      # 安装依赖
-      - name: Install dependencies
-        run: yarn install
-
-      # 构建文件
-      - name: Generate files
-        run: yarn build
-
       - name: Upload COS
         uses: zkqiang/tencent-cos-action@v0.1.0
         with:
           # https://github:com/marketplace/actions/tencent-cos-action:
           # https://cloud.tencent.com/document/product/436/10976#.E6.8C.87.E5.AE.9A-bucket-.E5.92.8C-region-.E7.9A.84.E5.91.BD.E4.BB.A4
-          args: delete -r -f /dgiot_release/dashboardCdn/dgiot-dashboard/ && upload -r ./dist/ /dgiot_release/dashboardCdn/dgiot-dashboard/
+          args: delete -r -f /dgiot_release/dashboardCdn/public/ && upload -r ./public/ /dgiot_release/dashboardCdn/public/
           secret_id: ${{ secrets.SECRET_ID }}
           secret_key: ${{ secrets.SECRET_KEY }}
           bucket: ${{ secrets.BUCKET }}
