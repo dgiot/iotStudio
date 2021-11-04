@@ -79,7 +79,8 @@
     "vue-ele-form-dynamic": "0.4.3",
     "vuera": "^0.2.7",
     "react-dom": "^16.8.6",
-    "@vue/babel-helper-vue-jsx-merge-props": "1.2.1"
+    "@vue/babel-helper-vue-jsx-merge-props": "1.2.1",
+    "babel-runtime": "^6.26.0"
   },
   "devDependencies": {
     "@commitlint/cli": "13.2.1",
