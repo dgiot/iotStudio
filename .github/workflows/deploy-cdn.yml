@@ -18,10 +18,11 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: latest
-      - name: install
-        run: pnpm
-      - name: build:cdn
-        run:  pnpm build:cdn
+      - name: Install and build
+        run: |
+          pnpm config set registry https://registry.npm.taobao.org
+          pnpm install
+          pnpm build:cdn
       - name: Deploy static to github pagese 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
