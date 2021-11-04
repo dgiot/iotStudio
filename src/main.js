@@ -6,6 +6,7 @@ import i18n from './i18n'
 import store from './store'
 import router from './router'
 import { isPwa } from './config'
+import "@/plugins/amis"
 import dgiotStore from '@dgiot/dgiot-mqtt-dashboard/src/store'
 import '@dgiot/dgiot-component'
 import '@/vab'

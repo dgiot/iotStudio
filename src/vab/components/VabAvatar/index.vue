@@ -51,7 +51,7 @@
       }),
     },
     mounted() {
-      document.getElementsByTagName('link')[0].href = this.avatar
+      // document.getElementsByTagName('link')[0].href = this.avatar
     },
     methods: {
       ...mapActions({
