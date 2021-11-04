@@ -12,10 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Mirror the Github organization repos to Gitee.
-      uses: Yikun/hub-mirror-action@v1.1
+      uses: Yikun/hub-mirror-action@master
       with:
         src: github/dgiot
         dst: gitee/dgiiot
         dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
         dst_token:  ${{ secrets.GITEE_TOKEN }}
         static_list: "dgiot-dashboard"
+        force_update: true
+        debug: true
+        timeout: '1h'
