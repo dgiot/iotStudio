@@ -14,8 +14,10 @@ jobs:
           ref: master
       - name: Compress resources
         #  apt-get install zip
-        #          apt-get install rar
+        #  apt-get install rar
         run: |
+          sudo apt-get install rar
+          ln -fs /usr/bin/rar /usr/bin/unrar
           tar -cvf assets.tar public/assets/
           tar -zcvf assets.tar.gz public/assets/
           zip  assets.zip public/assets/
