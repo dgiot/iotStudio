@@ -3020,7 +3020,7 @@
     },
   }
 </script>
-<style lang="scss" rel="stylesheet/scss" scoped>
+<style lang="scss" scoped>
   ::v-deep {
     .el-input-group__append {
       //padding: 0;
