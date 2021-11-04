@@ -70,7 +70,7 @@
     "axios": "0.23.0",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "element-ui": "2.15.6",
-    "indent-string": "^4.0.0",
+    "indent-string": "5.0.0",
     "ip": "^1.1.5",
     "konva": "^8.2.2",
     "qs": "^6.5.1",
