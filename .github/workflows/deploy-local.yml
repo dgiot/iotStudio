@@ -6,19 +6,22 @@ on:
 jobs:
   deploy-local:
     runs-on: ubuntu-20.04
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Use Node
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
         with:
-          node-version: '14.15.4'
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - uses: pnpm/action-setup@v2.0.1
         with:
-          version: latest
-      - name: Install and build
+          version: 6.3.0
+          run_install: false
         run: |
           pnpm config set registry https://registry.npm.taobao.org
           pnpm i --frozen-lockfile
