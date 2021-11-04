@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - 'v*'
-  repository_dispatch:
-    types: publish
 jobs:
   publish:
     runs-on: ubuntu-latest
