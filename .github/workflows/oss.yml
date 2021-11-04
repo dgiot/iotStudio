@@ -13,16 +13,12 @@ jobs:
         with:
           ref: master
       - name: Compress resources
-        #  apt-get install zip
-        #  apt-get install rar
-        #  ln -fs /usr/bin/rar /usr/bin/unrar
         run: |
           sudo apt-get install rar
           tar -cvf assets.tar public/assets/
           tar -zcvf assets.tar.gz public/assets/
           zip  assets.zip public/assets/
-          rar a assets.rar public/assets/
-          mv assets.tar assets.tar.gz assets.zip  assets.rar -t public/assets/
+          mv assets.tar assets.tar.gz assets.zip -t public/assets/
       - name: Upload COS
         uses: zkqiang/tencent-cos-action@v0.1.0
         with:
