@@ -14,10 +14,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '14.15.4'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
       - name: install
-        run: yarn
+        run: pnpm
       - name: build:cdn
-        run:  yarn build:cdn
+        run:  pnpm build:cdn
       - name: Deploy static to github pagese 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:

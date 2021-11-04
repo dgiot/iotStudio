@@ -7,17 +7,20 @@ jobs:
   lighthouse:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
           node-version: '14.15.4'
-
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
       - name: Install and build
         run: |
-          yarn install
-          yarn build:cdn
+          pnpm install
+          pnpm build:cdn
       - name: Audit with lighthouse CI
         uses: treosh/lighthouse-ci-action@v2
         with:
