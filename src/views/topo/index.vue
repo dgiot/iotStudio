@@ -120,7 +120,7 @@
     },
     watch: {},
     mounted() {
-      this.Stage = localStorage.getItem('konvaStale')
+      this.Stage = _.isEmpty(localStorage.getItem('konvaStale'))
         ? localStorage.getItem('konvaStale')
         : this.defaultKonva
       this.router = this.$dgiotBus.router(this.$route.fullPath)

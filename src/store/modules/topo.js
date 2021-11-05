@@ -35,6 +35,7 @@ export async function KonvaBus(args) {
       scaleY:1
     }
   } = args
+  if(_.isEmpty(json)) return false
   canvas.handlerArgs =_.merge(args , {
     type,
     attr: 'kevCurrent',
@@ -57,6 +58,7 @@ export async function KonvaBus(args) {
   var stage = Konva.Node.create(json, attr)
   canvas.json = stage
   var layer = Konva.Node.create(json, attr).findOne('Layer')
+  canvas.layer = layer
   // const bg = layer.findOne('bg')
   // if (bg?.length) {
   //   bg.moveToBottom()
@@ -114,7 +116,7 @@ const state = () => ({
   activeShape: {},
 })
 const getters = {
-  defaultKonva: (state) => state.konvaBg,
+  defaultKonva: (state) => state.defaultKonva,
   konvaBg: (state) => state.konvaBg,
   Sale: (state) => state.Sale,
   activeShape: (state) => state.activeShape,

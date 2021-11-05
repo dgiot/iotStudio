@@ -2,6 +2,7 @@ import Konva from 'konva'
 import { uuid } from '@/utils'
 import addNodeEvent from '@/utils/konva/common'
 import Vue from 'vue'
+import canvas from '@/utils/konva/core/canvas'
 /**
  * @description 组态物模型公共函数
  * @type {{create(*, *, *): Text, on(*)}}
@@ -36,14 +37,21 @@ const topoThing = {
     if(canvas.Layering.indexOf(args.handler) >0){
       const contextNode = canvas.clickItem
       if(!_.isEmpty(contextNode)){
-        contextNode[`${args.handler}`]()
+        contextNode[`${args.handler}`]((e)=>{
+          console.log(e,'contextNode')
+          canvas.layer.batchDraw()
+          // canvas.stage.batchDraw()
+        })
       }
       canvas.clickItem = {}
+      // canvas.layer.batchDraw()
+      // canvas.stage.batchDraw()
       // if(args.handler === 'remove') contextNode.destroy()
     }else{
       console.log(args)
     }
-    console.log("contextMenucontextMenucontextMenu",args)
+    console.log("contextNode args",args)
+    canvas.layer.batchDraw()
   },
   /**
    * @description 创建文本
@@ -53,8 +61,8 @@ const topoThing = {
    */
   create(thing, saleInfo, randomXy) {
     const Axis ={
-      x: randomXy(100, 50),
-      y: randomXy(70, 30),
+      x: randomXy(600, 30),
+      y: randomXy(450, 10),
     }
     const topoThing = new Konva.Text({
       x: Axis.x,
@@ -62,9 +70,10 @@ const topoThing = {
       text: `${thing.productid}_${uuid(3)}`,
       // fontSize: 18,
       fontFamily: 'Calibri',
-      fill: 'yellow', // 没有绑定组态设置为黄色，绑定后改为绿色
+      fontSize: 18,
+      padding: 5,
+      fill: 'white',
       width: 300,
-      padding: 20,
       scaleX: saleInfo.scaleX,
       scaleY: saleInfo.scaleY,
       align: 'center',
@@ -104,8 +113,10 @@ const topoThing = {
 
     var simpleLabel = new Konva.Label({
       name: 'thing',
+      opacity: 0.75,
       x: Axis.x,
       y: Axis.y,
+      draggable: true,
       id: thing.productid + '_flow',
       attrs: {
         id: thing.productid + '_flow',
@@ -114,28 +125,25 @@ const topoThing = {
         y: Axis.y,
       },
     })
-
+    simpleLabel.add(
+      new Konva.Tag({
+        fill: 'green',
+        attrs: {
+          name: 'dblclick',
+        },
+      })
+    )
     simpleLabel.add(
       new Konva.Text({
         hidden: thing.hidden ? thing.hidden : false,
-        fill: 'yellow',
+        fill: 'white',
         attrs: {
-          draggable: true,
+          // draggable: true,
           id: thing.productid + '_flow_text',
           text: 'dgiot' + '_flow_text' + uuid(5),
           fontSize: 24,
           lineHeight: 1.2,
-          padding: 10,
-          fill: 'yellow',
-        },
-      })
-    )
-
-    simpleLabel.add(
-      new Konva.Tag({
-        attrs: {
-          draggable: true,
-          name: 'dblclick',
+          padding: 10
         },
       })
     )

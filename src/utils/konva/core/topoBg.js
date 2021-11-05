@@ -1,6 +1,7 @@
 import Konva from 'konva'
 import canvas from '@/utils/konva/core/canvas'
-
+import topoImage from '@/utils/konva/core/topoImage'
+import { KonvaBus } from '@/store/modules/topo'
 /**
  * @description 组态背景公共函数
  * @type {{bgMoveToBottom(*=): void, setTopoBg(*=): void}}
@@ -84,7 +85,7 @@ const topoBg = {
       canvas.layer.find('Image')
         .forEach((bgImg) => {
           console.log(bgImg, bgImg.getAttr('class'), bgImg.attrs.type)
-          if (bgImg.attrs.type !== 'bg-image' || bgImg.attrs.id == 'bg') {
+          if (bgImg.attrs.type == 'bg-image' || bgImg.attrs.id == 'bg') {
             // 这里应该删掉所有的id为bg的元素 然后再创建
             console.log('删除这个元素', bgImg)
             bgImg.remove()
@@ -116,11 +117,11 @@ const topoBg = {
         console.warn('setBg', layer)
         const yoda = new Konva.Image(
           _.merge(
-            bgNode,
             {
               image: BgimageObj,
             },
             {
+              src:bgSrc,
               class: ' created',
               id: ' created',
             },
@@ -138,38 +139,19 @@ const topoBg = {
         console.warn(yoda)
         // yoda.zIndex(-211111)
         yoda.moveToBottom()
-        // "attrs":{"id":"bg","type":"bg-image","width":1200,"height":700,"src":"//cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361"
+        // "attrs":{"id":"bg","type":"bg-image","width":1200,"height":700,"src":"//img7.ddove.com/upload/20181127/134600237598.jpg"
         console.log(yoda.toJSON())
+        canvas.layer.batchDraw()
       }
       BgimageObj.src = bgSrc
-      canvas.layer.batchDraw()
-      canvas.stage.batchDraw()
-      // else {
-      //   console.log('没有的话走这里')
-      //   const imageObj = new Image()
-      //   imageObj.onload = function () {
-      //     const yoda = new Konva.Image({
-      //       id: 'bg',
-      //       src: bgSrc + randomXy(300, 10),
-      //       image: imageObj,
-      //       width: setattrs.width,
-      //       height: setattrs.height,
-      //       scaleX: saleInfo.scaleX,
-      //       scaleY: saleInfo.scaleY,
-      //     })
-      //     // layer.add(yoda)
-      //     console.log('setBg', layer, yoda)
-      //     console.log('topo log: \n' + '设置背景图\n', bgSrc)
-      //     yoda.zIndex(-211111)
-      //     yoda.moveToBottom()
-      //     stage.batchDraw()
+      // canvas.stage.batchDraw()
+      // await  KonvaBus(
+      //   {
+      //     type: 'createKonva',
+      //     attr: 'kevCurrent',
+      //     json: canvas.stage.toJSON(),
       //   }
-      //   // imageObj.src =
-      //   //   'https://cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361127'
-      //   imageObj.src = src + randomXy(300, 10)
-      //   stage.batchDraw()
-      // }
-      // layer.findOne('bg').moveToBottom()
+      // )
     }
   }
 

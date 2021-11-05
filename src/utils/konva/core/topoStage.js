@@ -11,6 +11,7 @@ let info = {
  */
 const topoStage = {
   handleChildren(args) {
+    const {layer} = canvas
     info['handleArray'] = args
     const {stage } = args
     stage.find("Star").forEach((node)=>{
@@ -72,11 +73,29 @@ const topoStage = {
       //   scaleX: args.saleInfo.scaleX,
       //   scaleY: args.saleInfo.scaleY,
       // })
-      node.on('contextmenu',e=>{
-        canvas.contextmenu = e.target
-        console.log('contextmenu',e.target)
-      })
+      // 定义事件监听
+      // node.on('mouseover', function(e) {
+      //   console.log('鼠标mouseover')
+      //   layer.draw()
+      // })
+      // node.on('mouseout', function() {
+      //   console.log('鼠标mouseout')
+      //   layer.draw()
+      // })
+      // node.on('mousedown', function(e){
+      //   console.log('mousedown',e)
+      //   layer.draw()
+      // })
+      // node.on('mouseup', function(e) {
+      //   console.log('鼠标移出星',e)
+      //   layer.draw()
+      // })
+      // node.on('contextmenu',e=>{
+      //   canvas.contextmenu = e.target
+      //   console.log('contextmenu',e.target)
+      // })
       node.on('click',e=>{
+        console.log(e,'eeeeee')
         canvas.clickItem = e.target
         canvas.contextmenu={}
         console.log('click',e.target.attrs)

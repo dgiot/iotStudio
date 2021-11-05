@@ -13,6 +13,7 @@ module.exports = {
     },
   },
   rules: {
+    "indent": ["off", 2],
     'linebreak-style': [0, 'error', 'windows'],
     // "max-len" : ["error", {code : 3000}],
     'no-unused-vars': 'off',

@@ -23,7 +23,7 @@ const topoImage = {
       canvas.bgNode.attrs = bgNode.attrs
       canvas.bgSrc = bgNode.getAttrs('src').src
       addNodeEvent({ type: 'bgMoveToBottom', bgNode, layer, stage })
-      canvas.removeBg('isRemovebg',konvaJson.find("#bg"),konvaJson)
+      if(konvaJson.find("#bg").length >2) canvas.removeBg('isRemovebg',konvaJson.find("#bg"),konvaJson)
     } else {
       const img = new Image()
       stage.find('Image').forEach((node) => {
@@ -51,10 +51,10 @@ const topoImage = {
       })
     }
     layer.find("#bg").forEach(item=>{
-      canvas.removeBg('isRemovebg',layer.find("#bg"),konvaJson)
+      if(layer.find("#bg").length >=2 ) canvas.removeBg('isRemovebg',layer.find("#bg"),konvaJson)
       layer.batchDraw()
       stage.batchDraw()
-      console.log(layer.toJSON())
+      // console.log(layer.toJSON())
     })
   },
 }

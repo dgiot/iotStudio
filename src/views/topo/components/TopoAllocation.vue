@@ -159,6 +159,7 @@
       this.fetchData()
     },
     mounted() {
+      console.log(this.$router)
     },
     beforeCreate() {
     }, //生命周期 - 创建之前
