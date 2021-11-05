@@ -90,71 +90,11 @@
           xl: 18,
         },
         productid: this.$route.query.productid || '',
-        initstage: {
-          attrs: {
-            id: 'kevCurrent',
-            width: 1200,
-            height: 700,
-          },
-          className: 'Stage',
-          children: [
-            {
-              attrs: {
-                id: 'Layer_Thing',
-                draggable: false,
-              },
-              className: 'Layer',
-              children: [
-                {
-                  attrs: {
-                    id: 'bg',
-                    type: 'bg-image',
-                    width: 1200,
-                    height: 700,
-                    draggable: false,
-                    src: '//cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361',
-                  },
-                  className: 'Image',
-                },
-                {
-                  attrs: {
-                    id: this.productid + '_flow',
-                    name: 'thing',
-                    x: 100,
-                    y: 100,
-                  },
-                  className: 'Label',
-                  children: [
-                    {
-                      attrs: {
-                        draggable: true,
-                        name: 'dblclick',
-                      },
-                      className: 'Tag',
-                    },
-                    {
-                      attrs: {
-                        draggable: true,
-                        id: this.productid + '_flow_text',
-                        text: 'dgiot',
-                        fontSize: 24,
-                        lineHeight: 1.2,
-                        padding: 10,
-                        fill: 'yellow',
-                      },
-                      draggable: true,
-                      className: 'Text',
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
       }
     },
     computed: {
       ...mapGetters({
+        defaultKonva: 'topo/defaultKonva',
         graphColor: 'konva/graphColor',
         drawing: 'konva/drawing',
         graphNow: 'konva/graphNow',
@@ -182,7 +122,7 @@
     mounted() {
       this.Stage = localStorage.getItem('konvaStale')
         ? localStorage.getItem('konvaStale')
-        : this.initstage
+        : this.defaultKonva
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.$nextTick(()=>{
         this.handleMqtt()

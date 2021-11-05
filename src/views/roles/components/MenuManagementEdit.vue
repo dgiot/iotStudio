@@ -15,8 +15,8 @@
     />
     <el-collapse v-model="activeNames">
       <el-collapse-item
-        name="1"
         title="菜单参数配置项"
+        name="1"
       >
         <menu-collapse />
       </el-collapse-item>
@@ -29,23 +29,23 @@
       label-width="100px"
       style="margin-top: 20px"
     >
-      <el-form-item
-        v-show="title != '编辑菜单'"
-        label="菜单选择"
-      >
-        <vab-icon
-          class="el-input-group__prepend"
-          icon="pages-line"
-        />
-        <el-cascader
-          ref="menuCascader"
-          v-model="cascadervalue"
-          :options="router"
-          :props="{ checkStrictly: true, label: 'title', value: 'title' }"
-          clearable
-          @change="handleChange"
-        />
-      </el-form-item>
+      <!--      <el-form-item-->
+      <!--        v-show="title != '编辑菜单'"-->
+      <!--        label="菜单选择"-->
+      <!--      >-->
+      <!--        <vab-icon-->
+      <!--          class="el-input-group__prepend"-->
+      <!--          icon="pages-line"-->
+      <!--        />-->
+      <!--        <el-cascader-->
+      <!--          ref="menuCascader"-->
+      <!--          v-model="cascadervalue"-->
+      <!--          :options="router"-->
+      <!--          :props="{ checkStrictly: true, label: 'title', value: 'title' }"-->
+      <!--          clearable-->
+      <!--          @change="handleChange"-->
+      <!--        />-->
+      <!--      </el-form-item>-->
       <el-form-item
         label="name"
         prop="name"
@@ -106,7 +106,7 @@
       >
         <el-input
           v-model="form.meta.icon"
-          style="cursor:pointer"
+          style="cursor: pointer"
           suffix-icon="el-icon-upload2"
           @click.native="uploadIcon(form)"
         >
@@ -121,14 +121,14 @@
               <el-image
                 v-if="form.meta.icon && form.meta.icon.includes('dgiot')"
                 :src="$FileServe + form.meta.icon"
-                style="width:16px;height:16px"
+                style="width: 16px; height: 16px"
               >
                 <img
                   slot="error"
                   :src="$FileServe + form.meta.icon"
                   :title="$FileServe + form.meta.icon"
-                  style="width:16px;height:16px"
-                >
+                  style="width: 16px; height: 16px"
+                />
               </el-image>
               <vab-icon
                 v-else
@@ -216,7 +216,7 @@
     data() {
       return {
         router,
-        visible:false,
+        visible: false,
         inputParams: {},
         cascadervalue: [],
         jsonModel: {
@@ -350,7 +350,7 @@
         console.log(item, this.form)
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
         this.inputParams = {
           file: '',
@@ -381,8 +381,8 @@
           type == 'addChildMenu'
             ? '新增子菜单'
             : type == 'one'
-              ? '新增一级菜单'
-              : '编辑菜单'
+            ? '新增一级菜单'
+            : '编辑菜单'
         if (type == 'addChildMenu') {
           this.form = {
             orderBy: row.orderBy * 10 + 1, // 如果是新增子菜单

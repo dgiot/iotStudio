@@ -1,3 +1,4 @@
+<!--eslint-disable-->
 <template>
   <div class="devproduct devproduct-container">
     <input
@@ -22,25 +23,15 @@
         @ParserSave="saveParse"
       />
     </el-dialog>
-    <el-dialog
-      :append-to-body="true"
-      :visible.sync="parserView"
-    >
-      <f-render
-        v-model="formConfig"
-        :config="formConfig"
-        pure
-      />
+    <el-dialog :append-to-body="true" :visible.sync="parserView">
+      <f-render v-model="formConfig" :config="formConfig" pure />
     </el-dialog>
     <el-dialog
       :append-to-body="true"
       class="parserTable"
       :visible.sync="parserTable"
     >
-      <div
-        slot="title"
-        class="header-title parserTable"
-      >
+      <div slot="title" class="header-title parserTable">
         <el-button
           type="primary"
           @click.native.prevent="addParse(parserTableList)"
@@ -54,10 +45,7 @@
           {{ $translateTitle('product.preservation') }}
         </el-button>
       </div>
-      <el-table
-        :data="parserTableList.parser"
-        :height="height"
-      >
+      <el-table :data="parserTableList.parser" :height="height">
         <el-table-column
           align="center"
           :label="$translateTitle('product.chinesetitle')"
@@ -77,18 +65,10 @@
           sortable
         >
           <template #default="{ row }">
-            <el-button
-              plain
-              type="primary"
-              @click="editParse(row.$index, row)"
-            >
+            <el-button plain type="primary" @click="editParse(row.$index, row)">
               {{ $translateTitle('concentrator.edit') }}
             </el-button>
-            <el-button
-              plain
-              type="success"
-              @click="previewParse(row.config)"
-            >
+            <el-button plain type="success" @click="previewParse(row.config)">
               {{ $translateTitle('application.preview') }}
             </el-button>
             <el-button
@@ -126,30 +106,18 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            @click.native="searchProduct(0)"
-          >
+          <el-button type="primary" @click.native="searchProduct(0)">
             {{ $translateTitle('developer.search') }}
           </el-button>
         </el-form-item>
         <el-form-item style="float: right; text-align: right">
-          <el-button
-            type="primary"
-            @click.native="addproduct"
-          >
+          <el-button type="primary" @click.native="addproduct">
             {{ $translateTitle('product.createproduct') }}
           </el-button>
-          <el-button
-            type="primary"
-            @click.native="exportpro"
-          >
+          <el-button type="primary" @click.native="exportpro">
             {{ $translateTitle('product.exportpro') }}
           </el-button>
-          <el-button
-            type="primary"
-            @click.native="handleImport()"
-          >
+          <el-button type="primary" @click.native="handleImport()">
             {{ $translateTitle('product.importpro') }}
           </el-button>
         </el-form-item>
@@ -176,9 +144,7 @@
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            :label="$translateTitle('product.nodetype')"
-          >
+          <el-table-column :label="$translateTitle('product.nodetype')">
             <template slot-scope="scope">
               <span v-if="scope.row.nodeType == 3">
                 {{ $translateTitle('product.direct') }}
@@ -205,9 +171,7 @@
           <!--              </span>-->
           <!--            </template>-->
           <!--          </el-table-column>-->
-          <el-table-column
-            :label="$translateTitle('product.addingtime')"
-          >
+          <el-table-column :label="$translateTitle('product.addingtime')">
             <template slot-scope="scope">
               <span>{{ utc2beijing(scope.row.createdAt) }}</span>
             </template>
@@ -236,10 +200,7 @@
                 {{ $translateTitle('product.dict') }}
               </el-button>
 
-              <el-button
-                size="mini"
-                @click="goKonva(scope.row.objectId)"
-              >
+              <el-button size="mini" @click="goKonva(scope.row.objectId)">
                 {{ $translateTitle('concentrator.konva') }}
               </el-button>
 
@@ -275,11 +236,7 @@
                     {{ $translateTitle('developer.determine') }}
                   </el-button>
                 </div>
-                <el-button
-                  slot="reference"
-                  size="mini"
-                  type="danger"
-                >
+                <el-button slot="reference" size="mini" type="danger">
                   {{ $translateTitle('developer.delete') }}
                 </el-button>
               </el-popover>
@@ -287,10 +244,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div
-        class="elpagination"
-        style="margin-top: 20px"
-      >
+      <div class="elpagination" style="margin-top: 20px">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
           :page-size="length"
@@ -344,28 +298,20 @@
                 :label="$translateTitle('product.productname')"
                 prop="name"
               >
-                <el-input
-                  v-model="form.name"
-                  autocomplete="off"
-                />
+                <el-input v-model="form.name" autocomplete="off" />
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.device manufacturer')"
                 prop="name"
               >
-                <el-input
-                  v-model="form.devType"
-                  autocomplete="off"
-                />
+                <el-input v-model="form.devType" autocomplete="off" />
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.classification')"
                 :prop="form.type == 0 ? '' : 'categoryname'"
               >
                 <el-row :gutter="24">
-                  <el-col
-                    :span="10"
-                  >
+                  <el-col :span="10">
                     <el-radio-group v-model="form.type">
                       <el-radio :label="1">
                         {{ $translateTitle('product.Standard category') }}
@@ -375,14 +321,8 @@
                       </el-radio>
                     </el-radio-group>
                   </el-col>
-                  <el-col
-                    :span="13"
-                    style="padding: 0"
-                  >
-                    <el-input
-                      v-model="form.categoryname"
-                      readonly
-                    >
+                  <el-col :span="13" style="padding: 0">
+                    <el-input v-model="form.categoryname" readonly>
                       <el-icon
                         slot="append"
                         class="el-icon-edit el-input__icon"
@@ -500,15 +440,9 @@
                   />
                 </el-select>
               </el-form-item>
-              <el-form-item
-                :label="$translateTitle('menu.icon')"
-                prop="icon"
-              >
+              <el-form-item :label="$translateTitle('menu.icon')" prop="icon">
                 <div v-if="imageUrl">
-                  <img
-                    class="avatar"
-                    :src="$FileServe + imageUrl"
-                  />
+                  <img class="avatar" :src="$FileServe + imageUrl" />
                   <el-button
                     size="mini"
                     style="vertical-align: text-bottom"
@@ -534,7 +468,7 @@
                       position: relative;
                       z-index: 5;
                       width: 100px;
-                      height:   100px;
+                      height: 100px;
                       cursor: pointer;
                       opacity: 0;
                     "
@@ -548,19 +482,13 @@
                 :label="$translateTitle('developer.describe')"
                 prop="desc"
               >
-                <el-input
-                  v-model="form.desc"
-                  type="textarea"
-                />
+                <el-input v-model="form.desc" type="textarea" />
               </el-form-item>
             </el-form>
           </div>
         </div>
         <div class="devproduct-prodialog-footer">
-          <el-button
-            type="primary"
-            @click.native="submitForm()"
-          >
+          <el-button type="primary" @click.native="submitForm()">
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="handleCloseDialogForm()">
@@ -638,15 +566,8 @@
               >
                 <template #default="{ row }">
                   {{ row.name }}
-                  <el-popover
-                    placement="left"
-                    trigger="click"
-                    width="800"
-                  >
-                    <dgiot-profile
-                      ref="profile"
-                      :is-product="true"
-                    />
+                  <el-popover placement="left" trigger="click" width="800">
+                    <dgiot-profile ref="profile" :is-product="true" />
                     <i
                       slot="reference"
                       class="el-icon-info"
@@ -688,15 +609,8 @@
           </div>
         </el-drawer>
       </el-drawer>
-      <el-dialog
-        :append-to-body="true"
-        top="1vh"
-        :visible.sync="dialogProfile"
-      >
-        <dgiot-profile
-          ref="dialogProfile"
-          :is-product="true"
-        />
+      <el-dialog :append-to-body="true" top="1vh" :visible.sync="dialogProfile">
+        <dgiot-profile ref="dialogProfile" :is-product="true" />
       </el-dialog>
       <!--新增字典-->
       <a-drawer
@@ -722,10 +636,7 @@
                 :label-width="formLabelWidth"
                 prop="name"
               >
-                <el-input
-                  v-model="dictTempForm.name"
-                  autocomplete="off"
-                />
+                <el-input v-model="dictTempForm.name" autocomplete="off" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -734,10 +645,7 @@
                 :label-width="formLabelWidth"
                 prop="cType"
               >
-                <el-input
-                  v-model="dictTempForm.cType"
-                  autocomplete="off"
-                />
+                <el-input v-model="dictTempForm.cType" autocomplete="off" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -746,33 +654,19 @@
                 :label-width="formLabelWidth"
                 prop="enable"
               >
-                <el-radio
-                  v-model="dictTempForm.enable"
-                  border
-                  label="1"
-                >
+                <el-radio v-model="dictTempForm.enable" border label="1">
                   启用
                 </el-radio>
-                <el-radio
-                  v-model="dictTempForm.enable"
-                  border
-                  label="0"
-                >
+                <el-radio v-model="dictTempForm.enable" border label="0">
                   禁用
                 </el-radio>
               </el-form-item>
             </el-col>
           </el-row>
 
-          <el-form-item
-            label="字典模板数据"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="字典模板数据" :label-width="formLabelWidth">
             <el-tabs v-model="elactiveName">
-              <el-tab-pane
-                label="Table"
-                name="Table"
-              >
+              <el-tab-pane label="Table" name="Table">
                 <el-button
                   class="mt-3"
                   icon="el-icon-plus"
@@ -788,34 +682,13 @@
                   :height="height"
                   style="width: 100%; text-align: center"
                 >
-                  <el-table-column
-                    label="序号"
-                    prop="order"
-                  />
-                  <el-table-column
-                    label="标识符"
-                    prop="identifier"
-                  />
-                  <el-table-column
-                    label="功能名称"
-                    prop="name"
-                  />
-                  <el-table-column
-                    label="数据类型"
-                    prop="type"
-                  />
-                  <el-table-column
-                    label="数据地址"
-                    prop="address"
-                  />
-                  <el-table-column
-                    label="数据长度"
-                    prop="bytes"
-                  />
-                  <el-table-column
-                    label="是否必填"
-                    prop="required"
-                  >
+                  <el-table-column label="序号" prop="order" />
+                  <el-table-column label="标识符" prop="identifier" />
+                  <el-table-column label="功能名称" prop="name" />
+                  <el-table-column label="数据类型" prop="type" />
+                  <el-table-column label="数据地址" prop="address" />
+                  <el-table-column label="数据长度" prop="bytes" />
+                  <el-table-column label="是否必填" prop="required">
                     <template slot-scope="scope">
                       <span v-if="scope.row.required">是</span>
                       <span v-else>否</span>
@@ -827,11 +700,7 @@
                   <!--                      <span v-else>否</span>-->
                   <!--                    </template>-->
                   <!--                  </el-table-column>-->
-                  <el-table-column
-                    align="center"
-                    label="操作"
-                    width="160"
-                  >
+                  <el-table-column align="center" label="操作" width="160">
                     <template slot-scope="scope">
                       <el-button
                         plain
@@ -859,10 +728,7 @@
                   </el-table-column>
                 </el-table>
               </el-tab-pane>
-              <el-tab-pane
-                label="Json"
-                name="Json"
-              >
+              <el-tab-pane label="Json" name="Json">
                 <vab-json-editor
                   v-model="dictTempForm.params"
                   lang="zh"
@@ -872,10 +738,7 @@
               </el-tab-pane>
             </el-tabs>
           </el-form-item>
-          <el-form-item
-            label="描述"
-            :label-width="formLabelWidth"
-          >
+          <el-form-item label="描述" :label-width="formLabelWidth">
             <el-input
               v-model="dictTempForm.description"
               :autosize="{ minRows: 2, maxRows: 4 }"
@@ -884,19 +747,14 @@
             />
           </el-form-item>
 
-          <el-form-item
-            size="mini"
-            style="text-align: center"
-          >
+          <el-form-item size="mini" style="text-align: center">
             <el-button
               type="primary"
               @click.native="onJsonSave('dictTempForm')"
             >
               提交
             </el-button>
-            <el-button @click="dictVisible = false">
-              取消
-            </el-button>
+            <el-button @click="dictVisible = false">取消</el-button>
           </el-form-item>
         </el-form>
       </a-drawer>
@@ -920,10 +778,7 @@
         >
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-form-item
-                label="序号"
-                prop="order"
-              >
+              <el-form-item label="序号" prop="order">
                 <el-input v-model.number="tempparams.order" />
               </el-form-item>
             </el-col>
@@ -985,10 +840,7 @@
                     :label="$translateTitle('product.string')"
                     value="string"
                   />
-                  <el-option
-                    label="switch"
-                    value="switch"
-                  />
+                  <el-option label="switch" value="switch" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -1035,10 +887,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row
-            v-show="tempparams.protocol == 'modbus'"
-            :gutter="24"
-          >
+          <el-row v-show="tempparams.protocol == 'modbus'" :gutter="24">
             <el-col :span="12">
               <el-form-item label="数据格式">
                 <el-select
@@ -1087,11 +936,7 @@
                 <span v-show="false">{{ scope.row }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              label="寄存器状态"
-              min-width="120"
-            >
+            <el-table-column align="center" label="寄存器状态" min-width="120">
               <!--关键代码-->
               <template slot-scope="scope">
                 <el-select
@@ -1140,7 +985,7 @@
             <el-table-column
               v-if="
                 tempparams.operatetype == 'writeCoils' ||
-                  tempparams.operatetype == 'writeHregs'
+                tempparams.operatetype == 'writeHregs'
               "
               align="center"
               label="寄存器个数"
@@ -1152,11 +997,7 @@
                 <span v-show="false">{{ scope.row.slaveid }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              label="写入字节数"
-              min-width="120"
-            >
+            <el-table-column align="center" label="写入字节数" min-width="120">
               <!--关键代码-->
               <template slot-scope="scope">
                 <el-input v-model="tempparams.bytes" />
@@ -1164,16 +1005,10 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-row
-            v-show="tempparams.protocol != 'modbus'"
-            :gutter="24"
-          >
+          <el-row v-show="tempparams.protocol != 'modbus'" :gutter="24">
             <el-col :span="12">
               <el-form-item label="数据地址">
-                <el-input
-                  v-model="tempparams.address"
-                  placeholder="数据地址"
-                />
+                <el-input v-model="tempparams.address" placeholder="数据地址" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -1272,36 +1107,20 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item label="必填">
-                <el-radio
-                  v-model="tempparams.required"
-                  border
-                  :label="true"
-                >
+                <el-radio v-model="tempparams.required" border :label="true">
                   是
                 </el-radio>
-                <el-radio
-                  v-model="tempparams.required"
-                  border
-                  :label="false"
-                >
+                <el-radio v-model="tempparams.required" border :label="false">
                   否
                 </el-radio>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="只读">
-                <el-radio
-                  v-model="tempparams.readonly"
-                  border
-                  :label="true"
-                >
+                <el-radio v-model="tempparams.readonly" border :label="true">
                   是
                 </el-radio>
-                <el-radio
-                  v-model="tempparams.readonly"
-                  border
-                  :label="false"
-                >
+                <el-radio v-model="tempparams.readonly" border :label="false">
                   否
                 </el-radio>
               </el-form-item>
@@ -1310,18 +1129,10 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item label="列表显示">
-                <el-radio
-                  v-model="tempparams.isshow"
-                  border
-                  :label="true"
-                >
+                <el-radio v-model="tempparams.isshow" border :label="true">
                   是
                 </el-radio>
-                <el-radio
-                  v-model="tempparams.isshow"
-                  border
-                  :label="false"
-                >
+                <el-radio v-model="tempparams.isshow" border :label="false">
                   否
                 </el-radio>
               </el-form-item>
@@ -1329,18 +1140,12 @@
           </el-row>
           <el-row :gutter="24">
             <el-col :span="12">
-              <el-form-item
-                v-if="tempparams.type == 'switch'"
-                label="开"
-              >
+              <el-form-item v-if="tempparams.type == 'switch'" label="开">
                 <el-input v-model="tempparams.activevalue" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item
-                v-if="tempparams.type == 'switch'"
-                label="关"
-              >
+              <el-form-item v-if="tempparams.type == 'switch'" label="关">
                 <el-input v-model="tempparams.inactivevalue" />
               </el-form-item>
             </el-col>
@@ -1356,33 +1161,18 @@
               class="notauto"
               readonly
             >
-              <el-option
-                label="是"
-                :value="true"
-              />
-              <el-option
-                label="否"
-                :value="false"
-              />
+              <el-option label="是" :value="true" />
+              <el-option label="否" :value="false" />
             </el-select>
             <el-input
               v-else-if="tempparams.type == 'int'"
               v-model.number="tempparams.default"
             />
-            <el-input
-              v-else
-              v-model="tempparams.default"
-            />
+            <el-input v-else v-model="tempparams.default" />
           </el-form-item>
-          <el-form-item
-            v-if="tempparams.type == 'enum'"
-            label="Enum数据"
-          >
+          <el-form-item v-if="tempparams.type == 'enum'" label="Enum数据">
             <el-tabs v-model="elactiveName1">
-              <el-tab-pane
-                label="Table"
-                name="Table1"
-              >
+              <el-tab-pane label="Table" name="Table1">
                 <!--枚举型添加格式-->
                 <el-button
                   class="mt-3"
@@ -1398,26 +1188,17 @@
                   :height="height"
                   style="width: 100%; text-align: center"
                 >
-                  <el-table-column
-                    align="center"
-                    label="属性"
-                  >
+                  <el-table-column align="center" label="属性">
                     <template slot-scope="scope">
                       <el-input v-model="scope.row.attribute" />
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    align="center"
-                    label="属性值"
-                  >
+                  <el-table-column align="center" label="属性值">
                     <template slot-scope="scope">
                       <el-input v-model="scope.row.attributevalue" />
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    align="center"
-                    label="操作"
-                  >
+                  <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
                       <el-button
                         plain
@@ -1435,10 +1216,7 @@
             </el-tabs>
           </el-form-item>
           <el-form-item>
-            <el-button
-              type="primary"
-              @click.native="submitFormTempDict()"
-            >
+            <el-button type="primary" @click.native="submitFormTempDict()">
               提交
             </el-button>
           </el-form-item>
@@ -1452,10 +1230,7 @@
         :visible.sync="importDialogShow"
         width="25%"
       >
-        <el-form
-          ref="uploadProForm"
-          :model="formPro"
-        >
+        <el-form ref="uploadProForm" :model="formPro">
           <el-upload
             ref="fileUpload"
             accept=".xls, .xlsx, .zip"
@@ -1470,21 +1245,14 @@
             :on-success="handleUploadSuccess"
             :with-credentials="true"
           >
-            <el-button
-              slot="trigger"
-              size="small"
-              type="primary"
-            >
+            <el-button slot="trigger" size="small" type="primary">
               选泽文件
             </el-button>
           </el-upload>
 
           <!-- </el-row> -->
         </el-form>
-        <div
-          slot="footer"
-          class="dialog-footer"
-        >
+        <div slot="footer" class="dialog-footer">
           <el-button
             class="btn-left"
             size="small"
@@ -1504,11 +1272,7 @@
         </div>
       </el-dialog>
     </div>
-    <VabRender
-      v-show="false"
-      :config="config"
-      :loading="true"
-    />
+    <VabRender v-show="false" :config="config" :loading="true" />
   </div>
 </template>
 <!--eslint-disable-->
@@ -1527,7 +1291,7 @@
   import Category from '@/api/Mock/Category'
   import { ExportParse, ImportParse } from '@/api/Export'
   import { queryProductTemplet } from '@/api/ProductTemplet'
-  import {getCategory, queryCategory} from '@/api/Category'
+  import { getCategory, queryCategory } from '@/api/Category'
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
   context.keys().forEach((fileName) => {
@@ -1674,9 +1438,9 @@
           roles: [],
           relationApp: '',
         },
-        taskchannelList:[],
-        tdchannelList:[],
-        otherchannelList:[],
+        taskchannelList: [],
+        tdchannelList: [],
+        otherchannelList: [],
         formPro: {
           name: '',
           url: '',
@@ -1829,6 +1593,7 @@
     },
     computed: {
       ...mapGetters({
+        defaultKonva: 'topo/defaultKonva',
         token: 'user/token',
         roleTree: 'user/roleTree',
       }),
@@ -2233,19 +1998,20 @@
         this.dialogFormVisible = false
       },
       // 选择产品模板
-     async chooseTemplate(row) {
+      async chooseTemplate(row) {
         const res = await this.getcategoryname(row.category)
         this.selectedRow = row
         this.$set(this.form, 'categoryid', row.category.objectId)
-        this.$set(this.form, 'categoryname', res + "/" + row.name)
+        this.$set(this.form, 'categoryname', res + '/' + row.name)
         this.$set(this.form, 'producttempid', row.objectId)
         this.form.thing = row.thing ? row.thing : {}
         this.cascaderDrawer = !this.cascaderDrawer
       },
-     async getcategoryname(category){
-      const {name} = await getCategory(category.parent.objectId)
-      const returnName = name == '所有领域' ? category.name : name + '/' + category.name
-      return returnName
+      async getcategoryname(category) {
+        const { name } = await getCategory(category.parent.objectId)
+        const returnName =
+          name == '所有领域' ? category.name : name + '/' + category.name
+        return returnName
       },
       // 关闭dialog 事件
       handleCloseDialogForm() {
@@ -2412,10 +2178,26 @@
         this.form.name = row.name
         this.form.nodeType = row.nodeType
         this.$set(this.form, 'type', row.channel ? row.channel.type : '')
-        this.$set(this.form, 'tdchannel', row.channel ? row.channel.tdchannel : '')
-        this.$set(this.form, 'taskchannel',row.channel ? row.channel.taskchannel : '')
-        this.$set(this.form, 'otherchannel',row.channel ? row.channel.otherchannel : [])
-        this.$set(this.form, 'storageStrategy',row.channel ? row.channel.storageStrategy : '')
+        this.$set(
+          this.form,
+          'tdchannel',
+          row.channel ? row.channel.tdchannel : ''
+        )
+        this.$set(
+          this.form,
+          'taskchannel',
+          row.channel ? row.channel.taskchannel : ''
+        )
+        this.$set(
+          this.form,
+          'otherchannel',
+          row.channel ? row.channel.otherchannel : []
+        )
+        this.$set(
+          this.form,
+          'storageStrategy',
+          row.channel ? row.channel.storageStrategy : ''
+        )
         this.form.netType = row.netType
         this.form.devType = row.devType
         this.form.categoryname = row.category ? row.category.name : ''
@@ -2480,17 +2262,19 @@
           devType: this.form.devType,
           desc: this.form.desc,
           thing: this.form.thing ? this.form.thing : {},
-          category : {
-            objectId: Number(this.form.type) == 0 ? '5ca6049839' : this.form.categoryid,
+          category: {
+            objectId:
+              Number(this.form.type) == 0 ? '5ca6049839' : this.form.categoryid,
             __type: 'Pointer',
             className: 'Category',
           },
-          producttemplet : {
-            objectId: Number(this.form.type) == 0 ? '0' : this.form.producttempid,
+          producttemplet: {
+            objectId:
+              Number(this.form.type) == 0 ? '0' : this.form.producttempid,
             __type: 'Pointer',
             className: 'ProductTemplet',
           },
-          channel : {
+          channel: {
             type: this.form.type,
             tdchannel: this.form.tdchannel,
             taskchannel: this.form.taskchannel,
@@ -2518,50 +2302,17 @@
                 read: true,
               }
               const addparams = {
-                productSecret: productSecret,
-                ACL: setAcl,
-                topics : [],
-                decoder : {},
-                config : {
-                  konva: {
-                    Stage: {
-                      "attrs": {
-                        "width": 1200,
-                        "height": 700,
-                        "draggable": false
-                      },
-                      "className": "Stage",
-                      "children": [
-                        {
-                          "attrs": {
-                            "id":"Layer_1",
-                            "draggable": false,
-                          },
-                          "className": "Layer",
-                          "children": [
-                            {
-                              "className": "Label",
-                              "children": [
-                              ]
-                            },
-                            {
-                              "attrs": {
-                                "id":"bg",
-                                width: 1200, // 布局宽度
-                                height: 700, // 布局高度
-                                "draggable": false,
-                                "src": "https://cad.iotn2n.com/dgiot_file/product/topo/52c325bc55_bg?timestamp=1635422987361"
-                              },
-                              "className": "Image"
-                            }
-                          ]
-                        }
-                      ]
+                  productSecret: productSecret,
+                  ACL: setAcl,
+                  topics: [],
+                  decoder: {},
+                  config: {
+                    konva: {
+                      Stage: this.defaultKonva
                     },
                   },
                 },
-              },
-              params = _.merge(initparams, addparams)
+                params = _.merge(initparams, addparams)
               console.log('createProduct', params)
               this.createProduct(params)
             } else {
