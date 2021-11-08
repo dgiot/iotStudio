@@ -45,19 +45,19 @@
               ></div>
             </el-container>
           </el-col>
-          <el-col
-            :lg="isDevice ? 0 : 4"
-            :md="isDevice ? 0 : 6"
-            :sm="isDevice ? 0 : 6"
-            :xl="isDevice ? 0 : 3"
-            :xs="0"
-            class="hidden-xs-only"
-            hidden-xs-only
-          >
-            <el-aside class="konva-container-main-operationsSide">
-              <TopoOperation ref="operation" @upconfig="saveKonvaitem" />
-            </el-aside>
-          </el-col>
+<!--          <el-col-->
+<!--            :lg="isDevice ? 0 : 4"-->
+<!--            :md="isDevice ? 0 : 6"-->
+<!--            :sm="isDevice ? 0 : 6"-->
+<!--            :xl="isDevice ? 0 : 3"-->
+<!--            :xs="0"-->
+<!--            class="hidden-xs-only"-->
+<!--            hidden-xs-only-->
+<!--          >-->
+<!--            <el-aside class="konva-container-main-operationsSide">-->
+<!--              <TopoOperation ref="operation" @upconfig="saveKonvaitem" />-->
+<!--            </el-aside>-->
+<!--          </el-col>-->
         </el-row>
       </el-main>
     </el-container>
@@ -84,10 +84,10 @@
         gutter: {
           gutter: 24,
           xs: 24,
-          sm: 15,
-          md: 15,
-          lg: 17,
-          xl: 18,
+          sm: 20,
+          md: 21,
+          lg: 21,
+          xl: 21,
         },
         productid: this.$route.query.productid || '',
       }
