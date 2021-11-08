@@ -97,7 +97,7 @@
             <el-button
               size="mini"
               type="primary"
-              @click="get_fileinfo(scope.row)"
+              @click.native.stop="get_fileinfo(scope.row)"
             >
               <!-- 详情 -->
               {{ $translateTitle('application.detail') }}
@@ -105,7 +105,7 @@
             <el-button
               size="mini"
               type="primary"
-              @click="download_file(scope.row)"
+              @click.native.stop="download_file(scope.row)"
             >
               <!-- 下载 -->
               {{ $translateTitle('application.preview') }}
@@ -114,7 +114,7 @@
               slot="reference"
               size="mini"
               type="danger"
-              @click="delete_file(scope.row)"
+              @click.native.stop="delete_file(scope.row)"
             >
               {{ $translateTitle('developer.delete') }}
             </el-button>
@@ -144,7 +144,7 @@
             label="url"
             label-width="200"
           >
-            <span>{{ $FileServe + '/' + detailinfo.path + '/' + detailinfo.name }}</span>
+            <span>{{ detailinfo.url }}</span>
           </el-form-item>
           <el-form-item
             label="MD5"
@@ -214,6 +214,7 @@ export default {
       }
     },
     fileclick(row){
+      console.log(row)
       if(row.is_dir){
         this.get_filelist(row.path + '/' + row.name)
         const len = this.filebreadcrumb.length - 1
@@ -221,7 +222,7 @@ export default {
         this.filebreadcrumb[len][key] = row
         this.filebreadcrumb.push(row)
       }else{
-
+        window.open(this.$FileServe + '/' + row.path + '/' + row.name)
       }
     },
     uploadCkick() {
@@ -238,17 +239,20 @@ export default {
       }
     },
     fileInfo(info) {
+      this.listLoading = true
       if (info.url) {
         this.$message({
           type: 'success',
           message: '上传成功',
         })
+        this.get_filelist(this.parentfile)
       } else {
         this.$message({
           type: 'error',
           message: '上传失败',
         })
       }
+      this.listLoading = false
     },
     files(file) {
       this.inputParams.filename = file.name
@@ -270,6 +274,7 @@ export default {
       this.ViewLoading = true
       file_info('files/' + row.path + '/' + row.name).then(res=>{
         this.detailinfo = res.data
+        this.detailinfo.url = this.$FileServe + '/' + row.path + '/' + row.name
         this.ViewLoading = false
       })
     },
