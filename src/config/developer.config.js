@@ -10,10 +10,6 @@ module.exports = {
     {
       path: 'group1',
       target: 'http://prod.iotn2n.com:1250',
-    },
-    {
-      path: 'group2',
-      target: 'http://prod.iotn2n.com:8012',
-    },
+    }
   ],
 }

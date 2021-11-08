@@ -148,7 +148,7 @@
 <script>
   import { mapGetters, mapState } from 'vuex'
 
-  // import PerformanceCurve from "@/views/platform/testpumplist/PerformanceCurve";
+  // import PerformanceCurve from "@/views/platform/tasktlist/PerformanceCurve";
 
   export default {
     name: 'TaskFormBasic',

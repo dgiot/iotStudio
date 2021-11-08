@@ -277,8 +277,8 @@
 
   import { mapGetters, mapState } from 'vuex'
 
-  import PerformanceCurve from '@/views/platform/testpumplist/PerformanceCurve'
-  import PerformanceCurveNew from '@/views/platform/testpumplist/PerformanceCurveNew'
+  import PerformanceCurve from '@/views/platform/tasktlist/PerformanceCurve'
+  import PerformanceCurveNew from '@/views/platform/tasktlist/PerformanceCurveNew'
 
   export default {
     name: 'Verify',

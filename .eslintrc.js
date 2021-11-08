@@ -42,6 +42,13 @@ module.exports = {
         math: 'always',
       },
     ],
+    "vue/max-attributes-per-line": ["error", {
+      "singleline": 1,
+      "multiline": {
+        "max": 1,
+        "allowFirstLine": false
+      }
+    }],
     // Vue.js风格指南(https://cn.vuejs.org/v2/style-guide/)
     // Vue组件排序
     'vue/order-in-components': [

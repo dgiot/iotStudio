@@ -409,7 +409,7 @@
 <script>
   import { mapGetters } from 'vuex'
 
-  import RoleTree from '@/views/platform/testpumplist/pumplist/RoleTree'
+  import RoleTree from '@/views/platform/tasktlist/pumplist/RoleTree'
 
   export default {
     name: 'ExamineList',
