@@ -202,10 +202,10 @@
           console.log('topo info msg 组态请求出错', e)
           loading.close()
         }
-        setTimeout(async() => {
-        //   // 默认创建一个,解决原有读取的text 组态无法使用事件问题
-         await _this.createThing({productid:_this.$route.query.productid,hidden:true})
-        }, 1200)
+        // setTimeout(async() => {
+        // //   // 默认创建一个,解决原有读取的text 组态无法使用事件问题
+        //  await _this.createThing({productid:_this.$route.query.productid,hidden:true})
+        // }, 1200)
       },
     },
   }

@@ -137,12 +137,12 @@ const mutations = {
     canvas.konvaAttr.scale = size
     const { width, height } = canvas.konvaAttr
     const newWidth = width * size / 100
-    const newHeight = width * size / 100 * 1200/700
+    const newHeight = height * size / 100
     const saleInfo = {
       width: newWidth,
-        height: newHeight,
-        scaleX: size * 0.01,
-        scaleY: size * 0.01,
+      height: newHeight,
+      scaleX: size * 0.01,
+      scaleY: size * 0.01,
     }
     const canvasAttr = {
       width: width,
@@ -151,15 +151,10 @@ const mutations = {
       saleInfo
     }
     canvas.konvaAttr = canvasAttr
-    KonvaBus({
-      type: 'setSale',
-      id: 'kevCurrent',
-      json: canvas.Konvajson,
-      saleInfo
-    })
     state.Sale = size
-    console.error('缩放大小', canvas.konvaAttr.scale)
-    console.error('konvaAttr', canvas.konvaAttr)
+    canvas.sale(saleInfo.scaleX)
+    console.error('缩放大小参数')
+    console.table(canvas.konvaAttr)
   },
   setKonva(state, attr) {
     state.konva = attr

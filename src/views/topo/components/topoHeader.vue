@@ -1,6 +1,17 @@
 <!-- 组件说明 -->
 <template>
   <div class="topo-header">
+    <el-drawer
+      v-drawerDrag
+      :visible.sync="infoVisible"
+      size="100%"
+    >
+      <div
+        :key="konva_key"
+        id="konva_preview"
+        class="konva_preview"
+      ></div>
+    </el-drawer>
     <div class="topo-header-drawer">
       <el-drawer
         append-to-body
@@ -165,7 +176,8 @@
   import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
   export default {
     name: 'TopoHeader',
-    components: {},
+    components: {
+    },
     props: {
       productid: {
         type: String,
@@ -186,6 +198,8 @@
     },
     data() {
       return {
+        konva_key: moment(new Date()).valueOf(),
+        infoVisible:false,
         topic: '',
         isshow: true,
         pickerColor: this.graphColor,
@@ -233,6 +247,7 @@
     activated() {},
     methods: {
       ...mapMutations({
+        initKonva: 'topo/initKonva',
         setDrawing: 'konva/setDrawing',
         setPointStart: 'konva/setPointStart',
         setDraw: 'konva/setDraw',
@@ -245,7 +260,14 @@
         this.$baseEventBus.$emit('busUpdata')
       },
       eyeTopo(){
-        console.log("预览事件")
+       this.infoVisible = !this.infoVisible
+       this.$nextTick(()=>{
+         this.initKonva({
+           data: JSON.parse(canvas.stage.toJSON()),
+           id: 'konva_preview',
+         })
+       })
+      this.konva_key =  moment(new Date()).valueOf()
       },
       handFullscreen() {
         this.$parent.$parent.$parent.isFullscreen =
