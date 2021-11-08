@@ -23,6 +23,13 @@ module.exports = {
     'vue/no-template-shadow': 'off',
     'vue/no-v-html': 'off',
     'vue/attributes-order': 0,
+    "vue/html-indent": ["error", 2, {
+      "attribute": 1,
+      "baseIndent": 1,
+      "closeBracket": 0,
+      "alignAttributesVertically": true,
+      "ignores": []
+    }],
     'vue/html-self-closing': [
       'error',
       {

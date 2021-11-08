@@ -57,61 +57,71 @@
           <!--            </a-menu>-->
           <!--          </a-dropdown>-->
 
-          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a
-              class="ant-dropdown-link"
-              @click="(e) => e.preventDefault()"
-            >
-              <a-icon type="edit" />
-              <p>
-                {{ $translateTitle('konva.edit') }}
-              </p>
-            </a>
-            <a-menu slot="overlay">
-              <!--              <a-menu-item @click="flagFn('pencil')">铅笔</a-menu-item>-->
-              <a-menu-item>
-                <el-link @click="flagFn('ellipse')">
-                  椭圆-空心
-                </el-link>
-              </a-menu-item>
-              <a-menu-item>
-                <el-link @click="flagFn('rect')">
-                  矩形
-                </el-link>
-              </a-menu-item>
-              <a-menu-item>
-                <el-link @click="flagFn('rectH')">
-                  矩形-空心
-                </el-link>
-              </a-menu-item>
-              <a-menu-item>
-                <el-link @click="flagFn('text')">
-                  文字
-                </el-link>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
+          <!--          <a-dropdown class="topo-header-top-query-left-panel-dropdown">-->
+          <!--            <a-->
+          <!--              class="ant-dropdown-link"-->
+          <!--              @click="(e) => e.preventDefault()"-->
+          <!--            >-->
+          <!--              <a-icon type="edit" />-->
+          <!--              <p>-->
+          <!--                {{ $translateTitle('konva.edit') }}-->
+          <!--              </p>-->
+          <!--            </a>-->
+          <!--            <a-menu slot="overlay">-->
+          <!--              &lt;!&ndash;              <a-menu-item @click="flagFn('pencil')">铅笔</a-menu-item>&ndash;&gt;-->
+          <!--              <a-menu-item>-->
+          <!--                <el-link @click="flagFn('ellipse')">-->
+          <!--                  椭圆-空心-->
+          <!--                </el-link>-->
+          <!--              </a-menu-item>-->
+          <!--              <a-menu-item>-->
+          <!--                <el-link @click="flagFn('rect')">-->
+          <!--                  矩形-->
+          <!--                </el-link>-->
+          <!--              </a-menu-item>-->
+          <!--              <a-menu-item>-->
+          <!--                <el-link @click="flagFn('rectH')">-->
+          <!--                  矩形-空心-->
+          <!--                </el-link>-->
+          <!--              </a-menu-item>-->
+          <!--              <a-menu-item>-->
+          <!--                <el-link @click="flagFn('text')">-->
+          <!--                  文字-->
+          <!--                </el-link>-->
+          <!--              </a-menu-item>-->
+          <!--            </a-menu>-->
+          <!--          </a-dropdown>-->
 
-          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a
-              class="ant-dropdown-link"
-              @click="removeFn()"
-              @keyup.delete="removeFn()"
-            >
-              <a-icon type="delete" />
-              <p>{{ $translateTitle('konva.delete') }}</p>
-            </a>
-          </a-dropdown>
+          <!--          <a-dropdown class="topo-header-top-query-left-panel-dropdown">-->
+          <!--            <a-->
+          <!--              class="ant-dropdown-link"-->
+          <!--              @click="removeFn()"-->
+          <!--              @keyup.delete="removeFn()"-->
+          <!--            >-->
+          <!--              <a-icon type="delete" />-->
+          <!--              <p>{{ $translateTitle('konva.delete') }}</p>-->
+          <!--            </a>-->
+          <!--          </a-dropdown>-->
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
             <a
               class="ant-dropdown-link"
               @click="saveTopo"
             >
               <a-icon
-                theme="filled"
                 type="save"
               />
               <p>{{ $translateTitle('konva.save') }}</p>
+            </a>
+          </a-dropdown>
+          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+            <a
+              class="ant-dropdown-link"
+              @click="eyeTopo"
+            >
+              <a-icon
+                type="eye"
+              />
+              <p>{{ $translateTitle('application.preview') }}</p>
             </a>
           </a-dropdown>
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
@@ -233,6 +243,9 @@
       }),
       saveTopo() {
         this.$baseEventBus.$emit('busUpdata')
+      },
+      eyeTopo(){
+        console.log("预览事件")
       },
       handFullscreen() {
         this.$parent.$parent.$parent.isFullscreen =

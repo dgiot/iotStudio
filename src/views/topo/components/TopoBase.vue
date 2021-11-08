@@ -96,7 +96,6 @@
           menulists: [
             {
               fnHandler: 'getPicture', //绑定事件
-              icoName: 'fa fa-up fa-fw', //icon图标
               btnName: '导出', //菜单名称
             },
             // {
@@ -111,19 +110,15 @@
             // },
             {
             fnHandler: 'moveUp', //绑定事件
-            icoName: 'fa fa-home fa-fw', //icon图标
             btnName: '上移', //菜单名称
           }, {
             fnHandler: 'moveDown',
-            icoName: 'fa fa-minus-square-o  fa-fw',
             btnName: '下移',
           }, {
             fnHandler: 'moveToTop',
-            icoName: 'fa fa-minus-square-o  fa-fw',
             btnName: '置顶',
           }, {
             fnHandler: 'moveToBottom',
-            icoName: 'fa fa-minus-square-o  fa-fw',
             btnName: '置底',
           },
           //   {
@@ -133,7 +128,6 @@
           // },
             {
             fnHandler: 'deleteSahpe',
-            icoName: 'fa fa-minus-square-o  fa-fw',
             btnName: '删除',
           }],
         },

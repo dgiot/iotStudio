@@ -52,6 +52,7 @@ const topoThing = {
     }
     console.log("contextNode args",args)
     canvas.layer.batchDraw()
+    canvas.stage.batchDraw()
   },
   /**
    * @description 创建文本
