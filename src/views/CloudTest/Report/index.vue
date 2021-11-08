@@ -13,6 +13,17 @@
     class="custom-table-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
   >
+    <div class="components">
+      <add-dialog :show.sync="activePopShow">
+        <span>你好</span>
+        <div slot="title">
+          这是title
+        </div>
+        <div slot="footer">
+          这是底部
+        </div>
+      </add-dialog>
+    </div>
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-form
@@ -198,7 +209,9 @@
       <template #empty>
         <el-image
           class="vab-data-empty"
-          :src="require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')"
+          :src="
+            require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+          "
         />
       </template>
     </el-table>
@@ -219,6 +232,7 @@
 </template>
 
 <script>
+  import addDialog from '@/views/CloudTest/Report/components/addDialog'
   import { batch } from '@/api/Batch/index'
   import { queryProduct, delProduct, postProduct } from '@/api/Product'
   import { fileUpload, deleteFile } from '@/api/Proxy'
@@ -233,15 +247,23 @@
     components: {
       VabDraggable,
       TableEdit,
+      addDialog,
     },
     data() {
       return {
+        activePopShow: false,
         isFullscreen: false,
         border: true,
         height: this.$baseTableHeight(0) - 40,
         stripe: false,
         lineHeight: 'medium',
-        checkList: ['objectId', 'Template name', 'Category', 'Trade Names', 'Creation time'],
+        checkList: [
+          'objectId',
+          'Template name',
+          'Category',
+          'Trade Names',
+          'Creation time',
+        ],
         columns: [
           {
             label: 'objectId',
@@ -309,7 +331,7 @@
     watch: {
       language: {
         deep: true,
-        limit:true,
+        limit: true,
         handler(val) {
           console.error(val)
         },
@@ -383,6 +405,9 @@
         }
         this.listLoading = true
         const { count = 0, results = [] } = await queryProduct(params)
+        results.forEach((item) => {
+          item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
+        })
         this.list = results
         this.total = count
         this.listLoading = false

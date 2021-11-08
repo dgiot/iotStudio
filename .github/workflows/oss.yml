@@ -24,7 +24,7 @@ jobs:
         with:
           # https://github:com/marketplace/actions/tencent-cos-action:
           # https://cloud.tencent.com/document/product/436/10976#.E6.8C.87.E5.AE.9A-bucket-.E5.92.8C-region-.E7.9A.84.E5.91.BD.E4.BB.A4
-          args: delete -r -f /dgiot_release/dashboardCdn/public/assets/ && upload -r ./public/assets/ /dgiot_release/dashboardCdn/public/assets/
+          args: delete -r -f /dgiot_release/dashboardCdn/public/assets/assets.zip && upload -r ./public/assets/assets.zip /dgiot_release/dashboardCdn/public/assets/assets.zip
           secret_id: ${{ secrets.SECRET_ID }}
           secret_key: ${{ secrets.SECRET_KEY }}
           bucket: ${{ secrets.BUCKET }}
