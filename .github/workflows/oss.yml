@@ -2,8 +2,8 @@ name: oss
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - 'v*'
 jobs:
   oss:
     runs-on: ubuntu-latest
