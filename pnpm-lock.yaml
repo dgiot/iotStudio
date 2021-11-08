@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@babel/helper-plugin-utils': 7.14.5
+  '@babel/runtime': ^7.16.0
   '@commitlint/cli': 13.2.1
   '@commitlint/config-conventional': 13.2.0
   '@dgiot/dgiot-component': 0.0.3
@@ -99,6 +100,7 @@ dependencies:
   vuera: registry.npmmirror.com/vuera/0.2.7_react-dom@16.14.0
 
 devDependencies:
+  '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.16.0
   '@commitlint/cli': registry.npmmirror.com/@commitlint/cli/13.2.1
   '@commitlint/config-conventional': registry.npmmirror.com/@commitlint/config-conventional/13.2.0
   '@vue/cli-plugin-babel': registry.npmmirror.com/@vue/cli-plugin-babel/4.5.14_@vue+cli-service@4.5.14
@@ -1713,6 +1715,11 @@ packages:
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
 
+  /emojis-list/3.0.0:
+    resolution: {integrity: sha1-VXBmIEatKeLpFucariYKvf9Pang=, tarball: emojis-list/download/emojis-list-3.0.0.tgz}
+    engines: {node: '>= 4'}
+    dev: true
+
   /enquirer/2.3.6:
     resolution: {integrity: sha1-Kn/l3WNKHkElqXXsmU/1RW3Dc00=, tarball: enquirer/download/enquirer-2.3.6.tgz}
     engines: {node: '>=8.6'}
@@ -2872,6 +2879,14 @@ packages:
 
   /json-stringify-safe/5.0.1:
     resolution: {integrity: sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=, tarball: json-stringify-safe/download/json-stringify-safe-5.0.1.tgz}
+
+  /json5/2.2.0:
+    resolution: {integrity: sha1-Lf7+cgxrpSXZ69kJlQ8FFTFsiaM=, tarball: json5/download/json5-2.2.0.tgz}
+    engines: {node: '>=6'}
+    hasBin: true
+    dependencies:
+      minimist: 1.2.5
+    dev: true
 
   /jsonfile/4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=, tarball: jsonfile/download/jsonfile-4.0.0.tgz}
@@ -4931,7 +4946,11 @@ packages:
   /use-isomorphic-layout-effect/1.1.1_react@16.14.0:
     resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: registry.npmmirror.com/react/16.14.0
     dev: false
@@ -4939,7 +4958,11 @@ packages:
   /use-latest/1.2.0_react@16.14.0:
     resolution: {integrity: sha1-pE9lcrgojgly7EEb3QhAraNm8jI=, tarball: use-latest/download/use-latest-1.2.0.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: registry.npmmirror.com/react/16.14.0
       use-isomorphic-layout-effect: 1.1.1_react@16.14.0
@@ -5143,7 +5166,7 @@ packages:
     version: 0.0.19
     dependencies:
       core-js: registry.npmmirror.com/core-js/3.18.3
-      remixicon: registry.npmmirror.com/remixicon/2.5.0
+      remixicon: registry.nlark.com/remixicon/2.5.0
       vue: registry.npmmirror.com/vue/2.6.14
     dev: false
 
@@ -6688,7 +6711,11 @@ packages:
     engines: {node: '>=6.0.0'}
     peerDependencies:
       eslint: '>=7.28.0'
+      eslint-config-prettier: '*'
       prettier: '>=2.0.0'
+    peerDependenciesMeta:
+      eslint-config-prettier:
+        optional: true
     dependencies:
       eslint: registry.npmmirror.com/eslint/7.32.0
       prettier: registry.nlark.com/prettier/2.4.1
@@ -8969,7 +8996,7 @@ packages:
     dev: false
 
   registry.nlark.com/regenerator-runtime/0.13.9:
-    resolution: {integrity: sha1-iSV0Kpj/2QgUmI11Zq0wyjsmO1I=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/regenerator-runtime/download/regenerator-runtime-0.13.9.tgz?cache=0&sync_timestamp=1627006689201&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fregenerator-runtime%2Fdownload%2Fregenerator-runtime-0.13.9.tgz}
+    resolution: {integrity: sha1-iSV0Kpj/2QgUmI11Zq0wyjsmO1I=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/regenerator-runtime/download/regenerator-runtime-0.13.9.tgz}
     name: regenerator-runtime
     version: 0.13.9
 
@@ -9022,6 +9049,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  registry.nlark.com/remixicon/2.5.0:
+    resolution: {integrity: sha1-teJFiUoVUKojeT+V2s6tv5atGkE=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/remixicon/download/remixicon-2.5.0.tgz}
+    name: remixicon
+    version: 2.5.0
+    dev: false
 
   registry.nlark.com/repeating/2.0.1:
     resolution: {integrity: sha1-UhTFOpJtNVJwdSf7q0FdvAjQbdo=, registry: https://registry.npm.taobao.org/, tarball: https://registry.nlark.com/repeating/download/repeating-2.0.1.tgz}
@@ -11247,7 +11280,7 @@ packages:
     dev: true
 
   registry.npmmirror.com/@babel/runtime/7.16.0:
-    resolution: {integrity: sha1-4nuXfy4giLokdIv5m14d7OZOTws=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@babel/runtime/download/@babel/runtime-7.16.0.tgz}
+    resolution: {integrity: sha1-4nuXfy4giLokdIv5m14d7OZOTws=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@babel/runtime/download/@babel/runtime-7.16.0.tgz?cache=0&sync_timestamp=1635557237102&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40babel%2Fruntime%2Fdownload%2F%40babel%2Fruntime-7.16.0.tgz}
     name: '@babel/runtime'
     version: 7.16.0
     engines: {node: '>=6.9.0'}
@@ -12266,6 +12299,7 @@ packages:
       uncontrollable: registry.npmmirror.com/uncontrollable/7.2.1_react@16.14.0
       video-react: registry.npmmirror.com/video-react/0.14.1_react-dom@16.14.0+react@16.14.0
     transitivePeerDependencies:
+      - '@types/react'
       - react-native
     dev: false
 
@@ -14289,14 +14323,14 @@ packages:
       json5: registry.nlark.com/json5/1.0.1
 
   registry.npmmirror.com/loader-utils/2.0.2:
-    resolution: {integrity: sha1-1uO0+4GHByGuTghoqxHdY4NowSk=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/loader-utils/download/loader-utils-2.0.2.tgz?cache=0&sync_timestamp=1636072745911&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-2.0.2.tgz}
+    resolution: {integrity: sha1-1uO0+4GHByGuTghoqxHdY4NowSk=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/loader-utils/download/loader-utils-2.0.2.tgz}
     name: loader-utils
     version: 2.0.2
     engines: {node: '>=8.9.0'}
     dependencies:
       big.js: registry.nlark.com/big.js/5.2.2
-      emojis-list: registry.nlark.com/emojis-list/3.0.0
-      json5: registry.nlark.com/json5/2.2.0
+      emojis-list: 3.0.0
+      json5: 2.2.0
     dev: true
 
   registry.npmmirror.com/loadsh/0.0.4:
@@ -15456,6 +15490,8 @@ packages:
       react-dom: registry.npmmirror.com/react-dom/16.14.0_react@16.14.0
       react-lifecycles-compat: registry.npmmirror.com/react-lifecycles-compat/3.0.4
       react-textarea-autosize: registry.npmmirror.com/react-textarea-autosize/8.3.3_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   registry.npmmirror.com/react-lifecycles-compat/3.0.4:
@@ -15511,6 +15547,8 @@ packages:
       react: registry.npmmirror.com/react/16.14.0
       use-composed-ref: registry.npmmirror.com/use-composed-ref/1.1.0_react@16.14.0
       use-latest: 1.2.0_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   registry.npmmirror.com/react-visibility-sensor/5.1.1_react-dom@16.14.0+react@16.14.0:
@@ -15591,12 +15629,6 @@ packages:
     dependencies:
       mdast-util-to-markdown: registry.nlark.com/mdast-util-to-markdown/0.6.5
     dev: true
-
-  registry.npmmirror.com/remixicon/2.5.0:
-    resolution: {integrity: sha1-teJFiUoVUKojeT+V2s6tv5atGkE=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/remixicon/download/remixicon-2.5.0.tgz}
-    name: remixicon
-    version: 2.5.0
-    dev: false
 
   registry.npmmirror.com/renderkid/2.0.7:
     resolution: {integrity: sha1-Rk8namvc7mBvShWZP5sp/HTKhgk=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/renderkid/download/renderkid-2.0.7.tgz?cache=0&sync_timestamp=1635213424088&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Frenderkid%2Fdownload%2Frenderkid-2.0.7.tgz}
@@ -16359,7 +16391,7 @@ packages:
     dev: true
 
   registry.npmmirror.com/vue-loader/16.8.3_webpack@4.46.0:
-    resolution: {integrity: sha1-1D5nXe9bqTRdbH8FkUwT2GGZcIc=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-loader/download/vue-loader-16.8.3.tgz}
+    resolution: {integrity: sha1-1D5nXe9bqTRdbH8FkUwT2GGZcIc=, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-loader/download/vue-loader-16.8.3.tgz?cache=0&sync_timestamp=1636036049738&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fvue-loader%2Fdownload%2Fvue-loader-16.8.3.tgz}
     id: registry.npmmirror.com/vue-loader/16.8.3
     name: vue-loader
     version: 16.8.3
