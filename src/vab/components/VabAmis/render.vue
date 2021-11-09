@@ -18,6 +18,7 @@
   import ReactDOM from 'react-dom'
   // import axios from 'axios'
   export default {
+    name: 'AmisRender',
     props: {
       // eslint-disable-next-line
       schema: {
@@ -128,8 +129,8 @@
           copy: (contents, options = {}) => {
             const ret = copy(contents, options)
             ret &&
-              (!options || options.shutup !== true) &&
-              toast.info('内容已拷贝到剪切板')
+            (!options || options.shutup !== true) &&
+            toast.info('内容已拷贝到剪切板')
             return ret
           },
         }
@@ -162,8 +163,8 @@
         let pathname = ~idx
           ? to.substring(0, idx)
           : ~idx2
-          ? to.substring(0, idx2)
-          : to
+            ? to.substring(0, idx2)
+            : to
         const search = ~idx ? to.substring(idx, ~idx2 ? idx2 : undefined) : ''
         const hash = ~idx2 ? to.substring(idx2) : ''
         if (!pathname) {
