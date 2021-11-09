@@ -15,7 +15,6 @@
     />
   </div>
 </template>
-
 <script>
   import AmisDemo from './Amis'
   import { ReactInVue } from 'vuera'

@@ -77,6 +77,7 @@
             </el-form-item>
           </el-form>
         </div>
+        <Vab-amis :schema="amisJson" />
         <div slot="footer">
           <el-button
             type="primary"
@@ -387,6 +388,24 @@
         }
       }
       return {
+        amisJson: {
+          "type": "page",
+          "body": [
+            {
+              "type": "divider"
+            },
+            {
+              "type": "form",
+              "body": [
+                {
+                  "type": "input-text",
+                  "name": "name",
+                  "label": "姓名"
+                }
+              ]
+            }
+          ]
+        },
         fileList: [],
         momentKey: moment(new Date()).valueOf(),
         ruleForm: {
