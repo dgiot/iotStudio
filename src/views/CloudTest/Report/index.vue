@@ -89,6 +89,83 @@
           </el-button>
         </div>
       </vab-dialog>
+      <vab-dialog :show.sync="tempPopShow">
+        <h3 slot="title">
+          {{ $translateTitle('cloudTest.report template') }}
+        </h3>
+        <div class="content">
+          <el-table
+            ref="tableSort"
+            v-loading="listLoading"
+            :border="border"
+            :data="tempList"
+            :height="$baseTableHeight(3)"
+            :size="lineHeight"
+            :stripe="stripe"
+          >
+            <el-table-column
+              align="center"
+              :label="$translateTitle('cloudTest.number')"
+              show-overflow-tooltip
+              width="80"
+            >
+              <template #default="{ $index }">
+                {{ $index + 1 }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="name"
+              :label="$translateTitle('cloudTest.Template name')"
+              show-overflow-tooltip
+              width="auto"
+            />
+            <el-table-column
+              align="center"
+              :label="$translateTitle('cloudTest.Template content')"
+              width="auto"
+            >
+              <template #default="{ row }">
+                <el-image
+                  style="width: 40px; height: 40px"
+                  :src="$FileServe+row.icon"
+                  :preview-src-list="[`${$FileServe+row.icon}`]"
+                />
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              flex="right"
+              :label="$translateTitle(`product.Template management`)"
+              show-overflow-tooltip
+              width="auto"
+            >
+              <template #default="{ row }">
+                <el-button
+                  type="success"
+                  @click="handlekonva(row)"
+                >
+                  {{ $translateTitle(`developer.mapping`) }}
+                </el-button>
+                <el-button
+                  type="warning"
+                  @click="handleDelete(row)"
+                >
+                  {{ $translateTitle(`cloudTest.delete`) }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <template #empty>
+              <el-image
+                class="vab-data-empty"
+                :src="
+                  require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                "
+              />
+            </template>
+          </el-table>
+        </div>
+      </vab-dialog>
     </div>
     <vab-query-form>
       <vab-query-form-left-panel>
@@ -101,7 +178,7 @@
         >
           <el-form-item>
             <el-input
-              v-model="queryForm.title"
+              v-model="queryForm.name"
               :placeholder="
                 $translateTitle('cloudTest.Please enter the query content')
               "
@@ -112,7 +189,7 @@
               icon="el-icon-search"
               native-type="submit"
               type="primary"
-              @click="handleQuery"
+              @click="fetchData(queryForm)"
             >
               {{ $translateTitle('cloudTest.search') }}
             </el-button>
@@ -134,16 +211,16 @@
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
-        <div class="stripe-panel">
-          <el-checkbox v-model="stripe">
-            {{ $translateTitle('cloudTest.Zebra pattern') }}
-          </el-checkbox>
-        </div>
-        <div class="border-panel">
-          <el-checkbox v-model="border">
-            {{ $translateTitle('cloudTest.frame') }}
-          </el-checkbox>
-        </div>
+        <!--        <div class="stripe-panel">-->
+        <!--          <el-checkbox v-model="stripe">-->
+        <!--            {{ $translateTitle('cloudTest.Zebra pattern') }}-->
+        <!--          </el-checkbox>-->
+        <!--        </div>-->
+        <!--        <div class="border-panel">-->
+        <!--          <el-checkbox v-model="border">-->
+        <!--            {{ $translateTitle('cloudTest.frame') }}-->
+        <!--          </el-checkbox>-->
+        <!--        </div>-->
         <el-button
           style="margin: 0 10px 10px 0 !important"
           type="primary"
@@ -261,9 +338,9 @@
         <template #default="{ row }">
           <el-button
             type="success"
-            @click="handleEdit(row)"
+            @click="handleManagement(row)"
           >
-            {{ $translateTitle(`cloudTest.edit`) }}
+            {{ $translateTitle(`product.Template management`) }}
           </el-button>
           <el-button
             type="warning"
@@ -282,12 +359,15 @@
         />
       </template>
     </el-table>
-    <vab-Pagination
+    <el-pagination
       background
-      :limit.sync="queryForm.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :page-sizes="queryForm.pageSizes"
+      :page-size="queryForm.pageSize"
       :page.sync="queryForm.pageNo"
       :total="queryForm.total"
-      @pagination="fetchData"
+      @current-change="currentChange"
+      @size-change="sizeChange"
     />
     <table-edit
       ref="edit"
@@ -313,18 +393,18 @@
       TableEdit,
     },
     data() {
-      const validateFile =  (rule, value, callback) => {
+      const validateFile = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请上传文件'));
+          callback(new Error('请上传文件'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       return {
         fileList: [],
         momentKey: moment(new Date()).valueOf(),
         ruleForm: {
-          file:null,
+          file: null,
           name: '',
           category: '',
           factory: '',
@@ -358,15 +438,14 @@
               trigger: 'blur',
             },
           ],
-          file: [
-            { validator: validateFile, trigger: 'blur' }
-          ],
+          file: [{ validator: validateFile, trigger: 'blur' }],
         },
         activePopShow: false,
+        tempPopShow: false,
         isFullscreen: false,
         border: true,
         height: this.$baseTableHeight(0) - 20,
-        stripe: false,
+        stripe: true,
         lineHeight: 'medium',
         checkList: [
           'objectId',
@@ -409,21 +488,20 @@
           },
         ],
         list: [],
-        imageList: [],
+        tempList: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
         selectRows: '',
         queryForm: {
-          limit: 20,
+          pageSizes: [10, 20, 30, 50],
+          limit: 10,
           order: '-createdAt',
           keys: 'count(*)',
           total: 0,
           skip: 0,
           pageNo: 1,
-          pageSize: 20,
-          title: '',
-          pagesize: 10,
-          start: 0,
+          pageSize: 10,
+          name: '',
         },
       }
     },
@@ -453,7 +531,7 @@
       },
     },
     created() {
-      this.fetchData()
+      this.fetchData(this.queryForm)
     },
     methods: {
       onBeforeUploadImage(file) {
@@ -461,7 +539,13 @@
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
           'application/msword',
         ]
-        console.error(file,file.size, file.size / 1024 / 1024 < 30,docxType.includes(file.type),file.type)
+        console.error(
+          file,
+          file.size,
+          file.size / 1024 / 1024 < 30,
+          docxType.includes(file.type),
+          file.type
+        )
         const isIMAGE = docxType.includes(file.type)
         const isLt30M = file.size / 1024 / 1024 < 30
         if (!isIMAGE) {
@@ -470,7 +554,7 @@
         if (!isLt30M) {
           this.$message.error('上传文件大小不能超过 30MB!')
         }
-        this.momentKey =  moment(new Date()).valueOf()
+        this.momentKey = moment(new Date()).valueOf()
         return isIMAGE && isLt30M
       },
       UploadImage(param) {
@@ -489,7 +573,7 @@
         console.log(file)
       },
       submitForm(formName) {
-        this.$refs[formName].validate(async valid => {
+        this.$refs[formName].validate(async (valid) => {
           if (valid) {
             const formData = new FormData()
             const configTemp = {
@@ -501,14 +585,18 @@
             formData.append('config', JSON.stringify(configTemp))
             formData.append('file', this.ruleForm.file)
             const loading = this.$baseColorfullLoading(1)
-            try{
+            try {
               const { result } = await postReportFile(formData)
               console.log(result)
-              this.$message.success(this.$translateTitle('cloudTest.Template created successfully'))
+              this.$message.success(
+                this.$translateTitle('cloudTest.Template created successfully')
+              )
               this.activePopShow = false
-              this.fetchData()
-            }catch (e) {
-              this.$message.error(this.$translateTitle('cloudTest.Template creation failed'))
+              this.fetchData(this.queryForm)
+            } catch (e) {
+              this.$message.error(
+                this.$translateTitle('cloudTest.Template creation failed')
+              )
             }
             loading.close()
           } else {
@@ -516,6 +604,14 @@
             return false
           }
         })
+      },
+      sizeChange(val) {
+        this.queryForm.limit = val
+        this.fetchData(this.queryForm)
+      },
+      currentChange(val) {
+        this.queryForm.skip = (val - 1) * this.queryForm.limit
+        this.fetchData(this.queryForm)
       },
       resetForm(formName) {
         this.ruleForm.file = null
@@ -537,52 +633,65 @@
         // this.$refs['edit'].showEdit()
         this.activePopShow = true
       },
-      handleEdit(row) {
-        this.$refs['edit'].showEdit(row)
+      handlekonva(row){
+        // 取证类型模板跳转到组态
+        this.$router.push({
+          path: '/Topo',
+          query: {
+            productid: row.objectId,
+            icon: row.icon,
+            type: 'Evidence',
+          },
+        })
+      },
+      async handleManagement(row) {
+        console.log(row)
+        const params = {
+          limit: 50,
+          skip: 0,
+          keys: 'count(*)',
+          where: { devType: row.devType, nodeType: 0 },
+          order: 'createdAt',
+        }
+        const loading = this.$baseColorfullLoading(1)
+        try {
+          const { count = 0, results } = await queryProduct(params)
+          this.tempList = results
+        } catch (e) {}
+        this.tempPopShow = true
+        loading.close()
       },
       handleDelete(row) {
-        if (row.id) {
+        if (row.objectId) {
           this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ ids: row.id })
+            const { msg } = await doDelete({ ids: row.objectId })
             this.$baseMessage(msg, 'success', 'vab-hey-message-success')
-            await this.fetchData()
+            await this.fetchData(this.queryForm)
           })
         } else {
           if (this.selectRows.length > 0) {
-            const ids = this.selectRows.map((item) => item.id).join()
+            const ids = this.selectRows.map((item) => item.objectId).join()
             this.$baseConfirm('你确定要删除选中项吗', null, async () => {
               const { msg } = await doDelete({ ids: ids })
               this.$baseMessage(msg, 'success', 'vab-hey-message-success')
-              await this.fetchData()
+              await this.fetchData(this.queryForm)
             })
           } else {
             this.$baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
           }
         }
       },
-      handleSizeChange(val) {
-        this.queryForm.pageSize = val
-        this.fetchData()
-      },
-      handleCurrentChange(val) {
-        this.queryForm.pageNo = val
-        this.fetchData()
-      },
-      handleQuery() {
-        this.queryForm.pageNo = 1
-        this.fetchData()
-      },
-      async fetchData(args = {}) {
-        if (!args.limit) {
-          args = this.queryForm
-        }
+      async fetchData(args) {
         const params = {
           limit: args.limit,
           order: args.order,
-          skip: args.skip,
+          skip: this.queryForm.name ? 0 : args.skip,
           keys: args.keys,
           where: {
-            // 'config.temp.identifier': 'inspectionReportTemp',
+            name: this.queryForm.name
+              ? { $regex: this.queryForm.name }
+              : { $ne: null },
+            'config.temp.identifier': 'inspectionReportTemp',
             // desc: '0',
             // category: 'Evidence',
             // nodeType: 1,
