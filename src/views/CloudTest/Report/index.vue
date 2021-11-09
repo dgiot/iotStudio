@@ -129,8 +129,8 @@
               <template #default="{ row }">
                 <el-image
                   style="width: 40px; height: 40px"
-                  :src="$FileServe+row.icon"
-                  :preview-src-list="[`${$FileServe+row.icon}`]"
+                  :src="row.icon"
+                  :preview-src-list="[row.icon]"
                 />
               </template>
             </el-table-column>
@@ -373,6 +373,9 @@
   import TableEdit from '@/views/Empty/tableEdit'
   import VabDraggable from 'vuedraggable'
   import { mapGetters, mapMutations } from 'vuex'
+  import {queryCategory} from "@/api/Category";
+  import alert from "@/views/Maintenance/alert";
+  import {post_tree} from "@/api/Data";
   export default {
     name: 'Index',
     components: {
@@ -388,6 +391,7 @@
         }
       }
       return {
+        categoryTreeData: [],
         amisJson: {
           "type": "page",
           "body": [
@@ -476,7 +480,7 @@
           {
             label: 'category',
             width: 'auto',
-            prop: 'category',
+            prop: 'category.name',
             sortable: true,
           },
           {
@@ -538,7 +542,21 @@
     created() {
       this.fetchData(this.queryForm)
     },
+    mounted() {
+      this.categorytree()
+    },
     methods: {
+      async categorytree() {
+        let params = {
+          class: 'Category',
+          filter:
+            '{"order": "createdAt","keys":["parent","name","level"],"where":{"parent": "d6ad425529"}}',
+          parent: 'parent',
+        }
+        console.log(params)
+        const { results = [] } = await post_tree(params)
+        this.categoryTreeData = results
+      },
       onBeforeUploadImage(file) {
         const docxType = [
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -652,7 +670,16 @@
           limit: 50,
           skip: 0,
           keys: 'count(*)',
-          where: { devType: this.temprow.devType, nodeType: 0 },
+          where: {
+            $relatedTo: {
+              object: {
+                __type: 'Pointer',
+                className: 'Product',
+                objectId: this.temprow.objectId,
+              },
+              key: 'children',
+            }
+            },
           order: 'createdAt',
         }
         const loading = this.$baseColorfullLoading(1)
@@ -680,12 +707,13 @@
           order: args.order,
           skip: this.queryForm.name ? 0 : args.skip,
           keys: args.keys,
+          include: 'category',
           where: {
             name: this.queryForm.name
               ? { $regex: this.queryForm.name }
               : { $ne: null },
-            'category': 'Evidence',
-            // nodeType: 1,
+            category: 'd6ad425529',
+            nodeType: 1,
           },
         }
         this.listLoading = true

@@ -67,6 +67,7 @@
     "axios": "0.23.0",
     "clone": "^2.1.2",
     "element-ui": "2.15.6",
+    "image-webpack-loader": "^8.0.1",
     "indent-string": "^5.0.0",
     "ip": "^1.1.5",
     "konva": "^8.2.2",
