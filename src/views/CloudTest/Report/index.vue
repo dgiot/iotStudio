@@ -149,7 +149,7 @@
                 </el-button>
                 <el-button
                   type="warning"
-                  @click="handleDelete(row)"
+                  @click="handleDelete(row,1)"
                 >
                   {{ $translateTitle(`cloudTest.delete`) }}
                 </el-button>
@@ -199,13 +199,6 @@
               @click="handleAdd"
             >
               {{ $translateTitle('cloudTest.add') }}
-            </el-button>
-            <el-button
-              icon="el-icon-delete"
-              type="danger"
-              @click="handleDelete($event)"
-            >
-              {{ $translateTitle('cloudTest.delete') }}
             </el-button>
           </el-form-item>
         </el-form>
@@ -301,13 +294,7 @@
       :height="height"
       :size="lineHeight"
       :stripe="stripe"
-      @selection-change="setSelectRows"
     >
-      <el-table-column
-        align="center"
-        type="selection"
-        width="55"
-      />
       <el-table-column
         align="center"
         :label="$translateTitle('cloudTest.number')"
@@ -344,7 +331,7 @@
           </el-button>
           <el-button
             type="warning"
-            @click="handleDelete(row)"
+            @click="handleDelete(row,0)"
           >
             {{ $translateTitle(`cloudTest.delete`) }}
           </el-button>
@@ -491,7 +478,7 @@
         tempList: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
-        selectRows: '',
+        temprow:{},
         queryForm: {
           pageSizes: [10, 20, 30, 50],
           limit: 10,
@@ -626,9 +613,6 @@
         if (this.isFullscreen) this.height = this.$baseTableHeight(1) + 210
         else this.height = this.$baseTableHeight(1)
       },
-      setSelectRows(val) {
-        this.selectRows = val
-      },
       handleAdd() {
         // this.$refs['edit'].showEdit()
         this.activePopShow = true
@@ -645,12 +629,12 @@
         })
       },
       async handleManagement(row) {
-        console.log(row)
+        this.temprow = row
         const params = {
           limit: 50,
           skip: 0,
           keys: 'count(*)',
-          where: { devType: row.devType, nodeType: 0 },
+          where: { devType: this.temprow.devType, nodeType: 0 },
           order: 'createdAt',
         }
         const loading = this.$baseColorfullLoading(1)
@@ -661,25 +645,16 @@
         this.tempPopShow = true
         loading.close()
       },
-      handleDelete(row) {
-        if (row.objectId) {
-          this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ ids: row.objectId })
-            this.$baseMessage(msg, 'success', 'vab-hey-message-success')
-            await this.fetchData(this.queryForm)
+      handleDelete(row,flag) {
+          this.$baseConfirm(this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ), null, async () => {
+            const res = await delProduct( row.objectId )
+            this.$baseMessage(this.$translateTitle(
+              'successfully deleted'
+            ), 'success', 'vab-hey-message-success')
+            flag==0 ? await this.fetchData(this.queryForm): await this.handleManagement(this.temprow)
           })
-        } else {
-          if (this.selectRows.length > 0) {
-            const ids = this.selectRows.map((item) => item.objectId).join()
-            this.$baseConfirm('你确定要删除选中项吗', null, async () => {
-              const { msg } = await doDelete({ ids: ids })
-              this.$baseMessage(msg, 'success', 'vab-hey-message-success')
-              await this.fetchData(this.queryForm)
-            })
-          } else {
-            this.$baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
-          }
-        }
       },
       async fetchData(args) {
         const params = {
@@ -691,9 +666,7 @@
             name: this.queryForm.name
               ? { $regex: this.queryForm.name }
               : { $ne: null },
-            'config.temp.identifier': 'inspectionReportTemp',
-            // desc: '0',
-            // category: 'Evidence',
+            'category': 'Evidence',
             // nodeType: 1,
           },
         }
