@@ -128,8 +128,8 @@
               <template #default="{ row }">
                 <el-image
                   style="width: 40px; height: 40px"
-                  :src="$FileServe+row.icon"
-                  :preview-src-list="[`${$FileServe+row.icon}`]"
+                  :src="$FileServe + row.icon"
+                  :preview-src-list="[`${$FileServe + row.icon}`]"
                 />
               </template>
             </el-table-column>
@@ -149,7 +149,7 @@
                 </el-button>
                 <el-button
                   type="warning"
-                  @click="handleDelete(row)"
+                  @click="handleDelete(row, 1)"
                 >
                   {{ $translateTitle(`cloudTest.delete`) }}
                 </el-button>
@@ -177,12 +177,20 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <el-input
+            <el-select
               v-model="queryForm.name"
+              multiple
               :placeholder="
-                $translateTitle('cloudTest.Please enter the query content')
+                $translateTitle('cloudTest.Please select review status')
               "
-            />
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button
@@ -199,13 +207,6 @@
               @click="handleAdd"
             >
               {{ $translateTitle('cloudTest.add') }}
-            </el-button>
-            <el-button
-              icon="el-icon-delete"
-              type="danger"
-              @click="handleDelete($event)"
-            >
-              {{ $translateTitle('cloudTest.delete') }}
             </el-button>
           </el-form-item>
         </el-form>
@@ -292,7 +293,6 @@
         </el-popover>
       </vab-query-form-right-panel>
     </vab-query-form>
-
     <el-table
       ref="tableSort"
       v-loading="listLoading"
@@ -301,13 +301,7 @@
       :height="height"
       :size="lineHeight"
       :stripe="stripe"
-      @selection-change="setSelectRows"
     >
-      <el-table-column
-        align="center"
-        type="selection"
-        width="55"
-      />
       <el-table-column
         align="center"
         :label="$translateTitle('cloudTest.number')"
@@ -331,6 +325,28 @@
 
       <el-table-column
         align="center"
+        :label="$translateTitle(`deviceLog.status`)"
+        show-overflow-tooltip
+        width="185"
+      >
+        <template #default="{ row }">
+          <el-tag
+            effect="dark"
+            :type="['success','info','warning','danger'][row.basedata.testStatus]||0"
+          >
+            {{
+              [
+                $translateTitle('product.notstarted'),
+                $translateTitle('product.testing'),
+                $translateTitle('product.finishtest'),
+              ][row.basedata.testStatus] ||
+                $translateTitle('product.notested')
+            }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
         :label="$translateTitle(`cloudTest.operate`)"
         show-overflow-tooltip
         width="185"
@@ -344,7 +360,7 @@
           </el-button>
           <el-button
             type="warning"
-            @click="handleDelete(row)"
+            @click="handleDelete(row, 0)"
           >
             {{ $translateTitle(`cloudTest.delete`) }}
           </el-button>
@@ -378,7 +394,7 @@
 
 <script>
   import { batch } from '@/api/Batch/index'
-  import { queryProduct, delProduct, postProduct } from '@/api/Product'
+  import { queryDevice, delDevice, postDevice } from '@/api/Device'
   import { fileUpload, deleteFile } from '@/api/Proxy'
   import { getDictCount } from '@/api/Dict'
   import { cereteReport, postReportFile, putReportFile } from '@/api/Platform'
@@ -401,6 +417,13 @@
         }
       }
       return {
+        options: [{
+          value: 'Underreview',
+          label: '审核中'
+        }, {
+          value: 'finishreview',
+          label: '审核完成'
+        }],
         fileList: [],
         momentKey: moment(new Date()).valueOf(),
         ruleForm: {
@@ -448,36 +471,32 @@
         stripe: true,
         lineHeight: 'medium',
         checkList: [
-          'objectId',
-          'Template name',
-          'category',
+          'Inspection number',
+          'mission name',
+          'Inspection template',
           'Trade Names',
           'Creation time',
+          'Starting time',
+          'end time'
         ],
         columns: [
           {
-            label: 'objectId',
+            label: 'Inspection number',
             width: 'auto',
-            prop: 'objectId',
+            prop: 'basedata.BasicInfo.bianhao',
             sortable: true,
             disableCheck: true,
           },
           {
-            label: 'Template name',
+            label: 'mission name',
             width: 'auto',
             prop: 'name',
             sortable: true,
           },
           {
-            label: 'category',
+            label: 'Inspection template',
             width: 'auto',
-            prop: 'category',
-            sortable: true,
-          },
-          {
-            label: 'Trade Names',
-            width: 'auto',
-            prop: 'devType',
+            prop: 'basedata.bedname',
             sortable: true,
           },
           {
@@ -486,12 +505,24 @@
             prop: 'createdAt',
             sortable: true,
           },
+          {
+            label: 'Starting time',
+            width: 'auto',
+            prop: 'basedata.starttime',
+            sortable: true,
+          },
+          {
+            label: 'end time',
+            width: 'auto',
+            prop: 'basedata.endtime',
+            sortable: true,
+          },
         ],
         list: [],
         tempList: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
-        selectRows: '',
+        temprow:{},
         queryForm: {
           pageSizes: [10, 20, 30, 50],
           limit: 10,
@@ -501,7 +532,7 @@
           skip: 0,
           pageNo: 1,
           pageSize: 10,
-          name: '',
+          name: ['审核中','审核完成'],
         },
       }
     },
@@ -626,9 +657,6 @@
         if (this.isFullscreen) this.height = this.$baseTableHeight(1) + 210
         else this.height = this.$baseTableHeight(1)
       },
-      setSelectRows(val) {
-        this.selectRows = val
-      },
       handleAdd() {
         // this.$refs['edit'].showEdit()
         this.activePopShow = true
@@ -645,94 +673,60 @@
         })
       },
       async handleManagement(row) {
-        console.log(row)
+        this.temprow = row
         const params = {
           limit: 50,
           skip: 0,
           keys: 'count(*)',
-          where: { devType: row.devType, nodeType: 0 },
+          where: { devType: this.temprow.devType, nodeType: 0 },
           order: 'createdAt',
         }
         const loading = this.$baseColorfullLoading(1)
         try {
-          const { count = 0, results } = await queryProduct(params)
+          const { count = 0, results } = await queryDevice(params)
           this.tempList = results
         } catch (e) {}
         this.tempPopShow = true
         loading.close()
       },
-      handleDelete(row) {
-        if (row.objectId) {
-          this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-            const { msg } = await doDelete({ ids: row.objectId })
-            this.$baseMessage(msg, 'success', 'vab-hey-message-success')
-            await this.fetchData(this.queryForm)
-          })
-        } else {
-          if (this.selectRows.length > 0) {
-            const ids = this.selectRows.map((item) => item.objectId).join()
-            this.$baseConfirm('你确定要删除选中项吗', null, async () => {
-              const { msg } = await doDelete({ ids: ids })
-              this.$baseMessage(msg, 'success', 'vab-hey-message-success')
-              await this.fetchData(this.queryForm)
-            })
-          } else {
-            this.$baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
-          }
-        }
+      handleDelete(row,flag) {
+        this.$baseConfirm(this.$translateTitle(
+          'Maintenance.Are you sure you want to delete the current item'
+        ), null, async () => {
+          const res = await delProduct( row.objectId )
+          this.$baseMessage(this.$translateTitle(
+            'successfully deleted'
+          ), 'success', 'vab-hey-message-success')
+          flag==0 ? await this.fetchData(this.queryForm): await this.handleManagement(this.temprow)
+        })
       },
       async fetchData(args) {
         const params = {
           limit: args.limit,
           order: args.order,
-          skip: this.queryForm.name ? 0 : args.skip,
+          skip: this.queryForm.name.length ? 0 : args.skip,
           keys: args.keys,
           where: {
-            name: this.queryForm.name
-              ? { $regex: this.queryForm.name }
-              : { $ne: null },
-            'config.temp.identifier': 'inspectionReportTemp',
-            // desc: '0',
-            // category: 'Evidence',
+            // name: this.queryForm.name
+            //   ? { $regex: this.queryForm.name }
+            //   : { $ne: null },
+            "basedata.identifier":"inspectionReportTemp"
             // nodeType: 1,
           },
         }
         this.listLoading = true
-        const { count = 0, results = [] } = await queryProduct(params)
-        results.forEach((item) => {
+        const tempList = {"results":[{"objectId":"0ac4f9eb2f","createdAt":"2021-04-29T14:31:28.274Z","updatedAt":"2021-10-30T07:28:16.718Z","basedata":{"name":"taskInfo","index":0,"layer":{"width":600,"height":850,"backColor":"#eee","backgroundImage":"","widthHeightRatio":""},"client":["电动泵"],"remark":"","bedaddr":"9f7c90228fff","bedname":"南方泵业台体","endtime":1618884000000,"deviceid":"","reportId":"633e7fa7d6","BasicInfo":{"guige":"/","pizun":"","wendu":"","beizhu":"/","daqiya":"","dengji":"/","shenhe":"","taishu":"/","xiaolv":"/","bianhao":"BB2021042-(1)","bianzhi":"","lianxidh":"","scdwAdrr":"/","wtdwAdrr":"/","chanpinxh":"/","jianceren":"","pizhunren":"","shenheren":"","chuchangbh":"/","qianfaData":"","shengchanN":"/","shiyanName":"/","chanpinName":"/","chouyangNum":"","daoyangData":"","dynamicTags":[],"jianyanData":"","jianyanyiju":"","yangpinName":"管道式离心泵","chouyangAddr":"/","chouyangAdrr":"厂成品库","chouyangData":"","weituodanwei":"/","chouyangjishu":"0","yanshoudengji":"","chanpinbianhao":"/","jianyanxingzhi":"委托校验","shengchangData":"","shiyanDateTime":"","songyangdanwei":"/","jianyanbiaozhun":"/","songyangDateTime":"","yangpinzhuangtai":""},"groupname":"南方泵业","starttime":1618880400000,"components":[],"identifier":"inspectionReportTemp","reportList":[{"ACL":{"role:方威检测室":{"read":true,"write":true}},"desc":"0","icon":"","name":"南方泵业管道循环泵","config":{"name":"南方泵业管道循环泵","index":0,"layer":{"width":600,"height":850,"backColor":"#eee","backgroundImage":"","widthHeightRatio":""},"client":["电动泵"],"deviceid":"","components":[],"identifier":"inspectionReportTemp"},"devType":"管道循环泵","category":"Evidence","children":{"__type":"Relation","className":"Product"},"nodeType":1,"objectId":"633e7fa7d6","createdAt":"2021-04-29T03:52:10.368Z","updatedAt":"2021-04-29T03:52:10.368Z","productSecret":"c6b084b31bfe5553c0a4a4eae76bf6e3"},{"ACL":{"role:方威检测室":{"read":true,"write":true}},"desc":"0","icon":"","name":"南方家用泵","config":{"name":"南方家用泵","index":0,"layer":{"width":600,"height":850,"backColor":"#eee","backgroundImage":"","widthHeightRatio":""},"client":"潜水泵","deviceid":"","components":[],"identifier":"a28b149a-0f31-fe7d-cadc-0be47faf8a8d"},"devType":"潜水泵","category":"Evidence","children":{"__type":"Relation","className":"Product"},"nodeType":1,"objectId":"c5f31fa3a4","createdAt":"2021-01-12T12:18:59.570Z","updatedAt":"2021-01-12T12:18:59.570Z","productSecret":"productSecret"}],"testStatus":2,"TestSetting":{"BasicSetting":{"AcceptParam":{"tHf":0.1,"tQz":0.16,"tp_up":0.16,"te_down":-0.05,"th_down":0,"tq_down":0},"dengji_test":"2U","testPrecision":"1"},"FormulaSetting":{"SpeedConversionFormula":"GB/t3216-2016"},"ParameterSetting":{"SumAverage":false,"RemoveMaxMinGetAverage":false},"StabilitySetting":{"Speed":"GB/T3216-2016","FlowHeadEfficiency":"GB/T3216-2016"},"QualifiedConditionsSetting":{"QualifiedConditions":"GB/T3216-2016"}},"verifyStatus":0,"insectionName":"南方泵业管道循环泵","PrescribedPoint":{"H1":"","H2":"","H3":"","Q1":"","Q2":"","Q3":"","tR":"","rpm":"","DJXL":"","NpRC":"","NpshG":"","glysG":"","point":"","glysRC":"","qishi1":"","qishi2":"","qishi3":"","temzcG":"","xiaolv1":"","xiaolv2":"","xiaolv3":"","zhougv1":"","zhougv2":"","zhougv3":"","zhendongG":"","pointDataArr":[]},"SouthPrescribedPoint":{"H1":"","H2":"","H3":"","Q1":"","Q2":"","Q3":"","tR":"","rpm":"","DJXL":"","NpRC":"","NpshG":"","glysG":"","point":"","glysRC":"","qishi1":"","qishi2":"","qishi3":"","temzcG":"","xiaolv1":"","xiaolv2":"","xiaolv3":"","zhougv1":"","zhougv2":"","zhougv3":"","zhendongG":"","pointDataArr":[]}},"detail":{"desc":"南方泵业管道循环泵检测","brand":"数蛙桌面采集网关","batchId":{"batch_name":"2021429","createdtime":1619706688},"devModel":"SW_WIN_CAPTURE","isEnable":true},"devaddr":"a4889298366f","ip":"","isEnable":true,"name":"南方泵业管道循环泵检测","product":{"objectId":"633e7fa7d6","__type":"Pointer","className":"Product"},"status":"ONLINE","ACL":{"role:方威检测室":{"read":true,"write":true}}},{"objectId":"d19ed1c4c0","createdAt":"2021-01-12T12:25:15.088Z","updatedAt":"2021-04-21T03:58:48.584Z","basedata":{"name":"taskInfo","remark":"","bedaddr":"9f7c90228fff","bedname":"南方泵业台体","endtime":1610157600000,"reportId":"c5f31fa3a4","BasicInfo":{"name":"南方泵业集团","guige":"IG40-100","pizun":"霍林","wendu":"33","beizhu":"/","daqiya":"1","dengji":"样品状态完好，适于检验","shenhe":"唐炜炜","taishu":"1","xiaolv":"76","bianhao":"2021GJW00198","bianzhi":"刘晓冬","xinghao":"6","lianxidh":"0571-86390083","scdwAdrr":"杭州市余杭区仁和街道","wtdwAdrr":"杭州市余杭区仁和街道","chanpinxh":"IG40-100","jianceren":"李少清","pizhunren":"霍林","shenheren":"唐炜炜","chuchangbh":"201217","qianfaData":"2021-01-10T16:00:00.000Z","shengchanN":"南方泵业集团","shiyanName":"王国军","chanpinName":"中开泵","chouyangNum":"1","daoyangData":"2021-01-09T16:00:00.000Z","dynamicTags":["流量计","温度计","压力变送器"],"jianyanData":"2021-01-10T16:00:00.000Z","jianyanyiju":"JB/T 6878-2006、GB/T 3216-2016、GB/T 29531-2013、GB/T 29529-2013","yangpinName":"中开泵","chouyangAddr":"南方泵业集团","chouyangAdrr":"厂成品库","chouyangData":"2021-01-04T16:00:00.000Z","weituodanwei":"南方泵业集团","chouyangjishu":"10","yanshoudengji":"2B","chanpinbianhao":"2101084523","jianyanxingzhi":"委托校验","shengchangData":"2020-12-16T16:00:00.000Z","shiyanDateTime":"2021-01-10T16:00:00.000Z","songyangdanwei":"南方泵业集团","chuchangbianhao":"8","jianyanbiaozhun":"/","songyangDateTime":"2021-01-09T16:00:00.000Z","yangpinzhuangtai":"样品状态完好，适于检验"},"groupname":"南方泵业","starttime":1610154000000,"identifier":"inspectionReportTemp","reportList":[{"ACL":{"role:方威检测室":{"read":true,"write":true}},"desc":"0","icon":"","name":"南方家用泵","config":{"name":"南方家用泵","index":0,"layer":{"width":600,"height":850,"backColor":"#eee","backgroundImage":"","widthHeightRatio":""},"client":"潜水泵","deviceid":"","components":[],"identifier":"a28b149a-0f31-fe7d-cadc-0be47faf8a8d"},"devType":"潜水泵","category":"Evidence","children":{"__type":"Relation","className":"Product"},"nodeType":1,"objectId":"c5f31fa3a4","createdAt":"2021-01-12T12:18:59.570Z","updatedAt":"2021-01-12T12:18:59.570Z","productSecret":"productSecret"}],"testStatus":1,"TestSetting":{"BasicSetting":{"AcceptParam":{"tHf":0.05,"tQz":0.08,"tp_up":0.08,"te_down":-0.05,"th_down":-0.05,"tq_down":-0.08},"dengji_test":"2B","testPrecision":"2"},"FormulaSetting":{"SpeedConversionFormula":"GB/t3216-2016"},"ParameterSetting":{"SumAverage":false,"AverageNumber":"15","AcquisitionCycle":"30","RemoveMaxMinGetAverage":false,"HeightOfSubmersiblePump":"0.5","GravitationalAcceleration":"9.81"},"StabilitySetting":{"Speed":"GB/T3216-2016","FlowHeadEfficiency":"GB/T3216-2016"},"QualifiedConditionsSetting":{"QualifiedConditions":"GB/T3216-2016"}},"verifyStatus":0,"insectionName":"南方家用泵","PrescribedPoint":{"H1":"","H2":"43","H3":"","Q1":"","Q2":"10","Q3":"","tR":"0.05","rpm":"2950","DJXL":"","NpRC":"0.01","NpshG":"2","gddxl":"72","glysG":"0.86","point":"","glysRC":"0.08","qishi1":"","qishi2":"2","qishi3":"","temzcG":"35","xiaolv1":"","xiaolv2":"72","xiaolv3":"","zhougv1":"","zhougv2":"2200","zhougv3":"","zhendongG":"4.5","pointDataArr":[]},"SouthPrescribedPoint":{"H1":"","H2":"43","H3":"","Q1":"","Q2":"10","Q3":"","tR":"0.05","rpm":"2950","DJXL":"","NpRC":"0.01","NpshG":"2","gddxl":"72","glysG":"0.86","point":"","glysRC":"0.08","qishi1":"","qishi2":"2","qishi3":"","temzcG":"35","xiaolv1":"","xiaolv2":"72","xiaolv3":"","zhougv1":"","zhougv2":"2200","zhougv3":"","zhendongG":"4.5","pointDataArr":[]}},"detail":{"desc":"南方泵业家用泵检测","brand":"数蛙桌面采集网关","batchId":{"batch_name":"2021112","createdtime":1610454315},"devModel":"SW_WIN_CAPTURE","isEnable":true},"devaddr":"cf4f2e4c63e2","ip":"","isEnable":true,"name":"南方泵业家用泵检测","product":{"objectId":"c5f31fa3a4","__type":"Pointer","className":"Product"},"status":"ONLINE","ACL":{"role:方威检测室":{"read":true,"write":true}}}]}
+        const { count = 0, results = [] } = await queryDevice(params)
+          this.list = results.length?results:tempList.results
+          results.forEach((item) => {
+          item.basedata.endtime = moment(item.basedata.endtime).format('YYYY-MM-DD HH:mm:ss')
+          item.basedata.starttime = moment(item.basedata.starttime).format('YYYY-MM-DD HH:mm:ss')
           item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
         })
-        this.list = results
+        // this.list = results
         this.queryForm.total = count
         this.listLoading = false
       },
     },
   }
 </script>
-
-<style lang="scss" scoped>
-  .custom-table-container {
-    ::v-deep {
-      i {
-        cursor: pointer;
-      }
-    }
-
-    .stripe-panel,
-    .border-panel {
-      margin: 0 10px $base-margin/2 10px !important;
-    }
-  }
-</style>
-<style lang="scss">
-  .custom-table-checkbox {
-    [class*='ri'] {
-      vertical-align: -2.5px;
-      cursor: pointer;
-    }
-
-    .el-checkbox {
-      margin: 5px 0 5px 8px;
-    }
-  }
-</style>
