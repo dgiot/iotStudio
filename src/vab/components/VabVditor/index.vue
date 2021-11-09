@@ -158,7 +158,7 @@
 </script>
 <style lang="scss" scoped>
   //@import 'https://unpkg.com/vditor@3.8.6/src/assets/scss/index.scss';
-  @import 'https://unpkg.com/vditor@3.8.6/dist/index.css';
+  //@import 'https://unpkg.com/vditor@3.8.6/dist/index.css';
   .dgiot-doc-header {
     margin-top: 10px;
   }

@@ -227,17 +227,17 @@
 <script>
   import { mapGetters, mapState } from 'vuex'
 
-  import SouthBasicInfoView from '@/views/platform/testpumplist/view/south/BasicInfo'
-  import SouthPrescribedPointView from '@/views/platform/testpumplist/view/south/PrescribedPoint'
+  import SouthBasicInfoView from '@/views/platform/tasktlist/view/south/BasicInfo'
+  import SouthPrescribedPointView from '@/views/platform/tasktlist/view/south/PrescribedPoint'
 
-  import BasicInfoView from '@/views/platform/testpumplist/view/BasicInfoView'
-  import TableInfoView from '@/views/platform/testpumplist/view/TableInfoView'
-  import PrescribedPointView from '@/views/platform/testpumplist/view/PrescribedPointView'
-  import TestSettingView from '@/views/platform/testpumplist/view/TestSettingView'
+  import BasicInfoView from '@/views/platform/tasktlist/view/BasicInfoView'
+  import TableInfoView from '@/views/platform/tasktlist/view/TableInfoView'
+  import PrescribedPointView from '@/views/platform/tasktlist/view/PrescribedPointView'
+  import TestSettingView from '@/views/platform/tasktlist/view/TestSettingView'
 
-  import TaskFormBasicView from '@/views/platform/testpumplist/view/TaskFormBasicView'
+  import TaskFormBasicView from '@/views/platform/tasktlist/view/TaskFormBasicView'
 
-  import PerformanceDataCurveView from '@/views/platform/testpumplist/view/PerformanceDataCurveView'
+  import PerformanceDataCurveView from '@/views/platform/tasktlist/view/PerformanceDataCurveView'
 
   export default {
     name: 'ExamineVerify',

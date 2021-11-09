@@ -23,6 +23,13 @@ module.exports = {
     'vue/no-template-shadow': 'off',
     'vue/no-v-html': 'off',
     'vue/attributes-order': 0,
+    "vue/html-indent": ["error", 2, {
+      "attribute": 1,
+      "baseIndent": 1,
+      "closeBracket": 0,
+      "alignAttributesVertically": true,
+      "ignores": []
+    }],
     'vue/html-self-closing': [
       'error',
       {
@@ -35,6 +42,13 @@ module.exports = {
         math: 'always',
       },
     ],
+    "vue/max-attributes-per-line": ["error", {
+      "singleline": 1,
+      "multiline": {
+        "max": 1,
+        "allowFirstLine": false
+      }
+    }],
     // Vue.js风格指南(https://cn.vuejs.org/v2/style-guide/)
     // Vue组件排序
     'vue/order-in-components': [

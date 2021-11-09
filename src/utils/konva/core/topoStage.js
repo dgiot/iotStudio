@@ -35,8 +35,20 @@ const topoStage = {
         nodeTags.forEach((tag) => {
           info['tag'].push(tag)
           const event = tag.getAttr('name')
+          node.on('mouseover', function (e) {
+            document.body.style.cursor = 'pointer'
+          })
+          node.on('mouseout', function (e) {
+            document.body.style.cursor = 'default'
+          })
+          node.on('contextmenu',e=>{
+            canvas.contextmenu = e.target
+            console.log('contextmenu',e.target)
+          })
           tag.on('click',e=>{
+            console.log(e)
             canvas.clickItem = e.target
+            canvas.contextmenu = e.target
             console.log('tag click',e.target.attrs)
           })
           if (event) {
@@ -61,6 +73,12 @@ const topoStage = {
         canvas.contextmenu={}
         canvas.clickItem = e.target
         console.log('click',e.target.attrs)
+      })
+      node.on('mouseover', function (e) {
+        document.body.style.cursor = 'pointer'
+      })
+      node.on('mouseout', function (e) {
+        document.body.style.cursor = 'default'
       })
     })
     stage.find('Path').forEach((node) => {
@@ -94,6 +112,12 @@ const topoStage = {
       //   canvas.contextmenu = e.target
       //   console.log('contextmenu',e.target)
       // })
+      node.on('mouseover', function (e) {
+        document.body.style.cursor = 'pointer'
+      })
+      node.on('mouseout', function (e) {
+        document.body.style.cursor = 'default'
+      })
       node.on('click',e=>{
         console.log(e,'eeeeee')
         canvas.clickItem = e.target

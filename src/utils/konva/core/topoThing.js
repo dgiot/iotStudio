@@ -52,6 +52,7 @@ const topoThing = {
     }
     console.log("contextNode args",args)
     canvas.layer.batchDraw()
+    canvas.stage.batchDraw()
   },
   /**
    * @description 创建文本
@@ -136,15 +137,13 @@ const topoThing = {
     simpleLabel.add(
       new Konva.Text({
         hidden: thing.hidden ? thing.hidden : false,
+        id: thing.productid + '_flow_text',
+        text: 'dgiot' + '_flow_text' + uuid(5),
+        fontSize: 24,
+        lineHeight: 1.2,
+        padding: 10,
+        fontFamily: 'Calibri',
         fill: 'white',
-        attrs: {
-          // draggable: true,
-          id: thing.productid + '_flow_text',
-          text: 'dgiot' + '_flow_text' + uuid(5),
-          fontSize: 24,
-          lineHeight: 1.2,
-          padding: 10
-        },
       })
     )
     console.log(simpleLabel)
