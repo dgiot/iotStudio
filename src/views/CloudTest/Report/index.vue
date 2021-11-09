@@ -285,7 +285,6 @@
         </el-popover>
       </vab-query-form-right-panel>
     </vab-query-form>
-
     <el-table
       ref="tableSort"
       v-loading="listLoading"
@@ -682,30 +681,3 @@
     },
   }
 </script>
-
-<style lang="scss" scoped>
-  .custom-table-container {
-    ::v-deep {
-      i {
-        cursor: pointer;
-      }
-    }
-
-    .stripe-panel,
-    .border-panel {
-      margin: 0 10px $base-margin/2 10px !important;
-    }
-  }
-</style>
-<style lang="scss">
-  .custom-table-checkbox {
-    [class*='ri'] {
-      vertical-align: -2.5px;
-      cursor: pointer;
-    }
-
-    .el-checkbox {
-      margin: 5px 0 5px 8px;
-    }
-  }
-</style>
