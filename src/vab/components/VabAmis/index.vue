@@ -8,11 +8,15 @@
 * @DocumentLink:
 -->
 <template>
-  <amis-render :schema="schema" />
+  <div>
+    <amis-render :schema="schema" />
+    <draw-code :code="schema" />
+  </div>
 </template>
 
 <script>
   import AmisRender from './render'
+  import DrawCode from '../VabDrawerCode'
   console.groupCollapsed(
     `%c amis Help`,
     'color:#009a61; font-size: 28px; font-weight: 300'
@@ -30,6 +34,7 @@
   export default {
     name: 'VabAmis',
     components: {
+      DrawCode,
       AmisRender,
     },
     props: {

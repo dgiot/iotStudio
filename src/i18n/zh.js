@@ -578,6 +578,7 @@ export default {
       config: '配置',
       dict: '字典',
       decoder: '解码器',
+      lowcode: '低代码',
       edit: '设备',
       myproduct: '我的产品',
       createproduct: '创建产品',

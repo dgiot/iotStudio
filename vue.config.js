@@ -44,6 +44,7 @@ const FileManagerPlugin = require('filemanager-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const smp = new SpeedMeasurePlugin()
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
@@ -62,6 +63,7 @@ const staticUrl = regUrl.test(process.env.CDN_URL)
   : '/assets/'
 
 function getChainWebpack(config) {
+  config.plugin('monaco').use(new MonacoWebpackPlugin())
   config.plugin('html').tap((args) => {
     var _staticUrl = useCdn || process.env.useCdn ? cdnUrl : localUrl
     // if (useCdn || process.env.NODE_ENV !== 'development') {
@@ -253,6 +255,7 @@ const configure = {
     },
   },
   plugins: [
+    // new MonacoWebpackPlugin(),
     // new HardSourceWebpackPlugin(),
     new Webpack.ProvidePlugin(providePlugin),
     new WebpackBar({

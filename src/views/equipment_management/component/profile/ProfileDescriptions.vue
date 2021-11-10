@@ -1,5 +1,12 @@
 <template>
   <div :key="productId">
+    <el-drawer
+      v-drawerDrag
+      size="100%"
+      :visible.sync="amisFlag"
+    >
+      <vab-amis :schema="amisJson" />
+    </el-drawer>
     <el-descriptions
       border
       class="margin-top"
@@ -77,10 +84,20 @@
         <template slot="label">
           <el-link
             :disabled="!productDetail.decoder.code.length"
-            type="warning"
+            type="primary"
             @click="seeDecoder(productDetail)"
           >
             {{ $translateTitle('product.decoder') }}
+          </el-link>
+        </template>
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <el-link
+            type="primary"
+            @click="seeLowcode(productDetail.config)"
+          >
+            {{ $translateTitle('product.lowcode') }}
           </el-link>
         </template>
       </el-descriptions-item>
@@ -463,8 +480,30 @@
     },
     data() {
       return {
+        key: moment(new Date()).valueOf(),
+        amisJsonPlus:'',
+        amisJson:{
+          "type": "page",
+          "body": [
+            {
+              "type": "divider"
+            },
+            {
+              "type": "form",
+              "body": [
+                {
+                  "type": "input-text",
+                  "name": "name",
+                  "label": "姓名"
+                }
+              ]
+            }
+          ]
+        },
         ace_editor: '',
         codeFlag: false,
+        amisFlag:false,
+        activeName:'first',
         productDetail: {
           thing: { properties: [] },
           config: { parser: [], profile: [] },
@@ -472,6 +511,14 @@
         },
         Category,
       }
+    },
+    watch: {
+      amisJson: {
+        deep: true,
+        handler(val) {
+          this.amisJsonPlus = JSON.stringify(val)
+        },
+      },
     },
     mounted() {},
     methods: {
@@ -481,6 +528,11 @@
         this.codeFlag = !this.codeFlag
         this.ace_editor = Base64.decode(decoder.code)
         // editor.gotoLine(editor.session.getLength())
+      },
+      seeLowcode(params) {
+        const { amis= {"type":"page","body":[{"type":"divider"},{"type":"form","body":[{"type":"input-text","name":"name","label":"姓名"}]}]}} = params
+        this.amisJson = amis
+        this.amisFlag = true
       },
       featProperties(params) {
         this.codeFlag = false
@@ -508,3 +560,12 @@
     },
   }
 </script>
+<style lang="scss" scoped>
+  .iframe-container {
+    iframe {
+      width: 100%;
+      height: $base-keep-alive-height;
+    }
+  }
+</style>
+

@@ -8,6 +8,9 @@
 
 <script>
   // eslint-disable
+  import {
+    tokenName,
+  } from '@/config'
   import { render as renderSchema } from 'amis'
   import {
     toast,
@@ -101,7 +104,7 @@
               config.params = data
             } else if (data && data instanceof FormData) {
               // config.headers = config.headers || {};
-              // config.headers['Content-Type'] = 'multipart/form-data';
+              config.headers['Content-Type'] = 'multipart/form-data';
             } else if (
               data &&
               typeof data !== 'string' &&
@@ -114,7 +117,8 @@
             }
 
             data && (config.data = data)
-
+            const { sessionToken = '' } = config.headers
+            config.headers[`${tokenName}`] = sessionToken
             return axios(url, config)
           },
           isCancel: (e) => axios.isCancel(e),
