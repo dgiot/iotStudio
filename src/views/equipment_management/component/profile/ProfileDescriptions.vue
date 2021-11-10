@@ -6,6 +6,13 @@
       :visible.sync="amisFlag"
     >
       <vab-amis :schema="amisJson" />
+      <div
+        class="demo-drawer__footer"
+      >
+        <el-button @click="cancelForm">
+          保存
+        </el-button>
+      </div>
     </el-drawer>
     <el-descriptions
       border
@@ -433,6 +440,7 @@
   </div>
 </template>
 <script>
+  import { mapGetters,mapMutations } from 'vuex'
   import Category from '@/api/Mock/Category'
   export default {
     name: 'ProfileDescriptions',
@@ -482,24 +490,6 @@
       return {
         key: moment(new Date()).valueOf(),
         amisJsonPlus:'',
-        amisJson:{
-          "type": "page",
-          "body": [
-            {
-              "type": "divider"
-            },
-            {
-              "type": "form",
-              "body": [
-                {
-                  "type": "input-text",
-                  "name": "name",
-                  "label": "姓名"
-                }
-              ]
-            }
-          ]
-        },
         ace_editor: '',
         codeFlag: false,
         amisFlag:false,
@@ -512,6 +502,11 @@
         Category,
       }
     },
+    computed: {
+      ...mapGetters({
+        amisJson: 'amis/amisJson',
+      }),
+    },
     watch: {
       amisJson: {
         deep: true,
@@ -522,6 +517,15 @@
     },
     mounted() {},
     methods: {
+      cancelForm(){
+        this.$message.success('待实现')
+        console.log('保存到数据库')
+        // 格式是 config{amis:this.amisJson} 记得_merge config 一下
+        console.log(this.amisJson)
+      },
+      ...mapMutations({
+        set_amisJson: 'amis/set_amisJson',
+      }),
       seeDecoder(productDetail) {
         console.log(ace, 'ace', this.ace_editor)
         const { decoder = {} } = productDetail
@@ -530,8 +534,9 @@
         // editor.gotoLine(editor.session.getLength())
       },
       seeLowcode(params) {
-        const { amis= {"type":"page","body":[{"type":"divider"},{"type":"form","body":[{"type":"input-text","name":"name","label":"姓名"}]}]}} = params
-        this.amisJson = amis
+        const { amis= {}} = params
+        this.set_amisJson(amis)
+        // this.amisJson = amis
         this.amisFlag = true
       },
       featProperties(params) {

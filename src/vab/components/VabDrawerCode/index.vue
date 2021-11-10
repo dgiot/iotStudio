@@ -19,6 +19,7 @@
     />
     <div class="drawerCode-content">
       <el-drawer
+        append-to-body
         ref="drawer"
         size="50%"
         v-drawerDrag

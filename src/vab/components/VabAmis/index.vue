@@ -8,9 +8,15 @@
 * @DocumentLink:
 -->
 <template>
-  <div>
-    <amis-render :schema="schema" />
-    <draw-code :code="schema" />
+  <div :key="amisKey">
+    <amis-render
+      :key="amisKey"
+      :schema="schema"
+    />
+    <draw-code
+      :key="amisKey"
+      :code="schema"
+    />
   </div>
 </template>
 
@@ -42,6 +48,20 @@
         type: Object,
         required: false,
         default: () => amisdefault,
+      },
+    },
+    data(){
+      return {
+        amisKey:moment(new Date()).format('X')
+      }
+    },
+    watch: {
+      schema: {
+        handler(val) {
+          this.amisKey = moment(new Date()).format('X')
+        },
+        immediate: true,
+        deep: true,
       },
     },
   }
