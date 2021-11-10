@@ -20,7 +20,7 @@ function moveEnv(target, root, filename) {
     `cp -r ${path.join(__dirname, target)} ${path.join(
       __dirname,
       root
-    )}/${filename}`,
+    )}${filename}`,
     (code, stdout, stderr) => {
       console.log('Exit code:', code)
     }

@@ -26,10 +26,13 @@
         :visible.sync="drawer"
         :direction="direction"
       >
-        <el-alert
-          style="height: auto"
-          title="请在amis编辑器中设计页面，并将页面配置好的json数据复制到下面的json组件中并保存"
-        />
+        <el-link
+          href="https://fastdgiot.gitee.io/amis-editor-demo/#/edit/1"
+          target="_blank"
+          type="primary"
+        >
+          请在amis编辑器中设计页面，并将页面配置好的json数据复制到下面的json组件中并保存
+        </el-link>
         <vab-monaco-plus
           ref="monacoCode"
           :codes="monacoCode"
