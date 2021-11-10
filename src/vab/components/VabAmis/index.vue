@@ -10,11 +10,9 @@
 <template>
   <div :key="amisKey">
     <amis-render
-      :key="amisKey"
       :schema="schema"
     />
     <draw-code
-      :key="amisKey"
       :code="schema"
     />
   </div>
