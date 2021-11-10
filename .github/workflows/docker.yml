@@ -3,7 +3,7 @@ name: docker
 on:
   push:
     tags:
-      - 'v*'
+      - 't*'
 jobs:
   build:
     runs-on: ubuntu-latest
