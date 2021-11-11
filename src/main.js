@@ -10,6 +10,8 @@ import "@/plugins/amis"
 import dgiotStore from '@dgiot/dgiot-mqtt-dashboard/src/store'
 import '@dgiot/dgiot-component'
 import '@/vab'
+import LogRocket from 'logrocket';
+LogRocket.init('wj9jpe/dgiot');
 if (isPwa) require('./registerServiceWorker')
 process.env.NODE_ENV !== 'development'
   ? (Vue.config.productionTip = true)

@@ -47,6 +47,7 @@ specifiers:
   konva: 8.2.3
   lighthouse: 8.6.0
   lint-staged: 11.2.6
+  logrocket: ^2.1.1
   mini-css-extract-plugin: 2.4.2
   monaco-editor: 0.19.3
   monaco-editor-webpack-plugin: 1.9.1
@@ -96,6 +97,7 @@ dependencies:
   indent-string: 5.0.0
   ip: 1.1.5
   konva: 8.2.3
+  logrocket: 2.1.1
   monaco-editor-webpack-plugin: 1.9.1_monaco-editor@0.19.3
   q: 1.5.1
   qs: 6.10.1
@@ -8045,6 +8047,10 @@ packages:
     resolution: {integrity: sha1-AF/eL15uRwaPk1/yhXPhJe9y8Zc=, tarball: loglevel/download/loglevel-1.7.1.tgz}
     engines: {node: '>= 0.6.0'}
     dev: true
+
+  /logrocket/2.1.1:
+    resolution: {integrity: sha1-GsROt4EbTrtaTtvNivNbl4K/oJM=, tarball: logrocket/download/logrocket-2.1.1.tgz}
+    dev: false
 
   /longest-streak/2.0.4:
     resolution: {integrity: sha1-uFmZV9pbXatk3uP+MW+ndFl9kOQ=, tarball: longest-streak/download/longest-streak-2.0.4.tgz}
