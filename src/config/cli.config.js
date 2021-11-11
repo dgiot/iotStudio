@@ -32,6 +32,8 @@ module.exports = {
   iconfontId: ['font_2759556_r8d9wroaw8'],
   // 是否开启 SpeedMeasurePlugin 打包速度输出日志插件
   isSmp: false,
+  // 代理后的文件地址
+  CDN_URL:'iotapi/dgiot_dashboard/public',
   // cdn资源文件 https://blog.csdn.net/qq_37210523/article/details/106267946
   cdn: '//dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/dgiot_release/dashboardCdn', // '//1.117.219.248:1250/group1/dgiot_dashboard'
 }

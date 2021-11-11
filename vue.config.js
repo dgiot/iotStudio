@@ -36,6 +36,7 @@ const {
   isSmp,
   ogConfig,
   cdn,
+  CDN_URL
 } = require('./src/config')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
@@ -57,9 +58,9 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
-process.env.CDN_URL = 'iotapi/public/'
+process.env.CDN_URL = CDN_URL
 // process.env.CDN_URL = process.env.CDN_URL
-const staticUrl = regUrl.test(process.env.CDN_URL)
+const staticUrl = process.env.CDN_URL
   ? `${process.env.CDN_URL}/assets/`
   : '/assets/'
 
@@ -106,7 +107,7 @@ function getChainWebpack(config) {
   // https://blog.csdn.net/weixin_34294049/article/details/97278751
   config.when(process.env.NODE_ENV === 'production', (config) => {
     if (process.env.CDN_URL)
-      console.log(`当前使用了cdn,cdn资源链接地址为${process.env.CDN_URL}`)
+      console.log(`当前使用了cdn,cdn资源链接地址为${process.env.VUE_APP_URL+process.env.CDN_URL}`)
     else console.log(`当前未使用cdn,可能会导致打包体积过大`)
     config.performance.set('hints', false)
     config.plugins.delete('prefetch')
