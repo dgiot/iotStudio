@@ -1,3 +1,41 @@
+## [4.3.8](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.7...v4.3.8) (2021-11-10)
+
+
+### Bug Fixes
+
+* **src/config/cli.config.js:** the element-ui font file cannot be found after repair packaging ([a236d4b](https://github.com/dgiot/dgiot-dashboard/commit/a236d4b985541c1441f27dce395c5c0252e7f067))
+* **src/utils/konva/core/topothing.js:** konva lable opacity ([5e271c0](https://github.com/dgiot/dgiot-dashboard/commit/5e271c0786f94e2013a90b0d27b71f60d4549b69))
+
+
+### Features
+
+* **20 chars)::** lowcode save ([17b09ff](https://github.com/dgiot/dgiot-dashboard/commit/17b09ffc1072d875e1ffef6a6dd219131dfa1844))
+* **src/vab/components/vabdrawercode/index.vue:** amis link ([8e67e72](https://github.com/dgiot/dgiot-dashboard/commit/8e67e72fdae14daf629d3c8c2f13ab888e84ff13))
+* commit ([14f61a3](https://github.com/dgiot/dgiot-dashboard/commit/14f61a3d5ef267b57489bd5f9225ba453212dc29))
+* **.github/workflows/oss.yml:** action ([5ac4229](https://github.com/dgiot/dgiot-dashboard/commit/5ac42299eadb8aea0dfc56182d0a41b4ea4bdfa8))
+* **package.json:** devDependencies @babel/runtime ([d9b23b1](https://github.com/dgiot/dgiot-dashboard/commit/d9b23b11daeee02808eb38cb39572a04fac658b7))
+* **package.json:** fix build error ([1c1fde0](https://github.com/dgiot/dgiot-dashboard/commit/1c1fde09b8e1302638fd0aadae2f6535f0f9da6a))
+* **public/index.html:** website statistical analysis ([65c38ef](https://github.com/dgiot/dgiot-dashboard/commit/65c38ef9b4d00a45ecbd52e06d600347027c45ee))
+* **src/views/cloudtest/report/index.vue:** added cloud detection interface ([7da6789](https://github.com/dgiot/dgiot-dashboard/commit/7da6789a6e81927cc339add45a06d4fd40d8828b))
+* **src/views/cloudtest/report/index.vue:** pagination query Jump to configuration ([3e82043](https://github.com/dgiot/dgiot-dashboard/commit/3e82043fa5bd4c48c8a260332246a641bc8c0bfa))
+* **src/views/cloudtest/report/index.vue:** report ([75eaef9](https://github.com/dgiot/dgiot-dashboard/commit/75eaef9b6c134414a74f53bf6fb7fa657f0708ce))
+* hidden settings ([59029a7](https://github.com/dgiot/dgiot-dashboard/commit/59029a704978f29e9531061faffebc22e52936cc))
+* package.json ([63f529a](https://github.com/dgiot/dgiot-dashboard/commit/63f529a40cbcb66893c8534b2eb51f1d97d1eb78))
+* pnpm-lock.yaml ([11e7687](https://github.com/dgiot/dgiot-dashboard/commit/11e76877325621c112cdba4f9fded8e98dda8a3d))
+* src/vab/components/VabAmis/index.vue ([57839f8](https://github.com/dgiot/dgiot-dashboard/commit/57839f87b6a1052ca8b7647ae9e352437e46102a))
+* src/views/CloudTest/Report/index.vue ([9b34e61](https://github.com/dgiot/dgiot-dashboard/commit/9b34e61f76a86ddac5bf14fe026021c8bcb520b3))
+* src/views/CloudTest/Report/index.vue ([9f9e8a2](https://github.com/dgiot/dgiot-dashboard/commit/9f9e8a2c8be031f6785baba2099c8eef4edb7d17))
+* src/views/CloudTest/Task/index.vue ([e53f309](https://github.com/dgiot/dgiot-dashboard/commit/e53f309a214958a4b8f2f5c92b198d6a571da921))
+* **.github/workflows/sync-gitee.yml:** branches ([d2d5f2f](https://github.com/dgiot/dgiot-dashboard/commit/d2d5f2f37a1985b4ce75ecf289f3ff2ed01d6e92))
+* **.github/workflows/sync-gitee.yml:** sync to Gitee ([7cbaf42](https://github.com/dgiot/dgiot-dashboard/commit/7cbaf42281d912115a61964f8caba690de4eda35))
+* **pnpm-lock.yaml:** pnpm-lock.yaml ([6c8ac44](https://github.com/dgiot/dgiot-dashboard/commit/6c8ac4451d0522eb7e42ef1bd63e6b4cc991531a))
+* **src/utils/konva/core/topobg.js:** change topo bg ([c5ec599](https://github.com/dgiot/dgiot-dashboard/commit/c5ec5999b1e60f9fec57d50370cd3edddf936a09))
+* **src/views/systemmanage/filemanagement.vue:** add filemanagement ([b6f77e7](https://github.com/dgiot/dgiot-dashboard/commit/b6f77e7d0fa15fe462fcdf134f567d516035f025))
+* **src/views/systemmanage/filemanagement.vue:** filemanagement ([627f92d](https://github.com/dgiot/dgiot-dashboard/commit/627f92df3900686008e610b15f90af2a5ef61bc9))
+* **src/views/topo/components/topoheader.vue:** konva preview ([8a2b7d7](https://github.com/dgiot/dgiot-dashboard/commit/8a2b7d74663a176e4c22252b1882218d2ae01d5e))
+
+
+
 ## [4.3.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.6...v4.3.7) (2021-11-04)
 
 

@@ -57,6 +57,7 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
+process.env.CDN_URL = 'iotapi/public/'
 // process.env.CDN_URL = process.env.CDN_URL
 const staticUrl = regUrl.test(process.env.CDN_URL)
   ? `${process.env.CDN_URL}/assets/`
