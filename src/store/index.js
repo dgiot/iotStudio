@@ -11,6 +11,16 @@
  */
 
 Vue.use(Vuex)
+// https://app.logrocket.com/wj9jpe/dgiot/settings/setup
+import LogRocket from 'logrocket';
+LogRocket.init('wj9jpe/dgiot');
+LogRocket.identify('THE_USER_ID_IN_YOUR_APP', {
+  name: 'lsxredrain',
+  email: 'lsxredrain@163.com',
+  subscriptionType: 'dgiot_dashboard'
+});
+import createPlugin from 'logrocket-vuex';
+const logrocketPlugin = createPlugin(LogRocket);
 const files = require.context('./modules', false, /\.js$/)
 const modules = {}
 files.keys().forEach((key) => {
@@ -22,6 +32,7 @@ Object.keys(modules).forEach((key) => {
 const store = new Vuex.Store({
   modules,
   // plugins: [createLogger()],
+  plugins: [logrocketPlugin]
 })
 export default store
 window.store = store
