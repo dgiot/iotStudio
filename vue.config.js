@@ -47,6 +47,8 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const smp = new SpeedMeasurePlugin()
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 const regUrl = /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
@@ -65,7 +67,7 @@ const staticUrl = process.env.CDN_URL
   : '/assets/'
 
 function getChainWebpack(config) {
-  config.plugin('monaco').use(new MonacoWebpackPlugin())
+  // config.plugin('monaco').use(new MonacoWebpackPlugin())
   config.plugin('html').tap((args) => {
     var _staticUrl = localUrl
     // if (useCdn || process.env.NODE_ENV !== 'development') {
@@ -229,7 +231,6 @@ const configure = {
     qs: 'qs',
     Qs: 'qs',
     qs: 'Qs',
-    amis: 'amis',
     moment: 'moment',
     jsplumb: 'jsplumb',
     JSEncrypt: 'jsencrypt',
@@ -250,7 +251,9 @@ const configure = {
     },
   },
   plugins: [
-    // new MonacoWebpackPlugin(),
+    new CleanWebpackPlugin({cleanStaleWebpackAssets: false}),
+    new MonacoWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),
     new Webpack.ProvidePlugin(providePlugin),
     new WebpackBar({

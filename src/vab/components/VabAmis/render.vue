@@ -7,19 +7,20 @@
 </template>
 
 <script>
+  /**
+   * @description amis配置参数
+   */
+  // https://baidu.gitee.io/amis/zh-CN/docs/start/getting-started#props
   // eslint-disable
+  import * as React from 'react';
   import {
     tokenName,
   } from '@/config'
-  import { render as renderSchema } from 'amis'
-  import {
-    toast,
-    alert,
-    confirm
-  } from 'amis';
+  import { render as renderAmis , ToastComponent, AlertComponent} from 'amis'
+  import {alert, confirm} from 'amis/lib/components/Alert';
+  import {toast} from 'amis/lib/components/Toast';
   import copy from 'copy-to-clipboard'
   import ReactDOM from 'react-dom'
-  // import axios from 'axios'
   export default {
     name: 'AmisRender',
     props: {
@@ -37,23 +38,28 @@
         required: false,
         default: () => {},
       },
+      theme: {
+        type: String,
+        required: false,
+        default: 'antd', // antd // cxd
+      },
     },
     data() {
       return {
-        theme: 'default',
       }
     },
 
     mounted() {
       this.initEnv()
+      console.log('ReactDOM',ReactDOM)
       ReactDOM.render(
-        renderSchema(
+        renderAmis(
           this.schema,
           {
             onAction: this.onAction || this.handleAction,
             theme: this.theme,
           },
-          this.envnpm
+          this.env
         ),
         this.$refs.renderBox
       )
