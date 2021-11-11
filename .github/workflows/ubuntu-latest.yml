@@ -1,18 +1,32 @@
 name: ubuntu-latest
-on: pull_request
+on:
+  pull_request
 
 jobs:
   ubuntu-latest:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node: [ "16" ]
+
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - uses: pnpm/action-setup@v2.0.1
-      - run: pnpm config set registry https://registry.npmmirror.com && rm -rf pnpm-lock.yaml
-      - run: pnpm install
-      - run: pnpm lint && pnpm lint:fix && pnpm lint:style && pnpm build
-      - name: Upload Installer
-        uses: actions/upload-artifact@v2
+      - name: Setup Node
+        uses: actions/setup-node@v2
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.0.1
+      - name: Pnpn script
+        run: |
+          pnpm config set registry https://registry.npmmirror.com
+          rm -rf pnpm-lock.yaml
+          pnpm install
+          pnpm lint
+          pnpm lint:fix
+          pnpm lint:style
+          pnpm build
+      - uses: actions/upload-artifact@v2
+        name: Upload Installer
         with:
           name: WeakAuras-Companion-PRCI-Installer
           path: dist_electron/*.exe
