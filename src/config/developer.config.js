@@ -10,6 +10,10 @@ module.exports = {
     {
       path: 'group1',
       target: 'http://prod.iotn2n.com:1250',
+    },
+    {
+      path: 'dgiot_file',
+      target: 'http://prod.iotn2n.com',
     }
   ],
 }
