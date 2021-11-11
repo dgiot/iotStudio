@@ -8,6 +8,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
       - uses: pnpm/action-setup@v2.0.1
+      - uses: actions/upload-artifact@v2
       - run: pnpm config set registry https://registry.npmmirror.com
       - rum: rm -rf pnpm-lock.yaml
       - run: pnpm install
@@ -15,8 +16,7 @@ jobs:
       - run: pnpm lint:fix
       - run: pnpm lint:style
       - run: pnpm build
-      - uses: actions/upload-artifact@v2
-        name: Upload Installer
+      - name: Upload Installer
         with:
           name: WeakAuras-Companion-PRCI-Installer
           path: dist_electron/*.exe
