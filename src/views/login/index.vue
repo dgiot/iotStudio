@@ -2,7 +2,7 @@
   <div
     ref="container"
     class="login-container"
-    :style="{ backgroundImage: backgroundImage.includes('//')?'url(' +backgroundImage + ')' :'url(' +locationPath+backgroundImage + ')' }"
+    :style="{ backgroundImage:'url(' +backgroundImage + ')'}"
   >
     <el-row>
       <el-col
