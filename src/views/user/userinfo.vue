@@ -489,7 +489,9 @@
           _pcimg: this._pcimg || '',
           _mimg: this._mimg || '',
         })
-        console.log('this.companyinfo', tag.companyinfo)
+
+        console.log('this.userinfo', this.userinfo)
+        console.log('this.companyinfo', this.$FileServe + this.userinfo.avatar)
       },
     },
   }

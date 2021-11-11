@@ -9,7 +9,9 @@ const getLocalStorage = (key) => {
     return false
   }
 }
-
+const {
+  CDN_URL
+} = require('../../config')
 function queryAll(commit) {
   const params = {
     count: 'objectId',
@@ -295,7 +297,7 @@ const actions = {
           : '晚上好'
       Vue.prototype.$baseNotify(title, `${thisTime}！`)
       //  登录成功后设置文件服务器地址
-      Vue.prototype.$FileServe =  process.env.CDN_URL
+      Vue.prototype.$FileServe =  process.env.VUE_APP_URL
     } else {
       // Vue.prototype.$baseMessage(
       //   `登录接口异常，未正确返回${tokenName}...`,

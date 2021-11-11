@@ -302,7 +302,7 @@
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.device manufacturer')"
-                prop="name"
+                prop="devType"
               >
                 <el-input v-model="form.devType" autocomplete="off" />
               </el-form-item>
@@ -1484,7 +1484,7 @@
           devType: [
             {
               required: true,
-              message: '请输入产品标识，用于区分不同设备',
+              message: '请输入设备厂家',
               trigger: 'blur',
             },
           ],

@@ -7,7 +7,9 @@ import globalConfig from './globalConfig'
 import store from '@/store'
 import { Message } from 'element-ui'
 import { create_object, del_object, get_object, query_object, query_object_header, shuwa_batch, update_object } from '@/api/shuwa_parse'
-
+const {
+  CDN_URL
+} = require('../config')
 import { delDict, getBatchNumer, getIndustry, postDict, putDict } from '@/api/Dict/index'
 import { delDevice, getDevice, postDevice, putDevice, queryDevice } from '@/api/Device/index'
 import { queryProduct } from '@/api/Product/index'
@@ -519,6 +521,6 @@ export default {
     Vue.prototype.$getMqttEventId = getMqttEventId
     Vue.prototype.$getTopicEventId = getTopicEventId
     Vue.prototype.$downBinary = downBinary
-    Vue.prototype.$FileServe =  process.env.CDN_URL
+    Vue.prototype.$FileServe =  process.env.VUE_APP_URL
   },
 }
