@@ -1,3 +1,5 @@
+name: accurics
+
 on:
   push:
     branches:
