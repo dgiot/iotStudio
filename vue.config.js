@@ -72,18 +72,10 @@ function getChainWebpack(config) {
     const { css, js } = _staticUrl
     _staticUrl = { css: [], js: [] }
     css.forEach((_css) => {
-      let i =
-        _css.substring(_css.lastIndexOf('/') + 1).indexOf('.css') != -1
-          ? `${staticUrl}css/${_css.substring(_css.lastIndexOf('/') + 1)}`
-          : `${staticUrl}css/${_css.substring(_css.lastIndexOf('/') + 1)}.css`
-      _staticUrl.css.push(i)
+      _staticUrl.css.push(`${staticUrl}css/${_css}`)
     })
     js.forEach((_js) => {
-      let i =
-        _js.substring(_js.lastIndexOf('/') + 1).indexOf('.js') != -1
-          ? `${staticUrl}js/${_js.substring(_js.lastIndexOf('/') + 1)}`
-          : `${staticUrl}js/${_js.substring(_js.lastIndexOf('/') + 1)}.js`
-      _staticUrl.js.push(i)
+      _staticUrl.js.push(`${staticUrl}js/${_js}`)
     })
     args[0].staticUrl = _staticUrl
     args[0].ogConfig = ogConfig
@@ -235,8 +227,7 @@ const configure = {
     echarts: 'echarts',
     screenfull: 'screenfull',
     qs: 'qs',
-    Qs: 'qs',
-    qs: 'Qs',
+    amis: 'amis',
     moment: 'moment',
     jsplumb: 'jsplumb',
     JSEncrypt: 'jsencrypt',

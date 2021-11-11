@@ -94,7 +94,7 @@ let localUrl = {
     'vue-ele-form.js',
     'fuzzy.js',
     'vue-prism-editor',
-    'flv.js/dist/flv.min.js',
+    'flv.min.js',
     'prism-clike.min.js',
     'prism-core.min.js',
     'vue2-perfect-scrollbar.js',

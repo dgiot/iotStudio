@@ -27,7 +27,7 @@ function queryAll(commit) {
     order: '-updatedAt',
     // keys: 'name',
     where: {
-      category: 'IotHub',
+      // category: 'IotHub',
     },
   }
   queryProduct(params)

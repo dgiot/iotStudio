@@ -22,7 +22,9 @@ const queryParams = [
     query: {
       // limit: 1,
       keys: ['count(*)'],
-      where: { category: 'IotHub' },
+      where: {
+        // category: 'IotHub'
+      },
     },
   },
   {
