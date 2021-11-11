@@ -9,12 +9,9 @@ jobs:
       - uses: actions/setup-node@v2
       - uses: pnpm/action-setup@v2.0.1
       - uses: actions/upload-artifact@v2
-      - run: pnpm config set registry https://registry.npmmirror.com
-      - run: rm -rf pnpm-lock.yaml
+      - run: pnpm config set registry https://registry.npmmirror.com && rm -rf pnpm-lock.yaml
       - run: pnpm install
-      - run: pnpm lint
-      - run: pnpm lint:fix
-      - run: pnpm lint:style
+      - run: pnpm lint && pnpm lint:fix && pnpm lint:style
       - run: pnpm build
       - name: Upload Installer
         with:
