@@ -23,6 +23,7 @@ specifiers:
   chalk: 4.1.2
   chokidar: 3.5.2
   chrome-launcher: ^0.14.1
+  clone: ^2.1.2
   commitizen: 4.2.4
   compression-webpack-plugin: 6.1.1
   copy-to-clipboard: ^3.3.1
@@ -47,6 +48,7 @@ specifiers:
   monaco-editor-webpack-plugin: 1.9.1
   prettier: 2.4.1
   pushstate-server: ^3.1.0
+  q: ^1.5.1
   qs: ^6.5.1
   raw-loader: 4.0.2
   react-dom: ^16.8.6
@@ -81,11 +83,13 @@ dependencies:
   '@vue/cli-plugin-pwa': 4.5.14_@vue+cli-service@4.5.14
   amis: 1.4.1
   axios: 0.23.0
+  clone: 2.1.2
   element-ui: 2.15.6
   indent-string: 5.0.0
   ip: 1.1.5
   konva: 8.2.3
   monaco-editor-webpack-plugin: 1.9.1_monaco-editor@0.19.3
+  q: 1.5.1
   qs: 6.10.1
   react-dom: 16.14.0
   register-service-worker: 1.7.2
@@ -2684,6 +2688,7 @@ packages:
       uncontrollable: 7.2.1_react@16.14.0
       video-react: 0.14.1_react-dom@16.14.0+react@16.14.0
     transitivePeerDependencies:
+      - '@types/react'
       - react-native
     dev: false
 
@@ -3843,7 +3848,6 @@ packages:
   /clone/2.1.2:
     resolution: {integrity: sha1-G39Ln1kfHo+DZwQBYANFoCiHQ18=, tarball: clone/download/clone-2.1.2.tgz}
     engines: {node: '>=0.8'}
-    dev: true
 
   /coa/2.0.2:
     resolution: {integrity: sha1-Q/bCEVG07yv1cYfbDXPeIp4+fsM=, tarball: coa/download/coa-2.0.2.tgz}
@@ -9925,7 +9929,6 @@ packages:
   /q/1.5.1:
     resolution: {integrity: sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=, tarball: q/download/q-1.5.1.tgz}
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
-    dev: true
 
   /qr.js/0.0.0:
     resolution: {integrity: sha1-ys6GOG9ZoNuAUPqQ2baw6IoeNk8=, tarball: qr.js/download/qr.js-0.0.0.tgz}
@@ -10197,6 +10200,8 @@ packages:
       react-dom: 16.14.0_react@16.14.0
       react-lifecycles-compat: 3.0.4
       react-textarea-autosize: 8.3.3_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-lifecycles-compat/3.0.4:
@@ -10241,6 +10246,8 @@ packages:
       react: 16.14.0
       use-composed-ref: 1.1.0_react@16.14.0
       use-latest: 1.2.0_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-transition-group/4.4.2_react-dom@16.14.0+react@16.14.0:
@@ -12323,7 +12330,11 @@ packages:
   /use-isomorphic-layout-effect/1.1.1_react@16.14.0:
     resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: 16.14.0
     dev: false
@@ -12331,7 +12342,11 @@ packages:
   /use-latest/1.2.0_react@16.14.0:
     resolution: {integrity: sha1-pE9lcrgojgly7EEb3QhAraNm8jI=, tarball: use-latest/download/use-latest-1.2.0.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: 16.14.0
       use-isomorphic-layout-effect: 1.1.1_react@16.14.0
