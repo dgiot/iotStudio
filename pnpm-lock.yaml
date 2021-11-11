@@ -33,9 +33,9 @@ specifiers:
   cz-conventional-changelog: 3.3.0
   cz-customizable: 6.3.0
   element-ui: 2.15.6
-  eslint: ^7.32.0
+  eslint: 7.32.0
   eslint-plugin-prettier: 4.0.0
-  eslint-plugin-vue: ^7.20.0
+  eslint-plugin-vue: 7.20.0
   file-loader: 6.2.0
   filemanager-webpack-plugin: 6.1.7
   fork-ts-checker-webpack-plugin: 6.4.0
@@ -55,7 +55,7 @@ specifiers:
   q: 1.5.1
   qs: 6.10.1
   raw-loader: 4.0.2
-  react-dom: 16.14.0
+  react-dom: 17.0.2
   register-service-worker: 1.7.2
   resize-detector: 0.3.0
   rimraf: 3.0.2
@@ -64,9 +64,9 @@ specifiers:
   script-loader: 0.7.2
   shelljs: 0.8.4
   speed-measure-webpack-plugin: 1.5.0
-  stylelint: ^13.13.1
-  stylelint-config-prettier: ^9.0.3
-  stylelint-config-recess-order: ^2.5.0
+  stylelint: 13.13.1
+  stylelint-config-prettier: 9.0.3
+  stylelint-config-recess-order: 2.6.0
   svg-sprite-loader: 6.0.11
   url-loader: 4.1.1
   vab-icons: git+https://github.com.cnpmjs.org/zxcasvw/vab-icons.git
@@ -99,14 +99,14 @@ dependencies:
   monaco-editor-webpack-plugin: 1.9.1_monaco-editor@0.19.3
   q: 1.5.1
   qs: 6.10.1
-  react-dom: 16.14.0
+  react-dom: 17.0.2
   register-service-worker: 1.7.2
   resize-detector: 0.3.0
   vab-icons: github.com.cnpmjs.org/zxcasvw/vab-icons/9b6a93942880ee21594110bf55310b7b097d9beb
   vue-contextmenu: 1.5.10
   vue-ele-form-data-editor: 0.1.6
   vue-ele-form-dynamic: 0.4.3
-  vuera: 0.2.7_react-dom@16.14.0
+  vuera: 0.2.7_react-dom@17.0.2
 
 devDependencies:
   '@babel/runtime': 7.16.3
@@ -2796,7 +2796,7 @@ packages:
     resolution: {integrity: sha1-Jp/HrVuOQstjyJbVZmAXJhwUQIk=, tarball: arg/download/arg-4.1.3.tgz?cache=0&sync_timestamp=1634577088648&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Farg%2Fdownload%2Farg-4.1.3.tgz}
 
   /argparse/1.0.10:
-    resolution: {integrity: sha1-vNZ5HqWuCXJeF+WtmIE0zUCz2RE=, tarball: argparse/download/argparse-1.0.10.tgz?cache=0&sync_timestamp=1636632343860&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fargparse%2Fdownload%2Fargparse-1.0.10.tgz}
+    resolution: {integrity: sha1-vNZ5HqWuCXJeF+WtmIE0zUCz2RE=, tarball: argparse/download/argparse-1.0.10.tgz}
     dependencies:
       sprintf-js: 1.0.3
 
@@ -5236,7 +5236,7 @@ packages:
     engines: {node: '>=0.8.0'}
 
   /escape-string-regexp/4.0.0:
-    resolution: {integrity: sha1-FLqDpdNz49MR5a/KKc9b+tllvzQ=, tarball: escape-string-regexp/download/escape-string-regexp-4.0.0.tgz}
+    resolution: {integrity: sha1-FLqDpdNz49MR5a/KKc9b+tllvzQ=, tarball: escape-string-regexp/download/escape-string-regexp-4.0.0.tgz?cache=0&sync_timestamp=1632909109983&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fescape-string-regexp%2Fdownload%2Fescape-string-regexp-4.0.0.tgz}
     engines: {node: '>=10'}
     dev: true
 
@@ -5313,7 +5313,7 @@ packages:
     dev: true
 
   /eslint-utils/2.1.0:
-    resolution: {integrity: sha1-0t5eA0JOcH3BDHQGjd7a5wh0Gyc=, tarball: eslint-utils/download/eslint-utils-2.1.0.tgz}
+    resolution: {integrity: sha1-0t5eA0JOcH3BDHQGjd7a5wh0Gyc=, tarball: eslint-utils/download/eslint-utils-2.1.0.tgz?cache=0&sync_timestamp=1632909141198&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Feslint-utils%2Fdownload%2Feslint-utils-2.1.0.tgz}
     engines: {node: '>=6'}
     dependencies:
       eslint-visitor-keys: 1.3.0
@@ -6130,7 +6130,7 @@ packages:
     resolution: {integrity: sha1-pWiZ0+o8m6uHS7l3O3xe3pL0iV0=, tarball: function-bind/download/function-bind-1.1.1.tgz}
 
   /functional-red-black-tree/1.0.1:
-    resolution: {integrity: sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=, tarball: functional-red-black-tree/download/functional-red-black-tree-1.0.1.tgz}
+    resolution: {integrity: sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=, tarball: functional-red-black-tree/download/functional-red-black-tree-1.0.1.tgz?cache=0&sync_timestamp=1632909141387&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Ffunctional-red-black-tree%2Fdownload%2Ffunctional-red-black-tree-1.0.1.tgz}
     dev: true
 
   /gensync/1.0.0-beta.2:
@@ -10246,17 +10246,6 @@ packages:
       react-onclickoutside: 6.12.0_react-dom@16.14.0+react@16.14.0
     dev: false
 
-  /react-dom/16.14.0:
-    resolution: {integrity: sha1-etg47Cmnd/s8dcOhkPZhz5Kri4k=, tarball: react-dom/download/react-dom-16.14.0.tgz?cache=0&sync_timestamp=1636610811012&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Freact-dom%2Fdownload%2Freact-dom-16.14.0.tgz}
-    peerDependencies:
-      react: ^16.14.0
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      prop-types: 15.7.2
-      scheduler: 0.19.1
-    dev: false
-
   /react-dom/16.14.0_react@16.14.0:
     resolution: {integrity: sha1-etg47Cmnd/s8dcOhkPZhz5Kri4k=, tarball: react-dom/download/react-dom-16.14.0.tgz?cache=0&sync_timestamp=1636610811012&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Freact-dom%2Fdownload%2Freact-dom-16.14.0.tgz}
     peerDependencies:
@@ -10267,6 +10256,16 @@ packages:
       prop-types: 15.7.2
       react: 16.14.0
       scheduler: 0.19.1
+    dev: false
+
+  /react-dom/17.0.2:
+    resolution: {integrity: sha1-7P+2hF462Nv83EmPDQqTlzZQLCM=, tarball: react-dom/download/react-dom-17.0.2.tgz?cache=0&sync_timestamp=1636610811012&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Freact-dom%2Fdownload%2Freact-dom-17.0.2.tgz}
+    peerDependencies:
+      react: 17.0.2
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      scheduler: 0.20.2
     dev: false
 
   /react-dropzone/11.4.2_react@16.14.0:
@@ -10520,7 +10519,7 @@ packages:
     dev: true
 
   /regexpp/3.2.0:
-    resolution: {integrity: sha1-BCWido2PI7rXDKS5BGH6LxIT4bI=, tarball: regexpp/download/regexpp-3.2.0.tgz}
+    resolution: {integrity: sha1-BCWido2PI7rXDKS5BGH6LxIT4bI=, tarball: regexpp/download/regexpp-3.2.0.tgz?cache=0&sync_timestamp=1632909141561&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fregexpp%2Fdownload%2Fregexpp-3.2.0.tgz}
     engines: {node: '>=8'}
     dev: true
 
@@ -10897,6 +10896,13 @@ packages:
 
   /scheduler/0.19.1:
     resolution: {integrity: sha1-Tz4u0sGn1laB9MhU+oxaHMtA8ZY=, tarball: scheduler/download/scheduler-0.19.1.tgz}
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+    dev: false
+
+  /scheduler/0.20.2:
+    resolution: {integrity: sha1-S67jlDbjSqk7SHS93L8P6Li1DpE=, tarball: scheduler/download/scheduler-0.20.2.tgz}
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
@@ -11918,7 +11924,7 @@ packages:
     dev: true
 
   /text-table/0.2.0:
-    resolution: {integrity: sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=, tarball: text-table/download/text-table-0.2.0.tgz?cache=0&sync_timestamp=1636632342237&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Ftext-table%2Fdownload%2Ftext-table-0.2.0.tgz}
+    resolution: {integrity: sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=, tarball: text-table/download/text-table-0.2.0.tgz}
     dev: true
 
   /thenify-all/1.6.0:
@@ -12718,14 +12724,14 @@ packages:
     resolution: {integrity: sha1-5RqlJQJQ1Wmj+606ilpofWA24jU=, tarball: vue/download/vue-2.6.14.tgz}
     dev: false
 
-  /vuera/0.2.7_react-dom@16.14.0:
+  /vuera/0.2.7_react-dom@17.0.2:
     resolution: {integrity: sha1-gEasmnzpYbHIH4Qhizvk6qp7qUA=, tarball: vuera/download/vuera-0.2.7.tgz}
     peerDependencies:
       react: '>= 15.2.0'
       react-dom: '>= 15.2.0'
       vue: '>= 2.2'
     dependencies:
-      react-dom: 16.14.0
+      react-dom: 17.0.2
     dev: false
 
   /vuex-persistedstate/4.1.0_vuex@3.6.2:

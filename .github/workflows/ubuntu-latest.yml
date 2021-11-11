@@ -1,14 +1,9 @@
-name: Windows Build
+name: ubuntu-latest
 on: pull_request
 
 jobs:
   build:
-    runs-on: windows-latest
-
-    strategy:
-      matrix:
-        node: ["16"]
-
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
