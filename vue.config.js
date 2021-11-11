@@ -65,7 +65,7 @@ const staticUrl = regUrl.test(process.env.CDN_URL)
 function getChainWebpack(config) {
   config.plugin('monaco').use(new MonacoWebpackPlugin())
   config.plugin('html').tap((args) => {
-    var _staticUrl = useCdn || process.env.useCdn ? cdnUrl : localUrl
+    var _staticUrl = localUrl
     // if (useCdn || process.env.NODE_ENV !== 'development') {
     const { css, js } = _staticUrl
     _staticUrl = { css: [], js: [] }
