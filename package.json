@@ -110,7 +110,7 @@
     "husky": "7.0.2",
     "lighthouse": "8.6.0",
     "lint-staged": "11.2.3",
-    "mini-css-extract-plugin": "2.4.2",
+    "mini-css-extract-plugin": "2.4.4",
     "monaco-editor": "0.19.3",
     "prettier": "2.4.1",
     "pushstate-server": "3.1.0",
