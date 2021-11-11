@@ -12,7 +12,7 @@ jobs:
       - run: pnpm install
       - run: pnpm lint && pnpm lint:fix && pnpm lint:style && pnpm build
       - name: Upload Installer
-      - uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v2
         with:
           name: WeakAuras-Companion-PRCI-Installer
           path: dist_electron/*.exe
