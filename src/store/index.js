@@ -11,6 +11,10 @@
  */
 
 Vue.use(Vuex)
+import LogRocket from 'logrocket';
+LogRocket.init('wj9jpe/dgiot');
+import createPlugin from 'logrocket-vuex';
+const logrocketPlugin = createPlugin(LogRocket);
 const files = require.context('./modules', false, /\.js$/)
 const modules = {}
 files.keys().forEach((key) => {
@@ -22,6 +26,7 @@ Object.keys(modules).forEach((key) => {
 const store = new Vuex.Store({
   modules,
   // plugins: [createLogger()],
+  plugins: [logrocketPlugin]
 })
 export default store
 window.store = store
