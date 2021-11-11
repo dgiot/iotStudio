@@ -2,18 +2,27 @@ import i18n from '@/i18n'
 import Bus from './eventBus'
 import dgiotBus from '@dgiot/dgiot-mqtt-dashboard/src/utils/bus'
 import dgiotMixin from '@dgiot/dgiot-mqtt-dashboard/src/mixins/mqtt'
-import { getToken, removeToken, setToken } from './vuex'
+import {getToken, removeToken, setToken} from './vuex'
 import globalConfig from './globalConfig'
 import store from '@/store'
-import { Message } from 'element-ui'
-import { create_object, del_object, get_object, query_object, query_object_header, shuwa_batch, update_object } from '@/api/shuwa_parse'
+import {Message} from 'element-ui'
+import {
+  create_object,
+  del_object,
+  get_object,
+  query_object,
+  query_object_header,
+  shuwa_batch,
+  update_object
+} from '@/api/shuwa_parse'
+
 const {
   CDN_URL
 } = require('../config')
-import { delDict, getBatchNumer, getIndustry, postDict, putDict } from '@/api/Dict/index'
-import { delDevice, getDevice, postDevice, putDevice, queryDevice } from '@/api/Device/index'
-import { queryProduct } from '@/api/Product/index'
-import { getMqttEventId, getTopicEventId } from '@/utils'
+import {delDict, getBatchNumer, getIndustry, postDict, putDict} from '@/api/Dict/index'
+import {delDevice, getDevice, postDevice, putDevice, queryDevice} from '@/api/Device/index'
+import {queryProduct} from '@/api/Product/index'
+import {getMqttEventId, getTopicEventId} from '@/utils'
 
 // https://www.jianshu.com/p/abdee4e7875a
 /**
@@ -253,7 +262,7 @@ function downBinary(res) {
     data,
     headers,
   } = res
-  let blob = new Blob([data], { type: headers['content-type'] }) // 这里标识下载文件类型
+  let blob = new Blob([data], {type: headers['content-type']}) // 这里标识下载文件类型
   console.log(blob, res.data)
   let downloadElement = document.createElement('a')
   let href = window.URL.createObjectURL(blob) // 创建下载的链接
@@ -466,7 +475,7 @@ export const isVoid = (value) =>
 export const cleanObject = (object) => {
   // Object.assign({}, object)
   if (!object) return {}
-  const result = { ...object }
+  const result = {...object}
   Object.keys(result)
     .forEach((key) => {
       const value = result[key]
@@ -521,6 +530,6 @@ export default {
     Vue.prototype.$getMqttEventId = getMqttEventId
     Vue.prototype.$getTopicEventId = getTopicEventId
     Vue.prototype.$downBinary = downBinary
-    Vue.prototype.$FileServe =  process.env.VUE_APP_URL
+    Vue.prototype.$FileServe =  sessionStorage.getItem('fileServer')
   },
 }
