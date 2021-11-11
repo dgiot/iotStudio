@@ -93,7 +93,7 @@ let localUrl = {
     'f-render.js',
     'vue-ele-form.js',
     'fuzzy.js',
-    'vue-prism-editor',
+    'vue-prism-editor.js',
     'flv.min.js',
     'prism-clike.min.js',
     'prism-core.min.js',

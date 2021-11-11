@@ -227,6 +227,8 @@ const configure = {
     echarts: 'echarts',
     screenfull: 'screenfull',
     qs: 'qs',
+    Qs: 'qs',
+    qs: 'Qs',
     amis: 'amis',
     moment: 'moment',
     jsplumb: 'jsplumb',
