@@ -519,6 +519,6 @@ export default {
     Vue.prototype.$getMqttEventId = getMqttEventId
     Vue.prototype.$getTopicEventId = getTopicEventId
     Vue.prototype.$downBinary = downBinary
-    Vue.prototype.$FileServe = localStorage.getItem('fileServer')
+    Vue.prototype.$FileServe =  process.env.CDN_URL
   },
 }

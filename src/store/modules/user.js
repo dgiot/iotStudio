@@ -9,17 +9,6 @@ const getLocalStorage = (key) => {
     return false
   }
 }
-function getFileServer() {
-  const localRole = localStorage.getItem('role')
-    ? localStorage.getItem('role')
-    : 'eyJ2dWV4aW5mbyI6W119'
-  let Base64Decode = JSON.parse(Base64.decode(localRole))
-  const serverUrl = Base64Decode.vuexinfo[0]
-    ? Base64Decode.vuexinfo[0].tag.appconfig.file
-    : location.origin
-  localStorage.setItem('fileServer', serverUrl)
-  return serverUrl
-}
 
 function queryAll(commit) {
   const params = {
@@ -306,9 +295,7 @@ const actions = {
           : '晚上好'
       Vue.prototype.$baseNotify(title, `${thisTime}！`)
       //  登录成功后设置文件服务器地址
-      Vue.prototype.$FileServe = localStorage.getItem('fileServer')
-        ? localStorage.getItem('fileServer')
-        : getFileServer()
+      Vue.prototype.$FileServe =  process.env.CDN_URL
     } else {
       // Vue.prototype.$baseMessage(
       //   `登录接口异常，未正确返回${tokenName}...`,

@@ -23,7 +23,7 @@ jobs:
         with:
           version: 6.3.0
           run_install: false
-      - run: pnpm config set registry https://registry.npm.taobao.org
+      - run: pnpm config set registry https://registry.npmmirror.com
       - run: pnpm i --frozen-lockfile
       - run: pnpm build
       - name: Deploy static to github pagese 🚀
