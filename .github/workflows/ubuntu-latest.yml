@@ -12,6 +12,7 @@ jobs:
           version: 6.3.0
           run_install: false
       - run: pnpm config set registry https://registry.npmmirror.com
+      - rum: rm -rf pnpm-lock.yaml
       - run: pnpm install
       - run: pnpm lint
       - run: pnpm lint:fix
