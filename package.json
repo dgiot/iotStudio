@@ -71,7 +71,7 @@
     "monaco-editor-webpack-plugin": "1.9.1",
     "q": "1.5.1",
     "qs": "6.10.1",
-    "react-dom": "16.14.0",
+    "react-dom": "17.0.2",
     "register-service-worker": "1.7.2",
     "resize-detector": "0.3.0",
     "vab-icons": "git+https://github.com.cnpmjs.org/zxcasvw/vab-icons.git",
