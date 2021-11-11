@@ -124,7 +124,7 @@
     "stylelint": "13.13.1",
     "stylelint-config-prettier": "9.0.3",
     "stylelint-config-recess-order": "2.5.0",
-    "svg-sprite-loader": "6.0.9",
+    "svg-sprite-loader": "6.0.11",
     "url-loader": "4.1.1",
     "vue-eslint-parser": "7.11.0",
     "vue-template-compiler": "2.6.14",
