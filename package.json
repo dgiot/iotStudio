@@ -79,7 +79,7 @@
     "@commitlint/cli": "13.2.1",
     "@commitlint/config-conventional": "13.2.0",
     "@vue/cli-plugin-babel": "4.5.14",
-    "@vue/cli-plugin-eslint": "4.5.14",
+    "@vue/cli-plugin-eslint": "4.5.15",
     "@vue/cli-plugin-router": "4.5.14",
     "@vue/cli-plugin-vuex": "4.5.14",
     "@vue/cli-service": "4.5.14",
