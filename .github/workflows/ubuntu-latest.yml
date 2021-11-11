@@ -16,6 +16,9 @@ jobs:
         uses: actions/setup-node@v2
       - name: Setup pnpm
         uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.3.0
+          run_install: false
       - name: Pnpn script
         run: |
           pnpm config set registry https://registry.npmmirror.com
