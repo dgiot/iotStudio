@@ -135,7 +135,7 @@
   </div>
 </template>
 <script lang="js">
-  import backgroundImage from '../../../public/assets/images/shuwa_tech/zh/blog/study/opc/nf_taiti.png'
+  import backgroundImage from  '../../../public/assets/images/topo/bg/boiler.jpg'
   import { uuid } from '@/utils'
   import { requireModule } from '@/utils/file'
   import { createState } from '@/utils/konva'
