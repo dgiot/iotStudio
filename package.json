@@ -70,7 +70,7 @@
     "konva": "8.2.3",
     "logrocket": "^2.1.1",
     "logrocket-vuex": "^0.0.3",
-    "monaco-editor-webpack-plugin": "1.9.1",
+    "monaco-editor-webpack-plugin": "6.0.0",
     "q": "1.5.1",
     "qs": "6.10.1",
     "react-dom": "17.0.2",
