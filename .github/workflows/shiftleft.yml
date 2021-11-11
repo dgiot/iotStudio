@@ -22,7 +22,7 @@ jobs:
           curl https://cdn.shiftleft.io/download/sl > ${GITHUB_WORKSPACE}/sl && chmod a+rx ${GITHUB_WORKSPACE}/sl
       # ShiftLeft requires Java 1.8. Post the package step override the version
       - name: Setup Java JDK
-        uses: actions/setup-java@v1.4.3
+        uses: actions/setup-java@v2.3.1
         with:
           java-version: 1.8
       - name: NextGen Static Analysis
