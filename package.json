@@ -101,7 +101,7 @@
     "eslint-plugin-vue": "7.19.1",
     "filemanager-webpack-plugin": "6.1.7",
     "hard-source-webpack-plugin": "0.13.1",
-    "husky": "7.0.2",
+    "husky": "7.0.4",
     "lighthouse": "^8.5.1",
     "lint-staged": "11.2.3",
     "mini-css-extract-plugin": "2.4.2",
