@@ -3,50 +3,50 @@ lockfileVersion: 5.3
 specifiers:
   '@babel/helper-plugin-utils': 7.14.5
   '@babel/runtime': 7.16.3
-  '@commitlint/cli': 13.2.1
-  '@commitlint/config-conventional': 13.2.0
+  '@commitlint/cli': 14.1.0
+  '@commitlint/config-conventional': 14.1.0
   '@dgiot/dgiot-component': 0.0.3
   '@dgiot/dgiot-mqtt-dashboard': 1.1.5
   '@material/icon-button': 13.0.0
   '@vue/babel-helper-vue-jsx-merge-props': 1.2.1
-  '@vue/cli-plugin-babel': 4.5.14
-  '@vue/cli-plugin-eslint': 4.5.14
-  '@vue/cli-plugin-pwa': 4.5.14
-  '@vue/cli-plugin-router': 4.5.14
-  '@vue/cli-plugin-vuex': 4.5.14
-  '@vue/cli-service': 4.5.14
+  '@vue/cli-plugin-babel': 4.5.15
+  '@vue/cli-plugin-eslint': 4.5.15
+  '@vue/cli-plugin-pwa': 4.5.15
+  '@vue/cli-plugin-router': 4.5.15
+  '@vue/cli-plugin-vuex': 4.5.15
+  '@vue/cli-service': 4.5.15
   '@vue/eslint-config-prettier': 6.0.0
   amis: 1.4.1
-  axios: 0.23.0
+  axios: 0.24.0
   babel-plugin-transform-remove-console: 6.9.4
   body-parser: 1.19.0
   chalk: 4.1.2
   chokidar: 3.5.2
-  chrome-launcher: 0.14.2
+  chrome-launcher: 0.15.0
   clean-webpack-plugin: 4.0.0
   clone: 2.1.2
   commitizen: 4.2.4
   compression-webpack-plugin: 6.1.1
   copy-to-clipboard: 3.3.1
-  core-js: 3.18.3
+  core-js: 3.19.1
   cross-env: 7.0.3
   cz-conventional-changelog: 3.3.0
   cz-customizable: 6.3.0
   element-ui: 2.15.6
   eslint: 7.32.0
   eslint-plugin-prettier: 4.0.0
-  eslint-plugin-vue: 7.19.1
+  eslint-plugin-vue: 7.20.0
   file-loader: 6.2.0
   filemanager-webpack-plugin: 6.1.7
   fork-ts-checker-webpack-plugin: 6.4.0
   hard-source-webpack-plugin: 0.13.1
   html-webpack-plugin: 5.5.0
-  husky: 7.0.2
+  husky: 7.0.4
   indent-string: 5.0.0
   ip: 1.1.5
   konva: 8.2.3
   lighthouse: 8.6.0
-  lint-staged: 11.2.3
+  lint-staged: 11.2.6
   mini-css-extract-plugin: 2.4.2
   monaco-editor: 0.19.3
   monaco-editor-webpack-plugin: 1.9.1
@@ -66,8 +66,8 @@ specifiers:
   speed-measure-webpack-plugin: 1.5.0
   stylelint: 13.13.1
   stylelint-config-prettier: 9.0.3
-  stylelint-config-recess-order: 2.5.0
-  svg-sprite-loader: 6.0.9
+  stylelint-config-recess-order: 2.6.0
+  svg-sprite-loader: 6.0.11
   url-loader: 4.1.1
   vab-icons: git+https://github.com.cnpmjs.org/zxcasvw/vab-icons.git
   vue-contextmenu: 1.5.10
@@ -76,7 +76,7 @@ specifiers:
   vue-eslint-parser: 7.11.0
   vue-template-compiler: 2.6.14
   vuera: 0.2.7
-  webpackbar: 5.0.0-3
+  webpackbar: 5.0.2
 
 dependencies:
   '@babel/helper-plugin-utils': 7.14.5
@@ -84,9 +84,9 @@ dependencies:
   '@dgiot/dgiot-mqtt-dashboard': 1.1.5
   '@material/icon-button': 13.0.0
   '@vue/babel-helper-vue-jsx-merge-props': 1.2.1
-  '@vue/cli-plugin-pwa': 4.5.14_@vue+cli-service@4.5.14
+  '@vue/cli-plugin-pwa': 4.5.15_@vue+cli-service@4.5.15
   amis: 1.4.1
-  axios: 0.23.0
+  axios: 0.24.0
   clean-webpack-plugin: 4.0.0
   clone: 2.1.2
   element-ui: 2.15.6
@@ -110,34 +110,34 @@ dependencies:
 
 devDependencies:
   '@babel/runtime': 7.16.3
-  '@commitlint/cli': 13.2.1
-  '@commitlint/config-conventional': 13.2.0
-  '@vue/cli-plugin-babel': 4.5.14_@vue+cli-service@4.5.14
-  '@vue/cli-plugin-eslint': 4.5.14_6412d873fecdec21a918dea9f43cc898
-  '@vue/cli-plugin-router': 4.5.14_@vue+cli-service@4.5.14
-  '@vue/cli-plugin-vuex': 4.5.14_@vue+cli-service@4.5.14
-  '@vue/cli-service': 4.5.14_d6b76f1e6c6f18759bed343558aa22ec
+  '@commitlint/cli': 14.1.0
+  '@commitlint/config-conventional': 14.1.0
+  '@vue/cli-plugin-babel': 4.5.15_@vue+cli-service@4.5.15
+  '@vue/cli-plugin-eslint': 4.5.15_62e16dd60e13dba96d3ac430272b4676
+  '@vue/cli-plugin-router': 4.5.15_@vue+cli-service@4.5.15
+  '@vue/cli-plugin-vuex': 4.5.15_@vue+cli-service@4.5.15
+  '@vue/cli-service': 4.5.15_d6b76f1e6c6f18759bed343558aa22ec
   '@vue/eslint-config-prettier': 6.0.0_07ea7830c059e0b322b8e6cb8d02712b
   babel-plugin-transform-remove-console: 6.9.4
   body-parser: 1.19.0
   chalk: 4.1.2
   chokidar: 3.5.2
-  chrome-launcher: 0.14.2
+  chrome-launcher: 0.15.0
   commitizen: 4.2.4
   compression-webpack-plugin: 6.1.1
   copy-to-clipboard: 3.3.1
-  core-js: 3.18.3
+  core-js: 3.19.1
   cross-env: 7.0.3
   cz-conventional-changelog: 3.3.0
   cz-customizable: 6.3.0
   eslint: 7.32.0
   eslint-plugin-prettier: 4.0.0_eslint@7.32.0+prettier@2.4.1
-  eslint-plugin-vue: 7.19.1_eslint@7.32.0
+  eslint-plugin-vue: 7.20.0_eslint@7.32.0
   filemanager-webpack-plugin: 6.1.7
   hard-source-webpack-plugin: 0.13.1
-  husky: 7.0.2
+  husky: 7.0.4
   lighthouse: 8.6.0
-  lint-staged: 11.2.3
+  lint-staged: 11.2.6
   mini-css-extract-plugin: 2.4.2
   monaco-editor: 0.19.3
   prettier: 2.4.1
@@ -151,12 +151,12 @@ devDependencies:
   speed-measure-webpack-plugin: 1.5.0
   stylelint: 13.13.1
   stylelint-config-prettier: 9.0.3_stylelint@13.13.1
-  stylelint-config-recess-order: 2.5.0_stylelint@13.13.1
-  svg-sprite-loader: 6.0.9
+  stylelint-config-recess-order: 2.6.0_stylelint@13.13.1
+  svg-sprite-loader: 6.0.11
   url-loader: 4.1.1_file-loader@6.2.0
   vue-eslint-parser: 7.11.0_eslint@7.32.0
   vue-template-compiler: 2.6.14
-  webpackbar: 5.0.0-3
+  webpackbar: 5.0.2
 
 packages:
 
@@ -1340,86 +1340,65 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
-  /@commitlint/cli/13.2.1:
-    resolution: {integrity: sha1-gOvUa+72zu07sMCEK82o0Co8kd4=, tarball: '@commitlint/cli/download/@commitlint/cli-13.2.1.tgz'}
+  /@commitlint/cli/14.1.0:
+    resolution: {integrity: sha1-e2V6lV7SLz3zSLqa+mzlpRIf9+s=, tarball: '@commitlint/cli/download/@commitlint/cli-14.1.0.tgz'}
     engines: {node: '>=v12'}
     hasBin: true
     dependencies:
-      '@commitlint/format': 13.2.0
-      '@commitlint/lint': 13.2.0
-      '@commitlint/load': 13.2.1
-      '@commitlint/read': 13.2.0
-      '@commitlint/types': 13.2.0
+      '@commitlint/format': 14.1.0
+      '@commitlint/lint': 14.1.0
+      '@commitlint/load': 14.1.0
+      '@commitlint/read': 14.0.0
+      '@commitlint/types': 14.0.0
       lodash: 4.17.21
       resolve-from: 5.0.0
       resolve-global: 1.0.0
       yargs: 17.2.1
     dev: true
 
-  /@commitlint/config-conventional/13.2.0:
-    resolution: {integrity: sha1-KtJP7MVq6WGdvgk0uYqYsYrOC+w=, tarball: '@commitlint/config-conventional/download/@commitlint/config-conventional-13.2.0.tgz'}
+  /@commitlint/config-conventional/14.1.0:
+    resolution: {integrity: sha1-KeOG7yAPpy1DQYFTqxxJDIkCTe4=, tarball: '@commitlint/config-conventional/download/@commitlint/config-conventional-14.1.0.tgz'}
     engines: {node: '>=v12'}
     dependencies:
       conventional-changelog-conventionalcommits: 4.6.1
     dev: true
 
-  /@commitlint/ensure/13.2.0:
-    resolution: {integrity: sha1-mQwk91N4HR8UwWR8UtNKVzCJLj0=, tarball: '@commitlint/ensure/download/@commitlint/ensure-13.2.0.tgz'}
+  /@commitlint/ensure/14.1.0:
+    resolution: {integrity: sha1-tYsv/ivJW+FD7Y8YhyG5ffEEO6U=, tarball: '@commitlint/ensure/download/@commitlint/ensure-14.1.0.tgz'}
     engines: {node: '>=v12'}
     dependencies:
-      '@commitlint/types': 13.2.0
+      '@commitlint/types': 14.0.0
       lodash: 4.17.21
-    dev: true
-
-  /@commitlint/execute-rule/13.2.0:
-    resolution: {integrity: sha1-4RIVnWZHvFr+L3fCCA7w9hX9VB8=, tarball: '@commitlint/execute-rule/download/@commitlint/execute-rule-13.2.0.tgz'}
-    engines: {node: '>=v12'}
     dev: true
 
   /@commitlint/execute-rule/14.0.0:
     resolution: {integrity: sha1-O6RfwlUobjGA+J7U6awe8jcWBzQ=, tarball: '@commitlint/execute-rule/download/@commitlint/execute-rule-14.0.0.tgz'}
     engines: {node: '>=v12'}
-    optional: true
 
-  /@commitlint/format/13.2.0:
-    resolution: {integrity: sha1-7M//CgnO2FM6+yGys6HigXaxCdU=, tarball: '@commitlint/format/download/@commitlint/format-13.2.0.tgz'}
+  /@commitlint/format/14.1.0:
+    resolution: {integrity: sha1-CbQIG9ywIWNJa/zs6Y+dRgYji8U=, tarball: '@commitlint/format/download/@commitlint/format-14.1.0.tgz'}
     engines: {node: '>=v12'}
     dependencies:
-      '@commitlint/types': 13.2.0
+      '@commitlint/types': 14.0.0
       chalk: 4.1.2
     dev: true
 
-  /@commitlint/is-ignored/13.2.0:
-    resolution: {integrity: sha1-Uy3ftdYqSJ/0062IvL7kTox9LI8=, tarball: '@commitlint/is-ignored/download/@commitlint/is-ignored-13.2.0.tgz'}
+  /@commitlint/is-ignored/14.0.0:
+    resolution: {integrity: sha1-jIjgUhFRm8GHVYqtB+7gJYEpLsQ=, tarball: '@commitlint/is-ignored/download/@commitlint/is-ignored-14.0.0.tgz'}
     engines: {node: '>=v12'}
     dependencies:
-      '@commitlint/types': 13.2.0
+      '@commitlint/types': 14.0.0
       semver: 7.3.5
     dev: true
 
-  /@commitlint/lint/13.2.0:
-    resolution: {integrity: sha1-tWjJa9Icj6juw1ml4h0idDIGdh8=, tarball: '@commitlint/lint/download/@commitlint/lint-13.2.0.tgz'}
+  /@commitlint/lint/14.1.0:
+    resolution: {integrity: sha1-FnOyFoA9ZcxLvmMfZWElvlT9L2k=, tarball: '@commitlint/lint/download/@commitlint/lint-14.1.0.tgz'}
     engines: {node: '>=v12'}
     dependencies:
-      '@commitlint/is-ignored': 13.2.0
-      '@commitlint/parse': 13.2.0
-      '@commitlint/rules': 13.2.0
-      '@commitlint/types': 13.2.0
-    dev: true
-
-  /@commitlint/load/13.2.1:
-    resolution: {integrity: sha1-1dkm29BQIcAoN8Q4/xBXAlsot0U=, tarball: '@commitlint/load/download/@commitlint/load-13.2.1.tgz'}
-    engines: {node: '>=v12'}
-    dependencies:
-      '@commitlint/execute-rule': 13.2.0
-      '@commitlint/resolve-extends': 13.2.0
-      '@commitlint/types': 13.2.0
-      '@endemolshinegroup/cosmiconfig-typescript-loader': 3.0.2_3fdcc7bc724bd900a681b5e9457ed94a
-      chalk: 4.1.2
-      cosmiconfig: 7.0.1
-      lodash: 4.17.21
-      resolve-from: 5.0.0
-      typescript: 4.4.4
+      '@commitlint/is-ignored': 14.0.0
+      '@commitlint/parse': 14.0.0
+      '@commitlint/rules': 14.1.0
+      '@commitlint/types': 14.0.0
     dev: true
 
   /@commitlint/load/14.1.0:
@@ -1435,40 +1414,29 @@ packages:
       lodash: 4.17.21
       resolve-from: 5.0.0
       typescript: 4.4.4
-    optional: true
 
-  /@commitlint/message/13.2.0:
-    resolution: {integrity: sha1-GmD1eFUXUKjWtTO+ikBUH8LpKKg=, tarball: '@commitlint/message/download/@commitlint/message-13.2.0.tgz'}
+  /@commitlint/message/14.0.0:
+    resolution: {integrity: sha1-TbhS/NdjUr5UeBHVdwlmdYijm6k=, tarball: '@commitlint/message/download/@commitlint/message-14.0.0.tgz'}
     engines: {node: '>=v12'}
     dev: true
 
-  /@commitlint/parse/13.2.0:
-    resolution: {integrity: sha1-SAVGAr1z3Mv/7k+bqLJUnIV7oLc=, tarball: '@commitlint/parse/download/@commitlint/parse-13.2.0.tgz'}
+  /@commitlint/parse/14.0.0:
+    resolution: {integrity: sha1-y29mMjonYXdE+bR5zwmUH/nD+T0=, tarball: '@commitlint/parse/download/@commitlint/parse-14.0.0.tgz'}
     engines: {node: '>=v12'}
     dependencies:
-      '@commitlint/types': 13.2.0
+      '@commitlint/types': 14.0.0
       conventional-changelog-angular: 5.0.13
       conventional-commits-parser: 3.2.3
     dev: true
 
-  /@commitlint/read/13.2.0:
-    resolution: {integrity: sha1-KvWAMi7GKXR4q6hPqOwk/SfDWlQ=, tarball: '@commitlint/read/download/@commitlint/read-13.2.0.tgz'}
+  /@commitlint/read/14.0.0:
+    resolution: {integrity: sha1-+HFgDOgVtUHH8aT9q+LGbYhAwqs=, tarball: '@commitlint/read/download/@commitlint/read-14.0.0.tgz'}
     engines: {node: '>=v12'}
     dependencies:
-      '@commitlint/top-level': 13.2.0
-      '@commitlint/types': 13.2.0
+      '@commitlint/top-level': 14.0.0
+      '@commitlint/types': 14.0.0
       fs-extra: 10.0.0
       git-raw-commits: 2.0.10
-    dev: true
-
-  /@commitlint/resolve-extends/13.2.0:
-    resolution: {integrity: sha1-dPSFEusXhavgczalIIIl/ff+wyc=, tarball: '@commitlint/resolve-extends/download/@commitlint/resolve-extends-13.2.0.tgz'}
-    engines: {node: '>=v12'}
-    dependencies:
-      import-fresh: 3.3.0
-      lodash: 4.17.21
-      resolve-from: 5.0.0
-      resolve-global: 1.0.0
     dev: true
 
   /@commitlint/resolve-extends/14.1.0:
@@ -1479,36 +1447,28 @@ packages:
       lodash: 4.17.21
       resolve-from: 5.0.0
       resolve-global: 1.0.0
-    optional: true
 
-  /@commitlint/rules/13.2.0:
-    resolution: {integrity: sha1-4nL71AmcL+mLyhJ31/jKo1eLj0M=, tarball: '@commitlint/rules/download/@commitlint/rules-13.2.0.tgz'}
+  /@commitlint/rules/14.1.0:
+    resolution: {integrity: sha1-yuwzmwXEXnU2ysXZ8dsR/Mnj380=, tarball: '@commitlint/rules/download/@commitlint/rules-14.1.0.tgz'}
     engines: {node: '>=v12'}
     dependencies:
-      '@commitlint/ensure': 13.2.0
-      '@commitlint/message': 13.2.0
-      '@commitlint/to-lines': 13.2.0
-      '@commitlint/types': 13.2.0
+      '@commitlint/ensure': 14.1.0
+      '@commitlint/message': 14.0.0
+      '@commitlint/to-lines': 14.0.0
+      '@commitlint/types': 14.0.0
       execa: 5.1.1
     dev: true
 
-  /@commitlint/to-lines/13.2.0:
-    resolution: {integrity: sha1-5l0WNA81O0lukGCbRS8j9LC+C2o=, tarball: '@commitlint/to-lines/download/@commitlint/to-lines-13.2.0.tgz'}
+  /@commitlint/to-lines/14.0.0:
+    resolution: {integrity: sha1-2Qx0U7xnjn4tikyuEleDsdTfeqQ=, tarball: '@commitlint/to-lines/download/@commitlint/to-lines-14.0.0.tgz'}
     engines: {node: '>=v12'}
     dev: true
 
-  /@commitlint/top-level/13.2.0:
-    resolution: {integrity: sha1-hpgU6KwP7GpuHy6WZaMY5NyXnh4=, tarball: '@commitlint/top-level/download/@commitlint/top-level-13.2.0.tgz'}
+  /@commitlint/top-level/14.0.0:
+    resolution: {integrity: sha1-X+1qx64vXP8C6h9Bvdv6JEh+88g=, tarball: '@commitlint/top-level/download/@commitlint/top-level-14.0.0.tgz'}
     engines: {node: '>=v12'}
     dependencies:
       find-up: 5.0.0
-    dev: true
-
-  /@commitlint/types/13.2.0:
-    resolution: {integrity: sha1-7YEo+eQTg/jw7hsDcMckgmgh5YE=, tarball: '@commitlint/types/download/@commitlint/types-13.2.0.tgz'}
-    engines: {node: '>=v12'}
-    dependencies:
-      chalk: 4.1.2
     dev: true
 
   /@commitlint/types/14.0.0:
@@ -1516,7 +1476,6 @@ packages:
     engines: {node: '>=v12'}
     dependencies:
       chalk: 4.1.2
-    optional: true
 
   /@dgiot/dgiot-component/0.0.3:
     resolution: {integrity: sha1-X5IkLxDaUwcfftzF9ARxDkI2Irc=, tarball: '@dgiot/dgiot-component/download/@dgiot/dgiot-component-0.0.3.tgz'}
@@ -1946,7 +1905,7 @@ packages:
     dev: true
 
   /@types/json-schema/7.0.9:
-    resolution: {integrity: sha1-l+3JA36gw4WFMgsolk3eOznkZg0=, tarball: '@types/json-schema/download/@types/json-schema-7.0.9.tgz'}
+    resolution: {integrity: sha1-l+3JA36gw4WFMgsolk3eOznkZg0=, tarball: '@types/json-schema/download/@types/json-schema-7.0.9.tgz?cache=0&sync_timestamp=1636542627846&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fjson-schema%2Fdownload%2F%40types%2Fjson-schema-7.0.9.tgz'}
 
   /@types/mdast/3.0.10:
     resolution: {integrity: sha1-RyQkSoKkWYiEy76bz9c9/5J+6K8=, tarball: '@types/mdast/download/@types/mdast-3.0.10.tgz'}
@@ -2127,7 +2086,7 @@ packages:
       '@vue/babel-plugin-jsx': 1.1.1_@babel+core@7.16.0
       '@vue/babel-preset-jsx': 1.2.4_@babel+core@7.16.0
       babel-plugin-dynamic-import-node: 2.3.3
-      core-js: 3.18.3
+      core-js: 3.19.1
       core-js-compat: 3.19.1
       semver: 6.3.0
     transitivePeerDependencies:
@@ -2215,14 +2174,14 @@ packages:
     resolution: {integrity: sha1-BwD9a605M21Bibo/99JeY46BjJw=, tarball: '@vue/cli-overlay/download/@vue/cli-overlay-4.5.15.tgz'}
     dev: true
 
-  /@vue/cli-plugin-babel/4.5.14_@vue+cli-service@4.5.14:
-    resolution: {integrity: sha1-UPApGlDe/H/AgdNQJWy9hTaXCso=, tarball: '@vue/cli-plugin-babel/download/@vue/cli-plugin-babel-4.5.14.tgz'}
+  /@vue/cli-plugin-babel/4.5.15_@vue+cli-service@4.5.15:
+    resolution: {integrity: sha1-rk+y7VQlX+PYTfOB2raFCWQRee0=, tarball: '@vue/cli-plugin-babel/download/@vue/cli-plugin-babel-4.5.15.tgz'}
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0-0
     dependencies:
       '@babel/core': 7.16.0
       '@vue/babel-preset-app': 4.5.15
-      '@vue/cli-service': 4.5.14_d6b76f1e6c6f18759bed343558aa22ec
+      '@vue/cli-service': 4.5.15_d6b76f1e6c6f18759bed343558aa22ec
       '@vue/cli-shared-utils': 4.5.15
       babel-loader: 8.2.3_1bd60a6cd0f7024f034efd75ae733a3f
       cache-loader: 4.1.0_webpack@4.46.0
@@ -2235,13 +2194,13 @@ packages:
       - webpack-command
     dev: true
 
-  /@vue/cli-plugin-eslint/4.5.14_6412d873fecdec21a918dea9f43cc898:
-    resolution: {integrity: sha1-f96kyueD9pZSH9Y10mT+5SsLg2o=, tarball: '@vue/cli-plugin-eslint/download/@vue/cli-plugin-eslint-4.5.14.tgz'}
+  /@vue/cli-plugin-eslint/4.5.15_62e16dd60e13dba96d3ac430272b4676:
+    resolution: {integrity: sha1-V4GCSpQfNMJjNqZ7H2WEoGxqJP8=, tarball: '@vue/cli-plugin-eslint/download/@vue/cli-plugin-eslint-4.5.15.tgz'}
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0-0
       eslint: '>= 1.6.0 < 7.0.0'
     dependencies:
-      '@vue/cli-service': 4.5.14_d6b76f1e6c6f18759bed343558aa22ec
+      '@vue/cli-service': 4.5.15_d6b76f1e6c6f18759bed343558aa22ec
       '@vue/cli-shared-utils': 4.5.15
       eslint: 7.32.0
       eslint-loader: 2.2.1_eslint@7.32.0+webpack@4.46.0
@@ -2254,12 +2213,12 @@ packages:
       - webpack-command
     dev: true
 
-  /@vue/cli-plugin-pwa/4.5.14_@vue+cli-service@4.5.14:
-    resolution: {integrity: sha1-VfWGifMxCd/AAfRQKMEjwQl8ZtM=, tarball: '@vue/cli-plugin-pwa/download/@vue/cli-plugin-pwa-4.5.14.tgz'}
+  /@vue/cli-plugin-pwa/4.5.15_@vue+cli-service@4.5.15:
+    resolution: {integrity: sha1-64AMQY2WtJbe7J0GOheY/m6cLbg=, tarball: '@vue/cli-plugin-pwa/download/@vue/cli-plugin-pwa-4.5.15.tgz'}
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0-0
     dependencies:
-      '@vue/cli-service': 4.5.14_d6b76f1e6c6f18759bed343558aa22ec
+      '@vue/cli-service': 4.5.15_d6b76f1e6c6f18759bed343558aa22ec
       '@vue/cli-shared-utils': 4.5.15
       webpack: 4.46.0
       workbox-webpack-plugin: 4.3.1_webpack@4.46.0
@@ -2268,25 +2227,25 @@ packages:
       - webpack-command
     dev: false
 
-  /@vue/cli-plugin-router/4.5.14_@vue+cli-service@4.5.14:
-    resolution: {integrity: sha1-xn2kCofk/CZvaT2HjukYz+0ysBE=, tarball: '@vue/cli-plugin-router/download/@vue/cli-plugin-router-4.5.14.tgz'}
+  /@vue/cli-plugin-router/4.5.15_@vue+cli-service@4.5.15:
+    resolution: {integrity: sha1-HnXIyJ30LGlPFDufECjePPXWHh4=, tarball: '@vue/cli-plugin-router/download/@vue/cli-plugin-router-4.5.15.tgz'}
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0-0
     dependencies:
-      '@vue/cli-service': 4.5.14_d6b76f1e6c6f18759bed343558aa22ec
+      '@vue/cli-service': 4.5.15_d6b76f1e6c6f18759bed343558aa22ec
       '@vue/cli-shared-utils': 4.5.15
     dev: true
 
-  /@vue/cli-plugin-vuex/4.5.14_@vue+cli-service@4.5.14:
-    resolution: {integrity: sha1-hVSQ7ehWqcSXYAUeGL1R9/4CQUI=, tarball: '@vue/cli-plugin-vuex/download/@vue/cli-plugin-vuex-4.5.14.tgz'}
+  /@vue/cli-plugin-vuex/4.5.15_@vue+cli-service@4.5.15:
+    resolution: {integrity: sha1-RmwfAnd9Av71Opu0mjbMOjvP7E4=, tarball: '@vue/cli-plugin-vuex/download/@vue/cli-plugin-vuex-4.5.15.tgz'}
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0-0
     dependencies:
-      '@vue/cli-service': 4.5.14_d6b76f1e6c6f18759bed343558aa22ec
+      '@vue/cli-service': 4.5.15_d6b76f1e6c6f18759bed343558aa22ec
     dev: true
 
-  /@vue/cli-service/4.5.14_d6b76f1e6c6f18759bed343558aa22ec:
-    resolution: {integrity: sha1-KEziUi+pG3qaEgU3Gs45wDF+ny8=, tarball: '@vue/cli-service/download/@vue/cli-service-4.5.14.tgz'}
+  /@vue/cli-service/4.5.15_d6b76f1e6c6f18759bed343558aa22ec:
+    resolution: {integrity: sha1-DpoYbVFVACfQ5o6VBCB3600RW0U=, tarball: '@vue/cli-service/download/@vue/cli-service-4.5.15.tgz'}
     engines: {node: '>=8'}
     hasBin: true
     peerDependencies:
@@ -2320,8 +2279,8 @@ packages:
       '@types/webpack': 4.41.31
       '@types/webpack-dev-server': 3.11.6_debug@4.3.2
       '@vue/cli-overlay': 4.5.15
-      '@vue/cli-plugin-router': 4.5.14_@vue+cli-service@4.5.14
-      '@vue/cli-plugin-vuex': 4.5.14_@vue+cli-service@4.5.14
+      '@vue/cli-plugin-router': 4.5.15_@vue+cli-service@4.5.15
+      '@vue/cli-plugin-vuex': 4.5.15_@vue+cli-service@4.5.15
       '@vue/cli-shared-utils': 4.5.15
       '@vue/component-compiler-utils': 3.3.0
       '@vue/preload-webpack-plugin': 1.1.2_502c618fc8a7d35df07e93275324a2d0
@@ -2695,7 +2654,6 @@ packages:
       uncontrollable: 7.2.1_react@16.14.0
       video-react: 0.14.1_react-dom@16.14.0+react@16.14.0
     transitivePeerDependencies:
-      - '@types/react'
       - react-native
     dev: false
 
@@ -3012,8 +2970,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /axios/0.23.0:
-    resolution: {integrity: sha1-sPpdCUio0ddePVY1I4tsRiWwUUk=, tarball: axios/download/axios-0.23.0.tgz}
+  /axios/0.24.0:
+    resolution: {integrity: sha1-gE5voeS5xSiFAd2d/1anoJQNINY=, tarball: axios/download/axios-0.24.0.tgz}
     dependencies:
       follow-redirects: 1.14.5
     transitivePeerDependencies:
@@ -3199,6 +3157,7 @@ packages:
 
   /bindings/1.5.0:
     resolution: {integrity: sha1-EDU8npRTNLwFEabZCzj7x8nFBN8=, tarball: bindings/download/bindings-1.5.0.tgz}
+    requiresBuild: true
     dependencies:
       file-uri-to-path: 1.0.0
     optional: true
@@ -3703,6 +3662,17 @@ packages:
       lighthouse-logger: 1.3.0
     dev: true
 
+  /chrome-launcher/0.15.0:
+    resolution: {integrity: sha512-ZQqX5kb9H0+jy1OqLnWampfocrtSZaGl7Ny3F9GRha85o4odbL8x55paUzh51UC7cEmZ5obp3H2Mm70uC2PpRA==, tarball: chrome-launcher/download/chrome-launcher-0.15.0.tgz}
+    engines: {node: '>=12.13.0'}
+    hasBin: true
+    dependencies:
+      '@types/node': 16.11.7
+      escape-string-regexp: 4.0.0
+      is-wsl: 2.2.0
+      lighthouse-logger: 1.3.0
+    dev: true
+
   /chrome-trace-event/1.0.3:
     resolution: {integrity: sha1-EBXs7UdB4V0GZkqVfbv1DQQeJqw=, tarball: chrome-trace-event/download/chrome-trace-event-1.0.3.tgz}
     engines: {node: '>=6.0'}
@@ -3713,10 +3683,6 @@ packages:
 
   /ci-info/2.0.0:
     resolution: {integrity: sha1-Z6npZL4xpR4V5QENWObxKDQAL0Y=, tarball: ci-info/download/ci-info-2.0.0.tgz}
-    dev: true
-
-  /ci-info/3.2.0:
-    resolution: {integrity: sha1-KHbLlIpJh5e1I28AlbwFfQ3KOLY=, tarball: ci-info/download/ci-info-3.2.0.tgz}
     dev: true
 
   /cipher-base/1.0.4:
@@ -3950,10 +3916,10 @@ packages:
     dev: true
 
   /commander/2.20.3:
-    resolution: {integrity: sha1-/UhehMA+tIgcIHIrpIA16FMa6zM=, tarball: commander/download/commander-2.20.3.tgz}
+    resolution: {integrity: sha1-/UhehMA+tIgcIHIrpIA16FMa6zM=, tarball: commander/download/commander-2.20.3.tgz?cache=0&sync_timestamp=1636619372944&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fcommander%2Fdownload%2Fcommander-2.20.3.tgz}
 
   /commander/8.3.0:
-    resolution: {integrity: sha1-SDfqGy2me5xhamevuw+v7lZ7ymY=, tarball: commander/download/commander-8.3.0.tgz}
+    resolution: {integrity: sha1-SDfqGy2me5xhamevuw+v7lZ7ymY=, tarball: commander/download/commander-8.3.0.tgz?cache=0&sync_timestamp=1636619372944&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fcommander%2Fdownload%2Fcommander-8.3.0.tgz}
     engines: {node: '>= 12'}
 
   /commitizen/4.2.4:
@@ -4236,8 +4202,8 @@ packages:
     requiresBuild: true
     dev: false
 
-  /core-js/3.18.3:
-    resolution: {integrity: sha1-hqC7otjsPfhg/vzAeo0Rl3nwFQk=, tarball: core-js/download/core-js-3.18.3.tgz}
+  /core-js/3.19.1:
+    resolution: {integrity: sha1-9vFzyuI+c6fYj6I7bp2jKSdsZkE=, tarball: core-js/download/core-js-3.19.1.tgz}
     requiresBuild: true
 
   /core-util-is/1.0.2:
@@ -4766,7 +4732,7 @@ packages:
     engines: {node: '>=0.10.0'}
 
   /deepmerge/4.2.2:
-    resolution: {integrity: sha1-RNLqNnm49NT/ujPwPYZfwee/SVU=, tarball: deepmerge/download/deepmerge-4.2.2.tgz}
+    resolution: {integrity: sha1-RNLqNnm49NT/ujPwPYZfwee/SVU=, tarball: deepmerge/download/deepmerge-4.2.2.tgz?cache=0&sync_timestamp=1636542577763&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fdeepmerge%2Fdownload%2Fdeepmerge-4.2.2.tgz}
     engines: {node: '>=0.10.0'}
     dev: false
 
@@ -5315,11 +5281,11 @@ packages:
       prettier-linter-helpers: 1.0.0
     dev: true
 
-  /eslint-plugin-vue/7.19.1_eslint@7.32.0:
-    resolution: {integrity: sha1-Q1+yznEoQqlTCyjqy4g2gOjqpPM=, tarball: eslint-plugin-vue/download/eslint-plugin-vue-7.19.1.tgz?cache=0&sync_timestamp=1636173579288&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Feslint-plugin-vue%2Fdownload%2Feslint-plugin-vue-7.19.1.tgz}
+  /eslint-plugin-vue/7.20.0_eslint@7.32.0:
+    resolution: {integrity: sha1-mMIYhaa/3wcTw6kpV6Wv6q7tklM=, tarball: eslint-plugin-vue/download/eslint-plugin-vue-7.20.0.tgz}
     engines: {node: '>=8.10'}
     peerDependencies:
-      eslint: ^6.2.0 || ^7.0.0 || ^8.0.0-0
+      eslint: ^6.2.0 || ^7.0.0 || ^8.0.0
     dependencies:
       eslint: 7.32.0
       eslint-utils: 2.1.0
@@ -5363,7 +5329,7 @@ packages:
     dev: true
 
   /eslint/7.32.0:
-    resolution: {integrity: sha1-xtMooUvj+wjI0dIeEsAv23oqgS0=, tarball: eslint/download/eslint-7.32.0.tgz}
+    resolution: {integrity: sha1-xtMooUvj+wjI0dIeEsAv23oqgS0=, tarball: eslint/download/eslint-7.32.0.tgz?cache=0&sync_timestamp=1636426099135&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Feslint%2Fdownload%2Feslint-7.32.0.tgz}
     engines: {node: ^10.12.0 || >=12.0.0}
     hasBin: true
     dependencies:
@@ -5676,7 +5642,7 @@ packages:
     dev: false
 
   /fast-deep-equal/3.1.3:
-    resolution: {integrity: sha1-On1WtVnWy8PrUSMlJE5hmmXGxSU=, tarball: fast-deep-equal/download/fast-deep-equal-3.1.3.tgz}
+    resolution: {integrity: sha1-On1WtVnWy8PrUSMlJE5hmmXGxSU=, tarball: fast-deep-equal/download/fast-deep-equal-3.1.3.tgz?cache=0&sync_timestamp=1636619287930&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Ffast-deep-equal%2Fdownload%2Ffast-deep-equal-3.1.3.tgz}
 
   /fast-diff/1.2.0:
     resolution: {integrity: sha1-c+4RmC2Gyq95WYKNUZz+kn+sXwM=, tarball: fast-diff/download/fast-diff-1.2.0.tgz}
@@ -5808,6 +5774,7 @@ packages:
 
   /file-uri-to-path/1.0.0:
     resolution: {integrity: sha1-VTp7hEb/b2hDWcRF8eN6BdrMM90=, tarball: file-uri-to-path/download/file-uri-to-path-1.0.0.tgz}
+    requiresBuild: true
     optional: true
 
   /filemanager-webpack-plugin/6.1.7:
@@ -6099,7 +6066,7 @@ packages:
       universalify: 0.1.2
 
   /fs-extra/9.1.0:
-    resolution: {integrity: sha1-WVRGDHZKjaIJS6NVS/g55rmnyG0=, tarball: fs-extra/download/fs-extra-9.1.0.tgz}
+    resolution: {integrity: sha1-WVRGDHZKjaIJS6NVS/g55rmnyG0=, tarball: fs-extra/download/fs-extra-9.1.0.tgz?cache=0&sync_timestamp=1635752058862&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Ffs-extra%2Fdownload%2Ffs-extra-9.1.0.tgz}
     engines: {node: '>=10'}
     dependencies:
       at-least-node: 1.0.0
@@ -6145,6 +6112,7 @@ packages:
     resolution: {integrity: sha1-ilJveLj99GI7cJ4Ll1xSwkwC/Ro=, tarball: fsevents/download/fsevents-2.3.2.tgz}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+    requiresBuild: true
     optional: true
 
   /fstream/1.0.12:
@@ -6273,7 +6241,7 @@ packages:
       path-is-absolute: 1.0.1
 
   /glob/7.2.0:
-    resolution: {integrity: sha1-0VU1r3cy4C6Uj0xBYovZECk/YCM=, tarball: glob/download/glob-7.2.0.tgz}
+    resolution: {integrity: sha1-0VU1r3cy4C6Uj0xBYovZECk/YCM=, tarball: glob/download/glob-7.2.0.tgz?cache=0&sync_timestamp=1636619377717&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fglob%2Fdownload%2Fglob-7.2.0.tgz}
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -6419,7 +6387,7 @@ packages:
     dev: true
 
   /graceful-fs/4.2.8:
-    resolution: {integrity: sha1-5BK40z9eAGWTy9PO5t+fLOu+gCo=, tarball: graceful-fs/download/graceful-fs-4.2.8.tgz}
+    resolution: {integrity: sha1-5BK40z9eAGWTy9PO5t+fLOu+gCo=, tarball: graceful-fs/download/graceful-fs-4.2.8.tgz?cache=0&sync_timestamp=1636542607538&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fgraceful-fs%2Fdownload%2Fgraceful-fs-4.2.8.tgz}
 
   /gzip-size/5.1.1:
     resolution: {integrity: sha1-y5vuaS+HwGErIyhAqHOQTkwTUnQ=, tarball: gzip-size/download/gzip-size-5.1.1.tgz}
@@ -6750,7 +6718,7 @@ packages:
       depd: 1.1.2
       inherits: 2.0.3
       setprototypeof: 1.1.0
-      statuses: 1.5.0
+      statuses: 1.4.0
     dev: true
 
   /http-errors/1.7.2:
@@ -6840,8 +6808,8 @@ packages:
     engines: {node: '>=10.17.0'}
     dev: true
 
-  /husky/7.0.2:
-    resolution: {integrity: sha1-IZANoPMBmazKQ6RsBDxK2Erojf8=, tarball: husky/download/husky-7.0.2.tgz}
+  /husky/7.0.4:
+    resolution: {integrity: sha1-JCBIJF3EnI+xvwzHz7mN1yJTFTU=, tarball: husky/download/husky-7.0.4.tgz?cache=0&sync_timestamp=1636426102077&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fhusky%2Fdownload%2Fhusky-7.0.4.tgz}
     engines: {node: '>=12'}
     hasBin: true
     dev: true
@@ -6913,7 +6881,7 @@ packages:
     dev: true
 
   /import-fresh/3.3.0:
-    resolution: {integrity: sha1-NxYsJfy566oublPVtNiM4X2eDCs=, tarball: import-fresh/download/import-fresh-3.3.0.tgz}
+    resolution: {integrity: sha1-NxYsJfy566oublPVtNiM4X2eDCs=, tarball: import-fresh/download/import-fresh-3.3.0.tgz?cache=0&sync_timestamp=1636542602699&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fimport-fresh%2Fdownload%2Fimport-fresh-3.3.0.tgz}
     engines: {node: '>=6'}
     dependencies:
       parent-module: 1.0.1
@@ -7781,8 +7749,8 @@ packages:
       uc.micro: 1.0.6
     dev: false
 
-  /lint-staged/11.2.3:
-    resolution: {integrity: sha1-/D9FacxPRlUzCd/BRHuK72n3RPs=, tarball: lint-staged/download/lint-staged-11.2.3.tgz}
+  /lint-staged/11.2.6:
+    resolution: {integrity: sha1-9HexrwKU2wVOWTfxcWed9juqTEM=, tarball: lint-staged/download/lint-staged-11.2.6.tgz}
     hasBin: true
     dependencies:
       cli-truncate: 2.1.0
@@ -7851,7 +7819,7 @@ packages:
       json5: 1.0.1
 
   /loader-utils/2.0.2:
-    resolution: {integrity: sha1-1uO0+4GHByGuTghoqxHdY4NowSk=, tarball: loader-utils/download/loader-utils-2.0.2.tgz}
+    resolution: {integrity: sha1-1uO0+4GHByGuTghoqxHdY4NowSk=, tarball: loader-utils/download/loader-utils-2.0.2.tgz?cache=0&sync_timestamp=1636542630352&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-2.0.2.tgz}
     engines: {node: '>=8.9.0'}
     dependencies:
       big.js: 5.2.2
@@ -8009,7 +7977,7 @@ packages:
     resolution: {integrity: sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=, tarball: lodash.uniq/download/lodash.uniq-4.5.0.tgz?cache=0&sync_timestamp=1636619390548&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Flodash.uniq%2Fdownload%2Flodash.uniq-4.5.0.tgz}
 
   /lodash/4.17.21:
-    resolution: {integrity: sha1-Z5WRxWTDv/quhFTPCz3zcMPWkRw=, tarball: lodash/download/lodash-4.17.21.tgz}
+    resolution: {integrity: sha1-Z5WRxWTDv/quhFTPCz3zcMPWkRw=, tarball: lodash/download/lodash-4.17.21.tgz?cache=0&sync_timestamp=1636619378318&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Flodash%2Fdownload%2Flodash-4.17.21.tgz}
 
   /log-symbols/2.2.0:
     resolution: {integrity: sha1-V0Dhxdbw39pK2TI7UzIQfva0xAo=, tarball: log-symbols/download/log-symbols-2.2.0.tgz}
@@ -8696,6 +8664,7 @@ packages:
 
   /nan/2.15.0:
     resolution: {integrity: sha1-PzSkc/8Y4VwbVia2KQO1rW5mX+4=, tarball: nan/download/nan-2.15.0.tgz}
+    requiresBuild: true
     optional: true
 
   /nanoid/3.1.30:
@@ -10343,8 +10312,6 @@ packages:
       react-dom: 16.14.0_react@16.14.0
       react-lifecycles-compat: 3.0.4
       react-textarea-autosize: 8.3.3_react@16.14.0
-    transitivePeerDependencies:
-      - '@types/react'
     dev: false
 
   /react-lifecycles-compat/3.0.4:
@@ -10389,8 +10356,6 @@ packages:
       react: 16.14.0
       use-composed-ref: 1.1.0_react@16.14.0
       use-latest: 1.2.0_react@16.14.0
-    transitivePeerDependencies:
-      - '@types/react'
     dev: false
 
   /react-transition-group/4.4.2_react-dom@16.14.0+react@16.14.0:
@@ -11007,7 +10972,7 @@ packages:
     dev: true
 
   /semver/7.3.5:
-    resolution: {integrity: sha1-C2Ich5NI2JmOSw5L6Us/EuYBjvc=, tarball: semver/download/semver-7.3.5.tgz?cache=0&sync_timestamp=1632909150577&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fsemver%2Fdownload%2Fsemver-7.3.5.tgz}
+    resolution: {integrity: sha1-C2Ich5NI2JmOSw5L6Us/EuYBjvc=, tarball: semver/download/semver-7.3.5.tgz}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
@@ -11312,7 +11277,7 @@ packages:
       urix: 0.1.0
 
   /source-map-support/0.5.20:
-    resolution: {integrity: sha1-EhZgifj15ejFaSazd2Mzkt0stsk=, tarball: source-map-support/download/source-map-support-0.5.20.tgz}
+    resolution: {integrity: sha1-EhZgifj15ejFaSazd2Mzkt0stsk=, tarball: source-map-support/download/source-map-support-0.5.20.tgz?cache=0&sync_timestamp=1636619387012&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fsource-map-support%2Fdownload%2Fsource-map-support-0.5.20.tgz}
     dependencies:
       buffer-from: 1.1.2
       source-map: 0.6.1
@@ -11475,10 +11440,8 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
-  /std-env/2.3.1:
-    resolution: {integrity: sha1-1CJxkIgZwkP43vx3oUD8H87jNqE=, tarball: std-env/download/std-env-2.3.1.tgz}
-    dependencies:
-      ci-info: 3.2.0
+  /std-env/3.0.1:
+    resolution: {integrity: sha1-vEy8DkOGEBl+NMLXnD3zC0kfUYI=, tarball: std-env/download/std-env-3.0.1.tgz}
     dev: true
 
   /stream-browserify/2.0.2:
@@ -11592,7 +11555,7 @@ packages:
       ansi-regex: 4.1.0
 
   /strip-ansi/6.0.1:
-    resolution: {integrity: sha1-nibGPTD1NEPpSJSVshBdN7Z6hdk=, tarball: strip-ansi/download/strip-ansi-6.0.1.tgz?cache=0&sync_timestamp=1632909098581&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fstrip-ansi%2Fdownload%2Fstrip-ansi-6.0.1.tgz}
+    resolution: {integrity: sha1-nibGPTD1NEPpSJSVshBdN7Z6hdk=, tarball: strip-ansi/download/strip-ansi-6.0.1.tgz?cache=0&sync_timestamp=1636619372398&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fstrip-ansi%2Fdownload%2Fstrip-ansi-6.0.1.tgz}
     engines: {node: '>=8'}
     dependencies:
       ansi-regex: 5.0.1
@@ -11667,8 +11630,8 @@ packages:
       stylelint: 13.13.1
     dev: true
 
-  /stylelint-config-recess-order/2.5.0_stylelint@13.13.1:
-    resolution: {integrity: sha1-pk8tlesnwHNwVLE+/FFVP8nKMMA=, tarball: stylelint-config-recess-order/download/stylelint-config-recess-order-2.5.0.tgz}
+  /stylelint-config-recess-order/2.6.0_stylelint@13.13.1:
+    resolution: {integrity: sha512-s5+2sCEb+/3NzcBHjqLUJRt9JXl+o8pvWEVfAC0mKDrFbuftZJ53hKW1VAMjRvRk1nDJRB/rnFMtFbXb5xB8SA==, tarball: stylelint-config-recess-order/download/stylelint-config-recess-order-2.6.0.tgz}
     peerDependencies:
       stylelint: '>=9'
     dependencies:
@@ -11688,7 +11651,7 @@ packages:
     dev: true
 
   /stylelint/13.13.1:
-    resolution: {integrity: sha1-/KnJ9d55kKsmoA8We4l48IOhjzw=, tarball: stylelint/download/stylelint-13.13.1.tgz}
+    resolution: {integrity: sha1-/KnJ9d55kKsmoA8We4l48IOhjzw=, tarball: stylelint/download/stylelint-13.13.1.tgz?cache=0&sync_timestamp=1636426104928&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fstylelint%2Fdownload%2Fstylelint-13.13.1.tgz}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dependencies:
@@ -11814,8 +11777,8 @@ packages:
       traverse: 0.6.6
     dev: true
 
-  /svg-sprite-loader/6.0.9:
-    resolution: {integrity: sha1-8aEInDhgDr1fuNCd+jyDqkQ0orQ=, tarball: svg-sprite-loader/download/svg-sprite-loader-6.0.9.tgz}
+  /svg-sprite-loader/6.0.11:
+    resolution: {integrity: sha1-pNYM7j10IyosF9Mcc6IAgpX2EiA=, tarball: svg-sprite-loader/download/svg-sprite-loader-6.0.11.tgz}
     engines: {node: '>=6'}
     dependencies:
       bluebird: 3.7.2
@@ -12503,11 +12466,7 @@ packages:
   /use-isomorphic-layout-effect/1.1.1_react@16.14.0:
     resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
     peerDependencies:
-      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
     dependencies:
       react: 16.14.0
     dev: false
@@ -12515,11 +12474,7 @@ packages:
   /use-latest/1.2.0_react@16.14.0:
     resolution: {integrity: sha1-pE9lcrgojgly7EEb3QhAraNm8jI=, tarball: use-latest/download/use-latest-1.2.0.tgz}
     peerDependencies:
-      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
     dependencies:
       react: 16.14.0
       use-isomorphic-layout-effect: 1.1.1_react@16.14.0
@@ -12717,6 +12672,7 @@ packages:
 
   /vue-loader/16.8.3_webpack@4.46.0:
     resolution: {integrity: sha1-1D5nXe9bqTRdbH8FkUwT2GGZcIc=, tarball: vue-loader/download/vue-loader-16.8.3.tgz}
+    requiresBuild: true
     peerDependencies:
       webpack: ^4.1.0 || ^5.0.0-0
     dependencies:
@@ -12785,6 +12741,7 @@ packages:
 
   /watchpack-chokidar2/2.0.1:
     resolution: {integrity: sha1-OFAAcu5uzmbzdpk2lQ6hdxvhyVc=, tarball: watchpack-chokidar2/download/watchpack-chokidar2-2.0.1.tgz}
+    requiresBuild: true
     dependencies:
       chokidar: 2.1.8
     optional: true
@@ -12955,20 +12912,16 @@ packages:
       watchpack: 1.7.5
       webpack-sources: 1.4.3
 
-  /webpackbar/5.0.0-3:
-    resolution: {integrity: sha1-9Plsj7EwAbK7E0glLbTJgKuTqqw=, tarball: webpackbar/download/webpackbar-5.0.0-3.tgz}
-    engines: {node: '>=10'}
+  /webpackbar/5.0.2:
+    resolution: {integrity: sha1-091GYhHHOFJ0HfyEK3VW3LwrBXA=, tarball: webpackbar/download/webpackbar-5.0.2.tgz}
+    engines: {node: '>=12'}
     peerDependencies:
       webpack: 3 || 4 || 5
     dependencies:
-      ansi-escapes: 4.3.2
       chalk: 4.1.2
       consola: 2.15.3
-      figures: 3.2.0
       pretty-time: 1.1.0
-      std-env: 2.3.1
-      text-table: 0.2.0
-      wrap-ansi: 7.0.0
+      std-env: 3.0.1
     dev: true
 
   /websocket-driver/0.7.4:
@@ -13366,7 +13319,7 @@ packages:
     name: vab-icons
     version: 0.0.19
     dependencies:
-      core-js: 3.18.3
+      core-js: 3.19.1
       remixicon: 2.5.0
       vue: 2.6.14
     dev: false
