@@ -46,7 +46,7 @@ jobs:
           version: 6.3.0
           run_install: false
       - run: pnpm config set registry https://registry.npmmirror.com
-      - run: pnpm i --frozen-lockfile
+      - run: pnpm i --lockfile-only  # 使用时, 仅更新 pnpm-lock.yaml 和 package.json 不检查 node_modules 和下载依赖项. https://pnpm.io/zh/cli/install#--lockfile-only
       - run: pnpm changelog
       - name: commit
         run: |

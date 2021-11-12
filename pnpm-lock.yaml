@@ -26,7 +26,7 @@ specifiers:
   clean-webpack-plugin: 4.0.0
   clone: ^2.1.2
   commitizen: 4.2.4
-  compression-webpack-plugin: ^9.0.0
+  compression-webpack-plugin: ^6.1.1
   conventional-changelog-cli: ^2.1.1
   copy-to-clipboard: 3.3.1
   core-js: 3.19.1
@@ -136,7 +136,7 @@ devDependencies:
   chokidar: 3.5.2
   chrome-launcher: 0.15.0
   commitizen: 4.2.4
-  compression-webpack-plugin: 9.0.0
+  compression-webpack-plugin: 6.1.1
   copy-to-clipboard: 3.3.1
   core-js: 3.19.1
   cross-env: 7.0.3
@@ -1591,6 +1591,10 @@ packages:
       lodash.uniq: 4.5.0
     dev: false
 
+  /@gar/promisify/1.1.2:
+    resolution: {integrity: sha1-MKqCXxHUOGcdWFvUTn/VZFNfwhA=, tarball: '@gar/promisify/download/@gar/promisify-1.1.2.tgz'}
+    dev: true
+
   /@hapi/address/2.1.4:
     resolution: {integrity: sha1-XWftQ/P9QaadS5/3tW58DR0KgeU=, tarball: '@hapi/address/download/@hapi/address-2.1.4.tgz'}
     deprecated: Moved to 'npm install @sideway/address'
@@ -1778,6 +1782,21 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
+
+  /@npmcli/fs/1.0.0:
+    resolution: {integrity: sha1-WJYSz606bqD+r8uQHSnGP9UtsJ8=, tarball: '@npmcli/fs/download/@npmcli/fs-1.0.0.tgz'}
+    dependencies:
+      '@gar/promisify': 1.1.2
+      semver: 7.3.5
+    dev: true
+
+  /@npmcli/move-file/1.1.2:
+    resolution: {integrity: sha1-GoLD43L3yuklPrZtclQ9a4aFxnQ=, tarball: '@npmcli/move-file/download/@npmcli/move-file-1.1.2.tgz'}
+    engines: {node: '>=10'}
+    dependencies:
+      mkdirp: 1.0.4
+      rimraf: 3.0.2
+    dev: true
 
   /@popperjs/core/2.10.2:
     resolution: {integrity: sha1-B5jAM1Hw3qGlpMq93yalWny+5ZA=, tarball: '@popperjs/core/download/@popperjs/core-2.10.2.tgz'}
@@ -2703,6 +2722,7 @@ packages:
       uncontrollable: 7.2.1_react@16.14.0
       video-react: 0.14.1_react-dom@16.14.0+react@16.14.0
     transitivePeerDependencies:
+      - '@types/react'
       - react-native
     dev: false
 
@@ -3446,6 +3466,30 @@ packages:
       unique-filename: 1.1.1
       y18n: 4.0.3
 
+  /cacache/15.3.0:
+    resolution: {integrity: sha1-3IU4D7L1Vv492kxxm/oOyHWn8es=, tarball: cacache/download/cacache-15.3.0.tgz}
+    engines: {node: '>= 10'}
+    dependencies:
+      '@npmcli/fs': 1.0.0
+      '@npmcli/move-file': 1.1.2
+      chownr: 2.0.0
+      fs-minipass: 2.1.0
+      glob: 7.2.0
+      infer-owner: 1.0.4
+      lru-cache: 6.0.0
+      minipass: 3.1.5
+      minipass-collect: 1.0.2
+      minipass-flush: 1.0.5
+      minipass-pipeline: 1.2.4
+      mkdirp: 1.0.4
+      p-map: 4.0.0
+      promise-inflight: 1.0.1
+      rimraf: 3.0.2
+      ssri: 8.0.1
+      tar: 6.1.11
+      unique-filename: 1.1.1
+    dev: true
+
   /cache-base/1.0.1:
     resolution: {integrity: sha1-Cn9GQWgxyLZi7jb+TnxZ129marI=, tarball: cache-base/download/cache-base-1.0.1.tgz}
     engines: {node: '>=0.10.0'}
@@ -3694,6 +3738,11 @@ packages:
 
   /chownr/1.1.4:
     resolution: {integrity: sha1-b8nXtC0ypYNZYzdmbn0ICE2izGs=, tarball: chownr/download/chownr-1.1.4.tgz}
+
+  /chownr/2.0.0:
+    resolution: {integrity: sha1-Fb++U9LqtM9w8YqM1o6+Wzyx3s4=, tarball: chownr/download/chownr-2.0.0.tgz}
+    engines: {node: '>=10'}
+    dev: true
 
   /chrome-launcher/0.14.2:
     resolution: {integrity: sha1-XLM0eUueg/rXMDyWwTGk7J6fg6Y=, tarball: chrome-launcher/download/chrome-launcher-0.14.2.tgz}
@@ -4014,14 +4063,17 @@ packages:
       mime-db: 1.51.0
     dev: true
 
-  /compression-webpack-plugin/9.0.0:
-    resolution: {integrity: sha1-OLThgxP11wTEU6tWReOKWAW6WIk=, tarball: compression-webpack-plugin/download/compression-webpack-plugin-9.0.0.tgz}
-    engines: {node: '>= 12.13.0'}
+  /compression-webpack-plugin/6.1.1:
+    resolution: {integrity: sha1-ro5LL/23OWu3duZpGNdRog2Mzw4=, tarball: compression-webpack-plugin/download/compression-webpack-plugin-6.1.1.tgz}
+    engines: {node: '>= 10.13.0'}
     peerDependencies:
-      webpack: ^5.1.0
+      webpack: ^4.0.0 || ^5.0.0
     dependencies:
+      cacache: 15.3.0
+      find-cache-dir: 3.3.2
       schema-utils: 3.1.1
-      serialize-javascript: 6.0.0
+      serialize-javascript: 5.0.1
+      webpack-sources: 1.4.3
     dev: true
 
   /compression/1.7.3:
@@ -6375,6 +6427,13 @@ packages:
       jsonfile: 6.1.0
       universalify: 2.0.0
     dev: false
+
+  /fs-minipass/2.1.0:
+    resolution: {integrity: sha1-f1A2/b8SxjwWkZDL5BmchSJx+fs=, tarball: fs-minipass/download/fs-minipass-2.1.0.tgz}
+    engines: {node: '>= 8'}
+    dependencies:
+      minipass: 3.1.5
+    dev: true
 
   /fs-monkey/1.0.3:
     resolution: {integrity: sha1-rjrJLVO7Mo7+DpodlUH2rY1I4tM=, tarball: fs-monkey/download/fs-monkey-1.0.3.tgz}
@@ -8896,10 +8955,39 @@ packages:
   /minimist/1.2.5:
     resolution: {integrity: sha1-Z9ZgFLZqaoqqDAg8X9WN9OTpdgI=, tarball: minimist/download/minimist-1.2.5.tgz}
 
+  /minipass-collect/1.0.2:
+    resolution: {integrity: sha1-IrgTv3Rdxu26JXa5QAIq1u3Ixhc=, tarball: minipass-collect/download/minipass-collect-1.0.2.tgz}
+    engines: {node: '>= 8'}
+    dependencies:
+      minipass: 3.1.5
+    dev: true
+
+  /minipass-flush/1.0.5:
+    resolution: {integrity: sha1-gucTXX6JpQ/+ZGEKeHlTxMTLs3M=, tarball: minipass-flush/download/minipass-flush-1.0.5.tgz}
+    engines: {node: '>= 8'}
+    dependencies:
+      minipass: 3.1.5
+    dev: true
+
+  /minipass-pipeline/1.2.4:
+    resolution: {integrity: sha1-aEcveXEcCEZXwGfFxq2Tzd6oIUw=, tarball: minipass-pipeline/download/minipass-pipeline-1.2.4.tgz}
+    engines: {node: '>=8'}
+    dependencies:
+      minipass: 3.1.5
+    dev: true
+
   /minipass/3.1.5:
     resolution: {integrity: sha1-cfYlGwozpJwBs8+X/3ftoDDf9zI=, tarball: minipass/download/minipass-3.1.5.tgz?cache=0&sync_timestamp=1636619378922&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fminipass%2Fdownload%2Fminipass-3.1.5.tgz}
     engines: {node: '>=8'}
     dependencies:
+      yallist: 4.0.0
+    dev: true
+
+  /minizlib/2.1.2:
+    resolution: {integrity: sha1-6Q00Zrogm5MkUVCKEc49NjIUWTE=, tarball: minizlib/download/minizlib-2.1.2.tgz}
+    engines: {node: '>= 8'}
+    dependencies:
+      minipass: 3.1.5
       yallist: 4.0.0
     dev: true
 
@@ -8934,6 +9022,12 @@ packages:
     hasBin: true
     dependencies:
       minimist: 1.2.5
+
+  /mkdirp/1.0.4:
+    resolution: {integrity: sha1-PrXtYmInVteaXw4qIh3+utdcL34=, tarball: mkdirp/download/mkdirp-1.0.4.tgz?cache=0&sync_timestamp=1636542630496&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fmkdirp%2Fdownload%2Fmkdirp-1.0.4.tgz}
+    engines: {node: '>=10'}
+    hasBin: true
+    dev: true
 
   /mobx-react-lite/2.2.2_e98576d7b318dc515d875aefe88d0b88:
     resolution: {integrity: sha1-h8IX3HK05HsiST2vFV2vN1n4aKY=, tarball: mobx-react-lite/download/mobx-react-lite-2.2.2.tgz}
@@ -10808,6 +10902,8 @@ packages:
       react-dom: 16.14.0_react@16.14.0
       react-lifecycles-compat: 3.0.4
       react-textarea-autosize: 8.3.3_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-lifecycles-compat/3.0.4:
@@ -10852,6 +10948,8 @@ packages:
       react: 16.14.0
       use-composed-ref: 1.1.0_react@16.14.0
       use-latest: 1.2.0_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-transition-group/4.4.2_react-dom@16.14.0+react@16.14.0:
@@ -11534,8 +11632,8 @@ packages:
     dependencies:
       randombytes: 2.1.0
 
-  /serialize-javascript/6.0.0:
-    resolution: {integrity: sha1-765diPRdeSQUHai1w6en5mP+/rg=, tarball: serialize-javascript/download/serialize-javascript-6.0.0.tgz}
+  /serialize-javascript/5.0.1:
+    resolution: {integrity: sha1-eIbshIBJpGJGepfT2Rjrsqr5NPQ=, tarball: serialize-javascript/download/serialize-javascript-5.0.1.tgz}
     dependencies:
       randombytes: 2.1.0
     dev: true
@@ -12403,6 +12501,18 @@ packages:
       inherits: 2.0.4
       readable-stream: 3.6.0
 
+  /tar/6.1.11:
+    resolution: {integrity: sha1-Z2CjjwA6+hsv/Q/+npq70Oqz1iE=, tarball: tar/download/tar-6.1.11.tgz}
+    engines: {node: '>= 10'}
+    dependencies:
+      chownr: 2.0.0
+      fs-minipass: 2.1.0
+      minipass: 3.1.5
+      minizlib: 2.1.2
+      mkdirp: 1.0.4
+      yallist: 4.0.0
+    dev: true
+
   /temp-dir/2.0.0:
     resolution: {integrity: sha1-vekrBb3+sVFugEycAK1FF38xMh4=, tarball: temp-dir/download/temp-dir-2.0.0.tgz}
     engines: {node: '>=8'}
@@ -13043,7 +13153,11 @@ packages:
   /use-isomorphic-layout-effect/1.1.1_react@16.14.0:
     resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: 16.14.0
     dev: false
@@ -13051,7 +13165,11 @@ packages:
   /use-latest/1.2.0_react@16.14.0:
     resolution: {integrity: sha1-pE9lcrgojgly7EEb3QhAraNm8jI=, tarball: use-latest/download/use-latest-1.2.0.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: 16.14.0
       use-isomorphic-layout-effect: 1.1.1_react@16.14.0
