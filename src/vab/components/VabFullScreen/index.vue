@@ -35,7 +35,7 @@
             '开启全屏失败',
             'error',
             false,
-            'vab-hey-message-error',
+            'vab-hey-message-error'
           )
           return false
         }

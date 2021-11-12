@@ -4,9 +4,9 @@
       {{ $translateTitle('leftbar.listeners') }}
       <el-select
         v-model="nodeName"
+        class="select-radius"
         :disabled="$store.state.loading"
         :placeholder="$translateTitle('select.placeholder')"
-        class="select-radius"
         @change="loadListeners"
       >
         <el-option
@@ -17,11 +17,7 @@
         />
       </el-select>
     </div>
-    <el-table
-      v-loading="$store.state.loading"
-      :data="listeners"
-      border
-    >
+    <el-table v-loading="$store.state.loading" border :data="listeners">
       <el-table-column
         :label="$translateTitle('listeners.protocol')"
         prop="protocol"
@@ -76,7 +72,7 @@
           })
           .catch((error) => {
             this.$message.error(
-              error || this.$translateTitle('error.networkError'),
+              error || this.$translateTitle('error.networkError')
             )
           })
       },
@@ -88,7 +84,7 @@
           })
           .catch((error) => {
             this.$message.error(
-              error || this.$translateTitle('error.networkError'),
+              error || this.$translateTitle('error.networkError')
             )
           })
       },

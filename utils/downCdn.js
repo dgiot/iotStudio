@@ -1,8 +1,4 @@
-const {
-  cdnUrl,
-  useCdn,
-  ignoreCdn,
-} = require('../src/config')
+const { cdnUrl, useCdn, ignoreCdn } = require('../src/config')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
@@ -35,25 +31,20 @@ function download(_static) {
     css: [],
   }
   log(chalk.yellow('Execute download cdn resource script'))
-  const {
-    css,
-    js,
-  } = _static
+  const { css, js } = _static
   createFile(['js', 'css'])
   // console.log(css, js)
   css.forEach((_css) => {
     ignoreCdn.forEach((i) => {
       if (_css.indexOf(i) == -1) {
         log(chalk.red(_css, '_css', _css.indexOf(i)))
-        axios.get(_css)
-          .then((rescss) => {
-            let cssfille =
-              _css.substring(_css.lastIndexOf('/') + 1)
-                .indexOf('.css') != -1
-                ? _css.substring(_css.lastIndexOf('/') + 1)
-                : _css.substring(_css.lastIndexOf('/') + 1) + '.css'
-            writeFile('css/' + cssfille, rescss.data)
-          })
+        axios.get(_css).then((rescss) => {
+          let cssfille =
+            _css.substring(_css.lastIndexOf('/') + 1).indexOf('.css') != -1
+              ? _css.substring(_css.lastIndexOf('/') + 1)
+              : _css.substring(_css.lastIndexOf('/') + 1) + '.css'
+          writeFile('css/' + cssfille, rescss.data)
+        })
       } else {
         ignoreStatic.css.push(_css)
       }
@@ -63,16 +54,14 @@ function download(_static) {
     ignoreCdn.forEach((i) => {
       log(chalk.red(_js, '_js', _js.indexOf(i)))
       if (_js.indexOf(i) == -1) {
-        axios.get(_js)
-          .then((resjs) => {
-            let jsfille =
-              _js.substring(_js.lastIndexOf('/') + 1)
-                .indexOf('.js') != -1
-                ? _js.substring(_js.lastIndexOf('/') + 1)
-                : _js.substring(_js.lastIndexOf('/') + 1) + '.js'
-            log(chalk.red(jsfille))
-            writeFile('js/' + jsfille, resjs.data)
-          })
+        axios.get(_js).then((resjs) => {
+          let jsfille =
+            _js.substring(_js.lastIndexOf('/') + 1).indexOf('.js') != -1
+              ? _js.substring(_js.lastIndexOf('/') + 1)
+              : _js.substring(_js.lastIndexOf('/') + 1) + '.js'
+          log(chalk.red(jsfille))
+          writeFile('js/' + jsfille, resjs.data)
+        })
       } else {
         ignoreStatic.js.push(_js)
       }

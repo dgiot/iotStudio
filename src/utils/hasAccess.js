@@ -9,11 +9,7 @@ export function hasAccess(value) {
       mode: 'oneOf',
     })
   }
-  const {
-    role,
-    ability,
-    mode = 'oneOf',
-  } = value
+  const { role, ability, mode = 'oneOf' } = value
   let result = true
   if (role) {
     result =
@@ -34,10 +30,7 @@ export function hasAccess(value) {
 
 export function can(roleOrAbility, value) {
   let hasRole = false
-  const {
-    role,
-    mode,
-  } = value
+  const { role, mode } = value
   if (role && mode) {
     if (mode === 'allOf') {
       hasRole = role.every((item) => {

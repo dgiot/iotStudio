@@ -1,23 +1,17 @@
 <template>
   <div :key="productId">
-    <el-drawer
-      v-drawerDrag
-      :visible.sync="amisFlag"
-      size="100%"
-    >
+    <el-drawer v-drawerDrag size="100%" :visible.sync="amisFlag">
       <vab-amis :schema="amisJson" />
       <div class="demo-drawer__footer">
-        <el-button @click="cancelForm">
-          保存
-        </el-button>
+        <el-button @click="cancelForm">保存</el-button>
       </div>
     </el-drawer>
     <el-descriptions
+      border
+      class="margin-top"
       :column="2"
       :content-style="{ 'text-align': 'left' }"
       :label-style="{ 'text-align': 'center' }"
-      border
-      class="margin-top"
     >
       <!--      <el-descriptions-item :label="$translateTitle('home.category')">-->
       <!--        {{ productDetail.netType }}-->
@@ -77,10 +71,7 @@
       <!--      组态完善之后再加-->
       <el-descriptions-item v-if="false">
         <template slot="label">
-          <el-link
-            type="warning"
-            @click="goKonva(productDetail.objectId)"
-          >
+          <el-link type="warning" @click="goKonva(productDetail.objectId)">
             {{ $translateTitle('concentrator.konva') }}
           </el-link>
         </template>
@@ -98,10 +89,7 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
-          <el-link
-            type="primary"
-            @click="seeLowcode(productDetail.config)"
-          >
+          <el-link type="primary" @click="seeLowcode(productDetail.config)">
             {{ $translateTitle('product.lowcode') }}
           </el-link>
         </template>
@@ -134,10 +122,10 @@
         tableType == 'things'
           ? things
           : tableType == 'profile' || tableType == 'parser'
-            ? parserTableList
-            : tableType == 'basedate.params'
-              ? dictTableList
-              : []
+          ? parserTableList
+          : tableType == 'basedate.params'
+          ? dictTableList
+          : []
       "
       :header-cell-style="{ 'text-align': 'center' }"
       height="60vh"
@@ -145,31 +133,28 @@
       size="medium"
       style="width: 100%"
     >
-      <div
-        v-if="tableType == 'things'"
-        :key="tableType + thingKey"
-      >
+      <div v-if="tableType == 'things'" :key="tableType + thingKey">
         <el-table-column type="expand">
           <template
-            v-if="scope.row.dataType.type == 'struct'"
+            v-if="row.dataType.type == 'struct'"
             slot-scope="scope"
             class="opentable"
           >
             <el-table
-              :data="scope.row.dataType.specs"
+              :data="row.dataType.specs"
               style="box-sizing: border-box; width: 60%; text-align: center"
             >
               <el-table-column
-                :label="$translateTitle('product.identifier')"
                 align="center"
+                :label="$translateTitle('product.identifier')"
               >
                 <template slot-scope="scope1">
                   <span>{{ scope1.row.identifier }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('product.functionaltypes')"
                 align="center"
+                :label="$translateTitle('product.functionaltypes')"
               >
                 <span>
                   {{ $translateTitle('product.attribute') }}
@@ -177,20 +162,20 @@
               </el-table-column>
 
               <el-table-column
-                :label="$translateTitle('product.functionname')"
                 align="center"
+                :label="$translateTitle('product.functionname')"
                 prop="name"
               />
               <el-table-column
-                :label="$translateTitle('product.datadefinition')"
                 align="center"
+                :label="$translateTitle('product.datadefinition')"
               />
             </el-table>
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.order')"
           align="center"
+          :label="$translateTitle('product.order')"
           sortable
           width="80"
         >
@@ -199,8 +184,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.Rounds')"
           align="center"
+          :label="$translateTitle('product.Rounds')"
           sortable
           width="80"
         >
@@ -210,8 +195,8 @@
         </el-table-column>
 
         <el-table-column
-          :label="$translateTitle('product.Strategy')"
           align="center"
+          :label="$translateTitle('product.Strategy')"
           sortable
           width="80"
         >
@@ -221,8 +206,8 @@
         </el-table-column>
 
         <el-table-column
-          :label="$translateTitle('product.protocol')"
           align="center"
+          :label="$translateTitle('product.protocol')"
           sortable
           width="80"
         >
@@ -233,8 +218,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.functionaltypes')"
           align="center"
+          :label="$translateTitle('product.functionaltypes')"
           sortable
           width="120"
         >
@@ -242,68 +227,68 @@
         </el-table-column>
 
         <el-table-column
-          :label="$translateTitle('product.identifier')"
           align="center"
+          :label="$translateTitle('product.identifier')"
           prop="identifier"
           sortable
         />
         <el-table-column
-          :label="$translateTitle('product.functionname')"
           align="center"
+          :label="$translateTitle('product.functionname')"
           prop="name"
           sortable
         />
         <el-table-column
-          :label="$translateTitle('product.datatype')"
           align="center"
+          :label="$translateTitle('product.datatype')"
           sortable
         >
-          <template slot-scope="scope">
-            <span>{{ scope.row.dataType.type }}</span>
+          <template #default="{ row }">
+            <span>{{ row.dataType.type }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.datadefinition')"
           align="center"
+          :label="$translateTitle('product.datadefinition')"
           sortable
         >
-          <template slot-scope="scope">
+          <template #default="{ row }">
             <span
               v-if="
-                scope.row.dataType.specs &&
-                  (scope.row.dataType.type == 'double' ||
-                    scope.row.dataType.type == 'float' ||
-                    scope.row.dataType.type == 'int')
+                row.dataType.specs &&
+                (row.dataType.type == 'double' ||
+                  row.dataType.type == 'float' ||
+                  row.dataType.type == 'int')
               "
             >
               {{
                 $translateTitle('product.rangeofvalues') +
-                  scope.row.dataType.specs.min +
-                  '~' +
-                  scope.row.dataType.specs.max
+                row.dataType.specs.min +
+                '~' +
+                row.dataType.specs.max
               }}
             </span>
-            <span v-else-if="scope.row.dataType.type == 'string'">
+            <span v-else-if="row.dataType.type == 'string'">
               {{
                 $translateTitle('product.datalength') +
-                  ':' +
-                  scope.row.dataType.size +
-                  $translateTitle('product.byte')
+                ':' +
+                row.dataType.size +
+                $translateTitle('product.byte')
               }}
             </span>
-            <span v-else-if="scope.row.dataType.type == 'date'" />
-            <span v-else-if="scope.row.dataType.type != 'struct'">
-              {{ scope.row.dataType.specs }}
+            <span v-else-if="row.dataType.type == 'date'" />
+            <span v-else-if="row.dataType.type != 'struct'">
+              {{ row.dataType.specs }}
             </span>
             <span v-else />
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('developer.operation')"
           align="center"
+          :label="$translateTitle('developer.operation')"
           width="160"
         >
-          <template slot-scope="scope">
+          <template #default="{ row }">
             <el-button
               size="mini"
               type="danger"
@@ -314,7 +299,7 @@
             <el-button
               size="mini"
               type="primary"
-              @click="wmxDataFill(scope.row, scope.$index)"
+              @click="wmxDataFill(row.scope.$index)"
             >
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
@@ -331,17 +316,14 @@
           sortable
         />
         <el-table-column
-          :label="$translateTitle('product.chinesetitle')"
           align="center"
+          :label="$translateTitle('product.chinesetitle')"
           prop="name"
           show-overflow-tooltip
           sortable
         >
           <template #default="{ row }">
-            <el-popover
-              placement="top"
-              trigger="hover"
-            >
+            <el-popover placement="top" trigger="hover">
               <p>
                 {{ $translateTitle('product.englishtitle') }}:
                 {{ row.enname }}
@@ -366,10 +348,7 @@
                 {{ $translateTitle('product.class') }}:
                 {{ row.field }}
               </p>
-              <div
-                slot="reference"
-                class="name-wrapper"
-              >
+              <div slot="reference" class="name-wrapper">
                 <el-tag size="medium">
                   {{ row.name }}
                 </el-tag>
@@ -378,44 +357,23 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.functionaltypes')"
           align="center"
+          :label="$translateTitle('product.functionaltypes')"
           prop="type"
           show-overflow-tooltip
           sortable
         />
       </div>
       <div v-else-if="tableType == 'basedate.params'">
-        <el-table-column
-          label="序号"
-          prop="order"
-        />
-        <el-table-column
-          label="标识符"
-          prop="identifier"
-        />
-        <el-table-column
-          label="功能名称"
-          prop="name"
-        />
-        <el-table-column
-          label="数据类型"
-          prop="type"
-        />
-        <el-table-column
-          label="数据地址"
-          prop="address"
-        />
-        <el-table-column
-          label="数据长度"
-          prop="bytes"
-        />
-        <el-table-column
-          label="是否必填"
-          prop="required"
-        >
-          <template slot-scope="scope">
-            <span v-if="scope.row.required">是</span>
+        <el-table-column label="序号" prop="order" />
+        <el-table-column label="标识符" prop="identifier" />
+        <el-table-column label="功能名称" prop="name" />
+        <el-table-column label="数据类型" prop="type" />
+        <el-table-column label="数据地址" prop="address" />
+        <el-table-column label="数据长度" prop="bytes" />
+        <el-table-column label="是否必填" prop="required">
+          <template #default="{ row }">
+            <span v-if="row.required">是</span>
             <span v-else>否</span>
           </template>
         </el-table-column>
@@ -431,15 +389,11 @@
       style="height: 500px"
       theme="monokai"
     />
-    <el-empty
-      v-else
-      :image-size="200"
-    />
+    <el-empty v-else :image-size="200" />
   </div>
 </template>
 <script>
   import { mapGetters, mapMutations } from 'vuex'
-  import Category from '@/api/Mock/Category'
 
   export default {
     name: 'ProfileDescriptions',
@@ -467,8 +421,7 @@
       decoderTableList: {
         required: false,
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       parserTableList: {
         required: false,
@@ -488,8 +441,7 @@
     },
     data() {
       return {
-        key: moment(new Date())
-          .valueOf(),
+        key: moment(new Date()).valueOf(),
         amisJsonPlus: '',
         ace_editor: '',
         codeFlag: false,
@@ -503,7 +455,6 @@
           },
           decoder: { code: [] },
         },
-        Category,
       }
     },
     computed: {
@@ -519,8 +470,7 @@
         },
       },
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {
       cancelForm() {
         this.$message.success('待实现')

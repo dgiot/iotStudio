@@ -227,10 +227,7 @@ const actions = {
    * @description 登录拦截放行时，设置虚拟角色
    * @param {*} { commit, dispatch }
    */
-  setVirtualRoles({
-    commit,
-    dispatch,
-  }) {
+  setVirtualRoles({ commit, dispatch }) {
     dispatch('acl/setFull', true, { root: true })
     commit('setUsername', 'admin(未开启登录拦截)')
   },
@@ -239,10 +236,7 @@ const actions = {
    * @param {*} { commit }
    * @param {*} userInfo
    */
-  async login({
-    commit,
-    dispatch,
-  }, userInfo) {
+  async login({ commit, dispatch }, userInfo) {
     const _userInfo = (await login(userInfo)) || {}
     let data = _.merge(
       {
@@ -265,7 +259,7 @@ const actions = {
           theme: { ...defaultTheme },
         },
       },
-      _userInfo,
+      _userInfo
     )
     const {
       sessionToken = '',
@@ -284,14 +278,7 @@ const actions = {
       if (nick) commit('setUsername', nick)
       const page_title = getToken('title') || title
       console.log(tag, 'tag info')
-      const {
-        title,
-        Copyright,
-        name,
-        logo,
-        _pcimg,
-        _mimg,
-      } = tag.companyinfo
+      const { title, Copyright, name, logo, _pcimg, _mimg } = tag.companyinfo
       console.log(Copyright, 'Copyright')
       const { avatar } = tag.userinfo
       commit('setAvatar', avatar)
@@ -316,12 +303,12 @@ const actions = {
         hour < 8
           ? '早上好'
           : hour <= 11
-            ? '上午好'
-            : hour <= 13
-              ? '中午好'
-              : hour < 18
-                ? '下午好'
-                : '晚上好'
+          ? '上午好'
+          : hour <= 13
+          ? '中午好'
+          : hour < 18
+          ? '下午好'
+          : '晚上好'
       Vue.prototype.$baseNotify(title, `${thisTime}！`)
       //  登录成功后设置文件服务器地址
       Vue.prototype.$FileServe = fileServer
@@ -332,7 +319,7 @@ const actions = {
       // )
       Vue.prototype.$baseMessage(
         `登录失败，可能是密码错误或者账号被禁用！请与经销商或平台管理员联系。`,
-        'error',
+        'error'
       )
       return Promise.reject()
     }
@@ -360,17 +347,17 @@ const actions = {
         hour < 8
           ? '早上好'
           : hour <= 11
-            ? '上午好'
-            : hour <= 13
-              ? '中午好'
-              : hour < 18
-                ? '下午好'
-                : '晚上好'
+          ? '上午好'
+          : hour <= 13
+          ? '中午好'
+          : hour < 18
+          ? '下午好'
+          : '晚上好'
       Vue.prototype.$baseNotify(`欢迎登录${title}`, `${thisTime}！`)
     } else {
       Vue.prototype.$baseMessage(
         `login核心接口异常，请检查返回JSON格式是否正确，是否正确返回${tokenName}...`,
-        'error',
+        'error'
       )
       return Promise.reject()
     }
@@ -380,10 +367,7 @@ const actions = {
    * @param {*} { commit, dispatch, state }
    * @returns
    */
-  async getUserInfo({
-    commit,
-    dispatch,
-  }) {
+  async getUserInfo({ commit, dispatch }) {
     const { results } = await getUserInfo({ limit: 40 })
     // if (
     //   results
@@ -408,10 +392,7 @@ const actions = {
     // // 如不使用ability权限控制,可删除以下代码
     // if (ability) dispatch('acl/setAbility', ability, { root: true })
   },
-  async getlicense({
-    commit,
-    dispatch,
-  }) {
+  async getlicense({ commit, dispatch }) {
     const { result } = await license()
     if (result) dispatch('acl/setLicense', result, { root: true })
   },
@@ -435,10 +416,7 @@ const actions = {
    * @description 重置token、roles、ability、router、tabsBar等
    * @param {*} { commit, dispatch }
    */
-  async resetAll({
-    commit,
-    dispatch,
-  }) {
+  async resetAll({ commit, dispatch }) {
     commit('setUsername', '')
     commit('setObejectId', '')
     // commit('setAvatar', '')

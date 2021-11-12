@@ -142,7 +142,7 @@ export function export_table_to_excel(id) {
     new Blob([s2ab(wbout)], {
       type: 'application/octet-stream',
     }),
-    'test.xlsx',
+    'test.xlsx'
   )
 }
 
@@ -181,8 +181,7 @@ export function export_json_to_excel({
           return {
             wch: 10,
           }
-        } else if (val.toString()
-          .charCodeAt(0) > 255) {
+        } else if (val.toString().charCodeAt(0) > 255) {
           return {
             wch: val.toString().length * 2,
           }
@@ -191,7 +190,7 @@ export function export_json_to_excel({
             wch: val.toString().length,
           }
         }
-      }),
+      })
     )
     let result = colWidth[0]
     for (let i = 1; i < colWidth.length; i++) {
@@ -216,6 +215,6 @@ export function export_json_to_excel({
     new Blob([s2ab(wbout)], {
       type: 'application/octet-stream',
     }),
-    `${filename}.${bookType}`,
+    `${filename}.${bookType}`
   )
 }

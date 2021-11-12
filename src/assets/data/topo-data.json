@@ -14,9 +14,7 @@
         {
           "type": "click",
           "action": "visible",
-          "showItems": [
-            "459e668d-74cb-9da0-83de-0344ca2e0bfd"
-          ],
+          "showItems": ["459e668d-74cb-9da0-83de-0344ca2e0bfd"],
           "hideItems": []
         }
       ],
@@ -134,9 +132,7 @@
           "type": "click",
           "action": "visible",
           "showItems": [],
-          "hideItems": [
-            "459e668d-74cb-9da0-83de-0344ca2e0bfd"
-          ]
+          "hideItems": ["459e668d-74cb-9da0-83de-0344ca2e0bfd"]
         }
       ],
       "dataBind": {

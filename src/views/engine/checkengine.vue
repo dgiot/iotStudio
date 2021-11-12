@@ -2,17 +2,11 @@
   <div class="checkengine">
     <!--基本信息-->
     <el-card class="box-card">
-      <div
-        slot="header"
-        class="clearfix"
-      >
+      <div slot="header" class="clearfix">
         <span style="fonty-size: 16px">基本信息</span>
       </div>
       <div class="box-form">
-        <el-form
-          :model="engineform"
-          label-width="80px"
-        >
+        <el-form label-width="80px" :model="engineform">
           <el-form-item label="触发事件:">
             <span>{{ engineform.region }}</span>
           </el-form-item>
@@ -27,10 +21,7 @@
     </el-card>
     <!--度量指标-->
     <el-card class="box-card">
-      <div
-        slot="header"
-        class="clearfix"
-      >
+      <div slot="header" class="clearfix">
         <span>度量指标</span>
       </div>
       <div class="box-table">
@@ -39,67 +30,32 @@
           :default-sort="{ prop: 'date', order: 'descending' }"
           style="width: 100%"
         >
-          <el-table-column
-            label="节点"
-            prop="node"
-          />
-          <el-table-column
-            label="已命中"
-            prop="matched"
-            sortable
-            width="180"
-          />
-          <el-table-column
-            label="命中速度"
-            prop="speed"
-            sortable
-            width="180"
-          />
-          <el-table-column
-            label="最大命中速度"
-            prop="speed_max"
-          />
-          <el-table-column
-            label="5分钟平均速度"
-            prop="speed_last5m"
-          />
+          <el-table-column label="节点" prop="node" />
+          <el-table-column label="已命中" prop="matched" sortable width="180" />
+          <el-table-column label="命中速度" prop="speed" sortable width="180" />
+          <el-table-column label="最大命中速度" prop="speed_max" />
+          <el-table-column label="5分钟平均速度" prop="speed_last5m" />
         </el-table>
       </div>
     </el-card>
     <!--响应动作-->
     <el-card class="box-card">
-      <div
-        slot="header"
-        class="clearfix"
-      >
+      <div slot="header" class="clearfix">
         <span>响应动作</span>
       </div>
       <div class="box-table">
-        <el-table
-          :data="rulesdata"
-          style="width: 100%"
-        >
-          <el-table-column
-            label="类型"
-            prop="name"
-            width="180"
-          />
+        <el-table :data="rulesdata" style="width: 100%">
+          <el-table-column label="类型" prop="name" width="180" />
           <el-table-column label="参数">
-            <template slot-scope="scope">
-              <!-- <el-input type="textarea" :value="JSON.stringify(scope.row.params,null,4)" rows="5" cols="10" readonly></el-input> -->
-              <span>{{ scope.row.params }}</span>
+            <template #default="{ row }">
+              <!-- <el-input type="textarea" :value="JSON.stringify(row.params,null,4)" rows="5" cols="10" readonly></el-input> -->
+              <span>{{ row.params }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            align="center"
-            label="度量指标"
-          >
-            <template slot-scope="scope">
+          <el-table-column align="center" label="度量指标">
+            <template #default="{ row }">
               <ul>
-                <li
-                  v-for="(items, index) in scope.row.metrics"
-                  :key="index"
-                >
+                <li v-for="(items, index) in row.metrics" :key="index">
                   <span style="display: inline-block; width: 120px">
                     {{ items.node }}
                   </span>
@@ -117,10 +73,10 @@
                     合计
                   </span>
                   <span class="type">
-                    {{ '成功:' + allsuccss(scope.row.metrics) }}
+                    {{ '成功:' + allsuccss(row.metrics) }}
                   </span>
                   <span class="type">
-                    {{ '失败:' + allfailed(scope.row.metrics) }}
+                    {{ '失败:' + allfailed(row.metrics) }}
                   </span>
                 </li>
               </ul>

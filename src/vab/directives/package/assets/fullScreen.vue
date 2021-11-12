@@ -1,7 +1,7 @@
 <template>
   <span
-    :style="{ top: top + 'px', position: 'absolute', right: right + 'px' }"
     class="full-screen-icon"
+    :style="{ top: top + 'px', position: 'absolute', right: right + 'px' }"
   >
     <Tooltip
       :content="isFullScreen ? '退出全屏' : '全屏显示'"

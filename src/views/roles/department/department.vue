@@ -3,34 +3,31 @@
     <el-row :gutter="20">
       <el-col :span="6">
         <el-table
+          border
           :data="roletempList"
+          highlight-current-row
           :row-class-name="tableRowClassName"
           :row-style="selectedHighlight"
-          border
-          highlight-current-row
           size="small"
           @row-click="getDetailmenu"
         >
-          <el-table-column
-            :label="$translateTitle('user.name')"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <span>{{ scope.row.data.name }}</span>
-              <span>( {{ scope.row.key }} )</span>
+          <el-table-column align="center" :label="$translateTitle('user.name')">
+            <template #default="{ row }">
+              <span>{{ row.data.name }}</span>
+              <span>( {{ row.key }} )</span>
             </template>
           </el-table-column>
 
           <el-table-column
-            :label="$translateTitle('developer.operation')"
             align="center"
+            :label="$translateTitle('developer.operation')"
             width="180"
           >
-            <template slot-scope="scope">
+            <template #default="{ row }">
               <el-button
                 size="small"
                 type="primary"
-                @click.stop="exportRoletemp(scope.row)"
+                @click.stop="exportRoletemp(row)"
               >
                 <!-- 更新模版 -->
                 {{ $translateTitle('equipment.Updatetemplate') }}
@@ -38,9 +35,7 @@
               <el-button
                 size="small"
                 type="danger"
-                @click.stop="
-                  handleDelete(scope.$index, scope.row, roletempList)
-                "
+                @click.stop="handleDelete(scope.$index, row.roletempList)"
               >
                 <!-- 删除 -->
                 {{ $translateTitle('task.Delete') }}
@@ -99,20 +94,17 @@
             <div class="rolecontrol">
               <el-tree
                 ref="permissionTree"
+                accordion
+                check-on-click-node
                 :data="permissionTreeData"
                 :default-checked-keys="rolePermissonList"
                 :default-expand-all="isExpand"
-                :expand-on-click-node="false"
-                accordion
-                check-on-click-node
                 default-props
+                :expand-on-click-node="false"
                 node-key="name"
                 show-checkbox
               >
-                <span
-                  slot-scope="{ node }"
-                  class="custom-tree-node"
-                >
+                <span slot-scope="{ node }" class="custom-tree-node">
                   <span>{{ node.label }}</span>
                 </span>
               </el-tree>
@@ -168,13 +160,13 @@
             <div class="menucontrol">
               <el-tree
                 ref="menusTree"
+                accordion
+                check-on-click-node
                 :data="menuTreeData"
                 :default-checked-keys="roleMenuList"
                 :default-expand-all="menuExpand"
-                :expand-on-click-node="false"
-                accordion
-                check-on-click-node
                 default-props
+                :expand-on-click-node="false"
                 node-key="objectId"
                 show-checkbox
               >
@@ -200,23 +192,14 @@
           </p>
         </div>
         <div class="tags">
-          <el-form
-            ref="form"
-            :model="form"
-            :rules="Rule"
-            label-width="170px"
-          >
+          <el-form ref="form" label-width="170px" :model="form" :rules="Rule">
             <!-- <el-form-item label="平台">
                     <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
                       <el-option v-for="(item,index) in selectapp" :key="index" :label="item.attributes.subtitle" :value="item.id"></el-option>
                    </el-select>
               </el-form-item>-->
             <el-form-item :label="$translateTitle('application.Accesskey')">
-              <el-input
-                v-model="form.secret"
-                readonly
-                style="width: 80%"
-              >
+              <el-input v-model="form.secret" readonly style="width: 80%">
                 <el-button
                   slot="append"
                   icon="el-icon-refresh-right"
@@ -243,7 +226,7 @@
                 v-model="form.wordpreview"
                 :placheholder="
                   $translateTitle('product.enter1') +
-                    $translateTitle('product.Wordpreviewserver')
+                  $translateTitle('product.Wordpreviewserver')
                 "
                 style="width: 80%"
               />
@@ -255,7 +238,7 @@
                 v-model="form.wordproduct"
                 :placheholder="
                   $translateTitle('product.enter1') +
-                    $translateTitle('product.Wordproductionserver')
+                  $translateTitle('product.Wordproductionserver')
                 "
                 style="width: 80%"
               />
@@ -282,10 +265,7 @@
               />
             </el-form-item>
 
-            <el-form-item
-              label="Graphql API"
-              prop="graphql"
-            >
+            <el-form-item label="Graphql API" prop="graphql">
               <el-input
                 v-model="form.graphql"
                 :placheholder="$translateTitle('product.enter1') + 'url'"
@@ -293,10 +273,7 @@
               />
             </el-form-item>
 
-            <el-form-item
-              label="Restful API"
-              prop="rest"
-            >
+            <el-form-item label="Restful API" prop="rest">
               <el-input
                 v-model="form.rest"
                 :placheholder="$translateTitle('product.enter1') + 'url'"
@@ -309,7 +286,7 @@
                 v-model="form.home"
                 :placheholder="
                   $translateTitle('product.enter1') +
-                    $translateTitle('developer.path')
+                  $translateTitle('developer.path')
                 "
                 style="width: 80%"
               />
@@ -435,7 +412,7 @@
             father.meta && father.meta.title ? father.meta.title : ''
           /* eslint-disable */
           const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parentId,
+            (child) => father.objectId == child.parentId
           )
           branchArr.length > 0 ? (father.children = branchArr) : ''
           return father.parentId == 0
@@ -454,7 +431,8 @@
     },
 
     methods: {
-      expand(tree, isExpand) { // 展开/折叠
+      expand(tree, isExpand) {
+        // 展开/折叠
         this[isExpand] = !this[isExpand]
         console.log('tree', tree, this.$refs[tree], isExpand)
         const nodes = this.$refs[tree].store._getAllNodes()
@@ -465,7 +443,8 @@
           nodes[i].expanded = this[isExpand]
         }
       },
-      checkAll(tree, data) { // 全选
+      checkAll(tree, data) {
+        // 全选
         this.$refs[tree].setCheckedNodes(this[data])
       },
       inverse(tree, data) {
@@ -473,18 +452,19 @@
         let nodes = res.getCheckedNodes(true, true)
         this.batchSelect(this[data], res, true, nodes)
       },
-      checkNot(tree) { // 全不选
+      checkNot(tree) {
+        // 全不选
         this.$refs[tree].setCheckedKeys([])
       },
       // 全选处理方法
       batchSelect(nodes, refs, flag, seleteds) {
         if (typeof nodes != 'undefined') {
-          nodes.forEach(element => {
+          nodes.forEach((element) => {
             refs.setChecked(element, flag, true)
           })
         }
         if (typeof seleteds != 'undefined') {
-          seleteds.forEach(node => {
+          seleteds.forEach((node) => {
             refs.setChecked(node, !flag, true)
           })
         }
@@ -493,8 +473,8 @@
         const ranNum = Math.ceil(Math.random() * 25)
         this.form.secret = Base64.encode(
           String.fromCharCode(65 + ranNum) +
-          Math.ceil(Math.random() * 10000000) +
-          Number(new Date()),
+            Math.ceil(Math.random() * 10000000) +
+            Number(new Date())
         )
       },
       async getMenu() {
@@ -540,18 +520,12 @@
           })
         }
       },
-      tableRowClassName({
-        row,
-        rowIndex,
-      }) {
+      tableRowClassName({ row, rowIndex }) {
         // 把每一行的索引放进row
 
         row.index = rowIndex
       },
-      selectedHighlight({
-        row,
-        rowIndex,
-      }) {
+      selectedHighlight({ row, rowIndex }) {
         if (this.currentSelectIndex === rowIndex) {
           return {
             color: '#409EFF',
@@ -696,7 +670,9 @@
     text-align: center;
   }
 
-  .leftTree, .footerleft, .footerright {
+  .leftTree,
+  .footerleft,
+  .footerright {
     height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
     overflow-x: hidden;
     overflow-y: scroll;

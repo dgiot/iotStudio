@@ -43,15 +43,8 @@
       </el-button>
     </div>
 
-    <el-tabs
-      v-model="activeName"
-      class="normal-tabs"
-      type="card"
-    >
-      <el-tab-pane
-        :label="$translateTitle('clients.basicInfo')"
-        name="basic"
-      >
+    <el-tabs v-model="activeName" class="normal-tabs" type="card">
+      <el-tab-pane :label="$translateTitle('clients.basicInfo')" name="basic">
         <vab-clients-basic :record="basicRecord" />
       </el-tab-pane>
       <el-tab-pane
@@ -120,7 +113,7 @@
             this.$httpDelete(`/clients/${encodeURIComponent(this.clientId)}`)
               .then(() => {
                 this.$message.success(
-                  this.$translateTitle('oper.disconnectSuccess'),
+                  this.$translateTitle('oper.disconnectSuccess')
                 )
                 this.$set(this.basicRecord, 'connected', false)
                 setTimeout(() => {
@@ -129,12 +122,11 @@
               })
               .catch((error) => {
                 this.$message.error(
-                  error || this.$translateTitle('error.networkError'),
+                  error || this.$translateTitle('error.networkError')
                 )
               })
           })
-          .catch(() => {
-          })
+          .catch(() => {})
       },
       loadBasicData() {
         this.$httpGet(`/clients/${encodeURIComponent(this.clientId)}`)
@@ -146,20 +138,18 @@
             }
             this.loadSubscription()
           })
-          .catch(() => {
-          })
+          .catch(() => {})
       },
       loadSubscription() {
         this.$httpGet(
           `/nodes/${this.nodeName}/subscriptions/${encodeURIComponent(
-            this.clientId,
-          )}`,
+            this.clientId
+          )}`
         )
           .then((res) => {
             this.subscriptionsData = res.data
           })
-          .catch(() => {
-          })
+          .catch(() => {})
       },
     },
   }

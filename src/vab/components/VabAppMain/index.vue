@@ -1,10 +1,7 @@
 <template>
   <div class="vab-app-main">
     <section>
-      <transition
-        mode="out-in"
-        name="fade-transform"
-      >
+      <transition mode="out-in" name="fade-transform">
         <vab-keep-alive v-if="routerView" />
       </transition>
     </section>
@@ -36,9 +33,9 @@
               .filter(
                 (item) =>
                   !item.meta.noKeepAlive &&
-                  item.name !== this.extra.transferRouteName,
+                  item.name !== this.extra.transferRouteName
               )
-              .flatMap((item) => item.matched),
+              .flatMap((item) => item.matched)
           ),
         ]
       },

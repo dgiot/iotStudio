@@ -2,7 +2,7 @@ name: ci
 
 on:
   pull_request:
-    types: [ opened, synchronize, edited ]
+    types: [opened, synchronize, edited]
   workflow_dispatch:
 
 jobs:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [ "16" ]
+        node: ['16']
     steps:
       - uses: actions/checkout@v2
       - name: Setup Node

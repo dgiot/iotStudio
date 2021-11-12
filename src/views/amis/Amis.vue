@@ -1,8 +1,5 @@
 <template>
-  <Vab-amis
-    :key="amisKey"
-    :schema="amisJson"
-  />
+  <Vab-amis :key="amisKey" :schema="amisJson" />
 </template>
 
 <script>
@@ -11,15 +8,14 @@
   export default {
     name: 'AmisDemo',
     data() {
-      return {
-
-      }
+      return {}
     },
     computed: {
       ...mapGetters({
         amisJson: 'amis/amisJson',
       }),
-    },    watch: {
+    },
+    watch: {
       amisJson: {
         handler(val) {
           console.log(val)

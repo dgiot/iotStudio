@@ -1,44 +1,32 @@
 <template>
   <div>
     <el-dialog
+      append-to-body
       :title="$translateTitle('topo.topo') + $translateTitle('topo.tag')"
       :visible.sync="tagDialog"
-      append-to-body
       width="50%"
     >
       <span>这是一段信息</span>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-button @click="tagDialog = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="tagDialog = false"
-        >确 定</el-button>
+        <el-button type="primary" @click="tagDialog = false">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog
+      append-to-body
       :title="$translateTitle('topo.topo') + $translateTitle('topo.thing')"
       :visible.sync="thingDialog"
-      append-to-body
       width="50%"
     >
       <span>这是一段信息</span>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-button @click="thingDialog = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="thingDialog = false"
-        >确 定</el-button>
+        <el-button type="primary" @click="thingDialog = false">确 定</el-button>
       </span>
     </el-dialog>
     <div
-      :class="{ 'topoBase-fullscreen': isDevice }"
       class="topoBase"
+      :class="{ 'topoBase-fullscreen': isDevice }"
       @contextmenu="showMenu"
     >
       <vue-context-menu
@@ -52,11 +40,7 @@
         @moveUp="contextMenu('moveUp')"
       />
       <topo-scale style="position: fixed; display: inline-block" />
-      <div
-        id="kevCurrent"
-        :key="Sale"
-        class="konvaTest"
-      ></div>
+      <div id="kevCurrent" :key="Sale" class="konvaTest"></div>
     </div>
   </div>
 </template>
@@ -155,8 +139,7 @@
       },
     },
     watch: {},
-    mounted() {
-    },
+    mounted() {},
     methods: {
       ...mapMutations({
         contextMenu: 'topo/contextMenu',

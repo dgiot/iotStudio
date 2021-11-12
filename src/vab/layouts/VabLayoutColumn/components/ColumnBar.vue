@@ -1,10 +1,10 @@
 <template>
   <el-scrollbar
+    class="column-bar-container"
     :class="{
       'is-collapse': collapse,
       ['column-bar-container-' + theme.columnStyle]: true,
     }"
-    class="column-bar-container"
   >
     <vab-logo />
     <el-tabs
@@ -19,11 +19,11 @@
       >
         <template slot="label">
           <div
+            class="column-grid"
             :class="{
               ['column-grid-' + theme.columnStyle]: true,
             }"
             :title="$translateTitle(`route.${item.meta.title}`)"
-            class="column-grid"
           >
             <div>
               <el-image
@@ -35,8 +35,8 @@
                 <img
                   slot="error"
                   :src="$FileServe + item.meta.icon"
-                  :title="$FileServe + item.meta.icon"
                   style="width: 16px; height: 16px"
+                  :title="$FileServe + item.meta.icon"
                 />
               </el-image>
               <vab-icon
@@ -58,18 +58,14 @@
       :background-color="variables['column-second-menu-background']"
       :default-active="activeMenu"
       :default-openeds="defaultOpeneds"
-      :unique-opened="uniqueOpened"
       mode="vertical"
+      :unique-opened="uniqueOpened"
     >
       <el-divider>
         {{ $translateTitle(handleGroupTitle) }}
       </el-divider>
       <template v-for="route in handlePartialRoutes">
-        <vab-menu
-          v-if="!route.hidden"
-          :key="route.path"
-          :item="route"
-        />
+        <vab-menu v-if="!route.hidden" :key="route.path" :item="route" />
       </template>
     </el-menu>
   </el-scrollbar>

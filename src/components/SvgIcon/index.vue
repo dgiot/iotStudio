@@ -1,10 +1,9 @@
 <template>
-  <svg
-    :class="svgClass"
-    aria-hidden="true"
-  >
-    <use :xlink:href="iconName" />
-  </svg>
+  <div>
+    <svg aria-hidden="true" :class="svgClass">
+      <use :xlink:href="iconName" />
+    </svg>
+  </div>
 </template>
 
 <script>

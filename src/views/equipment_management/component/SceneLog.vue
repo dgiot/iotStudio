@@ -1,16 +1,13 @@
 <template>
-  <div
-    :class="{ 'vab-fullscreen': isFullscreen }"
-    class="logs logs-container"
-  >
+  <div class="logs logs-container" :class="{ 'vab-fullscreen': isFullscreen }">
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form
           v-if="!$loadsh.isEmpty(queryForm)"
           ref="form"
           :inline="true"
-          :model="queryForm"
           label-width="80px"
+          :model="queryForm"
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('device.tracetype')">
@@ -28,11 +25,11 @@
           <el-form-item :label="$translateTitle('device.action')">
             <el-switch
               v-model="queryForm.action"
-              :active-text="$translateTitle('device.start')"
-              :inactive-text="$translateTitle('device.stop')"
               active-color="#13ce66"
+              :active-text="$translateTitle('device.start')"
               active-value="start"
               inactive-color="#ff4949"
+              :inactive-text="$translateTitle('device.stop')"
               inactive-value="stop"
               style="display: block"
               @change="starttrace"
@@ -50,19 +47,10 @@
                 "
               />
             </el-button>
-            <el-popover
-              v-show="scroketMsg.length"
-              trigger="hover"
-            >
+            <el-popover v-show="scroketMsg.length" trigger="hover">
               <el-checkbox-group v-model="checkList">
-                <vue-draggable
-                  :list="logcolumns"
-                  v-bind="dragOptions"
-                >
-                  <div
-                    v-for="(item, index) in logcolumns"
-                    :key="item + index"
-                  >
+                <vue-draggable :list="logcolumns" v-bind="dragOptions">
+                  <div v-for="(item, index) in logcolumns" :key="item + index">
                     <vab-icon icon="drag-drop-line" />
                     <el-checkbox
                       :disabled="item.disableCheck === true"
@@ -84,10 +72,7 @@
               </template>
             </el-popover>
           </el-form-item>
-          <el-form-item
-            :label="$translateTitle('device.topic')"
-            prop="product"
-          >
+          <el-form-item :label="$translateTitle('device.topic')" prop="product">
             <el-select v-model="instructtopic">
               <el-option
                 v-for="(item, index) in producttopic"
@@ -104,10 +89,7 @@
             <el-input v-model="instruct" />
           </el-form-item>
           <el-form-item>
-            <el-button
-              type="primary"
-              @click="sendinstruct()"
-            >
+            <el-button type="primary" @click="sendinstruct()">
               {{ $translateTitle('device.sendinstruct') }}
             </el-button>
           </el-form-item>
@@ -128,6 +110,7 @@
               ? Number($baseTableHeight(0)) + 80
               : Number($baseTableHeight(0)) + 40
           "
+          lang="json"
           :max-lines="
             isFullscreen
               ? Number($baseTableHeight(0) + 80) / 12
@@ -138,7 +121,6 @@
               ? Number($baseTableHeight(0) + 80) / 12
               : Number($baseTableHeight(0) - 80) / 12
           "
-          lang="json"
           theme="gob"
         />
       </a-tab-pane>
@@ -150,41 +132,34 @@
         <el-table
           :key="finallyColumns.length + momentKey"
           ref="dragTable"
-          :data="scroketMsg"
-          :height="height"
-          :row-class-name="tableRowClassName"
           border
           class="logs-table"
+          :data="scroketMsg"
           default-expand-all
+          :height="height"
           highlight-current-row
           resizable
+          :row-class-name="tableRowClassName"
           stripe
         >
           <el-table-column
             v-for="(item, index) in finallyColumns"
             :key="index"
+            align="center"
             :label="item"
             :prop="item"
+            show-overflow-tooltip
+            sortable
             :width="
               w80.includes(item) ? 80 : Wh120.includes(item) ? 120 : 'auto'
             "
-            align="center"
-            show-overflow-tooltip
-            sortable
           />
           <el-table-column type="expand">
             <template slot-scope="props">
-              <el-descriptions
-                :column="2"
-                border
-                class="margin-top"
-              >
+              <el-descriptions border class="margin-top" :column="2">
                 <el-descriptions-item>
                   <template slot="label">
-                    <i
-                      v-copy="props.row.msg"
-                      class="el-icon-copy-document"
-                    ></i>
+                    <i v-copy="props.row.msg" class="el-icon-copy-document"></i>
                   </template>
                   {{ props.row.msg }}
                 </el-descriptions-item>
@@ -246,8 +221,7 @@
         topic: '',
         logMqtt: {
           channeltopic: '',
-          key: moment(new Date())
-            .valueOf(),
+          key: moment(new Date()).valueOf(),
         },
         subtopic: '',
         router: '',
@@ -256,8 +230,7 @@
         isFullscreen: false,
         height: this.$baseTableHeight(0),
         logdata: [],
-        momentKey: moment(new Date())
-          .valueOf(),
+        momentKey: moment(new Date()).valueOf(),
         checkList: ['time', 'topic', 'pid', 'peername'],
         logcolumns: [
           'topic',
@@ -332,40 +305,28 @@
       this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
       this.get_topic()
     },
-    created() {
-    },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    created() {},
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       get_topic() {
         // this.deviceInfo
         console.log('this.deviceInfo', this.deviceInfo)
-        getProduct(this.deviceInfo.product.objectId)
-          .then(res => {
-            this.producttopic = res.topics
-          })
+        getProduct(this.deviceInfo.product.objectId).then((res) => {
+          this.producttopic = res.topics
+        })
       },
       sendinstruct() {
-        const pubtopic = this.instructtopic.replace('${DevAddr}', this.deviceInfo.devaddr)
-        this.$dgiotBus.$emit(
-          `MqttPublish`,
-          pubtopic,
-          this.instruct,
-          0,
-          false,
+        const pubtopic = this.instructtopic.replace(
+          '${DevAddr}',
+          this.deviceInfo.devaddr
         )
+        this.$dgiotBus.$emit(`MqttPublish`, pubtopic, this.instruct, 0, false)
       },
       handleHeight() {
         this.isFullscreen = !this.isFullscreen
@@ -374,8 +335,7 @@
         } else {
           this.height = this.$baseTableHeight(0)
         }
-        this.momentKey = moment(new Date())
-          .valueOf()
+        this.momentKey = moment(new Date()).valueOf()
       },
       // 设置表格row的class
       tableRowClassName({ row }) {
@@ -388,16 +348,13 @@
       rowDrop() {
         // 此时找到的元素是要拖拽元素的父容器
         const tbody = this.$refs.dragTable.$el.querySelector(
-          '.el-table__body-wrapper tbody',
+          '.el-table__body-wrapper tbody'
         )
         const _this = this
         Sortable.create(tbody, {
           //  指定父元素下可被拖拽的子元素
           draggable: '.el-table__row',
-          onEnd({
-            newIndex,
-            oldIndex,
-          }) {
+          onEnd({ newIndex, oldIndex }) {
             const currRow = _this.logdata.splice(oldIndex, 1)[0]
             _this.logdata.splice(newIndex, 0, currRow)
           },
@@ -407,7 +364,7 @@
       columnDrop() {
         const _this = this
         const wrapperTr = this.$refs.dragTable.$el.querySelector(
-          '.el-table__header-wrapper tr',
+          '.el-table__header-wrapper tr'
         )
         _this.sortable = Sortable.create(wrapperTr, {
           animation: 180,
@@ -416,8 +373,7 @@
             const oldItem = _this.finallyColumns[evt.oldIndex]
             _this.finallyColumns.splice(evt.oldIndex, 1)
             _this.finallyColumns.splice(evt.newIndex, 0, oldItem)
-            _this.momentKey = moment(new Date())
-              .valueOf()
+            _this.momentKey = moment(new Date()).valueOf()
             setTimeout(() => {
               _this.rowDrop()
               _this.columnDrop()
@@ -458,13 +414,7 @@
         }
         //   :
         const loading = this.$baseColorfullLoading()
-        const {
-          level,
-          action,
-          order,
-          deviceid,
-          tracetype,
-        } = this.queryForm
+        const { level, action, order, deviceid, tracetype } = this.queryForm
         const handle =
           this.queryForm.tracetype == 'clientid'
             ? this.queryForm.deviceid
@@ -482,22 +432,18 @@
           postTrace(params)
             .then((res) => {
               console.log(res)
-              const {
-                code = 0,
-                error = '',
-                msg = '',
-              } = res
+              const { code = 0, error = '', msg = '' } = res
               if (code == 200) {
                 this.$baseMessage(
                   this.$translateTitle('alert.Data request successfully'),
                   'success',
-                  'vab-hey-message-success',
+                  'vab-hey-message-success'
                 )
               } else {
                 this.$baseMessage(
                   this.$translateTitle('alert.Data request error') + `${error}`,
                   'error',
-                  'vab-hey-message-error',
+                  'vab-hey-message-error'
                 )
               }
             })
@@ -506,7 +452,7 @@
               this.$baseMessage(
                 this.$translateTitle('alert.Data request error') + `${error}`,
                 'error',
-                'vab-hey-message-error',
+                'vab-hey-message-error'
               )
             })
 
@@ -517,18 +463,13 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error',
+            'vab-hey-message-error'
           )
         }
-        this.momentKey = moment(new Date())
-          .valueOf()
+        this.momentKey = moment(new Date()).valueOf()
       },
       MqttUnbscribe() {
-        this.$dgiotBus.$emit(
-          'MqttUnbscribe',
-          this.topicKey,
-          this.subtopic,
-        )
+        this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
       },
     },
   }

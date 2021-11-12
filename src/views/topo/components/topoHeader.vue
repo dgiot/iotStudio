@@ -1,32 +1,21 @@
 <!-- 组件说明 -->
 <template>
   <div class="topo-header">
-    <el-drawer
-      v-drawerDrag
-      :visible.sync="infoVisible"
-      size="100%"
-    >
-      <div
-        id="konva_preview"
-        :key="konva_key"
-        class="konva_preview"
-      ></div>
+    <el-drawer v-drawerDrag size="100%" :visible.sync="infoVisible">
+      <div id="konva_preview" :key="konva_key" class="konva_preview"></div>
     </el-drawer>
     <div class="topo-header-drawer">
       <el-drawer
-        :visible.sync="drawer"
-        :with-header="false"
         append-to-body
         direction="rtl"
         size="40%"
+        :visible.sync="drawer"
+        :with-header="false"
       >
         <!--        <websocket :topic="topic" />-->
       </el-drawer>
     </div>
-    <vab-input
-      ref="uploadFinish"
-      @fileInfo="fileInfo"
-    />
+    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="topo-header-top">
       <vab-query-form class="topo-header-top-query">
         <vab-query-form-left-panel class="topo-header-top-query-left-panel">
@@ -114,28 +103,19 @@
           <!--            </a>-->
           <!--          </a-dropdown>-->
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a
-              class="ant-dropdown-link"
-              @click="saveTopo"
-            >
+            <a class="ant-dropdown-link" @click="saveTopo">
               <a-icon type="save" />
               <p>{{ $translateTitle('konva.save') }}</p>
             </a>
           </a-dropdown>
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a
-              class="ant-dropdown-link"
-              @click="eyeTopo"
-            >
+            <a class="ant-dropdown-link" @click="eyeTopo">
               <a-icon type="eye" />
               <p>{{ $translateTitle('application.preview') }}</p>
             </a>
           </a-dropdown>
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a
-              v-copyText="copyText"
-              class="ant-dropdown-link"
-            >
+            <a v-copyText="copyText" class="ant-dropdown-link">
               <a-icon type="share-alt" />
               <p>{{ $translateTitle('konva.share') }}</p>
             </a>
@@ -194,8 +174,7 @@
     },
     data() {
       return {
-        konva_key: moment(new Date())
-          .valueOf(),
+        konva_key: moment(new Date()).valueOf(),
         infoVisible: false,
         topic: '',
         isshow: true,
@@ -236,18 +215,12 @@
         }
       })
     },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    activated() {
-    },
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    activated() {},
     methods: {
       ...mapMutations({
         initKonva: 'topo/initKonva',
@@ -270,8 +243,7 @@
             id: 'konva_preview',
           })
         })
-        this.konva_key = moment(new Date())
-          .valueOf()
+        this.konva_key = moment(new Date()).valueOf()
       },
       handFullscreen() {
         this.$parent.$parent.$parent.isFullscreen =
@@ -306,8 +278,7 @@
       flagFn(v) {
         if (v == 'text') {
           this.setDrawParams({
-            text: '请输入相关文字' + moment()
-              .format('x'),
+            text: '请输入相关文字' + moment().format('x'),
           })
         }
 
@@ -328,7 +299,7 @@
       },
       showImageTable(type) {
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
         // this.isshow = !this.isshow
         // this.$emit('ImageTable', type)

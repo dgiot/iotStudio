@@ -9,10 +9,7 @@
           style="width: 100%"
           @current-change="handleCurrentChange"
         >
-          <el-table-column
-            label="ID"
-            prop="objectId"
-          />
+          <el-table-column label="ID" prop="objectId" />
           <!-- <el-table-column prop="name" label="产品名称" /> -->
           <el-table-column
             :label="$translateTitle('task.productname')"
@@ -66,25 +63,13 @@
                 <!-- 设为公共 -->
                 {{ $translateTitle('product.setaspublic') }}
               </el-button>
-              <el-button
-                size="small"
-                type="primary"
-                @click="chaxun"
-              >
+              <el-button size="small" type="primary" @click="chaxun">
                 {{ $translateTitle('product.publicagreementlibrary') }}
               </el-button>
-              <el-button
-                size="small"
-                type="primary"
-                @click="protol"
-              >
+              <el-button size="small" type="primary" @click="protol">
                 {{ $translateTitle('product.compile') }}
               </el-button>
-              <el-button
-                size="small"
-                type="success"
-                @click="updatesubdialog"
-              >
+              <el-button size="small" type="success" @click="updatesubdialog">
                 <!-- 热加载 -->
                 {{ $translateTitle('product.thermalloading') }}
               </el-button>
@@ -113,30 +98,27 @@
             style="width: 100%"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column
-              type="selection"
-              width="55"
-            />
+            <el-table-column type="selection" width="55" />
             <el-table-column
               :label="$translateTitle('developer.channelnumber')"
             >
-              <template slot-scope="scope">
-                <span>{{ scope.row.objectId }}</span>
+              <template #default="{ row }">
+                <span>{{ row.objectId }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$translateTitle('developer.channelname')">
-              <template slot-scope="scope">
-                <span>{{ scope.row.name }}</span>
+              <template #default="{ row }">
+                <span>{{ row.name }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$translateTitle('developer.channeladdr')">
-              <template slot-scope="scope">
-                <span>{{ 'channel/' + scope.row.objectId }}</span>
+              <template #default="{ row }">
+                <span>{{ 'channel/' + row.objectId }}</span>
               </template>
             </el-table-column>
             <el-table-column :label="$translateTitle('developer.channeltype')">
-              <template slot-scope="scope">
-                <span v-if="scope.row.type == 1">
+              <template #default="{ row }">
+                <span v-if="row.type == 1">
                   {{ $translateTitle('developer.collectionchannel') }}
                 </span>
                 <span v-else>
@@ -145,20 +127,14 @@
               </template>
             </el-table-column>
             <el-table-column :label="$translateTitle('developer.servicetype')">
-              <template slot-scope="scope">
-                <span>{{ scope.row.cType }}</span>
+              <template #default="{ row }">
+                <span>{{ row.cType }}</span>
               </template>
             </el-table-column>
           </el-table>
-          <div
-            slot="footer"
-            class="dialog-footer"
-          >
+          <div slot="footer" class="dialog-footer">
             <!-- <el-button type="primary" @click.native="updateAllChannel">确定</el-button> -->
-            <el-button
-              type="primary"
-              @click.native="updateAllChannel"
-            >
+            <el-button type="primary" @click.native="updateAllChannel">
               <!-- 确定 -->
               {{ $translateTitle('developer.determine') }}
             </el-button>
@@ -177,70 +153,63 @@
             style="width: 100%; margin-top: 20px; text-align: center"
           >
             <el-table-column
+              align="center"
               :label="$translateTitle('product.protocolname')"
-              align="center"
             >
-              <template slot-scope="scope">
-                <span>{{ scope.row.data.name }}</span>
+              <template #default="{ row }">
+                <span>{{ row.data.name }}</span>
               </template>
             </el-table-column>
             <el-table-column
+              align="center"
               :label="$translateTitle('plugins.version')"
-              align="center"
             >
-              <template slot-scope="scope">
-                <span>{{ scope.row.data.version }}</span>
+              <template #default="{ row }">
+                <span>{{ row.data.version }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              :label="$translateTitle('developer.describe')"
               align="center"
+              :label="$translateTitle('developer.describe')"
             >
-              <template slot-scope="scope">
-                <span>{{ scope.row.data.desc }}</span>
+              <template #default="{ row }">
+                <span>{{ row.data.desc }}</span>
               </template>
             </el-table-column>
             <!-- <el-table-column label="创建时间" align="center"> -->
             <el-table-column
-              :label="$translateTitle('application.createtime')"
               align="center"
+              :label="$translateTitle('application.createtime')"
             >
-              <template slot-scope="scope">
-                <span>{{ utc2beijing(scope.row.createdAt) }}</span>
+              <template #default="{ row }">
+                <span>{{ utc2beijing(row.createdAt) }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              :label="$translateTitle('developer.operation')"
               align="center"
+              :label="$translateTitle('developer.operation')"
               width="200"
             >
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  type="primary"
-                  @click="editordata(scope.row)"
-                >
+              <template #default="{ row }">
+                <el-button size="mini" type="primary" @click="editordata(row)">
                   {{ $translateTitle('product.clone') }}
                 </el-button>
                 <el-button
                   size="mini"
                   type="danger"
-                  @click="deletedata(scope.row.ObjectId)"
+                  @click="deletedata(row.ObjectId)"
                 >
                   {{ $translateTitle('developer.delete') }}
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
-          <div
-            class="elpagination"
-            style="padding: 20px 0"
-          >
+          <div class="elpagination" style="padding: 20px 0">
             <el-pagination
+              layout="total, sizes, prev, pager, next, jumper"
               :page-size="decoderlength"
               :page-sizes="[10, 20, 30, 50]"
               :total="decodertotal"
-              layout="total, sizes, prev, pager, next, jumper"
               @current-change="devicerCurrentChange"
               @size-change="decoderSizeChange"
             />
@@ -248,7 +217,7 @@
         </el-dialog>
         <div v-if="AllDict">
           <div style="background: #ffffff">
-            <label id="plug-name" />
+            <label id="plug-name1" />
           </div>
           <pre
             id="editor"
@@ -407,58 +376,57 @@
           enableSnippets: true,
           enableLiveAutocompletion: true, // 设置自动提示
         })
-        this.$get_object('Product', productId)
-          .then((response) => {
-            if (response) {
-              console.log('response', response.decoder)
-              this.productName = response.name
-              for (var key in response) {
-                this.productdetail[key] = response[key]
-              }
-              this.option.map((items) => {
-                if (this.productdetail.category == items.value) {
-                  this.productdetail.category = items.label
-                }
-              })
-              this.productdetail.createdAt = this.utc2beijing(response.createdAt)
-              this.productdetail.id = response.id
-              this.dynamicReg = response.dynamicReg
-              this.productdetail.isshow = 0
-              this.form.Productname = response.name
-              this.ProductSecret = response.productSecret
-              this.form.Productkey = this.productId
-              // window.location.origin
-              this.productimg = response.icon
-              if (response.decoder) {
-                setdata = response.decoder.code
-                this.thingsParseModel.name = response.decoder.name
-                this.thingsParseModel.version = response.decoder.version
-                this.thingsParseModel.desc = response.decoder.desc
-              } else {
-                this.$baseMessage('暂无decoder,将显示默认值', 'warning', false)
-                setdata =
-                  'JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4='
-              }
-              if (!this.productdetail.thing) {
-                this.productdetail.thing = {
-                  properties: [],
-                }
-              }
-
-              this.wmxData = this.productdetail.thing.properties.filter(
-                (item) => {
-                  return item.name && item.dataType
-                },
-              )
-
-              editor.setValue(Base64.decode(setdata))
-
-              editor.gotoLine(editor.session.getLength())
-              // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
-
-              this.queryDeviceCount(this.productId)
+        this.$get_object('Product', productId).then((response) => {
+          if (response) {
+            console.log('response', response.decoder)
+            this.productName = response.name
+            for (var key in response) {
+              this.productdetail[key] = response[key]
             }
-          })
+            this.option.map((items) => {
+              if (this.productdetail.category == items.value) {
+                this.productdetail.category = items.label
+              }
+            })
+            this.productdetail.createdAt = this.utc2beijing(response.createdAt)
+            this.productdetail.id = response.id
+            this.dynamicReg = response.dynamicReg
+            this.productdetail.isshow = 0
+            this.form.Productname = response.name
+            this.ProductSecret = response.productSecret
+            this.form.Productkey = this.productId
+            // window.location.origin
+            this.productimg = response.icon
+            if (response.decoder) {
+              setdata = response.decoder.code
+              this.thingsParseModel.name = response.decoder.name
+              this.thingsParseModel.version = response.decoder.version
+              this.thingsParseModel.desc = response.decoder.desc
+            } else {
+              this.$baseMessage('暂无decoder,将显示默认值', 'warning', false)
+              setdata =
+                'JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4='
+            }
+            if (!this.productdetail.thing) {
+              this.productdetail.thing = {
+                properties: [],
+              }
+            }
+
+            this.wmxData = this.productdetail.thing.properties.filter(
+              (item) => {
+                return item.name && item.dataType
+              }
+            )
+
+            editor.setValue(Base64.decode(setdata))
+
+            editor.gotoLine(editor.session.getLength())
+            // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
+
+            this.queryDeviceCount(this.productId)
+          }
+        })
       },
       // 查询设备总数
       async queryDeviceCount(productId) {
@@ -496,23 +464,22 @@
             const params = {
               decoder: obj,
             }
-            this.$update_object('Product', this.productId, params)
-              .then(
-                (res) => {
-                  if (this.issub == false) {
-                    this.$message({
-                      type: 'success',
-                      message: '保存成功',
-                    })
-                    if (istrue == true) {
-                      isupdatetrue += '保存成功'
-                      editor2.setValue(isupdatetrue)
-                    }
-                  } else {
+            this.$update_object('Product', this.productId, params).then(
+              (res) => {
+                if (this.issub == false) {
+                  this.$message({
+                    type: 'success',
+                    message: '保存成功',
+                  })
+                  if (istrue == true) {
+                    isupdatetrue += '保存成功'
+                    editor2.setValue(isupdatetrue)
                   }
-                  this.issub = true
-                },
-              )
+                } else {
+                }
+                this.issub = true
+              }
+            )
           } else {
             this.$message({
               type: 'warning',
@@ -530,47 +497,45 @@
                 'data.version': this.thingsParseModel.version,
               },
             }
-            this.$query_object('Dict', params)
-              .then((response) => {
-                if (response.results && response.results.length >= 1) {
-                  this.$message('此协议版本已存在')
-                  return
-                } else {
-                  this.$get_object('Product', this.productId)
-                    .then((response) => {
-                      if (response) {
-                        var obj = {
-                          name: this.thingsParseModel.name,
-                          version: this.thingsParseModel.version,
-                          code: Base64.encode(editor.getValue()),
-                          desc: this.thingsParseModel.desc,
-                        }
-                        const params = {
-                          type: 'decoder',
-                          data: obj,
-                          ACL: response.ACL,
-                        }
-                        this.$create_object('Dict', params)
-                          .then((resultes) => {
-                            if (resultes.error) {
-                              this.$message({
-                                type: 'error',
-                                message: resultes.error,
-                              })
-                            } else {
-                              this.$message({
-                                type: 'success',
-                                message: '保存到公共协议库成功',
-                              })
-                            }
+            this.$query_object('Dict', params).then((response) => {
+              if (response.results && response.results.length >= 1) {
+                this.$message('此协议版本已存在')
+                return
+              } else {
+                this.$get_object('Product', this.productId).then((response) => {
+                  if (response) {
+                    var obj = {
+                      name: this.thingsParseModel.name,
+                      version: this.thingsParseModel.version,
+                      code: Base64.encode(editor.getValue()),
+                      desc: this.thingsParseModel.desc,
+                    }
+                    const params = {
+                      type: 'decoder',
+                      data: obj,
+                      ACL: response.ACL,
+                    }
+                    this.$create_object('Dict', params)
+                      .then((resultes) => {
+                        if (resultes.error) {
+                          this.$message({
+                            type: 'error',
+                            message: resultes.error,
                           })
-                          .catch((e) => {
-                            console.log(e)
+                        } else {
+                          this.$message({
+                            type: 'success',
+                            message: '保存到公共协议库成功',
                           })
-                      }
-                    })
-                }
-              })
+                        }
+                      })
+                      .catch((e) => {
+                        console.log(e)
+                      })
+                  }
+                })
+              }
+            })
           } else {
             this.$message({
               type: 'warning',
@@ -604,7 +569,7 @@
                   .catch((error) => {
                     reject(error)
                   })
-              }),
+              })
             )
           })
           Promise.all(arr)
@@ -645,13 +610,12 @@
         }
       },
       deletedata(ObjectId) {
-        this.$del_object('Dict', ObjectId)
-          .then((resultes) => {
-            if (resultes) {
-              this.$message('成功删除')
-              this.chaxun()
-            }
-          })
+        this.$del_object('Dict', ObjectId).then((resultes) => {
+          if (resultes) {
+            this.$message('成功删除')
+            this.chaxun()
+          }
+        })
       },
       // 热加载弹窗
       updatesubdialog() {
@@ -686,14 +650,13 @@
             type: 'decoder',
           },
         }
-        this.$query_object('Dict', params)
-          .then((res) => {
-            if (res) {
-              this.decodertotal = res.count
-              this.dialogTableVisible = true
-              this.gridData = res.results
-            }
-          })
+        this.$query_object('Dict', params).then((res) => {
+          if (res) {
+            this.decodertotal = res.count
+            this.dialogTableVisible = true
+            this.gridData = res.results
+          }
+        })
       },
       // 协议编辑
       protol() {

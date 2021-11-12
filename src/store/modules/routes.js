@@ -75,7 +75,7 @@ const actions = {
         '路由未正常返回！',
         'error',
         false,
-        'vab-hey-message-error',
+        'vab-hey-message-error'
       )
       return false
     }
@@ -135,7 +135,7 @@ const actions = {
           '后端没有正确的返回路由,将展示默认路由',
           'error',
           false,
-          'vab-hey-message-error',
+          'vab-hey-message-error'
         )
         data = _defaultRoutes
       }

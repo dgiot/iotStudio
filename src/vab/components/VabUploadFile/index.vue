@@ -5,12 +5,12 @@
       <el-upload
         ref="upload"
         :accept="accept"
+        action=""
         :auto-upload="false"
         :before-upload="FileRequest"
-        :on-exceed="handleExceed"
-        action=""
         class="upload-demo"
         drag
+        :on-exceed="handleExceed"
       >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">
@@ -28,37 +28,28 @@
       </el-button>
     </div>
     <!--遮罩层-->
-    <div
-      v-if="loading"
-      class="loading"
-    >
+    <div v-if="loading" class="loading">
       <h4 class="tips">
         {{ tips }}
       </h4>
       <!--进度条-->
       <el-progress
+        class="progress"
         :percentage="percentage"
         :show-text="true"
-        class="progress"
         type="line"
       />
     </div>
     <!--上传完成提示对话框-->
     <el-dialog
       :append-to-body="true"
-      :visible="dialogVisible"
       title="提示"
+      :visible="dialogVisible"
       width="30%"
     >
       <span>文件上传成功</span>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          type="primary"
-          @click.native="ensure"
-        >确 定</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click.native="ensure">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -117,8 +108,7 @@
             console.log('出错了', e)
           })
       },
-      handleExceed() {
-      },
+      handleExceed() {},
       submitUpload() {
         const fileList = this.$refs.upload.fileList
         if (fileList.length) {

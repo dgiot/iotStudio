@@ -133,18 +133,16 @@
       this.$dgiotBus.$emit(
         'MqttUnbscribe',
         this.$dgiotBus.topicKey(this.router + this.topotopic),
-        this.topotopic,
+        this.topotopic
       )
     },
-    created() {
-    },
+    created() {},
     methods: {
       ...mapMutations({
         initKonva: 'topo/initKonva',
         createThing: 'topo/createThing',
       }),
-      saveKonvaitem() {
-      },
+      saveKonvaitem() {},
       async handleMqtt() {
         let _this = this
         if (_this.$route.query.type == 'device') {
@@ -152,18 +150,12 @@
         }
         const loading = _this.$baseColorfullLoading(3)
         try {
-          const {
-            productid,
-            devaddr = undefined,
-          } = _this.$route.query
+          const { productid, devaddr = undefined } = _this.$route.query
           let params = {
             productid: productid,
             devaddr: devaddr,
           }
-          const {
-            message = '',
-            data = {},
-          } = await _getTopo(params)
+          const { message = '', data = {} } = await _getTopo(params)
           // 绘制前不光需要获取到组态数据，还需要获取产品数据
           const { results = [] } = await queryProduct({
             where: { objectId: _this.$route.query.productid },
@@ -175,16 +167,16 @@
             _this.$refs['operation']
               ? (_this.$refs['operation'].productconfig = results[0])
               : console.log(
-                ' _this.$refs[\'operation\']',
-                _this.$refs['operation'],
-              )
+                  " _this.$refs['operation']",
+                  _this.$refs['operation']
+                )
             _this.globalStageid = data.Stage.attrs.id
             // _this.createKonva(data, _this.globalStageid, 'create')
             _this.paramsconfig = { konva: data }
             //
             console.log(
               'topo info msg 请求数据有组态 就设置这个组态为请求回来的组态',
-              data.Stage,
+              data.Stage
             )
             await _this.initKonva({
               data: data.Stage,
@@ -194,7 +186,7 @@
             this.$message.info('暂无组态。显示默认组态')
             console.log(
               'topo info msg 请求数据没有组态 就设置这个组态为默认',
-              this.Stage,
+              this.Stage
             )
             await _this.initKonva({
               data: this.Stage,
@@ -258,7 +250,7 @@
           &-baseContainer {
             height: calc(
               100vh - #{$base-top-bar-height} * 2.7 - #{$base-padding} * 2 -
-              90px
+                90px
             ) !important;
           }
         }

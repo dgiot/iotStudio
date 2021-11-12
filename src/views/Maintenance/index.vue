@@ -35,15 +35,15 @@
       <vab-query-form-top-panel>
         <el-form
           :inline="true"
-          :model="queryForm"
           label-width="auto"
+          :model="queryForm"
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('Maintenance.Ticket number')">
             <el-input
               v-model.trim="queryForm.number"
-              :placeholder="$translateTitle('Maintenance.Ticket number')"
               clearable
+              :placeholder="$translateTitle('Maintenance.Ticket number')"
             />
           </el-form-item>
           <el-form-item :label="$translateTitle('Maintenance.project')">
@@ -80,8 +80,8 @@
             <el-date-picker
               v-model="queryForm.searchDate"
               :end-placeholder="$translateTitle('Maintenance.end time')"
-              :start-placeholder="$translateTitle('Maintenance.start time')"
               format="yyyy-MM-dd"
+              :start-placeholder="$translateTitle('Maintenance.start time')"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -121,24 +121,24 @@
         width="55"
       />
       <el-table-column
-        :label="$translateTitle('Maintenance.Ticket number')"
         align="center"
+        :label="$translateTitle('Maintenance.Ticket number')"
         prop="number"
         show-overflow-tooltip
         sortablesortable
         width="120"
       />
       <el-table-column
-        :label="$translateTitle('Maintenance.Ticket type')"
         align="center"
+        :label="$translateTitle('Maintenance.Ticket type')"
         prop="type"
         show-overflow-tooltip
         sortable
         width="140"
       />
       <el-table-column
-        :label="$translateTitle('Maintenance.Ticket status')"
         align="center"
+        :label="$translateTitle('Maintenance.Ticket status')"
         show-overflow-tooltip
         sortable
       >
@@ -148,8 +148,8 @@
       </el-table-column>
 
       <el-table-column
-        :label="$translateTitle('Maintenance.project')"
         align="center"
+        :label="$translateTitle('Maintenance.project')"
         show-overflow-tooltip
         sortable
       >
@@ -159,8 +159,8 @@
       </el-table-column>
 
       <el-table-column
-        :label="$translateTitle('Maintenance.Equipment name')"
         align="center"
+        :label="$translateTitle('Maintenance.Equipment name')"
         show-overflow-tooltip
         sortable
       >
@@ -169,8 +169,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('Maintenance.Initiator')"
         align="center"
+        :label="$translateTitle('Maintenance.Initiator')"
         show-overflow-tooltip
         sortable
       >
@@ -179,30 +179,23 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('Maintenance.the starting time')"
         align="center"
+        :label="$translateTitle('Maintenance.the starting time')"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
-          {{
-            $moment(row.createdAt)
-              .format('YYYY-MM-DD HH:mm:ss')
-          }}
+          {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('Maintenance.operating')"
         align="center"
+        :label="$translateTitle('Maintenance.operating')"
         prop="name"
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <el-button
-            size="mini"
-            type="primary"
-            @click.native="showInfo(row)"
-          >
+          <el-button size="mini" type="primary" @click.native="showInfo(row)">
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
           <!--          <el-button v-show="row.status == 0" type="success">-->
@@ -357,7 +350,7 @@
         } catch (error) {
           console.log(error)
           this.$message.error(
-            this.$translateTitle('node.export error') + `${error}`,
+            this.$translateTitle('node.export error') + `${error}`
           )
         }
       },
@@ -436,10 +429,7 @@
         await query_object('Maintenance', params)
           .then((res) => {
             console.log(res, 'res')
-            const {
-              results = [],
-              count = 0,
-            } = res
+            const { results = [], count = 0 } = res
             this.list = results
             this.list.forEach((e) => {
               e._user = '暂无'

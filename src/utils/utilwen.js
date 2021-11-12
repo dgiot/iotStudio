@@ -6,9 +6,29 @@ import { getToken, removeToken, setToken } from './vuex'
 import globalConfig from './globalConfig'
 import store from '@/store'
 import { Message } from 'element-ui'
-import { create_object, del_object, get_object, query_object, query_object_header, shuwa_batch, update_object } from '@/api/shuwa_parse'
-import { delDict, getBatchNumer, getIndustry, postDict, putDict } from '@/api/Dict/index'
-import { delDevice, getDevice, postDevice, putDevice, queryDevice } from '@/api/Device/index'
+import {
+  create_object,
+  del_object,
+  get_object,
+  query_object,
+  query_object_header,
+  shuwa_batch,
+  update_object,
+} from '@/api/shuwa_parse'
+import {
+  delDict,
+  getBatchNumer,
+  getIndustry,
+  postDict,
+  putDict,
+} from '@/api/Dict/index'
+import {
+  delDevice,
+  getDevice,
+  postDevice,
+  putDevice,
+  queryDevice,
+} from '@/api/Device/index'
 import { queryProduct } from '@/api/Product/index'
 import { getMqttEventId, getTopicEventId } from '@/utils'
 
@@ -37,23 +57,22 @@ function moreHttp(option) {
     keys.push(key)
     arr.push(option[key])
   }
-  return axios.all(arr)
-    .then(
-      axios.spread(function () {
-        let result = {}
-        for (let i = 0; i < arguments.length; i++) {
-          let item = arguments[i]
-          if (item) {
-            if (item.data && item.data.data) {
-              result[keys[i]] = item.data.data
-            } else {
-              result[keys[i]] = item
-            }
+  return axios.all(arr).then(
+    axios.spread(function () {
+      let result = {}
+      for (let i = 0; i < arguments.length; i++) {
+        let item = arguments[i]
+        if (item) {
+          if (item.data && item.data.data) {
+            result[keys[i]] = item.data.data
+          } else {
+            result[keys[i]] = item
           }
         }
-        return result
-      }),
-    )
+      }
+      return result
+    })
+  )
 }
 
 function objGet(data, path) {
@@ -85,24 +104,19 @@ function dateFormat(fmt, date) {
     return ''
   }
   const opt = {
-    'Y+': date.getFullYear()
-      .toString(), // 年
+    'Y+': date.getFullYear().toString(), // 年
     'm+': (date.getMonth() + 1).toString(), // 月
-    'd+': date.getDate()
-      .toString(), // 日
-    'H+': date.getHours()
-      .toString(), // 时
-    'M+': date.getMinutes()
-      .toString(), // 分
-    'S+': date.getSeconds()
-      .toString(), // 秒
+    'd+': date.getDate().toString(), // 日
+    'H+': date.getHours().toString(), // 时
+    'M+': date.getMinutes().toString(), // 分
+    'S+': date.getSeconds().toString(), // 秒
   }
   for (const k in opt) {
     ret = new RegExp('(' + k + ')').exec(fmt)
     if (ret) {
       fmt = fmt.replace(
         ret[1],
-        ret[1].length == 1 ? opt[k] : opt[k].padStart(ret[1].length, '0'),
+        ret[1].length == 1 ? opt[k] : opt[k].padStart(ret[1].length, '0')
       )
     }
   }
@@ -248,10 +262,7 @@ function convertRes2Blob(response) {
  */
 function downBinary(res) {
   if (!res) return false
-  const {
-    data,
-    headers,
-  } = res
+  const { data, headers } = res
   let blob = new Blob([data], { type: headers['content-type'] }) // 这里标识下载文件类型
   console.log(blob, res.data)
   let downloadElement = document.createElement('a')
@@ -466,11 +477,10 @@ export const cleanObject = (object) => {
   // Object.assign({}, object)
   if (!object) return {}
   const result = { ...object }
-  Object.keys(result)
-    .forEach((key) => {
-      const value = result[key]
-      if (isVoid(value)) delete result[key]
-    })
+  Object.keys(result).forEach((key) => {
+    const value = result[key]
+    if (isVoid(value)) delete result[key]
+  })
   return result
 }
 export default {

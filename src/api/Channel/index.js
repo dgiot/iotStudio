@@ -1,4 +1,10 @@
-import { create_object, del_object, get_object, query_object, update_object } from '@/api/shuwa_parse'
+import {
+  create_object,
+  del_object,
+  get_object,
+  query_object,
+  update_object,
+} from '@/api/shuwa_parse'
 import request from '@/utils/request'
 
 export async function queryChannel(params, method) {
@@ -25,7 +31,7 @@ export async function getChannelCountByProduct(
   channellength,
   channelstart,
   product,
-  type,
+  type
 ) {
   const params = {
     count: 'objectId',
@@ -53,7 +59,7 @@ export function channelConnect(
   name,
   sql_length,
   connect,
-  ssl,
+  ssl
 ) {
   return request({
     url: '/resource/' + type,
@@ -83,7 +89,7 @@ export function updateConnect(
   sql_length,
   connect,
   ssl,
-  isEnable,
+  isEnable
 ) {
   return request({
     url: '/resource/edit/' + objectId,

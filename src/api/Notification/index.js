@@ -9,7 +9,12 @@
 // -->
 
 import request from '@/utils/request'
-import { create_object, del_object, get_object, update_object } from '@/api/shuwa_parse'
+import {
+  create_object,
+  del_object,
+  get_object,
+  update_object,
+} from '@/api/shuwa_parse'
 
 export async function queryNotification(params) {
   return request({

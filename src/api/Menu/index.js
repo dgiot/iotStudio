@@ -1,12 +1,13 @@
-import { create_object, del_object, get_object, query_object, update_object } from '@/api/shuwa_parse'
+import {
+  create_object,
+  del_object,
+  query_object,
+  update_object,
+} from '@/api/shuwa_parse'
 import request from '@/utils/request'
 
 export async function queryMenu(params) {
   return query_object('Menu', params)
-}
-
-export async function getMenu(name) {
-  return get_object('Menu', ObjectId)
 }
 
 export async function getToken(company) {

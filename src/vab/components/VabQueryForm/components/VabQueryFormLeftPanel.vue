@@ -1,11 +1,5 @@
 <template>
-  <el-col
-    :lg="span"
-    :md="24"
-    :sm="24"
-    :xl="span"
-    :xs="24"
-  >
+  <el-col :lg="span" :md="24" :sm="24" :xl="span" :xs="24">
     <div class="left-panel">
       <slot />
     </div>

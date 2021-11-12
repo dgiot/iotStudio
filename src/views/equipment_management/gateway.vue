@@ -1,9 +1,6 @@
 <template>
   <div class="gateway">
-    <el-card
-      class="wayheader"
-      shadow="always"
-    >
+    <el-card class="wayheader" shadow="always">
       <div class="wayheaderone">
         <span class="oneheader">网络设备</span>
         <span class="twoheader">网络层级:{{ cengji }}</span>
@@ -19,8 +16,7 @@
         cengji: 2,
       }
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {},
   }
 </script>

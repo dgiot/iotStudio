@@ -1,17 +1,8 @@
 <template>
-  <el-breadcrumb
-    class="vab-breadcrumb"
-    separator=">"
-  >
-    <el-breadcrumb-item
-      v-for="(item, index) in levelList"
-      :key="index"
-    >
+  <el-breadcrumb class="vab-breadcrumb" separator=">">
+    <el-breadcrumb-item v-for="(item, index) in levelList" :key="index">
       <a @click.prevent="handleLink(item.redirect)">
-        <vab-icon
-          v-if="item.meta && item.meta.icon"
-          :icon="item.meta.icon"
-        />
+        <vab-icon v-if="item.meta && item.meta.icon" :icon="item.meta.icon" />
         {{ $translateTitle(`route.${item.meta.title}`) }}
       </a>
     </el-breadcrumb-item>
@@ -38,7 +29,7 @@
       getBreadcrumb() {
         return this.$route.matched.filter(
           (item) =>
-            item.meta && this.$translateTitle(`route.${item.meta.title}`),
+            item.meta && this.$translateTitle(`route.${item.meta.title}`)
         )
       },
       handleLink(redirect) {

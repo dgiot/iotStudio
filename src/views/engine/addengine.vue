@@ -4,9 +4,9 @@
       <el-card class="box-card">
         <el-form
           ref="formInline"
+          label-width="80px"
           :model="formInline"
           :rules="formlinerule"
-          label-width="80px"
           size="medium"
         >
           <div class="form-block__title">
@@ -73,10 +73,7 @@
                 />
               </el-form-item>
               <el-form-item :label="$translateTitle('rule.Remarks')">
-                <el-input
-                  v-model="formInline.remarks"
-                  type="text"
-                />
+                <el-input v-model="formInline.remarks" type="text" />
               </el-form-item>
               <!--SQL测试-->
               <el-form-item :label="$translateTitle('rule.SQLtest')">
@@ -104,12 +101,11 @@
 
             <!--中间间隔-->
             <el-col :span="4" />
-            <el-col
-              :span="row2"
-              class="animated fadeInRightBig"
-            >
+            <el-col class="animated fadeInRightBig" :span="row2">
               <el-form-item
                 v-show="formInline.sqltest == true"
+                label="clientid"
+                prop="clientid"
                 :rules="[
                   {
                     required: true,
@@ -117,13 +113,13 @@
                     trigger: 'blur',
                   },
                 ]"
-                label="clientid"
-                prop="clientid"
               >
                 <el-input v-model="formInline.clientid" />
               </el-form-item>
               <el-form-item
                 v-show="formInline.sqltest == true"
+                label="username"
+                prop="username"
                 :rules="[
                   {
                     required: true,
@@ -131,13 +127,13 @@
                     trigger: 'blur',
                   },
                 ]"
-                label="username"
-                prop="username"
               >
                 <el-input v-model="formInline.username" />
               </el-form-item>
               <el-form-item
                 v-show="formInline.sqltest == true"
+                label="topic"
+                prop="topic"
                 :rules="[
                   {
                     required: true,
@@ -145,28 +141,26 @@
                     trigger: 'blur',
                   },
                 ]"
-                label="topic"
-                prop="topic"
               >
                 <el-input v-model="formInline.topic" />
               </el-form-item>
               <el-form-item
                 v-if="formInline.sqltest == true"
+                label="qos"
+                prop="qos"
                 :rules="[
                   { required: true, message: 'qos 不能为空', trigger: 'blur' },
                 ]"
-                label="qos"
-                prop="qos"
               >
                 <el-input v-model.number="formInline.qos" />
               </el-form-item>
               <el-form-item
                 v-show="formInline.sqltest == true"
+                label="payload"
+                prop="payload"
                 :rules="[
                   { required: true, message: '请填写payload', trigger: 'blur' },
                 ]"
-                label="payload"
-                prop="payload"
               >
                 <el-input
                   v-model="formInline.payload"
@@ -183,10 +177,7 @@
                   type="textarea"
                 /></pre>
               </el-form-item>
-              <el-form-item
-                v-show="formInline.sqltest == true"
-                label=" "
-              >
+              <el-form-item v-show="formInline.sqltest == true" label=" ">
                 <el-button
                   type="success"
                   @click.native="testRule('formInline')"
@@ -215,10 +206,7 @@
                 {{ $translateTitle('rule.Processing') }}
               </div>
             </div>
-            <div
-              class="bottomtable"
-              style="padding-left: 20px"
-            >
+            <div class="bottomtable" style="padding-left: 20px">
               <div class="tableaction">
                 <el-table
                   :cell-style="{ 'text-align': 'center' }"
@@ -227,9 +215,9 @@
                   style="width: 100%"
                 >
                   <el-table-column :label="$translateTitle('rule.channel')">
-                    <template slot-scope="scope">
-                      <span v-if="scope.row.params.$resource">
-                        {{ '关联资源:' + scope.row.params.$resource }}
+                    <template #default="{ row }">
+                      <span v-if="row.params.$resource">
+                        {{ '关联资源:' + row.params.$resource }}
                       </span>
                       <span v-else />
                     </template>
@@ -237,31 +225,31 @@
                   <el-table-column
                     :label="$translateTitle('rule.target_topic')"
                   >
-                    <template slot-scope="scope">
-                      {{ scope.row.params.target_topic }}
+                    <template #default="{ row }">
+                      {{ row.params.target_topic }}
                     </template>
                   </el-table-column>
                   <el-table-column :label="$translateTitle('rule.target_qos')">
-                    <template slot-scope="scope">
-                      {{ scope.row.params.target_qos }}
+                    <template #default="{ row }">
+                      {{ row.params.target_qos }}
                     </template>
                   </el-table-column>
                   <el-table-column
                     :label="$translateTitle('rule.payload_tmpl')"
                   >
-                    <template slot-scope="scope">
-                      {{ scope.row.params.payload_tmpl }}
+                    <template #default="{ row }">
+                      {{ row.params.payload_tmpl }}
                     </template>
                   </el-table-column>
                   <el-table-column
                     :label="$translateTitle('developer.operation')"
                     width="180"
                   >
-                    <template slot-scope="scope">
+                    <template #default="{ row }">
                       <el-button
                         size="mini"
                         type="warning"
-                        @click="editAisle(scope.row)"
+                        @click="editAisle(row)"
                       >
                         {{ $translateTitle('button.edit') }}
                       </el-button>
@@ -294,17 +282,17 @@
                 :append-to-body="true"
                 :close-on-click-modal="false"
                 :title="$translateTitle('rule.ResponseAction')"
-                :visible.sync="dialogFormVisible"
                 top="10%"
+                :visible.sync="dialogFormVisible"
                 width="40%"
                 @close="resetForm('params')"
               >
                 <el-form
                   ref="params"
-                  :model="params"
-                  :rules="paramsrules"
                   label-position="left"
                   label-width="140px"
+                  :model="params"
+                  :rules="paramsrules"
                 >
                   <el-form-item prop="channel">
                     <span slot="label">
@@ -350,8 +338,8 @@
                         <i class="icon-dd-schetit" />
                         <span>{{ $translateTitle('rule.resource') }}</span>
                         <el-tooltip
-                          :content="$translateTitle('rule.resource')"
                           class="item"
+                          :content="$translateTitle('rule.resource')"
                           effect="dark"
                           placement="top-start"
                         >
@@ -486,7 +474,14 @@
 <script>
   var editor1
   var editor2
-  import { addRule, get_actions, get_resources, get_rule_id, postResource, put_rule_id } from '@/api/Rules'
+  import {
+    addRule,
+    get_actions,
+    get_resources,
+    get_rule_id,
+    postResource,
+    put_rule_id,
+  } from '@/api/Rules'
   import provider from '@/api/Ace/index'
 
   export default {
@@ -540,11 +535,11 @@
             'SELECT\n' +
             '      payload.msg as msg,\n' +
             '      clientid,\n' +
-            '      \'productid\' as productid\n' +
+            "      'productid' as productid\n" +
             '    FROM\n' +
             '      "t/#"\n' +
             '    WHERE\n' +
-            '      msg = \'hello\'',
+            "      msg = 'hello'",
           remarks: '',
           sqltest: false,
           clientid: 'c_swqx',
@@ -761,8 +756,7 @@
               actions: this.actionData,
               ctx: ctx,
               description: this.formInline.remarks,
-              for: editor1.getValue()
-                .match(regex)[1],
+              for: editor1.getValue().match(regex)[1],
               name: this.formInline.username,
               rawsql: editor1.getValue(),
               test: 'true',
@@ -775,7 +769,7 @@
                   this.formInline.result = response.data.msg
                   console.log(
                     '     this.formInline.result ',
-                    this.formInline.result,
+                    this.formInline.result
                   )
                 } else {
                   this.$message.error('SQL Not Match')
@@ -907,22 +901,21 @@
               { channel: this.resourceform.objectId },
               this.resourceform.desc,
               '',
-              'data_resource',
-            )
-              .then((response) => {
-                if (response) {
-                  this.$message('创建成功')
-                  this.$refs[formName].resetFields()
-                  this.dialogVisible = false
-                  // getResource().then(response=>{
-                  //   if(response){
-                  //       this.resourcelist = response;
-                  //   }
-                  // }).catch(error=>{
-                  //   this.$message(error)
-                  // })
-                }
-              })
+              'data_resource'
+            ).then((response) => {
+              if (response) {
+                this.$message('创建成功')
+                this.$refs[formName].resetFields()
+                this.dialogVisible = false
+                // getResource().then(response=>{
+                //   if(response){
+                //       this.resourcelist = response;
+                //   }
+                // }).catch(error=>{
+                //   this.$message(error)
+                // })
+              }
+            })
           } else {
             this.$message.error('error submit!!')
             return false

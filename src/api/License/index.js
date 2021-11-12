@@ -1,4 +1,10 @@
-import { create_object, del_object, get_object, query_object, update_object } from '@/api/shuwa_parse'
+import {
+  create_object,
+  del_object,
+  get_object,
+  query_object,
+  update_object,
+} from '@/api/shuwa_parse'
 import request from '@/utils/request'
 
 export async function queryLicense(params) {
@@ -57,7 +63,7 @@ export function iotHub(type, license, addr) {
   })
 }
 
-export function uploadLicense(appid, appsecret, shuwa_iot_software) {
+export function uploadLicense(appid, appsecret) {
   return request({
     url: `lictool`,
     method: 'get',
@@ -125,14 +131,7 @@ export function handleZero(value) {
 }
 
 // 查询应用信息
-export function getProject({
-  order,
-  limit,
-  skip,
-  keys,
-  include,
-  where,
-}) {
+export function getProject({ order, limit, skip, keys, include, where }) {
   return request({
     url: `/classes/Project`,
     method: 'get',

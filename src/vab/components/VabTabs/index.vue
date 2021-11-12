@@ -3,10 +3,10 @@
     <vab-fold v-if="layout === 'common'" />
     <el-tabs
       v-model="tabActive"
+      class="vab-tabs-content"
       :class="{
         ['vab-tabs-content-' + theme.tabsBarStyle]: true,
       }"
-      class="vab-tabs-content"
       type="card"
       @tab-click="handleTabClick"
       @tab-remove="handleTabRemove"
@@ -32,8 +32,8 @@
               <img
                 slot="error"
                 :src="$FileServe + item.meta.icon"
-                :title="$FileServe + item.meta.icon"
                 style="width: 16px; height: 16px"
+                :title="$FileServe + item.meta.icon"
               />
             </el-image>
             <vab-icon
@@ -42,24 +42,15 @@
               :is-custom-svg="item.meta.isCustomSvg"
             />
             <!--  如果没有图标那么取第二级的图标 -->
-            <vab-icon
-              v-else
-              :icon="item.parentIcon"
-            />
+            <vab-icon v-else :icon="item.parentIcon" />
           </template>
           <span>{{ $translateTitle(`route.${item.meta.title}`) }}</span>
         </span>
       </el-tab-pane>
     </el-tabs>
 
-    <el-dropdown
-      @command="handleCommand"
-      @visible-change="handleVisibleChange"
-    >
-      <span
-        :class="{ 'vab-tabs-more-active': active }"
-        class="vab-tabs-more"
-      >
+    <el-dropdown @command="handleCommand" @visible-change="handleVisibleChange">
+      <span class="vab-tabs-more" :class="{ 'vab-tabs-more-active': active }">
         <span class="vab-tabs-more-icon">
           <i class="box box-t"></i>
           <i class="box box-b"></i>
@@ -96,40 +87,37 @@
     </el-dropdown>
     <ul
       v-if="visible"
-      :style="{ left: left + 'px', top: top + 'px' }"
       class="contextmenu el-dropdown-menu el-dropdown-menu--small"
+      :style="{ left: left + 'px', top: top + 'px' }"
     >
       <li
-        :class="{ 'is-disabled': visitedRoutes.length === 1 }"
         class="el-dropdown-menu__item"
+        :class="{ 'is-disabled': visitedRoutes.length === 1 }"
         @click="closeOthersTabs"
       >
         <vab-icon icon="close-line" />
         <span>{{ $translateTitle('关闭其他') }}</span>
       </li>
       <li
-        :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }"
         class="el-dropdown-menu__item"
+        :class="{ 'is-disabled': !visitedRoutes.indexOf(hoverRoute) }"
         @click="closeLeftTabs"
       >
         <vab-icon icon="arrow-left-line" />
         <span>{{ $translateTitle('关闭左侧') }}</span>
       </li>
       <li
+        class="el-dropdown-menu__item"
         :class="{
           'is-disabled':
             visitedRoutes.indexOf(hoverRoute) === visitedRoutes.length - 1,
         }"
-        class="el-dropdown-menu__item"
         @click="closeRightTabs"
       >
         <vab-icon icon="arrow-right-line" />
         <span>{{ $translateTitle('关闭右侧') }}</span>
       </li>
-      <li
-        class="el-dropdown-menu__item"
-        @click="closeAllTabs"
-      >
+      <li class="el-dropdown-menu__item" @click="closeAllTabs">
         <vab-icon icon="close-line" />
         <span>{{ $translateTitle('关闭全部') }}</span>
       </li>

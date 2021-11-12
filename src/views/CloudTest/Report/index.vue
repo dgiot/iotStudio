@@ -10,23 +10,22 @@
 <template>
   <div
     ref="custom-table"
-    :class="{ 'vab-fullscreen': isFullscreen }"
     class="custom-table-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <div class="components">
       <vab-dialog :show.sync="activePopShow">
         <h3 slot="title">
-          {{
-            $translateTitle('cloudTest.add')
+          {{ $translateTitle('cloudTest.add')
           }}{{ $translateTitle('cloudTest.report template') }}
         </h3>
         <div class="content">
           <el-form
             ref="ruleForm"
-            :model="ruleForm"
-            :rules="rules"
             class="demo-ruleForm"
             label-width="100px"
+            :model="ruleForm"
+            :rules="rules"
           >
             <el-form-item
               :label="$translateTitle('cloudTest.Template name')"
@@ -57,21 +56,17 @@
                 :key="momentKey"
                 ref="upload"
                 v-model="ruleForm.file"
+                accept=".doc,.docx"
+                action="string"
                 :before-upload="onBeforeUploadImage"
+                class="upload-demo"
                 :file-list="fileList"
                 :http-request="UploadImage"
                 :limit="1"
-                :on-change="fileChange"
-                accept=".doc,.docx"
-                action="string"
-                class="upload-demo"
                 list-type="text"
+                :on-change="fileChange"
               >
-                <el-button
-                  slot="trigger"
-                  size="small"
-                  type="primary"
-                >
+                <el-button slot="trigger" size="small" type="primary">
                   {{ $translateTitle('application.selectfile') }}
                 </el-button>
               </el-upload>
@@ -80,10 +75,7 @@
         </div>
         <Vab-amis :schema="amisJson" />
         <div slot="footer">
-          <el-button
-            type="primary"
-            @click="submitForm('ruleForm')"
-          >
+          <el-button type="primary" @click="submitForm('ruleForm')">
             {{ $translateTitle('product.createnow') }}
           </el-button>
           <el-button @click="resetForm('ruleForm')">
@@ -106,8 +98,8 @@
             :stripe="stripe"
           >
             <el-table-column
-              :label="$translateTitle('cloudTest.number')"
               align="center"
+              :label="$translateTitle('cloudTest.number')"
               show-overflow-tooltip
               width="80"
             >
@@ -116,15 +108,15 @@
               </template>
             </el-table-column>
             <el-table-column
-              :label="$translateTitle('cloudTest.Template name')"
               align="center"
+              :label="$translateTitle('cloudTest.Template name')"
               prop="name"
               show-overflow-tooltip
               width="auto"
             />
             <el-table-column
-              :label="$translateTitle('cloudTest.Template content')"
               align="center"
+              :label="$translateTitle('cloudTest.Template content')"
               width="auto"
             >
               <template #default="{ row }">
@@ -136,33 +128,27 @@
               </template>
             </el-table-column>
             <el-table-column
-              :label="$translateTitle(`product.Template management`)"
               align="center"
               flex="right"
+              :label="$translateTitle(`product.Template management`)"
               show-overflow-tooltip
               width="auto"
             >
               <template #default="{ row }">
-                <el-button
-                  type="success"
-                  @click="handlekonva(row)"
-                >
+                <el-button type="success" @click="handlekonva(row)">
                   {{ $translateTitle(`developer.mapping`) }}
                 </el-button>
-                <el-button
-                  type="warning"
-                  @click="handleDelete(row, 1)"
-                >
+                <el-button type="warning" @click="handleDelete(row, 1)">
                   {{ $translateTitle(`cloudTest.delete`) }}
                 </el-button>
               </template>
             </el-table-column>
             <template #empty>
               <el-image
+                class="vab-data-empty"
                 :src="
                   require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                 "
-                class="vab-data-empty"
               />
             </template>
           </el-table>
@@ -174,8 +160,8 @@
         <el-form
           ref="form"
           :inline="true"
-          :model="queryForm"
           label-width="0"
+          :model="queryForm"
           @submit.native.prevent
         >
           <el-form-item>
@@ -195,11 +181,7 @@
             >
               {{ $translateTitle('cloudTest.search') }}
             </el-button>
-            <el-button
-              icon="el-icon-plus"
-              type="primary"
-              @click="handleAdd"
-            >
+            <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
               {{ $translateTitle('cloudTest.add') }}
             </el-button>
           </el-form-item>
@@ -243,28 +225,16 @@
             </el-radio>
           </el-radio-group>
           <template #reference>
-            <el-button
-              style="margin: 0 10px 10px 0 !important"
-              type="primary"
-            >
+            <el-button style="margin: 0 10px 10px 0 !important" type="primary">
               <vab-icon icon="line-height" />
               {{ $translateTitle('cloudTest.size') }}
             </el-button>
           </template>
         </el-popover>
-        <el-popover
-          popper-class="custom-table-checkbox"
-          trigger="hover"
-        >
+        <el-popover popper-class="custom-table-checkbox" trigger="hover">
           <el-checkbox-group v-model="checkList">
-            <vab-draggable
-              :list="columns"
-              v-bind="dragOptions"
-            >
-              <div
-                v-for="(item, index) in columns"
-                :key="item + index"
-              >
+            <vab-draggable :list="columns" v-bind="dragOptions">
+              <div v-for="(item, index) in columns" :key="item + index">
                 <vab-icon icon="drag-drop-line" />
                 <el-checkbox
                   :disabled="item.disableCheck === true"
@@ -287,80 +257,90 @@
         </el-popover>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-table
-      ref="tableSort"
-      v-loading="listLoading"
-      :border="border"
-      :data="list"
-      :height="height"
-      :size="lineHeight"
-      :stripe="stripe"
-    >
-      <el-table-column
-        :label="$translateTitle('cloudTest.number')"
-        align="center"
-        show-overflow-tooltip
-        width="95"
+    <el-row :gutter="24">
+      <el-col
+        :lg="collapse ? 4 : 2"
+        :md="collapse ? 4 : 2"
+        :sm="collapse ? 10 : 2"
+        :xl="collapse ? 4 : 2"
+        :xs="collapse ? 8 : 2"
       >
-        <template #default="{ $index }">
-          {{ $index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-for="(item, index) in finallyColumns"
-        :key="index"
-        :label="$translateTitle(`cloudTest.${item.label}`)"
-        :prop="item.prop"
-        :sortable="item.sortable"
-        :width="item.width"
-        align="center"
-        show-overflow-tooltip
-      />
+        <vab-role-tree class="vab-role-tree" />
+      </el-col>
+      <el-col
+        :lg="collapse ? 20 : 22"
+        :md="collapse ? 20 : 22"
+        :sm="collapse ? 14 : 22"
+        :xl="collapse ? 21 : 22"
+        :xs="collapse ? 16 : 22"
+      >
+        <el-table
+          ref="tableSort"
+          v-loading="listLoading"
+          :border="border"
+          :data="list"
+          :height="height"
+          :size="lineHeight"
+          :stripe="stripe"
+        >
+          <el-table-column
+            align="center"
+            :label="$translateTitle('cloudTest.number')"
+            show-overflow-tooltip
+            width="95"
+          >
+            <template #default="{ $index }">
+              {{ $index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-for="(item, index) in finallyColumns"
+            :key="index"
+            align="center"
+            :label="$translateTitle(`cloudTest.${item.label}`)"
+            :prop="item.prop"
+            show-overflow-tooltip
+            :sortable="item.sortable"
+            :width="item.width"
+          />
 
-      <el-table-column
-        :label="$translateTitle(`cloudTest.operate`)"
-        align="center"
-        show-overflow-tooltip
-        width="185"
-      >
-        <template #default="{ row }">
-          <el-button
-            type="success"
-            @click="handleManagement(row)"
+          <el-table-column
+            align="center"
+            :label="$translateTitle(`cloudTest.operate`)"
+            show-overflow-tooltip
+            width="185"
           >
-            {{ $translateTitle(`product.Template management`) }}
-          </el-button>
-          <el-button
-            type="warning"
-            @click="handleDelete(row, 0)"
-          >
-            {{ $translateTitle(`cloudTest.delete`) }}
-          </el-button>
-        </template>
-      </el-table-column>
-      <template #empty>
-        <el-image
-          :src="
-            require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
-          "
-          class="vab-data-empty"
-        />
-      </template>
-    </el-table>
+            <template #default="{ row }">
+              <el-button type="success" @click="handleManagement(row)">
+                {{ $translateTitle(`product.Template management`) }}
+              </el-button>
+              <el-button type="warning" @click="handleDelete(row, 0)">
+                {{ $translateTitle(`cloudTest.delete`) }}
+              </el-button>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-image
+              class="vab-data-empty"
+              :src="
+                require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+              "
+            />
+          </template>
+        </el-table>
+      </el-col>
+    </el-row>
     <el-pagination
-      :page-size="queryForm.pageSize"
-      :page-sizes="queryForm.pageSizes"
-      :page.sync="queryForm.pageNo"
-      :total="queryForm.total"
       background
       layout="total, sizes, prev, pager, next, jumper"
+      :page.sync="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :page-sizes="queryForm.pageSizes"
+      :total="queryForm.total"
       @current-change="currentChange"
       @size-change="sizeChange"
     />
-    <table-edit
-      ref="edit"
-      @fetch-data="fetchData"
-    />
+    <table-edit ref="edit" @fetch-data="fetchData" />
   </div>
 </template>
 
@@ -407,8 +387,7 @@
           ],
         },
         fileList: [],
-        momentKey: moment(new Date())
-          .valueOf(),
+        momentKey: moment(new Date()).valueOf(),
         ruleForm: {
           file: null,
           name: '',
@@ -531,6 +510,7 @@
     computed: {
       ...mapGetters({
         language: 'settings/language',
+        collapse: 'settings/collapse',
       }),
       dragOptions() {
         return {
@@ -540,7 +520,7 @@
       },
       finallyColumns() {
         return this.columns.filter((item) =>
-          this.checkList.includes(item.label),
+          this.checkList.includes(item.label)
         )
       },
     },
@@ -581,7 +561,7 @@
           file.size,
           file.size / 1024 / 1024 < 30,
           docxType.includes(file.type),
-          file.type,
+          file.type
         )
         const isIMAGE = docxType.includes(file.type)
         const isLt30M = file.size / 1024 / 1024 < 30
@@ -591,8 +571,7 @@
         if (!isLt30M) {
           this.$message.error('上传文件大小不能超过 30MB!')
         }
-        this.momentKey = moment(new Date())
-          .valueOf()
+        this.momentKey = moment(new Date()).valueOf()
         return isIMAGE && isLt30M
       },
       UploadImage(param) {
@@ -632,13 +611,13 @@
               const { result } = await postReportFile(formData)
               console.log(result)
               this.$message.success(
-                this.$translateTitle('cloudTest.Template created successfully'),
+                this.$translateTitle('cloudTest.Template created successfully')
               )
               this.activePopShow = false
               this.fetchData(this.queryForm)
             } catch (e) {
               this.$message.error(
-                this.$translateTitle('cloudTest.Template creation failed'),
+                this.$translateTitle('cloudTest.Template creation failed')
               )
             }
             loading.close()
@@ -707,20 +686,16 @@
         }
         const loading = this.$baseColorfullLoading(1)
         try {
-          const {
-            count = 0,
-            results,
-          } = await queryProduct(params)
+          const { count = 0, results } = await queryProduct(params)
           this.tempList = results
-        } catch (e) {
-        }
+        } catch (e) {}
         this.tempPopShow = true
         loading.close()
       },
       handleDelete(row, flag) {
         this.$baseConfirm(
           this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item',
+            'Maintenance.Are you sure you want to delete the current item'
           ),
           null,
           async () => {
@@ -728,12 +703,12 @@
             this.$baseMessage(
               this.$translateTitle('successfully deleted'),
               'success',
-              'vab-hey-message-success',
+              'vab-hey-message-success'
             )
             flag == 0
               ? await this.fetchData(this.queryForm)
               : await this.handleManagement(this.temprow)
-          },
+          }
         )
       },
       async fetchData(args) {
@@ -752,13 +727,9 @@
           },
         }
         this.listLoading = true
-        const {
-          count = 0,
-          results = [],
-        } = await queryProduct(params)
+        const { count = 0, results = [] } = await queryProduct(params)
         results.forEach((item) => {
-          item.createdAt = moment(item.createdAt)
-            .format('YYYY-MM-DD HH:mm:ss')
+          item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
         })
         this.list = results
         this.queryForm.total = count

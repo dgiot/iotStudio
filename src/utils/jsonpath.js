@@ -12,10 +12,7 @@ export function getJsonPath(text, offSet) {
     const startPos = pos
     switch (text[pos]) {
       case '"':
-        const {
-          text: s,
-          pos: newPos,
-        } = readString(text, pos)
+        const { text: s, pos: newPos } = readString(text, pos)
         if (stack.length) {
           const frame = stack[stack.length - 1]
           if (frame.colType === colType.Object && isInKey) {

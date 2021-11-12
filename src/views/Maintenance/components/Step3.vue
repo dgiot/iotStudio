@@ -7,19 +7,13 @@
       >
         <el-form
           ref="form"
-          :model="form"
           class="create-ticker"
           label-width="auto"
+          :model="form"
           size="medium "
         >
           <el-row :gutter="24">
-            <el-col
-              :lg="12"
-              :md="12"
-              :sm="24"
-              :xl="12"
-              :xs="24"
-            >
+            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
               <el-form-item
                 :label="$translateTitle('Maintenance.project') + ': '"
               >
@@ -27,13 +21,7 @@
                 <span>{{ form.info.productname }}</span>
               </el-form-item>
             </el-col>
-            <el-col
-              :lg="12"
-              :md="12"
-              :sm="24"
-              :xl="12"
-              :xs="24"
-            >
+            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
               <el-form-item
                 :label="$translateTitle('Maintenance.Equipment name') + ': '"
               >
@@ -41,13 +29,7 @@
                 <span>{{ form.info.devicename }}</span>
               </el-form-item>
             </el-col>
-            <el-col
-              :lg="12"
-              :md="12"
-              :sm="24"
-              :xl="12"
-              :xs="24"
-            >
+            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
               <el-form-item
                 :label="$translateTitle('Maintenance.Initiator') + ': '"
               >
@@ -55,13 +37,7 @@
                 <span>{{ form.info.createdname }}</span>
               </el-form-item>
             </el-col>
-            <el-col
-              :lg="24"
-              :md="24"
-              :sm="24"
-              :xl="24"
-              :xs="24"
-            >
+            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
               <el-form-item
                 :label="
                   $translateTitle('Maintenance.Ticket description') + ': '
@@ -70,21 +46,11 @@
                 {{ form.info.description }}
               </el-form-item>
             </el-col>
-            <el-col
-              :lg="24"
-              :md="24"
-              :sm="24"
-              :xl="24"
-              :xs="24"
-            >
+            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
               <el-form-item
                 :label="$translateTitle('Maintenance.photo') + ': '"
               >
-                <el-carousel
-                  :interval="2000"
-                  height="200px"
-                  type="card"
-                >
+                <el-carousel height="200px" :interval="2000" type="card">
                   <el-carousel-item
                     v-for="(item, index) in form.info.photo"
                     :key="index"
@@ -92,18 +58,15 @@
                     <img
                       :alt="item"
                       :src="item"
-                      :title="item"
                       style="width: 100%; height: 100%"
+                      :title="item"
                     />
                   </el-carousel-item>
                 </el-carousel>
               </el-form-item>
             </el-col>
 
-            <el-col
-              v-if="showFooter"
-              :span="24"
-            >
+            <el-col v-if="showFooter" :span="24">
               <el-form-item
                 :label="
                   $translateTitle('Maintenance.Evaluation description') + ': '
@@ -130,10 +93,7 @@
       >
         <el-card shadow="hover">
           <template #header>
-            <el-radio-group
-              v-model="reverse"
-              class="card-header-radio"
-            >
+            <el-radio-group v-model="reverse" class="card-header-radio">
               <el-radio :label="true">
                 {{ $translateTitle('Maintenance.Positive order') }}
               </el-radio>
@@ -147,8 +107,8 @@
             <el-timeline-item
               v-for="item in form.info.timeline"
               :key="item.timestamp"
-              :timestamp="item.timestamp"
               placement="top"
+              :timestamp="item.timestamp"
             >
               <el-card>
                 <h4>{{ item.h4 }}</h4>
@@ -171,8 +131,7 @@
     props: {
       detail: {
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       showFooter: {
         type: Boolean,
@@ -206,13 +165,9 @@
       dispatchUser() {
         this.$refs['form'].validate(async (valid) => {
           if (valid && this.form.info.receiveusername) {
-            const {
-              objectId,
-              info,
-            } = this.form
+            const { objectId, info } = this.form
             info.timeline.push({
-              timestamp: moment(new Date())
-                .format('YYYY-MM-DD HH:mm:ss'),
+              timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
               h4: '已结单',
               p: `${this.username} 已结束这条工单`,
             })

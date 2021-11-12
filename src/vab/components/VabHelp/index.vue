@@ -2,8 +2,8 @@
   <div
     :key="src"
     ref="custom-table"
-    :class="{ 'vab-fullscreen': isFullscreen }"
     class="VabHelp"
+    :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <el-popover
       v-model="visible"
@@ -11,10 +11,7 @@
       :trigger="trigger"
       :width="width"
     >
-      <el-tooltip
-        slot="reference"
-        :placement="childPlacement"
-      >
+      <el-tooltip slot="reference" :placement="childPlacement">
         <div slot="content">
           {{ title }}
           <br />
@@ -32,10 +29,10 @@
             <!--            />-->
             <template slot="title">
               <iframe
+                frameborder="0"
                 :height="isFullscreen ? '100vh' : height"
                 :src="src"
                 :width="isFullscreen ? '100vh' : width"
-                frameborder="0"
               ></iframe>
             </template>
             <el-link type="primary">
@@ -43,10 +40,7 @@
             </el-link>
           </a-popconfirm>
         </div>
-        <el-button
-          circle
-          icon="el-icon-question"
-        />
+        <el-button circle icon="el-icon-question" />
       </el-tooltip>
     </el-popover>
   </div>

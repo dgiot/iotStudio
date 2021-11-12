@@ -1,33 +1,21 @@
 <template>
   <el-dialog
     :append-to-body="true"
-    :visible.sync="parserTable"
     class="parserTable"
     direction="rtl"
+    :visible.sync="parserTable"
     width="60%"
     @close="$parent.parserTable = !parserTable"
   >
-    <div
-      slot="title"
-      class="header-title"
-    >
-      <el-button
-        type="primary"
-        @click.native.prevent="addParse(parserTables)"
-      >
+    <div slot="title" class="header-title">
+      <el-button type="primary" @click.native.prevent="addParse(parserTables)">
         {{ $translateTitle('product.newlyadded') }}
       </el-button>
-      <el-button
-        type="success"
-        @click.native.prevent="saveParse(parserTables)"
-      >
+      <el-button type="success" @click.native.prevent="saveParse(parserTables)">
         {{ $translateTitle('product.preservation') }}
       </el-button>
     </div>
-    <el-table
-      :data="parserTables"
-      size="mini"
-    >
+    <el-table :data="parserTables" size="mini">
       <el-table-column
         align="center"
         label="uid"
@@ -37,18 +25,15 @@
         width="100"
       />
       <el-table-column
-        :label="$translateTitle('product.chinesetitle')"
         align="center"
+        :label="$translateTitle('product.chinesetitle')"
         prop="name"
         show-overflow-tooltip
         sortable
         width="140"
       >
         <template #default="{ row }">
-          <el-popover
-            placement="top"
-            trigger="hover"
-          >
+          <el-popover placement="top" trigger="hover">
             <p>
               {{ $translateTitle('product.englishtitle') }}: {{ row.enname }}
             </p>
@@ -72,10 +57,7 @@
               {{ $translateTitle('product.class') }}:
               {{ row.field }}
             </p>
-            <div
-              slot="reference"
-              class="name-wrapper"
-            >
+            <div slot="reference" class="name-wrapper">
               <el-tag size="medium">
                 {{ row.name }}
               </el-tag>
@@ -84,43 +66,37 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('product.functionaltypes')"
         align="center"
+        :label="$translateTitle('product.functionaltypes')"
         prop="type"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
-        :label="$translateTitle('product.visible')"
         align="center"
+        :label="$translateTitle('product.visible')"
         prop="visible"
         sortable
         width="100"
       >
         <template #default="{ row }">
-          <el-switch
-            v-model="row.visible"
-            disabled
-          />
+          <el-switch v-model="row.visible" disabled />
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('developer.operation')"
         align="center"
         fixed="right"
+        :label="$translateTitle('developer.operation')"
         width="200"
       >
-        <template slot-scope="scope">
-          <el-button
-            type="text"
-            @click="editParse(scope.$index, scope.row)"
-          >
+        <template #default="{ row }">
+          <el-button type="text" @click="editParse(row.$index, row)">
             {{ $translateTitle('concentrator.edit') }}
           </el-button>
           <el-button
-            :disabled="!scope.row.config.order"
+            :disabled="!row.config.order"
             type="text"
-            @click="previewParse(scope.row.config)"
+            @click="previewParse(row.config)"
           >
             {{ $translateTitle('application.preview') }}
           </el-button>
@@ -128,17 +104,17 @@
             size="small"
             type="text"
             @click.native.prevent="
-              lockingParse(scope.row.uid, scope.$index, parserTables)
+              lockingParse(row.uid, scope.$index, parserTables)
             "
           >
             {{ $translateTitle('application.locking') }}
           </el-button>
           <el-button
-            :disabled="scope.row.disable"
+            :disabled="row.disable"
             size="small"
             type="text"
             @click.native.prevent="
-              deleteParse(scope.row.uid, scope.$index, parserTables)
+              deleteParse(row.uid, scope.$index, parserTables)
             "
           >
             {{ $translateTitle('task.Delete') }}
@@ -167,10 +143,8 @@
     data() {
       return {}
     },
-    created() {
-    },
-    mounted() {
-    },
+    created() {},
+    mounted() {},
     methods: {
       addParse(table) {
         this.$parent.addParse(table)

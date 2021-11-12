@@ -1,10 +1,10 @@
 export default function (code) {
   return `<template>
   <vab-render
-    v-model="formData"
-    :request-fn="handleSubmit"
-    @request-success="handleSuccess"
-    :config="formConfig"
+    v-model='formData'
+    :request-fn='handleSubmit'
+    @request-success='handleSuccess'
+    :config='formConfig'
     pure
   />
 </template>

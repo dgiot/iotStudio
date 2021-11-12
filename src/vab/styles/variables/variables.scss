@@ -6,6 +6,14 @@ $base-color-black: #222;
 $base-color-blue: #1890ff;
 $base-color-green: #13ce66;
 $base-color-white: #fff;
+/**
+ * @description 全局主题变量配置
+ */
+//颜色配置
+$base-color-black: #222;
+$base-color-blue: #1890ff;
+$base-color-green: #13ce66;
+$base-color-white: #fff;
 $base-color-black: #515a6e;
 $base-color-yellow: #ffba00;
 $base-color-orange: #ff6700;
@@ -23,7 +31,6 @@ $base-border-color-light: #e4e7ed;
 $base-border-color-lighter: #ebeef5;
 $base-border-color-extra-light: #f2f6fc;
 $base-background-color-base: #f5f7fa;
-
 
 //默认层级
 $base-z-index: 1999;
@@ -80,7 +87,7 @@ $base-keep-alive-height: calc(
   100vh - #{$base-nav-height} - #{$base-tabs-height} - #{$base-padding} * 2 - 55px
 );
 //纵向左侧导航未折叠的宽度
-$base-left-menu-width: 266px;
+$base-left-menu-width: 200px;
 //纵向左侧导航未折叠右侧内容的宽度
 $base-right-content-width: calc(100% - #{$base-left-menu-width});
 //纵向左侧导航已折叠的宽度

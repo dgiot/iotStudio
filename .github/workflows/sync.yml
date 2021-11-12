@@ -2,9 +2,9 @@ name: sync
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   schedule:
-    - cron: "0 21 * * *"
+    - cron: '0 21 * * *'
   workflow_dispatch:
 
 jobs:

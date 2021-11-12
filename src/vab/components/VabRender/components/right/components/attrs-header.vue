@@ -1,17 +1,17 @@
 <!--eslint-disable-->
 <template>
   <div>
-    <div class="vab-render-right-link">
-      <el-link :href="url" target="_blank" type="primary">
+    <div class='vab-render-right-link'>
+      <el-link :href='url' target='_blank' type='primary'>
         点击查看 {{ title }}
       </el-link>
       &nbsp;
     </div>
-    <div class="vab-render-right-search">
+    <div class='vab-render-right-search'>
       <el-input
-        v-model.trim="keyword"
+        v-model.trim='keyword'
         clearable
-        placeholder="输入关键字搜索属性"
+        placeholder='输入关键字搜索属性'
         @input="$emit('input', $event)"
       />
     </div>

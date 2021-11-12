@@ -14,19 +14,16 @@
       @files="files"
     />
     <el-collapse v-model="activeNames">
-      <el-collapse-item
-        name="1"
-        title="菜单参数配置项"
-      >
+      <el-collapse-item name="1" title="菜单参数配置项">
         <menu-collapse />
       </el-collapse-item>
     </el-collapse>
     <el-form
       ref="form"
       :inline="true"
+      label-width="100px"
       :model="form"
       :rules="rules"
-      label-width="100px"
       style="margin-top: 20px"
     >
       <!--      <el-form-item-->
@@ -46,10 +43,7 @@
       <!--          @change="handleChange"-->
       <!--        />-->
       <!--      </el-form-item>-->
-      <el-form-item
-        label="name"
-        prop="name"
-      >
+      <el-form-item label="name" prop="name">
         <el-input
           v-model="form.name"
           :disabled="title == '编辑菜单'"
@@ -60,50 +54,35 @@
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item
-        label="路径"
-        prop="url"
-      >
+      <el-form-item label="路径" prop="url">
         <el-input v-model="form.url">
           <template slot="prepend">
             <vab-icon icon="route-fill" />
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item
-        label="vue文件路径"
-        prop="meta.component"
-      >
+      <el-form-item label="vue文件路径" prop="meta.component">
         <el-input v-model="form.meta.component">
           <template slot="prepend">
             <vab-icon icon="vuejs-fill" />
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item
-        label="重定向"
-        prop="redirect"
-      >
+      <el-form-item label="重定向" prop="redirect">
         <el-input v-model="form.meta.redirect">
           <template slot="prepend">
             <vab-icon icon="infrared-thermometer-fill" />
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item
-        label="标题"
-        prop="meta.title"
-      >
+      <el-form-item label="标题" prop="meta.title">
         <el-input v-model="form.meta.title">
           <template slot="prepend">
             <vab-icon icon="article-line" />
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item
-        label="icon图标"
-        prop="meta.icon"
-      >
+      <el-form-item label="icon图标" prop="meta.icon">
         <el-input
           v-model="form.meta.icon"
           style="cursor: pointer"
@@ -126,23 +105,17 @@
                 <img
                   slot="error"
                   :src="$FileServe + form.meta.icon"
-                  :title="$FileServe + form.meta.icon"
                   style="width: 16px; height: 16px"
+                  :title="$FileServe + form.meta.icon"
                 />
               </el-image>
-              <vab-icon
-                v-else
-                :icon="form.meta.icon"
-              />
+              <vab-icon v-else :icon="form.meta.icon" />
             </template>
             <vab-icon-selector @handle-icon="handleIcon" />
           </el-popover>
         </el-input>
       </el-form-item>
-      <el-form-item
-        label="badge"
-        prop="badge"
-      >
+      <el-form-item label="badge" prop="badge">
         <el-input v-model="form.meta.badge">
           <template slot="prepend">
             <vab-icon icon="notification-badge-fill" />
@@ -176,26 +149,13 @@
       <!--      <el-form-item label="不显示当前标签页" prop="tabHidden">-->
       <!--        <el-switch v-model="form.meta.tabHidden" />-->
       <!--      </el-form-item>-->
-      <el-form-item
-        label="排序"
-        prop="orderBy"
-      >
-        <el-input-number
-          v-model.number="form.orderBy"
-          label="描述文字"
-        />
+      <el-form-item label="排序" prop="orderBy">
+        <el-input-number v-model.number="form.orderBy" label="描述文字" />
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="close">
-        取 消
-      </el-button>
-      <el-button
-        type="primary"
-        @click.native="save"
-      >
-        确 定
-      </el-button>
+      <el-button @click="close">取 消</el-button>
+      <el-button type="primary" @click.native="save">确 定</el-button>
     </template>
   </el-dialog>
 </template>
@@ -350,7 +310,7 @@
         console.log(item, this.form)
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
         this.inputParams = {
           file: '',
@@ -381,8 +341,8 @@
           type == 'addChildMenu'
             ? '新增子菜单'
             : type == 'one'
-              ? '新增一级菜单'
-              : '编辑菜单'
+            ? '新增一级菜单'
+            : '编辑菜单'
         if (type == 'addChildMenu') {
           this.form = {
             orderBy: row.orderBy * 10 + 1, // 如果是新增子菜单

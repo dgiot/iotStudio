@@ -1,8 +1,8 @@
 <template>
   <div
     ref="custom-table"
-    :class="{ 'vab-fullscreen': isFullscreen }"
     class="devproduct devproduct-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <!--添加物模型弹窗-->
     <el-dialog
@@ -10,8 +10,8 @@
       :before-close="wmxhandleClose"
       :close-on-click-modal="false"
       :title="wmxSituation + '自定义属性'"
-      :visible.sync="wmxdialogVisible"
       top="5vh"
+      :visible.sync="wmxdialogVisible"
       width="60%"
     >
       <wmxdetail
@@ -33,24 +33,13 @@
         <div style="background: #ffffff">
           <label id="plug-name" />
         </div>
-        <pre
-          id="editor1"
-          class="ace_editor"
-          style="min-height: 400px"
-        ><textarea
+        <pre id="editor1" class="ace_editor" style="min-height: 400px"><textarea
           class="ace_text-input"
           style="overflow:scroll"
         /></pre>
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-        style="height: 30px"
-      >
-        <el-button
-          type="primary"
-          @click="preserve"
-        >
+      <span slot="footer" class="dialog-footer" style="height: 30px">
+        <el-button type="primary" @click="preserve">
           <!-- 更新 -->
           {{ $translateTitle('equipment.update') }}
         </el-button>
@@ -59,8 +48,8 @@
     <el-dialog
       :append-to-body="true"
       :title="formConfig.uid"
-      :visible.sync="dialogVisible"
       top="1vh"
+      :visible.sync="dialogVisible"
     >
       <vab-parser
         :dba-table="DbaTable"
@@ -77,26 +66,18 @@
       <!--        </el-button>-->
       <!--      </span>-->
     </el-dialog>
-    <el-dialog
-      v-drag-dialog
-      :visible.sync="parserView"
-      append-to-body
-    >
-      <f-render
-        v-model="formConfig"
-        :config="formConfig"
-        pure
-      />
+    <el-dialog v-drag-dialog append-to-body :visible.sync="parserView">
+      <f-render v-model="formConfig" :config="formConfig" pure />
     </el-dialog>
 
     <div class="prosecond">
       <vab-query-form>
         <vab-query-form-top-panel>
           <el-form
-            :inline="true"
-            :model="formInline"
             class="demo-form-inline"
+            :inline="true"
             label-width="100px"
+            :model="formInline"
             @submit.native.prevent
           >
             <el-form-item :label="$translateTitle('resource.category')">
@@ -121,8 +102,8 @@
             <el-form-item :label="$translateTitle('alert.product name')">
               <el-input
                 v-model="queryForm.name"
-                :placeholder="$translateTitle('product.searchproductname')"
                 clearable
+                :placeholder="$translateTitle('product.searchproductname')"
                 size="mini"
                 style="width: 90%"
               >
@@ -155,17 +136,11 @@
         </vab-query-form-top-panel>
       </vab-query-form>
       <el-row :gutter="24">
-        <el-col
-          :lg="4"
-          :md="5"
-          :sm="6"
-          :xl="3"
-          :xs="12"
-        >
+        <el-col :lg="4" :md="5" :sm="6" :xl="3" :xs="12">
           <ul
-            :style="{ height: tableHeight + 'px' }"
             class="infinite-list"
             style="overflow: auto"
+            :style="{ height: tableHeight + 'px' }"
           >
             <li
               v-for="(item, index) in categorysonList"
@@ -187,13 +162,7 @@
             </li>
           </ul>
         </el-col>
-        <el-col
-          :lg="10"
-          :md="6"
-          :sm="6"
-          :xl="5"
-          :xs="12"
-        >
+        <el-col :lg="10" :md="6" :sm="6" :xl="5" :xs="12">
           <div class="protable">
             <el-table
               ref="multipleTable"
@@ -212,8 +181,8 @@
                 show-overflow-tooltip
                 width="80"
               >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.name }}</span>
+                <template #default="{ row }">
+                  <span>{{ row.name }}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -221,23 +190,23 @@
                 show-overflow-tooltip
                 width="80"
               >
-                <template slot-scope="scope">
+                <template #default="{ row }">
                   <span>
-                    {{ scope.row.category ? scope.row.category.name : '' }}
+                    {{ row.category ? row.category.name : '' }}
                   </span>
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('developer.operation')"
                 fixed="right"
+                :label="$translateTitle('developer.operation')"
                 width="145"
               >
-                <template slot-scope="scope">
+                <template #default="{ row }">
                   <el-button
-                    :underline="false"
                     size="mini"
                     type="success"
-                    @click.stop="editproducttemp(scope.row)"
+                    :underline="false"
+                    @click.stop="editproducttemp(row)"
                   >
                     {{ $translateTitle('concentrator.edit') }}
                   </el-button>
@@ -245,7 +214,7 @@
                     slot="reference"
                     size="mini"
                     type="danger"
-                    @click.stop="deleteproducttemp(scope.row)"
+                    @click.stop="deleteproducttemp(row)"
                   >
                     {{ $translateTitle('developer.delete') }}
                   </el-button>
@@ -253,27 +222,18 @@
               </el-table-column>
             </el-table>
           </div>
-          <div
-            class="elpagination"
-            style="margin-top: 20px"
-          >
+          <div class="elpagination" style="margin-top: 20px">
             <el-pagination
+              layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
               :page-sizes="[10, 20, 30, 50]"
               :total="total"
-              layout="total, sizes, prev, pager, next, jumper"
               @current-change="productCurrentChange"
               @size-change="productSizeChange"
             />
           </div>
         </el-col>
-        <el-col
-          :lg="10"
-          :md="13"
-          :sm="18"
-          :xl="16"
-          :xs="24"
-        >
+        <el-col :lg="10" :md="13" :sm="18" :xl="16" :xs="24">
           <profile-descriptions
             ref="ProfileDescription"
             :decoder-table-list="decoderTableList"
@@ -306,36 +266,25 @@
       :title-dict="title_dict_edit_dialog"
       :title-temp-dialog="title_temp_dialog"
     />
-    <product-templet
-      ref="templet"
-      @fetch-data="queryProduttemp({})"
-    />
+    <product-templet ref="templet" @fetch-data="queryProduttemp({})" />
     <el-drawer
+      append-to-body
       :before-close="handleClose"
       :close-on-click-modal="false"
-      :title="moduleTitle"
-      :visible.sync="dialogFormVisible"
-      append-to-body
       size="50%"
+      :title="moduleTitle"
       top="5vh"
+      :visible.sync="dialogFormVisible"
     >
       <div class="devproduct-prodialog-content">
         <!--产品信息-->
         <div class="contentone">
-          <el-form
-            ref="form"
-            :model="form"
-            :rules="rules"
-            label-width="150px"
-          >
+          <el-form ref="form" label-width="150px" :model="form" :rules="rules">
             <el-form-item
               :label="$translateTitle('product.Producttemplatename')"
               prop="name"
             >
-              <el-input
-                v-model="form.name"
-                autocomplete="off"
-              />
+              <el-input v-model="form.name" autocomplete="off" />
             </el-form-item>
             <el-form-item :label="$translateTitle('product.classification')">
               <el-input
@@ -352,15 +301,9 @@
                 />
               </div>
             </el-form-item>
-            <el-form-item
-              :label="$translateTitle('menu.icon')"
-              prop="icon"
-            >
+            <el-form-item :label="$translateTitle('menu.icon')" prop="icon">
               <div v-if="imageUrl">
-                <img
-                  :src="$FileServe + imageUrl"
-                  class="avatar"
-                />
+                <img class="avatar" :src="$FileServe + imageUrl" />
                 <el-button
                   size="mini"
                   style="vertical-align: text-bottom"
@@ -406,22 +349,13 @@
               :label="$translateTitle('developer.describe')"
               prop="desc"
             >
-              <el-input
-                v-model="form.desc"
-                type="textarea"
-              />
+              <el-input v-model="form.desc" type="textarea" />
             </el-form-item>
           </el-form>
         </div>
       </div>
-      <div
-        class="devproduct-prodialog-footer"
-        style="text-align: center"
-      >
-        <el-button
-          type="primary"
-          @click.native="submitForm()"
-        >
+      <div class="devproduct-prodialog-footer" style="text-align: center">
+        <el-button type="primary" @click.native="submitForm()">
           {{ $translateTitle('developer.determine') }}
         </el-button>
         <el-button @click="handleCloseDialogForm()">
@@ -457,11 +391,10 @@
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
-  context.keys()
-    .forEach((fileName) => {
-      let comp = context(fileName)
-      res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
-    })
+  context.keys().forEach((fileName) => {
+    let comp = context(fileName)
+    res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
+  })
 
   var editor1
   export default {
@@ -479,9 +412,7 @@
         things: [],
         tableType: 'things',
         multipleTable: [],
-        thingKey: moment(new Date())
-          .valueOf()
-          .toString(),
+        thingKey: moment(new Date()).valueOf().toString(),
         productDetail: {
           decoder: { code: '' },
           thing: { properties: [] },
@@ -688,19 +619,16 @@
     },
     mounted() {
       this.$baseEventBus.$off('profileDialog')
-      this.$baseEventBus.$on('profileDialog', ({
-        config,
-        type,
-        flag,
-        productInfo,
-        parserType,
-      }) => {
-        this.productDetail = productInfo
-        this.productInfo = productInfo
-        this.parserType = type
-        this.productConfig = _.merge({ basedate: { params: {} } }, config)
-        this.editorParser(config, type, flag)
-      })
+      this.$baseEventBus.$on(
+        'profileDialog',
+        ({ config, type, flag, productInfo, parserType }) => {
+          this.productDetail = productInfo
+          this.productInfo = productInfo
+          this.parserType = type
+          this.productConfig = _.merge({ basedate: { params: {} } }, config)
+          this.editorParser(config, type, flag)
+        }
+      )
       const { project = '' } = this.$route.query
       this.formInline.productname = project
       this.querycategorylist()
@@ -758,7 +686,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success',
+            'vab-hey-message-success'
           )
           if (isLoading) loading.close()
         } catch (error) {
@@ -766,7 +694,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error',
+            'vab-hey-message-error'
           )
         }
         // console.clear()
@@ -790,19 +718,17 @@
         }
         if (data.name == '所有领域') {
           params.where = { level: { $gte: 1 } }
-          queryCategory(params)
-            .then((res) => {
-              this.categorysonList = res.results
-            })
+          queryCategory(params).then((res) => {
+            this.categorysonList = res.results
+          })
         } else {
           params.where = {
             parent: data.objectId,
           }
-          queryCategory(params)
-            .then((res) => {
-              // this.categorysonList.push(data)
-              this.categorysonList = [data].concat(res.results)
-            })
+          queryCategory(params).then((res) => {
+            // this.categorysonList.push(data)
+            this.categorysonList = [data].concat(res.results)
+          })
         }
         loading.close()
       },
@@ -824,9 +750,7 @@
           categoryid: data.objectId,
         }
         this.dialogFormVisible = true
-        this.producttempId = moment(new Date())
-          .valueOf()
-          .toString()
+        this.producttempId = moment(new Date()).valueOf().toString()
       },
       editproducttemp(row) {
         console.log('row', row)
@@ -834,26 +758,33 @@
         this.addflag = false
         this.form = row
         this.producttempId = row.objectId
-        this.$set(this.form, 'categoryname', row.category ? row.category.name : '')
-        this.$set(this.form, 'categoryid', row.category ? row.category.objectId : '')
+        this.$set(
+          this.form,
+          'categoryname',
+          row.category ? row.category.name : ''
+        )
+        this.$set(
+          this.form,
+          'categoryid',
+          row.category ? row.category.objectId : ''
+        )
         this.dialogFormVisible = true
       },
       deleteproducttemp(row) {
-        delProductTemplet(row.objectId)
-          .then(res => {
-            if (res) {
-              this.$message({
-                type: 'success',
-                message: '产品模板删除成功',
-              })
-            } else {
-              this.$message({
-                type: 'error',
-                message: '产品模板删除失败',
-              })
-            }
-            this.queryProduttemp({ category: row.category.objectId })
-          })
+        delProductTemplet(row.objectId).then((res) => {
+          if (res) {
+            this.$message({
+              type: 'success',
+              message: '产品模板删除成功',
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '产品模板删除失败',
+            })
+          }
+          this.queryProduttemp({ category: row.category.objectId })
+        })
       },
       handleNodeClick(data) {
         this.$set(this.form, 'categoryid', data.objectId)
@@ -884,9 +815,9 @@
           where: {
             name: this.queryForm.name
               ? {
-                $regex: this.queryForm.name,
-                $options: 'i',
-              }
+                  $regex: this.queryForm.name,
+                  $options: 'i',
+                }
               : { $ne: null },
           },
         }
@@ -894,10 +825,7 @@
           params.where.category = args.category
         }
         try {
-          const {
-            results = [],
-            count = 0,
-          } = await queryProductTemplet(params)
+          const { results = [], count = 0 } = await queryProductTemplet(params)
           loading.close()
           this.proTableData = results
           this.total = count
@@ -955,10 +883,7 @@
         this.saveParse(rows, -1, false)
       },
       editorParser(config, type, flag) {
-        const {
-          objectId,
-          thing = {},
-        } = this.productDetail
+        const { objectId, thing = {} } = this.productDetail
         var _sourceDict = []
         var _sourceModule = []
         var _sourceField = []
@@ -985,7 +910,7 @@
           'this.parserTableList',
           this.parserTableList,
           this.parserTables,
-          this.tableType,
+          this.tableType
         )
         if (this.productDetail?.basedate?.params?.length) {
           this.productDetail.basedate.params.forEach((_dict) => {
@@ -1023,7 +948,7 @@
             config: this.productConfig.config,
           })
           this.$message.success(
-            this.$translateTitle('user.Save the template successfully'),
+            this.$translateTitle('user.Save the template successfully')
           )
           this.dialogVisible = false
           if (mark) {
@@ -1032,7 +957,7 @@
           }
         } catch (e) {
           this.$message.error(
-            this.$translateTitle('user.Save the template error') + `${e}`,
+            this.$translateTitle('user.Save the template error') + `${e}`
           )
           console.log(e, 'eeee')
         }
@@ -1052,7 +977,7 @@
         this.loading = true
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
         this.inputParams = {
           file: '',
@@ -1197,13 +1122,12 @@
         if (!val) {
           return
         }
-        getServer(val)
-          .then((resultes) => {
-            if (resultes) {
-              this.fileServer = resultes.file
-              this.access_token = resultes.access_token
-            }
-          })
+        getServer(val).then((resultes) => {
+          if (resultes) {
+            this.fileServer = resultes.file
+            this.access_token = resultes.access_token
+          }
+        })
       },
       deleteImgsrc() {
         this.imageUrl = ''
@@ -1240,40 +1164,38 @@
             if (this.addflag) {
               params.ACL = setAcl
               console.log('params', params)
-              postProductTemplet(params)
-                .then((res) => {
-                  if (res.objectId) {
-                    this.$message({
-                      type: 'success',
-                      message: '产品模板创建成功',
-                    })
-                  } else {
-                    this.$message({
-                      type: 'error',
-                      message: '产品模板创建失败',
-                    })
-                  }
-                  this.queryProduttemp({ category: this.form.categoryid })
-                  this.dialogFormVisible = false
-                })
+              postProductTemplet(params).then((res) => {
+                if (res.objectId) {
+                  this.$message({
+                    type: 'success',
+                    message: '产品模板创建成功',
+                  })
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: '产品模板创建失败',
+                  })
+                }
+                this.queryProduttemp({ category: this.form.categoryid })
+                this.dialogFormVisible = false
+              })
             } else {
-              putProductTemplet(this.producttempId, params)
-                .then((res) => {
-                  console.log('resresresres', res)
-                  if (res.updatedAt) {
-                    this.$message({
-                      type: 'success',
-                      message: '产品模板修改成功',
-                    })
-                  } else {
-                    this.$message({
-                      type: 'error',
-                      message: '产品模板修改失败',
-                    })
-                  }
-                  this.queryProduttemp({ category: this.form.categoryid })
-                  this.dialogFormVisible = false
-                })
+              putProductTemplet(this.producttempId, params).then((res) => {
+                console.log('resresresres', res)
+                if (res.updatedAt) {
+                  this.$message({
+                    type: 'success',
+                    message: '产品模板修改成功',
+                  })
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: '产品模板修改失败',
+                  })
+                }
+                this.queryProduttemp({ category: this.form.categoryid })
+                this.dialogFormVisible = false
+              })
             }
           } else {
             this.$message('必填项未填')
@@ -1314,10 +1236,7 @@
           name: row.attributes.name,
           thing: row.attributes.thing,
         }
-        const {
-          objectId,
-          code,
-        } = await getHashClass('Product', data)
+        const { objectId, code } = await getHashClass('Product', data)
         if (code == 200) {
           this.blackDict(objectId, data)
         }
@@ -1927,29 +1846,26 @@
         } else if (this.wmxSituation == '编辑') {
           // console.log("编辑", obj);
           this.productDetail.thing.properties[this.modifyIndex] = obj
-          this.thingKey = moment(new Date())
-            .valueOf()
-            .toString()
+          this.thingKey = moment(new Date()).valueOf().toString()
         }
         console.log(this.wmxSituation, this.productDetail.thing.properties)
         let data = {
           thing: { properties: this.productDetail.thing.properties },
         }
-        putProductTemplet(this.producttempId, data)
-          .then((res) => {
-            if (res.updatedAt) {
-              this.$message({
-                type: 'success',
-                message: this.wmxSituation + '成功',
-              })
-              // this.getProDetail()
-            } else {
-              this.$message({
-                type: 'warning',
-                message: this.wmxSituation + '失败',
-              })
-            }
-          })
+        putProductTemplet(this.producttempId, data).then((res) => {
+          if (res.updatedAt) {
+            this.$message({
+              type: 'success',
+              message: this.wmxSituation + '成功',
+            })
+            // this.getProDetail()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: this.wmxSituation + '失败',
+            })
+          }
+        })
         // }
         this.wmxdialogVisible = false
       },
@@ -1972,13 +1888,12 @@
         const params = {
           thing: JSON.parse(editor1.getValue()),
         }
-        putProductTemplet(this.producttempId, params)
-          .then((res) => {
-            this.$message({
-              type: 'success',
-              message: this.wmxSituation + '成功',
-            })
+        putProductTemplet(this.producttempId, params).then((res) => {
+          this.$message({
+            type: 'success',
+            message: this.wmxSituation + '成功',
           })
+        })
         this.schemadialogVisible = false
       },
       //组态

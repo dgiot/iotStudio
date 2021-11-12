@@ -1,23 +1,20 @@
 <template>
   <div
     ref="custom-table"
-    :class="{ 'vab-fullscreen': isFullscreen }"
     class="custom-table-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-form
           ref="form"
           :inline="true"
-          :model="queryForm"
           label-width="0"
+          :model="queryForm"
           @submit.native.prevent
         >
           <el-form-item>
-            <el-input
-              v-model="queryForm.title"
-              placeholder="标题"
-            />
+            <el-input v-model="queryForm.title" placeholder="标题" />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -47,14 +44,10 @@
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
         <div class="stripe-panel">
-          <el-checkbox v-model="stripe">
-            斑马纹
-          </el-checkbox>
+          <el-checkbox v-model="stripe">斑马纹</el-checkbox>
         </div>
         <div class="border-panel">
-          <el-checkbox v-model="border">
-            边框（可拉伸列）
-          </el-checkbox>
+          <el-checkbox v-model="border">边框（可拉伸列）</el-checkbox>
         </div>
         <el-button
           style="margin: 0 10px 10px 0 !important"
@@ -72,39 +65,21 @@
           trigger="hover"
         >
           <el-radio-group v-model="lineHeight">
-            <el-radio label="medium">
-              大
-            </el-radio>
-            <el-radio label="small">
-              中
-            </el-radio>
-            <el-radio label="mini">
-              小
-            </el-radio>
+            <el-radio label="medium">大</el-radio>
+            <el-radio label="small">中</el-radio>
+            <el-radio label="mini">小</el-radio>
           </el-radio-group>
           <template #reference>
-            <el-button
-              style="margin: 0 10px 10px 0 !important"
-              type="primary"
-            >
+            <el-button style="margin: 0 10px 10px 0 !important" type="primary">
               <vab-icon icon="line-height" />
               表格尺寸
             </el-button>
           </template>
         </el-popover>
-        <el-popover
-          popper-class="custom-table-checkbox"
-          trigger="hover"
-        >
+        <el-popover popper-class="custom-table-checkbox" trigger="hover">
           <el-checkbox-group v-model="checkList">
-            <vab-draggable
-              :list="columns"
-              v-bind="dragOptions"
-            >
-              <div
-                v-for="(item, index) in columns"
-                :key="item + index"
-              >
+            <vab-draggable :list="columns" v-bind="dragOptions">
+              <div v-for="(item, index) in columns" :key="item + index">
                 <vab-icon icon="drag-drop-line" />
                 <el-checkbox
                   :disabled="item.disableCheck === true"
@@ -138,11 +113,7 @@
       :stripe="stripe"
       @selection-change="setSelectRows"
     >
-      <el-table-column
-        align="center"
-        type="selection"
-        width="55"
-      />
+      <el-table-column align="center" type="selection" width="55" />
       <el-table-column
         align="center"
         label="序号"
@@ -157,17 +128,14 @@
       <el-table-column
         v-for="(item, index) in finallyColumns"
         :key="index"
-        :label="item.label"
-        :width="item.width"
         align="center"
+        :label="item.label"
         sortable
+        :width="item.width"
       >
         <template #default="{ row }">
           <span v-if="item.label === '评级'">
-            <el-rate
-              v-model="row.rate"
-              disabled
-            />
+            <el-rate v-model="row.rate" disabled />
           </span>
           <span v-else>{{ row[item.prop] }}</span>
         </template>
@@ -181,42 +149,29 @@
         width="85"
       >
         <template #default="{ row }">
-          <el-button
-            type="text"
-            @click="handleEdit(row)"
-          >
-            编辑
-          </el-button>
-          <el-button
-            type="text"
-            @click="handleDelete(row)"
-          >
-            删除
-          </el-button>
+          <el-button type="text" @click="handleEdit(row)">编辑</el-button>
+          <el-button type="text" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
       <template #empty>
         <el-image
+          class="vab-data-empty"
           :src="
             require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
-          class="vab-data-empty"
         />
       </template>
     </el-table>
     <el-pagination
+      background
       :current-page="queryForm.pageNo"
       :layout="layout"
       :page-size="queryForm.pageSize"
       :total="total"
-      background
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
-    <table-edit
-      ref="edit"
-      @fetch-data="fetchData"
-    />
+    <table-edit ref="edit" @fetch-data="fetchData" />
   </div>
 </template>
 
@@ -295,29 +250,21 @@
       },
       finallyColumns() {
         return this.columns.filter((item) =>
-          this.checkList.includes(item.label),
+          this.checkList.includes(item.label)
         )
       },
     },
-    mounted() {
-    },
+    mounted() {},
     created() {
       this.fetchData()
     },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       clickFullScreen() {
         this.isFullscreen = !this.isFullscreen
@@ -348,8 +295,7 @@
           })
         } else {
           if (this.selectRows.length > 0) {
-            const ids = this.selectRows.map((item) => item.id)
-              .join()
+            const ids = this.selectRows.map((item) => item.id).join()
             this.$baseConfirm('你确定要删除选中项吗', null, async () => {
               const { msg } = await doDelete({ ids: ids })
               this.$baseMessage(msg, 'success', 'vab-hey-message-success')
@@ -375,10 +321,7 @@
       async fetchData() {
         this.listLoading = true
         const {
-          data: {
-            list,
-            total,
-          },
+          data: { list, total },
         } = await getList(this.queryForm)
         this.list = list
         const imageList = []

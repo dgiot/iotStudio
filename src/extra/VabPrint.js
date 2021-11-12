@@ -5,7 +5,7 @@ const Print = function (dom, options) {
     {
       noPrint: '.no-print',
     },
-    options,
+    options
   )
 
   if (typeof dom === 'string') {
@@ -113,7 +113,7 @@ Print.prototype = {
     iframe.id = 'myIframe'
     iframe.setAttribute(
       'style',
-      'position:absolute;width:0;height:0;top:-10px;left:-10px;',
+      'position:absolute;width:0;height:0;top:-10px;left:-10px;'
     )
     w = f.contentWindow || f.contentDocument
     doc = f.contentDocument || f.contentWindow.document
@@ -152,16 +152,16 @@ Print.prototype = {
   isDOM:
     typeof HTMLElement === 'object'
       ? function (obj) {
-        return obj instanceof HTMLElement
-      }
+          return obj instanceof HTMLElement
+        }
       : function (obj) {
-        return (
-          obj &&
-          typeof obj === 'object' &&
-          obj.nodeType === 1 &&
-          typeof obj.nodeName === 'string'
-        )
-      },
+          return (
+            obj &&
+            typeof obj === 'object' &&
+            obj.nodeType === 1 &&
+            typeof obj.nodeName === 'string'
+          )
+        },
 }
 
 export default Print

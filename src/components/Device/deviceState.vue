@@ -1,24 +1,15 @@
 <template>
   <div class="runData">
-    <div
-      v-if="_tableDict"
-      class="devicedetail"
-    >
+    <div v-if="_tableDict" class="devicedetail">
       <el-row class="runData_row">
         <el-col
           v-for="(item, index) in _tableDict"
           :key="index"
-          :span="4"
           class="runData_col"
+          :span="4"
         >
-          <el-card
-            class="box-card"
-            shadow="hover"
-          >
-            <div
-              slot="header"
-              class="clearfix"
-            >
+          <el-card class="box-card" shadow="hover">
+            <div slot="header" class="clearfix">
               <span>{{ item.name }}</span>
               <el-button
                 icon="el-icon-refresh"
@@ -54,8 +45,7 @@
     props: {
       devicedetail: {
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
     },
     data() {

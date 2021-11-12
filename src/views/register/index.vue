@@ -1,29 +1,15 @@
 <template>
   <div class="register-container">
     <el-row>
-      <el-col
-        :lg="14"
-        :md="11"
-        :sm="24"
-        :xl="14"
-        :xs="24"
-      >
-        <div style="color: transparent">
-          占位符
-        </div>
+      <el-col :lg="14" :md="11" :sm="24" :xl="14" :xs="24">
+        <div style="color: transparent">占位符</div>
       </el-col>
-      <el-col
-        :lg="9"
-        :md="12"
-        :sm="24"
-        :xl="9"
-        :xs="24"
-      >
+      <el-col :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
         <el-form
           ref="registerForm"
+          class="register-form"
           :model="form"
           :rules="registerRules"
-          class="register-form"
           size="mini"
         >
           <div class="title-tips">
@@ -31,10 +17,10 @@
           </div>
           <el-form-item prop="username">
             <el-input
-              v-focus
               v-model.trim="form.username"
-              :placeholder="$translateTitle('请输入用户名')"
+              v-focus
               auto-complete="off"
+              :placeholder="$translateTitle('请输入用户名')"
               type="text"
             >
               <template #prefix>
@@ -45,8 +31,8 @@
           <el-form-item prop="phone">
             <el-input
               v-model.trim="form.phone"
-              :placeholder="$translateTitle('请输入手机号')"
               maxlength="11"
+              :placeholder="$translateTitle('请输入手机号')"
               show-word-limit
               type="text"
             >
@@ -55,10 +41,7 @@
               </template>
             </el-input>
           </el-form-item>
-          <el-form-item
-            prop="phoneCode"
-            style="position: relative"
-          >
+          <el-form-item prop="phoneCode" style="position: relative">
             <el-input
               v-model.trim="form.phoneCode"
               :placeholder="$translateTitle('请输入手机验证码')"
@@ -69,8 +52,8 @@
               </template>
             </el-input>
             <el-button
-              :disabled="isGetPhone"
               class="phone-code"
+              :disabled="isGetPhone"
               type="primary"
               @click="getPhoneCode"
             >
@@ -80,8 +63,8 @@
           <el-form-item prop="password">
             <el-input
               v-model.trim="form.password"
-              :placeholder="$translateTitle('请输入密码')"
               autocomplete="new-password"
+              :placeholder="$translateTitle('请输入密码')"
               type="password"
             >
               <template #prefix>
@@ -99,10 +82,7 @@
             </el-button>
 
             <span>
-              <router-link
-                style="float: left"
-                to="/login"
-              >
+              <router-link style="float: left" to="/login">
                 <div style="margin-top: 20px">
                   {{ $translateTitle('登录') }}
                 </div>
@@ -119,16 +99,8 @@
           </el-form-item>
         </el-form>
       </el-col>
-      <el-col
-        :lg="1"
-        :md="1"
-        :sm="24"
-        :xl="1"
-        :xs="24"
-      >
-        <div style="color: transparent">
-          占位符
-        </div>
+      <el-col :lg="1" :md="1" :sm="24" :xl="1" :xs="24">
+        <div style="color: transparent">占位符</div>
       </el-col>
     </el-row>
   </div>
@@ -143,8 +115,7 @@
     directives: {
       focus: {
         inserted(el) {
-          el.querySelector('input')
-            .focus()
+          el.querySelector('input').focus()
         },
       },
     },
@@ -265,7 +236,8 @@
     min-height: 700px;
     margin: 0 auto;
     text-align: center;
-    background: url('../../../public/assets/images/platform/assets/login_images/background.jpg') center center fixed no-repeat;
+    background: url('../../../public/assets/images/platform/assets/login_images/background.jpg')
+      center center fixed no-repeat;
     background-size: cover;
 
     .register-form {

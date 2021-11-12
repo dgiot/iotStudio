@@ -1,16 +1,13 @@
 <template>
   <div>
-    <el-tab-pane
-      label="物解析"
-      name="fourth"
-    >
+    <el-tab-pane label="物解析" name="fourth">
       <div class="protolheader">
         <el-form
           ref="formInline"
+          class="demo-form-inline"
           :inline="true"
           :model="formInline"
           :rules="addRules"
-          class="demo-form-inline"
         >
           <el-form-item
             :label="$translateTitle('product.protocolname')"
@@ -48,27 +45,15 @@
             >
               设为公共
             </el-button>
-            <el-button
-              size="small"
-              type="primary"
-              @click="chaxun"
-            >
+            <el-button size="small" type="primary" @click="chaxun">
               {{ $translateTitle('product.publicagreementlibrary') }}
             </el-button>
           </el-form-item>
           <el-form-item style="display: block">
-            <el-button
-              size="small"
-              type="primary"
-              @click="protol"
-            >
+            <el-button size="small" type="primary" @click="protol">
               {{ $translateTitle('product.compile') }}
             </el-button>
-            <el-button
-              size="small"
-              type="success"
-              @click="updatesubdialog"
-            >
+            <el-button size="small" type="success" @click="updatesubdialog">
               热加载
             </el-button>
           </el-form-item>
@@ -78,8 +63,8 @@
       <el-dialog
         :append-to-body="true"
         :close-on-click-modal="false"
-        :visible.sync="protoldialog"
         title="通道热加载"
+        :visible.sync="protoldialog"
         width="50%"
       >
         <el-table
@@ -89,28 +74,25 @@
           style="width: 100%"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column
-            type="selection"
-            width="55"
-          />
+          <el-table-column type="selection" width="55" />
           <el-table-column :label="$translateTitle('developer.channelnumber')">
-            <template slot-scope="scope">
-              <span>{{ scope.row.objectId }}</span>
+            <template #default="{ row }">
+              <span>{{ row.objectId }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$translateTitle('developer.channelname')">
-            <template slot-scope="scope">
-              <span>{{ scope.row.name }}</span>
+            <template #default="{ row }">
+              <span>{{ row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$translateTitle('developer.channeladdr')">
-            <template slot-scope="scope">
-              <span>{{ 'channel/' + scope.row.objectId }}</span>
+            <template #default="{ row }">
+              <span>{{ 'channel/' + row.objectId }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$translateTitle('developer.channeltype')">
-            <template slot-scope="scope">
-              <span v-if="scope.row.type == 1">
+            <template #default="{ row }">
+              <span v-if="row.type == 1">
                 {{ $translateTitle('developer.collectionchannel') }}
               </span>
               <span v-else>
@@ -119,19 +101,13 @@
             </template>
           </el-table-column>
           <el-table-column :label="$translateTitle('developer.servicetype')">
-            <template slot-scope="scope">
-              <span>{{ scope.row.cType }}</span>
+            <template #default="{ row }">
+              <span>{{ row.cType }}</span>
             </template>
           </el-table-column>
         </el-table>
-        <div
-          slot="footer"
-          class="dialog-footer"
-        >
-          <el-button
-            type="primary"
-            @click.native="updateAllChannel"
-          >
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click.native="updateAllChannel">
             确定
           </el-button>
         </div>
@@ -149,69 +125,59 @@
           style="width: 100%; margin-top: 20px; text-align: center"
         >
           <el-table-column
+            align="center"
             :label="$translateTitle('product.protocolname')"
-            align="center"
           >
-            <template slot-scope="scope">
-              <span>{{ scope.row.data.name }}</span>
+            <template #default="{ row }">
+              <span>{{ row.data.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
+            align="center"
             :label="$translateTitle('plugins.version')"
-            align="center"
           >
-            <template slot-scope="scope">
-              <span>{{ scope.row.data.version }}</span>
+            <template #default="{ row }">
+              <span>{{ row.data.version }}</span>
             </template>
           </el-table-column>
           <el-table-column
+            align="center"
             :label="$translateTitle('developer.describe')"
-            align="center"
           >
-            <template slot-scope="scope">
-              <span>{{ scope.row.data.desc }}</span>
+            <template #default="{ row }">
+              <span>{{ row.data.desc }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="创建时间">
+            <template #default="{ row }">
+              <span>{{ utc2beijing(row.createdAt) }}</span>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            label="创建时间"
-          >
-            <template slot-scope="scope">
-              <span>{{ utc2beijing(scope.row.createdAt) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
             :label="$translateTitle('developer.operation')"
-            align="center"
             width="200"
           >
-            <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="primary"
-                @click="editordata(scope.row)"
-              >
+            <template #default="{ row }">
+              <el-button size="mini" type="primary" @click="editordata(row)">
                 {{ $translateTitle('product.clone') }}
               </el-button>
               <el-button
                 size="mini"
                 type="danger"
-                @click="deletedata(scope.row.objectId)"
+                @click="deletedata(row.objectId)"
               >
                 {{ $translateTitle('developer.delete') }}
               </el-button>
             </template>
           </el-table-column>
         </el-table>
-        <div
-          class="elpagination"
-          style="padding: 20px 0"
-        >
+        <div class="elpagination" style="padding: 20px 0">
           <el-pagination
+            layout="total, sizes, prev, pager, next, jumper"
             :page-size="decoderlength"
             :page-sizes="[10, 20, 30, 50]"
             :total="decodertotal"
-            layout="total, sizes, prev, pager, next, jumper"
             @current-change="devicerCurrentChange"
             @size-change="decoderSizeChange"
           />

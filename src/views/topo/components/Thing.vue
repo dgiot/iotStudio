@@ -10,10 +10,10 @@
 <template>
   <div class="thing">
     <el-dialog
-      :title="$translateTitle('topo.topo') + $translateTitle('topo.thing')"
-      :visible.sync="thingDialog"
       append-to-body
+      :title="$translateTitle('topo.topo') + $translateTitle('topo.thing')"
       top="5vh"
+      :visible.sync="thingDialog"
     >
       <wmxdetail
         ref="sizeForm"
@@ -67,23 +67,16 @@
               this.bindTopo(args)
             }
           }
-        },
+        }
       )
     },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       ...mapMutations({
         setSizeForm: 'konva/setSizeForm',
@@ -227,33 +220,31 @@
           item: obj,
           productid: this.$route.query.productid,
         }
-        putThing(data)
-          .then((res) => {
-            console.log('编辑', res)
-            if (res.code == 200) {
-              this.$message({
-                type: 'success',
-                message: '编辑成功',
-              })
-              let params = {
-                identifier: obj.identifier,
-                name: obj.name,
-                productid: this.$route.query.productid,
-                shapeid: this.shapeid,
-              }
-              edit_konva_thing(params)
-                .then((res) => {
-                  console.log(res)
-                  this.handleCloseSub()
-                })
-              this.wmxhandleClose()
-            } else {
-              this.$message({
-                type: 'warning',
-                message: '编辑失败' + res.msg,
-              })
+        putThing(data).then((res) => {
+          console.log('编辑', res)
+          if (res.code == 200) {
+            this.$message({
+              type: 'success',
+              message: '编辑成功',
+            })
+            let params = {
+              identifier: obj.identifier,
+              name: obj.name,
+              productid: this.$route.query.productid,
+              shapeid: this.shapeid,
             }
-          })
+            edit_konva_thing(params).then((res) => {
+              console.log(res)
+              this.handleCloseSub()
+            })
+            this.wmxhandleClose()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '编辑失败' + res.msg,
+            })
+          }
+        })
       },
       // 删除枚举型
       removeDomain(item) {
@@ -301,10 +292,7 @@
           }
           this.shapeid = args.id
           const { data } = await get_konva_thing(params)
-          const {
-            konvathing,
-            nobound,
-          } = data
+          const { konvathing, nobound } = data
           console.log(konvathing, 'konvathing')
           console.log(nobound, 'nobound')
           if (Object.values(konvathing).length > 0) {
@@ -314,7 +302,7 @@
             // 提交之前需要先判断类型
             if (
               ['float', 'double', 'int', 'long'].indexOf(
-                konvathing.dataType.type,
+                konvathing.dataType.type
               ) != -1
             ) {
               obj = {
@@ -339,12 +327,12 @@
                 iscount: this.$objGet(konvathing, 'dataForm.iscount'),
                 countstrategy: this.$objGet(
                   konvathing,
-                  'dataForm.countstrategy',
+                  'dataForm.countstrategy'
                 ),
                 countround: this.$objGet(konvathing, 'dataForm.countround'),
                 countcollection: this.$objGet(
                   konvathing,
-                  'dataForm.countcollection',
+                  'dataForm.countcollection'
                 ),
                 slaveid: this.$objGet(konvathing, 'dataForm.slaveid'),
                 collection: '',
@@ -386,12 +374,12 @@
                 iscount: this.$objGet(konvathing, 'dataForm.iscount'),
                 countstrategy: this.$objGet(
                   konvathing,
-                  'dataForm.countstrategy',
+                  'dataForm.countstrategy'
                 ),
                 countround: this.$objGet(konvathing, 'dataForm.countround'),
                 countcollection: this.$objGet(
                   konvathing,
-                  'dataForm.countcollection',
+                  'dataForm.countcollection'
                 ),
                 required: false,
                 ico: konvathing.ico,
@@ -435,12 +423,12 @@
                 iscount: this.$objGet(konvathing, 'dataForm.iscount'),
                 countstrategy: this.$objGet(
                   konvathing,
-                  'dataForm.countstrategy',
+                  'dataForm.countstrategy'
                 ),
                 countround: this.$objGet(konvathing, 'dataForm.countround'),
                 countcollection: this.$objGet(
                   konvathing,
-                  'dataForm.countcollection',
+                  'dataForm.countcollection'
                 ),
                 required: false,
                 ico: konvathing.ico,
@@ -491,12 +479,12 @@
                 iscount: this.$objGet(konvathing, 'dataForm.iscount'),
                 countstrategy: this.$objGet(
                   konvathing,
-                  'dataForm.countstrategy',
+                  'dataForm.countstrategy'
                 ),
                 countround: this.$objGet(konvathing, 'dataForm.countround'),
                 countcollection: this.$objGet(
                   konvathing,
-                  'dataForm.countcollection',
+                  'dataForm.countcollection'
                 ),
                 required: true,
                 ico: konvathing.ico,
@@ -539,12 +527,12 @@
                 iscount: this.$objGet(konvathing, 'dataForm.iscount'),
                 countstrategy: this.$objGet(
                   konvathing,
-                  'dataForm.countstrategy',
+                  'dataForm.countstrategy'
                 ),
                 countround: this.$objGet(konvathing, 'dataForm.countround'),
                 countcollection: this.$objGet(
                   konvathing,
-                  'dataForm.countcollection',
+                  'dataForm.countcollection'
                 ),
                 required: true,
                 ico: konvathing.ico,
@@ -596,12 +584,12 @@
                 iscount: this.$objGet(konvathing, 'dataForm.iscount'),
                 countstrategy: this.$objGet(
                   konvathing,
-                  'dataForm.countstrategy',
+                  'dataForm.countstrategy'
                 ),
                 countround: this.$objGet(konvathing, 'dataForm.countround'),
                 countcollection: this.$objGet(
                   konvathing,
-                  'dataForm.countcollection',
+                  'dataForm.countcollection'
                 ),
                 required: true,
                 ico: konvathing.ico,
@@ -647,12 +635,12 @@
                 iscount: this.$objGet(konvathing, 'dataForm.iscount'),
                 countstrategy: this.$objGet(
                   konvathing,
-                  'dataForm.countstrategy',
+                  'dataForm.countstrategy'
                 ),
                 countround: this.$objGet(konvathing, 'dataForm.countround'),
                 countcollection: this.$objGet(
                   konvathing,
-                  'dataForm.countcollection',
+                  'dataForm.countcollection'
                 ),
                 required: true,
                 ico: konvathing.ico,
@@ -695,12 +683,12 @@
                 iscount: this.$objGet(konvathing, 'dataForm.iscount'),
                 countstrategy: this.$objGet(
                   konvathing,
-                  'dataForm.countstrategy',
+                  'dataForm.countstrategy'
                 ),
                 countround: this.$objGet(konvathing, 'dataForm.countround'),
                 countcollection: this.$objGet(
                   konvathing,
-                  'dataForm.countcollection',
+                  'dataForm.countcollection'
                 ),
                 required: true,
                 ico: konvathing.ico,

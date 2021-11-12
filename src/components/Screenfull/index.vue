@@ -51,10 +51,9 @@
 </template>
 
 <script>
-  import screenfull from 'screenfull'
-
+  import screenfullModule from 'screenfull'
   export default {
-    name: 'Screenfull',
+    name: 'ScreenfullM',
     props: {
       width: {
         type: Number,
@@ -80,14 +79,14 @@
     },
     methods: {
       click() {
-        if (screenfull.isFullscreen == true) {
+        if (screenfullModule.isFullscreen == true) {
           this.isscreen = true
           this.$baseEventBus.$emit('isshow', '全屏')
         } else {
           this.isscreen = false
           this.$baseEventBus.$emit('isshow', '退出全屏')
         }
-        if (!screenfull.enabled) {
+        if (!screenfullModule.enabled) {
           this.$message({
             message: 'you browser can not work',
             type: 'warning',

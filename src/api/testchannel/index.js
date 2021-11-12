@@ -10,7 +10,7 @@ export function channelConnect(
   name,
   sql_length,
   connect,
-  ssl,
+  ssl
 ) {
   return request({
     url: '/resource/' + type,
@@ -40,7 +40,7 @@ export function updateConnect(
   sql_length,
   connect,
   ssl,
-  isEnable,
+  isEnable
 ) {
   return request({
     url: '/resource/edit/' + objectId,

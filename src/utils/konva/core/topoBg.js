@@ -13,11 +13,7 @@ const topoBg = {
    * @param layer
    * @param stage
    */
-  bgMoveToBottom({
-    bgNode,
-    layer,
-    stage,
-  } = args) {
+  bgMoveToBottom({ bgNode, layer, stage } = args) {
     const BgimageObj = new Image()
     const {
       randomXy,
@@ -27,7 +23,7 @@ const topoBg = {
     } = canvas
     const bgSrc = topobgSrc.includes('//')
       ? topobgSrc
-      : localStorage.getItem('fileServer') + topobgSrc
+      : location.host + topobgSrc
     const setattrs = canvas.konvaAttr
     console.log('当前组态的背景底图是：', bgSrc, stage)
     // bgNode.on('contextmenu', (e) => {
@@ -51,8 +47,8 @@ const topoBg = {
           {
             class: ' created',
             id: ' created',
-          },
-        ),
+          }
+        )
       )
       yoda.setAttrs({
         class: '不刪1111除',
@@ -88,23 +84,22 @@ const topoBg = {
     layer.batchDraw()
     stage.batchDraw()
     if (bgNode) {
-      canvas.layer.find('Image')
-        .forEach((bgImg) => {
-          console.log(bgImg, bgImg.getAttr('class'), bgImg.attrs.type)
-          if (bgImg.attrs.type == 'bg-image' || bgImg.attrs.id == 'bg') {
-            // 这里应该删掉所有的id为bg的元素 然后再创建
-            console.log('删除这个元素', bgImg)
-            bgImg.remove()
-            bgImg.destroy()
-          } else {
-            console.log('该图元不删除')
-          }
-          // bgImg.hide()
-          console.log(bgImg)
-          canvas.layer.batchDraw()
-          canvas.stage.batchDraw()
-          // canvas.bgNode = {}
-        })
+      canvas.layer.find('Image').forEach((bgImg) => {
+        console.log(bgImg, bgImg.getAttr('class'), bgImg.attrs.type)
+        if (bgImg.attrs.type == 'bg-image' || bgImg.attrs.id == 'bg') {
+          // 这里应该删掉所有的id为bg的元素 然后再创建
+          console.log('删除这个元素', bgImg)
+          bgImg.remove()
+          bgImg.destroy()
+        } else {
+          console.log('该图元不删除')
+        }
+        // bgImg.hide()
+        console.log(bgImg)
+        canvas.layer.batchDraw()
+        canvas.stage.batchDraw()
+        // canvas.bgNode = {}
+      })
       const BgimageObj = new Image()
       const bgSrc = src.includes('//')
         ? src
@@ -130,8 +125,8 @@ const topoBg = {
               src: bgSrc,
               class: ' created',
               id: ' created',
-            },
-          ),
+            }
+          )
         )
         yoda.setAttrs({
           id: 'bg',

@@ -6,7 +6,12 @@
  * @Description: In User Settings Edit
  * @FilePath: \dgiot-dashboard\src\api\Project\index.js
  */
-import { create_object, del_object, get_object, query_object } from '@/api/shuwa_parse'
+import {
+  create_object,
+  del_object,
+  get_object,
+  query_object,
+} from '@/api/shuwa_parse'
 import request from '@/utils/request'
 
 export async function queryProject(params) {

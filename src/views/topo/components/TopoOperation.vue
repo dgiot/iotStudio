@@ -1,31 +1,22 @@
 <!-- 组件说明 -->
 <template>
   <div class="operation">
-    <el-tabs
-      v-if="Shapeconfig.attrs"
-      v-model="activeName"
-      stretch
-    >
+    <el-tabs v-if="Shapeconfig.attrs" v-model="activeName" stretch>
       <div class="unvisible">
         <el-upload
           ref="upload"
+          action="https://jsonplaceholder.typicode.com/posts/"
           :before-remove="beforeRemove"
+          class="upload-demo"
           :file-list="fileList"
           :limit="1"
+          multiple
           :on-exceed="handleExceed"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          class="upload-demo"
-          multiple
           style="display: none"
         >
-          <el-button
-            size="small"
-            type="primary"
-          >
-            点击上传
-          </el-button>
+          <el-button size="small" type="primary">点击上传</el-button>
         </el-upload>
       </div>
       <el-tab-pane
@@ -36,8 +27,8 @@
           v-for="(item, key, index) in Shapeconfig.attrs"
           :key="index"
           ref="numberValidateForm"
-          :disabled="disabledForm"
           class="demo-ruleForm"
+          :disabled="disabledForm"
           label-width="80px"
         >
           <el-form-item :label="$translateTitle(`konva.${key}`)">
@@ -77,10 +68,7 @@
           >
             {{ $translateTitle('developer.edit') }}
           </el-button>
-          <el-button
-            type="info"
-            @click.native="saveKonvaitem(Shapeconfig)"
-          >
+          <el-button type="info" @click.native="saveKonvaitem(Shapeconfig)">
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button
@@ -138,8 +126,8 @@
           :before-close="wmxhandleClose"
           :close-on-click-modal="false"
           :title="wmxSituation + '自定义属性'"
-          :visible.sync="wmxdialogVisible"
           top="5vh"
+          :visible.sync="wmxdialogVisible"
           width="60%"
         >
           <wmxdetail
@@ -237,22 +225,14 @@
         },
       },
     },
-    mounted() {
-    },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    },
-    activated() {
-    },
+    mounted() {},
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {},
+    activated() {},
     methods: {
       ...mapMutations({
         setSizeForm: 'konva/setSizeForm',
@@ -326,10 +306,7 @@
           shapeid: this.Shapeconfig.attrs.id,
         }
         const { data } = await get_konva_thing(params)
-        const {
-          konvathing,
-          nobound,
-        } = data
+        const { konvathing, nobound } = data
         console.log(konvathing, 'konvathing')
         console.log(nobound, 'nobound')
         if (Object.values(konvathing).length > 0) {
@@ -340,8 +317,9 @@
           var obj = {}
           // 提交之前需要先判断类型
           if (
-            ['float', 'double', 'int', 'long'].indexOf(konvathing.dataType.type) !=
-            -1
+            ['float', 'double', 'int', 'long'].indexOf(
+              konvathing.dataType.type
+            ) != -1
           ) {
             obj = {
               name: konvathing.name,
@@ -365,7 +343,10 @@
               iscount: this.$objGet(konvathing, 'dataForm.iscount'),
               countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
               countround: this.$objGet(konvathing, 'dataForm.countround'),
-              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
+              countcollection: this.$objGet(
+                konvathing,
+                'dataForm.countcollection'
+              ),
               slaveid: this.$objGet(konvathing, 'dataForm.slaveid'),
               collection: '',
               control: '',
@@ -406,18 +387,27 @@
               iscount: this.$objGet(konvathing, 'dataForm.iscount'),
               countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
               countround: this.$objGet(konvathing, 'dataForm.countround'),
-              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
+              countcollection: this.$objGet(
+                konvathing,
+                'dataForm.countcollection'
+              ),
               required: false,
               ico: konvathing.ico,
               isread: konvathing.accessMode,
               isshow: konvathing.isshow,
               identifier: konvathing.identifier,
               collection:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.control,
               strategy:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.strategy,
               editdatatype: true,
             }
           } else if (konvathing.dataType.type == 'image') {
@@ -443,18 +433,27 @@
               iscount: this.$objGet(konvathing, 'dataForm.iscount'),
               countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
               countround: this.$objGet(konvathing, 'dataForm.countround'),
-              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
+              countcollection: this.$objGet(
+                konvathing,
+                'dataForm.countcollection'
+              ),
               required: false,
               ico: konvathing.ico,
               isread: konvathing.accessMode,
               isshow: konvathing.isshow,
               identifier: konvathing.identifier,
               collection:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.control,
               strategy:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.strategy,
               editdatatype: true,
             }
           } else if (konvathing.dataType.type == 'enum') {
@@ -487,18 +486,27 @@
               iscount: this.$objGet(konvathing, 'dataForm.iscount'),
               countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
               countround: this.$objGet(konvathing, 'dataForm.countround'),
-              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
+              countcollection: this.$objGet(
+                konvathing,
+                'dataForm.countcollection'
+              ),
               required: true,
               ico: konvathing.ico,
               isread: konvathing.accessMode,
               isshow: konvathing.isshow,
               identifier: konvathing.identifier,
               collection:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.control,
               strategy:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.strategy,
               editdatatype: true,
             }
           } else if (konvathing.dataType.type == 'struct') {
@@ -523,18 +531,28 @@
               iscount: this.$objGet(konvathing, 'dataForm.iscount'),
               countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
               countround: this.$objGet(konvathing, 'dataForm.countround'),
-              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
+              countcollection: this.$objGet(
+                konvathing,
+                'dataForm.countcollection'
+              ),
               required: true,
               ico: konvathing.ico,
               isread: konvathing.accessMode,
               isshow: konvathing.isshow,
               collection:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
-              identifier: konvathing.dataForm == undefined ? '' : konvathing.identifier,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.control,
+              identifier:
+                konvathing.dataForm == undefined ? '' : konvathing.identifier,
               strategy:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.strategy,
               editdatatype: true,
             }
           } else if (konvathing.dataType.type == 'text') {
@@ -543,9 +561,13 @@
               devicetype: konvathing.devicetype,
               type: konvathing.dataType.type,
               collection:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.control,
               string: konvathing.dataType.size,
               startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
               step: this.$objGet(konvathing, 'dataType.specs.step'),
@@ -563,14 +585,19 @@
               iscount: this.$objGet(konvathing, 'dataForm.iscount'),
               countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
               countround: this.$objGet(konvathing, 'dataForm.countround'),
-              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
+              countcollection: this.$objGet(
+                konvathing,
+                'dataForm.countcollection'
+              ),
               required: true,
               ico: konvathing.ico,
               isread: konvathing.accessMode,
               isshow: konvathing.isshow,
               identifier: konvathing.identifier,
               strategy:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.strategy,
               editdatatype: true,
             }
           } else if (konvathing.dataType.type == 'date') {
@@ -579,11 +606,17 @@
               devicetype: konvathing.devicetype,
               type: konvathing.dataType.type,
               collection:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.control,
               strategy:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.strategy,
               startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
               step: this.$objGet(konvathing, 'dataType.specs.step'),
               unit: this.$objGet(konvathing, 'dataType.specs.unit'),
@@ -600,7 +633,10 @@
               iscount: this.$objGet(konvathing, 'dataForm.iscount'),
               countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
               countround: this.$objGet(konvathing, 'dataForm.countround'),
-              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
+              countcollection: this.$objGet(
+                konvathing,
+                'dataForm.countcollection'
+              ),
               required: true,
               ico: konvathing.ico,
               isread: konvathing.accessMode,
@@ -615,11 +651,17 @@
               type: konvathing.dataType.type,
               gpstype: konvathing.dataType.gpstype,
               collection:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.collection,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.collection,
               control:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.control,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.control,
               strategy:
-                konvathing.dataForm == undefined ? '' : konvathing.dataForm.strategy,
+                konvathing.dataForm == undefined
+                  ? ''
+                  : konvathing.dataForm.strategy,
               startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
               step: this.$objGet(konvathing, 'dataType.specs.step'),
               unit: this.$objGet(konvathing, 'dataType.specs.unit'),
@@ -636,7 +678,10 @@
               iscount: this.$objGet(konvathing, 'dataForm.iscount'),
               countstrategy: this.$objGet(konvathing, 'dataForm.countstrategy'),
               countround: this.$objGet(konvathing, 'dataForm.countround'),
-              countcollection: this.$objGet(konvathing, 'dataForm.countcollection'),
+              countcollection: this.$objGet(
+                konvathing,
+                'dataForm.countcollection'
+              ),
               required: true,
               ico: konvathing.ico,
               isread: konvathing.accessMode,
@@ -805,40 +850,35 @@
           item: obj,
           productid: this.$route.query.productid,
         }
-        putThing(data)
-          .then((res) => {
-            console.log('编辑', res)
-            if (res.code == 200) {
-              this.$message({
-                type: 'success',
-                message: '编辑成功',
-              })
-              let params = {
-                identifier: obj.identifier,
-                name: obj.name,
-                productid: this.$route.query.productid,
-                shapeid: this.Shapeconfig.attrs.id,
-              }
-              edit_konva_thing(params)
-                .then((res) => {
-                  console.log(res)
-                  this.handleCloseSub()
-                })
-              this.wmxhandleClose()
-            } else {
-              this.$message({
-                type: 'warning',
-                message: '编辑失败' + res.msg,
-              })
+        putThing(data).then((res) => {
+          console.log('编辑', res)
+          if (res.code == 200) {
+            this.$message({
+              type: 'success',
+              message: '编辑成功',
+            })
+            let params = {
+              identifier: obj.identifier,
+              name: obj.name,
+              productid: this.$route.query.productid,
+              shapeid: this.Shapeconfig.attrs.id,
             }
-          })
+            edit_konva_thing(params).then((res) => {
+              console.log(res)
+              this.handleCloseSub()
+            })
+            this.wmxhandleClose()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '编辑失败' + res.msg,
+            })
+          }
+        })
       },
-      selectStruct() {
-      },
-      wmxCurrentChange() {
-      },
-      wmxSizeChange() {
-      },
+      selectStruct() {},
+      wmxCurrentChange() {},
+      wmxSizeChange() {},
       isShowItem(lable) {
         return !this.ShowItem.includes(lable)
       },
@@ -877,7 +917,7 @@
         this.$message.warning(
           `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
             files.length + fileList.length
-          } 个文件`,
+          } 个文件`
         )
       },
       beforeRemove(file, fileList) {
@@ -900,9 +940,7 @@
     overflow: auto;
   }
 
-  ::v-deep .el-tabs__nav-wrap
-  .el-tabs__nav-scroll
-  .el-tabs__nav {
+  ::v-deep .el-tabs__nav-wrap .el-tabs__nav-scroll .el-tabs__nav {
     display: flex;
     justify-content: space-around;
     width: 100%;
@@ -912,12 +950,13 @@
     cursor: pointer;
   }
 
-  ::v-deep .el-input-group__append, .el-input-group__prepend {
+  ::v-deep .el-input-group__append,
+  .el-input-group__prepend {
     padding: 0 !important;
-    margin: 0 !important
+    margin: 0 !important;
   }
 
   .footer-panel {
-    text-align: center
+    text-align: center;
   }
 </style>

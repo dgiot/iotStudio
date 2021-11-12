@@ -1,33 +1,24 @@
 <template>
-  <el-dropdown
-    trigger="click"
-    @command="handleSetSize"
-  >
-    <div>
-      <vab-icon
-        class-name="size-icon"
-        icon-class="size"
-      />
-    </div>
-    <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item
-        :disabled="size === 'medium'"
-        command="medium"
-      >
-        Medium
-      </el-dropdown-item>
-      <el-dropdown-item
-        :disabled="size === 'small'"
-        command="small"
-      >
-        Small
-      </el-dropdown-item>
-    </el-dropdown-menu>
-  </el-dropdown>
+  <div class="SizeSelect">
+    <el-dropdown trigger="click" @command="handleSetSize">
+      <div>
+        <vab-icon class-name="size-icon" icon-class="size" />
+      </div>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="medium" :disabled="size === 'medium'">
+          Medium
+        </el-dropdown-item>
+        <el-dropdown-item command="small" :disabled="size === 'small'">
+          Small
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+  </div>
 </template>
 
 <script>
   export default {
+    mame: 'SizeSelect',
     computed: {
       size() {
         return this.$store.getters.size

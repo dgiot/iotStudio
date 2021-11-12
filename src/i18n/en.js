@@ -98,7 +98,7 @@ export default {
       connected: 'CONNECTED',
       connecting: 'CONNECTING',
       disconnected: 'DISCONNECTED',
-      notSupport: 'Your browser doesn\'t support WebSocket',
+      notSupport: "Your browser doesn't support WebSocket",
     },
     route: {
       云组态: 'cloudConfigurationt',

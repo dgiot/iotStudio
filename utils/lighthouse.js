@@ -8,11 +8,9 @@ function launchChromeAndRunLighthouse(url, opts, config = null) {
     .then((chrome) => {
       opts.port = chrome.port
       // 2. 在相同的端口运行lighthouse
-      return lighthouse(url, opts, config)
-        .then((results) =>
-          chrome.kill()
-            .then(() => results),
-        )
+      return lighthouse(url, opts, config).then((results) =>
+        chrome.kill().then(() => results)
+      )
     })
 }
 
@@ -21,9 +19,8 @@ const opts = {
 }
 
 // Usage:
-launchChromeAndRunLighthouse('https://prod.iotn2n.com', opts)
-  .then(
-    (results) => {
-      // Use results!
-    },
-  )
+launchChromeAndRunLighthouse('https://prod.iotn2n.com', opts).then(
+  (results) => {
+    // Use results!
+  }
+)

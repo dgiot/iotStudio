@@ -1,8 +1,6 @@
 {
   "basePath": "/iotapi",
-  "consumes": [
-    "application/json"
-  ],
+  "consumes": ["application/json"],
   "definitions": {
     "_Session": {
       "properties": {
@@ -2198,9 +2196,7 @@
           }
         },
         "summary": "查询产品",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       },
       "post": {
         "description": "新增一条产品记录",
@@ -2257,9 +2253,7 @@
           }
         },
         "summary": "新增产品",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       }
     },
     "/classes/Category/{id}": {
@@ -2308,9 +2302,7 @@
           }
         },
         "summary": "删除Category",
-        "tags": [
-          "Category"
-        ]
+        "tags": ["Category"]
       },
       "get": {
         "description": "根据ID获取Category详情",
@@ -2360,9 +2352,7 @@
           }
         },
         "summary": "获取Category详情",
-        "tags": [
-          "Category"
-        ]
+        "tags": ["Category"]
       },
       "put": {
         "description": "通过ID更新Category",
@@ -2432,9 +2422,7 @@
           }
         },
         "summary": "更新Category",
-        "tags": [
-          "Category"
-        ]
+        "tags": ["Category"]
       }
     },
     "/classes/_User": {
@@ -2526,9 +2514,7 @@
           }
         },
         "summary": "查询用户",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       },
       "post": {
         "description": "新增一条用户记录",
@@ -2585,9 +2571,7 @@
           }
         },
         "summary": "新增用户",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/level/_Installation": {
@@ -2635,9 +2619,7 @@
           }
         },
         "summary": "设置部署表级别",
-        "tags": [
-          "_Installation"
-        ]
+        "tags": ["_Installation"]
       }
     },
     "/report": {
@@ -2672,9 +2654,7 @@
           }
         },
         "summary": "导出取证报告压缩包",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       },
       "post": {
         "description": "新增取证报告",
@@ -2727,9 +2707,7 @@
           }
         },
         "summary": "新增取证报告",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       },
       "put": {
         "description": "导入取证报告压缩包",
@@ -2773,9 +2751,7 @@
           }
         },
         "summary": "导入取证报告压缩包",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/resource_types": {
@@ -2833,9 +2809,7 @@
           }
         },
         "summary": "获取资源类型列表",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       }
     },
     "/classes/Device": {
@@ -2927,9 +2901,7 @@
           }
         },
         "summary": "查询设备",
-        "tags": [
-          "Device"
-        ]
+        "tags": ["Device"]
       },
       "post": {
         "description": "新增一条设备记录",
@@ -2986,9 +2958,7 @@
           }
         },
         "summary": "新增设备",
-        "tags": [
-          "Device"
-        ]
+        "tags": ["Device"]
       }
     },
     "/classes/_Role/{id}": {
@@ -3037,9 +3007,7 @@
           }
         },
         "summary": "删除角色",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "get": {
         "description": "根据ID获取角色详情",
@@ -3089,9 +3057,7 @@
           }
         },
         "summary": "获取角色详情",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "put": {
         "description": "通过ID更新角色",
@@ -3161,16 +3127,12 @@
           }
         },
         "summary": "更新角色",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       }
     },
     "/health": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "检测是启动",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_health"
@@ -3196,9 +3158,7 @@
         },
         "security": [],
         "summary": "health",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/level/Evidence": {
@@ -3246,9 +3206,7 @@
           }
         },
         "summary": "设置证据表级别",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/hardinfo": {
@@ -3278,9 +3236,7 @@
         },
         "security": [],
         "summary": "获取硬件key",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/classes/Crond": {
@@ -3372,9 +3328,7 @@
           }
         },
         "summary": "查询任务",
-        "tags": [
-          "Crond"
-        ]
+        "tags": ["Crond"]
       },
       "post": {
         "description": "新增一条任务记录",
@@ -3431,9 +3385,7 @@
           }
         },
         "summary": "新增任务",
-        "tags": [
-          "Crond"
-        ]
+        "tags": ["Crond"]
       }
     },
     "/classes/ProductTemplet": {
@@ -3525,9 +3477,7 @@
           }
         },
         "summary": "查询ProductTemplet",
-        "tags": [
-          "ProductTemplet"
-        ]
+        "tags": ["ProductTemplet"]
       },
       "post": {
         "description": "新增一条ProductTemplet记录",
@@ -3584,9 +3534,7 @@
           }
         },
         "summary": "新增ProductTemplet",
-        "tags": [
-          "ProductTemplet"
-        ]
+        "tags": ["ProductTemplet"]
       }
     },
     "/schema/Channel": {
@@ -3624,9 +3572,7 @@
           }
         },
         "summary": "获取通道表的权限级别和结构",
-        "tags": [
-          "Channel"
-        ]
+        "tags": ["Channel"]
       }
     },
     "/schema/LogLevel": {
@@ -3664,9 +3610,7 @@
           }
         },
         "summary": "获取LogLevel表的权限级别和结构",
-        "tags": [
-          "LogLevel"
-        ]
+        "tags": ["LogLevel"]
       }
     },
     "/wechat": {
@@ -3701,14 +3645,10 @@
         },
         "security": [],
         "summary": "wechat登陆",
-        "tags": [
-          "Wechat"
-        ]
+        "tags": ["Wechat"]
       },
       "post": {
-        "consumes": [
-          "text/plain"
-        ],
+        "consumes": ["text/plain"],
         "description": "wechat绑定",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_wechat"
@@ -3763,9 +3703,7 @@
         },
         "security": [],
         "summary": "wechat绑定",
-        "tags": [
-          "Wechat"
-        ]
+        "tags": ["Wechat"]
       }
     },
     "/classes/Instruct/{id}": {
@@ -3814,9 +3752,7 @@
           }
         },
         "summary": "删除指令",
-        "tags": [
-          "Instruct"
-        ]
+        "tags": ["Instruct"]
       },
       "get": {
         "description": "根据ID获取指令详情",
@@ -3866,9 +3802,7 @@
           }
         },
         "summary": "获取指令详情",
-        "tags": [
-          "Instruct"
-        ]
+        "tags": ["Instruct"]
       },
       "put": {
         "description": "通过ID更新指令",
@@ -3938,9 +3872,7 @@
           }
         },
         "summary": "更新指令",
-        "tags": [
-          "Instruct"
-        ]
+        "tags": ["Instruct"]
       }
     },
     "/classes/Icon": {
@@ -4032,9 +3964,7 @@
           }
         },
         "summary": "查询Icon",
-        "tags": [
-          "Icon"
-        ]
+        "tags": ["Icon"]
       },
       "post": {
         "description": "新增一条Icon记录",
@@ -4091,9 +4021,7 @@
           }
         },
         "summary": "新增Icon",
-        "tags": [
-          "Icon"
-        ]
+        "tags": ["Icon"]
       }
     },
     "/resources": {
@@ -4136,9 +4064,7 @@
           }
         },
         "summary": "获取资源列表",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       },
       "post": {
         "description": "创建资源",
@@ -4174,16 +4100,12 @@
           }
         },
         "summary": "创建资源",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       }
     },
     "/licsetup": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "下载安装脚本",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_licsetup"
@@ -4218,9 +4140,7 @@
         },
         "security": [],
         "summary": "离线安装",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/level/Icon": {
@@ -4268,9 +4188,7 @@
           }
         },
         "summary": "设置Icon表级别",
-        "tags": [
-          "Icon"
-        ]
+        "tags": ["Icon"]
       }
     },
     "/schema/App": {
@@ -4308,9 +4226,7 @@
           }
         },
         "summary": "获取应用表的权限级别和结构",
-        "tags": [
-          "App"
-        ]
+        "tags": ["App"]
       }
     },
     "/classes/Icon/{id}": {
@@ -4359,9 +4275,7 @@
           }
         },
         "summary": "删除Icon",
-        "tags": [
-          "Icon"
-        ]
+        "tags": ["Icon"]
       },
       "get": {
         "description": "根据ID获取Icon详情",
@@ -4411,9 +4325,7 @@
           }
         },
         "summary": "获取Icon详情",
-        "tags": [
-          "Icon"
-        ]
+        "tags": ["Icon"]
       },
       "put": {
         "description": "通过ID更新Icon",
@@ -4483,9 +4395,7 @@
           }
         },
         "summary": "更新Icon",
-        "tags": [
-          "Icon"
-        ]
+        "tags": ["Icon"]
       }
     },
     "/meter_ctrl": {
@@ -4548,9 +4458,7 @@
         },
         "security": [],
         "summary": "对远程电表进行关闸/合闸(重要：接口调用后间隔15秒以上，避免对同一终端设备频繁操作)",
-        "tags": [
-          "METER"
-        ]
+        "tags": ["METER"]
       }
     },
     "/encoder": {
@@ -4581,9 +4489,7 @@
         },
         "security": [],
         "summary": "编码",
-        "tags": [
-          "gb26875"
-        ]
+        "tags": ["gb26875"]
       }
     },
     "/task/{vcaddr}": {
@@ -4618,9 +4524,7 @@
           }
         },
         "summary": "停止任务",
-        "tags": [
-          "Crond"
-        ]
+        "tags": ["Crond"]
       }
     },
     "/level/LogLevel": {
@@ -4668,9 +4572,7 @@
           }
         },
         "summary": "设置LogLevel表级别",
-        "tags": [
-          "LogLevel"
-        ]
+        "tags": ["LogLevel"]
       }
     },
     "/adddevice": {
@@ -4730,9 +4632,7 @@
           }
         },
         "summary": "序列号添加设备",
-        "tags": [
-          "Device"
-        ]
+        "tags": ["Device"]
       }
     },
     "/schema/_Installation": {
@@ -4770,9 +4670,7 @@
           }
         },
         "summary": "获取部署表的权限级别和结构",
-        "tags": [
-          "_Installation"
-        ]
+        "tags": ["_Installation"]
       }
     },
     "/log/level": {
@@ -4816,9 +4714,7 @@
           }
         },
         "summary": "获取日志配置",
-        "tags": [
-          "System"
-        ]
+        "tags": ["System"]
       },
       "put": {
         "description": "更新日志级别",
@@ -4872,9 +4768,7 @@
           }
         },
         "summary": "更新日志级别",
-        "tags": [
-          "System"
-        ]
+        "tags": ["System"]
       }
     },
     "/classes/Log/{id}": {
@@ -4923,9 +4817,7 @@
           }
         },
         "summary": "删除Log",
-        "tags": [
-          "Log"
-        ]
+        "tags": ["Log"]
       },
       "get": {
         "description": "根据ID获取Log详情",
@@ -4975,9 +4867,7 @@
           }
         },
         "summary": "获取Log详情",
-        "tags": [
-          "Log"
-        ]
+        "tags": ["Log"]
       },
       "put": {
         "description": "通过ID更新Log",
@@ -5047,9 +4937,7 @@
           }
         },
         "summary": "更新Log",
-        "tags": [
-          "Log"
-        ]
+        "tags": ["Log"]
       }
     },
     "/provider": {
@@ -5101,9 +4989,7 @@
           }
         },
         "summary": "获取acl编辑器提示语",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       }
     },
     "/decoder": {
@@ -5133,9 +5019,7 @@
         },
         "security": [],
         "summary": "解码",
-        "tags": [
-          "gb26875"
-        ]
+        "tags": ["gb26875"]
       }
     },
     "/schema/Rules": {
@@ -5173,16 +5057,12 @@
           }
         },
         "summary": "获取Rules表的权限级别和结构",
-        "tags": [
-          "Rules"
-        ]
+        "tags": ["Rules"]
       }
     },
     "/classes/Site/{Id}": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "获取应用信息",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_classes_site_id"
@@ -5216,9 +5096,7 @@
         },
         "security": [],
         "summary": "获取应用信息",
-        "tags": [
-          "Project"
-        ]
+        "tags": ["Project"]
       }
     },
     "/level/Rules": {
@@ -5266,9 +5144,7 @@
           }
         },
         "summary": "设置Rules表级别",
-        "tags": [
-          "Rules"
-        ]
+        "tags": ["Rules"]
       }
     },
     "/group/{id}": {
@@ -5305,9 +5181,7 @@
           }
         },
         "summary": "获取组信息",
-        "tags": [
-          "Group"
-        ]
+        "tags": ["Group"]
       }
     },
     "/roleuser": {
@@ -5351,9 +5225,7 @@
           }
         },
         "summary": "删除用户权限",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "get": {
         "description": "查询用户权限",
@@ -5395,9 +5267,7 @@
           }
         },
         "summary": "查询用户权限",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "post": {
         "description": "新增用户权限",
@@ -5447,9 +5317,7 @@
           }
         },
         "summary": "新增用户权限",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "put": {
         "description": "修改用户权限",
@@ -5511,9 +5379,7 @@
           }
         },
         "summary": "修改用户权限",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       }
     },
     "/hash/{class}": {
@@ -5558,9 +5424,7 @@
           }
         },
         "summary": "获取类对象hash值",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/schema/Icon": {
@@ -5598,9 +5462,7 @@
           }
         },
         "summary": "获取Icon表的权限级别和结构",
-        "tags": [
-          "Icon"
-        ]
+        "tags": ["Icon"]
       }
     },
     "/schema/Instruct": {
@@ -5638,9 +5500,7 @@
           }
         },
         "summary": "获取指令表的权限级别和结构",
-        "tags": [
-          "Instruct"
-        ]
+        "tags": ["Instruct"]
       }
     },
     "/level/Notification": {
@@ -5688,9 +5548,7 @@
           }
         },
         "summary": "设置通知表级别",
-        "tags": [
-          "Notification"
-        ]
+        "tags": ["Notification"]
       }
     },
     "/level/ProductTemplet": {
@@ -5738,9 +5596,7 @@
           }
         },
         "summary": "设置ProductTemplet表级别",
-        "tags": [
-          "ProductTemplet"
-        ]
+        "tags": ["ProductTemplet"]
       }
     },
     "/wechat_unbind": {
@@ -5766,9 +5622,7 @@
           }
         },
         "summary": "wechat解绑",
-        "tags": [
-          "Wechat"
-        ]
+        "tags": ["Wechat"]
       }
     },
     "/classes/Evidence/{id}": {
@@ -5817,9 +5671,7 @@
           }
         },
         "summary": "删除证据",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       },
       "get": {
         "description": "根据ID获取证据详情",
@@ -5869,9 +5721,7 @@
           }
         },
         "summary": "获取证据详情",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       },
       "put": {
         "description": "通过ID更新证据",
@@ -5941,9 +5791,7 @@
           }
         },
         "summary": "更新证据",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/dashboard": {
@@ -5976,9 +5824,7 @@
           }
         },
         "summary": "启动任务",
-        "tags": [
-          "TOPO"
-        ]
+        "tags": ["TOPO"]
       }
     },
     "/classes/App": {
@@ -6070,9 +5916,7 @@
           }
         },
         "summary": "查询应用",
-        "tags": [
-          "App"
-        ]
+        "tags": ["App"]
       },
       "post": {
         "description": "新增一条应用记录",
@@ -6129,9 +5973,7 @@
           }
         },
         "summary": "新增应用",
-        "tags": [
-          "App"
-        ]
+        "tags": ["App"]
       }
     },
     "/user": {
@@ -6179,9 +6021,7 @@
           }
         },
         "summary": "员工离职",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       },
       "post": {
         "description": "新增用户",
@@ -6255,9 +6095,7 @@
           }
         },
         "summary": "员工入职",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       },
       "put": {
         "description": "员工转岗",
@@ -6303,9 +6141,7 @@
           }
         },
         "summary": "员工转岗",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/classes/_Session/{id}": {
@@ -6354,9 +6190,7 @@
           }
         },
         "summary": "删除会话",
-        "tags": [
-          "_Session"
-        ]
+        "tags": ["_Session"]
       },
       "get": {
         "description": "根据ID获取会话详情",
@@ -6406,9 +6240,7 @@
           }
         },
         "summary": "获取会话详情",
-        "tags": [
-          "_Session"
-        ]
+        "tags": ["_Session"]
       },
       "put": {
         "description": "通过ID更新会话",
@@ -6478,9 +6310,7 @@
           }
         },
         "summary": "更新会话",
-        "tags": [
-          "_Session"
-        ]
+        "tags": ["_Session"]
       }
     },
     "/file_info": {
@@ -6515,9 +6345,7 @@
           }
         },
         "summary": "删除文件",
-        "tags": [
-          "go-fastdfs"
-        ]
+        "tags": ["go-fastdfs"]
       },
       "get": {
         "description": "获取文件信息",
@@ -6550,9 +6378,7 @@
           }
         },
         "summary": "获取文件信息",
-        "tags": [
-          "go-fastdfs"
-        ]
+        "tags": ["go-fastdfs"]
       }
     },
     "/classes/Menu/{id}": {
@@ -6601,9 +6427,7 @@
           }
         },
         "summary": "删除菜单",
-        "tags": [
-          "Menu"
-        ]
+        "tags": ["Menu"]
       },
       "get": {
         "description": "根据ID获取菜单详情",
@@ -6653,9 +6477,7 @@
           }
         },
         "summary": "获取菜单详情",
-        "tags": [
-          "Menu"
-        ]
+        "tags": ["Menu"]
       },
       "put": {
         "description": "通过ID更新菜单",
@@ -6725,9 +6547,7 @@
           }
         },
         "summary": "更新菜单",
-        "tags": [
-          "Menu"
-        ]
+        "tags": ["Menu"]
       }
     },
     "/notification": {
@@ -6789,9 +6609,7 @@
           }
         },
         "summary": "告警列表",
-        "tags": [
-          "Wechat"
-        ]
+        "tags": ["Wechat"]
       }
     },
     "/schema/Project": {
@@ -6829,9 +6647,7 @@
           }
         },
         "summary": "获取项目表的权限级别和结构",
-        "tags": [
-          "Project"
-        ]
+        "tags": ["Project"]
       }
     },
     "/classes/Channel": {
@@ -6923,9 +6739,7 @@
           }
         },
         "summary": "查询通道",
-        "tags": [
-          "Channel"
-        ]
+        "tags": ["Channel"]
       },
       "post": {
         "description": "新增一条通道记录",
@@ -6982,9 +6796,7 @@
           }
         },
         "summary": "新增通道",
-        "tags": [
-          "Channel"
-        ]
+        "tags": ["Channel"]
       }
     },
     "/sendsubscribe": {
@@ -7043,9 +6855,7 @@
           }
         },
         "summary": "发送订阅消息",
-        "tags": [
-          "Wechat"
-        ]
+        "tags": ["Wechat"]
       }
     },
     "/compile": {
@@ -7090,9 +6900,7 @@
           }
         },
         "summary": "编译代码",
-        "tags": [
-          "System"
-        ]
+        "tags": ["System"]
       }
     },
     "/export_file": {
@@ -7151,9 +6959,7 @@
           }
         },
         "summary": "文件导出",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/level/Crond": {
@@ -7201,9 +7007,7 @@
           }
         },
         "summary": "设置任务表级别",
-        "tags": [
-          "Crond"
-        ]
+        "tags": ["Crond"]
       }
     },
     "/generate_api/{type}": {
@@ -7216,9 +7020,7 @@
         "parameters": [
           {
             "description": "编译出对应的代码模块",
-            "enum": [
-              "erlang"
-            ],
+            "enum": ["erlang"],
             "in": "path",
             "name": "type",
             "required": true,
@@ -7259,9 +7061,7 @@
           }
         },
         "summary": "根据swagger产生API代码",
-        "tags": [
-          "System"
-        ]
+        "tags": ["System"]
       }
     },
     "/schema/Crond": {
@@ -7299,16 +7099,12 @@
           }
         },
         "summary": "获取任务表的权限级别和结构",
-        "tags": [
-          "Crond"
-        ]
+        "tags": ["Crond"]
       }
     },
     "/login": {
       "post": {
-        "consumes": [
-          "text/plain"
-        ],
+        "consumes": ["text/plain"],
         "description": "用户登录",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_login"
@@ -7358,9 +7154,7 @@
         },
         "security": [],
         "summary": "用户登录",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       }
     },
     "/disableuser": {
@@ -7406,9 +7200,7 @@
           }
         },
         "summary": "禁用启用账号",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/group": {
@@ -7456,9 +7248,7 @@
           }
         },
         "summary": "删除分组",
-        "tags": [
-          "Group"
-        ]
+        "tags": ["Group"]
       },
       "post": {
         "description": "创建分组",
@@ -7508,9 +7298,7 @@
           }
         },
         "summary": "创建分组",
-        "tags": [
-          "Group"
-        ]
+        "tags": ["Group"]
       },
       "put": {
         "description": "关联组态控件与物模型",
@@ -7562,9 +7350,7 @@
           }
         },
         "summary": "关联组态与物模型",
-        "tags": [
-          "Group"
-        ]
+        "tags": ["Group"]
       }
     },
     "/users/{id}": {
@@ -7604,16 +7390,12 @@
           }
         },
         "summary": "获取用户信息",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/testpaper": {
       "post": {
-        "consumes": [
-          "multipart/form-data"
-        ],
+        "consumes": ["multipart/form-data"],
         "description": "导入试卷",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_testpaper"
@@ -7652,9 +7434,7 @@
           }
         },
         "summary": "试卷",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/license": {
@@ -7684,9 +7464,7 @@
         },
         "security": [],
         "summary": "获取license",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/graphql": {
@@ -7726,9 +7504,7 @@
         },
         "security": [],
         "summary": "graphql",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/list_dir": {
@@ -7763,9 +7539,7 @@
           }
         },
         "summary": "获取文件列表",
-        "tags": [
-          "go-fastdfs"
-        ]
+        "tags": ["go-fastdfs"]
       }
     },
     "/schema/Log": {
@@ -7803,9 +7577,7 @@
           }
         },
         "summary": "获取Log表的权限级别和结构",
-        "tags": [
-          "Log"
-        ]
+        "tags": ["Log"]
       }
     },
     "/level/Menu": {
@@ -7853,9 +7625,7 @@
           }
         },
         "summary": "设置菜单表级别",
-        "tags": [
-          "Menu"
-        ]
+        "tags": ["Menu"]
       }
     },
     "/schema/Maintenance": {
@@ -7893,9 +7663,7 @@
           }
         },
         "summary": "获取工单表的权限级别和结构",
-        "tags": [
-          "Maintenance"
-        ]
+        "tags": ["Maintenance"]
       }
     },
     "/cluster": {
@@ -7908,10 +7676,7 @@
         "parameters": [
           {
             "description": "操作类型",
-            "enum": [
-              "join",
-              "leave"
-            ],
+            "enum": ["join", "leave"],
             "in": "query",
             "name": "action",
             "required": true,
@@ -7951,9 +7716,7 @@
           }
         },
         "summary": "集群操作",
-        "tags": [
-          "System"
-        ]
+        "tags": ["System"]
       }
     },
     "/level/Product": {
@@ -8001,9 +7764,7 @@
           }
         },
         "summary": "设置产品表级别",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       }
     },
     "/level/App": {
@@ -8051,9 +7812,7 @@
           }
         },
         "summary": "设置应用表级别",
-        "tags": [
-          "App"
-        ]
+        "tags": ["App"]
       }
     },
     "/chart/{version}": {
@@ -8141,9 +7900,7 @@
         },
         "security": [],
         "summary": "统计获取",
-        "tags": [
-          "System"
-        ]
+        "tags": ["System"]
       }
     },
     "/export_data": {
@@ -8200,9 +7957,7 @@
           }
         },
         "summary": "档案导出",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/classes/Article": {
@@ -8294,9 +8049,7 @@
           }
         },
         "summary": "查询Article",
-        "tags": [
-          "Article"
-        ]
+        "tags": ["Article"]
       },
       "post": {
         "description": "新增一条Article记录",
@@ -8353,9 +8106,7 @@
           }
         },
         "summary": "新增Article",
-        "tags": [
-          "Article"
-        ]
+        "tags": ["Article"]
       }
     },
     "/rule/{id}": {
@@ -8407,9 +8158,7 @@
         },
         "security": [],
         "summary": "删除规则引擎",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       },
       "get": {
         "description": "获取规则引擎",
@@ -8459,9 +8208,7 @@
         },
         "security": [],
         "summary": "获取规则引擎",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       },
       "put": {
         "description": "修改规则引擎",
@@ -8519,9 +8266,7 @@
           }
         },
         "summary": "修改规则引擎",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       }
     },
     "/token": {
@@ -8578,9 +8323,7 @@
           }
         },
         "summary": "获得子角色Token",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       },
       "post": {
         "description": "获取 token 时服务器会返回 token 有效期，具体值参考接口返回的 expires_in 字段值。由于网络延迟等原因，系统不保证 token 在此值表示的有效期内绝对有效，如果发现 token 使用异常请重新获取新的 token，比如 http response code 返回 401。",
@@ -8638,9 +8381,7 @@
         },
         "security": [],
         "summary": "获得Token",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/iotapp": {
@@ -8687,9 +8428,7 @@
         },
         "security": [],
         "summary": "部署平台",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       },
       "post": {
         "description": "部署应用",
@@ -8732,9 +8471,7 @@
           }
         },
         "summary": "部署应用",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/verify_code/{Action}": {
@@ -8747,12 +8484,7 @@
         "parameters": [
           {
             "description": "验证操作类型",
-            "enum": [
-              "login",
-              "register",
-              "passwordreset",
-              "modifyuser"
-            ],
+            "enum": ["login", "register", "passwordreset", "modifyuser"],
             "in": "path",
             "name": "Action",
             "required": true,
@@ -8801,9 +8533,7 @@
         },
         "security": [],
         "summary": "验证手机号/邮箱是否通过",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/functions/{func}": {
@@ -8850,9 +8580,7 @@
           }
         },
         "summary": "云函数",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/classes/_Installation": {
@@ -8944,9 +8672,7 @@
           }
         },
         "summary": "查询部署",
-        "tags": [
-          "_Installation"
-        ]
+        "tags": ["_Installation"]
       },
       "post": {
         "description": "新增一条部署记录",
@@ -9003,9 +8729,7 @@
           }
         },
         "summary": "新增部署",
-        "tags": [
-          "_Installation"
-        ]
+        "tags": ["_Installation"]
       }
     },
     "/roletree": {
@@ -9034,9 +8758,7 @@
           }
         },
         "summary": "获取角色树",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       }
     },
     "/iothub": {
@@ -9088,9 +8810,7 @@
         },
         "security": [],
         "summary": "启动物联网关",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/echart/{deviceid}": {
@@ -9128,17 +8848,7 @@
           {
             "default": "1m",
             "description": "统计间隔",
-            "enum": [
-              "1u",
-              "1a",
-              "1s",
-              "1m",
-              "1h",
-              "1d",
-              "1w",
-              "1n",
-              "1y"
-            ],
+            "enum": ["1u", "1a", "1s", "1m", "1h", "1d", "1w", "1n", "1y"],
             "in": "query",
             "name": "interval",
             "required": false,
@@ -9197,9 +8907,7 @@
           }
         },
         "summary": "获取当前设备时序数据图表",
-        "tags": [
-          "DBA"
-        ]
+        "tags": ["DBA"]
       }
     },
     "/classes/Timescale": {
@@ -9291,9 +8999,7 @@
           }
         },
         "summary": "查询时序",
-        "tags": [
-          "Timescale"
-        ]
+        "tags": ["Timescale"]
       },
       "post": {
         "description": "新增一条时序记录",
@@ -9350,9 +9056,7 @@
           }
         },
         "summary": "新增时序",
-        "tags": [
-          "Timescale"
-        ]
+        "tags": ["Timescale"]
       }
     },
     "/classes/Channel/{id}": {
@@ -9401,9 +9105,7 @@
           }
         },
         "summary": "删除通道",
-        "tags": [
-          "Channel"
-        ]
+        "tags": ["Channel"]
       },
       "get": {
         "description": "根据ID获取通道详情",
@@ -9453,9 +9155,7 @@
           }
         },
         "summary": "获取通道详情",
-        "tags": [
-          "Channel"
-        ]
+        "tags": ["Channel"]
       },
       "put": {
         "description": "通过ID更新通道",
@@ -9525,9 +9225,7 @@
           }
         },
         "summary": "更新通道",
-        "tags": [
-          "Channel"
-        ]
+        "tags": ["Channel"]
       }
     },
     "/batch": {
@@ -9552,12 +9250,7 @@
                         "type": "object"
                       },
                       "method": {
-                        "enum": [
-                          "POST",
-                          "DELETE",
-                          "PUT",
-                          "GET"
-                        ],
+                        "enum": ["POST", "DELETE", "PUT", "GET"],
                         "type": "string"
                       },
                       "path": {
@@ -9594,9 +9287,7 @@
           }
         },
         "summary": "数据批处理",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/classes/Project/{id}": {
@@ -9645,9 +9336,7 @@
           }
         },
         "summary": "删除项目",
-        "tags": [
-          "Project"
-        ]
+        "tags": ["Project"]
       },
       "get": {
         "description": "根据ID获取项目详情",
@@ -9697,9 +9386,7 @@
           }
         },
         "summary": "获取项目详情",
-        "tags": [
-          "Project"
-        ]
+        "tags": ["Project"]
       },
       "put": {
         "description": "通过ID更新项目",
@@ -9769,9 +9456,7 @@
           }
         },
         "summary": "更新项目",
-        "tags": [
-          "Project"
-        ]
+        "tags": ["Project"]
       }
     },
     "/classes/Permission/{id}": {
@@ -9820,9 +9505,7 @@
           }
         },
         "summary": "删除权限",
-        "tags": [
-          "Permission"
-        ]
+        "tags": ["Permission"]
       },
       "get": {
         "description": "根据ID获取权限详情",
@@ -9872,9 +9555,7 @@
           }
         },
         "summary": "获取权限详情",
-        "tags": [
-          "Permission"
-        ]
+        "tags": ["Permission"]
       },
       "put": {
         "description": "通过ID更新权限",
@@ -9944,16 +9625,12 @@
           }
         },
         "summary": "更新权限",
-        "tags": [
-          "Permission"
-        ]
+        "tags": ["Permission"]
       }
     },
     "/import_file": {
       "post": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "导入文件",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_import_file"
@@ -9995,9 +9672,7 @@
           }
         },
         "summary": "文件导入",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/classes/Product/{id}": {
@@ -10046,9 +9721,7 @@
           }
         },
         "summary": "删除产品",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       },
       "get": {
         "description": "根据ID获取产品详情",
@@ -10098,9 +9771,7 @@
           }
         },
         "summary": "获取产品详情",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       },
       "put": {
         "description": "通过ID更新产品",
@@ -10170,9 +9841,7 @@
           }
         },
         "summary": "更新产品",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       }
     },
     "/level/Dict": {
@@ -10220,9 +9889,7 @@
           }
         },
         "summary": "设置字典表级别",
-        "tags": [
-          "Dict"
-        ]
+        "tags": ["Dict"]
       }
     },
     "/tree": {
@@ -10280,9 +9947,7 @@
           }
         },
         "summary": "获取类树",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/classes/Notification/{id}": {
@@ -10331,9 +9996,7 @@
           }
         },
         "summary": "删除通知",
-        "tags": [
-          "Notification"
-        ]
+        "tags": ["Notification"]
       },
       "get": {
         "description": "根据ID获取通知详情",
@@ -10383,9 +10046,7 @@
           }
         },
         "summary": "获取通知详情",
-        "tags": [
-          "Notification"
-        ]
+        "tags": ["Notification"]
       },
       "put": {
         "description": "通过ID更新通知",
@@ -10455,16 +10116,12 @@
           }
         },
         "summary": "更新通知",
-        "tags": [
-          "Notification"
-        ]
+        "tags": ["Notification"]
       }
     },
     "/classes/Decoder/{id}": {
       "delete": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "根据ID删除解码器",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#delete_classes_decoder_id"
@@ -10497,14 +10154,10 @@
           }
         },
         "summary": "删除解码器",
-        "tags": [
-          "Decoder"
-        ]
+        "tags": ["Decoder"]
       },
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "根据ID获取解码器",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_classes_decoder_id"
@@ -10537,14 +10190,10 @@
           }
         },
         "summary": "获取解码器",
-        "tags": [
-          "Decoder"
-        ]
+        "tags": ["Decoder"]
       },
       "put": {
-        "consumes": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
         "description": "根据ID更新解码器",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#put_classes_decoder_id"
@@ -10604,9 +10253,7 @@
           }
         },
         "summary": "更新解码器",
-        "tags": [
-          "Decoder"
-        ]
+        "tags": ["Decoder"]
       }
     },
     "/classes/_Installation/{id}": {
@@ -10655,9 +10302,7 @@
           }
         },
         "summary": "删除部署",
-        "tags": [
-          "_Installation"
-        ]
+        "tags": ["_Installation"]
       },
       "get": {
         "description": "根据ID获取部署详情",
@@ -10707,9 +10352,7 @@
           }
         },
         "summary": "获取部署详情",
-        "tags": [
-          "_Installation"
-        ]
+        "tags": ["_Installation"]
       },
       "put": {
         "description": "通过ID更新部署",
@@ -10779,9 +10422,7 @@
           }
         },
         "summary": "更新部署",
-        "tags": [
-          "_Installation"
-        ]
+        "tags": ["_Installation"]
       }
     },
     "/classes/_User/{id}": {
@@ -10830,9 +10471,7 @@
           }
         },
         "summary": "删除用户",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       },
       "get": {
         "description": "根据ID获取用户详情",
@@ -10882,9 +10521,7 @@
           }
         },
         "summary": "获取用户详情",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       },
       "put": {
         "description": "通过ID更新用户",
@@ -10954,16 +10591,12 @@
           }
         },
         "summary": "更新用户",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/apihub": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "数蛙API网关",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_apihub"
@@ -11053,16 +10686,12 @@
         },
         "security": [],
         "summary": "应用访问参数",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/decoder/func/{id}": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "根据产品ID关联的解码器获取指令集",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_decoder_func_id"
@@ -11095,9 +10724,7 @@
           }
         },
         "summary": "获取指令集",
-        "tags": [
-          "Decoder"
-        ]
+        "tags": ["Decoder"]
       }
     },
     "/actions/{id}": {
@@ -11148,9 +10775,7 @@
           }
         },
         "summary": "获取动作",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       }
     },
     "/evidence": {
@@ -11185,9 +10810,7 @@
           }
         },
         "summary": "证据统计",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       },
       "post": {
         "description": "存证",
@@ -11253,9 +10876,7 @@
           }
         },
         "summary": "存证",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       },
       "put": {
         "description": "证据固化",
@@ -11311,9 +10932,7 @@
           }
         },
         "summary": "证据固化",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/classes/_Session": {
@@ -11405,9 +11024,7 @@
           }
         },
         "summary": "查询会话",
-        "tags": [
-          "_Session"
-        ]
+        "tags": ["_Session"]
       },
       "post": {
         "description": "新增一条会话记录",
@@ -11464,9 +11081,7 @@
           }
         },
         "summary": "新增会话",
-        "tags": [
-          "_Session"
-        ]
+        "tags": ["_Session"]
       }
     },
     "/level/_User": {
@@ -11514,9 +11129,7 @@
           }
         },
         "summary": "设置用户表级别",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/level/_Role": {
@@ -11564,16 +11177,12 @@
           }
         },
         "summary": "设置角色表级别",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       }
     },
     "/menu": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "导出菜单",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_menu"
@@ -11616,14 +11225,10 @@
           }
         },
         "summary": "菜单导出",
-        "tags": [
-          "Menu"
-        ]
+        "tags": ["Menu"]
       },
       "post": {
-        "consumes": [
-          "multipart/form-data"
-        ],
+        "consumes": ["multipart/form-data"],
         "description": "导入菜单",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_menu"
@@ -11655,16 +11260,12 @@
           }
         },
         "summary": "菜单导入",
-        "tags": [
-          "Menu"
-        ]
+        "tags": ["Menu"]
       }
     },
     "/nodes": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "获取节点",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_nodes"
@@ -11689,9 +11290,7 @@
           }
         },
         "summary": "获取节点",
-        "tags": [
-          "System"
-        ]
+        "tags": ["System"]
       }
     },
     "/level/_Session": {
@@ -11739,16 +11338,12 @@
           }
         },
         "summary": "设置会话表级别",
-        "tags": [
-          "_Session"
-        ]
+        "tags": ["_Session"]
       }
     },
     "/sendsms": {
       "post": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "发送短信,短信验证码发送成功后,则会在缓存中以mobile为键写入, 用户下一步提交时，可以根据此键查询验证通过",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_sendsms"
@@ -11827,9 +11422,7 @@
         },
         "security": [],
         "summary": "发送短信验证码",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/classes/Menu": {
@@ -11921,9 +11514,7 @@
           }
         },
         "summary": "查询菜单",
-        "tags": [
-          "Menu"
-        ]
+        "tags": ["Menu"]
       },
       "post": {
         "description": "新增一条菜单记录",
@@ -11980,9 +11571,7 @@
           }
         },
         "summary": "新增菜单",
-        "tags": [
-          "Menu"
-        ]
+        "tags": ["Menu"]
       }
     },
     "/level/Category": {
@@ -12030,9 +11619,7 @@
           }
         },
         "summary": "设置Category表级别",
-        "tags": [
-          "Category"
-        ]
+        "tags": ["Category"]
       }
     },
     "/bed": {
@@ -12067,9 +11654,7 @@
           }
         },
         "summary": "查询台体其子设备",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       },
       "post": {
         "description": "取证前处理",
@@ -12129,16 +11714,12 @@
           }
         },
         "summary": "取证前处理",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/classes/Decoder": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "查询解码器",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_classes_decoder"
@@ -12209,14 +11790,10 @@
           }
         },
         "summary": "查询解码器",
-        "tags": [
-          "Decoder"
-        ]
+        "tags": ["Decoder"]
       },
       "post": {
-        "consumes": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
         "description": "给产品新增解码器",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_classes_decoder"
@@ -12269,9 +11846,7 @@
           }
         },
         "summary": "新增解码器",
-        "tags": [
-          "Decoder"
-        ]
+        "tags": ["Decoder"]
       }
     },
     "/schema/_User": {
@@ -12309,16 +11884,12 @@
           }
         },
         "summary": "获取用户表的权限级别和结构",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/licupdate": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "下载升级脚本",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_licupdate"
@@ -12353,9 +11924,7 @@
         },
         "security": [],
         "summary": "离线升级",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/schema/_Session": {
@@ -12393,9 +11962,7 @@
           }
         },
         "summary": "获取会话表的权限级别和结构",
-        "tags": [
-          "_Session"
-        ]
+        "tags": ["_Session"]
       }
     },
     "/schema/Article": {
@@ -12433,16 +12000,12 @@
           }
         },
         "summary": "获取Article表的权限级别和结构",
-        "tags": [
-          "Article"
-        ]
+        "tags": ["Article"]
       }
     },
     "/product": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "导入产品及其设备",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_product"
@@ -12485,14 +12048,10 @@
           }
         },
         "summary": "产品档案导出",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       },
       "post": {
-        "consumes": [
-          "multipart/form-data"
-        ],
+        "consumes": ["multipart/form-data"],
         "description": "导入产品及其设备",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_product"
@@ -12540,9 +12099,7 @@
           }
         },
         "summary": "产品档案导入",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       }
     },
     "/schema/Timescale": {
@@ -12580,9 +12137,7 @@
           }
         },
         "summary": "获取时序表的权限级别和结构",
-        "tags": [
-          "Timescale"
-        ]
+        "tags": ["Timescale"]
       }
     },
     "/requestPasswordReset": {
@@ -12632,9 +12187,7 @@
         },
         "security": [],
         "summary": "重置密码",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/level/Channel": {
@@ -12682,9 +12235,7 @@
           }
         },
         "summary": "设置通道表级别",
-        "tags": [
-          "Channel"
-        ]
+        "tags": ["Channel"]
       }
     },
     "/classes/Permission": {
@@ -12776,9 +12327,7 @@
           }
         },
         "summary": "查询权限",
-        "tags": [
-          "Permission"
-        ]
+        "tags": ["Permission"]
       },
       "post": {
         "description": "新增一条权限记录",
@@ -12835,16 +12384,12 @@
           }
         },
         "summary": "新增权限",
-        "tags": [
-          "Permission"
-        ]
+        "tags": ["Permission"]
       }
     },
     "/lictool": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "下载license辅助小工具",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_lictool"
@@ -12885,9 +12430,7 @@
         },
         "security": [],
         "summary": "lictool",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/schema/Evidence": {
@@ -12925,16 +12468,12 @@
           }
         },
         "summary": "获取证据表的权限级别和结构",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/plugin/{App}": {
       "post": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "对插件启动/停止/热更新/获取",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_plugin_app"
@@ -12950,12 +12489,7 @@
           },
           {
             "description": "启动/停止/热更新/获取",
-            "enum": [
-              "start",
-              "stop",
-              "reload",
-              "modules"
-            ],
+            "enum": ["start", "stop", "reload", "modules"],
             "in": "query",
             "name": "Action",
             "required": true,
@@ -12980,16 +12514,12 @@
           }
         },
         "summary": "对插件启动/停止/热更新/获取",
-        "tags": [
-          "System"
-        ]
+        "tags": ["System"]
       }
     },
     "/role": {
       "delete": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "删除角色",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#delete_role"
@@ -13022,14 +12552,10 @@
           }
         },
         "summary": "删除角色",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "获取角色",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_role"
@@ -13062,9 +12588,7 @@
           }
         },
         "summary": "获取角色",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "post": {
         "description": "创建角色",
@@ -13125,9 +12649,7 @@
           }
         },
         "summary": "创建角色",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "put": {
         "description": "修改角色",
@@ -13145,10 +12667,7 @@
               "properties": {
                 "menus": {
                   "description": "菜单列表",
-                  "example": [
-                    "项目管理",
-                    "访问权限"
-                  ],
+                  "example": ["项目管理", "访问权限"],
                   "type": "array"
                 },
                 "objectId": {
@@ -13158,24 +12677,17 @@
                 },
                 "roles": {
                   "description": "父角色列表",
-                  "example": [
-                    "admin"
-                  ],
+                  "example": ["admin"],
                   "type": "array"
                 },
                 "rules": {
                   "description": "API列表",
-                  "example": [
-                    "GET_USERS_ID",
-                    "GET_USERS_ME"
-                  ],
+                  "example": ["GET_USERS_ID", "GET_USERS_ME"],
                   "type": "array"
                 },
                 "users": {
                   "description": "用户列表",
-                  "example": [
-                    "test"
-                  ],
+                  "example": ["test"],
                   "type": "array"
                 }
               },
@@ -13201,9 +12713,7 @@
           }
         },
         "summary": "修改角色",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       }
     },
     "/schema/Permission": {
@@ -13241,9 +12751,7 @@
           }
         },
         "summary": "获取权限表的权限级别和结构",
-        "tags": [
-          "Permission"
-        ]
+        "tags": ["Permission"]
       }
     },
     "/devicedict": {
@@ -13272,9 +12780,7 @@
           }
         },
         "summary": "查询设备参数字典",
-        "tags": [
-          "TOPO"
-        ]
+        "tags": ["TOPO"]
       }
     },
     "/schema/Product": {
@@ -13312,9 +12818,7 @@
           }
         },
         "summary": "获取产品表的权限级别和结构",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       }
     },
     "/level/Project": {
@@ -13362,9 +12866,7 @@
           }
         },
         "summary": "设置项目表级别",
-        "tags": [
-          "Project"
-        ]
+        "tags": ["Project"]
       }
     },
     "/level/Maintenance": {
@@ -13412,16 +12914,12 @@
           }
         },
         "summary": "设置工单表级别",
-        "tags": [
-          "Maintenance"
-        ]
+        "tags": ["Maintenance"]
       }
     },
     "/setup_result": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "安装结果",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_setup_result"
@@ -13462,9 +12960,7 @@
         },
         "security": [],
         "summary": "安装结果",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/report/{reportId}": {
@@ -13498,9 +12994,7 @@
           }
         },
         "summary": "删除取证报告",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/cert": {
@@ -13526,9 +13020,7 @@
           }
         },
         "summary": "扫描U盾",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/trace": {
@@ -13557,9 +13049,7 @@
           }
         },
         "summary": "trace列表",
-        "tags": [
-          "System"
-        ]
+        "tags": ["System"]
       },
       "post": {
         "description": "启动，停止trace",
@@ -13628,9 +13118,7 @@
           }
         },
         "summary": "trace操作",
-        "tags": [
-          "System"
-        ]
+        "tags": ["System"]
       }
     },
     "/level/Log": {
@@ -13678,16 +13166,12 @@
           }
         },
         "summary": "设置Log表级别",
-        "tags": [
-          "Log"
-        ]
+        "tags": ["Log"]
       }
     },
     "/import_data": {
       "post": {
-        "consumes": [
-          "multipart/form-data"
-        ],
+        "consumes": ["multipart/form-data"],
         "description": "json文件导库",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_import_data"
@@ -13725,9 +13209,7 @@
           }
         },
         "summary": "导库",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/wechat_index": {
@@ -13753,9 +13235,7 @@
           }
         },
         "summary": "总控台",
-        "tags": [
-          "Wechat"
-        ]
+        "tags": ["Wechat"]
       }
     },
     "/thing": {
@@ -13843,9 +13323,7 @@
           }
         },
         "summary": "删除物模型",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       },
       "post": {
         "description": "添加物模型",
@@ -13931,9 +13409,7 @@
           }
         },
         "summary": "添加物模型",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       },
       "put": {
         "description": "修改物模型",
@@ -14019,9 +13495,7 @@
           }
         },
         "summary": "修改物模型",
-        "tags": [
-          "Product"
-        ]
+        "tags": ["Product"]
       }
     },
     "/classes/Notification": {
@@ -14113,9 +13587,7 @@
           }
         },
         "summary": "查询通知",
-        "tags": [
-          "Notification"
-        ]
+        "tags": ["Notification"]
       },
       "post": {
         "description": "新增一条通知记录",
@@ -14172,9 +13644,7 @@
           }
         },
         "summary": "新增通知",
-        "tags": [
-          "Notification"
-        ]
+        "tags": ["Notification"]
       }
     },
     "/capture": {
@@ -14229,9 +13699,7 @@
           }
         },
         "summary": "关联组态控件与物模型",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/classes/Dict/{id}": {
@@ -14280,9 +13748,7 @@
           }
         },
         "summary": "删除字典",
-        "tags": [
-          "Dict"
-        ]
+        "tags": ["Dict"]
       },
       "get": {
         "description": "根据ID获取字典详情",
@@ -14332,9 +13798,7 @@
           }
         },
         "summary": "获取字典详情",
-        "tags": [
-          "Dict"
-        ]
+        "tags": ["Dict"]
       },
       "put": {
         "description": "通过ID更新字典",
@@ -14404,9 +13868,7 @@
           }
         },
         "summary": "更新字典",
-        "tags": [
-          "Dict"
-        ]
+        "tags": ["Dict"]
       }
     },
     "/classes/Maintenance/{id}": {
@@ -14455,9 +13917,7 @@
           }
         },
         "summary": "删除工单",
-        "tags": [
-          "Maintenance"
-        ]
+        "tags": ["Maintenance"]
       },
       "get": {
         "description": "根据ID获取工单详情",
@@ -14507,9 +13967,7 @@
           }
         },
         "summary": "获取工单详情",
-        "tags": [
-          "Maintenance"
-        ]
+        "tags": ["Maintenance"]
       },
       "put": {
         "description": "通过ID更新工单",
@@ -14579,9 +14037,7 @@
           }
         },
         "summary": "更新工单",
-        "tags": [
-          "Maintenance"
-        ]
+        "tags": ["Maintenance"]
       }
     },
     "/wechat_map": {
@@ -14607,16 +14063,12 @@
           }
         },
         "summary": "设备地图",
-        "tags": [
-          "Wechat"
-        ]
+        "tags": ["Wechat"]
       }
     },
     "/roletemp": {
       "delete": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "删除岗位",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#delete_roletemp"
@@ -14649,14 +14101,10 @@
           }
         },
         "summary": "删除岗位",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "导出岗位",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_roletemp"
@@ -14696,14 +14144,10 @@
           }
         },
         "summary": "导出岗位",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "post": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "保存岗位",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_roletemp"
@@ -14743,9 +14187,7 @@
           }
         },
         "summary": "保存岗位",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "put": {
         "description": "修改岗位",
@@ -14763,10 +14205,7 @@
               "properties": {
                 "menus": {
                   "description": "菜单列表",
-                  "example": [
-                    "项目管理",
-                    "访问权限"
-                  ],
+                  "example": ["项目管理", "访问权限"],
                   "type": "array"
                 },
                 "objectId": {
@@ -14776,24 +14215,17 @@
                 },
                 "roles": {
                   "description": "父角色列表",
-                  "example": [
-                    "admin"
-                  ],
+                  "example": ["admin"],
                   "type": "array"
                 },
                 "rules": {
                   "description": "API列表",
-                  "example": [
-                    "GET_USERS_ID",
-                    "GET_USERS_ME"
-                  ],
+                  "example": ["GET_USERS_ID", "GET_USERS_ME"],
                   "type": "array"
                 },
                 "users": {
                   "description": "用户列表",
-                  "example": [
-                    "test"
-                  ],
+                  "example": ["test"],
                   "type": "array"
                 }
               },
@@ -14819,16 +14251,12 @@
           }
         },
         "summary": "修改岗位",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       }
     },
     "/upload": {
       "post": {
-        "consumes": [
-          "multipart/form-data"
-        ],
+        "consumes": ["multipart/form-data"],
         "description": "文件上传到服务器",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_upload"
@@ -14859,9 +14287,7 @@
           }
         },
         "summary": "服务器文件上传",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/ffmpeg": {
@@ -14919,9 +14345,7 @@
           }
         },
         "summary": "获取视频取证任务",
-        "tags": [
-          "FFMPEG"
-        ]
+        "tags": ["FFMPEG"]
       },
       "put": {
         "description": "修改视频取证任务",
@@ -14944,10 +14368,7 @@
                 },
                 "enable": {
                   "description": "控制动作",
-                  "enum": [
-                    true,
-                    false
-                  ],
+                  "enum": [true, false],
                   "example": true,
                   "type": "boolean"
                 },
@@ -14996,9 +14417,7 @@
           }
         },
         "summary": "修改视频取证任务",
-        "tags": [
-          "FFMPEG"
-        ]
+        "tags": ["FFMPEG"]
       }
     },
     "/device_info": {
@@ -15032,9 +14451,7 @@
           }
         },
         "summary": "设备详情",
-        "tags": [
-          "Wechat"
-        ]
+        "tags": ["Wechat"]
       }
     },
     "/schema/Dict": {
@@ -15072,9 +14489,7 @@
           }
         },
         "summary": "获取字典表的权限级别和结构",
-        "tags": [
-          "Dict"
-        ]
+        "tags": ["Dict"]
       }
     },
     "/deviceacl": {
@@ -15103,9 +14518,7 @@
           }
         },
         "summary": "查询设备所拥有权限",
-        "tags": [
-          "TOPO"
-        ]
+        "tags": ["TOPO"]
       }
     },
     "/classes/LogLevel/{id}": {
@@ -15154,9 +14567,7 @@
           }
         },
         "summary": "删除LogLevel",
-        "tags": [
-          "LogLevel"
-        ]
+        "tags": ["LogLevel"]
       },
       "get": {
         "description": "根据ID获取LogLevel详情",
@@ -15206,9 +14617,7 @@
           }
         },
         "summary": "获取LogLevel详情",
-        "tags": [
-          "LogLevel"
-        ]
+        "tags": ["LogLevel"]
       },
       "put": {
         "description": "通过ID更新LogLevel",
@@ -15278,9 +14687,7 @@
           }
         },
         "summary": "更新LogLevel",
-        "tags": [
-          "LogLevel"
-        ]
+        "tags": ["LogLevel"]
       }
     },
     "/schema/Category": {
@@ -15318,9 +14725,7 @@
           }
         },
         "summary": "获取Category表的权限级别和结构",
-        "tags": [
-          "Category"
-        ]
+        "tags": ["Category"]
       }
     },
     "/schema/_Role": {
@@ -15358,9 +14763,7 @@
           }
         },
         "summary": "获取角色表的权限级别和结构",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       }
     },
     "/level/Permission": {
@@ -15408,9 +14811,7 @@
           }
         },
         "summary": "设置权限表级别",
-        "tags": [
-          "Permission"
-        ]
+        "tags": ["Permission"]
       }
     },
     "/classes/Crond/{id}": {
@@ -15459,9 +14860,7 @@
           }
         },
         "summary": "删除任务",
-        "tags": [
-          "Crond"
-        ]
+        "tags": ["Crond"]
       },
       "get": {
         "description": "根据ID获取任务详情",
@@ -15511,9 +14910,7 @@
           }
         },
         "summary": "获取任务详情",
-        "tags": [
-          "Crond"
-        ]
+        "tags": ["Crond"]
       },
       "put": {
         "description": "通过ID更新任务",
@@ -15583,9 +14980,7 @@
           }
         },
         "summary": "更新任务",
-        "tags": [
-          "Crond"
-        ]
+        "tags": ["Crond"]
       }
     },
     "/actions": {
@@ -15628,9 +15023,7 @@
           }
         },
         "summary": "获取动作列表",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       }
     },
     "/meter_ctrl_status": {
@@ -15685,9 +15078,7 @@
         },
         "security": [],
         "summary": "查询拉闸/合闸的状态(重要：接口调用后间隔15秒以上，避免对同一终端设备频繁操作)",
-        "tags": [
-          "METER"
-        ]
+        "tags": ["METER"]
       }
     },
     "/schema/License": {
@@ -15725,9 +15116,7 @@
           }
         },
         "summary": "获取授权表的权限级别和结构",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/classes/License": {
@@ -15819,9 +15208,7 @@
           }
         },
         "summary": "查询授权",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       },
       "post": {
         "description": "新增一条授权记录",
@@ -15878,9 +15265,7 @@
           }
         },
         "summary": "新增授权",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/classes/_Role": {
@@ -15972,9 +15357,7 @@
           }
         },
         "summary": "查询角色",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       },
       "post": {
         "description": "新增一条角色记录",
@@ -16031,9 +15414,7 @@
           }
         },
         "summary": "新增角色",
-        "tags": [
-          "_Role"
-        ]
+        "tags": ["_Role"]
       }
     },
     "/schema/Device": {
@@ -16071,9 +15452,7 @@
           }
         },
         "summary": "获取设备表的权限级别和结构",
-        "tags": [
-          "Device"
-        ]
+        "tags": ["Device"]
       }
     },
     "/classes/App/{id}": {
@@ -16122,9 +15501,7 @@
           }
         },
         "summary": "删除应用",
-        "tags": [
-          "App"
-        ]
+        "tags": ["App"]
       },
       "get": {
         "description": "根据ID获取应用详情",
@@ -16174,9 +15551,7 @@
           }
         },
         "summary": "获取应用详情",
-        "tags": [
-          "App"
-        ]
+        "tags": ["App"]
       },
       "put": {
         "description": "通过ID更新应用",
@@ -16246,9 +15621,7 @@
           }
         },
         "summary": "更新应用",
-        "tags": [
-          "App"
-        ]
+        "tags": ["App"]
       }
     },
     "/device/{deviceid}": {
@@ -16325,9 +15698,7 @@
           }
         },
         "summary": "获取当前设备时序数据",
-        "tags": [
-          "DBA"
-        ]
+        "tags": ["DBA"]
       }
     },
     "/file_reload": {
@@ -16340,11 +15711,7 @@
         "parameters": [
           {
             "description": "set(修改参数),get获取参数,reload重新加载参数",
-            "enum": [
-              "get",
-              "set",
-              "reload"
-            ],
+            "enum": ["get", "set", "reload"],
             "in": "query",
             "name": "action",
             "required": true,
@@ -16374,9 +15741,7 @@
           }
         },
         "summary": "配置管理API",
-        "tags": [
-          "go-fastdfs"
-        ]
+        "tags": ["go-fastdfs"]
       }
     },
     "/classes/Rules/{id}": {
@@ -16425,9 +15790,7 @@
           }
         },
         "summary": "删除Rules",
-        "tags": [
-          "Rules"
-        ]
+        "tags": ["Rules"]
       },
       "get": {
         "description": "根据ID获取Rules详情",
@@ -16477,9 +15840,7 @@
           }
         },
         "summary": "获取Rules详情",
-        "tags": [
-          "Rules"
-        ]
+        "tags": ["Rules"]
       },
       "put": {
         "description": "通过ID更新Rules",
@@ -16549,16 +15910,12 @@
           }
         },
         "summary": "更新Rules",
-        "tags": [
-          "Rules"
-        ]
+        "tags": ["Rules"]
       }
     },
     "/import_reportTemp": {
       "post": {
-        "consumes": [
-          "multipart/form-data"
-        ],
+        "consumes": ["multipart/form-data"],
         "description": "json文件导库",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_import_reporttemp"
@@ -16596,16 +15953,12 @@
           }
         },
         "summary": "导库",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/users/me": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "检查会话是否有效,用于判断是否登录",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_users_me"
@@ -16637,9 +15990,7 @@
           }
         },
         "summary": "检查会话是否有效",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/classes/LogLevel": {
@@ -16731,9 +16082,7 @@
           }
         },
         "summary": "查询LogLevel",
-        "tags": [
-          "LogLevel"
-        ]
+        "tags": ["LogLevel"]
       },
       "post": {
         "description": "新增一条LogLevel记录",
@@ -16790,9 +16139,7 @@
           }
         },
         "summary": "新增LogLevel",
-        "tags": [
-          "LogLevel"
-        ]
+        "tags": ["LogLevel"]
       }
     },
     "/schema/Notification": {
@@ -16830,9 +16177,7 @@
           }
         },
         "summary": "获取通知表的权限级别和结构",
-        "tags": [
-          "Notification"
-        ]
+        "tags": ["Notification"]
       }
     },
     "/product/{pid}": {
@@ -16938,9 +16283,7 @@
           }
         },
         "summary": "获取当前产品下的所有设备数据",
-        "tags": [
-          "DBA"
-        ]
+        "tags": ["DBA"]
       }
     },
     "/users": {
@@ -17009,9 +16352,7 @@
         },
         "security": [],
         "summary": "用户注册",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/point": {
@@ -17067,9 +16408,7 @@
           }
         },
         "summary": "获取采集点",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       },
       "post": {
         "description": "标识采样点",
@@ -17124,9 +16463,7 @@
           }
         },
         "summary": "标识采样点",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/level/Timescale": {
@@ -17174,9 +16511,7 @@
           }
         },
         "summary": "设置时序表级别",
-        "tags": [
-          "Timescale"
-        ]
+        "tags": ["Timescale"]
       }
     },
     "/classes/Article/{id}": {
@@ -17225,9 +16560,7 @@
           }
         },
         "summary": "删除Article",
-        "tags": [
-          "Article"
-        ]
+        "tags": ["Article"]
       },
       "get": {
         "description": "根据ID获取Article详情",
@@ -17277,9 +16610,7 @@
           }
         },
         "summary": "获取Article详情",
-        "tags": [
-          "Article"
-        ]
+        "tags": ["Article"]
       },
       "put": {
         "description": "通过ID更新Article",
@@ -17349,9 +16680,7 @@
           }
         },
         "summary": "更新Article",
-        "tags": [
-          "Article"
-        ]
+        "tags": ["Article"]
       }
     },
     "/classes/Instruct": {
@@ -17443,9 +16772,7 @@
           }
         },
         "summary": "查询指令",
-        "tags": [
-          "Instruct"
-        ]
+        "tags": ["Instruct"]
       },
       "post": {
         "description": "新增一条指令记录",
@@ -17502,9 +16829,7 @@
           }
         },
         "summary": "新增指令",
-        "tags": [
-          "Instruct"
-        ]
+        "tags": ["Instruct"]
       }
     },
     "/konva_thing": {
@@ -17541,9 +16866,7 @@
           }
         },
         "summary": "物模型详情",
-        "tags": [
-          "TOPO"
-        ]
+        "tags": ["TOPO"]
       },
       "post": {
         "description": "修改组态",
@@ -17585,16 +16908,12 @@
           }
         },
         "summary": "组态修改",
-        "tags": [
-          "TOPO"
-        ]
+        "tags": ["TOPO"]
       }
     },
     "/classes/Navigation": {
       "get": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "查询顶部导航菜单",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#get_classes_navigation"
@@ -17634,16 +16953,12 @@
           }
         },
         "summary": "获取顶部导航",
-        "tags": [
-          "Menu"
-        ]
+        "tags": ["Menu"]
       }
     },
     "/control/channel": {
       "post": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "如果通道配置有改变时的要操作",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_control_channel"
@@ -17659,11 +16974,7 @@
           },
           {
             "description": "动作",
-            "enum": [
-              "update",
-              "enable",
-              "disable"
-            ],
+            "enum": ["update", "enable", "disable"],
             "in": "query",
             "name": "action",
             "required": true,
@@ -17682,9 +16993,7 @@
           }
         },
         "summary": "通道控制",
-        "tags": [
-          "Channel"
-        ]
+        "tags": ["Channel"]
       }
     },
     "/classes/License/{id}": {
@@ -17733,9 +17042,7 @@
           }
         },
         "summary": "删除授权",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       },
       "get": {
         "description": "根据ID获取授权详情",
@@ -17785,9 +17092,7 @@
           }
         },
         "summary": "获取授权详情",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       },
       "put": {
         "description": "通过ID更新授权",
@@ -17857,9 +17162,7 @@
           }
         },
         "summary": "更新授权",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/level/Instruct": {
@@ -17907,9 +17210,7 @@
           }
         },
         "summary": "设置指令表级别",
-        "tags": [
-          "Instruct"
-        ]
+        "tags": ["Instruct"]
       }
     },
     "/classes/Timescale/{id}": {
@@ -17958,9 +17259,7 @@
           }
         },
         "summary": "删除时序",
-        "tags": [
-          "Timescale"
-        ]
+        "tags": ["Timescale"]
       },
       "get": {
         "description": "根据ID获取时序详情",
@@ -18010,9 +17309,7 @@
           }
         },
         "summary": "获取时序详情",
-        "tags": [
-          "Timescale"
-        ]
+        "tags": ["Timescale"]
       },
       "put": {
         "description": "通过ID更新时序",
@@ -18082,9 +17379,7 @@
           }
         },
         "summary": "更新时序",
-        "tags": [
-          "Timescale"
-        ]
+        "tags": ["Timescale"]
       }
     },
     "/schema/Menu": {
@@ -18122,9 +17417,7 @@
           }
         },
         "summary": "获取菜单表的权限级别和结构",
-        "tags": [
-          "Menu"
-        ]
+        "tags": ["Menu"]
       }
     },
     "/rules": {
@@ -18167,9 +17460,7 @@
           }
         },
         "summary": "获取规则引擎列表",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       },
       "post": {
         "description": "创建规则引擎",
@@ -18205,16 +17496,12 @@
           }
         },
         "summary": "创建规则引擎",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       }
     },
     "/logout": {
       "post": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "退出登录",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_logout"
@@ -18247,9 +17534,7 @@
         },
         "security": [],
         "summary": "退出登录",
-        "tags": [
-          "_User"
-        ]
+        "tags": ["_User"]
       }
     },
     "/classes/Log": {
@@ -18341,9 +17626,7 @@
           }
         },
         "summary": "查询Log",
-        "tags": [
-          "Log"
-        ]
+        "tags": ["Log"]
       },
       "post": {
         "description": "新增一条Log记录",
@@ -18400,9 +17683,7 @@
           }
         },
         "summary": "新增Log",
-        "tags": [
-          "Log"
-        ]
+        "tags": ["Log"]
       }
     },
     "/classes/ProductTemplet/{id}": {
@@ -18451,9 +17732,7 @@
           }
         },
         "summary": "删除ProductTemplet",
-        "tags": [
-          "ProductTemplet"
-        ]
+        "tags": ["ProductTemplet"]
       },
       "get": {
         "description": "根据ID获取ProductTemplet详情",
@@ -18503,9 +17782,7 @@
           }
         },
         "summary": "获取ProductTemplet详情",
-        "tags": [
-          "ProductTemplet"
-        ]
+        "tags": ["ProductTemplet"]
       },
       "put": {
         "description": "通过ID更新ProductTemplet",
@@ -18575,9 +17852,7 @@
           }
         },
         "summary": "更新ProductTemplet",
-        "tags": [
-          "ProductTemplet"
-        ]
+        "tags": ["ProductTemplet"]
       }
     },
     "/schema/ProductTemplet": {
@@ -18615,9 +17890,7 @@
           }
         },
         "summary": "获取ProductTemplet表的权限级别和结构",
-        "tags": [
-          "ProductTemplet"
-        ]
+        "tags": ["ProductTemplet"]
       }
     },
     "/resources/{id}": {
@@ -18669,9 +17942,7 @@
         },
         "security": [],
         "summary": "删除资源",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       },
       "get": {
         "description": "获取资源",
@@ -18720,9 +17991,7 @@
           }
         },
         "summary": "获取资源",
-        "tags": [
-          "Rule"
-        ]
+        "tags": ["Rule"]
       }
     },
     "/classes/Rules": {
@@ -18814,9 +18083,7 @@
           }
         },
         "summary": "查询Rules",
-        "tags": [
-          "Rules"
-        ]
+        "tags": ["Rules"]
       },
       "post": {
         "description": "新增一条Rules记录",
@@ -18873,9 +18140,7 @@
           }
         },
         "summary": "新增Rules",
-        "tags": [
-          "Rules"
-        ]
+        "tags": ["Rules"]
       }
     },
     "/classes/Category": {
@@ -18967,9 +18232,7 @@
           }
         },
         "summary": "查询Category",
-        "tags": [
-          "Category"
-        ]
+        "tags": ["Category"]
       },
       "post": {
         "description": "新增一条Category记录",
@@ -19026,9 +18289,7 @@
           }
         },
         "summary": "新增Category",
-        "tags": [
-          "Category"
-        ]
+        "tags": ["Category"]
       }
     },
     "/relation": {
@@ -19091,9 +18352,7 @@
           }
         },
         "summary": "删除关联",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       },
       "post": {
         "description": "创建关联",
@@ -19154,9 +18413,7 @@
           }
         },
         "summary": "创建关联",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/plugin": {
@@ -19185,16 +18442,12 @@
           }
         },
         "summary": "获取插件",
-        "tags": [
-          "System"
-        ]
+        "tags": ["System"]
       }
     },
     "/upload_token": {
       "post": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "获取上传文件Token",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_upload_token"
@@ -19228,9 +18481,7 @@
         },
         "security": [],
         "summary": "获取上传文件Token",
-        "tags": [
-          "Data"
-        ]
+        "tags": ["Data"]
       }
     },
     "/task": {
@@ -19264,9 +18515,7 @@
           }
         },
         "summary": "获取任务",
-        "tags": [
-          "Crond"
-        ]
+        "tags": ["Crond"]
       },
       "put": {
         "description": "修改任务",
@@ -19333,9 +18582,7 @@
           }
         },
         "summary": "修改任务",
-        "tags": [
-          "Crond"
-        ]
+        "tags": ["Crond"]
       }
     },
     "/topo": {
@@ -19380,14 +18627,10 @@
           }
         },
         "summary": "获取产品组态",
-        "tags": [
-          "TOPO"
-        ]
+        "tags": ["TOPO"]
       },
       "post": {
-        "consumes": [
-          "*"
-        ],
+        "consumes": ["*"],
         "description": "发送组态",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_topo"
@@ -19429,9 +18672,7 @@
         },
         "security": [],
         "summary": "发送组态",
-        "tags": [
-          "TOPO"
-        ]
+        "tags": ["TOPO"]
       }
     },
     "/classes/Dict": {
@@ -19523,9 +18764,7 @@
           }
         },
         "summary": "查询字典",
-        "tags": [
-          "Dict"
-        ]
+        "tags": ["Dict"]
       },
       "post": {
         "description": "新增一条字典记录",
@@ -19582,9 +18821,7 @@
           }
         },
         "summary": "新增字典",
-        "tags": [
-          "Dict"
-        ]
+        "tags": ["Dict"]
       }
     },
     "/classes/Evidence": {
@@ -19676,9 +18913,7 @@
           }
         },
         "summary": "查询证据",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       },
       "post": {
         "description": "新增一条证据记录",
@@ -19735,9 +18970,7 @@
           }
         },
         "summary": "新增证据",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/classes/Device/{id}": {
@@ -19786,9 +19019,7 @@
           }
         },
         "summary": "删除设备",
-        "tags": [
-          "Device"
-        ]
+        "tags": ["Device"]
       },
       "get": {
         "description": "根据ID获取设备详情",
@@ -19838,9 +19069,7 @@
           }
         },
         "summary": "获取设备详情",
-        "tags": [
-          "Device"
-        ]
+        "tags": ["Device"]
       },
       "put": {
         "description": "通过ID更新设备",
@@ -19910,9 +19139,7 @@
           }
         },
         "summary": "更新设备",
-        "tags": [
-          "Device"
-        ]
+        "tags": ["Device"]
       }
     },
     "/app/{deviceid}": {
@@ -19950,9 +19177,7 @@
           }
         },
         "summary": "获取当前设备最新时序数据卡片",
-        "tags": [
-          "DBA"
-        ]
+        "tags": ["DBA"]
       }
     },
     "/level/License": {
@@ -20000,9 +19225,7 @@
           }
         },
         "summary": "设置授权表级别",
-        "tags": [
-          "License"
-        ]
+        "tags": ["License"]
       }
     },
     "/level/Article": {
@@ -20050,9 +19273,7 @@
           }
         },
         "summary": "设置Article表级别",
-        "tags": [
-          "Article"
-        ]
+        "tags": ["Article"]
       }
     },
     "/classes/Project": {
@@ -20144,9 +19365,7 @@
           }
         },
         "summary": "查询项目",
-        "tags": [
-          "Project"
-        ]
+        "tags": ["Project"]
       },
       "post": {
         "description": "新增一条项目记录",
@@ -20203,16 +19422,12 @@
           }
         },
         "summary": "新增项目",
-        "tags": [
-          "Project"
-        ]
+        "tags": ["Project"]
       }
     },
     "/reportTemp": {
       "post": {
-        "consumes": [
-          "multipart/form-data"
-        ],
+        "consumes": ["multipart/form-data"],
         "description": "新增报告模版",
         "externalDocs": {
           "url": "http://www.iotn2n.com/doc/#post_reporttemp"
@@ -20264,9 +19479,7 @@
           }
         },
         "summary": "新增报告模版",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       },
       "put": {
         "description": "新增报告子模版",
@@ -20329,9 +19542,7 @@
           }
         },
         "summary": "新增报告子模版",
-        "tags": [
-          "Evidence"
-        ]
+        "tags": ["Evidence"]
       }
     },
     "/table": {
@@ -20361,9 +19572,7 @@
         },
         "security": [],
         "summary": "获取parse表名",
-        "tags": [
-          "DBA"
-        ]
+        "tags": ["DBA"]
       }
     },
     "/classes/Maintenance": {
@@ -20455,9 +19664,7 @@
           }
         },
         "summary": "查询工单",
-        "tags": [
-          "Maintenance"
-        ]
+        "tags": ["Maintenance"]
       },
       "post": {
         "description": "新增一条工单记录",
@@ -20514,9 +19721,7 @@
           }
         },
         "summary": "新增工单",
-        "tags": [
-          "Maintenance"
-        ]
+        "tags": ["Maintenance"]
       }
     },
     "/file_stat": {
@@ -20542,9 +19747,7 @@
           }
         },
         "summary": "文件统计信息",
-        "tags": [
-          "go-fastdfs"
-        ]
+        "tags": ["go-fastdfs"]
       }
     },
     "/device": {
@@ -20600,9 +19803,7 @@
           }
         },
         "summary": "查询设备时序数据",
-        "tags": [
-          "Device"
-        ]
+        "tags": ["Device"]
       }
     },
     "/level/Device": {
@@ -20650,19 +19851,12 @@
           }
         },
         "summary": "设置设备表级别",
-        "tags": [
-          "Device"
-        ]
+        "tags": ["Device"]
       }
     }
   },
-  "produces": [
-    "application/json"
-  ],
-  "schemes": [
-    "http",
-    "https"
-  ],
+  "produces": ["application/json"],
+  "schemes": ["http", "https"],
   "security": [
     {
       "APIKeyHeader": []

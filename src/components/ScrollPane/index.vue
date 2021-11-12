@@ -9,8 +9,8 @@
 <template>
   <el-scrollbar
     ref="scrollContainer"
-    :vertical="false"
     class="scroll-container"
+    :vertical="false"
     @wheel.native.prevent="handleScroll"
   >
     <slot />

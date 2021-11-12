@@ -1,13 +1,7 @@
 <template>
   <div class="vab-nav">
     <el-row :gutter="15">
-      <el-col
-        :lg="12"
-        :md="12"
-        :sm="12"
-        :xl="12"
-        :xs="4"
-      >
+      <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="4">
         <div class="left-panel">
           <vab-fold />
           <el-tabs
@@ -32,19 +26,10 @@
               </template>
             </el-tab-pane>
           </el-tabs>
-          <vab-breadcrumb
-            v-else
-            class="hidden-xs-only"
-          />
+          <vab-breadcrumb v-else class="hidden-xs-only" />
         </div>
       </el-col>
-      <el-col
-        :lg="12"
-        :md="12"
-        :sm="12"
-        :xl="12"
-        :xs="20"
-      >
+      <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="20">
         <div class="right-panel">
           <vab-error-log />
           <vab-search />
@@ -119,14 +104,8 @@
     },
     methods: {
       async Mqtt(md5Info) {
-        const {
-          VUE_APP_URL,
-          NODE_ENV,
-        } = process.env
-        const {
-          hostname,
-          protocol,
-        } = location
+        const { VUE_APP_URL, NODE_ENV } = process.env
+        const { hostname, protocol } = location
         const ip =
           NODE_ENV == 'development'
             ? VUE_APP_URL.split('//')[1].split(':')[0]
@@ -139,9 +118,8 @@
           port: protocol == 'http:' ? 8083 : 8084,
           userName: md5Info.username,
           passWord: await dcodeIO.bcrypt.hash(
-            this.objectId + moment()
-              .format('YYYY:MM:DD'),
-            3,
+            this.objectId + moment().format('YYYY:MM:DD'),
+            3
           ),
           connectTimeout: 10 * 1000,
           router: md5Info.router,

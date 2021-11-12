@@ -1,48 +1,28 @@
 <template>
   <div
     ref="container"
-    :style="{ backgroundImage: 'url(' + backgroundImage + ')' }"
     class="login-container"
+    :style="{ backgroundImage: 'url(' + backgroundImage + ')' }"
   >
     <el-row>
-      <el-col
-        :lg="14"
-        :md="11"
-        :sm="24"
-        :xl="14"
-        :xs="24"
-      >
-        <div style="color: transparent">
-          占位符
-        </div>
+      <el-col :lg="14" :md="11" :sm="24" :xl="14" :xs="24">
+        <div style="color: transparent">占位符</div>
       </el-col>
-      <el-col
-        :lg="9"
-        :md="12"
-        :sm="24"
-        :xl="9"
-        :xs="24"
-      >
+      <el-col :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
         <el-form
           ref="form"
-          :model="form"
-          :rules="rules"
           class="login-form"
           label-position="left"
+          :model="form"
+          :rules="rules"
         >
-          <div
-            v-if="Default.title"
-            class="title-tips"
-          >
+          <div v-if="Default.title" class="title-tips">
             {{ $translateTitle('home.login') }}
           </div>
-          <el-form-item
-            prop="username"
-            style="margin-top: 40px"
-          >
+          <el-form-item prop="username" style="margin-top: 40px">
             <el-input
-              v-focus
               v-model.trim="form.username"
+              v-focus
               :placeholder="$translateTitle('home.Please enter user name')"
               tabindex="1"
               type="text"
@@ -58,8 +38,8 @@
               ref="password"
               v-model.trim="form.password"
               :placeholder="$translateTitle('home.Please enter the password')"
-              :type="passwordType"
               tabindex="2"
+              :type="passwordType"
               @keyup.enter.native="handleLogin"
             >
               <!--              <el-link-->
@@ -71,10 +51,7 @@
               <!--                {{ $translateTitle('home.Forgot password') }}-->
               <!--              </el-link>-->
               <template #prefix>
-                <vab-icon
-                  v-if="form.password.length"
-                  icon="lock-line"
-                />
+                <vab-icon v-if="form.password.length" icon="lock-line" />
               </template>
 
               <template
@@ -87,10 +64,7 @@
                   @click.native="handlePassword"
                 />
               </template>
-              <template
-                v-else
-                #suffix
-              >
+              <template v-else #suffix>
                 <vab-icon
                   v-if="form.password.length"
                   class="show-password"
@@ -104,8 +78,8 @@
             <el-input class="sbMc">
               <el-button
                 slot="append"
-                :loading="loading"
                 class="login-btn"
+                :loading="loading"
                 type="primary"
                 @click.native="handleLogin"
               >
@@ -115,11 +89,7 @@
           </el-form-item>
 
           <span>
-            <router-link
-              v-show="false"
-              style="float: left"
-              to="/register"
-            >
+            <router-link v-show="false" style="float: left" to="/register">
               <div style="margin-top: 20px">
                 {{ $translateTitle('home.registered') }}
               </div>
@@ -148,8 +118,7 @@
     directives: {
       focus: {
         inserted(el) {
-          el.querySelector('input')
-            .focus()
+          el.querySelector('input').focus()
         },
       },
     },
@@ -256,12 +225,12 @@
         this.$set(
           this.info,
           'empty',
-          this.$translateTitle('home.Username can not be empty'),
+          this.$translateTitle('home.Username can not be empty')
         )
         this.$set(
           this.info,
           'than',
-          this.$translateTitle('home.Password cannot be less than'),
+          this.$translateTitle('home.Password cannot be less than')
         )
         this.$set(this.info, 'Bit', this.$translateTitle('home.Bit'))
         this.$forceUpdate()
@@ -294,12 +263,7 @@
         }
         // await this.getlicense()
         const Default = await SiteDefault()
-        const {
-          copyright,
-          logo,
-          objectId,
-          title,
-        } = Default
+        const { copyright, logo, objectId, title } = Default
         this.setDefault(Default)
         this.setTitle(title)
         this.setCopyright(copyright)

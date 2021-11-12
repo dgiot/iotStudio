@@ -91,7 +91,7 @@ Vue.prototype.$baseMessage = (
   message,
   type,
   dangerouslyUseHTMLString,
-  customClass,
+  customClass
 ) => {
   Message({
     showClose: true,
@@ -119,9 +119,7 @@ Vue.prototype.$baseAlert = (content, title, callback) => {
         callback()
       }
     },
-  })
-    .then(() => {
-    })
+  }).then(() => {})
 }
 
 /**
@@ -139,7 +137,7 @@ Vue.prototype.$baseConfirm = (
   callback1,
   callback2,
   confirmButtonText,
-  cancelButtonText,
+  cancelButtonText
 ) => {
   MessageBox.confirm(content, title || '温馨提示', {
     confirmButtonText: confirmButtonText || '确定',

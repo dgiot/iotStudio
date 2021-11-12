@@ -4,8 +4,8 @@
       <vab-query-form-top-panel>
         <el-form
           :inline="true"
-          :model="queryForm"
           label-width="60px"
+          :model="queryForm"
           @submit.native.prevent
         >
           <el-form-item label="账号">
@@ -38,10 +38,7 @@
       </vab-query-form-top-panel>
     </vab-query-form>
 
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-    >
+    <el-table v-loading="listLoading" :data="list">
       <el-table-column
         align="center"
         label="日志类型"
@@ -72,11 +69,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        label="登录IP"
-        prop="ip"
-      />
+      <el-table-column align="center" label="登录IP" prop="ip" />
       <el-table-column
         align="center"
         label="访问时间"
@@ -86,11 +79,11 @@
       <template #empty></template>
     </el-table>
     <el-pagination
+      background
       :current-page="queryForm.pageNo"
       :layout="layout"
       :page-size="queryForm.pageSize"
       :total="total"
-      background
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
@@ -135,10 +128,7 @@
       async fetchData() {
         this.listLoading = true
         const {
-          data: {
-            list,
-            total,
-          },
+          data: { list, total },
         } = await getList(this.queryForm)
         this.list = list
         this.total = total

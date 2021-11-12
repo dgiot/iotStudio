@@ -1,7 +1,7 @@
 <template>
   <div
-    :title="$translateTitle('Logs.Source code') + link"
     class="wrapper"
+    :title="$translateTitle('Logs.Source code') + link"
     @click="showSourceCode"
   >
     <vab-icon icon="code-box-line" />

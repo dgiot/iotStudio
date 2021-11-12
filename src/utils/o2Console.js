@@ -40,8 +40,7 @@ const methods = [
 let length = methods.length
 const console = (window.console = window.console || {})
 let method
-const noop = function () {
-}
+const noop = function () {}
 while (length--) {
   method = methods[length]
   // define undefined methods as noops to prevent errors

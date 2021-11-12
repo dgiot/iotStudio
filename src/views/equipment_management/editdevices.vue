@@ -483,28 +483,28 @@
                   :label="$translateTitle('equipment.devicenumber')"
                   align="center"
                 >
-                  <template slot-scope="scope">
-                    <span>{{ scope.row.devaddr }}</span>
-                    <p style="margin: 0; color: green">{{ scope.row.name }}</p>
+                  <template #default="{ row }">
+                    <span>{{ row.devaddr }}</span>
+                    <p style="margin: 0; color: green">{{ row.name }}</p>
                   </template>
                 </el-table-column>
                 <el-table-column
                   :label="$translateTitle('equipment.state')"
                   align="center"
                 >
-                  <template slot-scope="scope">
-                    <span :class="scope.row.status">
-                      {{ scope.row.status }}
+                  <template #default="{ row }">
+                    <span :class="row.status">
+                      {{ row.status }}
                     </span>
                   </template>
                 </el-table-column>
                 <el-table-column align="center" label="子网地址">
-                  <template slot-scope="scope">
+                  <template #default="{ row }">
                     <span>
                       {{
-                        scope.row.route == undefined
+                        row.route == undefined
                           ? ''
-                          : scope.row.route[devicedetail.devaddr]
+                          : row.route[devicedetail.devaddr]
                       }}
                     </span>
                   </template>
@@ -513,17 +513,17 @@
                   :label="$translateTitle('equipment.product')"
                   align="center"
                 >
-                  <template slot-scope="scope">
-                    <span type="success">{{ scope.row.productName }}</span>
+                  <template #default="{ row }">
+                    <span type="success">{{ row.productName }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
                   :label="$translateTitle('equipment.nodetype')"
                   align="center"
                 >
-                  <!-- <template slot-scope="scope">
+                  <!-- <template #default="{ row }">
                     <svg-icon
-                      v-if="scope.row.nodeType == 0"
+                      v-if="row.nodeType == 0"
                       icon-class="iot"
                       style="width: 2rem; height: 2rem"
                     />
@@ -542,12 +542,12 @@
                   "
                   align="center"
                 >
-                  <template slot-scope="scope">
+                  <template #default="{ row }">
                     <el-switch
-                      v-model="scope.row.isEnable"
+                      v-model="row.isEnable"
                       active-color="#5eb058"
                       inactive-color="#cccccc"
-                      @change="handelUpdate($event, scope.row, scope.$index)"
+                      @change="handelUpdate($event, row. row.$index)"
                     />
                   </template>
                 </el-table-column>
@@ -556,9 +556,9 @@
                   :label="$translateTitle('equipment.lastonlinetime')"
                   align="center"
                 >
-                  <template slot-scope="scope">
-                    <span v-if="scope.row.lastOnlineTime">
-                      {{ timestampToTime(scope.row.lastOnlineTime) }}
+                  <template #default="{ row }">
+                    <span v-if="row.lastOnlineTime">
+                      {{ timestampToTime(row.lastOnlineTime) }}
                     </span>
                     <span v-else>—</span>
                   </template>
@@ -567,28 +567,28 @@
                   :label="$translateTitle('developer.operation')"
                   align="center"
                 >
-                  <template slot-scope="scope">
+                  <template #default="{ row }">
                     <el-link
                       :underline="false"
                       icon="el-icon-view"
                       type="primary"
-                      @click="deviceToDetail(scope.row)"
+                      @click="deviceToDetail(row)"
                     >
                       {{ $translateTitle('equipment.see') }}
                     </el-link>
 
                     <el-popover
-                      :ref="`popover-${scope.$index}`"
+                      :ref="`popover-${row.$index}`"
                       placement="top"
                       width="300"
                     >
-                      <p>确定解除这个{{ scope.row.name }}设备关联吗？</p>
+                      <p>确定解除这个{{ row.name }}设备关联吗？</p>
                       <div style="margin: 0; text-align: right">
                         <el-button
                           size="mini"
                           @click="
-                            scope._self.$refs[
-                              `popover-${scope.$index}`
+                            row._self.$refs[
+                              `popover-${row.$index}`
                             ].doClose()
                           "
                         >
@@ -597,7 +597,7 @@
                         <el-button
                           size="mini"
                           type="primary"
-                          @click="makeSure(scope)"
+                          @click="makeSure(row)"
                         >
                           {{ $translateTitle('developer.determine') }}
                         </el-button>
@@ -720,10 +720,7 @@
         >
           <Instruct :devices-id="deviceid" :product-id="productid" />
         </el-tab-pane>
-        <el-tab-pane
-          :label="$translateTitle('device.trace')"
-          name="task"
-        >
+        <el-tab-pane :label="$translateTitle('device.trace')" name="task">
           <scene-log
             v-show="activeName == 'task'"
             ref="SceneLog"
@@ -731,10 +728,7 @@
             :name="activeName"
           />
         </el-tab-pane>
-        <el-tab-pane
-          :label="$translateTitle('device.log')"
-          name="trace"
-        >
+        <el-tab-pane :label="$translateTitle('device.log')" name="trace">
           <device-log
             v-show="activeName == 'trace'"
             :devaddr="devicedevaddr"
@@ -744,10 +738,7 @@
           />
         </el-tab-pane>
 
-        <el-tab-pane
-          :label="$translateTitle('device.alert')"
-          name="alert"
-        >
+        <el-tab-pane :label="$translateTitle('device.alert')" name="alert">
           <vab-empty />
         </el-tab-pane>
       </el-tabs>
@@ -760,7 +751,12 @@
   import SceneLog from '@/views/equipment_management/component/SceneLog'
   import deviceLog from '@/views/Logs/device'
   import { mapGetters } from 'vuex'
-  import { getCardDevice, getDabDevice, getDevice, queryDevice } from '@/api/Device/index.js'
+  import {
+    getCardDevice,
+    getDabDevice,
+    getDevice,
+    queryDevice,
+  } from '@/api/Device/index.js'
   import { utc2beijing } from '@/utils/index'
   import Instruct from '../devicemanage/instruct_manage'
   import chartType from '@/api/Mock/Chart'
@@ -818,7 +814,7 @@
         bind(el, binding) {
           // 获取element-ui定义好的scroll盒子
           const SELECTWRAP_DOM = el.querySelector(
-            '.el-select-dropdown .el-select-dropdown__wrap',
+            '.el-select-dropdown .el-select-dropdown__wrap'
           )
           SELECTWRAP_DOM.addEventListener('scroll', function () {
             /**
@@ -895,11 +891,9 @@
       }
       return {
         router: '',
-        chartKey: moment(new Date())
-          .valueOf(),
+        chartKey: moment(new Date()).valueOf(),
         machinelist: {},
-        thirdtbKey: moment(new Date())
-          .valueOf(),
+        thirdtbKey: moment(new Date()).valueOf(),
         deviceInfo: {},
         columns,
         productId: this.$route.query.productid,
@@ -1153,8 +1147,7 @@
     watch: {
       machinelist: {
         deep: true,
-        handler(val) {
-        },
+        handler(val) {},
       },
       sm(v) {
         this.$nextTick((_) => {
@@ -1188,14 +1181,9 @@
     },
     methods: {
       Unbscribe() {
-        const subtopic =
-          'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
+        const subtopic = 'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
         const topicKey = this.$dgiotBus.topicKey(this.router, subtopic)
-        this.$dgiotBus.$emit(
-          'MqttUnbscribe',
-          topicKey,
-          subtopic,
-        )
+        this.$dgiotBus.$emit('MqttUnbscribe', topicKey, subtopic)
       },
       async getDeviceInfo(deviceid) {
         const resultes = await getDevice(deviceid)
@@ -1227,8 +1215,7 @@
         this.deviceInfo = resultes
       },
       toggleChart(e) {
-        this.chartKey = moment(new Date())
-          .valueOf()
+        this.chartKey = moment(new Date()).valueOf()
         this.loading = false
         console.log(e)
         this.chartExtend = {}
@@ -1301,10 +1288,9 @@
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
         this.params.datetimerange = [start, end]
         this.queryFlag = false
-        this.$queryProduct({})
-          .then((res) => {
-            this.allProudct = res.results
-          })
+        this.$queryProduct({}).then((res) => {
+          this.allProudct = res.results
+        })
       },
       async queryChart() {
         this.chartData = {
@@ -1315,7 +1301,7 @@
         if (this.params.startTime && this.params.endTime) {
           this.$baseColorfullLoading(
             1,
-            this.$translateTitle('home.messag_loding'),
+            this.$translateTitle('home.messag_loding')
           )
           let deviceid = this.$route.query.deviceid
           // let endTime = moment(this.params.datetimerange[1]).valueOf()
@@ -1334,10 +1320,8 @@
             endTime,
           } = this.params
           let params = {
-            starttime: moment(startTime)
-              .valueOf(),
-            endtime: moment(endTime)
-              .valueOf(),
+            starttime: moment(startTime).valueOf(),
+            endtime: moment(endTime).valueOf(),
             interval: number + interval,
             keys: keys,
             limit: limit,
@@ -1346,8 +1330,7 @@
           }
           await getDabDevice(deviceid, params)
             .then((res) => {
-              this.$baseColorfullLoading()
-                .close()
+              this.$baseColorfullLoading().close()
               console.log(res, 'res charts')
               if (res?.chartData) {
                 const { chartData = {} } = res
@@ -1366,12 +1349,11 @@
             .catch((e) => {
               console.log(e)
               this.loading = false
-              this.$baseColorfullLoading()
-                .close()
+              this.$baseColorfullLoading().close()
             })
         } else {
           this.$message.error(
-            this.$translateTitle('developer.Please select the query time'),
+            this.$translateTitle('developer.Please select the query time')
           )
         }
       },
@@ -1476,88 +1458,86 @@
           include: 'product',
           where: { objectId: deviceid },
         }
-        queryDevice(params)
-          .then((res) => {
-            console.log(res, 'res')
-            if (res.results.length > 0) {
-              // console.log(resultes, 'resproduct')
-              // 产品
-              const resultes = res.results[0]
-              var obj = {}
-              vm.productid = vm.$objGet(resultes, 'product.objectId')
-              vm.devicedevaddr = vm.$objGet(resultes, 'devaddr')
-              obj.id = resultes.objectId
-              obj.createdAt = utc2beijing(resultes.createdAt)
-              obj.productName = vm.$objGet(resultes, 'product.name')
-              obj.productid = vm.$objGet(resultes, 'product.objectId')
-              // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
-              // obj.updatedAt = this.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'updatedAt'))
-              obj.ip = vm.$objGet(resultes, 'ip')
-              obj.basedata = JSON.stringify(resultes.basedata)
-              obj.DeviceName = resultes.name
-              obj.status = resultes.status
-              obj.desc = vm.$objGet(resultes, 'desc')
-              obj.devaddr = vm.$objGet(resultes, 'devaddr')
-              obj.nodeType = vm.$objGet(resultes, 'product.nodeType')
-              obj.devType = vm.$objGet(resultes, 'product.devType')
-              obj.productSecret = vm.$objGet(resultes, 'product.productSecret')
-              obj.address =
-                vm.$objGet(resultes, 'detail.address') ||
-                vm.$objGet(resultes, 'location.latitude') +
+        queryDevice(params).then((res) => {
+          console.log(res, 'res')
+          if (res.results.length > 0) {
+            // console.log(resultes, 'resproduct')
+            // 产品
+            const resultes = res.results[0]
+            var obj = {}
+            vm.productid = vm.$objGet(resultes, 'product.objectId')
+            vm.devicedevaddr = vm.$objGet(resultes, 'devaddr')
+            obj.id = resultes.objectId
+            obj.createdAt = utc2beijing(resultes.createdAt)
+            obj.productName = vm.$objGet(resultes, 'product.name')
+            obj.productid = vm.$objGet(resultes, 'product.objectId')
+            // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
+            // obj.updatedAt = this.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'updatedAt'))
+            obj.ip = vm.$objGet(resultes, 'ip')
+            obj.basedata = JSON.stringify(resultes.basedata)
+            obj.DeviceName = resultes.name
+            obj.status = resultes.status
+            obj.desc = vm.$objGet(resultes, 'desc')
+            obj.devaddr = vm.$objGet(resultes, 'devaddr')
+            obj.nodeType = vm.$objGet(resultes, 'product.nodeType')
+            obj.devType = vm.$objGet(resultes, 'product.devType')
+            obj.productSecret = vm.$objGet(resultes, 'product.productSecret')
+            obj.address =
+              vm.$objGet(resultes, 'detail.address') ||
+              vm.$objGet(resultes, 'location.latitude') +
                 '，' +
                 vm.$objGet(resultes, 'location.longitude')
-              const tddata = vm.$objGet(resultes, 'tddata')
-              // const thingTemp = this.$objGet(resultes, 'product.thing')
-              let resData = JSON.parse(
-                JSON.stringify(vm.$objGet(resultes, 'product.thing.properties')),
-              )
-              console.log(resData, 'resData')
-              vm.Update()
-              let array = []
-              if (!resData) return
-              resData.forEach((item) => {
-                if (item.devicetype) {
-                  array.push(item.devicetype)
+            const tddata = vm.$objGet(resultes, 'tddata')
+            // const thingTemp = this.$objGet(resultes, 'product.thing')
+            let resData = JSON.parse(
+              JSON.stringify(vm.$objGet(resultes, 'product.thing.properties'))
+            )
+            console.log(resData, 'resData')
+            vm.Update()
+            let array = []
+            if (!resData) return
+            resData.forEach((item) => {
+              if (item.devicetype) {
+                array.push(item.devicetype)
+              }
+            })
+            array = _.uniqBy(array)
+            let machine = {}
+            array.forEach((item) => {
+              let arr = []
+              resData.forEach((item1) => {
+                if (item == item1.devicetype) {
+                  arr.push(item1)
                 }
               })
-              array = _.uniqBy(array)
-              let machine = {}
-              array.forEach((item) => {
-                let arr = []
-                resData.forEach((item1) => {
-                  if (item == item1.devicetype) {
-                    arr.push(item1)
-                  }
-                })
-                machine[item] = arr
-              })
-              vm.machinelist = machine
-              vm.thirdtbKey = moment(new Date())
-                .valueOf()
-              console.log('this.machinelist', vm.machinelist)
-              vm.devicedetail = obj
-              if (vm.$route.query.nodeType != 0 && vm.ischildren == 'true') {
-                vm.activeName = 'children'
-                vm.isshowchild = true
-                vm.getDevices()
-                const params = {}
-              } else {
-                vm.ischildren = false
-                vm.isshowchild = true
-              }
-              // 初始化物模型数据
-              vm.isupdate = true
-              // this.Update()
-              vm.updateTrue(true)
-              if (resultes.product.topics) {
-                vm.topicData = resultes.product.topics.concat(vm.topic)
-              } else {
-                vm.topicData = vm.topic
-              }
+              machine[item] = arr
+            })
+            vm.machinelist = machine
+            vm.thirdtbKey = moment(new Date()).valueOf()
+            console.log('this.machinelist', vm.machinelist)
+            vm.devicedetail = obj
+            if (vm.$route.query.nodeType != 0 && vm.ischildren == 'true') {
+              vm.activeName = 'children'
+              vm.isshowchild = true
+              vm.getDevices()
+              const params = {}
             } else {
-              vm.$message('objectId 未返回')
+              vm.ischildren = false
+              vm.isshowchild = true
             }
-          })
+            // 初始化物模型数据
+            vm.isupdate = true
+            // this.Update()
+            vm.updateTrue(true)
+            if (resultes.product.topics) {
+              vm.topicData = resultes.product.topics.concat(vm.topic)
+            } else {
+              vm.topicData = vm.topic
+            }
+          } else {
+            vm.$message('objectId 未返回')
+          }
+        })
       },
       Update() {
         var vm = this
@@ -1585,8 +1565,7 @@
                 machine[item] = arr
               })
               vm.machinelist = machine
-              vm.thirdtbKey = moment(new Date())
-                .valueOf()
+              vm.thirdtbKey = moment(new Date()).valueOf()
               console.log('this.machinelist', vm.machinelist)
             } else {
               this.updateTrue(false)
@@ -1652,15 +1631,14 @@
             product: val,
           },
         }
-        this.$queryDevice(params)
-          .then((response) => {
-            if (response.results && response.results.length > 0) {
-              this.productDevices = response.results
-            } else {
-              this.productDevices = []
-            }
-            this.childrenForm.device = ''
-          })
+        this.$queryDevice(params).then((response) => {
+          if (response.results && response.results.length > 0) {
+            this.productDevices = response.results
+          } else {
+            this.productDevices = []
+          }
+          this.childrenForm.device = ''
+        })
       },
       deviceToDetail(row) {
         console.log('row', row)
@@ -1693,19 +1671,18 @@
             }
             this.$putDevice(
               this.childrenForm.device,
-              childrenDevicesParmas,
-            )
-              .then((resultes) => {
-                if (resultes) {
-                  this.$message({
-                    type: 'success',
-                    message: '添加成功',
-                  })
-                  this.childDialog = false
-                  this.getDevices()
-                  this.$refs['childrenForm'].resetFields()
-                }
-              })
+              childrenDevicesParmas
+            ).then((resultes) => {
+              if (resultes) {
+                this.$message({
+                  type: 'success',
+                  message: '添加成功',
+                })
+                this.childDialog = false
+                this.getDevices()
+                this.$refs['childrenForm'].resetFields()
+              }
+            })
           } else {
             console.log('error submit!!')
             return false
@@ -1718,9 +1695,7 @@
             const params = {
               parentId: null,
             }
-            this.$putDevice(item.objectId, params)
-              .then((resultes) => {
-              })
+            this.$putDevice(item.objectId, params).then((resultes) => {})
           }),
         ])
           .then((data) => {
@@ -1748,9 +1723,7 @@
             const params = {
               isEnable: false,
             }
-            this.$putDevice(item.objectId, params)
-              .then((resultes) => {
-              })
+            this.$putDevice(item.objectId, params).then((resultes) => {})
           }),
         ])
           .then((data) => {
@@ -1777,9 +1750,7 @@
             const params = {
               isEnable: true,
             }
-            this.$putDevice(item.objectId, params)
-              .then((resultes) => {
-              })
+            this.$putDevice(item.objectId, params).then((resultes) => {})
           }),
         ])
           .then((data) => {
@@ -1803,7 +1774,7 @@
       /* el-popover点击关闭*/
       makeSure(scope) {
         // 可以在这里执行删除数据的回调操作.......删除操作.....
-        const objRoute = JSON.parse(JSON.stringify(scope.row.route))
+        const objRoute = JSON.parse(JSON.stringify(row.route))
         const routeKey = this.devicedevaddr
         // 删除key为上级设备地址值
         delete objRoute[routeKey]
@@ -1811,17 +1782,16 @@
           parentId: null,
           route: objRoute,
         }
-        this.$putDevice(scope.row.objectId, params)
-          .then((response) => {
-            if (response) {
-              this.$message({
-                type: 'success',
-                message: '解除关联成功',
-              })
-              scope._self.$refs[`popover-${scope.$index}`].doClose()
-              this.getDevices()
-            }
-          })
+        this.$putDevice(row.objectId, params).then((response) => {
+          if (response) {
+            this.$message({
+              type: 'success',
+              message: '解除关联成功',
+            })
+            scope._self.$refs[`popover-${scope.$index}`].doClose()
+            this.getDevices()
+          }
+        })
       },
       handelUpdate(event, row, index) {
         var newData1 = {}
@@ -1844,13 +1814,12 @@
             const params = {
               isEnable: newData2.isEnable,
             }
-            this.$putDevice(row.objectId, params)
-              .then((resultes) => {
-                this.$message({
-                  type: 'success',
-                  message: '状态修改成功',
-                })
+            this.$putDevice(row.objectId, params).then((resultes) => {
+              this.$message({
+                type: 'success',
+                message: '状态修改成功',
               })
+            })
             this.getDevices()
           })
           .catch(() => {

@@ -2,30 +2,23 @@
   <div class="doc-dialog">
     <el-dialog
       :key="key"
+      append-to-body
       :title="
         form.type == 'add'
           ? $translateTitle('article.New category')
           : $translateTitle('article.edit category')
       "
       :visible.sync="dialogFormVisible"
-      append-to-body
       width="400px"
       @close="handleClose"
     >
-      <el-form
-        ref="form"
-        :model="form"
-        :rules="rules"
-      >
+      <el-form ref="form" :model="form" :rules="rules">
         <el-form-item
           :label="$translateTitle('article.name')"
           :label-width="formLabelWidth"
           prop="name"
         >
-          <el-input
-            v-model="form.name"
-            autocomplete="off"
-          />
+          <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
         <el-form-item
           v-show="form.parent.objectId.includes('article')"
@@ -33,10 +26,7 @@
           :label-width="formLabelWidth"
           prop="category"
         >
-          <el-input
-            v-model="form.category"
-            autocomplete="off"
-          />
+          <el-input v-model="form.category" autocomplete="off" />
         </el-form-item>
         <el-form-item
           v-show="form.parent.objectId.includes('article')"
@@ -44,10 +34,7 @@
           :label-width="formLabelWidth"
           prop="ico"
         >
-          <el-input
-            v-model="form.ico"
-            autocomplete="off"
-          />
+          <el-input v-model="form.ico" autocomplete="off" />
         </el-form-item>
         <el-form-item
           :label="$translateTitle('article.order')"
@@ -56,9 +43,9 @@
         >
           <el-input-number
             v-model="form.order"
+            autocomplete="off"
             :min="0"
             :step="1"
-            autocomplete="off"
             style="width: 100%"
           />
         </el-form-item>
@@ -68,16 +55,10 @@
           :label-width="formLabelWidth"
           prop="parent.objectId"
         >
-          <el-input
-            v-model="form.parent.objectId"
-            autocomplete="off"
-          />
+          <el-input v-model="form.parent.objectId" autocomplete="off" />
         </el-form-item>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
           {{ $translateTitle('button.cancel') }}
         </el-button>
@@ -105,8 +86,7 @@
     name: 'DocDialog',
     data() {
       return {
-        key: moment(new Date())
-          .valueOf(),
+        key: moment(new Date()).valueOf(),
         dialogFormVisible: false,
         form: {
           type: '',
@@ -171,24 +151,15 @@
       }
     },
     computed: {},
-    mounted() {
-    },
-    created() {
-    },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    mounted() {},
+    created() {},
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       handleClose(done) {
         console.log(done)

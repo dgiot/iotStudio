@@ -1,22 +1,13 @@
 <template>
   <div class="player-container">
     <el-row :gutter="24">
-      <el-col
-        :lg="24"
-        :md="24"
-        :sm="24"
-        :xl="24"
-        :xs="24"
-      >
-        <el-row
-          v-show="!$route.query.url"
-          :gutter="24"
-        >
+      <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+        <el-row v-show="!$route.query.url" :gutter="24">
           <el-col :span="23">
             <el-input
               v-model="flvsrc"
-              :disabled="$route.query.url"
               class="input-with-select"
+              :disabled="$route.query.url"
               placeholder="请输入内容"
             >
               <el-select
@@ -37,19 +28,10 @@
             </el-input>
           </el-col>
           <el-col :span="1">
-            <el-button
-              plain
-              type="primary"
-              @click="Play()"
-            >
-              播放
-            </el-button>
+            <el-button plain type="primary" @click="Play()">播放</el-button>
           </el-col>
         </el-row>
-        <el-card
-          class="player_card"
-          shadow="hover"
-        >
+        <el-card class="player_card" shadow="hover">
           <vab-player
             ref="vabPlayer"
             :autoplay="mp4Play"

@@ -17,6 +17,7 @@
 <script>
   import AmisRender from './render'
   import DrawCode from '../VabDrawerCode'
+
   console.groupEnd()
   const amisdefault = {
     type: 'page',
@@ -40,15 +41,13 @@
     },
     data() {
       return {
-        amisKey: moment(new Date())
-          .format('X'),
+        amisKey: moment(new Date()).format('X'),
       }
     },
     watch: {
       schema: {
         handler(val) {
-          this.amisKey = moment(new Date())
-            .format('X')
+          this.amisKey = moment(new Date()).format('X')
         },
         immediate: true,
         deep: true,

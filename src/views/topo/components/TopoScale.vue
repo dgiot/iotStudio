@@ -10,17 +10,11 @@
 <template>
   <div class="TopoScale-container">
     <div class="TopoScale-container-content">
-      <i
-        class="el-icon-zoom-out"
-        @click="setSize('out')"
-      ></i>
+      <i class="el-icon-zoom-out" @click="setSize('out')"></i>
       <div class="scale">
         {{ scale }}
       </div>
-      <i
-        class="el-icon-zoom-in"
-        @click="setSize('in')"
-      ></i>
+      <i class="el-icon-zoom-in" @click="setSize('in')"></i>
     </div>
   </div>
 </template>
@@ -41,22 +35,14 @@
         scale: 'topo/Sale',
       }),
     },
-    mounted() {
-    },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    mounted() {},
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       ...mapActions({
         setSale: 'topo/setSale',

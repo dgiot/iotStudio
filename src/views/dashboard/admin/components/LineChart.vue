@@ -1,8 +1,5 @@
-template>
-<div
-  :class="className"
-  :style="{ height: height, width: width }"
-/>
+<template>
+  <div :class="className" :style="{ height: height, width: width }" />
 </template>
 
 <script>
@@ -79,10 +76,10 @@ template>
       }
 
       this.sidebarElm &&
-      this.sidebarElm.removeEventListener(
-        'transitionend',
-        this.sidebarResizeHandler,
-      )
+        this.sidebarElm.removeEventListener(
+          'transitionend',
+          this.sidebarResizeHandler
+        )
 
       this.chart.dispose()
       this.chart = null
@@ -93,12 +90,7 @@ template>
           this.__resizeHandler()
         }
       },
-      setOptions({
-        expectedData,
-        actualData,
-        title,
-        max,
-      } = {}) {
+      setOptions({ expectedData, actualData, title, max } = {}) {
         this.chart.setOption({
           xAxis: {
             data: actualData,

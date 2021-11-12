@@ -13,8 +13,8 @@
       <el-image
         v-for="url in urls"
         :key="url"
-        :src="url"
         lazy
+        :src="url"
         @click.native="setKonvaBg(url)"
       />
     </div>

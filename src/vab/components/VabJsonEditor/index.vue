@@ -1,13 +1,10 @@
 <template>
   <div>
     <div class="jsoneditor-vue"></div>
-    <div
-      v-if="showBtns !== false"
-      class="jsoneditor-btns"
-    >
+    <div v-if="showBtns !== false" class="jsoneditor-btns">
       <button
-        :disabled="error"
         class="json-save-btn"
+        :disabled="error"
         type="button"
         @click="onSave()"
       >
@@ -37,7 +34,7 @@
       },
       modes: {
         type: Array,
-        default: function () {
+        default: function() {
           return ['tree', 'code', 'form', 'text', 'view']
         },
       },
@@ -94,7 +91,7 @@
             self.$emit('json-change', json)
             self.internalChange = true
             self.$emit('input', json)
-            self.$nextTick(function () {
+            self.$nextTick(function() {
               self.internalChange = false
             })
           } catch (e) {

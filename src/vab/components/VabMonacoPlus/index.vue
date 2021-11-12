@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      ref="container"
-      class="monaco-editor"
-    ></div>
+    <div ref="container" class="monaco-editor"></div>
   </div>
 </template>
 

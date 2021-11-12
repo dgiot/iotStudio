@@ -4,14 +4,8 @@
       <el-container>
         <el-main>
           <div class="main">
-            <el-drawer
-              :visible.sync="drawer"
-              direction="ltr"
-            >
-              <div
-                v-if="showTree"
-                class="tree"
-              >
+            <el-drawer direction="ltr" :visible.sync="drawer">
+              <div v-if="showTree" class="tree">
                 搜索 :
                 <el-input
                   v-model="filterText"
@@ -23,29 +17,20 @@
                   ref="tree"
                   :allow-drag="allowDrag"
                   :allow-drop="allowDrop"
-                  :data="treeData"
-                  :filter-node-method="filterNode"
-                  :props="defaultProps"
                   class="treeitems"
+                  :data="treeData"
                   default-expand-all
                   draggable
+                  :filter-node-method="filterNode"
                   node-key="id"
+                  :props="defaultProps"
                   @node-drop="handleDrop"
                 >
-                  <span
-                    slot-scope="{ node, data }"
-                    class="custom-tree-node"
-                  >
+                  <span slot-scope="{ node, data }" class="custom-tree-node">
                     <span v-if="data.roles.seen == true">
-                      <el-input
-                        v-model="editLabel"
-                        style="width: 80%"
-                      />
+                      <el-input v-model="editLabel" style="width: 80%" />
                     </span>
-                    <span
-                      v-else
-                      style="color: #409eff"
-                    >{{ node.label }}</span>
+                    <span v-else style="color: #409eff">{{ node.label }}</span>
                     <span
                       v-if="data.roles.seen == false"
                       style="margin-left: 5px"
@@ -106,9 +91,9 @@
     </el-container>
     <el-dialog
       :append-to-body="true"
-      :visible="centerDialogRole"
       center
       title="添加角色"
+      :visible="centerDialogRole"
       width="35%"
       @close="closeDialogRole"
     >
@@ -184,8 +169,7 @@
             return 'platform'
           }
         },
-        set: function () {
-        },
+        set: function () {},
       },
     },
     watch: {

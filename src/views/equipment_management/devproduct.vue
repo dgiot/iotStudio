@@ -11,9 +11,9 @@
       >
         <div class="prosecond">
           <el-form
+            class="demo-form-inline"
             :inline="true"
             :model="formInline"
-            class="demo-form-inline"
             size="small"
           >
             <el-form-item>
@@ -23,10 +23,7 @@
               />
             </el-form-item>
             <el-form-item>
-              <el-button
-                type="primary"
-                @click.native="searchProduct(0)"
-              >
+              <el-button type="primary" @click.native="searchProduct(0)">
                 {{ $translateTitle('developer.search') }}
               </el-button>
             </el-form-item>
@@ -38,22 +35,13 @@
               >
                 {{ $translateTitle('product.createproduct') }}
               </el-button>
-              <el-button
-                type="primary"
-                @click.native="goTopoview"
-              >
+              <el-button type="primary" @click.native="goTopoview">
                 {{ $translateTitle('product.topoview') }}
               </el-button>
-              <el-button
-                type="primary"
-                @click.native="exportpro"
-              >
+              <el-button type="primary" @click.native="exportpro">
                 {{ $translateTitle('product.exportpro') }}
               </el-button>
-              <el-button
-                type="primary"
-                @click.native="importDialogShow = true"
-              >
+              <el-button type="primary" @click.native="importDialogShow = true">
                 {{ $translateTitle('product.importpro') }}
               </el-button>
 
@@ -64,29 +52,23 @@
             </el-form-item>
           </el-form>
           <div class="protable">
-            <el-table
-              :data="proTableData"
-              style="width: 100%"
-            >
-              <el-table-column
-                label="ProductID"
-                prop="objectId"
-              />
+            <el-table :data="proTableData" style="width: 100%">
+              <el-table-column label="ProductID" prop="objectId" />
               <el-table-column :label="$translateTitle('product.productname')">
-                <template slot-scope="scope">
-                  <span>{{ scope.row.name }}</span>
+                <template #default="{ row }">
+                  <span>{{ row.name }}</span>
                 </template>
               </el-table-column>
               <el-table-column
                 :label="$translateTitle('product.productgrouping')"
               >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.devType }}</span>
+                <template #default="{ row }">
+                  <span>{{ row.devType }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$translateTitle('product.nodetype')">
-                <template slot-scope="scope">
-                  <span v-if="scope.row.nodeType == 0">
+                <template #default="{ row }">
+                  <span v-if="row.nodeType == 0">
                     {{ $translateTitle('product.equipment') }}
                   </span>
                   <span v-else>{{ $translateTitle('product.gateway') }}</span>
@@ -95,25 +77,25 @@
               <el-table-column
                 :label="$translateTitle('product.classification')"
               >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.CategoryKey }}</span>
+                <template #default="{ row }">
+                  <span>{{ row.CategoryKey }}</span>
                 </template>
               </el-table-column>
               <el-table-column :label="$translateTitle('product.addingtime')">
-                <template slot-scope="scope">
-                  <span>{{ utc2beijing(scope.row.createdAt) }}</span>
+                <template #default="{ row }">
+                  <span>{{ utc2beijing(row.createdAt) }}</span>
                 </template>
               </el-table-column>
               <el-table-column
                 :label="$translateTitle('developer.operation')"
                 width="320"
               >
-                <template slot-scope="scope">
+                <template #default="{ row }">
                   <el-link
-                    :underline="false"
                     icon="el-icon-view"
                     type="primary"
-                    @click="deviceToDetail(scope.row)"
+                    :underline="false"
+                    @click="deviceToDetail(row)"
                   >
                     <!-- 配置 -->
                     {{ $translateTitle('product.config') }}
@@ -124,8 +106,7 @@
                     width="300"
                   >
                     <p>
-                      {{ $translateTitle('product.qdsczg') }}{{
-                        scope.row.name
+                      {{ $translateTitle('product.qdsczg') }}{{ row.name
                       }}{{ $translateTitle('equipment.cpm') }}
                     </p>
                     <div style="margin: 0; text-align: right">
@@ -147,35 +128,35 @@
                     </div>
                     <el-link
                       slot="reference"
-                      :underline="false"
                       icon="el-icon-delete"
                       type="danger"
+                      :underline="false"
                     >
                       {{ $translateTitle('developer.delete') }}
                     </el-link>
                   </el-popover>
                   <el-link
-                    :underline="false"
                     icon="el-icon-attract"
                     type="primary"
-                    @click="GoTodevices(scope.row)"
+                    :underline="false"
+                    @click="GoTodevices(row)"
                   >
                     {{ $translateTitle('product.equipment') }}
                   </el-link>
                   <el-link
-                    :underline="false"
                     icon="el-icon-edit"
                     type="success"
-                    @click="editorProduct(scope.row)"
+                    :underline="false"
+                    @click="editorProduct(row)"
                   >
                     <!-- 编辑 -->
                     {{ $translateTitle('concentrator.edit') }}
                   </el-link>
                   <el-link
-                    :underline="false"
                     icon="el-icon-s-promotion"
                     type="primary"
-                    @click="proudctView(scope.row)"
+                    :underline="false"
+                    @click="proudctView(row)"
                   >
                     <!-- 运行组态 -->
                     {{ $translateTitle('product.monitorconfiguration') }}
@@ -184,15 +165,12 @@
               </el-table-column>
             </el-table>
           </div>
-          <div
-            class="elpagination"
-            style="margin-top: 20px"
-          >
+          <div class="elpagination" style="margin-top: 20px">
             <el-pagination
+              layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
               :page-sizes="[10, 20, 30, 50]"
               :total="total"
-              layout="total, sizes, prev, pager, next, jumper"
               @current-change="productCurrentChange"
               @size-change="productSizeChange"
             />
@@ -207,8 +185,8 @@
         :before-close="handleClose"
         :close-on-click-modal="false"
         :title="$translateTitle('product.createproduct')"
-        :visible.sync="dialogFormVisible"
         top="5vh"
+        :visible.sync="dialogFormVisible"
         width="40%"
       >
         <div class="content">
@@ -227,29 +205,19 @@
               />
             </div>
 
-            <el-form
-              ref="ruleForm"
-              :model="form"
-              :rules="rules"
-            >
+            <el-form ref="ruleForm" :model="form" :rules="rules">
               <el-form-item
                 :label="$translateTitle('product.productname')"
                 prop="name"
               >
-                <el-input
-                  v-model="form.name"
-                  autocomplete="off"
-                />
+                <el-input v-model="form.name" autocomplete="off" />
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.productgrouping')"
                 prop="devType"
               >
                 <!-- <el-form-item :label=" $translateTitle('product.productidentification')" prop="devType"> -->
-                <el-input
-                  v-model="form.devType"
-                  autocomplete="off"
-                />
+                <el-input v-model="form.devType" autocomplete="off" />
               </el-form-item>
 
               <!--        <el-form-item :label=" $translateTitle('product.classification')" prop="category">
@@ -302,10 +270,7 @@
             </el-form>
           </div>
           <!--节点类型-->
-          <div
-            class="contenttwo"
-            style="margin-top: 20px"
-          >
+          <div class="contenttwo" style="margin-top: 20px">
             <div style="display: flex">
               <span>{{ $translateTitle('product.nodetype') }}</span>
               <p
@@ -319,19 +284,12 @@
               />
             </div>
 
-            <el-form
-              ref="ruleForm"
-              :model="form"
-              :rules="rules"
-            >
+            <el-form ref="ruleForm" :model="form" :rules="rules">
               <el-form-item
                 :label="$translateTitle('product.nodetype')"
                 prop="nodeType"
               >
-                <el-radio-group
-                  v-model="form.nodeType"
-                  @change="changeNode"
-                >
+                <el-radio-group v-model="form.nodeType" @change="changeNode">
                   <el-radio :label="0">
                     {{ $translateTitle('product.equipment') }}
                   </el-radio>
@@ -349,10 +307,7 @@
             </el-form>
           </div>
           <!--连网方式-->
-          <div
-            class="contentthird"
-            style="margin-top: 20px"
-          >
+          <div class="contentthird" style="margin-top: 20px">
             <div style="display: flex">
               <span>
                 {{ $translateTitle('product.networkinganddescription') }}
@@ -367,17 +322,13 @@
                 "
               />
             </div>
-            <el-form
-              ref="ruleForm"
-              :model="form"
-              :rules="rules"
-            >
+            <el-form ref="ruleForm" :model="form" :rules="rules">
               <el-form-item
                 :label="
                   $translateTitle('product.networking') +
-                    '(共' +
-                    channel.length +
-                    '项)'
+                  '(共' +
+                  channel.length +
+                  '项)'
                 "
                 prop="netType"
               >
@@ -396,11 +347,7 @@
               </el-form-item>
               <!-- <el-form-item label="产品模型"> -->
               <el-form-item :label="$translateTitle('developer.productmodel')">
-                <img
-                  v-if="imageUrl"
-                  :src="imageUrl"
-                  class="avatar"
-                />
+                <img v-if="imageUrl" class="avatar" :src="imageUrl" />
                 <i
                   v-else
                   v-loading="loading"
@@ -441,23 +388,14 @@
                 :label="$translateTitle('developer.describe')"
                 prop="desc"
               >
-                <el-input
-                  v-model="form.desc"
-                  type="textarea"
-                />
+                <el-input v-model="form.desc" type="textarea" />
               </el-form-item>
             </el-form>
           </div>
         </div>
 
-        <div
-          slot="footer"
-          class="dialog-footer"
-        >
-          <el-button
-            type="primary"
-            @click.native="submitForm('ruleForm')"
-          >
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click.native="submitForm('ruleForm')">
             {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="dialogFormVisible = false">
@@ -476,10 +414,7 @@
         :visible.sync="importDialogShow"
         width="25%"
       >
-        <el-form
-          ref="uploadProForm"
-          :model="formPro"
-        >
+        <el-form ref="uploadProForm" :model="formPro">
           <!--   <el-row :gutter="20">
   <el-col :span="12">
      <el-input  placeholder=" " size="small" v-model="formPro.name" :disabled="true"> </el-input>
@@ -490,8 +425,10 @@
           -->
           <el-upload
             ref="fileUpload"
+            accept=".xls, .xlsx, .zip"
             :action="uploadAction"
             :auto-upload="false"
+            class="upload-demo"
             :data="uploadData"
             :file-list="fileList"
             :headers="uploadHeaders"
@@ -499,14 +436,8 @@
             :on-error="handleUploadError"
             :on-success="handleUploadSuccess"
             :with-credentials="true"
-            accept=".xls, .xlsx, .zip"
-            class="upload-demo"
           >
-            <el-button
-              slot="trigger"
-              size="small"
-              type="primary"
-            >
+            <el-button slot="trigger" size="small" type="primary">
               <!-- 选择文件 -->
               {{ $translateTitle('application.selectfiles') }}
             </el-button>
@@ -514,10 +445,7 @@
 
           <!-- </el-row> -->
         </el-form>
-        <div
-          slot="footer"
-          class="dialog-footer"
-        >
+        <div slot="footer" class="dialog-footer">
           <el-button
             class="btn-left"
             size="small"
@@ -545,7 +473,12 @@
   import { queryDict } from '@/api/Dict/index'
   import { app_count } from '@/api/Platform/index'
   import { queryDevice } from '@/api/Device/index'
-  import { delProduct, getProduct, putProduct, queryProduct } from '@/api/Product'
+  import {
+    delProduct,
+    getProduct,
+    putProduct,
+    queryProduct,
+  } from '@/api/Product'
   // import { getIndustry } from '@/api/applicationManagement'
   import { returnLogin } from '@/utils/utilwen'
   import { export_txt_to_zip } from '@/utils/Export2Zip.js'
@@ -813,19 +746,18 @@
         if (!val) {
           return
         }
-        getServer(val)
-          .then((resultes) => {
-            if (resultes) {
-              this.fileServer = resultes.file
-              this.access_token = resultes.access_token
-            }
-          })
+        getServer(val).then((resultes) => {
+          if (resultes) {
+            this.fileServer = resultes.file
+            this.access_token = resultes.access_token
+          }
+        })
       },
       treeData(paramData) {
         const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.id == child.parentid,
+            (child) => father.id == child.parentid
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parentid == 0 // 返回第一层
@@ -982,10 +914,7 @@
         if (this.formInline.productname != '') {
           params.where.name = this.formInline.productname
         }
-        const {
-          results,
-          count,
-        } = await queryProduct(params)
+        const { results, count } = await queryProduct(params)
         results.map((k, i) => {
           if (k.category != '' && k.category) {
             category.push(k.category)
@@ -1107,8 +1036,8 @@
             var ranNum = Math.ceil(Math.random() * 25)
             var productSecret = Base64.encode(
               String.fromCharCode(65 + ranNum) +
-              Math.ceil(Math.random() * 10000000) +
-              Number(new Date()),
+                Math.ceil(Math.random() * 10000000) +
+                Number(new Date())
             )
             if (this.productid == '') {
               this.addProduct()
@@ -1158,7 +1087,7 @@
           skip: 0,
           limit: 1,
           where: {
-            product: scope.row.objectId,
+            product: row.objectId,
           },
         }
         queryDevice(params)
@@ -1168,10 +1097,10 @@
               this.$message('请先删除该产品下设备')
               return
             } else {
-              getProduct(scope.row.objectId)
+              getProduct(row.objectId)
                 .then((results) => {
                   console.log(results)
-                  delProduct(scope.row.objectId)
+                  delProduct(row.objectId)
                     .then((response) => {
                       if (response) {
                         this.$message({

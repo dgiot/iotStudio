@@ -21,11 +21,11 @@
       <el-drawer
         ref="drawer"
         v-drawerDrag
+        append-to-body
         :direction="direction"
+        size="50%"
         :visible.sync="drawer"
         :with-header="false"
-        append-to-body
-        size="50%"
       >
         <el-link
           href="https://fastdgiot.gitee.io/amis-editor-demo/#/edit/1"
@@ -44,11 +44,7 @@
           <el-button @click="previewForm">
             {{ $translateTitle('application.preview') }}
           </el-button>
-          <el-button
-            :loading="loading"
-            type="primary"
-            @click="submitForm"
-          >
+          <el-button :loading="loading" type="primary" @click="submitForm">
             {{
               loading
                 ? $translateTitle('developer.Waitingtoreturn')
@@ -74,8 +70,7 @@
       code: {
         type: Object,
         required: false,
-        default: () => {
-        },
+        default: () => {},
       },
     },
     data() {
@@ -97,29 +92,21 @@
         deep: true,
       },
     },
-    mounted() {
-    },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    mounted() {},
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       ...mapMutations({
         set_amisJson: 'amis/set_amisJson',
       }),
       previewForm() {
         this.set_amisJson(
-          JSON.parse(this.$refs.monacoCode.monacoEditor.getValue()),
+          JSON.parse(this.$refs.monacoCode.monacoEditor.getValue())
         )
         this.loading = false
         this.drawer = false

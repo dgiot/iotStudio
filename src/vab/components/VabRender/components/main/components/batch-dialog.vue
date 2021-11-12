@@ -6,9 +6,9 @@
       'append-to-body': true,
     }"
     :form-desc="formDesc"
-    :visible="visible"
     label-position="left"
     title="批量添加表单项"
+    :visible="visible"
     width="800px"
     @request="handleAdd"
     @update:visible="$emit('change')"
@@ -37,8 +37,7 @@
       // 字段出现的次数
       fieldCountObj() {
         return _.countBy(this.VabRender.formItemList, (o) =>
-          String(o.field)
-            .trim(),
+          String(o.field).trim()
         )
       },
       formDesc() {
@@ -98,7 +97,7 @@
                             label: `${item.type} - ${item.label}`,
                             value: item.type,
                           },
-                        }),
+                        })
                       )
                     },
                   },
@@ -116,8 +115,7 @@
                 if (Array.isArray(value) && value.length) {
                   // 当前输入表单的字段统计个数
                   const currentFieldCountObj = _.countBy(value, (o) =>
-                    String(o.field)
-                      .trim(),
+                    String(o.field).trim()
                   )
 
                   // 合并后的字段统计个数
@@ -128,7 +126,7 @@
                       return currentFieldCountObj[field]
                         ? val + currentFieldCountObj[field]
                         : val
-                    }),
+                    })
                   )
 
                   // 字段不可重复
@@ -136,7 +134,7 @@
                     .map((item, index) =>
                       mergedCountObj[item.field] > 1
                         ? `第${index + 1}行的 field 重复`
-                        : null,
+                        : null
                     )
                     .filter(Boolean)
 
@@ -153,7 +151,7 @@
                           ? `第${index + 1}行的 ${errMsg.join('、')} 未填写`
                           : null
                       })
-                      .filter(Boolean),
+                      .filter(Boolean)
                   )
                 }
                 errorArr.length
@@ -178,16 +176,10 @@
     methods: {
       handleAdd({ formItems }) {
         try {
-          const newFormItems = formItems.map(({
-            field,
-            label,
-            type,
-          }) => ({
+          const newFormItems = formItems.map(({ field, label, type }) => ({
             ...this.VabRender.getFormItemByType(type),
-            field: String(field)
-              .trim(),
-            label: String(label)
-              .trim(),
+            field: String(field).trim(),
+            label: String(label).trim(),
           }))
 
           this.VabRender.formItemList = [

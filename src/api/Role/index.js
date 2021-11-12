@@ -6,7 +6,13 @@
  * @FilePath: \dgiot-dashboard\src\api\Role\index.js
  * @Description:
  */
-import { create_object, del_object, get_object, query_object, update_object } from '@/api/shuwa_parse'
+import {
+  create_object,
+  del_object,
+  get_object,
+  query_object,
+  update_object,
+} from '@/api/shuwa_parse'
 import request from '@/utils/request'
 
 export async function queryRole(params) {

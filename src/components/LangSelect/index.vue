@@ -1,34 +1,28 @@
 <template>
-  <el-dropdown
-    class="international"
-    trigger="click"
-    @command="handleSetLanguage"
-  >
-    <div>
-      <vab-icon
-        class-name="international-icon"
-        icon-class="language"
-      />
-    </div>
-    <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item
-        :disabled="language === 'zh'"
-        command="zh"
-      >
-        中文
-      </el-dropdown-item>
-      <el-dropdown-item
-        :disabled="language === 'en'"
-        command="en"
-      >
-        English
-      </el-dropdown-item>
-    </el-dropdown-menu>
-  </el-dropdown>
+  <div>
+    <el-dropdown
+      class="international"
+      trigger="click"
+      @command="handleSetLanguage"
+    >
+      <div>
+        <vab-icon class-name="international-icon" icon-class="language" />
+      </div>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="zh" :disabled="language === 'zh'">
+          中文
+        </el-dropdown-item>
+        <el-dropdown-item command="en" :disabled="language === 'en'">
+          English
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+  </div>
 </template>
 
 <script>
   export default {
+    name: 'LangSelect',
     computed: {
       language() {
         return this.$store.getters.language

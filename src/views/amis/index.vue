@@ -1,18 +1,8 @@
 <template>
-  <div
-    id="amis-wramiser"
-    class="amis-wramiser amis-container"
-  >
+  <div id="amis-wramiser" class="amis-wramiser amis-container">
     <AmisDemo />
-    <Toast
-      key="toast"
-      position="top-right"
-      theme="default"
-    />
-    <Alert
-      key="alert"
-      theme="default"
-    />
+    <Toast key="toast" position="top-right" theme="default" />
+    <Alert key="alert" theme="default" />
   </div>
 </template>
 <script>

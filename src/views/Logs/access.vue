@@ -1,27 +1,24 @@
 <template>
-  <div
-    :class="{ 'vab-fullscreen': isFullscreen }"
-    class="logs logs-container"
-  >
+  <div class="logs logs-container" :class="{ 'vab-fullscreen': isFullscreen }">
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form
           ref="form"
           :inline="true"
-          :model="queryForm"
           label-width="auto"
+          :model="queryForm"
           @submit.native.prevent
         >
           <el-form-item
-            :label="$translateTitle('Maintenance.times')"
             class="item-time"
+            :label="$translateTitle('Maintenance.times')"
           >
             <el-date-picker
               v-model="queryForm.searchDate"
-              :end-placeholder="$translateTitle('Maintenance.end time')"
-              :start-placeholder="$translateTitle('Maintenance.start time')"
               class="item-time-picker"
+              :end-placeholder="$translateTitle('Maintenance.end time')"
               format="yyyy-MM-dd"
+              :start-placeholder="$translateTitle('Maintenance.start time')"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -47,14 +44,8 @@
 
             <el-popover trigger="hover">
               <el-checkbox-group v-model="checkList">
-                <vue-draggable
-                  :list="logcolumns"
-                  v-bind="dragOptions"
-                >
-                  <div
-                    v-for="(item, index) in logcolumns"
-                    :key="item + index"
-                  >
+                <vue-draggable :list="logcolumns" v-bind="dragOptions">
+                  <div v-for="(item, index) in logcolumns" :key="item + index">
                     <vab-icon icon="drag-drop-line" />
                     <el-checkbox
                       :disabled="item.disableCheck === true"
@@ -82,24 +73,19 @@
     <el-table
       :key="finallyColumns.length + momentKey"
       ref="dragTable"
-      :data="logdata"
-      :height="height"
-      :row-class-name="tableRowClassName"
-      :size="size"
       border
       class="logs-table"
+      :data="logdata"
+      :height="height"
       highlight-current-row
       resizable
+      :row-class-name="tableRowClassName"
+      :size="size"
       stripe
     >
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-descriptions
-            :column="2"
-            :size="size"
-            border
-            class="margin-top"
-          >
+          <el-descriptions border class="margin-top" :column="2" :size="size">
             <el-descriptions-item
               v-for="(item, key, index) in props.row.body"
               v-show="key != 'elm'"
@@ -115,9 +101,9 @@
       <el-table-column
         v-for="(item, index) in finallyColumns"
         :key="index"
+        align="center"
         :label="item"
         :prop="item"
-        align="center"
         show-overflow-tooltip
         sortable
       />
@@ -154,8 +140,7 @@
         isFullscreen: false,
         height: this.$baseTableHeight(0),
         logdata: [],
-        momentKey: moment(new Date())
-          .valueOf(),
+        momentKey: moment(new Date()).valueOf(),
         checkList: [
           'time',
           'username',
@@ -190,11 +175,8 @@
           topic: '',
           domain: 'parse_api',
           searchDate: [
-            moment()
-              .subtract('days', 7)
-              .format('YYYY-MM-DD'),
-            moment(new Date())
-              .format('YYYY-MM-DD'),
+            moment().subtract('days', 7).format('YYYY-MM-DD'),
+            moment(new Date()).format('YYYY-MM-DD'),
           ],
           order: '-createdAt',
           keys: 'count(*)',
@@ -212,8 +194,7 @@
         return this.logcolumns.filter((item) => this.checkList.includes(item))
       },
     },
-    created() {
-    },
+    created() {},
     mounted() {
       this.queryTable({})
       this.rowDrop()
@@ -227,8 +208,7 @@
         } else {
           this.height = this.$baseTableHeight(0)
         }
-        this.momentKey = moment(new Date())
-          .valueOf()
+        this.momentKey = moment(new Date()).valueOf()
       },
       // 设置表格row的class
       tableRowClassName({ row }) {
@@ -241,16 +221,13 @@
       rowDrop() {
         // 此时找到的元素是要拖拽元素的父容器
         const tbody = this.$refs.dragTable.$el.querySelector(
-          '.el-table__body-wrapper tbody',
+          '.el-table__body-wrapper tbody'
         )
         const _this = this
         Sortable.create(tbody, {
           //  指定父元素下可被拖拽的子元素
           draggable: '.el-table__row',
-          onEnd({
-            newIndex,
-            oldIndex,
-          }) {
+          onEnd({ newIndex, oldIndex }) {
             const currRow = _this.logdata.splice(oldIndex, 1)[0]
             _this.logdata.splice(newIndex, 0, currRow)
           },
@@ -260,7 +237,7 @@
       columnDrop() {
         const _this = this
         const wrapperTr = this.$refs.dragTable.$el.querySelector(
-          '.el-table__header-wrapper tr',
+          '.el-table__header-wrapper tr'
         )
         _this.sortable = Sortable.create(wrapperTr, {
           animation: 180,
@@ -269,8 +246,7 @@
             const oldItem = _this.finallyColumns[evt.oldIndex]
             _this.finallyColumns.splice(evt.oldIndex, 1)
             _this.finallyColumns.splice(evt.newIndex, 0, oldItem)
-            _this.momentKey = moment(new Date())
-              .valueOf()
+            _this.momentKey = moment(new Date()).valueOf()
             setTimeout(() => {
               _this.rowDrop()
               _this.columnDrop()
@@ -295,10 +271,10 @@
             where: {
               domain: this.queryForm.domain
                 ? {
-                  $all: this.queryForm.domain.split(
-                    /,(?=(?:[^']*(?:'[^']*')?[^']*)*$)/,
-                  ),
-                }
+                    $all: this.queryForm.domain.split(
+                      /,(?=(?:[^']*(?:'[^']*')?[^']*)*$)/
+                    ),
+                  }
                 : { $ne: '' },
               createdAt: {
                 $gte: {
@@ -312,16 +288,11 @@
               },
             },
           }
-          const {
-            results = [],
-            count: total = 0,
-          } = await queryLog(params)
+          const { results = [], count: total = 0 } = await queryLog(params)
           results.forEach((item, index) => {
             item.time = this.$moment(
-              Number(item.time.toString()
-                .substring(0, 13)),
-            )
-              .format('YYYY-MM-DD HH:mm:ss.SSS')
+              Number(item.time.toString().substring(0, 13))
+            ).format('YYYY-MM-DD HH:mm:ss.SSS')
             const msg = JSON.parse(item.msg)
             for (let k in msg) {
               if (k == 'body') {
@@ -340,7 +311,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success',
+            'vab-hey-message-success'
           )
           loading.close()
         } catch (error) {
@@ -348,11 +319,10 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error',
+            'vab-hey-message-error'
           )
         }
-        this.momentKey = moment(new Date())
-          .valueOf()
+        this.momentKey = moment(new Date()).valueOf()
       },
     },
   }

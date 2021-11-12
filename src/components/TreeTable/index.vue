@@ -1,65 +1,61 @@
 <template>
-  <el-table
-    ref="multipleTable"
-    :data="tableData"
-    :row-style="showRow"
-    row-key="objectId"
-    v-bind="$attrs"
-    v-on="$listeners"
-  >
-    <slot name="selection" />
-    <slot name="pre-column" />
-    <el-table-column
-      v-for="item in columns"
-      :key="item.key"
-      :align="item.align || 'center'"
-      :header-align="item.headerAlign"
-      :label="item.label"
-      :width="item.width"
+  <div>
+    <el-table
+      ref="multipleTable"
+      :data="tableData"
+      row-key="objectId"
+      :row-style="showRow"
+      v-bind="$attrs"
+      v-on="$listeners"
     >
-      <template slot-scope="scope">
-        <slot
-          :name="item.key"
-          :scope="scope"
-        >
-          <template v-if="item.expand">
-            <span :style="{ 'padding-left': 20 + 'px' }" />
-            <span
-              v-show="showSperadIcon(scope.row)"
-              class="tree-ctrl"
-              @click="toggleExpanded(scope.$index)"
-            />
-            <i
-              v-if="!scope.row._expand && !scope.row.children"
-              class="el-icon-minus"
-              style="margin-right: 5px"
-            />
-            <!-- <i v-if="scope.row._expand" class="el-icon-plus"/>
-              <i v-else class="el-icon-minus" /> -->
-          </template>
-          <template v-if="item.checkbox">
-            <el-checkbox
-              v-if="
-                scope.row[defaultChildren] &&
-                  scope.row[defaultChildren].length > 0
-              "
-              v-model="scope.row._select"
-              :indeterminate="scope.row._select"
-              :style="{ 'padding-left': +scope.row._level * indent + 'px' }"
-              @change="handleCheckAllChange(scope.row)"
-            />
-            <el-checkbox
-              v-else
-              v-model="scope.row._select"
-              :style="{ 'padding-left': +scope.row._level * indent + 'px' }"
-              @change="handleCheckAllChange(scope.row)"
-            />
-          </template>
-          {{ scope.row[item.key] }}
-        </slot>
-      </template>
-    </el-table-column>
-  </el-table>
+      <slot name="selection" />
+      <slot name="pre-column" />
+      <el-table-column
+        v-for="item in columns"
+        :key="item.key"
+        :align="item.align || 'center'"
+        :header-align="item.headerAlign"
+        :label="item.label"
+        :width="item.width"
+      >
+        <template #default="{ row }">
+          <slot :name="item.key" :scope="scope">
+            <template v-if="item.expand">
+              <span :style="{ 'padding-left': 20 + 'px' }" />
+              <span
+                v-show="showSperadIcon(row)"
+                class="tree-ctrl"
+                @click="toggleExpanded(row.$index)"
+              />
+              <i
+                v-if="!row._expand && !row.children"
+                class="el-icon-minus"
+                style="margin-right: 5px"
+              />
+              <!-- <i v-if="row._expand" class="el-icon-plus"/>
+                <i v-else class="el-icon-minus" /> -->
+            </template>
+            <template v-if="item.checkbox">
+              <el-checkbox
+                v-if="row[defaultChildren] && row[defaultChildren].length > 0"
+                v-model="row._select"
+                :indeterminate="row._select"
+                :style="{ 'padding-left': +row._level * indent + 'px' }"
+                @change="handleCheckAllChange(row)"
+              />
+              <el-checkbox
+                v-else
+                v-model="row._select"
+                :style="{ 'padding-left': +row._level * indent + 'px' }"
+                @change="handleCheckAllChange(row)"
+              />
+            </template>
+            {{ row[item.key] }}
+          </slot>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
@@ -133,10 +129,7 @@
         row.children.push(data)
       },
       delete(row) {
-        const {
-          _index,
-          _parent,
-        } = row
+        const { _index, _parent } = row
         if (_parent) {
           _parent.children.splice(_index, 1)
         } else {
@@ -181,12 +174,8 @@
       },
       updateTreeNode(item) {
         return new Promise((resolve) => {
-          const {
-            _id,
-            _parent,
-          } = item
-          const index = _id.split('-')
-            .slice(-1)[0] // get last index
+          const { _id, _parent } = item
+          const index = _id.split('-').slice(-1)[0] // get last index
           if (_parent) {
             _parent.children.splice(index, 1, item)
             resolve(this.initData)

@@ -1,8 +1,5 @@
 <template>
-  <div
-    ref="VabAliplayer"
-    class="VabAliplayer"
-  >
+  <div ref="VabAliplayer" class="VabAliplayer">
     <template v-if="!isShowMultiple && show">
       <vue-aliplayer-v2
         ref="VueAliplayerV2"
@@ -10,30 +7,19 @@
         :source="source"
       />
     </template>
-    <div
-      v-if="isShowMultiple && show"
-      class="show-multiple"
-    >
+    <div v-if="isShowMultiple && show" class="show-multiple">
       <template v-for="x in 5">
         <vue-aliplayer-v2
           :key="x"
           ref="VueAliplayerV2"
+          class="multiple-player"
           :options="options"
           :source="source"
-          class="multiple-player"
         />
       </template>
     </div>
-    <p
-      v-if="!show"
-      class="remove-text"
-    >
-      播放器已销毁!
-    </p>
-    <div
-      v-if="!show"
-      class="player-btns"
-    >
+    <p v-if="!show" class="remove-text">播放器已销毁!</p>
+    <div v-if="!show" class="player-btns">
       <template v-if="!isShowMultiple && show">
         <span @click="play()">播放</span>
         <span @click="pause()">暂停</span>
@@ -180,8 +166,7 @@
       mediaDataSource: {
         required: false,
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       /**
        * @param {*} config 高级设置会覆盖上面设置
@@ -189,8 +174,7 @@
       config: {
         required: false,
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
     },
     data() {

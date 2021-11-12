@@ -12,20 +12,17 @@
         :form-desc="filteredFormDesc"
         :is-show-back-btn="false"
         :is-show-submit-btn="false"
+        label-position="top"
         :options-fn="
           VabRender.formBindProps['options-fn'] ||
-            VabRender.formBindProps['optionsFn']
+          VabRender.formBindProps['optionsFn']
         "
         :rules="rules"
         :span="20"
-        label-position="top"
       >
         <template #rules="{ desc, formData, field, type }">
           <div style="margin-bottom: 20px">
-            <el-button
-              type="danger"
-              @click.native="isShowRuleDialog = true"
-            >
+            <el-button type="danger" @click.native="isShowRuleDialog = true">
               新增校检规则
             </el-button>
           </div>
@@ -39,12 +36,7 @@
         </template>
       </ele-form>
     </template>
-    <div
-      v-else
-      class="form-item-placeholder"
-    >
-      从左侧拖拽添加表单项并点选
-    </div>
+    <div v-else class="form-item-placeholder">从左侧拖拽添加表单项并点选</div>
   </div>
 </template>
 

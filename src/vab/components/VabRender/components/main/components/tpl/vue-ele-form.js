@@ -1,10 +1,10 @@
 export default function (code) {
   return `<template>
   <ele-form
-    v-bind="formConfig"
-    v-model="formData"
-    :request-fn="handleRequest"
-    @request-success="handleRequestSuccess"
+    v-bind='formConfig'
+    v-model='formData'
+    :request-fn='handleRequest'
+    @request-success='handleRequestSuccess'
   />
 </template>
 

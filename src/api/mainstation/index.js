@@ -11,7 +11,7 @@ export function Mainstationvalue(
   endtime,
   route,
   protocol,
-  data,
+  data
 ) {
   return request({
     url: '/readdata',

@@ -1,30 +1,23 @@
 <template>
   <el-dialog
     :append-to-body="true"
-    :visible="visible"
     title="代码"
+    :visible="visible"
     @update:visible="$emit('change', $event)"
   >
     <el-radio-group v-model="showType">
-      <el-radio label="vab-render">
-        vab-render方式
-      </el-radio>
-      <el-radio label="vue-ele-form">
-        vue-ele-form方式
-      </el-radio>
+      <el-radio label="vab-render">vab-render方式</el-radio>
+      <el-radio label="vue-ele-form">vue-ele-form方式</el-radio>
     </el-radio-group>
     <prism-editor
-      :highlight="highlighter"
-      :value="code"
       class="vab-render-code"
+      :highlight="highlighter"
       line-numbers
       readonly
+      :value="code"
     />
     <div style="margin-top: 20px; text-align: center">
-      <el-button
-        type="primary"
-        @click.native="handleCopyCode"
-      >
+      <el-button type="primary" @click.native="handleCopyCode">
         复制代码
       </el-button>
       <!-- 下载 TODO 检测移入事件 -->
@@ -32,15 +25,13 @@
         <el-link
           :download="`${Date.now()}.vue`"
           :href="fileURL"
-          :underline="false"
           style="color: white"
+          :underline="false"
         >
           下载文件
         </el-link>
       </el-button>
-      <el-button @click.native="$emit('change', false)">
-        关闭弹窗
-      </el-button>
+      <el-button @click.native="$emit('change', false)">关闭弹窗</el-button>
     </div>
   </el-dialog>
 </template>
@@ -103,9 +94,8 @@
         this.code = tpl(
           indentString(
             reomveQuotes(this.VabRender.getFormConfigStr()),
-            6,
-          )
-            .trim(),
+            6
+          ).trim()
         )
       },
       // 高亮代码

@@ -70,9 +70,9 @@ yarn dev
 
 - 登录
 
-  | 用户名       | 密码                                                                                      |
-      | -------------- | ----------------------------------------------------------------------------------------- |
-  | dgiot_admin         | dgiot_admin                             |
+  | 用户名      | 密码        |
+  | ----------- | ----------- |
+  | dgiot_admin | dgiot_admin |
 
 - 设备详情预览
   ![b87bd877-7cb6-f6b6-1eac-ae17b39bf928.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/b87bd877-7cb6-f6b6-1eac-ae17b39bf928.png)

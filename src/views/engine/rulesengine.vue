@@ -25,19 +25,19 @@
           show-overflow-tooltip
           width="180"
         >
-          <template slot-scope="scope">
-            <span @click="detailRules(scope.row.id)">{{ scope.row.id }}</span>
+          <template #default="{ row }">
+            <span @click="detailRules(row.id)">{{ row.id }}</span>
           </template>
         </el-table-column>
         <!-- <el-table-column label="主题" align="center"> -->
         <el-table-column
-          :label="$translateTitle('leftbar.topics')"
           align="center"
+          :label="$translateTitle('leftbar.topics')"
           show-overflow-tooltip
           width="200"
         >
-          <template slot-scope="scope">
-            <span>{{ scope.row.for.join(',') }}</span>
+          <template #default="{ row }">
+            <span>{{ row.for.join(',') }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -48,68 +48,50 @@
           width="200"
         />
         <el-table-column
-          :label="$translateTitle('rule.ResponseAction')"
           align="center"
+          :label="$translateTitle('rule.ResponseAction')"
         >
-          <template slot-scope="scope">
-            <p
-              v-for="(item, index) in scope.row.actions"
-              :key="index"
-            >
+          <template #default="{ row }">
+            <p v-for="(item, index) in row.actions" :key="index">
               {{ item.name }}
             </p>
           </template>
         </el-table-column>
         <!-- <el-table-column align="center" label="已命中"> -->
-        <el-table-column
-          :label="$translateTitle('product.hit')"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <span>{{ matched(scope.row.metrics) }}</span>
+        <el-table-column align="center" :label="$translateTitle('product.hit')">
+          <template #default="{ row }">
+            <span>{{ matched(row.metrics) }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('equipment.state')"
           align="center"
+          :label="$translateTitle('equipment.state')"
         >
-          <template slot-scope="scope">
+          <template #default="{ row }">
             <el-switch
-              v-model="scope.row.enabled"
+              v-model="row.enabled"
               active-color="#13ce66"
               inactive-color="#ff4949"
-              @change="changeRule(scope.row.id, scope.row.enabled)"
+              @change="changeRule(row.id, row.enabled)"
             />
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('developer.operation')"
           align="center"
           fixed="right"
+          :label="$translateTitle('developer.operation')"
           width="210"
         >
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="success"
-              @click="detailRules(scope.row.id)"
-            >
+          <template #default="{ row }">
+            <el-button size="mini" type="success" @click="detailRules(row.id)">
               <!-- 查看 -->
               {{ $translateTitle('equipment.see') }}
             </el-button>
-            <el-button
-              size="mini"
-              type="primary"
-              @click="editRule(scope.row.id)"
-            >
+            <el-button size="mini" type="primary" @click="editRule(row.id)">
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
             </el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="deleteRule(scope.row.id)"
-            >
+            <el-button size="mini" type="danger" @click="deleteRule(row.id)">
               <!-- 删除 -->
               {{ $translateTitle('developer.delete') }}
             </el-button>
@@ -118,10 +100,10 @@
       </el-table>
       <div class="block">
         <el-pagination
+          layout="total, sizes, prev, pager, next, jumper"
           :page-size="pagesize"
           :page-sizes="[10, 20, 30, 50]"
           :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />
@@ -186,10 +168,8 @@
           })
       },
       // 分页
-      handleSizeChange(val) {
-      },
-      handleCurrentChange(val) {
-      },
+      handleSizeChange(val) {},
+      handleCurrentChange(val) {},
       addEngine() {
         var query = {
           title: '新增',

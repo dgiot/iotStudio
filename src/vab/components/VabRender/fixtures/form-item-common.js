@@ -16,12 +16,10 @@ export default {
       tip: '字段名不可重复',
       options: (data) =>
         data.source == '手动输入'
-          ? JSON.parse(localStorage.getItem('_sourceDict'))
-            .map((e) => {
+          ? JSON.parse(localStorage.getItem('_sourceDict')).map((e) => {
               return e.field
             })
-          : JSON.parse(localStorage.getItem('_sourceModule'))
-            .map((e) => {
+          : JSON.parse(localStorage.getItem('_sourceModule')).map((e) => {
               return e.field
             }),
       rules: {

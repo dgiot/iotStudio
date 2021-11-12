@@ -1,7 +1,7 @@
 <template>
   <el-scrollbar
-    :class="{ 'is-collapse': collapse, 'side-bar-common': layout === 'common' }"
     class="vab-side-bar"
+    :class="{ 'is-collapse': collapse, 'side-bar-common': layout === 'common' }"
   >
     <vab-logo v-if="layout === 'vertical' || layout === 'comprehensive'" />
     <el-menu
@@ -11,17 +11,13 @@
       :collapse-transition="false"
       :default-active="activeMenu"
       :default-openeds="defaultOpeneds"
-      :text-color="variables['menu-color']"
-      :unique-opened="uniqueOpened"
       menu-trigger="click"
       mode="vertical"
+      :text-color="variables['menu-color']"
+      :unique-opened="uniqueOpened"
     >
       <template v-for="route in handleRoutes">
-        <vab-menu
-          v-if="!route.hidden"
-          :key="route.path"
-          :item="route"
-        />
+        <vab-menu v-if="!route.hidden" :key="route.path" :item="route" />
       </template>
     </el-menu>
   </el-scrollbar>
@@ -59,10 +55,10 @@
         return this.layout === 'comprehensive'
           ? this.handlePartialRoutes
           : this.routes.flatMap((route) =>
-            route.menuHidden === true && route.children
-              ? route.children
-              : route,
-          )
+              route.menuHidden === true && route.children
+                ? route.children
+                : route
+            )
       },
       handlePartialRoutes() {
         const activeMenu = this.routes.find((_) => _.name === this.extra.first)

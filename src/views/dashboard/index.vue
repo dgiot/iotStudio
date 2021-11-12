@@ -1,14 +1,8 @@
 <template>
   <div class="dashboard-container">
     <div class="main">
-      <a-tabs
-        class="tabs"
-        default-active-key="iframe"
-      >
-        <a-tab-pane
-          key="iframe"
-          :tab="$translateTitle('leftbar.monitor')"
-        >
+      <a-tabs class="tabs" default-active-key="iframe">
+        <a-tab-pane key="iframe" :tab="$translateTitle('leftbar.monitor')">
           <iframe
             v-show="dashboardrul != '' && dashboardrul"
             id="iframe"
@@ -20,8 +14,8 @@
         </a-tab-pane>
         <a-tab-pane
           key="chart"
-          :tab="$translateTitle('equipment.chart')"
           force-render
+          :tab="$translateTitle('equipment.chart')"
         >
           <empty />
         </a-tab-pane>

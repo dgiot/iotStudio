@@ -1,25 +1,25 @@
 <template>
   <!--分栏布局 -->
   <div
+    class="vab-layout-column"
     :class="{
       fixed: fixedHeader,
       'no-tabs-bar': !showTabs,
     }"
-    class="vab-layout-column"
   >
     <column-bar />
     <div
+      class="vab-main"
       :class="{
         ['vab-main-' + theme.columnStyle]: true,
         'is-collapse-main': collapse,
       }"
-      class="vab-main"
     >
       <div
+        class="vab-layout-header"
         :class="{
           'fixed-header': fixedHeader,
         }"
-        class="vab-layout-header"
       >
         <vab-nav />
         <vab-tabs v-show="showTabs" />

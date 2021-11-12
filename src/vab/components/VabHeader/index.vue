@@ -12,9 +12,9 @@
               :active-text-color="variables['menu-color-active']"
               :background-color="variables['menu-background']"
               :default-active="activeMenu"
-              :text-color="variables['menu-color']"
               menu-trigger="hover"
               mode="horizontal"
+              :text-color="variables['menu-color']"
             >
               <template v-for="route in handleRoutes">
                 <vab-menu
@@ -104,9 +104,9 @@
 
         ::v-deep {
           > .el-menu--horizontal.el-menu
-          > .el-submenu
-          > .el-submenu__title
-          > .el-submenu__icon-arrow {
+            > .el-submenu
+            > .el-submenu__title
+            > .el-submenu__icon-arrow {
             float: right;
             margin-top: ($base-top-bar-height - 11) / 2 !important;
           }

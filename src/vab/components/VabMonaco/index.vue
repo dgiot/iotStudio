@@ -1,8 +1,5 @@
 <template>
-  <div
-    :id="`monaco-${id}`"
-    class="monaco-view"
-  ></div>
+  <div :id="`monaco-${id}`" class="monaco-view"></div>
 </template>
 
 <script>
@@ -111,8 +108,7 @@
     },
     beforeDestroy() {
       if (this.editor) {
-        this.editor.getModel()
-          .dispose()
+        this.editor.getModel().dispose()
         this.editor.dispose()
         this.editor = null
       }
@@ -158,11 +154,10 @@
           monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
           () => {
             this.$emit('qucik-save', this.value)
-          },
+          }
         )
         // Update editor options
-        this.editor.getModel()
-          .updateOptions({ tabSize: 2 })
+        this.editor.getModel().updateOptions({ tabSize: 2 })
       },
       defineTheme() {
         monaco.editor.defineTheme('monokai', Monokai)
@@ -210,7 +205,7 @@
                 contents: createMonacoHover(word, this.provider),
               }
             },
-          },
+          }
         )
       },
     },

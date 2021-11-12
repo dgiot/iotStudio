@@ -4,18 +4,15 @@
       <el-row>
         <el-form
           ref="record"
-          :model="record"
           class="clients-basic-form"
           label-suffix=":"
+          :model="record"
         >
           <el-col :span="12">
             <div class="card-subtitle">
               {{ $t('clients.connectInfo') }}
             </div>
-            <el-form-item
-              :label="$t('clients.node')"
-              prop="node"
-            >
+            <el-form-item :label="$t('clients.node')" prop="node">
               <span>{{ record.node }}</span>
             </el-form-item>
             <el-form-item
@@ -35,10 +32,7 @@
               </el-popover>
               <span v-else>{{ record.clientid }}</span>
             </el-form-item>
-            <el-form-item
-              :label="$t('clients.username')"
-              prop="username"
-            >
+            <el-form-item :label="$t('clients.username')" prop="username">
               <span>{{ record.username }}</span>
             </el-form-item>
             <el-form-item :label="$t('clients.protoType')">
@@ -54,28 +48,16 @@
                 </span>
               </template>
             </el-form-item>
-            <el-form-item
-              :label="$t('clients.ipAddr')"
-              prop="ip_address"
-            >
+            <el-form-item :label="$t('clients.ipAddr')" prop="ip_address">
               <span>{{ record.ip_address }}</span>
             </el-form-item>
-            <el-form-item
-              :label="$t('clients.port')"
-              prop="port"
-            >
+            <el-form-item :label="$t('clients.port')" prop="port">
               <span>{{ record.port }}</span>
             </el-form-item>
-            <el-form-item
-              :label="$t('clients.keepalive')"
-              prop="keepalive"
-            >
+            <el-form-item :label="$t('clients.keepalive')" prop="keepalive">
               <span>{{ record.keepalive }}</span>
             </el-form-item>
-            <el-form-item
-              :label="$t('clients.isBridge')"
-              prop="is_bridge"
-            >
+            <el-form-item :label="$t('clients.isBridge')" prop="is_bridge">
               <span>{{ record.is_bridge }}</span>
             </el-form-item>
             <el-form-item
@@ -92,10 +74,7 @@
             >
               <span>{{ record.disconnected_at }}</span>
             </el-form-item>
-            <el-form-item
-              :label="$t('clients.connected')"
-              prop="connected"
-            >
+            <el-form-item :label="$t('clients.connected')" prop="connected">
               <span :class="record.connected ? 'connected' : 'disconnected'">
                 {{
                   record.connected
@@ -104,10 +83,7 @@
                 }}
               </span>
             </el-form-item>
-            <el-form-item
-              label="Zone"
-              prop="zone"
-            >
+            <el-form-item label="Zone" prop="zone">
               <span>{{ record.zone }}</span>
             </el-form-item>
           </el-col>
@@ -128,10 +104,7 @@
             >
               <span>{{ record.expiry_interval }}</span>
             </el-form-item>
-            <el-form-item
-              :label="$t('clients.createdAt')"
-              prop="created_at"
-            >
+            <el-form-item :label="$t('clients.createdAt')" prop="created_at">
               <span>{{ record.created_at }}</span>
             </el-form-item>
             <el-form-item :label="$t('clients.subscriptions')">
@@ -178,10 +151,7 @@
       </el-row>
 
       <div class="view-more">
-        <a
-          href="javascript:;"
-          @click="showMore = !showMore"
-        >
+        <a href="javascript:;" @click="showMore = !showMore">
           {{ showMore ? $t('oper.collapse') : $t('oper.viewMore') }}
           <i :class="showMore ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
         </a>
@@ -191,9 +161,9 @@
         <el-form
           v-if="showMore"
           ref="record"
-          :model="record"
           class="clients-basic-form"
           label-suffix=":"
+          :model="record"
         >
           <el-row>
             <el-col :span="12">

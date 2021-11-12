@@ -2027,9 +2027,9 @@ export default [
             options: (data) => {
               return Array.isArray(data.options)
                 ? data.options.map((item) => ({
-                  text: item.label,
-                  value: item.key,
-                }))
+                    text: item.label,
+                    value: item.key,
+                  }))
                 : data.options
             },
             attrs: {

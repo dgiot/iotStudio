@@ -44,19 +44,13 @@
           {{ $translateTitle('equipment.createdAt') + ':' }}
         </td>
         <td>
-          {{
-            $moment(devicedetail.createdAt)
-              .format('YYYY-MM-DD HH:mm:ss')
-          }}
+          {{ $moment(devicedetail.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </td>
         <td class="cloumn">
           {{ $translateTitle('equipment.lastonlinetime') + ':' }}
         </td>
         <td>
-          {{
-            $moment(devicedetail.updatedAt)
-              .format('YYYY-MM-DD HH:mm:ss')
-          }}
+          {{ $moment(devicedetail.updatedAt).format('YYYY-MM-DD HH:mm:ss') }}
         </td>
         <td class="cloumn">
           {{ $translateTitle('equipment.nodetype') + ':' }}
@@ -86,37 +80,34 @@
       :data="devicedetail.topicData"
       style="width: 100%; text-align: center"
     >
-      <el-table-column
-        align="left"
-        label="Topic"
-      >
-        <template slot-scope="scope">
+      <el-table-column label="Topic">
+        <template #default="{ row }">
           <span>
             {{
-              scope.row.topic.replace(
+              row.topic.replace(
                 '\${ProductId}\/${DevAddr\}',
-                devicedetail.productid + '/' + devicedetail.devaddr,
+                devicedetail.productid + '/' + devicedetail.devaddr
               )
             }}
           </span>
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('equipment.operationauthority')"
         align="center"
+        :label="$translateTitle('equipment.operationauthority')"
       >
-        <template slot-scope="scope">
-          <span v-if="scope.row.type == 'pub'">
+        <template #default="{ row }">
+          <span v-if="row.type == 'pub'">
             {{ $translateTitle('product.pub') }}
           </span>
-          <span v-if="scope.row.type == 'sub'">
+          <span v-if="row.type == 'sub'">
             {{ $translateTitle('product.sub') }}
           </span>
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('developer.describe')"
         align="center"
+        :label="$translateTitle('developer.describe')"
         prop="desc"
       />
     </el-table>
@@ -139,15 +130,13 @@
     props: {
       devicedetail: {
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
     },
     data() {
       return {}
     },
-    created() {
-    },
+    created() {},
   }
 </script>
 <style>

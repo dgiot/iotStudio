@@ -1,7 +1,7 @@
 <template>
   <el-select
-    :value="rawValue"
     class="emq-select"
+    :value="rawValue"
     v-bind="$attrs"
     v-on="$listeners"
   >
@@ -13,10 +13,7 @@
         :label="item[fieldName.label]"
         :value="item[fieldName.value]"
       >
-        <slot
-          :item="item"
-          name="option"
-        ></slot>
+        <slot :item="item" name="option"></slot>
       </el-option>
     </slot>
   </el-select>
@@ -109,12 +106,7 @@
         return this.disabledItem.includes(item[this.fieldName.value])
       },
       async getOptions() {
-        const {
-          api,
-          url,
-          options,
-          list,
-        } = this.field
+        const { api, url, options, list } = this.field
         let value = []
         if (options) {
           value = options

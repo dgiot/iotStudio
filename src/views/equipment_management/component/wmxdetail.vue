@@ -3,10 +3,10 @@
   <div class="wmxheader">
     <el-form
       ref="sizeForm"
-      :model="sizeForm"
-      :rules="sizerule"
       label-position="left"
       label-width="150px"
+      :model="sizeForm"
+      :rules="sizerule"
       size="mini"
     >
       <!-- update 2020 05-27 hughWang -->
@@ -49,10 +49,7 @@
                       :value="item"
                     />
                   </el-select>
-                  <el-input
-                    v-else
-                    v-model="sizeForm.name"
-                  />
+                  <el-input v-else v-model="sizeForm.name" />
                 </el-form-item>
               </el-col>
 
@@ -107,46 +104,19 @@
                 v-if="sizeForm.type == 'float' || sizeForm.type == 'double'"
                 :span="12"
               >
-                <el-form-item
-                  label="小数位数"
-                  prop="precision"
-                >
-                  <el-select
-                    v-model="sizeForm.precision"
-                    style="width: 100%"
-                  >
-                    <el-option
-                      :label="1"
-                      value="1"
-                    />
-                    <el-option
-                      :label="2"
-                      value="2"
-                    />
-                    <el-option
-                      :label="3"
-                      value="3"
-                    />
-                    <el-option
-                      :label="4"
-                      value="4"
-                    />
-                    <el-option
-                      :label="5"
-                      value="5"
-                    />
-                    <el-option
-                      :label="6"
-                      value="6"
-                    />
+                <el-form-item label="小数位数" prop="precision">
+                  <el-select v-model="sizeForm.precision" style="width: 100%">
+                    <el-option :label="1" value="1" />
+                    <el-option :label="2" value="2" />
+                    <el-option :label="3" value="3" />
+                    <el-option :label="4" value="4" />
+                    <el-option :label="5" value="5" />
+                    <el-option :label="6" value="6" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item
-                  label="图标"
-                  prop="precision"
-                >
+                <el-form-item label="图标" prop="precision">
                   <el-avatar
                     :size="100"
                     :src="$FileServe + sizeForm.ico"
@@ -204,9 +174,9 @@
             <el-row
               v-if="
                 sizeForm.type == 'int' ||
-                  sizeForm.type == 'long' ||
-                  sizeForm.type == 'float' ||
-                  sizeForm.type == 'double'
+                sizeForm.type == 'long' ||
+                sizeForm.type == 'float' ||
+                sizeForm.type == 'double'
               "
               :gutter="24"
             >
@@ -247,23 +217,20 @@
             <el-row
               v-if="
                 sizeForm.type == 'int' ||
-                  sizeForm.type == 'long' ||
-                  sizeForm.type == 'float' ||
-                  sizeForm.type == 'double'
+                sizeForm.type == 'long' ||
+                sizeForm.type == 'float' ||
+                sizeForm.type == 'double'
               "
               :gutter="24"
             >
               <el-col :span="12">
-                <el-form-item
-                  label="步长"
-                  prop="step"
-                >
+                <el-form-item label="步长" prop="step">
                   <el-input-number
                     v-model="sizeForm.step"
+                    controls-position="right"
                     :min="0"
                     :precision="2"
                     :step="0.01"
-                    controls-position="right"
                     style="width: 100%"
                   />
                 </el-form-item>
@@ -273,8 +240,8 @@
                 <el-form-item :label="$translateTitle('product.unit')">
                   <el-select
                     v-model="sizeForm.unit"
-                    :placeholder="$translateTitle('product.unit')"
                     filterable
+                    :placeholder="$translateTitle('product.unit')"
                     style="width: 100%"
                   >
                     <el-option-group
@@ -299,10 +266,7 @@
               </el-col>
             </el-row>
             <!--BOOL数据类型添加格式-->
-            <el-row
-              v-if="sizeForm.type == 'bool'"
-              :gutter="24"
-            >
+            <el-row v-if="sizeForm.type == 'bool'" :gutter="24">
               <el-col :span="12">
                 <el-form-item
                   :label="$translateTitle('product.attribute')"
@@ -326,10 +290,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row
-              v-if="sizeForm.type == 'bool'"
-              :gutter="24"
-            >
+            <el-row v-if="sizeForm.type == 'bool'" :gutter="24">
               <el-col :span="12">
                 <el-form-item>
                   <el-input
@@ -350,17 +311,14 @@
               </el-col>
             </el-row>
             <!--枚举型添加格式-->
-            <el-row
-              v-if="sizeForm.type == 'enum'"
-              :gutter="24"
-            >
+            <el-row v-if="sizeForm.type == 'enum'" :gutter="24">
               <el-col :span="24">
                 <el-form-item label="枚举项">
                   <!--枚举型添加格式-->
                   <el-link
-                    :underline="false"
                     icon="el-icon-plus"
                     type="primary"
+                    :underline="false"
                     @click="addDomain"
                   >
                     {{ $translateTitle('product.add') }}
@@ -375,33 +333,24 @@
                     :data="sizeForm.struct"
                     style="width: 100%; text-align: center"
                   >
-                    <el-table-column
-                      align="center"
-                      label="存库值"
-                    >
-                      <template slot-scope="scope">
-                        <el-input v-model="scope.row.attribute" />
+                    <el-table-column align="center" label="存库值">
+                      <template #default="{ row }">
+                        <el-input v-model="row.attribute" />
                       </template>
                     </el-table-column>
-                    <el-table-column
-                      align="center"
-                      label="界面值"
-                    >
-                      <template slot-scope="scope">
-                        <el-input v-model="scope.row.attributevalue" />
+                    <el-table-column align="center" label="界面值">
+                      <template #default="{ row }">
+                        <el-input v-model="row.attributevalue" />
                       </template>
                     </el-table-column>
-                    <el-table-column
-                      align="center"
-                      label="操作"
-                    >
-                      <template slot-scope="scope">
+                    <el-table-column align="center" label="操作">
+                      <template #default="{ row }">
                         <el-button
                           plain
                           size="mini"
                           title="删除"
                           type="danger"
-                          @click.native="removeDomain(scope.row)"
+                          @click.native="removeDomain(row)"
                         >
                           删除
                         </el-button>
@@ -413,10 +362,7 @@
             </el-row>
             <!--结构体类型添加格式-->
             <div v-if="sizeForm.type == 'struct'">
-              <el-form-item
-                label="JSON对象"
-                required
-              >
+              <el-form-item label="JSON对象" required>
                 <ul style="padding-left: 20px; margin: 0">
                   <li
                     v-for="(item, index) in sizeForm.struct"
@@ -432,16 +378,16 @@
                     </div>
                     <div>
                       <el-link
-                        :underline="false"
                         style="margin-left: 20px"
                         type="primary"
+                        :underline="false"
                         @click="editStruct(item, index)"
                       >
                         {{ $translateTitle('developer.edit') }}
                       </el-link>
                       <el-link
-                        :underline="false"
                         type="primary"
+                        :underline="false"
                         @click="deleteStruct(index)"
                       >
                         {{ $translateTitle('developer.delete') }}
@@ -450,9 +396,9 @@
                   </li>
                 </ul>
                 <el-link
-                  :underline="false"
                   icon="el-icon-plus"
                   type="primary"
+                  :underline="false"
                   @click="addStruct('structform')"
                 >
                   {{ $translateTitle('product.addparameter') }}
@@ -465,10 +411,7 @@
                 :label="$translateTitle('product.datalength')"
                 prop="string"
               >
-                <el-input
-                  v-model.number="sizeForm.string"
-                  type="number"
-                >
+                <el-input v-model.number="sizeForm.string" type="number">
                   <template slot="append">
                     {{ $translateTitle('product.byte') }}
                   </template>
@@ -478,10 +421,7 @@
             <!--date类型添加格式-->
             <div v-if="sizeForm.type == 'date'">
               <el-form-item :label="$translateTitle('product.timeformat')">
-                <el-input
-                  v-model="sizeForm.date"
-                  readonly
-                />
+                <el-input v-model="sizeForm.date" readonly />
               </el-form-item>
             </div>
             <!--            地理位置-->
@@ -490,8 +430,8 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item
-                    :label="$translateTitle('product.gps type')"
                     class="is-required"
+                    :label="$translateTitle('product.gps type')"
                   >
                     <el-select
                       v-model="sizeForm.gpstype"
@@ -516,8 +456,8 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item
-                    :label="$translateTitle('product.image type')"
                     class="is-required"
+                    :label="$translateTitle('product.image type')"
                   >
                     <el-select
                       v-model="options.value"
@@ -547,8 +487,8 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item
-                    :label="$translateTitle('product.image type')"
                     class="is-required"
+                    :label="$translateTitle('product.image type')"
                   >
                     <el-select
                       v-model="sizeForm.imagevalue"
@@ -577,11 +517,7 @@
               {{ $translateTitle('task.dataacquisition') }}
               <el-row style="margin: 0 auto">
                 <el-col :span="2">
-                  <el-popover
-                    placement="right"
-                    trigger="click"
-                    width="400"
-                  >
+                  <el-popover placement="right" trigger="click" width="400">
                     <el-table
                       :data="
                         wmxData.slice(
@@ -594,9 +530,9 @@
                       <el-table-column
                         :label="$translateTitle('product.identifier')"
                       >
-                        <template slot-scope="scope">
+                        <template #default="{ row }">
                           <span style="margin-left: 10px">
-                            {{ scope.row.identifier }}
+                            {{ row.identifier }}
                           </span>
                         </template>
                       </el-table-column>
@@ -604,9 +540,9 @@
                       <el-table-column
                         :label="$translateTitle('product.functionname')"
                       >
-                        <template slot-scope="scope">
+                        <template #default="{ row }">
                           <span style="margin-left: 10px">
-                            {{ scope.row.name }}
+                            {{ row.name }}
                           </span>
                         </template>
                       </el-table-column>
@@ -614,19 +550,19 @@
                       <el-table-column
                         :label="$translateTitle('product.datatype')"
                       >
-                        <template slot-scope="scope">
+                        <template #default="{ row }">
                           <span style="margin-left: 10px">
-                            {{ scope.row.dataType.type }}
+                            {{ row.dataType.type }}
                           </span>
                         </template>
                       </el-table-column>
                     </el-table>
                     <el-pagination
+                      layout="total, sizes, prev, pager, next, jumper"
                       :page-size="wmxPageSize"
                       :page-sizes="[10, 20, 30, 50]"
-                      :total="wmxData.length"
-                      layout="total, sizes, prev, pager, next, jumper"
                       style="margin-top: 10px"
+                      :total="wmxData.length"
                       @current-change="wmxCurrentChange"
                       @size-change="wmxSizeChange"
                     />
@@ -686,8 +622,8 @@
                       v-for="item in sizeOption"
                       :key="item.val"
                       :label="item.label"
-                      :value="item.val"
                       size="mini"
+                      :value="item.val"
                     />
                   </el-select>
                 </el-form-item>
@@ -788,22 +724,19 @@
                 <el-form-item label="采集公式">
                   <el-input
                     v-model="sizeForm.collection"
-                    :rows="1"
                     placeholder="%s"
+                    :rows="1"
                     style="width: 95%"
                     type="textarea"
                   />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item
-                  label="采集顺序"
-                  style="width: 100%"
-                >
+                <el-form-item label="采集顺序" style="width: 100%">
                   <el-input-number
                     v-model="sizeForm.order"
-                    :min="0"
                     label="采集顺序"
+                    :min="0"
                     style="width: 100%"
                   />
                 </el-form-item>
@@ -811,10 +744,7 @@
             </el-row>
             <el-row :gutter="24">
               <el-col :span="24">
-                <el-tooltip
-                  effect="dark"
-                  placement="right-start"
-                >
+                <el-tooltip effect="dark" placement="right-start">
                   <div slot="content">
                     1. 采集值: 主动向设备写数据经控制公式计算后下发 。
                     <br />
@@ -865,16 +795,13 @@
                     3. 复杂值 ：关闭本弹窗后使用物解析处理
                     <br />
                   </div>
-                  <i
-                    class="el-icon-question"
-                    style="float: left"
-                  />
+                  <i class="el-icon-question" style="float: left" />
                 </el-tooltip>
                 <el-form-item label="控制公式">
                   <el-input
                     v-model="sizeForm.control"
-                    :rows="1"
                     placeholder="%s"
+                    :rows="1"
                     style="width: 98%"
                     type="textarea"
                   />
@@ -1064,9 +991,7 @@
           <!--            </el-row>-->
           <!--          </el-collapse-item>-->
           <el-collapse-item name="4">
-            <template slot="title">
-              数据来源
-            </template>
+            <template slot="title">数据来源</template>
             <el-row :gutter="24">
               <el-col :span="12">
                 <el-form-item label="协议类型">
@@ -1091,10 +1016,7 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row
-              v-show="sizeForm.protocol == 'modbus'"
-              :gutter="24"
-            >
+            <el-row v-show="sizeForm.protocol == 'modbus'" :gutter="24">
               <el-col :span="12">
                 <el-form-item label="数据格式">
                   <el-select
@@ -1126,8 +1048,8 @@
             </el-row>
             <el-table
               v-show="sizeForm.protocol == 'modbus'"
-              :data="dataList"
               border
+              :data="dataList"
               size="small"
               style="width: 100%"
             >
@@ -1137,9 +1059,9 @@
                 min-width="120"
               >
                 <!--关键代码-->
-                <template slot-scope="scope">
+                <template #default="{ row }">
                   <el-input v-model="sizeForm.slaveid" />
-                  <span v-show="false">{{ scope.row }}</span>
+                  <span v-show="false">{{ row }}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -1148,7 +1070,7 @@
                 min-width="120"
               >
                 <!--关键代码-->
-                <template slot-scope="scope">
+                <template #default="{ row }">
                   <el-select
                     v-model="sizeForm.operatetype"
                     placeholder="请选择"
@@ -1188,7 +1110,7 @@
                       :value="item.value"
                     />
                   </el-select>
-                  <span v-show="false">{{ scope.row.slaveid }}</span>
+                  <span v-show="false">{{ row.slaveid }}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -1197,9 +1119,9 @@
                 min-width="120"
               >
                 <!--关键代码-->
-                <template slot-scope="scope">
+                <template #default="{ row }">
                   <el-input v-model="sizeForm.dis" />
-                  <span v-show="false">{{ scope.row.slaveid }}</span>
+                  <span v-show="false">{{ row.slaveid }}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -1208,22 +1130,16 @@
                 min-width="120"
               >
                 <!--关键代码-->
-                <template slot-scope="scope">
+                <template #default="{ row }">
                   <el-input v-model="sizeForm.dinumber" />
-                  <span v-show="false">{{ scope.row.slaveid }}</span>
+                  <span v-show="false">{{ row.slaveid }}</span>
                 </template>
               </el-table-column>
             </el-table>
-            <el-row
-              v-show="sizeForm.protocol != 'modbus'"
-              :gutter="24"
-            >
+            <el-row v-show="sizeForm.protocol != 'modbus'" :gutter="24">
               <el-col :span="12">
                 <el-form-item label="数据地址">
-                  <el-input
-                    v-model="sizeForm.dis"
-                    placeholder="数据地址"
-                  />
+                  <el-input v-model="sizeForm.dis" placeholder="数据地址" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
@@ -1244,10 +1160,7 @@
         {{ $translateTitle('developer.cancel') }}
       </el-button>
       <!-- 物模型提交 -->
-      <el-button
-        type="primary"
-        @click.native="submitForm('sizeForm')"
-      >
+      <el-button type="primary" @click.native="submitForm('sizeForm')">
         {{ $translateTitle('developer.determine') }}
       </el-button>
     </div>
@@ -1269,7 +1182,7 @@
       let isidentifier = (rule, value, callback) => {
         if (!identifier.test(value)) {
           return callback(
-            new Error('请以小写字母开头，只能输入小写字母,数字,_'),
+            new Error('请以小写字母开头，只能输入小写字母,数字,_')
           )
         } else {
           callback()
@@ -1500,18 +1413,12 @@
     mounted() {
       // this.getAllunit()
     },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    activated() {
-    },
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    activated() {},
     methods: {
       // 数据类型
       changeGroup(type) {
@@ -1525,7 +1432,7 @@
         this.upNodeType = type
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
         this.inputParams = {
           file: '',
@@ -1538,8 +1445,7 @@
         this.inputParams.filename = `${this.$route.query.id}.${
           this.sizeForm.identifier
             ? this.sizeForm.identifier
-            : moment()
-              .format('x')
+            : moment().format('x')
         }.${type}`
         this.inputParams.file = file
       },

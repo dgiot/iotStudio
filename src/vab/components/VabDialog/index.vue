@@ -3,6 +3,7 @@
     :append-to-body="appendToBody"
     :before-close="handleClose"
     :close-on-click-modal="false"
+    custom-class="uq-dialog-custom"
     :destroy-on-close="destroyOnClose"
     :fullscreen="fullscreen"
     :modal="modal"
@@ -10,7 +11,6 @@
     :title="$slots.title ? '' : title"
     :visible.sync="visible"
     :width="width"
-    custom-class="uq-dialog-custom"
     @close="close"
     @closed="closed"
     @open="open"
@@ -22,10 +22,7 @@
       </span>
     </template>
     <slot />
-    <span
-      slot="footer"
-      class="dialog-footer"
-    >
+    <span slot="footer" class="dialog-footer">
       <slot name="footer" />
     </span>
   </el-dialog>

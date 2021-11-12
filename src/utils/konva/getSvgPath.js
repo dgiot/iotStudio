@@ -28,8 +28,7 @@ function getSvgPath(item) {
         data: _d,
         originX: 'center',
         originY: 'bottom',
-        id: `${svgId}-${index}-${moment(new Date())
-          .valueOf()}`,
+        id: `${svgId}-${index}-${moment(new Date()).valueOf()}`,
         x: 10,
         y: 15,
         angle: -30,

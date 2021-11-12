@@ -27,8 +27,7 @@ const topoThing = {
       msg: {
         type: 'bind_topo',
         id: args.getAttr('id'),
-        text: args.findOne('Text')
-          .getAttr('text'),
+        text: args.findOne('Text').getAttr('text'),
       },
     }
     // console.log(params,Vue.prototype.$dgiotBus.emit(params.busTopicKey,params.msg))
@@ -133,7 +132,7 @@ const topoThing = {
         attrs: {
           name: 'dblclick',
         },
-      }),
+      })
     )
     simpleLabel.add(
       new Konva.Text({
@@ -145,7 +144,7 @@ const topoThing = {
         padding: 10,
         fontFamily: 'Calibri',
         fill: 'white',
-      }),
+      })
     )
     console.log(simpleLabel)
     return simpleLabel
@@ -203,7 +202,7 @@ const topoThing = {
           draggable: true,
           name: 'dblclick',
         },
-      }),
+      })
     )
     console.log(evidencePath)
     return evidencePath
@@ -211,23 +210,19 @@ const topoThing = {
   /**
    * @description 绑定组态
    */
-  bindTopo() {
-  },
+  bindTopo() {},
   /**
    * @description 保存组态
    */
-  saveTopo() {
-  },
+  saveTopo() {},
   /**
    * @description 处理设备界面进入组态 设置组态不可点击移动等属性
    */
-  deviceThing() {
-  },
+  deviceThing() {},
   /**
    * @description 更新组态
    */
-  upTopo() {
-  },
+  upTopo() {},
 }
 
 export default topoThing

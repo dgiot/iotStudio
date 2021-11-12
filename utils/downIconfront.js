@@ -78,7 +78,7 @@ function writeFile(files, data, resource) {
     if (resource == 'json') {
       const jsonPath = path.join(
         __dirname,
-        `../src/views/topo/components/iconfont.json`,
+        `../src/views/topo/components/iconfont.json`
       )
       upIconJson(jsonPath, data)
     }

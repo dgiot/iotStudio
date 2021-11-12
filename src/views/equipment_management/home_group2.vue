@@ -140,40 +140,40 @@
             sortable
           />
           <el-table-column :label="$translateTitle('product.productname')">
-            <template slot-scope="scope">
-              <span>{{ scope.row.name }}</span>
+            <template #default="{ row }">
+              <span>{{ row.name }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$translateTitle('product.nodetype')">
-            <template slot-scope="scope">
-              <span v-if="scope.row.nodeType == 3">
+            <template #default="{ row }">
+              <span v-if="row.nodeType == 3">
                 {{ $translateTitle('product.direct') }}
               </span>
-              <span v-if="scope.row.nodeType == 1">
+              <span v-if="row.nodeType == 1">
                 {{ $translateTitle('product.gateway') }}
               </span>
-              <span v-else-if="scope.row.nodeType == 0">
+              <span v-else-if="row.nodeType == 0">
                 {{ $translateTitle('product.equipment') }}
               </span>
             </template>
           </el-table-column>
           <!--          <el-table-column :label="$translateTitle('product.classification')">-->
-          <!--            <template slot-scope="scope">-->
+          <!--            <template #default="{ row }">-->
           <!--              <span>-->
-          <!--                {{ scope.row.category ? scope.row.category.name : '' }}-->
+          <!--                {{ row.category ? row.category.name : '' }}-->
           <!--              </span>-->
           <!--            </template>-->
           <!--          </el-table-column>-->
           <!--          <el-table-column :label="$translateTitle('product.producttemplet')">-->
-          <!--            <template slot-scope="scope">-->
+          <!--            <template #default="{ row }">-->
           <!--              <span>-->
-          <!--                {{ scope.row.producttemplet ? scope.row.producttemplet.name : '' }}-->
+          <!--                {{ row.producttemplet ? row.producttemplet.name : '' }}-->
           <!--              </span>-->
           <!--            </template>-->
           <!--          </el-table-column>-->
           <el-table-column :label="$translateTitle('product.addingtime')">
-            <template slot-scope="scope">
-              <span>{{ utc2beijing(scope.row.createdAt) }}</span>
+            <template #default="{ row }">
+              <span>{{ utc2beijing(row.createdAt) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -182,12 +182,12 @@
             fixed="right"
             width="360"
           >
-            <template slot-scope="scope">
+            <template #default="{ row }">
               <el-button
                 :underline="false"
                 size="mini"
                 type="primary"
-                @click="deviceToDetail(scope.row)"
+                @click="deviceToDetail(row)"
               >
                 {{ $translateTitle('product.config') }}
               </el-button>
@@ -195,12 +195,12 @@
                 :underline="false"
                 size="mini"
                 type="warning"
-                @click="editorDict(scope.row.objectId)"
+                @click="editorDict(row.objectId)"
               >
                 {{ $translateTitle('product.dict') }}
               </el-button>
 
-              <el-button size="mini" @click="goKonva(scope.row.objectId)">
+              <el-button size="mini" @click="goKonva(row.objectId)">
                 {{ $translateTitle('concentrator.konva') }}
               </el-button>
 
@@ -208,7 +208,7 @@
                 :underline="false"
                 size="mini"
                 type="success"
-                @click="editorProduct(scope.row)"
+                @click="editorProduct(row)"
               >
                 {{ $translateTitle('concentrator.edit') }}
               </el-button>
@@ -218,7 +218,7 @@
                 style="margin-left: 10px"
                 width="300"
               >
-                <p>确定删除这个{{ scope.row.name }}产品吗？</p>
+                <p>确定删除这个{{ row.name }}产品吗？</p>
                 <div style="margin: 0; text-align: right">
                   <el-button
                     size="mini"
@@ -580,8 +580,8 @@
                 :label="$translateTitle('department.category')"
                 prop="categoryname"
               >
-                <template slot-scope="scope">
-                  {{ scope.row.category.name }}
+                <template #default="{ row }">
+                  {{ row.category.name }}
                 </template>
               </el-table-column>
               <el-table-column
@@ -689,19 +689,19 @@
                   <el-table-column label="数据地址" prop="address" />
                   <el-table-column label="数据长度" prop="bytes" />
                   <el-table-column label="是否必填" prop="required">
-                    <template slot-scope="scope">
-                      <span v-if="scope.row.required">是</span>
+                    <template #default="{ row }">
+                      <span v-if="row.required">是</span>
                       <span v-else>否</span>
                     </template>
                   </el-table-column>
                   <!--                  <el-table-column prop="readonly" label="是否只读">-->
-                  <!--                    <template slot-scope="scope">-->
-                  <!--                      <span v-if="scope.row.readonly">是</span>-->
+                  <!--                    <template #default="{ row }">-->
+                  <!--                      <span v-if="row.readonly">是</span>-->
                   <!--                      <span v-else>否</span>-->
                   <!--                    </template>-->
                   <!--                  </el-table-column>-->
                   <el-table-column align="center" label="操作" width="160">
-                    <template slot-scope="scope">
+                    <template #default="{ row }">
                       <el-button
                         plain
                         size="mini"
@@ -719,7 +719,7 @@
                         title="编辑"
                         type="info"
                         @click.native="
-                          editRow(scope.row, scope.$index, dictTempForm.params)
+                          editRow(row. scope.$index, dictTempForm.params)
                         "
                       >
                         编辑
@@ -931,14 +931,14 @@
               min-width="120"
             >
               <!--关键代码-->
-              <template slot-scope="scope">
+              <template #default="{ row }">
                 <el-input v-model="tempparams.slaveid" />
-                <span v-show="false">{{ scope.row }}</span>
+                <span v-show="false">{{ row }}</span>
               </template>
             </el-table-column>
             <el-table-column align="center" label="寄存器状态" min-width="120">
               <!--关键代码-->
-              <template slot-scope="scope">
+              <template #default="{ row }">
                 <el-select
                   v-model="tempparams.operatetype"
                   placeholder="请选择"
@@ -968,7 +968,7 @@
                     :value="item.value"
                   />
                 </el-select>
-                <span v-show="false">{{ scope.row.slaveid }}</span>
+                <span v-show="false">{{ row.slaveid }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -977,9 +977,9 @@
               min-width="120"
             >
               <!--关键代码-->
-              <template slot-scope="scope">
+              <template #default="{ row }">
                 <el-input v-model="tempparams.address" />
-                <span v-show="false">{{ scope.row.slaveid }}</span>
+                <span v-show="false">{{ row.slaveid }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -992,16 +992,16 @@
               min-width="120"
             >
               <!--关键代码-->
-              <template slot-scope="scope">
+              <template #default="{ row }">
                 <el-input v-model="tempparams.registersnumber" />
-                <span v-show="false">{{ scope.row.slaveid }}</span>
+                <span v-show="false">{{ row.slaveid }}</span>
               </template>
             </el-table-column>
             <el-table-column align="center" label="写入字节数" min-width="120">
               <!--关键代码-->
-              <template slot-scope="scope">
+              <template #default="{ row }">
                 <el-input v-model="tempparams.bytes" />
-                <span v-show="false">{{ scope.row.slaveid }}</span>
+                <span v-show="false">{{ row.slaveid }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -1189,23 +1189,23 @@
                   style="width: 100%; text-align: center"
                 >
                   <el-table-column align="center" label="属性">
-                    <template slot-scope="scope">
-                      <el-input v-model="scope.row.attribute" />
+                    <template #default="{ row }">
+                      <el-input v-model="row.attribute" />
                     </template>
                   </el-table-column>
                   <el-table-column align="center" label="属性值">
-                    <template slot-scope="scope">
-                      <el-input v-model="scope.row.attributevalue" />
+                    <template #default="{ row }">
+                      <el-input v-model="row.attributevalue" />
                     </template>
                   </el-table-column>
                   <el-table-column align="center" label="操作">
-                    <template slot-scope="scope">
+                    <template #default="{ row }">
                       <el-button
                         plain
                         size="mini"
                         title="删除"
                         type="danger"
-                        @click.native="removeDomain(scope.row)"
+                        @click.native="removeDomain(row)"
                       >
                         删除
                       </el-button>
@@ -1288,18 +1288,16 @@
   import { getServer } from '@/api/Role/index'
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
-  import Category from '@/api/Mock/Category'
   import { ExportParse, ImportParse } from '@/api/Export'
   import { queryProductTemplet } from '@/api/ProductTemplet'
   import { getCategory, queryCategory } from '@/api/Category'
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
-  context.keys()
-    .forEach((fileName) => {
-      let comp = context(fileName)
-      res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
-    })
+  context.keys().forEach((fileName) => {
+    let comp = context(fileName)
+    res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
+  })
 
   export default {
     components: {
@@ -1322,7 +1320,7 @@
         selectedRow: {},
         tableData: [],
         allTemp: [],
-        category: Category,
+        category: [],
         descriptions: {
           tableType: 'things',
           things: [],
@@ -1356,8 +1354,7 @@
           keys: 'count(*)',
         },
         cascaderDrawer: false,
-        drawerWidth: Number($(window)
-          .width()) - 240,
+        drawerWidth: Number($(window).width()) - 240,
         height: this.$baseTableHeight(0),
         config: {},
         dataList: [{}],
@@ -1630,7 +1627,7 @@
         console.log(
           'multipleSelection',
           this.multipleSelection,
-          this.selectfromtype,
+          this.selectfromtype
         )
         if (!_.isObject(val)) {
           val.forEach((v) => {
@@ -1696,17 +1693,14 @@
             category: categorys ? { $in: categorys } : { $ne: null },
             name: args.name
               ? {
-                $regex: args.name,
-                $options: 'i',
-              }
+                  $regex: args.name,
+                  $options: 'i',
+                }
               : { $ne: null },
           },
         }
         try {
-          const {
-            results = [],
-            count = 0,
-          } = await queryProductTemplet(params)
+          const { results = [], count = 0 } = await queryProductTemplet(params)
           loading.close()
           this.tableData = results
           this.queryForm.total = count
@@ -1728,7 +1722,7 @@
         this.loading = true
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
         this.inputParams = {
           file: '',
@@ -1880,19 +1874,18 @@
         if (!val) {
           return
         }
-        getServer(val)
-          .then((resultes) => {
-            if (resultes) {
-              this.fileServer = resultes.file
-              this.access_token = resultes.access_token
-            }
-          })
+        getServer(val).then((resultes) => {
+          if (resultes) {
+            this.fileServer = resultes.file
+            this.access_token = resultes.access_token
+          }
+        })
       },
       treeData(paramData) {
         const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parent.objectId,
+            (child) => father.objectId == child.parent.objectId
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parent.objectId == 0 // 返回第一层
@@ -1976,12 +1969,9 @@
                 : { $ne: null },
             },
           }
-          const {
-            results = [],
-            count = 0,
-          } = await this.$query_object(
+          const { results = [], count = 0 } = await this.$query_object(
             'Product',
-            parsms,
+            parsms
           )
           // console.log("results", results)
           if (results) {
@@ -2005,7 +1995,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error',
+            'vab-hey-message-error'
           )
         }
       },
@@ -2066,9 +2056,7 @@
           roles: [],
           categoryname: '',
         }
-        this.productid = moment(new Date())
-          .valueOf()
-          .toString()
+        this.productid = moment(new Date()).valueOf().toString()
         this.dialogFormVisible = true
       },
       getParent(id, origin, returnarr) {
@@ -2123,13 +2111,13 @@
             config: type + 2 > 0 ? this.parserTableList : list,
           })
           this.$message.success(
-            this.$translateTitle('user.Save the template successfully'),
+            this.$translateTitle('user.Save the template successfully')
           )
           this.dialogVisible = false
           this.parserTable = false
         } catch (e) {
           this.$message.error(
-            this.$translateTitle('user.Save the template error') + `${e}`,
+            this.$translateTitle('user.Save the template error') + `${e}`
           )
           console.log(e, 'eeee')
         }
@@ -2213,22 +2201,22 @@
         this.$set(
           this.form,
           'tdchannel',
-          row.channel ? row.channel.tdchannel : '',
+          row.channel ? row.channel.tdchannel : ''
         )
         this.$set(
           this.form,
           'taskchannel',
-          row.channel ? row.channel.taskchannel : '',
+          row.channel ? row.channel.taskchannel : ''
         )
         this.$set(
           this.form,
           'otherchannel',
-          row.channel ? row.channel.otherchannel : [],
+          row.channel ? row.channel.otherchannel : []
         )
         this.$set(
           this.form,
           'storageStrategy',
-          row.channel ? row.channel.storageStrategy : '',
+          row.channel ? row.channel.storageStrategy : ''
         )
         this.form.netType = row.netType
         this.form.devType = row.devType
@@ -2274,16 +2262,15 @@
               },
             },
           }
-          queryCategory(params)
-            .then((res) => {
-              const ids = []
-              ids.push(objectId)
-              res.results.forEach((result) => {
-                ids.push(result.objectId)
-              })
-              console.log('ids', ids)
-              this.queryProdut({ categorys: ids })
+          queryCategory(params).then((res) => {
+            const ids = []
+            ids.push(objectId)
+            res.results.forEach((result) => {
+              ids.push(result.objectId)
             })
+            console.log('ids', ids)
+            this.queryProdut({ categorys: ids })
+          })
         }
       },
       submitForm() {
@@ -2322,8 +2309,8 @@
               var ranNum = Math.ceil(Math.random() * 25)
               var productSecret = Base64.encode(
                 String.fromCharCode(65 + ranNum) +
-                Math.ceil(Math.random() * 10000000) +
-                Number(new Date()),
+                  Math.ceil(Math.random() * 10000000) +
+                  Number(new Date())
               )
               const aclKey = 'role' + ':' + this.form.relationApp
               const setAcl = {}
@@ -2387,7 +2374,7 @@
         const res = await this.$update_object(
           'Product',
           this.custom_row.objectId,
-          data,
+          data
         )
         if (res.updatedAt) {
           this.initQuery('产品修改成功', 'success')
@@ -2445,28 +2432,26 @@
           skip: 0,
           limit: 1,
           where: {
-            product: scope.row.objectId,
+            product: row.objectId,
           },
         }
-        queryDevice(params)
-          .then((results) => {
-            if (results.count > 0) {
-              this.$message('请先删除该产品下设备')
-              return
-            } else {
-              delProduct(scope.row.objectId)
-                .then((response) => {
-                  if (response) {
-                    this.$message({
-                      type: 'success',
-                      message: '删除成功',
-                    })
-                    scope._self.$refs[`popover-${scope.$index}`].doClose()
-                    this.searchProduct()
-                  }
+        queryDevice(params).then((results) => {
+          if (results.count > 0) {
+            this.$message('请先删除该产品下设备')
+            return
+          } else {
+            delProduct(row.objectId).then((response) => {
+              if (response) {
+                this.$message({
+                  type: 'success',
+                  message: '删除成功',
                 })
-            }
-          })
+                scope._self.$refs[`popover-${scope.$index}`].doClose()
+                this.searchProduct()
+              }
+            })
+          }
+        })
       },
       productSizeChange(val) {
         this.length = val
@@ -2502,10 +2487,7 @@
           name: row.attributes.name,
           thing: row.attributes.thing,
         }
-        const {
-          objectId,
-          code,
-        } = await getHashClass('Product', data)
+        const { objectId, code } = await getHashClass('Product', data)
         if (code == 200) {
           this.blackDict(objectId, data)
         }

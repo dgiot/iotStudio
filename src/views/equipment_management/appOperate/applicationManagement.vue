@@ -1,11 +1,7 @@
 <template>
   <div id="application dgiot-container">
     <vab-query-form-top-panel>
-      <el-form
-        ref="form"
-        :inline="true"
-        label-width="0"
-      >
+      <el-form ref="form" :inline="true" label-width="0">
         <el-form-item>
           <el-input
             v-model="name"
@@ -14,11 +10,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button
-            size="small"
-            type="primary"
-            @click="getAppMange(0)"
-          >
+          <el-button size="small" type="primary" @click="getAppMange(0)">
             {{ $translateTitle('application.search') }}
           </el-button>
         </el-form-item>
@@ -63,20 +55,19 @@
         prop="creation_time"
       />
       <el-table-column
-        :label="$translateTitle('developer.operation')"
         flex="right"
+        :label="$translateTitle('developer.operation')"
         prop="operation"
         width="350"
       >
-        <template slot-scope="scope">
+        <template #default="{ row }">
           <el-popover
             :ref="`popover-${scope.$index}`"
             placement="top"
             width="300"
           >
             <p>
-              {{ $translateTitle('product.qdsczg') }}{{
-                scope.row.name
+              {{ $translateTitle('product.qdsczg') }}{{ row.name
               }}{{ $translateTitle('equipment.yym') }}
             </p>
             <div style="margin: 0; text-align: right">
@@ -86,19 +77,15 @@
               >
                 {{ $translateTitle('developer.cancel') }}
               </el-button>
-              <el-button
-                size="mini"
-                type="primary"
-                @click="makeSure(scope)"
-              >
+              <el-button size="mini" type="primary" @click="makeSure(scope)">
                 {{ $translateTitle('developer.determine') }}
               </el-button>
             </div>
             <el-link
               slot="reference"
-              :underline="false"
               icon="el-icon-delete"
               type="danger"
+              :underline="false"
             >
               {{ $translateTitle('developer.delete') }}
             </el-link>
@@ -111,19 +98,15 @@
           >
             {{ $translateTitle('developer.edit') }}
           </el-button>
-          <el-button
-            size="small"
-            type="text"
-            @click="Gotoproduct(scope)"
-          >
+          <el-button size="small" type="text" @click="Gotoproduct(scope)">
             <i class="el-icon-s-management" />
             <!-- 管理 -->
             {{ $translateTitle('leftbar.management') }}
           </el-button>
           <el-link
-            :underline="false"
             type="primary"
-            @click="applicationDeployment(scope.row)"
+            :underline="false"
+            @click="applicationDeployment(row)"
           >
             <!-- 部署 -->
             {{ $translateTitle('developer.deploy') }}
@@ -133,10 +116,10 @@
     </el-table>
     <el-pagination
       :current-page="page.currentPage"
+      layout="total, sizes, prev, pager, next, jumper"
       :page-size="page.pageSize"
       :page-sizes="page.pageSizes"
       :total="page.total"
-      layout="total, sizes, prev, pager, next, jumper"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
@@ -204,34 +187,33 @@
           skip: this.page.currentPage,
           count: 'objectId',
           where,
-        })
-          .then((res) => {
-            const r = res.results
-            this.label = `我的应用(${res.count})`
-            this.description = `获取${r.length}条数据`
-            this.page.total = res.count
-            for (let i = 0; i < r.length; i++) {
-              const obj = {}
-              obj.name = r[i].title
-              obj.objectId = r[i].objectId
-              obj.productIdentifier = r[i].productIdentifier
-              obj.scale = handleZero(r[i].scale)
-              obj.creation_time = utc2beijing(r[i].createdAt)
-              obj.end_time = utc2beijing(r[i].updatedAt)
-              obj.category = r[i].category
-              obj.secret = r[i].secret
-              obj.logo = r[i].logo
-              obj.title = r[i].title
-              obj.userUnit = r[i].userUnit
-              obj.dashboard = r[i].dashboard
-              obj.background = r[i].background
-              obj.acl = r[i].ACL
-              obj.desc = r[i].desc
-              obj.copyright = r[i].copyright
+        }).then((res) => {
+          const r = res.results
+          this.label = `我的应用(${res.count})`
+          this.description = `获取${r.length}条数据`
+          this.page.total = res.count
+          for (let i = 0; i < r.length; i++) {
+            const obj = {}
+            obj.name = r[i].title
+            obj.objectId = r[i].objectId
+            obj.productIdentifier = r[i].productIdentifier
+            obj.scale = handleZero(r[i].scale)
+            obj.creation_time = utc2beijing(r[i].createdAt)
+            obj.end_time = utc2beijing(r[i].updatedAt)
+            obj.category = r[i].category
+            obj.secret = r[i].secret
+            obj.logo = r[i].logo
+            obj.title = r[i].title
+            obj.userUnit = r[i].userUnit
+            obj.dashboard = r[i].dashboard
+            obj.background = r[i].background
+            obj.acl = r[i].ACL
+            obj.desc = r[i].desc
+            obj.copyright = r[i].copyright
 
-              this.tableData.push(obj)
-            }
-          })
+            this.tableData.push(obj)
+          }
+        })
       },
       handleSizeChange(val) {
         this.page.pageSize = val
@@ -260,7 +242,7 @@
                     background: #fafafc;
                     width:200px;
                     font-weight:bold;">App Id:</td>
-                    <td>${scope.row.objectId}</td>
+                    <td>${row.objectId}</td>
                 </tr>
                 <tr ">
                      <td style="color: #74777a;
@@ -270,7 +252,7 @@
                     padding-top:20px;
                     font-weight:bold;">App Secret:
                     </td>
-                    <td style="padding-top:20px;">${scope.row.secret}</td>
+                    <td style="padding-top:20px;">${row.secret}</td>
                 </tr>
                 </table>
             `
@@ -313,7 +295,7 @@
           skip: 0,
           limit: 1,
           where: {
-            product: scope.row.objectId,
+            product: row.objectId,
           },
         }
         queryDevice(params)
@@ -323,10 +305,10 @@
               this.$message('请先删除该产品下设备')
               return
             } else {
-              getProduct(scope.row.objectId)
+              getProduct(row.objectId)
                 .then((results) => {
                   console.log(results)
-                  delProduct(scope.row.objectId)
+                  delProduct(row.objectId)
                     .then((response) => {
                       if (response) {
                         this.$message({
@@ -353,7 +335,7 @@
 
       Gotoproduct(scope) {
         var projectRoles = []
-        for (var key in scope.row.acl) {
+        for (var key in row.acl) {
           console.log(key.substring(5))
           projectRoles.push(key.substring(5))
         }
@@ -362,7 +344,7 @@
         this.$router.push({
           path: '/roles/product',
           query: {
-            project: scope.row.objectId,
+            project: row.objectId,
           },
         })
       },

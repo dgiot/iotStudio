@@ -46,10 +46,7 @@
       </a-col>
       <a-col :span="20">
         <div class="text">
-          <vab-vditor
-            ref="vditor"
-            :value="productDetail.data"
-          />
+          <vab-vditor ref="vditor" :value="productDetail.data" />
         </div>
       </a-col>
     </a-row>
@@ -60,7 +57,13 @@
   import { requireModule } from '@/utils/file'
   import { mapMutations } from 'vuex'
   import { post_tree } from '@/api/Data'
-  import { createArticle, delArticle, getArticle, putArticle, queryArticle } from '@/api/Article'
+  import {
+    createArticle,
+    delArticle,
+    getArticle,
+    putArticle,
+    queryArticle,
+  } from '@/api/Article'
 
   export default {
     name: 'DgiotDoc',
@@ -72,8 +75,7 @@
         editId: '',
         collapsed: false,
         productDetail: {},
-        setKey: moment(new Date())
-          .valueOf(),
+        setKey: moment(new Date()).valueOf(),
       }
     },
     computed: {
@@ -107,31 +109,24 @@
         this.articleId,
         this.selectedKeys,
         this.docDetails,
-        'vuex ',
+        'vuex '
       )
       // if (_.unionBy(this.docDetails))
       this.getTree(this.$route.query)
       // if (_.isEmpty(this.docDetails)) this.getSetting(this.$route.query)
       if (this.articleId) this.getArticle(this.$route.query)
     },
-    created() {
-    },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
+    created() {},
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
     destroyed() {
       this.set_docDetails([])
       this.setSelectedKeys([])
     }, //生命周期 - 销毁完成
-    activated() {
-    },
+    activated() {},
     methods: {
       ...mapMutations({
         delVisitedRoute: 'tabs/delVisitedRoute',
@@ -163,7 +158,7 @@
       deletDoc(objectId) {
         this.$baseConfirm(
           this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item',
+            'Maintenance.Are you sure you want to delete the current item'
           ),
           null,
           async () => {
@@ -173,13 +168,13 @@
             this.$baseMessage(
               this.$translateTitle('Maintenance.successfully deleted'),
               'success',
-              'vab-hey-message-success',
+              'vab-hey-message-success'
             )
             setTimeout(() => {
               loading.close()
               this.getTree(this.$route.query)
             }, 800)
-          },
+          }
         )
       },
       init() {
@@ -191,7 +186,7 @@
         var filter =
           '{"keys":["parent","name","data","projectId","order","category","data","Icon","desc"],"where":{"projectId":"LYjcKG3ysu"}}'.replace(
             'LYjcKG3ysu',
-            this.$route.query.details,
+            this.$route.query.details
           )
         const params = {
           class: 'Article',
@@ -216,7 +211,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success',
+            'vab-hey-message-success'
           )
           loading.close()
         } catch (error) {
@@ -224,7 +219,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error',
+            'vab-hey-message-error'
           )
         }
       },
@@ -243,8 +238,7 @@
           const mergerDetails = _.merge(docDetails, this.docDetails)
           // this.set_docDetails(mergerDetails)
           this.docDetails = mergerDetails
-          this.setKey = moment(new Date())
-            .valueOf()
+          this.setKey = moment(new Date()).valueOf()
           loading.close()
           this.init()
         } catch (error) {
@@ -252,7 +246,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error',
+            'vab-hey-message-error'
           )
         }
       },
@@ -307,8 +301,7 @@
           const loading = this.$baseColorfullLoading()
           const res = await getArticle(treeKey)
           this.$refs.DocDialog.form.projectId = this.detailsId
-          this.$refs.DocDialog.key = moment(new Date())
-            .valueOf()
+          this.$refs.DocDialog.key = moment(new Date()).valueOf()
           this.$refs.DocDialog.form.parent.objectId = res.objectId
           this.$refs.DocDialog.form.category = res.category
           this.$refs.DocDialog.form.type = 'add'
@@ -370,7 +363,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success',
+            'vab-hey-message-success'
           )
           loading.close()
         } catch (error) {
@@ -378,7 +371,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error',
+            'vab-hey-message-error'
           )
         }
       },

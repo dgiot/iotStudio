@@ -1,8 +1,5 @@
 <template>
-  <div
-    :style="styleObject"
-    class="VabEditor"
-  ></div>
+  <div class="VabEditor" :style="styleObject"></div>
 </template>
 
 <script>
@@ -23,8 +20,7 @@
   ]
 
   function capitalize(str) {
-    return str.charAt(0)
-      .toUpperCase() + str.slice(1)
+    return str.charAt(0).toUpperCase() + str.slice(1)
   }
 
   export default {
@@ -51,8 +47,7 @@
       options: {
         required: false,
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       placeholder: {
         type: String,
@@ -139,8 +134,8 @@
         ace.config.set(
           'basePath',
           'https://cdn.jsdelivr.net/npm/ace-builds@' +
-          require('ace').version +
-          '/src-noconflict/',
+            require('ace').version +
+            '/src-noconflict/'
         )
       }
     },

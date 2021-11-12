@@ -1,19 +1,25 @@
 <!--eslint-disable-->
 <template>
   <!-- 1.设计阶段 -->
-  <multipane v-if="!pure" :style="{ height }" class="vab-render">
+  <multipane v-if='!pure' :style='{ height }' class='vab-render'>
     <!-- 左侧 -->
-    <slot :comps="sortedComps" :frender="this" name="left">
+    <slot :comps='sortedComps' :frender='this' name='left'>
       <vab-render-left />
       <multipane-resizer></multipane-resizer>
       <vab-render-main
-        :frender="this" :loading="loading"
-        class="vab-render-main"
-        name="main"
-        @save="handleSave"
+        :frender='this'
+        :loading='loading'
+        class='vab-render-main'
+        name='main'
+        @save='handleSave'
       />
       <multipane-resizer></multipane-resizer>
-      <vab-render-right v-if="isShowRight && rightTabs.length" :frender="this" class="vab-render-right" name="right" />
+      <vab-render-right
+        v-if='isShowRight && rightTabs.length'
+        :frender='this'
+        class='vab-render-right'
+        name='right'
+      />
     </slot>
     <multipane-resizer></multipane-resizer>
     <!--    &lt;!&ndash; 中间 &ndash;&gt;-->
@@ -36,15 +42,15 @@
   <!-- 2.使用 -->
   <ele-form
     v-else
-    ref="form"
+    ref='form'
     :class="{ 'pure-form--loading': loading }"
-    :formData="value"
-    :formDesc="formDesc"
-    v-bind="formBindProps"
+    :formData='value'
+    :formDesc='formDesc'
+    v-bind='formBindProps'
     @input="$emit('input', value)"
-    v-on="$listeners"
+    v-on='$listeners'
   >
-    <form-skeleton v-if="loading" />
+    <form-skeleton v-if='loading' />
   </ele-form>
 </template>
 
@@ -232,16 +238,12 @@
             return
           }
 
-          const {
-            formDesc = {},
-            ...formPropsData
-          } = cloneDeep(formConfig)
+          const { formDesc = {}, ...formPropsData } = cloneDeep(formConfig)
 
           this.formPropsData = Object.assign(this.formPropsData, formPropsData)
-          this.formItemList = objectToArr(formDesc, 'field')
-            .map((item) =>
-              Object.assign({ attrs: {} }, item),
-            )
+          this.formItemList = objectToArr(formDesc, 'field').map((item) =>
+            Object.assign({ attrs: {} }, item)
+          )
 
           // 当有数据时，选中第一个
           if (this.formItemList.length) {
@@ -313,11 +315,7 @@
           formDesc: _.mapValues(
             this.formDesc,
             // 组件属性 attrs 和表单项属性 commonAttrs
-            ({
-              type,
-              attrs,
-              ...commonAttrs
-            }) => {
+            ({ type, attrs, ...commonAttrs }) => {
               const res = {
                 type,
                 ...removeEmptyProps(commonAttrs),
@@ -328,7 +326,7 @@
                 res.attrs = attrs
               }
               return res
-            },
+            }
           ),
           order: Object.keys(this.formDesc),
         }
@@ -337,7 +335,7 @@
       initFormPropsData() {
         this.formPropsData = Object.assign(
           this.formPropsData,
-          cloneDeep(this.formProps.data),
+          cloneDeep(this.formProps.data)
         )
       },
     },

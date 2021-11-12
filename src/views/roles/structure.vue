@@ -5,20 +5,20 @@
     <div class="adduserDiadlog">
       <a-drawer
         v-loading="isloading"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        element-loading-spinner="el-icon-loading"
         :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
         :title="$translateTitle('user.newusers')"
         :visible.sync="adduserDiadlog"
-        element-loading-background="rgba(0, 0, 0, 0.8)"
-        element-loading-spinner="el-icon-loading"
         width="600px"
         @close="adduserDiadlog = !adduserDiadlog"
       >
         <el-form
           ref="userInfoFormRef"
-          :model="userInfoForm"
-          :rules="userFormRules"
           class="demo-ruleForm"
           label-width="160px"
+          :model="userInfoForm"
+          :rules="userFormRules"
           status-icon
         >
           <el-form-item
@@ -47,57 +47,45 @@
               </a-button>
             </span>
           </el-form-item>
-          <el-form-item
-            v-if="centerDialogRole"
-            label-width="78px"
-          >
+          <el-form-item v-if="centerDialogRole" label-width="78px">
             <addroles
               ref="addRoleRef"
               :dept-data="deptOption[0]"
               :is-structures="isStructures"
             />
           </el-form-item>
-          <el-form-item
-            :label="$translateTitle('user.name1')"
-            prop="nick"
-          >
+          <el-form-item :label="$translateTitle('user.name1')" prop="nick">
             <el-input
               v-model="userInfoForm.nick"
-              :placeholder="$translateTitle('product.eqwords')"
               auto-complete="off"
+              :placeholder="$translateTitle('product.eqwords')"
             />
           </el-form-item>
 
           <el-form-item
             :label="$translateTitle('product.phone')"
-            :width="85"
             prop="phone"
+            :width="85"
           >
             <el-input
               v-model="userInfoForm.phone"
+              auto-complete="off"
               :maxlength="11"
               :placeholder="$translateTitle('product.enterphonenumber')"
-              auto-complete="off"
             />
           </el-form-item>
-          <el-form-item
-            :label="$translateTitle('user.email')"
-            prop="email"
-          >
+          <el-form-item :label="$translateTitle('user.email')" prop="email">
             <el-input
               v-model="userInfoForm.email"
-              :placeholder="$translateTitle('product.enteremail')"
               auto-complete="off"
+              :placeholder="$translateTitle('product.enteremail')"
             />
           </el-form-item>
-          <el-form-item
-            :label="$translateTitle('user.account')"
-            prop="account"
-          >
+          <el-form-item :label="$translateTitle('user.account')" prop="account">
             <el-input
               v-model="userInfoForm.account"
-              :placeholder="$translateTitle('product.enteraccount')"
               auto-complete="off"
+              :placeholder="$translateTitle('product.enteraccount')"
             />
           </el-form-item>
 
@@ -107,8 +95,8 @@
           >
             <el-input
               v-model="userInfoForm.password"
-              :placeholder="$translateTitle('product.entermmzh')"
               auto-complete="off"
+              :placeholder="$translateTitle('product.entermmzh')"
             />
           </el-form-item>
           <!-- <el-form-item label="确认密码" prop="checkPass"> -->
@@ -118,8 +106,8 @@
           >
             <el-input
               v-model="userInfoForm.checkPass"
-              :placeholder="$translateTitle('product.enterpwa')"
               auto-complete="off"
+              :placeholder="$translateTitle('product.enterpwa')"
             />
           </el-form-item>
           <!-- <el-form-item label="部门选择" prop="departmentid"> -->
@@ -156,13 +144,7 @@
       </a-drawer>
     </div>
     <el-row :gutter="20">
-      <el-col
-        :lg="24"
-        :md="24"
-        :sm="24"
-        :xl="24"
-        :xs="24"
-      >
+      <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
         <!--表格渲染-->
         <div class="tabContent">
           <el-row :gutter="24">
@@ -171,8 +153,8 @@
                 <vab-query-form-top-panel>
                   <el-form
                     :inline="true"
-                    :model="queryForm"
                     label-width="auto"
+                    :model="queryForm"
                     @submit.native.prevent
                   >
                     <el-form-item :label="$translateTitle('user.department')">
@@ -183,17 +165,17 @@
                         @visible-change="change($event)"
                       >
                         <el-option
-                          :value="treeDataValue"
                           style="height: auto; padding: 0"
+                          :value="treeDataValue"
                         >
                           <el-tree
                             :key="upKey"
                             ref="workGroup"
                             :data="deptTreeData"
-                            :expand-on-click-node="false"
-                            :props="roleProps"
                             default-expand-all
+                            :expand-on-click-node="false"
                             node-key="index"
+                            :props="roleProps"
                           >
                             <div
                               slot-scope="{ node, data }"
@@ -209,8 +191,8 @@
                               </span>
                               <span>
                                 <i
-                                  :title="$translateTitle('developer.adduser')"
                                   class="el-icon-circle-plus-outline"
+                                  :title="$translateTitle('developer.adduser')"
                                   @click="addItemUser(data)"
                                 />
                               </span>
@@ -230,27 +212,27 @@
                   style="width: 100%; margin-top: 20px"
                 >
                   <el-table-column :label="$translateTitle('user.username')">
-                    <template slot-scope="scope">
-                      <div>{{ scope.row.username }}</div>
+                    <template #default="{ row }">
+                      <div>{{ row.username }}</div>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$translateTitle('user.phonenumber')">
-                    <template slot-scope="scope">
-                      <div>{{ scope.row.phone }}</div>
+                    <template #default="{ row }">
+                      <div>{{ row.phone }}</div>
                     </template>
                   </el-table-column>
                   <el-table-column
                     :label="$translateTitle('user.email')"
                     :show-overflow-tooltip="true"
                   >
-                    <template slot-scope="scope">
-                      <div>{{ scope.row.email }}</div>
+                    <template #default="{ row }">
+                      <div>{{ row.email }}</div>
                     </template>
                   </el-table-column>
                   <el-table-column :label="$translateTitle('user.department')">
-                    <template slot-scope="scope">
+                    <template #default="{ row }">
                       <div>
-                        {{ scope.row.departmentname || departmentname }}
+                        {{ row.departmentname || departmentname }}
                       </div>
                     </template>
                   </el-table-column>
@@ -259,24 +241,24 @@
                     :label="$translateTitle('user.createdtime')"
                     :show-overflow-tooltip="true"
                   >
-                    <template slot-scope="scope">
+                    <template #default="{ row }">
                       <span>
-                        {{ new Date(scope.row.createdAt).toLocaleDateString() }}
+                        {{ new Date(row.createdAt).toLocaleDateString() }}
                       </span>
                     </template>
                   </el-table-column>
 
                   <el-table-column
-                    :label="$translateTitle('developer.operation')"
                     align="center"
+                    :label="$translateTitle('developer.operation')"
                     width="400"
                   >
-                    <template slot-scope="scope">
+                    <template #default="{ row }">
                       <el-button
-                        :disabled="scope.row.objectId !== objectId"
+                        :disabled="row.objectId !== objectId"
                         size="small"
                         type="success"
-                        @click="handleEditor(scope.row)"
+                        @click="handleEditor(row)"
                       >
                         {{ $translateTitle('developer.edit') }}
                       </el-button>
@@ -284,49 +266,44 @@
                         :disabled="!curDepartmentId"
                         size="small"
                         type="danger"
-                        @click="handleDetele(scope.row)"
+                        @click="handleDetele(row)"
                       >
                         {{ $translateTitle('developer.delete') }}
                       </el-button>
                       <!-- <el-button
                         size="mini"
                         type="primary"
-                        @click="editorrole(scope.row.objectId)"
+                        @click="editorrole(row.objectId)"
                       >{{  $translateTitle("user.assignroles") }}</el-button
                       > -->
                     </template>
                   </el-table-column>
 
                   <el-table-column
+                    align="center"
                     :label="
                       $translateTitle('user.Disable') +
-                        $translateTitle('user.account')
+                      $translateTitle('user.account')
                     "
-                    align="center"
                     width="140px"
                   >
-                    <template slot-scope="scope">
+                    <template #default="{ row }">
                       <el-tooltip
                         :content="
                           $translateTitle('user.Current state') +
-                            scope.row.emailVerified
+                          row.emailVerified
                             ? $translateTitle('user.Enable')
                             : $translateTitle('user.Disable')
                         "
                         placement="top"
                       >
                         <el-switch
-                          v-model="scope.row.emailVerified"
-                          :active-text="$translateTitle('user.Enable')"
-                          :inactive-text="$translateTitle('user.Disable')"
+                          v-model="row.emailVerified"
                           active-color="#13ce66"
+                          :active-text="$translateTitle('user.Enable')"
                           inactive-color="#ff4949"
-                          @change="
-                            disableRow(
-                              scope.row.objectId,
-                              scope.row.emailVerified
-                            )
-                          "
+                          :inactive-text="$translateTitle('user.Disable')"
+                          @change="disableRow(row.objectId, row.emailVerified)"
                         />
                       </el-tooltip>
                     </template>
@@ -352,46 +329,31 @@
           size="mini"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column
-            type="selection"
-            width="55"
-          />
-          <el-table-column
-            :label="$translateTitle('user.name')"
-            align="center"
-          >
-            <template slot-scope="scope">
-              <span>{{ scope.row.alias }}</span>
+          <el-table-column type="selection" width="55" />
+          <el-table-column align="center" :label="$translateTitle('user.name')">
+            <template #default="{ row }">
+              <span>{{ row.alias }}</span>
             </template>
           </el-table-column>
           <el-table-column
+            align="center"
             :label="$translateTitle('developer.describe')"
-            align="center"
           >
-            <template slot-scope="scope">
-              <span>{{ scope.row.desc }}</span>
+            <template #default="{ row }">
+              <span>{{ row.desc }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            align="center"
-            label="ID"
-          >
-            <template slot-scope="scope">
-              <span>{{ scope.row.objectId }}</span>
+          <el-table-column align="center" label="ID">
+            <template #default="{ row }">
+              <span>{{ row.objectId }}</span>
             </template>
           </el-table-column>
         </el-table>
-        <div
-          slot="footer"
-          class="dialog-footer"
-        >
+        <div slot="footer" class="dialog-footer">
           <el-button @click="roleacl = false">
             {{ $translateTitle('developer.cancel') }}
           </el-button>
-          <el-button
-            type="primary"
-            @click.native="adduseracl"
-          >
+          <el-button type="primary" @click.native="adduseracl">
             {{ $translateTitle('developer.determine') }}
           </el-button>
         </div>
@@ -403,7 +365,13 @@
   import addroles from '@/views/roles/rolelist/addroles'
   import { Promise } from 'q'
   import { mapGetters, mapMutations } from 'vuex'
-  import { disableuser, EmployeesHired, EmployeeTurnover, getUser, queryUser } from '@/api/User/index'
+  import {
+    disableuser,
+    EmployeesHired,
+    EmployeeTurnover,
+    getUser,
+    queryUser,
+  } from '@/api/User/index'
   import { queryRoledepartment } from '@/api/Role/index'
   import { Roletree } from '@/api/Menu'
 
@@ -437,8 +405,7 @@
         tableHeight: this.$baseTableHeight(0) - 20,
         isloading: false,
         isStructures: true,
-        upKey: Number(moment()
-          .unix()),
+        upKey: Number(moment().unix()),
         isEvent: false,
         depobjectId: '',
         centerDialogRole: false,
@@ -680,12 +647,11 @@
       change(e) {
         console.log(e)
         if (e) {
-          $('.el-tree')
-            .css({
-              height: '300px',
-              display: 'block',
-              'overflow-x': 'auto',
-            })
+          $('.el-tree').css({
+            height: '300px',
+            display: 'block',
+            'overflow-x': 'auto',
+          })
         }
       },
       // 添加用户
@@ -803,12 +769,12 @@
             console.log(
               roleitem.objectId,
               roleitem,
-              this.userId == roleitem.objectId,
+              this.userId == roleitem.objectId
             )
             if (this.userId == roleitem.objectId) {
               this.$refs.multipleTable.toggleRowSelection(
                 this.rolelist[index],
-                true,
+                true
               )
               this.userrolelist.push(roleitem.objectId)
             }
@@ -838,16 +804,15 @@
             console.log(nowitems)
             this.testroles(nowitems)
           }),
-        ])
-          .then((data) => {
-            if (data.length != 0) {
-              this.$message({
-                type: 'success',
-                message: '分配成功',
-              })
-              this.roleacl = false
-            }
-          })
+        ]).then((data) => {
+          if (data.length != 0) {
+            this.$message({
+              type: 'success',
+              message: '分配成功',
+            })
+            this.roleacl = false
+          }
+        })
       },
       testroles(id) {
         console.log(id)
@@ -930,36 +895,35 @@
           userid: objectId,
           action: action,
         }
-        disableuser(params)
-          .then((res) => {
-            console.log(res)
-            if (res != undefined) {
-              if (emailVerified) {
-                this.$message({
-                  type: 'success',
-                  message: '启用成功!',
-                })
-              } else {
-                this.$message({
-                  type: 'success',
-                  message: '禁用成功!',
-                })
-              }
+        disableuser(params).then((res) => {
+          console.log(res)
+          if (res != undefined) {
+            if (emailVerified) {
+              this.$message({
+                type: 'success',
+                message: '启用成功!',
+              })
             } else {
-              this.userFordepartment()
-              if (emailVerified) {
-                this.$message({
-                  type: 'error',
-                  message: '权限不足,启用失败!',
-                })
-              } else {
-                this.$message({
-                  type: 'error',
-                  message: '权限不足,禁用失败!',
-                })
-              }
+              this.$message({
+                type: 'success',
+                message: '禁用成功!',
+              })
             }
-          })
+          } else {
+            this.userFordepartment()
+            if (emailVerified) {
+              this.$message({
+                type: 'error',
+                message: '权限不足,启用失败!',
+              })
+            } else {
+              this.$message({
+                type: 'error',
+                message: '权限不足,禁用失败!',
+              })
+            }
+          }
+        })
       },
       // 删除
       handleDetele(row) {
@@ -967,25 +931,24 @@
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
+        }).then(async () => {
+          // const data = {
+          //   department: this.curDepartmentId,
+          //   username: row.username,
+          // }
+          const params = {
+            department: this.curDepartmentId,
+            username: row.username,
+          }
+          const res = await EmployeeTurnover(params)
+          if (res) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!',
+            })
+            this.handleNodeClick({ name: this.departmentname })
+          }
         })
-          .then(async () => {
-            // const data = {
-            //   department: this.curDepartmentId,
-            //   username: row.username,
-            // }
-            const params = {
-              department: this.curDepartmentId,
-              username: row.username,
-            }
-            const res = await EmployeeTurnover(params)
-            if (res) {
-              this.$message({
-                type: 'success',
-                message: '删除成功!',
-              })
-              this.handleNodeClick({ name: this.departmentname })
-            }
-          })
       },
       handleSizeChange(val) {
         this.pagesize = val
@@ -1110,8 +1073,8 @@
 </style>
 <style>
   .el-tree--highlight-current
-  .el-tree-node.is-current
-  > .el-tree-node__content {
+    .el-tree-node.is-current
+    > .el-tree-node__content {
     background-color: #cccccc;
   }
 

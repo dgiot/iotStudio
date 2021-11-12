@@ -1,10 +1,7 @@
 <template>
   <div class="log log-container">
     <div>
-      <a-tabs
-        default-active-key="editor"
-        @change="stopchannel"
-      >
+      <a-tabs default-active-key="editor" @change="stopchannel">
         <a-tab-pane key="editor">
           <span slot="tab">
             <vab-icon icon="aspect-ratio-fill" />
@@ -17,6 +14,7 @@
                 ? Number($baseTableHeight(0))
                 : Number($baseTableHeight(0))
             "
+            lang="text"
             :max-lines="
               isFullscreen
                 ? Number($baseTableHeight(0)) / 12
@@ -27,9 +25,8 @@
                 ? Number($baseTableHeight(0)) / 12
                 : Number($baseTableHeight(0)) / 12
             "
-            :value="msg"
-            lang="text"
             theme="gob"
+            :value="msg"
           />
         </a-tab-pane>
         <a-tab-pane key="table">
@@ -48,8 +45,8 @@
             :height="height"
           >
             <el-table-column
-              :label="$translateTitle('home.updatedAt')"
               align="center"
+              :label="$translateTitle('home.updatedAt')"
               prop="timestamp"
               show-overflow-tooltip
               sortable
@@ -58,17 +55,16 @@
               <template #default="{ row }">
                 <span>
                   {{
-                    $moment(Number(row.timestamp))
-                      .format(
-                        'YYYY-MM-DD HH:mm:ss.SSS',
-                      )
+                    $moment(Number(row.timestamp)).format(
+                      'YYYY-MM-DD HH:mm:ss.SSS'
+                    )
                   }}
                 </span>
               </template>
             </el-table-column>
             <el-table-column
-              :label="$translateTitle('product.log')"
               align="center"
+              :label="$translateTitle('product.log')"
               prop="msg"
               show-overflow-tooltip
               sortable
@@ -84,27 +80,21 @@
               </template>
             </el-table-column>
             <template #empty>
-              <a-empty
-                :description="false"
-                class="vab-data-empty"
-              />
+              <a-empty class="vab-data-empty" :description="false" />
             </template>
           </el-table>
           <el-pagination
+            background
             :current-page="queryForm.pageNo"
             :layout="layout"
             :page-size="queryForm.pageSize"
             :total="list.length"
-            background
             @current-change="handleCurrentChange"
             @size-change="handleSizeChange"
           />
         </a-tab-pane>
 
-        <a-tab-pane
-          key="device"
-          :disabled="!product.length"
-        >
+        <a-tab-pane key="device" :disabled="!product.length">
           <span slot="tab">
             <vab-icon icon="traffic-light-line" />
             {{ $translateTitle('system.Accurate log') }}
@@ -121,10 +111,7 @@
                   <el-form-item>
                     <span slot="label">
                       {{ $translateTitle('alert.productname') }}
-                      <el-badge
-                        :value="product.length"
-                        class="item"
-                      />
+                      <el-badge class="item" :value="product.length" />
                     </span>
                     <el-select
                       v-model="queryForm.product"
@@ -143,53 +130,50 @@
             </vab-query-form>
           </el-row>
           <el-table
+            border
             :data="Device"
             :height="$baseTableHeight(0) - 90"
-            border
             style="width: 100%"
           >
             <el-table-column
-              :label="$translateTitle('equipment.devicename')"
               align="center"
+              :label="$translateTitle('equipment.devicename')"
               prop="name"
               show-overflow-tooltip
               sortable
             />
             <el-table-column
-              :label="$translateTitle('equipment.devicenumber')"
               align="center"
+              :label="$translateTitle('equipment.devicenumber')"
               prop="devaddr"
               show-overflow-tooltip
               sortable
             />
             <el-table-column
-              :label="$translateTitle('product.log')"
               align="center"
+              :label="$translateTitle('product.log')"
             >
               <template #default="{ row }">
-                <el-button
-                  type="text"
-                  @click="subscriptionlog(row.devaddr)"
-                >
+                <el-button type="text" @click="subscriptionlog(row.devaddr)">
                   {{ $translateTitle('product.subscriptionlog') }}
                 </el-button>
               </template>
             </el-table-column>
             <template #empty>
               <el-image
+                class="vab-data-empty"
                 :src="
                   require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                 "
-                class="vab-data-empty"
               />
             </template>
           </el-table>
         </a-tab-pane>
       </a-tabs>
       <el-dialog
-        :visible.sync="dialogVisible"
         append-to-body
         top="1vh"
+        :visible.sync="dialogVisible"
         width="50%"
       >
         <vab-editor
@@ -199,6 +183,7 @@
               ? Number($baseTableHeight(0))
               : Number($baseTableHeight(0))
           "
+          lang="text"
           :max-lines="
             isFullscreen
               ? Number($baseTableHeight(0)) / 12
@@ -209,9 +194,8 @@
               ? Number($baseTableHeight(0)) / 12
               : Number($baseTableHeight(0)) / 12
           "
-          :value="deviceLog"
-          lang="text"
           theme="gob"
+          :value="deviceLog"
         />
       </el-dialog>
     </div>
@@ -256,8 +240,7 @@
         pubtopic: '',
         topicKey: '',
         dialogVisible: false,
-        editorKey: moment()
-          .format('x'),
+        editorKey: moment().format('x'),
         deviceLog: '',
         loading: false,
         Device: [],
@@ -308,15 +291,14 @@
         limit: true,
       },
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {
       stopchannel(val) {
         if (val == 'device') {
           this.$dgiotBus.$emit(
             'MqttUnbscribe',
             this.$dgiotBus.router(this.$route.fullPath),
-            'log/channel/' + this.channelId + '/#',
+            'log/channel/' + this.channelId + '/#'
           )
         }
       },
@@ -325,15 +307,13 @@
         //   timestamp: moment().format('x'),
         //   msg: Msg,
         // })
-        this.editorKey = moment()
-          .format('x')
+        this.editorKey = moment().format('x')
         this.deviceLog += Msg + `\n`
         // subdialog.setValue(this.submessage)
         // subdialog.gotoLine(subdialog.session.getLength())
       },
       subscriptionlog(devaddr) {
-        this.editorKey = moment()
-          .format('x')
+        this.editorKey = moment().format('x')
         this.deviceLog = 'Log is true' + `\n`
         this.pubtopic =
           'channel/' +
@@ -374,9 +354,9 @@
               product: this.queryForm.product
                 ? this.queryForm.product
                 : {
-                  $ne: null,
-                  $exists: true,
-                },
+                    $ne: null,
+                    $exists: true,
+                  },
             },
           }
           const { results } = await queryDevice(params)
@@ -387,7 +367,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error',
+            'vab-hey-message-error'
           )
         }
       },

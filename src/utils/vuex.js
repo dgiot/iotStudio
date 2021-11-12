@@ -30,8 +30,8 @@ export function getToken(tokenName, storage = 'localStorage', type = '') {
     'localStorage' === storage
       ? localStorage.getItem(tokenName)
       : 'sessionStorage' === storage
-        ? sessionStorage.getItem(tokenName)
-        : cookie.get(tokenName)
+      ? sessionStorage.getItem(tokenName)
+      : cookie.get(tokenName)
   if (res && isBase64(res)) {
     let Base64Decode = JSON.parse(Base64.decode(res))
     return Base64Decode.vuexinfo
@@ -130,10 +130,10 @@ export function clearCookie() {
   date.setTime(date.getTime() - 10000)
   const keys = document.cookie.match(/[^ =;]+(?=\=)/g)
   if (keys) {
-    for (var i = keys.length; i--;) {
+    for (var i = keys.length; i--; ) {
       cookieWhiteList.indexOf(keys[i]) < -1
         ? (document.cookie =
-          keys[i] + '=0; expire=' + date.toGMTString() + '; path=/')
+            keys[i] + '=0; expire=' + date.toGMTString() + '; path=/')
         : tempToken.token.push(keys[i])
     }
   }

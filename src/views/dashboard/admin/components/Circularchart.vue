@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="className"
-    :style="{ height: height, width: width }"
-  />
+  <div :class="className" :style="{ height: height, width: width }" />
 </template>
 
 <script>
@@ -61,10 +58,10 @@
       // 监听侧边栏的变化
       this.sidebarElm = document.getElementsByClassName('sidebar-container')[0]
       this.sidebarElm &&
-      this.sidebarElm.addEventListener(
-        'transitionend',
-        this.sidebarResizeHandler,
-      )
+        this.sidebarElm.addEventListener(
+          'transitionend',
+          this.sidebarResizeHandler
+        )
     },
     beforeDestroy() {
       if (!this.chart) {
@@ -75,10 +72,10 @@
       }
 
       this.sidebarElm &&
-      this.sidebarElm.removeEventListener(
-        'transitionend',
-        this.sidebarResizeHandler,
-      )
+        this.sidebarElm.removeEventListener(
+          'transitionend',
+          this.sidebarResizeHandler
+        )
 
       this.chart.dispose()
       this.chart = null

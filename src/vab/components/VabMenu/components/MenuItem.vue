@@ -7,10 +7,7 @@
  * @Description:
 -->
 <template>
-  <el-menu-item
-    :index="itemOrMenu.path"
-    @click.native="handleLink"
-  >
+  <el-menu-item :index="itemOrMenu.path" @click.native="handleLink">
     <el-image
       v-if="itemOrMenu.meta.icon && itemOrMenu.meta.icon.includes('dgiot')"
       :alt="$FileServe"
@@ -20,8 +17,8 @@
       <img
         slot="error"
         :src="$FileServe + itemOrMenu.meta.icon"
-        :title="$FileServe + itemOrMenu.meta.icon"
         style="width: 16px; height: 16px"
+        :title="$FileServe + itemOrMenu.meta.icon"
       />
     </el-image>
     <vab-icon

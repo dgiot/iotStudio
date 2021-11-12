@@ -1,18 +1,15 @@
 <template>
   <div class="roles dgiot-container">
     <el-row :gutter="20">
-      <el-col
-        :span="14"
-        :xs="8"
-      >
+      <el-col :span="14" :xs="8">
         <div class="rightTable">
           <div class="search">
             <vab-query-form style="margin-top: 20px">
               <vab-query-form-top-panel>
                 <el-form
                   :inline="true"
-                  :model="queryForm"
                   label-width="100px"
+                  :model="queryForm"
                   @submit.native.prevent
                 >
                   <el-form-item :label="$translateTitle('user.department')">
@@ -23,17 +20,17 @@
                       @visible-change="change($event)"
                     >
                       <el-option
-                        :value="treeDataValue"
                         style="height: auto; padding: 0"
+                        :value="treeDataValue"
                       >
                         <el-tree
                           ref="workGroup"
-                          :data="roleTree"
-                          :expand-on-click-node="false"
-                          :props="roleProps"
                           class="workGroup"
+                          :data="roleTree"
                           default-expand-all
+                          :expand-on-click-node="false"
                           node-key="index"
+                          :props="roleProps"
                         >
                           <div
                             slot-scope="{ node, data }"
@@ -49,8 +46,8 @@
                             </span>
                             <span>
                               <i
-                                :title="$translateTitle('product.addrole')"
                                 class="el-icon-circle-plus-outline"
+                                :title="$translateTitle('product.addrole')"
                                 @click="setDialogRole(data)"
                               />
                             </span>
@@ -62,8 +59,8 @@
                   <el-form-item :label="$translateTitle('user.rolename')">
                     <el-input
                       v-model="search"
-                      :placeholder="$translateTitle('user.rolename')"
                       clearable
+                      :placeholder="$translateTitle('user.rolename')"
                       size="mini"
                     />
                   </el-form-item>
@@ -98,63 +95,57 @@
               </vab-query-form-top-panel>
             </vab-query-form>
           </div>
-          <div
-            class="tableroles"
-            style="margin-top: 20px"
-          >
+          <div class="tableroles" style="margin-top: 20px">
             <el-table
               :data="roleList"
               :height="tableHeight"
+              highlight-current-row
               :row-class-name="tableRowClassName"
               :row-style="selectedHighlight"
-              highlight-current-row
               size="small"
               style="width: 100%; text-align: center"
               @row-click="getDetailmenu"
             >
               <el-table-column
-                :label="$translateTitle('user.rolename')"
                 align="center"
+                :label="$translateTitle('user.rolename')"
               >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.name }}</span>
+                <template #default="{ row }">
+                  <span>{{ row.name }}</span>
                 </template>
               </el-table-column>
               <!--         <el-table-column :label=" $translateTitle('developer.describe')" align="center">
-                <template slot-scope="scope">
-                  <span>{{ scope.row.desc }}</span>
+                <template #default="{ row }">
+                  <span>{{ row.desc }}</span>
                 </template>
               </el-table-column>-->
               <el-table-column
+                align="center"
                 :label="$translateTitle('user.Remarks')"
-                align="center"
               >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.alias }}</span>
+                <template #default="{ row }">
+                  <span>{{ row.alias }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="ID">
+                <template #default="{ row }">
+                  <span>{{ row.objectId }}</span>
                 </template>
               </el-table-column>
               <el-table-column
                 align="center"
-                label="ID"
-              >
-                <template slot-scope="scope">
-                  <span>{{ scope.row.objectId }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
                 :label="$translateTitle('developer.operation')"
-                align="center"
               >
-                <template slot-scope="scope">
-                  <!-- <el-button size="mini" type="primary" @click.native="handleEdit(scope.row)">分配权限</el-button> -->
-                  <!-- <el-button size="mini" type="success" @click.native="addmenu(scope.row)">分配菜单</el-button> -->
+                <template #default="{ row }">
+                  <!-- <el-button size="mini" type="primary" @click.native="handleEdit(row)">分配权限</el-button> -->
+                  <!-- <el-button size="mini" type="success" @click.native="addmenu(row)">分配菜单</el-button> -->
                   <!-- <el-button size="mini" type="primary" >增加用户</el-button> -->
 
                   <el-dropdown
                     size="mini"
                     split-button
                     type="primary"
-                    @click="exportRolerole(scope.row)"
+                    @click="exportRolerole(row)"
                   >
                     <span class="el-dropdown-link">
                       <!-- 修改 -->
@@ -163,21 +154,21 @@
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item
                         icon="el-icon-document"
-                        @click.native="exportRoletemp(scope.row)"
+                        @click.native="exportRoletemp(row)"
                       >
                         <!-- 保存模板 -->
                         {{ $translateTitle('product.savetemplate') }}
                       </el-dropdown-item>
-                      <!-- <el-dropdown-item icon="el-icon-document" @click.native="handleEditrole(scope.row)" >编辑</el-dropdown-item> -->
+                      <!-- <el-dropdown-item icon="el-icon-document" @click.native="handleEditrole(row)" >编辑</el-dropdown-item> -->
                       <el-dropdown-item
                         icon="el-icon-delete"
                         size="mini"
-                        @click.native="handleDelete(scope.row)"
+                        @click.native="handleDelete(row)"
                       >
                         <!-- 删除 -->
                         {{ $translateTitle('task.Delete') }}
                       </el-dropdown-item>
-                      <!-- <el-dropdown-item @click.native="taskDetail(scope.row.objectId,scope.row.test_bed.id)">详情</el-dropdown-item> -->
+                      <!-- <el-dropdown-item @click.native="taskDetail(row.objectId,row.test_bed.id)">详情</el-dropdown-item> -->
                     </el-dropdown-menu>
                   </el-dropdown>
                 </template>
@@ -186,8 +177,8 @@
             <!--分页-->
             <div class="rightPagination">
               <el-pagination
-                :total="total"
                 layout="prev, pager, next"
+                :total="total"
                 @current-change="handleCurrentChange"
                 @size-change="handleSizeChange"
               />
@@ -195,10 +186,7 @@
           </div>
         </div>
       </el-col>
-      <el-col
-        :span="10"
-        :xs="16"
-      >
+      <el-col :span="10" :xs="16">
         <!--菜单-->
         <div class="rolefooter">
           <div class="footerleft">
@@ -247,26 +235,23 @@
               </div>
               <el-tree
                 ref="permissionTree"
+                accordion
+                check-on-click-node
                 :data="permissionTreeData"
                 :default-checked-keys="rolePermissonList"
                 :default-expand-all="isExpand"
-                :expand-on-click-node="false"
-                accordion
-                check-on-click-node
                 default-props
+                :expand-on-click-node="false"
                 node-key="objectId"
                 show-checkbox
               >
-                <span
-                  slot-scope="{ node }"
-                  class="custom-tree-node"
-                >
+                <span slot-scope="{ node }" class="custom-tree-node">
                   <span>{{ node.label }}</span>
                 </span>
                 <span>
                   <i
-                    :title="$translateTitle('product.addrole')"
                     class="el-icon-circle-plus-outline"
+                    :title="$translateTitle('product.addrole')"
                     @click="setDialogRole(data)"
                   />
                 </span>
@@ -316,19 +301,16 @@
                 {{ $translateTitle('button.unselect all') }}
               </el-button>
             </div>
-            <div
-              class="menucontrol"
-              style="margin-top: 0px"
-            >
+            <div class="menucontrol" style="margin-top: 0px">
               <el-tree
                 ref="menusTree"
+                accordion
+                check-on-click-node
                 :data="menuTreeData"
                 :default-checked-keys="roleMenuList"
                 :default-expand-all="menuExpand"
-                :expand-on-click-node="false"
-                accordion
-                check-on-click-node
                 default-props
+                :expand-on-click-node="false"
                 node-key="objectId"
                 show-checkbox
               >
@@ -369,46 +351,31 @@
         style="width: 100%; text-align: center"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column
-          type="selection"
-          width="55"
-        />
-        <el-table-column
-          :label="$translateTitle('user.name')"
-          align="center"
-        >
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+        <el-table-column type="selection" width="55" />
+        <el-table-column align="center" :label="$translateTitle('user.name')">
+          <template #default="{ row }">
+            <span>{{ row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column
+          align="center"
           :label="$translateTitle('user.Remarks')"
-          align="center"
         >
-          <template slot-scope="scope">
-            <span>{{ scope.row.desc }}</span>
+          <template #default="{ row }">
+            <span>{{ row.desc }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          label="ID"
-        >
-          <template slot-scope="scope">
-            <span>{{ scope.row.objectId }}</span>
+        <el-table-column align="center" label="ID">
+          <template #default="{ row }">
+            <span>{{ row.objectId }}</span>
           </template>
         </el-table-column>
       </el-table>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button
-          type="primary"
-          @click.native="addacl"
-        >
+        <el-button type="primary" @click.native="addacl">
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>
@@ -448,24 +415,18 @@
         >
           <el-input
             v-model="form.desc"
-            :rows="2"
             autocomplete="off"
+            :rows="2"
             style="width: 300px"
             type="textarea"
           />
         </el-form-item>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="roleEdit = false">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button
-          type="primary"
-          @click.native="updaterole"
-        >
+        <el-button type="primary" @click.native="updaterole">
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </div>
@@ -473,7 +434,14 @@
   </div>
 </template>
 <script>
-  import { delRole, queryRole, queryRoledepartment, roleMenu, saveRole, saveRoletemp } from '@/api/Role/index'
+  import {
+    delRole,
+    queryRole,
+    queryRoledepartment,
+    roleMenu,
+    saveRole,
+    saveRoletemp,
+  } from '@/api/Role/index'
   import { mapGetters, mapMutations } from 'vuex'
   import addroles from '@/views/roles/rolelist/addroles'
   import { Roletree } from '@/api/Menu'
@@ -552,7 +520,7 @@
         return cloneData.filter((father) => {
           /* eslint-disable */
           const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parentId,
+            (child) => father.objectId == child.parentId
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parentId == 0 // 返回第一层
@@ -567,7 +535,7 @@
             father.meta && father.meta.title ? father.meta.title : ''
           /* eslint-disable */
           const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parentId,
+            (child) => father.objectId == child.parentId
           )
           branchArr.length > 0 ? (father.children = branchArr) : ''
           return father.parentId == 0
@@ -591,7 +559,8 @@
     },
 
     methods: {
-      expand(tree, isExpand) { // 展开/折叠
+      expand(tree, isExpand) {
+        // 展开/折叠
         this[isExpand] = !this[isExpand]
         console.log('tree', tree, this.$refs[tree], isExpand)
         const nodes = this.$refs[tree].store._getAllNodes()
@@ -602,7 +571,8 @@
           nodes[i].expanded = this[isExpand]
         }
       },
-      checkAll(tree, data) { // 全选
+      checkAll(tree, data) {
+        // 全选
         this.$refs[tree].setCheckedNodes(this[data])
       },
       inverse(tree, data) {
@@ -610,18 +580,19 @@
         let nodes = res.getCheckedNodes(true, true)
         this.batchSelect(this[data], res, true, nodes)
       },
-      checkNot(tree) { // 全不选
+      checkNot(tree) {
+        // 全不选
         this.$refs[tree].setCheckedKeys([])
       },
       // 全选处理方法
       batchSelect(nodes, refs, flag, seleteds) {
         if (typeof nodes != 'undefined') {
-          nodes.forEach(element => {
+          nodes.forEach((element) => {
             refs.setChecked(element, flag, true)
           })
         }
         if (typeof seleteds != 'undefined') {
-          seleteds.forEach(node => {
+          seleteds.forEach((node) => {
             refs.setChecked(node, !flag, true)
           })
         }
@@ -637,12 +608,11 @@
       change(e) {
         console.log(e)
         if (e) {
-          $('.el-tree')
-            .css({
-              height: '300px',
-              display: 'block',
-              'overflow-x': 'auto',
-            })
+          $('.el-tree').css({
+            height: '300px',
+            display: 'block',
+            'overflow-x': 'auto',
+          })
         }
       },
       getMenu() {
@@ -693,9 +663,7 @@
       },
       //给role添加acl权限
       addacl() {
-        this.$get_object('_Role', this.objectId)
-          .then((object) => {
-          })
+        this.$get_object('_Role', this.objectId).then((object) => {})
       },
       //关闭菜单弹窗
       handleClose() {
@@ -714,23 +682,30 @@
           })
           return
         } else {
-          this.$confirm(this.$translateTitle('user.This operation will permanently delete this role, do you want to continue?'), this.$translateTitle('user.prompt'), {
-            confirmButtonText: this.$translateTitle('developer.determine'),
-            cancelButtonText: this.$translateTitle('developer.cancel'),
-            type: 'warning',
-          })
+          this.$confirm(
+            this.$translateTitle(
+              'user.This operation will permanently delete this role, do you want to continue?'
+            ),
+            this.$translateTitle('user.prompt'),
+            {
+              confirmButtonText: this.$translateTitle('developer.determine'),
+              cancelButtonText: this.$translateTitle('developer.cancel'),
+              type: 'warning',
+            }
+          )
             .then(() => {
               this.delConfirm(row.objectId)
             })
-            .catch(() => {
-            })
+            .catch(() => {})
         }
       },
       // 二次确认删除
       async delConfirm(objectId) {
         let res = await delRole(objectId)
         if (res) {
-          this.$message.success(`${this.$translateTitle('user.successfully deleted')}`)
+          this.$message.success(
+            `${this.$translateTitle('user.successfully deleted')}`
+          )
 
           this.getRolesList()
           this.getRoletree()
@@ -746,18 +721,12 @@
         this.getMenu()
         this.getRoletree()
       },
-      tableRowClassName({
-        row,
-        rowIndex,
-      }) {
+      tableRowClassName({ row, rowIndex }) {
         //把每一行的索引放进row
 
         row.index = rowIndex
       },
-      selectedHighlight({
-        row,
-        rowIndex,
-      }) {
+      selectedHighlight({ row, rowIndex }) {
         if (this.currentSelectIndex === rowIndex) {
           return {
             // "background-color": "#409EFF",
@@ -780,14 +749,8 @@
         })
 
         this.currentSelectIndex = row.index
-        const {
-          menus,
-          rules,
-          roles,
-          users,
-          objectId,
-        } = await roleMenu(
-          row.name,
+        const { menus, rules, roles, users, objectId } = await roleMenu(
+          row.name
         )
         this.roleItem = {
           menus: menus,
@@ -858,10 +821,7 @@
           where: where,
           count: 'objectId',
         }
-        let {
-          results,
-          count,
-        } = await queryRole(params)
+        let { results, count } = await queryRole(params)
         if (results) {
           loading.close()
           this.roleList = results
@@ -940,7 +900,7 @@
         let selectMenu = this.getCheckedKeys(
           this.menuTreeData,
           this.$refs.menusTree.getCheckedKeys(),
-          'objectId',
+          'objectId'
         ) // 选中子级时选中父级
         // let selectMenu = this.$refs.menusTree.getCheckedNodes()  // 只选中子级
         let usersList = []
@@ -951,7 +911,10 @@
         let usersData = this.roleItem.users
 
         if (!usersData || !rolesData) {
-          this.$message.error(`${this.$translateTitle('user.The correct role permissions and menus are not selected')}`,
+          this.$message.error(
+            `${this.$translateTitle(
+              'user.The correct role permissions and menus are not selected'
+            )}`
           )
 
           return false
@@ -985,27 +948,43 @@
             roles: _.uniq(rolesList),
             users: _.uniq(usersList),
           })
-            .then(res => {
-
+            .then((res) => {
               if (res) {
-                this.$message.success(`${this.$translateTitle('user.Role information updated successfully')}`)
+                this.$message.success(
+                  `${this.$translateTitle(
+                    'user.Role information updated successfully'
+                  )}`
+                )
               } else {
-                this.$message.error(`${this.$translateTitle('user.Role information updated failed')}`)
+                this.$message.error(
+                  `${this.$translateTitle(
+                    'user.Role information updated failed'
+                  )}`
+                )
               }
             })
-            .catch(e => {
-              this.$message.error(`${this.$translateTitle('user.Role information updated successfully')}` + `${e}`)
+            .catch((e) => {
+              this.$message.error(
+                `${this.$translateTitle(
+                  'user.Role information updated successfully'
+                )}` + `${e}`
+              )
             })
-
         } else {
-          this.$message.info(`${this.$translateTitle('user.Please select the menu list and permission list')}`)
+          this.$message.info(
+            `${this.$translateTitle(
+              'user.Please select the menu list and permission list'
+            )}`
+          )
         }
       },
       // 保存模板
       async exportRoletemp(row) {
         const res = await saveRoletemp(row.name)
         if (res) {
-          this.$message.success(`${this.$translateTitle('user.Save the template successfully')}`)
+          this.$message.success(
+            `${this.$translateTitle('user.Save the template successfully')}`
+          )
         }
       },
       updaterole() {
@@ -1013,25 +992,24 @@
           alias: this.form.alias,
           desc: this.form.desc,
         }
-        this.$update_object(this.editroleid, params)
-          .then((res) => {
-            this.$message.success(`${this.$translateTitle('user.update completed')}`)
+        this.$update_object(this.editroleid, params).then((res) => {
+          this.$message.success(
+            `${this.$translateTitle('user.update completed')}`
+          )
 
-            this.roleEdit = false
-            this.getRolesList()
-          })
+          this.roleEdit = false
+          this.getRolesList()
+        })
       },
       handleNodeClick(data) {
         this.treeDataValue = data.label
         this.queryForm.workGroupName = data.label
-        $('.workGroup')
-          .css({
-            height: '0px',
-            display: 'none',
-            'overflow-x': 'auto',
-          })
-        $('.el-select-dropdown')
-          .css({ display: 'none' })
+        $('.workGroup').css({
+          height: '0px',
+          display: 'none',
+          'overflow-x': 'auto',
+        })
+        $('.el-select-dropdown').css({ display: 'none' })
         this.curDepartmentId = data.objectId
 
         // 清除选中的角色
@@ -1046,11 +1024,7 @@
       appendChildTree(data) {
         console.log(data, '添加子节点')
       },
-      renderContent(h, {
-        node,
-        data,
-        store,
-      }) {
+      renderContent(h, { node, data, store }) {
         return (
           <span class="custom-tree-node">
             <span>{node.label}</span>
@@ -1075,7 +1049,6 @@
         // this.$nextTick(() => {
         //   this.$refs['addRoleRef'].getData(data)
         // })
-
       },
       closeDialogRole() {
         this.centerDialogRole = false

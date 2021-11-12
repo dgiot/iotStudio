@@ -1,9 +1,5 @@
 <template>
-  <div
-    :id="playerId"
-    :style="playStyle"
-    class="prism-player"
-  />
+  <div :id="playerId" class="prism-player" :style="playStyle" />
 </template>
 
 <script>
@@ -108,9 +104,7 @@
     },
     data() {
       return {
-        playerId: 'aliplayer_' + Math.random()
-          .toString(36)
-          .substr(2),
+        playerId: 'aliplayer_' + Math.random().toString(36).substr(2),
         scriptTagStatus: 0,
         isReload: false,
         instance: null,

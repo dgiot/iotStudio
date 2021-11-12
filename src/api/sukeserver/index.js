@@ -7,7 +7,7 @@ export function addSukeyys(
   para,
   status_url,
   status_para,
-  default1,
+  default1
 ) {
   return request({
     url: '/suke/add_yys',
@@ -44,7 +44,7 @@ export function editSukeyys(
   para,
   status_url,
   status_para,
-  default1,
+  default1
 ) {
   return request({
     url: '/suke/edit_yys',

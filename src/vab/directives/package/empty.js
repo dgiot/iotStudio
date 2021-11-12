@@ -6,15 +6,8 @@
 const empty = {
   update(el, binding, vnode) {
     el.style.position = el.style.position || 'relative'
-    const {
-      offsetHeight,
-      offsetWidth,
-    } = el
-    const {
-      visible,
-      content,
-      img,
-    } = binding.value
+    const { offsetHeight, offsetWidth } = el
+    const { visible, content, img } = binding.value
     const image = img ? `<img src="${img}" height="30%" width="30%"></img>` : ''
     const defaultStyle =
       'position:absolute;top:0;left:0;z-index:9999;background:#fff;display:flex;justify-content: center;align-items: center;'

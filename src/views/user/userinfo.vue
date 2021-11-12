@@ -2,13 +2,7 @@
   <div class="userinfo">
     <div class="personal-center-container">
       <el-row :gutter="20">
-        <el-col
-          :lg="12"
-          :md="12"
-          :sm="24"
-          :xl="8"
-          :xs="24"
-        >
+        <el-col :lg="12" :md="12" :sm="24" :xl="8" :xs="24">
           <el-card shadow="hover">
             <div class="personal-center-user-info">
               <el-avatar
@@ -47,31 +41,16 @@
             </div>
           </el-card>
         </el-col>
-        <el-col
-          :lg="12"
-          :md="12"
-          :sm="24"
-          :xl="16"
-          :xs="24"
-        >
+        <el-col :lg="12" :md="12" :sm="24" :xl="16" :xs="24">
           <el-card shadow="hover">
             <el-tabs v-model="activeName">
-              <el-tab-pane
-                label="个人信息"
-                name="first"
-              >
-                <el-col
-                  :lg="24"
-                  :md="24"
-                  :sm="24"
-                  :xl="24"
-                  :xs="24"
-                >
+              <el-tab-pane label="个人信息" name="first">
+                <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
                   <el-form
                     ref="userinfo"
+                    label-width="80px"
                     :model="userinfo"
                     :rules="registerRules"
-                    label-width="80px"
                   >
                     <el-form-item label="姓名">
                       <el-input v-model="username" />
@@ -83,28 +62,13 @@
                       <el-input v-model="userinfo.objectId" disabled />
                     </el-form-item> -->
                     <el-form-item label="性别">
-                      <el-select
-                        v-model="userinfo.sex"
-                        style="width: 100%"
-                      >
-                        <el-option
-                          label="保密"
-                          value="保密"
-                        />
-                        <el-option
-                          label="男"
-                          value="男"
-                        />
-                        <el-option
-                          label="女"
-                          value="女"
-                        />
+                      <el-select v-model="userinfo.sex" style="width: 100%">
+                        <el-option label="保密" value="保密" />
+                        <el-option label="男" value="男" />
+                        <el-option label="女" value="女" />
                       </el-select>
                     </el-form-item>
-                    <el-form-item
-                      label="绑定手机"
-                      prop="phone"
-                    >
+                    <el-form-item label="绑定手机" prop="phone">
                       <el-input v-model="userinfo.phone" />
                     </el-form-item>
                     <el-form-item label="个人简介">
@@ -117,32 +81,20 @@
                       <el-input v-model="password" />
                     </el-form-item>
                     <el-form-item>
-                      <el-button
-                        type="primary"
-                        @click.native="onSubmit"
-                      >
+                      <el-button type="primary" @click.native="onSubmit">
                         保存
                       </el-button>
                     </el-form-item>
                   </el-form>
                 </el-col>
               </el-tab-pane>
-              <el-tab-pane
-                label="平台设置"
-                name="second"
-              >
+              <el-tab-pane label="平台设置" name="second">
                 <div class="personal-center-item">
-                  <el-col
-                    :lg="24"
-                    :md="24"
-                    :sm="24"
-                    :xl="24"
-                    :xs="24"
-                  >
+                  <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
                     <el-form
                       ref="companyinfo"
-                      :model="companyinfo"
                       label-width="120px"
+                      :model="companyinfo"
                     >
                       <el-form-item label="企业名称">
                         <el-input v-model="companyinfo.name">
@@ -155,11 +107,7 @@
                         </el-input>
                       </el-form-item>
                       <el-form-item label="企业logo">
-                        <el-input
-                          v-model="companyinfo.logo"
-                          disabled
-                          readonly
-                        >
+                        <el-input v-model="companyinfo.logo" disabled readonly>
                           <template slot="prepend">
                             <vab-icon
                               icon="remixicon-fill"
@@ -178,10 +126,7 @@
                       <el-form-item label="登录提示欢迎语">
                         <el-input v-model="companyinfo.title">
                           <template slot="prepend">
-                            <vab-icon
-                              icon="text"
-                              style="color: #3492ed"
-                            />
+                            <vab-icon icon="text" style="color: #3492ed" />
                           </template>
                         </el-input>
                       </el-form-item>
@@ -219,11 +164,7 @@
                         </el-input>
                       </el-form-item>
                       <el-form-item label="侧边栏展开图">
-                        <el-input
-                          v-model="companyinfo._mimg"
-                          disabled
-                          readonly
-                        >
+                        <el-input v-model="companyinfo._mimg" disabled readonly>
                           <template slot="prepend">
                             <vab-icon
                               icon="bank-card-line"
@@ -261,10 +202,7 @@
                         </el-input>
                       </el-form-item>
                       <el-form-item>
-                        <el-button
-                          type="primary"
-                          @click.native="onSubmit"
-                        >
+                        <el-button type="primary" @click.native="onSubmit">
                           保存
                         </el-button>
                       </el-form-item>
@@ -392,7 +330,7 @@
                   this.$translateTitle('保存成功'),
                   'success',
                   false,
-                  'vab-hey-message-success',
+                  'vab-hey-message-success'
                 )
               })
               .catch((e) => {
@@ -401,7 +339,7 @@
                   this.$translateTitle('保存失败' + e),
                   'success',
                   false,
-                  'vab-hey-message-success',
+                  'vab-hey-message-success'
                 )
               })
             break
@@ -439,7 +377,7 @@
             this.$translateTitle('保存成功'),
             'success',
             false,
-            'vab-hey-message-success',
+            'vab-hey-message-success'
           )
         }
       },
@@ -447,7 +385,7 @@
         this.upNodeType = type
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
         this.inputParams = {
           file: '',
@@ -455,14 +393,14 @@
           path: 'user/profile/',
           filename: `${this.ObjectId}_${this.upNodeType.replace(
             '.',
-            '_',
+            '_'
           )}.${type}`,
         }
       },
       files(file, type) {
         this.inputParams.filename = `${this.ObjectId}_${this.upNodeType.replace(
           '.',
-          '_',
+          '_'
         )}.${type}`
         this.inputParams.file = file
       },

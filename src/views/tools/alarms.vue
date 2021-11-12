@@ -7,11 +7,7 @@
     <div class="table-title">
       {{ $translateTitle('analysis.currentAlarms') }}
     </div>
-    <el-table
-      v-loading="loading"
-      :data="currentTableData"
-      border
-    >
+    <el-table v-loading="loading" border :data="currentTableData">
       <el-table-column
         :label="$translateTitle('analysis.alarmName')"
         prop="name"
@@ -29,16 +25,10 @@
             trigger="hover"
             width="160"
           >
-            <div
-              v-for="(value, label) in row.details"
-              :key="label"
-            >
+            <div v-for="(value, label) in row.details" :key="label">
               {{ label }}: {{ value }}
             </div>
-            <span
-              slot="reference"
-              class="details"
-            >
+            <span slot="reference" class="details">
               <i class="iconfont icon-bangzhu"></i>
             </span>
           </el-popover>
@@ -62,15 +52,9 @@
       <el-table-column>
         <span slot="header">
           {{ $translateTitle('analysis.duration') }}
-          <el-popover
-            placement="top"
-            trigger="hover"
-          >
+          <el-popover placement="top" trigger="hover">
             {{ $translateTitle('analysis.durationTips') }}
-            <i
-              slot="reference"
-              class="el-icon-question"
-            ></i>
+            <i slot="reference" class="el-icon-question"></i>
           </el-popover>
         </span>
         <template slot-scope="{ row }">
@@ -78,8 +62,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('oper.oper')"
         fixed="right"
+        :label="$translateTitle('oper.oper')"
         width="120px"
       >
         <template slot-scope="{ row, $index, _self }">
@@ -106,12 +90,7 @@
                 {{ $translateTitle('oper.confirm') }}
               </el-button>
             </div>
-            <el-button
-              slot="reference"
-              plain
-              size="mini"
-              type="danger"
-            >
+            <el-button slot="reference" plain size="mini" type="danger">
               {{ $translateTitle('analysis.deactivate') }}
             </el-button>
           </el-popover>
@@ -122,8 +101,8 @@
     <div class="table-title">
       {{ $translateTitle('analysis.historicalAlarm') }}
       <el-button
-        :disabled="!historicalTableData.length"
         class="table-oper"
+        :disabled="!historicalTableData.length"
         plain
         size="mini"
         type="danger"
@@ -132,11 +111,7 @@
         {{ $translateTitle('analysis.clearAll') }}
       </el-button>
     </div>
-    <el-table
-      v-loading="loading"
-      :data="historicalTableData"
-      border
-    >
+    <el-table v-loading="loading" border :data="historicalTableData">
       <el-table-column
         :label="$translateTitle('analysis.alarmName')"
         prop="name"
@@ -154,16 +129,10 @@
             trigger="hover"
             width="160"
           >
-            <div
-              v-for="(value, label) in row.details"
-              :key="label"
-            >
+            <div v-for="(value, label) in row.details" :key="label">
               {{ label }}: {{ value }}
             </div>
-            <span
-              slot="reference"
-              class="details"
-            >
+            <span slot="reference" class="details">
               <i class="iconfont icon-bangzhu"></i>
             </span>
           </el-popover>
@@ -243,7 +212,7 @@
           .catch((error) => {
             this.loading = false
             this.$message.error(
-              error || this.$translateTitle('error.networkError'),
+              error || this.$translateTitle('error.networkError')
             )
           })
       },
@@ -268,7 +237,7 @@
           })
           .catch((error) => {
             this.$message.error(
-              error || this.$translateTitle('error.networkError'),
+              error || this.$translateTitle('error.networkError')
             )
           })
       },
@@ -280,7 +249,7 @@
             confirmButtonClass: 'confirm-btn',
             cancelButtonClass: 'cache-btn el-button--text',
             type: 'warning',
-          },
+          }
         )
           .then(() => {
             this.$httpDelete('/alarms/deactivated')
@@ -289,12 +258,11 @@
               })
               .catch((error) => {
                 this.$message.error(
-                  error || this.$translateTitle('error.networkError'),
+                  error || this.$translateTitle('error.networkError')
                 )
               })
           })
-          .catch(() => {
-          })
+          .catch(() => {})
       },
     },
   }

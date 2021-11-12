@@ -4,12 +4,7 @@
  * @url https://juejin.cn/post/6953879183600648229#heading-2
  */
 const throttle = {
-  bind: function (el, {
-    value: {
-      fn,
-      time,
-    },
-  }) {
+  bind: function (el, { value: { fn, time } }) {
     if (typeof fn !== 'function') return
     el._flag = true //开关默认为开
     el._timer = null

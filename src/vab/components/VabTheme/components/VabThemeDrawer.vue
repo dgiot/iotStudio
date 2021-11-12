@@ -1,19 +1,15 @@
 <template>
   <el-drawer
-    :title="$translateTitle('主题配置')"
-    :visible.sync="drawerVisible"
     append-to-body
     custom-class="vab-drawer"
     direction="rtl"
     size="280px"
+    :title="$translateTitle('主题配置')"
+    :visible.sync="drawerVisible"
   >
     <el-scrollbar class="theme-scrollbar">
       <div class="el-drawer__body">
-        <el-form
-          ref="form"
-          :model="theme"
-          label-position="left"
-        >
+        <el-form ref="form" label-position="left" :model="theme">
           <el-divider content-position="left">
             <vab-icon icon="settings-3-line" />
             {{ $translateTitle('常用设置') }}
@@ -68,10 +64,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$translateTitle('主题')">
-            <el-select
-              v-model="theme.themeName"
-              @change="setTheme"
-            >
+            <el-select v-model="theme.themeName" @change="setTheme">
               <el-option
                 key="default"
                 :label="$translateTitle('默认')"
@@ -132,10 +125,7 @@
             </el-select>
           </el-form-item>
           <el-form-item :label="$translateTitle('侧边栏图片切换')">
-            <el-switch
-              v-model="theme.pictureSwitch"
-              @change="togglePic"
-            />
+            <el-switch v-model="theme.pictureSwitch" @change="togglePic" />
           </el-form-item>
           <el-form-item :label="$translateTitle('标签')">
             <el-switch v-model="theme.showTabs" />
@@ -171,10 +161,7 @@
                 </el-tooltip>
               </label>
             </template>
-            <el-select
-              v-model="theme.tabsBarStyle"
-              :disabled="!theme.showTabs"
-            >
+            <el-select v-model="theme.tabsBarStyle" :disabled="!theme.showTabs">
               <el-option
                 key="card"
                 :label="$translateTitle('卡片')"
@@ -226,10 +213,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-divider
-            content-position="left"
-            style="margin-top: 20px"
-          >
+          <el-divider content-position="left" style="margin-top: 20px">
             <vab-icon icon="settings-3-line" />
             {{ $translateTitle('其它设置') }}
           </el-divider>
@@ -261,10 +245,7 @@
       </div>
     </el-scrollbar>
     <div class="el-drawer__footer">
-      <el-button
-        type="primary"
-        @click.native="handleSaveTheme(theme)"
-      >
+      <el-button type="primary" @click.native="handleSaveTheme(theme)">
         {{ $translateTitle('保存') }}
       </el-button>
       <el-button @click.native="setDefaultTheme">
@@ -324,8 +305,7 @@
       })
       this.setTheme()
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {
       ...mapActions({
         saveTheme: 'settings/saveTheme',
@@ -355,16 +335,16 @@
             console.log(res)
             this.$message.success(
               this.$translateTitle(
-                'title.Theme configuration saved successfully',
-              ),
+                'title.Theme configuration saved successfully'
+              )
             )
           })
           .catch((e) => {
             console.log(e)
             this.$message.success(
               this.$translateTitle(
-                'title.Theme configuration saved error' + e.error,
-              ),
+                'title.Theme configuration saved error' + e.error
+              )
             )
           })
         await this.saveTheme(theme)
@@ -388,19 +368,19 @@
           'ocean',
         ]
         this.theme.themeName = _.sample(
-          _.pull(themeNameArray, [this.theme.themeName]),
+          _.pull(themeNameArray, [this.theme.themeName])
         )
         const columnStyleArray = ['vertical', 'horizontal', 'card']
         this.theme.columnStyle = _.sample(
-          _.pull(columnStyleArray, [this.theme.columnStyle]),
+          _.pull(columnStyleArray, [this.theme.columnStyle])
         )
         const tabsBarStyleArray = ['card', 'smart', 'smooth']
         this.theme.tabsBarStyle = _.sample(
-          _.pull(tabsBarStyleArray, [this.theme.tabsBarStyle]),
+          _.pull(tabsBarStyleArray, [this.theme.tabsBarStyle])
         )
         const showTabsBarIconArray = [true, false]
         this.theme.showTabsBarIcon = _.sample(
-          _.pull(showTabsBarIconArray, [this.theme.showTabsBarIcon]),
+          _.pull(showTabsBarIconArray, [this.theme.showTabsBarIcon])
         )
         if (this.device === 'desktop') {
           const layoutArray = [
@@ -422,7 +402,7 @@
       },
       setTheme() {
         document.getElementsByTagName(
-          'body',
+          'body'
         )[0].className = `vab-theme-${this.theme.themeName}`
       },
     },

@@ -1,6 +1,11 @@
-import { create_object, del_object, get_object, query_object, update_object } from '@/api/shuwa_parse'
+import {
+  create_object,
+  del_object,
+  get_object,
+  query_object,
+  update_object,
+} from '@/api/shuwa_parse'
 import request from '@/utils/request'
-import { loginRSA } from '@/config'
 
 export async function queryUser(params) {
   return query_object('_User', params)
@@ -95,9 +100,6 @@ export function passwordreset(account, code, password) {
 }
 
 export async function login(data) {
-  if (loginRSA) {
-    data = await encryptedData(data)
-  }
   return request({
     headers: {
       'Content-Type': 'text/plain',
@@ -109,9 +111,6 @@ export async function login(data) {
 }
 
 export async function socialLogin(data) {
-  if (loginRSA) {
-    data = await encryptedData(data)
-  }
   return request({
     url: '/socialLogin',
     method: 'post',

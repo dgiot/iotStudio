@@ -5,8 +5,8 @@
       <span class="sub-tip">{{ $t('analysis.metricsTip') }}</span>
       <el-button
         v-if="!modClosed"
-        :disable="$store.state.loading"
         class="confirm-btn"
+        :disable="$store.state.loading"
         icon="el-icon-plus"
         plain
         round
@@ -19,8 +19,8 @@
       </el-button>
       <el-button
         v-else
-        :disable="$store.state.loading"
         class="confirm-btn"
+        :disable="$store.state.loading"
         plain
         round
         size="medium"
@@ -34,10 +34,10 @@
     <el-table
       ref="crudTable"
       v-loading="$store.state.loading"
+      border
       :data="topics"
       :expand-row-keys="expands"
       :row-key="getRowKeys"
-      border
       @expand-change="handleExpandChange"
     >
       <el-table-column type="expand">
@@ -46,28 +46,19 @@
             {{ $t('analysis.details') }}
             <el-radio-group
               v-model="topicQos"
-              :prop="props"
               class="topic-qos-radio"
+              :prop="props"
               size="mini"
             >
               <el-radio-button label="all">
                 {{ $t('analysis.all') }}
               </el-radio-button>
-              <el-radio-button label="qos0">
-                QoS 0
-              </el-radio-button>
-              <el-radio-button label="qos1">
-                QoS 1
-              </el-radio-button>
-              <el-radio-button label="qos2">
-                QoS 2
-              </el-radio-button>
+              <el-radio-button label="qos0">QoS 0</el-radio-button>
+              <el-radio-button label="qos1">QoS 1</el-radio-button>
+              <el-radio-button label="qos2">QoS 2</el-radio-button>
             </el-radio-group>
           </div>
-          <el-row
-            :gutter="20"
-            class="expand-body"
-          >
+          <el-row class="expand-body" :gutter="20">
             <el-col :span="8">
               <div class="message-card in">
                 <div>
@@ -112,7 +103,7 @@
                     {{
                       $t('analysis.rateItem', [
                         getCurrentTopicDropRate(
-                          currentTopic['messages.dropped.rate'],
+                          currentTopic['messages.dropped.rate']
                         ),
                       ])
                     }}
@@ -127,26 +118,11 @@
           </el-row>
         </template>
       </el-table-column>
-      <el-table-column
-        :label="$t('topics.topic')"
-        prop="topic"
-      />
-      <el-table-column
-        :label="$t('analysis.messageIn')"
-        prop="messageIn"
-      />
-      <el-table-column
-        :label="$t('analysis.messageOut')"
-        prop="messageOut"
-      />
-      <el-table-column
-        :label="$t('analysis.messageDrop')"
-        prop="messageDrop"
-      />
-      <el-table-column
-        :label="$t('oper.oper')"
-        width="180px"
-      >
+      <el-table-column :label="$t('topics.topic')" prop="topic" />
+      <el-table-column :label="$t('analysis.messageIn')" prop="messageIn" />
+      <el-table-column :label="$t('analysis.messageOut')" prop="messageOut" />
+      <el-table-column :label="$t('analysis.messageDrop')" prop="messageDrop" />
+      <el-table-column :label="$t('oper.oper')" width="180px">
         <template slot-scope="props">
           <el-button
             plain
@@ -156,11 +132,7 @@
           >
             {{ $t('oper.view') }}
           </el-button>
-          <el-popover
-            :value="popoverVisible"
-            placement="right"
-            trigger="click"
-          >
+          <el-popover placement="right" trigger="click" :value="popoverVisible">
             <p>{{ $t('oper.confirmDelete') }}</p>
             <div style="text-align: right">
               <el-button
@@ -179,12 +151,7 @@
                 {{ $t('oper.confirm') }}
               </el-button>
             </div>
-            <el-button
-              slot="reference"
-              plain
-              size="mini"
-              type="danger"
-            >
+            <el-button slot="reference" plain size="mini" type="danger">
               {{ $t('oper.delete') }}
             </el-button>
           </el-popover>
@@ -194,42 +161,32 @@
 
     <el-dialog
       :append-to-body="true"
+      class="create-subscribe"
       :title="$t('analysis.addTopic')"
       :visible.sync="addVisible"
-      class="create-subscribe"
       width="400px"
       @keyup.enter.native="handleAdd"
     >
       <el-form
         ref="record"
-        :model="record"
-        :rules="rules"
         class="el-form--public"
         label-position="top"
+        :model="record"
+        :rules="rules"
         size="small"
       >
-        <el-form-item
-          :label="$t('subscriptions.topic')"
-          prop="topic"
-        >
-          <el-input
-            v-model="record.topic"
-            placeholder="Topic"
-          />
+        <el-form-item :label="$t('subscriptions.topic')" prop="topic">
+          <el-input v-model="record.topic" placeholder="Topic" />
         </el-form-item>
       </el-form>
 
       <div slot="footer">
-        <el-button
-          class="cache-btn"
-          type="text"
-          @click="handleClose"
-        >
+        <el-button class="cache-btn" type="text" @click="handleClose">
           {{ $t('oper.cancel') }}
         </el-button>
         <el-button
-          :loading="$store.state.loading"
           class="confirm-btn"
+          :loading="$store.state.loading"
           type="success"
           @click="handleAdd"
         >
@@ -349,8 +306,7 @@
               this.handleClose()
               this.loadData()
             })
-            .catch(() => {
-            })
+            .catch(() => {})
         })
       },
       handleClose() {
@@ -360,32 +316,30 @@
       viewTopicDetails(row, index) {
         const elExpand = document.querySelectorAll('.el-table__expand-icon')[
           index
-          ]
+        ]
         if (elExpand) {
           elExpand.click()
         }
       },
       loadDetail() {
         this.$httpGet(
-          `/topic-metrics/${encodeURIComponent(this.currentTopic.topic)}`,
+          `/topic-metrics/${encodeURIComponent(this.currentTopic.topic)}`
         )
           .then((res) => {
             this.currentTopic = res.data
             this.loadData()
           })
-          .catch(() => {
-          })
+          .catch(() => {})
       },
       setLoadDetailInterval() {
         this.timer = setInterval(() => {
           this.$httpGet(
-            `/topic-metrics/${encodeURIComponent(this.currentExpandRow.topic)}`,
+            `/topic-metrics/${encodeURIComponent(this.currentExpandRow.topic)}`
           )
             .then((res) => {
               this.currentTopic = res.data
             })
-            .catch(() => {
-            })
+            .catch(() => {})
         }, 10000)
       },
       handleExpandChange(row, expandedRows) {
@@ -405,8 +359,7 @@
             this.loadData()
             this.setLoadDetailInterval()
           })
-          .catch(() => {
-          })
+          .catch(() => {})
       },
       getCurrentTopicData(type, analysis) {
         const label = {

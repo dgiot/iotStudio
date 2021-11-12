@@ -29,9 +29,9 @@
     <!--          </span>-->
     <!--          <p>used/avaliable</p>-->
     <!--        </template>-->
-    <!--        <template slot-scope="scope">-->
+    <!--        <template #default="{ row }">-->
     <!--          <span>-->
-    <!--            {{ scope.row.process_used + '/' + scope.row.process_available }}-->
+    <!--            {{ row.process_used + '/' + row.process_available }}-->
     <!--          </span>-->
     <!--        </template>-->
     <!--      </el-table-column>-->
@@ -40,10 +40,10 @@
     <!--          <span>CPU</span>-->
     <!--          <p>1load/5load/15load</p>-->
     <!--        </template>-->
-    <!--        <template slot-scope="scope">-->
+    <!--        <template #default="{ row }">-->
     <!--          <span>-->
     <!--            {{-->
-    <!--              scope.row.load1 + '/' + scope.row.load5 + '/' + scope.row.load15-->
+    <!--              row.load1 + '/' + row.load5 + '/' + row.load15-->
     <!--            }}-->
     <!--          </span>-->
     <!--        </template>-->
@@ -55,9 +55,9 @@
     <!--          </span>-->
     <!--          <p>used/total</p>-->
     <!--        </template>-->
-    <!--        <template slot-scope="scope">-->
+    <!--        <template #default="{ row }">-->
     <!--          <span>-->
-    <!--            {{ scope.row.memory_used + '/' + scope.row.memory_total }}-->
+    <!--            {{ row.memory_used + '/' + row.memory_total }}-->
     <!--          </span>-->
     <!--        </template>-->
     <!--      </el-table-column>-->
@@ -70,8 +70,8 @@
     <!--        prop="node_status"-->
     <!--      />-->
     <!--      <el-table-column :label="$translateTitle('node.operation')">-->
-    <!--        <template slot-scope="scope">-->
-    <!--          <el-button type="danger" size="small" @click="removeNode(scope.row)">-->
+    <!--        <template #default="{ row }">-->
+    <!--          <el-button type="danger" size="small" @click="removeNode(row.">-->
     <!--            {{ $translateTitle('node.remove') }}-->
     <!--          </el-button>-->
     <!--        </template>-->
@@ -96,21 +96,12 @@
       width="30%"
     >
       <span>{{ $translateTitle('node.nodename') }}</span>
-      <el-input
-        v-model="form.nodename"
-        type="text"
-      />
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <el-input v-model="form.nodename" type="text" />
+      <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button
-          type="primary"
-          @click.native="join"
-        >
+        <el-button type="primary" @click.native="join">
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>
@@ -185,13 +176,12 @@
     },
     methods: {
       Getinformation() {
-        getNode(this.start, this.lengt)
-          .then((response) => {
-            if (response) {
-              this.tableData5 = response.nodes
-              this.total = response.nodes.length
-            }
-          })
+        getNode(this.start, this.lengt).then((response) => {
+          if (response) {
+            this.tableData5 = response.nodes
+            this.total = response.nodes.length
+          }
+        })
       },
       handleSizeChange(val) {
         this.length = val

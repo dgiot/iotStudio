@@ -13,10 +13,7 @@
         style="position: relative; top: 20px; left: 101px"
         @click="remove"
       ></i>
-      <img
-        :src="url"
-        style="width: 100px; height: 100px"
-      />
+      <img :src="url" style="width: 100px; height: 100px" />
     </div>
   </div>
 </template>
@@ -47,29 +44,19 @@
       }
     },
     computed: {},
-    mounted() {
-    },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    mounted() {},
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       doUpload(event) {
         let file = event.target.files[0]
         const name = event.target.files[0].name
-        const type = name.split('.')
-          .pop()
-          .toLowerCase()
+        const type = name.split('.').pop().toLowerCase()
         this.$emit('files', file, type)
         const params = this.params
         console.log('extension', params)

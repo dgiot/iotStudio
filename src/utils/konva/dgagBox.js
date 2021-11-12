@@ -22,7 +22,7 @@ export default function dragBox(drag, wrap) {
       initX = e.clientX
       initY = e.clientY
     },
-    false,
+    false
   )
 
   document.addEventListener('mousemove', function (e) {
@@ -43,6 +43,6 @@ export default function dragBox(drag, wrap) {
       wrapLeft = getCss(wrap, 'left')
       wrapRight = getCss(wrap, 'top')
     },
-    false,
+    false
   )
 }

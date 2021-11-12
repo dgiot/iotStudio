@@ -1,35 +1,23 @@
 <template>
   <div class="createResourcechannel">
-    <vab-input
-      ref="uploadFinish"
-      @fileInfo="fileInfo"
-    />
+    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <el-form
       ref="addchannel"
+      label-width="auto"
       :model="addchannel"
       :rules="addrules"
-      label-width="auto"
       size="mini"
     >
-      <div
-        class="dialog-footer"
-        style="margin: 15px"
-      >
+      <div class="dialog-footer" style="margin: 15px">
         <el-button @click="handleClose">
           {{ $translateTitle('developer.back') }}
         </el-button>
-        <el-button
-          type="primary"
-          @click.native="addchannelForm('addchannel')"
-        >
+        <el-button type="primary" @click.native="addchannelForm('addchannel')">
           {{ $translateTitle('developer.create') }}
         </el-button>
       </div>
       <el-row>
-        <el-form-item
-          label="通道类型"
-          prop="region"
-        >
+        <el-form-item label="通道类型" prop="region">
           <el-select
             v-model="addchannel.region"
             placeholder="通道类型"
@@ -40,8 +28,8 @@
               v-for="(item, index) in channelregion"
               :key="index"
               :label="item.title.zh"
-              :value="item.cType"
               style="display: block"
+              :value="item.cType"
             />
           </el-select>
         </el-form-item>
@@ -52,57 +40,41 @@
           >
             <el-input
               v-model="addchannel.name"
-              :placeholder="$translateTitle('developer.channelname')"
               autocomplete="off"
+              :placeholder="$translateTitle('developer.channelname')"
               style="float: left"
             />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item
-            label="所属应用"
-            prop="applicationtText"
-          >
+          <el-form-item label="所属应用" prop="applicationtText">
             <el-input
               v-model="addchannel.applicationtText"
               readonly
               @focus="showTree = !showTree"
             />
-            <div
-              v-if="showTree"
-              class="device-tree"
-            >
+            <div v-if="showTree" class="device-tree">
               <el-tree
                 :data="allApps"
-                :props="defaultProps"
                 default-expand-all
+                :props="defaultProps"
                 @node-click="handleNodeClick"
               />
             </div>
           </el-form-item>
         </el-col>
-        <el-col
-          v-for="(item, index) in arrlist"
-          :key="index"
-          :span="12"
-        >
+        <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
           <el-form-item
             v-show="item.showname != 'ico'"
             :label="item.title.zh"
             :prop="item.showname"
             :required="item.required"
           >
-            <el-tooltip
-              effect="dark"
-              placement="right-start"
-            >
+            <el-tooltip effect="dark" placement="right-start">
               <div slot="content">
                 {{ item.description.zh }}
               </div>
-              <i
-                class="el-icon-question"
-                style="float: left"
-              />
+              <i class="el-icon-question" style="float: left" />
             </el-tooltip>
             <el-input
               v-if="item.type == 'string'"
@@ -125,14 +97,8 @@
               readonly
               style="width: 98%"
             >
-              <el-option
-                :value="true"
-                label="是"
-              />
-              <el-option
-                :value="false"
-                label="否"
-              />
+              <el-option label="是" :value="true" />
+              <el-option label="否" :value="false" />
             </el-select>
             <el-select
               v-else-if="item.type == 'enum'"
@@ -153,9 +119,9 @@
           <el-form-item :label="$translateTitle('developer.describe')">
             <el-input
               v-model="addchannel.desc"
+              autocomplete="off"
               :placeholder="$translateTitle('developer.describe')"
               :rows="3"
-              autocomplete="off"
               type="textarea"
             />
           </el-form-item>
@@ -180,13 +146,13 @@
               style="padding: 10px; margin: 0px; cursor: pointer"
             >
               <el-card
+                class="box-card"
                 :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
+                size="mini"
                 :style="{
                   color:
                     addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                 }"
-                class="box-card"
-                size="mini"
               >
                 <!--                <div slot="header" class="clearfix">-->
                 <!--                  <el-button-->
@@ -202,19 +168,16 @@
                 <!--                  </el-button>-->
                 <!--                  <p>{{ item.title.zh }}</p>-->
                 <!--                </div>-->
-                <div
-                  class="text item"
-                  @click="setCard(item.cType)"
-                >
+                <div class="text item" @click="setCard(item.cType)">
                   <el-row :gutter="24">
                     <el-col :span="6">
                       <img
+                        class="image"
                         :src="
                           item.params.ico.default
                             ? item.params.ico.default
                             : require('../../../public/assets/images/logo/logo.png')
                         "
-                        class="image"
                         style="width: 50px; height: 50px"
                       />
                     </el-col>
@@ -305,20 +268,13 @@
     mounted() {
       this.getResource()
     },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       ...mapActions({
         addVisitedRoute: 'tabs/addVisitedRoute',
@@ -339,7 +295,7 @@
         console.log(type, index)
         this.channeindex = index
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
       },
       async fileInfo(info) {
@@ -516,22 +472,21 @@
         this.addrules = obj1
       },
       async addchannelaxios(data) {
-        await postChannel(data)
-          .then((results) => {
-            if (results) {
-              this.$message({
-                type: 'success',
-                message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
-              })
-              // this.$refs['addchannel'].resetFields()
-              this.addchannel = {}
-              // this.reload()
-              this.channelForm = false
-              this.resourceid = ''
-              // 创建成功后返回通道管理页，关闭当前页
-              this.handleTabRemove()
-            }
-          })
+        await postChannel(data).then((results) => {
+          if (results) {
+            this.$message({
+              type: 'success',
+              message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
+            })
+            // this.$refs['addchannel'].resetFields()
+            this.addchannel = {}
+            // this.reload()
+            this.channelForm = false
+            this.resourceid = ''
+            // 创建成功后返回通道管理页，关闭当前页
+            this.handleTabRemove()
+          }
+        })
       },
       /**
        * 根据原生路径删除标签中的标签

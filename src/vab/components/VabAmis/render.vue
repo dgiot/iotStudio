@@ -1,10 +1,5 @@
 <template>
-  <div
-    :key="amisKey"
-    className="box"
-    ref="renderBox"
-  >
-  </div>
+  <div :key="amisKey" ref="renderBox" className="box"></div>
 </template>
 
 <script>
@@ -13,12 +8,10 @@
    */
   // https://baidu.gitee.io/amis/zh-CN/docs/start/getting-started#props
   // eslint-disable
-  import {
-    tokenName,
-  } from '@/config'
-  import { render as renderAmis, ToastComponent, AlertComponent } from 'amis'
-  import { alert, confirm } from 'amis/lib/components/Alert';
-  import { toast } from 'amis/lib/components/Toast';
+  import { tokenName } from '@/config'
+  import { render as renderAmis } from 'amis'
+  import { alert, confirm } from 'amis/lib/components/Alert'
+  import { toast } from 'amis/lib/components/Toast'
   import copy from 'copy-to-clipboard'
   import ReactDOM from 'react-dom'
 
@@ -32,14 +25,12 @@
       updateLocation: {
         type: Function,
         required: false,
-        default: () => {
-        },
+        default: () => {},
       },
       onAction: {
         type: Function,
         required: false,
-        default: () => {
-        },
+        default: () => {},
       },
       theme: {
         type: String,
@@ -57,13 +48,13 @@
       this.initEnv()
       console.groupCollapsed(
         `%c amis Help`,
-        'color:#009a61; font-size: 28px; font-weight: 300',
+        'color:#009a61; font-size: 28px; font-weight: 300'
       )
       console.info('ReactDOM', ReactDOM)
-      console.info("code",this.schema)
+      console.info('code', this.schema)
       console.info('edit ： https://aisuda.github.io/amis-editor-demo/#/edit/0')
       console.info(
-        'demo ： https://baidu.gitee.io/amis/zh-CN/docs/concepts/schema?page=1',
+        'demo ： https://baidu.gitee.io/amis/zh-CN/docs/concepts/schema?page=1'
       )
       ReactDOM.render(
         renderAmis(
@@ -99,22 +90,15 @@
               }
               const query = qs.parse(search.substring(1))
               const currentQuery = qs.parse(location.search.substring(1))
-              return Object.keys(query)
-                .every(
-                  (key) => query[key] === currentQuery[key]
-                )
+              return Object.keys(query).every(
+                (key) => query[key] === currentQuery[key]
+              )
             } else if (pathname === location.pathname) {
               return true
             }
             return false
           },
-          fetcher: ({
-            url,
-            method,
-            data,
-            config,
-            headers
-          }) => {
+          fetcher: ({ url, method, data, config, headers }) => {
             config = config || {}
             config.headers = config.headers || {}
             config.withCredentials = true
@@ -130,7 +114,7 @@
               config.params = data
             } else if (data && data instanceof FormData) {
               // config.headers = config.headers || {};
-              config.headers['Content-Type'] = 'multipart/form-data';
+              config.headers['Content-Type'] = 'multipart/form-data'
             } else if (
               data &&
               typeof data !== 'string' &&
@@ -159,8 +143,8 @@
           copy: (contents, options = {}) => {
             const ret = copy(contents, options)
             ret &&
-            (!options || options.shutup !== true) &&
-            toast.info('内容已拷贝到剪切板')
+              (!options || options.shutup !== true) &&
+              toast.info('内容已拷贝到剪切板')
             return ret
           },
         }
@@ -193,8 +177,8 @@
         let pathname = ~idx
           ? to.substring(0, idx)
           : ~idx2
-            ? to.substring(0, idx2)
-            : to
+          ? to.substring(0, idx2)
+          : to
         const search = ~idx ? to.substring(idx, ~idx2 ? idx2 : undefined) : ''
         const hash = ~idx2 ? to.substring(idx2) : ''
         if (!pathname) {
@@ -210,8 +194,7 @@
             }
             pathname = pathname.substring(m[0].length)
           }
-          pathname = paths.concat(pathname)
-            .join('/')
+          pathname = paths.concat(pathname).join('/')
         }
         return pathname + search + hash
       },

@@ -25,7 +25,6 @@
   <img src="https://img.shields.io/travis/dgiot/dgiot-dashboard/master" alt="travis">
 <p>
 
-
 ![微服务架构图_02.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%9B%BE_02.png)
 
 dgiot Front framemaker
@@ -73,9 +72,9 @@ yarn serve
 
 - login
 
-  | user       | password                                                                                      |
-        | -------------- | ----------------------------------------------------------------------------------------- |
-  | dgiot_admin         | dgiot_admin                             |
+  | user        | password    |
+  | ----------- | ----------- |
+  | dgiot_admin | dgiot_admin |
 
 - Device details Preview
   ![image](https://user-images.githubusercontent.com/55233292/133011218-56c4e9fe-8104-4fa6-912f-168c2dd92ab1.png)
@@ -99,5 +98,5 @@ yarn build
 | gitee            | [https://gitee.com/dgiot](https://gitee.com/dgiiot?from=git)                              |
 | Official website | [https://www.iotn2n.com](https://www.iotn2n.com?from=git)                                 |
 | blog             | [https://tech.iotn2n.com](https://tech.iotn2n.com?from=git)                               |
-| platform            | [https://dgiot.iotn2n.com](https://dgiot.iotn2n.com?from=git)                               |
+| platform         | [https://dgiot.iotn2n.com](https://dgiot.iotn2n.com?from=git)                             |
 | WeChat           | ![qrcode.png](http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/wechat/qrcode.png) |

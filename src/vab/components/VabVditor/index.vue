@@ -6,8 +6,8 @@
           <el-form
             ref="form"
             :inline="true"
-            :model="queryForm"
             label-width="0"
+            :model="queryForm"
             @submit.native.prevent
           >
             <el-form-item>
@@ -29,10 +29,7 @@
       :key="setKey"
       name="description"
     />
-    <el-empty
-      v-show="value == 'temp'"
-      :image-size="200"
-    />
+    <el-empty v-show="value == 'temp'" :image-size="200" />
   </div>
 </template>
 <script>
@@ -53,8 +50,7 @@
           name: '',
         },
         height: this.$baseTableHeight(0),
-        setKey: moment(new Date())
-          .valueOf(),
+        setKey: moment(new Date()).valueOf(),
         contentEditor: {},
       }
     },
@@ -64,8 +60,7 @@
         this.createVditor()
       },
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {
       async save(value) {
         try {
@@ -76,7 +71,7 @@
           this.$baseMessage(
             this.$translateTitle('user.update completed'),
             'success',
-            'vab-hey-message-success',
+            'vab-hey-message-success'
           )
           const res = await putArticle(this.$route.query.article, params)
           loading.close()
@@ -86,7 +81,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error',
+            'vab-hey-message-error'
           )
         }
       },
