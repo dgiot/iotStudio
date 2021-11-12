@@ -177,6 +177,9 @@
         timer: 0,
       }
     },
+    created() {
+      sessionStorage.setItem('fileServer', location.host)
+    },
     computed: {
       ...mapGetters({
         language: 'settings/language',

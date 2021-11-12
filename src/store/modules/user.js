@@ -270,8 +270,8 @@ const actions = {
       fileServer,
     } = data
     if (sessionToken) {
+      Vue.prototype.$FileServe = sessionStorage.getItem('fileServer')
       commit('setLoginInfo', userInfo)
-      sessionStorage.setItem('fileServer', fileServer)
       // clientMqtt()
       // initDgiotMqtt(objectId)
       commit('_setToken', sessionToken)
