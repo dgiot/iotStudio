@@ -24,18 +24,15 @@ const {
   imageCompression,
   webpackBanner,
   webpackBarName,
-  cdnUrl,
   localUrl,
   Keywords,
   Description,
   dateTime,
   proxy,
-  useCdn,
   isPwa,
   pwaConfig,
   isSmp,
   ogConfig,
-  cdn,
   CDN_URL,
 } = require('./src/config')
 const { version, author } = require('./package.json')
@@ -47,11 +44,10 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const smp = new SpeedMeasurePlugin()
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
-const regUrl = /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
 process.env.VUE_APP_TITLE = title
 process.env.VUE_APP_AUTHOR = author
 process.env.VUE_APP_UPDATE_TIME = dateTime
@@ -137,7 +133,7 @@ function getChainWebpack(config) {
     config
       .plugin('banner')
       .use(Webpack.BannerPlugin, [`${webpackBanner}${dateTime}`])
-    if (imageCompression) {
+    if (imageCompression)
       config.module
         .rule('images')
         .use('image-webpack-loader')
@@ -146,20 +142,18 @@ function getChainWebpack(config) {
           bypassOnDebug: true,
         })
         .end()
-    }
-    if (buildGzip) {
+    if (buildGzip)
       // https://blog.csdn.net/weixin_42164539/article/details/110389256
       config.plugin('compression').use(CompressionWebpackPlugin, [
         {
           filename: '[path][base].gz[query]',
           algorithm: 'gzip',
           test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
-          threshold: 10240,
+          threshold: 8192,
           minRatio: 0.8,
         },
       ])
-    }
-    if (build7z) {
+    if (build7z)
       config.plugin('fileManager').use(FileManagerPlugin, [
         {
           events: {
@@ -174,7 +168,6 @@ function getChainWebpack(config) {
           },
         },
       ])
-    }
   })
 }
 
@@ -261,7 +254,7 @@ const configure = {
     },
   },
   plugins: [
-    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
+    new CleanWebpackPlugin({cleanStaleWebpackAssets: false}),
     new MonacoWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),

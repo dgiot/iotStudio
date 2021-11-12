@@ -3,7 +3,6 @@ import 'amis/lib/themes/cxd.css'
 import 'amis/lib/helper.css'
 // import 'amis/sdk/iconfont.css'
 import 'amis/lib/themes/antd.css'
-import 'amis/sdk/sdk.js'
-import * as Qs from 'qs'
-
+import 'amis/sdk/sdk.js';
+import * as Qs from 'qs';
 window.qs = Qs

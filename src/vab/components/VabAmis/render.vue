@@ -1,8 +1,9 @@
 <template>
   <div
-    ref="renderBox"
     class="box"
-  ></div>
+    ref="renderBox"
+  >
+  </div>
 </template>
 
 <script>
@@ -11,13 +12,14 @@
    */
   // https://baidu.gitee.io/amis/zh-CN/docs/start/getting-started#props
   // eslint-disable
-  import { tokenName } from '@/config'
-  import { render as renderAmis } from 'amis'
-  import { alert, confirm } from 'amis/lib/components/Alert'
-  import { toast } from 'amis/lib/components/Toast'
+  import {
+    tokenName,
+  } from '@/config'
+  import { render as renderAmis , ToastComponent, AlertComponent} from 'amis'
+  import {alert, confirm} from 'amis/lib/components/Alert';
+  import {toast} from 'amis/lib/components/Toast';
   import copy from 'copy-to-clipboard'
   import ReactDOM from 'react-dom'
-
   export default {
     name: 'AmisRender',
     props: {
@@ -42,12 +44,13 @@
       },
     },
     data() {
-      return {}
+      return {
+      }
     },
 
     mounted() {
       this.initEnv()
-      console.log('ReactDOM', ReactDOM)
+      console.log('ReactDOM',ReactDOM)
       ReactDOM.render(
         renderAmis(
           this.schema,
@@ -106,7 +109,7 @@
               config.params = data
             } else if (data && data instanceof FormData) {
               // config.headers = config.headers || {};
-              config.headers['Content-Type'] = 'multipart/form-data'
+              config.headers['Content-Type'] = 'multipart/form-data';
             } else if (
               data &&
               typeof data !== 'string' &&
@@ -135,8 +138,8 @@
           copy: (contents, options = {}) => {
             const ret = copy(contents, options)
             ret &&
-              (!options || options.shutup !== true) &&
-              toast.info('内容已拷贝到剪切板')
+            (!options || options.shutup !== true) &&
+            toast.info('内容已拷贝到剪切板')
             return ret
           },
         }
@@ -169,8 +172,8 @@
         let pathname = ~idx
           ? to.substring(0, idx)
           : ~idx2
-          ? to.substring(0, idx2)
-          : to
+            ? to.substring(0, idx2)
+            : to
         const search = ~idx ? to.substring(idx, ~idx2 ? idx2 : undefined) : ''
         const hash = ~idx2 ? to.substring(idx2) : ''
         if (!pathname) {
