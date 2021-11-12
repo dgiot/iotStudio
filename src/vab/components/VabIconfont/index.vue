@@ -1,10 +1,10 @@
 <template>
   <svg
     v-if="type == 'svg'"
-    aria-hidden="true"
-    class="icon svg-icon"
     :class="iconClass"
     :style="style"
+    aria-hidden="true"
+    class="icon svg-icon"
   >
     <use :xlink:href="`#dgiot-${name}`" />
   </svg>
@@ -81,7 +81,7 @@
     methods: {},
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   i {
     @font-face {
       font-family: 'iconfont'; /* Project id 2759556 */

@@ -7,26 +7,25 @@
     >
       <div
         id="surface-edit-layer"
-        class="topo-layer"
         :class="{ 'topo-layer-view-selected': selectedIsLayer }"
         :style="layerStyle"
+        class="topo-layer"
         tabindex="0"
         @click="onLayerClick($event)"
-        @dragover.prevent
         @drop="onDrop"
+        @mousedown="onLayerMousedown($event)"
+        @mousemove="onLayerMousemove($event)"
+        @mouseup="onLayerMouseup($event)"
+        @dragover.prevent
         @keydown.ctrl.67.stop="copyItem"
         @keydown.ctrl.86.stop="pasteItem"
         @keydown.ctrl.89.stop="redo"
         @keydown.ctrl.90.stop="undo"
         @keyup.delete="removeItem()"
-        @mousedown="onLayerMousedown($event)"
-        @mousemove="onLayerMousemove($event)"
-        @mouseup="onLayerMouseup($event)"
       >
         <template v-for="(component, index) in configData.components">
           <div
             :key="component.identifier"
-            class="topo-layer-view"
             :class="{
               'topo-layer-view-selected':
                 selectedComponentMap[component.identifier] == undefined
@@ -47,6 +46,7 @@
                 ? `rotate(${component.style.transform}deg)`
                 : 'rotate(0deg)',
             }"
+            class="topo-layer-view"
             tabindex="0"
             @click.stop="clickComponent(index, component, $event)"
             @keydown.ctrl.67.stop="copyItem"
@@ -128,13 +128,13 @@
           </div>
         </template>
         <div
-          class="topo-frame-selection"
           :style="{
             width: frameSelectionDiv.width + 'px',
             height: frameSelectionDiv.height + 'px',
             top: frameSelectionDiv.top + 'px',
             left: frameSelectionDiv.left + 'px',
           }"
+          class="topo-frame-selection"
         ></div>
       </div>
     </vue-ruler-tool>
@@ -191,12 +191,12 @@
         >
           <el-slider
             v-model="selectedValue"
-            label
             :label-value="`${selectedValue}%`"
             :max="200"
             :min="30"
-            snap
             :step="1"
+            label
+            snap
             style="float: right; width: 200px"
           />
         </el-col>
@@ -209,15 +209,11 @@
   import VueRulerTool from './ruler'
   import TopoBase from './TopoBase'
   import topoUtil from './util/topo-util'
-  import { deepCopy, uid } from '@/utils'
+  import { deepCopy } from '@/utils'
 
-  import {
-    checkInRange,
-    checkByPointInRect,
-    checkByRectCollisionDetection,
-  } from '@/utils/topo'
+  import { checkByRectCollisionDetection } from '@/utils/topo'
 
-  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+  import { mapActions, mapMutations, mapState } from 'vuex'
 
   export default {
     name: 'TopoMain',
@@ -274,7 +270,7 @@
         }
         if (this.configData.layer.backgroundImage) {
           styles.push(
-            `background-image: url("${this.configData.layer.backgroundImage}")`
+            `background-image: url("${this.configData.layer.backgroundImage}")`,
           )
         }
         if (this.configData.layer.width > 0) {
@@ -655,15 +651,15 @@
           transparent 75%,
           #ccc 75%,
           #ccc
-        ),
-        linear-gradient(
+      ),
+      linear-gradient(
           45deg,
           #ccc 25%,
           transparent 25%,
           transparent 75%,
           #ccc 75%,
           #ccc
-        );
+      );
       background-position: 0 0, 10px 10px;
       background-size: 20px 20px;
       transform-origin: left top;

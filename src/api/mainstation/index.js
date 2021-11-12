@@ -11,7 +11,7 @@ export function Mainstationvalue(
   endtime,
   route,
   protocol,
-  data
+  data,
 ) {
   return request({
     url: '/readdata',
@@ -34,6 +34,7 @@ export function Mainstationvalue(
     },
   })
 }
+
 export function Getlhz(form, session, operation, type) {
   return request({
     url: '/measured_point/control',

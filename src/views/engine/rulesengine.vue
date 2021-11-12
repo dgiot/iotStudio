@@ -31,8 +31,8 @@
         </el-table-column>
         <!-- <el-table-column label="主题" align="center"> -->
         <el-table-column
-          align="center"
           :label="$translateTitle('leftbar.topics')"
+          align="center"
           show-overflow-tooltip
           width="200"
         >
@@ -48,8 +48,8 @@
           width="200"
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('rule.ResponseAction')"
+          align="center"
         >
           <template slot-scope="scope">
             <p
@@ -62,16 +62,16 @@
         </el-table-column>
         <!-- <el-table-column align="center" label="已命中"> -->
         <el-table-column
-          align="center"
           :label="$translateTitle('product.hit')"
+          align="center"
         >
           <template slot-scope="scope">
             <span>{{ matched(scope.row.metrics) }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('equipment.state')"
+          align="center"
         >
           <template slot-scope="scope">
             <el-switch
@@ -83,9 +83,9 @@
           </template>
         </el-table-column>
         <el-table-column
+          :label="$translateTitle('developer.operation')"
           align="center"
           fixed="right"
-          :label="$translateTitle('developer.operation')"
           width="210"
         >
           <template slot-scope="scope">
@@ -118,10 +118,10 @@
       </el-table>
       <div class="block">
         <el-pagination
-          layout="total, sizes, prev, pager, next, jumper"
           :page-size="pagesize"
           :page-sizes="[10, 20, 30, 50]"
           :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />
@@ -131,9 +131,9 @@
   </div>
 </template>
 <script>
-  import { getRule, getRuleDetail, ruleDelete, put_rule_id } from '@/api/Rules'
+  import { getRule, getRuleDetail, put_rule_id, ruleDelete } from '@/api/Rules'
   // import VabParser from '@/vab/components/VabParser'
-  import { getHashClass } from '@/api/Hash/index'
+
   export default {
     // components: { VabParser },
     data() {
@@ -186,8 +186,10 @@
           })
       },
       // 分页
-      handleSizeChange(val) {},
-      handleCurrentChange(val) {},
+      handleSizeChange(val) {
+      },
+      handleCurrentChange(val) {
+      },
       addEngine() {
         var query = {
           title: '新增',
@@ -236,7 +238,10 @@
       editRule(id) {
         this.$router.push({
           path: '/rules_engine/addengine',
-          query: { id: id, title: '编辑' },
+          query: {
+            id: id,
+            title: '编辑',
+          },
         })
       },
       deleteRule(id) {
@@ -259,17 +264,21 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+
     .engintable {
       width: 100%;
       height: auto;
+
       .engineheader {
         h3 {
           float: left;
         }
       }
+
       .block {
       }
     }
+
     ::v-deep .firstcolumn {
       color: #34c388;
       cursor: pointer;

@@ -31,6 +31,7 @@
 
 <script>
   import BaseView from './View'
+
   export default {
     name: 'ViewImage',
     components: {},

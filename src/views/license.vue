@@ -5,14 +5,14 @@
         <el-col :span="12">
           <img
             v-if="isend == false"
-            alt
             :src="originimgsrc"
+            alt
             srcset
           />
           <img
             v-if="isend == true"
-            alt
             :src="originimgsrc"
+            alt
             srcset
           />
         </el-col>
@@ -33,15 +33,15 @@
       </el-row> -->
       <el-row style="margin-top: 50px">
         <el-col
-          class="originupdate"
           :span="12"
+          class="originupdate"
         >
           <p>当前时间:</p>
           <span>{{ updatetime }}</span>
         </el-col>
         <el-col
-          class="originupdate"
           :span="12"
+          class="originupdate"
         >
           <p>服务器状态</p>
           <span v-if="isarrange == false">未部署</span>
@@ -128,8 +128,8 @@
         </div> -->
         <el-form
           ref="form"
-          label-width="140px"
           :model="configdata"
+          label-width="140px"
         >
           <el-form-item label="用户名:">
             <span>{{ configdata.hostName }}</span>
@@ -222,8 +222,9 @@
   </div>
 </template>
 <script>
-  import { hardInfo, iotHub, iotApp } from '@/api/License/index'
+  import { hardInfo, iotHub } from '@/api/License/index'
   import Cookies from 'js-cookie'
+
   export default {
     data() {
       return {
@@ -297,16 +298,17 @@
         }, 1000)
       },
       getHardInfo() {
-        hardInfo().then((resultes) => {
-          this.configdata.computerAuth = resultes.computerAuth
-          this.configdata.natIP = resultes.natIP
-          this.configdata.wlanIp = resultes.wlanIp
-          this.configdata.computerKey = resultes.computerKey
-          this.configdata.hostName = resultes.hostName
-          this.configdata.computerConfig = resultes.computerConfig
-          this.configdata.dbInstalled = resultes.dbInstalled
-          this.value2 = resultes.serverHealth
-        })
+        hardInfo()
+          .then((resultes) => {
+            this.configdata.computerAuth = resultes.computerAuth
+            this.configdata.natIP = resultes.natIP
+            this.configdata.wlanIp = resultes.wlanIp
+            this.configdata.computerKey = resultes.computerKey
+            this.configdata.hostName = resultes.hostName
+            this.configdata.computerConfig = resultes.computerConfig
+            this.configdata.dbInstalled = resultes.dbInstalled
+            this.value2 = resultes.serverHealth
+          })
       },
       uploadHub() {
         if (this.configdata.infomation == '') {
@@ -321,28 +323,30 @@
         iotHub(
           this.configdata.standard,
           this.configdata.authorizenumber,
-          this.configdata.infomation
-        ).then((resultes) => {
-          if (resultes.result == true) {
-            this.active = 3
-            this.$router.push('/login')
-          } else {
-            if (resultes.status == 'license_failed') {
-              this.$message('授权码错误，请重新填写')
-              return
-            } else if (resultes.status == 'server_disconnected') {
-              this.$message('服务器未连接')
-              return
-            } else if (resultes.status == 'database_uninstalled') {
-              this.active = 2
-              this.$message('服务器部署完成，请完成下一步数据库部署')
-              this.dbinstall = false
-              Cookies.set('authorizenumber', this.configdata.authorizenumber)
+          this.configdata.infomation,
+        )
+          .then((resultes) => {
+            if (resultes.result == true) {
+              this.active = 3
+              this.$router.push('/login')
+            } else {
+              if (resultes.status == 'license_failed') {
+                this.$message('授权码错误，请重新填写')
+                return
+              } else if (resultes.status == 'server_disconnected') {
+                this.$message('服务器未连接')
+                return
+              } else if (resultes.status == 'database_uninstalled') {
+                this.active = 2
+                this.$message('服务器部署完成，请完成下一步数据库部署')
+                this.dbinstall = false
+                Cookies.set('authorizenumber', this.configdata.authorizenumber)
+              }
             }
-          }
-        })
+          })
       },
-      uploadDb() {},
+      uploadDb() {
+      },
     },
   }
 </script>
@@ -350,27 +354,34 @@
   .license {
     display: flex;
     min-width: 1100px !important;
+
     .licenseleft {
       box-sizing: border-box;
       width: 400px;
       padding: 40px 20px;
     }
+
     .licenseright {
       box-sizing: border-box;
       width: calc(100% - 400px);
       padding: 40px;
       background-size: cover;
+
       ::v-deep .is-process {
         color: white;
       }
+
       .rightcenter {
         margin-top: 40px;
       }
+
       .rightcomputer {
         box-sizing: border-box;
         padding: 0 50px;
+
         .el-row {
           margin: 50px 0;
+
           .el-col {
             //   text-align:center;
             span {
@@ -380,43 +391,52 @@
           }
         }
       }
+
       .buttongroup {
         box-sizing: border-box;
         padding: 0 50px;
         text-align: center;
       }
     }
+
     ::v-deep .originupdate {
       p {
         font-size: 18px;
         color: white;
       }
+
       span {
         font-size: 14px;
         color: white;
       }
     }
+
     ::v-deep p {
       font-weight: 700;
       color: white;
     }
+
     ::v-deep span {
       font-size: 16px;
       color: white;
     }
+
     ::v-deep .el-input {
       width: 200px;
     }
+
     ::v-deep .el-col {
       @media screen and (max-width: 1350px) {
         width: 100%;
         margin-bottom: 20px;
       }
     }
+
     ::v-deep .el-form-item__label {
       font-size: 16px;
       color: #ffffff;
     }
+
     ::v-deep .el-form-item {
       width: 500px !important;
     }

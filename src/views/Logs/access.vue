@@ -1,27 +1,27 @@
 <template>
   <div
-    class="logs logs-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
+    class="logs logs-container"
   >
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form
           ref="form"
           :inline="true"
-          label-width="auto"
           :model="queryForm"
+          label-width="auto"
           @submit.native.prevent
         >
           <el-form-item
-            class="item-time"
             :label="$translateTitle('Maintenance.times')"
+            class="item-time"
           >
             <el-date-picker
               v-model="queryForm.searchDate"
-              class="item-time-picker"
               :end-placeholder="$translateTitle('Maintenance.end time')"
-              format="yyyy-MM-dd"
               :start-placeholder="$translateTitle('Maintenance.start time')"
+              class="item-time-picker"
+              format="yyyy-MM-dd"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -48,8 +48,8 @@
             <el-popover trigger="hover">
               <el-checkbox-group v-model="checkList">
                 <vue-draggable
-                  v-bind="dragOptions"
                   :list="logcolumns"
+                  v-bind="dragOptions"
                 >
                   <div
                     v-for="(item, index) in logcolumns"
@@ -82,23 +82,23 @@
     <el-table
       :key="finallyColumns.length + momentKey"
       ref="dragTable"
-      border
-      class="logs-table"
       :data="logdata"
       :height="height"
-      highlight-current-row
-      resizable
       :row-class-name="tableRowClassName"
       :size="size"
+      border
+      class="logs-table"
+      highlight-current-row
+      resizable
       stripe
     >
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-descriptions
-            border
-            class="margin-top"
             :column="2"
             :size="size"
+            border
+            class="margin-top"
           >
             <el-descriptions-item
               v-for="(item, key, index) in props.row.body"
@@ -115,9 +115,9 @@
       <el-table-column
         v-for="(item, index) in finallyColumns"
         :key="index"
-        align="center"
         :label="item"
         :prop="item"
+        align="center"
         show-overflow-tooltip
         sortable
       />
@@ -145,6 +145,7 @@
 
 <script>
   import { queryLog } from '@/api/Logs'
+
   export default {
     name: 'AccessLog',
     data() {
@@ -153,7 +154,8 @@
         isFullscreen: false,
         height: this.$baseTableHeight(0),
         logdata: [],
-        momentKey: moment(new Date()).valueOf(),
+        momentKey: moment(new Date())
+          .valueOf(),
         checkList: [
           'time',
           'username',
@@ -188,8 +190,11 @@
           topic: '',
           domain: 'parse_api',
           searchDate: [
-            moment().subtract('days', 7).format('YYYY-MM-DD'),
-            moment(new Date()).format('YYYY-MM-DD'),
+            moment()
+              .subtract('days', 7)
+              .format('YYYY-MM-DD'),
+            moment(new Date())
+              .format('YYYY-MM-DD'),
           ],
           order: '-createdAt',
           keys: 'count(*)',
@@ -207,7 +212,8 @@
         return this.logcolumns.filter((item) => this.checkList.includes(item))
       },
     },
-    created() {},
+    created() {
+    },
     mounted() {
       this.queryTable({})
       this.rowDrop()
@@ -216,9 +222,13 @@
     methods: {
       handleHeight() {
         this.isFullscreen = !this.isFullscreen
-        if (this.isFullscreen) this.height = this.$baseTableHeight(0) + 120
-        else this.height = this.$baseTableHeight(0)
-        this.momentKey = moment(new Date()).valueOf()
+        if (this.isFullscreen) {
+          this.height = this.$baseTableHeight(0) + 120
+        } else {
+          this.height = this.$baseTableHeight(0)
+        }
+        this.momentKey = moment(new Date())
+          .valueOf()
       },
       // 设置表格row的class
       tableRowClassName({ row }) {
@@ -231,13 +241,16 @@
       rowDrop() {
         // 此时找到的元素是要拖拽元素的父容器
         const tbody = this.$refs.dragTable.$el.querySelector(
-          '.el-table__body-wrapper tbody'
+          '.el-table__body-wrapper tbody',
         )
         const _this = this
         Sortable.create(tbody, {
           //  指定父元素下可被拖拽的子元素
           draggable: '.el-table__row',
-          onEnd({ newIndex, oldIndex }) {
+          onEnd({
+            newIndex,
+            oldIndex,
+          }) {
             const currRow = _this.logdata.splice(oldIndex, 1)[0]
             _this.logdata.splice(newIndex, 0, currRow)
           },
@@ -247,7 +260,7 @@
       columnDrop() {
         const _this = this
         const wrapperTr = this.$refs.dragTable.$el.querySelector(
-          '.el-table__header-wrapper tr'
+          '.el-table__header-wrapper tr',
         )
         _this.sortable = Sortable.create(wrapperTr, {
           animation: 180,
@@ -256,7 +269,8 @@
             const oldItem = _this.finallyColumns[evt.oldIndex]
             _this.finallyColumns.splice(evt.oldIndex, 1)
             _this.finallyColumns.splice(evt.newIndex, 0, oldItem)
-            _this.momentKey = moment(new Date()).valueOf()
+            _this.momentKey = moment(new Date())
+              .valueOf()
             setTimeout(() => {
               _this.rowDrop()
               _this.columnDrop()
@@ -281,10 +295,10 @@
             where: {
               domain: this.queryForm.domain
                 ? {
-                    $all: this.queryForm.domain.split(
-                      /,(?=(?:[^']*(?:'[^']*')?[^']*)*$)/
-                    ),
-                  }
+                  $all: this.queryForm.domain.split(
+                    /,(?=(?:[^']*(?:'[^']*')?[^']*)*$)/,
+                  ),
+                }
                 : { $ne: '' },
               createdAt: {
                 $gte: {
@@ -298,11 +312,16 @@
               },
             },
           }
-          const { results = [], count: total = 0 } = await queryLog(params)
+          const {
+            results = [],
+            count: total = 0,
+          } = await queryLog(params)
           results.forEach((item, index) => {
             item.time = this.$moment(
-              Number(item.time.toString().substring(0, 13))
-            ).format('YYYY-MM-DD HH:mm:ss.SSS')
+              Number(item.time.toString()
+                .substring(0, 13)),
+            )
+              .format('YYYY-MM-DD HH:mm:ss.SSS')
             const msg = JSON.parse(item.msg)
             for (let k in msg) {
               if (k == 'body') {
@@ -321,7 +340,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'vab-hey-message-success',
           )
           loading.close()
         } catch (error) {
@@ -329,10 +348,11 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
-        this.momentKey = moment(new Date()).valueOf()
+        this.momentKey = moment(new Date())
+          .valueOf()
       },
     },
   }
@@ -343,9 +363,10 @@
     text-align: center !important;
   }
 </style>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .logs {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7) !important;
+    height: calc(100vh - #{$base-top-bar-height} * 2.7) !important;
+
     ::v-deep {
       .item-time {
         .el-form-item__content {
@@ -356,13 +377,16 @@
         }
       }
     }
+
     &-row {
       &-query {
       }
+
       &-tree {
         overflow: scroll;
       }
     }
+
     &-table {
       ::v-deep {
         * {

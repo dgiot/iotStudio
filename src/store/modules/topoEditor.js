@@ -1,5 +1,6 @@
 import { deepCopy, uid } from '@/utils'
 import jsonData from '@/assets/data/topo-data.json'
+
 const state = () => ({
   topoData: {
     name: '--',
@@ -252,4 +253,9 @@ const actions = {
     state.topoData = jsonData
   },
 }
-export default { state, getters, mutations, actions }
+export default {
+  state,
+  getters,
+  mutations,
+  actions,
+}

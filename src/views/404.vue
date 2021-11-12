@@ -11,16 +11,16 @@
         >
           <div class="pic-error">
             <el-image
-              class="pic-error-parent"
               :src="
                 require('../../public/assets/images/platform/assets/error_images/404.png')
               "
+              class="pic-error-parent"
             />
             <el-image
-              class="pic-error-child left"
               :src="
                 require('../../public/assets/images/platform/assets/error_images/404.png')
               "
+              class="pic-error-child left"
             />
           </div>
         </el-col>
@@ -42,11 +42,20 @@
             <div class="bullshit-info">
               {{ info }}
             </div>
+            <el-button
+              round
+              size="medium"
+              style="float:left"
+              type="primary"
+              @click="back"
+            >
+              {{ $translateTitle('message.return to previous page') }}
+            </el-button>
             <router-link
               class="bullshit-return-home"
               to="/"
             >
-              {{ jumpTime }}s&nbsp;{{ btn }}
+              {{ $translateTitle('message.Exit home') }}
             </router-link>
             <el-button
               round
@@ -55,7 +64,7 @@
               type="primary"
               @click="logout"
             >
-              {{ $translateTitle('退出登录') }}
+              {{ $translateTitle('message.sign out') }}
             </el-button>
           </div>
         </el-col>
@@ -92,7 +101,7 @@
       }),
     },
     mounted() {
-      this.timeChange()
+      // this.timeChange()
     },
     methods: {
       ...mapActions({
@@ -114,6 +123,9 @@
         await this._logout()
         await this.$router.push(toLoginRoute(this.$route))
       },
+      async back() {
+        await this.$router.go(-1)
+      },
     },
   }
 </script>
@@ -127,7 +139,7 @@
       position: absolute;
       top: 55%;
       left: 50%;
-      width: 40vw;
+      width: 80vw;
       height: 400px;
       transform: translate(-50%, -50%);
 
@@ -187,9 +199,10 @@
       .bullshit {
         position: relative;
         float: left;
-        width: 300px;
+        //width: 300px;
         padding: 30px 0;
         overflow: hidden;
+        text-align: center;
 
         &-oops {
           margin-bottom: 20px;
@@ -228,11 +241,32 @@
           animation-fill-mode: forwards;
         }
 
+        &-return-back {
+          display: block;
+          float: left;
+          width: 110px;
+          height: 36px;
+          margin-right: 20px;
+          font-size: 14px;
+          line-height: 36px;
+          color: #fff;
+          text-align: center;
+          cursor: pointer;
+          background: $base-color-blue;
+          border-radius: 100px;
+          opacity: 0;
+          animation-name: slideUp;
+          animation-duration: 0.5s;
+          animation-delay: 0.3s;
+          animation-fill-mode: forwards;
+        }
+
         &-return-home {
           display: block;
           float: left;
           width: 110px;
           height: 36px;
+          margin: 0 0 0 20px;
           font-size: 14px;
           line-height: 36px;
           color: #fff;

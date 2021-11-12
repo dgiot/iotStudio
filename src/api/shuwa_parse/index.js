@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import { Message } from 'element-ui'
+
 /**
  * 数蛙全局通用接口方法 查询
  * @param {*} tabclass  表名 必传 不可为空

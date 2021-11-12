@@ -3,10 +3,10 @@
     <!-- 每个组件都只有一个form,因此表单的ref属性 不需要修改 -->
     <el-form
       ref="formRef"
-      disabled
       :inline="true"
-      label-width="120px"
       :model="TestSettingObj"
+      label-width="120px"
+      disabled
     >
       <el-row>
         <el-col :span="8">
@@ -32,10 +32,7 @@
         </el-col>
       </el-row>
 
-      <el-divider
-        content-position="left"
-        style="color: blue"
-      >
+      <el-divider content-position="left" style="color: blue">
         合格条件设置
       </el-divider>
 
@@ -64,14 +61,8 @@
               allow-create
               @change="qConditionsChange"
             >
-              <el-option
-                label="GB/T3216-2016"
-                value="GB/T3216-2016"
-              />
-              <el-option
-                label="其他"
-                value="other"
-              />
+              <el-option label="GB/T3216-2016" value="GB/T3216-2016" />
+              <el-option label="其他" value="other" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -81,8 +72,8 @@
             <span class="txt-label">tQ:</span>
             <input
               v-model="curentConditonObj.tQz"
-              class="num-inp"
               :disabled="qConditions != 'other'"
+              class="num-inp"
               type="number"
             />
             % &nbsp;&nbsp;
@@ -90,8 +81,8 @@
 
             <input
               v-model="curentConditonObj.tHf"
-              class="num-inp"
               :disabled="qConditions != 'other'"
+              class="num-inp"
               type="number"
             />
             % &nbsp;&nbsp;
@@ -99,8 +90,8 @@
 
             <input
               v-model="curentConditonObj.tp_up"
-              class="num-inp"
               :disabled="qConditions != 'other'"
+              class="num-inp"
               type="number"
             />
             % &nbsp;&nbsp;
@@ -111,8 +102,8 @@
 
             <input
               v-model="curentConditonObj.tq_down"
-              class="num-inp"
               :disabled="qConditions != 'other'"
+              class="num-inp"
               type="number"
             />
             % &nbsp;&nbsp;
@@ -120,8 +111,8 @@
 
             <input
               v-model="curentConditonObj.th_down"
-              class="num-inp"
               :disabled="qConditions != 'other'"
+              class="num-inp"
               type="number"
             />
             % &nbsp;&nbsp;
@@ -129,8 +120,8 @@
 
             <input
               v-model="curentConditonObj.te_down"
-              class="num-inp"
               :disabled="qConditions != 'other'"
+              class="num-inp"
               type="number"
             />
             % &nbsp;&nbsp;
@@ -138,10 +129,7 @@
         </el-col>
       </el-row>
 
-      <el-divider
-        content-position="left"
-        style="color: blue"
-      >
+      <el-divider content-position="left" style="color: blue">
         稳定条件设置
       </el-divider>
 
@@ -151,35 +139,20 @@
             v-model="TestSettingObj.StabilitySetting.FlowHeadEfficiency"
             allow-create
           >
-            <el-option
-              label="GB/T3216-2016"
-              value="GB/T3216-2016"
-            />
-            <el-option
-              label="其他"
-              value="other"
-            />
+            <el-option label="GB/T3216-2016" value="GB/T3216-2016" />
+            <el-option label="其他" value="other" />
           </el-select>
         </el-form-item>
 
         <el-form-item label="转速">
           <el-select v-model="TestSettingObj.StabilitySetting.Speed">
-            <el-option
-              label="GB/T3216-2016"
-              value="GB/T3216-2016"
-            />
-            <el-option
-              label="其他"
-              value="other"
-            />
+            <el-option label="GB/T3216-2016" value="GB/T3216-2016" />
+            <el-option label="其他" value="other" />
           </el-select>
         </el-form-item>
       </el-row>
 
-      <el-divider
-        content-position="left"
-        style="color: blue"
-      >
+      <el-divider content-position="left" style="color: blue">
         波动范围设置
       </el-divider>
 
@@ -189,9 +162,7 @@
             v-model="TestSettingObj.FluctuationSetting.CurrentValue"
             type="text"
           >
-            <template slot="append">
-              %
-            </template>
+            <template slot="append">%</template>
           </el-input>
         </el-form-item>
 
@@ -200,21 +171,14 @@
             v-model="TestSettingObj.FluctuationSetting.SetValue"
             type="text"
           >
-            <template slot="append">
-              %
-            </template>
+            <template slot="append">%</template>
           </el-input>
         </el-form-item>
 
-        <el-button size="small">
-          同步
-        </el-button>
+        <el-button size="small">同步</el-button>
       </el-row>
 
-      <el-divider
-        content-position="left"
-        style="color: blue"
-      >
+      <el-divider content-position="left" style="color: blue">
         参数设置
       </el-divider>
       <el-row>

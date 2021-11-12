@@ -10,6 +10,7 @@
 import request from '@/utils/request'
 import { Message } from 'element-ui'
 import store from '@/store'
+
 const Vue = require('vue')
 
 /**
@@ -51,6 +52,7 @@ export async function Batchdelete(method, tableClass, ObjectIdArr, body) {
     })
   }
 }
+
 /**
  *
  * @param {*}
@@ -59,7 +61,7 @@ export async function Batchdelete(method, tableClass, ObjectIdArr, body) {
 export async function batch(
   data,
   access_token = store.getters['user/token'],
-  _company = false
+  _company = false,
 ) {
   console.log(data, 'axios from batch')
   return request({
@@ -74,5 +76,6 @@ export async function batch(
     data: { requests: data },
   })
 }
+
 Vue.prototype.$methodBatch = batch
 Vue.prototype.$postBatch = Batchdelete

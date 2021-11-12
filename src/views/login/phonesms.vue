@@ -3,16 +3,16 @@
     <div class="loginbanner">
       <el-form
         ref="ruleForm2"
-        class="login-form"
-        label-width="100px"
         :model="ruleForm2"
         :rules="rules2"
+        class="login-form"
+        label-width="100px"
         status-icon
       >
         <div class="logo">
           <img
-            alt="logo"
             :src="logosrc"
+            alt="logo"
             style="width: 80px; height: 80px"
           />
           <p>{{ title }}</p>
@@ -40,8 +40,8 @@
           <el-input
             ref="phonerole"
             v-model="ruleForm2.phone"
-            auto-complete="on"
             :maxlength="11"
+            auto-complete="on"
             name="phone"
             placeholder="请输入手机号"
             style="width: 250px"
@@ -134,6 +134,7 @@
   const Base64 = require('js-base64').Base64
   import { Phonelogin, Verify } from '@/api/User/index'
   import Cookies from 'js-cookie'
+
   export default {
     data() {
       var validatePass = (rule, value, callback) => {
@@ -212,7 +213,11 @@
         ],
         rules2: {
           account: [
-            { required: true, message: '请输入账号', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入账号',
+              trigger: 'blur',
+            },
             {
               min: 1,
               max: 10,
@@ -221,7 +226,11 @@
             },
           ],
           phone: [
-            { required: true, message: '请输入手机号', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入手机号',
+              trigger: 'blur',
+            },
             {
               validator: function (rule, value, callback) {
                 var MobileRegex = /^1[34578]\d{9}$/
@@ -235,17 +244,38 @@
             },
           ],
           password: [
-            { validator: validatePass, trigger: 'blur', required: true },
+            {
+              validator: validatePass,
+              trigger: 'blur',
+              required: true,
+            },
           ],
           checkPass: [
-            { validator: validatecheckPass, trigger: 'blur', required: true },
+            {
+              validator: validatecheckPass,
+              trigger: 'blur',
+              required: true,
+            },
           ],
           username: [
-            { required: true, message: '请输入姓名', trigger: 'blur' },
-            { min: 2, max: 5, message: '姓名格式不正确', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入姓名',
+              trigger: 'blur',
+            },
+            {
+              min: 2,
+              max: 5,
+              message: '姓名格式不正确',
+              trigger: 'blur',
+            },
           ],
           email: [
-            { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入邮箱地址',
+              trigger: 'blur',
+            },
             {
               type: 'email',
               message: '请输入正确的邮箱地址',
@@ -298,7 +328,8 @@
         _this.$refs[formName].validate((valid) => {
           if (valid && MobileRegex.test(_this.ruleForm2.phone)) {
             Verify(_this.actions, _this.ruleForm2.phone, _this.code)
-              .then((result) => {})
+              .then((result) => {
+              })
               .catch((error) => {
                 _this.$message(error)
               })
@@ -318,7 +349,7 @@
           _this.sendMsgDisabled = true
           Phonelogin(
             _this.ruleForm2.phone,
-            encodeURIComponent(_this.ruleForm2.value)
+            encodeURIComponent(_this.ruleForm2.value),
           )
             .then((res) => {
               this.$message({
@@ -347,7 +378,7 @@
     },
   }
 </script>
-<style rel="stylesheet/scss" lang="scss">
+<style lang="scss" rel="stylesheet/scss">
   $light_gray: rgba(0, 0, 0, 0.247058823529412);
   /* reset element-ui css */
   .login-container {
@@ -358,13 +389,16 @@
       box-sizing: border-box;
       padding: 16px;
       background: transparent;
+
       .hasuser {
         text-align: center;
       }
+
       .el-input {
         display: inline-block;
         width: 85%;
         height: 47px;
+
         input {
           height: 47px;
           padding: 12px 5px 12px 15px;
@@ -373,22 +407,26 @@
           border: 1px;
           border-radius: 0px;
           -webkit-appearance: none;
+
           &:-webkit-autofill {
             // -webkit-box-shadow: 0 0 0px 1000px $bg inset !important;
             -webkit-text-fill-color: black !important;
           }
         }
       }
+
       .el-form-item {
         color: #454545;
         background: #ffffff;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 5px;
       }
+
       .logo {
         display: flex;
         justify-content: center;
         margin-bottom: 10px;
+
         p {
           margin: 25px 0;
           font-size: 30px;
@@ -399,7 +437,7 @@
   }
 </style>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss" rel="stylesheet/scss" scoped>
   $bg: rgba(45, 58, 75, 0.8);
   $dark_gray: #889aa4;
   $light_gray: #eee;
@@ -408,6 +446,7 @@
     width: 100%;
     height: 100%;
     background-color: $bg;
+
     .login-form {
       position: absolute;
       right: 5%;
@@ -419,9 +458,10 @@
       background: #ffffff;
       border-radius: 5px;
       box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
-        0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-        0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+      0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+      0px 2px 1px -1px rgba(0, 0, 0, 0.12);
     }
+
     .login_bottom {
       position: absolute;
       right: 0;
@@ -434,6 +474,7 @@
       font-size: 14px;
       color: #ffffff;
       text-align: center;
+
       img {
         width: 16px;
         height: 16px;
@@ -441,22 +482,26 @@
         vertical-align: middle;
       }
     }
+
     .tips {
       margin-bottom: 10px;
       font-size: 14px;
       color: #fff;
+
       span {
         &:first-of-type {
           margin-right: 16px;
         }
       }
     }
+
     .svg-container {
       display: inline-block;
       width: 150px;
       color: black;
       vertical-align: middle;
     }
+
     .title {
       margin: 0px auto 40px auto;
       font-size: 26px;
@@ -465,6 +510,7 @@
       color: $light_gray;
       text-align: center;
     }
+
     .show-pwd {
       position: absolute;
       top: 7px;
@@ -481,9 +527,11 @@
     margin-left: 20px !important;
     border: 1px solid #cccccc;
   }
+
   .login-container .loginbanner .el-input input {
     color: black;
   }
+
   .login-container .svg-container[data-v-53cb85aa] {
     padding: 0px;
   }

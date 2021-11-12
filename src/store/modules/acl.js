@@ -7,6 +7,7 @@
  * @Description:
  */
 import { getToken, setToken } from '@/utils/vuex'
+
 const state = () => ({
   admin: false,
   role: getToken('role') || [],
@@ -75,4 +76,9 @@ const actions = {
     commit('setDefault', Default)
   },
 }
-export default { state, getters, mutations, actions }
+export default {
+  state,
+  getters,
+  mutations,
+  actions,
+}

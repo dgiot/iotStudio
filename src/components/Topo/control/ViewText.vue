@@ -1,6 +1,5 @@
 <template>
   <div
-    class="view-text"
     :style="{
       fontSize: detail.style.fontSize + 'px',
       fontFamily: detail.style.fontFamily,
@@ -8,6 +7,7 @@
       textAlign: textAlign,
       lineHeight: lineHeight + 'px',
     }"
+    class="view-text"
   >
     {{ detail.style.text }}
   </div>

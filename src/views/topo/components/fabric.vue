@@ -168,7 +168,7 @@
         // ctrl+z 删除最近添加的元素
         if (e.keyCode == 90 && e.ctrlKey) {
           this.canvas.remove(
-            this.canvas.getObjects()[this.canvas.getObjects().length - 1]
+            this.canvas.getObjects()[this.canvas.getObjects().length - 1],
           )
         }
       }
@@ -227,12 +227,13 @@
           false,
           false,
           0,
-          null
+          null,
         )
         save_link.dispatchEvent(event)
       },
       uploadImg() {
-        document.getElementById('imgInput').click()
+        document.getElementById('imgInput')
+          .click()
       },
       // 从已渲染的DOM元素加载图片至canvas
       loadExpImg() {
@@ -260,7 +261,7 @@
               imgTitle = _this.imgFile.name
               _this.imgSrc = this.result
             },
-            false
+            false,
           )
           reader.readAsDataURL(this.imgFile)
         }
@@ -348,7 +349,10 @@
         if (this.drawType == 'polygon') {
           if (this.activeLine && this.activeLine.class == 'line') {
             var pointer = this.canvas.getPointer(e.e)
-            this.activeLine.set({ x2: pointer.x, y2: pointer.y })
+            this.activeLine.set({
+              x2: pointer.x,
+              y2: pointer.y,
+            })
             var points = this.activeShape.get('points')
             points[this.pointArray.length] = {
               x: pointer.x,
@@ -364,12 +368,16 @@
         }
       },
       deleteObj() {
-        this.canvas.getActiveObjects().map((item) => {
-          this.canvas.remove(item)
-        })
+        this.canvas.getActiveObjects()
+          .map((item) => {
+            this.canvas.remove(item)
+          })
       },
       transformMouse(mouseX, mouseY) {
-        return { x: mouseX / 1, y: mouseY / 1 }
+        return {
+          x: mouseX / 1,
+          y: mouseY / 1,
+        }
       },
       // 绘制多边形开始，绘制多边形和其他图形不一样，需要单独处理
       drawPolygon() {
@@ -483,7 +491,8 @@
         this.lineArray.map((line, index) => {
           this.canvas.remove(line)
         })
-        this.canvas.remove(this.activeShape).remove(this.activeLine)
+        this.canvas.remove(this.activeShape)
+          .remove(this.activeLine)
         var polygon = new fabric.Polygon(points, {
           stroke: this.color,
           strokeWidth: this.drawWidth,
@@ -588,7 +597,7 @@
             var radius =
               Math.sqrt(
                 (mouseTo.x - left) * (mouseTo.x - left) +
-                  (mouseTo.y - top) * (mouseTo.y - top)
+                (mouseTo.y - top) * (mouseTo.y - top),
               ) / 2
             canvasObject = new fabric.Ellipse({
               left: (mouseTo.x - left) / 2 + left,
@@ -672,30 +681,37 @@
   .el-container {
     flex-direction: column;
   }
+
   img,
   input {
     display: none;
   }
+
   .demo {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
+
   canvas {
     border: 1px dashed black;
   }
+
   .draw-btn-group {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     // width: 1270px;
     margin-top: 10px;
+
     & > div {
       cursor: pointer;
       background: #fafafa;
+
       &:hover {
         background: #eee;
       }
+
       i {
         display: flex;
         width: 30px;
@@ -704,54 +720,68 @@
         background-position: 50% 50%;
         background-size: 80%;
       }
+
       .icon-1 {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/1.png');
       }
+
       .icon-pentagram {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/pentagram.png');
       }
+
       .icon-2 {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/2.png');
       }
+
       .icon-3 {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/3.png');
       }
+
       .icon-4 {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/4.png');
         background-size: 75%;
       }
+
       .icon-5 {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/5.png');
         background-size: 70%;
       }
+
       .icon-6 {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/6.png');
       }
+
       .icon-7 {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/7.png');
         background-size: 80%;
       }
+
       .icon-del {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/del.png');
         background-size: 90%;
       }
+
       .icon-img {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/img.png');
         background-size: 80%;
       }
+
       .icon-back {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/back.png');
         background-size: 75%;
       }
+
       .icon-save {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/save.png');
         background-size: 80%;
       }
+
       .icon-mouse {
         background-image: url('https://cdn.jsdelivr.net/gh/Couy69/vue-fabric-drawingboard@master/src/assets/icons/draw/mouse.png');
         background-size: 60%;
       }
     }
+
     .active {
       background: #eee;
     }

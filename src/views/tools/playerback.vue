@@ -15,8 +15,8 @@
           <el-col :span="23">
             <el-input
               v-model="flvsrc"
-              class="input-with-select"
               :disabled="$route.query.url"
+              class="input-with-select"
               placeholder="请输入内容"
             >
               <el-select
@@ -135,6 +135,7 @@
     padding: 0 !important;
     margin-top: 20px;
     background: $base-color-background !important;
+
     .player_card {
       width: 100%;
       height: 100%;

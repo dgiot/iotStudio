@@ -1,11 +1,11 @@
 <template>
   <embed
     :height="detail.style.position.h"
-    pluginspage="http://www.adobe.com/svg/viewer/install/"
     :src="svgURL"
+    :width="detail.style.position.w"
+    pluginspage="http://www.adobe.com/svg/viewer/install/"
     style="pointer-events: none"
     type="image/svg+xml"
-    :width="detail.style.position.w"
   />
   <!-- <iframe :src="svgURL" :width="detail.style.position.w" :height="detail.style.position.h" >
 </iframe> -->
@@ -21,7 +21,8 @@
       this.onResize()
     },
     methods: {
-      onResize() {},
+      onResize() {
+      },
     },
   }
 </script>

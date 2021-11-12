@@ -4,9 +4,9 @@
       {{ $translateTitle('leftbar.listeners') }}
       <el-select
         v-model="nodeName"
-        class="select-radius"
         :disabled="$store.state.loading"
         :placeholder="$translateTitle('select.placeholder')"
+        class="select-radius"
         @change="loadListeners"
       >
         <el-option
@@ -19,8 +19,8 @@
     </div>
     <el-table
       v-loading="$store.state.loading"
-      border
       :data="listeners"
+      border
     >
       <el-table-column
         :label="$translateTitle('listeners.protocol')"
@@ -48,7 +48,8 @@
 <!--eslint-disable-->
 <script>
   import { mapActions } from 'vuex'
-  import { Select, Option, Table, TableColumn } from 'element-ui'
+  import { Option, Select, Table, TableColumn } from 'element-ui'
+
   export default {
     name: 'ListenersView',
     components: {
@@ -75,7 +76,7 @@
           })
           .catch((error) => {
             this.$message.error(
-              error || this.$translateTitle('error.networkError')
+              error || this.$translateTitle('error.networkError'),
             )
           })
       },
@@ -87,7 +88,7 @@
           })
           .catch((error) => {
             this.$message.error(
-              error || this.$translateTitle('error.networkError')
+              error || this.$translateTitle('error.networkError'),
             )
           })
       },

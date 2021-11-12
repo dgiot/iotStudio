@@ -129,10 +129,10 @@
         </el-row>
       </el-card>
       <el-pagination
-        layout="total, sizes, prev, pager, next, jumper"
         :page-size="pagesize"
         :page-sizes="[1, 5, 10]"
         :total="total"
+        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
@@ -148,16 +148,16 @@
     >
       <div
         v-loading="loading"
+        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
         class="block"
         element-loading-background="rgba(0, 0, 0, 0.8)"
         element-loading-spinner="el-icon-loading"
-        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
       >
         <el-form
           ref="form"
-          label-width="120px"
           :model="form"
           :rules="Rule"
+          label-width="120px"
         >
           <!-- <el-form-item label="平台">
                 <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
@@ -309,9 +309,9 @@
       <div class="block">
         <el-form
           ref="form1"
-          label-width="170px"
           :model="form1"
           :rules="Rule"
+          label-width="170px"
         >
           <!-- <el-form-item label="应用名称" prop="desc">
             <el-input v-model="form1.desc" style="width:80%" />
@@ -443,7 +443,8 @@
 </template>
 <script>
   const Base64 = require('js-base64').Base64
-  import { queryRole, putRole, delRole } from '@/api/Role'
+  import { putRole, queryRole } from '@/api/Role'
+
   export default {
     data() {
       const validatorUrl = (rule, value, callback) => {
@@ -492,7 +493,11 @@
         },
         Rule: {
           desc: [
-            { required: true, message: '请输入应用名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入应用名称',
+              trigger: 'blur',
+            },
             {
               validator: (rule, value, callback) => {
                 if (value.length === 0) {
@@ -503,10 +508,22 @@
               },
             },
           ],
-          file: [{ trigger: 'blur', validator: validatorUrl }],
-          topo: [{ trigger: 'blur', validator: validatorUrl }],
-          graphql: [{ trigger: 'blur', validator: validatorUrl }],
-          rest: [{ trigger: 'blur', validator: validatorUrl }],
+          file: [{
+            trigger: 'blur',
+            validator: validatorUrl,
+          }],
+          topo: [{
+            trigger: 'blur',
+            validator: validatorUrl,
+          }],
+          graphql: [{
+            trigger: 'blur',
+            validator: validatorUrl,
+          }],
+          rest: [{
+            trigger: 'blur',
+            validator: validatorUrl,
+          }],
         },
         appdata: [],
         objectid: '',
@@ -515,7 +532,8 @@
         loading: false,
       }
     },
-    created() {},
+    created() {
+    },
     //   watch:{
     //      appdata:{
     //          handler(newVal) {
@@ -551,8 +569,8 @@
         var ranNum = Math.ceil(Math.random() * 25)
         var session = Base64.encode(
           String.fromCharCode(65 + ranNum) +
-            Math.ceil(Math.random() * 10000000) +
-            Number(new Date())
+          Math.ceil(Math.random() * 10000000) +
+          Number(new Date()),
         )
 
         const formParam = {
@@ -597,8 +615,8 @@
         const ranNum = Math.ceil(Math.random() * 25)
         this.form1.secret = Base64.encode(
           String.fromCharCode(65 + ranNum) +
-            Math.ceil(Math.random() * 10000000) +
-            Number(new Date())
+          Math.ceil(Math.random() * 10000000) +
+          Number(new Date()),
         )
       },
       handleSizeChange(val) {
@@ -704,7 +722,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .application {
     box-sizing: border-box;
     box-sizing: border-box;
@@ -712,24 +730,29 @@
     background: #ffffff;
   }
 </style>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .application .el-dialog__body {
     padding: 20px;
     border-bottom: 1px solid #333333;
   }
+
   .application .el-dialog__header {
     border-bottom: 1px solid #333333;
   }
+
   .application .el-dialog__title {
     font-size: 20px;
     font-weight: 900;
   }
+
   .application .el-dialog {
     border-radius: 10px;
   }
+
   .application .grid-content {
     text-align: center;
   }
+
   .application .grid-content dl dt {
     float: left;
     width: 160px;
@@ -740,21 +763,26 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
   .application .grid-content dl dd {
     margin-bottom: 1em;
     margin-left: 180px;
     text-align: left;
   }
+
   .application .grid-content .editor {
     margin: 13px 0;
     text-align: left;
   }
+
   .application .el-card__body {
     font-size: 14px;
   }
+
   .application {
-    height: calc(100vh - #{$base-top-bar-height}* 3 - 25px);
+    height: calc(100vh - #{$base-top-bar-height} * 3 - 25px);
   }
+
   .application .appcontent .isbutton .el-button {
     position: absolute;
     top: -45px;

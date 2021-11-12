@@ -7,9 +7,9 @@
       >
         <el-form
           ref="form"
+          :model="form"
           class="create-ticker"
           label-width="auto"
-          :model="form"
           size="medium "
         >
           <el-row :gutter="24">
@@ -81,8 +81,8 @@
                 :label="$translateTitle('Maintenance.photo') + ': '"
               >
                 <el-carousel
-                  height="200px"
                   :interval="2000"
+                  height="200px"
                   type="card"
                 >
                   <el-carousel-item
@@ -92,8 +92,8 @@
                     <img
                       :alt="item"
                       :src="item"
-                      style="width: 100%; height: 100%"
                       :title="item"
+                      style="width: 100%; height: 100%"
                     />
                   </el-carousel-item>
                 </el-carousel>
@@ -147,8 +147,8 @@
             <el-timeline-item
               v-for="item in form.info.timeline"
               :key="item.timestamp"
-              placement="top"
               :timestamp="item.timestamp"
+              placement="top"
             >
               <el-card>
                 <h4>{{ item.h4 }}</h4>
@@ -166,11 +166,13 @@
   import { update_object } from '@/api/shuwa_parse'
   import { queryUser } from '@/api/User'
   import { mapGetters, mapMutations } from 'vuex'
+
   export default {
     props: {
       detail: {
         type: Object,
-        default: () => {},
+        default: () => {
+        },
       },
       step: {
         type: Number,
@@ -208,9 +210,13 @@
       dispatchUser() {
         this.$refs['form'].validate(async (valid) => {
           if (valid && this.form.info.receiveusername) {
-            const { objectId, info } = this.form
+            const {
+              objectId,
+              info,
+            } = this.form
             info.timeline.push({
-              timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+              timestamp: moment(new Date())
+                .format('YYYY-MM-DD HH:mm:ss'),
               h4: '已处理',
               p: `${this.username}处理了这条工单`,
             })
@@ -239,15 +245,18 @@
     .el-form-item {
       margin-bottom: 0;
     }
+
     .el-form-item__label {
       font-weight: 700;
     }
+
     .el-card__body {
       h3 {
         float: left;
         width: 90px;
         margin: 10px 0;
       }
+
       span {
         margin: 10px 0;
         font-size: 16px;

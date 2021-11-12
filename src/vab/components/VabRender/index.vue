@@ -3,46 +3,46 @@
   <!-- 1.设计阶段 -->
   <multipane v-if="!pure" :style="{ height }" class="vab-render">
     <!-- 左侧 -->
-    <slot name="left" :comps="sortedComps" :frender="this">
+    <slot :comps="sortedComps" :frender="this" name="left">
       <vab-render-left />
       <multipane-resizer></multipane-resizer>
       <vab-render-main
-        name="main" :frender="this"
-        :loading="loading"
-        @save="handleSave"
+        :frender="this" :loading="loading"
         class="vab-render-main"
+        name="main"
+        @save="handleSave"
       />
       <multipane-resizer></multipane-resizer>
-      <vab-render-right  v-if="isShowRight && rightTabs.length" name="right" :frender="this" class="vab-render-right" />
+      <vab-render-right v-if="isShowRight && rightTabs.length" :frender="this" class="vab-render-right" name="right" />
     </slot>
     <multipane-resizer></multipane-resizer>
-<!--    &lt;!&ndash; 中间 &ndash;&gt;-->
-<!--    <slot name="main" :frender="this">-->
-<!--      <vab-render-main-->
-<!--        :loading="loading"-->
-<!--        @save="handleSave"-->
-<!--        class="vab-render-main"-->
-<!--      />-->
-<!--    </slot>-->
-<!--    <template v-if="isShowRight && rightTabs.length">-->
-<!--      <multipane-resizer></multipane-resizer>-->
-<!--      &lt;!&ndash; 右侧 &ndash;&gt;-->
-<!--      <slot name="right" :frender="this">-->
-<!--        <vab-render-right class="vab-render-right" />-->
-<!--      </slot>-->
-<!--    </template>-->
+    <!--    &lt;!&ndash; 中间 &ndash;&gt;-->
+    <!--    <slot name="main" :frender="this">-->
+    <!--      <vab-render-main-->
+    <!--        :loading="loading"-->
+    <!--        @save="handleSave"-->
+    <!--        class="vab-render-main"-->
+    <!--      />-->
+    <!--    </slot>-->
+    <!--    <template v-if="isShowRight && rightTabs.length">-->
+    <!--      <multipane-resizer></multipane-resizer>-->
+    <!--      &lt;!&ndash; 右侧 &ndash;&gt;-->
+    <!--      <slot name="right" :frender="this">-->
+    <!--        <vab-render-right class="vab-render-right" />-->
+    <!--      </slot>-->
+    <!--    </template>-->
   </multipane>
 
   <!-- 2.使用 -->
   <ele-form
-    :formDesc="formDesc"
-    :formData="value"
-    v-bind="formBindProps"
-    ref="form"
-    v-on="$listeners"
-    :class="{ 'pure-form--loading': loading }"
-    @input="$emit('input', value)"
     v-else
+    ref="form"
+    :class="{ 'pure-form--loading': loading }"
+    :formData="value"
+    :formDesc="formDesc"
+    v-bind="formBindProps"
+    @input="$emit('input', value)"
+    v-on="$listeners"
   >
     <form-skeleton v-if="loading" />
   </ele-form>
@@ -57,16 +57,16 @@
   import VabRenderLeft from './components/left/index'
   import VabRenderMain from './components/main/index'
   import VabRenderRight from './components/right/index'
-
-  // 工具函数
-
-  const cloneDeep = require('clone')
-  import { objectToArr, arrToObject, removeEmptyProps } from './utils'
+  import { arrToObject, objectToArr, removeEmptyProps } from './utils'
 
   // 默认配置
   import compsDefault from './fixtures/comps'
   import formPropsDefault from './fixtures/form-props'
   import formItemCommonDefault from './fixtures/form-item-common'
+
+  // 工具函数
+
+  const cloneDeep = require('clone')
 
   // 组件的数据，通过 provide / inject 的形式传递给子组件
   // 主要原因是因为组件嵌套过深，相当于一个状态管理
@@ -136,9 +136,18 @@
       rightTabs: {
         type: Array,
         default: () => [
-          { label: '表单项属性配置', name: 'form-item-common' },
-          { label: '组件属性配置', name: 'form-item-attrs' },
-          { label: '表单配置', name: 'form-props' },
+          {
+            label: '表单项属性配置',
+            name: 'form-item-common',
+          },
+          {
+            label: '组件属性配置',
+            name: 'form-item-attrs',
+          },
+          {
+            label: '表单配置',
+            name: 'form-props',
+          },
         ],
         validator(tabs) {
           return (tabs || []).every((item) => item.label && item.name)
@@ -223,12 +232,16 @@
             return
           }
 
-          const { formDesc = {}, ...formPropsData } = cloneDeep(formConfig)
+          const {
+            formDesc = {},
+            ...formPropsData
+          } = cloneDeep(formConfig)
 
           this.formPropsData = Object.assign(this.formPropsData, formPropsData)
-          this.formItemList = objectToArr(formDesc, 'field').map((item) =>
-            Object.assign({ attrs: {} }, item)
-          )
+          this.formItemList = objectToArr(formDesc, 'field')
+            .map((item) =>
+              Object.assign({ attrs: {} }, item),
+            )
 
           // 当有数据时，选中第一个
           if (this.formItemList.length) {
@@ -300,7 +313,11 @@
           formDesc: _.mapValues(
             this.formDesc,
             // 组件属性 attrs 和表单项属性 commonAttrs
-            ({ type, attrs, ...commonAttrs }) => {
+            ({
+              type,
+              attrs,
+              ...commonAttrs
+            }) => {
               const res = {
                 type,
                 ...removeEmptyProps(commonAttrs),
@@ -311,7 +328,7 @@
                 res.attrs = attrs
               }
               return res
-            }
+            },
           ),
           order: Object.keys(this.formDesc),
         }
@@ -320,7 +337,7 @@
       initFormPropsData() {
         this.formPropsData = Object.assign(
           this.formPropsData,
-          cloneDeep(this.formProps.data)
+          cloneDeep(this.formProps.data),
         )
       },
     },
@@ -384,6 +401,7 @@
     text-align: left;
     background: #eee;
   }
+
   .vab-render > .pane ~ .pane {
     border-left: 1px solid #ccc;
   }
@@ -402,6 +420,7 @@
     border-right: 1px solid #dcdfe6;
     border-left: 1px solid #dcdfe6;
   }
+
   .vab-render > .multipane-resizer::before::before {
     border-color: #999;
   }

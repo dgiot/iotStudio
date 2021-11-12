@@ -9,8 +9,8 @@
 <template>
   <el-scrollbar
     ref="scrollContainer"
-    class="scroll-container"
     :vertical="false"
+    class="scroll-container"
     @wheel.native.prevent="handleScroll"
   >
     <slot />
@@ -80,16 +80,18 @@
   }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss" rel="stylesheet/scss" scoped>
   .scroll-container {
     position: relative;
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
+
     ::v-deep {
       .el-scrollbar__bar {
         bottom: 0px;
       }
+
       .el-scrollbar__wrap {
         height: 49px;
       }

@@ -5,6 +5,7 @@ function getInertText(text, preWord) {
   // let $text = text.replace(/\"/g, '')
   return text
 }
+
 export function createMonacoComplete(hints, range, { word }) {
   let customHints = []
   if (hints.length) {
@@ -25,12 +26,17 @@ export function createMonacoComplete(hints, range, { word }) {
 
 function getValueName(hint) {
   // eslint-disable-next-line prefer-const
-  let { name, default: defaultValue, valueType } = hint
+  let {
+    name,
+    default: defaultValue,
+    valueType,
+  } = hint
   if (valueType) {
     name = `${name}: ${valueType}`
   }
   return defaultValue ? `${name}, value: ${defaultValue}` : name
 }
+
 export function createMonacoHover(key, hints) {
   const contents = []
   hints.forEach((hint) => {
@@ -45,7 +51,7 @@ export function createMonacoHover(key, hints) {
         },
         {
           value: hint.documentation,
-        }
+        },
       )
     }
   })

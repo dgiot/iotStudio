@@ -1,11 +1,25 @@
 <template>
   <div :key="productId">
+    <el-drawer
+      v-drawerDrag
+      :visible.sync="amisFlag"
+      size="100%"
+    >
+      <vab-amis :schema="amisJson" />
+      <div
+        class="demo-drawer__footer"
+      >
+        <el-button @click="cancelForm">
+          保存
+        </el-button>
+      </div>
+    </el-drawer>
     <el-descriptions
-      border
-      class="margin-top"
       :column="2"
       :content-style="{ 'text-align': 'left' }"
       :label-style="{ 'text-align': 'center' }"
+      border
+      class="margin-top"
     >
       <!--      <el-descriptions-item :label="$translateTitle('home.category')">-->
       <!--        {{ productDetail.netType }}-->
@@ -77,10 +91,20 @@
         <template slot="label">
           <el-link
             :disabled="!productDetail.decoder.code.length"
-            type="warning"
+            type="primary"
             @click="seeDecoder(productDetail)"
           >
             {{ $translateTitle('product.decoder') }}
+          </el-link>
+        </template>
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <el-link
+            type="primary"
+            @click="seeLowcode(productDetail.config)"
+          >
+            {{ $translateTitle('product.lowcode') }}
           </el-link>
         </template>
       </el-descriptions-item>
@@ -123,7 +147,10 @@
       size="medium"
       style="width: 100%"
     >
-      <div v-if="tableType == 'things'">
+      <div
+        v-if="tableType == 'things'"
+        :key="tableType+thingKey"
+      >
         <el-table-column type="expand">
           <template
             v-if="scope.row.dataType.type == 'struct'"
@@ -135,16 +162,16 @@
               style="box-sizing: border-box; width: 60%; text-align: center"
             >
               <el-table-column
-                align="center"
                 :label="$translateTitle('product.identifier')"
+                align="center"
               >
                 <template slot-scope="scope1">
                   <span>{{ scope1.row.identifier }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('product.functionaltypes')"
+                align="center"
               >
                 <span>
                   {{ $translateTitle('product.attribute') }}
@@ -152,20 +179,20 @@
               </el-table-column>
 
               <el-table-column
-                align="center"
                 :label="$translateTitle('product.functionname')"
+                align="center"
                 prop="name"
               />
               <el-table-column
-                align="center"
                 :label="$translateTitle('product.datadefinition')"
+                align="center"
               />
             </el-table>
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('product.order')"
+          align="center"
           sortable
           width="80"
         >
@@ -174,8 +201,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('product.Rounds')"
+          align="center"
           sortable
           width="80"
         >
@@ -185,8 +212,8 @@
         </el-table-column>
 
         <el-table-column
-          align="center"
           :label="$translateTitle('product.Strategy')"
+          align="center"
           sortable
           width="80"
         >
@@ -196,8 +223,8 @@
         </el-table-column>
 
         <el-table-column
-          align="center"
           :label="$translateTitle('product.protocol')"
+          align="center"
           sortable
           width="80"
         >
@@ -208,8 +235,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('product.functionaltypes')"
+          align="center"
           sortable
           width="120"
         >
@@ -217,20 +244,20 @@
         </el-table-column>
 
         <el-table-column
-          align="center"
           :label="$translateTitle('product.identifier')"
+          align="center"
           prop="identifier"
           sortable
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('product.functionname')"
+          align="center"
           prop="name"
           sortable
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('product.datatype')"
+          align="center"
           sortable
         >
           <template slot-scope="scope">
@@ -238,8 +265,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('product.datadefinition')"
+          align="center"
           sortable
         >
           <template slot-scope="scope">
@@ -274,22 +301,22 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('developer.operation')"
+          align="center"
           width="160"
         >
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="danger"
-              @click="deletewmx(scope.row)"
+              @click="deletewmx(scope.$index)"
             >
               {{ $translateTitle('developer.delete') }}
             </el-button>
             <el-button
               size="mini"
               type="primary"
-              @click="wmxDataFill(scope.row, scope.row.index)"
+              @click="wmxDataFill(scope.row, scope.$index)"
             >
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
@@ -306,8 +333,8 @@
           sortable
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('product.chinesetitle')"
+          align="center"
           prop="name"
           show-overflow-tooltip
           sortable
@@ -353,8 +380,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('product.functionaltypes')"
+          align="center"
           prop="type"
           show-overflow-tooltip
           sortable
@@ -413,10 +440,17 @@
   </div>
 </template>
 <script>
+  import { mapGetters, mapMutations } from 'vuex'
   import Category from '@/api/Mock/Category'
+
   export default {
     name: 'ProfileDescriptions',
     props: {
+      thingKey: {
+        required: true,
+        type: String,
+        default: '',
+      },
       productId: {
         required: true,
         type: String,
@@ -435,7 +469,8 @@
       decoderTableList: {
         required: false,
         type: Object,
-        default: () => {},
+        default: () => {
+        },
       },
       parserTableList: {
         required: false,
@@ -455,24 +490,61 @@
     },
     data() {
       return {
+        key: moment(new Date())
+          .valueOf(),
+        amisJsonPlus: '',
         ace_editor: '',
         codeFlag: false,
+        amisFlag: false,
+        activeName: 'first',
         productDetail: {
           thing: { properties: [] },
-          config: { parser: [], profile: [] },
+          config: {
+            parser: [],
+            profile: [],
+          },
           decoder: { code: [] },
         },
         Category,
       }
     },
-    mounted() {},
+    computed: {
+      ...mapGetters({
+        amisJson: 'amis/amisJson',
+      }),
+    },
+    watch: {
+      amisJson: {
+        deep: true,
+        handler(val) {
+          this.amisJsonPlus = JSON.stringify(val)
+        },
+      },
+    },
+    mounted() {
+    },
     methods: {
+      cancelForm() {
+        this.$message.success('待实现')
+        console.log('保存到数据库')
+        // 格式是 config{amis:this.amisJson} 记得_merge config 一下
+        console.log(this.amisJson)
+      },
+      ...mapMutations({
+        set_amisJson: 'amis/set_amisJson',
+      }),
       seeDecoder(productDetail) {
         console.log(ace, 'ace', this.ace_editor)
         const { decoder = {} } = productDetail
         this.codeFlag = !this.codeFlag
         this.ace_editor = Base64.decode(decoder.code)
         // editor.gotoLine(editor.session.getLength())
+      },
+      seeLowcode(params) {
+        const { amis = {} } = params
+        this.set_amisJson(amis)
+        // this.amisJson = amis
+        this.amisFlag = true
       },
       featProperties(params) {
         this.codeFlag = false
@@ -500,3 +572,12 @@
     },
   }
 </script>
+<style lang="scss" scoped>
+  .iframe-container {
+    iframe {
+      width: 100%;
+      height: $base-keep-alive-height;
+    }
+  }
+</style>
+

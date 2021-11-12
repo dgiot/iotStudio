@@ -50,7 +50,10 @@ const state = () => ({
   language: getToken('language') || i18n,
   theme: getToken('theme') || { ...defaultTheme },
   tag: getToken('tag') || {},
-  extra: { first: '', transferRouteName: '' },
+  extra: {
+    first: '',
+    transferRouteName: '',
+  },
 })
 const getters = {
   showThemeSetting: (state) => state.showThemeSetting,
@@ -105,11 +108,14 @@ const mutations = {
     state.theme = theme
     setToken('theme', theme)
   },
+  saveLayout(state, layout) {
+    state.theme.layout = layout
+  },
   resetTheme(state) {
     state.theme = { ...defaultTheme }
     localStorage.removeItem('theme')
     document.getElementsByTagName(
-      'body'
+      'body',
     )[0].className = `vab-theme-${state.theme.themeName}`
   },
 }
@@ -119,6 +125,9 @@ const actions = {
   },
   setLogo({ commit }, logo) {
     commit('setLogo', logo)
+  },
+  setLayout({ commit }, layout) {
+    commit('saveLayout', title)
   },
   setTitle({ commit }, title) {
     commit('setTitle', title)
@@ -151,4 +160,9 @@ const actions = {
     commit('resetTheme')
   },
 }
-export default { state, getters, mutations, actions }
+export default {
+  state,
+  getters,
+  mutations,
+  actions,
+}

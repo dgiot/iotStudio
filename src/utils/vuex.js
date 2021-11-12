@@ -6,15 +6,18 @@
  * @FilePath: \dgiot-dashboard\src\utils\vuex.js
  * @Description: vuex持久化方法
  */
-import { expiresTime, cookieWhiteList } from '@/config'
+import { cookieWhiteList, expiresTime } from '@/config'
 import cookie from 'js-cookie'
-const Base64 = require('js-base64').Base64
 import { isBase64 } from '@/utils'
+
+const Base64 = require('js-base64').Base64
+
 const tempToken = {
   sessionStorage: [],
   localStorage: [],
   token: [],
 }
+
 /**
  * @description 获取token
  * @param tokenName
@@ -27,8 +30,8 @@ export function getToken(tokenName, storage = 'localStorage', type = '') {
     'localStorage' === storage
       ? localStorage.getItem(tokenName)
       : 'sessionStorage' === storage
-      ? sessionStorage.getItem(tokenName)
-      : cookie.get(tokenName)
+        ? sessionStorage.getItem(tokenName)
+        : cookie.get(tokenName)
   if (res && isBase64(res)) {
     let Base64Decode = JSON.parse(Base64.decode(res))
     return Base64Decode.vuexinfo
@@ -81,6 +84,7 @@ export function removeToken() {
   //   return cookie.remove(tokenName)
   // }
 }
+
 function foreach() {
   const strCookie = document.cookie
   const arrCookie = strCookie.split('; ')
@@ -91,18 +95,22 @@ function foreach() {
   }
   console.log('tempToken', tempToken)
 }
+
 function GetCookieVal(offset) {
   let endstr = document.cookie.indexOf(';', offset)
   if (endstr == -1) endstr = document.cookie.length
   return decodeURIComponent(document.cookie.substring(offset, endstr))
 }
+
 function DelCookie(name) {
   var exp = new Date()
   exp.setTime(exp.getTime() - 1)
   var cval = GetCookie(name)
-  if (cookieWhiteList.indexOf(name) < -1)
+  if (cookieWhiteList.indexOf(name) < -1) {
     document.cookie = name + '=' + cval + '; expires=' + exp.toGMTString()
+  }
 }
+
 function GetCookie(name) {
   const arg = name + '='
   const alen = arg.length
@@ -116,16 +124,18 @@ function GetCookie(name) {
   }
   return null
 }
+
 export function clearCookie() {
   const date = new Date()
   date.setTime(date.getTime() - 10000)
   const keys = document.cookie.match(/[^ =;]+(?=\=)/g)
   if (keys) {
-    for (var i = keys.length; i--; )
+    for (var i = keys.length; i--;) {
       cookieWhiteList.indexOf(keys[i]) < -1
         ? (document.cookie =
-            keys[i] + '=0; expire=' + date.toGMTString() + '; path=/')
+          keys[i] + '=0; expire=' + date.toGMTString() + '; path=/')
         : tempToken.token.push(keys[i])
+    }
   }
   foreach()
 }

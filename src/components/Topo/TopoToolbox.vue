@@ -32,8 +32,8 @@
                 <template v-else-if="value.isFontIcon === 1">
                   <div class="item-icon">
                     <i
-                      class="icon iconfont"
                       :class="value.icon"
+                      class="icon iconfont"
                     ></i>
                   </div>
                   <div class="toolbox-item-text">
@@ -43,8 +43,8 @@
                 <template v-else>
                   <div class="toolbox-item-icon">
                     <img
-                      class="topo-dom"
                       :src="value.icon"
+                      class="topo-dom"
                       style="width: 40px; height: 40px"
                     />
                   </div>
@@ -66,7 +66,7 @@
   import jsonChart from './data-toolbox/chart.json'
   import jsonOffice from './data-toolbox/office.json'
   import jsonSvg from './data-toolbox/svg.json'
-  import jsonSvgDianli from './data-toolbox/svg-dianli.json'
+
   export default {
     name: 'TopoToolbox',
     data() {
@@ -111,9 +111,11 @@
         margin: 10px 5px;
         color: #777;
         border: transparent solid 1px;
+
         &.base {
           width: 64px;
         }
+
         .toolbox-item-icon {
           text-align: center;
         }
@@ -137,6 +139,7 @@
 <style lang="scss" scoped>
   .item-icon {
     height: 30px;
+
     .iconfont {
       margin-left: 14px;
       font-size: 30px;

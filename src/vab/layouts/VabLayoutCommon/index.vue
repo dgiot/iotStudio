@@ -1,37 +1,37 @@
 <template>
   <!--常规布局 -->
   <div
-    class="vab-layout-common"
     :class="{
       fixed: fixedHeader,
       'no-tabs-bar': !showTabs,
     }"
+    class="vab-layout-common"
   >
     <div
-      class="vab-layout-header"
       :class="{
         'fixed-header': fixedHeader,
       }"
+      class="vab-layout-header"
     >
       <vab-header layout="common" />
       <div>
         <vab-side-bar layout="common" />
         <div
           v-show="showTabs"
-          class="vab-main"
           :class="{
             'is-collapse-main': collapse,
           }"
+          class="vab-main"
         >
           <vab-tabs layout="common" />
         </div>
       </div>
     </div>
     <div
-      class="vab-main main-padding"
       :class="{
         'is-collapse-main': collapse,
       }"
+      class="vab-main main-padding"
     >
       <vab-app-main />
     </div>
@@ -83,7 +83,7 @@
       .vab-tabs-content {
         width: calc(
           100% - #{$base-top-bar-height} - #{$base-font-size-default} - #{$base-padding} -
-            2px
+          2px
         ) !important;
       }
 

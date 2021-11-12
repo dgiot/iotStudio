@@ -16,11 +16,11 @@
       <template v-for="(pass, index) in points">
         <div
           :key="index"
-          class="passby"
           :style="{
             left: pass.x - 5 + 'px',
             top: pass.y - 5 + 'px',
           }"
+          class="passby"
           @mousedown.stop="aroowPassDown(pass, $event, index)"
         ></div>
       </template>
@@ -67,7 +67,7 @@
           this.points[2].x,
           this.points[2].y,
           this.points[3].x,
-          this.points[3].y
+          this.points[3].y,
         )
         ctx.lineWidth = lineWidth //设置线宽状态
         ctx.strokeStyle = color //设置线的颜色状态

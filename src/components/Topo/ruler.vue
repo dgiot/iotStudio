@@ -2,13 +2,13 @@
   <div
     v-show="rulerToggle"
     id="rulerTool"
-    class="ScaleBox"
-    onselectstart="return false;"
     :style="{
       width: windowWidth + 'px',
       height: windowHeight + 'px',
       position: position,
     }"
+    class="ScaleBox"
+    onselectstart="return false;"
   >
     <div
       id="levelRuler"
@@ -18,8 +18,8 @@
       <span
         v-for="(item, index) in xScale"
         :key="index"
-        class="n"
         :style="{ left: index * 50 + 2 + 'px' }"
+        class="n"
       >
         {{ item.id }}
       </span>
@@ -32,47 +32,47 @@
       <span
         v-for="(item, index) in yScale"
         :key="index"
-        class="n"
         :style="{ top: index * 50 + 2 + 'px' }"
+        class="n"
       >
         {{ item.id }}
       </span>
     </div>
     <div
       id="levelDottedLine"
-      class="RefDot_h"
       :style="{ top: verticalDottedTop + 'px' }"
+      class="RefDot_h"
     />
     <div
       id="verticalDottedLine"
-      class="RefDot_v"
       :style="{ left: levelDottedLeft + 'px' }"
+      class="RefDot_v"
     />
     <div
       v-for="item in levelLineList"
       :id="item.id"
       :key="item.id"
-      class="RefLine_h"
       :style="{ top: item.top + 'px' }"
       :title="item.title"
+      class="RefLine_h"
       @mousedown="dragLevelLine(item.id)"
     />
     <div
       v-for="item in verticalLineList"
       :id="item.id"
       :key="item.id"
-      class="RefLine_v"
       :style="{ left: item.left + 'px' }"
       :title="item.title"
+      class="RefLine_v"
       @mousedown="dragVerticalLine(item.id)"
     />
     <div
       id="content"
-      style="padding: 18px"
       :style="{
         left: contentLayout.left + 'px',
         top: contentLayout.top + 'px',
       }"
+      style="padding: 18px"
     >
       <slot />
     </div>
@@ -90,7 +90,7 @@
         validator: function (val) {
           return (
             ['absolute', 'fixed', 'relative', 'static', 'inherit'].indexOf(
-              val
+              val,
             ) !== -1
           )
         },
@@ -112,7 +112,10 @@
       contentLayout: {
         type: Object,
         default: () => {
-          return { top: 0, left: 0 }
+          return {
+            top: 0,
+            left: 0,
+          }
         },
       }, // 内容部分布局
       parent: {
@@ -148,12 +151,12 @@
       document.documentElement.addEventListener(
         'mousemove',
         this.dottedLineMove,
-        true
+        true,
       )
       document.documentElement.addEventListener(
         'mouseup',
         this.dottedLineUp,
-        true
+        true,
       )
       document.documentElement.addEventListener('keyup', this.keyboard, true)
       this.init()
@@ -170,12 +173,12 @@
       document.documentElement.removeEventListener(
         'mousemove',
         this.dottedLineMove,
-        true
+        true,
       )
       document.documentElement.removeEventListener(
         'mouseup',
         this.dottedLineUp,
-        true
+        true,
       )
       document.documentElement.removeEventListener('keyup', this.keyboard, true)
     },
@@ -427,8 +430,7 @@
     left: 18px;
     width: 100%;
     height: 18px;
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAASCAMAAAAuTX21AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRFMzMzAAAA////BqjYlAAAACNJREFUeNpiYCAdMDKRCka1jGoBA2JZZGshiaCXFpIBQIABAAplBkCmQpujAAAAAElFTkSuQmCC)
-      repeat-x; /*./image/ruler_h.png*/
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAASCAMAAAAuTX21AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRFMzMzAAAA////BqjYlAAAACNJREFUeNpiYCAdMDKRCka1jGoBA2JZZGshiaCXFpIBQIABAAplBkCmQpujAAAAAElFTkSuQmCC) repeat-x; /*./image/ruler_h.png*/
     opacity: 0.6;
   }
 
@@ -436,8 +438,7 @@
     top: 18px;
     width: 18px;
     height: 100%;
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAyCAMAAABmvHtTAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRFMzMzAAAA////BqjYlAAAACBJREFUeNpiYGBEBwwMTGiAakI0NX7U9aOuHyGuBwgwAH6bBkAR6jkzAAAAAElFTkSuQmCC)
-      repeat-y; /*./image/ruler_v.png*/
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAyCAMAAABmvHtTAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRFMzMzAAAA////BqjYlAAAACBJREFUeNpiYGBEBwwMTGiAakI0NX7U9aOuHyGuBwgwAH6bBkAR6jkzAAAAAElFTkSuQmCC) repeat-y; /*./image/ruler_v.png*/
     opacity: 0.6;
   }
 
@@ -470,8 +471,7 @@
     width: 100%;
     height: 3px;
     cursor: n-resize; /*url(./image/cur_move_h.cur), move*/
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAABCAMAAADU3h9xAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFSv//AAAAH8VRuAAAAA5JREFUeNpiYIACgAADAAAJAAE0lmO3AAAAAElFTkSuQmCC)
-      repeat-x left center; /*./image/line_h.png*/
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAABCAMAAADU3h9xAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFSv//AAAAH8VRuAAAAA5JREFUeNpiYIACgAADAAAJAAE0lmO3AAAAAElFTkSuQmCC) repeat-x left center; /*./image/line_h.png*/
   }
 
   .RefLine_v {
@@ -479,8 +479,7 @@
     height: 100%;
     _height: 9999px;
     cursor: w-resize; /*url(./image/cur_move_v.cur), move*/
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAICAMAAAAPxGVzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFSv//AAAAH8VRuAAAAA5JREFUeNpiYEAFAAEGAAAQAAGePof9AAAAAElFTkSuQmCC)
-      repeat-y center top; /*./image/line_v.png*/
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAICAMAAAAPxGVzAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFSv//AAAAH8VRuAAAAA5JREFUeNpiYEAFAAEGAAAQAAGePof9AAAAAElFTkSuQmCC) repeat-y center top; /*./image/line_v.png*/
   }
 
   .RefDot_h {
@@ -488,8 +487,7 @@
     width: 100%;
     height: 3px;
     cursor: n-resize; /*url(./image/cur_move_h.cur), move*/
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAMAAABFaP0WAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFf39/////F3PnHQAAAAJ0Uk5T/wDltzBKAAAAEElEQVR42mJgYGRgZAQIMAAADQAExkizYQAAAABJRU5ErkJggg==)
-      repeat-x left 1px; /*./image/line_dot.png*/
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAMAAABFaP0WAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFf39/////F3PnHQAAAAJ0Uk5T/wDltzBKAAAAEElEQVR42mJgYGRgZAQIMAAADQAExkizYQAAAABJRU5ErkJggg==) repeat-x left 1px; /*./image/line_dot.png*/
   }
 
   .RefDot_v {
@@ -498,9 +496,9 @@
     height: 100%;
     _height: 9999px;
     cursor: w-resize; /*url(./image/cur_move_v.cur), move*/
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAMAAABFaP0WAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFf39/////F3PnHQAAAAJ0Uk5T/wDltzBKAAAAEElEQVR42mJgYGRgZAQIMAAADQAExkizYQAAAABJRU5ErkJggg==)
-      repeat-y 1px top; /*./image/line_dot.png*/
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAMAAABFaP0WAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFf39/////F3PnHQAAAAJ0Uk5T/wDltzBKAAAAEElEQVR42mJgYGRgZAQIMAAADQAExkizYQAAAABJRU5ErkJggg==) repeat-y 1px top; /*./image/line_dot.png*/
   }
+
   #content {
     position: absolute;
     width: 100%;

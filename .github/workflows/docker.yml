@@ -1,9 +1,11 @@
-name: Continuos Integration with Github
+name: docker
 
 on:
   push:
     tags:
-      - 'v*'
+      - 't*'
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest

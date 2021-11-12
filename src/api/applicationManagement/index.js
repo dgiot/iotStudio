@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+
 // 上传图片
 export function Upload({ file }) {
   return request({
@@ -11,7 +12,14 @@ export function Upload({ file }) {
 }
 
 // 获取行业信息
-export function getIndustry({ order, limit, skip, keys, include, where }) {
+export function getIndustry({
+  order,
+  limit,
+  skip,
+  keys,
+  include,
+  where,
+}) {
   return request({
     url: 'iotapi/classes/Datas',
     method: 'get',
@@ -27,7 +35,14 @@ export function getIndustry({ order, limit, skip, keys, include, where }) {
 }
 
 // 查询应用信息
-export function getProject({ order, limit, skip, keys, include, where }) {
+export function getProject({
+  order,
+  limit,
+  skip,
+  keys,
+  include,
+  where,
+}) {
   return request({
     url: `/classes/Project`,
     method: 'get',
@@ -126,6 +141,7 @@ export function handleZero(value) {
     return value
   }
 }
+
 export function uploadLicense(appid, appsecret, shuwa_iot_software) {
   return request({
     url: `/lictool`,
@@ -137,6 +153,7 @@ export function uploadLicense(appid, appsecret, shuwa_iot_software) {
     },
   })
 }
+
 export function uploadServer(license) {
   return request({
     url: `/licsetup`,
@@ -146,6 +163,7 @@ export function uploadServer(license) {
     },
   })
 }
+
 export function offlineServer(license) {
   return request({
     url: `/licupdate`,
@@ -155,6 +173,7 @@ export function offlineServer(license) {
     },
   })
 }
+
 export function setUpLictool(appname) {
   return request({
     url: '/iotapp',

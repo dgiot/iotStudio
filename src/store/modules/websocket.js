@@ -11,6 +11,7 @@
 // https://www.jianshu.com/p/007b8ca7dc26
 import { getToken } from '@/utils/vuex'
 import { storage } from '@/config'
+
 const state = () => ({
   _websocket: getToken('_websocket', storage, null),
   _url: getToken('_url', storage, ''),
@@ -96,7 +97,7 @@ const mutations = {
       //这里发送一个心跳，后端收到后，返回一个心跳消息，
       console.info(
         state._websocket,
-        '这里发送一个心跳，后端收到后，返回一个心跳消息，'
+        '这里发送一个心跳，后端收到后，返回一个心跳消息，',
       )
       if (state._websocket.readyState == 1) {
         //如果连接正常
@@ -120,4 +121,9 @@ const actions = {
     commit('WEBSOCKET_SEND', message)
   },
 }
-export default { state, getters, mutations, actions }
+export default {
+  state,
+  getters,
+  mutations,
+  actions,
+}

@@ -2,7 +2,7 @@
 
 // * @Author: h7ml
 // * @Date: 2021-10-14 14:55:34
-// * @LastEditors: vivi
+// * @LastEditors: h7ml
 // * @LastEditTime: 2021-10-14 14:55:34
 // * @Description: 此脚本是为了兼容windows下的cp命令
 // * @FilePath: utils\cp.js
@@ -18,14 +18,18 @@ const shell = require('shelljs')
  * @param filename 文件名
  */
 function moveEnv(target, root, filename) {
+  console.log(`cp -r ${path.join(__dirname, target)} ${path.join(
+    __dirname,
+    root,
+  )}${filename}`)
   shell.exec(
     `cp -r ${path.join(__dirname, target)} ${path.join(
       __dirname,
-      root
-    )}/${filename}`,
+      root,
+    )}${filename}`,
     (code, stdout, stderr) => {
-      console.log('已成功设置cdn资源服务器地址=====>', process.env.CDN_URL)
-    }
+      console.log('已成功设置cdn资源服务器地址')
+    },
   )
 }
 

@@ -3,31 +3,21 @@
     <div class="block">
       <el-row :gutter="20">
         <!--第一个tree树-->
-        <el-col
-          :lg="12"
-          :md="12"
-          :sm="24"
-          :xl="12"
-          :xs="24"
-        >
+        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
           <el-table
             ref="refTable"
-            accordion
             :data="datafortable"
             stripe
             style="width: 100%"
+            accordion
             @expand-change="rowExpand"
           >
-            <el-table-column
-              label="取证"
-              type="expand"
-              width="200"
-            >
+            <el-table-column type="expand" label="取证" width="200">
               <template slot-scope="props">
                 <el-form
-                  class="demo-table-expand"
-                  inline
                   label-position="bottom"
+                  inline
+                  class="demo-table-expand"
                   style="margin-bottom: 10px"
                 >
                   <!-- <div>
@@ -45,8 +35,8 @@
                       </el-table-column>
                       <el-table-column align="center" label="内容">
                         <template slot-scope="scope">
-                          <el-button type="success" @click.native="detail(scope.row.attributes.data.data)">查 看</el-button>
-                          <el-button type="danger" @click.native="deleteimg(scope.row.id)">删 除</el-button>
+                          <el-button type="success" @click="detail(scope.row.attributes.data.data)">查 看</el-button>
+                          <el-button type="danger" @click="deleteimg(scope.row.id)">删 除</el-button>
                         </template>
                       </el-table-column>
                     </el-table>
@@ -70,10 +60,7 @@
                   :data="tableData1"
                   style="width: 100%; text-align: center"
                 >
-                  <el-table-column
-                    align="center"
-                    label="设备名称"
-                  >
+                  <el-table-column label="设备名称" align="center">
                     <template slot-scope="scope">
                       <span
                         v-if="scope.row.product.name.indexOf('控制台') != -1"
@@ -90,18 +77,12 @@
                       <span v-else>摄像头</span>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    align="center"
-                    label="设备编号"
-                  >
+                  <el-table-column label="设备编号" align="center">
                     <template slot-scope="scope">
                       <span>{{ scope.row.devaddr }}</span>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    align="center"
-                    label="运行状态"
-                  >
+                  <el-table-column label="运行状态" align="center">
                     <template slot-scope="scope">
                       <span
                         v-if="scope.row.status == 'OFFLINE'"
@@ -115,17 +96,10 @@
                       >
                         忙碌
                       </span>
-                      <span
-                        v-else
-                        style="color: green"
-                      >在线</span>
+                      <span v-else style="color: green">在线</span>
                     </template>
                   </el-table-column>
-                  <el-table-column
-                    align="center"
-                    label="操作"
-                    width="200"
-                  >
+                  <el-table-column label="操作" align="center" width="200">
                     <template slot-scope="scope">
                       <el-button
                         size="mini"
@@ -155,31 +129,11 @@
                 </el-table>
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              label="ID"
-              type="index"
-            />
-            <el-table-column
-              align="center"
-              label="检验项目"
-              prop="name"
-            />
-            <el-table-column
-              align="center"
-              label="保证值"
-              prop="title"
-            />
-            <el-table-column
-              align="center"
-              label="测试值"
-              prop="value"
-            />
-            <el-table-column
-              align="center"
-              label="评定"
-              prop
-            />
+            <el-table-column label="ID" align="center" type="index" />
+            <el-table-column prop="name" label="检验项目" align="center" />
+            <el-table-column prop="title" label="保证值" align="center" />
+            <el-table-column prop="value" label="测试值" align="center" />
+            <el-table-column prop label="评定" align="center" />
           </el-table>
           <!-- <div class="block" style="margin-top:10px;">
             <el-pagination
@@ -193,53 +147,41 @@
           </div>-->
         </el-col>
         <el-col
-          :lg="12"
-          :md="12"
-          :sm="24"
-          style="min-height: 875px; border-left: 1px solid blue"
-          :xl="12"
           :xs="24"
+          :sm="24"
+          :md="12"
+          :lg="12"
+          :xl="12"
+          style="min-height: 875px; border-left: 1px solid blue"
         >
-          <div
-            id="Getdata"
-            style="width: 100%; height: 300px"
-          />
+          <div id="Getdata" style="width: 100%; height: 300px" />
           <el-table
-            class="tableforfile"
             :data="Datafile"
+            class="tableforfile"
             style="width: 100%; text-align: center"
           >
-            <el-table-column
-              align="center"
-              label="数据来源"
-            >
+            <el-table-column label="数据来源" align="center">
               <template slot-scope="scope">
                 <span>{{ scope.row.attributes.data.source }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              label="最近更新时间"
-            >
+            <el-table-column align="center" label="最近更新时间">
               <template slot-scope="scope">
                 <span>{{ utc2beijing(scope.row.attributes.createdAt) }}</span>
               </template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              label="内容"
-            >
+            <el-table-column align="center" label="内容">
               <template slot-scope="scope">
                 <el-button
-                  size="mini"
                   type="success"
+                  size="mini"
                   @click="detail(scope.row.attributes.data.data)"
                 >
                   查 看
                 </el-button>
                 <el-button
-                  size="mini"
                   type="danger"
+                  size="mini"
                   @click="deleteimg(scope.row.id)"
                 >
                   删 除
@@ -250,58 +192,39 @@
         </el-col>
       </el-row>
     </div>
-    <el-dialog
-      :append-to-body="true"
-      title="提示"
-      :visible.sync="dialogVisible"
-      width="40%"
-    >
+    <el-dialog :visible.sync="dialogVisible" title="提示" width="40%">
       <div style="margin-top: 10px">
         <el-upload
           ref="upload"
           :action="action"
-          :auto-upload="false"
-          :before-upload="getFilename"
-          class="upload-demo"
           :data="data"
           :limit="1"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
+          :before-upload="getFilename"
           :on-success="responsesuccess"
+          :auto-upload="false"
+          class="upload-demo"
         >
-          <el-button
-            slot="trigger"
-            size="small"
-            type="primary"
-          >
+          <el-button slot="trigger" size="small" type="primary">
             选取文件
           </el-button>
           <el-button
-            size="small"
             style="margin-left: 10px"
+            size="small"
             type="success"
             @click="submitUpload"
           >
             上传到服务器
           </el-button>
-          <el-button
-            size="small"
-            type="primary"
-            @click.native="importdata"
-          >
+          <el-button size="small" type="primary" @click="importdata">
             提 交
           </el-button>
         </el-upload>
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-button @click="deleteFile">取 消</el-button>
-        <el-button
-          type="primary"
-          @click.native="deleteFile"
-        >确 定</el-button>
+        <el-button type="primary" @click="deleteFile">确 定</el-button>
       </span>
     </el-dialog>
   </div>

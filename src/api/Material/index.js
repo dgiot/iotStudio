@@ -1591,14 +1591,18 @@ const data = [
 // }
 
 export function getMaterial(params) {
-  const { title = '', pageNo = 1, pageSize = 72 } = params
+  const {
+    title = '',
+    pageNo = 1,
+    pageSize = 72,
+  } = params
   let mockList = data.filter((item) => {
     if (title && item.indexOf(title) < 0) return false
     return true
   })
   const pageList = mockList.filter(
     (item, index) =>
-      index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
+      index < pageSize * pageNo && index >= pageSize * (pageNo - 1),
   )
   return {
     code: 200,

@@ -11,9 +11,9 @@
       >
         <div class="prosecond">
           <el-form
-            class="demo-form-inline"
             :inline="true"
             :model="formInline"
+            class="demo-form-inline"
             size="small"
           >
             <el-form-item>
@@ -110,9 +110,9 @@
               >
                 <template slot-scope="scope">
                   <el-link
+                    :underline="false"
                     icon="el-icon-view"
                     type="primary"
-                    :underline="false"
                     @click="deviceToDetail(scope.row)"
                   >
                     <!-- 配置 -->
@@ -124,7 +124,8 @@
                     width="300"
                   >
                     <p>
-                      {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                      {{ $translateTitle('product.qdsczg') }}{{
+                        scope.row.name
                       }}{{ $translateTitle('equipment.cpm') }}
                     </p>
                     <div style="margin: 0; text-align: right">
@@ -146,34 +147,34 @@
                     </div>
                     <el-link
                       slot="reference"
+                      :underline="false"
                       icon="el-icon-delete"
                       type="danger"
-                      :underline="false"
                     >
                       {{ $translateTitle('developer.delete') }}
                     </el-link>
                   </el-popover>
                   <el-link
+                    :underline="false"
                     icon="el-icon-attract"
                     type="primary"
-                    :underline="false"
                     @click="GoTodevices(scope.row)"
                   >
                     {{ $translateTitle('product.equipment') }}
                   </el-link>
                   <el-link
+                    :underline="false"
                     icon="el-icon-edit"
                     type="success"
-                    :underline="false"
                     @click="editorProduct(scope.row)"
                   >
                     <!-- 编辑 -->
                     {{ $translateTitle('concentrator.edit') }}
                   </el-link>
                   <el-link
+                    :underline="false"
                     icon="el-icon-s-promotion"
                     type="primary"
-                    :underline="false"
                     @click="proudctView(scope.row)"
                   >
                     <!-- 运行组态 -->
@@ -188,10 +189,10 @@
             style="margin-top: 20px"
           >
             <el-pagination
-              layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
               :page-sizes="[10, 20, 30, 50]"
               :total="total"
+              layout="total, sizes, prev, pager, next, jumper"
               @current-change="productCurrentChange"
               @size-change="productSizeChange"
             />
@@ -206,8 +207,8 @@
         :before-close="handleClose"
         :close-on-click-modal="false"
         :title="$translateTitle('product.createproduct')"
-        top="5vh"
         :visible.sync="dialogFormVisible"
+        top="5vh"
         width="40%"
       >
         <div class="content">
@@ -397,8 +398,8 @@
               <el-form-item :label="$translateTitle('developer.productmodel')">
                 <img
                   v-if="imageUrl"
-                  class="avatar"
                   :src="imageUrl"
+                  class="avatar"
                 />
                 <i
                   v-else
@@ -489,10 +490,8 @@
           -->
           <el-upload
             ref="fileUpload"
-            accept=".xls, .xlsx, .zip"
             :action="uploadAction"
             :auto-upload="false"
-            class="upload-demo"
             :data="uploadData"
             :file-list="fileList"
             :headers="uploadHeaders"
@@ -500,6 +499,8 @@
             :on-error="handleUploadError"
             :on-success="handleUploadSuccess"
             :with-credentials="true"
+            accept=".xls, .xlsx, .zip"
+            class="upload-demo"
           >
             <el-button
               slot="trigger"
@@ -544,22 +545,16 @@
   import { queryDict } from '@/api/Dict/index'
   import { app_count } from '@/api/Platform/index'
   import { queryDevice } from '@/api/Device/index'
-  import {
-    delProduct,
-    getProduct,
-    queryProduct,
-    putProduct,
-    postProduct,
-  } from '@/api/Product'
-  const Base64 = require('js-base64').Base64
+  import { delProduct, getProduct, putProduct, queryProduct } from '@/api/Product'
   // import { getIndustry } from '@/api/applicationManagement'
-  import { setTimeout } from 'timers'
   import { returnLogin } from '@/utils/utilwen'
   import { export_txt_to_zip } from '@/utils/Export2Zip.js'
   // import IconSelect from '@/components/IconSelect'
   import Cookies from 'js-cookie'
   import { getServer } from '@/api/Role/index'
-  import { resolve } from 'url'
+
+  const Base64 = require('js-base64').Base64
+
   export default {
     data() {
       return {
@@ -598,9 +593,17 @@
         },
         rules: {
           roles: [
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'blur',
+            },
           ],
-          name: [{ required: true, message: '请输入产品', trigger: 'blur' }],
+          name: [{
+            required: true,
+            message: '请输入产品',
+            trigger: 'blur',
+          }],
           devType: [
             {
               required: true,
@@ -609,13 +612,25 @@
             },
           ],
           category: [
-            { required: true, message: '请选择所属分类', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属分类',
+              trigger: 'change',
+            },
           ],
           nodeType: [
-            { required: true, message: '请选择节点类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择节点类型',
+              trigger: 'change',
+            },
           ],
           netType: [
-            { required: true, message: '请选择联网方式', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择联网方式',
+              trigger: 'change',
+            },
           ],
           relationApp: [
             {
@@ -628,18 +643,54 @@
         option: [],
         ruleoptions: [],
         channel: [
-          { label: '蜂窝(2G/3G/4G)(直连)', value: 'CELLULAR' },
-          { label: 'NB-IOT通道', value: 'NB-IOT' },
-          { label: 'BLE(低功耗蓝牙)', value: 'Bluetooth' },
-          { label: '5G通道(直连)', value: '5G' },
-          { label: 'WIFI通道(直连)', value: 'WIFI' },
-          { label: 'ZigBee通道', value: 'ZigBee' },
-          { label: 'Modbus', value: 'Modbus' },
-          { label: 'LoRa(WAN)(直连)', value: 'LoRaWAN' },
-          { label: 'OPC UA', value: ' OPC UA' },
-          { label: 'ZETA通道', value: 'ZETA' },
-          { label: '网线连接(直连)', value: '网线连接' },
-          { label: '自定义', value: 'OTHER' },
+          {
+            label: '蜂窝(2G/3G/4G)(直连)',
+            value: 'CELLULAR',
+          },
+          {
+            label: 'NB-IOT通道',
+            value: 'NB-IOT',
+          },
+          {
+            label: 'BLE(低功耗蓝牙)',
+            value: 'Bluetooth',
+          },
+          {
+            label: '5G通道(直连)',
+            value: '5G',
+          },
+          {
+            label: 'WIFI通道(直连)',
+            value: 'WIFI',
+          },
+          {
+            label: 'ZigBee通道',
+            value: 'ZigBee',
+          },
+          {
+            label: 'Modbus',
+            value: 'Modbus',
+          },
+          {
+            label: 'LoRa(WAN)(直连)',
+            value: 'LoRaWAN',
+          },
+          {
+            label: 'OPC UA',
+            value: ' OPC UA',
+          },
+          {
+            label: 'ZETA通道',
+            value: 'ZETA',
+          },
+          {
+            label: '网线连接(直连)',
+            value: '网线连接',
+          },
+          {
+            label: '自定义',
+            value: 'OTHER',
+          },
         ],
         imageUrl: '',
         productid: '',
@@ -670,29 +721,86 @@
 
         if (val == 0) {
           this.channel = [
-            { label: '蜂窝(2G/3G/4G)', value: 'CELLULAR' },
-            { label: 'NB-IOT通道', value: 'NB-IOT' },
-            { label: 'BLE(低功耗蓝牙)', value: 'Bluetooth' },
-            { label: '5G通道', value: '5G' },
-            { label: 'WIFI通道', value: 'WIFI' },
-            { label: 'ZigBee通道', value: 'ZigBee' },
-            { label: 'LoRa(WAN)', value: 'LoRaWAN' },
-            { label: 'Modbus', value: 'Modbus' },
-            { label: 'OPC UA', value: ' OPC UA' },
-            { label: 'ZETA通道', value: 'ZETA' },
-            { label: '网线连接', value: '网线连接' },
+            {
+              label: '蜂窝(2G/3G/4G)',
+              value: 'CELLULAR',
+            },
+            {
+              label: 'NB-IOT通道',
+              value: 'NB-IOT',
+            },
+            {
+              label: 'BLE(低功耗蓝牙)',
+              value: 'Bluetooth',
+            },
+            {
+              label: '5G通道',
+              value: '5G',
+            },
+            {
+              label: 'WIFI通道',
+              value: 'WIFI',
+            },
+            {
+              label: 'ZigBee通道',
+              value: 'ZigBee',
+            },
+            {
+              label: 'LoRa(WAN)',
+              value: 'LoRaWAN',
+            },
+            {
+              label: 'Modbus',
+              value: 'Modbus',
+            },
+            {
+              label: 'OPC UA',
+              value: ' OPC UA',
+            },
+            {
+              label: 'ZETA通道',
+              value: 'ZETA',
+            },
+            {
+              label: '网线连接',
+              value: '网线连接',
+            },
 
-            { label: '自定义', value: 'OTHER' },
+            {
+              label: '自定义',
+              value: 'OTHER',
+            },
           ]
         } else {
           this.channel = [
-            { label: '蜂窝(2G/3G/4G)', value: 'CELLULAR' },
-            { label: '5G通道', value: '5G' },
-            { label: 'WIFI通道', value: 'WIFI' },
-            { label: 'NB-IOT通道', value: 'NB-IOT' },
-            { label: 'LoRaWAN', value: 'LoRaWAN' },
-            { label: '网线连接', value: '网线连接' },
-            { label: '自定义', value: 'OTHER' },
+            {
+              label: '蜂窝(2G/3G/4G)',
+              value: 'CELLULAR',
+            },
+            {
+              label: '5G通道',
+              value: '5G',
+            },
+            {
+              label: 'WIFI通道',
+              value: 'WIFI',
+            },
+            {
+              label: 'NB-IOT通道',
+              value: 'NB-IOT',
+            },
+            {
+              label: 'LoRaWAN',
+              value: 'LoRaWAN',
+            },
+            {
+              label: '网线连接',
+              value: '网线连接',
+            },
+            {
+              label: '自定义',
+              value: 'OTHER',
+            },
           ]
         }
       },
@@ -703,18 +811,19 @@
         if (!val) {
           return
         }
-        getServer(val).then((resultes) => {
-          if (resultes) {
-            this.fileServer = resultes.file
-            this.access_token = resultes.access_token
-          }
-        })
+        getServer(val)
+          .then((resultes) => {
+            if (resultes) {
+              this.fileServer = resultes.file
+              this.access_token = resultes.access_token
+            }
+          })
       },
       treeData(paramData) {
         const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.id == child.parentid
+            (child) => father.id == child.parentid,
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parentid == 0 // 返回第一层
@@ -871,7 +980,10 @@
         if (this.formInline.productname != '') {
           params.where.name = this.formInline.productname
         }
-        const { results, count } = await queryProduct(params)
+        const {
+          results,
+          count,
+        } = await queryProduct(params)
         results.map((k, i) => {
           if (k.category != '' && k.category) {
             category.push(k.category)
@@ -993,8 +1105,8 @@
             var ranNum = Math.ceil(Math.random() * 25)
             var productSecret = Base64.encode(
               String.fromCharCode(65 + ranNum) +
-                Math.ceil(Math.random() * 10000000) +
-                Number(new Date())
+              Math.ceil(Math.random() * 10000000) +
+              Number(new Date()),
             )
             if (this.productid == '') {
               this.addProduct()
@@ -1141,6 +1253,7 @@
   .devproduct .el-tabs__header {
     margin: 0;
   }
+
   .devproduct .el-tabs__item {
     height: 50px;
     margin: 0;
@@ -1149,44 +1262,55 @@
     font-size: 16px;
     line-height: 50px;
   }
+
   .devproduct .el-tabs__content {
     box-sizing: border-box;
     padding: 20px;
     background: #f4f4f4;
   }
+
   .devproduct .el-tab-pane {
     background: #ffffff;
   }
+
   .devproduct .procontent,
   .devproduct .prosecond {
     box-sizing: border-box;
     width: 100%;
-    padding: 20px 10px;
+    /*padding: 20px 10px;*/
   }
+
   .devproduct .el-dialog {
     margin-top: 5vh;
   }
+
   .devproduct .el-dialog .el-dialog__header {
     border-bottom: 1px solid #cccccc;
   }
+
   .devproduct .el-dialog .el-cascader,
   .devproduct .el-dialog .el-select {
     width: 100%;
   }
+
   .devproduct .el-dialog .el-form {
     box-sizing: border-box;
     padding: 0 10px;
   }
+
   .devproduct .el-dialog .el-form .el-form-item {
     margin-bottom: 5px;
   }
+
   .devproduct .el-dialog .el-form .el-form-item__content {
     margin-left: 10px;
     clear: both;
   }
+
   .devproduct .avatar-uploader {
     display: inline-block;
   }
+
   .avatar-uploader .el-upload {
     position: relative;
     overflow: hidden;
@@ -1194,9 +1318,11 @@
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
   }
+
   .avatar-uploader .el-upload:hover {
     border-color: #409eff;
   }
+
   .avatar-uploader-icon {
     width: 150px;
     height: 150px;
@@ -1206,6 +1332,7 @@
     text-align: center;
     border: 1px dashed #cccccc;
   }
+
   .avatar {
     display: block;
     width: 150px;

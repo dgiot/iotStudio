@@ -1,12 +1,7 @@
-import {
-  query_object,
-  get_object,
-  del_object,
-  update_object,
-  create_object,
-} from '@/api/shuwa_parse'
+import { create_object, del_object, get_object, query_object, update_object } from '@/api/shuwa_parse'
 import request from '@/utils/request'
 import { loginRSA } from '@/config'
+
 export async function queryUser(params) {
   return query_object('_User', params)
 }
@@ -26,6 +21,7 @@ export function EmployeeTurnover(params) {
     data: params,
   })
 }
+
 export async function getUser(ObjectId) {
   return get_object('_User', ObjectId)
 }
@@ -137,6 +133,7 @@ export function getUserInfo(params) {
     params: params,
   })
 }
+
 export function logout() {
   return request({
     url: '/logout',
@@ -151,6 +148,7 @@ export function register(data) {
     data,
   })
 }
+
 export function getRouterList(params) {
   return request({
     headers: { accept: 'application/json' },

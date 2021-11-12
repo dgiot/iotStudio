@@ -10,8 +10,8 @@
       </div>
       <div class="box-form">
         <el-form
-          label-width="80px"
           :model="engineform"
+          label-width="80px"
         >
           <el-form-item label="触发事件:">
             <span>{{ engineform.region }}</span>
@@ -133,6 +133,7 @@
 </template>
 <script>
   import { getRuleDetail } from '@/api/Rules'
+
   export default {
     data() {
       return {
@@ -191,29 +192,36 @@
     height: 100%;
     padding: 20px;
     background-color: #f6f7fb;
+
     ::v-deep .el-card {
       box-sizing: border-box;
       padding: 20px;
       margin-bottom: 20px;
       color: #71737d !important;
+
       ::v-deep .el-card__header {
         border: 0;
       }
+
       ::v-deep .el-form-item__label {
         font-weight: 100 !important;
         color: #71737d !important;
         text-align: left;
       }
+
       ::v-deep .el-form-item__content {
         color: #71737d !important;
       }
+
       ::v-deep .type {
         margin-left: 20px;
       }
     }
+
     li {
       list-style: none;
     }
+
     ::v-deep .el-form-item {
       margin-bottom: 0;
     }

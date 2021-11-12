@@ -4,79 +4,59 @@
     <div class="dialog">
       <vab-input
         ref="uploadFinish"
+        :params="inputParams"
         @fileInfo="fileInfo"
+        @files="files"
       />
     </div>
-    <a-tabs
-      :tab-position="tabPosition"
-      class="icon-selector-tabs"
-      default-active-key="1"
-    >
-      <a-tab-pane
+    <Thing />
+    <a-collapse accordion>
+      <a-collapse-panel
         key="1"
+        :header="$translateTitle('topo.background')"
       >
-        <span
-          slot="tab"
-          :title="$translateTitle('topo.Upload background')"
-        >
-          <vab-icon
-            icon="image-2-fill"
-          />
-        </span>
         <el-button
           size="mini"
           type="primary"
-          @click="uploadCkick('bg')"
+          @click.native="uploadCkick('bg')"
         >
           {{ $translateTitle('topo.Upload background') }}
         </el-button>
-      </a-tab-pane>
-      <a-tab-pane
+        <Background />
+      </a-collapse-panel>
+      <a-collapse-panel
         key="2"
+        :header="$translateTitle('product.physicalmodel')"
       >
-        <span
-          slot="tab"
-          :title="$translateTitle('topo.Add text content')"
-        >
-          <vab-icon
-            icon="text"
-          />
-        </span>
         <el-button
           size="mini"
           type="primary"
-          @click.native="createdThing()"
+          @click.native="
+            createThing({
+              productid: $route.query.productid,
+              hidden: false,
+            })
+          "
         >
           {{ $translateTitle('topo.Add text content') }}
         </el-button>
-      </a-tab-pane>
-      <a-tab-pane
+      </a-collapse-panel>
+      <a-collapse-panel
         key="3"
+        :header="$translateTitle('topo.evidence')"
       >
-        <span
-          slot="tab"
-          :title="$translateTitle('topo.Add configuration tag')"
-        >
-          <vab-icon
-            icon="caravan-line"
-          />
-        </span>
-        <el-button
-          size="mini"
-          type="primary"
-        >
-          {{ $translateTitle('topo.Add configuration tag') }}
-        </el-button>
-      </a-tab-pane>
-      <a-tab-pane
+        <!--        <el-button-->
+        <!--          size="mini"-->
+        <!--          type="primary"-->
+        <!--        >-->
+        <!--          {{ $translateTitle('topo.Add configuration tag') }}-->
+        <!--        </el-button>-->
+        <Evidence />
+      </a-collapse-panel>
+      <a-collapse-panel
         key="4"
+        :header="$translateTitle('topo.image')"
       >
-        <span
-          slot="tab"
-          :title="$translateTitle('topo.image')"
-        >
-          <vab-icon icon="image-add-line" />
-        </span>
         <div>
           <el-collapse
             v-model="activeNames"
@@ -107,7 +87,7 @@
               </el-row>
             </el-collapse-item>
             <el-collapse-item
-              name="1"
+              name="image"
               title="图标"
             >
               <el-row :gutter="20">
@@ -173,8 +153,8 @@
             </el-collapse-item>
           </el-collapse>
         </div>
-      </a-tab-pane>
-    </a-tabs>
+      </a-collapse-panel>
+    </a-collapse>
   </div>
 </template>
 
@@ -183,6 +163,10 @@
   import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
   import { getSvgPath } from '@/utils/konva'
+  import Thing from '@/views/topo/components/Thing'
+  // import TopoThing from '@/views/topo/components/TopoThing'
+  import Background from '@/views/topo/components/Background'
+  import Evidence from '@/views/topo/components/TopoEvidence'
 
   const regUrl =
     /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
@@ -196,16 +180,21 @@
       `${process.env.BASE_URL}/assets/images/dgiot_release/topo/`,
     )
   // https://blog.csdn.net/u010007013/article/details/102674042
-  // import imgHost from '../../../../public/assets/images/dgiot_release/topo/'
-  console.log(imgHost, process.env.BASE_URL, process.env)
+  // console.log(imgHost, process.env.BASE_URL, process.env)
   //   20210821112723
   //   https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json
   // const iconfont = require('https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json')
   const iconfont = require('./iconfont.json')
   export default {
     name: 'TopoTabs',
+    components: {
+      Thing,
+      Background,
+      Evidence,
+    },
     data() {
       return {
+        inputParams: {},
         upImgType: 'bg',
         tabPosition: 'left',
         iconfont,
@@ -235,10 +224,10 @@
     computed: {},
     created() {
       this.fetchData()
-      this.$dgiotBus.$off(location.hash)
-      this.$dgiotBus.$on(location.hash, (args) => {
-        console.log(args, 'args')
-      })
+      // this.$dgiotBus.$off(location.hash)
+      // this.$dgiotBus.$on(location.hash, (args) => {
+      //   console.log(args, 'args')
+      // })
     },
     mounted() {
     },
@@ -283,17 +272,28 @@
           thingid: 'thingid',
         })
         console.log(res)
-
       },
       uploadCkick(type) {
         this.upImgType = type
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
           new MouseEvent('click'),
         )
+        this.inputParams = {
+          file: '',
+          scene: 'app',
+          path: 'product/topo/',
+          filename: `${this.$route.query.productid}_bg`,
+        }
+      },
+      files(file, type) {
+        this.inputParams.filename = `${this.$route.query.productid}_bg`
+        this.inputParams.file = file
       },
       ...mapMutations({
         setFlag: 'konva/setFlag',
         setDrawParams: 'konva/setDrawParams',
+        createThing: 'topo/createThing',
+        setKonvaBg: 'topo/setKonvaBg',
       }),
       // mousedown(item) {
       //   this.$emit('fatherMousedown', item)
@@ -329,15 +329,18 @@
         this.queryForm.pageNo = 1
         this.fetchData()
       },
-      fileInfo(res) {
+      async fileInfo(res) {
         console.log(res)
-        this.dialogVisible = !this.dialogVisible
         if (this.upImgType === 'img') {
-          this.handleIcon(res.url)
+          await this.handleIcon(res.url)
         } else {
           //  直接设置背景图的地址
-          console.log('set konva bg', res.url)
-          localStorage.setItem('konvaBg', res.url)
+          localStorage.setItem('konvaBg', res.path)
+          await this.setKonvaBg(res.path)
+          console.error(
+            'set konva bg \n',
+            localStorage.getItem('fileServer') + res.path,
+          )
           //  然后重新绘制一下 使用vuex topo
         }
       },
@@ -367,21 +370,14 @@
   }
 </script>
 <style>
-  .ant-tabs .ant-tabs-left-bar .ant-tabs-tab, .ant-tabs .ant-tabs-right-bar .ant-tabs-tab {
-    padding: 10px 8px
-  }
-
-  .ant-tabs .ant-tabs-left-content {
-    margin-top: 20px !important;
-    padding-left: 0;
+  .ant-collapse-content-box {
     text-align: center;
   }
-
 </style>
 <style lang="scss" scope>
   .icon-selector-popper {
-    margin-left: 0px;
     height: calc(100vh - #{$base-top-bar-height} * 3.5);
+    margin-left: 0px;
     overflow-x: hidden;
     overflow-y: scroll;
 

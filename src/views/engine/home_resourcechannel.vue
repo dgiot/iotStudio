@@ -6,9 +6,9 @@
     />
     <div class="firsttable">
       <el-form
-        class="demo-form-inline"
         :inline="true"
         :model="channelformsearch"
+        class="demo-form-inline"
         size="small"
       >
         <el-form-item>
@@ -179,15 +179,15 @@
           sortable
         />
         <el-table-column
-          fixed="right"
           :label="$translateTitle('developer.operation')"
+          fixed="right"
           width="240"
         >
           <template slot-scope="scope">
             <el-button
               :disabled="scope.row.status == 'OFFLINE'"
-              size="mini"
               :title="scope.row.status == 'ONLINE' ? '' : '请先启用通道'"
+              size="mini"
               type="success"
               @click="subProTopic(scope.row)"
             >
@@ -218,7 +218,8 @@
             >
               <!-- <p>确定删除这个{{ scope.row.name }}通道吗？</p> -->
               <p>
-                {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                {{ $translateTitle('product.qdsczg') }}{{
+                  scope.row.name
                 }}{{ $translateTitle('equipment.channel') }}
               </p>
               <div>
@@ -261,10 +262,10 @@
       <div class="elpagination">
         <el-pagination
           :key="length + 'key' + total"
-          layout="total, sizes, prev, pager, next, jumper"
           :page-size="length"
           :page-sizes="[5, 10, 20, 30, 50]"
           :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
           @current-change="channelCurrentChange"
           @size-change="channelSizeChange"
         />
@@ -275,15 +276,15 @@
       :append-to-body="true"
       :before-close="handleClose"
       :title="channelupdated + '通道'"
-      top="10vh"
       :visible.sync="channelForm"
+      top="10vh"
       width="50%"
     >
       <el-form
         ref="addchannel"
-        label-width="auto"
         :model="addchannel"
         :rules="addrules"
+        label-width="auto"
       >
         <el-form-item
           :label="$translateTitle('developer.channeltype')"
@@ -297,8 +298,8 @@
           > -->
           <el-select
             v-model="addchannel.region"
-            disabled
             :placeholder="$translateTitle('developer.channeltype')"
+            disabled
             @change="removeauto"
           >
             <el-option
@@ -327,14 +328,14 @@
               <el-card
                 v-if="item.params.ico && item.params.ico.default"
                 v-show="addchannel.region == item.cType"
-                class="box-card"
                 :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
-                size="mini"
                 :style="{
                   display: addchannel.region == item.cType ? 'block' : 'none',
                   color:
                     addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                 }"
+                class="box-card"
+                size="mini"
               >
                 <div
                   slot="header"
@@ -356,10 +357,10 @@
                   <el-row :gutter="24">
                     <el-col :span="12">
                       <img
-                        class="image"
                         :src="
                           item.params.ico.default ? item.params.ico.default : ''
                         "
+                        class="image"
                         style="width: 50px; height: 50px"
                       />
                     </el-col>
@@ -378,8 +379,8 @@
         >
           <el-input
             v-model="addchannel.name"
-            autocomplete="off"
             :placeholder="$translateTitle('developer.channelname')"
+            autocomplete="off"
           />
         </el-form-item>
         <el-form-item
@@ -485,9 +486,9 @@
           <el-form-item :label="$translateTitle('developer.describe')">
             <el-input
               v-model="addchannel.desc"
-              autocomplete="off"
               :placeholder="$translateTitle('developer.describe')"
               :rows="3"
+              autocomplete="off"
               type="textarea"
               @change="inputChange"
             />
@@ -574,9 +575,9 @@
     </el-dialog>
     <a-drawer
       :append-to-body="true"
-      placement="right"
       :title="channelname + '日志'"
       :visible="subdialog"
+      placement="right"
       width="80%"
       @close="handleCloseSubdialog(pubtopic)"
     >
@@ -589,9 +590,9 @@
       />
     </a-drawer>
     <el-dialog
-      custom-class="dgiot_dialog"
       :show-close="false"
       :visible.sync="channelDialog"
+      custom-class="dgiot_dialog"
       width="50%"
     >
       <vab-query-form>
@@ -622,29 +623,29 @@
           width="50"
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('developer.channelname')"
+          align="center"
           prop="name"
           show-overflow-tooltip
           sortable
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('developer.servicetype')"
+          align="center"
           prop="devType"
           show-overflow-tooltip
           sortable
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('developer.describe')"
+          align="center"
           prop="desc"
           show-overflow-tooltip
           sortable
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('developer.operation')"
+          align="center"
           prop="objectId"
           show-overflow-tooltip
           sortable
@@ -674,21 +675,16 @@
 </template>
 <script>
   import { requireModule } from '@/utils/file'
-  import {
-    queryChannel,
-    delChannel,
-    postChannel,
-    putChannel,
-    saveChanne,
-  } from '@/api/Channel/index'
+  import { delChannel, postChannel, putChannel, queryChannel, saveChanne } from '@/api/Channel/index'
   import { queryProduct } from '@/api/Product/index'
   import { queryRole } from '@/api/Role/index'
   import { subupadte } from '@/api/System/index'
   import { resourceTypes } from '@/api/Rules'
   import { mapGetters } from 'vuex'
   import defaultLogo from '../../../public/assets/images/logo/logo.png'
-  var subdialog
   import VabInput from '@/vab/components/VabInput/input'
+
+  var subdialog
 
   export default {
     components: {
@@ -746,16 +742,32 @@
         applicationList: [],
         addrules: {
           applicationtText: [
-            { required: true, message: '请选择所属应用', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'change',
+            },
           ],
           roles: [
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'blur',
+            },
           ],
           name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择服务类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择服务类型',
+              trigger: 'change',
+            },
           ],
         },
         length: 10,
@@ -826,7 +838,7 @@
       handleDelete(channelInfo) {
         this.$baseConfirm(
           this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item'
+            'Maintenance.Are you sure you want to delete the current item',
           ),
           null,
           async () => {
@@ -840,7 +852,7 @@
                 })
               })
             }
-          }
+          },
         )
       },
       // 移除通道
@@ -864,7 +876,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'vab-hey-message-success',
           )
           loading.close()
         } catch (error) {
@@ -872,12 +884,14 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
       },
-      async handleSizeChange() {},
-      async handleCurrentChange() {},
+      async handleSizeChange() {
+      },
+      async handleCurrentChange() {
+      },
       async productinformation(objectId) {
         this.channelid = objectId
         const loading = this.$baseLoading(3)
@@ -898,7 +912,10 @@
               },
             },
           }
-          const { results = [], count: total = 0 } = await queryProduct(params)
+          const {
+            results = [],
+            count: total = 0,
+          } = await queryProduct(params)
           loading.close()
           this.pagination.total = total
           this.channelInfo = results
@@ -909,7 +926,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
       },
@@ -918,7 +935,7 @@
         this.channeindex = index
         this.channeType = channeType
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
       },
       fileInfo(info) {
@@ -948,7 +965,10 @@
               delete obj.name
               const aclKey = 'role' + ':' + this.addchannel.applicationtText
               const aclObj = {}
-              aclObj[aclKey] = { read: true, write: true }
+              aclObj[aclKey] = {
+                read: true,
+                write: true,
+              }
               const data = {
                 ACL: aclObj,
                 config: obj,
@@ -967,19 +987,20 @@
         }
       },
       async addchannelaxios(data) {
-        await postChannel(data).then((results) => {
-          if (results) {
-            this.$message({
-              type: 'success',
-              message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
-            })
-            this.$refs['addchannel'].resetFields()
-            this.addchannel = {}
-            // this.reload()
-            this.channelForm = false
-            this.resourceid = ''
-          }
-        })
+        await postChannel(data)
+          .then((results) => {
+            if (results) {
+              this.$message({
+                type: 'success',
+                message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
+              })
+              this.$refs['addchannel'].resetFields()
+              this.addchannel = {}
+              // this.reload()
+              this.channelForm = false
+              this.resourceid = ''
+            }
+          })
       },
       handleNodeClick(data) {
         this.showTree = !this.showTree
@@ -1026,7 +1047,10 @@
               : { $ne: null },
           },
         }
-        const { count, results } = await queryChannel(params)
+        const {
+          count,
+          results,
+        } = await queryChannel(params)
         this.total = count
         this.tableData = results
         this.listLoading = false
@@ -1051,8 +1075,14 @@
         res.forEach((item) => {
           if (!item.params.ico) {
             item.params.ico = {
-              title: { en: 'channel ICO', zh: '通道ICO' },
-              description: { en: 'channel ICO', zh: '通道ICO' },
+              title: {
+                en: 'channel ICO',
+                zh: '通道ICO',
+              },
+              description: {
+                en: 'channel ICO',
+                zh: '通道ICO',
+              },
               default: defaultLogo,
             }
           }
@@ -1068,8 +1098,8 @@
           if (updatedAt) {
             this.$message.success(
               this.$translateTitle(`developer.${action}`) +
-                '' +
-                this.$translateTitle('node.success')
+              '' +
+              this.$translateTitle('node.success'),
             )
             this.Get_Re_Channel(this.start)
           }
@@ -1201,16 +1231,32 @@
         var obj = {}
         var obj1 = {
           applicationtText: [
-            { required: true, message: '请选择所属应用', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'change',
+            },
           ],
           roles: [
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'blur',
+            },
           ],
           name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择服务类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择服务类型',
+              trigger: 'change',
+            },
           ],
         }
         if (this.resourceid == '') {
@@ -1227,10 +1273,16 @@
                 }
                 if (item.required) {
                   if (item.type == 'string' || item.type == 'integer') {
-                    obj1[item.showname] = [{ required: true, trigger: 'blur' }]
+                    obj1[item.showname] = [{
+                      required: true,
+                      trigger: 'blur',
+                    }]
                   } else {
                     obj1[item.showname] = [
-                      { required: true, trigger: 'change' },
+                      {
+                        required: true,
+                        trigger: 'change',
+                      },
                     ]
                   }
                 }
@@ -1256,11 +1308,17 @@
                   if (item.required) {
                     if (item.type == 'string' || item.type == 'integer') {
                       obj1[item.showname] = [
-                        { required: true, trigger: 'blur' },
+                        {
+                          required: true,
+                          trigger: 'blur',
+                        },
                       ]
                     } else {
                       obj1[item.showname] = [
-                        { required: true, trigger: 'change' },
+                        {
+                          required: true,
+                          trigger: 'change',
+                        },
                       ]
                     }
                   }
@@ -1321,10 +1379,12 @@
       },
       mqttMsg(Msg) {
         this.msgList.push({
-          timestamp: moment().format('x'),
+          timestamp: moment()
+            .format('x'),
           msg: Msg,
         })
-        this.refreshFlag = moment().format('x')
+        this.refreshFlag = moment()
+          .format('x')
         this.submessage += Msg + `\n`
         // subdialog.setValue(this.submessage)
         // subdialog.gotoLine(subdialog.session.getLength())
@@ -1353,7 +1413,7 @@
             this.pubtopic,
             JSON.stringify({ action: 'start_logger' }),
             0,
-            false
+            false,
           )
           this.refreshFlag = this.subtopic.split('log')[1]
         }, 500)
@@ -1364,9 +1424,10 @@
           pubtopic,
           JSON.stringify({ action: 'stop_logger' }),
           0,
-          false
+          false,
         )
-        this.refreshFlag = moment().format('x')
+        this.refreshFlag = moment()
+          .format('x')
         this.submessage = ''
         this.msgList = []
         this.subdialog = !this.subdialog
@@ -1379,6 +1440,7 @@
     .el-dialog__header {
       display: none;
     }
+
     .dj-dialog-content {
       padding: 0;
       overflow: unset;
@@ -1418,11 +1480,13 @@
   ::v-deep .el-dialog__wrapper {
     margin-bottom: 20px;
   }
+
   .resourcechannel {
     box-sizing: border-box;
     width: 100%;
     //height: 100%;
-    height: calc(100vh - #{$base-top-bar-height}* 3 - 25px);
+    height: calc(100vh - #{$base-top-bar-height} * 3 - 25px);
+
     ::v-deep {
       .green_active {
         color: green;

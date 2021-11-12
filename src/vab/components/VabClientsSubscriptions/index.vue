@@ -3,15 +3,15 @@
     <el-card class="el-card--self tabs-card">
       <el-row>
         <el-col
-          class="card-subtitle"
           :span="12"
+          class="card-subtitle"
         >
           {{ $t('clients.currentSubs') }}
         </el-col>
 
         <el-col
-          class="oper-btn-group"
           :span="12"
+          class="oper-btn-group"
         >
           <el-button
             icon="el-icon-refresh"
@@ -36,9 +36,9 @@
 
       <el-table
         v-loading="$store.state.loading"
+        :data="tableData"
         border
         class="client-sub-table"
-        :data="tableData"
       >
         <el-table-column
           :label="$t('subscriptions.topic')"
@@ -68,18 +68,18 @@
 
     <el-dialog
       :append-to-body="true"
-      class="create-subscribe"
       :title="$t('clients.addSubs')"
       :visible.sync="addVisible"
+      class="create-subscribe"
       width="400px"
       @keyup.enter.native="handleAdd"
     >
       <el-form
         ref="record"
-        class="el-form--public"
-        label-position="top"
         :model="record"
         :rules="rules"
+        class="el-form--public"
+        label-position="top"
         size="small"
       >
         <el-form-item
@@ -97,8 +97,8 @@
         >
           <vab-emq-select
             v-model="record.qos"
-            class="el-select--public"
             :field="{ list: [0, 1, 2] }"
+            class="el-select--public"
             popper-class="el-select--public"
             size="small"
           />
@@ -114,8 +114,8 @@
           {{ $t('oper.cancel') }}
         </el-button>
         <el-button
-          class="confirm-btn"
           :loading="$store.state.loading"
+          class="confirm-btn"
           type="success"
           @click.native="handleAdd"
         >
@@ -128,6 +128,7 @@
 
 <script>
   import VabEmqSelect from '@/vab/components/VabEmqSelect'
+
   export default {
     name: 'VabClientsSubscriptions',
     components: {
@@ -144,7 +145,8 @@
       },
       reload: {
         type: Function,
-        default: () => {},
+        default: () => {
+        },
       },
       mountpoint: {
         type: String,
@@ -178,10 +180,13 @@
             this.$t('oper.warning'),
             {
               type: 'warning',
-            }
+            },
           )
           .then(() => {
-            const { topic, clientid } = row
+            const {
+              topic,
+              clientid,
+            } = row
             let topicVal = this.mountpoint
               ? topic.replace(this.mountpoint, '')
               : topic
@@ -193,9 +198,11 @@
               .then(() => {
                 this.reload()
               })
-              .catch(() => {})
+              .catch(() => {
+              })
           })
-          .catch(() => {})
+          .catch(() => {
+          })
       },
       open() {
         this.addVisible = true
@@ -213,7 +220,8 @@
               this.handleClose()
               this.reload()
             })
-            .catch(() => {})
+            .catch(() => {
+            })
         })
       },
       handleClose() {
@@ -230,11 +238,14 @@
       margin: 24px 0;
       text-align: right;
     }
+
     .client-sub-table {
       margin-bottom: 24px;
     }
+
     .el-select--public {
       width: 100%;
+
       .el-input__inner {
         height: 32px !important;
         line-height: 32px !important;

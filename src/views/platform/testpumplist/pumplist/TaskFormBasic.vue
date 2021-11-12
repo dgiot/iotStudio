@@ -2,14 +2,11 @@
   <div class="TaskFormBasic">
     <el-form
       ref="formRef"
-      label-width="120px"
       :model="addDetectionTaskform"
       :rules="formRule"
+      label-width="120px"
     >
-      <el-divider
-        content-position="left"
-        style="color: blue"
-      >
+      <el-divider content-position="left" style="color: blue">
         检测任务基本信息
       </el-divider>
       <el-row>
@@ -19,28 +16,22 @@
               <el-input v-model="addDetectionTaskform.inspection_number" placeholder="请输入检验编号"/>
             </el-form-item> -->
 
-            <el-form-item
-              label="任务名称："
-              prop="task_name"
-            >
+            <el-form-item label="任务名称：" prop="task_name">
               <el-input
                 v-model="addDetectionTaskform.task_name"
-                placeholder="请输入任务名称"
                 style="width: 100%"
+                placeholder="请输入任务名称"
               />
             </el-form-item>
 
             <!-- 修改为新增的reportId  -->
 
             <!-- 该字段并不真的使用 -->
-            <el-form-item
-              label="质检项目"
-              prop="reportId"
-            >
+            <el-form-item label="质检项目" prop="reportId">
               <el-select
                 v-model="addDetectionTaskform.selectDefault"
-                placeholder="质检项目"
                 style="width: 100%"
+                placeholder="质检项目"
                 @change="changeReport"
               >
                 <el-option
@@ -63,10 +54,7 @@
               <el-input v-model.number="addDetectionTaskform.entrustphone" placeholder="请输入委托方联系方式"/>
             </el-form-item> -->
 
-            <el-form-item
-              label="开始时间："
-              prop="starttime"
-            >
+            <el-form-item label="开始时间：" prop="starttime">
               <el-date-picker
                 v-model="addDetectionTaskform.starttime"
                 type="datetime"
@@ -74,10 +62,7 @@
               />
             </el-form-item>
 
-            <el-form-item
-              label="结束时间："
-              prop="endtime"
-            >
+            <el-form-item label="结束时间：" prop="endtime">
               <el-date-picker
                 v-model="addDetectionTaskform.endtime"
                 type="datetime"
@@ -87,10 +72,7 @@
           </div>
         </el-col>
       </el-row>
-      <el-divider
-        content-position="left"
-        style="color: blue"
-      >
+      <el-divider content-position="left" style="color: blue">
         检测资源信息
       </el-divider>
 
@@ -100,10 +82,7 @@
         </el-col>
         <el-col :span="12">
           <div class="grid-content bg-purple-light">
-            <el-form-item
-              label="测试台体"
-              prop="bedname"
-            >
+            <el-form-item label="测试台体" prop="bedname">
               <el-select
                 v-model="addDetectionTaskform.bedIndex"
                 placeholder="请选择测试台体"
@@ -122,10 +101,7 @@
         </el-col>
         <el-col :span="12">
           <div class="grid-content bg-purple-light">
-            <el-form-item
-              label="所属组织"
-              prop="groupname"
-            >
+            <el-form-item label="所属组织" prop="groupname">
               <el-select
                 v-model="addDetectionTaskform.groupname"
                 placeholder="请选择测试台体"

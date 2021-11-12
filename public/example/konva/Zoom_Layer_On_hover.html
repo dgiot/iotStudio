@@ -17,31 +17,31 @@
 <body>
 <div id="container"></div>
 <script>
-  var width = window.innerWidth;
-  var height = window.innerHeight;
+  var width = window.innerWidth
+  var height = window.innerHeight
 
   var stage = new Konva.Stage({
     container: 'container',
     width: width,
     height: height,
-  });
+  })
 
-  var layer = new Konva.Layer();
+  var layer = new Konva.Layer()
   var rect1 = new Konva.Rect({
     x: 200,
     y: 200,
-    width: width/4,
-    height: height/3,
+    width: width / 4,
+    height: height / 3,
     fill: 'green',
     stroke: 'black',
     strokeWidth: 4,
-  });
+  })
   // add the shape to the layer
-  layer.add(rect1);
-  rect1.zIndex(0);
-  stage.add(layer);
+  layer.add(rect1)
+  rect1.zIndex(0)
+  stage.add(layer)
 
-  var imageObj = new Image();
+  var imageObj = new Image()
   imageObj.onload = function () {
     var backgroundImage = new Konva.Image({
       x: 0,
@@ -49,33 +49,33 @@
       width: width,
       height: height,
       image: imageObj,
-    });
-    layer.add(backgroundImage);
-  };
+    })
+    layer.add(backgroundImage)
+  }
 
-  imageObj.src = 'https://konvajs.org/assets/space.jpg';
+  imageObj.src = 'https://konvajs.org/assets/space.jpg'
 
-  var zoomLevel = 2;
+  var zoomLevel = 2
   layer.on('mouseenter', function () {
     layer.scale({
       x: zoomLevel,
       y: zoomLevel,
-    });
-  });
+    })
+  })
 
   layer.on('mousemove', function (e) {
-    var pos = stage.getPointerPosition();
-    layer.x(-pos.x);
-    layer.y(-pos.y);
-  });
+    var pos = stage.getPointerPosition()
+    layer.x(-pos.x)
+    layer.y(-pos.y)
+  })
   layer.on('mouseleave', function () {
-    layer.x(0);
-    layer.y(0);
+    layer.x(0)
+    layer.y(0)
     layer.scale({
       x: 1,
       y: 1,
-    });
-  });
+    })
+  })
 </script>
 </body>
 </html>

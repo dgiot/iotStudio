@@ -7,7 +7,7 @@ export function addSukeyys(
   para,
   status_url,
   status_para,
-  default1
+  default1,
 ) {
   return request({
     url: '/suke/add_yys',
@@ -23,6 +23,7 @@ export function addSukeyys(
     },
   })
 }
+
 export function searchSuketype(start, length, type) {
   return request({
     url: '/suke/query_info',
@@ -34,6 +35,7 @@ export function searchSuketype(start, length, type) {
     },
   })
 }
+
 export function editSukeyys(
   objectId,
   name,
@@ -42,7 +44,7 @@ export function editSukeyys(
   para,
   status_url,
   status_para,
-  default1
+  default1,
 ) {
   return request({
     url: '/suke/edit_yys',
@@ -59,6 +61,7 @@ export function editSukeyys(
     },
   })
 }
+
 export function addSukedevtype(name, code, remark, status) {
   return request({
     url: '/suke/add_devtype',
@@ -71,6 +74,7 @@ export function addSukedevtype(name, code, remark, status) {
     },
   })
 }
+
 export function editorSukedevtype(objectId, name, code, remark, status) {
   return request({
     url: '/suke/edit_devtype',
@@ -84,6 +88,7 @@ export function editorSukedevtype(objectId, name, code, remark, status) {
     },
   })
 }
+
 // 增加suke指令
 export function addSkzl(form) {
   return request({
@@ -99,6 +104,7 @@ export function addSkzl(form) {
     },
   })
 }
+
 export function editorSkzl(form) {
   return request({
     url: '/suke/edit_zl',
@@ -114,6 +120,7 @@ export function editorSkzl(form) {
     },
   })
 }
+
 // 查询指令
 export function queryzlinfo(form, skip, limit) {
   return request({
@@ -129,6 +136,7 @@ export function queryzlinfo(form, skip, limit) {
     },
   })
 }
+
 // 查询设备
 export function searchSukeuser(form, skip, limit) {
   return request({
@@ -146,6 +154,7 @@ export function searchSukeuser(form, skip, limit) {
     },
   })
 }
+
 // 查询设备类型
 export function querydevinfo(form, skip, limit) {
   return request({
@@ -160,6 +169,7 @@ export function querydevinfo(form, skip, limit) {
     },
   })
 }
+
 export function queryyysinfo(form, skip, limit) {
   return request({
     url: '/suke/query_yys_info',

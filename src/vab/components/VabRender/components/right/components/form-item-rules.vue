@@ -7,8 +7,8 @@
     }"
     :form-btns="formBtns"
     :form-desc="formDesc"
-    title="新增校检规则"
     :visible="visible"
+    title="新增校检规则"
     @request="handleAddRule"
     @update:visible="toggleDialog"
   />
@@ -19,6 +19,7 @@
   import { changeFormDescLabel } from '../../../utils'
 
   export default {
+    name: 'VabRenderRightFormItemRules',
     inject: ['VabRender'],
     props: {
       visible: {
@@ -49,19 +50,58 @@
               clearable: true,
             },
             options: [
-              { value: 'string', desc: '必须是 string' },
-              { value: 'number', desc: '必须是 number' },
-              { value: 'boolean', desc: '必须是 boolean' },
-              { value: 'integer', desc: '整数' },
-              { value: 'float', desc: '浮点数' },
-              { value: 'enum', desc: '值必须出现在 enmu 枚举值中' },
-              { value: 'date', desc: '合法的日期，使用 Date 判断' },
-              { value: 'url', desc: 'URL' },
-              { value: 'email', desc: '邮箱地址' },
-              { value: 'array', desc: '必须是数组，通过 Array.isArray 判断' },
-              { value: 'object', desc: '是对象且不为数组' },
-              { value: 'method', desc: '必须是 function' },
-              { value: 'hex', desc: '16进制' },
+              {
+                value: 'string',
+                desc: '必须是 string',
+              },
+              {
+                value: 'number',
+                desc: '必须是 number',
+              },
+              {
+                value: 'boolean',
+                desc: '必须是 boolean',
+              },
+              {
+                value: 'integer',
+                desc: '整数',
+              },
+              {
+                value: 'float',
+                desc: '浮点数',
+              },
+              {
+                value: 'enum',
+                desc: '值必须出现在 enmu 枚举值中',
+              },
+              {
+                value: 'date',
+                desc: '合法的日期，使用 Date 判断',
+              },
+              {
+                value: 'url',
+                desc: 'URL',
+              },
+              {
+                value: 'email',
+                desc: '邮箱地址',
+              },
+              {
+                value: 'array',
+                desc: '必须是数组，通过 Array.isArray 判断',
+              },
+              {
+                value: 'object',
+                desc: '是对象且不为数组',
+              },
+              {
+                value: 'method',
+                desc: '必须是 function',
+              },
+              {
+                value: 'hex',
+                desc: '16进制',
+              },
             ],
             slots: {
               default(h, { options }) {
@@ -77,9 +117,9 @@
                           fontSize: '13px',
                         },
                       },
-                      option.desc
+                      option.desc,
                     ),
-                  ])
+                  ]),
                 )
                 return res
               },
@@ -181,7 +221,7 @@
         this.$set(
           this.VabRender.formItemList[this.VabRender.currentIndex],
           'rules',
-          (currentItem.rules || []).concat(filteredData)
+          (currentItem.rules || []).concat(filteredData),
         )
 
         // 关闭弹窗

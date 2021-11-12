@@ -17,18 +17,14 @@
       <!-- 指定节点标签为节点对象的某个属性值  -->
       <el-tree
         ref="tree"
+        :props="elTreedefaultProps"
         :data="deptTreeData"
-        default-expand-all
-        :expand-on-click-node="false"
         highlight-current
         node-key="id"
-        :props="elTreedefaultProps"
+        default-expand-all
+        :expand-on-click-node="false"
       >
-        <div
-          slot-scope="{ node, data }"
-          class="custom-tree-node"
-          title="L1"
-        >
+        <div slot-scope="{ node, data }" class="custom-tree-node" title="L1">
           <!-- :class="{ selected: data.objectId == currentFactoryId }" -->
           <div
             class="factory-item"

@@ -129,6 +129,7 @@
       .el-submenu__title {
         background-color: transparent !important;
       }
+
       > .el-submenu__title {
         background-color: $base-color-blue !important;
       }
@@ -312,9 +313,9 @@
     &--info.is-light {
       color: $base-color-blue !important;
       background-color: mix(
-        $base-color-white,
-        $base-color-blue,
-        90%
+          $base-color-white,
+          $base-color-blue,
+          90%
       ) !important;
       border: 1px solid $base-color-blue !important;
 

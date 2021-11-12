@@ -7,6 +7,7 @@ export function getNode() {
     params: {},
   })
 }
+
 export function joinNode(action, node) {
   return request({
     url: 'cluster?action=' + action,
@@ -28,6 +29,7 @@ export function Getapp(node, start, length) {
     },
   })
 }
+
 export function Getmodule(app) {
   return request({
     url: 'plugin/' + app,
@@ -47,6 +49,7 @@ export function Getstart(app) {
     },
   })
 }
+
 export function Getstop(app) {
   return request({
     url: 'plugin/' + app,
@@ -56,6 +59,7 @@ export function Getstop(app) {
     },
   })
 }
+
 export function GetReload(app) {
   return request({
     url: 'plugin/' + app,
@@ -65,6 +69,7 @@ export function GetReload(app) {
     },
   })
 }
+
 export function Compile(code) {
   return request({
     url: 'compile',

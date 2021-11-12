@@ -1,7 +1,7 @@
 <template>
   <el-scrollbar
-    class="vab-side-bar"
     :class="{ 'is-collapse': collapse, 'side-bar-common': layout === 'common' }"
+    class="vab-side-bar"
   >
     <vab-logo v-if="layout === 'vertical' || layout === 'comprehensive'" />
     <el-menu
@@ -11,10 +11,10 @@
       :collapse-transition="false"
       :default-active="activeMenu"
       :default-openeds="defaultOpeneds"
-      menu-trigger="click"
-      mode="vertical"
       :text-color="variables['menu-color']"
       :unique-opened="uniqueOpened"
+      menu-trigger="click"
+      mode="vertical"
     >
       <template v-for="route in handleRoutes">
         <vab-menu
@@ -59,10 +59,10 @@
         return this.layout === 'comprehensive'
           ? this.handlePartialRoutes
           : this.routes.flatMap((route) =>
-              route.menuHidden === true && route.children
-                ? route.children
-                : route
-            )
+            route.menuHidden === true && route.children
+              ? route.children
+              : route,
+          )
       },
       handlePartialRoutes() {
         const activeMenu = this.routes.find((_) => _.name === this.extra.first)

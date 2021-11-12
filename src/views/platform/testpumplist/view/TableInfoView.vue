@@ -3,10 +3,10 @@
     <!-- 每个组件都只有一个form,因此表单的ref属性 不需要修改 -->
     <el-form
       ref="formRef"
-      disabled
       :inline="true"
       :model="TableInfoObj"
       size="small"
+      disabled
     >
       <el-row>
         <el-col :span="5">
@@ -59,10 +59,7 @@
                   />
                 </el-select>
               </el-col>
-              <el-col
-                :offset="2"
-                :span="4"
-              >
+              <el-col :span="4" :offset="2">
                 <el-checkbox v-model="TableInfoObj.shifoujieyeweiji">
                   是否接液位计
                 </el-checkbox>
@@ -74,93 +71,48 @@
 
       <el-row>
         <el-col :span="8">
-          <el-form-item
-            label="流量测量"
-            label-width="120px"
-          >
-            <el-input
-              v-model="TableInfoObj.Qtest"
-              class="ipw"
-            />
+          <el-form-item label="流量测量" label-width="120px">
+            <el-input v-model="TableInfoObj.Qtest" class="ipw" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item
-            label="扭矩测量"
-            label-width="120px"
-          >
-            <el-input
-              v-model="TableInfoObj.niujuceliang"
-              class="ipw"
-            />
+          <el-form-item label="扭矩测量" label-width="120px">
+            <el-input v-model="TableInfoObj.niujuceliang" class="ipw" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item
-            label="转速测量"
-            label-width="120px"
-          >
-            <el-input
-              v-model="TableInfoObj.Ntest"
-              class="ipw"
-            />
+          <el-form-item label="转速测量" label-width="120px">
+            <el-input v-model="TableInfoObj.Ntest" class="ipw" />
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="8">
-          <el-form-item
-            label="进口压力测量"
-            label-width="120px"
-          >
-            <el-input
-              v-model="TableInfoObj.inputPa"
-              class="ipw"
-            />
+          <el-form-item label="进口压力测量" label-width="120px">
+            <el-input v-model="TableInfoObj.inputPa" class="ipw" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item
-            label="出口压力测量"
-            label-width="120px"
-          >
-            <el-input
-              v-model="TableInfoObj.outputPa"
-              class="ipw"
-            />
+          <el-form-item label="出口压力测量" label-width="120px">
+            <el-input v-model="TableInfoObj.outputPa" class="ipw" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item
-            label="振动测量"
-            label-width="120px"
-          >
-            <el-input
-              v-model="TableInfoObj.zhendongcl"
-              class="ipw"
-            />
+          <el-form-item label="振动测量" label-width="120px">
+            <el-input v-model="TableInfoObj.zhendongcl" class="ipw" />
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="8">
-          <el-form-item
-            label="温度测量"
-            label-width="120px"
-          >
+          <el-form-item label="温度测量" label-width="120px">
             <el-row>
               <el-col :span="12">
-                <el-input
-                  v-model="TableInfoObj.temcl"
-                  class="ipw2"
-                />
+                <el-input v-model="TableInfoObj.temcl" class="ipw2" />
               </el-col>
-              <el-col
-                :offset="2"
-                :span="4"
-              >
+              <el-col :span="4" :offset="2">
                 <el-checkbox v-model="TableInfoObj.shifoujiewenduchuanganqi">
                   是否接温度传感器
                 </el-checkbox>
@@ -169,54 +121,36 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item
-            label="噪声测量"
-            label-width="120px"
-          >
-            <el-input
-              v-model="TableInfoObj.zaoshengcl"
-              class="ipw"
-            />
+          <el-form-item label="噪声测量" label-width="120px">
+            <el-input v-model="TableInfoObj.zaoshengcl" class="ipw" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item
-            label="大气压力测量"
-            label-width="120px"
-          >
-            <el-input
-              v-model="TableInfoObj.airpresscl"
-              class="ipw"
-            />
+          <el-form-item label="大气压力测量" label-width="120px">
+            <el-input v-model="TableInfoObj.airpresscl" class="ipw" />
           </el-form-item>
         </el-col>
       </el-row>
 
       <el-row>
         <el-col :span="8">
-          <el-form-item
-            label="液位测量"
-            label-width="120px"
-          >
+          <el-form-item label="液位测量" label-width="120px">
             <el-input v-model="TableInfoObj.yeweicl" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item
-            label="振动测量类型"
-            label-width="120px"
-          >
+          <el-form-item label="振动测量类型" label-width="120px">
             <el-select
               v-model="TableInfoObj.zhendongceliangleixing"
-              class="ipw"
               clearable
+              class="ipw"
             >
               <el-option
                 v-for="item in defaultObj.zdcl"
                 :key="item.value"
-                class="ipw"
                 :label="item.label"
                 :value="item.value"
+                class="ipw"
               />
             </el-select>
           </el-form-item>
@@ -226,18 +160,14 @@
         <el-col :span="7">
           <el-form-item label="进口测压处管径">
             <el-input v-model="TableInfoObj.jinkouceyaguanjing">
-              <template slot="append">
-                mm
-              </template>
+              <template slot="append">mm</template>
             </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="7">
           <el-form-item label="出口测压处管径">
             <el-input v-model="TableInfoObj.chuouceyaguanjing">
-              <template slot="append">
-                mm
-              </template>
+              <template slot="append">mm</template>
             </el-input>
           </el-form-item>
         </el-col>
@@ -265,18 +195,14 @@
             <el-col :span="12">
               <el-form-item label="进口压力表至基准面距离">
                 <el-input v-model="TableInfoObj.jinkouyalijuli">
-                  <template slot="append">
-                    mm
-                  </template>
+                  <template slot="append">mm</template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="出口压力表至基准面距离">
                 <el-input v-model="TableInfoObj.chukouyalijuli">
-                  <template slot="append">
-                    mm
-                  </template>
+                  <template slot="append">mm</template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -286,18 +212,14 @@
             <el-col :span="12">
               <el-form-item label="泵进口直径">
                 <el-input v-model="TableInfoObj.bengjinkouzhijing">
-                  <template slot="append">
-                    mm
-                  </template>
+                  <template slot="append">mm</template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="泵出口直径">
                 <el-input v-model="TableInfoObj.bengchukouzhijing">
-                  <template slot="append">
-                    mm
-                  </template>
+                  <template slot="append">mm</template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -323,9 +245,7 @@
             <el-col :span="9">
               <el-form-item label="介质温度">
                 <el-input v-model="TableInfoObj.wendu">
-                  <template slot="append">
-                    ℃
-                  </template>
+                  <template slot="append">℃</template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -334,30 +254,19 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="泵的安装高度">
-                <el-input
-                  v-model="TableInfoObj.hg"
-                  style="width: 180px"
-                >
-                  <template slot="append">
-                    mm
-                  </template>
+                <el-input v-model="TableInfoObj.hg" style="width: 180px">
+                  <template slot="append">mm</template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="7">
               <el-form-item label="进口管损">
-                <el-input
-                  v-model="TableInfoObj.hi_k"
-                  style="width: 140px"
-                />
+                <el-input v-model="TableInfoObj.hi_k" style="width: 140px" />
               </el-form-item>
             </el-col>
             <el-col :span="9">
               <el-form-item label="出口管损">
-                <el-input
-                  v-model="TableInfoObj.ho_k"
-                  style="width: 210px"
-                />
+                <el-input v-model="TableInfoObj.ho_k" style="width: 210px" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -368,28 +277,18 @@
                   v-model="TableInfoObj.yeluncaizhi"
                   style="width: 180px"
                 >
-                  <template slot="append">
-                    mm
-                  </template>
+                  <template slot="append">mm</template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="16">
               <el-form-item label="叶轮材质">
-                <el-input
-                  v-model="TableInfoObj.c4"
-                  style="width: 140px"
-                />
+                <el-input v-model="TableInfoObj.c4" style="width: 140px" />
               </el-form-item>
 
               <el-form-item label="大气压力">
-                <el-input
-                  v-model="TableInfoObj.daqiyali"
-                  style="width: 232px"
-                >
-                  <template slot="append">
-                    MPa
-                  </template>
+                <el-input v-model="TableInfoObj.daqiyali" style="width: 232px">
+                  <template slot="append">MPa</template>
                 </el-input>
               </el-form-item>
             </el-col>

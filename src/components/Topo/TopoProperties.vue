@@ -12,22 +12,22 @@
     <template v-if="configObject != null && isLayer == false">
       <div class="topo-properties-tabs">
         <div
-          class="topo-properties-tab"
           :class="{ 'topo-properties-tab-active': tabIndex == 0 }"
+          class="topo-properties-tab"
           @click="changeTab(0)"
         >
           样式
         </div>
         <div
-          class="topo-properties-tab"
           :class="{ 'topo-properties-tab-active': tabIndex == 1 }"
+          class="topo-properties-tab"
           @click="changeTab(1)"
         >
           数据
         </div>
         <div
-          class="topo-properties-tab"
           :class="{ 'topo-properties-tab-active': tabIndex == 2 }"
+          class="topo-properties-tab"
           @click="changeTab(2)"
         >
           行为
@@ -330,8 +330,8 @@
                   <td>
                     <el-select
                       v-model="configObject.style.animations"
-                      clearable
                       :options="animations"
+                      clearable
                     />
                   </td>
                 </tr>
@@ -399,12 +399,9 @@
                     <td width="50%">
                       <el-select
                         v-model="event.type"
-                        emit-value
-                        map-options
                         :option-disable="
                           (item) => (item === null ? true : item.cannotSelect)
                         "
-                        option-label="label"
                         :options="[
                           { label: '点击', value: 'click' },
                           { label: '双击', value: 'dblclick' },
@@ -419,6 +416,9 @@
                             cannotSelect: true,
                           },
                         ]"
+                        emit-value
+                        map-options
+                        option-label="label"
                       />
                     </td>
                   </tr>
@@ -427,12 +427,9 @@
                     <td>
                       <el-select
                         v-model="event.action"
-                        emit-value
-                        map-options
                         :option-disable="
                           (item) => (item === null ? true : item.cannotSelect)
                         "
-                        option-label="label"
                         :options="[
                           {
                             label: '打开链接',
@@ -451,6 +448,9 @@
                             cannotSelect: true,
                           },
                         ]"
+                        emit-value
+                        map-options
+                        option-label="label"
                       />
                     </td>
                   </tr>
@@ -460,12 +460,12 @@
                     <td>
                       <el-select
                         v-model="event.showItems"
+                        :options="generateTargetComponentOptions()"
                         emit-value
                         filled
                         map-options
                         multiple
                         option-label="label"
-                        :options="generateTargetComponentOptions()"
                         use-chips
                       />
                     </td>
@@ -475,12 +475,12 @@
                     <td>
                       <el-select
                         v-model="event.hideItems"
+                        :options="generateTargetComponentOptions()"
                         emit-value
                         filled
                         map-options
                         multiple
                         option-label="label"
-                        :options="generateTargetComponentOptions()"
                         use-chips
                       />
                     </td>
@@ -543,7 +543,7 @@
 </template>
 <!--eslint-disable-->
 <script>
-  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+  import { mapState } from 'vuex'
 
   export default {
     name: 'TopoProperties',
@@ -620,18 +620,31 @@
             this.configObject.direction &&
             this.configObject.direction == 'vertical'
               ? [
-                  { label: '向上', value: 'up' },
-                  { label: '向下', value: 'down' },
-                ]
+                {
+                  label: '向上',
+                  value: 'up',
+                },
+                {
+                  label: '向下',
+                  value: 'down',
+                },
+              ]
               : [
-                  { label: '向右', value: 'right' },
-                  { label: '向左', value: 'left' },
-                ]
+                {
+                  label: '向右',
+                  value: 'right',
+                },
+                {
+                  label: '向左',
+                  value: 'left',
+                },
+              ]
         }
         return items
       },
     },
-    mounted() {},
+    mounted() {
+    },
     methods: {
       initPage(configData) {
         this.configData = configData

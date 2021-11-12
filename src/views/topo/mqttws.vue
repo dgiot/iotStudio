@@ -118,7 +118,7 @@
               this.client.send(message)
             }
           }.bind(this),
-          1000
+          1000,
         )
       },
       stop: function () {

@@ -13,8 +13,21 @@
     :popper-append-to-body="false"
   >
     <template #title>
+      <el-image
+        v-if="itemOrMenu.meta.icon && itemOrMenu.meta.icon.includes('dgiot')"
+        :alt="$FileServe"
+        :src="$FileServe + itemOrMenu.meta.icon"
+        style="width:16px;height:16px"
+      >
+        <img
+          slot="error"
+          :src="$FileServe + itemOrMenu.meta.icon"
+          :title="$FileServe + itemOrMenu.meta.icon"
+          style="width:16px;height:16px"
+        >
+      </el-image>
       <vab-icon
-        v-if="itemOrMenu.meta && itemOrMenu.meta.icon"
+        v-else
         :icon="itemOrMenu.meta.icon"
         :is-custom-svg="itemOrMenu.meta.isCustomSvg"
         :title="$translateTitle(`route.${itemOrMenu.meta.title}`)"

@@ -9,9 +9,9 @@
     </div>
     <el-form
       ref="ruleForm2"
+      :model="ruleForm2"
       class="demo-ruleForm"
       label-width="100px"
-      :model="ruleForm2"
       status-icon
     >
       <el-form-item
@@ -58,12 +58,12 @@
       <el-form-item :label="$translateTitle('developer.departmentselection')">
         <el-cascader
           v-model="ruleForm2.departmentid"
-          auto-complete="off"
-          change-on-select
           :options="data"
           :placeholder="$translateTitle('product.selectdepartment')"
           :props="treeprops"
           :show-all-levels="false"
+          auto-complete="off"
+          change-on-select
           style="width: 600px"
         />
       </el-form-item>
@@ -80,7 +80,7 @@
   </div>
 </template>
 <script>
-  import { putUser, getUser } from '@/api/User/index'
+  import { getUser, putUser } from '@/api/User/index'
   import { roletree } from '@/api/Role/index'
 
   export default {
@@ -177,22 +177,27 @@
     padding: 20px;
     background: #ffffff;
   }
+
   .admin {
     margin: 20px 0 10px 20px;
     font-size: 24px;
   }
+
   .admin .des {
     padding-left: 5px;
     font-size: 15px;
     color: #777;
   }
+
   .goodslist {
     margin-bottom: 10px;
     margin-left: 20px;
   }
+
   .el-input {
     width: 600px;
   }
+
   .el-form {
     margin-left: 20px;
   }

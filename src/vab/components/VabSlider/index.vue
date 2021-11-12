@@ -4,13 +4,13 @@
     class="slider"
   >
     <div
-      class="process"
       :style="{ width }"
+      class="process"
     ></div>
     <div
       ref="trunk"
-      class="thunk"
       :style="{ left }"
+      class="thunk"
     >
       <div class="block"></div>
       <div class="tips">
@@ -108,11 +108,13 @@
     width: 80%;
     margin: 100px auto 0;
   }
+
   .clear:after {
     display: block;
     clear: both;
     content: '';
   }
+
   .slider {
     position: relative;
     width: 300px;
@@ -123,6 +125,7 @@
     background: #e4e7ed;
     border-radius: 5px;
   }
+
   .slider .process {
     position: absolute;
     top: 0;
@@ -132,6 +135,7 @@
     background: #409eff;
     border-radius: 5px;
   }
+
   .slider .thunk {
     position: absolute;
     top: -7px;
@@ -139,6 +143,7 @@
     width: 20px;
     height: 20px;
   }
+
   .slider .block {
     width: 20px;
     height: 20px;
@@ -147,6 +152,7 @@
     border-radius: 50%;
     transition: 0.2s all;
   }
+
   .slider .tips {
     position: absolute;
     bottom: 30px;
@@ -159,6 +165,7 @@
     background: #000;
     border-radius: 5px;
   }
+
   .slider .tips i {
     position: absolute;
     bottom: -9px;
@@ -167,6 +174,7 @@
     font-size: 16px;
     color: #000;
   }
+
   .slider .block:hover {
     opacity: 0.6;
     transform: scale(1.1);

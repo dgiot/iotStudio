@@ -10,7 +10,7 @@ export function channelConnect(
   name,
   sql_length,
   connect,
-  ssl
+  ssl,
 ) {
   return request({
     url: '/resource/' + type,
@@ -28,6 +28,7 @@ export function channelConnect(
     },
   })
 }
+
 export function updateConnect(
   objectId,
   host,
@@ -39,7 +40,7 @@ export function updateConnect(
   sql_length,
   connect,
   ssl,
-  isEnable
+  isEnable,
 ) {
   return request({
     url: '/resource/edit/' + objectId,
@@ -58,6 +59,7 @@ export function updateConnect(
     },
   })
 }
+
 export function deleteConnect(objectId) {
   return request({
     url: '/resource/edit/' + objectId,

@@ -9,15 +9,15 @@
           <el-form
             ref="form"
             :inline="true"
-            label-width="0"
             :model="queryForm"
+            label-width="0"
             @submit.native.prevent
           >
             <el-form-item>
               <el-input
                 v-model="queryForm.name"
-                clearable
                 :placeholder="$translateTitle('product.title')"
+                clearable
               />
             </el-form-item>
             <el-form-item>
@@ -43,13 +43,12 @@
     </div>
     <div class="dgiot-doc-center">
       <a-row
-        class="dgiot-doc-center-row"
         :gutter="24"
+        class="dgiot-doc-center-row"
       >
         <a-col
           v-for="item in HomePageForDetails"
           :key="item.objectId"
-          class="dgiot-doc-center-row-antdcol"
           :lg="8"
           :md="8"
           :sm="12"
@@ -57,12 +56,13 @@
           :xl="6"
           :xs="24"
           :xxl="4.5"
+          class="dgiot-doc-center-row-antdcol"
         >
           <a-card
             :bordered="false"
+            :title="item.name"
             class="dgiot-doc-center-row-antdcol-card ant-card-bordered"
             hoverable
-            :title="item.name"
           >
             <el-image
               slot="cover"
@@ -115,14 +115,8 @@
 <script>
   import { uuid } from '@/utils'
   import { requireModule } from '@/utils/file'
-  import {
-    createArticle,
-    getArticle,
-    delArticle,
-    putArticle,
-    queryArticle,
-  } from '@/api/Article'
-  import { batch } from '@/api/Batch'
+  import { createArticle, delArticle, putArticle, queryArticle } from '@/api/Article'
+
   export default {
     name: 'DgiotDoc',
     components: {
@@ -142,17 +136,25 @@
       }
     },
     computed: {},
-    mounted() {},
+    mounted() {
+    },
     created() {
       this.queryDoc()
     },
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
+    beforeCreate() {
+    }, //生命周期 - 创建之前
+    beforeMount() {
+    }, //生命周期 - 挂载之前
+    beforeUpdate() {
+    }, //生命周期 - 更新之前
+    updated() {
+    }, //生命周期 - 更新之后
+    beforeDestroy() {
+    }, //生命周期 - 销毁之前
+    destroyed() {
+    }, //生命周期 - 销毁完成
+    activated() {
+    },
     methods: {
       init() {
         this.$refs.DocDialog.$refs.form.resetFields()
@@ -167,7 +169,7 @@
       deletDoc(item) {
         this.$baseConfirm(
           this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item'
+            'Maintenance.Are you sure you want to delete the current item',
           ),
           null,
           async () => {
@@ -178,12 +180,12 @@
             this.$baseMessage(
               this.$translateTitle('Maintenance.successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'vab-hey-message-success',
             )
             setTimeout(() => {
               this.queryDoc()
             }, 1200)
-          }
+          },
         )
       },
       /**
@@ -210,7 +212,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
       },
@@ -269,10 +271,11 @@
 
 <style lang="scss" scoped>
   .dgiot-doc {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7);
+    height: calc(100vh - #{$base-top-bar-height} * 2.7);
     overflow-x: hidden;
     overflow-y: scroll;
     transition: $base-transition;
+
     &-center {
       &-row {
         margin: auto 60px !important;
@@ -280,8 +283,10 @@
 
         &-antdcol {
           margin-top: 20px;
+
           &-card {
             min-height: 220px;
+
             .el-image,
             .image-slot {
               width: 100px;

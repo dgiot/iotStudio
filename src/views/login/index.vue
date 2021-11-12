@@ -1,8 +1,8 @@
 <template>
   <div
     ref="container"
+    :style="{ backgroundImage:'url(' +backgroundImage + ')'}"
     class="login-container"
-    :style="{ backgroundImage: 'url(' + backgroundImage + ')' }"
   >
     <el-row>
       <el-col
@@ -25,10 +25,10 @@
       >
         <el-form
           ref="form"
-          class="login-form"
-          label-position="left"
           :model="form"
           :rules="rules"
+          class="login-form"
+          label-position="left"
         >
           <div
             v-if="Default.title"
@@ -41,8 +41,8 @@
             style="margin-top: 40px"
           >
             <el-input
-              v-model.trim="form.username"
               v-focus
+              v-model.trim="form.username"
               :placeholder="$translateTitle('home.Please enter user name')"
               tabindex="1"
               type="text"
@@ -58,8 +58,8 @@
               ref="password"
               v-model.trim="form.password"
               :placeholder="$translateTitle('home.Please enter the password')"
-              tabindex="2"
               :type="passwordType"
+              tabindex="2"
               @keyup.enter.native="handleLogin"
             >
               <!--              <el-link-->
@@ -104,8 +104,8 @@
             <el-input class="sbMc">
               <el-button
                 slot="append"
-                class="login-btn"
                 :loading="loading"
+                class="login-btn"
                 type="primary"
                 @click.native="handleLogin"
               >
@@ -142,12 +142,14 @@
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/validate'
   import { SiteDefault } from '@/api/License'
+
   export default {
     name: 'Login',
     directives: {
       focus: {
         inserted(el) {
-          el.querySelector('input').focus()
+          el.querySelector('input')
+            .focus()
         },
       },
     },
@@ -157,16 +159,22 @@
     },
     data() {
       const validateUsername = (rule, value, callback) => {
-        if ('' === value) callback(new Error(this.info.empty))
-        else callback()
+        if ('' === value) {
+          callback(new Error(this.info.empty))
+        } else {
+          callback()
+        }
       }
       const validatePassword = (rule, value, callback) => {
         let pwdlength = 4
-        if (!isPassword(value, pwdlength))
+        if (!isPassword(value, pwdlength)) {
           callback(new Error(this.info.than + pwdlength + this.info.Bit))
-        else callback()
+        } else {
+          callback()
+        }
       }
       return {
+        locationPath: location.href.split('/#')[0],
         info: {
           empty: this.$translateTitle('home.Username can not be empty'),
           than: this.$translateTitle('home.Password cannot be less than'),
@@ -248,12 +256,12 @@
         this.$set(
           this.info,
           'empty',
-          this.$translateTitle('home.Username can not be empty')
+          this.$translateTitle('home.Username can not be empty'),
         )
         this.$set(
           this.info,
           'than',
-          this.$translateTitle('home.Password cannot be less than')
+          this.$translateTitle('home.Password cannot be less than'),
         )
         this.$set(this.info, 'Bit', this.$translateTitle('home.Bit'))
         this.$forceUpdate()
@@ -286,7 +294,12 @@
         }
         // await this.getlicense()
         const Default = await SiteDefault()
-        const { copyright, logo, objectId, title } = Default
+        const {
+          copyright,
+          logo,
+          objectId,
+          title,
+        } = Default
         this.setDefault(Default)
         this.setTitle(title)
         this.setCopyright(copyright)
@@ -356,11 +369,13 @@
       color: #096dd9;
       text-align: center;
     }
+
     .sbMc {
       ::v-deep {
         .el-input__inner {
           display: none;
         }
+
         .el-input-group__append {
           color: #fff;
           background-color: #409eff;
@@ -368,6 +383,7 @@
         }
       }
     }
+
     .login-btn {
       display: inherit;
       width: 100%;

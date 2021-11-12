@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+
 export async function fileUpload(data) {
   return request({
     url: '/dgiotproxy/file/fileUpload',
@@ -9,6 +10,7 @@ export async function fileUpload(data) {
     },
   })
 }
+
 export async function deleteFile(params) {
   return request({
     url: 'dgiotproxy/file/deleteFile',
@@ -16,6 +18,7 @@ export async function deleteFile(params) {
     params,
   })
 }
+
 export async function upload(data, _upurl) {
   return request({
     url: '/upload',

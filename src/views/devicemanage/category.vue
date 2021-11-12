@@ -1,16 +1,16 @@
 <template>
   <div
     ref="custom-table"
-    class="custom-table-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
+    class="custom-table-container"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-form
           ref="form"
           :inline="true"
-          label-width="0"
           :model="queryForm"
+          label-width="0"
           @submit.native.prevent
         >
           <el-form-item>
@@ -47,40 +47,47 @@
       :data="categoryList"
       :default-sort="{ prop: 'order', order: 'ascending' }"
       :height="height"
-      row-key="objectId"
       :size="lineHeight"
       :stripe="stripe"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+      row-key="objectId"
       @selection-change="setSelectRows"
     >
       <el-table-column
         align="center"
-        :label="$translateTitle('equipment.serialnumber')"
-        prop="objectId"
+        prop="name"
         show-overflow-tooltip
         sortable
-        width="280"
+        type="index"
+        width="50"
       />
+      <!--      <el-table-column-->
+      <!--        align="center"-->
+      <!--        :label="$translateTitle('device.level')"-->
+      <!--        prop="level"-->
+      <!--        show-overflow-tooltip-->
+      <!--        sortable-->
+      <!--      />-->
       <el-table-column
-        align="center"
         :label="$translateTitle('product.name')"
+        align="center"
         prop="name"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('developer.operation')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
-          <el-button
-            type="text"
-            @click="handleEdit(row)"
-          >
-            {{ $translateTitle('button.edit') }}
-          </el-button>
+          <!--          <el-button-->
+          <!--            type="text"-->
+          <!--            @click="handleEdit(row)"-->
+          <!--          >-->
+          <!--            {{ $translateTitle('button.edit') }}-->
+          <!--          </el-button>-->
           <el-button
             type="text"
             @click="handleAddChild(row)"
@@ -97,10 +104,10 @@
       </el-table-column>
       <template #empty>
         <el-image
-          class="vab-data-empty"
           :src="
             require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
+          class="vab-data-empty"
         />
       </template>
     </el-table>
@@ -113,8 +120,9 @@
 
 <script>
   import categoryEdit from './categoryEdit'
-  import { queryCategory, delCategory } from '@/api/Category'
+  import { delCategory } from '@/api/Category'
   import { post_tree } from '@/api/Data'
+
   export default {
     name: 'Empty',
     components: { categoryEdit },
@@ -123,7 +131,7 @@
         infoData: 'Category',
         isFullscreen: false,
         border: true,
-        height: this.$baseTableHeight(0) - 20,
+        height: this.$baseTableHeight(0) + 40,
         stripe: false,
         lineHeight: 'medium',
         categoryList: [],
@@ -149,25 +157,36 @@
         }
       },
     },
-    mounted() {},
+    mounted() {
+    },
     created() {
       this.fetchData()
     },
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
+    beforeCreate() {
+    }, //生命周期 - 创建之前
+    beforeMount() {
+    }, //生命周期 - 挂载之前
+    beforeUpdate() {
+    }, //生命周期 - 更新之前
+    updated() {
+    }, //生命周期 - 更新之后
+    beforeDestroy() {
+    }, //生命周期 - 销毁之前
+    destroyed() {
+    }, //生命周期 - 销毁完成
+    activated() {
+    },
     methods: {
       clickFullScreen() {
         this.isFullscreen = !this.isFullscreen
         this.handleHeight()
       },
       handleHeight() {
-        if (this.isFullscreen) this.height = this.$baseTableHeight(1) + 210
-        else this.height = this.$baseTableHeight(1)
+        if (this.isFullscreen) {
+          this.height = this.$baseTableHeight(1) + 210
+        } else {
+          this.height = this.$baseTableHeight(1)
+        }
       },
       setSelectRows(val) {
         this.selectRows = val
@@ -184,7 +203,7 @@
       handleDelete(CategoryId) {
         this.$baseConfirm(
           this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item'
+            'Maintenance.Are you sure you want to delete the current item',
           ),
           this.$translateTitle('Maintenance.Delete reminder'),
           async () => {
@@ -194,17 +213,17 @@
               this.$baseMessage(
                 this.$translateTitle('user.successfully deleted'),
                 'success',
-                'vab-hey-message-success'
+                'vab-hey-message-success',
               )
               await this.fetchData()
             } else {
               this.$baseMessage(
                 this.$translateTitle('user.error deleted') + res,
                 'error',
-                'vab-hey-message-error'
+                'vab-hey-message-error',
               )
             }
-          }
+          },
         )
       },
       handleSizeChange(val) {
@@ -227,7 +246,7 @@
         let params = {
           class: 'Category',
           filter:
-            '{"order": "createdAt","keys":["parent","name","level"],"where":{"level": {"$gte": 1}, "name":' +
+            '{"order": "createdAt","keys":["parent","name","level","createdAt"],"where":{"level": {"$gte": 1}, "name":' +
             name +
             '}}',
           parent: 'parent',

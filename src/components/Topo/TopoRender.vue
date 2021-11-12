@@ -1,8 +1,8 @@
 <template>
   <div
     v-if="configData.layer"
-    class="topo-render"
     :style="layerStyle"
+    class="topo-render"
   >
     <template v-for="(component, index) in configData.components">
       <div
@@ -10,7 +10,6 @@
           component.style.visible == undefined ? true : component.style.visible
         "
         :key="index"
-        class="topo-render-wrapper"
         :class="{
           'topo-render-wrapper-clickable': component.action.length > 0,
         }"
@@ -28,6 +27,7 @@
             ? `rotate(${component.style.transform}deg)`
             : 'rotate(0deg)',
         }"
+        class="topo-render-wrapper"
         @click="doClickComponent(component)"
         @dblclick="doDbClickComponent(component)"
       >
@@ -63,7 +63,7 @@
         }
         if (this.configData.layer.backgroundImage) {
           styles.push(
-            `background-image: url("${this.configData.layer.backgroundImage}")`
+            `background-image: url("${this.configData.layer.backgroundImage}")`,
           )
         }
         if (this.configData.layer.width > 0) {

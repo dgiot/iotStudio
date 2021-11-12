@@ -119,6 +119,7 @@
 </template>
 <script>
   import { getNode, joinNode } from '@/api/System/index'
+
   export default {
     data() {
       return {
@@ -184,12 +185,13 @@
     },
     methods: {
       Getinformation() {
-        getNode(this.start, this.lengt).then((response) => {
-          if (response) {
-            this.tableData5 = response.nodes
-            this.total = response.nodes.length
-          }
-        })
+        getNode(this.start, this.lengt)
+          .then((response) => {
+            if (response) {
+              this.tableData5 = response.nodes
+              this.total = response.nodes.length
+            }
+          })
       },
       handleSizeChange(val) {
         this.length = val

@@ -28,17 +28,17 @@
 
       <el-form
         ref="form"
-        label-width="180px"
         :model="form"
+        label-width="180px"
       >
         <!-- 工程名称 -->
         <el-row>
           <el-col :span="12">
             <div class="grid-content bg-purple">
               <el-form-item
+                :rules="[{ required: true, message: '工程单位不能为空' }]"
                 label="工程单位"
                 prop="department"
-                :rules="[{ required: true, message: '工程单位不能为空' }]"
               >
                 <el-input
                   v-model="form.department"
@@ -47,8 +47,8 @@
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('application.applicationname')"
-                prop="name"
                 :rules="[{ required: true, message: '工程名称不能为空' }]"
+                prop="name"
               >
                 <el-input
                   v-model="form.name"
@@ -59,8 +59,8 @@
               <!-- 工程链接 -->
               <el-form-item
                 :label="$translateTitle('application.applicationlink')"
-                prop="productIdentifier"
                 :rules="[{ required: true, message: '工程链接不能为空' }]"
+                prop="productIdentifier"
               >
                 <!--         <el-input v-model="form.productIdentifier" placeholder="例：vcon" class="link">
                   <template slot="prepend">{{host}}</template>
@@ -82,7 +82,6 @@
               <!-- 所属行业 -->
               <el-form-item
                 :label="$translateTitle('application.industrytype')"
-                prop="category"
                 :rules="[
                   {
                     required: true,
@@ -90,18 +89,18 @@
                     trigger: 'blur',
                   },
                 ]"
+                prop="category"
               >
                 <el-cascader
                   ref="category"
                   v-model="form.category"
-                  clearable
                   :options="treeData"
                   :placeholder="$translateTitle('application.industrytype')"
+                  clearable
                 />
               </el-form-item>
 
               <el-form-item
-                label="所属应用"
                 :rules="[
                   {
                     required: true,
@@ -109,6 +108,7 @@
                     trigger: 'blur',
                   },
                 ]"
+                label="所属应用"
               >
                 <el-input
                   v-model="form.relationApp"
@@ -168,11 +168,11 @@
               >
                 <el-input
                   v-model="form.desc"
-                  maxlength="300"
                   :placeholder="
                     $translateTitle('application.applicationdescription')
                   "
                   :rows="4"
+                  maxlength="300"
                   show-word-limit
                   type="textarea"
                 />
@@ -187,13 +187,13 @@
               >
                 <el-upload
                   ref="upload"
-                  action="/upload"
                   :auto-upload="false"
-                  class="upload-demo"
                   :file-list="form.fileList"
                   :limit="1"
-                  list-type="picture"
                   :on-success="handleSuccess"
+                  action="/upload"
+                  class="upload-demo"
+                  list-type="picture"
                 >
                   <el-button
                     slot="trigger"
@@ -220,7 +220,7 @@
                   >
                     {{
                       $translateTitle(
-                        'application.onlyJPG/PNGfilescanbeuploadedandnomorethan500kb'
+                        'application.onlyJPG/PNGfilescanbeuploadedandnomorethan500kb',
                       )
                     }}
                   </div>
@@ -229,13 +229,13 @@
               <el-form-item label="背景图片">
                 <el-upload
                   ref="upload1"
-                  action="/upload"
                   :auto-upload="false"
-                  class="upload-demo"
                   :file-list="form.fileList1"
                   :limit="1"
-                  list-type="picture"
                   :on-success="handleSuccess1"
+                  action="/upload"
+                  class="upload-demo"
+                  list-type="picture"
                 >
                   <el-button
                     slot="trigger"
@@ -262,7 +262,7 @@
                   >
                     {{
                       $translateTitle(
-                        'application.onlyJPG/PNGfilescanbeuploadedandnomorethan500kb'
+                        'application.onlyJPG/PNGfilescanbeuploadedandnomorethan500kb',
                       )
                     }}
                   </div>
@@ -275,11 +275,11 @@
               >
                 <el-input
                   v-model="form.copyright"
-                  maxlength="300"
                   :placeholder="
                     $translateTitle('application.copyrightinformation')
                   "
                   :rows="3"
+                  maxlength="300"
                   show-word-limit
                   type="textarea"
                 />
@@ -320,7 +320,6 @@
             <div class="grid-content bg-purple">
               <el-form-item
                 :label="$translateTitle('application.applicationaccessscale')"
-                prop="scale"
                 :rules="[
                   {
                     required: true,
@@ -328,6 +327,7 @@
                     trigger: 'change',
                   },
                 ]"
+                prop="scale"
               >
                 <el-select
                   v-model.number="form.scale"
@@ -396,6 +396,7 @@
   import { app_count } from '@/api/Platform/index'
   import { postProduct, putProduct } from '@/api/Product/index'
   import { postRelation } from '@/api/Relation/index'
+
   export default {
     data() {
       return {
@@ -415,13 +416,41 @@
           product: [],
           department: '', // 工程单位
           scaleDate: [
-            { id: 0, value: 100, label: '100' },
-            { id: 1, value: 1000, label: '1000' },
-            { id: 2, value: 10000, label: '1万' },
-            { id: 3, value: 100000, label: '10万' },
-            { id: 4, value: 1000000, label: '100万' },
-            { id: 5, value: 10000000, label: '1000万' },
-            { id: 6, value: 100000000, label: '1亿' },
+            {
+              id: 0,
+              value: 100,
+              label: '100',
+            },
+            {
+              id: 1,
+              value: 1000,
+              label: '1000',
+            },
+            {
+              id: 2,
+              value: 10000,
+              label: '1万',
+            },
+            {
+              id: 3,
+              value: 100000,
+              label: '10万',
+            },
+            {
+              id: 4,
+              value: 1000000,
+              label: '100万',
+            },
+            {
+              id: 5,
+              value: 10000000,
+              label: '1000万',
+            },
+            {
+              id: 6,
+              value: 100000000,
+              label: '1亿',
+            },
           ],
           productIdentifier: '', // 工程链接
           fileList: [], // 上传列表，
@@ -462,7 +491,7 @@
         const cloneData = JSON.parse(JSON.stringify(this.form.options)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.id == child.parentid
+            (child) => father.id == child.parentid,
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parentid == 0 // 返回第一层
@@ -491,21 +520,23 @@
       handleClickRefresh() {
         this.randomSecret()
       },
-      onApplicationchange(val) {},
+      onApplicationchange(val) {
+      },
       getProductList(relAppid) {
-        this.$query_object('Product', {}).then((res) => {
-          if (res.results) {
-            this.productlist = res.results
-          }
-        })
+        this.$query_object('Product', {})
+          .then((res) => {
+            if (res.results) {
+              this.productlist = res.results
+            }
+          })
       },
       // 产生随机secrets
       randomSecret() {
         const ranNum = Math.ceil(Math.random() * 25)
         this.form.secret = Base64.encode(
           String.fromCharCode(65 + ranNum) +
-            Math.ceil(Math.random() * 10000000) +
-            Number(new Date())
+          Math.ceil(Math.random() * 10000000) +
+          Number(new Date()),
         )
       },
       // 判断页面
@@ -513,7 +544,10 @@
         this.argu = this.$route.query
         this.content.title = this.argu.title
         this.actionType = this.argu.actionType
-        const { results } = await app_count({ limit: 100, where: {} })
+        const { results } = await app_count({
+          limit: 100,
+          where: {},
+        })
         if (results) {
           this.applicationList = results
           // 从工程管理列表,的修改按钮 跳转过来的
@@ -766,18 +800,22 @@
     width: 100%;
     padding: 20px;
     margin: 0 auto;
+
     .head {
       display: flex;
       justify-content: space-between;
       margin: 20px 0;
     }
+
     .form {
       padding: 10px 30px;
       border: 3px solid #f7f7f7;
+
       .title {
         margin: 10px 0;
         text-align: right;
       }
+
       .el-form {
         // display: flex;
         // flex-wrap: wrap;
@@ -788,23 +826,28 @@
             width: 100%;
           }
         }
+
         .el-form-item {
           ::v-deep .el-slider__marks-text {
             width: 30px;
             margin-top: 5px;
           }
+
           ::v-deep .el-cascader {
             width: 100%;
           }
+
           ::v-deep .el-select {
             width: 100%;
           }
+
           ::v-deep .el-input-number {
             width: 100%;
           }
         }
       }
     }
+
     .btns {
       margin-top: 40px;
       text-align: center;
@@ -815,9 +858,11 @@
   .el-upload-list__item.is-success .el-upload-list__item-status-label {
     display: none;
   }
+
   .el-upload-list__item .el-icon-close {
     display: block;
   }
+
   .el-notification {
     width: 1000px;
   }

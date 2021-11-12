@@ -15,21 +15,13 @@
                 v-model="prescribedPointForm.point"
                 placeholder="请选择个数"
               >
-                <el-option
-                  v-for="i in 20"
-                  :key="i"
-                  :label="i"
-                  :value="i"
-                />
+                <el-option v-for="i in 20" :key="i" :label="i" :value="i" />
               </el-select>
             </el-form-item>
           </div>
 
           <div>
-            <el-radio
-              v-model="averagePoint"
-              label="flow"
-            >
+            <el-radio v-model="averagePoint" label="flow">
               流量作为均分点
             </el-radio>
           </div>
@@ -53,8 +45,8 @@
 
             <el-button
               :disabled="averagePoint == 'lift' || !prescribedPointForm.point"
-              size="small"
               type="primary"
+              size="small"
               @click="average()"
             >
               流量均分
@@ -62,10 +54,7 @@
           </el-row>
 
           <div>
-            <el-radio
-              v-model="averagePoint"
-              label="lift"
-            >
+            <el-radio v-model="averagePoint" label="lift">
               扬程作为均分点
             </el-radio>
           </div>
@@ -89,8 +78,8 @@
 
             <el-button
               :disabled="averagePoint == 'flow' || !prescribedPointForm.point"
-              size="small"
               type="primary"
+              size="small"
               @click="average()"
             >
               扬程均分
@@ -99,13 +88,8 @@
 
           <div>
             <el-form-item label="额定转速">
-              <el-input
-                v-model="prescribedPointForm.rpm"
-                size="small"
-              >
-                <template slot="append">
-                  (r/min)
-                </template>
+              <el-input v-model="prescribedPointForm.rpm" size="small">
+                <template slot="append">(r/min)</template>
               </el-input>
             </el-form-item>
           </div>
@@ -113,60 +97,37 @@
           <el-row>
             <el-col :span="4">
               <el-form-item label="规定流量(小流量)：">
-                <el-input
-                  v-model="prescribedPointForm.Q1"
-                  size="small"
-                >
-                  <template slot="append">
-                    m/s
-                  </template>
+                <el-input v-model="prescribedPointForm.Q1" size="small">
+                  <template slot="append">m/s</template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="规定扬程：">
-                <el-input
-                  v-model="prescribedPointForm.H1"
-                  size="small"
-                >
-                  <template slot="append">
-                    mm
-                  </template>
+                <el-input v-model="prescribedPointForm.H1" size="small">
+                  <template slot="append">mm</template>
                 </el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="轴功率：">
-                <el-input
-                  v-model="prescribedPointForm.zhougv1"
-                  size="small"
-                >
-                  <template slot="append">
-                    W
-                  </template>
+                <el-input v-model="prescribedPointForm.zhougv1" size="small">
+                  <template slot="append">W</template>
                 </el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="效率：">
-                <el-input
-                  v-model="prescribedPointForm.xiaolv1"
-                  size="small"
-                />
+                <el-input v-model="prescribedPointForm.xiaolv1" size="small" />
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="气蚀余量：">
-                <el-input
-                  v-model="prescribedPointForm.qishi1"
-                  size="small"
-                >
-                  <template slot="append">
-                    M
-                  </template>
+                <el-input v-model="prescribedPointForm.qishi1" size="small">
+                  <template slot="append">M</template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -175,60 +136,37 @@
           <el-row>
             <el-col :span="4">
               <el-form-item label="规定流量(额定流量)： ">
-                <el-input
-                  v-model="prescribedPointForm.Q2"
-                  size="small"
-                >
-                  <template slot="append">
-                    m/s
-                  </template>
+                <el-input v-model="prescribedPointForm.Q2" size="small">
+                  <template slot="append">m/s</template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="规定扬程：">
-                <el-input
-                  v-model="prescribedPointForm.H2"
-                  size="small"
-                >
-                  <template slot="append">
-                    mm
-                  </template>
+                <el-input v-model="prescribedPointForm.H2" size="small">
+                  <template slot="append">mm</template>
                 </el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="轴功率：">
-                <el-input
-                  v-model="prescribedPointForm.zhougv2"
-                  size="small"
-                >
-                  <template slot="append">
-                    W
-                  </template>
+                <el-input v-model="prescribedPointForm.zhougv2" size="small">
+                  <template slot="append">W</template>
                 </el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="效率：">
-                <el-input
-                  v-model="prescribedPointForm.xiaolv2"
-                  size="small"
-                />
+                <el-input v-model="prescribedPointForm.xiaolv2" size="small" />
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="气蚀余量：">
-                <el-input
-                  v-model="prescribedPointForm.qishi2"
-                  size="small"
-                >
-                  <template slot="append">
-                    M
-                  </template>
+                <el-input v-model="prescribedPointForm.qishi2" size="small">
+                  <template slot="append">M</template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -237,60 +175,37 @@
           <el-row>
             <el-col :span="4">
               <el-form-item label="规定流量(大流量)：">
-                <el-input
-                  v-model="prescribedPointForm.Q3"
-                  size="small"
-                >
-                  <template slot="append">
-                    m/s
-                  </template>
+                <el-input v-model="prescribedPointForm.Q3" size="small">
+                  <template slot="append">m/s</template>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="规定扬程：">
-                <el-input
-                  v-model="prescribedPointForm.H3"
-                  size="small"
-                >
-                  <template slot="append">
-                    mm
-                  </template>
+                <el-input v-model="prescribedPointForm.H3" size="small">
+                  <template slot="append">mm</template>
                 </el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="轴功率：">
-                <el-input
-                  v-model="prescribedPointForm.zhougv3"
-                  size="small"
-                >
-                  <template slot="append">
-                    W
-                  </template>
+                <el-input v-model="prescribedPointForm.zhougv3" size="small">
+                  <template slot="append">W</template>
                 </el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="效率：">
-                <el-input
-                  v-model="prescribedPointForm.xiaolv3"
-                  size="small"
-                />
+                <el-input v-model="prescribedPointForm.xiaolv3" size="small" />
               </el-form-item>
             </el-col>
 
             <el-col :span="4">
               <el-form-item label="气蚀余量：">
-                <el-input
-                  v-model="prescribedPointForm.qishi3"
-                  size="small"
-                >
-                  <template slot="append">
-                    M
-                  </template>
+                <el-input v-model="prescribedPointForm.qishi3" size="small">
+                  <template slot="append">M</template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -300,27 +215,19 @@
         <!-- 均分点信息 -->
 
         <el-col :span="4">
-          <h3 style="text-align: center">
-            均分点信息
-          </h3>
+          <h3 style="text-align: center">均分点信息</h3>
 
-          <el-table
-            :data="pointDataArr"
-            style="width: 100%"
-          >
-            <el-table-column
-              lable="序号"
-              type="index"
-            />
+          <el-table :data="pointDataArr" style="width: 100%">
+            <el-table-column lable="序号" type="index" />
             <el-table-column
               v-if="averagePoint == 'flow'"
-              label="Q(1/s)"
               property="flow"
+              label="Q(1/s)"
             />
             <el-table-column
               v-if="averagePoint == 'lift'"
-              label="h(m)"
               property="lift"
+              label="h(m)"
             />
           </el-table>
         </el-col>

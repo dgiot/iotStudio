@@ -28,24 +28,20 @@
           <el-input v-model="formInline.name" placeholder="请输入企业名称"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click.native="getEmpower">查询</el-button>
+          <el-button type="primary" @click="getEmpower">查询</el-button>
           <el-button type="primary">重置</el-button>
         </el-form-item>
       </el-form>-->
 
       <div class="pump_table">
         <el-table
-          border
-          :cell-style="rowClass"
           :data="tableData"
+          :cell-style="rowClass"
           :header-cell-style="headClass"
+          border
           style="width: 100%"
         >
-          <el-table-column
-            label="序号"
-            type="index"
-            width="50"
-          />
+          <el-table-column type="index" label="序号" width="50" />
           <el-table-column
             label="企业名称"
             prop="data.CompanyAuthentication.abbrname"
@@ -56,8 +52,8 @@
           />
           <el-table-column
             label="法定代表人姓名"
-            prop="data.CompanyAuthentication.businessname"
             width="150"
+            prop="data.CompanyAuthentication.businessname"
           />
 
           <el-table-column
@@ -75,8 +71,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="实验室名称"
             prop="data.Laboratory.laboratoryInfo.name"
+            label="实验室名称"
           />
 
           <el-table-column label="审核日期">
@@ -85,15 +81,9 @@
             </template>
           </el-table-column>
 
-          <el-table-column
-            label="审核状态"
-            width="100"
-          >
+          <el-table-column label="审核状态" width="100">
             <template slot-scope="scope">
-              <el-tag
-                v-if="scope.row.data.verifyStatus == 0"
-                type="info"
-              >
+              <el-tag v-if="scope.row.data.verifyStatus == 0" type="info">
                 待审核
               </el-tag>
               <el-tag
@@ -110,30 +100,20 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column
-            label="审核意见"
-            width="200"
-          >
+          <el-table-column label="审核意见" width="200">
             <template slot-scope="scope">
               <span>{{ scope.row.data.suggestion }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column
-            label="审核管理"
-            width="150"
-          >
+          <el-table-column width="150" label="审核管理">
             <template slot-scope="scope">
-              <el-button
-                size="small"
-                type="primary"
-                @click="lookUp(scope.row)"
-              >
+              <el-button type="primary" size="small" @click="lookUp(scope.row)">
                 查看
               </el-button>
               <el-button
-                size="small"
                 type="success"
+                size="small"
                 @click="examine(scope.row)"
               >
                 审核
@@ -144,49 +124,32 @@
       </div>
       <div class="block">
         <el-pagination
-          layout="total, sizes, prev, pager, next, jumper"
-          :page-size="pagesize"
           :page-sizes="[10, 200, 30, 50]"
+          :page-size="pagesize"
           :total="total"
-          @current-change="handleCurrentChange"
+          layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
         />
       </div>
     </div>
     <!--审核弹窗-->
-    <el-dialog
-      :append-to-body="true"
-      title="认证审核"
-      :visible.sync="dialogVisible"
-      width="40%"
-    >
+    <el-dialog :visible.sync="dialogVisible" title="认证审核" width="40%">
       <div>
         <el-form
           ref="verifyFormRef"
-          label-width="100px"
           :model="verifyForm"
           :rules="verifyFormRules"
+          label-width="100px"
         >
-          <el-form-item
-            label="审核状态"
-            prop="status"
-          >
+          <el-form-item label="审核状态" prop="status">
             <el-radio-group v-model="verifyForm.status">
-              <el-radio :label="0">
-                待审核
-              </el-radio>
-              <el-radio :label="2">
-                审核未通过
-              </el-radio>
-              <el-radio :label="1">
-                审核通过
-              </el-radio>
+              <el-radio :label="0">待审核</el-radio>
+              <el-radio :label="2">审核未通过</el-radio>
+              <el-radio :label="1">审核通过</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item
-            label="审核意见"
-            prop="suggestion"
-          >
+          <el-form-item label="审核意见" prop="suggestion">
             <el-input
               v-model="verifyForm.suggestion"
               :rows="4"
@@ -195,15 +158,9 @@
           </el-form-item>
         </el-form>
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click.native="submitForm('verifyFormRef')"
-        >
+        <el-button type="primary" @click="submitForm('verifyFormRef')">
           提 交
         </el-button>
       </span>
@@ -211,20 +168,13 @@
     <!--查看弹窗-->
     <el-dialog
       v-if="dialogFormVisible"
-      :append-to-body="true"
-      title="企业资质审核"
       :visible.sync="dialogFormVisible"
+      title="企业资质审核"
       width="80%"
     >
       <el-tabs v-model="activeName">
-        <el-tab-pane
-          label="认证信息"
-          name="first"
-        >
-          <el-form
-            label-width="160px"
-            size="mini"
-          >
+        <el-tab-pane label="认证信息" name="first">
+          <el-form label-width="160px" size="mini">
             <el-row>
               <!--左侧-->
               <el-col :span="12">
@@ -245,11 +195,11 @@
                 </el-form-item>
                 <el-form-item label="法人代表身份证">
                   <img
-                    class="avatar"
                     :src="
                       fileDomain +
-                        currentRow.data.CompanyAuthentication.contraryimageUrl
+                      currentRow.data.CompanyAuthentication.contraryimageUrl
                     "
+                    class="avatar"
                   />
                 </el-form-item>
                 <el-form-item label="注册地址">
@@ -263,7 +213,7 @@
                   <el-input
                     v-text="
                       currentRow.data.CompanyAuthentication.businessduration +
-                        '年'
+                      '年'
                     "
                   />
                 </el-form-item>
@@ -299,11 +249,11 @@
                 </el-form-item>
                 <el-form-item label="企业营业执照">
                   <img
-                    class="avatar"
                     :src="
                       fileDomain +
-                        currentRow.data.CompanyAuthentication.businesslicense
+                      currentRow.data.CompanyAuthentication.businesslicense
                     "
+                    class="avatar"
                   />
                 </el-form-item>
                 <el-form-item label="街道地址">
@@ -325,14 +275,8 @@
             </el-row>
           </el-form>
         </el-tab-pane>
-        <el-tab-pane
-          label="实验室信息"
-          name="third"
-        >
-          <el-form
-            label-width="120px"
-            size="mini"
-          >
+        <el-tab-pane label="实验室信息" name="third">
+          <el-form label-width="120px" size="mini">
             <el-row>
               <!--左侧-->
               <el-col :span="12">
@@ -347,26 +291,11 @@
                     disabled
                     style="width: 100px"
                   >
-                    <el-option
-                      label="国家级"
-                      value="1"
-                    />
-                    <el-option
-                      label="省级"
-                      value="2"
-                    />
-                    <el-option
-                      label="地市级"
-                      value="3"
-                    />
-                    <el-option
-                      label="县(区)级"
-                      value="4"
-                    />
-                    <el-option
-                      label="其他"
-                      value="5"
-                    />
+                    <el-option label="国家级" value="1" />
+                    <el-option label="省级" value="2" />
+                    <el-option label="地市级" value="3" />
+                    <el-option label="县(区)级" value="4" />
+                    <el-option label="其他" value="5" />
                   </el-select>
                 </el-form-item>
                 <el-form-item label="实验室地址">
@@ -395,11 +324,11 @@
                 </el-form-item>
                 <el-form-item label="实验室照片">
                   <img
-                    class="avatar"
                     :src="
                       fileDomain +
-                        currentRow.data.Laboratory.laboratoryInfo.imgsrc
+                      currentRow.data.Laboratory.laboratoryInfo.imgsrc
                     "
+                    class="avatar"
                   />
                 </el-form-item>
                 <el-form-item label="主管单位">
@@ -411,22 +340,13 @@
                 <el-form-item label="实验室类别">
                   <el-select
                     v-model="currentRow.data.Laboratory.laboratoryInfo.category"
+                    style="width: 100px"
                     disabled
                     placeholder="请选择实验室类别"
-                    style="width: 100px"
                   >
-                    <el-option
-                      label="主实验室"
-                      value="1"
-                    />
-                    <el-option
-                      label="辅助实验室"
-                      value="2"
-                    />
-                    <el-option
-                      label="其他"
-                      value="3"
-                    />
+                    <el-option label="主实验室" value="1" />
+                    <el-option label="辅助实验室" value="2" />
+                    <el-option label="其他" value="3" />
                   </el-select>
                 </el-form-item>
 
@@ -514,11 +434,11 @@
                 </el-form-item>
                 <el-form-item label="证书电子文件">
                   <img
-                    class="avatar"
                     :src="
                       fileDomain +
-                        currentRow.data.Laboratory.laboratoryInfo.imgsrc1
+                      currentRow.data.Laboratory.laboratoryInfo.imgsrc1
                     "
+                    class="avatar"
                   />
                 </el-form-item>
               </el-col>
@@ -526,17 +446,9 @@
           </el-form>
         </el-tab-pane>
       </el-tabs>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="dialogFormVisible = false">
-          取 消
-        </el-button>
-        <el-button
-          type="primary"
-          @click.native="dialogFormVisible = false"
-        >
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">
           确 定
         </el-button>
       </div>

@@ -139,9 +139,9 @@
       this.$baseEventBus.$on('busTopo', (type, data) => {
         this.newTopo(type, data)
       })
-      this.$baseEventBus.$on('busUpdata', () => {
-        this.updataTopo()
-      })
+      // this.$baseEventBus.$on('busUpdata', () => {
+      //   this.updataTopo()
+      // })
     },
     methods: {
       ...mapMutations({

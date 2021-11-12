@@ -9,7 +9,7 @@ export function getMeterDate(
   start_date,
   end_date,
   di,
-  resource
+  resource,
 ) {
   return request({
     url: '/meter/hisdata',
@@ -26,6 +26,7 @@ export function getMeterDate(
     },
   })
 }
+
 export function getMeterListDate(
   skip,
   limit,
@@ -34,7 +35,7 @@ export function getMeterListDate(
   start_date,
   end_date,
   type,
-  di
+  di,
 ) {
   return request({
     url: '/result/meter/hisdata',
@@ -51,6 +52,7 @@ export function getMeterListDate(
     },
   })
 }
+
 export function getMeterListDate1(
   skip,
   limit,
@@ -58,7 +60,7 @@ export function getMeterListDate1(
   start_date,
   end_date,
   type,
-  di
+  di,
 ) {
   return request({
     url: '/result/meter/hisdata',

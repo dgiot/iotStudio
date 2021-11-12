@@ -69,9 +69,9 @@
                 >
                   <el-form
                     ref="userinfo"
-                    label-width="80px"
                     :model="userinfo"
                     :rules="registerRules"
+                    label-width="80px"
                   >
                     <el-form-item label="姓名">
                       <el-input v-model="username" />
@@ -141,8 +141,8 @@
                   >
                     <el-form
                       ref="companyinfo"
-                      label-width="120px"
                       :model="companyinfo"
+                      label-width="120px"
                     >
                       <el-form-item label="企业名称">
                         <el-input v-model="companyinfo.name">
@@ -281,9 +281,10 @@
 </template>
 <script>
   import { mapGetters, mapMutations } from 'vuex'
-  import { isPhone, isUrl } from '@/utils/validate'
+  import { isPhone } from '@/utils/validate'
   import { putUser } from '@/api/User'
   import { putProject } from '@/api/Project'
+
   export default {
     name: 'Userinfo',
     components: {},
@@ -306,7 +307,10 @@
               trigger: 'blur',
               message: this.$translateTitle('请输入手机号'),
             },
-            { validator: validatePhone, trigger: 'blur' },
+            {
+              validator: validatePhone,
+              trigger: 'blur',
+            },
           ],
         },
         filetype: '',
@@ -388,7 +392,7 @@
                   this.$translateTitle('保存成功'),
                   'success',
                   false,
-                  'vab-hey-message-success'
+                  'vab-hey-message-success',
                 )
               })
               .catch((e) => {
@@ -397,7 +401,7 @@
                   this.$translateTitle('保存失败' + e),
                   'success',
                   false,
-                  'vab-hey-message-success'
+                  'vab-hey-message-success',
                 )
               })
             break
@@ -430,19 +434,20 @@
           pamams['password'] = this.password
         }
         const res = await putUser(this.objectId, pamams)
-        if (res)
+        if (res) {
           this.$baseMessage(
             this.$translateTitle('保存成功'),
             'success',
             false,
-            'vab-hey-message-success'
+            'vab-hey-message-success',
           )
+        }
       },
       uploadCkick(type) {
         this.upNodeType = type
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
         this.inputParams = {
           file: '',
@@ -450,14 +455,14 @@
           path: 'user/profile/',
           filename: `${this.ObjectId}_${this.upNodeType.replace(
             '.',
-            '_'
+            '_',
           )}.${type}`,
         }
       },
       files(file, type) {
         this.inputParams.filename = `${this.ObjectId}_${this.upNodeType.replace(
           '.',
-          '_'
+          '_',
         )}.${type}`
         this.inputParams.file = file
       },
@@ -489,7 +494,9 @@
           _pcimg: this._pcimg || '',
           _mimg: this._mimg || '',
         })
-        console.log('this.companyinfo', tag.companyinfo)
+
+        console.log('this.userinfo', this.userinfo)
+        console.log('this.companyinfo', this.$FileServe + this.userinfo.avatar)
       },
     },
   }
@@ -499,9 +506,11 @@
   #{$base}-container {
     padding: 0 !important;
     background: $base-color-background !important;
+
     i {
       cursor: pointer;
     }
+
     #{$base}-user-info {
       padding: $base-padding;
       text-align: center;
@@ -565,6 +574,7 @@
       }
     }
   }
+
   .userinfo {
     box-sizing: border-box;
     width: 100%;

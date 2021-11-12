@@ -3,8 +3,8 @@
     <div class="search">
       <el-input
         v-model="search"
-        clearable
         :placeholder="$translateTitle('concentrator.input')"
+        clearable
         style="width: 200px"
       />
       <el-button
@@ -26,13 +26,13 @@
     </div>
     <el-table
       v-loading="listLoading"
-      border
       :data="treeData"
-      default-expand-all
       :height="tableHeight"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+      border
+      default-expand-all
       row-key="objectId"
       size="mini"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
       <el-table-column
         align="center"
@@ -42,8 +42,8 @@
         width="55"
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('equipment.name')"
+        align="center"
         show-overflow-tooltip
       >
         <template #default="{ row }">
@@ -53,8 +53,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('product.alias')"
+        align="center"
         show-overflow-tooltip
       >
         <template #default="{ row }">
@@ -64,8 +64,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('user.createdtime')"
+        align="center"
         show-overflow-tooltip
       >
         <template #default="{ row }">
@@ -73,8 +73,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('task.Operation')"
+        align="center"
         show-overflow-tooltip
       >
         <template #default="{ row }">
@@ -140,8 +140,8 @@
         >
           <el-input
             v-model="form.description"
-            autocomplete="off"
             :rows="2"
+            autocomplete="off"
             style="width: 300px"
             type="textarea"
           />
@@ -165,12 +165,9 @@
   </div>
 </template>
 <script>
-  import {
-    getPermission,
-    queryPermission,
-    putPermission,
-  } from '@/api/Permission/index'
+  import { getPermission, putPermission, queryPermission } from '@/api/Permission/index'
   import { utc2beijing } from '@/utils'
+
   export default {
     components: {},
     data() {
@@ -229,7 +226,7 @@
         const cloneData = JSON.parse(JSON.stringify(this.data)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parent
+            (child) => father.objectId == child.parent,
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parent == 0 // 返回第一层
@@ -250,13 +247,18 @@
         this.form.alias = resultes.alias
         this.roleEdit = true
       },
-      handleDelete(row) {},
-      addcontrol() {},
+      handleDelete(row) {
+      },
+      addcontrol() {
+      },
       async getcontrolrole(args) {
         console.log(args)
         this.listLoading = true
         this.data = []
-        const { results, count } = await queryPermission({
+        const {
+          results,
+          count,
+        } = await queryPermission({
           count: '*',
           limit: args.limit ? args.limit : this.queryForm.limit,
           order: this.queryForm.order,
@@ -286,11 +288,12 @@
           alias: this.form.alias,
           description: this.form.description,
         })
-        if (res)
+        if (res) {
           this.$message({
             type: 'success',
             message: '更新成功',
           })
+        }
         this.roleEdit = false
       },
     },

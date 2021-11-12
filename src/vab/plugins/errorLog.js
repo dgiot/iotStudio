@@ -20,8 +20,14 @@ if (checkNeed()) {
     const url = window.location.href
     Vue.nextTick(() => {
       store
-        .dispatch('errorLog/addErrorLog', { err, vm, info, url })
-        .then(() => {})
+        .dispatch('errorLog/addErrorLog', {
+          err,
+          vm,
+          info,
+          url,
+        })
+        .then(() => {
+        })
     })
   }
 }

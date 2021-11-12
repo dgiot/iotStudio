@@ -1,6 +1,7 @@
 import _setText from '@/utils/konva/setText'
 import _setRect from '@/utils/konva/setRect'
 import _setImage from '@/utils/konva/setImg'
+
 let _errorDate = []
 export default async function updateShape(Shape) {
   Shape.forEach((_item) => {

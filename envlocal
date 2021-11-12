@@ -1,3 +1,0 @@
-# 这里配置的是process.env环境变量
-# CDN_URL 地址是 cdn资源服务器的地址 不带http和https 是为了同时兼容这两种环境 为空则不使用cdn资源加载
-CDN_URL=

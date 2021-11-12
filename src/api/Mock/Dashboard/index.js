@@ -13,7 +13,11 @@ const queryParams = [
     dataType: 'card',
     vuekey: 'app_count',
     table: 'App',
-    query: { limit: 1, keys: ['count(*)'], where: {} },
+    query: {
+      limit: 1,
+      keys: ['count(*)'],
+      where: {},
+    },
   },
   {
     dataType: 'card',
@@ -22,7 +26,9 @@ const queryParams = [
     query: {
       // limit: 1,
       keys: ['count(*)'],
-      where: { category: 'IotHub' },
+      where: {
+        // category: 'IotHub'
+      },
     },
   },
   {
@@ -51,19 +57,31 @@ const queryParams = [
     dataType: 'card',
     vuekey: 'project_count',
     table: 'Project',
-    query: { limit: 1, keys: ['count(*)'], where: {} },
+    query: {
+      limit: 1,
+      keys: ['count(*)'],
+      where: {},
+    },
   },
   {
     dataType: 'card',
     vuekey: 'ChartStatus',
     table: 'ChartStatus',
-    query: { limit: 1, keys: ['count(*)'], where: {} },
+    query: {
+      limit: 1,
+      keys: ['count(*)'],
+      where: {},
+    },
   },
   {
     dataType: 'card',
     vuekey: 'device_count',
     table: 'Device',
-    query: { limit: 1, keys: ['count(*)'], where: {} },
+    query: {
+      limit: 1,
+      keys: ['count(*)'],
+      where: {},
+    },
   },
   {
     dataType: 'card',

@@ -11,7 +11,8 @@ import { Message } from 'element-ui'
 
 function toMd5(string) {
   return {
-    objectId: md5(string).substring(0, 10),
+    objectId: md5(string)
+      .substring(0, 10),
     code: 200,
   }
 }
@@ -59,83 +60,83 @@ export async function getHashClass(classNmae, data) {
   switch (classNmae) {
     case 'Product':
       keys = ['category', 'devType', 'name']
-      if (verifyRule(classNmae, keys, data))
+      if (verifyRule(classNmae, keys, data)) {
         response = toMd5(
-          `${classNmae}${data.category}${data.devType}${data.name}`
+          `${classNmae}${data.category}${data.devType}${data.name}`,
         )
-      else {
+      } else {
         response = errorRes
       }
       // return response
       break
     case 'Device':
       keys = ['productid', 'devaddr']
-      if (verifyRule(classNmae, keys, data))
+      if (verifyRule(classNmae, keys, data)) {
         response = toMd5(`${classNmae}${data.productid}${data.devaddr}`)
-      else {
+      } else {
         response = errorRes
       }
       // return response
       break
     case 'Evidence':
       keys = ['ukey', 'timestamp']
-      if (verifyRule(classNmae, keys, data))
+      if (verifyRule(classNmae, keys, data)) {
         response = toMd5(`${classNmae}${data.ukey}${data.timestamp}`)
-      else {
+      } else {
         response = errorRes
       }
       // return response
       break
     case 'Channel':
       keys = ['name', 'type', 'ctype']
-      if (verifyRule(classNmae, keys, data))
+      if (verifyRule(classNmae, keys, data)) {
         response = toMd5(`${classNmae}${data.name}${data.type}${data.ctype}`)
-      else {
+      } else {
         response = errorRes
       }
       // return response
       break
     case 'Dict':
       keys = ['key', 'type']
-      if (verifyRule(classNmae, keys, data))
+      if (verifyRule(classNmae, keys, data)) {
         response = toMd5(`${classNmae}${data.key}${data.type}`)
-      else {
+      } else {
         response = errorRes
       }
       // return response
       break
     case 'Instruct':
       keys = ['deviceid', 'pn', 'di']
-      if (verifyRule(classNmae, keys, data))
+      if (verifyRule(classNmae, keys, data)) {
         response = toMd5(`${classNmae}${data.deviceid}${data.pn}${data.di}`)
-      else {
+      } else {
         response = errorRes
       }
       // return response
       break
     case 'Menu':
       keys = ['name', 'url']
-      if (verifyRule(classNmae, keys, data))
+      if (verifyRule(classNmae, keys, data)) {
         response = toMd5(`${classNmae}${data.name}${data.url}`)
-      else {
+      } else {
         response = errorRes
       }
       // return response
       break
     case 'Permission':
       keys = ['name']
-      if (verifyRule(classNmae, keys, data))
+      if (verifyRule(classNmae, keys, data)) {
         response = toMd5(`${classNmae}${data.name}`)
-      else {
+      } else {
         response = errorRes
       }
       // return response
       break
     case 'Crond':
       keys = ['name']
-      if (verifyRule(classNmae, keys, data))
+      if (verifyRule(classNmae, keys, data)) {
         response = toMd5(`${classNmae}${data.name}`)
-      else {
+      } else {
         response = errorRes
       }
       // return response

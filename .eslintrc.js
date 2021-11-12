@@ -13,6 +13,9 @@ module.exports = {
     },
   },
   rules: {
+    'indent': ['off', 2],
+    'linebreak-style': [0, 'error', 'windows'],
+    // "max-len" : ["error", {code : 3000}],
     'no-unused-vars': 'off',
     'no-undef': 'off',
     'no-console': 'off',
@@ -20,6 +23,13 @@ module.exports = {
     'vue/no-template-shadow': 'off',
     'vue/no-v-html': 'off',
     'vue/attributes-order': 0,
+    'vue/html-indent': ['error', 2, {
+      'attribute': 1,
+      'baseIndent': 1,
+      'closeBracket': 0,
+      'alignAttributesVertically': true,
+      'ignores': [],
+    }],
     'vue/html-self-closing': [
       'error',
       {
@@ -32,6 +42,8 @@ module.exports = {
         math: 'always',
       },
     ],
+    'vue/multi-word-component-names': 'off',
+    'vue/no-useless-template-attributes': 'off',
     // Vue.js风格指南(https://cn.vuejs.org/v2/style-guide/)
     // Vue组件排序
     'vue/order-in-components': [

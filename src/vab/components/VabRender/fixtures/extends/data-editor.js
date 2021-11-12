@@ -33,8 +33,14 @@ export default {
           label: '自适应内容高度值类型',
           default: 'switch',
           options: [
-            { text: '自适应', value: 'switch' },
-            { text: '最大最小值', value: 'data-editor' },
+            {
+              text: '自适应',
+              value: 'switch',
+            },
+            {
+              text: '最大最小值',
+              value: 'data-editor',
+            },
           ],
         },
         autosize: {
@@ -43,7 +49,10 @@ export default {
             if (data.autosizeType === 'switch') {
               return false
             } else {
-              return { minRows: 2, maxRows: 6 }
+              return {
+                minRows: 2,
+                maxRows: 6,
+              }
             }
           },
           label: '自适应内容高度配置',

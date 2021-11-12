@@ -35,15 +35,15 @@
       <vab-query-form-top-panel>
         <el-form
           :inline="true"
-          label-width="auto"
           :model="queryForm"
+          label-width="auto"
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('Maintenance.Ticket number')">
             <el-input
               v-model.trim="queryForm.number"
-              clearable
               :placeholder="$translateTitle('Maintenance.Ticket number')"
+              clearable
             />
           </el-form-item>
           <el-form-item :label="$translateTitle('Maintenance.project')">
@@ -80,8 +80,8 @@
             <el-date-picker
               v-model="queryForm.searchDate"
               :end-placeholder="$translateTitle('Maintenance.end time')"
-              format="yyyy-MM-dd"
               :start-placeholder="$translateTitle('Maintenance.start time')"
+              format="yyyy-MM-dd"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -121,24 +121,24 @@
         width="55"
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
+        align="center"
         prop="number"
         show-overflow-tooltip
         sortablesortable
         width="120"
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Ticket type')"
+        align="center"
         prop="type"
         show-overflow-tooltip
         sortable
         width="140"
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Ticket status')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -148,8 +148,8 @@
       </el-table-column>
 
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.project')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -159,8 +159,8 @@
       </el-table-column>
 
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Equipment name')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -169,8 +169,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Initiator')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -179,18 +179,21 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.the starting time')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
-          {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
+          {{
+            $moment(row.createdAt)
+              .format('YYYY-MM-DD HH:mm:ss')
+          }}
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.operating')"
+        align="center"
         prop="name"
         show-overflow-tooltip
       >
@@ -235,19 +238,13 @@
 </template>
 
 <script>
-  import {
-    query_object,
-    get_object,
-    del_object,
-    update_object,
-    create_object,
-  } from '@/api/shuwa_parse'
+  import { query_object } from '@/api/shuwa_parse'
   import { exlout } from '@/api/File'
   import { queryDevice } from '@/api/Device'
   import ChangeInfo from '@/views/Maintenance/ChangeInfo'
 
-  import { mapGetters, mapMutations } from 'vuex'
-  import { UploadImg } from '@/api/File'
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'Index',
     components: {
@@ -272,13 +269,25 @@
         formLabelWidth: '140px',
         rules: {
           product: [
-            { required: true, message: '请选择活动区域', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择活动区域',
+              trigger: 'change',
+            },
           ],
           name: [
-            { required: true, message: '请选择活动区域', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择活动区域',
+              trigger: 'change',
+            },
           ],
           type: [
-            { required: true, message: '请选择活动资源', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择活动资源',
+              trigger: 'change',
+            },
           ],
         },
         list: [],
@@ -348,7 +357,7 @@
         } catch (error) {
           console.log(error)
           this.$message.error(
-            this.$translateTitle('node.export error') + `${error}`
+            this.$translateTitle('node.export error') + `${error}`,
           )
         }
       },
@@ -412,16 +421,25 @@
         }
         if (this.queryForm.searchDate?.length) {
           params.where['createdAt'] = {
-            $gt: { __type: 'Date', iso: this.queryForm.searchDate[0] },
+            $gt: {
+              __type: 'Date',
+              iso: this.queryForm.searchDate[0],
+            },
           }
           params.where['updatedAt'] = {
-            $lt: { __type: 'Date', iso: this.queryForm.searchDate[1] },
+            $lt: {
+              __type: 'Date',
+              iso: this.queryForm.searchDate[1],
+            },
           }
         }
         await query_object('Maintenance', params)
           .then((res) => {
             console.log(res, 'res')
-            const { results = [], count = 0 } = res
+            const {
+              results = [],
+              count = 0,
+            } = res
             this.list = results
             this.list.forEach((e) => {
               e._user = '暂无'
@@ -476,7 +494,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .mycontainer {
     .ticker-dialog {
       .create-ticker {
@@ -485,12 +503,15 @@
         }
       }
     }
+
     .query-form {
       margin-top: 10px;
+
       ::v-deep {
         .el-form-item__label-wrap {
           margin-left: 10px;
         }
+
         .dialog-footer {
           text-align: center;
         }

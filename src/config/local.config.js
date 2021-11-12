@@ -7,6 +7,7 @@
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/
 let localUrl = {
   css: [
+    'material_icons.css',// 谷歌字体图标
     'iview.css',
     'antd.min.css',
     'vuetify.min.css',
@@ -92,8 +93,8 @@ let localUrl = {
     'f-render.js',
     'vue-ele-form.js',
     'fuzzy.js',
-    'vue-prism-editor',
-    'flv.js/dist/flv.min.js',
+    'vue-prism-editor.js',
+    'flv.min.js',
     'prism-clike.min.js',
     'prism-core.min.js',
     'vue2-perfect-scrollbar.js',

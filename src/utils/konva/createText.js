@@ -14,4 +14,5 @@
 function createText(params) {
   return new Konva.Text(params)
 }
+
 export default createText

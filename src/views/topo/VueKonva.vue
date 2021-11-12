@@ -3,8 +3,8 @@
     <div class="_dialog">
       <el-dialog
         :append-to-body="true"
-        class="_shape"
         :visible.sync="ShapeVisible"
+        class="_shape"
         width="100vh"
       >
         <span
@@ -14,10 +14,10 @@
       </el-dialog>
     </div>
     <div
-      class="_header"
       :style="{
         display: headevisible ? 'block' : 'none',
       }"
+      class="_header"
     >
       <topo-header
         ref="topoheader"
@@ -33,8 +33,8 @@
     </div>
     <div class="_mian">
       <el-row
-        class="_row"
         :gutter="gutter"
+        class="_row"
       >
         <transition name="fade">
           <el-col
@@ -47,8 +47,8 @@
           </el-col>
         </transition>
         <el-col
-          class="_konvarow"
           :span="24 - rightrow"
+          class="_konvarow"
         >
           <!--          <topo-base ref="topobase" />-->
           <div
@@ -59,10 +59,10 @@
 
           <div
             v-show="!isDevice && productid"
-            class="_info"
             :style="{
               display: infoFlag ? 'block' : 'block',
             }"
+            class="_info"
           >
             <el-row
               :gutter="10"
@@ -135,15 +135,15 @@
   </div>
 </template>
 <script lang="js">
-  import backgroundImage from '../../../public/assets/images/shuwa_tech/zh/blog/study/opc/nf_taiti.png'
-  import { uuid } from '@/utils'
+  import backgroundImage from '../../../public/assets/images/topo/bg/boiler.jpg'
+  import { isBase64, isImage, uuid } from '@/utils'
   import { requireModule } from '@/utils/file'
   import { createState } from '@/utils/konva'
   import { mapGetters, mapMutations } from 'vuex'
-  import { isBase64, isImage } from '@/utils'
   import { Websocket } from '@/utils/wxscoket.js'
   import { _getTopo } from '@/api/Topo'
   import { putProduct, queryProduct } from '@/api/Product'
+
   export default {
     components: {
       ...requireModule(require.context('./components', true, /\.vue$/)),
@@ -276,16 +276,18 @@
           })
         }
         console.log('删除的节点', node.remove())
-        _this.stage.find('Transformer').map((_Transformer) => {
-          console.log(_Transformer, '_Transformer')
-        })
+        _this.stage.find('Transformer')
+          .map((_Transformer) => {
+            console.log(_Transformer, '_Transformer')
+          })
         console.log(_this.stage.find('Transformer'), _this.stage.find())
         // _this.stage.find('Transformer').destroy()
         node.remove()
         Layer.draw()
         _this.setGraphNow('')
-        if (node.attrs.id == _this.$refs['operation'].Shapeconfig.attrs.id)
+        if (node.attrs.id == _this.$refs['operation'].Shapeconfig.attrs.id) {
           _this.$refs['operation'].Shapeconfig = []
+        }
         _this.updataProduct(this.productid)
       },
       // ImageTable
@@ -294,7 +296,10 @@
         this.showTable = type
       },
       // saveKonvaitem
-      saveKonvaitem(config, ShapeConfig = { index: 1, opacity: 1 }) {
+      saveKonvaitem(config, ShapeConfig = {
+        index: 1,
+        opacity: 1,
+      }) {
         let _this = this
         console.log(_this.stage.find(`#${config.attrs.id}`))
         console.log('config.attrs.id', config.attrs.id)
@@ -325,7 +330,7 @@
                 duration: 1,
                 zIndex: ShapeConfig.zIndex,
                 easing: Konva.Easings.ElasticEaseOut,
-              }).play()
+              }).play(),
             )
           }
         })
@@ -339,7 +344,7 @@
                 Opacity: 0.8,
                 duration: 1,
                 easing: Konva.Easings.ElasticEaseOut,
-              }).play()
+              }).play(),
             )
           }
         })
@@ -353,7 +358,7 @@
                 Opacity: 0.8,
                 duration: 1,
                 easing: Konva.Easings.ElasticEaseOut,
-              }).play()
+              }).play(),
             )
           }
         })
@@ -496,7 +501,7 @@
                     node: shape,
                     duration: 1,
                     easing: Konva.Easings.ElasticEaseOut,
-                  }).play()
+                  }).play(),
                 )
               } else {
                 updataId.push(i.id)
@@ -531,12 +536,18 @@
           console.log('订阅mqtt')
           _this.$refs.topoheader.handleCloseSub(sendInfo)
         }
-        const { productid, devaddr = undefined } = _this.$route.query
+        const {
+          productid,
+          devaddr = undefined,
+        } = _this.$route.query
         let params = {
           productid: productid,
           devaddr: devaddr,
         }
-        const { message = '', data } = await _getTopo(params)
+        const {
+          message = '',
+          data,
+        } = await _getTopo(params)
         // 绘制前不光需要获取到组态数据，还需要获取产品数据
         const { results = [] } = await queryProduct({
           where: { objectId: _this.$route.query.productid },
@@ -547,7 +558,7 @@
           // console.log(this.$refs['edrawer'].$refs, 'edrawer')
           _this.$refs['operation']
             ? (_this.$refs['operation'].productconfig = results[0])
-            : console.log(" _this.$refs['operation']", _this.$refs['operation'])
+            : console.log(' _this.$refs[\'operation\']', _this.$refs['operation'])
           console.log(data.Stage.attrs.id)
           _this.globalStageid = data.Stage.attrs.id
           _this.createKonva(data, _this.globalStageid, 'create')
@@ -580,7 +591,8 @@
         _this.stage = Konva.Node.create(Stage, globalStageid)
         _this.$refs.topobase.createTopo(
           _this.stage.toJSON(),
-          moment(new Date()).valueOf()
+          moment(new Date())
+            .valueOf(),
         )
         console.log('_this.$refs.topobase', _this.$refs.topobase)
         console.log('data', data)
@@ -621,13 +633,16 @@
           const type = _this.flag
           console.log('params', _this.drawParams)
           const _group = _this.stage.find('Group')[0]
-          const { offsetX, offsetY } = e.evt
+          const {
+            offsetX,
+            offsetY,
+          } = e.evt
           var state = createState(
             type,
             offsetX,
             offsetY,
             color,
-            _this.drawParams
+            _this.drawParams,
           )
           console.log('createState', state)
           _group.add(state)
@@ -656,11 +671,12 @@
               console.log(e, 'Text dblclick')
               console.log(_this.stage.find('Transformer'), _this.stage.find())
               _this.stage.find('Transformer')?.length
-                ? _this.stage.find('Transformer').destroy()
+                ? _this.stage.find('Transformer')
+                  .destroy()
                 : console.log(
-                    "_this.stage.find('Transformer')",
-                    _this.stage.find('Transformer')
-                  )
+                  '_this.stage.find(\'Transformer\')',
+                  _this.stage.find('Transformer'),
+                )
               // 在画布上创建具有绝对位置的textarea
 
               // 首先，我们需要为textarea找到位置
@@ -669,7 +685,8 @@
               let textPosition = this.getAbsolutePosition()
 
               // 然后让我们在页面上找到stage容器的位置
-              let stageBox = _this.stage.container().getBoundingClientRect()
+              let stageBox = _this.stage.container()
+                .getBoundingClientRect()
 
               // 因此textarea的位置将是上面位置的和
               console.log('eeeeeeeeeeeeeeeee', e)
@@ -802,10 +819,13 @@
           // }
           // img.with = $('#konva').width()
           // img.height = $('#konva').height()
-          console.log('img', img, "$('#konva')", $('#current1'))
-          $('#current1').css('background-image', `url(${img_url})`)
-          $('#current1').css('background-repeat', 'no-repeat')
-          $('#current1').css('background-size', '100%,100%')
+          console.log('img', img, '$(\'#konva\')', $('#current1'))
+          $('#current1')
+            .css('background-image', `url(${img_url})`)
+          $('#current1')
+            .css('background-repeat', 'no-repeat')
+          $('#current1')
+            .css('background-size', '100%,100%')
           // img.onload = () => {
           //   node.image(img)
           //   console.log(node.image(img), 'node.image(img)')
@@ -861,8 +881,9 @@
         Layer.draw()
         Layer.batchDraw()
         console.log('绘制完成')
-        if (this.$refs.topoheader)
+        if (this.$refs.topoheader) {
           this.$refs.topoheader.subscribe(_this.productid)
+        }
       },
     },
   }
@@ -875,29 +896,38 @@
     .fade-leave-active {
       transition: opacity 2.5s;
     }
-    .fade-enter, .fade-leave-to /* .fade-leave-active, 2.1.8 版本以下 */ {
+
+    .fade-enter, .fade-leave-to /* .fade-leave-active, 2.1.8 版本以下 */
+    {
       opacity: 0;
     }
+
     width: 100%;
     background-size: 100% 100%;
+
     ::v-deep .el-drawer__body {
       overflow-x: auto;
       overflow-y: auto;
     }
+
     ._dialog {
       ::v-deep .el-dialog__footer {
         margin: 0 auto;
         text-align: center;
       }
     }
+
     ._drawer {
       width: 100%;
     }
+
     ._header {
       width: 100%;
     }
+
     ._mian {
       position: relative;
+
       .arrowClass {
         position: absolute;
         z-index: 999;
@@ -914,11 +944,13 @@
         border-color: #409eff;
         border-radius: 50%;
       }
+
       ._row {
         ._konvarow {
           padding: 0 !important;
           // border: 1px solid red;
           box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
+
           .konva {
             position: relative;
             width: 1200px;
@@ -930,9 +962,11 @@
             background-size: 100% 100%;
             border: 1px solid #ebeef5;
           }
+
           .isDevice {
             min-height: calc(100vh - 163px);
           }
+
           .arrowClass {
             position: absolute;
             z-index: 999;
@@ -950,6 +984,7 @@
             border-radius: 50%;
           }
         }
+
         ._info {
           height: 40px;
           margin: 0 50px;

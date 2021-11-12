@@ -1,8 +1,6 @@
 <template>
   <div class="examine-verify">
-    <h3 style="text-align: center">
-      任务详情
-    </h3>
+    <h3 style="text-align: center">任务详情</h3>
     <!--     <el-tabs v-model="activeName">
       <el-tab-pane label="审核详情" name="first"> -->
     <el-row :gutter="20">
@@ -12,60 +10,33 @@
         </div>
 
         <div v-if="groupname == '南方泵业'">
-          <el-tabs
-            v-model="activeTab"
-            type="card"
-          >
-            <el-tab-pane
-              label="基本信息"
-              name="basicInfoView"
-            >
+          <el-tabs v-model="activeTab" type="card">
+            <el-tab-pane label="基本信息" name="basicInfoView">
               <SouthBasicInfoView ref="SouthBasicInfoView" />
             </el-tab-pane>
-            <el-tab-pane
-              label="规定点信息"
-              name="prescribedPointView"
-            >
+            <el-tab-pane label="规定点信息" name="prescribedPointView">
               <SouthPrescribedPointView ref="SouthPrescribedPointView" />
             </el-tab-pane>
 
-            <el-tab-pane
-              label="测试设置"
-              name="TestSettingView"
-            >
+            <el-tab-pane label="测试设置" name="TestSettingView">
               <TestSettingView ref="TestSettingRef" />
             </el-tab-pane>
           </el-tabs>
         </div>
 
         <div v-if="groupname == '利欧泵业'">
-          <el-tabs
-            v-model="activeTab"
-            type="card"
-          >
-            <el-tab-pane
-              label="基本信息"
-              name="basicInfoView"
-            >
+          <el-tabs v-model="activeTab" type="card">
+            <el-tab-pane label="基本信息" name="basicInfoView">
               <BasicInfoView ref="BasicInfoRef" />
             </el-tab-pane>
-            <el-tab-pane
-              label="台位信息"
-              name="tableInfoView"
-            >
+            <el-tab-pane label="台位信息" name="tableInfoView">
               <TableInfoView ref="TableInfoRef" />
             </el-tab-pane>
-            <el-tab-pane
-              label="规定点信息"
-              name="prescribedPointView"
-            >
+            <el-tab-pane label="规定点信息" name="prescribedPointView">
               <PrescribedPointView ref="PrescribedPointRef" />
             </el-tab-pane>
 
-            <el-tab-pane
-              label="测试设置"
-              name="TestSettingView"
-            >
+            <el-tab-pane label="测试设置" name="TestSettingView">
               <TestSettingView ref="TestSettingRef" />
             </el-tab-pane>
           </el-tabs>
@@ -77,41 +48,24 @@
         </div>
 
         <el-row :gutter="24">
-          <el-col
-            :offset="2"
-            :span="20"
-          >
+          <el-col :span="20" :offset="2">
             <div>
-              <h3 style="text-align: center">
-                实验数据
-              </h3>
+              <h3 style="text-align: center">实验数据</h3>
               <el-table
                 ref="importListTable"
                 :cell-style="headClass"
-                :data="currentTestData"
                 :header-cell-style="headClass"
+                :data="currentTestData"
                 size="mini"
                 style="width: 100%; height: 53vh"
               >
                 <!-- <el-table-column prop="id" label="ID" /> -->
 
-                <el-table-column
-                  label="流量"
-                  prop="Q2"
-                />
+                <el-table-column prop="Q2" label="流量" />
 
-                <el-table-column
-                  label="扬程"
-                  prop="H2"
-                />
-                <el-table-column
-                  label="功率"
-                  prop="W2"
-                />
-                <el-table-column
-                  label="效率"
-                  prop="Eff"
-                />
+                <el-table-column prop="H2" label="扬程" />
+                <el-table-column prop="W2" label="功率" />
+                <el-table-column prop="Eff" label="效率" />
               </el-table>
               <div
                 v-show="userRoles.org_type != '中心厂家检测员'"
@@ -138,10 +92,10 @@
                     currentTestData.verifyStatus == 0
                       ? '未审核'
                       : currentTestData.verifyStatus == 1
-                        ? '审核通过'
-                        : currentTestData.verifyStatus == 2
-                          ? 1
-                          : '审核不通过'
+                      ? '审核通过'
+                      : currentTestData.verifyStatus == 2
+                      ? 1
+                      : '审核不通过'
                   }}
                 </el-button>
               </div>
@@ -170,56 +124,29 @@
     </el-tabs> -->
 
     <!--审核弹窗-->
-    <el-dialog
-      :append-to-body="true"
-      title="审核"
-      :visible.sync="verifyDialogVisible"
-      width="40%"
-    >
+    <el-dialog :visible.sync="verifyDialogVisible" title="审核" width="40%">
       <div>
         <el-form
           ref="verifyFormRef"
-          label-width="100px"
           :model="verifyForm"
           :rules="verifyFormRules"
+          label-width="100px"
         >
-          <el-form-item
-            label="审核状态"
-            prop="status"
-          >
+          <el-form-item label="审核状态" prop="status">
             <el-radio-group v-model="verifyForm.status">
               <!-- <el-radio :label="0">待审核</el-radio> -->
-              <el-radio :label="2">
-                审核未通过
-              </el-radio>
-              <el-radio :label="1">
-                审核通过
-              </el-radio>
+              <el-radio :label="2">审核未通过</el-radio>
+              <el-radio :label="1">审核通过</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item
-            label="审核意见"
-            prop="remark"
-          >
-            <el-input
-              v-model="verifyForm.remark"
-              :rows="4"
-              type="textarea"
-            />
+          <el-form-item label="审核意见" prop="remark">
+            <el-input v-model="verifyForm.remark" :rows="4" type="textarea" />
           </el-form-item>
         </el-form>
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-button @click="verifyDialogVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click.native="submitVerify()"
-        >
-          提 交
-        </el-button>
+        <el-button type="primary" @click="submitVerify()">提 交</el-button>
       </span>
     </el-dialog>
   </div>

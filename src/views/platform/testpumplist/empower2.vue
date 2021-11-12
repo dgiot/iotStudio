@@ -1,57 +1,36 @@
 <template>
   <div class="empower">
-    <el-steps
-      :active="allactive"
-      simple
-    >
-      <el-step
-        icon="el-icon-edit"
-        title="填写认证信息"
-      />
-      <el-step
-        icon="el-icon-upload"
-        title="填写实验室基本信息"
-      />
-      <el-step
-        icon="el-icon-picture"
-        title="审核结果"
-      />
+    <el-steps :active="allactive" simple>
+      <el-step title="填写认证信息" icon="el-icon-edit" />
+      <el-step title="填写实验室基本信息" icon="el-icon-upload" />
+      <el-step title="审核结果" icon="el-icon-picture" />
     </el-steps>
 
     <!--认证企业新增-->
     <div v-if="allactive == 1">
       <el-steps :active="active">
         <el-step
-          description="企业认证新增"
-          icon="el-icon-s-check"
           title="认证企业新增"
+          icon="el-icon-s-check"
+          description="企业认证新增"
         />
         <!-- <el-step title="企业检测资质备案" icon="el-icon-s-promotion" description="企业检测资质备案"></el-step> -->
-        <el-step
-          icon="el-icon-picture"
-          title="预览提交"
-        />
+        <el-step title="预览提交" icon="el-icon-picture" />
       </el-steps>
 
-      <div
-        v-if="active == 1"
-        class="empowerone"
-      >
+      <div v-if="active == 1" class="empowerone">
         <el-card shadow="always">
           <el-form
             ref="formrules"
-            label-width="140px"
             :model="authenticationForm"
             :rules="formrules"
+            label-width="140px"
           >
             <el-row>
               <!--左边表单-->
               <el-col :span="12">
                 <div class="grid-content bg-purple">
-                  <el-form-item
-                    label="企业名称"
-                    prop="businessname"
-                  >
+                  <el-form-item label="企业名称" prop="businessname">
                     <el-input
                       v-model="authenticationForm.businessname"
                       placeholder="请填写企业名称"
@@ -63,36 +42,28 @@
                       placeholder="请填写企业简称"
                     />
                   </el-form-item>
-                  <el-form-item
-                    label="法人代表名称"
-                    prop="corporname"
-                  >
+                  <el-form-item label="法人代表名称" prop="corporname">
                     <el-input
                       v-model="authenticationForm.corporname"
                       placeholder="请输入法人姓名"
                     />
                   </el-form-item>
-                  <el-form-item
-                    label="法人代表身份证"
-                    required
-                  >
+                  <el-form-item label="法人代表身份证" required>
                     <el-col :span="11">
                       <img
                         v-if="authenticationForm.frontimageUrl"
-                        class="avatar"
                         :src="fileDomain + authenticationForm.frontimageUrl"
+                        class="avatar"
                       />
-                      <i
-                        v-else
-                        class="el-icon-plus avatar-uploader-icon"
-                      />
+                      <i v-else class="el-icon-plus avatar-uploader-icon" />
                       <form
                         ref="uploadform"
-                        enctype="multipart/form-data"
                         method="POST"
+                        enctype="multipart/form-data"
                         style="position: absolute"
                       >
                         <input
+                          type="file"
                           style="
                             position: relative;
                             top: -200px;
@@ -102,7 +73,6 @@
                             cursor: pointer;
                             opacity: 0;
                           "
-                          type="file"
                           @change="upload($event, 'front')"
                         />
                       </form>
@@ -121,44 +91,34 @@
                       <el-button
                         v-show="authenticationForm.frontimageUrl != ''"
                         size="small"
+                        type="danger"
                         style="
                           position: absolute;
                           top: 150px;
                           left: 200px;
                           margin-left: 0;
                         "
-                        type="danger"
                         @click="authenticationForm.frontimageUrl = ''"
                       >
                         删除
                       </el-button>
                     </el-col>
-                    <el-col
-                      class="line"
-                      :span="2"
-                    >
-                      -
-                    </el-col>
-                    <el-col
-                      :span="11"
-                      style="position: relative"
-                    >
+                    <el-col :span="2" class="line">-</el-col>
+                    <el-col :span="11" style="position: relative">
                       <img
                         v-if="authenticationForm.contraryimageUrl"
-                        class="avatar"
                         :src="fileDomain + authenticationForm.contraryimageUrl"
+                        class="avatar"
                       />
-                      <i
-                        v-else
-                        class="el-icon-plus avatar-uploader-icon"
-                      />
+                      <i v-else class="el-icon-plus avatar-uploader-icon" />
                       <form
                         ref="uploadform"
-                        enctype="multipart/form-data"
                         method="POST"
+                        enctype="multipart/form-data"
                         style="position: absolute"
                       >
                         <input
+                          type="file"
                           style="
                             position: relative;
                             top: -200px;
@@ -168,7 +128,6 @@
                             cursor: pointer;
                             opacity: 0;
                           "
-                          type="file"
                           @change="upload($event, 'contrary')"
                         />
                       </form>
@@ -188,23 +147,20 @@
                       <el-button
                         v-show="authenticationForm.contraryimageUrl != ''"
                         size="small"
+                        type="danger"
                         style="
                           position: absolute;
                           top: 150px;
                           left: 190px;
                           margin-left: 0;
                         "
-                        type="danger"
                         @click="authenticationForm.contraryimageUrl = ''"
                       >
                         删除
                       </el-button>
                     </el-col>
                   </el-form-item>
-                  <el-form-item
-                    label="注册地址"
-                    prop="addr"
-                  >
+                  <el-form-item label="注册地址" prop="addr">
                     <el-cascader
                       v-model="authenticationForm.addr"
                       :options="options"
@@ -212,57 +168,34 @@
                       @change="handleModChange"
                     />
                   </el-form-item>
-                  <el-form-item
-                    label="营业年限"
-                    prop="businessduration"
-                  >
+                  <el-form-item label="营业年限" prop="businessduration">
                     <el-select
                       v-model="authenticationForm.businessduration"
                       placeholder="请选择营业年限"
                     >
-                      <el-option
-                        label="初创企业"
-                        value="1"
-                      />
-                      <el-option
-                        label="1-3年"
-                        value="2"
-                      />
-                      <el-option
-                        label="3-5年"
-                        value="3"
-                      />
-                      <el-option
-                        label="5-10年"
-                        value="4"
-                      />
-                      <el-option
-                        label="10年以上"
-                        value="5"
-                      />
+                      <el-option label="初创企业" value="1" />
+                      <el-option label="1-3年" value="2" />
+                      <el-option label="3-5年" value="3" />
+                      <el-option label="5-10年" value="4" />
+                      <el-option label="10年以上" value="5" />
                     </el-select>
                   </el-form-item>
-                  <el-form-item
-                    label="注册资金"
-                    prop="registeredcapital"
-                  >
+                  <el-form-item label="注册资金" prop="registeredcapital">
                     <el-input
                       v-model="authenticationForm.registeredcapital"
                       placeholder="请填写注册资金"
                     >
-                      <template slot="append">
-                        万元
-                      </template>
+                      <template slot="append">万元</template>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="企业描述">
                     <el-input
                       v-model="authenticationForm.businessdesc"
-                      maxlength="300"
-                      placeholder="请输入企业描述信息"
                       :rows="4"
-                      show-word-limit
                       type="textarea"
+                      placeholder="请输入企业描述信息"
+                      maxlength="300"
+                      show-word-limit
                     />
                   </el-form-item>
                 </div>
@@ -276,32 +209,23 @@
                       placeholder="请输入企业英文名称"
                     />
                   </el-form-item>
-                  <el-form-item
-                    label="统一社会信用代码"
-                    prop="creditcode"
-                  >
+                  <el-form-item label="统一社会信用代码" prop="creditcode">
                     <el-input
                       v-model="authenticationForm.creditcode"
                       placeholder="请输入社会信用代码"
                     />
                   </el-form-item>
-                  <el-form-item
-                    label="法人代表身份证号"
-                    prop="identity"
-                  >
+                  <el-form-item label="法人代表身份证号" prop="identity">
                     <el-input
                       v-model="authenticationForm.identity"
                       placeholder="请输入法人身份证号码（18位）"
                     />
                   </el-form-item>
-                  <el-form-item
-                    label="企业营业执照"
-                    required
-                  >
+                  <el-form-item label="企业营业执照" required>
                     <img
                       v-if="authenticationForm.businesslicense"
-                      class="avatar"
                       :src="fileDomain + authenticationForm.businesslicense"
+                      class="avatar"
                     />
                     <i
                       v-else
@@ -310,11 +234,12 @@
                     />
                     <form
                       ref="uploadform"
-                      enctype="multipart/form-data"
                       method="POST"
+                      enctype="multipart/form-data"
                       style="position: absolute"
                     >
                       <input
+                        type="file"
                         style="
                           position: relative;
                           top: -200px;
@@ -324,7 +249,6 @@
                           cursor: pointer;
                           opacity: 0;
                         "
-                        type="file"
                         @change="upload($event, 'business')"
                       />
                     </form>
@@ -343,22 +267,19 @@
                     <el-button
                       v-show="authenticationForm.businesslicense != ''"
                       size="small"
+                      type="danger"
                       style="
                         position: absolute;
                         top: 150px;
                         left: 200px;
                         margin-left: 0;
                       "
-                      type="danger"
                       @click="authenticationForm.businesslicense = ''"
                     >
                       删除
                     </el-button>
                   </el-form-item>
-                  <el-form-item
-                    label="街道地址"
-                    prop="roadress"
-                  >
+                  <el-form-item label="街道地址" prop="roadress">
                     <el-input
                       v-model="authenticationForm.roadress"
                       placeholder="请填写企业街道地址"
@@ -369,43 +290,22 @@
                       v-model="authenticationForm.region"
                       placeholder="请选择企业规模"
                     >
-                      <el-option
-                        label="10人以下"
-                        value="1"
-                      />
-                      <el-option
-                        label="11-50人"
-                        value="2"
-                      />
-                      <el-option
-                        label="50-100人"
-                        value="3"
-                      />
-                      <el-option
-                        label="101-500人"
-                        value="4"
-                      />
-                      <el-option
-                        label="501-1000人"
-                        value="5"
-                      />
-                      <el-option
-                        label="1000人以上"
-                        value="6"
-                      />
+                      <el-option label="10人以下" value="1" />
+                      <el-option label="11-50人" value="2" />
+                      <el-option label="50-100人" value="3" />
+                      <el-option label="101-500人" value="4" />
+                      <el-option label="501-1000人" value="5" />
+                      <el-option label="1000人以上" value="6" />
                     </el-select>
                   </el-form-item>
-                  <el-form-item
-                    label="经营范围"
-                    prop="businessscope"
-                  >
+                  <el-form-item label="经营范围" prop="businessscope">
                     <el-input
                       v-model="authenticationForm.businessscope"
-                      maxlength="300"
-                      placeholder="请输入企业经营范围信息"
                       :rows="4"
-                      show-word-limit
                       type="textarea"
+                      placeholder="请输入企业经营范围信息"
+                      maxlength="300"
+                      show-word-limit
                     />
                   </el-form-item>
                 </div>
@@ -413,90 +313,66 @@
             </el-row>
           </el-form>
           <div style="text-align: center">
-            <el-button
-              style="margin-top: 12px"
-              type="primary"
-              @click="next(2)"
-            >
+            <el-button type="primary" style="margin-top: 12px" @click="next(2)">
               提交,下一步
             </el-button>
-            <el-button type="info">
-              取消
-            </el-button>
+            <el-button type="info">取消</el-button>
           </div>
         </el-card>
       </div>
 
       <!--预览提交-->
-      <div
-        v-if="active == 2"
-        class="empowerthird"
-      >
+      <div v-if="active == 2" class="empowerthird">
         <el-divider>企业认证</el-divider>
         <el-form
           ref="authenticationPreviewFormRef"
-          label-width="140px"
           :model="authenticationPreviewForm"
           :rules="formrules"
+          label-width="140px"
         >
           <el-row>
             <!--左边表单-->
             <el-col :span="12">
               <div class="grid-content bg-purple">
-                <el-form-item
-                  label="企业名称"
-                  prop="businessname"
-                >
+                <el-form-item label="企业名称" prop="businessname">
                   <el-input
                     v-model="authenticationPreviewForm.businessname"
                     placeholder="请填写企业名称"
                     readonly
                   />
                 </el-form-item>
-                <el-form-item
-                  label="企业简称"
-                  prop="abbrname"
-                >
+                <el-form-item label="企业简称" prop="abbrname">
                   <el-input
                     v-model="authenticationPreviewForm.abbrname"
                     placeholder="请填写企业简称"
                     readonly
                   />
                 </el-form-item>
-                <el-form-item
-                  label="法人代表名称"
-                  prop="corporname"
-                >
+                <el-form-item label="法人代表名称" prop="corporname">
                   <el-input
                     v-model="authenticationPreviewForm.corporname"
                     placeholder="请输入法人姓名"
                     readonly
                   />
                 </el-form-item>
-                <el-form-item
-                  label="法人代表身份证"
-                  required
-                >
+                <el-form-item label="法人代表身份证" required>
                   <el-col :span="11">
                     <!--           :on-success="handleAvatarSuccessFront"
                     :before-upload="beforeAvatarUpload"-->
 
                     <el-upload
-                      action="/iotapi/upload"
-                      class="avatar-uploader"
                       :show-file-list="false"
+                      class="avatar-uploader"
+                      action="/iotapi/upload"
                     >
                       <img
                         v-if="authenticationPreviewForm.frontimageUrl"
-                        class="avatar"
                         :src="
                           fileDomain + authenticationPreviewForm.frontimageUrl
                         "
+                        class="avatar"
                       />
-                      <i
-                        v-else
-                        class="el-icon-plus avatar-uploader-icon"
-                      />
+                      <i v-else class="el-icon-plus avatar-uploader-icon" />
                       <div
                         class="el-upload__text"
                         style="
@@ -510,35 +386,24 @@
                       </div>
                     </el-upload>
                   </el-col>
-                  <el-col
-                    class="line"
-                    :span="2"
-                  >
-                    -
-                  </el-col>
-                  <el-col
-                    :span="11"
-                    style="position: relative"
-                  >
+                  <el-col :span="2" class="line">-</el-col>
+                  <el-col :span="11" style="position: relative">
                     <!--    :on-success="handleAvatarSuccessContrary"
                     :before-upload="beforeAvatarUpload"-->
                     <el-upload
-                      action="/iotapi/upload"
-                      class="avatar-uploader"
                       :show-file-list="false"
+                      class="avatar-uploader"
+                      action="/iotapi/upload"
                     >
                       <img
                         v-if="authenticationPreviewForm.contraryimageUrl"
-                        class="avatar"
                         :src="
                           fileDomain +
-                            authenticationPreviewForm.contraryimageUrl
+                          authenticationPreviewForm.contraryimageUrl
                         "
+                        class="avatar"
                       />
-                      <i
-                        v-else
-                        class="el-icon-plus avatar-uploader-icon"
-                      />
+                      <i v-else class="el-icon-plus avatar-uploader-icon" />
                       <div
                         class="el-upload__text"
                         style="
@@ -553,71 +418,44 @@
                     </el-upload>
                   </el-col>
                 </el-form-item>
-                <el-form-item
-                  label="注册地址"
-                  prop="addr"
-                >
+                <el-form-item label="注册地址" prop="addr">
                   <el-cascader
                     v-model="authenticationPreviewForm.addr"
                     :options="options"
-                    readonly
                     size="large"
+                    readonly
                     @change="handleModChange"
                   />
                 </el-form-item>
-                <el-form-item
-                  label="营业年限"
-                  prop="businessduration"
-                >
+                <el-form-item label="营业年限" prop="businessduration">
                   <el-select
                     v-model="authenticationPreviewForm.businessduration"
                     placeholder="请选择营业年限"
                     readonly
                   >
-                    <el-option
-                      label="初创企业"
-                      value="1"
-                    />
-                    <el-option
-                      label="1-3年"
-                      value="2"
-                    />
-                    <el-option
-                      label="3-5年"
-                      value="3"
-                    />
-                    <el-option
-                      label="5-10年"
-                      value="4"
-                    />
-                    <el-option
-                      label="10年以上"
-                      value="5"
-                    />
+                    <el-option label="初创企业" value="1" />
+                    <el-option label="1-3年" value="2" />
+                    <el-option label="3-5年" value="3" />
+                    <el-option label="5-10年" value="4" />
+                    <el-option label="10年以上" value="5" />
                   </el-select>
                 </el-form-item>
-                <el-form-item
-                  label="注册资金"
-                  prop="registeredcapital"
-                >
+                <el-form-item label="注册资金" prop="registeredcapital">
                   <el-input
                     v-model="authenticationPreviewForm.registeredcapital"
                     placeholder="请填写注册资金"
                     readonly
                   />
                 </el-form-item>
-                <el-form-item
-                  label="企业描述"
-                  prop="businessdesc"
-                >
+                <el-form-item label="企业描述" prop="businessdesc">
                   <el-input
                     v-model="authenticationPreviewForm.businessdesc"
-                    maxlength="300"
-                    placeholder="请输入企业描述信息"
-                    readonly
                     :rows="4"
-                    show-word-limit
                     type="textarea"
+                    placeholder="请输入企业描述信息"
+                    maxlength="300"
+                    show-word-limit
+                    readonly
                   />
                 </el-form-item>
               </div>
@@ -625,59 +463,44 @@
             <!--右边表单-->
             <el-col :span="12">
               <div class="grid-content bg-purple-light">
-                <el-form-item
-                  label="企业英文名称"
-                  prop="englishname"
-                >
+                <el-form-item label="企业英文名称" prop="englishname">
                   <el-input
                     v-model="authenticationPreviewForm.englishname"
                     placeholder="请输入企业英文名称"
                     readonly
                   />
                 </el-form-item>
-                <el-form-item
-                  label="统一社会信用代码"
-                  prop="creditcode"
-                >
+                <el-form-item label="统一社会信用代码" prop="creditcode">
                   <el-input
                     v-model="authenticationPreviewForm.creditcode"
                     placeholder="请输入社会信用代码"
                     readonly
                   />
                 </el-form-item>
-                <el-form-item
-                  label="法人代表身份证号"
-                  prop="identity"
-                >
+                <el-form-item label="法人代表身份证号" prop="identity">
                   <el-input
                     v-model="authenticationPreviewForm.identity"
                     placeholder="请输入法人身份证号码（18位）"
                     readonly
                   />
                 </el-form-item>
-                <el-form-item
-                  label="企业营业执照"
-                  required
-                >
+                <el-form-item label="企业营业执照" required>
                   <!--         :on-success="handleAvatarSuccessBusiness"
                   :before-upload="beforeAvatarUpload"-->
 
                   <el-upload
-                    action="/iotapi/upload"
-                    class="avatar-uploader"
                     :show-file-list="false"
+                    class="avatar-uploader"
+                    action="/iotapi/upload"
                   >
                     <img
                       v-if="authenticationPreviewForm.businesslicense"
-                      class="avatar"
                       :src="
                         fileDomain + authenticationPreviewForm.businesslicense
                       "
+                      class="avatar"
                     />
-                    <i
-                      v-else
-                      class="el-icon-plus avatar-uploader-icon"
-                    />
+                    <i v-else class="el-icon-plus avatar-uploader-icon" />
                     <div
                       class="el-upload__text"
                       style="
@@ -691,10 +514,7 @@
                     </div>
                   </el-upload>
                 </el-form-item>
-                <el-form-item
-                  label="街道地址"
-                  prop="roadress"
-                >
+                <el-form-item label="街道地址" prop="roadress">
                   <el-input
                     v-model="authenticationPreviewForm.roadress"
                     placeholder="请填写企业街道地址"
@@ -707,44 +527,23 @@
                     placeholder="请选择企业规模"
                     readonly
                   >
-                    <el-option
-                      label="10人以下"
-                      value="1"
-                    />
-                    <el-option
-                      label="11-50人"
-                      value="2"
-                    />
-                    <el-option
-                      label="50-100人"
-                      value="3"
-                    />
-                    <el-option
-                      label="101-500人"
-                      value="4"
-                    />
-                    <el-option
-                      label="501-1000人"
-                      value="5"
-                    />
-                    <el-option
-                      label="1000人以上"
-                      value="6"
-                    />
+                    <el-option label="10人以下" value="1" />
+                    <el-option label="11-50人" value="2" />
+                    <el-option label="50-100人" value="3" />
+                    <el-option label="101-500人" value="4" />
+                    <el-option label="501-1000人" value="5" />
+                    <el-option label="1000人以上" value="6" />
                   </el-select>
                 </el-form-item>
-                <el-form-item
-                  label="经营范围"
-                  prop="businessscope"
-                >
+                <el-form-item label="经营范围" prop="businessscope">
                   <el-input
                     v-model="authenticationPreviewForm.businessscope"
-                    maxlength="300"
-                    placeholder="请输入企业经营范围信息"
-                    readonly
                     :rows="4"
-                    show-word-limit
                     type="textarea"
+                    placeholder="请输入企业经营范围信息"
+                    maxlength="300"
+                    readonly
+                    show-word-limit
                   />
                 </el-form-item>
               </div>
@@ -754,35 +553,21 @@
 
         <div style="text-align: center">
           <el-button
-            style="margin-top: 12px"
             type="primary"
+            style="margin-top: 12px"
             @click="addEmpower"
           >
             提交审核
           </el-button>
-          <el-button
-            type="info"
-            @click.native="goBack"
-          >
-            返回上一步
-          </el-button>
+          <el-button type="info" @click="goBack">返回上一步</el-button>
         </div>
       </div>
     </div>
     <!--实验室认证-->
     <div v-if="allactive == 2">
-      <el-steps
-        :active="laboratoryactive"
-        simple
-      >
-        <el-step
-          icon="el-icon-s-promotion"
-          title="填写实验室信息"
-        />
-        <el-step
-          icon="el-icon-upload"
-          title="预览提交审核"
-        />
+      <el-steps :active="laboratoryactive" simple>
+        <el-step title="填写实验室信息" icon="el-icon-s-promotion" />
+        <el-step title="预览提交审核" icon="el-icon-upload" />
       </el-steps>
       <div
         v-if="laboratoryactive == 1"
@@ -801,20 +586,17 @@
         >
           企业实验室认证
         </p>
-        <div
-          class="blocktop"
-          style="margin-top: 20px"
-        >
+        <div class="blocktop" style="margin-top: 20px">
           <el-tabs
             v-model="editableTabsValue"
-            closable
             type="card"
+            closable
             @tab-remove="removeTab"
           >
             <el-button
+              type="primary"
               size="small"
               style="float: right"
-              type="primary"
               @click="addTab(editableTabsValue)"
             >
               新增
@@ -831,30 +613,17 @@
           </el-tabs>
           <div style="text-align: center">
             <el-row>
-              <el-button
-                type="primary"
-                @click.native="previewLaboratory"
-              >
+              <el-button type="primary" @click="previewLaboratory">
                 确定,预览
               </el-button>
-              <el-button type="info">
-                取消
-              </el-button>
-              <el-button
-                type="info"
-                @click.native="allactive = 1"
-              >
-                上一步
-              </el-button>
+              <el-button type="info">取消</el-button>
+              <el-button type="info" @click="allactive = 1">上一步</el-button>
             </el-row>
           </div>
         </div>
       </div>
       <div v-if="laboratoryactive == 2">
-        <el-tabs
-          v-model="laboratoryFormvalue"
-          type="card"
-        >
+        <el-tabs v-model="laboratoryFormvalue" type="card">
           <el-tab-pane
             v-for="(item, index) in laboratorylist"
             :key="item.laboratoryForm.name"
@@ -869,16 +638,8 @@
         </el-tabs>
         <div style="text-align: center">
           <el-row>
-            <el-button
-              type="primary"
-              @click.native="next(3)"
-            >
-              确定
-            </el-button>
-            <el-button
-              type="info"
-              @click.native="laboratoryactive = 1"
-            >
+            <el-button type="primary" @click="next(3)">确定</el-button>
+            <el-button type="info" @click="laboratoryactive = 1">
               返回上一步
             </el-button>
           </el-row>
@@ -891,30 +652,20 @@
         style="padding: 30px; margin: 0 auto; text-align: center"
       >
         <el-image>
-          <div
-            slot="error"
-            class="image-slot"
-          >
+          <div slot="error" class="image-slot">
             <svg-icon
               icon-class="empowerexamine"
               style="width: 8rem; height: 8rem"
             />
           </div>
         </el-image>
-        <p style="font-size: 25px; color: #409eff">
-          正在审核中
-        </p>
-        <p style="font-size: 20px">
-          审核员联系电话：17201202365
-        </p>
+        <p style="font-size: 25px; color: #409eff">正在审核中</p>
+        <p style="font-size: 20px">审核员联系电话：17201202365</p>
         <p style="font-size: 14px; color: #cccccc">
           预计3到5个工作日完成，请耐心等待，谢谢您的配合和理解
         </p>
         <p>
-          <el-button
-            type="primary"
-            @click.native="cancelAdd"
-          >
+          <el-button type="primary" @click="cancelAdd">
             填写新的企业资质
             <i class="el-icon-s-fold" />
           </el-button>
@@ -923,19 +674,18 @@
     </div>
     <!--其他资质弹窗-->
     <el-dialog
-      :append-to-body="true"
+      :visible.sync="dialogVisible"
       :before-close="handleClose"
       title="其他资质添加"
-      :visible.sync="dialogVisible"
       width="60%"
     >
       <div class="dialogform">
         <el-form
           ref="addotherform"
-          class="demo-addotherform"
-          label-width="120px"
           :model="addotherform"
           :rules="otheformrule"
+          label-width="120px"
+          class="demo-addotherform"
         >
           <el-row>
             <p
@@ -950,99 +700,75 @@
             <!--证书认证上-->
             <el-col :span="12">
               <div class="grid-content bg-purple">
-                <el-form-item
-                  label="证书编号"
-                  prop="name"
-                >
+                <el-form-item label="证书编号" prop="name">
                   <el-input v-model="addotherform.name" />
                 </el-form-item>
-                <el-form-item
-                  label="签发日期"
-                  prop="dateOfIssue"
-                >
+                <el-form-item label="签发日期" prop="dateOfIssue">
                   <el-date-picker
                     v-model="addotherform.dateOfIssue"
-                    placeholder="选择签发日期"
-                    style="width: 100%"
                     type="date"
+                    placeholder="选择签发日期"
                     value-format="timestamp"
+                    style="width: 100%"
                   />
                 </el-form-item>
-                <el-form-item
-                  label="初次认可"
-                  prop="initialRecognition"
-                >
+                <el-form-item label="初次认可" prop="initialRecognition">
                   <el-date-picker
                     v-model="addotherform.initialRecognition"
-                    placeholder="选择签发日期"
-                    style="width: 100%"
                     type="date"
+                    placeholder="选择签发日期"
                     value-format="timestamp"
+                    style="width: 100%"
                   />
                 </el-form-item>
                 <el-form-item label="资质内容">
                   <el-input
                     v-model="addotherform.desc"
-                    placeholder="请输入证书资质信息"
                     :rows="8"
                     type="textarea"
+                    placeholder="请输入证书资质信息"
                   />
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="12">
               <div class="grid-content bg-purple-light">
-                <el-form-item
-                  label="发证机关"
-                  prop="licencsIssuing"
-                >
+                <el-form-item label="发证机关" prop="licencsIssuing">
                   <el-input v-model="addotherform.licencsIssuing" />
                 </el-form-item>
-                <el-form-item
-                  label="有效期至"
-                  prop="termOfValidity"
-                >
+                <el-form-item label="有效期至" prop="termOfValidity">
                   <el-date-picker
                     v-model="addotherform.termOfValidity"
-                    placeholder="选择有效期至"
-                    style="width: 100%"
                     type="date"
+                    placeholder="选择有效期至"
                     value-format="timestamp"
+                    style="width: 100%"
                   />
                 </el-form-item>
-                <el-form-item
-                  label="更新时间"
-                  prop="updatedDate"
-                >
+                <el-form-item label="更新时间" prop="updatedDate">
                   <el-date-picker
                     v-model="addotherform.updatedDate"
-                    placeholder="选择签发更新时间"
-                    style="width: 100%"
                     type="date"
+                    placeholder="选择签发更新时间"
                     value-format="timestamp"
+                    style="width: 100%"
                   />
                 </el-form-item>
-                <el-form-item
-                  label="证书电子文件"
-                  required
-                >
+                <el-form-item label="证书电子文件" required>
                   <!--   :on-success="handleAvatarSuccessOther"
                   :before-upload="beforeAvatarUploadOther"-->
 
                   <el-upload
-                    action="/iotapi/upload"
-                    class="avatar-uploader"
                     :show-file-list="false"
+                    class="avatar-uploader"
+                    action="/iotapi/upload"
                   >
                     <img
                       v-if="addotherform.imgsrc"
-                      class="avatar"
                       :src="fileDomain + addotherform.imgsrc"
+                      class="avatar"
                     />
-                    <i
-                      v-else
-                      class="el-icon-plus avatar-uploader-icon"
-                    />
+                    <i v-else class="el-icon-plus avatar-uploader-icon" />
                     <div
                       class="el-upload__text"
                       style="
@@ -1058,13 +784,13 @@
                   <el-button
                     v-show="addotherform.imgsrc != ''"
                     size="small"
+                    type="danger"
                     style="
                       position: absolute;
                       top: 150px;
                       left: 200px;
                       margin-left: 0;
                     "
-                    type="danger"
                     @click="addotherform.imgsrc = ''"
                   >
                     删除
@@ -1075,15 +801,9 @@
           </el-row>
         </el-form>
       </div>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click.native="updateOther('addotherform')"
-        >
+        <el-button type="primary" @click="updateOther('addotherform')">
           确 定
         </el-button>
       </span>

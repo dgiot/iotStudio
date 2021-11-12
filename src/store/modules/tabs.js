@@ -16,8 +16,9 @@ const mutations = {
    */
   addVisitedRoute(state, route) {
     const target = state.visitedRoutes.find((item) => item.path === route.path)
-    if (target && !route.meta.dynamicNewTab) Object.assign(target, route)
-    else if (!target) state.visitedRoutes.push(Object.assign({}, route))
+    if (target && !route.meta.dynamicNewTab) {
+      Object.assign(target, route)
+    } else if (!target) state.visitedRoutes.push(Object.assign({}, route))
   },
   /**
    * @description 删除当前标签页
@@ -38,7 +39,7 @@ const mutations = {
    */
   delOthersVisitedRoutes(state, path) {
     state.visitedRoutes = state.visitedRoutes.filter(
-      (item) => item.meta.noClosable || item.path === path
+      (item) => item.meta.noClosable || item.path === path,
     )
   },
   /**
@@ -49,7 +50,7 @@ const mutations = {
    */
   delLeftVisitedRoutes(state, path) {
     const idx = state.visitedRoutes.indexOf(
-      state.visitedRoutes.find((item) => item.path === path)
+      state.visitedRoutes.find((item) => item.path === path),
     )
     state.visitedRoutes = state.visitedRoutes.filter((item, index) => {
       return item.meta.noClosable || index >= idx
@@ -63,7 +64,7 @@ const mutations = {
    */
   delRightVisitedRoutes(state, path) {
     const idx = state.visitedRoutes.indexOf(
-      state.visitedRoutes.find((item) => item.path === path)
+      state.visitedRoutes.find((item) => item.path === path),
     )
     state.visitedRoutes = state.visitedRoutes.filter((item, index) => {
       return item.meta.noClosable || index <= idx
@@ -76,7 +77,7 @@ const mutations = {
    */
   delAllVisitedRoutes(state) {
     state.visitedRoutes = state.visitedRoutes.filter(
-      (item) => item.meta.noClosable
+      (item) => item.meta.noClosable,
     )
   },
   /**
@@ -87,13 +88,16 @@ const mutations = {
   changeTabsMeta(state, options) {
     function handleVisitedRoutes(visitedRoutes) {
       return visitedRoutes.map((route) => {
-        if (route.name === options.name || route.meta.title === options.title)
+        if (route.name === options.name || route.meta.title === options.title) {
           Object.assign(route.meta, options.meta)
-        if (route.children && route.children.length)
+        }
+        if (route.children && route.children.length) {
           route.children = handleVisitedRoutes(route.children)
+        }
         return route
       })
     }
+
     state.visitedRoutes = handleVisitedRoutes(state.visitedRoutes)
   },
 }
@@ -154,4 +158,9 @@ const actions = {
     commit('changeTabsMeta', options)
   },
 }
-export default { state, getters, mutations, actions }
+export default {
+  state,
+  getters,
+  mutations,
+  actions
+}

@@ -171,7 +171,8 @@ export function isBlank(value) {
     false ||
     value === '' ||
     value.trim() === '' ||
-    value.toLocaleLowerCase().trim() === 'null'
+    value.toLocaleLowerCase()
+      .trim() === 'null'
   )
 }
 

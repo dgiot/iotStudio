@@ -150,15 +150,17 @@
       handleSetLineChartData(type) {
         this.lineChartData = lineChartData[type]
       },
-      daydata() {},
+      daydata() {
+      },
     },
   }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss" rel="stylesheet/scss" scoped>
   .dashboard-editor-container {
     padding: 32px;
     background-color: rgb(240, 242, 245);
+
     .chart-wrapper {
       padding: 16px 16px 0;
       margin-bottom: 32px;

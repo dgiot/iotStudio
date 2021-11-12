@@ -1,6 +1,7 @@
 import createText from '@/utils/konva/createText'
 import createRect from '@/utils/konva/createRect'
 import createImg from '@/utils/konva/createImg'
+
 export default function createShape(group, Shape) {
   Shape.forEach((_item) => {
     switch (_item.type) {

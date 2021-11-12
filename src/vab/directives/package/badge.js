@@ -11,7 +11,10 @@ let flag = false
  */
 const badge = {
   update(el, binding, vnode) {
-    const { modifiers, value } = binding
+    const {
+      modifiers,
+      value,
+    } = binding
     const modifiersKey = Object.keys(modifiers)
     let isDot = modifiersKey.includes('dot')
     let backgroundColor = ''
@@ -28,12 +31,12 @@ const badge = {
     const targetTemplate = isDot
       ? `<div style="position:absolute;top:-5px;right:-5px;height:10px;width:10px;border-radius:50%;background:${backgroundColor}"></div>`
       : `<div style="background:${backgroundColor};position:absolute;top:-${
-          HEIGHT / 2
-        }px;right:-${
-          HEIGHT / 2
-        }px;height:${HEIGHT}px;min-width:${HEIGHT}px;border-radius:${
-          HEIGHT / 2
-        }px;text-align:center;line-height:${HEIGHT}px;color:#fff;padding:0 5px;">${value}</div>`
+        HEIGHT / 2
+      }px;right:-${
+        HEIGHT / 2
+      }px;height:${HEIGHT}px;min-width:${HEIGHT}px;border-radius:${
+        HEIGHT / 2
+      }px;text-align:center;line-height:${HEIGHT}px;color:#fff;padding:0 5px;">${value}</div>`
 
     el.style.position = el.style.position || 'relative'
     const badge = Vue.extend({

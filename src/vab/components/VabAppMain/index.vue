@@ -15,7 +15,6 @@
 <script>
   import { mapActions, mapGetters } from 'vuex'
   import VabProgress from 'nprogress'
-  import * as utils from '@/utils/vuex'
 
   export default {
     name: 'VabAppMain',
@@ -37,9 +36,9 @@
               .filter(
                 (item) =>
                   !item.meta.noKeepAlive &&
-                  item.name !== this.extra.transferRouteName
+                  item.name !== this.extra.transferRouteName,
               )
-              .flatMap((item) => item.matched)
+              .flatMap((item) => item.matched),
           ),
         ]
       },

@@ -71,6 +71,7 @@
 
 <script>
   import { intercept } from '@/utils'
+
   export default {
     name: 'ClientsView',
     data() {
@@ -119,7 +120,7 @@
             this.$httpDelete(`/clients/${encodeURIComponent(this.clientId)}`)
               .then(() => {
                 this.$message.success(
-                  this.$translateTitle('oper.disconnectSuccess')
+                  this.$translateTitle('oper.disconnectSuccess'),
                 )
                 this.$set(this.basicRecord, 'connected', false)
                 setTimeout(() => {
@@ -128,11 +129,12 @@
               })
               .catch((error) => {
                 this.$message.error(
-                  error || this.$translateTitle('error.networkError')
+                  error || this.$translateTitle('error.networkError'),
                 )
               })
           })
-          .catch(() => {})
+          .catch(() => {
+          })
       },
       loadBasicData() {
         this.$httpGet(`/clients/${encodeURIComponent(this.clientId)}`)
@@ -144,18 +146,20 @@
             }
             this.loadSubscription()
           })
-          .catch(() => {})
+          .catch(() => {
+          })
       },
       loadSubscription() {
         this.$httpGet(
           `/nodes/${this.nodeName}/subscriptions/${encodeURIComponent(
-            this.clientId
-          )}`
+            this.clientId,
+          )}`,
         )
           .then((res) => {
             this.subscriptionsData = res.data
           })
-          .catch(() => {})
+          .catch(() => {
+          })
       },
     },
   }
@@ -167,6 +171,7 @@
       float: right;
       margin-top: -32px;
       color: #adafb4;
+
       .connect-btn {
         min-width: 80px;
         margin-left: 20px;
@@ -174,25 +179,31 @@
         font-weight: normal;
         background: transparent;
         border: 1px solid;
+
         &.disconnected {
           color: #ff6d6d;
           border-color: #ff6d6d;
         }
+
         &.connected {
           color: #adafb4;
           border-color: #adafb4;
         }
+
         &:hover {
           background: transparent !important;
         }
       }
     }
+
     .el-card.tabs-card {
       border-radius: 0 0 4px 4px;
     }
+
     .el-card .el-card__body {
       padding: 10px 36px;
     }
+
     .card-subtitle {
       margin: 24px 0;
       font-size: 16px;

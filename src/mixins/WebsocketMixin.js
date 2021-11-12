@@ -1,5 +1,9 @@
 import store from '@/store'
-const { token, objectId } = store.getters['user/token']
+
+const {
+  token,
+  objectId,
+} = store.getters['user/token']
 var socketUrl = 'http://prod.iotn2n.com:8083'
 const WebsocketMixin = {
   mounted() {
@@ -31,10 +35,10 @@ const WebsocketMixin = {
       var url =
         window.location.protocol === 'https:'
           ? socketUrl.replace('https://', 'wss://') +
-            '/' +
-            objectId +
-            '/' +
-            token
+          '/' +
+          objectId +
+          '/' +
+          token
           : socketUrl.replace('http://', 'ws://') + '/' + objectId + '/' + token
       this.websock = new WebSocket(url)
       this.websock.onopen = this.websocketOnopen

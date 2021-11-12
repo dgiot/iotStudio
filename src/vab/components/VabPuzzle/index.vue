@@ -14,8 +14,8 @@
       @touchstart.stop
     >
       <div
-        class="auth-body_"
         :style="`height: ${canvasHeight}px`"
+        class="auth-body_"
       >
         <!-- 主图，有缺口 -->
         <canvas
@@ -35,7 +35,6 @@
         <!-- 小图 -->
         <canvas
           ref="canvas2"
-          class="auth-canvas2_"
           :height="canvasHeight"
           :style="`width:${puzzleBaseSize}px;height:${canvasHeight}px;transform:translateX(${
             styleWidth -
@@ -44,6 +43,7 @@
             ((styleWidth - sliderBaseSize) / (canvasWidth - sliderBaseSize))
           }px)`"
           :width="puzzleBaseSize"
+          class="auth-canvas2_"
         />
         <div :class="['loading-box_', { hide_: !loading }]">
           <div class="loading-gif_">
@@ -68,23 +68,23 @@
           }) skew(-30deg, 0);`"
         ></div>
         <img
-          class="reset_"
           :src="resetSvg"
+          class="reset_"
           @click="reset"
         />
       </div>
       <div class="auth-control_">
         <div
-          class="range-box"
           :style="`height:${sliderBaseSize}px`"
+          class="range-box"
         >
           <div class="range-text">
             {{ sliderText }}
           </div>
           <div
             ref="range-slider"
-            class="range-slider"
             :style="`width:${styleWidth}px`"
+            class="range-slider"
           >
             <div
               :class="['range-btn', { isDown: mouseDown }]"
@@ -107,18 +107,40 @@
    * @document https://github.com/javaLuo/vue-puzzle-vcode/blob/master/src/app.vue
    */
   import resetSvg from './reset.png'
+
   export default {
     name: 'VabPuzzle',
     /** 父级参数 **/
     props: {
-      id: { type: String, default: 'vabpuzzle' },
-      canvasWidth: { type: Number, default: 310 }, // 主canvas的宽
-      canvasHeight: { type: Number, default: 160 }, // 主canvas的高
+      id: {
+        type: String,
+        default: 'vabpuzzle',
+      },
+      canvasWidth: {
+        type: Number,
+        default: 310,
+      }, // 主canvas的宽
+      canvasHeight: {
+        type: Number,
+        default: 160,
+      }, // 主canvas的高
       // 是否出现，由父级控制
-      show: { type: Boolean, default: false },
-      puzzleScale: { type: Number, default: 1 }, // 拼图块的大小缩放比例
-      sliderSize: { type: Number, default: 50 }, // 滑块的大小
-      range: { type: Number, default: 10 }, // 允许的偏差值
+      show: {
+        type: Boolean,
+        default: false,
+      },
+      puzzleScale: {
+        type: Number,
+        default: 1,
+      }, // 拼图块的大小缩放比例
+      sliderSize: {
+        type: Number,
+        default: 50,
+      }, // 滑块的大小
+      range: {
+        type: Number,
+        default: 10,
+      }, // 允许的偏差值
       // 所有的背景图片
       imgs: {
         default: () => [],
@@ -167,13 +189,13 @@
         return w < this.sliderBaseSize
           ? this.sliderBaseSize
           : w > this.canvasWidth
-          ? this.canvasWidth
-          : w
+            ? this.canvasWidth
+            : w
       },
       // 图中拼图块的60 * 用户设定的缩放比例计算之后的值 0.2~2
       puzzleBaseSize() {
         return Math.round(
-          Math.max(Math.min(this.puzzleScale, 2), 0.2) * 52.5 + 6
+          Math.max(Math.min(this.puzzleScale, 2), 0.2) * 52.5 + 6,
         )
       },
       // 处理一下sliderSize，弄成整数，以免计算有偏差
@@ -181,9 +203,9 @@
         return Math.max(
           Math.min(
             Math.round(this.sliderSize),
-            Math.round(this.canvasWidth * 0.5)
+            Math.round(this.canvasWidth * 0.5),
           ),
-          10
+          10,
         )
       },
     },
@@ -283,11 +305,11 @@
         // 取一个随机坐标，作为拼图块的位置
         this.pinX = this.getRandom(
           this.puzzleBaseSize,
-          this.canvasWidth - this.puzzleBaseSize - 20
+          this.canvasWidth - this.puzzleBaseSize - 20,
         ) // 留20的边距
         this.pinY = this.getRandom(
           20,
-          this.canvasHeight - this.puzzleBaseSize - 20
+          this.canvasHeight - this.puzzleBaseSize - 20,
         ) // 主图高度 - 拼图块自身高度 - 20边距
         img.crossOrigin = 'anonymous' // 匿名，想要获取跨域的图片
         img.onload = () => {
@@ -329,7 +351,7 @@
             this.puzzleBaseSize * 1.2,
             0,
             Math.PI * 2,
-            true
+            true,
           )
           ctx.closePath()
           ctx.shadowColor = 'rgba(255, 255, 255, .8)'
@@ -343,7 +365,7 @@
             this.pinX - 3, // 为了阴影 是从-3px开始截取，判定的时候要+3px
             this.pinY - 20,
             this.pinX + this.puzzleBaseSize + 5,
-            this.pinY + this.puzzleBaseSize + 5
+            this.pinY + this.puzzleBaseSize + 5,
           )
           ctx2.putImageData(imgData, 0, this.pinY - 20)
           // 清理
@@ -366,7 +388,7 @@
             this.puzzleBaseSize * 1.2,
             0,
             Math.PI * 2,
-            true
+            true,
           )
           ctx.shadowColor = '#000'
           ctx.shadowOffsetX = 2
@@ -436,14 +458,14 @@
           this.pinY - moveL / 2,
           this.pinX + moveL + moveL / 2,
           this.pinY - moveL / 2,
-          moveL / 2
+          moveL / 2,
         )
         ctx.arcTo(
           this.pinX + moveL + moveL,
           this.pinY - moveL / 2,
           this.pinX + moveL + moveL,
           this.pinY,
-          moveL / 2
+          moveL / 2,
         )
         ctx.lineTo(this.pinX + moveL + moveL + moveL, this.pinY)
         ctx.lineTo(this.pinX + moveL + moveL + moveL, this.pinY + moveL)
@@ -452,18 +474,18 @@
           this.pinY + moveL,
           this.pinX + moveL + moveL + moveL + moveL / 2,
           this.pinY + moveL + moveL / 2,
-          moveL / 2
+          moveL / 2,
         )
         ctx.arcTo(
           this.pinX + moveL + moveL + moveL + moveL / 2,
           this.pinY + moveL + moveL,
           this.pinX + moveL + moveL + moveL,
           this.pinY + moveL + moveL,
-          moveL / 2
+          moveL / 2,
         )
         ctx.lineTo(
           this.pinX + moveL + moveL + moveL,
-          this.pinY + moveL + moveL + moveL
+          this.pinY + moveL + moveL + moveL,
         )
         ctx.lineTo(this.pinX, this.pinY + moveL + moveL + moveL)
         ctx.lineTo(this.pinX, this.pinY + moveL + moveL)
@@ -472,14 +494,14 @@
           this.pinY + moveL + moveL,
           this.pinX + moveL / 2,
           this.pinY + moveL + moveL / 2,
-          moveL / 2
+          moveL / 2,
         )
         ctx.arcTo(
           this.pinX + moveL / 2,
           this.pinY + moveL,
           this.pinX,
           this.pinY + moveL,
-          moveL / 2
+          moveL / 2,
         )
         ctx.lineTo(this.pinX, this.pinY)
       },
@@ -491,18 +513,18 @@
         canvas.height = this.canvasHeight
         ctx.fillStyle = `rgb(${this.getRandom(100, 255)},${this.getRandom(
           100,
-          255
+          255,
         )},${this.getRandom(100, 255)})`
         ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight)
         // 随机画10个图形
         for (let i = 0; i < 12; i++) {
           ctx.fillStyle = `rgb(${this.getRandom(100, 255)},${this.getRandom(
             100,
-            255
+            255,
           )},${this.getRandom(100, 255)})`
           ctx.strokeStyle = `rgb(${this.getRandom(100, 255)},${this.getRandom(
             100,
-            255
+            255,
           )},${this.getRandom(100, 255)})`
           if (this.getRandom(0, 2) > 1) {
             // 矩形
@@ -512,7 +534,7 @@
               this.getRandom(-20, canvas.width - 20),
               this.getRandom(-20, canvas.height - 20),
               this.getRandom(10, canvas.width / 2 + 10),
-              this.getRandom(10, canvas.height / 2 + 10)
+              this.getRandom(10, canvas.height / 2 + 10),
             )
             ctx.restore()
           } else {
@@ -524,7 +546,7 @@
               this.getRandom(0, canvas.height),
               this.getRandom(10, canvas.height / 2 + 10),
               ran,
-              ran + Math.PI * 1.5
+              ran + Math.PI * 1.5,
             )
             ctx.closePath()
             ctx.fill()
@@ -538,11 +560,11 @@
         // 最后+ 的是补上slider和滑块宽度不一致造成的缝隙
         const x = Math.abs(
           this.pinX -
-            (this.styleWidth - this.sliderBaseSize) +
-            (this.puzzleBaseSize - this.sliderBaseSize) *
-              ((this.styleWidth - this.sliderBaseSize) /
-                (this.canvasWidth - this.sliderBaseSize)) -
-            3
+          (this.styleWidth - this.sliderBaseSize) +
+          (this.puzzleBaseSize - this.sliderBaseSize) *
+          ((this.styleWidth - this.sliderBaseSize) /
+            (this.canvasWidth - this.sliderBaseSize)) -
+          3,
         )
         if (x < this.range) {
           // 成功

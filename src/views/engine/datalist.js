@@ -18,7 +18,7 @@ var datalist = [
     },
     event: 'message.publish',
     sql_example:
-      "SELECT payload.msg as msg FROM \"message.publish\" WHERE topic =~ 't/#' and msg = 'hello'",
+      'SELECT payload.msg as msg FROM "message.publish" WHERE topic =~ \'t/#\' and msg = \'hello\'',
     test_columns: {
       clientid: 'c_emqx',
       username: 'u_emqx',
@@ -52,7 +52,7 @@ var datalist = [
     },
     event: 'message.delivered',
     sql_example:
-      "SELECT payload.msg as msg FROM \"message.delivered\" WHERE topic =~ 't/#' and msg = 'hello'",
+      'SELECT payload.msg as msg FROM "message.delivered" WHERE topic =~ \'t/#\' and msg = \'hello\'',
     test_columns: {
       clientid: 'c_emqx',
       username: 'u_emqx',
@@ -84,7 +84,7 @@ var datalist = [
     },
     event: 'message.acked',
     sql_example:
-      "SELECT payload.msg as msg FROM \"message.acked\" WHERE topic =~ 't/#' and msg = 'hello'",
+      'SELECT payload.msg as msg FROM "message.acked" WHERE topic =~ \'t/#\' and msg = \'hello\'',
     test_columns: {
       clientid: 'c_emqx',
       username: 'u_emqx',
@@ -116,7 +116,7 @@ var datalist = [
     },
     event: 'message.dropped',
     sql_example:
-      "SELECT payload.msg as msg FROM \"message.dropped\" WHERE topic =~ 't/#' and msg = 'hello'",
+      'SELECT payload.msg as msg FROM "message.dropped" WHERE topic =~ \'t/#\' and msg = \'hello\'',
     test_columns: {
       clientid: 'c_emqx',
       username: 'u_emqx',

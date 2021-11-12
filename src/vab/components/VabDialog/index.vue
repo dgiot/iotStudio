@@ -3,7 +3,6 @@
     :append-to-body="appendToBody"
     :before-close="handleClose"
     :close-on-click-modal="false"
-    custom-class="uq-dialog-custom"
     :destroy-on-close="destroyOnClose"
     :fullscreen="fullscreen"
     :modal="modal"
@@ -11,6 +10,7 @@
     :title="$slots.title ? '' : title"
     :visible.sync="visible"
     :width="width"
+    custom-class="uq-dialog-custom"
     @close="close"
     @closed="closed"
     @open="open"
@@ -115,7 +115,7 @@
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .uq-dialog-custom {
     .el-dialog__header {
     }

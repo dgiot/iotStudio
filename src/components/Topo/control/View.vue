@@ -36,8 +36,10 @@
       },
     },
     methods: {
-      refreshData(val, sceneName) {},
-      onResize() {},
+      refreshData(val, sceneName) {
+      },
+      onResize() {
+      },
     },
   }
 </script>

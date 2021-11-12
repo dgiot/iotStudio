@@ -16,10 +16,12 @@ export default {
       tip: '字段名不可重复',
       options: (data) =>
         data.source == '手动输入'
-          ? JSON.parse(localStorage.getItem('_sourceDict')).map((e) => {
+          ? JSON.parse(localStorage.getItem('_sourceDict'))
+            .map((e) => {
               return e.field
             })
-          : JSON.parse(localStorage.getItem('_sourceModule')).map((e) => {
+          : JSON.parse(localStorage.getItem('_sourceModule'))
+            .map((e) => {
               return e.field
             }),
       rules: {
@@ -112,8 +114,14 @@ export default {
       type: 'radio-button',
       tip: '与全局isShowLabel作用相同',
       options: [
-        { text: '显示', value: undefined },
-        { text: '隐藏', value: false },
+        {
+          text: '显示',
+          value: undefined,
+        },
+        {
+          text: '隐藏',
+          value: false,
+        },
       ],
     },
     labelWidth: {
@@ -125,8 +133,14 @@ export default {
       label: '强制折行',
       type: 'radio-button',
       options: [
-        { text: '正常', value: undefined },
-        { text: '折行', value: true },
+        {
+          text: '正常',
+          value: undefined,
+        },
+        {
+          text: '折行',
+          value: true,
+        },
       ],
     },
     displayFormatter: {

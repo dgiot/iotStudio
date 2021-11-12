@@ -1,8 +1,8 @@
 <template>
   <div
     ref="custom-table"
-    class="devproduct devproduct-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
+    class="devproduct devproduct-container"
   >
     <!--添加物模型弹窗-->
     <el-dialog
@@ -10,8 +10,8 @@
       :before-close="wmxhandleClose"
       :close-on-click-modal="false"
       :title="wmxSituation + '自定义属性'"
-      top="5vh"
       :visible.sync="wmxdialogVisible"
+      top="5vh"
       width="60%"
     >
       <wmxdetail
@@ -38,8 +38,8 @@
           class="ace_editor"
           style="min-height: 400px"
         ><textarea
-class="ace_text-input"
-                   style="overflow:scroll"
+          class="ace_text-input"
+          style="overflow:scroll"
         /></pre>
       </div>
       <span
@@ -59,8 +59,8 @@ class="ace_text-input"
     <el-dialog
       :append-to-body="true"
       :title="formConfig.uid"
-      top="1vh"
       :visible.sync="dialogVisible"
+      top="1vh"
     >
       <vab-parser
         :dba-table="DbaTable"
@@ -77,14 +77,10 @@ class="ace_text-input"
       <!--        </el-button>-->
       <!--      </span>-->
     </el-dialog>
-    <vab-input
-      ref="uploadFinish"
-      @fileInfo="fileInfo"
-    />
     <el-dialog
       v-drag-dialog
-      append-to-body
       :visible.sync="parserView"
+      append-to-body
     >
       <f-render
         v-model="formConfig"
@@ -97,10 +93,10 @@ class="ace_text-input"
       <vab-query-form>
         <vab-query-form-top-panel>
           <el-form
-            class="demo-form-inline"
             :inline="true"
-            label-width="100px"
             :model="formInline"
+            class="demo-form-inline"
+            label-width="100px"
             @submit.native.prevent
           >
             <el-form-item :label="$translateTitle('resource.category')">
@@ -125,8 +121,8 @@ class="ace_text-input"
             <el-form-item :label="$translateTitle('alert.product name')">
               <el-input
                 v-model="queryForm.name"
-                clearable
                 :placeholder="$translateTitle('product.searchproductname')"
+                clearable
                 size="mini"
                 style="width: 90%"
               >
@@ -141,13 +137,6 @@ class="ace_text-input"
             </el-form-item>
           </el-form>
 
-          <el-button
-            size="mini"
-            type="primary"
-            @click="$refs['templet'].showEdit()"
-          >
-            {{ $translateTitle('product.Product template') }}
-          </el-button>
           <el-button
             v-show="!$loadsh.isEmpty(productDetail)"
             size="mini"
@@ -174,18 +163,18 @@ class="ace_text-input"
           :xs="12"
         >
           <ul
+            :style="{ height: tableHeight + 'px' }"
             class="infinite-list"
             style="overflow: auto"
-            :style="{ height: tableHeight + 'px' }"
           >
             <li
               v-for="(item, index) in categorysonList"
               :key="index"
               class="infinite-list-item"
               disabled
-              @click.stop="categorysonChange(item, index)"
+              @click.stop="categorysonChange(item)"
             >
-              <el-link :type="linkType == index ? 'success' : ''">
+              <el-link :type="linkType == item.name ? 'success' : ''">
                 {{ item.name }}&nbsp;&nbsp;&nbsp;
               </el-link>
               <el-button
@@ -199,10 +188,10 @@ class="ace_text-input"
           </ul>
         </el-col>
         <el-col
-          :lg="4"
+          :lg="10"
           :md="6"
           :sm="6"
-          :xl="3"
+          :xl="5"
           :xs="12"
         >
           <div class="protable">
@@ -221,10 +210,43 @@ class="ace_text-input"
               <el-table-column
                 :label="$translateTitle('product.productname')"
                 show-overflow-tooltip
-                sortable
+                width="80"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('product.classification')"
+                show-overflow-tooltip
+                width="80"
+              >
+                <template slot-scope="scope">
+                  <span>{{ scope.row.category ? scope.row.category.name : '' }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$translateTitle('developer.operation')"
+                fixed="right"
+                width="145"
+              >
+                <template slot-scope="scope">
+                  <el-button
+                    :underline="false"
+                    size="mini"
+                    type="success"
+                    @click.stop="editproducttemp(scope.row)"
+                  >
+                    {{ $translateTitle('concentrator.edit') }}
+                  </el-button>
+                  <el-button
+                    slot="reference"
+                    size="mini"
+                    type="danger"
+                    @click.stop="deleteproducttemp(scope.row)"
+                  >
+                    {{ $translateTitle('developer.delete') }}
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -234,20 +256,20 @@ class="ace_text-input"
             style="margin-top: 20px"
           >
             <el-pagination
-              layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
               :page-sizes="[10, 20, 30, 50]"
               :total="total"
+              layout="total, sizes, prev, pager, next, jumper"
               @current-change="productCurrentChange"
               @size-change="productSizeChange"
             />
           </div>
         </el-col>
         <el-col
-          :lg="16"
+          :lg="10"
           :md="13"
-          :sm="12"
-          :xl="18"
+          :sm="18"
+          :xl="16"
           :xs="24"
         >
           <profile-descriptions
@@ -259,6 +281,7 @@ class="ace_text-input"
             :product-id="producttempId"
             :table-loading="tableLoading"
             :table-type="tableType"
+            :thing-key="thingKey"
             :things="things"
           />
         </el-col>
@@ -286,22 +309,22 @@ class="ace_text-input"
       @fetch-data="queryProduttemp({})"
     />
     <el-drawer
-      append-to-body
       :before-close="handleClose"
       :close-on-click-modal="false"
-      size="50%"
       :title="moduleTitle"
-      top="5vh"
       :visible.sync="dialogFormVisible"
+      append-to-body
+      size="50%"
+      top="5vh"
     >
       <div class="devproduct-prodialog-content">
         <!--产品信息-->
         <div class="contentone">
           <el-form
             ref="form"
-            label-width="150px"
             :model="form"
             :rules="rules"
+            label-width="150px"
           >
             <el-form-item
               :label="$translateTitle('product.Producttemplatename')"
@@ -312,15 +335,22 @@ class="ace_text-input"
                 autocomplete="off"
               />
             </el-form-item>
-
             <el-form-item
               :label="$translateTitle('product.classification')"
-              prop="netType"
             >
               <el-input
-                v-model="form.netType"
-                readonly
+                v-model="form.categoryname"
+                :disabled="addflag"
+                :placeholder="$translateTitle('product.pleaseselectyourcate')"
+                @focus="showTree = !showTree"
               />
+              <div v-if="showTree">
+                <el-tree
+                  :data="categorytree"
+                  :props="defaultProps"
+                  @node-click="handleNodeClick"
+                />
+              </div>
             </el-form-item>
             <el-form-item
               :label="$translateTitle('menu.icon')"
@@ -328,8 +358,8 @@ class="ace_text-input"
             >
               <div v-if="imageUrl">
                 <img
+                  :src="$FileServe + imageUrl"
                   class="avatar"
-                  :src="imageUrl"
                 />
                 <el-button
                   size="mini"
@@ -343,7 +373,7 @@ class="ace_text-input"
               <i
                 v-else
                 class="el-icon-plus avatar-uploader-icon"
-                @click="uploadCkick"
+                @click="uploadCkick('producttemp_ico')"
               />
               <form
                 ref="uploadform"
@@ -366,6 +396,12 @@ class="ace_text-input"
               </form>
               <br />
             </el-form-item>
+            <vab-input
+              ref="uploadFinish"
+              :params="inputParams"
+              @fileInfo="fileInfo"
+              @files="files"
+            />
             <el-form-item
               :label="$translateTitle('developer.describe')"
               prop="desc"
@@ -378,7 +414,10 @@ class="ace_text-input"
           </el-form>
         </div>
       </div>
-      <div class="devproduct-prodialog-footer">
+      <div
+        class="devproduct-prodialog-footer"
+        style="text-align: center"
+      >
         <el-button
           type="primary"
           @click.native="submitForm()"
@@ -395,14 +434,8 @@ class="ace_text-input"
 <!--eslint-disable-->
 <script>
   import { queryCategory } from '@/api/Category'
-  const context = require.context('./component/profile', true, /\.vue$/)
-  let res_components = {}
-  context.keys().forEach((fileName) => {
-    let comp = context(fileName)
-    res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
-  })
   import { mapGetters, mapMutations } from 'vuex'
-  import { deleteThing, postThing, putProduct, putThing } from '@/api/Product'
+  import { putProduct } from '@/api/Product'
   import { getAllunit } from '@/api/Dict/index'
   import { export_txt_to_zip } from '@/utils/Export2Zip.js'
   import { getServer } from '@/api/Role/index'
@@ -410,6 +443,7 @@ class="ace_text-input"
   import { getHashClass } from '@/api/Hash'
   import { getTable } from '@/api/Dba'
   import {
+    delProductTemplet,
     getProductTemplet,
     postProductTemplet,
     putProductTemplet,
@@ -419,9 +453,22 @@ class="ace_text-input"
   import { uuid } from '@/utils'
   import wmxdetail from './component/wmxdetail'
   import { setTimeout } from 'timers'
+  import { post_tree } from '@/api/Data'
+
+  const context = require.context('./component/profile', true, /\.vue$/)
+  let res_components = {}
+  context.keys()
+    .forEach((fileName) => {
+      let comp = context(fileName)
+      res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
+    })
+
   var editor1
   export default {
-    components: { ...res_components, wmxdetail },
+    components: {
+      ...res_components,
+      wmxdetail,
+    },
     props: {},
     data() {
       return {
@@ -432,12 +479,19 @@ class="ace_text-input"
         things: [],
         tableType: 'things',
         multipleTable: [],
+        thingKey: moment(new Date())
+          .valueOf()
+          .toString(),
         productDetail: {
           decoder: { code: '' },
           thing: { properties: [] },
-          config: { parser: [], profile: [], basedate: { params: [] } },
+          config: {
+            parser: [],
+            profile: [],
+            basedate: { params: [] },
+          },
         },
-        linkType: 0,
+        linkType: '',
         productOptions: [],
         DbaTable: [],
         parserView: false,
@@ -510,6 +564,8 @@ class="ace_text-input"
         formLabelWidth: '120px',
         dialogFormVisible: false,
         importDialogShow: false,
+        categorytree: [],
+        inputParams: {},
         form: {
           name: '',
           decoder: {},
@@ -591,7 +647,6 @@ class="ace_text-input"
         Parserzh: '',
         parseren: '',
         loading: false,
-        allApps: [],
         categoryList: [],
         categorysonList: [],
         queryForm: {
@@ -603,10 +658,12 @@ class="ace_text-input"
         projectid: '',
         allTableDate: [],
         showTree: false,
+        addflag: true,
         //物模型
         wmxdialogVisible: false,
         schemadialogVisible: false,
         wmxSituation: '新增',
+        modifyIndex: -1,
       }
     },
     computed: {
@@ -631,11 +688,17 @@ class="ace_text-input"
     },
     mounted() {
       this.$baseEventBus.$off('profileDialog')
-      this.$baseEventBus.$on('profileDialog', ({config, type, flag, productInfo,parserType}) => {
+      this.$baseEventBus.$on('profileDialog', ({
+        config,
+        type,
+        flag,
+        productInfo,
+        parserType,
+      }) => {
         this.productDetail = productInfo
         this.productInfo = productInfo
         this.parserType = type
-        this.productConfig = _.merge({basedate:{params:{}}},config)
+        this.productConfig = _.merge({ basedate: { params: {} } }, config)
         this.editorParser(config, type, flag)
       })
       const { project = '' } = this.$route.query
@@ -668,10 +731,11 @@ class="ace_text-input"
         }
         const { results } = await queryCategory(parsms)
         this.categoryList = results
-        // if (results)
-        //   this.$nextTick(() => {
-        //     // this.categoryChange({ name: '所有领域' })
-        //   })
+        if (results && this.$route.fullPath == '/dashboard/profile') {
+          this.$nextTick(() => {
+            this.categoryChange({ name: '所有领域' })
+          })
+        }
       },
       async StepsListRowClick(params) {
         var productDetail = {}
@@ -685,12 +749,16 @@ class="ace_text-input"
           productDetail = _.merge(res, {
             decoder: { code: '' },
             thing: { properties: [] },
-            config: { parser: [], profile: [], basedate: { params: [] } },
+            config: {
+              parser: [],
+              profile: [],
+              basedate: { params: [] },
+            },
           })
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'vab-hey-message-success',
           )
           if (isLoading) loading.close()
         } catch (error) {
@@ -698,7 +766,7 @@ class="ace_text-input"
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
         // console.clear()
@@ -708,60 +776,128 @@ class="ace_text-input"
         this.$refs.ProfileDescription.productDetail = productDetail
       },
       clearCategory() {
-        this.linkType = -1
+        this.linkType = ''
         this.queryProduttemp({})
       },
       categoryChange(data) {
+        this.linkType = data.name
         const loading = this.$baseColorfullLoading()
-        console.log(this.formInline.category)
         this.categorysonList = []
         let params = {
           order: 'createdAt',
+          include: 'parent',
           where: {},
         }
         if (data.name == '所有领域') {
           params.where = { level: { $gte: 1 } }
-          queryCategory(params).then((res) => {
-            this.categorysonList = res.results
-          })
+          queryCategory(params)
+            .then((res) => {
+              this.categorysonList = res.results
+            })
         } else {
           params.where = {
-            parent: {
-              className: 'Category',
-              objectId: data.objectId,
-              __type: 'Pointer',
-            },
+            parent: data.objectId,
           }
-          queryCategory(params).then((res) => {
-            this.categorysonList = res.results
-            this.categorysonList.push(data)
-          })
+          queryCategory(params)
+            .then((res) => {
+              // this.categorysonList.push(data)
+              this.categorysonList = [data].concat(res.results)
+            })
         }
         loading.close()
       },
-      categorysonChange(data, index) {
-        this.linkType = index
+      categorysonChange(data) {
+        this.linkType = data.name
         this.queryProduttemp({ category: data.objectId })
       },
       addproducttemp(data) {
-        this.form.netType = data.name
-        this.form.category = data.objectId
+        this.fetchData()
+        this.addflag = true
+        this.form = {
+          name: '',
+          decoder: {},
+          thing: {},
+          config: {},
+          nodeType: 0,
+          netType: '',
+          categoryname: data.name,
+          categoryid: data.objectId,
+        }
         this.dialogFormVisible = true
+        this.producttempId = moment(new Date())
+          .valueOf()
+          .toString()
+      },
+      editproducttemp(row) {
+        console.log('row', row)
+        this.fetchData()
+        this.addflag = false
+        this.form = row
+        this.producttempId = row.objectId
+        this.$set(this.form, 'categoryname', row.category ? row.category.name : '')
+        this.$set(this.form, 'categoryid', row.category ? row.category.objectId : '')
+        this.dialogFormVisible = true
+      },
+      deleteproducttemp(row) {
+        delProductTemplet(row.objectId)
+          .then(res => {
+            if (res) {
+              this.$message({
+                type: 'success',
+                message: '产品模板删除成功',
+              })
+            } else {
+              this.$message({
+                type: 'error',
+                message: '产品模板删除失败',
+              })
+            }
+            this.queryProduttemp({ category: row.category.objectId })
+          })
+      },
+      handleNodeClick(data) {
+        this.$set(this.form, 'categoryid', data.objectId)
+        this.$set(this.form, 'categoryname', data.name)
+        this.showTree = !this.showTree
+      },
+      async fetchData() {
+        let name = this.queryForm.name.length
+          ? '{ "$regex": "' + this.queryForm.name + '"}'
+          : '{ "$ne": "null" }'
+        let params = {
+          class: 'Category',
+          filter:
+            '{"order": "createdAt","keys":["parent","name","level"],"where":{"level": {"$gte": 1}, "name":' +
+            name +
+            '}}',
+          parent: 'parent',
+        }
+        const { results = [] } = await post_tree(params)
+        this.categorytree = results
       },
       async queryProduttemp(args) {
         const loading = this.$baseColorfullLoading()
         let params = {
           order: '-createdAt',
           keys: 'count(*)',
+          include: 'category,name',
           where: {
-            category: args.category ? args.category : { $ne: null },
             name: this.queryForm.name
-              ? { $regex: this.queryForm.name, $options: 'i' }
+              ? {
+                $regex: this.queryForm.name,
+                $options: 'i',
+              }
               : { $ne: null },
           },
         }
+        if (args.category) {
+          params.where.category = args.category
+        }
         try {
-          const { results = [], count = 0 } = await queryProductTemplet(params)
+          const {
+            results = [],
+            count = 0,
+          } = await queryProductTemplet(params)
           loading.close()
           this.proTableData = results
           this.total = count
@@ -819,7 +955,10 @@ class="ace_text-input"
         this.saveParse(rows, -1, false)
       },
       editorParser(config, type, flag) {
-        const { objectId, thing = {} } = this.productDetail
+        const {
+          objectId,
+          thing = {},
+        } = this.productDetail
         var _sourceDict = []
         var _sourceModule = []
         var _sourceField = []
@@ -828,7 +967,7 @@ class="ace_text-input"
         this.editDictTempId = objectId
         this.parserType = type
         this.tableType = type
-        this.productConfig = _.merge({basedate:{params:{}}},config)
+        this.productConfig = _.merge({ basedate: { params: {} } }, config)
         var isArr = ['parser', 'profile', 'basedate.params']
         if (isArr.includes(type)) {
           console.log('type', type)
@@ -846,7 +985,7 @@ class="ace_text-input"
           'this.parserTableList',
           this.parserTableList,
           this.parserTables,
-          this.tableType
+          this.tableType,
         )
         if (this.productDetail?.basedate?.params?.length) {
           this.productDetail.basedate.params.forEach((_dict) => {
@@ -884,7 +1023,7 @@ class="ace_text-input"
             config: this.productConfig.config,
           })
           this.$message.success(
-            this.$translateTitle('user.Save the template successfully')
+            this.$translateTitle('user.Save the template successfully'),
           )
           this.dialogVisible = false
           if (mark) {
@@ -893,7 +1032,7 @@ class="ace_text-input"
           }
         } catch (e) {
           this.$message.error(
-            this.$translateTitle('user.Save the template error') + `${e}`
+            this.$translateTitle('user.Save the template error') + `${e}`,
           )
           console.log(e, 'eeee')
         }
@@ -909,17 +1048,27 @@ class="ace_text-input"
         }
         // console.log(this.DbaTable)
       },
-      uploadCkick() {
+      uploadCkick(type) {
         this.loading = true
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
+        this.inputParams = {
+          file: '',
+          scene: 'app',
+          path: 'producttemp/ico/',
+          filename: `${this.producttempId}.${type}`,
+        }
       },
       fileInfo(info) {
         console.log('info', info)
-        this.imageUrl = info.url
+        this.imageUrl = info.path
         this.loading = false
+      },
+      files(file, type) {
+        this.inputParams.filename = `${this.producttempId}.${type}`
+        this.inputParams.file = file
       },
       async getAllunit() {
         this.allunit = []
@@ -1048,15 +1197,15 @@ class="ace_text-input"
         if (!val) {
           return
         }
-        getServer(val).then((resultes) => {
-          if (resultes) {
-            this.fileServer = resultes.file
-            this.access_token = resultes.access_token
-          }
-        })
+        getServer(val)
+          .then((resultes) => {
+            if (resultes) {
+              this.fileServer = resultes.file
+              this.access_token = resultes.access_token
+            }
+          })
       },
       deleteImgsrc() {
-        // event.stopPropagation()
         this.imageUrl = ''
       },
       handleClose() {
@@ -1078,45 +1227,53 @@ class="ace_text-input"
         }
         var params = {
           name: this.form.name,
-          category: this.form.category,
-          netType: this.form.netType,
-          icon: this.imageUrl,
-          desc: this.form.desc,
-          ACL: setAcl,
+          category: {
+            objectId: this.form.categoryid,
+            __type: 'Pointer',
+            className: 'Category',
+          },
+          icon: this.imageUrl ? this.imageUrl : '',
+          desc: this.form.desc ? this.form.desc : '',
         }
         this.$refs.form.validate((valid) => {
           if (valid) {
-            if (this.custom_status === 'add') {
+            if (this.addflag) {
+              params.ACL = setAcl
               console.log('params', params)
-              postProductTemplet(params).then((res) => {
-                if (res.objectId) {
-                  this.$message({
-                    type: 'success',
-                    message: '产品模板创建成功',
-                  })
-                } else {
-                  this.$message({
-                    type: 'error',
-                    message: '产品模板创建失败',
-                  })
-                }
-                this.dialogFormVisible = false
-              })
+              postProductTemplet(params)
+                .then((res) => {
+                  if (res.objectId) {
+                    this.$message({
+                      type: 'success',
+                      message: '产品模板创建成功',
+                    })
+                  } else {
+                    this.$message({
+                      type: 'error',
+                      message: '产品模板创建失败',
+                    })
+                  }
+                  this.queryProduttemp({ category: this.form.categoryid })
+                  this.dialogFormVisible = false
+                })
             } else {
-              putProductTemplet(this.producttempId, params).then((res) => {
-                if (res.objectId) {
-                  this.$message({
-                    type: 'success',
-                    message: '产品模板修改成功',
-                  })
-                } else {
-                  this.$message({
-                    type: 'error',
-                    message: '产品模板修改失败',
-                  })
-                }
-                this.dialogFormVisible = false
-              })
+              putProductTemplet(this.producttempId, params)
+                .then((res) => {
+                  console.log('resresresres', res)
+                  if (res.updatedAt) {
+                    this.$message({
+                      type: 'success',
+                      message: '产品模板修改成功',
+                    })
+                  } else {
+                    this.$message({
+                      type: 'error',
+                      message: '产品模板修改失败',
+                    })
+                  }
+                  this.queryProduttemp({ category: this.form.categoryid })
+                  this.dialogFormVisible = false
+                })
             }
           } else {
             this.$message('必填项未填')
@@ -1157,7 +1314,10 @@ class="ace_text-input"
           name: row.attributes.name,
           thing: row.attributes.thing,
         }
-        const { objectId, code } = await getHashClass('Product', data)
+        const {
+          objectId,
+          code,
+        } = await getHashClass('Product', data)
         if (code == 200) {
           this.blackDict(objectId, data)
         }
@@ -1299,34 +1459,31 @@ class="ace_text-input"
           attributevalue: '',
         })
       },
-      deletewmx(row) {
-        // this.productdetail.thing.properties.splice(
-        //   (this.wmxstart - 1) * this.wmxPageSize + index,
-        //   1
-        // )
-        const params = {
-          productid: this.productId,
-          item: row,
+      deletewmx(index) {
+        this.productDetail.thing.properties.splice(index, 1)
+        let data = {
+          thing: { properties: this.productDetail.thing.properties },
         }
-        deleteThing(params).then((res) => {
-          console.log('删除', res)
-          if (res.code == 200) {
-            this.$message({
-              type: 'success',
-              message: '删除成功',
-            })
-            this.getProDetail()
-          } else {
-            this.$message({
-              type: 'warning',
-              message: '删除失败 ' + res.msg,
-            })
-          }
-        })
+        putProductTemplet(this.producttempId, data)
+          .then((res) => {
+            if (res.updatedAt) {
+              this.$message({
+                type: 'success',
+                message: '删除成功',
+              })
+            } else {
+              this.$message({
+                type: 'warning',
+                message: '删除失败',
+              })
+            }
+          })
+          .catch((e) => {
+            console.log(e)
+          })
       },
       wmxDataFill(rowData, index) {
         this.modifyIndex = index
-        // console.log("rowData ", rowData);
         this.wmxdialogVisible = true
         this.wmxSituation = '编辑'
         var obj = {}
@@ -1642,6 +1799,7 @@ class="ace_text-input"
       },
       // 物模型提交
       submitFormwmx(sizeForm) {
+        console.log('sizeForm', sizeForm)
         var obj = {
           name: sizeForm.name,
           devicetype: sizeForm.devicetype,
@@ -1690,12 +1848,6 @@ class="ace_text-input"
             },
           }
           Object.assign(obj, obj1)
-          // 去除多余的属性
-          if (!this.showNewItem) {
-            delete obj.dataForm.operatetype
-            delete obj.dataForm.originaltype
-            delete obj.dataForm.slaveid
-          }
         } else if (sizeForm.type == 'image') {
           obj1 = {
             dataType: {
@@ -1767,14 +1919,24 @@ class="ace_text-input"
         delete obj.index
         console.log('obj', obj)
         // 检测到
+        // if (this.wmxSituation == '新增') {
+        // console.log("新增");
         if (this.wmxSituation == '新增') {
           // console.log("新增");
           this.productDetail.thing.properties.unshift(obj)
-          console.log('新增', this.productDetail.thing.properties)
-          let data = {
-            thing: { properties: this.productDetail.thing.properties },
-          }
-          putProductTemplet(this.producttempId, data).then((res) => {
+        } else if (this.wmxSituation == '编辑') {
+          // console.log("编辑", obj);
+          this.productDetail.thing.properties[this.modifyIndex] = obj
+          this.thingKey = moment(new Date())
+            .valueOf()
+            .toString()
+        }
+        console.log(this.wmxSituation, this.productDetail.thing.properties)
+        let data = {
+          thing: { properties: this.productDetail.thing.properties },
+        }
+        putProductTemplet(this.producttempId, data)
+          .then((res) => {
             if (res.updatedAt) {
               this.$message({
                 type: 'success',
@@ -1788,7 +1950,7 @@ class="ace_text-input"
               })
             }
           })
-        }
+        // }
         this.wmxdialogVisible = false
       },
       // 查看物模型模板
@@ -1810,12 +1972,13 @@ class="ace_text-input"
         const params = {
           thing: JSON.parse(editor1.getValue()),
         }
-        putProductTemplet(this.producttempId, params).then((res) => {
-          this.$message({
-            type: 'success',
-            message: this.wmxSituation + '成功',
+        putProductTemplet(this.producttempId, params)
+          .then((res) => {
+            this.$message({
+              type: 'success',
+              message: this.wmxSituation + '成功',
+            })
           })
-        })
         this.schemadialogVisible = false
       },
       //组态
@@ -1830,19 +1993,22 @@ class="ace_text-input"
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .devproduct {
     ::v-deep .el-table--enable-row-hover .el-table__body tr:hover > td {
       color: #f19944;
       background-color: #fdf3ea;
     }
+
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+
     .infinite-list {
       padding: 0;
       margin: 0;
       list-style: none;
+
       .infinite-list-item {
         display: flex;
         align-items: center;
@@ -1864,9 +2030,11 @@ class="ace_text-input"
     display: block;
     text-align: center;
   }
+
   .devproduct ::v-deep .el-dialog {
     margin: 0 auto;
   }
+
   .devproduct .el-tabs__header {
     margin: 0;
   }

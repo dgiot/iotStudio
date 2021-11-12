@@ -24,7 +24,8 @@ function export_txt_to_zip(jsonData, jsonName, zipName) {
       (err) => {
         console.log(err)
         alert('导出失败')
-      }
+      },
     )
 }
+
 export { export_txt_to_zip }

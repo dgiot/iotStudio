@@ -12,8 +12,9 @@ const sensor = {
     if (
       !Object.prototype.toString.call(sensorObj) === '[object Object]' ||
       JSON.stringify(sensorObj) == '{}'
-    )
+    ) {
       return
+    }
     //遍历传入对象参数，根据key值确定埋点类型
     for (const key in sensorObj) {
       if (Object.hasOwnProperty.call(sensorObj, key)) {
@@ -49,20 +50,20 @@ const sensor = {
     }
     // 展示类埋点执行
     showObj.value &&
-      sensors.track(showObj.name, {
-        FileName: showObj.value,
-      })
+    sensors.track(showObj.name, {
+      FileName: showObj.value,
+    })
     //点击类埋点执行
     if (clickObj.value) {
       el.handler = function () {
         clickObj.name === '$WebClick' &&
-          sensors.track(clickObj.name, {
-            $element_name: clickObj.value,
-          })
+        sensors.track(clickObj.name, {
+          $element_name: clickObj.value,
+        })
         clickObj.name === 'PopupBtnClick' &&
-          sensors.track(clickObj.name, {
-            FileName: clickObj.value,
-          })
+        sensors.track(clickObj.name, {
+          FileName: clickObj.value,
+        })
       }
       el.addEventListener('click', el.handler)
     }

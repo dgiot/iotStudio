@@ -1,13 +1,24 @@
 <!-- 组件说明 -->
 <template>
   <div class="topo-header">
+    <el-drawer
+      v-drawerDrag
+      :visible.sync="infoVisible"
+      size="100%"
+    >
+      <div
+        id="konva_preview"
+        :key="konva_key"
+        class="konva_preview"
+      ></div>
+    </el-drawer>
     <div class="topo-header-drawer">
       <el-drawer
+        :visible.sync="drawer"
+        :with-header="false"
         append-to-body
         direction="rtl"
         size="40%"
-        :visible.sync="drawer"
-        :with-header="false"
       >
         <!--        <websocket :topic="topic" />-->
       </el-drawer>
@@ -57,61 +68,71 @@
           <!--            </a-menu>-->
           <!--          </a-dropdown>-->
 
-          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a
-              class="ant-dropdown-link"
-              @click="(e) => e.preventDefault()"
-            >
-              <a-icon type="edit" />
-              <p>
-                {{ $translateTitle('konva.edit') }}
-              </p>
-            </a>
-            <a-menu slot="overlay">
-              <!--              <a-menu-item @click="flagFn('pencil')">铅笔</a-menu-item>-->
-              <a-menu-item>
-                <el-link @click="flagFn('ellipse')">
-                  椭圆-空心
-                </el-link>
-              </a-menu-item>
-              <a-menu-item>
-                <el-link @click="flagFn('rect')">
-                  矩形
-                </el-link>
-              </a-menu-item>
-              <a-menu-item>
-                <el-link @click="flagFn('rectH')">
-                  矩形-空心
-                </el-link>
-              </a-menu-item>
-              <a-menu-item>
-                <el-link @click="flagFn('text')">
-                  文字
-                </el-link>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
+          <!--          <a-dropdown class="topo-header-top-query-left-panel-dropdown">-->
+          <!--            <a-->
+          <!--              class="ant-dropdown-link"-->
+          <!--              @click="(e) => e.preventDefault()"-->
+          <!--            >-->
+          <!--              <a-icon type="edit" />-->
+          <!--              <p>-->
+          <!--                {{ $translateTitle('konva.edit') }}-->
+          <!--              </p>-->
+          <!--            </a>-->
+          <!--            <a-menu slot="overlay">-->
+          <!--              &lt;!&ndash;              <a-menu-item @click="flagFn('pencil')">铅笔</a-menu-item>&ndash;&gt;-->
+          <!--              <a-menu-item>-->
+          <!--                <el-link @click="flagFn('ellipse')">-->
+          <!--                  椭圆-空心-->
+          <!--                </el-link>-->
+          <!--              </a-menu-item>-->
+          <!--              <a-menu-item>-->
+          <!--                <el-link @click="flagFn('rect')">-->
+          <!--                  矩形-->
+          <!--                </el-link>-->
+          <!--              </a-menu-item>-->
+          <!--              <a-menu-item>-->
+          <!--                <el-link @click="flagFn('rectH')">-->
+          <!--                  矩形-空心-->
+          <!--                </el-link>-->
+          <!--              </a-menu-item>-->
+          <!--              <a-menu-item>-->
+          <!--                <el-link @click="flagFn('text')">-->
+          <!--                  文字-->
+          <!--                </el-link>-->
+          <!--              </a-menu-item>-->
+          <!--            </a-menu>-->
+          <!--          </a-dropdown>-->
 
-          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
-            <a
-              class="ant-dropdown-link"
-              @click="removeFn()"
-              @keyup.delete="removeFn()"
-            >
-              <a-icon type="delete" />
-              <p>{{ $translateTitle('konva.delete') }}</p>
-            </a>
-          </a-dropdown>
+          <!--          <a-dropdown class="topo-header-top-query-left-panel-dropdown">-->
+          <!--            <a-->
+          <!--              class="ant-dropdown-link"-->
+          <!--              @click="removeFn()"-->
+          <!--              @keyup.delete="removeFn()"-->
+          <!--            >-->
+          <!--              <a-icon type="delete" />-->
+          <!--              <p>{{ $translateTitle('konva.delete') }}</p>-->
+          <!--            </a>-->
+          <!--          </a-dropdown>-->
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
             <a
               class="ant-dropdown-link"
               @click="saveTopo"
             >
               <a-icon
-                theme="filled"
                 type="save"
               />
               <p>{{ $translateTitle('konva.save') }}</p>
+            </a>
+          </a-dropdown>
+          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+            <a
+              class="ant-dropdown-link"
+              @click="eyeTopo"
+            >
+              <a-icon
+                type="eye"
+              />
+              <p>{{ $translateTitle('application.preview') }}</p>
             </a>
           </a-dropdown>
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
@@ -152,7 +173,8 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
+
   export default {
     name: 'TopoHeader',
     components: {},
@@ -176,6 +198,9 @@
     },
     data() {
       return {
+        konva_key: moment(new Date())
+          .valueOf(),
+        infoVisible: false,
         topic: '',
         isshow: true,
         pickerColor: this.graphColor,
@@ -215,14 +240,21 @@
         }
       })
     },
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    activated() {},
+    beforeCreate() {
+    }, //生命周期 - 创建之前
+    beforeMount() {
+    }, //生命周期 - 挂载之前
+    beforeUpdate() {
+    }, //生命周期 - 更新之前
+    updated() {
+    }, //生命周期 - 更新之后
+    beforeDestroy() {
+    }, //生命周期 - 销毁之前
+    activated() {
+    },
     methods: {
       ...mapMutations({
+        initKonva: 'topo/initKonva',
         setDrawing: 'konva/setDrawing',
         setPointStart: 'konva/setPointStart',
         setDraw: 'konva/setDraw',
@@ -233,6 +265,17 @@
       }),
       saveTopo() {
         this.$baseEventBus.$emit('busUpdata')
+      },
+      eyeTopo() {
+        this.infoVisible = !this.infoVisible
+        this.$nextTick(() => {
+          this.initKonva({
+            data: JSON.parse(canvas.stage.toJSON()),
+            id: 'konva_preview',
+          })
+        })
+        this.konva_key = moment(new Date())
+          .valueOf()
       },
       handFullscreen() {
         this.$parent.$parent.$parent.isFullscreen =
@@ -265,8 +308,12 @@
         })
       },
       flagFn(v) {
-        if (v == 'text')
-          this.setDrawParams({ text: '请输入相关文字' + moment().format('x') })
+        if (v == 'text') {
+          this.setDrawParams({
+            text: '请输入相关文字' + moment()
+              .format('x'),
+          })
+        }
 
         // this.$emit('createShape', v, this.graphColor)
         if (v) {
@@ -277,12 +324,15 @@
       },
       removeFn() {
         console.log(this.graphNow)
-        if (this.graphNow) this.$dgiotBus.$emit('removeShape', this.graphNow)
-        else this.$message.error('请选择图形')
+        if (this.graphNow) {
+          this.$dgiotBus.$emit('removeShape', this.graphNow)
+        } else {
+          this.$message.error('请选择图形')
+        }
       },
       showImageTable(type) {
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
         // this.isshow = !this.isshow
         // this.$emit('ImageTable', type)
@@ -333,7 +383,7 @@
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .topo-header {
     &-top {
       &-query {
@@ -342,6 +392,7 @@
             padding: 6px 8px;
             color: rgb(89, 89, 89);
             text-align: center;
+
             i {
               font-size: 18px !important;
             }

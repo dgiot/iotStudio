@@ -40,7 +40,8 @@ const methods = [
 let length = methods.length
 const console = (window.console = window.console || {})
 let method
-const noop = function () {}
+const noop = function () {
+}
 while (length--) {
   method = methods[length]
   // define undefined methods as noops to prevent errors
@@ -48,10 +49,12 @@ while (length--) {
 }
 //URL是否远程开启
 const urlDebug = getUrlParams(window.location.href)
+
 function o2Log(arg) {
   // this.debug = urlDebug || arg.debug
   this.debug = true
 }
+
 o2Log.prototype = {
   log: function (obj) {
     if (this.debug) console.log(obj)
@@ -74,6 +77,7 @@ o2Log.prototype = {
 o2Log.prototype.errorReport = function (api, message) {
   //Todo
 }
+
 /**
  * 过滤URL中debug参数
  * @param url
@@ -105,4 +109,5 @@ function getUrlParams(url) {
 
   return result
 }
+
 export default o2Log

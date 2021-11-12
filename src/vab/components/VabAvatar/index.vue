@@ -5,14 +5,14 @@
   >
     <span class="avatar-dropdown">
       <el-avatar
-        class="user-avatar"
         :src="$FileServe + avatar"
+        class="user-avatar"
       />
       <div class="user-name">
         <span class="hidden-xs-only">{{ username }}</span>
         <vab-icon
-          class="vab-dropdown"
           :class="{ 'vab-dropdown-active': active }"
+          class="vab-dropdown"
           icon="arrow-down-s-line"
         />
       </div>
@@ -51,7 +51,7 @@
       }),
     },
     mounted() {
-      document.getElementsByTagName('link')[0].href = this.avatar
+      // document.getElementsByTagName('link')[0].href = this.avatar
     },
     methods: {
       ...mapActions({
@@ -71,14 +71,16 @@
         this.active = val
       },
       personalCenter() {
-        if (this.objectId) this.$router.push(`/userinfo/${this.objectId}`)
-        else
+        if (this.objectId) {
+          this.$router.push(`/userinfo/${this.objectId}`)
+        } else {
           this.$baseMessage(
             '获取用户id失败',
             'error',
             false,
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
+        }
       },
       async logout() {
         await this._logout()

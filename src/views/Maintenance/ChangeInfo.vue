@@ -23,7 +23,10 @@
       <el-col :span="7">
         <div class="grid-content bg-purple">
           {{ $translateTitle('Maintenance.the starting time') }} :
-          {{ $moment(detail.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
+          {{
+            $moment(detail.createdAt)
+              .format('YYYY-MM-DD HH:mm:ss')
+          }}
         </div>
       </el-col>
     </el-row>
@@ -53,8 +56,8 @@
       ref="step2"
       :detail="detail"
       :show-footer="showFooter"
-      show-hard="showHard"
       :step="step"
+      show-hard="showHard"
       @change-step="handleSetStep"
     />
     <step3
@@ -62,8 +65,8 @@
       ref="step3"
       :detail="detail"
       :show-footer="showFooter"
-      show-hard="showHard"
       :step="step"
+      show-hard="showHard"
       @change-step="handleSetStep"
     />
     <Step4
@@ -71,8 +74,8 @@
       ref="step4"
       :detail="detail"
       :show-footer="showFooter"
-      show-hard="showHard"
       :step="step"
+      show-hard="showHard"
       @change-step="handleSetStep"
     />
   </div>
@@ -91,11 +94,17 @@
 
   export default {
     name: 'ChangeInfo',
-    components: { Step1, Step2, Step3, Step4 },
+    components: {
+      Step1,
+      Step2,
+      Step3,
+      Step4,
+    },
     props: {
       detail: {
         type: Object,
-        default: () => {},
+        default: () => {
+        },
       },
       showFooter: {
         type: Boolean,
@@ -132,7 +141,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .changeInfo {
     .steps {
       margin: 20px 0;

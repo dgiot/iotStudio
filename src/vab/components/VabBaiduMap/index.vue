@@ -3,16 +3,16 @@
     <baidu-map
       :ak="ak"
       :center="baiduCenter"
-      class="baidu_map"
       :scroll-wheel-zoom="scrollWheelZoom"
       :style="{ height: mapHeight, width: mapWidth }"
       :zoom="sizeZoom"
+      class="baidu_map"
     >
       <bm-control v-if="controlShow">
         <bm-panorama
           v-if="panoramaShow"
-          anchor="BMAP_ANCHOR_TOP_LEFT"
           :offset="panoramaOffset"
+          anchor="BMAP_ANCHOR_TOP_LEFT"
         />
         <bm-overview-map
           v-if="overviewShow"
@@ -28,22 +28,22 @@
         />
         <bm-map-type
           v-if="maptypeShow"
-          anchor="BMAP_ANCHOR_TOP_LEFT"
           :map-types="mapTypes"
           :offset="mapTypesOffset"
+          anchor="BMAP_ANCHOR_TOP_LEFT"
         />
       </bm-control>
       <bm-marker
         v-for="(item, index) in markerLocation"
         v-show="markerLocation.length || markerShow"
         :key="index"
-        animation="BMAP_ANIMATION_BOUNCE"
         :content="item.name"
         :dragging="item.true"
         :position="{
           lng: item.longitude,
           lat: item.latitude,
         }"
+        animation="BMAP_ANIMATION_BOUNCE"
       >
         <bm-label
           v-if="labelShow"
@@ -55,9 +55,9 @@
       <bm-driving
         v-if="drivingShow"
         :auto-viewport="autoViewport"
-        end="drivingEnd"
         :panel="false"
         :start="drivingStart"
+        end="drivingEnd"
         @searchcomplete="_handleSearchComplete"
       />
       <bml-lushu
@@ -97,9 +97,9 @@
       <bm-walking
         v-if="walkingShow"
         :auto-viewport="walkingViewPort"
+        :start="walkingStart"
         end="walkingEnd"
         location="walkingLocation"
-        :start="walkingStart"
       />
       <bm-transit
         v-if="transitShow"
@@ -146,9 +146,9 @@
         :center="circlePathCenter"
         :editing="true"
         :radius="circlePathRadius"
-        stroke-color="blue"
         :stroke-opacity="0.5"
         :stroke-weight="2"
+        stroke-color="blue"
         @lineupdate="_updateCirclePath"
       />
       <bm-ground
@@ -184,8 +184,8 @@
       <!--      </bm-overlay>-->
       <bm-point-collection
         v-if="collectionShow"
-        color="red"
         :points="collectionPoints"
+        color="red"
         shape="BMAP_POINT_SHAPE_STAR"
         size="BMAP_POINT_SIZE_SMALL"
         @click.native="_clickHandler"
@@ -199,8 +199,8 @@
       <bm-boundary
         v-if="boundaryShow"
         :name="boundaryName"
-        stroke-color="blue"
         :stroke-weight="2"
+        stroke-color="blue"
       />
 
       <bm-navigation
@@ -209,13 +209,12 @@
       />
       <bm-geolocation
         v-if="geoShow"
-        anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
         :auto-location="true"
         :show-address-bar="true"
+        anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
       />
       <bm-copyright
         v-if="copyrightShow"
-        anchor="BMAP_ANCHOR_TOP_RIGHT"
         :copyright="[
           {
             id: 1,
@@ -224,6 +223,7 @@
           },
           { id: 2, content: '<a>杭州数蛙科技有限公司</a>' },
         ]"
+        anchor="BMAP_ANCHOR_TOP_RIGHT"
       />
     </baidu-map>
   </div>
@@ -231,38 +231,38 @@
 
 <script>
   import {
-    BmNavigation,
     BaiduMap,
-    BmGeolocation,
-    BmCityList,
-    BmMarker,
-    BmLabel,
-    BmControl,
-    BmPanorama,
-    BmOverviewMap,
-    BmMapType,
-    BmScale,
-    BmCopyright,
-    BmlMarkerClusterer,
-    BmlLushu,
-    BmlHeatmap,
-    BmlCurveLine,
-    BmWalking,
-    BmView,
-    BmTransit,
-    BmTraffic,
-    BmTile,
-    BmPolyline,
-    BmPolygon,
-    BmPointCollection,
-    // BmOverlay,
-    BmLocalSearch,
-    BmGround,
-    BmDriving,
-    BmCircle,
-    BmBus,
     BmBoundary,
+    BmBus,
+    BmCircle,
+    BmCityList,
+    BmControl,
+    BmCopyright,
+    BmDriving,
+    BmGeolocation,
+    BmGround,
+    BmLabel,
+    BmlCurveLine,
+    BmlHeatmap,
+    BmlLushu,
+    BmlMarkerClusterer,
+    BmLocalSearch,
+    BmMapType,
+    BmMarker,
+    BmNavigation,
+    BmOverviewMap,
+    BmPanorama,
+    BmPointCollection,
+    BmPolygon,
+    BmPolyline,
+    BmScale,
+    BmTile,
+    BmTraffic,
+    BmTransit,
+    BmView,
+    BmWalking,
   } from 'vue-baidu-map'
+
   export default {
     name: 'VabBaiduMap',
     components: {
@@ -664,9 +664,18 @@
       gonPath: {
         type: Array,
         default: () => [
-          { lng: 116.412732, lat: 39.911707 },
-          { lng: 116.39455, lat: 39.910932 },
-          { lng: 116.403461, lat: 39.921336 },
+          {
+            lng: 116.412732,
+            lat: 39.911707,
+          },
+          {
+            lng: 116.39455,
+            lat: 39.910932,
+          },
+          {
+            lng: 116.403461,
+            lat: 39.921336,
+          },
         ],
       },
       polygonStrokeColor: {
@@ -779,7 +788,10 @@
         active: this.isActive,
         baiduCenter: this.mapCenter
           ? this.mapCenter
-          : { lng: 116.404, lat: 39.915 },
+          : {
+            lng: 116.404,
+            lat: 39.915,
+          },
       }
     },
     mounted() {
@@ -792,7 +804,9 @@
     methods: {
       _handleSearchComplete(e) {
         console.log(e, 'handleSearchComplete')
-        this.lushupath = res.getPlan(0).getRoute(0).getPath()
+        this.lushupath = res.getPlan(0)
+          .getRoute(0)
+          .getPath()
       },
       _reset() {
         this.lushuplay = false
@@ -821,7 +835,11 @@
       _infoWindowclear() {
         this.contents = ''
       },
-      draw({ el, BMap, map }) {
+      draw({
+        el,
+        BMap,
+        map,
+      }) {
         const pixel = map.pointToOverlayPixel(new BMap.Point(116.404, 39.915))
         el.style.left = pixel.x - 60 + 'px'
         el.style.top = pixel.y - 20 + 'px'
@@ -833,9 +851,10 @@
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .baidu_map {
     height: 500px;
+
     .sample {
       position: absolute;
       width: 120px;
@@ -848,6 +867,7 @@
       background: rgba(0, 0, 0, 0.5);
       box-shadow: 0 0 5px #000;
     }
+
     .sample.active {
       color: #fff;
       background: rgba(0, 0, 0, 0.75);

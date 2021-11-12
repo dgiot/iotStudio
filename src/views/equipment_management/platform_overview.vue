@@ -918,6 +918,7 @@
     BmScale,
   } from 'vue-baidu-map'
 
+  window.dgiotEnv = process.env
   export default {
     name: 'Index',
     components: {
@@ -1264,7 +1265,6 @@
       },
       mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
-        console.log(mqttMsg, 'mqttMsg')
         // // console.log(destinationName, mqttMsg, 'mqttMsg')
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey

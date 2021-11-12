@@ -7,7 +7,6 @@ import globalConfig from './globalConfig'
 import store from '@/store'
 import { Message } from 'element-ui'
 import { create_object, del_object, get_object, query_object, query_object_header, shuwa_batch, update_object } from '@/api/shuwa_parse'
-
 import { delDict, getBatchNumer, getIndustry, postDict, putDict } from '@/api/Dict/index'
 import { delDevice, getDevice, postDevice, putDevice, queryDevice } from '@/api/Device/index'
 import { queryProduct } from '@/api/Product/index'
@@ -20,6 +19,10 @@ import { getMqttEventId, getTopicEventId } from '@/utils'
  * @returns {*}
  */
 import o2Log from './o2Console'
+
+const {
+  CDN_URL,
+} = require('../config')
 
 Vue.use(dgiotBus)
 Vue.mixin(dgiotMixin)
@@ -519,6 +522,6 @@ export default {
     Vue.prototype.$getMqttEventId = getMqttEventId
     Vue.prototype.$getTopicEventId = getTopicEventId
     Vue.prototype.$downBinary = downBinary
-    Vue.prototype.$FileServe = localStorage.getItem('fileServer')
+    Vue.prototype.$FileServe = sessionStorage.getItem('fileServer')
   },
 }

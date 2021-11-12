@@ -24,6 +24,7 @@ function beFull(id) {
       return false
     }
   }
+
   return requesetFullScreen(document.getElementById(`${id}`))
 }
 

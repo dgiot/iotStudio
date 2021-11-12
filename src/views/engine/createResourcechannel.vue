@@ -6,9 +6,9 @@
     />
     <el-form
       ref="addchannel"
-      label-width="auto"
       :model="addchannel"
       :rules="addrules"
+      label-width="auto"
       size="mini"
     >
       <div
@@ -40,8 +40,8 @@
               v-for="(item, index) in channelregion"
               :key="index"
               :label="item.title.zh"
-              style="display: block"
               :value="item.cType"
+              style="display: block"
             />
           </el-select>
         </el-form-item>
@@ -52,8 +52,8 @@
           >
             <el-input
               v-model="addchannel.name"
-              autocomplete="off"
               :placeholder="$translateTitle('developer.channelname')"
+              autocomplete="off"
               style="float: left"
             />
           </el-form-item>
@@ -74,8 +74,8 @@
             >
               <el-tree
                 :data="allApps"
-                default-expand-all
                 :props="defaultProps"
+                default-expand-all
                 @node-click="handleNodeClick"
               />
             </div>
@@ -126,12 +126,12 @@
               style="width: 98%"
             >
               <el-option
-                label="是"
                 :value="true"
+                label="是"
               />
               <el-option
-                label="否"
                 :value="false"
+                label="否"
               />
             </el-select>
             <el-select
@@ -153,9 +153,9 @@
           <el-form-item :label="$translateTitle('developer.describe')">
             <el-input
               v-model="addchannel.desc"
-              autocomplete="off"
               :placeholder="$translateTitle('developer.describe')"
               :rows="3"
+              autocomplete="off"
               type="textarea"
             />
           </el-form-item>
@@ -180,13 +180,13 @@
               style="padding: 10px; margin: 0px; cursor: pointer"
             >
               <el-card
-                class="box-card"
                 :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
-                size="mini"
                 :style="{
                   color:
                     addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                 }"
+                class="box-card"
+                size="mini"
               >
                 <!--                <div slot="header" class="clearfix">-->
                 <!--                  <el-button-->
@@ -209,12 +209,12 @@
                   <el-row :gutter="24">
                     <el-col :span="6">
                       <img
-                        class="image"
                         :src="
                           item.params.ico.default
                             ? item.params.ico.default
                             : require('../../../public/assets/images/logo/logo.png')
                         "
+                        class="image"
                         style="width: 50px; height: 50px"
                       />
                     </el-col>
@@ -250,9 +250,10 @@
 
 <script>
   import defaultLogo from '../../../public/assets/images/logo/logo.png'
-  import { resourceTypes, putResourceTypes } from '@/api/Rules'
+  import { putResourceTypes, resourceTypes } from '@/api/Rules'
   import { postChannel } from '@/api/Channel'
   import { mapActions, mapGetters } from 'vuex'
+
   export default {
     name: 'CreateResourcechannel',
     components: {},
@@ -269,13 +270,25 @@
         arrlist: [],
         addrules: {
           applicationtText: [
-            { required: true, message: '请选择所属应用', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'change',
+            },
           ],
           name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择通道类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择通道类型',
+              trigger: 'change',
+            },
           ],
         },
         addchannel: {
@@ -292,13 +305,20 @@
     mounted() {
       this.getResource()
     },
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
+    beforeCreate() {
+    }, //生命周期 - 创建之前
+    beforeMount() {
+    }, //生命周期 - 挂载之前
+    beforeUpdate() {
+    }, //生命周期 - 更新之前
+    updated() {
+    }, //生命周期 - 更新之后
+    beforeDestroy() {
+    }, //生命周期 - 销毁之前
+    destroyed() {
+    }, //生命周期 - 销毁完成
+    activated() {
+    },
     methods: {
       ...mapActions({
         addVisitedRoute: 'tabs/addVisitedRoute',
@@ -319,7 +339,7 @@
         console.log(type, index)
         this.channeindex = index
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
       },
       async fileInfo(info) {
@@ -349,7 +369,10 @@
             delete obj.name
             const aclKey = 'role' + ':' + this.addchannel.applicationtText
             const aclObj = {}
-            aclObj[aclKey] = { read: true, write: true }
+            aclObj[aclKey] = {
+              read: true,
+              write: true,
+            }
             const data = {
               ACL: aclObj,
               config: obj,
@@ -382,13 +405,25 @@
         var obj = {}
         var obj1 = {
           applicationtText: [
-            { required: true, message: '请选择所属应用', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'change',
+            },
           ],
           name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择通道类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择通道类型',
+              trigger: 'change',
+            },
           ],
         }
         if (this.resourceid == '') {
@@ -406,10 +441,16 @@
                 }
                 if (item.required) {
                   if (item.type == 'string' || item.type == 'integer') {
-                    obj1[item.showname] = [{ required: true, trigger: 'blur' }]
+                    obj1[item.showname] = [{
+                      required: true,
+                      trigger: 'blur',
+                    }]
                   } else {
                     obj1[item.showname] = [
-                      { required: true, trigger: 'change' },
+                      {
+                        required: true,
+                        trigger: 'change',
+                      },
                     ]
                   }
                 }
@@ -436,11 +477,17 @@
                   if (item.required) {
                     if (item.type == 'string' || item.type == 'integer') {
                       obj1[item.showname] = [
-                        { required: true, trigger: 'blur' },
+                        {
+                          required: true,
+                          trigger: 'blur',
+                        },
                       ]
                     } else {
                       obj1[item.showname] = [
-                        { required: true, trigger: 'change' },
+                        {
+                          required: true,
+                          trigger: 'change',
+                        },
                       ]
                     }
                   }
@@ -467,21 +514,22 @@
         this.addrules = obj1
       },
       async addchannelaxios(data) {
-        await postChannel(data).then((results) => {
-          if (results) {
-            this.$message({
-              type: 'success',
-              message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
-            })
-            // this.$refs['addchannel'].resetFields()
-            this.addchannel = {}
-            // this.reload()
-            this.channelForm = false
-            this.resourceid = ''
-            // 创建成功后返回通道管理页，关闭当前页
-            this.handleTabRemove()
-          }
-        })
+        await postChannel(data)
+          .then((results) => {
+            if (results) {
+              this.$message({
+                type: 'success',
+                message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
+              })
+              // this.$refs['addchannel'].resetFields()
+              this.addchannel = {}
+              // this.reload()
+              this.channelForm = false
+              this.resourceid = ''
+              // 创建成功后返回通道管理页，关闭当前页
+              this.handleTabRemove()
+            }
+          })
       },
       /**
        * 根据原生路径删除标签中的标签
@@ -507,8 +555,14 @@
         res.forEach((item) => {
           if (!item.params.ico) {
             item.params.ico = {
-              title: { en: 'channel ICO', zh: '通道ICO' },
-              description: { en: 'channel ICO', zh: '通道ICO' },
+              title: {
+                en: 'channel ICO',
+                zh: '通道ICO',
+              },
+              description: {
+                en: 'channel ICO',
+                zh: '通道ICO',
+              },
               default: defaultLogo,
             }
           }
@@ -529,11 +583,13 @@
   .el-card {
     margin-bottom: 0 !important;
   }
+
   .box-card {
     ::v-deep {
       .el-card__body {
         border: 1px solid #252528 !important;
       }
+
       //span {
       //  float: left;
       //}
@@ -550,6 +606,7 @@
       }
     }
   }
+
   /* @import url() */
   .createResourcechannel {
     margin: 20px;
@@ -566,6 +623,7 @@
         .clearfix {
           margin: 0;
         }
+
         .el-tree > .el-tree-node {
           display: inline-block;
           min-width: 100%;

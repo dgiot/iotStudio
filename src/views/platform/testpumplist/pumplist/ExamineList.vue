@@ -1,9 +1,6 @@
 <template>
   <el-container>
-    <el-aside
-      v-show="treeState"
-      width="300px"
-    >
+    <el-aside v-show="treeState" width="300px">
       <RoleTree ref="roleTreeRef" />
     </el-aside>
     <el-main>
@@ -11,18 +8,12 @@
         <el-tabs type="border-card">
           <el-tab-pane :label="'审核中(' + total + ')'">
             <el-row>
-              <el-col :span="12">
-&nbsp;
-              </el-col>
-              <el-col
-                :span="12"
-                style="text-align: right"
-              />
+              <el-col :span="12">&nbsp;</el-col>
+              <el-col :span="12" style="text-align: right" />
             </el-row>
 
             <div class="tasklist">
               <el-table
-                border
                 :data="
                   taskList.undoneData.slice(
                     (currentPage - 1) * PageSize,
@@ -30,15 +21,13 @@
                   )
                 "
                 stripe
+                border
               >
-                <el-table-column
-                  label="id"
-                  type="index"
-                />
+                <el-table-column type="index" label="id" />
 
                 <el-table-column
-                  align="center"
                   label="检验/试验编号"
+                  align="center"
                   prop="basedata.inspection_number"
                 >
                   <template slot-scope="scope">
@@ -48,29 +37,25 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column
-                  align="center"
-                  label="任务名称"
-                  prop="name"
-                />
+                <el-table-column prop="name" label="任务名称" align="center" />
 
                 <el-table-column
-                  align="center"
-                  label="质检项目"
                   prop="basedata.insectionName"
+                  label="质检项目"
+                  align="center"
                 />
 
                 <el-table-column
-                  align="center"
-                  label="测试台体"
                   prop="basedata.bedname"
+                  label="测试台体"
+                  align="center"
                   width="150"
                 />
 
                 <el-table-column
-                  align="center"
                   label="开始时间"
                   prop="$timestampToTime(scope.row.basedata.starttime)}"
+                  align="center"
                 >
                   <template slot-scope="scope">
                     <span>
@@ -80,9 +65,9 @@
                 </el-table-column>
 
                 <el-table-column
-                  align="center"
                   label="结束时间"
                   prop="$timestampToTime(scope.row.basedata.endtime)}"
+                  align="center"
                 >
                   <template slot-scope="scope">
                     <span>
@@ -91,10 +76,7 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column
-                  align="center"
-                  label="创建日期"
-                >
+                <el-table-column label="创建日期" align="center">
                   <template slot-scope="scope">
                     <span>
                       {{ $utc2beijing(scope.row.createdAt).substring(0, 16) }}
@@ -102,11 +84,7 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column
-                  align="center"
-                  label="状态"
-                  width="160"
-                >
+                <el-table-column label="状态" align="center" width="160">
                   <template slot-scope="scope">
                     <!-- verifyStatus 0 未审核, 1 审核通过 2 审核不通过 -->
 
@@ -128,19 +106,15 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column
-                  align="center"
-                  label="报告操作"
-                  width="200"
-                >
+                <el-table-column align="center" label="报告操作" width="200">
                   <template slot-scope="scope">
                     <!-- testStatus = 1代表完成 , 为了排列整齐 开始以后,完成按钮一直显示, 状态不等于1 就禁用 -->
 
                     <el-button
                       :disabled="scope.row.basedata.testStatus != 2"
-                      icon="el-icon-document"
-                      size="mini"
                       type="success"
+                      size="mini"
+                      icon="el-icon-document"
                       @click="beforGetTestReport(scope.row.objectId, scope.row)"
                     >
                       下载报告
@@ -148,23 +122,19 @@
                   </template>
                 </el-table-column>
 
-                <el-table-column
-                  align="center"
-                  label="数据操作"
-                  width="320"
-                >
+                <el-table-column label="数据操作" width="320" align="center">
                   <template slot-scope="scope">
                     <el-button
-                      size="small"
                       type="primary"
+                      size="small"
                       @click="evidenceView(scope.row)"
                     >
                       查 证
                     </el-button>
 
                     <el-button
-                      size="small"
                       type="primary"
+                      size="small"
                       @click="examineVerify(scope.row)"
                     >
                       审 核
@@ -175,12 +145,12 @@
 
               <div style="margin-top: 20px">
                 <el-pagination
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :page-size="pagesize"
                   :page-sizes="pageSizes"
+                  :page-size="pagesize"
                   :total="totalCount"
-                  @current-change="handleCurrentChange"
+                  layout="total, sizes, prev, pager, next, jumper"
                   @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
                 />
               </div>
             </div>
@@ -188,7 +158,6 @@
 
           <el-tab-pane :label="'审核完成(' + total1 + ')'">
             <el-table
-              border
               :data="
                 taskList.doneData.slice(
                   (currentPage - 1) * PageSize,
@@ -196,15 +165,13 @@
                 )
               "
               stripe
+              border
             >
-              <el-table-column
-                label="id"
-                type="index"
-              />
+              <el-table-column type="index" label="id" />
 
               <el-table-column
-                align="center"
                 label="检验/试验编号"
+                align="center"
                 prop="basedata.inspection_number"
               >
                 <template slot-scope="scope">
@@ -215,30 +182,30 @@
               </el-table-column>
 
               <el-table-column
-                align="center"
-                label="任务名称"
                 prop="name"
+                label="任务名称"
+                align="center"
                 width="150"
               />
 
               <el-table-column
-                align="center"
-                label="质检项目"
                 prop="basedata.insectionName"
+                label="质检项目"
+                align="center"
                 width="200"
               />
 
               <el-table-column
-                align="center"
-                label="测试台体"
                 prop="basedata.bedname"
+                label="测试台体"
+                align="center"
                 width="150"
               />
 
               <el-table-column
-                align="center"
                 label="开始时间"
                 prop="$timestampToTime(scope.row.basedata.starttime)}"
+                align="center"
               >
                 <template slot-scope="scope">
                   <span>
@@ -248,9 +215,9 @@
               </el-table-column>
 
               <el-table-column
-                align="center"
                 label="结束时间"
                 prop="$timestampToTime(scope.row.basedata.endtime)}"
+                align="center"
               >
                 <template slot-scope="scope">
                   <span>
@@ -259,10 +226,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column
-                align="center"
-                label="创建日期"
-              >
+              <el-table-column label="创建日期" align="center">
                 <template slot-scope="scope">
                   <span>
                     {{ $utc2beijing(scope.row.createdAt).substring(0, 16) }}
@@ -270,11 +234,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column
-                align="center"
-                label="状态"
-                width="160"
-              >
+              <el-table-column label="状态" align="center" width="160">
                 <template slot-scope="scope">
                   <!-- verifyStatus 0 未审核, 1 审核通过 2 审核不通过 -->
 
@@ -296,19 +256,15 @@
                 </template>
               </el-table-column>
 
-              <el-table-column
-                align="center"
-                label="报告操作"
-                width="200"
-              >
+              <el-table-column align="center" label="报告操作" width="200">
                 <template slot-scope="scope">
                   <!-- testStatus = 1代表完成 , 为了排列整齐 开始以后,完成按钮一直显示, 状态不等于1 就禁用 -->
 
                   <el-button
                     :disabled="scope.row.basedata.testStatus != 2"
-                    icon="el-icon-document"
-                    size="mini"
                     type="success"
+                    size="mini"
+                    icon="el-icon-document"
                     @click="beforGetTestReport(scope.row.objectId, scope.row)"
                   >
                     下载报告
@@ -316,23 +272,19 @@
                 </template>
               </el-table-column>
 
-              <el-table-column
-                align="center"
-                label="数据操作"
-                width="320"
-              >
+              <el-table-column label="数据操作" width="320" align="center">
                 <template slot-scope="scope">
                   <el-button
-                    size="small"
                     type="primary"
+                    size="small"
                     @click="evidenceView(scope.row)"
                   >
                     查 证
                   </el-button>
 
                   <el-button
-                    size="small"
                     type="primary"
+                    size="small"
                     @click="examineVerify(scope.row)"
                   >
                     审 核
@@ -343,48 +295,32 @@
 
             <div style="margin-top: 20px">
               <el-pagination
-                layout="total, sizes, prev, pager, next, jumper"
-                :page-size="pagesize"
                 :page-sizes="pageSizes"
+                :page-size="pagesize"
                 :total="total1"
-                @current-change="handleCurrentChange"
+                layout="total, sizes, prev, pager, next, jumper"
                 @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
               />
             </div>
           </el-tab-pane>
         </el-tabs>
 
         <el-dialog
-          :append-to-body="true"
+          :visible.sync="testReportDialog"
           :close-on-click-modal="false"
           title="测试报告生成"
-          :visible.sync="testReportDialog"
           width="40%"
         >
-          <el-form
-            class="demo-form-inline"
-            :inline="true"
-            :model="exportObj"
-          >
+          <el-form :inline="true" :model="exportObj" class="demo-form-inline">
             <el-form-item label="报告语言">
               <el-select v-model="exportObj.lang">
-                <el-option
-                  label="中文"
-                  value="zh"
-                />
-                <el-option
-                  label="英文"
-                  value="en"
-                />
+                <el-option label="中文" value="zh" />
+                <el-option label="英文" value="en" />
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button
-                type="primary"
-                @click.native="getTestReport"
-              >
-                确定
-              </el-button>
+              <el-button type="primary" @click="getTestReport">确定</el-button>
             </el-form-item>
           </el-form>
 
@@ -392,9 +328,9 @@
             <a
               v-show="testReportUrl && testReportUrl.length > 0"
               ref="downLink"
-              class="report-link"
-              :download="getfileName(testReportUrl)"
               :href="hostUrl + testReportUrl"
+              :download="getfileName(testReportUrl)"
+              class="report-link"
             >
               {{ getfileName(testReportUrl) }}
             </a>

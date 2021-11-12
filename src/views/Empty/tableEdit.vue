@@ -8,9 +8,9 @@
   >
     <el-form
       ref="form"
-      label-width="80px"
       :model="form"
       :rules="rules"
+      label-width="80px"
     >
       <el-form-item
         label="标题"
@@ -51,14 +51,23 @@
           author: '',
         },
         rules: {
-          title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
-          author: [{ required: true, trigger: 'blur', message: '请输入作者' }],
+          title: [{
+            required: true,
+            trigger: 'blur',
+            message: '请输入标题',
+          }],
+          author: [{
+            required: true,
+            trigger: 'blur',
+            message: '请输入作者',
+          }],
         },
         title: '',
         dialogFormVisible: false,
       }
     },
-    created() {},
+    created() {
+    },
     methods: {
       showEdit(row) {
         if (!row) {

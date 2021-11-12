@@ -18,10 +18,10 @@
       >
         <ele-form
           v-model="alertConfig.config"
-          v-bind="alertConfig.config"
           :config="formConfig"
-          pure
           :request-fn="handleSubmit"
+          pure
+          v-bind="alertConfig.config"
           @request-success="handleSuccess(alertConfig)"
         />
       </el-dialog>
@@ -91,16 +91,16 @@
       <vab-query-form-top-panel>
         <el-form
           :inline="true"
-          label-width="auto"
           :model="queryForm"
+          label-width="auto"
           size="mini"
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('alert.productname')">
             <el-select
               v-model="queryForm.productName"
-              clearable
               :placeholder="$translateTitle('equipment.entername')"
+              clearable
             >
               <el-option
                 v-for="(item, index) in _Product"
@@ -113,8 +113,8 @@
           <el-form-item :label="$translateTitle('alert.isprocess')">
             <el-select
               v-model="queryForm.isprocess"
-              clearable
               :placeholder="$translateTitle('alert.isprocess')"
+              clearable
             >
               <el-option
                 v-for="(item, index) in processAll"
@@ -128,8 +128,8 @@
             <el-date-picker
               v-model="queryForm.searchDate"
               :end-placeholder="$translateTitle('Maintenance.end time')"
-              format="yyyy-MM-dd"
               :start-placeholder="$translateTitle('Maintenance.start time')"
+              format="yyyy-MM-dd"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -172,48 +172,51 @@
       />
 
       <el-table-column
-        align="center"
         :label="$translateTitle('alert.alert number')"
+        align="center"
         prop="objectId"
         show-overflow-tooltip
         sortablesortable
         width="120"
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('alert.productname')"
+        align="center"
         prop="productname"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('alert.devicename')"
+        align="center"
         prop="devicename"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('equipment.createdAt')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
-          {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
+          {{
+            $moment(row.createdAt)
+              .format('YYYY-MM-DD HH:mm:ss')
+          }}
         </template>
       </el-table-column>
 
       <el-table-column
-        align="center"
         :label="$translateTitle('alert.Alarm status')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
           <el-tag
-            effect="dark"
             :type="row.alertstatus ? 'danger' : 'success'"
+            effect="dark"
           >
             {{
               row.alertstatus
@@ -224,15 +227,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('alert.Alarm handling')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
           <el-link
-            effect="dark"
             :type="row.status == 1 ? 'success' : 'info'"
+            effect="dark"
           >
             {{
               row.status == 1
@@ -245,15 +248,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('alert.process')"
+        align="center"
         prop="process"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.operating')"
+        align="center"
         prop="name"
         show-overflow-tooltip
       >
@@ -314,14 +317,10 @@
 </template>
 
 <script>
-  import {
-    queryNotification,
-    putNotification,
-    delNotification,
-  } from '@/api/Notification'
+  import { delNotification, putNotification, queryNotification } from '@/api/Notification'
   import { batch } from '@/api/Batch'
   import { getProduct } from '@/api/Product'
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters } from 'vuex'
   import { Promise } from 'q'
 
   export default {
@@ -354,13 +353,25 @@
         devicename: '',
         rules: {
           product: [
-            { required: true, message: '请选择活动区域', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择活动区域',
+              trigger: 'change',
+            },
           ],
           name: [
-            { required: true, message: '请选择活动区域', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择活动区域',
+              trigger: 'change',
+            },
           ],
           type: [
-            { required: true, message: '请选择活动资源', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择活动资源',
+              trigger: 'change',
+            },
           ],
         },
         processAll: [
@@ -405,7 +416,8 @@
       }),
     },
 
-    created() {},
+    created() {
+    },
     mounted() {
       this.fetchData()
     },
@@ -421,7 +433,7 @@
         })
         this.$baseConfirm(
           this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item'
+            'Maintenance.Are you sure you want to delete the current item',
           ),
           null,
           async () => {
@@ -429,12 +441,12 @@
             this.$baseMessage(
               this.$translateTitle('Maintenance.successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'vab-hey-message-success',
             )
             setTimeout(() => {
               this.fetchData()
             }, 1500)
-          }
+          },
         )
       },
       handleSubmit(data) {
@@ -526,7 +538,10 @@
         try {
           const { config } = await getProduct(productId)
           Loading.close()
-          const { parser = [], profile = [] } = config
+          const {
+            parser = [],
+            profile = [],
+          } = config
           const _mergeProfile = [].concat(profile, parser)
           console.log(_mergeProfile, '_mergeProfile')
           let _profileConfig = _mergeProfile.map((e) => {
@@ -555,7 +570,7 @@
         if (res == {}) {
           this.$message.success(
             this.$translateTitle('Maintenance.delete') +
-              $translateTitle('message.success')
+            $translateTitle('message.success'),
           )
         }
         this.fetchData()
@@ -585,16 +600,25 @@
         }
         if (this.queryForm.searchDate.length) {
           params.where['createdAt'] = {
-            $gt: { __type: 'Date', iso: this.queryForm.searchDate[0] },
+            $gt: {
+              __type: 'Date',
+              iso: this.queryForm.searchDate[0],
+            },
           }
           params.where['updatedAt'] = {
-            $lt: { __type: 'Date', iso: this.queryForm.searchDate[1] },
+            $lt: {
+              __type: 'Date',
+              iso: this.queryForm.searchDate[1],
+            },
           }
         }
         await queryNotification(params)
           .then((res) => {
             console.log(res, 'res')
-            const { results = [], count = 0 } = res
+            const {
+              results = [],
+              count = 0,
+            } = res
             this.list = results
             this.total = count
             loading.close()
@@ -641,7 +665,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .mycontainer {
     .ticker-dialog {
       .create-ticker {

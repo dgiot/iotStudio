@@ -6,42 +6,42 @@
   >
     <template v-if="fixedWidthMode == 'left'">
       <div
-        class="wresize-panel-left"
         :style="{ width: divLeft.width + 'px' }"
+        class="wresize-panel-left"
       >
         <slot name="left"></slot>
       </div>
 
       <div
-        class="wresize-handler"
         :style="{ left: divHandler.left + 'px' }"
+        class="wresize-handler"
         @mousedown="onMouseDownLeft($event)"
       ></div>
 
       <div
-        class="wresize-panel-right"
         :style="{ left: divRight.left + 'px' }"
+        class="wresize-panel-right"
       >
         <slot name="right"></slot>
       </div>
     </template>
     <template v-else>
       <div
-        class="wresize-panel-left"
         :style="{ right: divLeft.right + 'px' }"
+        class="wresize-panel-left"
       >
         <slot name="left"></slot>
       </div>
 
       <div
-        class="wresize-handler"
         :style="{ left: divHandler.right + 'px' }"
+        class="wresize-handler"
         @mousedown="onMouseDownRight($event)"
       ></div>
 
       <div
-        class="wresize-panel-right"
         :style="{ width: divRight.width + 'px' }"
+        class="wresize-panel-right"
       >
         <slot name="right"></slot>
       </div>

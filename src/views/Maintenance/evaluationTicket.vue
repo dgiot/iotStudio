@@ -48,10 +48,10 @@
         >
           <el-form
             ref="form"
-            class="create-ticker"
-            label-width="auto"
             :model="form"
             :rules="rules"
+            class="create-ticker"
+            label-width="auto"
             size="medium "
           >
             <el-form-item
@@ -115,9 +115,9 @@
             </el-form-item>
             <el-form-item :label="$translateTitle('Maintenance.photo')">
               <el-upload
-                action="#"
                 :auto-upload="true"
                 :http-request="myUpload"
+                action="#"
                 list-type="picture-card"
               >
                 <i
@@ -129,9 +129,9 @@
                   :key="index"
                 >
                   <img
+                    :src="item.url"
                     alt=""
                     class="el-upload-list__item-thumbnail"
-                    :src="item.url"
                   />
                 </div>
               </el-upload>
@@ -140,8 +140,8 @@
                 :visible.sync="dialogVisible"
               >
                 <img
-                  alt=""
                   :src="dialogImageUrl"
+                  alt=""
                   width="100%"
                 />
               </el-dialog>
@@ -168,22 +168,22 @@
       <vab-query-form-top-panel>
         <el-form
           :inline="true"
-          label-width="auto"
           :model="queryForm"
+          label-width="auto"
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('Maintenance.number')">
             <el-input
               v-model.trim="queryForm.number"
-              clearable
               :placeholder="$translateTitle('Maintenance.Ticket number')"
+              clearable
             />
           </el-form-item>
           <el-form-item :label="$translateTitle('Maintenance.projects')">
             <el-select
               v-model="queryForm.product"
-              clearable
               :placeholder="$translateTitle('Maintenance.project')"
+              clearable
             >
               <el-option
                 v-for="(item, index) in _Product"
@@ -198,8 +198,8 @@
           <el-form-item :label="$translateTitle('Maintenance.type')">
             <el-input
               v-model="queryForm.type"
-              clearable
               :placeholder="$translateTitle('Maintenance.Ticket type')"
+              clearable
             />
           </el-form-item>
           <!--          <el-form-item label="账号">-->
@@ -213,8 +213,8 @@
             <el-date-picker
               v-model="queryForm.searchDate"
               :end-placeholder="$translateTitle('Maintenance.end time')"
-              format="yyyy-MM-dd"
               :start-placeholder="$translateTitle('Maintenance.start time')"
+              format="yyyy-MM-dd"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -262,9 +262,9 @@
     <el-table
       ref="tableSort"
       v-loading="listLoading"
-      border
       :data="list"
       :height="height"
+      border
       stripe
       @selection-change="changeBox"
     >
@@ -276,23 +276,23 @@
         width="55"
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
+        align="center"
         prop="number"
         show-overflow-tooltip
         sortable
         width="120"
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Ticket type')"
+        align="center"
         prop="type"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Ticket status')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -302,8 +302,8 @@
       </el-table-column>
 
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.project')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -313,8 +313,8 @@
       </el-table-column>
 
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Equipment name')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -323,8 +323,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Initiator')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -333,19 +333,22 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.the starting time')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
-          {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
+          {{
+            $moment(row.createdAt)
+              .format('YYYY-MM-DD HH:mm:ss')
+          }}
         </template>
       </el-table-column>
       <el-table-column
+        :label="$translateTitle('Maintenance.operating')"
         align="center"
         fixed="right"
-        :label="$translateTitle('Maintenance.operating')"
         width="220"
       >
         <template #default="{ row }">
@@ -387,6 +390,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import ChangeStep from '@/views/Maintenance/ChangeStep'
   import { exlout, UploadImg } from '@/api/File'
+
   export default {
     name: 'EvaluationTicket',
     components: {
@@ -428,11 +432,23 @@
         formLabelWidth: '140px',
         rules: {
           product: [
-            { required: true, message: '请选择所属项目', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属项目',
+              trigger: 'change',
+            },
           ],
-          name: [{ required: true, message: '请选择设备', trigger: 'change' }],
+          name: [{
+            required: true,
+            message: '请选择设备',
+            trigger: 'change',
+          }],
           type: [
-            { required: true, message: '请输入工单类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请输入工单类型',
+              trigger: 'change',
+            },
           ],
         },
         list: [],
@@ -441,10 +457,22 @@
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         status: [
-          { key: 0, text: 'Maintenance.To be assigned' },
-          { key: 1, text: 'Maintenance.Assigned' },
-          { key: 2, text: 'Maintenance.Processed' },
-          { key: 3, text: 'Maintenance.Statement' },
+          {
+            key: 0,
+            text: 'Maintenance.To be assigned',
+          },
+          {
+            key: 1,
+            text: 'Maintenance.Assigned',
+          },
+          {
+            key: 2,
+            text: 'Maintenance.Processed',
+          },
+          {
+            key: 3,
+            text: 'Maintenance.Statement',
+          },
         ],
         queryForm: {
           devicename: '',
@@ -474,7 +502,7 @@
         get() {
           console.log(
             'this.$store.state.global._deviceStep',
-            this.$store.state.global._deviceStep
+            this.$store.state.global._deviceStep,
           )
           return this.$store.state.global._deviceStep
         },
@@ -482,7 +510,7 @@
           console.log(
             'this.$store.state.global._deviceStep',
             this.$store.state.global._deviceStep,
-            v
+            v,
           )
           this.set_deviceStep(v)
         },
@@ -570,7 +598,8 @@
           write: true,
         }
         const params = {
-          number: moment(new Date()).unix() + '',
+          number: moment(new Date())
+            .unix() + '',
           type: from.type,
           // status: 0,
           // product: {
@@ -590,7 +619,8 @@
             photo: from.photo,
             timeline: [
               {
-                timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+                timestamp: moment(new Date())
+                  .format('YYYY-MM-DD HH:mm:ss'),
                 h4: '生成工单',
                 p: `${this.username}新建工单`,
               },
@@ -657,7 +687,7 @@
         } catch (error) {
           console.log(error)
           this.$message.error(
-            this.$translateTitle('node.export error') + `${error}`
+            this.$translateTitle('node.export error') + `${error}`,
           )
         }
       },
@@ -682,7 +712,7 @@
         console.log(batchParams, 'batchParams')
         this.$baseConfirm(
           this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item'
+            'Maintenance.Are you sure you want to delete the current item',
           ),
           null,
           async () => {
@@ -690,17 +720,20 @@
             this.$baseMessage(
               this.$translateTitle('Maintenance.successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'vab-hey-message-success',
             )
             setTimeout(() => {
               this.fetchData()
             }, 1500)
-          }
+          },
         )
       },
       handleHeight() {
-        if (this.fold) this.height = this.$baseTableHeight(0) - 20
-        else this.height = this.$baseTableHeight(0) - 30
+        if (this.fold) {
+          this.height = this.$baseTableHeight(0) - 20
+        } else {
+          this.height = this.$baseTableHeight(0) - 30
+        }
       },
       getStatus(type = 0) {
         // type == 0 ? '' : ''
@@ -788,16 +821,25 @@
         }
         if (this.queryForm.searchDate?.length) {
           params.where['createdAt'] = {
-            $gt: { __type: 'Date', iso: this.queryForm.searchDate[0] },
+            $gt: {
+              __type: 'Date',
+              iso: this.queryForm.searchDate[0],
+            },
           }
           params.where['updatedAt'] = {
-            $lt: { __type: 'Date', iso: this.queryForm.searchDate[1] },
+            $lt: {
+              __type: 'Date',
+              iso: this.queryForm.searchDate[1],
+            },
           }
         }
         await query_object('Maintenance', params)
           .then((res) => {
             console.log(res, 'res')
-            const { results = [], count = 0 } = res
+            const {
+              results = [],
+              count = 0,
+            } = res
             this.list = results
             this.list.forEach((e) => {
               e._user = '暂无'
@@ -845,9 +887,13 @@
         // console.log()
       },
       async backChange(detail) {
-        const { objectId, info } = detail
+        const {
+          objectId,
+          info,
+        } = detail
         info.timeline.push({
-          timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+          timestamp: moment(new Date())
+            .format('YYYY-MM-DD HH:mm:ss'),
           h4: '已回退',
           p: `${this.username} 回退了流程`,
         })
@@ -863,9 +909,13 @@
         }
       },
       async Reassign(detail) {
-        const { objectId, info } = detail
+        const {
+          objectId,
+          info,
+        } = detail
         info.timeline.push({
-          timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+          timestamp: moment(new Date())
+            .format('YYYY-MM-DD HH:mm:ss'),
           h4: '已改派',
           p: `${this.username} 改派了工单`,
         })
@@ -889,7 +939,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .mycontainer {
     .ticker-dialog {
       .create-ticker {
@@ -898,12 +948,15 @@
         }
       }
     }
+
     .query-form {
       margin-top: 10px;
+
       ::v-deep {
         .el-form-item__label-wrap {
           margin-left: 10px;
         }
+
         .dialog-footer {
           text-align: center;
         }

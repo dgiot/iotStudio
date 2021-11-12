@@ -2,9 +2,9 @@
   <div class="instruct">
     <div>
       <el-form
-        class="demo-form-inline"
         :inline="true"
         :model="formInline"
+        class="demo-form-inline"
         size="small"
       >
         <el-form-item>
@@ -184,12 +184,12 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        background
-        layout="total, sizes, prev, pager, next, jumper"
         :page-size="pagesize"
         :page-sizes="[10, 20, 30, 40]"
-        style="margin-top: 20px"
         :total="total"
+        background
+        layout="total, sizes, prev, pager, next, jumper"
+        style="margin-top: 20px"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
@@ -211,8 +211,8 @@
         <el-row>
           <el-col :span="12">
             <el-form-item
-              label="指令名称"
               :label-width="formLabelWidth"
+              label="指令名称"
               prop="name"
             >
               <el-input
@@ -222,8 +222,8 @@
               />
             </el-form-item>
             <el-form-item
-              label="操作类型"
               :label-width="formLabelWidth"
+              label="操作类型"
               prop="type"
             >
               <el-select
@@ -241,8 +241,8 @@
               </el-select>
             </el-form-item>
             <el-form-item
-              label="是否启用"
               :label-width="formLabelWidth"
+              label="是否启用"
               prop="enable"
             >
               <el-radio-group v-model="form.enable">
@@ -257,8 +257,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="指令指标"
               :label-width="formLabelWidth"
+              label="指令指标"
               prop="pointer"
             >
               <el-input
@@ -268,8 +268,8 @@
               />
             </el-form-item>
             <el-form-item
-              label="指令序号"
               :label-width="formLabelWidth"
+              label="指令序号"
               prop="order"
             >
               <el-input
@@ -290,8 +290,8 @@
         <el-row>
           <el-col :span="12">
             <el-form-item
-              label="超时时长"
               :label-width="formLabelWidth"
+              label="超时时长"
               prop="duration"
             >
               <el-input
@@ -305,8 +305,8 @@
               </el-input>
             </el-form-item>
             <el-form-item
-              label="生效轮次"
               :label-width="formLabelWidth"
+              label="生效轮次"
               prop="rotation"
             >
               <el-select
@@ -339,8 +339,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              label="子网编号"
               :label-width="formLabelWidth"
+              label="子网编号"
               prop="subnet"
             >
               <el-input
@@ -350,8 +350,8 @@
               />
             </el-form-item>
             <el-form-item
-              label="发送间隔"
               :label-width="formLabelWidth"
+              label="发送间隔"
               prop="interval"
             >
               <el-input
@@ -385,13 +385,8 @@
   </div>
 </template>
 <script>
-  import { returnLogin } from '@/utils/utilwen'
-  import {
-    queryIndustry,
-    delIndustry,
-    updateIndustry,
-    postIndustry,
-  } from '@/api/Dict/index'
+  import { delIndustry, postIndustry, queryIndustry, updateIndustry } from '@/api/Dict/index'
+
   export default {
     name: 'Instruct',
     props: {
@@ -410,9 +405,18 @@
           name: '',
         },
         options: [
-          { value: 'first', label: '第一轮' },
-          { value: 'last', label: '最后一轮' },
-          { value: 'all', label: '全部' },
+          {
+            value: 'first',
+            label: '第一轮',
+          },
+          {
+            value: 'last',
+            label: '最后一轮',
+          },
+          {
+            value: 'all',
+            label: '全部',
+          },
         ],
         instructData: [],
         multipleTable: [],
@@ -433,13 +437,29 @@
           subnet: '',
         },
         formrule: {
-          duration: [{ required: true, message: '请输入', trigger: 'blur' }],
-          interval: [{ required: true, message: '请输入', trigger: 'blur' }],
+          duration: [{
+            required: true,
+            message: '请输入',
+            trigger: 'blur',
+          }],
+          interval: [{
+            required: true,
+            message: '请输入',
+            trigger: 'blur',
+          }],
           name: [
-            { required: true, message: '指标名称不能为空', trigger: 'blur' },
+            {
+              required: true,
+              message: '指标名称不能为空',
+              trigger: 'blur',
+            },
           ],
           type: [
-            { required: true, message: '请选择操作类型', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择操作类型',
+              trigger: 'blur',
+            },
           ],
           enable: [
             {
@@ -449,16 +469,32 @@
             },
           ],
           order: [
-            { required: true, message: '指标序号不能为空', trigger: 'blur' }, // 指令序号
+            {
+              required: true,
+              message: '指标序号不能为空',
+              trigger: 'blur',
+            }, // 指令序号
           ],
           rotation: [
-            { required: true, message: '生效轮次不能为空', trigger: 'change' },
+            {
+              required: true,
+              message: '生效轮次不能为空',
+              trigger: 'change',
+            },
           ],
           subnet: [
-            { required: true, message: '子网编号不能为空', trigger: 'blur' },
+            {
+              required: true,
+              message: '子网编号不能为空',
+              trigger: 'blur',
+            },
           ],
           pointer: [
-            { required: true, message: '指令指标不能为空', trigger: 'blur' },
+            {
+              required: true,
+              message: '指令指标不能为空',
+              trigger: 'blur',
+            },
           ],
         },
         instructid: '',
@@ -485,7 +521,8 @@
     mounted() {
       this.Instruct()
     },
-    updated() {},
+    updated() {
+    },
     methods: {
       dialogClosed() {
         this.dialogFormVisible = false
@@ -497,7 +534,7 @@
           }
           switch (
             type // 1：查看，2：编辑，3：新增
-          ) {
+            ) {
             case '2':
               this.dialogTitle = '编辑'
               this.form = data
@@ -543,7 +580,10 @@
         if (this.formInline.name) {
           params.where.name = this.formInline.name
         }
-        const { count = 0, results = [] } = await queryIndustry(params)
+        const {
+          count = 0,
+          results = [],
+        } = await queryIndustry(params)
         this.total = count
         this.instructData = results
       },
@@ -707,15 +747,18 @@
     min-height: 100%;
     padding: 20px;
     background: #ffffff;
+
     .instruct_button {
       display: flex;
       flex-direction: row-reverse;
       flex-direction: unset;
       justify-content: space-between;
     }
+
     .instruct_table {
       margin-top: 20px;
     }
+
     ::v-deep .el-select--small {
       width: 100%;
     }

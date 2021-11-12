@@ -3,7 +3,7 @@
  */
 // prod /data/dgiot/lib/dgiot_api-4.3.0/priv/www
 // flow /data/dgiot/lib/dgiot_api-1.6.4/priv/www
-// local D:\msys64\home\vivi\dgiot_dashboard\dist
+// local D:\msys64\home\h7ml\dgiot_dashboard\dist
 
 /**
  * @description vue.config.js全局配置
@@ -34,16 +34,24 @@ const {
   isPwa,
   pwaConfig,
   isSmp,
+  ogConfig,
   cdn,
+  CDN_URL,
 } = require('./src/config')
-const { version, author } = require('./package.json')
+const {
+  version,
+  author,
+} = require('./package.json')
 const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
 const FileManagerPlugin = require('filemanager-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const smp = new SpeedMeasurePlugin()
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 const regUrl = /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
@@ -55,40 +63,45 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
+process.env.CDN_URL = process.env.NODE_ENV === 'development' ? proxy[0].target + CDN_URL : CDN_URL
 // process.env.CDN_URL = process.env.CDN_URL
-const staticUrl = regUrl.test(process.env.CDN_URL)
+const staticUrl = process.env.CDN_URL
   ? `${process.env.CDN_URL}/assets/`
   : '/assets/'
 
 function getChainWebpack(config) {
-  config.plugin('html').tap((args) => {
-    var _staticUrl = useCdn || process.env.useCdn ? cdnUrl : localUrl
-    // if (useCdn || process.env.NODE_ENV !== 'development') {
-    const { css, js } = _staticUrl
-    _staticUrl = { css: [], js: [] }
-    css.forEach((_css) => {
-      let i =
-        _css.substring(_css.lastIndexOf('/') + 1).indexOf('.css') != -1
-          ? `${staticUrl}css/${_css.substring(_css.lastIndexOf('/') + 1)}`
-          : `${staticUrl}css/${_css.substring(_css.lastIndexOf('/') + 1)}.css`
-      _staticUrl.css.push(i)
+  // config.plugin('monaco').use(new MonacoWebpackPlugin())
+  config.plugin('html')
+    .tap((args) => {
+      var _staticUrl = localUrl
+      // if (useCdn || process.env.NODE_ENV !== 'development') {
+      const {
+        css,
+        js,
+      } = _staticUrl
+      _staticUrl = {
+        css: [],
+        js: [],
+      }
+      css.forEach((_css) => {
+        _staticUrl.css.push(`${staticUrl}css/${_css}`)
+      })
+      js.forEach((_js) => {
+        _staticUrl.js.push(`${staticUrl}js/${_js}`)
+      })
+      args[0].staticUrl = _staticUrl
+      args[0].ogConfig = ogConfig
+      return args
     })
-    js.forEach((_js) => {
-      let i =
-        _js.substring(_js.lastIndexOf('/') + 1).indexOf('.js') != -1
-          ? `${staticUrl}js/${_js.substring(_js.lastIndexOf('/') + 1)}`
-          : `${staticUrl}js/${_js.substring(_js.lastIndexOf('/') + 1)}.js`
-      _staticUrl.js.push(i)
-    })
-    args[0].staticUrl = _staticUrl
-    return args
-  })
   config.resolve.symlinks(true)
-  config.module.rule('svg').exclude.add(resolve('src/icon'))
+  config.module.rule('svg')
+    .exclude
+    .add(resolve('src/icon'))
   config.module
     .rule('vabIcon')
     .test(/\.svg$/)
-    .include.add(resolve('src/icon'))
+    .include
+    .add(resolve('src/icon'))
     .end()
     .use('svg-sprite-loader')
     .loader('svg-sprite-loader')
@@ -100,9 +113,11 @@ function getChainWebpack(config) {
   })
   // https://blog.csdn.net/weixin_34294049/article/details/97278751
   config.when(process.env.NODE_ENV === 'production', (config) => {
-    if (process.env.CDN_URL)
+    if (process.env.CDN_URL) {
       console.log(`当前使用了cdn,cdn资源链接地址为${process.env.CDN_URL}`)
-    else console.log(`当前未使用cdn,可能会导致打包体积过大`)
+    } else {
+      console.log(`当前未使用cdn,可能会导致打包体积过大`)
+    }
     config.performance.set('hints', false)
     config.plugins.delete('prefetch')
     config.devtool('none')
@@ -131,7 +146,7 @@ function getChainWebpack(config) {
     config
       .plugin('banner')
       .use(Webpack.BannerPlugin, [`${webpackBanner}${dateTime}`])
-    if (imageCompression)
+    if (imageCompression) {
       config.module
         .rule('images')
         .use('image-webpack-loader')
@@ -140,32 +155,38 @@ function getChainWebpack(config) {
           bypassOnDebug: true,
         })
         .end()
+    }
     if (buildGzip)
       // https://blog.csdn.net/weixin_42164539/article/details/110389256
-      config.plugin('compression').use(CompressionWebpackPlugin, [
-        {
-          filename: '[path][base].gz[query]',
-          algorithm: 'gzip',
-          test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
-          threshold: 8192,
-          minRatio: 0.8,
-        },
-      ])
-    if (build7z)
-      config.plugin('fileManager').use(FileManagerPlugin, [
-        {
-          events: {
-            onEnd: {
-              archive: [
-                {
-                  source: `./${outputDir}`,
-                  destination: `./${outputDir}/${abbreviation}_${dateTime}.zip`,
-                },
-              ],
+    {
+      config.plugin('compression')
+        .use(CompressionWebpackPlugin, [
+          {
+            filename: '[path][base].gz[query]',
+            algorithm: 'gzip',
+            test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+            threshold: 10240,
+            minRatio: 0.8,
+          },
+        ])
+    }
+    if (build7z) {
+      config.plugin('fileManager')
+        .use(FileManagerPlugin, [
+          {
+            events: {
+              onEnd: {
+                archive: [
+                  {
+                    source: `./${outputDir}`,
+                    destination: `./${outputDir}/${abbreviation}_${dateTime}.zip`,
+                  },
+                ],
+              },
             },
           },
-        },
-      ])
+        ])
+    }
   })
 }
 
@@ -179,13 +200,17 @@ const cssExport = {
   loaderOptions: {
     scss: {
       additionalData(content, loaderContext) {
-        const { resourcePath, rootContext } = loaderContext
+        const {
+          resourcePath,
+          rootContext,
+        } = loaderContext
         const relativePath = path.relative(rootContext, resourcePath)
         if (
           relativePath.replace(/\\/g, '/') !==
           'src/vab/styles/variables/variables.scss'
-        )
+        ) {
           return '@import "~@/vab/styles/variables/variables.scss";' + content
+        }
         return content
       },
     },
@@ -229,6 +254,8 @@ const configure = {
     echarts: 'echarts',
     screenfull: 'screenfull',
     qs: 'qs',
+    Qs: 'qs',
+    qs: 'Qs',
     moment: 'moment',
     jsplumb: 'jsplumb',
     JSEncrypt: 'jsencrypt',
@@ -249,6 +276,9 @@ const configure = {
     },
   },
   plugins: [
+    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
+    new MonacoWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),
     new Webpack.ProvidePlugin(providePlugin),
     new WebpackBar({

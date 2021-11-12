@@ -20,8 +20,8 @@
         </a-tab-pane>
         <a-tab-pane
           key="chart"
-          force-render
           :tab="$translateTitle('equipment.chart')"
+          force-render
         >
           <empty />
         </a-tab-pane>
@@ -32,6 +32,7 @@
 
 <script>
   import empty from '@/views/Empty'
+
   export default {
     name: 'Dashboard',
     components: {

@@ -2,13 +2,13 @@
   <div class="doc-dialog">
     <el-dialog
       :key="key"
-      append-to-body
       :title="
         form.type == 'add'
           ? $translateTitle('article.New category')
           : $translateTitle('article.edit category')
       "
       :visible.sync="dialogFormVisible"
+      append-to-body
       width="400px"
       @close="handleClose"
     >
@@ -56,9 +56,9 @@
         >
           <el-input-number
             v-model="form.order"
-            autocomplete="off"
             :min="0"
             :step="1"
+            autocomplete="off"
             style="width: 100%"
           />
         </el-form-item>
@@ -105,7 +105,8 @@
     name: 'DocDialog',
     data() {
       return {
-        key: moment(new Date()).valueOf(),
+        key: moment(new Date())
+          .valueOf(),
         dialogFormVisible: false,
         form: {
           type: '',
@@ -123,7 +124,11 @@
         },
         rules: {
           name: [
-            { required: true, message: '请输入文档名', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入文档名',
+              trigger: 'blur',
+            },
             {
               min: 3,
               max: 15,
@@ -132,7 +137,11 @@
             },
           ],
           category: [
-            { required: true, message: '请输入类别', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入类别',
+              trigger: 'blur',
+            },
             {
               min: 3,
               max: 15,
@@ -162,15 +171,24 @@
       }
     },
     computed: {},
-    mounted() {},
-    created() {},
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
+    mounted() {
+    },
+    created() {
+    },
+    beforeCreate() {
+    }, //生命周期 - 创建之前
+    beforeMount() {
+    }, //生命周期 - 挂载之前
+    beforeUpdate() {
+    }, //生命周期 - 更新之前
+    updated() {
+    }, //生命周期 - 更新之后
+    beforeDestroy() {
+    }, //生命周期 - 销毁之前
+    destroyed() {
+    }, //生命周期 - 销毁完成
+    activated() {
+    },
     methods: {
       handleClose(done) {
         console.log(done)

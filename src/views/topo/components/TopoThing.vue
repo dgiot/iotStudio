@@ -1,16 +1,21 @@
 <!--
-* @Author: vivi
+* @Author: h7ml
 * @Date: 2021-10-25 18:47:44
-* @LastEditors: vivi
+* @LastEditors: h7ml
 * @LastEditTime: 2021-10-25 18:47:44
 * @Description:
 * @FilePath: src\views\topo\components\TopoThing.vue
+* @document https://fonts.google.com/icons?selected=Material+Icons
+* @api https://github.com/material-components/material-web/tree/ae060177fac6ab2d7987a49ff9f34f0de2c335af/packages/icon-button
 * @DocumentLink:
 -->
 <template>
   <div class="TopoThing-container">
     <div class="TopoThing-content">
+      <span class="material-icons">home</span>
       {{ infoData }}
+      <md-icon>favorite</md-icon>
+      <i class="material-icons">account_balance_wallet</i>
     </div>
   </div>
 </template>
@@ -43,7 +48,6 @@
     },
     methods: {}, //如果页面有keep-alive缓存功能，这个函数会触发
   }
-
 </script>
 <style lang="scss" scoped>
   .TopoThing-container {

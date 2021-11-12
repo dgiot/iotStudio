@@ -6,6 +6,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
+
   export default {
     name: 'VabFooter',
     computed: {
@@ -27,6 +28,7 @@
     color: rgba(0, 0, 0, 0.45);
     background: $base-color-white;
     border-top: 1px dashed $base-border-color;
+
     i {
       margin: 0 5px;
     }

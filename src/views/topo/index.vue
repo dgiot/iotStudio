@@ -1,3 +1,4 @@
+<!--eslint-disable-->
 <template>
   <div
     :class="{ 'vab-fullscreen': isFullscreen, 'konva-fullscreen': isDevice }"
@@ -44,22 +45,19 @@
               ></div>
             </el-container>
           </el-col>
-          <el-col
-            :lg="isDevice ? 0 : 4"
-            :md="isDevice ? 0 : 6"
-            :sm="isDevice ? 0 : 6"
-            :xl="isDevice ? 0 : 3"
-            :xs="0"
-            class="hidden-xs-only"
-            hidden-xs-only
-          >
-            <el-aside class="konva-container-main-operationsSide">
-              <TopoOperation
-                ref="operation"
-                @upconfig="saveKonvaitem"
-              />
-            </el-aside>
-          </el-col>
+          <!--          <el-col-->
+          <!--            :lg="isDevice ? 0 : 4"-->
+          <!--            :md="isDevice ? 0 : 6"-->
+          <!--            :sm="isDevice ? 0 : 6"-->
+          <!--            :xl="isDevice ? 0 : 3"-->
+          <!--            :xs="0"-->
+          <!--            class="hidden-xs-only"-->
+          <!--            hidden-xs-only-->
+          <!--          >-->
+          <!--            <el-aside class="konva-container-main-operationsSide">-->
+          <!--              <TopoOperation ref="operation" @upconfig="saveKonvaitem" />-->
+          <!--            </el-aside>-->
+          <!--          </el-col>-->
         </el-row>
       </el-main>
     </el-container>
@@ -68,9 +66,10 @@
 <script>
   import 'element-ui/lib/theme-chalk/display.css'
   import { requireModule } from '@/utils/file'
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import { _getTopo } from '@/api/Topo'
   import { queryProduct } from '@/api/Product'
+  import canvas from '@/utils/konva/core/canvas'
 
   export default {
     components: {
@@ -78,22 +77,24 @@
     },
     data() {
       return {
+        Stage: {},
         router: '',
         topicKey: '',
         isFullscreen: false,
         gutter: {
           gutter: 24,
           xs: 24,
-          sm: 15,
-          md: 15,
-          lg: 17,
-          xl: 20,
+          sm: 20,
+          md: 21,
+          lg: 21,
+          xl: 21,
         },
         productid: this.$route.query.productid || '',
       }
     },
     computed: {
       ...mapGetters({
+        defaultKonva: 'topo/defaultKonva',
         graphColor: 'konva/graphColor',
         drawing: 'konva/drawing',
         graphNow: 'konva/graphNow',
@@ -119,10 +120,16 @@
     },
     watch: {},
     mounted() {
+      this.Stage = _.isEmpty(localStorage.getItem('konvaStale'))
+        ? localStorage.getItem('konvaStale')
+        : this.defaultKonva
       this.router = this.$dgiotBus.router(this.$route.fullPath)
-      this.handleMqtt()
+      this.$nextTick(() => {
+        this.handleMqtt()
+      })
     },
     destroyed() {
+      localStorage.setItem('konvaStale', JSON.stringify(canvas.stageJson))
       this.$dgiotBus.$emit(
         'MqttUnbscribe',
         this.$dgiotBus.topicKey(this.router + this.topotopic),
@@ -132,52 +139,81 @@
     created() {
     },
     methods: {
-      ...mapActions({
+      ...mapMutations({
         initKonva: 'topo/initKonva',
+        createThing: 'topo/createThing',
       }),
       saveKonvaitem() {
-
       },
       async handleMqtt() {
         let _this = this
         if (_this.$route.query.type == 'device') {
           _this.productid = _this.$route.query.deviceid
         }
-        const {
-          productid,
-          devaddr = undefined,
-        } = _this.$route.query
-        let params = {
-          productid: productid,
-          devaddr: devaddr,
+        const loading = _this.$baseColorfullLoading(3)
+        try {
+          const {
+            productid,
+            devaddr = undefined,
+          } = _this.$route.query
+          let params = {
+            productid: productid,
+            devaddr: devaddr,
+          }
+          const {
+            message = '',
+            data = {},
+          } = await _getTopo(params)
+          // 绘制前不光需要获取到组态数据，还需要获取产品数据
+          const { results = [] } = await queryProduct({
+            where: { objectId: _this.$route.query.productid },
+          })
+          _this.productconfig = results[0]
+          // console.log(_this.productconfig)
+          if (message == 'SUCCESS') {
+            // console.log(this.$refs['edrawer'].$refs, 'edrawer')
+            _this.$refs['operation']
+              ? (_this.$refs['operation'].productconfig = results[0])
+              : console.log(
+                ' _this.$refs[\'operation\']',
+                _this.$refs['operation'],
+              )
+            _this.globalStageid = data.Stage.attrs.id
+            // _this.createKonva(data, _this.globalStageid, 'create')
+            _this.paramsconfig = { konva: data }
+            //
+            console.log(
+              'topo info msg 请求数据有组态 就设置这个组态为请求回来的组态',
+              data.Stage,
+            )
+            await _this.initKonva({
+              data: data.Stage,
+              id: 'kevCurrent',
+            })
+          } else {
+            this.$message.info('暂无组态。显示默认组态')
+            console.log(
+              'topo info msg 请求数据没有组态 就设置这个组态为默认',
+              this.Stage,
+            )
+            await _this.initKonva({
+              data: this.Stage,
+              id: 'kevCurrent',
+            })
+          }
+          loading.close()
+        } catch (e) {
+          await this.initKonva({
+            data: this.Stage,
+            id: 'kevCurrent',
+          })
+          console.log('topo info msg 组态请求出错', e)
+          loading.close()
         }
-        const {
-          message = '',
-          data,
-        } = await _getTopo(params)
-        // 绘制前不光需要获取到组态数据，还需要获取产品数据
-        const { results = [] } = await queryProduct({
-          where: { objectId: _this.$route.query.productid },
-        })
-        _this.productconfig = results[0]
-        console.log(_this.productconfig)
-        if (message == 'SUCCESS') {
-          // console.log(this.$refs['edrawer'].$refs, 'edrawer')
-          _this.$refs['operation']
-            ? (_this.$refs['operation'].productconfig = results[0])
-            : console.log(' _this.$refs[\'operation\']', _this.$refs['operation'])
-          _this.globalStageid = data.Stage.attrs.id
-          // _this.createKonva(data, _this.globalStageid, 'create')
-          _this.paramsconfig = { konva: data }
-          //
-          // set backgroundImage
-        }
-        console.error(data.Stage)
-        this.initKonva({
-          data: data
-            .Stage,
-          id: 'kevCurrent',
-        })
+        // setTimeout(async() => {
+        // //   // 默认创建一个,解决原有读取的text 组态无法使用事件问题
+        //  await _this.createThing({productid:_this.$route.query.productid,hidden:true})
+        // }, 1200)
       },
     },
   }

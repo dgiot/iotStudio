@@ -5,7 +5,7 @@ module.exports = {
   // 开发以及部署时的URL
   // hash模式时在不确定二级目录名称的情况下建议使用""代表相对路径或者"/二级目录/"
   // history模式默认使用"/"或者"/二级目录/"，记住只有hash时publicPath可以为空！！！
-  publicPath: '',
+  publicPath: './', //https://www.cnblogs.com/lemoncool/p/10876407.html
   // 生产环境构建文件的目录名
   outputDir: 'dist',
   // 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。
@@ -25,13 +25,16 @@ module.exports = {
   // npm run build时是否开启图片压缩，由于国内网路原因image-webpack-loader必须使用cnpm安装，如无法使用cnpm，请配置false
   imageCompression: false,
   // 是否启用cdn，如果不启用。则将cdn资源文件下载到本地，并替换引入资源地址。
-  useCdn: false,
+  useCdn: true,
   // 忽略cdn下载的文件关键字
   ignoreCdn: ['php', 'bugtags', '1279876845', 'qq'],
   // iconfront 的id //
   iconfontId: ['font_2759556_r8d9wroaw8'],
   // 是否开启 SpeedMeasurePlugin 打包速度输出日志插件
   isSmp: false,
+  // 代理后的文件地址
+  CDN_URL: '/dgiot_dashboard/public',
   // cdn资源文件 https://blog.csdn.net/qq_37210523/article/details/106267946
   cdn: '//dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/dgiot_release/dashboardCdn', // '//1.117.219.248:1250/group1/dgiot_dashboard'
 }
+

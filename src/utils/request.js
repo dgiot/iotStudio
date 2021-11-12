@@ -1,13 +1,4 @@
-import {
-  baseURL,
-  contentType,
-  debounce,
-  requestTimeout,
-  statusName,
-  successCode,
-  errorCode,
-  tokenName,
-} from '@/config'
+import { baseURL, contentType, debounce, errorCode, requestTimeout, statusName, successCode, tokenName } from '@/config'
 import { globalUrl } from './utilwen'
 import store from '@/store'
 
@@ -28,7 +19,12 @@ const errorcodeVerificationArray = isArray(errorCode)
   ? [...errorCode]
   : [...[errorCode]]
 
-const handleData = ({ config, data, status, statusText }) => {
+const handleData = ({
+  config,
+  data,
+  status,
+  statusText,
+}) => {
   if (loadingInstance) loadingInstance.close()
   // 极个别情况，若将错误code设置为0时，防止识别成false影响判断
   if (data[statusName] === 0) data[statusName] = '0'
@@ -84,7 +80,8 @@ const instance = axios.create({
   headers: {
     'Content-Type': contentType,
     Auth: 'h7ml',
-    Timestamp: moment(new Date()).unix() + '',
+    Timestamp: moment(new Date())
+      .unix() + '',
   },
 })
 
@@ -112,23 +109,28 @@ instance.interceptors.request.use(
       config.headers[`${tokenName}`] = token
     } else if (noCookiePages.indexOf(path) == -1 && !headers[`${tokenName}`]) {
       Vue.prototype.$baseMessage(`当前页${path}未获取到${tokenName}`, 'error')
-      router.push({ path: '/login', replace: true })
+      router.push({
+        path: '/login',
+        replace: true,
+      })
       return
     }
 
     if (
       config.data &&
       config.headers['Content-Type'] ===
-        'application/x-www-form-urlencoded;charset=UTF-8'
-    )
+      'application/x-www-form-urlencoded;charset=UTF-8'
+    ) {
       config.data = qs.stringify(config.data)
-    if (debounce.some((item) => config.url.includes(item)))
+    }
+    if (debounce.some((item) => config.url.includes(item))) {
       loadingInstance = Vue.prototype.$baseLoading()
+    }
     return config
   },
   (error) => {
     return Promise.reject(error)
-  }
+  },
 )
 
 /**
@@ -137,7 +139,10 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => handleData(response),
   (error) => {
-    const { response, config } = error
+    const {
+      response,
+      config,
+    } = error
     if (response) {
       return handleData(response)
     } else {
@@ -146,7 +151,7 @@ instance.interceptors.response.use(
       console.log('response', response)
       Vue.prototype.$baseMessage(
         `请求出错：请求链接：${config.url}，错误信息：${error}`,
-        'error'
+        'error',
       )
       return {}
     }
@@ -157,10 +162,15 @@ instance.interceptors.response.use(
     //   )
     //   return {}
     // } else return handleData(response)
-  }
+  },
 )
+
 function backHome() {
   store.dispatch('user/resetAll')
-  router.push({ path: '/login', replace: true })
+  router.push({
+    path: '/login',
+    replace: true,
+  })
 }
+
 export default instance

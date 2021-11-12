@@ -3,16 +3,16 @@
     <div class="loginbanner">
       <el-form
         ref="ruleForm2"
-        class="login-form"
-        label-width="100px"
         :model="ruleForm2"
         :rules="rules2"
+        class="login-form"
+        label-width="100px"
         status-icon
       >
         <div class="logo">
           <img
-            alt="logo"
             :src="logosrc"
+            alt="logo"
             style="width: 80px; height: 80px"
           />
           <p>重置密码</p>
@@ -48,8 +48,8 @@
           <el-input
             ref="phonerole"
             v-model="ruleForm2.phone"
-            auto-complete="on"
             :maxlength="11"
+            auto-complete="on"
             name="phone"
             placeholder="请输入手机号"
             style="width: 250px"
@@ -104,11 +104,11 @@
           </span>
           <el-input
             v-model="ruleForm2.password"
-            auto-complete="new-password"
             :maxlength="10"
+            :type="pwdType"
+            auto-complete="new-password"
             name="password"
             placeholder="请输入6-10位数字字母组合"
-            :type="pwdType"
           />
           <span
             class="show-pwd"
@@ -127,10 +127,10 @@
           </span>
           <el-input
             v-model="ruleForm2.checkPass"
-            auto-complete="new-password"
             :maxlength="10"
-            placeholder="请再次输入密码"
             :type="pwdType"
+            auto-complete="new-password"
+            placeholder="请再次输入密码"
           />
           <span
             class="show-pwd"
@@ -159,6 +159,7 @@
 <script>
   const Base64 = require('js-base64').Base64
   import { passwordreset, Phonelogin } from '@/api/User/index'
+
   export default {
     data() {
       var validatePass = (rule, value, callback) => {
@@ -200,7 +201,11 @@
         protype: '',
         rules2: {
           account: [
-            { required: true, message: '请输入账号', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入账号',
+              trigger: 'blur',
+            },
             {
               min: 1,
               max: 10,
@@ -209,7 +214,11 @@
             },
           ],
           phone: [
-            { required: true, message: '请输入手机号', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入手机号',
+              trigger: 'blur',
+            },
             {
               validator: function (rule, value, callback) {
                 var MobileRegex = /^1[3-9]\d{9}$/
@@ -223,24 +232,49 @@
             },
           ],
           password: [
-            { validator: validatePass, trigger: 'blur', required: true },
+            {
+              validator: validatePass,
+              trigger: 'blur',
+              required: true,
+            },
           ],
           checkPass: [
-            { validator: validatecheckPass, trigger: 'blur', required: true },
+            {
+              validator: validatecheckPass,
+              trigger: 'blur',
+              required: true,
+            },
           ],
           username: [
-            { required: true, message: '请输入姓名', trigger: 'blur' },
-            { min: 2, max: 5, message: '姓名格式不正确', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入姓名',
+              trigger: 'blur',
+            },
+            {
+              min: 2,
+              max: 5,
+              message: '姓名格式不正确',
+              trigger: 'blur',
+            },
           ],
           email: [
-            { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入邮箱地址',
+              trigger: 'blur',
+            },
             {
               type: 'email',
               message: '请输入正确的邮箱地址',
               trigger: ['blur', 'change'],
             },
           ],
-          roles: [{ required: true, message: '请选择平台', trigger: 'change' }],
+          roles: [{
+            required: true,
+            message: '请选择平台',
+            trigger: 'change',
+          }],
         },
         pwdType: 'password',
         origin: [
@@ -317,7 +351,7 @@
         const _this = this
         Phonelogin(
           _this.ruleForm2.phone,
-          encodeURIComponent(_this.ruleForm2.value)
+          encodeURIComponent(_this.ruleForm2.value),
         )
           .then((res) => {
             if (res) {
@@ -349,7 +383,7 @@
               passwordreset(
                 this.ruleForm2.phone,
                 this.code,
-                this.ruleForm2.password
+                this.ruleForm2.password,
               )
                 .then((resultes) => {
                   if (resultes) {
@@ -368,7 +402,7 @@
     },
   }
 </script>
-<style rel="stylesheet/scss" lang="scss">
+<style lang="scss" rel="stylesheet/scss">
   $light_gray: rgba(0, 0, 0, 0.247058823529412);
   /* reset element-ui css */
   .login-container {
@@ -379,13 +413,16 @@
       box-sizing: border-box;
       padding: 16px;
       background: transparent;
+
       .hasuser {
         text-align: center;
       }
+
       .el-input {
         display: inline-block;
         width: 85%;
         height: 47px;
+
         input {
           height: 47px;
           padding: 12px 5px 12px 15px;
@@ -394,22 +431,26 @@
           border: 1px;
           border-radius: 0px;
           -webkit-appearance: none;
+
           &:-webkit-autofill {
             // -webkit-box-shadow: 0 0 0px 1000px $bg inset !important;
             -webkit-text-fill-color: black !important;
           }
         }
       }
+
       .el-form-item {
         color: #454545;
         background: #ffffff;
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 5px;
       }
+
       .logo {
         display: flex;
         justify-content: center;
         margin-bottom: 10px;
+
         p {
           margin: 25px 0;
           font-size: 30px;
@@ -420,7 +461,7 @@
   }
 </style>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss" rel="stylesheet/scss" scoped>
   $bg: rgba(45, 58, 75, 0.8);
   $dark_gray: #889aa4;
   $light_gray: #eee;
@@ -429,6 +470,7 @@
     width: 100%;
     height: 100%;
     background-color: $bg;
+
     .login-form {
       position: absolute;
       right: 5%;
@@ -440,9 +482,10 @@
       background: #ffffff;
       border-radius: 5px;
       box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
-        0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-        0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+      0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+      0px 2px 1px -1px rgba(0, 0, 0, 0.12);
     }
+
     .login_bottom {
       position: absolute;
       right: 0;
@@ -455,6 +498,7 @@
       font-size: 14px;
       color: #ffffff;
       text-align: center;
+
       img {
         width: 16px;
         height: 16px;
@@ -462,16 +506,19 @@
         vertical-align: middle;
       }
     }
+
     .tips {
       margin-bottom: 10px;
       font-size: 14px;
       color: #fff;
+
       span {
         &:first-of-type {
           margin-right: 16px;
         }
       }
     }
+
     .svg-container {
       display: inline-block;
       width: 30px;
@@ -479,6 +526,7 @@
       color: $dark_gray;
       vertical-align: middle;
     }
+
     .title {
       margin: 0px auto 40px auto;
       font-size: 26px;
@@ -487,6 +535,7 @@
       color: $light_gray;
       text-align: center;
     }
+
     .show-pwd {
       position: absolute;
       top: 7px;
@@ -504,6 +553,7 @@
     border: 1px solid #cccccc;
     border-radius: 5px;
   }
+
   .login-container .loginbanner .el-input input {
     color: black;
   }

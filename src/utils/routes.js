@@ -3,6 +3,7 @@ import { isExternal } from '@/utils/validate'
 import { hasAccess } from '@/utils/hasAccess'
 import { recordRoute } from '@/config'
 import { json2params } from '@/utils/index'
+
 /**
  * @description all模式渲染后端返回路由,支持包含views路径的所有页面
  * @param asyncRoutes
@@ -20,8 +21,9 @@ export function convertRouter(asyncRoutes) {
         route.component = (resolve) => require([`@/${path}`], resolve)
       }
     }
-    if (route.children && route.children.length)
+    if (route.children && route.children.length) {
       route.children = convertRouter(route.children)
+    }
     if (route.children && route.children.length === 0) delete route.children
     return route
   })
@@ -37,15 +39,19 @@ export function convertRouter(asyncRoutes) {
 export function filterRoutes(routes, rolesControl, baseUrl = '/') {
   return routes
     .filter((route) => {
-      if (rolesControl && route.meta && route.meta.roles)
+      if (rolesControl && route.meta && route.meta.roles) {
         return hasAccess(route.meta.roles)
-      else return true
+      } else {
+        return true
+      }
     })
     .map((route) => {
-      if (route.path !== '*' && !isExternal(route.path))
+      if (route.path !== '*' && !isExternal(route.path)) {
         route.path = path.resolve(baseUrl, route.path)
-      if (route.children)
+      }
+      if (route.children) {
         route.children = filterRoutes(route.children, rolesControl, route.path)
+      }
       return route
     })
 }
@@ -57,7 +63,11 @@ export function filterRoutes(routes, rolesControl, baseUrl = '/') {
  * @returns {string|*}
  */
 export function handleActivePath(route, isTabsBar = false) {
-  const { meta, path, fullPath } = route
+  const {
+    meta,
+    path,
+    fullPath,
+  } = route
   const rawPath = route.matched
     ? route.matched[route.matched.length - 1].path
     : path
@@ -71,12 +81,21 @@ export function handleActivePath(route, isTabsBar = false) {
  * @param currentPath 当前页面地址
  */
 export function toLoginRoute(currentPath) {
-  const { path = '', params = {}, query = {} } = currentPath
-  if (recordRoute && currentPath !== '/')
+  const {
+    path = '',
+    params = {},
+    query = {},
+  } = currentPath
+  if (recordRoute && currentPath !== '/') {
     return {
       path: '/login',
       query: { redirect: path + '?' + json2params(query) },
       replace: true,
     }
-  else return { path: '/login', replace: true }
+  } else {
+    return {
+      path: '/login',
+      replace: true
+    }
+  }
 }

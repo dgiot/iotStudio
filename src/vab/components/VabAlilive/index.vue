@@ -1,8 +1,8 @@
 <template>
   <div
     :id="playerId"
-    class="prism-player"
     :style="playStyle"
+    class="prism-player"
   />
 </template>
 
@@ -108,7 +108,9 @@
     },
     data() {
       return {
-        playerId: 'aliplayer_' + Math.random().toString(36).substr(2),
+        playerId: 'aliplayer_' + Math.random()
+          .toString(36)
+          .substr(2),
         scriptTagStatus: 0,
         isReload: false,
         instance: null,
@@ -418,14 +420,14 @@
         return this.instance.getDuration()
       },
       /**
-      获取当前的音量，返回值为0-1的实数ios和部分android会失效
-     */
+       获取当前的音量，返回值为0-1的实数ios和部分android会失效
+       */
       getVolume: function () {
         return this.instance.getVolume()
       },
       /**
-      设置音量，vol为0-1的实数，ios和部分android会失效
-     */
+       设置音量，vol为0-1的实数，ios和部分android会失效
+       */
       setVolume: function (vol) {
         this.instance.setVolume(vol)
       },

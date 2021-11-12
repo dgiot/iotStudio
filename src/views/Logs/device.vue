@@ -1,20 +1,20 @@
 <template>
   <div
-    class="logs logs-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
+    class="logs logs-container"
   >
     <vab-query-form>
       <vab-query-form-top-panel>
         <el-form
           ref="form"
           :inline="true"
-          label-width="100px"
           :model="queryForm"
+          label-width="100px"
           @submit.native.prevent
         >
           <el-form-item
-            class="item-time"
             :label="$translateTitle('device.Log type')"
+            class="item-time"
           >
             <el-select
               v-model="queryForm.domain"
@@ -30,15 +30,15 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            class="item-time"
             :label="$translateTitle('Maintenance.times')"
+            class="item-time"
           >
             <el-date-picker
               v-model="queryForm.searchDate"
-              class="item-time-picker"
               :end-placeholder="$translateTitle('Maintenance.end time')"
-              format="yyyy-MM-dd"
               :start-placeholder="$translateTitle('Maintenance.start time')"
+              class="item-time-picker"
+              format="yyyy-MM-dd"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -66,8 +66,8 @@
           >
             <el-input
               v-model="queryForm.devaddr"
-              clearable
               :placeholder="$translateTitle('equipment.enterdevicenumber')"
+              clearable
             />
           </el-form-item>
           <el-form-item>
@@ -92,8 +92,8 @@
             <el-popover trigger="hover">
               <el-checkbox-group v-model="checkList">
                 <vue-draggable
-                  v-bind="dragOptions"
                   :list="logcolumns"
+                  v-bind="dragOptions"
                 >
                   <div
                     v-for="(item, index) in logcolumns"
@@ -124,8 +124,8 @@
       </vab-query-form-top-panel>
     </vab-query-form>
     <el-dialog
-      append-to-body
       :visible.sync="preDialog"
+      append-to-body
     >
       <vab-editor
         :key="refreshFlag"
@@ -135,7 +135,6 @@
             ? Number($baseTableHeight(1))
             : Number($baseTableHeight(1))
         "
-        lang="json"
         :max-lines="
           isFullscreen
             ? Number($baseTableHeight(1)) / 12
@@ -146,6 +145,7 @@
             ? Number($baseTableHeight(1)) / 12
             : Number($baseTableHeight(1)) / 12
         "
+        lang="json"
         theme="gob"
       />
     </el-dialog>
@@ -153,26 +153,26 @@
       :key="finallyColumns.length + momentKey"
       ref="dragTable"
       v-loading="loading"
-      border
-      class="block"
       :data="logdata"
-      element-loading-background="rgba(0, 0, 0, 0.8)"
-      element-loading-spinner="el-icon-loading"
       :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
       :height="height"
+      :row-class-name="tableRowClassName"
+      border
+      class="block"
+      element-loading-background="rgba(0, 0, 0, 0.8)"
+      element-loading-spinner="el-icon-loading"
       highlight-current-row
       resizable
-      :row-class-name="tableRowClassName"
       size="mini"
       stripe
     >
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-descriptions
-            border
-            class="margin-top"
             :column="2"
             :size="size"
+            border
+            class="margin-top"
           >
             <el-descriptions-item
               v-for="(item, key, index) in props.row"
@@ -186,8 +186,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('device.Log type')"
+        align="center"
       >
         <template #default="{ row }">
           {{ $translateTitle(`deviceLog.${row.domain}`) }}
@@ -196,9 +196,9 @@
       <el-table-column
         v-for="(item, index) in finallyColumns"
         :key="index"
-        align="center"
         :label="$translateTitle(`deviceLog.${item}`)"
         :prop="item"
+        align="center"
         show-overflow-tooltip
         sortable
       />
@@ -211,8 +211,8 @@
       <!--        fixed="right"-->
       <!--      />-->
       <el-table-column
-        align="center"
         :label="$translateTitle('concentrator.operation')"
+        align="center"
       >
         <template #default="{ row }">
           <el-button
@@ -293,8 +293,10 @@
         isFullscreen: false,
         height: this.$baseTableHeight(2),
         logdata: [],
-        refreshFlag: moment(new Date()).valueOf(),
-        momentKey: moment(new Date()).valueOf(),
+        refreshFlag: moment(new Date())
+          .valueOf(),
+        momentKey: moment(new Date())
+          .valueOf(),
         checkList: ['time', 'msg'],
         logcolumns: [
           'devaddr',
@@ -325,8 +327,11 @@
           topic: '',
           domain: [],
           searchDate: [
-            moment().subtract('days', 7).format('YYYY-MM-DD'),
-            moment(new Date()).format('YYYY-MM-DD'),
+            moment()
+              .subtract('days', 7)
+              .format('YYYY-MM-DD'),
+            moment(new Date())
+              .format('YYYY-MM-DD'),
           ],
           order: '-createdAt',
           keys: 'count(*)',
@@ -346,12 +351,14 @@
         return this.logcolumns.filter((item) => this.checkList.includes(item))
       },
     },
-    created() {},
+    created() {
+    },
     mounted() {
       if (this.productid) this.queryForm.productid = this.productid
       if (this.deviceid) this.queryForm.deviceid = this.deviceid
-      if (this.$route.query.deviceid)
+      if (this.$route.query.deviceid) {
         this.queryForm.deviceid = this.$route.query.deviceid
+      }
       this.queryTable({})
       this.rowDrop()
       this.queryProduct()
@@ -372,9 +379,13 @@
       },
       handleHeight() {
         this.isFullscreen = !this.isFullscreen
-        if (this.isFullscreen) this.height = this.$baseTableHeight(0) + 120
-        else this.height = this.$baseTableHeight(0)
-        this.momentKey = moment(new Date()).valueOf()
+        if (this.isFullscreen) {
+          this.height = this.$baseTableHeight(0) + 120
+        } else {
+          this.height = this.$baseTableHeight(0)
+        }
+        this.momentKey = moment(new Date())
+          .valueOf()
       },
       // 设置表格row的class
       tableRowClassName({ row }) {
@@ -387,13 +398,16 @@
       rowDrop() {
         // 此时找到的元素是要拖拽元素的父容器
         const tbody = this.$refs.dragTable.$el.querySelector(
-          '.el-table__body-wrapper tbody'
+          '.el-table__body-wrapper tbody',
         )
         const _this = this
         Sortable.create(tbody, {
           //  指定父元素下可被拖拽的子元素
           draggable: '.el-table__row',
-          onEnd({ newIndex, oldIndex }) {
+          onEnd({
+            newIndex,
+            oldIndex,
+          }) {
             const currRow = _this.logdata.splice(oldIndex, 1)[0]
             _this.logdata.splice(newIndex, 0, currRow)
           },
@@ -403,7 +417,7 @@
       columnDrop() {
         const _this = this
         const wrapperTr = this.$refs.dragTable.$el.querySelector(
-          '.el-table__header-wrapper tr'
+          '.el-table__header-wrapper tr',
         )
         _this.sortable = Sortable.create(wrapperTr, {
           animation: 180,
@@ -412,7 +426,8 @@
             const oldItem = _this.finallyColumns[evt.oldIndex]
             _this.finallyColumns.splice(evt.oldIndex, 1)
             _this.finallyColumns.splice(evt.newIndex, 0, oldItem)
-            _this.momentKey = moment(new Date()).valueOf()
+            _this.momentKey = moment(new Date())
+              .valueOf()
             setTimeout(() => {
               _this.rowDrop()
               _this.columnDrop()
@@ -428,7 +443,8 @@
         this.preDialog = true
         console.log(row)
         this.msg = JSON.stringify(row, null, 2)
-        this.refreshFlag = moment(new Date()).valueOf()
+        this.refreshFlag = moment(new Date())
+          .valueOf()
       },
       async queryTable(args = {}) {
         this.loading = true
@@ -454,7 +470,7 @@
                   //       /,(?=(?:[^']*(?:'[^']*')?[^']*)*$)/
                   //     ),
                   //   }
-                  { $in: this.queryForm.domain }
+                { $in: this.queryForm.domain }
                 : { $ne: '' },
               createdAt: {
                 $gte: {
@@ -477,11 +493,16 @@
           // if (this.queryForm.productid) {
           //   params.where.productid = this.queryForm.productid
           // }
-          const { results = [], count: total = 0 } = await queryLog(params)
+          const {
+            results = [],
+            count: total = 0,
+          } = await queryLog(params)
           results.forEach((item) => {
             item.time = this.$moment(
-              Number(item.time.toString().substring(0, 13))
-            ).format('YYYY-MM-DD HH:mm:ss')
+              Number(item.time.toString()
+                .substring(0, 13)),
+            )
+              .format('YYYY-MM-DD HH:mm:ss')
             if (item.type != 'text') {
               const msg = JSON.parse(item.msg)
               for (let k in msg) {
@@ -494,7 +515,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'vab-hey-message-success',
           )
           loading.close()
         } catch (error) {
@@ -502,7 +523,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
         this.loading = false
@@ -510,7 +531,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .logs {
     //height: calc(100vh - #{$base-top-bar-height} * 5.2) !important;
 

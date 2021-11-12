@@ -3,10 +3,10 @@
   <div class="wmxheader">
     <el-form
       ref="sizeForm"
-      label-position="left"
-      label-width="150px"
       :model="sizeForm"
       :rules="sizerule"
+      label-position="left"
+      label-width="150px"
       size="mini"
     >
       <!-- update 2020 05-27 hughWang -->
@@ -142,7 +142,6 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              {{ sizeForm.ico }}
               <el-col :span="12">
                 <el-form-item
                   label="图标"
@@ -261,10 +260,10 @@
                 >
                   <el-input-number
                     v-model="sizeForm.step"
-                    controls-position="right"
                     :min="0"
                     :precision="2"
                     :step="0.01"
+                    controls-position="right"
                     style="width: 100%"
                   />
                 </el-form-item>
@@ -274,8 +273,8 @@
                 <el-form-item :label="$translateTitle('product.unit')">
                   <el-select
                     v-model="sizeForm.unit"
-                    filterable
                     :placeholder="$translateTitle('product.unit')"
+                    filterable
                     style="width: 100%"
                   >
                     <el-option-group
@@ -359,9 +358,9 @@
                 <el-form-item label="枚举项">
                   <!--枚举型添加格式-->
                   <el-link
+                    :underline="false"
                     icon="el-icon-plus"
                     type="primary"
-                    :underline="false"
                     @click="addDomain"
                   >
                     {{ $translateTitle('product.add') }}
@@ -433,16 +432,16 @@
                     </div>
                     <div>
                       <el-link
+                        :underline="false"
                         style="margin-left: 20px"
                         type="primary"
-                        :underline="false"
                         @click="editStruct(item, index)"
                       >
                         {{ $translateTitle('developer.edit') }}
                       </el-link>
                       <el-link
-                        type="primary"
                         :underline="false"
+                        type="primary"
                         @click="deleteStruct(index)"
                       >
                         {{ $translateTitle('developer.delete') }}
@@ -451,9 +450,9 @@
                   </li>
                 </ul>
                 <el-link
+                  :underline="false"
                   icon="el-icon-plus"
                   type="primary"
-                  :underline="false"
                   @click="addStruct('structform')"
                 >
                   {{ $translateTitle('product.addparameter') }}
@@ -491,8 +490,8 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item
-                    class="is-required"
                     :label="$translateTitle('product.gps type')"
+                    class="is-required"
                   >
                     <el-select
                       v-model="sizeForm.gpstype"
@@ -517,8 +516,8 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item
-                    class="is-required"
                     :label="$translateTitle('product.image type')"
+                    class="is-required"
                   >
                     <el-select
                       v-model="options.value"
@@ -548,8 +547,8 @@
               <el-row :gutter="20">
                 <el-col :span="12">
                   <el-form-item
-                    class="is-required"
                     :label="$translateTitle('product.image type')"
+                    class="is-required"
                   >
                     <el-select
                       v-model="sizeForm.imagevalue"
@@ -623,11 +622,11 @@
                       </el-table-column>
                     </el-table>
                     <el-pagination
-                      layout="total, sizes, prev, pager, next, jumper"
                       :page-size="wmxPageSize"
                       :page-sizes="[10, 20, 30, 50]"
-                      style="margin-top: 10px"
                       :total="wmxData.length"
+                      layout="total, sizes, prev, pager, next, jumper"
+                      style="margin-top: 10px"
                       @current-change="wmxCurrentChange"
                       @size-change="wmxSizeChange"
                     />
@@ -687,8 +686,8 @@
                       v-for="item in sizeOption"
                       :key="item.val"
                       :label="item.label"
-                      size="mini"
                       :value="item.val"
+                      size="mini"
                     />
                   </el-select>
                 </el-form-item>
@@ -789,8 +788,8 @@
                 <el-form-item label="采集公式">
                   <el-input
                     v-model="sizeForm.collection"
-                    placeholder="%s"
                     :rows="1"
+                    placeholder="%s"
                     style="width: 95%"
                     type="textarea"
                   />
@@ -803,8 +802,8 @@
                 >
                   <el-input-number
                     v-model="sizeForm.order"
-                    label="采集顺序"
                     :min="0"
+                    label="采集顺序"
                     style="width: 100%"
                   />
                 </el-form-item>
@@ -874,8 +873,8 @@
                 <el-form-item label="控制公式">
                   <el-input
                     v-model="sizeForm.control"
-                    placeholder="%s"
                     :rows="1"
+                    placeholder="%s"
                     style="width: 98%"
                     type="textarea"
                   />
@@ -1127,8 +1126,8 @@
             </el-row>
             <el-table
               v-show="sizeForm.protocol == 'modbus'"
-              border
               :data="dataList"
+              border
               size="small"
               style="width: 100%"
             >
@@ -1258,10 +1257,9 @@
 <script>
   import mockModules from '@/api/Mock/Modules'
 
-  console.log('dataType', mockModules)
+  // console.log('dataType', mockModules)
   import { getAllunit } from '@/api/Dict/index'
   import { mapGetters, mapMutations } from 'vuex'
-  import { putProject } from '@/api/Project'
 
   export default {
     name: 'Wmxdetail',
@@ -1271,7 +1269,7 @@
       let isidentifier = (rule, value, callback) => {
         if (!identifier.test(value)) {
           return callback(
-            new Error('请以小写字母开头，只能输入小写字母,数字,_')
+            new Error('请以小写字母开头，只能输入小写字母,数字,_'),
           )
         } else {
           callback()
@@ -1326,9 +1324,18 @@
         dataList: [{}],
         dataType: mockModules.mockModules.dataType,
         options: [
-          { value: 'all', label: '全部' },
-          { value: 'first', label: '第一轮' },
-          { value: 'last', label: '最后一轮' },
+          {
+            value: 'all',
+            label: '全部',
+          },
+          {
+            value: 'first',
+            label: '第一轮',
+          },
+          {
+            value: 'last',
+            label: '最后一轮',
+          },
         ],
         wmxData: [],
         allunit: mockModules.mockModules.dataNnit,
@@ -1493,12 +1500,18 @@
     mounted() {
       // this.getAllunit()
     },
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    activated() {},
+    beforeCreate() {
+    }, //生命周期 - 创建之前
+    beforeMount() {
+    }, //生命周期 - 挂载之前
+    beforeUpdate() {
+    }, //生命周期 - 更新之前
+    updated() {
+    }, //生命周期 - 更新之后
+    beforeDestroy() {
+    }, //生命周期 - 销毁之前
+    activated() {
+    },
     methods: {
       // 数据类型
       changeGroup(type) {
@@ -1512,7 +1525,7 @@
         this.upNodeType = type
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
         this.inputParams = {
           file: '',
@@ -1525,7 +1538,8 @@
         this.inputParams.filename = `${this.$route.query.id}.${
           this.sizeForm.identifier
             ? this.sizeForm.identifier
-            : moment().format('x')
+            : moment()
+              .format('x')
         }.${type}`
         this.inputParams.file = file
       },

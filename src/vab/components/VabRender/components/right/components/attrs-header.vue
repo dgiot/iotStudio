@@ -2,7 +2,7 @@
 <template>
   <div>
     <div class="vab-render-right-link">
-      <el-link type="primary" target="_blank" :href="url">
+      <el-link :href="url" target="_blank" type="primary">
         点击查看 {{ title }}
       </el-link>
       &nbsp;
@@ -20,7 +20,7 @@
 
 <script>
   export default {
-    name: 'AttrsHeader',
+    name: 'VabRenderRightAttrsHeader',
     props: {
       url: {
         type: String,
@@ -49,6 +49,7 @@
     text-align: center;
     border-left: 3px solid #eee;
   }
+
   .vab-render-right-search {
     box-sizing: border-box;
     padding: 20px;

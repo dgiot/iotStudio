@@ -39,7 +39,7 @@ function handleClick(text) {
     const copyTarget = document.createElement('input')
     copyTarget.setAttribute(
       'style',
-      'position:fixed;top:0;left:0;opacity:0;z-index:-1000;'
+      'position:fixed;top:0;left:0;opacity:0;z-index:-1000;',
     )
     copyTarget.setAttribute('id', 'copyTarget')
     document.body.appendChild(copyTarget)

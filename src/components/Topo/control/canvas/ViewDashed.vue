@@ -10,6 +10,7 @@
 
 <script>
   import canvasView from './ViewCanvas'
+
   let stop = null
   // 虚线
   export default {
@@ -144,6 +145,7 @@
         let dotWidth = this.dotWidth
         let dotsNum = x2 / dotSpace
         let index = 0
+
         function drawLine() {
           index++
           //生成线
@@ -160,6 +162,7 @@
             index = 0
           }
         }
+
         this.doLopo(el, ctx, drawLine)
       },
       //动态画横线-左
@@ -178,6 +181,7 @@
         let dotWidth = this.dotWidth
         let dotsNum = x2 / dotSpace
         let index = 0
+
         function drawLine() {
           index++
           //生成线
@@ -195,6 +199,7 @@
             index = 0
           }
         }
+
         this.doLopo(el, ctx, drawLine)
       },
       //动态画向上竖线
@@ -214,6 +219,7 @@
         let dotWidth = this.dotWidth
         let dotsNum = y2 / dotSpace
         let index = 0
+
         function drawLine() {
           index++
           //生成线
@@ -230,6 +236,7 @@
             index = 0
           }
         }
+
         this.doLopo(el, ctx, drawLine)
       },
       //动态画向下竖线
@@ -249,6 +256,7 @@
 
         let dotsNum = y2 / dotSpace
         let index = 0
+
         function drawLine() {
           index++
           //生成线
@@ -266,6 +274,7 @@
             index = 0
           }
         }
+
         this.doLopo(el, ctx, drawLine)
       },
     },

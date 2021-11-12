@@ -1,10 +1,10 @@
 <template>
   <el-scrollbar
-    class="column-bar-container"
     :class="{
       'is-collapse': collapse,
       ['column-bar-container-' + theme.columnStyle]: true,
     }"
+    class="column-bar-container"
   >
     <vab-logo />
     <el-tabs
@@ -19,15 +19,29 @@
       >
         <template slot="label">
           <div
-            class="column-grid"
             :class="{
               ['column-grid-' + theme.columnStyle]: true,
             }"
             :title="$translateTitle(`route.${item.meta.title}`)"
+            class="column-grid"
           >
             <div>
+              <el-image
+                v-if="item.meta.icon && item.meta.icon.includes('dgiot')"
+                :alt="$FileServe"
+                :src="$FileServe + item.meta.icon"
+                style="width:16px;height:16px"
+              >
+                <img
+                  slot="error"
+                  :src="$FileServe + item.meta.icon"
+                  :title="$FileServe + item.meta.icon"
+                  style="width:16px;height:16px"
+                >
+              </el-image>
               <vab-icon
-                v-if="item.meta.icon"
+                v-else
+                :alt="$FileServe"
                 :icon="item.meta.icon"
                 :is-custom-svg="item.meta.isCustomSvg"
               />
@@ -44,8 +58,8 @@
       :background-color="variables['column-second-menu-background']"
       :default-active="activeMenu"
       :default-openeds="defaultOpeneds"
-      mode="vertical"
       :unique-opened="uniqueOpened"
+      mode="vertical"
     >
       <el-divider>
         {{ $translateTitle(handleGroupTitle) }}
@@ -296,6 +310,13 @@
           height: auto;
           padding: 0;
           color: $base-color-white;
+          text-align: center;
+
+          .el-image {
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+          }
 
           &.is-active {
             background: $base-color-blue;

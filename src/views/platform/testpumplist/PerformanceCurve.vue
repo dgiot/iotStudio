@@ -1,11 +1,6 @@
 <template>
   <div class="PerformanceCurve">
-    <div
-      ref="chartViewTop"
-      class="view-chart-box"
-    >
-      Click to bind data.
-    </div>
+    <div ref="chartViewTop" class="view-chart-box">Click to bind data.</div>
   </div>
 </template>
 <script>

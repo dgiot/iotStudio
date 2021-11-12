@@ -12,11 +12,11 @@
     <!-- 组件列表 -->
     <perfect-scrollbar class="vab-render-scrollarea">
       <vue-draggable
-        class="vab-render-comps"
         :clone="handleAddFormItem"
         :group="{ name: 'form', pull: 'clone', put: false }"
         :list="filteredComps"
         :sort="false"
+        class="vab-render-comps"
         tag="ul"
       >
         <li
@@ -37,6 +37,7 @@
 
 <script>
   export default {
+    name: 'VabRenderLeft',
     inject: ['VabRender'],
     data() {
       return {
@@ -53,7 +54,10 @@
       },
     },
     methods: {
-      getFormItemByConfig({ type, label }) {
+      getFormItemByConfig({
+        type,
+        label,
+      }) {
         const formItemData = this.VabRender.getFormItemByType(type)
         return {
           label,

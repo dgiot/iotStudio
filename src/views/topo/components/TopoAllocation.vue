@@ -117,8 +117,7 @@
       `${process.env.BASE_URL}/assets/images/dgiot_release/topo/`,
     )
   // https://blog.csdn.net/u010007013/article/details/102674042
-  // import imgHost from '../../../../public/assets/images/dgiot_release/topo/'
-  console.log(imgHost, process.env.BASE_URL, process.env)
+  // console.log(imgHost, process.env.BASE_URL, process.env)
   import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
   import { getSvgPath } from '@/utils/konva'
@@ -159,6 +158,7 @@
       this.fetchData()
     },
     mounted() {
+      console.log(this.$router)
     },
     beforeCreate() {
     }, //生命周期 - 创建之前

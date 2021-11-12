@@ -9,7 +9,8 @@ export default {
      * @returns {string} 以prefix为前缀,内容为时间戳的字符串
      */
     getTimestamp(prefix = '') {
-      const timestamp = new Date().getTime().toString()
+      const timestamp = new Date().getTime()
+        .toString()
       if (prefix) {
         return prefix + timestamp
       } else {

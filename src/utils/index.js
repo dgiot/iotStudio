@@ -1,4 +1,14 @@
 /**
+ * @description 生成随机数
+ * @param max
+ * @param min
+ * @return {number}
+ */
+export function randomXy(max, min) {
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+/**
  * @description 格式化时间
  * @param time
  * @param cFormat
@@ -85,6 +95,7 @@ export function formatTime(time, option) {
     )
   }
 }
+
 /**
  *
  * @param {*} url
@@ -94,6 +105,7 @@ export function isImage(url) {
   var reg = /\.(png|jpg|gif|jpeg|webp)$/
   return reg.test(url)
 }
+
 /**
  * @description 将url请求参数转为json格式
  * @param url
@@ -106,14 +118,15 @@ export function paramObj(url) {
   }
   return JSON.parse(
     '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"')
-        .replace(/\+/g, ' ') +
-      '"}'
+    decodeURIComponent(search)
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"')
+      .replace(/\+/g, ' ') +
+    '"}',
   )
 }
+
 /**
  * @param duration (ms)
  * @return dd:hh:mm:ss
@@ -133,6 +146,7 @@ export function getDateDiff(duration) {
     .map((n) => (n > 10 ? n : `0${n}`))
     .join(':')
 }
+
 /**
  * @description 父子关系的数组转换成树形结构数据
  * @param data
@@ -140,10 +154,10 @@ export function getDateDiff(duration) {
  */
 export function translateDataToTree(data) {
   const parent = data.filter(
-    (value) => value.parentId === 'undefined' || value.parentId == null
+    (value) => value.parentId === 'undefined' || value.parentId == null,
   )
   const children = data.filter(
-    (value) => value.parentId !== 'undefined' && value.parentId !== null
+    (value) => value.parentId !== 'undefined' && value.parentId !== null,
   )
   const translator = (parent, children) => {
     parent.forEach((parent) => {
@@ -296,6 +310,7 @@ export function shuffle(array) {
   }
   return array
 }
+
 export const intercept = (text, len) => {
   if (text && text.length > len) {
     return `${text.substring(0, len)}...`
@@ -314,13 +329,14 @@ export function param2Obj(url) {
   }
   return JSON.parse(
     '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"') +
-      '"}'
+    decodeURIComponent(search)
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"') +
+    '"}',
   )
 }
+
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
@@ -355,6 +371,7 @@ export function debounce(func, wait, immediate) {
     return result
   }
 }
+
 export function isExternal(path) {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
@@ -474,18 +491,21 @@ export function handleZero(value) {
     return value
   }
 }
+
 /*
  * @description 随机生成十六进制颜色
  */
 
 export function randomHexColor() {
-  var hex = Math.floor(Math.random() * 16777216).toString(16) //生成ffffff以内16进制数
+  var hex = Math.floor(Math.random() * 16777216)
+    .toString(16) //生成ffffff以内16进制数
   while (hex.length < 6) {
     //while循环判断hex位数，少于6位前面加0凑够6位
     hex = '0' + hex
   }
   return '#' + hex //返回‘#'开头16进制颜色
 }
+
 /*
  * @description 生成从minNum到maxNum的随机数
  */
@@ -651,7 +671,10 @@ export function formatFlow(flow) {
     unit = 'GB'
   }
   flow = flow % 1.0 == 0 ? parseInt(flow) : flow
-  return { flow: flow, unit: unit }
+  return {
+    flow: flow,
+    unit: unit,
+  }
 }
 
 /**
@@ -666,7 +689,8 @@ export function strToHex(str) {
   let hexCharCode = []
   hexCharCode.push('0x')
   for (let i = 0; i < str.length; i++) {
-    hexCharCode.push(str.charCodeAt(i).toString(16))
+    hexCharCode.push(str.charCodeAt(i)
+      .toString(16))
   }
   return hexCharCode.join('')
 }
@@ -679,7 +703,8 @@ export function strToHex(str) {
 export function hexToStr(hexCharCodeStr) {
   let trimedStr = hexCharCodeStr.trim()
   let rawStr =
-    trimedStr.substr(0, 2).toLowerCase() === '0x'
+    trimedStr.substr(0, 2)
+      .toLowerCase() === '0x'
       ? trimedStr.substr(2)
       : trimedStr
   let len = rawStr.length
@@ -778,6 +803,7 @@ export function isBase64(str) {
     return false
   }
 }
+
 export default function () {
   return (
     s4() +

@@ -41,16 +41,8 @@
     </div>
 
     <!-- type="flex"  -->
-    <div
-      class="evidence-box"
-      :style="evidenceCSS"
-    >
-      <el-row
-        align="middle"
-        class="info-box-item"
-        :gutter="20"
-        type="flex"
-      >
+    <div :style="evidenceCSS" class="evidence-box">
+      <el-row :gutter="20" class="info-box-item" type="flex" align="middle">
         <!-- 音频 -->
         <el-col :span="2">
           <i class="el-icon-microphone" />
@@ -70,17 +62,9 @@
 
         <el-col :span="2">
           <div class="m-list">
-            <el-button
-              size="small"
-              @click="showCurve"
-            >
-              曲线
-            </el-button>
+            <el-button size="small" @click="showCurve">曲线</el-button>
 
-            <el-select
-              v-model="mediaIndex.audio"
-              placeholder="请选择"
-            >
+            <el-select v-model="mediaIndex.audio" placeholder="请选择">
               <el-option
                 v-for="(item, index) in categories.audio"
                 :key="index"
@@ -92,25 +76,21 @@
         </el-col>
       </el-row>
 
-      <el-row
-        align="middle"
-        class="info-box-item large"
-        :gutter="20"
-      >
+      <el-row :gutter="20" class="info-box-item large" align="middle">
         <!-- 视频 -->
         <el-col :span="10">
           <div
-            class="media-box"
-            :class="{ isplay: currentVideoUrl }"
             :style="mediaBoxCss"
+            :class="{ isplay: currentVideoUrl }"
+            class="media-box"
           >
             <video
               v-if="currentVideoUrl"
-              autoplay="autoplay"
-              controls="controls"
-              :src="fileDomain + currentVideoUrl"
               :style="mediaBoxCss"
+              :src="fileDomain + currentVideoUrl"
+              controls="controls"
               type="video/mp4"
+              autoplay="autoplay"
             />
             <p>&nbsp;</p>
           </div>
@@ -123,10 +103,7 @@
               视频
               <i class="el-icon-film" />
             </p>
-            <el-select
-              v-model="mediaIndex.video"
-              placeholder="请选择"
-            >
+            <el-select v-model="mediaIndex.video" placeholder="请选择">
               <el-option
                 v-for="(item, index) in categories.video"
                 :key="index"
@@ -142,10 +119,7 @@
               图片
               <i class="el-icon-right" />
             </p>
-            <el-select
-              v-model="mediaIndex.image"
-              placeholder="请选择"
-            >
+            <el-select v-model="mediaIndex.image" placeholder="请选择">
               <el-option
                 v-for="(item, index) in categories.image"
                 :key="index"
@@ -160,15 +134,15 @@
         <el-col :span="10">
           <!-- <el-col :span="18"> -->
           <div
-            class="media-box"
-            :class="{ isplay: currentImageUrl }"
             :style="mediaBoxCss"
+            :class="{ isplay: currentImageUrl }"
+            class="media-box"
           >
             <!-- style="width: 100%; height: 100%" -->
             <img
               v-if="currentImageUrl"
-              :src="fileDomain + currentImageUrl"
               :style="mediaBoxCss"
+              :src="fileDomain + currentImageUrl"
             />
           </div>
           <!--        </el-col>
@@ -185,8 +159,8 @@
             <p style="font-size: 32px; text-align: center">
               <el-tooltip
                 class="item"
-                content="点击查看文件"
                 effect="dark"
+                content="点击查看文件"
                 placement="top-start"
               >
                 <el-button @click="pdfDialogVisible = true">
@@ -197,10 +171,7 @@
                 </el-button>
               </el-tooltip>
             </p>
-            <el-select
-              v-model="mediaIndex.file"
-              placeholder="请选择"
-            >
+            <el-select v-model="mediaIndex.file" placeholder="请选择">
               <el-option
                 v-for="(item, index) in categories.file"
                 :key="index"
@@ -214,56 +185,42 @@
     </div>
 
     <el-dialog
-      :append-to-body="true"
-      title="取证文件查看"
       :visible.sync="pdfDialogVisible"
+      title="取证文件查看"
       width="60%"
     >
       <div class="pdf-box">
         <iframe
           v-if="currentFileUrl"
-          frameborder="0"
           :src="fileDomain + currentFileUrl"
           style="width: 100%; min-height: 500px"
+          frameborder="0"
         />
 
-        <p
-          v-show="!currentFileUrl"
-          style="font-size: 20px; text-align: center"
-        >
+        <p v-show="!currentFileUrl" style="font-size: 20px; text-align: center">
           当前没有选定文件
         </p>
       </div>
 
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button
-          type="primary"
-          @click.native="pdfDialogVisible = false"
-        >
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="pdfDialogVisible = false">
           确 定
         </el-button>
       </span>
     </el-dialog>
 
     <el-dialog
-      :append-to-body="true"
+      :visible.sync="curveDialogVisible"
       :close-on-click-modal="false"
       title="性能曲线"
-      :visible.sync="curveDialogVisible"
       width="70%"
     >
       <PerformanceCurveNew ref="PerformanceCurveNew" />
 
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
+      <span slot="footer" class="dialog-footer">
         <el-button
-          size="small"
           type="primary"
+          size="small"
           @click="curveDialogVisible = false"
         >
           确 定

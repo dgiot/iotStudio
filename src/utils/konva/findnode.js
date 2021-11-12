@@ -12,4 +12,5 @@ function findnode(id) {
     this.$message('id必传', 'error')
   }
 }
+
 export default findnode

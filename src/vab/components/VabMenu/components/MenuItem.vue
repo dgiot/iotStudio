@@ -11,8 +11,21 @@
     :index="itemOrMenu.path"
     @click.native="handleLink"
   >
+    <el-image
+      v-if="itemOrMenu.meta.icon && itemOrMenu.meta.icon.includes('dgiot')"
+      :alt="$FileServe"
+      :src="$FileServe + itemOrMenu.meta.icon"
+      style="width:16px;height:16px"
+    >
+      <img
+        slot="error"
+        :src="$FileServe + itemOrMenu.meta.icon"
+        :title="$FileServe + itemOrMenu.meta.icon"
+        style="width:16px;height:16px"
+      >
+    </el-image>
     <vab-icon
-      v-if="itemOrMenu.meta && itemOrMenu.meta.icon"
+      v-else
       :icon="itemOrMenu.meta.icon"
       :is-custom-svg="itemOrMenu.meta.isCustomSvg"
       :title="$translateTitle(`route.${itemOrMenu.meta.title}`)"
@@ -63,12 +76,15 @@
         const routePath = this.itemOrMenu.path
         const target = this.itemOrMenu.meta.target
         if (target === '_blank') {
-          if (isExternal(routePath)) window.open(routePath)
-          else if (this.$route.fullPath !== routePath)
+          if (isExternal(routePath)) {
+            window.open(routePath)
+          } else if (this.$route.fullPath !== routePath) {
             window.open(routePath.href)
+          }
         } else {
-          if (isExternal(routePath)) window.location.href = routePath
-          else if (this.$route.fullPath !== routePath) {
+          if (isExternal(routePath)) {
+            window.location.href = routePath
+          } else if (this.$route.fullPath !== routePath) {
             if (this.device === 'mobile') this.foldSideBar()
             this.$router.push(routePath)
           }

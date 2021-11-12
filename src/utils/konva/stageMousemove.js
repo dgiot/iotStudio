@@ -1,15 +1,19 @@
 import store from '@/store'
+
 function getKonva(type) {
   return store.getters[`konva/${type}`]
 }
+
 function Setkonva(key, value) {
   return store.commit(`konva/${key}`, value)
 }
+
 let graphNow = getKonva('graphNow')
 let graphColor = getKonva('graphColor')
 let draw = getKonva('draw')
 let pointStart = getKonva('pointStart')
 let flag = getKonva('flag')
+
 /**
  * 铅笔
  * @param points 点数组
@@ -41,7 +45,8 @@ function drawPencil(points, stroke, strokeWidth) {
   line.on('dblclick', function () {
     // 双击删除自己
     this.remove()
-    stage.find('Transformer').destroy()
+    stage.find('Transformer')
+      .destroy()
     // layer.draw()
   })
   Setkonva('setGraphNow', line)
@@ -83,7 +88,8 @@ function drawEllipse(x, y, rx, ry, stroke, strokeWidth) {
   ellipse.on('dblclick', function () {
     // 双击删除自己
     this.remove()
-    stage.find('Transformer').destroy()
+    stage.find('Transformer')
+      .destroy()
     layer.draw()
   })
   Setkonva('setGraphNow', ellipse)
@@ -127,7 +133,8 @@ function drawRect(x, y, w, h, c, sw) {
   rect.on('dblclick', function () {
     // 双击删除自己
     this.remove()
-    stage.find('Transformer').destroy()
+    stage.find('Transformer')
+      .destroy()
     // layer.draw()
   })
   Setkonva('setGraphNow', rect)
@@ -172,7 +179,8 @@ function drawText(x, y, fill, fs) {
     let textPosition = this.getAbsolutePosition()
 
     // 然后让我们在页面上找到stage容器的位置
-    let stageBox = stage.container().getBoundingClientRect()
+    let stageBox = stage.container()
+      .getBoundingClientRect()
 
     // 因此textarea的位置将是上面位置的和
     let areaPosition = {

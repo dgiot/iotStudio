@@ -4,9 +4,9 @@
       <el-row>
         <el-form
           ref="record"
+          :model="record"
           class="clients-basic-form"
           label-suffix=":"
-          :model="record"
         >
           <el-col :span="12">
             <div class="card-subtitle">
@@ -191,9 +191,9 @@
         <el-form
           v-if="showMore"
           ref="record"
+          :model="record"
           class="clients-basic-form"
           label-suffix=":"
-          :model="record"
         >
           <el-row>
             <el-col :span="12">
@@ -257,6 +257,7 @@
 
 <script>
   import { intercept } from '@/utils'
+
   export default {
     name: 'VabClientsBasic',
     filters: {
@@ -297,13 +298,16 @@
         font-size: 14px;
         color: #5f6067;
       }
+
       .el-form-item__content {
         color: #f8f8f8;
       }
+
       .el-form-item {
         margin-bottom: 12px;
       }
     }
+
     .view-more {
       margin: 24px 0;
       font-size: 14px;

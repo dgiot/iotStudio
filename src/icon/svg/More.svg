@@ -1,1 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200" class="icon" p-id="2602" t="1568100746300" version="1.1" viewBox="0 0 1024 1024"><defs><style type="text/css"/></defs><path d="M188.8 456.576h646.4v110.84288H188.8zM188.8 789.0176h555.84256v110.8224H188.8zM188.8 124.16h743.36256v110.81728H188.8z" p-id="2603"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" class="icon"
+     p-id="2602" t="1568100746300" version="1.1" viewBox="0 0 1024 1024">
+  <defs>
+    <style type="text/css"/>
+  </defs>
+  <path
+    d="M188.8 456.576h646.4v110.84288H188.8zM188.8 789.0176h555.84256v110.8224H188.8zM188.8 124.16h743.36256v110.81728H188.8z"
+    p-id="2603"/>
+</svg>

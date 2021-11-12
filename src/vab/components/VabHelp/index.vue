@@ -2,8 +2,8 @@
   <div
     :key="src"
     ref="custom-table"
-    class="VabHelp"
     :class="{ 'vab-fullscreen': isFullscreen }"
+    class="VabHelp"
   >
     <el-popover
       v-model="visible"
@@ -32,10 +32,10 @@
             <!--            />-->
             <template slot="title">
               <iframe
-                frameborder="0"
                 :height="isFullscreen ? '100vh' : height"
                 :src="src"
                 :width="isFullscreen ? '100vh' : width"
+                frameborder="0"
               ></iframe>
             </template>
             <el-link type="primary">

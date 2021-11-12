@@ -10,6 +10,7 @@
 <script>
   import echarts from 'echarts'
   import BaseView from '../View'
+
   export default {
     name: 'ViewChartPie',
     extends: BaseView,

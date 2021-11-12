@@ -1,9 +1,9 @@
 <template>
   <svg
     :height="detail.style.position.h"
+    :width="detail.style.position.w"
     style="pointer-events: none"
     version="1.1"
-    :width="detail.style.position.w"
     xmlns="http://www.w3.org/2000/svg"
     v-html="svgContent"
   />
@@ -36,7 +36,8 @@
             console.log(error)
           })
       },
-      onResize() {},
+      onResize() {
+      },
     },
   }
 </script>

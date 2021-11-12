@@ -21,7 +21,8 @@
         deep: true,
       },
     },
-    mounted() {},
+    mounted() {
+    },
     methods: {
       getForeColor() {
         var foreColor = this.detail.style.foreColor

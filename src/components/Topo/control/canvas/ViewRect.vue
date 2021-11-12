@@ -49,7 +49,7 @@
           x + width,
           y + height,
           x + width,
-          y + height - radius
+          y + height - radius,
         )
         ctx.lineTo(x + width, y + radius)
         ctx.quadraticCurveTo(x + width, y, x + width - radius, y)

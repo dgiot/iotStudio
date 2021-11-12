@@ -3,16 +3,16 @@
   <div class="modules">
     <el-dialog
       :append-to-body="true"
-      title="修改物模型"
       :visible.sync="edit_module"
+      title="修改物模型"
       width="17%"
     >
       <el-form
         ref="editForm"
-        class="demo-editForm"
-        label-width="100px"
         :model="editForm"
         :rules="rules"
+        class="demo-editForm"
+        label-width="100px"
       >
         <el-form-item
           label="产品名称"
@@ -52,16 +52,16 @@
 
     <el-dialog
       :append-to-body="true"
-      title="新增物模型"
       :visible.sync="add_module"
+      title="新增物模型"
       width="17%"
     >
       <el-form
         ref="moduleForm"
-        class="demo-moduleForm"
-        label-width="100px"
         :model="moduleForm"
         :rules="rules"
+        class="demo-moduleForm"
+        label-width="100px"
       >
         <el-form-item
           label="产品名称"
@@ -197,10 +197,10 @@
     <footer>
       <el-pagination
         :current-page="currentPage"
-        layout="total, sizes, prev, pager, next, jumper"
         :page-size="10"
         :page-sizes="[10, 20, 50, 100]"
         :total="pageTotal"
+        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
@@ -210,9 +210,10 @@
 </template>
 
 <script>
-  import { getDictCount, delDict, queryDict, postDict } from '@/api/Dict/index'
+  import { delDict, getDictCount, postDict } from '@/api/Dict/index'
   import { queryProduct } from '@/api/Product/index'
   import { getHashClass } from '@/api/Hash/index'
+
   export default {
     name: 'Modules',
     components: {},
@@ -247,13 +248,25 @@
         },
         rules: {
           name: [
-            { required: true, message: '请输入产品名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入产品名称',
+              trigger: 'blur',
+            },
           ],
           devType: [
-            { required: true, message: '请输入产品类型', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入产品类型',
+              trigger: 'blur',
+            },
           ],
           category: [
-            { required: true, message: '请选择模型所属分类', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择模型所属分类',
+              trigger: 'blur',
+            },
           ],
         },
       }
@@ -263,13 +276,20 @@
       this.searchModule('')
       this.Industry()
     },
-    beforeCreate() {}, // 生命周期 - 创建之前
-    beforeMount() {}, // 生命周期 - 挂载之前
-    beforeUpdate() {}, // 生命周期 - 更新之前
-    updated() {}, // 生命周期 - 更新之后
-    beforeDestroy() {}, // 生命周期 - 销毁之前
-    destroyed() {}, // 生命周期 - 销毁完成
-    activated() {},
+    beforeCreate() {
+    }, // 生命周期 - 创建之前
+    beforeMount() {
+    }, // 生命周期 - 挂载之前
+    beforeUpdate() {
+    }, // 生命周期 - 更新之前
+    updated() {
+    }, // 生命周期 - 更新之后
+    beforeDestroy() {
+    }, // 生命周期 - 销毁之前
+    destroyed() {
+    }, // 生命周期 - 销毁完成
+    activated() {
+    },
     methods: {
       // 查询product
       async getProduct() {
@@ -281,7 +301,7 @@
         const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.id == child.parentid
+            (child) => father.id == child.parentid,
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parentid == 0 // 返回第一层
@@ -345,7 +365,10 @@
               devType: this.moduleForm.devType,
               name: this.moduleForm.name,
             }
-            const { objectId, code } = await getHashClass('Product', data)
+            const {
+              objectId,
+              code,
+            } = await getHashClass('Product', data)
             if (code == 200) {
               this.blackDict(objectId, data, this.moduleForm.type)
             }
@@ -381,7 +404,10 @@
             where: { type: 'Product' },
           }
         }
-        const { results, count = 0 } = await getDictCount(params)
+        const {
+          results,
+          count = 0,
+        } = await getDictCount(params)
         this.pictLoading = false
         if (results) {
           this.tableData = results
@@ -428,6 +454,7 @@
   /* @import url() */
   .modules {
     margin: 20px;
+
     footer {
       margin-top: 20px;
       text-align: center;

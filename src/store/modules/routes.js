@@ -2,10 +2,11 @@
  * @description 路由拦截状态管理，目前两种模式：all模式与intelligence模式，其中partialRoutes是菜单暂未使用
  */
 import { asyncRoutes, constantRoutes, resetRouter } from '@/router'
-import { errorRoutes, defaultRoutes } from '@/config/router.config'
+import { defaultRoutes, errorRoutes } from '@/config/router.config'
 import { getRouterList } from '@/api/User'
 import { convertRouter, filterRoutes } from '@/utils/routes'
 import { getToken } from '@/utils/vuex'
+
 const state = () => ({
   routes: [],
   cachedRoutes: [],
@@ -45,8 +46,9 @@ const mutations = {
     function handleRoutes(routes) {
       return routes.map((route) => {
         if (route.name === options.name) Object.assign(route.meta, options.meta)
-        if (route.children && route.children.length)
+        if (route.children && route.children.length) {
           route.children = handleRoutes(route.children)
+        }
         return route
       })
     }
@@ -73,7 +75,7 @@ const actions = {
         '路由未正常返回！',
         'error',
         false,
-        'vab-hey-message-error'
+        'vab-hey-message-error',
       )
       return false
     }
@@ -133,7 +135,7 @@ const actions = {
           '后端没有正确的返回路由,将展示默认路由',
           'error',
           false,
-          'vab-hey-message-error'
+          'vab-hey-message-error',
         )
         data = _defaultRoutes
       }
@@ -170,4 +172,9 @@ const actions = {
     commit('changeMenuMeta', options)
   },
 }
-export default { state, getters, mutations, actions }
+export default {
+  state,
+  getters,
+  mutations,
+  actions
+}

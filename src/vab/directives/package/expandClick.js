@@ -8,7 +8,7 @@ const expandClick = {
     const s = document.styleSheets[document.styleSheets.length - 1]
     const DEFAULT = -10 // 默认向外扩展10px
     const [top, right, bottom, left] =
-      (binding.expression && binding.expression.split(',')) || []
+    (binding.expression && binding.expression.split(',')) || []
     const ruleStr = `content:"";position:absolute;top:-${
       top || DEFAULT
     }px;bottom:-${bottom || DEFAULT}px;right:-${right || DEFAULT}px;left:-${
@@ -22,7 +22,7 @@ const expandClick = {
     if (s.insertRule) {
       s.insertRule(
         '.expand_click_range::before' + '{' + ruleStr + '}',
-        s.cssRules.length
+        s.cssRules.length,
       )
     } else {
       /* IE */

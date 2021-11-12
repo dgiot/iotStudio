@@ -1,7 +1,7 @@
 <template>
   <div
-    class="vue-admin-beautiful-wrapper"
     :class="classObj"
+    class="vue-admin-beautiful-wrapper"
   >
     <component
       :is="'vab-layout-' + theme.layout"
@@ -64,7 +64,9 @@
           if (isMobile) {
             this.oldLayout = this.theme.layout
             this.foldSideBar()
-          } else this.openSideBar()
+          } else {
+            this.openSideBar()
+          }
           this.theme.layout = isMobile ? 'vertical' : this.oldLayout
           this.toggleDevice(isMobile ? 'mobile' : 'desktop')
           this.isMobile = isMobile
@@ -131,6 +133,7 @@
       ::v-deep {
         .vab-layout-vertical {
           z-index: 99;
+
           .el-scrollbar.vab-side-bar.is-collapse {
             width: 0;
           }

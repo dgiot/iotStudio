@@ -5,8 +5,8 @@
         <el-main>
           <div class="main">
             <el-drawer
-              direction="ltr"
               :visible.sync="drawer"
+              direction="ltr"
             >
               <div
                 v-if="showTree"
@@ -23,13 +23,13 @@
                   ref="tree"
                   :allow-drag="allowDrag"
                   :allow-drop="allowDrop"
-                  class="treeitems"
                   :data="treeData"
+                  :filter-node-method="filterNode"
+                  :props="defaultProps"
+                  class="treeitems"
                   default-expand-all
                   draggable
-                  :filter-node-method="filterNode"
                   node-key="id"
-                  :props="defaultProps"
                   @node-drop="handleDrop"
                 >
                   <span
@@ -106,9 +106,9 @@
     </el-container>
     <el-dialog
       :append-to-body="true"
+      :visible="centerDialogRole"
       center
       title="添加角色"
-      :visible="centerDialogRole"
       width="35%"
       @close="closeDialogRole"
     >
@@ -118,9 +118,10 @@
 </template>
 
 <script>
-  import { roletree, putRole, delRole } from '@/api/Role/index.js'
+  import { delRole, putRole, roletree } from '@/api/Role/index.js'
   import { addGroup } from '@/api/Group/index.js'
   import addroles from '@/views/roles/rolelist/addroles'
+
   export default {
     name: 'Group',
     components: { addroles },
@@ -183,7 +184,8 @@
             return 'platform'
           }
         },
-        set: function () {},
+        set: function () {
+        },
       },
     },
     watch: {
@@ -233,6 +235,7 @@
           }
           return deepObject
         }
+
         roletree()
           .then((res) => {
             this.treeData = deepClone(res.results)
@@ -385,22 +388,27 @@
         margin: 30px;
         background: #fff !important;
       }
+
       .el-tree-node__content {
         height: 30px;
       }
+
       .el-drawer {
         /* z-index: 999;
       width: 30% !important; */
       }
+
       @media screen and (max-width: 960px) {
         .el-drawer {
           z-index: 999;
           width: 70% !important;
         }
       }
+
       .is-leaf {
         /* display: none; */
       }
+
       /* .el-tree-node__content{
       padding-left: 8px;
     } */
@@ -411,6 +419,7 @@
         font-size: 20px;
         cursor: pointer;
       }
+
       .el-header,
       .el-footer {
         background-color: #fff;
