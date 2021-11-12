@@ -9,8 +9,8 @@
     </div>
     <el-table
       v-loading="loading"
-      :data="currentTableData"
       border
+      :data="currentTableData"
     >
       <el-table-column
         :label="$translateTitle('analysis.alarmName')"
@@ -78,8 +78,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('oper.oper')"
         fixed="right"
+        :label="$translateTitle('oper.oper')"
         width="120px"
       >
         <template slot-scope="{ row, $index, _self }">
@@ -122,8 +122,8 @@
     <div class="table-title">
       {{ $translateTitle('analysis.historicalAlarm') }}
       <el-button
-        :disabled="!historicalTableData.length"
         class="table-oper"
+        :disabled="!historicalTableData.length"
         plain
         size="mini"
         type="danger"
@@ -134,8 +134,8 @@
     </div>
     <el-table
       v-loading="loading"
-      :data="historicalTableData"
       border
+      :data="historicalTableData"
     >
       <el-table-column
         :label="$translateTitle('analysis.alarmName')"

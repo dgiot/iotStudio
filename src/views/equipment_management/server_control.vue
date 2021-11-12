@@ -19,15 +19,15 @@
         {{ $translateTitle('developer.Serverdeployment') }}
       </h3>
       <el-form
+        class="demo-form-inline"
         :inline="true"
         :model="formInline"
-        class="demo-form-inline"
         size="small"
       >
         <el-form-item style="float: left">
           <el-button
-            :disabled="appid && appid.length == 0"
             class="el-icon-download"
+            :disabled="appid && appid.length == 0"
             type="success"
             @click="downlictool()"
           >
@@ -130,15 +130,15 @@
       >
         <!-- <el-table-column label="编号" type="index" width="50" align="center" /> -->
         <el-table-column
-          :label="$translateTitle('equipment.number')"
           align="center"
+          :label="$translateTitle('equipment.number')"
           type="index"
           width="80"
         />
         <!-- <el-table-column label="客户名称" align="center" width="100"> -->
         <el-table-column
-          :label="$translateTitle('user.Customername')"
           align="center"
+          :label="$translateTitle('user.Customername')"
           width="150"
         >
           <template slot-scope="scope">
@@ -147,8 +147,8 @@
         </el-table-column>
         <!-- <el-table-column label="客户应用" align="center" width="200"> -->
         <el-table-column
-          :label="$translateTitle('user.Customerapplication')"
           align="center"
+          :label="$translateTitle('user.Customerapplication')"
           width="200"
         >
           <template slot-scope="scope">
@@ -157,8 +157,8 @@
         </el-table-column>
         <!-- <el-table-column label="版本" align="center" width="100"> -->
         <el-table-column
-          :label="$translateTitle('plugins.version')"
           align="center"
+          :label="$translateTitle('plugins.version')"
           width="100"
         >
           <template slot-scope="scope">
@@ -169,8 +169,8 @@
         </el-table-column>
         <!-- <el-table-column label="服务器IP" align="center" width="150"> -->
         <el-table-column
-          :label="$translateTitle('resource.server') + ' IP'"
           align="center"
+          :label="$translateTitle('resource.server') + ' IP'"
           width="150"
         >
           <template slot-scope="scope">
@@ -191,8 +191,8 @@
         </el-table-column>
         <!-- <el-table-column label="服务器配置" align="center" width="150"> -->
         <el-table-column
-          :label="$translateTitle('product.Serverconfiguration')"
           align="center"
+          :label="$translateTitle('product.Serverconfiguration')"
           width="150"
         >
           <template
@@ -237,8 +237,8 @@
         </el-table-column>
         <!-- 机器码 -->
         <el-table-column
-          :label="$translateTitle('product.Machinecode')"
           align="center"
+          :label="$translateTitle('product.Machinecode')"
           show-overflow-tooltip
           width="200"
         >
@@ -248,8 +248,8 @@
         </el-table-column>
         <!-- 授权码 -->
         <el-table-column
-          :label="$translateTitle('developer.authcode')"
           align="center"
+          :label="$translateTitle('developer.authcode')"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.license }}</span>
@@ -257,8 +257,8 @@
         </el-table-column>
         <!-- 连接状态 -->
         <el-table-column
-          :label="$translateTitle('concentrator.connection')"
           align="center"
+          :label="$translateTitle('concentrator.connection')"
           width="100"
         >
           <template slot-scope="scope">
@@ -280,8 +280,8 @@
         </el-table-column>
         <!-- 部署情况 -->
         <el-table-column
-          :label="$translateTitle('developer.Deployment')"
           align="center"
+          :label="$translateTitle('developer.Deployment')"
           width="100"
         >
           <template slot-scope="scope">
@@ -317,8 +317,8 @@
         </el-table-column>
         <!-- 操作 -->
         <el-table-column
-          :label="$translateTitle('node.operation')"
           align="center"
+          :label="$translateTitle('node.operation')"
           width="500"
         >
           <template slot-scope="scope">
@@ -368,10 +368,10 @@
     </div>
     <div class="serverpagina">
       <el-pagination
+        layout="total, sizes, prev, pager, next, jumper"
         :page-size="pagesize"
         :page-sizes="[10, 20, 30, 50]"
         :total="total"
-        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
@@ -386,10 +386,10 @@
     >
       <el-form
         ref="ruleForm"
-        :model="ruleForm"
-        :rules="rules"
         class="demo-ruleForm"
         label-width="100px"
+        :model="ruleForm"
+        :rules="rules"
       >
         <!-- <el-form-item label="设备规模" prop="name">
           <el-input v-model.number="ruleForm.name">
@@ -435,7 +435,7 @@
             <!-- 标准版本为单机版 -->
             {{
               $translateTitle(
-                'product.Thestandardversionisthestandaloneversion',
+                'product.Thestandardversionisthestandaloneversion'
               )
             }}
           </p>
@@ -545,8 +545,8 @@
       <div>
         <el-input
           v-model="licensedetail"
-          :rows="20"
           readonly
+          :rows="20"
           type="textarea"
         />
       </div>
@@ -569,10 +569,10 @@
     >
       <el-form
         ref="serverForm"
-        :model="serverForm"
-        :rules="serverrules"
         class="demo-serverForm"
         label-width="150px"
+        :model="serverForm"
+        :rules="serverrules"
       >
         <!-- 用户名称 -->
         <el-form-item
@@ -648,8 +648,8 @@
             </el-form-item>
           </el-col>
           <el-col
-            :span="2"
             class="line"
+            :span="2"
           >
             -
           </el-col>
@@ -801,11 +801,11 @@
         >
           <el-input
             v-model="onlineform.name"
+            autocomplete="off"
             :placeholder="
               $translateTitle('product.enter1') +
                 $translateTitle('plugins.version')
             "
-            autocomplete="off"
           />
         </el-form-item>
       </el-form>
@@ -829,7 +829,14 @@
   </div>
 </template>
 <script>
-  import { offlineServer, postLicense, putLicense, queryLicense, uploadLicense, uploadServer } from '@/api/License'
+  import {
+    offlineServer,
+    postLicense,
+    putLicense,
+    queryLicense,
+    uploadLicense,
+    uploadServer,
+  } from '@/api/License'
   import { app_count } from '@/api/Platform/index'
 
   var product = {}
@@ -1201,10 +1208,7 @@
           params.type = this.formInline.version
         }
         // console.log('search license is', params)
-        const {
-          count,
-          results,
-        } = await queryLicense(params)
+        const { count, results } = await queryLicense(params)
         if (count) this.total = count
         if (results) this.tableData = results
       },
@@ -1248,7 +1252,7 @@
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning',
-            },
+            }
           )
             .then(() => {
               this.dialogFormVisible = true
@@ -1293,15 +1297,14 @@
 
       // 下载服务器配置
       uploadLicense1(row) {
-        uploadServer(row.attributes.license)
-          .then((resultes) => {
-            window.open(
-              window.location.origin +
+        uploadServer(row.attributes.license).then((resultes) => {
+          window.open(
+            window.location.origin +
               '/licsetup?license=' +
               row.attributes.license,
-              '_blank',
-            )
-          })
+            '_blank'
+          )
+        })
       },
       // 在线升级
       onlineLictool(row) {
@@ -1334,26 +1337,25 @@
       },
       // 离线升级
       offlineLictool(row) {
-        offlineServer(row.attributes.license)
-          .then((resultes) => {
-            window.open(
-              window.location.origin +
+        offlineServer(row.attributes.license).then((resultes) => {
+          window.open(
+            window.location.origin +
               '/licsetup?license=' +
               row.attributes.license,
-              '_blank',
-            )
-          })
+            '_blank'
+          )
+        })
       }, // 通用配置下载
       async downlictool() {
         const res = await uploadLicense(this.appid, this.appsecret)
         if (res) {
           window.open(
             window.location.origin +
-            '/lictool?appid=' +
-            this.appid +
-            '&appsecret=' +
-            this.appsecret,
-            '_blank',
+              '/lictool?appid=' +
+              this.appid +
+              '&appsecret=' +
+              this.appsecret,
+            '_blank'
           )
         }
       },

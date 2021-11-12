@@ -232,16 +232,12 @@
             return
           }
 
-          const {
-            formDesc = {},
-            ...formPropsData
-          } = cloneDeep(formConfig)
+          const { formDesc = {}, ...formPropsData } = cloneDeep(formConfig)
 
           this.formPropsData = Object.assign(this.formPropsData, formPropsData)
-          this.formItemList = objectToArr(formDesc, 'field')
-            .map((item) =>
-              Object.assign({ attrs: {} }, item),
-            )
+          this.formItemList = objectToArr(formDesc, 'field').map((item) =>
+            Object.assign({ attrs: {} }, item)
+          )
 
           // 当有数据时，选中第一个
           if (this.formItemList.length) {
@@ -313,11 +309,7 @@
           formDesc: _.mapValues(
             this.formDesc,
             // 组件属性 attrs 和表单项属性 commonAttrs
-            ({
-              type,
-              attrs,
-              ...commonAttrs
-            }) => {
+            ({ type, attrs, ...commonAttrs }) => {
               const res = {
                 type,
                 ...removeEmptyProps(commonAttrs),
@@ -328,7 +320,7 @@
                 res.attrs = attrs
               }
               return res
-            },
+            }
           ),
           order: Object.keys(this.formDesc),
         }
@@ -337,7 +329,7 @@
       initFormPropsData() {
         this.formPropsData = Object.assign(
           this.formPropsData,
-          cloneDeep(this.formProps.data),
+          cloneDeep(this.formProps.data)
         )
       },
     },

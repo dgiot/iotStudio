@@ -2,8 +2,8 @@
   <div class="vab-render-right">
     <el-tabs
       v-model="activeTab"
-      :stretch="true"
       class="vab-render-header"
+      :stretch="true"
     >
       <el-tab-pane
         v-for="tab of VabRender.rightTabs"

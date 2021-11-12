@@ -11,8 +11,8 @@
       :form-desc="filteredFormDesc"
       :is-show-back-btn="false"
       :is-show-submit-btn="false"
-      :span="20"
       label-position="top"
+      :span="20"
     />
   </div>
 </template>

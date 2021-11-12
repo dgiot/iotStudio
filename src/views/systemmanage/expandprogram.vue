@@ -8,10 +8,10 @@
     >
       <el-form
         ref="formLabelAlign"
-        :model="formLabelAlign"
-        :rules="rules"
         label-position="left"
         label-width="170px"
+        :model="formLabelAlign"
+        :rules="rules"
         size="mini"
       >
         <!-- <el-form-item label="模块名称" prop="name"> -->
@@ -79,8 +79,8 @@
         >
           <!-- <el-table-column align="center" label="类型" width="100"> -->
           <el-table-column
-            :label="$translateTitle('rule.Type')"
             align="center"
+            :label="$translateTitle('rule.Type')"
             width="100"
           >
             <template slot-scope="scope">
@@ -92,9 +92,9 @@
           <!-- ----------------------which mod--------------------------------- -->
           <!-- ----------------------which mod--------------------------------- -->
           <el-table-column
-            :show-overflow-tooltip="true"
             align="center"
             label="mod"
+            :show-overflow-tooltip="true"
             width="120"
           >
             <template slot-scope="scope">
@@ -103,8 +103,8 @@
           </el-table-column>
           <!-- <el-table-column label="操作" align="center"> -->
           <el-table-column
-            :label="$translateTitle('task.Operation')"
             align="center"
+            :label="$translateTitle('task.Operation')"
           >
             <template slot-scope="scope">
               <!-- <el-button
@@ -113,8 +113,8 @@
                 @click="handleTest(scope.$index, scope.row.type, scope.row.mod)"
               > -->
               <el-button
-                :title="$translateTitle('rule.testnewequipment')"
                 size="mini"
+                :title="$translateTitle('rule.testnewequipment')"
                 @click="handleTest(scope.$index, scope.row.type, scope.row.mod)"
               >
                 <vab-icon icon="bug-line" />
@@ -128,8 +128,8 @@
                 "
               > -->
               <el-button
-                :title="$translateTitle('product.pub')"
                 size="mini"
+                :title="$translateTitle('product.pub')"
                 type="primary"
                 @click="
                   handleRelease(scope.$index, scope.row.type, scope.row.mod)
@@ -146,8 +146,8 @@
                 "
               > -->
               <el-button
-                :title="$translateTitle('equipment.Offtheshelf')"
                 size="mini"
+                :title="$translateTitle('equipment.Offtheshelf')"
                 type="danger"
                 @click="
                   handleDelete(scope.$index, scope.row.type, scope.row.mod)
@@ -224,8 +224,8 @@
               name="swagger"
             >
               <iframe
-                :src="swaggerPath"
                 height="700vh"
+                :src="swaggerPath"
                 width="100%"
               />
             </el-tab-pane>
@@ -241,7 +241,12 @@
   import { getDeviceCountByProduct } from '@/api/Device/index'
   import { getChannelCountByProduct } from '@/api/Channel/index'
   // const Base64 = require('js-base64').Base64
-  import { delExproto, getExproto, postExproto, putExproto } from '@/api/Exproto/index'
+  import {
+    delExproto,
+    getExproto,
+    postExproto,
+    putExproto,
+  } from '@/api/Exproto/index'
   import { Compile, subupadte } from '@/api/System/index.js'
 
   var isupdatetrue = ''
@@ -277,11 +282,13 @@
       return {
         fullscreenLoading: false,
         rules: {
-          name: [{
-            required: true,
-            validator: validCode,
-            trigger: 'blur',
-          }],
+          name: [
+            {
+              required: true,
+              validator: validCode,
+              trigger: 'blur',
+            },
+          ],
           language: [
             {
               required: true,
@@ -381,8 +388,7 @@
             })
             if (res) this.AllDict.splice(index, 1)
           })
-          .catch((_) => {
-          })
+          .catch((_) => {})
       },
 
       // 调试api
@@ -598,56 +604,55 @@
         //   enableSnippets: true,
         //   enableLiveAutocompletion: true // 设置自动提示
         // });
-        this.$get_object('Product', productId)
-          .then((response) => {
-            if (response) {
-              this.productName = response.name
-              for (var key in response) {
-                this.productdetail[key] = response[key]
-              }
-              this.option.map((items) => {
-                if (this.productdetail.category == items.value) {
-                  this.productdetail.category = items.label
-                }
-              })
-              this.productdetail.createdAt = this.utc2beijing(response.createdAt)
-              this.productdetail.id = response.id
-              this.dynamicReg = response.dynamicReg
-              this.productdetail.isshow = 0
-              this.form.Productname = response.name
-              this.ProductSecret = response.productSecret
-              this.form.Productkey = this.productId
-              // window.location.origin
-              this.productimg = response.icon
-              if (response.decoder) {
-                setdata = response.decoder.code
-                this.thingsParseModel.name = response.decoder.name
-                this.thingsParseModel.version = response.decoder.version
-                this.thingsParseModel.desc = response.decoder.desc
-              } else {
-                setdata =
-                  'JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4='
-              }
-              if (!this.productdetail.thing) {
-                this.productdetail.thing = {
-                  properties: [],
-                }
-              }
-
-              this.wmxData = this.productdetail.thing.properties.filter(
-                (item) => {
-                  return item.name && item.dataType
-                },
-              )
-
-              editor.setValue(Base64.decode(setdata))
-
-              editor.gotoLine(editor.session.getLength())
-              // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
-
-              this.queryDeviceCount(this.productId)
+        this.$get_object('Product', productId).then((response) => {
+          if (response) {
+            this.productName = response.name
+            for (var key in response) {
+              this.productdetail[key] = response[key]
             }
-          })
+            this.option.map((items) => {
+              if (this.productdetail.category == items.value) {
+                this.productdetail.category = items.label
+              }
+            })
+            this.productdetail.createdAt = this.utc2beijing(response.createdAt)
+            this.productdetail.id = response.id
+            this.dynamicReg = response.dynamicReg
+            this.productdetail.isshow = 0
+            this.form.Productname = response.name
+            this.ProductSecret = response.productSecret
+            this.form.Productkey = this.productId
+            // window.location.origin
+            this.productimg = response.icon
+            if (response.decoder) {
+              setdata = response.decoder.code
+              this.thingsParseModel.name = response.decoder.name
+              this.thingsParseModel.version = response.decoder.version
+              this.thingsParseModel.desc = response.decoder.desc
+            } else {
+              setdata =
+                'JSUlLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQolJSUgQGNvcHlyaWdodCAoQykgMjAxOCwgPHNodXdhPgolJSUgQGRvYwolJSUg5Y2P6K6u6Kej5p6QRGVtbwolJSUgQGVuZAolJSUgQ3JlYXRlZCA6IDA4LiDljYHkuIDmnIggMjAxOCAxNDo0OQolJSUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCi1tb2R1bGUoc2h1d2FfZGVtb19kZWNvZGVyKS4KLWF1dGhvcigic2h1d2EiKS4KLWRlZmluZShNU0dfVFlQRSwgPDwiREVNTyI+PikuCi1wcm90b2NvbChbPDwiREVNTyI+Pl0pLgoKLWV4cG9ydChbcGFyc2VfZnJhbWUvMiwgdG9fZnJhbWUvMV0pLgoKCnBhcnNlX2ZyYW1lKEJ1ZmYsIE9wdHMpIC0+CiAgICBwYXJzZV9mcmFtZShCdWZmLCBbXSwgT3B0cykuCgoKcGFyc2VfZnJhbWUoPDw+PiwgQWNjLCBfT3B0cykgLT4KICAgIHs8PD4+LCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBSZXN0L2JpbmFyeT4+ID0gQmluLCBBY2MsIF9PcHRzKSB3aGVuIGJ5dGVfc2l6ZShSZXN0KSA9PCA2IC0+CiAgICB7QmluLCBBY2N9OwpwYXJzZV9mcmFtZSg8PDE2IzY4LCBMZW46MTYvbGl0dGxlLWludGVnZXIsIExlbjoxNi9saXR0bGUtaW50ZWdlciwgMTYjNjgsIFJlc3QvYmluYXJ5Pj4gPSBCaW4sIEFjYywgT3B0cykgLT4KICAgIGNhc2UgYnl0ZV9zaXplKFJlc3QpIC0gMiA+PSBMZW4gb2YKICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgIGNhc2UgUmVzdCBvZgogICAgICAgICAgICAgICAgPDxVc2VyWm9uZTpMZW4vYnl0ZXMsIENyYzo4LCAxNiMxNiwgUmVzdDEvYmluYXJ5Pj4gLT4KICAgICAgICAgICAgICAgICAgICBBY2MxID0KICAgICAgICAgICAgICAgICAgICAgICAgY2FzZSBzaHV3YV91dGlsczpnZXRfcGFyaXR5KFVzZXJab25lKSA9Oj0gQ3JjIG9mCiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cnVlIC0+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRnJhbWUgPSAjewogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8PCJtc2d0eXBlIj4+ID0+ID9NU0dfVFlQRSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDwiZGF0YSI+PiA9PiBVc2VyWm9uZQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQWNjICsrIFtGcmFtZV07CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmYWxzZSAtPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFjYwogICAgICAgICAgICAgICAgICAgICAgICBlbmQsCiAgICAgICAgICAgICAgICAgICAgcGFyc2VfZnJhbWUoUmVzdDEsIEFjYzEsIE9wdHMpOwogICAgICAgICAgICAgICAgXyAtPgogICAgICAgICAgICAgICAgICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykKICAgICAgICAgICAgZW5kOwogICAgICAgIGZhbHNlIC0+CiAgICAgICAgICAgIHtCaW4sIEFjY30KICAgIGVuZDsKcGFyc2VfZnJhbWUoPDxfOjgsIFJlc3QvYmluYXJ5Pj4sIEFjYywgT3B0cykgLT4KICAgIHBhcnNlX2ZyYW1lKFJlc3QsIEFjYywgT3B0cykuCgoKJSUg57uE6KOF5oiQ5bCB5YyFLCDlj4LmlbDkuLpNYXDlvaLlvI8KdG9fZnJhbWUoI3s8PCJtc2d0eXBlIj4+IDo9ID9NU0dfVFlQRX0gPSBGcmFtZSkgLT4KICAgIFBheWxvYWQgPSB0ZXJtX3RvX2JpbmFyeShGcmFtZSksCiAgICA8PDE2IzAzLCBQYXlsb2FkL2JpbmFyeSwgMTYjMjM+Pi4='
+            }
+            if (!this.productdetail.thing) {
+              this.productdetail.thing = {
+                properties: [],
+              }
+            }
+
+            this.wmxData = this.productdetail.thing.properties.filter(
+              (item) => {
+                return item.name && item.dataType
+              }
+            )
+
+            editor.setValue(Base64.decode(setdata))
+
+            editor.gotoLine(editor.session.getLength())
+            // editor6.setValue(JSON.stringify(this.productdetail.thing, null, 4));
+
+            this.queryDeviceCount(this.productId)
+          }
+        })
       },
       // 查询设备总数
       async queryDeviceCount(productId) {
@@ -724,45 +729,44 @@
                   this.$message('此协议版本已存在')
                   return
                 } else {
-                  this.$get_object('Product', this.productId)
-                    .then(
-                      (response) => {
-                        if (response) {
-                          var obj = {
-                            name: this.formInline.name,
-                            version: this.formInline.version,
-                            code: Base64.encode(editor.getValue()),
-                            desc: this.formInline.desc,
-                          }
-                          const params = {
-                            key:
-                              this.formInline.name +
-                              ':' +
-                              this.formInline.version,
-                            type: 'decoder',
-                            data: obj,
-                            ACL: response.ACL,
-                          }
-                          this.$create_object('Dict', params)
-                            .then((resultes) => {
-                              if (resultes.error) {
-                                this.$message({
-                                  type: 'error',
-                                  message: resultes.error,
-                                })
-                              } else {
-                                this.$message({
-                                  type: 'success',
-                                  message: '保存到公共协议库成功',
-                                })
-                              }
-                            })
-                            .catch((e) => {
-                              console.log(e)
-                            })
+                  this.$get_object('Product', this.productId).then(
+                    (response) => {
+                      if (response) {
+                        var obj = {
+                          name: this.formInline.name,
+                          version: this.formInline.version,
+                          code: Base64.encode(editor.getValue()),
+                          desc: this.formInline.desc,
                         }
-                      },
-                    )
+                        const params = {
+                          key:
+                            this.formInline.name +
+                            ':' +
+                            this.formInline.version,
+                          type: 'decoder',
+                          data: obj,
+                          ACL: response.ACL,
+                        }
+                        this.$create_object('Dict', params)
+                          .then((resultes) => {
+                            if (resultes.error) {
+                              this.$message({
+                                type: 'error',
+                                message: resultes.error,
+                              })
+                            } else {
+                              this.$message({
+                                type: 'success',
+                                message: '保存到公共协议库成功',
+                              })
+                            }
+                          })
+                          .catch((e) => {
+                            console.log(e)
+                          })
+                      }
+                    }
+                  )
                 }
               })
               .catch((e) => {
@@ -801,7 +805,7 @@
                   .catch((error) => {
                     reject(error)
                   })
-              }),
+              })
             )
           })
           Promise.all(arr)
@@ -866,7 +870,7 @@
           this.channellength,
           this.channelstart,
           product,
-          type,
+          type
         )
           .then((res) => {
             this.protolchannel = res.results

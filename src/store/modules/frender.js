@@ -22,10 +22,7 @@ const mutations = {
   },
 }
 const actions = {
-  set_formItemCommon({
-    commit,
-    formItem,
-  }) {
+  set_formItemCommon({ commit, formItem }) {
     commit('set_formItemCommon', formItem)
   },
 }

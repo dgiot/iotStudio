@@ -6,7 +6,13 @@
  * @Description: In User Settings Edit
  * @FilePath: \dgiot-dashboard\src\api\Direct\index.js
  */
-import { create_object, del_object, get_object, query_object, update_object } from '@/api/shuwa_parse'
+import {
+  create_object,
+  del_object,
+  get_object,
+  query_object,
+  update_object,
+} from '@/api/shuwa_parse'
 
 export async function queryDict(params) {
   return query_object('Dict', params)

@@ -15,8 +15,8 @@
           <el-col :span="23">
             <el-input
               v-model="flvsrc"
-              :disabled="$route.query.url"
               class="input-with-select"
+              :disabled="$route.query.url"
               placeholder="请输入内容"
             >
               <el-select

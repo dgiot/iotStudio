@@ -20,8 +20,8 @@
         </a-tab-pane>
         <a-tab-pane
           key="chart"
-          :tab="$translateTitle('equipment.chart')"
           force-render
+          :tab="$translateTitle('equipment.chart')"
         >
           <empty />
         </a-tab-pane>

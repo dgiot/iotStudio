@@ -38,8 +38,7 @@
     directives: {
       focus: {
         inserted(el) {
-          el.querySelector('input')
-            .focus()
+          el.querySelector('input').focus()
         },
       },
     },

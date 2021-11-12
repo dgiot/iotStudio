@@ -1,9 +1,9 @@
 <template>
   <a-drawer
     :append-to-body="true"
-    :visible="dialogFormVisible"
     class="parserTable"
     direction="rtl"
+    :visible="dialogFormVisible"
     width="500"
     @close="close"
   >
@@ -12,18 +12,18 @@
         <el-form
           ref="form"
           :inline="true"
-          :model="queryForm"
           label-width="80px"
+          :model="queryForm"
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('alert.productname')">
             <el-select
               v-model="queryForm.productId"
+              clearable
               :placeholder="
                 $translateTitle('alert.please enter') +
                   $translateTitle('alert.product name')
               "
-              clearable
               @clear="Industry"
             >
               <el-option
@@ -49,11 +49,11 @@
       </vab-query-form-top-panel>
     </vab-query-form>
     <el-table
+      border
       :cell-style="{ 'text-align': 'center' }"
       :data="tableData"
       :header-cell-style="{ 'text-align': 'center' }"
       :height="$baseTableHeight(0) + 180"
-      border
       size="mini"
       style="width: 100%"
     >
@@ -68,8 +68,8 @@
         width="180"
       />
       <el-table-column
-        :label="$translateTitle('developer.operation')"
         align="center"
+        :label="$translateTitle('developer.operation')"
       >
         <template #default="{ row }">
           <!--          <el-button size="mini" type="success" @click.native="updateTemplate(row)">-->
@@ -150,10 +150,8 @@
         return aclObj
       },
     },
-    created() {
-    },
-    mounted() {
-    },
+    created() {},
+    mounted() {},
     methods: {
       // treeData(paramData) {
       //   const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
@@ -171,8 +169,7 @@
         this.form.data = e
         console.log(e)
       },
-      categoryChange(item) {
-      },
+      categoryChange(item) {},
       async Industry(args = {}) {
         if (!args.limit) {
           args = this.queryForm
@@ -186,10 +183,7 @@
         try {
           const loading = this.$baseColorfullLoading()
           // console.log(this.categoryListOptions, 'categoryListOptions')
-          const {
-            results,
-            count = 0,
-          } = await queryProductTemplet(params)
+          const { results, count = 0 } = await queryProductTemplet(params)
           loading.close()
           this.tableData = results
           this.queryForm.total = count
@@ -239,13 +233,13 @@
           loading.close()
           console.log(res)
           this.$message.success(
-            this.$translateTitle('user.successfully deleted'),
+            this.$translateTitle('user.successfully deleted')
           )
           this.Industry()
         } catch (error) {
           console.log(error)
           this.$message.error(
-            this.$translateTitle('user.error deleted') + `${error}`,
+            this.$translateTitle('user.error deleted') + `${error}`
           )
         }
       },
@@ -278,15 +272,15 @@
         const setparams =
           mark == 'top'
             ? _.merge(params, {
-              ACL: _.merge(setAcl, this.aclObj),
-              parent: {
-                objectId: '0',
-                __type: 'Pointer',
-                className: 'Category',
-              },
-            })
+                ACL: _.merge(setAcl, this.aclObj),
+                parent: {
+                  objectId: '0',
+                  __type: 'Pointer',
+                  className: 'Category',
+                },
+              })
             : mark == 'child'
-              ? _.merge(params, {
+            ? _.merge(params, {
                 ACL: _.merge(setAcl, this.aclObj),
                 parent: {
                   objectId: this.form.objectId,
@@ -294,7 +288,7 @@
                   className: 'Category',
                 },
               })
-              : params
+            : params
         this.$refs['form'].validate(async (valid) => {
           console.log('setparams', setparams)
           if (valid) {

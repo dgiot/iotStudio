@@ -19,8 +19,7 @@
         cengji: 2,
       }
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {},
   }
 </script>

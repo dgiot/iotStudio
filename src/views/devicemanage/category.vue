@@ -1,16 +1,16 @@
 <template>
   <div
     ref="custom-table"
-    :class="{ 'vab-fullscreen': isFullscreen }"
     class="custom-table-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-form
           ref="form"
           :inline="true"
-          :model="queryForm"
           label-width="0"
+          :model="queryForm"
           @submit.native.prevent
         >
           <el-form-item>
@@ -47,10 +47,10 @@
       :data="categoryList"
       :default-sort="{ prop: 'order', order: 'ascending' }"
       :height="height"
+      row-key="objectId"
       :size="lineHeight"
       :stripe="stripe"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-      row-key="objectId"
       @selection-change="setSelectRows"
     >
       <el-table-column
@@ -69,15 +69,15 @@
       <!--        sortable-->
       <!--      />-->
       <el-table-column
-        :label="$translateTitle('product.name')"
         align="center"
+        :label="$translateTitle('product.name')"
         prop="name"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
-        :label="$translateTitle('developer.operation')"
         align="center"
+        :label="$translateTitle('developer.operation')"
         show-overflow-tooltip
         sortable
       >
@@ -104,10 +104,10 @@
       </el-table-column>
       <template #empty>
         <el-image
+          class="vab-data-empty"
           :src="
             require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
-          class="vab-data-empty"
         />
       </template>
     </el-table>
@@ -157,25 +157,17 @@
         }
       },
     },
-    mounted() {
-    },
+    mounted() {},
     created() {
       this.fetchData()
     },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       clickFullScreen() {
         this.isFullscreen = !this.isFullscreen
@@ -203,7 +195,7 @@
       handleDelete(CategoryId) {
         this.$baseConfirm(
           this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item',
+            'Maintenance.Are you sure you want to delete the current item'
           ),
           this.$translateTitle('Maintenance.Delete reminder'),
           async () => {
@@ -213,17 +205,17 @@
               this.$baseMessage(
                 this.$translateTitle('user.successfully deleted'),
                 'success',
-                'vab-hey-message-success',
+                'vab-hey-message-success'
               )
               await this.fetchData()
             } else {
               this.$baseMessage(
                 this.$translateTitle('user.error deleted') + res,
                 'error',
-                'vab-hey-message-error',
+                'vab-hey-message-error'
               )
             }
-          },
+          }
         )
       },
       handleSizeChange(val) {

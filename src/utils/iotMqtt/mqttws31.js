@@ -61,9 +61,9 @@
 
  function onConnect() {
   // Once a connection has been made, make a subscription and send a message.
-  console.log("onConnect");
-  client.subscribe("/World");
-  message = new Paho.MQTT.Message("Hello");
+  console.log('onConnect');
+  client.subscribe('/World');
+  message = new Paho.MQTT.Message('Hello');
   message.destinationName = "/World";
   client.send(message);
 };
@@ -126,12 +126,14 @@ Paho.MQTT = (function (global) {
     for (var key in obj) {
       if (obj.hasOwnProperty(key)) {
         if (keys.hasOwnProperty(key)) {
-          if (typeof obj[key] !== keys[key])
+          if (typeof obj[key] !== keys[key]) {
             throw new Error(format(ERROR.INVALID_TYPE, [typeof obj[key], key]))
+          }
         } else {
           var errorStr = 'Unknown property, ' + key + '. Valid properties are:'
-          for (var key in keys)
+          for (var key in keys) {
             if (keys.hasOwnProperty(key)) errorStr = errorStr + ' ' + key
+          }
           throw new Error(errorStr)
         }
       }
@@ -158,11 +160,26 @@ Paho.MQTT = (function (global) {
    * @private
    */
   var ERROR = {
-    OK: { code: 0, text: 'AMQJSC0000I OK.' },
-    CONNECT_TIMEOUT: { code: 1, text: 'AMQJSC0001E Connect timed out.' },
-    SUBSCRIBE_TIMEOUT: { code: 2, text: 'AMQJS0002E Subscribe timed out.' },
-    UNSUBSCRIBE_TIMEOUT: { code: 3, text: 'AMQJS0003E Unsubscribe timed out.' },
-    PING_TIMEOUT: { code: 4, text: 'AMQJS0004E Ping timed out.' },
+    OK: {
+      code: 0,
+      text: 'AMQJSC0000I OK.',
+    },
+    CONNECT_TIMEOUT: {
+      code: 1,
+      text: 'AMQJSC0001E Connect timed out.',
+    },
+    SUBSCRIBE_TIMEOUT: {
+      code: 2,
+      text: 'AMQJS0002E Subscribe timed out.',
+    },
+    UNSUBSCRIBE_TIMEOUT: {
+      code: 3,
+      text: 'AMQJS0003E Unsubscribe timed out.',
+    },
+    PING_TIMEOUT: {
+      code: 4,
+      text: 'AMQJS0004E Ping timed out.',
+    },
     INTERNAL_ERROR: {
       code: 5,
       text: 'AMQJS0005E Internal error. Error Message: {0}, Stack trace: {1}',
@@ -171,8 +188,14 @@ Paho.MQTT = (function (global) {
       code: 6,
       text: 'AMQJS0006E Bad Connack return code:{0} {1}.',
     },
-    SOCKET_ERROR: { code: 7, text: 'AMQJS0007E Socket error:{0}.' },
-    SOCKET_CLOSE: { code: 8, text: 'AMQJS0008I Socket closed.' },
+    SOCKET_ERROR: {
+      code: 7,
+      text: 'AMQJS0007E Socket error:{0}.',
+    },
+    SOCKET_CLOSE: {
+      code: 8,
+      text: 'AMQJS0008I Socket closed.',
+    },
     MALFORMED_UTF: {
       code: 9,
       text: 'AMQJS0009E Malformed UTF data:{0} {1} {2}.',
@@ -181,8 +204,14 @@ Paho.MQTT = (function (global) {
       code: 10,
       text: 'AMQJS0010E {0} is not supported by this browser.',
     },
-    INVALID_STATE: { code: 11, text: 'AMQJS0011E Invalid state {0}.' },
-    INVALID_TYPE: { code: 12, text: 'AMQJS0012E Invalid type {0} for {1}.' },
+    INVALID_STATE: {
+      code: 11,
+      text: 'AMQJS0011E Invalid state {0}.',
+    },
+    INVALID_TYPE: {
+      code: 12,
+      text: 'AMQJS0012E Invalid type {0} for {1}.',
+    },
     INVALID_ARGUMENT: {
       code: 13,
       text: 'AMQJS0013E Invalid argument {0} for {1}.',
@@ -254,18 +283,18 @@ Paho.MQTT = (function (global) {
    * Optional properties
    *
    * messageIdentifier: message ID in the range [0..65535]
-   * payloadMessage:	Application Message - PUBLISH only
-   * connectStrings:	array of 0 or more Strings to be put into the CONNECT payload
-   * topics:			array of strings (SUBSCRIBE, UNSUBSCRIBE)
-   * requestQoS:		array of QoS values [0..2]
+   * payloadMessage:  Application Message - PUBLISH only
+   * connectStrings:  array of 0 or more Strings to be put into the CONNECT payload
+   * topics:      array of strings (SUBSCRIBE, UNSUBSCRIBE)
+   * requestQoS:    array of QoS values [0..2]
    *
    * "Flag" properties
-   * cleanSession:	true if present / false if absent (CONNECT)
-   * willMessage:  	true if present / false if absent (CONNECT)
-   * isRetained:		true if present / false if absent (CONNECT)
-   * userName:		true if present / false if absent (CONNECT)
-   * password:		true if present / false if absent (CONNECT)
-   * keepAliveInterval:	integer [0..65535]  (CONNECT)
+   * cleanSession:  true if present / false if absent (CONNECT)
+   * willMessage:    true if present / false if absent (CONNECT)
+   * isRetained:    true if present / false if absent (CONNECT)
+   * userName:    true if present / false if absent (CONNECT)
+   * password:    true if present / false if absent (CONNECT)
+   * keepAliveInterval:  integer [0..65535]  (CONNECT)
    *
    * @private
    * @ignore
@@ -312,14 +341,17 @@ Paho.MQTT = (function (global) {
           remLength += UTF8Length(this.willMessage.destinationName) + 2
           // Will message is always a string, sent as UTF-8 characters with a preceding length.
           var willMessagePayloadBytes = this.willMessage.payloadBytes
-          if (!(willMessagePayloadBytes instanceof Uint8Array))
+          if (!(willMessagePayloadBytes instanceof Uint8Array)) {
             willMessagePayloadBytes = new Uint8Array(payloadBytes)
+          }
           remLength += willMessagePayloadBytes.byteLength + 2
         }
-        if (this.userName != undefined)
+        if (this.userName != undefined) {
           remLength += UTF8Length(this.userName) + 2
-        if (this.password != undefined)
+        }
+        if (this.password != undefined) {
           remLength += UTF8Length(this.password) + 2
+        }
         break
 
       // Subscribe, Unsubscribe can both contain topic strings
@@ -353,10 +385,11 @@ Paho.MQTT = (function (global) {
         remLength += destinationNameLength + 2
         var payloadBytes = this.payloadMessage.payloadBytes
         remLength += payloadBytes.byteLength
-        if (payloadBytes instanceof ArrayBuffer)
+        if (payloadBytes instanceof ArrayBuffer) {
           payloadBytes = new Uint8Array(payloadBytes)
-        else if (!(payloadBytes instanceof Uint8Array))
+        } else if (!(payloadBytes instanceof Uint8Array)) {
           payloadBytes = new Uint8Array(payloadBytes.buffer)
+        }
         break
 
       case MESSAGE_TYPE.DISCONNECT:
@@ -377,14 +410,14 @@ Paho.MQTT = (function (global) {
     byteStream.set(mbi, 1)
 
     // If this is a PUBLISH then the variable header starts with a topic
-    if (this.type == MESSAGE_TYPE.PUBLISH)
+    if (this.type == MESSAGE_TYPE.PUBLISH) {
       pos = writeString(
         this.payloadMessage.destinationName,
         destinationNameLength,
         byteStream,
         pos
       )
-    // If this is a CONNECT then the variable header contains the protocol name/version, flags and keepalive time
+    } // If this is a CONNECT then the variable header contains the protocol name/version, flags and keepalive time
     else if (this.type == MESSAGE_TYPE.CONNECT) {
       switch (this.mqttVersion) {
         case 3:
@@ -412,8 +445,9 @@ Paho.MQTT = (function (global) {
     }
 
     // Output the messageIdentifier - if there is one
-    if (this.messageIdentifier != undefined)
+    if (this.messageIdentifier != undefined) {
       pos = writeUint16(this.messageIdentifier, byteStream, pos)
+    }
 
     switch (this.type) {
       case MESSAGE_TYPE.CONNECT:
@@ -434,20 +468,22 @@ Paho.MQTT = (function (global) {
           byteStream.set(willMessagePayloadBytes, pos)
           pos += willMessagePayloadBytes.byteLength
         }
-        if (this.userName != undefined)
+        if (this.userName != undefined) {
           pos = writeString(
             this.userName,
             UTF8Length(this.userName),
             byteStream,
             pos
           )
-        if (this.password != undefined)
+        }
+        if (this.password != undefined) {
           pos = writeString(
             this.password,
             UTF8Length(this.password),
             byteStream,
             pos
           )
+        }
         break
 
       case MESSAGE_TYPE.PUBLISH:
@@ -471,8 +507,9 @@ Paho.MQTT = (function (global) {
 
       case MESSAGE_TYPE.UNSUBSCRIBE:
         // UNSUBSCRIBE has a list of topic strings
-        for (var i = 0; i < this.topics.length; i++)
+        for (var i = 0; i < this.topics.length; i++) {
           pos = writeString(this.topics[i], topicStrLength[i], byteStream, pos)
+        }
         break
 
       default:
@@ -608,8 +645,11 @@ Paho.MQTT = (function (global) {
           output++
         }
         output += 3
-      } else if (charCode > 0x7f) output += 2
-      else output++
+      } else if (charCode > 0x7f) {
+        output += 2
+      } else {
+        output++
+      }
     }
     return output
   }
@@ -661,10 +701,11 @@ Paho.MQTT = (function (global) {
 
     while (pos < offset + length) {
       var byte1 = input[pos++]
-      if (byte1 < 128) utf16 = byte1
-      else {
+      if (byte1 < 128) {
+        utf16 = byte1
+      } else {
         var byte2 = input[pos++] - 128
-        if (byte2 < 0)
+        if (byte2 < 0) {
           throw new Error(
             format(ERROR.MALFORMED_UTF, [
               byte1.toString(16),
@@ -672,12 +713,13 @@ Paho.MQTT = (function (global) {
               '',
             ])
           )
-        if (byte1 < 0xe0)
+        }
+        if (byte1 < 0xe0) {
           // 2 byte character
           utf16 = 64 * (byte1 - 0xc0) + byte2
-        else {
+        } else {
           var byte3 = input[pos++] - 128
-          if (byte3 < 0)
+          if (byte3 < 0) {
             throw new Error(
               format(ERROR.MALFORMED_UTF, [
                 byte1.toString(16),
@@ -685,12 +727,13 @@ Paho.MQTT = (function (global) {
                 byte3.toString(16),
               ])
             )
-          if (byte1 < 0xf0)
+          }
+          if (byte1 < 0xf0) {
             // 3 byte character
             utf16 = 4096 * (byte1 - 0xe0) + 64 * byte2 + byte3
-          else {
+          } else {
             var byte4 = input[pos++] - 128
-            if (byte4 < 0)
+            if (byte4 < 0) {
               throw new Error(
                 format(ERROR.MALFORMED_UTF, [
                   byte1.toString(16),
@@ -699,12 +742,13 @@ Paho.MQTT = (function (global) {
                   byte4.toString(16),
                 ])
               )
-            if (byte1 < 0xf8)
+            }
+            if (byte1 < 0xf8) {
               // 4 byte character
               utf16 =
                 262144 * (byte1 - 0xf0) + 4096 * byte2 + 64 * byte3 + byte4
-            // longer encodings are not supported
-            else
+            } // longer encodings are not supported
+            else {
               throw new Error(
                 format(ERROR.MALFORMED_UTF, [
                   byte1.toString(16),
@@ -713,6 +757,7 @@ Paho.MQTT = (function (global) {
                   byte4.toString(16),
                 ])
               )
+            }
           }
         }
       }
@@ -768,8 +813,9 @@ Paho.MQTT = (function (global) {
     this.reset = function () {
       this.isReset = true
       this._window.clearTimeout(this.timeout)
-      if (this._keepAliveInterval > 0)
+      if (this._keepAliveInterval > 0) {
         this.timeout = setTimeout(doTimeout(this), this._keepAliveInterval)
+      }
     }
 
     this.cancel = function () {
@@ -864,12 +910,14 @@ Paho.MQTT = (function (global) {
     this._sequence = 0
 
     // Load the local state, if any, from the saved version, only restore state relevant to this client.
-    for (var key in localStorage)
+    for (var key in localStorage) {
       if (
         key.indexOf('Sent:' + this._localKey) == 0 ||
         key.indexOf('Received:' + this._localKey) == 0
-      )
+      ) {
         this.restore(key)
+      }
+    }
   }
 
   // Messaging Client public instance members.
@@ -914,10 +962,12 @@ Paho.MQTT = (function (global) {
       this.connected
     )
 
-    if (this.connected)
+    if (this.connected) {
       throw new Error(format(ERROR.INVALID_STATE, ['already connected']))
-    if (this.socket)
+    }
+    if (this.socket) {
       throw new Error(format(ERROR.INVALID_STATE, ['already connected']))
+    }
 
     this.connectOptions = connectOptions
 
@@ -932,14 +982,17 @@ Paho.MQTT = (function (global) {
   ClientImpl.prototype.subscribe = function (filter, subscribeOptions) {
     this._trace('Client.subscribe', filter, subscribeOptions)
 
-    if (!this.connected)
+    if (!this.connected) {
       throw new Error(format(ERROR.INVALID_STATE, ['not connected']))
+    }
 
     var wireMessage = new WireMessage(MESSAGE_TYPE.SUBSCRIBE)
     wireMessage.topics = [filter]
-    if (subscribeOptions.qos != undefined)
+    if (subscribeOptions.qos != undefined) {
       wireMessage.requestedQos = [subscribeOptions.qos]
-    else wireMessage.requestedQos = [0]
+    } else {
+      wireMessage.requestedQos = [0]
+    }
 
     if (subscribeOptions.onSuccess) {
       wireMessage.onSuccess = function (grantedQos) {
@@ -984,8 +1037,9 @@ Paho.MQTT = (function (global) {
   ClientImpl.prototype.unsubscribe = function (filter, unsubscribeOptions) {
     this._trace('Client.unsubscribe', filter, unsubscribeOptions)
 
-    if (!this.connected)
+    if (!this.connected) {
       throw new Error(format(ERROR.INVALID_STATE, ['not connected']))
+    }
 
     var wireMessage = new WireMessage(MESSAGE_TYPE.UNSUBSCRIBE)
     wireMessage.topics = [filter]
@@ -1021,27 +1075,31 @@ Paho.MQTT = (function (global) {
   ClientImpl.prototype.send = function (message) {
     this._trace('Client.send', message)
 
-    if (!this.connected)
+    if (!this.connected) {
       throw new Error(format(ERROR.INVALID_STATE, ['not connected']))
+    }
 
     wireMessage = new WireMessage(MESSAGE_TYPE.PUBLISH)
     wireMessage.payloadMessage = message
 
-    if (message.qos > 0) this._requires_ack(wireMessage)
-    else if (this.onMessageDelivered)
+    if (message.qos > 0) {
+      this._requires_ack(wireMessage)
+    } else if (this.onMessageDelivered) {
       this._notify_msg_sent[wireMessage] = this.onMessageDelivered(
         wireMessage.payloadMessage
       )
+    }
     this._schedule_message(wireMessage)
   }
 
   ClientImpl.prototype.disconnect = function () {
     this._trace('Client.disconnect')
 
-    if (!this.socket)
+    if (!this.socket) {
       throw new Error(
         format(ERROR.INVALID_STATE, ['not connecting or connected'])
       )
+    }
 
     wireMessage = new WireMessage(MESSAGE_TYPE.DISCONNECT)
 
@@ -1060,10 +1118,12 @@ Paho.MQTT = (function (global) {
         'Client.getTraceLog in flight messages',
         this._sentMessages.length
       )
-      for (var key in this._sentMessages)
+      for (var key in this._sentMessages) {
         this._trace('_sentMessages ', key, this._sentMessages[key])
-      for (var key in this._receivedMessages)
+      }
+      for (var key in this._receivedMessages) {
         this._trace('_receivedMessages ', key, this._receivedMessages[key])
+      }
 
       return this._traceBuffer
     }
@@ -1149,24 +1209,29 @@ Paho.MQTT = (function (global) {
         var hex = ''
         var messageBytes = wireMessage.payloadMessage.payloadBytes
         for (var i = 0; i < messageBytes.length; i++) {
-          if (messageBytes[i] <= 0xf)
+          if (messageBytes[i] <= 0xf) {
             hex = hex + '0' + messageBytes[i].toString(16)
-          else hex = hex + messageBytes[i].toString(16)
+          } else {
+            hex = hex + messageBytes[i].toString(16)
+          }
         }
         storedMessage.payloadMessage.payloadHex = hex
 
         storedMessage.payloadMessage.qos = wireMessage.payloadMessage.qos
         storedMessage.payloadMessage.destinationName =
           wireMessage.payloadMessage.destinationName
-        if (wireMessage.payloadMessage.duplicate)
+        if (wireMessage.payloadMessage.duplicate) {
           storedMessage.payloadMessage.duplicate = true
-        if (wireMessage.payloadMessage.retained)
+        }
+        if (wireMessage.payloadMessage.retained) {
           storedMessage.payloadMessage.retained = true
+        }
 
         // Add a sequence number to sent messages.
         if (prefix.indexOf('Sent:') == 0) {
-          if (wireMessage.sequence === undefined)
+          if (wireMessage.sequence === undefined) {
             wireMessage.sequence = ++this._sequence
+          }
           storedMessage.sequence = wireMessage.sequence
         }
         break
@@ -1203,10 +1268,12 @@ Paho.MQTT = (function (global) {
         payloadMessage.qos = storedMessage.payloadMessage.qos
         payloadMessage.destinationName =
           storedMessage.payloadMessage.destinationName
-        if (storedMessage.payloadMessage.duplicate)
+        if (storedMessage.payloadMessage.duplicate) {
           payloadMessage.duplicate = true
-        if (storedMessage.payloadMessage.retained)
+        }
+        if (storedMessage.payloadMessage.retained) {
           payloadMessage.retained = true
+        }
         wireMessage.payloadMessage = payloadMessage
 
         break
@@ -1246,8 +1313,9 @@ Paho.MQTT = (function (global) {
    */
   ClientImpl.prototype._requires_ack = function (wireMessage) {
     var messageCount = Object.keys(this._sentMessages).length
-    if (messageCount > this.maxMessageIdentifier)
+    if (messageCount > this.maxMessageIdentifier) {
       throw Error('Too many messages:' + messageCount)
+    }
 
     while (this._sentMessages[this._message_identifier] !== undefined) {
       this._message_identifier++
@@ -1352,8 +1420,9 @@ Paho.MQTT = (function (global) {
           if (wireMessage.returnCode === 0) {
             this.connected = true
             // Jump to the end of the list of uris and stop looking for a good host.
-            if (this.connectOptions.uris)
+            if (this.connectOptions.uris) {
               this.hostIndex = this.connectOptions.uris.length
+            }
           } else {
             this._disconnected(
               ERROR.CONNACK_RETURNCODE.code,
@@ -1368,8 +1437,9 @@ Paho.MQTT = (function (global) {
           // Resend messages.
           var sequencedMessages = new Array()
           for (var msgId in this._sentMessages) {
-            if (this._sentMessages.hasOwnProperty(msgId))
+            if (this._sentMessages.hasOwnProperty(msgId)) {
               sequencedMessages.push(this._sentMessages[msgId])
+            }
           }
 
           // Sort sentMessages into the original sent order.
@@ -1414,8 +1484,9 @@ Paho.MQTT = (function (global) {
             localStorage.removeItem(
               'Sent:' + this._localKey + wireMessage.messageIdentifier
             )
-            if (this.onMessageDelivered)
+            if (this.onMessageDelivered) {
               this.onMessageDelivered(sentMessage.payloadMessage)
+            }
           }
           break
 
@@ -1456,8 +1527,9 @@ Paho.MQTT = (function (global) {
           localStorage.removeItem(
             'Sent:' + this._localKey + wireMessage.messageIdentifier
           )
-          if (this.onMessageDelivered)
+          if (this.onMessageDelivered) {
             this.onMessageDelivered(sentMessage.payloadMessage)
+          }
           break
 
         case MESSAGE_TYPE.SUBACK:
@@ -1534,7 +1606,9 @@ Paho.MQTT = (function (global) {
     if (wireMessage.type == 1) {
       var wireMessageMasked = this._traceMask(wireMessage, 'password')
       this._trace('Client._socket_send', wireMessageMasked)
-    } else this._trace('Client._socket_send', wireMessage)
+    } else {
+      this._trace('Client._socket_send', wireMessage)
+    }
 
     this.socket.send(wireMessage.encode())
     /* We have proved to the server we are alive. */
@@ -1623,11 +1697,12 @@ Paho.MQTT = (function (global) {
       if (this.connected) {
         this.connected = false
         // Execute the connectionLostCallback if there is one, and we were connected.
-        if (this.onConnectionLost)
+        if (this.onConnectionLost) {
           this.onConnectionLost({
             errorCode: errorCode,
             errorMessage: errorText,
           })
+        }
       } else {
         // Otherwise we never had a connection, so indicate that the connect has failed.
         if (
@@ -1658,11 +1733,15 @@ Paho.MQTT = (function (global) {
     // Pass trace message back to client's callback function
     if (this.traceFunction) {
       for (var i in arguments) {
-        if (typeof arguments[i] !== 'undefined')
+        if (typeof arguments[i] !== 'undefined') {
           arguments[i] = JSON.stringify(arguments[i])
+        }
       }
       var record = Array.prototype.slice.call(arguments).join('')
-      this.traceFunction({ severity: 'Debug', message: record })
+      this.traceFunction({
+        severity: 'Debug',
+        message: record,
+      })
     }
 
     //buffer style trace
@@ -1671,10 +1750,13 @@ Paho.MQTT = (function (global) {
         if (this._traceBuffer.length == this._MAX_TRACE_ENTRIES) {
           this._traceBuffer.shift()
         }
-        if (i === 0) this._traceBuffer.push(arguments[i])
-        else if (typeof arguments[i] === 'undefined')
+        if (i === 0) {
           this._traceBuffer.push(arguments[i])
-        else this._traceBuffer.push('  ' + JSON.stringify(arguments[i]))
+        } else if (typeof arguments[i] === 'undefined') {
+          this._traceBuffer.push(arguments[i])
+        } else {
+          this._traceBuffer.push('  ' + JSON.stringify(arguments[i]))
+        }
       }
     }
   }
@@ -1684,8 +1766,11 @@ Paho.MQTT = (function (global) {
     var traceObjectMasked = {}
     for (var attr in traceObject) {
       if (traceObject.hasOwnProperty(attr)) {
-        if (attr == masked) traceObjectMasked[attr] = '******'
-        else traceObjectMasked[attr] = traceObject[attr]
+        if (attr == masked) {
+          traceObjectMasked[attr] = '******'
+        } else {
+          traceObjectMasked[attr] = traceObject[attr]
+        }
       }
     }
     return traceObjectMasked
@@ -1755,8 +1840,9 @@ Paho.MQTT = (function (global) {
   var Client = function (host, port, path, clientId) {
     var uri
 
-    if (typeof host !== 'string')
+    if (typeof host !== 'string') {
       throw new Error(format(ERROR.INVALID_TYPE, [typeof host, 'host']))
+    }
 
     if (arguments.length == 2) {
       // host: must be full ws:// uri
@@ -1778,10 +1864,12 @@ Paho.MQTT = (function (global) {
         clientId = path
         path = '/mqtt'
       }
-      if (typeof port !== 'number' || port < 0)
+      if (typeof port !== 'number' || port < 0) {
         throw new Error(format(ERROR.INVALID_TYPE, [typeof port, 'port']))
-      if (typeof path !== 'string')
+      }
+      if (typeof path !== 'string') {
         throw new Error(format(ERROR.INVALID_TYPE, [typeof path, 'path']))
+      }
 
       var ipv6AddSBracket =
         host.indexOf(':') != -1 &&
@@ -1803,8 +1891,9 @@ Paho.MQTT = (function (global) {
       }
       clientIdLength++
     }
-    if (typeof clientId !== 'string' || clientIdLength > 65535)
+    if (typeof clientId !== 'string' || clientIdLength > 65535) {
       throw new Error(format(ERROR.INVALID_ARGUMENT, [clientId, 'clientId']))
+    }
 
     var client = new ClientImpl(uri, host, port, path, clientId)
     this._getHost = function () {
@@ -1846,45 +1935,48 @@ Paho.MQTT = (function (global) {
       return client.onConnectionLost
     }
     this._setOnConnectionLost = function (newOnConnectionLost) {
-      if (typeof newOnConnectionLost === 'function')
+      if (typeof newOnConnectionLost === 'function') {
         client.onConnectionLost = newOnConnectionLost
-      else
+      } else {
         throw new Error(
           format(ERROR.INVALID_TYPE, [
             typeof newOnConnectionLost,
             'onConnectionLost',
           ])
         )
+      }
     }
 
     this._getOnMessageDelivered = function () {
       return client.onMessageDelivered
     }
     this._setOnMessageDelivered = function (newOnMessageDelivered) {
-      if (typeof newOnMessageDelivered === 'function')
+      if (typeof newOnMessageDelivered === 'function') {
         client.onMessageDelivered = newOnMessageDelivered
-      else
+      } else {
         throw new Error(
           format(ERROR.INVALID_TYPE, [
             typeof newOnMessageDelivered,
             'onMessageDelivered',
           ])
         )
+      }
     }
 
     this._getOnMessageArrived = function () {
       return client.onMessageArrived
     }
     this._setOnMessageArrived = function (newOnMessageArrived) {
-      if (typeof newOnMessageArrived === 'function')
+      if (typeof newOnMessageArrived === 'function') {
         client.onMessageArrived = newOnMessageArrived
-      else
+      } else {
         throw new Error(
           format(ERROR.INVALID_TYPE, [
             typeof newOnMessageArrived,
             'onMessageArrived',
           ])
         )
+      }
     }
 
     this._getTrace = function () {
@@ -1959,8 +2051,9 @@ Paho.MQTT = (function (global) {
       })
 
       // If no keep alive interval is set, assume 60 seconds.
-      if (connectOptions.keepAliveInterval === undefined)
+      if (connectOptions.keepAliveInterval === undefined) {
         connectOptions.keepAliveInterval = 60
+      }
 
       if (connectOptions.mqttVersion > 4 || connectOptions.mqttVersion < 3) {
         throw new Error(
@@ -1982,61 +2075,68 @@ Paho.MQTT = (function (global) {
       if (
         connectOptions.password === undefined &&
         connectOptions.userName !== undefined
-      )
+      ) {
         throw new Error(
           format(ERROR.INVALID_ARGUMENT, [
             connectOptions.password,
             'connectOptions.password',
           ])
         )
+      }
 
       if (connectOptions.willMessage) {
-        if (!(connectOptions.willMessage instanceof Message))
+        if (!(connectOptions.willMessage instanceof Message)) {
           throw new Error(
             format(ERROR.INVALID_TYPE, [
               connectOptions.willMessage,
               'connectOptions.willMessage',
             ])
           )
+        }
         // The will message must have a payload that can be represented as a string.
         // Cause the willMessage to throw an exception if this is not the case.
         connectOptions.willMessage.stringPayload
 
-        if (typeof connectOptions.willMessage.destinationName === 'undefined')
+        if (typeof connectOptions.willMessage.destinationName === 'undefined') {
           throw new Error(
             format(ERROR.INVALID_TYPE, [
               typeof connectOptions.willMessage.destinationName,
               'connectOptions.willMessage.destinationName',
             ])
           )
+        }
       }
-      if (typeof connectOptions.cleanSession === 'undefined')
+      if (typeof connectOptions.cleanSession === 'undefined') {
         connectOptions.cleanSession = true
+      }
       if (connectOptions.hosts) {
-        if (!(connectOptions.hosts instanceof Array))
+        if (!(connectOptions.hosts instanceof Array)) {
           throw new Error(
             format(ERROR.INVALID_ARGUMENT, [
               connectOptions.hosts,
               'connectOptions.hosts',
             ])
           )
-        if (connectOptions.hosts.length < 1)
+        }
+        if (connectOptions.hosts.length < 1) {
           throw new Error(
             format(ERROR.INVALID_ARGUMENT, [
               connectOptions.hosts,
               'connectOptions.hosts',
             ])
           )
+        }
 
         var usingURIs = false
         for (var i = 0; i < connectOptions.hosts.length; i++) {
-          if (typeof connectOptions.hosts[i] !== 'string')
+          if (typeof connectOptions.hosts[i] !== 'string') {
             throw new Error(
               format(ERROR.INVALID_TYPE, [
                 typeof connectOptions.hosts[i],
                 'connectOptions.hosts[' + i + ']',
               ])
             )
+          }
           if (
             /^(wss?):\/\/((\[(.+)\])|([^\/]+?))(:(\d+))?(\/.*)$/.test(
               connectOptions.hosts[i]
@@ -2063,27 +2163,30 @@ Paho.MQTT = (function (global) {
         }
 
         if (!usingURIs) {
-          if (!connectOptions.ports)
+          if (!connectOptions.ports) {
             throw new Error(
               format(ERROR.INVALID_ARGUMENT, [
                 connectOptions.ports,
                 'connectOptions.ports',
               ])
             )
-          if (!(connectOptions.ports instanceof Array))
+          }
+          if (!(connectOptions.ports instanceof Array)) {
             throw new Error(
               format(ERROR.INVALID_ARGUMENT, [
                 connectOptions.ports,
                 'connectOptions.ports',
               ])
             )
-          if (connectOptions.hosts.length != connectOptions.ports.length)
+          }
+          if (connectOptions.hosts.length != connectOptions.ports.length) {
             throw new Error(
               format(ERROR.INVALID_ARGUMENT, [
                 connectOptions.ports,
                 'connectOptions.ports',
               ])
             )
+          }
 
           connectOptions.uris = []
 
@@ -2091,13 +2194,14 @@ Paho.MQTT = (function (global) {
             if (
               typeof connectOptions.ports[i] !== 'number' ||
               connectOptions.ports[i] < 0
-            )
+            ) {
               throw new Error(
                 format(ERROR.INVALID_TYPE, [
                   typeof connectOptions.ports[i],
                   'connectOptions.ports[' + i + ']',
                 ])
               )
+            }
             var host = connectOptions.hosts[i]
             var port = connectOptions.ports[i]
 
@@ -2146,8 +2250,9 @@ Paho.MQTT = (function (global) {
      * @throws {InvalidState} if the client is not in connected state.
      */
     this.subscribe = function (filter, subscribeOptions) {
-      if (typeof filter !== 'string')
+      if (typeof filter !== 'string') {
         throw new Error('Invalid argument:' + filter)
+      }
       subscribeOptions = subscribeOptions || {}
       validate(subscribeOptions, {
         qos: 'number',
@@ -2156,10 +2261,11 @@ Paho.MQTT = (function (global) {
         onFailure: 'function',
         timeout: 'number',
       })
-      if (subscribeOptions.timeout && !subscribeOptions.onFailure)
+      if (subscribeOptions.timeout && !subscribeOptions.onFailure) {
         throw new Error(
           'subscribeOptions.timeout specified with no onFailure callback.'
         )
+      }
       if (
         typeof subscribeOptions.qos !== 'undefined' &&
         !(
@@ -2167,13 +2273,14 @@ Paho.MQTT = (function (global) {
           subscribeOptions.qos === 1 ||
           subscribeOptions.qos === 2
         )
-      )
+      ) {
         throw new Error(
           format(ERROR.INVALID_ARGUMENT, [
             subscribeOptions.qos,
             'subscribeOptions.qos',
           ])
         )
+      }
       client.subscribe(filter, subscribeOptions)
     }
 
@@ -2206,8 +2313,9 @@ Paho.MQTT = (function (global) {
      * @throws {InvalidState} if the client is not in connected state.
      */
     this.unsubscribe = function (filter, unsubscribeOptions) {
-      if (typeof filter !== 'string')
+      if (typeof filter !== 'string') {
         throw new Error('Invalid argument:' + filter)
+      }
       unsubscribeOptions = unsubscribeOptions || {}
       validate(unsubscribeOptions, {
         invocationContext: 'object',
@@ -2215,10 +2323,11 @@ Paho.MQTT = (function (global) {
         onFailure: 'function',
         timeout: 'number',
       })
-      if (unsubscribeOptions.timeout && !unsubscribeOptions.onFailure)
+      if (unsubscribeOptions.timeout && !unsubscribeOptions.onFailure) {
         throw new Error(
           'unsubscribeOptions.timeout specified with no onFailure callback.'
         )
+      }
       client.unsubscribe(filter, unsubscribeOptions)
     }
 
@@ -2228,14 +2337,14 @@ Paho.MQTT = (function (global) {
      * @name Paho.MQTT.Client#send
      * @function
      * @param {string|Paho.MQTT.Message} topic - <b>mandatory</b> The name of the destination to which the message is to be sent.
-     * 					   - If it is the only parameter, used as Paho.MQTT.Message object.
+     *             - If it is the only parameter, used as Paho.MQTT.Message object.
      * @param {String|ArrayBuffer} payload - The message data to be sent.
      * @param {number} qos The Quality of Service used to deliver the message.
-     * 		<dl>
-     * 			<dt>0 Best effort (default).
-     *     			<dt>1 At least once.
-     *     			<dt>2 Exactly once.
-     * 		</dl>
+     *    <dl>
+     *      <dt>0 Best effort (default).
+     *          <dt>1 At least once.
+     *          <dt>2 Exactly once.
+     *    </dl>
      * @param {Boolean} retained If true, the message is to be retained by the server and delivered
      *                     to both current and future subscriptions.
      *                     If false the server only delivers the message to current subscribers, this is the default for new Messages.
@@ -2250,17 +2359,19 @@ Paho.MQTT = (function (global) {
       if (arguments.length == 0) {
         throw new Error('Invalid argument.' + 'length')
       } else if (arguments.length == 1) {
-        if (!(topic instanceof Message) && typeof topic !== 'string')
+        if (!(topic instanceof Message) && typeof topic !== 'string') {
           throw new Error('Invalid argument:' + typeof topic)
+        }
 
         message = topic
-        if (typeof message.destinationName === 'undefined')
+        if (typeof message.destinationName === 'undefined') {
           throw new Error(
             format(ERROR.INVALID_ARGUMENT, [
               message.destinationName,
               'Message.destinationName',
             ])
           )
+        }
         client.send(message)
       } else {
         //parameter checking in Message object
@@ -2431,8 +2542,11 @@ Paho.MQTT = (function (global) {
     }
 
     this._getPayloadString = function () {
-      if (typeof payload === 'string') return payload
-      else return parseUTF8(payload, 0, payload.length)
+      if (typeof payload === 'string') {
+        return payload
+      } else {
+        return parseUTF8(payload, 0, payload.length)
+      }
     }
 
     this._getPayloadBytes = function () {
@@ -2452,15 +2566,16 @@ Paho.MQTT = (function (global) {
       return destinationName
     }
     this._setDestinationName = function (newDestinationName) {
-      if (typeof newDestinationName === 'string')
+      if (typeof newDestinationName === 'string') {
         destinationName = newDestinationName
-      else
+      } else {
         throw new Error(
           format(ERROR.INVALID_ARGUMENT, [
             newDestinationName,
             'newDestinationName',
           ])
         )
+      }
     }
 
     var qos = 0
@@ -2468,8 +2583,11 @@ Paho.MQTT = (function (global) {
       return qos
     }
     this._setQos = function (newQos) {
-      if (newQos === 0 || newQos === 1 || newQos === 2) qos = newQos
-      else throw new Error('Invalid argument:' + newQos)
+      if (newQos === 0 || newQos === 1 || newQos === 2) {
+        qos = newQos
+      } else {
+        throw new Error('Invalid argument:' + newQos)
+      }
     }
 
     var retained = false
@@ -2477,11 +2595,13 @@ Paho.MQTT = (function (global) {
       return retained
     }
     this._setRetained = function (newRetained) {
-      if (typeof newRetained === 'boolean') retained = newRetained
-      else
+      if (typeof newRetained === 'boolean') {
+        retained = newRetained
+      } else {
         throw new Error(
           format(ERROR.INVALID_ARGUMENT, [newRetained, 'newRetained'])
         )
+      }
     }
 
     var duplicate = false

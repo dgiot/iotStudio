@@ -11,16 +11,16 @@
         >
           <div class="pic-error">
             <el-image
+              class="pic-error-parent"
               :src="
                 require('../../public/assets/images/platform/assets/error_images/404.png')
               "
-              class="pic-error-parent"
             />
             <el-image
+              class="pic-error-child left"
               :src="
                 require('../../public/assets/images/platform/assets/error_images/404.png')
               "
-              class="pic-error-child left"
             />
           </div>
         </el-col>
@@ -45,7 +45,7 @@
             <el-button
               round
               size="medium"
-              style="float:left"
+              style="float: left"
               type="primary"
               @click="back"
             >

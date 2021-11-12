@@ -2,8 +2,8 @@
   <el-dialog
     :append-to-body="true"
     :close-on-click-modal="false"
-    :visible="visible"
     title="数据编辑"
+    :visible="visible"
     @update:visible="$emit('change', $event)"
   >
     <el-alert
@@ -14,8 +14,8 @@
     />
     <prism-editor
       v-model="code"
-      :highlight="highlighter"
       class="vab-render-code"
+      :highlight="highlighter"
       line-numbers
     />
     <div style="margin-top: 20px; text-align: center">
@@ -35,8 +35,8 @@
         <el-link
           :download="`${Date.now()}.js`"
           :href="fileURL"
-          :underline="false"
           style="color: white"
+          :underline="false"
         >
           下载数据
         </el-link>
@@ -100,20 +100,15 @@
           // 判断是否为对象
           if (_.isPlainObject(res)) {
             // 1. 通过解构符合的方式分离出 formDesc 和 formPropsData
-            const {
-              formDesc = {},
-              order = [],
-              ...formPropsData
-            } = res
+            const { formDesc = {}, order = [], ...formPropsData } = res
             // 2. 赋值 VabRender.formPropsData
             this.VabRender.formPropsData = Object.assign(formPropsData, {
               order: order || Object.keys(formDesc),
             })
             // 3. 将 formDesc 转为数组，并赋值给 VabRender.formItemList
-            this.VabRender.formItemList = objectToArr(formDesc, 'field')
-              .map(
-                (item) => Object.assign({ attrs: {} }, item),
-              )
+            this.VabRender.formItemList = objectToArr(formDesc, 'field').map(
+              (item) => Object.assign({ attrs: {} }, item)
+            )
 
             // 关闭弹窗
             this.$emit('change')

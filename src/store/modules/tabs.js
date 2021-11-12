@@ -39,7 +39,7 @@ const mutations = {
    */
   delOthersVisitedRoutes(state, path) {
     state.visitedRoutes = state.visitedRoutes.filter(
-      (item) => item.meta.noClosable || item.path === path,
+      (item) => item.meta.noClosable || item.path === path
     )
   },
   /**
@@ -50,7 +50,7 @@ const mutations = {
    */
   delLeftVisitedRoutes(state, path) {
     const idx = state.visitedRoutes.indexOf(
-      state.visitedRoutes.find((item) => item.path === path),
+      state.visitedRoutes.find((item) => item.path === path)
     )
     state.visitedRoutes = state.visitedRoutes.filter((item, index) => {
       return item.meta.noClosable || index >= idx
@@ -64,7 +64,7 @@ const mutations = {
    */
   delRightVisitedRoutes(state, path) {
     const idx = state.visitedRoutes.indexOf(
-      state.visitedRoutes.find((item) => item.path === path),
+      state.visitedRoutes.find((item) => item.path === path)
     )
     state.visitedRoutes = state.visitedRoutes.filter((item, index) => {
       return item.meta.noClosable || index <= idx
@@ -77,7 +77,7 @@ const mutations = {
    */
   delAllVisitedRoutes(state) {
     state.visitedRoutes = state.visitedRoutes.filter(
-      (item) => item.meta.noClosable,
+      (item) => item.meta.noClosable
     )
   },
   /**
@@ -162,5 +162,5 @@ export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
 }

@@ -12,8 +12,8 @@
     @command="handleCommand"
   >
     <vab-icon
-      :style="{ color: router ? '#1890ff' : '' }"
       icon="translate"
+      :style="{ color: router ? '#1890ff' : '' }"
     />
     <template #dropdown>
       <el-dropdown-menu>

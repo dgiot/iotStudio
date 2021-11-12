@@ -2,24 +2,22 @@
   <div :key="productId">
     <el-drawer
       v-drawerDrag
-      :visible.sync="amisFlag"
       size="100%"
+      :visible.sync="amisFlag"
     >
       <vab-amis :schema="amisJson" />
-      <div
-        class="demo-drawer__footer"
-      >
+      <div class="demo-drawer__footer">
         <el-button @click="cancelForm">
           保存
         </el-button>
       </div>
     </el-drawer>
     <el-descriptions
+      border
+      class="margin-top"
       :column="2"
       :content-style="{ 'text-align': 'left' }"
       :label-style="{ 'text-align': 'center' }"
-      border
-      class="margin-top"
     >
       <!--      <el-descriptions-item :label="$translateTitle('home.category')">-->
       <!--        {{ productDetail.netType }}-->
@@ -149,7 +147,7 @@
     >
       <div
         v-if="tableType == 'things'"
-        :key="tableType+thingKey"
+        :key="tableType + thingKey"
       >
         <el-table-column type="expand">
           <template
@@ -162,16 +160,16 @@
               style="box-sizing: border-box; width: 60%; text-align: center"
             >
               <el-table-column
-                :label="$translateTitle('product.identifier')"
                 align="center"
+                :label="$translateTitle('product.identifier')"
               >
                 <template slot-scope="scope1">
                   <span>{{ scope1.row.identifier }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('product.functionaltypes')"
                 align="center"
+                :label="$translateTitle('product.functionaltypes')"
               >
                 <span>
                   {{ $translateTitle('product.attribute') }}
@@ -179,20 +177,20 @@
               </el-table-column>
 
               <el-table-column
-                :label="$translateTitle('product.functionname')"
                 align="center"
+                :label="$translateTitle('product.functionname')"
                 prop="name"
               />
               <el-table-column
-                :label="$translateTitle('product.datadefinition')"
                 align="center"
+                :label="$translateTitle('product.datadefinition')"
               />
             </el-table>
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.order')"
           align="center"
+          :label="$translateTitle('product.order')"
           sortable
           width="80"
         >
@@ -201,8 +199,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.Rounds')"
           align="center"
+          :label="$translateTitle('product.Rounds')"
           sortable
           width="80"
         >
@@ -212,8 +210,8 @@
         </el-table-column>
 
         <el-table-column
-          :label="$translateTitle('product.Strategy')"
           align="center"
+          :label="$translateTitle('product.Strategy')"
           sortable
           width="80"
         >
@@ -223,8 +221,8 @@
         </el-table-column>
 
         <el-table-column
-          :label="$translateTitle('product.protocol')"
           align="center"
+          :label="$translateTitle('product.protocol')"
           sortable
           width="80"
         >
@@ -235,8 +233,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.functionaltypes')"
           align="center"
+          :label="$translateTitle('product.functionaltypes')"
           sortable
           width="120"
         >
@@ -244,20 +242,20 @@
         </el-table-column>
 
         <el-table-column
-          :label="$translateTitle('product.identifier')"
           align="center"
+          :label="$translateTitle('product.identifier')"
           prop="identifier"
           sortable
         />
         <el-table-column
-          :label="$translateTitle('product.functionname')"
           align="center"
+          :label="$translateTitle('product.functionname')"
           prop="name"
           sortable
         />
         <el-table-column
-          :label="$translateTitle('product.datatype')"
           align="center"
+          :label="$translateTitle('product.datatype')"
           sortable
         >
           <template slot-scope="scope">
@@ -265,8 +263,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.datadefinition')"
           align="center"
+          :label="$translateTitle('product.datadefinition')"
           sortable
         >
           <template slot-scope="scope">
@@ -301,8 +299,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('developer.operation')"
           align="center"
+          :label="$translateTitle('developer.operation')"
           width="160"
         >
           <template slot-scope="scope">
@@ -333,8 +331,8 @@
           sortable
         />
         <el-table-column
-          :label="$translateTitle('product.chinesetitle')"
           align="center"
+          :label="$translateTitle('product.chinesetitle')"
           prop="name"
           show-overflow-tooltip
           sortable
@@ -380,8 +378,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('product.functionaltypes')"
           align="center"
+          :label="$translateTitle('product.functionaltypes')"
           prop="type"
           show-overflow-tooltip
           sortable
@@ -469,8 +467,7 @@
       decoderTableList: {
         required: false,
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       parserTableList: {
         required: false,
@@ -490,8 +487,7 @@
     },
     data() {
       return {
-        key: moment(new Date())
-          .valueOf(),
+        key: moment(new Date()).valueOf(),
         amisJsonPlus: '',
         ace_editor: '',
         codeFlag: false,
@@ -521,8 +517,7 @@
         },
       },
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {
       cancelForm() {
         this.$message.success('待实现')
@@ -580,4 +575,3 @@
     }
   }
 </style>
-

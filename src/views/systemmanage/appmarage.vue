@@ -31,20 +31,20 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('plugins.version')"
           align="center"
+          :label="$translateTitle('plugins.version')"
           prop="version"
           sortable
         />
         <el-table-column
-          :label="$translateTitle('developer.describe')"
           align="center"
+          :label="$translateTitle('developer.describe')"
           prop="desc"
           sortable
         />
         <el-table-column
-          :label="$translateTitle('developer.operation')"
           align="right"
+          :label="$translateTitle('developer.operation')"
         >
           <!-- eslint-disable-next-line -->
           <template slot="header" slot-scope="scope">
@@ -108,12 +108,12 @@
     </div>
     <div class="block">
       <el-pagination
-        :page-size="length"
-        :page-sizes="[10, 25, 50, 100]"
-        :total="total"
         background
         layout="total, sizes, prev, pager, next, jumper"
+        :page-size="length"
+        :page-sizes="[10, 25, 50, 100]"
         style="margin-top: 30px"
+        :total="total"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
@@ -132,26 +132,26 @@
           style="width: 100%; margin-top: 20px; text-align: center"
         >
           <el-table-column
-            :label="$translateTitle('plugins.modulename')"
             align="center"
+            :label="$translateTitle('plugins.modulename')"
             prop="path"
             sortable
           />
           <el-table-column
-            :label="$translateTitle('plugins.ischange')"
             align="center"
+            :label="$translateTitle('plugins.ischange')"
             prop="is_changed"
             sortable
           />
         </el-table>
         <div class="block">
           <el-pagination
-            :page-size="length1"
-            :page-sizes="[10, 25, 50, 100]"
-            :total="total1"
             background
             layout="total, sizes, prev, pager, next, jumper"
+            :page-size="length1"
+            :page-sizes="[10, 25, 50, 100]"
             style="margin-top: 30px"
+            :total="total1"
             @current-change="handleCurrentChange1"
             @size-change="handleSizeChange1"
           />
@@ -179,7 +179,13 @@
   </div>
 </template>
 <script>
-  import { Getapp, Getmodule, GetReload, Getstart, Getstop } from '@/api/System/index'
+  import {
+    Getapp,
+    Getmodule,
+    GetReload,
+    Getstart,
+    Getstop,
+  } from '@/api/System/index'
 
   var table = []
   var table1 = []
@@ -250,8 +256,7 @@
         this.tableData = this.tableData.filter(
           (data) =>
             !this.search ||
-            data.app.toLowerCase()
-              .includes(this.search.toLowerCase()),
+            data.app.toLowerCase().includes(this.search.toLowerCase())
         )
       },
       changedialog() {
@@ -261,8 +266,7 @@
         this.tableData1 = tableData1.filter(
           (data) =>
             !this.searchvalue ||
-            data.path.toLowerCase()
-              .includes(searchvalue.toLowerCase()),
+            data.path.toLowerCase().includes(searchvalue.toLowerCase())
         )
       },
       checkupdate(app) {
@@ -271,21 +275,20 @@
         this.searchvalue = ''
         this.dialogVisible = true
         ;(this.app = app), (this.total1 = 0)
-        Getmodule(app)
-          .then((res) => {
-            if (res) {
-              res.map((item) => {
-                if (item.is_changed == false) {
-                  item.is_changed = 'false'
-                } else {
-                  item.is_changed = 'true'
-                }
-              })
-              this.tableData1 = res
-              table1 = res
-              this.total1 = res.length
-            }
-          })
+        Getmodule(app).then((res) => {
+          if (res) {
+            res.map((item) => {
+              if (item.is_changed == false) {
+                item.is_changed = 'false'
+              } else {
+                item.is_changed = 'true'
+              }
+            })
+            this.tableData1 = res
+            table1 = res
+            this.total1 = res.length
+          }
+        })
       },
       checkupdateall() {
         this.searchvalue = ''
@@ -293,21 +296,20 @@
         this.tableData1 = []
         this.total1 = 0
         this.app = ''
-        Getmodule('changed')
-          .then((res) => {
-            if (res) {
-              res.map((item) => {
-                if (item.is_changed == false) {
-                  item.is_changed = 'false'
-                } else {
-                  item.is_changed = 'true'
-                }
-              })
-              this.tableData1 = res
-              table1 = res
-              this.total1 = res.length
-            }
-          })
+        Getmodule('changed').then((res) => {
+          if (res) {
+            res.map((item) => {
+              if (item.is_changed == false) {
+                item.is_changed = 'false'
+              } else {
+                item.is_changed = 'true'
+              }
+            })
+            this.tableData1 = res
+            table1 = res
+            this.total1 = res.length
+          }
+        })
       },
       // 启动
       startup(app) {
@@ -343,40 +345,38 @@
       },
       reupload() {
         if (this.app == '') {
-          GetReload('all')
-            .then((response) => {
-              if (response) {
-                if (response.length == 0) {
-                  this.$message({
-                    message: '当前无更新',
-                    type: 'warning',
-                  })
-                } else {
-                  this.$message({
-                    message: '已更新模块' + response,
-                    type: 'success',
-                  })
-                }
+          GetReload('all').then((response) => {
+            if (response) {
+              if (response.length == 0) {
+                this.$message({
+                  message: '当前无更新',
+                  type: 'warning',
+                })
+              } else {
+                this.$message({
+                  message: '已更新模块' + response,
+                  type: 'success',
+                })
               }
-            })
+            }
+          })
         } else {
-          GetReload(this.app)
-            .then((response) => {
-              if (response) {
-                if (response.length == 0) {
-                  this.$message({
-                    message: '当前无更新',
-                    type: 'warning',
-                  })
-                } else {
-                  this.$message({
-                    message: '已更新模块' + response,
-                    type: 'success',
-                  })
-                }
-                this.app == ''
+          GetReload(this.app).then((response) => {
+            if (response) {
+              if (response.length == 0) {
+                this.$message({
+                  message: '当前无更新',
+                  type: 'warning',
+                })
+              } else {
+                this.$message({
+                  message: '已更新模块' + response,
+                  type: 'success',
+                })
               }
-            })
+              this.app == ''
+            }
+          })
         }
       },
     },

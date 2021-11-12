@@ -23,10 +23,7 @@
       <el-col :span="7">
         <div class="grid-content bg-purple">
           {{ $translateTitle('Maintenance.the starting time') }} :
-          {{
-            $moment(detail.createdAt)
-              .format('YYYY-MM-DD HH:mm:ss')
-          }}
+          {{ $moment(detail.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </div>
       </el-col>
     </el-row>
@@ -56,8 +53,8 @@
       ref="step2"
       :detail="detail"
       :show-footer="showFooter"
-      :step="step"
       show-hard="showHard"
+      :step="step"
       @change-step="handleSetStep"
     />
     <step3
@@ -65,8 +62,8 @@
       ref="step3"
       :detail="detail"
       :show-footer="showFooter"
-      :step="step"
       show-hard="showHard"
+      :step="step"
       @change-step="handleSetStep"
     />
     <Step4
@@ -74,8 +71,8 @@
       ref="step4"
       :detail="detail"
       :show-footer="showFooter"
-      :step="step"
       show-hard="showHard"
+      :step="step"
       @change-step="handleSetStep"
     />
   </div>
@@ -103,8 +100,7 @@
     props: {
       detail: {
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       showFooter: {
         type: Boolean,

@@ -11,8 +11,8 @@
               <vab-query-form-top-panel>
                 <el-form
                   :inline="true"
-                  :model="queryForm"
                   label-width="100px"
+                  :model="queryForm"
                   @submit.native.prevent
                 >
                   <el-form-item :label="$translateTitle('user.department')">
@@ -23,17 +23,17 @@
                       @visible-change="change($event)"
                     >
                       <el-option
-                        :value="treeDataValue"
                         style="height: auto; padding: 0"
+                        :value="treeDataValue"
                       >
                         <el-tree
                           ref="workGroup"
-                          :data="roleTree"
-                          :expand-on-click-node="false"
-                          :props="roleProps"
                           class="workGroup"
+                          :data="roleTree"
                           default-expand-all
+                          :expand-on-click-node="false"
                           node-key="index"
+                          :props="roleProps"
                         >
                           <div
                             slot-scope="{ node, data }"
@@ -49,8 +49,8 @@
                             </span>
                             <span>
                               <i
-                                :title="$translateTitle('product.addrole')"
                                 class="el-icon-circle-plus-outline"
+                                :title="$translateTitle('product.addrole')"
                                 @click="setDialogRole(data)"
                               />
                             </span>
@@ -62,8 +62,8 @@
                   <el-form-item :label="$translateTitle('user.rolename')">
                     <el-input
                       v-model="search"
-                      :placeholder="$translateTitle('user.rolename')"
                       clearable
+                      :placeholder="$translateTitle('user.rolename')"
                       size="mini"
                     />
                   </el-form-item>
@@ -105,16 +105,16 @@
             <el-table
               :data="roleList"
               :height="tableHeight"
+              highlight-current-row
               :row-class-name="tableRowClassName"
               :row-style="selectedHighlight"
-              highlight-current-row
               size="small"
               style="width: 100%; text-align: center"
               @row-click="getDetailmenu"
             >
               <el-table-column
-                :label="$translateTitle('user.rolename')"
                 align="center"
+                :label="$translateTitle('user.rolename')"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>
@@ -126,8 +126,8 @@
                 </template>
               </el-table-column>-->
               <el-table-column
-                :label="$translateTitle('user.Remarks')"
                 align="center"
+                :label="$translateTitle('user.Remarks')"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.alias }}</span>
@@ -142,8 +142,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('developer.operation')"
                 align="center"
+                :label="$translateTitle('developer.operation')"
               >
                 <template slot-scope="scope">
                   <!-- <el-button size="mini" type="primary" @click.native="handleEdit(scope.row)">分配权限</el-button> -->
@@ -186,8 +186,8 @@
             <!--分页-->
             <div class="rightPagination">
               <el-pagination
-                :total="total"
                 layout="prev, pager, next"
+                :total="total"
                 @current-change="handleCurrentChange"
                 @size-change="handleSizeChange"
               />
@@ -247,13 +247,13 @@
               </div>
               <el-tree
                 ref="permissionTree"
+                accordion
+                check-on-click-node
                 :data="permissionTreeData"
                 :default-checked-keys="rolePermissonList"
                 :default-expand-all="isExpand"
-                :expand-on-click-node="false"
-                accordion
-                check-on-click-node
                 default-props
+                :expand-on-click-node="false"
                 node-key="objectId"
                 show-checkbox
               >
@@ -265,8 +265,8 @@
                 </span>
                 <span>
                   <i
-                    :title="$translateTitle('product.addrole')"
                     class="el-icon-circle-plus-outline"
+                    :title="$translateTitle('product.addrole')"
                     @click="setDialogRole(data)"
                   />
                 </span>
@@ -322,13 +322,13 @@
             >
               <el-tree
                 ref="menusTree"
+                accordion
+                check-on-click-node
                 :data="menuTreeData"
                 :default-checked-keys="roleMenuList"
                 :default-expand-all="menuExpand"
-                :expand-on-click-node="false"
-                accordion
-                check-on-click-node
                 default-props
+                :expand-on-click-node="false"
                 node-key="objectId"
                 show-checkbox
               >
@@ -374,16 +374,16 @@
           width="55"
         />
         <el-table-column
-          :label="$translateTitle('user.name')"
           align="center"
+          :label="$translateTitle('user.name')"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('user.Remarks')"
           align="center"
+          :label="$translateTitle('user.Remarks')"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.desc }}</span>
@@ -448,8 +448,8 @@
         >
           <el-input
             v-model="form.desc"
-            :rows="2"
             autocomplete="off"
+            :rows="2"
             style="width: 300px"
             type="textarea"
           />
@@ -473,7 +473,14 @@
   </div>
 </template>
 <script>
-  import { delRole, queryRole, queryRoledepartment, roleMenu, saveRole, saveRoletemp } from '@/api/Role/index'
+  import {
+    delRole,
+    queryRole,
+    queryRoledepartment,
+    roleMenu,
+    saveRole,
+    saveRoletemp,
+  } from '@/api/Role/index'
   import { mapGetters, mapMutations } from 'vuex'
   import addroles from '@/views/roles/rolelist/addroles'
   import { Roletree } from '@/api/Menu'

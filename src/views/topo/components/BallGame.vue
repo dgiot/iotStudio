@@ -46,10 +46,7 @@
        * @Desc: 初始化
        */
       init() {
-        let {
-          width,
-          height,
-        } = this.$refs.content.getBoundingClientRect()
+        let { width, height } = this.$refs.content.getBoundingClientRect()
         this.width = width
         this.height = height
         this.stage = new Stage({
@@ -118,7 +115,10 @@
         this.circle.x(this.centerX)
         this.circle.y(this.centerY)
         // 撞墙检测
-        if (this.centerX + this.radius >= this.width || this.centerX - this.radius <= 0) {
+        if (
+          this.centerX + this.radius >= this.width ||
+          this.centerX - this.radius <= 0
+        ) {
           this.speedX = -this.speedX
         }
         if (this.centerY - this.radius <= 0) {
@@ -132,10 +132,14 @@
         }
         // 加速度
         if (Math.abs(this.speedX) < this.maxSpeed) {
-          this.speedX > 0 ? this.speedX += this.speedStep : this.speedX -= this.speedStep
+          this.speedX > 0
+            ? (this.speedX += this.speedStep)
+            : (this.speedX -= this.speedStep)
         }
         if (Math.abs(this.speedY) < this.maxSpeed) {
-          this.speedY > 0 ? this.speedY += this.speedStep : this.speedY -= this.speedStep
+          this.speedY > 0
+            ? (this.speedY += this.speedStep)
+            : (this.speedY -= this.speedStep)
         }
       },
 
@@ -165,7 +169,10 @@
         } else {
           miny = this.centerY
         }
-        if (this.getTwoPointDistance(minx, miny, this.centerX, this.centerY) <= this.radius) {
+        if (
+          this.getTwoPointDistance(minx, miny, this.centerX, this.centerY) <=
+          this.radius
+        ) {
           if (minx === rectX || minx === rectX + rectWidth) {
             this.speedX = -this.speedX
           }

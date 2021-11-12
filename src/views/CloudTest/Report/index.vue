@@ -10,23 +10,22 @@
 <template>
   <div
     ref="custom-table"
-    :class="{ 'vab-fullscreen': isFullscreen }"
     class="custom-table-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <div class="components">
       <vab-dialog :show.sync="activePopShow">
         <h3 slot="title">
-          {{
-            $translateTitle('cloudTest.add')
+          {{ $translateTitle('cloudTest.add')
           }}{{ $translateTitle('cloudTest.report template') }}
         </h3>
         <div class="content">
           <el-form
             ref="ruleForm"
-            :model="ruleForm"
-            :rules="rules"
             class="demo-ruleForm"
             label-width="100px"
+            :model="ruleForm"
+            :rules="rules"
           >
             <el-form-item
               :label="$translateTitle('cloudTest.Template name')"
@@ -57,15 +56,15 @@
                 :key="momentKey"
                 ref="upload"
                 v-model="ruleForm.file"
+                accept=".doc,.docx"
+                action="string"
                 :before-upload="onBeforeUploadImage"
+                class="upload-demo"
                 :file-list="fileList"
                 :http-request="UploadImage"
                 :limit="1"
-                :on-change="fileChange"
-                accept=".doc,.docx"
-                action="string"
-                class="upload-demo"
                 list-type="text"
+                :on-change="fileChange"
               >
                 <el-button
                   slot="trigger"
@@ -106,8 +105,8 @@
             :stripe="stripe"
           >
             <el-table-column
-              :label="$translateTitle('cloudTest.number')"
               align="center"
+              :label="$translateTitle('cloudTest.number')"
               show-overflow-tooltip
               width="80"
             >
@@ -116,15 +115,15 @@
               </template>
             </el-table-column>
             <el-table-column
-              :label="$translateTitle('cloudTest.Template name')"
               align="center"
+              :label="$translateTitle('cloudTest.Template name')"
               prop="name"
               show-overflow-tooltip
               width="auto"
             />
             <el-table-column
-              :label="$translateTitle('cloudTest.Template content')"
               align="center"
+              :label="$translateTitle('cloudTest.Template content')"
               width="auto"
             >
               <template #default="{ row }">
@@ -136,9 +135,9 @@
               </template>
             </el-table-column>
             <el-table-column
-              :label="$translateTitle(`product.Template management`)"
               align="center"
               flex="right"
+              :label="$translateTitle(`product.Template management`)"
               show-overflow-tooltip
               width="auto"
             >
@@ -151,7 +150,7 @@
                 </el-button>
                 <el-button
                   type="warning"
-                  @click="handleDelete(row,1)"
+                  @click="handleDelete(row, 1)"
                 >
                   {{ $translateTitle(`cloudTest.delete`) }}
                 </el-button>
@@ -159,10 +158,10 @@
             </el-table-column>
             <template #empty>
               <el-image
+                class="vab-data-empty"
                 :src="
                   require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                 "
-                class="vab-data-empty"
               />
             </template>
           </el-table>
@@ -174,8 +173,8 @@
         <el-form
           ref="form"
           :inline="true"
-          :model="queryForm"
           label-width="0"
+          :model="queryForm"
           @submit.native.prevent
         >
           <el-form-item>
@@ -297,8 +296,8 @@
       :stripe="stripe"
     >
       <el-table-column
-        :label="$translateTitle('cloudTest.number')"
         align="center"
+        :label="$translateTitle('cloudTest.number')"
         show-overflow-tooltip
         width="95"
       >
@@ -309,17 +308,17 @@
       <el-table-column
         v-for="(item, index) in finallyColumns"
         :key="index"
+        align="center"
         :label="$translateTitle(`cloudTest.${item.label}`)"
         :prop="item.prop"
+        show-overflow-tooltip
         :sortable="item.sortable"
         :width="item.width"
-        align="center"
-        show-overflow-tooltip
       />
 
       <el-table-column
-        :label="$translateTitle(`cloudTest.operate`)"
         align="center"
+        :label="$translateTitle(`cloudTest.operate`)"
         show-overflow-tooltip
         width="185"
       >
@@ -332,7 +331,7 @@
           </el-button>
           <el-button
             type="warning"
-            @click="handleDelete(row,0)"
+            @click="handleDelete(row, 0)"
           >
             {{ $translateTitle(`cloudTest.delete`) }}
           </el-button>
@@ -340,20 +339,20 @@
       </el-table-column>
       <template #empty>
         <el-image
+          class="vab-data-empty"
           :src="
             require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
-          class="vab-data-empty"
         />
       </template>
     </el-table>
     <el-pagination
-      :page-size="queryForm.pageSize"
-      :page-sizes="queryForm.pageSizes"
-      :page.sync="queryForm.pageNo"
-      :total="queryForm.total"
       background
       layout="total, sizes, prev, pager, next, jumper"
+      :page.sync="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :page-sizes="queryForm.pageSizes"
+      :total="queryForm.total"
       @current-change="currentChange"
       @size-change="sizeChange"
     />
@@ -389,26 +388,25 @@
       return {
         categoryTreeData: [],
         amisJson: {
-          'type': 'page',
-          'body': [
+          type: 'page',
+          body: [
             {
-              'type': 'divider',
+              type: 'divider',
             },
             {
-              'type': 'form',
-              'body': [
+              type: 'form',
+              body: [
                 {
-                  'type': 'input-text',
-                  'name': 'name',
-                  'label': '姓名',
+                  type: 'input-text',
+                  name: 'name',
+                  label: '姓名',
                 },
               ],
             },
           ],
         },
         fileList: [],
-        momentKey: moment(new Date())
-          .valueOf(),
+        momentKey: moment(new Date()).valueOf(),
         ruleForm: {
           file: null,
           name: '',
@@ -456,10 +454,12 @@
               trigger: 'blur',
             },
           ],
-          file: [{
-            validator: validateFile,
-            trigger: 'blur',
-          }],
+          file: [
+            {
+              validator: validateFile,
+              trigger: 'blur',
+            },
+          ],
         },
         activePopShow: false,
         tempPopShow: false,
@@ -538,7 +538,7 @@
       },
       finallyColumns() {
         return this.columns.filter((item) =>
-          this.checkList.includes(item.label),
+          this.checkList.includes(item.label)
         )
       },
     },
@@ -579,7 +579,7 @@
           file.size,
           file.size / 1024 / 1024 < 30,
           docxType.includes(file.type),
-          file.type,
+          file.type
         )
         const isIMAGE = docxType.includes(file.type)
         const isLt30M = file.size / 1024 / 1024 < 30
@@ -589,8 +589,7 @@
         if (!isLt30M) {
           this.$message.error('上传文件大小不能超过 30MB!')
         }
-        this.momentKey = moment(new Date())
-          .valueOf()
+        this.momentKey = moment(new Date()).valueOf()
         return isIMAGE && isLt30M
       },
       UploadImage(param) {
@@ -600,10 +599,12 @@
       fileChange(file) {
         this.$refs.upload.clearFiles() //清除文件对象
         this.logo = file.raw // 取出上传文件的对象，在其它地方也可以使用
-        this.fileList = [{
-          name: file.name,
-          url: file.url,
-        }] // 重新手动赋值filstList， 免得自定义上传成功了, 而fileList并没有动态改变， 这样每次都是上传一个对象
+        this.fileList = [
+          {
+            name: file.name,
+            url: file.url,
+          },
+        ] // 重新手动赋值filstList， 免得自定义上传成功了, 而fileList并没有动态改变， 这样每次都是上传一个对象
       },
       submitUpload() {
         this.$refs.upload.submit()
@@ -628,13 +629,13 @@
               const { result } = await postReportFile(formData)
               console.log(result)
               this.$message.success(
-                this.$translateTitle('cloudTest.Template created successfully'),
+                this.$translateTitle('cloudTest.Template created successfully')
               )
               this.activePopShow = false
               this.fetchData(this.queryForm)
             } catch (e) {
               this.$message.error(
-                this.$translateTitle('cloudTest.Template creation failed'),
+                this.$translateTitle('cloudTest.Template creation failed')
               )
             }
             loading.close()
@@ -703,26 +704,30 @@
         }
         const loading = this.$baseColorfullLoading(1)
         try {
-          const {
-            count = 0,
-            results,
-          } = await queryProduct(params)
+          const { count = 0, results } = await queryProduct(params)
           this.tempList = results
-        } catch (e) {
-        }
+        } catch (e) {}
         this.tempPopShow = true
         loading.close()
       },
       handleDelete(row, flag) {
-        this.$baseConfirm(this.$translateTitle(
-          'Maintenance.Are you sure you want to delete the current item',
-        ), null, async () => {
-          const res = await delProduct(row.objectId)
-          this.$baseMessage(this.$translateTitle(
-            'successfully deleted',
-          ), 'success', 'vab-hey-message-success')
-          flag == 0 ? await this.fetchData(this.queryForm) : await this.handleManagement(this.temprow)
-        })
+        this.$baseConfirm(
+          this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ),
+          null,
+          async () => {
+            const res = await delProduct(row.objectId)
+            this.$baseMessage(
+              this.$translateTitle('successfully deleted'),
+              'success',
+              'vab-hey-message-success'
+            )
+            flag == 0
+              ? await this.fetchData(this.queryForm)
+              : await this.handleManagement(this.temprow)
+          }
+        )
       },
       async fetchData(args) {
         const params = {
@@ -740,13 +745,9 @@
           },
         }
         this.listLoading = true
-        const {
-          count = 0,
-          results = [],
-        } = await queryProduct(params)
+        const { count = 0, results = [] } = await queryProduct(params)
         results.forEach((item) => {
-          item.createdAt = moment(item.createdAt)
-            .format('YYYY-MM-DD HH:mm:ss')
+          item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
         })
         this.list = results
         this.queryForm.total = count

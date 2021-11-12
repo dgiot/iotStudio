@@ -1,16 +1,16 @@
 <template>
   <div
     ref="custom-table"
-    :class="{ 'vab-fullscreen': isFullscreen }"
     class="custom-table-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <vab-query-form>
       <vab-query-form-left-panel>
         <el-form
           ref="form"
           :inline="true"
-          :model="queryForm"
           label-width="0"
+          :model="queryForm"
           @submit.native.prevent
         >
           <el-form-item>
@@ -157,10 +157,10 @@
       <el-table-column
         v-for="(item, index) in finallyColumns"
         :key="index"
-        :label="item.label"
-        :width="item.width"
         align="center"
+        :label="item.label"
         sortable
+        :width="item.width"
       >
         <template #default="{ row }">
           <span v-if="item.label === '评级'">
@@ -197,19 +197,19 @@
       </el-table-column>
       <template #empty>
         <el-image
+          class="vab-data-empty"
           :src="
             require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
-          class="vab-data-empty"
         />
       </template>
     </el-table>
     <el-pagination
+      background
       :current-page="queryForm.pageNo"
       :layout="layout"
       :page-size="queryForm.pageSize"
       :total="total"
-      background
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
@@ -295,29 +295,21 @@
       },
       finallyColumns() {
         return this.columns.filter((item) =>
-          this.checkList.includes(item.label),
+          this.checkList.includes(item.label)
         )
       },
     },
-    mounted() {
-    },
+    mounted() {},
     created() {
       this.fetchData()
     },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       clickFullScreen() {
         this.isFullscreen = !this.isFullscreen
@@ -348,8 +340,7 @@
           })
         } else {
           if (this.selectRows.length > 0) {
-            const ids = this.selectRows.map((item) => item.id)
-              .join()
+            const ids = this.selectRows.map((item) => item.id).join()
             this.$baseConfirm('你确定要删除选中项吗', null, async () => {
               const { msg } = await doDelete({ ids: ids })
               this.$baseMessage(msg, 'success', 'vab-hey-message-success')
@@ -375,10 +366,7 @@
       async fetchData() {
         this.listLoading = true
         const {
-          data: {
-            list,
-            total,
-          },
+          data: { list, total },
         } = await getList(this.queryForm)
         this.list = list
         const imageList = []

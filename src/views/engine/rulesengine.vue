@@ -31,8 +31,8 @@
         </el-table-column>
         <!-- <el-table-column label="主题" align="center"> -->
         <el-table-column
-          :label="$translateTitle('leftbar.topics')"
           align="center"
+          :label="$translateTitle('leftbar.topics')"
           show-overflow-tooltip
           width="200"
         >
@@ -48,8 +48,8 @@
           width="200"
         />
         <el-table-column
-          :label="$translateTitle('rule.ResponseAction')"
           align="center"
+          :label="$translateTitle('rule.ResponseAction')"
         >
           <template slot-scope="scope">
             <p
@@ -62,16 +62,16 @@
         </el-table-column>
         <!-- <el-table-column align="center" label="已命中"> -->
         <el-table-column
-          :label="$translateTitle('product.hit')"
           align="center"
+          :label="$translateTitle('product.hit')"
         >
           <template slot-scope="scope">
             <span>{{ matched(scope.row.metrics) }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('equipment.state')"
           align="center"
+          :label="$translateTitle('equipment.state')"
         >
           <template slot-scope="scope">
             <el-switch
@@ -83,9 +83,9 @@
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('developer.operation')"
           align="center"
           fixed="right"
+          :label="$translateTitle('developer.operation')"
           width="210"
         >
           <template slot-scope="scope">
@@ -118,10 +118,10 @@
       </el-table>
       <div class="block">
         <el-pagination
+          layout="total, sizes, prev, pager, next, jumper"
           :page-size="pagesize"
           :page-sizes="[10, 20, 30, 50]"
           :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />
@@ -186,10 +186,8 @@
           })
       },
       // 分页
-      handleSizeChange(val) {
-      },
-      handleCurrentChange(val) {
-      },
+      handleSizeChange(val) {},
+      handleCurrentChange(val) {},
       addEngine() {
         var query = {
           title: '新增',

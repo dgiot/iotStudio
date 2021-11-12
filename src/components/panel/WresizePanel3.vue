@@ -5,34 +5,34 @@
     @mouseup="onMouseup($event)"
   >
     <div
-      :style="{ width: divLeft.width + 'px' }"
       class="wresize-panel-left"
+      :style="{ width: divLeft.width + 'px' }"
     >
       <slot name="left"></slot>
     </div>
 
     <div
-      :style="{ left: divLeftHandler.left + 'px' }"
       class="wresize-handler-left"
+      :style="{ left: divLeftHandler.left + 'px' }"
       @mousedown="onMouseDownLeft($event)"
     ></div>
 
     <div
-      :style="{ left: divCenter.left + 'px', right: divCenter.right + 'px' }"
       class="wresize-panel-center"
+      :style="{ left: divCenter.left + 'px', right: divCenter.right + 'px' }"
     >
       <slot name="center"></slot>
     </div>
 
     <div
-      :style="{ right: divRightHandler.right + 'px' }"
       class="wresize-handler-right"
+      :style="{ right: divRightHandler.right + 'px' }"
       @mousedown="onMouseDownRight($event)"
     ></div>
 
     <div
-      :style="{ width: divRight.width + 'px' }"
       class="wresize-panel-right"
+      :style="{ width: divRight.width + 'px' }"
     >
       <slot name="right"></slot>
     </div>

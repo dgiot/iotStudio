@@ -7,10 +7,10 @@
       <video
         id="videoElement"
         :key="source + new Date()"
-        :height="height"
-        :width="width"
         autoplay
         controls
+        :height="height"
+        :width="width"
       ></video>
     </div>
     <!--    <hrm-player-->
@@ -101,8 +101,7 @@
       options: {
         required: false,
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       // https://github.com/wangdaodao/vue-flv-player#attributes
       /**
@@ -127,8 +126,7 @@
       mediaDataSource: {
         required: false,
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       /**
        * @param {*} config 高级设置会覆盖上面设置
@@ -136,8 +134,7 @@
       config: {
         required: false,
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
     },
     data() {

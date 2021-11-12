@@ -2,8 +2,8 @@
   <el-table
     ref="multipleTable"
     :data="tableData"
-    :row-style="showRow"
     row-key="objectId"
+    :row-style="showRow"
     v-bind="$attrs"
     v-on="$listeners"
   >
@@ -133,10 +133,7 @@
         row.children.push(data)
       },
       delete(row) {
-        const {
-          _index,
-          _parent,
-        } = row
+        const { _index, _parent } = row
         if (_parent) {
           _parent.children.splice(_index, 1)
         } else {
@@ -181,12 +178,8 @@
       },
       updateTreeNode(item) {
         return new Promise((resolve) => {
-          const {
-            _id,
-            _parent,
-          } = item
-          const index = _id.split('-')
-            .slice(-1)[0] // get last index
+          const { _id, _parent } = item
+          const index = _id.split('-').slice(-1)[0] // get last index
           if (_parent) {
             _parent.children.splice(index, 1, item)
             resolve(this.initData)

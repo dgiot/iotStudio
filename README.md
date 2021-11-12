@@ -22,7 +22,9 @@
 	alt="Vulnerablities" maxretrytimes="3" class="m-1 transition-all duration-1000">
   <img src="https://img.shields.io/github/release/dgiot/dgiot-dashboard?color=brightgreen" alt="release">
   <img src="https://img.shields.io/github/license/dgiot/dgiot-dashboard" alt="license">
+  <img src="https://img.shields.io/travis/dgiot/dgiot-dashboard/master" alt="travis">
 <p>
+
 
 ![微服务架构图_02.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%9B%BE_02.png)
 
@@ -72,7 +74,7 @@ yarn serve
 - login
 
   | user       | password                                                                                      |
-      | -------------- | ----------------------------------------------------------------------------------------- |
+        | -------------- | ----------------------------------------------------------------------------------------- |
   | dgiot_admin         | dgiot_admin                             |
 
 - Device details Preview

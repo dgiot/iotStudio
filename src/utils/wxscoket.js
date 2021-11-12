@@ -30,7 +30,7 @@ function formatDate(date, fmt) {
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(
       RegExp.$1,
-      (date.getFullYear() + '').substr(4 - RegExp.$1.length),
+      (date.getFullYear() + '').substr(4 - RegExp.$1.length)
     )
   }
   var o = {
@@ -45,7 +45,7 @@ function formatDate(date, fmt) {
       var str = o[k] + ''
       fmt = fmt.replace(
         RegExp.$1,
-        RegExp.$1.length === 1 ? str : padLeftZero(str),
+        RegExp.$1.length === 1 ? str : padLeftZero(str)
       )
     }
   }
@@ -66,8 +66,7 @@ var sendInfo = {
 //   localHost.push('localhost', '127.0.0.1')
 // }
 let _scokethost =
-  globalUrl(hostname, localHost)
-    .split('//')[1] || location.hostname
+  globalUrl(hostname, localHost).split('//')[1] || location.hostname
 // var result = localHost.some((i) => {
 //   return hostname.indexOf(i) > -1
 // })
@@ -109,8 +108,7 @@ var Websocket = {
     try {
       Msg = JSON.parse(Msg)
       // eslint-disable-next-line no-empty
-    } catch (e) {
-    }
+    } catch (e) {}
     // eslint-disable-next-line no-undef
   },
   newClient: function () {
@@ -119,7 +117,7 @@ var Websocket = {
     _this.client = new Paho.MQTT.Client(
       _this.cInfo.host,
       Number(_this.cInfo.port),
-      _this.cInfo.clientId,
+      _this.cInfo.clientId
     )
   },
   sslPort: function () {

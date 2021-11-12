@@ -5,10 +5,7 @@
  */
 const format = {
   update(el, binding, vnode) {
-    const {
-      value,
-      modifiers,
-    } = binding
+    const { value, modifiers } = binding
     if (!value) return
     let formatValue = value
     if (modifiers.toFixed) {

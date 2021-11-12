@@ -1,10 +1,10 @@
 <template>
   <svg
     v-if="type == 'svg'"
-    :class="iconClass"
-    :style="style"
     aria-hidden="true"
     class="icon svg-icon"
+    :class="iconClass"
+    :style="style"
   >
     <use :xlink:href="`#dgiot-${name}`" />
   </svg>

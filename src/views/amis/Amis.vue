@@ -12,8 +12,7 @@
     name: 'AmisDemo',
     data() {
       return {
-        amisKey: moment(new Date())
-          .format('X'),
+        amisKey: moment(new Date()).format('X'),
       }
     },
     computed: {
@@ -24,8 +23,7 @@
     watch: {
       amisJson: {
         handler(val) {
-          this.amisKey = moment(new Date())
-            .format('X')
+          this.amisKey = moment(new Date()).format('X')
         },
         immediate: true,
         deep: true,

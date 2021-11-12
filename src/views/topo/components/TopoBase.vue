@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-dialog
+      append-to-body
       :title="$translateTitle('topo.topo') + $translateTitle('topo.tag')"
       :visible.sync="tagDialog"
-      append-to-body
       width="50%"
     >
       <span>这是一段信息</span>
@@ -19,9 +19,9 @@
       </span>
     </el-dialog>
     <el-dialog
+      append-to-body
       :title="$translateTitle('topo.topo') + $translateTitle('topo.thing')"
       :visible.sync="thingDialog"
-      append-to-body
       width="50%"
     >
       <span>这是一段信息</span>
@@ -37,8 +37,8 @@
       </span>
     </el-dialog>
     <div
-      :class=" {'topoBase-fullscreen': isDevice }"
       class="topoBase"
+      :class="{ 'topoBase-fullscreen': isDevice }"
       @contextmenu="showMenu"
     >
       <vue-context-menu
@@ -51,7 +51,7 @@
         @moveToTop="contextMenu('moveToTop')"
         @moveUp="contextMenu('moveUp')"
       />
-      <topo-scale style="position:fixed;display: inline-block;" />
+      <topo-scale style="position: fixed; display: inline-block" />
       <div
         id="kevCurrent"
         :key="Sale"
@@ -112,13 +112,16 @@
             {
               fnHandler: 'moveUp', //绑定事件
               btnName: '上移', //菜单名称
-            }, {
+            },
+            {
               fnHandler: 'moveDown',
               btnName: '下移',
-            }, {
+            },
+            {
               fnHandler: 'moveToTop',
               btnName: '置顶',
-            }, {
+            },
+            {
               fnHandler: 'moveToBottom',
               btnName: '置底',
             },
@@ -130,7 +133,8 @@
             {
               fnHandler: 'deleteSahpe',
               btnName: '删除',
-            }],
+            },
+          ],
         },
         stage: {},
         konvajson: {},
@@ -151,8 +155,7 @@
       },
     },
     watch: {},
-    mounted() {
-    },
+    mounted() {},
     methods: {
       ...mapMutations({
         contextMenu: 'topo/contextMenu',

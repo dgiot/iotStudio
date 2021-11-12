@@ -20,7 +20,7 @@ http
           return console.log('Failed to crawl' + err)
         }
         console.log(
-          'File created swagger successfully, address：' + swaggerFile,
+          'File created swagger successfully, address：' + swaggerFile
         )
       })
     })

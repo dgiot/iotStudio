@@ -183,10 +183,15 @@ export default {
     formBtnSize: {
       type: 'radio-button',
       label: '表单按钮大小',
-      options: [{
-        text: '默认',
-        value: undefined,
-      }, 'medium', 'small', 'mini'],
+      options: [
+        {
+          text: '默认',
+          value: undefined,
+        },
+        'medium',
+        'small',
+        'mini',
+      ],
     },
     isShowResetBtn: {
       type: 'radio-button',

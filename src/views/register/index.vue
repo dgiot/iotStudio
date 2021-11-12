@@ -21,9 +21,9 @@
       >
         <el-form
           ref="registerForm"
+          class="register-form"
           :model="form"
           :rules="registerRules"
-          class="register-form"
           size="mini"
         >
           <div class="title-tips">
@@ -31,10 +31,10 @@
           </div>
           <el-form-item prop="username">
             <el-input
-              v-focus
               v-model.trim="form.username"
-              :placeholder="$translateTitle('请输入用户名')"
+              v-focus
               auto-complete="off"
+              :placeholder="$translateTitle('请输入用户名')"
               type="text"
             >
               <template #prefix>
@@ -45,8 +45,8 @@
           <el-form-item prop="phone">
             <el-input
               v-model.trim="form.phone"
-              :placeholder="$translateTitle('请输入手机号')"
               maxlength="11"
+              :placeholder="$translateTitle('请输入手机号')"
               show-word-limit
               type="text"
             >
@@ -69,8 +69,8 @@
               </template>
             </el-input>
             <el-button
-              :disabled="isGetPhone"
               class="phone-code"
+              :disabled="isGetPhone"
               type="primary"
               @click="getPhoneCode"
             >
@@ -80,8 +80,8 @@
           <el-form-item prop="password">
             <el-input
               v-model.trim="form.password"
-              :placeholder="$translateTitle('请输入密码')"
               autocomplete="new-password"
+              :placeholder="$translateTitle('请输入密码')"
               type="password"
             >
               <template #prefix>
@@ -143,8 +143,7 @@
     directives: {
       focus: {
         inserted(el) {
-          el.querySelector('input')
-            .focus()
+          el.querySelector('input').focus()
         },
       },
     },
@@ -265,7 +264,8 @@
     min-height: 700px;
     margin: 0 auto;
     text-align: center;
-    background: url('../../../public/assets/images/platform/assets/login_images/background.jpg') center center fixed no-repeat;
+    background: url('../../../public/assets/images/platform/assets/login_images/background.jpg')
+      center center fixed no-repeat;
     background-size: cover;
 
     .register-form {

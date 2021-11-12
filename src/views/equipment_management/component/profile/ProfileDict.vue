@@ -5,9 +5,9 @@
       v-if="dictVisible"
       :append-to-body="true"
       :close-on-click-modal="false"
+      style="z-index: 999"
       :title="titleTempDialog"
       :visible="dictVisible"
-      style="z-index: 999"
       width="60%"
       @close="$parent.dictVisible = !dictVisible"
     >
@@ -20,8 +20,8 @@
         <el-row :gutter="20">
           <el-col :span="8">
             <el-form-item
-              :label-width="formLabelWidth"
               label="字典模板名称"
+              :label-width="formLabelWidth"
               prop="name"
             >
               <el-input
@@ -32,8 +32,8 @@
           </el-col>
           <el-col :span="8">
             <el-form-item
-              :label-width="formLabelWidth"
               label="字典模板类型"
+              :label-width="formLabelWidth"
               prop="cType"
             >
               <el-input
@@ -44,8 +44,8 @@
           </el-col>
           <el-col :span="8">
             <el-form-item
-              :label-width="formLabelWidth"
               label="字典模板状态"
+              :label-width="formLabelWidth"
               prop="enable"
             >
               <el-radio
@@ -67,8 +67,8 @@
         </el-row>
 
         <el-form-item
-          :label-width="formLabelWidth"
           label="字典模板数据"
+          :label-width="formLabelWidth"
         >
           <el-tabs v-model="elactiveName">
             <el-tab-pane
@@ -171,16 +171,16 @@
             >
               <vab-json-editor
                 v-model="dictTempForm.params"
-                :mode="'code'"
                 lang="zh"
+                :mode="'code'"
                 @has-error="$parent.onError"
               />
             </el-tab-pane>
           </el-tabs>
         </el-form-item>
         <el-form-item
-          :label-width="formLabelWidth"
           label="描述"
+          :label-width="formLabelWidth"
         >
           <el-input
             v-model="dictTempForm.description"
@@ -212,16 +212,16 @@
       :before-close="$parent.closeDict"
       :close-on-click-modal="false"
       :title="titleDict"
-      :visible.sync="editFlag"
       top="5vh"
+      :visible.sync="editFlag"
       width="60%"
       @open="$parent.opendialog('tempparams')"
     >
       <el-form
         ref="tempparams"
-        :model="tempparams"
         label-position="left"
         label-width="100px"
+        :model="tempparams"
         size="mini"
       >
         <el-row :gutter="24">
@@ -305,8 +305,8 @@
             <el-form-item :label="$translateTitle('product.unit')">
               <el-select
                 v-model="tempparams.unit"
-                :placeholder="$translateTitle('product.unit')"
                 filterable
+                :placeholder="$translateTitle('product.unit')"
                 style="width: 100%"
               >
                 <el-option
@@ -376,8 +376,8 @@
         </el-row>
         <el-table
           v-show="tempparams.protocol == 'modbus'"
-          :data="dataList"
           border
+          :data="dataList"
           size="small"
           style="width: 100%"
         >
@@ -574,15 +574,15 @@
             <el-form-item label="必填">
               <el-radio
                 v-model="tempparams.required"
-                :label="true"
                 border
+                :label="true"
               >
                 是
               </el-radio>
               <el-radio
                 v-model="tempparams.required"
-                :label="false"
                 border
+                :label="false"
               >
                 否
               </el-radio>
@@ -592,15 +592,15 @@
             <el-form-item label="只读">
               <el-radio
                 v-model="tempparams.readonly"
-                :label="true"
                 border
+                :label="true"
               >
                 是
               </el-radio>
               <el-radio
                 v-model="tempparams.readonly"
-                :label="false"
                 border
+                :label="false"
               >
                 否
               </el-radio>
@@ -612,15 +612,15 @@
             <el-form-item label="列表显示">
               <el-radio
                 v-model="tempparams.isshow"
-                :label="true"
                 border
+                :label="true"
               >
                 是
               </el-radio>
               <el-radio
                 v-model="tempparams.isshow"
-                :label="false"
                 border
+                :label="false"
               >
                 否
               </el-radio>
@@ -657,12 +657,12 @@
             readonly
           >
             <el-option
-              :value="true"
               label="是"
+              :value="true"
             />
             <el-option
-              :value="false"
               label="否"
+              :value="false"
             />
           </el-select>
           <el-input
@@ -763,8 +763,7 @@
       rules: {
         required: false,
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       editFlag: {
         required: false,
@@ -789,8 +788,7 @@
       tempparam: {
         required: false,
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       allunit: {
         required: false,
@@ -813,8 +811,7 @@
     created() {
       this.tempparams = this.tempparam
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {
       addParse(table) {
         this.$parent.addParse(table)

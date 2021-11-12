@@ -7,6 +7,7 @@ let localHost = [
   '127.0',
   '192.168',
 ]
+
 function globalUrl(hostname = window.location.hostname, localHost) {
   // var result = localHost.some((i) => {
   //   return hostname.includes(i) > -1

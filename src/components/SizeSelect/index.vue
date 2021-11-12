@@ -11,14 +11,14 @@
     </div>
     <el-dropdown-menu slot="dropdown">
       <el-dropdown-item
-        :disabled="size === 'medium'"
         command="medium"
+        :disabled="size === 'medium'"
       >
         Medium
       </el-dropdown-item>
       <el-dropdown-item
-        :disabled="size === 'small'"
         command="small"
+        :disabled="size === 'small'"
       >
         Small
       </el-dropdown-item>

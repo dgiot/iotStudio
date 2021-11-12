@@ -81,10 +81,7 @@ function topoUtils() {
   }
 
   function updateCanvasAttr(scale) {
-    const {
-      width,
-      height,
-    } = canvas.konvaAttr
+    const { width, height } = canvas.konvaAttr
     const newWidth = scale / 100
     const newHeight = scale / 100
     const canvasAttr = {
@@ -126,7 +123,6 @@ function topoUtils() {
     //   })
     // )
   }
-
 }
 
 export default topoUtils

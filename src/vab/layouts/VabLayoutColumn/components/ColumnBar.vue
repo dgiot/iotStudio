@@ -1,10 +1,10 @@
 <template>
   <el-scrollbar
+    class="column-bar-container"
     :class="{
       'is-collapse': collapse,
       ['column-bar-container-' + theme.columnStyle]: true,
     }"
-    class="column-bar-container"
   >
     <vab-logo />
     <el-tabs
@@ -19,25 +19,25 @@
       >
         <template slot="label">
           <div
+            class="column-grid"
             :class="{
               ['column-grid-' + theme.columnStyle]: true,
             }"
             :title="$translateTitle(`route.${item.meta.title}`)"
-            class="column-grid"
           >
             <div>
               <el-image
                 v-if="item.meta.icon && item.meta.icon.includes('dgiot')"
                 :alt="$FileServe"
                 :src="$FileServe + item.meta.icon"
-                style="width:16px;height:16px"
+                style="width: 16px; height: 16px"
               >
                 <img
                   slot="error"
                   :src="$FileServe + item.meta.icon"
+                  style="width: 16px; height: 16px"
                   :title="$FileServe + item.meta.icon"
-                  style="width:16px;height:16px"
-                >
+                />
               </el-image>
               <vab-icon
                 v-else
@@ -58,8 +58,8 @@
       :background-color="variables['column-second-menu-background']"
       :default-active="activeMenu"
       :default-openeds="defaultOpeneds"
-      :unique-opened="uniqueOpened"
       mode="vertical"
+      :unique-opened="uniqueOpened"
     >
       <el-divider>
         {{ $translateTitle(handleGroupTitle) }}

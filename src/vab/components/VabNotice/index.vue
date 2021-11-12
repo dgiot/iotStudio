@@ -104,7 +104,7 @@
           '清空消息成功',
           'success',
           false,
-          'vab-hey-message-success',
+          'vab-hey-message-success'
         )
       },
       // async fetchData() {

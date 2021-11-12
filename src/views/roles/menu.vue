@@ -62,19 +62,19 @@
         <el-table
           v-if="refreshTable"
           v-loading="listLoading"
+          border
           :data="treeData"
           :default-expand-all="isdefaultExpandAll"
           :default-sort="{ prop: 'order', order: 'ascending' }"
           :height="tableHeight"
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-          border
           row-key="objectId"
           size="mini"
+          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
           <el-table-column
-            :label="$translateTitle('product.title')"
             align="center"
             fixed
+            :label="$translateTitle('product.title')"
             width="200"
           >
             <template #default="{ row }">
@@ -84,26 +84,26 @@
             </template>
           </el-table-column>
           <el-table-column
-            :label="$translateTitle('user.name')"
             align="center"
+            :label="$translateTitle('user.name')"
             prop="name"
           />
           <el-table-column
-            :label="$translateTitle('developer.path')"
             align="center"
+            :label="$translateTitle('developer.path')"
             prop="url"
             show-overflow-tooltip
             width="220"
           />
           <el-table-column
-            :label="$translateTitle('menu.sort')"
             align="center"
+            :label="$translateTitle('menu.sort')"
             prop="orderBy"
             sortable
           />
           <el-table-column
-            :label="'vue ' + $translateTitle('developer.filepath')"
             align="center"
+            :label="'vue ' + $translateTitle('developer.filepath')"
             show-overflow-tooltip
             width="400"
           >
@@ -114,8 +114,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            :label="$translateTitle('developer.redirect')"
             align="center"
+            :label="$translateTitle('developer.redirect')"
             show-overflow-tooltip
             width="200"
           >
@@ -126,10 +126,10 @@
             </template>
           </el-table-column>
           <el-table-column
-            :label="$translateTitle('task.Advancedconfiguration')"
-            :width="200"
             align="center"
+            :label="$translateTitle('task.Advancedconfiguration')"
             show-overflow-tooltip
+            :width="200"
           >
             <template #default="{ row }">
               <el-popover
@@ -154,7 +154,7 @@
                   <!-- 当前路由是否可关闭多标签页： -->
                   {{
                     $translateTitle(
-                      'product.Whetherthecurrentroutecanclosemultipletabs',
+                      'product.Whetherthecurrentroutecanclosemultipletabs'
                     ) + ':'
                   }}
                   <el-tag
@@ -202,30 +202,30 @@
             </template>
           </el-table-column>
           <el-table-column
-            :label="$translateTitle('developer.operation')"
             align="center"
             fixed="right"
+            :label="$translateTitle('developer.operation')"
             width="220px"
           >
             <template #default="{ row }">
               <el-button
-                :title="$translateTitle('menu.childrenmenu')"
                 icon="el-icon-plus"
                 size="mini"
+                :title="$translateTitle('menu.childrenmenu')"
                 type="primary"
                 @click="handleEdit(row, 'addChildMenu')"
               />
               <el-button
-                :title="$translateTitle('developer.edit')"
                 icon="el-icon-edit"
                 size="mini"
+                :title="$translateTitle('developer.edit')"
                 type="success"
                 @click="handleEdit(row, 'editMenu')"
               />
               <el-button
-                :title="$translateTitle('developer.delete') + row.meta.title"
                 icon="el-icon-delete"
                 size="mini"
+                :title="$translateTitle('developer.delete') + row.meta.title"
                 type="danger"
                 @click="handleDelete(row)"
               />
@@ -233,10 +233,10 @@
           </el-table-column>
           <template #empty>
             <el-image
+              class="vab-data-empty"
               :src="
                 require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
               "
-              class="vab-data-empty"
             />
           </template>
         </el-table>
@@ -368,7 +368,7 @@
         var Tree = [] // 对源数据深度克隆
         Tree = cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parent,
+            (child) => father.objectId == child.parent
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           father.parent == 0 ? (father.parent = '0') : ''
@@ -415,16 +415,15 @@
         this.fetchData()
       },
       getRole() {
-        queryMenu({})
-          .then((res) => {
-            res.results.map((item) => {
-              var obj = {}
-              obj.objectId = item.objectId
-              obj.alias = item.alias
-              obj.name = item.name
-              this.options.push(obj)
-            })
+        queryMenu({}).then((res) => {
+          res.results.map((item) => {
+            var obj = {}
+            obj.objectId = item.objectId
+            obj.alias = item.alias
+            obj.name = item.name
+            this.options.push(obj)
           })
+        })
       },
       SelectTopmenu(val) {
         console.log(val)
@@ -542,21 +541,20 @@
       // 删除菜单
       handleDelete(row) {
         if (!row.children) {
-          this.$del_object('Menu', row.objectId)
-            .then((res) => {
-              if (res.error) {
-                this.$message({
-                  type: 'error',
-                  message: '删除失败!',
-                })
-              } else {
-                this.$message({
-                  type: 'success',
-                  message: '删除成功!',
-                })
-                this.fetchData()
-              }
-            })
+          this.$del_object('Menu', row.objectId).then((res) => {
+            if (res.error) {
+              this.$message({
+                type: 'error',
+                message: '删除失败!',
+              })
+            } else {
+              this.$message({
+                type: 'success',
+                message: '删除成功!',
+              })
+              this.fetchData()
+            }
+          })
         } else {
           this.$message({
             type: 'warning',
@@ -564,8 +562,7 @@
           })
         }
       },
-      searchvalue() {
-      },
+      searchvalue() {},
       handleClose() {
         this.dialogVisible = false
       },

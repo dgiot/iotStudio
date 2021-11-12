@@ -72,22 +72,22 @@
       </el-form>
       <div class="operation-area">
         <el-button
-          type="success"
           class="confirm-btn"
           :disabled="loading || client.connected"
-          @keyup.enter.native="mqttConnect"
+          type="success"
           @click="mqttConnect"
+          @keyup.enter.native="mqttConnect"
         >
           {{ $translateTitle('websocket.connect') }}
         </el-button>
 
         <el-button
-          type="danger"
-          :loading="loading && client.connected"
           :disabled="!loading && !client.connected"
+          :loading="loading && client.connected"
           style="margin-left: 20px"
-          @keyup.enter.native="disconnectSwitch"
+          type="danger"
           @click="disconnectSwitch"
+          @keyup.enter.native="disconnectSwitch"
         >
           {{ $translateTitle('websocket.disconnect') }}
         </el-button>
@@ -128,8 +128,8 @@
               <el-button
                 class="confirm-btn"
                 type="success"
-                @keyup.enter.native="mqttSubscribe"
                 @click="mqttSubscribe"
+                @keyup.enter.native="mqttSubscribe"
               >
                 {{ $translateTitle('websocket.subscribe') }}
               </el-button>
@@ -142,28 +142,28 @@
                 :max-height="320"
               >
                 <el-table-column
-                  prop="topic"
-                  min-width="150"
                   :label="$translateTitle('websocket.topic')"
+                  min-width="150"
+                  prop="topic"
                 />
                 <el-table-column
-                  prop="qos"
-                  min-width="120"
                   :label="$translateTitle('websocket.qoS')"
+                  min-width="120"
+                  prop="qos"
                 />
                 <el-table-column
-                  prop="time"
-                  min-width="180"
                   :label="$translateTitle('websocket.time')"
+                  min-width="180"
+                  prop="time"
                 />
                 <el-table-column
-                  width="90"
                   :label="$translateTitle('websocket.oper')"
+                  width="90"
                 >
                   <template slot-scope="props">
                     <i
-                      title="Unsubscribe"
                       class="unsubscribe el-icon-close"
+                      title="Unsubscribe"
                       @click="mqttCacheScuscribe(props.row.topic)"
                     ></i>
                   </template>
@@ -207,8 +207,8 @@
             </el-form-item>
           </el-col>
           <el-col
-            style="margin-top: 33px"
             :span="6"
+            style="margin-top: 33px"
           >
             <el-form-item>
               <el-checkbox v-model="publishRetain">
@@ -216,8 +216,8 @@
               </el-checkbox>
               <el-button
                 class="confirm-btn"
-                type="success"
                 style="float: right; margin-top: 4px"
+                type="success"
                 @click="mqttPublish"
                 @keyup.enter.native="mqttPublish"
               >
@@ -237,8 +237,8 @@
               :label="$translateTitle('websocket.messagesAlreadySent')"
             >
               <i
-                title="clear message"
                 class="fa fa-refresh refresh-btn"
+                title="clear message"
                 @click="clearMessage(false)"
               ></i>
               <el-table
@@ -247,23 +247,23 @@
                 :max-height="600"
               >
                 <el-table-column
-                  prop="message"
-                  min-width="100"
                   :label="$translateTitle('websocket.messages')"
+                  min-width="100"
+                  prop="message"
                 />
                 <el-table-column
-                  prop="topic"
                   :label="$translateTitle('websocket.topic')"
+                  prop="topic"
                 />
                 <el-table-column
-                  prop="qos"
-                  min-width="120"
                   :label="$translateTitle('websocket.qoS')"
+                  min-width="120"
+                  prop="qos"
                 />
                 <el-table-column
-                  prop="time"
-                  min-width="180"
                   :label="$translateTitle('websocket.time')"
+                  min-width="180"
+                  prop="time"
                 />
               </el-table>
             </el-form-item>
@@ -273,8 +273,8 @@
               :label="$translateTitle('websocket.messagesReceived')"
             >
               <i
-                title="clear message"
                 class="fa fa-refresh refresh-btn"
+                title="clear message"
                 @click="clearMessage"
               ></i>
               <el-table
@@ -283,23 +283,23 @@
                 :max-height="600"
               >
                 <el-table-column
-                  prop="message"
-                  min-width="100"
                   :label="$translateTitle('websocket.messages')"
+                  min-width="100"
+                  prop="message"
                 />
                 <el-table-column
-                  prop="topic"
                   :label="$translateTitle('websocket.topic')"
+                  prop="topic"
                 />
                 <el-table-column
-                  prop="qos"
-                  min-width="120"
                   :label="$translateTitle('websocket.qoS')"
+                  min-width="120"
+                  prop="qos"
                 />
                 <el-table-column
+                  :label="$translateTitle('websocket.time')"
                   prop="time"
                   width="180"
-                  :label="$translateTitle('websocket.time')"
                 />
               </el-table>
             </el-form-item>
@@ -669,42 +669,52 @@
     .el-form-item--small.el-form-item {
       margin-bottom: 2px;
     }
+
     .check-area {
       .el-form-item__content {
         line-height: 20px !important;
       }
     }
+
     .operation-area {
       margin-top: 10px !important;
     }
+
     .el-input .el-input--medium {
       margin-bottom: 10px !important;
     }
+
     .el-select {
       width: 100%;
     }
+
     .refresh-btn {
       margin-left: 8px;
       font-size: 12px;
       cursor: pointer;
     }
+
     .connect-state {
       display: inline-block;
       margin-left: 20px;
       font-size: 14px;
       color: #a7a7a7;
+
       span {
         margin-left: 4px;
       }
     }
+
     .el-table {
       margin-top: 5px;
       /* 增加内边距 */
       border-width: 0 !important;
     }
+
     .el-card {
       margin-top: 24px;
     }
+
     .el-input,
     .el-checkbox {
       margin: 5px 0 20px;

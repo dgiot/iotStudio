@@ -125,15 +125,15 @@
             <el-input
               v-if="selectdevice == $translateTitle('equipment.devicename')"
               v-model="deviceinput"
-              :placeholder="$translateTitle('equipment.enterproductname')"
               class="selectdetail"
+              :placeholder="$translateTitle('equipment.enterproductname')"
               size="small"
             />
             <el-input
               v-else
               v-model="deviceinput"
-              :placeholder="$translateTitle('equipment.enterdevicenumber')"
               class="selectdetail"
+              :placeholder="$translateTitle('equipment.enterdevicenumber')"
               size="small"
             />
             <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
@@ -146,8 +146,8 @@
               {{ $translateTitle('developer.search') }}
             </el-button>
             <el-button
-              :disabled="multipleTable.length == 0"
               class="selectdetail"
+              :disabled="multipleTable.length == 0"
               size="small"
               type="primary"
               @click="deleteDevcie"
@@ -155,8 +155,8 @@
               {{ $translateTitle('developer.delete') }}
             </el-button>
             <el-button
-              :disabled="multipleTable.length == 0"
               class="selectdetail"
+              :disabled="multipleTable.length == 0"
               size="small"
               type="primary"
               @click="unactiveDevice(false)"
@@ -164,8 +164,8 @@
               {{ $translateTitle('developer.prohibit') }}
             </el-button>
             <el-button
-              :disabled="multipleTable.length == 0"
               class="selectdetail"
+              :disabled="multipleTable.length == 0"
               size="small"
               type="primary"
               @click="unactiveDevice(true)"
@@ -188,12 +188,12 @@
                 width="55"
               />
               <el-table-column
+                align="center"
                 :label="
                   $translateTitle('equipment.devicenumber') +
                     '/' +
                     $translateTitle('equipment.name')
                 "
-                align="center"
                 prop="name"
                 show-overflow-tooltip
                 sortable
@@ -206,8 +206,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('equipment.state')"
                 align="center"
+                :label="$translateTitle('equipment.state')"
                 prop="status"
                 show-overflow-tooltip
                 sortable
@@ -265,8 +265,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('equipment.product')"
                 align="center"
+                :label="$translateTitle('equipment.product')"
                 prop="product.name"
                 show-overflow-tooltip
                 sortable
@@ -277,8 +277,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('equipment.nodetype')"
                 align="center"
+                :label="$translateTitle('equipment.nodetype')"
                 prop="product.nodeType"
                 show-overflow-tooltip
                 sortable
@@ -307,12 +307,12 @@
               <!--                </template>-->
               <!--              </el-table-column>-->
               <el-table-column
+                align="center"
                 :label="
                   $translateTitle('developer.enable') +
                     '/' +
                     $translateTitle('developer.prohibit')
                 "
-                align="center"
                 prop="enable"
                 show-overflow-tooltip
                 sortable
@@ -356,9 +356,9 @@
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('developer.operation')"
                 align="center"
                 fixed="right"
+                :label="$translateTitle('developer.operation')"
                 width="180"
               >
                 <template slot-scope="scope">
@@ -371,8 +371,8 @@
                   <!--                    {{ $translateTitle('equipment.see') }}-->
                   <!--                  </el-link>-->
                   <el-link
-                    :underline="false"
                     type="primary"
+                    :underline="false"
                     @click="editorDevice(scope.row)"
                   >
                     编辑
@@ -402,8 +402,8 @@
                     </div>
                     <el-link
                       slot="reference"
-                      :underline="false"
                       type="danger"
+                      :underline="false"
                     >
                       {{ $translateTitle('developer.delete') }}
                     </el-link>
@@ -428,10 +428,10 @@
               style="margin-top: 20px"
             >
               <el-pagination
+                layout="total, sizes, prev, pager, next, jumper"
                 :page-size="devicelength"
                 :page-sizes="[10, 20, 30, 50]"
                 :total="devicetotal"
-                layout="total, sizes, prev, pager, next, jumper"
                 @current-change="deviceCurrentChange"
                 @size-change="deviceSizeChange"
               />
@@ -447,14 +447,14 @@
             style="width: 100%; text-align: center"
           >
             <el-table-column
-              :label="$translateTitle('equipment.serialnumber')"
               align="center"
+              :label="$translateTitle('equipment.serialnumber')"
               type="index"
               width="200"
             />
             <el-table-column
-              :label="$translateTitle('equipment.batchname')"
               align="center"
+              :label="$translateTitle('equipment.batchname')"
               prop="data.batch_name"
               show-overflow-tooltip
               sortable
@@ -464,8 +464,8 @@
               </template>
             </el-table-column>
             <el-table-column
-              :label="$translateTitle('equipment.createdAt')"
               align="center"
+              :label="$translateTitle('equipment.createdAt')"
               prop="createdAt"
               show-overflow-tooltip
               sortable
@@ -533,9 +533,9 @@
         <div class="devicecontent">
           <el-form
             ref="deviceform"
+            label-width="150px"
             :model="deviceform"
             :rules="rules"
-            label-width="150px"
           >
             <el-form-item
               :label="$translateTitle('equipment.devicename')"
@@ -641,17 +641,17 @@
         :append-to-body="true"
         :before-close="handleClose1"
         :close-on-click-modal="false"
-        :visible.sync="pcdialogVisible"
         title="批次添加"
+        :visible.sync="pcdialogVisible"
         width="50%"
       >
         <div class="pccontent">
           <el-form
             ref="pcformInline"
+            class="demo-form-inline"
             :inline="true"
             :model="pcformInline"
             :rules="pcformrule"
-            class="demo-form-inline"
           >
             <el-form-item
               :label="$translateTitle('equipment.batchname')"
@@ -686,14 +686,14 @@
             style="width: 100%; text-align: center"
           >
             <el-table-column
-              :label="$translateTitle('equipment.serialnumber')"
               align="center"
+              :label="$translateTitle('equipment.serialnumber')"
               type="index"
               width="50"
             />
             <el-table-column
-              :label="$translateTitle('equipment.batchname')"
               align="center"
+              :label="$translateTitle('equipment.batchname')"
               prop="data.batch_name"
               show-overflow-tooltip
               sortable
@@ -703,8 +703,8 @@
               </template>
             </el-table-column>
             <el-table-column
-              :label="$translateTitle('equipment.createdAt')"
               align="center"
+              :label="$translateTitle('equipment.createdAt')"
               prop="createdAt"
               show-overflow-tooltip
               sortable
@@ -714,8 +714,8 @@
               </template>
             </el-table-column>
             <el-table-column
-              :label="$translateTitle('developer.operation')"
               align="center"
+              :label="$translateTitle('developer.operation')"
               width="300"
             >
               <template slot-scope="scope">
@@ -750,8 +750,8 @@
         :append-to-body="true"
         :before-close="handleClosebmap"
         :close-on-click-modal="false"
-        :visible.sync="bmapdialogVisible"
         title="设备安装地址"
+        :visible.sync="bmapdialogVisible"
         width="50%"
       >
         <div>
@@ -778,12 +778,12 @@
           </el-form>
           <!-- <label>地址：<input v-model="bmapfrom.keyword"></label> -->
           <baidu-map
+            ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
             :center="center"
             :map-click="false"
             :scroll-wheel-zoom="true"
-            :zoom="zoom"
-            ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
             style="height: 300px"
+            :zoom="zoom"
             @click="mapClick"
             @ready="handler"
           >
@@ -800,9 +800,9 @@
             />
             <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
             <bm-geolocation
+              anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
               :auto-location="true"
               :show-address-bar="true"
-              anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
             />
             <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT" />
             <!-- <bm-marker :position="center" style="display:none">
@@ -834,7 +834,13 @@
   import { queryDict } from '@/api/Direct/index.js'
   import { delDict, getBatchNumer } from '@/api/Dict'
   import { mapGetters } from 'vuex'
-  import { BaiduMap, BmCityList, BmGeolocation, BmLocalSearch, BmNavigation } from 'vue-baidu-map'
+  import {
+    BaiduMap,
+    BmCityList,
+    BmGeolocation,
+    BmLocalSearch,
+    BmNavigation,
+  } from 'vue-baidu-map'
   import { getProduct } from '@/api/Product/index.js'
   import { returnLogin } from '@/utils/utilwen'
 
@@ -1042,34 +1048,34 @@
             type: 'b83b5d9fc0',
           },
         }
-        queryDict(parsms)
-          .then((res) => {
-            this.yysSelect = [{
+        queryDict(parsms).then((res) => {
+          this.yysSelect = [
+            {
               name: '空',
               key: '',
-            }]
-            res.results.map((item) => {
-              this.yysSelect.push(item.data)
-            })
+            },
+          ]
+          res.results.map((item) => {
+            this.yysSelect.push(item.data)
           })
+        })
       },
       rolesSelect(val) {
         this.productroleslist = []
-        this.$queryProduct({})
-          .then(
-            (response) => {
-              if (response) {
-                for (var key in response.results[0].ACL) {
-                  if (key.includes('role')) {
-                    this.productroleslist.push(key.substr(5))
-                  }
+        this.$queryProduct({}).then(
+          (response) => {
+            if (response) {
+              for (var key in response.results[0].ACL) {
+                if (key.includes('role')) {
+                  this.productroleslist.push(key.substr(5))
                 }
               }
-            },
-            (error) => {
-              returnLogin(error)
-            },
-          )
+            }
+          },
+          (error) => {
+            returnLogin(error)
+          }
+        )
       },
       goEdit(row) {
         var topoUrl = window.location.origin + '/spa'
@@ -1118,10 +1124,7 @@
         localSearch.search(this.bmapform.keyword)
         this.bmapdialogVisible = false
       },
-      handler({
-        BMap,
-        map,
-      }) {
+      handler({ BMap, map }) {
         this.center.lng = 120.2
         this.center.lat = 30.26667
         this.zoom = this.zoom
@@ -1211,11 +1214,10 @@
       },
 
       async searchProduct() {
-        getProduct(this.equvalue)
-          .then((res) => {
-            this.deviceform.productName = res.name
-            this.productName = res.name
-          })
+        getProduct(this.equvalue).then((res) => {
+          this.deviceform.productName = res.name
+          this.productName = res.name
+        })
       },
       // 查询设备
       async getDevices(start) {
@@ -1280,15 +1282,14 @@
               isEnable: newData2.isEnable,
             }
             console.log('row', row)
-            this.$putDevice(row.objectId, params)
-              .then((respone) => {
-                if (!respone.error) {
-                  this.initQuery('状态修改成功', 'success')
-                  this.getDevices()
-                } else {
-                  this.initQuery('状态修改失败', 'error')
-                }
-              }),
+            this.$putDevice(row.objectId, params).then((respone) => {
+              if (!respone.error) {
+                this.initQuery('状态修改成功', 'success')
+                this.getDevices()
+              } else {
+                this.initQuery('状态修改失败', 'error')
+              }
+            }),
               (error) => {
                 returnLogin(error)
               }
@@ -1350,14 +1351,13 @@
           idarr.push(item.id)
         })
 
-        await Batchdelete('_Device', idarr, {})
-          .then((res) => {
-            if (!res.error) {
-              this.initQuery(`设备${idarr}删除成功`, 'success')
-            } else {
-              this.initQuery(`设备${idarr}删除失败`, 'error')
-            }
-          })
+        await Batchdelete('_Device', idarr, {}).then((res) => {
+          if (!res.error) {
+            this.initQuery(`设备${idarr}删除成功`, 'success')
+          } else {
+            this.initQuery(`设备${idarr}删除失败`, 'error')
+          }
+        })
       },
       // 设备多个启用和禁用
       async unactiveDevice(isEnable) {
@@ -1368,22 +1368,21 @@
         const body = {
           isEnable: isEnable,
         }
-        await Batchdelete('_Device', idarr, body)
-          .then((res) => {
-            if (!res.error) {
-              if (isEnable) {
-                this.initQuery(`设备${idarr}启动成功`, 'success')
-              } else {
-                this.initQuery(`设备${idarr}禁用成功`, 'success')
-              }
+        await Batchdelete('_Device', idarr, body).then((res) => {
+          if (!res.error) {
+            if (isEnable) {
+              this.initQuery(`设备${idarr}启动成功`, 'success')
             } else {
-              if (isEnable) {
-                this.initQuery(`设备${idarr}启动失败`, 'error')
-              } else {
-                this.initQuery(`设备${idarr}禁用失败`, 'error')
-              }
+              this.initQuery(`设备${idarr}禁用成功`, 'success')
             }
-          })
+          } else {
+            if (isEnable) {
+              this.initQuery(`设备${idarr}启动失败`, 'error')
+            } else {
+              this.initQuery(`设备${idarr}禁用失败`, 'error')
+            }
+          }
+        })
       },
       // activeDevice(val) {
       //   this.$changeDeviceStatus(this.multipleTable,true)
@@ -1400,10 +1399,7 @@
       //     });
       // },
       /* @pamras 选中高亮*/
-      rowClass({
-        row,
-        rowIndex,
-      }) {
+      rowClass({ row, rowIndex }) {
         if (this.selectRow.includes(rowIndex)) {
           return { 'background-color': 'rgba(185, 221, 249, 0.3)' }
         }
@@ -1466,17 +1462,16 @@
       /* el-popover点击关闭*/
       makeSure(scope) {
         // 可以在这里执行删除数据的回调操作.......删除操作.....
-        this.$deleteDevice(scope.row.objectId)
-          .then((response) => {
-            if (!response.error) {
-              this.initQuery('删除成功', 'success')
-              scope._self.$refs[`popover-${scope.$index}`].doClose()
-              this.getDevices()
-            } else {
-              scope._self.$refs[`popover-${scope.$index}`].doClose()
-              this.initQuery('删除失败', 'error')
-            }
-          })
+        this.$deleteDevice(scope.row.objectId).then((response) => {
+          if (!response.error) {
+            this.initQuery('删除成功', 'success')
+            scope._self.$refs[`popover-${scope.$index}`].doClose()
+            this.getDevices()
+          } else {
+            scope._self.$refs[`popover-${scope.$index}`].doClose()
+            this.initQuery('删除失败', 'error')
+          }
+        })
       },
       // 增加批次
       async addDeviceBatch(isdialog) {
@@ -1556,98 +1551,94 @@
                   devaddr: this.deviceform.devaddr,
                 },
               }
-              this.$queryDevice(params)
-                .then((respone) => {
-                  if (respone.results.length == 0) {
-                    var editParams = {
-                      ACL: this.aclObj,
-                      detail: {
-                        assetNum: this.deviceform.assetNum,
-                        devModel: this.deviceform.devModel,
-                        brand: this.deviceform.brand,
-                        address: this.deviceform.address,
-                        desc: this.deviceform.desc,
-                      },
-                      product: {
-                        __type: 'Pointer',
-                        className: 'Product',
-                        objectId: this.$route.query.productid,
-                      },
-                      basedata: {
-                        auth: this.deviceform.auth,
-                        yysId: this.deviceform.yysId,
-                      },
-                    }
-                    params = Object.assign(initparams, editParams)
-
-                    this.$putDevice(this.deviceid, params)
-                      .then((res) => {
-                        if (!res.error) {
-                          this.initQuery('修改成功', 'success')
-                          this.devicedialogVisible = false
-                          this.getDevices()
-                          this.deviceform = {}
-                          this.deviceform.productName = this.productName
-                        } else {
-                          this.initQuery('修改失败', 'error')
-                        }
-                      })
-                  } else {
-                    this.initQuery('设备已经存在', 'error')
+              this.$queryDevice(params).then((respone) => {
+                if (respone.results.length == 0) {
+                  var editParams = {
+                    ACL: this.aclObj,
+                    detail: {
+                      assetNum: this.deviceform.assetNum,
+                      devModel: this.deviceform.devModel,
+                      brand: this.deviceform.brand,
+                      address: this.deviceform.address,
+                      desc: this.deviceform.desc,
+                    },
+                    product: {
+                      __type: 'Pointer',
+                      className: 'Product',
+                      objectId: this.$route.query.productid,
+                    },
+                    basedata: {
+                      auth: this.deviceform.auth,
+                      yysId: this.deviceform.yysId,
+                    },
                   }
-                })
+                  params = Object.assign(initparams, editParams)
+
+                  this.$putDevice(this.deviceid, params).then((res) => {
+                    if (!res.error) {
+                      this.initQuery('修改成功', 'success')
+                      this.devicedialogVisible = false
+                      this.getDevices()
+                      this.deviceform = {}
+                      this.deviceform.productName = this.productName
+                    } else {
+                      this.initQuery('修改失败', 'error')
+                    }
+                  })
+                } else {
+                  this.initQuery('设备已经存在', 'error')
+                }
+              })
             } else {
               var params = {
                 where: {
                   devaddr: this.deviceform.devaddr,
                 },
               }
-              this.$queryDevice(params)
-                .then((respone) => {
-                  if (respone.results.length == 0) {
-                    var createParams = {
-                      ACL: this.aclObj,
-                      detail: {
-                        assetNum: this.deviceform.assetNum,
-                        devModel: this.deviceform.devModel,
-                        brand: this.deviceform.brand,
-                        address: this.deviceform.address,
-                        desc: this.deviceform.desc,
-                      },
-                      // isEnable: false,
-                      // status: false,
-                      // location: {
-                      //   "__type": "GeoPoint",
-                      //   "latitude": this.center.lat ? this.center.lat : 0,
-                      //   "longitude": this.center.lng ? this.center.lng : 0
-                      // },
-                      product: {
-                        __type: 'Pointer',
-                        className: 'Product',
-                        objectId: this.$route.query.productid,
-                      },
-                      basedata: {
-                        auth: this.deviceform.auth,
-                        yysId: this.deviceform.yysId,
-                      },
-                    }
-                    params = Object.assign(initparams, createParams)
-                    this.$postDevice(params)
-                      .then((res) => {
-                        if (!res.error) {
-                          this.initQuery('创建成功', 'success')
-                          this.devicedialogVisible = false
-                          this.getDevices()
-                          this.deviceform = {}
-                          this.deviceform.productName = this.productName
-                        } else {
-                          this.initQuery('创建失败', 'error')
-                        }
-                      })
-                  } else {
-                    this.initQuery('设备已经存在', 'error')
+              this.$queryDevice(params).then((respone) => {
+                if (respone.results.length == 0) {
+                  var createParams = {
+                    ACL: this.aclObj,
+                    detail: {
+                      assetNum: this.deviceform.assetNum,
+                      devModel: this.deviceform.devModel,
+                      brand: this.deviceform.brand,
+                      address: this.deviceform.address,
+                      desc: this.deviceform.desc,
+                    },
+                    // isEnable: false,
+                    // status: false,
+                    // location: {
+                    //   "__type": "GeoPoint",
+                    //   "latitude": this.center.lat ? this.center.lat : 0,
+                    //   "longitude": this.center.lng ? this.center.lng : 0
+                    // },
+                    product: {
+                      __type: 'Pointer',
+                      className: 'Product',
+                      objectId: this.$route.query.productid,
+                    },
+                    basedata: {
+                      auth: this.deviceform.auth,
+                      yysId: this.deviceform.yysId,
+                    },
                   }
-                })
+                  params = Object.assign(initparams, createParams)
+                  this.$postDevice(params).then((res) => {
+                    if (!res.error) {
+                      this.initQuery('创建成功', 'success')
+                      this.devicedialogVisible = false
+                      this.getDevices()
+                      this.deviceform = {}
+                      this.deviceform.productName = this.productName
+                    } else {
+                      this.initQuery('创建失败', 'error')
+                    }
+                  })
+                } else {
+                  this.initQuery('设备已经存在', 'error')
+                }
+              })
             }
           } else {
             this.$message('必填项未填')
@@ -1670,22 +1661,21 @@
                 key: this.pcformInline.pcname,
                 type: 'batch_number',
               }
-              this.$postDict(params)
-                .then((res) => {
-                  if (!res.error) {
-                    this.$message({
-                      message: '新增成功',
-                      type: 'success',
-                    })
-                    this.$refs[formName].resetFields()
-                    this.addDeviceBatch()
-                  } else {
-                    this.$message({
-                      message: `新增失败${res.error}`,
-                      type: 'error',
-                    })
-                  }
-                })
+              this.$postDict(params).then((res) => {
+                if (!res.error) {
+                  this.$message({
+                    message: '新增成功',
+                    type: 'success',
+                  })
+                  this.$refs[formName].resetFields()
+                  this.addDeviceBatch()
+                } else {
+                  this.$message({
+                    message: `新增失败${res.error}`,
+                    type: 'error',
+                  })
+                }
+              })
             } else {
               const params = {
                 objectId: this.batchid,
@@ -1697,21 +1687,20 @@
                 type: 'batch_number',
               }
               // 更新批次
-              this.$putDict(params.objectId, params)
-                .then((res) => {
-                  if (!res.error) {
-                    this.initQuery('修改成功', 'success')
-                    this.batchid = ''
-                    this.pcformInline = {
-                      pcname: '',
-                      createdtime: '',
-                    }
-                    this.$refs[formName].resetFields()
-                    this.addDeviceBatch()
-                  } else {
-                    this.initQuery('修改失败', 'error')
+              this.$putDict(params.objectId, params).then((res) => {
+                if (!res.error) {
+                  this.initQuery('修改成功', 'success')
+                  this.batchid = ''
+                  this.pcformInline = {
+                    pcname: '',
+                    createdtime: '',
                   }
-                })
+                  this.$refs[formName].resetFields()
+                  this.addDeviceBatch()
+                } else {
+                  this.initQuery('修改失败', 'error')
+                }
+              })
             }
           } else {
             console.log('error submit!!')

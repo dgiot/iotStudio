@@ -3,8 +3,8 @@
     <div class="_dialog">
       <el-dialog
         :append-to-body="true"
-        :visible.sync="ShapeVisible"
         class="_shape"
+        :visible.sync="ShapeVisible"
         width="100vh"
       >
         <span
@@ -14,10 +14,10 @@
       </el-dialog>
     </div>
     <div
+      class="_header"
       :style="{
         display: headevisible ? 'block' : 'none',
       }"
-      class="_header"
     >
       <topo-header
         ref="topoheader"
@@ -33,8 +33,8 @@
     </div>
     <div class="_mian">
       <el-row
-        :gutter="gutter"
         class="_row"
+        :gutter="gutter"
       >
         <transition name="fade">
           <el-col
@@ -47,8 +47,8 @@
           </el-col>
         </transition>
         <el-col
-          :span="24 - rightrow"
           class="_konvarow"
+          :span="24 - rightrow"
         >
           <!--          <topo-base ref="topobase" />-->
           <div
@@ -59,10 +59,10 @@
 
           <div
             v-show="!isDevice && productid"
+            class="_info"
             :style="{
               display: infoFlag ? 'block' : 'block',
             }"
-            class="_info"
           >
             <el-row
               :gutter="10"
@@ -897,8 +897,7 @@
       transition: opacity 2.5s;
     }
 
-    .fade-enter, .fade-leave-to /* .fade-leave-active, 2.1.8 版本以下 */
-    {
+    .fade-enter, .fade-leave-to /* .fade-leave-active, 2.1.8 版本以下 */ {
       opacity: 0;
     }
 

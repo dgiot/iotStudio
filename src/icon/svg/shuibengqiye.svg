@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" class="icon"
-     p-id="6670" t="1577334444733" version="1.1" viewBox="0 0 1024 1024">
-  <defs>
-    <style type="text/css"/>
-  </defs>
-  <path fill="#386BF3" d="M180 117.75h498v664H180z" p-id="6671"/>
-  <path fill="#C3D2FB" d="M678 242.25h166v539.5H678z" p-id="6672"/>
-  <path fill="#3D4265" d="M97 781.75h830v124.5H97zM304.5 242.25h83v415h-83zM470.5 242.25h83v249h-83z" p-id="6673"/>
-</svg>

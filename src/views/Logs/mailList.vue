@@ -4,8 +4,8 @@
       <vab-query-form-top-panel>
         <el-form
           :inline="true"
-          :model="queryForm"
           label-width="60px"
+          :model="queryForm"
           @submit.native.prevent
         >
           <el-form-item label="账号">
@@ -86,11 +86,11 @@
       <template #empty></template>
     </el-table>
     <el-pagination
+      background
       :current-page="queryForm.pageNo"
       :layout="layout"
       :page-size="queryForm.pageSize"
       :total="total"
-      background
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
@@ -135,10 +135,7 @@
       async fetchData() {
         this.listLoading = true
         const {
-          data: {
-            list,
-            total,
-          },
+          data: { list, total },
         } = await getList(this.queryForm)
         this.list = list
         this.total = total

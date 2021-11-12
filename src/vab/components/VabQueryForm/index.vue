@@ -1,7 +1,7 @@
 <template>
   <el-row
-    :gutter="0"
     class="vab-query-form"
+    :gutter="0"
   >
     <slot />
   </el-row>

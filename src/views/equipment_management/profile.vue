@@ -1,8 +1,8 @@
 <template>
   <div
     ref="custom-table"
-    :class="{ 'vab-fullscreen': isFullscreen }"
     class="devproduct devproduct-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <!--添加物模型弹窗-->
     <el-dialog
@@ -10,8 +10,8 @@
       :before-close="wmxhandleClose"
       :close-on-click-modal="false"
       :title="wmxSituation + '自定义属性'"
-      :visible.sync="wmxdialogVisible"
       top="5vh"
+      :visible.sync="wmxdialogVisible"
       width="60%"
     >
       <wmxdetail
@@ -59,8 +59,8 @@
     <el-dialog
       :append-to-body="true"
       :title="formConfig.uid"
-      :visible.sync="dialogVisible"
       top="1vh"
+      :visible.sync="dialogVisible"
     >
       <vab-parser
         :dba-table="DbaTable"
@@ -79,8 +79,8 @@
     </el-dialog>
     <el-dialog
       v-drag-dialog
-      :visible.sync="parserView"
       append-to-body
+      :visible.sync="parserView"
     >
       <f-render
         v-model="formConfig"
@@ -93,10 +93,10 @@
       <vab-query-form>
         <vab-query-form-top-panel>
           <el-form
-            :inline="true"
-            :model="formInline"
             class="demo-form-inline"
+            :inline="true"
             label-width="100px"
+            :model="formInline"
             @submit.native.prevent
           >
             <el-form-item :label="$translateTitle('resource.category')">
@@ -121,8 +121,8 @@
             <el-form-item :label="$translateTitle('alert.product name')">
               <el-input
                 v-model="queryForm.name"
-                :placeholder="$translateTitle('product.searchproductname')"
                 clearable
+                :placeholder="$translateTitle('product.searchproductname')"
                 size="mini"
                 style="width: 90%"
               >
@@ -163,9 +163,9 @@
           :xs="12"
         >
           <ul
-            :style="{ height: tableHeight + 'px' }"
             class="infinite-list"
             style="overflow: auto"
+            :style="{ height: tableHeight + 'px' }"
           >
             <li
               v-for="(item, index) in categorysonList"
@@ -222,19 +222,21 @@
                 width="80"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.category ? scope.row.category.name : '' }}</span>
+                  <span>
+                    {{ scope.row.category ? scope.row.category.name : '' }}
+                  </span>
                 </template>
               </el-table-column>
               <el-table-column
-                :label="$translateTitle('developer.operation')"
                 fixed="right"
+                :label="$translateTitle('developer.operation')"
                 width="145"
               >
                 <template slot-scope="scope">
                   <el-button
-                    :underline="false"
                     size="mini"
                     type="success"
+                    :underline="false"
                     @click.stop="editproducttemp(scope.row)"
                   >
                     {{ $translateTitle('concentrator.edit') }}
@@ -256,10 +258,10 @@
             style="margin-top: 20px"
           >
             <el-pagination
+              layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
               :page-sizes="[10, 20, 30, 50]"
               :total="total"
-              layout="total, sizes, prev, pager, next, jumper"
               @current-change="productCurrentChange"
               @size-change="productSizeChange"
             />
@@ -309,22 +311,22 @@
       @fetch-data="queryProduttemp({})"
     />
     <el-drawer
+      append-to-body
       :before-close="handleClose"
       :close-on-click-modal="false"
-      :title="moduleTitle"
-      :visible.sync="dialogFormVisible"
-      append-to-body
       size="50%"
+      :title="moduleTitle"
       top="5vh"
+      :visible.sync="dialogFormVisible"
     >
       <div class="devproduct-prodialog-content">
         <!--产品信息-->
         <div class="contentone">
           <el-form
             ref="form"
+            label-width="150px"
             :model="form"
             :rules="rules"
-            label-width="150px"
           >
             <el-form-item
               :label="$translateTitle('product.Producttemplatename')"
@@ -335,9 +337,7 @@
                 autocomplete="off"
               />
             </el-form-item>
-            <el-form-item
-              :label="$translateTitle('product.classification')"
-            >
+            <el-form-item :label="$translateTitle('product.classification')">
               <el-input
                 v-model="form.categoryname"
                 :disabled="addflag"
@@ -358,8 +358,8 @@
             >
               <div v-if="imageUrl">
                 <img
-                  :src="$FileServe + imageUrl"
                   class="avatar"
+                  :src="$FileServe + imageUrl"
                 />
                 <el-button
                   size="mini"

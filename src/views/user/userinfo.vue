@@ -69,9 +69,9 @@
                 >
                   <el-form
                     ref="userinfo"
+                    label-width="80px"
                     :model="userinfo"
                     :rules="registerRules"
-                    label-width="80px"
                   >
                     <el-form-item label="姓名">
                       <el-input v-model="username" />
@@ -141,8 +141,8 @@
                   >
                     <el-form
                       ref="companyinfo"
-                      :model="companyinfo"
                       label-width="120px"
+                      :model="companyinfo"
                     >
                       <el-form-item label="企业名称">
                         <el-input v-model="companyinfo.name">
@@ -392,7 +392,7 @@
                   this.$translateTitle('保存成功'),
                   'success',
                   false,
-                  'vab-hey-message-success',
+                  'vab-hey-message-success'
                 )
               })
               .catch((e) => {
@@ -401,7 +401,7 @@
                   this.$translateTitle('保存失败' + e),
                   'success',
                   false,
-                  'vab-hey-message-success',
+                  'vab-hey-message-success'
                 )
               })
             break
@@ -439,7 +439,7 @@
             this.$translateTitle('保存成功'),
             'success',
             false,
-            'vab-hey-message-success',
+            'vab-hey-message-success'
           )
         }
       },
@@ -447,7 +447,7 @@
         this.upNodeType = type
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
         this.inputParams = {
           file: '',
@@ -455,14 +455,14 @@
           path: 'user/profile/',
           filename: `${this.ObjectId}_${this.upNodeType.replace(
             '.',
-            '_',
+            '_'
           )}.${type}`,
         }
       },
       files(file, type) {
         this.inputParams.filename = `${this.ObjectId}_${this.upNodeType.replace(
           '.',
-          '_',
+          '_'
         )}.${type}`
         this.inputParams.file = file
       },

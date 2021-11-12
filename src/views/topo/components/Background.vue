@@ -13,8 +13,8 @@
       <el-image
         v-for="url in urls"
         :key="url"
-        :src="url"
         lazy
+        :src="url"
         @click.native="setKonvaBg(url)"
       />
     </div>
@@ -34,9 +34,7 @@
         BackgroundDialog: false,
         infoData: 'Background',
         BackgroundArgs: {},
-        urls: [
-          '//img7.ddove.com/upload/20181127/134600237598.jpg',
-        ],
+        urls: ['//img7.ddove.com/upload/20181127/134600237598.jpg'],
       }
     },
     methods: {

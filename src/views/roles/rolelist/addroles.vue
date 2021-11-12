@@ -4,10 +4,10 @@
     <div class="role-box">
       <el-form
         ref="roleFormObj"
+        label-width="80px"
         :loading="isloading"
         :model="roleFormObj"
         :rules="roleFormRules"
-        label-width="80px"
       >
         <el-form-item
           v-if="!isStructures"
@@ -65,8 +65,8 @@
             <el-option
               v-for="(item, index) in Option.dictOption"
               :key="index"
-              :value="item.key"
               change="changeOption('dict',item.name)"
+              :value="item.key"
             />
           </el-select>
         </el-form-item>
@@ -110,8 +110,7 @@
     props: {
       deptData: {
         type: Object,
-        default: () => {
-        },
+        default: () => {},
         required: true,
       },
       isStructures: {
@@ -180,11 +179,13 @@
               trigger: 'blur',
             },
           ],
-          depname: [{
-            required: true,
-            message: '请选择部门',
-            trigger: 'blur',
-          }],
+          depname: [
+            {
+              required: true,
+              message: '请选择部门',
+              trigger: 'blur',
+            },
+          ],
           dictvalue: [
             {
               required: true,

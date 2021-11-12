@@ -21,8 +21,7 @@
     data() {
       return {}
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {},
   }
 </script>

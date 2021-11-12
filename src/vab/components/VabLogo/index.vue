@@ -1,9 +1,9 @@
 <template>
   <div
+    class="logo-container"
     :class="{
       ['logo-container-' + theme.layout]: true,
     }"
-    class="logo-container"
   >
     <router-link to="/">
       <span class="logoico">
@@ -17,8 +17,8 @@
         />
       </span>
       <span
-        :class="{ 'hidden-xs-only': theme.layout === 'horizontal' }"
         class="title"
+        :class="{ 'hidden-xs-only': theme.layout === 'horizontal' }"
       >
         {{ name }}
       </span>

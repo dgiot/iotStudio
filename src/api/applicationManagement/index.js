@@ -12,14 +12,7 @@ export function Upload({ file }) {
 }
 
 // 获取行业信息
-export function getIndustry({
-  order,
-  limit,
-  skip,
-  keys,
-  include,
-  where,
-}) {
+export function getIndustry({ order, limit, skip, keys, include, where }) {
   return request({
     url: 'iotapi/classes/Datas',
     method: 'get',
@@ -35,14 +28,7 @@ export function getIndustry({
 }
 
 // 查询应用信息
-export function getProject({
-  order,
-  limit,
-  skip,
-  keys,
-  include,
-  where,
-}) {
+export function getProject({ order, limit, skip, keys, include, where }) {
   return request({
     url: `/classes/Project`,
     method: 'get',

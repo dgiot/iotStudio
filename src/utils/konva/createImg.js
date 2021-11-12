@@ -1,8 +1,5 @@
 function createImg(params) {
-  const {
-    width,
-    height,
-  } = params
+  const { width, height } = params
   var imgconfig = {}
 
   let createimg = new Image()

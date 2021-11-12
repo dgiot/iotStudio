@@ -5,14 +5,14 @@
         <el-col :span="12">
           <img
             v-if="isend == false"
-            :src="originimgsrc"
             alt
+            :src="originimgsrc"
             srcset
           />
           <img
             v-if="isend == true"
-            :src="originimgsrc"
             alt
+            :src="originimgsrc"
             srcset
           />
         </el-col>
@@ -33,15 +33,15 @@
       </el-row> -->
       <el-row style="margin-top: 50px">
         <el-col
-          :span="12"
           class="originupdate"
+          :span="12"
         >
           <p>当前时间:</p>
           <span>{{ updatetime }}</span>
         </el-col>
         <el-col
-          :span="12"
           class="originupdate"
+          :span="12"
         >
           <p>服务器状态</p>
           <span v-if="isarrange == false">未部署</span>
@@ -128,8 +128,8 @@
         </div> -->
         <el-form
           ref="form"
-          :model="configdata"
           label-width="140px"
+          :model="configdata"
         >
           <el-form-item label="用户名:">
             <span>{{ configdata.hostName }}</span>
@@ -298,17 +298,16 @@
         }, 1000)
       },
       getHardInfo() {
-        hardInfo()
-          .then((resultes) => {
-            this.configdata.computerAuth = resultes.computerAuth
-            this.configdata.natIP = resultes.natIP
-            this.configdata.wlanIp = resultes.wlanIp
-            this.configdata.computerKey = resultes.computerKey
-            this.configdata.hostName = resultes.hostName
-            this.configdata.computerConfig = resultes.computerConfig
-            this.configdata.dbInstalled = resultes.dbInstalled
-            this.value2 = resultes.serverHealth
-          })
+        hardInfo().then((resultes) => {
+          this.configdata.computerAuth = resultes.computerAuth
+          this.configdata.natIP = resultes.natIP
+          this.configdata.wlanIp = resultes.wlanIp
+          this.configdata.computerKey = resultes.computerKey
+          this.configdata.hostName = resultes.hostName
+          this.configdata.computerConfig = resultes.computerConfig
+          this.configdata.dbInstalled = resultes.dbInstalled
+          this.value2 = resultes.serverHealth
+        })
       },
       uploadHub() {
         if (this.configdata.infomation == '') {
@@ -323,30 +322,28 @@
         iotHub(
           this.configdata.standard,
           this.configdata.authorizenumber,
-          this.configdata.infomation,
-        )
-          .then((resultes) => {
-            if (resultes.result == true) {
-              this.active = 3
-              this.$router.push('/login')
-            } else {
-              if (resultes.status == 'license_failed') {
-                this.$message('授权码错误，请重新填写')
-                return
-              } else if (resultes.status == 'server_disconnected') {
-                this.$message('服务器未连接')
-                return
-              } else if (resultes.status == 'database_uninstalled') {
-                this.active = 2
-                this.$message('服务器部署完成，请完成下一步数据库部署')
-                this.dbinstall = false
-                Cookies.set('authorizenumber', this.configdata.authorizenumber)
-              }
+          this.configdata.infomation
+        ).then((resultes) => {
+          if (resultes.result == true) {
+            this.active = 3
+            this.$router.push('/login')
+          } else {
+            if (resultes.status == 'license_failed') {
+              this.$message('授权码错误，请重新填写')
+              return
+            } else if (resultes.status == 'server_disconnected') {
+              this.$message('服务器未连接')
+              return
+            } else if (resultes.status == 'database_uninstalled') {
+              this.active = 2
+              this.$message('服务器部署完成，请完成下一步数据库部署')
+              this.dbinstall = false
+              Cookies.set('authorizenumber', this.configdata.authorizenumber)
             }
-          })
+          }
+        })
       },
-      uploadDb() {
-      },
+      uploadDb() {},
     },
   }
 </script>

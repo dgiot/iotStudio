@@ -63,11 +63,7 @@ export function filterRoutes(routes, rolesControl, baseUrl = '/') {
  * @returns {string|*}
  */
 export function handleActivePath(route, isTabsBar = false) {
-  const {
-    meta,
-    path,
-    fullPath,
-  } = route
+  const { meta, path, fullPath } = route
   const rawPath = route.matched
     ? route.matched[route.matched.length - 1].path
     : path
@@ -81,11 +77,7 @@ export function handleActivePath(route, isTabsBar = false) {
  * @param currentPath 当前页面地址
  */
 export function toLoginRoute(currentPath) {
-  const {
-    path = '',
-    params = {},
-    query = {},
-  } = currentPath
+  const { path = '', params = {}, query = {} } = currentPath
   if (recordRoute && currentPath !== '/') {
     return {
       path: '/login',
@@ -95,7 +87,7 @@ export function toLoginRoute(currentPath) {
   } else {
     return {
       path: '/login',
-      replace: true
+      replace: true,
     }
   }
 }

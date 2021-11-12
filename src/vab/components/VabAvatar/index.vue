@@ -5,14 +5,14 @@
   >
     <span class="avatar-dropdown">
       <el-avatar
-        :src="$FileServe + avatar"
         class="user-avatar"
+        :src="$FileServe + avatar"
       />
       <div class="user-name">
         <span class="hidden-xs-only">{{ username }}</span>
         <vab-icon
-          :class="{ 'vab-dropdown-active': active }"
           class="vab-dropdown"
+          :class="{ 'vab-dropdown-active': active }"
           icon="arrow-down-s-line"
         />
       </div>
@@ -78,7 +78,7 @@
             '获取用户id失败',
             'error',
             false,
-            'vab-hey-message-error',
+            'vab-hey-message-error'
           )
         }
       },

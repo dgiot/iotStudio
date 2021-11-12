@@ -8,15 +8,13 @@
         @files="files"
       />
       <el-form
+        class="demo-form-inline"
         :inline="true"
         :model="fileParams"
-        class="demo-form-inline"
         size="small"
       >
         <el-form-item :label="$translateTitle('application.scene')">
-          <el-input
-            v-model="fileParams.scene"
-          />
+          <el-input v-model="fileParams.scene" />
         </el-form-item>
         <el-form-item :label="$translateTitle('developer.path')">
           <el-input
@@ -67,9 +65,7 @@
           sortable
           width="200"
         >
-          <template
-            slot-scope="scope"
-          >
+          <template slot-scope="scope">
             <span v-if="scope.row.is_dir">{{ '-' }}</span>
             <span v-else>{{ Math.round(scope.row.size / 1024) + 'kb' }}</span>
           </template>
@@ -82,15 +78,16 @@
           width="260"
         >
           <template slot-scope="scope">
-            <span>{{
-              $moment(scope.row.mtime * 1000)
-                .format('YYYY-MM-DD HH:mm:ss')
-            }}</span>
+            <span>
+              {{
+                $moment(scope.row.mtime * 1000).format('YYYY-MM-DD HH:mm:ss')
+              }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column
-          :label="$translateTitle('developer.operation')"
           fixed="right"
+          :label="$translateTitle('developer.operation')"
           width="300"
         >
           <template
@@ -126,8 +123,8 @@
       </el-table>
       <el-dialog
         :model="detailinfo"
-        :visible.sync="detailView"
         title="文件信息"
+        :visible.sync="detailView"
         width="30%"
       >
         <el-form v-loading="ViewLoading">
@@ -171,10 +168,13 @@
             label="日期"
             label-width="200"
           >
-            <span>{{
-              $moment(detailinfo.timeStamp * 1000)
-                .format('YYYY-MM-DD HH:mm:ss')
-            }}</span>
+            <span>
+              {{
+                $moment(detailinfo.timeStamp * 1000).format(
+                  'YYYY-MM-DD HH:mm:ss'
+                )
+              }}
+            </span>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -182,18 +182,19 @@
   </div>
 </template>
 <script>
-
   import { delete_file, file_info, list_dir } from '@/api/System/filemanagement'
 
   export default {
     data() {
       return {
         filelist: [],
-        filebreadcrumb: [{
-          name: '全部文件',
-          path: 'dgiot_file',
-          is_dir: true,
-        }],
+        filebreadcrumb: [
+          {
+            name: '全部文件',
+            path: 'dgiot_file',
+            is_dir: true,
+          },
+        ],
         fileParams: { scene: 'app' },
         inputParams: {},
         parentfile: 'dgiot_file',
@@ -210,10 +211,12 @@
     methods: {
       breadcrumbClick(row) {
         if (row.name == '全部文件') {
-          this.filebreadcrumb = [{
-            name: '全部文件',
-            path: 'dgiot_file',
-          }]
+          this.filebreadcrumb = [
+            {
+              name: '全部文件',
+              path: 'dgiot_file',
+            },
+          ]
           this.get_filelist(row.path)
         } else {
           if (row.child) {
@@ -242,15 +245,13 @@
         this.loading = true
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click'),
+          new MouseEvent('click')
         )
         this.inputParams = {
           file: '',
           scene: this.fileParams.scene ? this.fileParams.scene : 'default',
           path: this.fileParams.path ? this.fileParams.path : 'default',
-          filename: moment(new Date())
-            .valueOf()
-            .toString(),
+          filename: moment(new Date()).valueOf().toString(),
         }
       },
       fileInfo(info) {
@@ -275,25 +276,24 @@
       },
       get_filelist(path) {
         this.listLoading = true
-        list_dir(path)
-          .then(res => {
-            if (res.status == 'ok') {
-              this.filelist = res.data
-            } else {
-              this.filelist = []
-            }
-            this.listLoading = false
-          })
+        list_dir(path).then((res) => {
+          if (res.status == 'ok') {
+            this.filelist = res.data
+          } else {
+            this.filelist = []
+          }
+          this.listLoading = false
+        })
       },
       get_fileinfo(row) {
         this.detailView = true
         this.ViewLoading = true
-        file_info('files/' + row.path + '/' + row.name)
-          .then(res => {
-            this.detailinfo = res.data
-            this.detailinfo.url = this.$FileServe + '/' + row.path + '/' + row.name
-            this.ViewLoading = false
-          })
+        file_info('files/' + row.path + '/' + row.name).then((res) => {
+          this.detailinfo = res.data
+          this.detailinfo.url =
+            this.$FileServe + '/' + row.path + '/' + row.name
+          this.ViewLoading = false
+        })
       },
       delete_file(row) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -303,7 +303,7 @@
         })
           .then(() => {
             delete_file('files/' + row.path + '/' + row.name)
-              .then(res => {
+              .then((res) => {
                 if (res.status == 'ok') {
                   this.$message({
                     type: 'success',

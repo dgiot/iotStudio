@@ -28,17 +28,17 @@
 
       <el-form
         ref="form"
-        :model="form"
         label-width="180px"
+        :model="form"
       >
         <!-- 工程名称 -->
         <el-row>
           <el-col :span="12">
             <div class="grid-content bg-purple">
               <el-form-item
-                :rules="[{ required: true, message: '工程单位不能为空' }]"
                 label="工程单位"
                 prop="department"
+                :rules="[{ required: true, message: '工程单位不能为空' }]"
               >
                 <el-input
                   v-model="form.department"
@@ -47,8 +47,8 @@
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('application.applicationname')"
-                :rules="[{ required: true, message: '工程名称不能为空' }]"
                 prop="name"
+                :rules="[{ required: true, message: '工程名称不能为空' }]"
               >
                 <el-input
                   v-model="form.name"
@@ -59,8 +59,8 @@
               <!-- 工程链接 -->
               <el-form-item
                 :label="$translateTitle('application.applicationlink')"
-                :rules="[{ required: true, message: '工程链接不能为空' }]"
                 prop="productIdentifier"
+                :rules="[{ required: true, message: '工程链接不能为空' }]"
               >
                 <!--         <el-input v-model="form.productIdentifier" placeholder="例：vcon" class="link">
                   <template slot="prepend">{{host}}</template>
@@ -82,6 +82,7 @@
               <!-- 所属行业 -->
               <el-form-item
                 :label="$translateTitle('application.industrytype')"
+                prop="category"
                 :rules="[
                   {
                     required: true,
@@ -89,18 +90,18 @@
                     trigger: 'blur',
                   },
                 ]"
-                prop="category"
               >
                 <el-cascader
                   ref="category"
                   v-model="form.category"
+                  clearable
                   :options="treeData"
                   :placeholder="$translateTitle('application.industrytype')"
-                  clearable
                 />
               </el-form-item>
 
               <el-form-item
+                label="所属应用"
                 :rules="[
                   {
                     required: true,
@@ -108,7 +109,6 @@
                     trigger: 'blur',
                   },
                 ]"
-                label="所属应用"
               >
                 <el-input
                   v-model="form.relationApp"
@@ -168,11 +168,11 @@
               >
                 <el-input
                   v-model="form.desc"
+                  maxlength="300"
                   :placeholder="
                     $translateTitle('application.applicationdescription')
                   "
                   :rows="4"
-                  maxlength="300"
                   show-word-limit
                   type="textarea"
                 />
@@ -187,13 +187,13 @@
               >
                 <el-upload
                   ref="upload"
+                  action="/upload"
                   :auto-upload="false"
+                  class="upload-demo"
                   :file-list="form.fileList"
                   :limit="1"
-                  :on-success="handleSuccess"
-                  action="/upload"
-                  class="upload-demo"
                   list-type="picture"
+                  :on-success="handleSuccess"
                 >
                   <el-button
                     slot="trigger"
@@ -220,7 +220,7 @@
                   >
                     {{
                       $translateTitle(
-                        'application.onlyJPG/PNGfilescanbeuploadedandnomorethan500kb',
+                        'application.onlyJPG/PNGfilescanbeuploadedandnomorethan500kb'
                       )
                     }}
                   </div>
@@ -229,13 +229,13 @@
               <el-form-item label="背景图片">
                 <el-upload
                   ref="upload1"
+                  action="/upload"
                   :auto-upload="false"
+                  class="upload-demo"
                   :file-list="form.fileList1"
                   :limit="1"
-                  :on-success="handleSuccess1"
-                  action="/upload"
-                  class="upload-demo"
                   list-type="picture"
+                  :on-success="handleSuccess1"
                 >
                   <el-button
                     slot="trigger"
@@ -262,7 +262,7 @@
                   >
                     {{
                       $translateTitle(
-                        'application.onlyJPG/PNGfilescanbeuploadedandnomorethan500kb',
+                        'application.onlyJPG/PNGfilescanbeuploadedandnomorethan500kb'
                       )
                     }}
                   </div>
@@ -275,11 +275,11 @@
               >
                 <el-input
                   v-model="form.copyright"
+                  maxlength="300"
                   :placeholder="
                     $translateTitle('application.copyrightinformation')
                   "
                   :rows="3"
-                  maxlength="300"
                   show-word-limit
                   type="textarea"
                 />
@@ -320,6 +320,7 @@
             <div class="grid-content bg-purple">
               <el-form-item
                 :label="$translateTitle('application.applicationaccessscale')"
+                prop="scale"
                 :rules="[
                   {
                     required: true,
@@ -327,7 +328,6 @@
                     trigger: 'change',
                   },
                 ]"
-                prop="scale"
               >
                 <el-select
                   v-model.number="form.scale"
@@ -491,7 +491,7 @@
         const cloneData = JSON.parse(JSON.stringify(this.form.options)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.id == child.parentid,
+            (child) => father.id == child.parentid
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parentid == 0 // 返回第一层
@@ -520,23 +520,21 @@
       handleClickRefresh() {
         this.randomSecret()
       },
-      onApplicationchange(val) {
-      },
+      onApplicationchange(val) {},
       getProductList(relAppid) {
-        this.$query_object('Product', {})
-          .then((res) => {
-            if (res.results) {
-              this.productlist = res.results
-            }
-          })
+        this.$query_object('Product', {}).then((res) => {
+          if (res.results) {
+            this.productlist = res.results
+          }
+        })
       },
       // 产生随机secrets
       randomSecret() {
         const ranNum = Math.ceil(Math.random() * 25)
         this.form.secret = Base64.encode(
           String.fromCharCode(65 + ranNum) +
-          Math.ceil(Math.random() * 10000000) +
-          Number(new Date()),
+            Math.ceil(Math.random() * 10000000) +
+            Number(new Date())
         )
       },
       // 判断页面
@@ -784,7 +782,7 @@
           duration: 0,
           type: 'success',
           message: `<div><iframe
-                src='http://${this.form.dashboard}'
+                src="http://${this.form.dashboard}"
                 width="1000"
                 height="400"
                 frameborder="0"

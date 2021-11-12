@@ -15,8 +15,8 @@
           <el-form
             ref="form"
             :inline="true"
-            :model="headerInfo"
             label-width="100px"
+            :model="headerInfo"
             style="float: left"
             @submit.native.prevent
           >
@@ -83,10 +83,10 @@
             >
               <el-select
                 v-model="headerInfo.type"
-                :placeholder="$translateTitle('product.type')"
                 allow-create
                 default-first-option
                 filterable
+                :placeholder="$translateTitle('product.type')"
                 @change="changeTable"
               >
                 <el-option
@@ -165,8 +165,7 @@
       },
       formConfig: {
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       dbaTable: {
         type: Array,
@@ -216,11 +215,7 @@
     },
     methods: {
       setLabel(row) {
-        const {
-          name,
-          identifier,
-          defaultvalue,
-        } = row
+        const { name, identifier, defaultvalue } = row
         console.log(name, identifier, defaultvalue, 'row')
       },
       // changeClass(_class) {

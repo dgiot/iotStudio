@@ -1,8 +1,8 @@
 <template>
   <i
-    :class="'ri-' + icon"
     aria-hidden="true"
     class="icon"
+    :class="'ri-' + icon"
   ></i>
 </template>
 

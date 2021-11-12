@@ -11,8 +11,7 @@ import { Message } from 'element-ui'
 
 function toMd5(string) {
   return {
-    objectId: md5(string)
-      .substring(0, 10),
+    objectId: md5(string).substring(0, 10),
     code: 200,
   }
 }
@@ -62,7 +61,7 @@ export async function getHashClass(classNmae, data) {
       keys = ['category', 'devType', 'name']
       if (verifyRule(classNmae, keys, data)) {
         response = toMd5(
-          `${classNmae}${data.category}${data.devType}${data.name}`,
+          `${classNmae}${data.category}${data.devType}${data.name}`
         )
       } else {
         response = errorRes

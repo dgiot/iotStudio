@@ -6,8 +6,8 @@
       class="jsoneditor-btns"
     >
       <button
-        :disabled="error"
         class="json-save-btn"
+        :disabled="error"
         type="button"
         @click="onSave()"
       >

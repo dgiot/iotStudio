@@ -12,8 +12,8 @@
           v-if="isRenderFinish"
           :animation="200"
           :disabled="false"
-          :list="VabRender.formItemList"
           group="form"
+          :list="VabRender.formItemList"
           style="padding-bottom: 80px"
           tag="el-row"
           @add="handleAdd"
@@ -32,11 +32,11 @@
               <el-col
                 v-if="formItem._vif"
                 :key="field"
+                class="form-item"
                 :class="{
                   'ele-form-col--break': formItem.break,
                   'form-item-active': VabRender.currentIndex === index,
                 }"
-                class="form-item"
                 v-bind="formItem._colAttrs"
                 @click.native="handleFormItemClick(index)"
               >

@@ -71,10 +71,7 @@
       },
     },
     data() {
-      const {
-        width,
-        height,
-      } = this.captchaConfig
+      const { width, height } = this.captchaConfig
       let Config = {
         stage: {
           width: width,
@@ -190,49 +187,45 @@
         document.removeEventListener('mouseup', this.moveGroupStop)
       })
       // 给滑块组绑定拖拽监听
-      this.$refs.moveGroup.getNode()
-        .dragBoundFunc((pos) => {
-          const {
-            width,
-            height,
-          } = this.captchaConfig
-          let moveGroup = this.$refs.moveGroup.getNode()
-          let moveRect = this.$refs.moveRect.getNode()
-          let coverRect = this.$refs.coverRect.getNode()
+      this.$refs.moveGroup.getNode().dragBoundFunc((pos) => {
+        const { width, height } = this.captchaConfig
+        let moveGroup = this.$refs.moveGroup.getNode()
+        let moveRect = this.$refs.moveRect.getNode()
+        let coverRect = this.$refs.coverRect.getNode()
 
-          let moveX = moveGroup.getAttrs().x ? moveGroup.getAttrs().x : 0
-          coverRect.width(moveX + height / 2)
-          if (pos.x >= width - height) {
-            if (this.success == 0) {
-              this.success = 1
-              this.$emit('eventCaptcha')
-            }
-            coverRect.opacity(1)
-          }
+        let moveX = moveGroup.getAttrs().x ? moveGroup.getAttrs().x : 0
+        coverRect.width(moveX + height / 2)
+        if (pos.x >= width - height) {
           if (this.success == 0) {
-            if (pos.x < 0) {
-              return {
-                x: 0,
-                y: moveGroup.getAbsolutePosition().y,
-              }
-            } else if (pos.x > width - height) {
-              return {
-                x: width - height,
-                y: moveGroup.getAbsolutePosition().y,
-              }
-            } else {
-              return {
-                x: pos.x,
-                y: moveGroup.getAbsolutePosition().y,
-              }
+            this.success = 1
+            this.$emit('eventCaptcha')
+          }
+          coverRect.opacity(1)
+        }
+        if (this.success == 0) {
+          if (pos.x < 0) {
+            return {
+              x: 0,
+              y: moveGroup.getAbsolutePosition().y,
             }
-          } else {
+          } else if (pos.x > width - height) {
             return {
               x: width - height,
               y: moveGroup.getAbsolutePosition().y,
             }
+          } else {
+            return {
+              x: pos.x,
+              y: moveGroup.getAbsolutePosition().y,
+            }
           }
-        })
+        } else {
+          return {
+            x: width - height,
+            y: moveGroup.getAbsolutePosition().y,
+          }
+        }
+      })
     },
     methods: {
       // 鼠标进入滑块组
@@ -253,16 +246,14 @@
         _$mouseDown = false
         document.body.style.cursor = 'default' // 鼠标恢复指针状态
         if (this.success == 0) {
-          this.$refs.moveGroup.getNode()
-            .to({
-              x: 0,
-              duration: 0.3,
-            })
-          this.$refs.coverRect.getNode()
-            .to({
-              width: this.captchaConfig.height / 2,
-              duration: 0.3,
-            })
+          this.$refs.moveGroup.getNode().to({
+            x: 0,
+            duration: 0.3,
+          })
+          this.$refs.coverRect.getNode().to({
+            width: this.captchaConfig.height / 2,
+            duration: 0.3,
+          })
         }
       },
     },

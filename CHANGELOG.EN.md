@@ -57,6 +57,11 @@
 * **topo:** define the configuration event method and handle the corresponding function ([f0f6565](https://github.com/dgiot/dgiot-dashboard/commit/f0f65653337a34a52c4665fb8918c150dc116f9a))
 
 
+### Performance Improvements
+
+* delete unnecessary files ([b8865a4](https://github.com/dgiot/dgiot-dashboard/commit/b8865a49d1f7b01482badb1f2fe8f8b2f14a4343))
+
+
 
 ## [4.3.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.5...v4.3.6) (2021-10-10)
 

@@ -129,10 +129,10 @@
         </el-row>
       </el-card>
       <el-pagination
+        layout="total, sizes, prev, pager, next, jumper"
         :page-size="pagesize"
         :page-sizes="[1, 5, 10]"
         :total="total"
-        layout="total, sizes, prev, pager, next, jumper"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
@@ -148,16 +148,16 @@
     >
       <div
         v-loading="loading"
-        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
         class="block"
         element-loading-background="rgba(0, 0, 0, 0.8)"
         element-loading-spinner="el-icon-loading"
+        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
       >
         <el-form
           ref="form"
+          label-width="120px"
           :model="form"
           :rules="Rule"
-          label-width="120px"
         >
           <!-- <el-form-item label="平台">
                 <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
@@ -309,9 +309,9 @@
       <div class="block">
         <el-form
           ref="form1"
+          label-width="170px"
           :model="form1"
           :rules="Rule"
-          label-width="170px"
         >
           <!-- <el-form-item label="应用名称" prop="desc">
             <el-input v-model="form1.desc" style="width:80%" />
@@ -508,22 +508,30 @@
               },
             },
           ],
-          file: [{
-            trigger: 'blur',
-            validator: validatorUrl,
-          }],
-          topo: [{
-            trigger: 'blur',
-            validator: validatorUrl,
-          }],
-          graphql: [{
-            trigger: 'blur',
-            validator: validatorUrl,
-          }],
-          rest: [{
-            trigger: 'blur',
-            validator: validatorUrl,
-          }],
+          file: [
+            {
+              trigger: 'blur',
+              validator: validatorUrl,
+            },
+          ],
+          topo: [
+            {
+              trigger: 'blur',
+              validator: validatorUrl,
+            },
+          ],
+          graphql: [
+            {
+              trigger: 'blur',
+              validator: validatorUrl,
+            },
+          ],
+          rest: [
+            {
+              trigger: 'blur',
+              validator: validatorUrl,
+            },
+          ],
         },
         appdata: [],
         objectid: '',
@@ -532,8 +540,7 @@
         loading: false,
       }
     },
-    created() {
-    },
+    created() {},
     //   watch:{
     //      appdata:{
     //          handler(newVal) {
@@ -569,8 +576,8 @@
         var ranNum = Math.ceil(Math.random() * 25)
         var session = Base64.encode(
           String.fromCharCode(65 + ranNum) +
-          Math.ceil(Math.random() * 10000000) +
-          Number(new Date()),
+            Math.ceil(Math.random() * 10000000) +
+            Number(new Date())
         )
 
         const formParam = {
@@ -615,8 +622,8 @@
         const ranNum = Math.ceil(Math.random() * 25)
         this.form1.secret = Base64.encode(
           String.fromCharCode(65 + ranNum) +
-          Math.ceil(Math.random() * 10000000) +
-          Number(new Date()),
+            Math.ceil(Math.random() * 10000000) +
+            Number(new Date())
         )
       },
       handleSizeChange(val) {

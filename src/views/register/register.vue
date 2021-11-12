@@ -3,16 +3,16 @@
     <div class="loginbanner">
       <el-form
         ref="ruleForm2"
-        :model="ruleForm2"
-        :rules="rules2"
         class="login-form"
         label-width="100px"
+        :model="ruleForm2"
+        :rules="rules2"
         status-icon
       >
         <div class="logo">
           <img
-            :src="logosrc"
             alt="logo"
+            :src="logosrc"
             style="width: 80px; height: 80px"
           />
           <p>{{ title }}</p>
@@ -24,9 +24,9 @@
           </span>
           <el-input
             v-model="ruleForm2.phone"
-            :maxlength="11"
             auto-complete="on"
             clearable
+            :maxlength="11"
             name="phone"
             placeholder="请输入手机号"
             type="text"
@@ -41,10 +41,10 @@
           </span>
           <el-input
             v-model="ruleForm2.password"
-            :type="pwdType"
             auto-complete="on"
             name="password"
             placeholder="请输入密码"
+            :type="pwdType"
           />
           <span
             class="show-pwd"
@@ -63,9 +63,9 @@
           </span>
           <el-input
             v-model="ruleForm2.checkPass"
-            :type="pwdType"
             auto-complete="on"
             placeholder="请再次输入密码"
+            :type="pwdType"
           />
           <span
             class="show-pwd"
@@ -212,11 +212,13 @@
               trigger: ['blur', 'change'],
             },
           ],
-          roles: [{
-            required: true,
-            message: '请选择平台',
-            trigger: 'change',
-          }],
+          roles: [
+            {
+              required: true,
+              message: '请选择平台',
+              trigger: 'change',
+            },
+          ],
         },
       }
     },
@@ -384,8 +386,8 @@
       background: #ffffff;
       border-radius: 5px;
       box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
-      0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-      0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+        0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+        0px 2px 1px -1px rgba(0, 0, 0, 0.12);
     }
 
     .login_bottom {

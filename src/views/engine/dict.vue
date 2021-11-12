@@ -12,10 +12,10 @@
       >
         <el-form
           ref="dictForm"
-          :model="addDictForm"
-          :rules="rules1"
           class="dict_type"
           label-width="135px"
+          :model="addDictForm"
+          :rules="rules1"
           size="mini"
         >
           <el-row :gutter="20">
@@ -53,8 +53,8 @@
               <!-- <el-form-item label="字典名称" title="字典唯一标识" prop="key"> -->
               <el-form-item
                 :label="$translateTitle('developer.dictionaryname')"
-                :title="$translateTitle('developer.dictionaryuniqueID')"
                 prop="key"
+                :title="$translateTitle('developer.dictionaryuniqueID')"
               >
                 <el-input
                   v-model="addDictForm.key"
@@ -435,8 +435,8 @@
 
                   <!-- <el-table-column label="操作" width="160" align="center"> -->
                   <el-table-column
-                    :label="$translateTitle('task.Operation')"
                     align="center"
+                    :label="$translateTitle('task.Operation')"
                     width="160"
                   >
                     <!-- <template slot-scope="scope">
@@ -451,9 +451,9 @@
                       > -->
                     <template slot-scope="scope">
                       <el-button
-                        :title="$translateTitle('task.Delete')"
                         plain
                         size="mini"
+                        :title="$translateTitle('task.Delete')"
                         type="danger"
                         @click.native="
                           delRow(scope.$index, dictTempForm.params)
@@ -472,9 +472,9 @@
                         "
                       > -->
                       <el-button
-                        :title="$translateTitle('task.Edit')"
                         plain
                         size="mini"
+                        :title="$translateTitle('task.Edit')"
                         type="info"
                         @click.native="
                           editRow(scope.row, scope.$index, dictTempForm.params)
@@ -493,8 +493,8 @@
               >
                 <vab-json-editor
                   v-model="dictTempForm.params"
-                  :mode="'code'"
                   lang="zh"
+                  :mode="'code'"
                   @has-error="onError"
                   @json-change="onJsonChange"
                 />
@@ -544,16 +544,16 @@
       <el-dialog
         :append-to-body="true"
         :close-on-click-modal="false"
+        size="mini"
         :title="title_dict_edit_dialog"
         :visible.sync="edit_dict_temp_dialog"
-        size="mini"
         @open="opendialog('tempparams')"
       >
         <el-form
           ref="tempparams"
-          :model="tempparams"
           class="demo-ruleForm"
           label-width="70px"
+          :model="tempparams"
           size="mini"
           status-icon
         >
@@ -615,16 +615,16 @@
               >
                 <el-radio
                   v-model="tempparams.required"
-                  :label="true"
                   border
+                  :label="true"
                 >
                   <!-- 是 -->
                   {{ $translateTitle('product.yes') }}
                 </el-radio>
                 <el-radio
                   v-model="tempparams.required"
-                  :label="false"
                   border
+                  :label="false"
                 >
                   <!-- 否 -->
                   {{ $translateTitle('product.no') }}
@@ -730,10 +730,10 @@
         /> -->
         <el-input
           v-model="search_dict"
+          clearable
           :placeholder="
             $translateTitle('developer.pleaseenterdictionarytemplatename')
           "
-          clearable
           size="mini"
           style="width: 200px"
         />
@@ -886,10 +886,10 @@
           style="margin-top: 20px; text-align: center"
         >
           <el-pagination
+            layout="total, sizes, prev, pager, next, jumper"
             :page-size="length1"
             :page-sizes="[10, 20, 30, 50]"
             :total="total1"
-            layout="total, sizes, prev, pager, next, jumper"
             @current-change="channelCurrentChange1"
             @size-change="channelSizeChange1"
           />
@@ -933,16 +933,16 @@
         <el-table
           v-show="isALL"
           v-loading="listLoading"
+          border
           :cell-style="{ 'text-align': 'center' }"
           :data="dictData"
+          element-loading-background="rgba(0, 0, 0, 0.8)"
+          element-loading-spinner="el-icon-loading"
           :element-loading-text="
             $translateTitle('developer.loadingdesperately')
           "
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="tableRowClassName"
-          border
-          element-loading-background="rgba(0, 0, 0, 0.8)"
-          element-loading-spinner="el-icon-loading"
           stripe
           style="width: 100%"
         >
@@ -1048,17 +1048,17 @@
           v-show="!isALL"
           ref="filterObj"
           v-loading="loading"
+          border
           :cell-style="{ 'text-align': 'center' }"
+          class="filter_obj"
           :data="dictList"
+          element-loading-background="rgba(0, 0, 0, 0.8)"
+          element-loading-spinner="el-icon-loading"
           :element-loading-text="
             $translateTitle('developer.loadingdesperately')
           "
           :header-cell-style="{ 'text-align': 'center' }"
           :row-class-name="tableRowClassName"
-          border
-          class="filter_obj"
-          element-loading-background="rgba(0, 0, 0, 0.8)"
-          element-loading-spinner="el-icon-loading"
           style="width: 100%"
         >
           <el-table-column
@@ -1092,8 +1092,8 @@
             />
           </template>
           <el-table-column
-            :label="$translateTitle('product.commandoperation')"
             fixed="right"
+            :label="$translateTitle('product.commandoperation')"
             width="240"
           >
             <template slot-scope="scope">
@@ -1144,10 +1144,10 @@
           style="margin-top: 20px; text-align: center"
         >
           <el-pagination
+            layout="total, sizes, prev, pager, next, jumper"
             :page-size="length"
             :page-sizes="[10, 20, 30, 50]"
             :total="total"
-            layout="total, sizes, prev, pager, next, jumper"
             @current-change="channelCurrentChange"
             @size-change="channelSizeChange"
           />
@@ -1261,7 +1261,7 @@
       },
       finallyColumns() {
         return this.columns.filter((item) =>
-          this.checkList.includes(item.label),
+          this.checkList.includes(item.label)
         )
       },
     },
@@ -1270,20 +1270,13 @@
       this.getDictRecord()
       this.dialogType()
     },
-    beforeCreate() {
-    }, // 生命周期 - 创建之前
-    beforeMount() {
-    }, // 生命周期 - 挂载之前
-    beforeUpdate() {
-    }, // 生命周期 - 更新之前
-    updated() {
-    }, // 生命周期 - 更新之后
-    beforeDestroy() {
-    }, // 生命周期 - 销毁之前
-    destroyed() {
-    }, // 生命周期 - 销毁完成
-    activated() {
-    },
+    beforeCreate() {}, // 生命周期 - 创建之前
+    beforeMount() {}, // 生命周期 - 挂载之前
+    beforeUpdate() {}, // 生命周期 - 更新之前
+    updated() {}, // 生命周期 - 更新之后
+    beforeDestroy() {}, // 生命周期 - 销毁之前
+    destroyed() {}, // 生命周期 - 销毁完成
+    activated() {},
     methods: {
       opendialog(name) {
         this.$nextTick(() => {
@@ -1296,12 +1289,11 @@
           this.getDictRecord()
           this.isALL = true
         } else {
-          getDict(objectId)
-            .then((res) => {
-              this.dialogtempconfig = res.data.params
-              // console.log(res.data.params)
-              // this.dialogtempconfig.key = res.key
-            })
+          getDict(objectId).then((res) => {
+            this.dialogtempconfig = res.data.params
+            // console.log(res.data.params)
+            // this.dialogtempconfig.key = res.key
+          })
           this.listLoading = true
           const parsms = {
             order: '-createdAt',
@@ -1361,69 +1353,68 @@
       },
       selectChange(objectId) {
         var obj = {}
-        getDict(objectId)
-          .then((res) => {
-            this.listLoading = true
-            this.arrlist = res.data.params
-            var obj1 = {
-              key: [
-                {
-                  required: true,
-                  message: '请输入字典名称',
-                  trigger: 'blur',
-                },
-              ],
-              templateId: [
-                {
-                  required: true,
-                  message: '请选择字典类型',
-                  trigger: 'blur',
-                },
-              ],
-              rolesObj: [
-                {
-                  required: true,
-                  message: '请选择所属应用',
-                  trigger: 'change',
-                },
-              ],
-              // enable: [{ required: true, message: "请选择状态", trigger: "blur" }]
+        getDict(objectId).then((res) => {
+          this.listLoading = true
+          this.arrlist = res.data.params
+          var obj1 = {
+            key: [
+              {
+                required: true,
+                message: '请输入字典名称',
+                trigger: 'blur',
+              },
+            ],
+            templateId: [
+              {
+                required: true,
+                message: '请选择字典类型',
+                trigger: 'blur',
+              },
+            ],
+            rolesObj: [
+              {
+                required: true,
+                message: '请选择所属应用',
+                trigger: 'change',
+              },
+            ],
+            // enable: [{ required: true, message: "请选择状态", trigger: "blur" }]
+          }
+          this.arrlist.map((item) => {
+            if (item.default) {
+              obj[item.name] = item.default
+            } else {
+              obj[item.name] = ''
             }
-            this.arrlist.map((item) => {
-              if (item.default) {
-                obj[item.name] = item.default
+            if (item.required) {
+              if (item.type == 'Boolean') {
+                obj1[item.name] = [
+                  {
+                    required: true,
+                    message: '请选择' + item.title.zh,
+                    trigger: 'change',
+                  },
+                ]
               } else {
-                obj[item.name] = ''
+                obj1[item.name] = [
+                  {
+                    required: true,
+                    message: '请输入' + item.title.zh,
+                    trigger: 'blur',
+                  },
+                ]
               }
-              if (item.required) {
-                if (item.type == 'Boolean') {
-                  obj1[item.name] = [
-                    {
-                      required: true,
-                      message: '请选择' + item.title.zh,
-                      trigger: 'change',
-                    },
-                  ]
-                } else {
-                  obj1[item.name] = [
-                    {
-                      required: true,
-                      message: '请输入' + item.title.zh,
-                      trigger: 'blur',
-                    },
-                  ]
-                }
-              }
-            })
-            this.rules1 = obj1
-            if (!this.editDictId) {
-              this.addDictForm = obj
-              console.log(obj)
             }
-            this.addDictForm.templateId = objectId
-            this.addDictForm.templateName = res.data.name
-            this.listLoading = false
           })
+          this.rules1 = obj1
+          if (!this.editDictId) {
+            this.addDictForm = obj
+            console.log(obj)
+          }
+          this.addDictForm.templateId = objectId
+          this.addDictForm.templateName = res.data.name
+          this.listLoading = false
+        })
       },
       submitFormTempDict() {
         this.edit_dict_temp_dialog = false
@@ -1492,10 +1483,7 @@
           }
         })
       },
-      tableRowClassName({
-        row,
-        rowIndex,
-      }) {
+      tableRowClassName({ row, rowIndex }) {
         if (rowIndex === 1) {
           return 'warning-row'
         } else if (rowIndex === 3) {
@@ -1555,11 +1543,13 @@
         this.addDictForm = {}
         this.arrlist = []
         this.rules1 = {
-          key: [{
-            required: true,
-            message: '请输入字典名称',
-            trigger: 'blur',
-          }],
+          key: [
+            {
+              required: true,
+              message: '请输入字典名称',
+              trigger: 'blur',
+            },
+          ],
           templateId: [
             {
               required: true,
@@ -1735,10 +1725,7 @@
         if (this.search_dict) {
           parsms.where['data.name'] = this.search_dict
         }
-        const {
-          results,
-          count,
-        } = await queryDict(parsms)
+        const { results, count } = await queryDict(parsms)
         this.total1 = count
         this.dictRecordOpt = []
         this.dictRecord = results
@@ -1751,7 +1738,7 @@
             data: { name: 'ALL' },
             objectId: '0',
           },
-          ...results,
+          ...results
         )
         // console.log('aa', this.dictRecordOpt);
       },
@@ -1782,10 +1769,7 @@
             'data.templateTypekey': 'dict_template',
           },
         }
-        const {
-          results,
-          count,
-        } = await queryDict(parsms)
+        const { results, count } = await queryDict(parsms)
         this.total = count
         this.listLoading = false
         this.dictData = results

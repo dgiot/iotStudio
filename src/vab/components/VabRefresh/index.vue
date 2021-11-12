@@ -39,16 +39,14 @@
         })
         if (otherRoutes.length) {
           let transferRoute = otherRoutes.find((item) => {
-            return item.matched.slice(0, -1)
-              .join(',') === parentRouteName
+            return item.matched.slice(0, -1).join(',') === parentRouteName
           })
           if (!transferRoute) transferRoute = otherRoutes[0]
           this.extra.transferRouteName = currentRoute.name
-          this.$router.replace(transferRoute)
-            .then(() => {
-              this.extra.transferRouteName = ''
-              this.$router.replace(currentRoute)
-            })
+          this.$router.replace(transferRoute).then(() => {
+            this.extra.transferRouteName = ''
+            this.$router.replace(currentRoute)
+          })
         } else {
           this.$baseEventBus.$emit('reload-router-view')
         }

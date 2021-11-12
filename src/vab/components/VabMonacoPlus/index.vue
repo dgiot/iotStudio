@@ -81,7 +81,7 @@
   .monaco-editor {
     width: 100%;
     height: 100%;
-    border: 1px solid grey
+    border: 1px solid grey;
   }
 
   .monaco-editor {

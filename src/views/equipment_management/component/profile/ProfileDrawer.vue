@@ -1,9 +1,9 @@
 <template>
   <el-dialog
     :append-to-body="true"
-    :visible.sync="parserTable"
     class="parserTable"
     direction="rtl"
+    :visible.sync="parserTable"
     width="60%"
     @close="$parent.parserTable = !parserTable"
   >
@@ -37,8 +37,8 @@
         width="100"
       />
       <el-table-column
-        :label="$translateTitle('product.chinesetitle')"
         align="center"
+        :label="$translateTitle('product.chinesetitle')"
         prop="name"
         show-overflow-tooltip
         sortable
@@ -84,15 +84,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('product.functionaltypes')"
         align="center"
+        :label="$translateTitle('product.functionaltypes')"
         prop="type"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
-        :label="$translateTitle('product.visible')"
         align="center"
+        :label="$translateTitle('product.visible')"
         prop="visible"
         sortable
         width="100"
@@ -105,9 +105,9 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('developer.operation')"
         align="center"
         fixed="right"
+        :label="$translateTitle('developer.operation')"
         width="200"
       >
         <template slot-scope="scope">
@@ -167,10 +167,8 @@
     data() {
       return {}
     },
-    created() {
-    },
-    mounted() {
-    },
+    created() {},
+    mounted() {},
     methods: {
       addParse(table) {
         this.$parent.addParse(table)

@@ -19,8 +19,8 @@
         <ele-form
           v-model="alertConfig.config"
           :config="formConfig"
-          :request-fn="handleSubmit"
           pure
+          :request-fn="handleSubmit"
           v-bind="alertConfig.config"
           @request-success="handleSuccess(alertConfig)"
         />
@@ -91,16 +91,16 @@
       <vab-query-form-top-panel>
         <el-form
           :inline="true"
-          :model="queryForm"
           label-width="auto"
+          :model="queryForm"
           size="mini"
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('alert.productname')">
             <el-select
               v-model="queryForm.productName"
-              :placeholder="$translateTitle('equipment.entername')"
               clearable
+              :placeholder="$translateTitle('equipment.entername')"
             >
               <el-option
                 v-for="(item, index) in _Product"
@@ -113,8 +113,8 @@
           <el-form-item :label="$translateTitle('alert.isprocess')">
             <el-select
               v-model="queryForm.isprocess"
-              :placeholder="$translateTitle('alert.isprocess')"
               clearable
+              :placeholder="$translateTitle('alert.isprocess')"
             >
               <el-option
                 v-for="(item, index) in processAll"
@@ -128,8 +128,8 @@
             <el-date-picker
               v-model="queryForm.searchDate"
               :end-placeholder="$translateTitle('Maintenance.end time')"
-              :start-placeholder="$translateTitle('Maintenance.start time')"
               format="yyyy-MM-dd"
+              :start-placeholder="$translateTitle('Maintenance.start time')"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -172,51 +172,48 @@
       />
 
       <el-table-column
-        :label="$translateTitle('alert.alert number')"
         align="center"
+        :label="$translateTitle('alert.alert number')"
         prop="objectId"
         show-overflow-tooltip
         sortablesortable
         width="120"
       />
       <el-table-column
-        :label="$translateTitle('alert.productname')"
         align="center"
+        :label="$translateTitle('alert.productname')"
         prop="productname"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
-        :label="$translateTitle('alert.devicename')"
         align="center"
+        :label="$translateTitle('alert.devicename')"
         prop="devicename"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
-        :label="$translateTitle('equipment.createdAt')"
         align="center"
+        :label="$translateTitle('equipment.createdAt')"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
-          {{
-            $moment(row.createdAt)
-              .format('YYYY-MM-DD HH:mm:ss')
-          }}
+          {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
       </el-table-column>
 
       <el-table-column
-        :label="$translateTitle('alert.Alarm status')"
         align="center"
+        :label="$translateTitle('alert.Alarm status')"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
           <el-tag
-            :type="row.alertstatus ? 'danger' : 'success'"
             effect="dark"
+            :type="row.alertstatus ? 'danger' : 'success'"
           >
             {{
               row.alertstatus
@@ -227,15 +224,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('alert.Alarm handling')"
         align="center"
+        :label="$translateTitle('alert.Alarm handling')"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
           <el-link
-            :type="row.status == 1 ? 'success' : 'info'"
             effect="dark"
+            :type="row.status == 1 ? 'success' : 'info'"
           >
             {{
               row.status == 1
@@ -248,15 +245,15 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$translateTitle('alert.process')"
         align="center"
+        :label="$translateTitle('alert.process')"
         prop="process"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
-        :label="$translateTitle('Maintenance.operating')"
         align="center"
+        :label="$translateTitle('Maintenance.operating')"
         prop="name"
         show-overflow-tooltip
       >
@@ -317,7 +314,11 @@
 </template>
 
 <script>
-  import { delNotification, putNotification, queryNotification } from '@/api/Notification'
+  import {
+    delNotification,
+    putNotification,
+    queryNotification,
+  } from '@/api/Notification'
   import { batch } from '@/api/Batch'
   import { getProduct } from '@/api/Product'
   import { mapGetters } from 'vuex'
@@ -416,8 +417,7 @@
       }),
     },
 
-    created() {
-    },
+    created() {},
     mounted() {
       this.fetchData()
     },
@@ -433,7 +433,7 @@
         })
         this.$baseConfirm(
           this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item',
+            'Maintenance.Are you sure you want to delete the current item'
           ),
           null,
           async () => {
@@ -441,12 +441,12 @@
             this.$baseMessage(
               this.$translateTitle('Maintenance.successfully deleted'),
               'success',
-              'vab-hey-message-success',
+              'vab-hey-message-success'
             )
             setTimeout(() => {
               this.fetchData()
             }, 1500)
-          },
+          }
         )
       },
       handleSubmit(data) {
@@ -538,10 +538,7 @@
         try {
           const { config } = await getProduct(productId)
           Loading.close()
-          const {
-            parser = [],
-            profile = [],
-          } = config
+          const { parser = [], profile = [] } = config
           const _mergeProfile = [].concat(profile, parser)
           console.log(_mergeProfile, '_mergeProfile')
           let _profileConfig = _mergeProfile.map((e) => {
@@ -570,7 +567,7 @@
         if (res == {}) {
           this.$message.success(
             this.$translateTitle('Maintenance.delete') +
-            $translateTitle('message.success'),
+              $translateTitle('message.success')
           )
         }
         this.fetchData()
@@ -615,10 +612,7 @@
         await queryNotification(params)
           .then((res) => {
             console.log(res, 'res')
-            const {
-              results = [],
-              count = 0,
-            } = res
+            const { results = [], count = 0 } = res
             this.list = results
             this.total = count
             loading.close()

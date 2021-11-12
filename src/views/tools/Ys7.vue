@@ -26,8 +26,7 @@
       return {}
     },
     computed: {},
-    created() {
-    },
+    created() {},
     mounted() {
       this.initYs7()
     },

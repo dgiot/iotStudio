@@ -2,8 +2,7 @@
   <div
     ref="renderBox"
     class="box"
-  >
-  </div>
+  ></div>
 </template>
 
 <script>
@@ -29,14 +28,12 @@
       updateLocation: {
         type: Function,
         required: false,
-        default: () => {
-        },
+        default: () => {},
       },
       onAction: {
         type: Function,
         required: false,
-        default: () => {
-        },
+        default: () => {},
       },
       theme: {
         type: String,
@@ -58,9 +55,9 @@
             onAction: this.onAction || this.handleAction,
             theme: this.theme,
           },
-          this.env,
+          this.env
         ),
-        this.$refs.renderBox,
+        this.$refs.renderBox
       )
     },
 
@@ -85,22 +82,15 @@
               }
               const query = qs.parse(search.substring(1))
               const currentQuery = qs.parse(location.search.substring(1))
-              return Object.keys(query)
-                .every(
-                  (key) => query[key] === currentQuery[key],
-                )
+              return Object.keys(query).every(
+                (key) => query[key] === currentQuery[key]
+              )
             } else if (pathname === location.pathname) {
               return true
             }
             return false
           },
-          fetcher: ({
-            url,
-            method,
-            data,
-            config,
-            headers,
-          }) => {
+          fetcher: ({ url, method, data, config, headers }) => {
             config = config || {}
             config.headers = config.headers || {}
             config.withCredentials = true
@@ -145,8 +135,8 @@
           copy: (contents, options = {}) => {
             const ret = copy(contents, options)
             ret &&
-            (!options || options.shutup !== true) &&
-            toast.info('内容已拷贝到剪切板')
+              (!options || options.shutup !== true) &&
+              toast.info('内容已拷贝到剪切板')
             return ret
           },
         }
@@ -179,8 +169,8 @@
         let pathname = ~idx
           ? to.substring(0, idx)
           : ~idx2
-            ? to.substring(0, idx2)
-            : to
+          ? to.substring(0, idx2)
+          : to
         const search = ~idx ? to.substring(idx, ~idx2 ? idx2 : undefined) : ''
         const hash = ~idx2 ? to.substring(idx2) : ''
         if (!pathname) {
@@ -196,8 +186,7 @@
             }
             pathname = pathname.substring(m[0].length)
           }
-          pathname = paths.concat(pathname)
-            .join('/')
+          pathname = paths.concat(pathname).join('/')
         }
         return pathname + search + hash
       },

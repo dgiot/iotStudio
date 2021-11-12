@@ -1,8 +1,8 @@
 <template>
   <div
     ref="custom-table"
-    :class="{ 'vab-fullscreen': isFullscreen }"
     class="custom-table-container"
+    :class="{ 'vab-fullscreen': isFullscreen }"
   >
     <input
       ref="uploader"
@@ -41,8 +41,8 @@
             <vab-json-editor
               v-if="row.fields"
               v-model="row.fields"
-              :mode="'code'"
               lang="zh"
+              :mode="'code'"
             />
             <div
               slot="reference"
@@ -78,10 +78,10 @@
       </el-table-column>
       <template #empty>
         <el-image
+          class="vab-data-empty"
           :src="
             require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
-          class="vab-data-empty"
         />
       </template>
     </el-table>
@@ -112,22 +112,14 @@
     mounted() {
       this.fetchData()
     },
-    created() {
-    },
-    beforeCreate() {
-    }, //生命周期 - 创建之前
-    beforeMount() {
-    }, //生命周期 - 挂载之前
-    beforeUpdate() {
-    }, //生命周期 - 更新之前
-    updated() {
-    }, //生命周期 - 更新之后
-    beforeDestroy() {
-    }, //生命周期 - 销毁之前
-    destroyed() {
-    }, //生命周期 - 销毁完成
-    activated() {
-    },
+    created() {},
+    beforeCreate() {}, //生命周期 - 创建之前
+    beforeMount() {}, //生命周期 - 挂载之前
+    beforeUpdate() {}, //生命周期 - 更新之前
+    updated() {}, //生命周期 - 更新之后
+    beforeDestroy() {}, //生命周期 - 销毁之前
+    destroyed() {}, //生命周期 - 销毁完成
+    activated() {},
     methods: {
       async handleExport(type, row) {
         const { className } = row

@@ -7,10 +7,10 @@
       >
         <el-form
           ref="form"
-          :model="form"
-          :rules="rules"
           class="create-ticker"
           label-width="auto"
+          :model="form"
+          :rules="rules"
           size="medium "
         >
           <el-row :gutter="24">
@@ -82,8 +82,8 @@
                 :label="$translateTitle('Maintenance.photo') + ': '"
               >
                 <el-carousel
-                  :interval="2000"
                   height="200px"
+                  :interval="2000"
                   type="card"
                 >
                   <el-carousel-item
@@ -93,8 +93,8 @@
                     <img
                       :alt="item"
                       :src="item"
-                      :title="item"
                       style="width: 100%; height: 100%"
+                      :title="item"
                     />
                   </el-carousel-item>
                 </el-carousel>
@@ -130,10 +130,10 @@
                 <el-tree
                   ref="workGroup"
                   :data="deptTreeData"
-                  :expand-on-click-node="false"
-                  :props="roleProps"
                   default-expand-all
+                  :expand-on-click-node="false"
                   node-key="index"
+                  :props="roleProps"
                   style="float: left; width: 50%"
                 >
                   <div
@@ -152,12 +152,12 @@
                   v-model="form.info.receiveusername"
                   v-loading="loading"
                   :disabled="!user.length"
+                  element-loading-background="rgba(0, 0, 0, 0.8)"
+                  element-loading-spinner="el-icon-loading"
                   :element-loading-text="
                     $translateTitle('developer.Data is loading')
                   "
                   :placeholder="$translateTitle('product.selectdepartment')"
-                  element-loading-background="rgba(0, 0, 0, 0.8)"
-                  element-loading-spinner="el-icon-loading"
                   style="width: 50%"
                 >
                   <el-option
@@ -201,8 +201,8 @@
             <el-timeline-item
               v-for="item in form.info.timeline"
               :key="item.timestamp"
-              :timestamp="item.timestamp"
               placement="top"
+              :timestamp="item.timestamp"
             >
               <el-card>
                 <h4>{{ item.h4 }}</h4>
@@ -226,8 +226,7 @@
     props: {
       detail: {
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
       step: {
         type: Number,
@@ -313,15 +312,9 @@
           })
           if (valid && this.form.info.receiveusername) {
             const setAcl = {}
-            const {
-              objectId,
-              info,
-              ACL: InitAcl,
-              user,
-            } = this.form
+            const { objectId, info, ACL: InitAcl, user } = this.form
             info.timeline.push({
-              timestamp: moment(new Date())
-                .format('YYYY-MM-DD HH:mm:ss'),
+              timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
               h4: '已分配',
               p: `${this.username} 分配给 ${_user[0].nick}`,
             })

@@ -56,25 +56,17 @@ const canvas = {
   },
   removeBg: (type, allnode, json) => {
     try {
-      json.find(`.${type}`)
-        .forEach(item => {
-          console.error(item)
-          console.error(item)
-        })
+      json.find(`.${type}`).forEach((item) => {
+        console.error(item)
+        console.error(item)
+      })
       console.groupCollapsed(
         `%cremoveBg info`,
-        'color:#0091ca; font-size: 28px',
+        'color:#0091ca; font-size: 28px'
       )
-      console.info(
-        '删除标识:',
-        '\n:' + type,
-      )
-      console.info(
-        '删除的节点:\n',
-      )
-      console.info(
-        '图元含有id为:bg的:\n',
-      )
+      console.info('删除标识:', '\n:' + type)
+      console.info('删除的节点:\n')
+      console.info('图元含有id为:bg的:\n')
       console.info(json.find('#bg'))
       console.info('所有图片图元\n')
       console.log(json.find('Image'))
@@ -82,7 +74,7 @@ const canvas = {
       // 批量删除掉id不为  created的
       // node.removeName('selected');
       // canvas.removeBg('isRemovebg')
-      allnode.forEach(node => {
+      allnode.forEach((node) => {
         if (allnode.length <= 1) {
           console.info('节点只有一个,不删除')
           // allnode.remove()
@@ -104,7 +96,6 @@ const canvas = {
           }
         }
       })
-
     } catch (e) {
       throw new Error('删除背景图异常，原因是' + e)
     }

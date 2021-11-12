@@ -61,7 +61,7 @@ export async function Batchdelete(method, tableClass, ObjectIdArr, body) {
 export async function batch(
   data,
   access_token = store.getters['user/token'],
-  _company = false,
+  _company = false
 ) {
   console.log(data, 'axios from batch')
   return request({

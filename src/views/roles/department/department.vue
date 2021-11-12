@@ -3,17 +3,17 @@
     <el-row :gutter="20">
       <el-col :span="6">
         <el-table
+          border
           :data="roletempList"
+          highlight-current-row
           :row-class-name="tableRowClassName"
           :row-style="selectedHighlight"
-          border
-          highlight-current-row
           size="small"
           @row-click="getDetailmenu"
         >
           <el-table-column
-            :label="$translateTitle('user.name')"
             align="center"
+            :label="$translateTitle('user.name')"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.data.name }}</span>
@@ -22,8 +22,8 @@
           </el-table-column>
 
           <el-table-column
-            :label="$translateTitle('developer.operation')"
             align="center"
+            :label="$translateTitle('developer.operation')"
             width="180"
           >
             <template slot-scope="scope">
@@ -99,13 +99,13 @@
             <div class="rolecontrol">
               <el-tree
                 ref="permissionTree"
+                accordion
+                check-on-click-node
                 :data="permissionTreeData"
                 :default-checked-keys="rolePermissonList"
                 :default-expand-all="isExpand"
-                :expand-on-click-node="false"
-                accordion
-                check-on-click-node
                 default-props
+                :expand-on-click-node="false"
                 node-key="name"
                 show-checkbox
               >
@@ -168,13 +168,13 @@
             <div class="menucontrol">
               <el-tree
                 ref="menusTree"
+                accordion
+                check-on-click-node
                 :data="menuTreeData"
                 :default-checked-keys="roleMenuList"
                 :default-expand-all="menuExpand"
-                :expand-on-click-node="false"
-                accordion
-                check-on-click-node
                 default-props
+                :expand-on-click-node="false"
                 node-key="objectId"
                 show-checkbox
               >
@@ -202,9 +202,9 @@
         <div class="tags">
           <el-form
             ref="form"
+            label-width="170px"
             :model="form"
             :rules="Rule"
-            label-width="170px"
           >
             <!-- <el-form-item label="平台">
                     <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
@@ -359,22 +359,30 @@
               },
             },
           ],
-          file: [{
-            trigger: 'blur',
-            validator: validatorUrl,
-          }],
-          topo: [{
-            trigger: 'blur',
-            validator: validatorUrl,
-          }],
-          graphql: [{
-            trigger: 'blur',
-            validator: validatorUrl,
-          }],
-          rest: [{
-            trigger: 'blur',
-            validator: validatorUrl,
-          }],
+          file: [
+            {
+              trigger: 'blur',
+              validator: validatorUrl,
+            },
+          ],
+          topo: [
+            {
+              trigger: 'blur',
+              validator: validatorUrl,
+            },
+          ],
+          graphql: [
+            {
+              trigger: 'blur',
+              validator: validatorUrl,
+            },
+          ],
+          rest: [
+            {
+              trigger: 'blur',
+              validator: validatorUrl,
+            },
+          ],
         },
         form: {
           file: 'http://127.0.0.1:1250/shapes/upload',

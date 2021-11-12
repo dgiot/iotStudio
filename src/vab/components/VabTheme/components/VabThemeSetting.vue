@@ -1,14 +1,14 @@
 <template>
   <div v-show="path == 'Userinfo'">
     <el-button
-      :style="{
-        right: showThemeSetting == true ? '72px' : '0px',
-        display: device == 'mobile' ? 'none' : 'block',
-      }"
       circle
       class="setting-btn"
       icon="el-icon-setting"
       size="mini"
+      :style="{
+        right: showThemeSetting == true ? '72px' : '0px',
+        display: device == 'mobile' ? 'none' : 'block',
+      }"
       type="success"
       @click.native="changeThemeSetting(showThemeSetting)"
     />
@@ -138,8 +138,8 @@
             color: $color;
             background: mix($base-color-white, $color, 90%);
             transition: color 0.15s ease, background-color 0.15s ease,
-            border-color 0.15s ease, box-shadow 0.15s ease,
-            -webkit-box-shadow 0.15s ease;
+              border-color 0.15s ease, box-shadow 0.15s ease,
+              -webkit-box-shadow 0.15s ease;
 
             &:hover {
               color: $base-color-white;

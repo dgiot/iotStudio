@@ -8,6 +8,7 @@ let setting = {
   userName: options.userName,
   passWord: options.passWord,
 }
+
 export function clientMqtt() {
   iotMqtt.init({
     ...setting,

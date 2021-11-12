@@ -10,8 +10,8 @@
       <svg
         v-else
         :height="height"
-        :width="width"
         viewBox="0 0 184 152"
+        :width="width"
         xmlns="http://www.w3.org/2000/svg"
       >
         <g
@@ -97,8 +97,7 @@
       imageStyle: {
         required: false,
         type: Object,
-        default: () => {
-        },
+        default: () => {},
       },
     },
     data() {
