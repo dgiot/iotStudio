@@ -1,49 +1,9 @@
-## [4.3.8](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.7...v4.3.8) (2021-11-10)
+## [4.3.8](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.6...v4.3.8) (2021-11-12)
 
 
 ### Bug Fixes
 
-* **src/config/cli.config.js:** the element-ui font file cannot be found after repair packaging ([a236d4b](https://github.com/dgiot/dgiot-dashboard/commit/a236d4b985541c1441f27dce395c5c0252e7f067))
-* **src/utils/konva/core/topothing.js:** konva lable opacity ([5e271c0](https://github.com/dgiot/dgiot-dashboard/commit/5e271c0786f94e2013a90b0d27b71f60d4549b69))
-
-
-### Features
-
-* **.github/workflows/oss.yml:** action ([5ac4229](https://github.com/dgiot/dgiot-dashboard/commit/5ac42299eadb8aea0dfc56182d0a41b4ea4bdfa8))
-* **.github/workflows/sync-gitee.yml:** branches ([d2d5f2f](https://github.com/dgiot/dgiot-dashboard/commit/d2d5f2f37a1985b4ce75ecf289f3ff2ed01d6e92))
-* **.github/workflows/sync-gitee.yml:** sync to Gitee ([7cbaf42](https://github.com/dgiot/dgiot-dashboard/commit/7cbaf42281d912115a61964f8caba690de4eda35))
-* **20 chars)::** lowcode save ([17b09ff](https://github.com/dgiot/dgiot-dashboard/commit/17b09ffc1072d875e1ffef6a6dd219131dfa1844))
-* commit ([14f61a3](https://github.com/dgiot/dgiot-dashboard/commit/14f61a3d5ef267b57489bd5f9225ba453212dc29))
-* hidden settings ([59029a7](https://github.com/dgiot/dgiot-dashboard/commit/59029a704978f29e9531061faffebc22e52936cc))
-* package.json ([63f529a](https://github.com/dgiot/dgiot-dashboard/commit/63f529a40cbcb66893c8534b2eb51f1d97d1eb78))
-* **package.json:** devDependencies @babel/runtime ([d9b23b1](https://github.com/dgiot/dgiot-dashboard/commit/d9b23b11daeee02808eb38cb39572a04fac658b7))
-* **package.json:** fix build error ([1c1fde0](https://github.com/dgiot/dgiot-dashboard/commit/1c1fde09b8e1302638fd0aadae2f6535f0f9da6a))
-* pnpm-lock.yaml ([11e7687](https://github.com/dgiot/dgiot-dashboard/commit/11e76877325621c112cdba4f9fded8e98dda8a3d))
-* **pnpm-lock.yaml:** pnpm-lock.yaml ([6c8ac44](https://github.com/dgiot/dgiot-dashboard/commit/6c8ac4451d0522eb7e42ef1bd63e6b4cc991531a))
-* **public/index.html:** website statistical analysis ([65c38ef](https://github.com/dgiot/dgiot-dashboard/commit/65c38ef9b4d00a45ecbd52e06d600347027c45ee))
-* **src/utils/konva/core/topobg.js:** change topo bg ([c5ec599](https://github.com/dgiot/dgiot-dashboard/commit/c5ec5999b1e60f9fec57d50370cd3edddf936a09))
-* src/vab/components/VabAmis/index.vue ([57839f8](https://github.com/dgiot/dgiot-dashboard/commit/57839f87b6a1052ca8b7647ae9e352437e46102a))
-* **src/vab/components/vabdrawercode/index.vue:** amis link ([8e67e72](https://github.com/dgiot/dgiot-dashboard/commit/8e67e72fdae14daf629d3c8c2f13ab888e84ff13))
-* src/views/CloudTest/Report/index.vue ([9b34e61](https://github.com/dgiot/dgiot-dashboard/commit/9b34e61f76a86ddac5bf14fe026021c8bcb520b3))
-* src/views/CloudTest/Report/index.vue ([9f9e8a2](https://github.com/dgiot/dgiot-dashboard/commit/9f9e8a2c8be031f6785baba2099c8eef4edb7d17))
-* **src/views/cloudtest/report/index.vue:** added cloud detection interface ([7da6789](https://github.com/dgiot/dgiot-dashboard/commit/7da6789a6e81927cc339add45a06d4fd40d8828b))
-* **src/views/cloudtest/report/index.vue:** pagination query Jump to configuration ([3e82043](https://github.com/dgiot/dgiot-dashboard/commit/3e82043fa5bd4c48c8a260332246a641bc8c0bfa))
-* **src/views/cloudtest/report/index.vue:** report ([75eaef9](https://github.com/dgiot/dgiot-dashboard/commit/75eaef9b6c134414a74f53bf6fb7fa657f0708ce))
-* src/views/CloudTest/Task/index.vue ([e53f309](https://github.com/dgiot/dgiot-dashboard/commit/e53f309a214958a4b8f2f5c92b198d6a571da921))
-* **src/views/systemmanage/filemanagement.vue:** add filemanagement ([b6f77e7](https://github.com/dgiot/dgiot-dashboard/commit/b6f77e7d0fa15fe462fcdf134f567d516035f025))
-* **src/views/systemmanage/filemanagement.vue:** filemanagement ([627f92d](https://github.com/dgiot/dgiot-dashboard/commit/627f92df3900686008e610b15f90af2a5ef61bc9))
-* **src/views/topo/components/topoheader.vue:** konva preview ([8a2b7d7](https://github.com/dgiot/dgiot-dashboard/commit/8a2b7d74663a176e4c22252b1882218d2ae01d5e))
-
-
-
-## [4.3.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.6...v4.3.7) (2021-11-04)
-
-
-### Bug Fixes
-
-* **.github/workflows/sync-repo.yml:** fix the problem that the script fails when syncing to gitee ([d26dfea](https://github.com/dgiot/dgiot-dashboard/commit/d26dfea1d3adbc25ea449e7a0cf470564d5a8530))
 * **\src\config\local.config.js:** solve the display problem of the product template pop-up window ([3c8e406](https://github.com/dgiot/dgiot-dashboard/commit/3c8e40672d45137e6ba2b335d617d719c06b65e1))
-* **action:** repair the structure video ([1bf2a65](https://github.com/dgiot/dgiot-dashboard/commit/1bf2a65ff6a7c9fb1b4ab86267f8240bcc531546))
 * **deps:** pin dependencies ([99fed4b](https://github.com/dgiot/dgiot-dashboard/commit/99fed4beca62a716854c9ad450bace22e61fa94b))
 * **deps:** pin dependencies ([bc1a322](https://github.com/dgiot/dgiot-dashboard/commit/bc1a3222b007ffcc260821c729dc906d4d611982))
 * **deps:** pin dependency shelljs to 0.8.4 ([1229cf8](https://github.com/dgiot/dgiot-dashboard/commit/1229cf8947720a9abecaf19e4877fcd4427a9af1))
@@ -56,15 +16,14 @@
 * **home_gropp2.vue:** device type error modification ([fb9c24f](https://github.com/dgiot/dgiot-dashboard/commit/fb9c24f58ae0b763970b50ef48393b116dff9773))
 * **package.json:** build ([9e2410b](https://github.com/dgiot/dgiot-dashboard/commit/9e2410b0c1932b1844d078b7c877170f0595214d))
 * **package.json:** fix problems with the script ([962c9fb](https://github.com/dgiot/dgiot-dashboard/commit/962c9fbc163559bdaaa4e5b53872de954dc5c427))
-* producttemple ([9f7d527](https://github.com/dgiot/dgiot-dashboard/commit/9f7d527582d9a027ea38863d6065b65dd8f969d8))
 * **src/views/topo/components/topoallocation.vue:** assets ([00c01e9](https://github.com/dgiot/dgiot-dashboard/commit/00c01e9111ffde6a422ae40bafb74cb720efe517))
-* **src/views/topo/components/topobase.vue:** fix the field error when saving the configuration ([3feeb4c](https://github.com/dgiot/dgiot-dashboard/commit/3feeb4cff8b7f7e98812fb6a565ed525f5892845))
 * **utils/push.js:** fix build error ([61e61aa](https://github.com/dgiot/dgiot-dashboard/commit/61e61aae31f1066fd6d28b075494cf58c4fbc2ba))
 
 
 ### Features
 
 * **.github/workflows/lighthouse.yml:** lighthouse ([7fa0a45](https://github.com/dgiot/dgiot-dashboard/commit/7fa0a454213cbbe6a3d9905d1daa8ecd657a33bf))
+* action ([bf58348](https://github.com/dgiot/dgiot-dashboard/commit/bf5834880b255b5a186e6f773392209a8366c5c2))
 * added Asian Games style files ([19b3967](https://github.com/dgiot/dgiot-dashboard/commit/19b3967e564a2d986fb234c22094d49934116240))
 * combining code to resolve conflicts ([549a968](https://github.com/dgiot/dgiot-dashboard/commit/549a96804be3c4ce89e049ef3e6630e5a9342d75))
 * custom default category ([4e348ca](https://github.com/dgiot/dgiot-dashboard/commit/4e348ca7d6d3c01a1ae46c85463bbebce9758b7a))
@@ -75,65 +34,27 @@
 * **lighthouse:** added lighthouse analysis action ([48c0204](https://github.com/dgiot/dgiot-dashboard/commit/48c020417cb651eb478115cec2798377f885bd52))
 * **package.json && src/config/cli.config.js && vue.config.js:** build ([d2cc5b6](https://github.com/dgiot/dgiot-dashboard/commit/d2cc5b6fd951e90236b76e4695722ba8c70ab579))
 * **proddetail.vue:** proddetail.vue ([2b8ab66](https://github.com/dgiot/dgiot-dashboard/commit/2b8ab66357c577be6354032d1ce5e5ebcee78c46))
-* product,category ([14994ea](https://github.com/dgiot/dgiot-dashboard/commit/14994ea7a11fcf128d6fa9da27c3e0ff96fb7852))
-* producttemplet ([5d2ede2](https://github.com/dgiot/dgiot-dashboard/commit/5d2ede2e5f33ad3a10e03d3450adefb66eb0d396))
-* profile ([39c98ad](https://github.com/dgiot/dgiot-dashboard/commit/39c98ad815d6551906e70e9c7298987699ffcaec))
 * profile ([5bba068](https://github.com/dgiot/dgiot-dashboard/commit/5bba068855e957f98c9a13c8bf7827e4b8b14188))
 * profile.vue ([bc8482c](https://github.com/dgiot/dgiot-dashboard/commit/bc8482cf7c99f49c881b0f5681916cc58ce31530))
 * solve the problems caused by the merged code ([a646beb](https://github.com/dgiot/dgiot-dashboard/commit/a646beb22b0b211949d8ae4b03ec9264089cb137))
 * **src/config/cli.config.js && vue.config.js:** cdn ([15b412e](https://github.com/dgiot/dgiot-dashboard/commit/15b412e789cf0f5e85331f5a49854ee8d3e28f84))
 * **src/config/local.config.js:** optimize resource loading speed ([3388c41](https://github.com/dgiot/dgiot-dashboard/commit/3388c412aef91dd2f63ffbd1e89eabc32ffa14c2))
 * **src/store/modules/topo.js:** configure click events and edit text ([c188752](https://github.com/dgiot/dgiot-dashboard/commit/c18875244fb1ddc823b202ac40303af9581e3598))
-* **src/store/modules/topo.js:** global overall configuration zoom ([f3d1227](https://github.com/dgiot/dgiot-dashboard/commit/f3d12276efbc89dd2aa91284d73ae8c1f0abf14d))
-* **src/store/modules/topo.js:** organize the configuration structure ([4c623f6](https://github.com/dgiot/dgiot-dashboard/commit/4c623f67787c0395287708a534f6f19916cb227b))
 * **src/store/modules/topo.js:** topo ([4f215bc](https://github.com/dgiot/dgiot-dashboard/commit/4f215bc74fa963e4b6d72c352b981c72d5090650))
-* **src/store/modules/topo.js:** update configuration method ([42a73bd](https://github.com/dgiot/dgiot-dashboard/commit/42a73bda06d656d0abde0b15bfee8c9ac8abfc2b))
-* **src/utils/konva/core/topostage.js:** forensic Type Definition Event ([f64ccd9](https://github.com/dgiot/dgiot-dashboard/commit/f64ccd918789f2046889cb345186879926dda4bf))
-* **src/utils/konva/core/topothing.js:** configuration binding model ([0c720c4](https://github.com/dgiot/dgiot-dashboard/commit/0c720c4cd534e84841f90a8f72c2a607551e9148))
-* **src/utils/konva/core/topothing.js:** create configuration label ([04a5620](https://github.com/dgiot/dgiot-dashboard/commit/04a56203ad30127854c3e512fb31ef157c7546cc))
-* **src/views/amis/amis.vue:** added amis low code support ([5a46a51](https://github.com/dgiot/dgiot-dashboard/commit/5a46a51b593142270a54403ab56e8f485ac62056))
 * **src/views/engine/home_resourcechannel.vue && package.json:** dialog ([04476f3](https://github.com/dgiot/dgiot-dashboard/commit/04476f323e80b1fb9e6a1ad4931295c0f8bf1916))
 * **src/views/equipment_management/component/scenelog.vue:** sceblog sendmqtt ([e5ffa2e](https://github.com/dgiot/dgiot-dashboard/commit/e5ffa2e442d23f851c145534b8e08ec0ab4733a2))
 * **src/views/equipment_management/component/scenelog.vue:** trace log ([ae1a44c](https://github.com/dgiot/dgiot-dashboard/commit/ae1a44cb5710c1509cd4a10404424f0838548b86))
 * **src/views/equipment_management/editdevices.vue:** device log type ([8145806](https://github.com/dgiot/dgiot-dashboard/commit/8145806c2004f658cc61847717833738091df0a5))
-* **src/views/equipment_management/home_group2.vue:** set the default value of the new product ([620fc8f](https://github.com/dgiot/dgiot-dashboard/commit/620fc8ffe9562e0d010839148b726383578533ec))
-* **src/views/equipment_management/home_index.vue:** adjust the height of the table page ([715555f](https://github.com/dgiot/dgiot-dashboard/commit/715555fb1b773ac4a0e12738f59fdcab96b4b24c))
 * **src/views/equipment_management/proddetail.vue:** product.parser ([13c4e10](https://github.com/dgiot/dgiot-dashboard/commit/13c4e10bebac8c6faa5d47bdd871013478dc7fa1))
 * **src/views/equipment_management/profile.vue:** saveParse ([d2de90c](https://github.com/dgiot/dgiot-dashboard/commit/d2de90c4ca6f5a6f3a1ea4d92ae3eb6664094624))
 * **src/views/logs/device.vue && src/i18n/zh.js:** deviceLog Type ([6f836af](https://github.com/dgiot/dgiot-dashboard/commit/6f836afecf7da2e17aa64157c75423d1c56c4929))
-* **src/views/roles/menu.vue:** add user-defined image logo upload function ([a2296e7](https://github.com/dgiot/dgiot-dashboard/commit/a2296e7c2796da621642e2da97406a99fcd64441))
 * **src/views/roles/structure.vue:** user Management ([1dd7d52](https://github.com/dgiot/dgiot-dashboard/commit/1dd7d52090323e437b6fe4102062ecd8aca7f31e))
-* **src/views/topo/components/thing.vue:** konva bus emit bindTopo ([a97a8ad](https://github.com/dgiot/dgiot-dashboard/commit/a97a8ad38bfc488d6455dbdc155e1567e0fe5183))
-* **src/views/topo/components/thing.vue:** new forensic type ([5a23fd6](https://github.com/dgiot/dgiot-dashboard/commit/5a23fd66e4b77c4cd762364770c99c8990b95942))
-* **src/views/topo/components/thing.vue:** topo save ([4ce18c7](https://github.com/dgiot/dgiot-dashboard/commit/4ce18c7196370bf6dc7421f3feb378747dd90de1))
 * **src/views/topo/components/topoallocation.vue:** dynamic topo cdn resource address ([d23df8c](https://github.com/dgiot/dgiot-dashboard/commit/d23df8c1307ef242a0068b82cf63676accf6d959))
 * **src/views/topo/components/topobase.vue:** all configuration interface ([4d9a1e7](https://github.com/dgiot/dgiot-dashboard/commit/4d9a1e7d44948c8bcea74aa6a88e647bf6ba5ad5))
-* **src/views/topo/components/topobase.vue:** configuration save and submit ([d5022f3](https://github.com/dgiot/dgiot-dashboard/commit/d5022f3316a9d5132b4912c449c45442ee266cba))
 * **src/views/topo/components/topobase.vue:** full screen configuration page ([b73c863](https://github.com/dgiot/dgiot-dashboard/commit/b73c8636eb2712e821d2fcd034ea25eca6b4211b))
 * **src/views/topo/components/topobase.vue:** new mouse right-click menu ([ef30de8](https://github.com/dgiot/dgiot-dashboard/commit/ef30de88005f3c9928b2bdf8bb24e656744a6d74))
-* **src/views/topo/components/topoevidence.vue:** define the sidebar icon ([3f9e206](https://github.com/dgiot/dgiot-dashboard/commit/3f9e2068c46cd42fc591f2d1865908ff04347c7d))
-* **src/views/topo/components/topoevidence.vue:** forensic data interaction ([6d74ca9](https://github.com/dgiot/dgiot-dashboard/commit/6d74ca9414dffa44d914d4c9192f94d3519633b4))
 * style ([68f98e4](https://github.com/dgiot/dgiot-dashboard/commit/68f98e4abab531b7b65740b68339ba109511c852))
-* **thing.vue:** bindTopo ([6bf23d1](https://github.com/dgiot/dgiot-dashboard/commit/6bf23d14ed9190b60d2c7791c3194836afdcb2d5))
 * **topo:** define the configuration event method and handle the corresponding function ([f0f6565](https://github.com/dgiot/dgiot-dashboard/commit/f0f65653337a34a52c4665fb8918c150dc116f9a))
-* **utils/server.js:** add command prompt after running ([03bba97](https://github.com/dgiot/dgiot-dashboard/commit/03bba97c87258e2c9cf3acf830b50e618334b66b))
-
-
-### Performance Improvements
-
-* **.github/workflows/assets-cdn.yml:** install rimraf before build ([dbdc2bd](https://github.com/dgiot/dgiot-dashboard/commit/dbdc2bd5bc0685a5dcab7d132beebb2e17f865e5))
-* **.github/workflows/assets-cdn.yml:** lockfile-only ([cd46882](https://github.com/dgiot/dgiot-dashboard/commit/cd46882f57af1b070fe2cfaa10ca3abff96003dd))
-* **.github/workflows/assets-cdn.yml:** modify pnpm to yarn ([0926fb2](https://github.com/dgiot/dgiot-dashboard/commit/0926fb230f35cfe73108581c452423f97d5847cd))
-* **.github/workflows/assets-cdn.yml:** no cache ([add6d16](https://github.com/dgiot/dgiot-dashboard/commit/add6d16e67b789db646bdd7e6895237a50b98715))
-* **.github/workflows/assets-cdn.yml:** no cache ([80600a6](https://github.com/dgiot/dgiot-dashboard/commit/80600a6f6cd45716710a54c64e89204f729a5ec9))
-* **.github/workflows/assets-cdn.yml:** upload static files to tencent oss ([de548bc](https://github.com/dgiot/dgiot-dashboard/commit/de548bce4acacd4e833a8d3336757f437beb0b72))
-* **action:** modify the node version in the build command ([eac31e8](https://github.com/dgiot/dgiot-dashboard/commit/eac31e8263fa569e4066f1dddfa5d2d973042f85))
-* **action:** modify the region where the Tencent Cloud storage bucket is located ([9ad8657](https://github.com/dgiot/dgiot-dashboard/commit/9ad8657732543ea5ec21c30ec6be0d01e7d46504))
-* **action:** set pnpm cache dependency ([5063dbc](https://github.com/dgiot/dgiot-dashboard/commit/5063dbc7e299100a48b062cd75ca50e807f0b3b9))
-* **action:** set pnpm cache dependency ([d6c1a02](https://github.com/dgiot/dgiot-dashboard/commit/d6c1a0218f6bb396c265a9e06eb1e04040bb16f0))
-* **action:** set the node version to be consistent with the local ([ae66de5](https://github.com/dgiot/dgiot-dashboard/commit/ae66de5ac5748a707bcb95b3afaf39e74139f643))
-* **action:** set up pnpm registry ([264a14a](https://github.com/dgiot/dgiot-dashboard/commit/264a14a4c482565aea77a98b83ff99a183aa08e7))
-* **package.json:** modify package.json dependency package ([b5f7864](https://github.com/dgiot/dgiot-dashboard/commit/b5f7864cf9f21017e77b943979c784d591109660))
 
 
 
