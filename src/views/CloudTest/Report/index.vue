@@ -121,8 +121,8 @@
             >
               <template #default="{ row }">
                 <el-image
-                  :preview-src-list="[row.icon]"
-                  :src="row.icon"
+                  :preview-src-list="[$FileServe + row.icon]"
+                  :src="$FileServe + row.icon"
                   style="width: 40px; height: 40px"
                 />
               </template>

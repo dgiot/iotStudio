@@ -23,7 +23,7 @@ const topoBg = {
     } = canvas
     const bgSrc = topobgSrc.includes('//')
       ? topobgSrc
-      : location.host + topobgSrc
+      : sessionStorage.getItem('fileServer') + topobgSrc
     const setattrs = canvas.konvaAttr
     console.log('当前组态的背景底图是：', bgSrc, stage)
     // bgNode.on('contextmenu', (e) => {

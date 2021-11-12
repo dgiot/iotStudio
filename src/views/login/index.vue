@@ -177,9 +177,6 @@
         timer: 0,
       }
     },
-    created() {
-      sessionStorage.setItem('fileServer', location.host)
-    },
     computed: {
       ...mapGetters({
         language: 'settings/language',
@@ -214,6 +211,13 @@
         },
         immediate: true,
       },
+    },
+    created() {
+      const url =
+        process.env.NODE_ENV === 'development'
+          ? process.env.VUE_APP_URL
+          : location.origin
+      sessionStorage.setItem('fileServer', url)
     },
     mounted() {
       this.initShuwa()

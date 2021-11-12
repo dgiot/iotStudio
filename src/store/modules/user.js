@@ -240,10 +240,6 @@ const actions = {
     const _userInfo = (await login(userInfo)) || {}
     let data = _.merge(
       {
-        fileServer:
-          process.env.NODE_ENV === 'development'
-            ? process.env.VUE_APP_URL
-            : location.origin,
         tag: {
           companyinfo: {
             title: ``,
@@ -310,8 +306,6 @@ const actions = {
           ? '下午好'
           : '晚上好'
       Vue.prototype.$baseNotify(title, `${thisTime}！`)
-      //  登录成功后设置文件服务器地址
-      Vue.prototype.$FileServe = fileServer
     } else {
       // Vue.prototype.$baseMessage(
       //   `登录接口异常，未正确返回${tokenName}...`,
