@@ -1,4 +1,4 @@
-<template>
+template>
   <div class="instruct">
     <div>
       <el-form

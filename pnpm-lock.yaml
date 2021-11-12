@@ -68,6 +68,7 @@ specifiers:
   script-loader: 0.7.2
   shelljs: 0.8.4
   speed-measure-webpack-plugin: 1.5.0
+  standard-version: ^9.3.2
   stylelint: ^13.13.1
   stylelint-config-prettier: ^9.0.3
   stylelint-config-recess-order: ^2.5.0
@@ -110,6 +111,7 @@ dependencies:
   register-service-worker: 1.7.2
   resize-detector: 0.3.0
   sax: 1.2.4
+  standard-version: 9.3.2
   vab-icons: github.com.cnpmjs.org/zxcasvw/vab-icons/9b6a93942880ee21594110bf55310b7b097d9beb
   vue-contextmenu: 1.5.10
   vue-ele-form-data-editor: 0.1.6
@@ -4055,6 +4057,16 @@ packages:
       readable-stream: 2.3.7
       typedarray: 0.0.6
 
+  /concat-stream/2.0.0:
+    resolution: {integrity: sha1-QUz1r3kKSMYKub5FJ9VtXkETPLE=, tarball: concat-stream/download/concat-stream-2.0.0.tgz}
+    engines: {'0': node >= 6.0}
+    dependencies:
+      buffer-from: 1.1.2
+      inherits: 2.0.4
+      readable-stream: 3.6.0
+      typedarray: 0.0.6
+    dev: false
+
   /configstore/5.0.1:
     resolution: {integrity: sha1-02UCG130uYzdGH1qOw4/anzF7ZY=, tarball: configstore/download/configstore-5.0.1.tgz?cache=0&sync_timestamp=1636619381273&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fconfigstore%2Fdownload%2Fconfigstore-5.0.1.tgz}
     engines: {node: '>=8'}
@@ -4150,6 +4162,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       q: 1.5.1
+    dev: false
+
+  /conventional-changelog-config-spec/2.1.0:
+    resolution: {integrity: sha1-h0pjUofvi1gf2FWFMr9lXU+1ny0=, tarball: conventional-changelog-config-spec/download/conventional-changelog-config-spec-2.1.0.tgz}
     dev: false
 
   /conventional-changelog-conventionalcommits/4.6.1:
@@ -4276,6 +4292,21 @@ packages:
       meow: 8.1.2
       split2: 3.2.2
       through2: 4.0.2
+
+  /conventional-recommended-bump/6.1.0:
+    resolution: {integrity: sha1-z6YjKF0d5VQBLy/95w2ciiIjH1U=, tarball: conventional-recommended-bump/download/conventional-recommended-bump-6.1.0.tgz}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      concat-stream: 2.0.0
+      conventional-changelog-preset-loader: 2.3.4
+      conventional-commits-filter: 2.0.7
+      conventional-commits-parser: 3.2.3
+      git-raw-commits: 2.0.10
+      git-semver-tags: 4.1.1
+      meow: 8.1.2
+      q: 1.5.1
+    dev: false
 
   /convert-source-map/1.8.0:
     resolution: {integrity: sha1-8zc8MtIbTXgN2ABFFGhPt5HKQ2k=, tarball: convert-source-map/download/convert-source-map-1.8.0.tgz}
@@ -4999,6 +5030,11 @@ packages:
     resolution: {integrity: sha1-Cr0PVJ9p/GZZolT+lnhhhrb1KP0=, tarball: detect-indent/download/detect-indent-6.0.0.tgz}
     engines: {node: '>=8'}
 
+  /detect-newline/3.1.0:
+    resolution: {integrity: sha1-V29d/GOuGhkv8ZLYrTr2MImRtlE=, tarball: detect-newline/download/detect-newline-3.1.0.tgz?cache=0&sync_timestamp=1636676939574&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fdetect-newline%2Fdownload%2Fdetect-newline-3.1.0.tgz}
+    engines: {node: '>=8'}
+    dev: false
+
   /detect-node/2.1.0:
     resolution: {integrity: sha1-yccHdaScPQO8LAbZpzvlUPl4+LE=, tarball: detect-node/download/detect-node-2.1.0.tgz}
     dev: true
@@ -5140,6 +5176,14 @@ packages:
     resolution: {integrity: sha1-Bhr2ZNGff02PxuT/m1hM4jety4s=, tarball: dotenv/download/dotenv-8.6.0.tgz}
     engines: {node: '>=10'}
     dev: true
+
+  /dotgitignore/2.1.0:
+    resolution: {integrity: sha1-pLFaTk7zzzg1mKrx36SgS8wIm3s=, tarball: dotgitignore/download/dotgitignore-2.1.0.tgz}
+    engines: {node: '>=6'}
+    dependencies:
+      find-up: 3.0.0
+      minimatch: 3.0.4
+    dev: false
 
   /downshift/6.1.7_react@16.14.0:
     resolution: {integrity: sha1-/bTE5PHRFYeYXNduIei0s/py5Ew=, tarball: downshift/download/downshift-6.1.7.tgz}
@@ -5901,7 +5945,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       escape-string-regexp: 1.0.5
-    dev: true
 
   /file-entry-cache/6.0.1:
     resolution: {integrity: sha1-IRst2WWcsDlLBz5zI6w8kz1SICc=, tarball: file-entry-cache/download/file-entry-cache-6.0.1.tgz}
@@ -6084,7 +6127,6 @@ packages:
     dependencies:
       locate-path: 6.0.0
       path-exists: 4.0.0
-    dev: true
 
   /findup-sync/4.0.0:
     resolution: {integrity: sha1-lWyc3egEBSuIG0KFEpBcSl8s3vA=, tarball: findup-sync/download/findup-sync-4.0.0.tgz}
@@ -6203,6 +6245,13 @@ packages:
     dependencies:
       inherits: 2.0.4
       readable-stream: 2.3.7
+
+  /fs-access/1.0.1:
+    resolution: {integrity: sha1-1qh/JiJxzv6+wwxVNAf7mV2od3o=, tarball: fs-access/download/fs-access-1.0.1.tgz}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      null-check: 1.0.0
+    dev: false
 
   /fs-constants/1.0.0:
     resolution: {integrity: sha1-a+Dem+mYzhavivwkSXue6bfM2a0=, tarball: fs-constants/download/fs-constants-1.0.0.tgz}
@@ -6610,7 +6659,7 @@ packages:
     dev: true
 
   /handlebars/4.7.7:
-    resolution: {integrity: sha1-nOM0FqrQLb1sj6+oJA1dmABJRaE=, tarball: handlebars/download/handlebars-4.7.7.tgz}
+    resolution: {integrity: sha1-nOM0FqrQLb1sj6+oJA1dmABJRaE=, tarball: handlebars/download/handlebars-4.7.7.tgz?cache=0&sync_timestamp=1636173584052&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fhandlebars%2Fdownload%2Fhandlebars-4.7.7.tgz}
     engines: {node: '>=0.4.7'}
     hasBin: true
     dependencies:
@@ -8080,7 +8129,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
-    dev: true
 
   /lodash-es/4.17.21:
     resolution: {integrity: sha1-Q+YmxG5lkbd1C+srUBFzkMYJ4+4=, tarball: lodash-es/download/lodash-es-4.17.21.tgz}
@@ -9106,6 +9154,11 @@ packages:
     dependencies:
       boolbase: 1.0.0
 
+  /null-check/1.0.0:
+    resolution: {integrity: sha1-l33/1xdgErnsMNKjnbXPcqBDnt0=, tarball: null-check/download/null-check-1.0.0.tgz}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
   /num2fraction/1.2.2:
     resolution: {integrity: sha1-b2gragJ6Tp3fpFZM0lidHU5mnt4=, tarball: num2fraction/download/num2fraction-1.2.2.tgz}
     dev: true
@@ -9337,7 +9390,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yocto-queue: 0.1.0
-    dev: true
 
   /p-locate/2.0.0:
     resolution: {integrity: sha1-IKAQOyIqcMj9OcwuWAaA893l7EM=, tarball: p-locate/download/p-locate-2.0.0.tgz}
@@ -9363,7 +9415,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-limit: 3.1.0
-    dev: true
 
   /p-map/2.1.0:
     resolution: {integrity: sha1-MQko/u+cnsxltosXaTAYpmXOoXU=, tarball: p-map/download/p-map-2.1.0.tgz}
@@ -11700,6 +11751,28 @@ packages:
     resolution: {integrity: sha1-UkKUktY8YuuYmATBFVLj0i53kwM=, tarball: stackframe/download/stackframe-1.2.0.tgz}
     dev: true
 
+  /standard-version/9.3.2:
+    resolution: {integrity: sha1-KNuMG+Zv0tc28o98XedhnmTNbas=, tarball: standard-version/download/standard-version-9.3.2.tgz}
+    engines: {node: '>=10'}
+    hasBin: true
+    dependencies:
+      chalk: 2.4.2
+      conventional-changelog: 3.1.24
+      conventional-changelog-config-spec: 2.1.0
+      conventional-changelog-conventionalcommits: 4.6.1
+      conventional-recommended-bump: 6.1.0
+      detect-indent: 6.0.0
+      detect-newline: 3.1.0
+      dotgitignore: 2.1.0
+      figures: 3.2.0
+      find-up: 5.0.0
+      fs-access: 1.0.1
+      git-semver-tags: 4.1.1
+      semver: 7.3.5
+      stringify-package: 1.0.1
+      yargs: 16.2.0
+    dev: false
+
   /static-extend/0.1.2:
     resolution: {integrity: sha1-YICcOcv/VTNyJv1eC1IPNB8ftcY=, tarball: static-extend/download/static-extend-0.1.2.tgz}
     engines: {node: '>=0.10.0'}
@@ -11815,6 +11888,10 @@ packages:
       get-own-enumerable-property-symbols: 3.0.2
       is-obj: 1.0.1
       is-regexp: 1.0.0
+
+  /stringify-package/1.0.1:
+    resolution: {integrity: sha1-5ao2Q+f3TQ8oYoty89rVzs/DuoU=, tarball: stringify-package/download/stringify-package-1.0.1.tgz?cache=0&sync_timestamp=1636676941089&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fstringify-package%2Fdownload%2Fstringify-package-1.0.1.tgz}
+    dev: false
 
   /strip-ansi/3.0.1:
     resolution: {integrity: sha1-ajhfuIU9lS1f8F0Oiq+UJ43GPc8=, tarball: strip-ansi/download/strip-ansi-3.0.1.tgz?cache=0&sync_timestamp=1636619372398&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fstrip-ansi%2Fdownload%2Fstrip-ansi-3.0.1.tgz}
@@ -12800,7 +12877,7 @@ packages:
     dev: true
 
   /util-deprecate/1.0.2:
-    resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=, tarball: util-deprecate/download/util-deprecate-1.0.2.tgz}
+    resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=, tarball: util-deprecate/download/util-deprecate-1.0.2.tgz?cache=0&sync_timestamp=1636619290552&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Futil-deprecate%2Fdownload%2Futil-deprecate-1.0.2.tgz}
 
   /util.promisify/1.0.0:
     resolution: {integrity: sha1-RA9xZaRZyaFtwUXrjnLzVocJcDA=, tarball: util.promisify/download/util.promisify-1.0.0.tgz}
@@ -13591,7 +13668,6 @@ packages:
   /yocto-queue/0.1.0:
     resolution: {integrity: sha1-ApTrPe4FAo0x7hpfosVWpqrxChs=, tarball: yocto-queue/download/yocto-queue-0.1.0.tgz}
     engines: {node: '>=10'}
-    dev: true
 
   /yorkie/2.0.0:
     resolution: {integrity: sha1-kkEZEtQ1IU4SxRwq4Qk+VLa7g9k=, tarball: yorkie/download/yorkie-2.0.0.tgz}

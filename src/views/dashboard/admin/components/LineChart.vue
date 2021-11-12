@@ -1,4 +1,4 @@
-<template>
+template>
   <div
     :class="className"
     :style="{ height: height, width: width }"

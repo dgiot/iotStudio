@@ -3,6 +3,7 @@
 </template>
 <script>
   import MQTTConnect from '@/utils/MQTTConnect'
+
   const { options, iotMqtt } = MQTTConnect
   export default {
     name: 'VabMqtt',

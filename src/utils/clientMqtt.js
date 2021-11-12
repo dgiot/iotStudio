@@ -1,4 +1,5 @@
 import MQTTConnect from '@/utils/MQTTConnect'
+
 const { options, iotMqtt } = MQTTConnect
 let setting = {
   id: 'dgiot_' + new Date().getTime(),

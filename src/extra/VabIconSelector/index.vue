@@ -3,12 +3,20 @@
     <el-col :span="24">
       <vab-query-form>
         <vab-query-form-top-panel>
-          <el-form :inline="true" label-width="0" @submit.native.prevent>
+          <el-form
+            :inline="true"
+            label-width="0"
+            @submit.native.prevent
+          >
             <el-form-item label="">
               <el-input v-model="queryForm.title" />
             </el-form-item>
             <el-form-item label-width="0">
-              <el-button native-type="submit" type="primary" @click="queryData">
+              <el-button
+                native-type="submit"
+                type="primary"
+                @click="queryData"
+              >
                 查询
               </el-button>
             </el-form-item>
@@ -17,8 +25,15 @@
       </vab-query-form>
     </el-col>
 
-    <el-col v-for="(item, index) in queryIcon" :key="index" :span="6">
-      <el-card shadow="hover" @click.native="handleIcon(item)">
+    <el-col
+      v-for="(item, index) in queryIcon"
+      :key="index"
+      :span="6"
+    >
+      <el-card
+        shadow="hover"
+        @click.native="handleIcon(item)"
+      >
         <vab-icon :icon="item" />
       </el-card>
     </el-col>

@@ -21,6 +21,7 @@ function globalUrl(hostname = window.location.hostname, localHost) {
 }
 
 import iotMqtt from '@/utils/iotMqtt'
+
 export default {
   client: {},
   iotMqtt: iotMqtt,

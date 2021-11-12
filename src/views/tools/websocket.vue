@@ -1,6 +1,9 @@
 <template>
   <div class="websocket-view">
-    <el-card class="el-card--self" @keyup.enter.native="mqttConnect">
+    <el-card
+      class="el-card--self"
+      @keyup.enter.native="mqttConnect"
+    >
       <div slot="header">
         <span>{{ $translateTitle('websocket.connect') }}</span>
       </div>
@@ -98,12 +101,18 @@
       </div>
     </el-card>
 
-    <el-card class="el-card--self" style="max-height: 450px">
+    <el-card
+      class="el-card--self"
+      style="max-height: 450px"
+    >
       <div slot="header">
         <span>{{ $translateTitle('websocket.subscribe') }}</span>
       </div>
       <el-form size="medium">
-        <el-row :gutter="20" @keyup.enter.native="mqttSubscribe">
+        <el-row
+          :gutter="20"
+          @keyup.enter.native="mqttSubscribe"
+        >
           <el-col :span="12">
             <el-form-item :label="$translateTitle('websocket.topic')">
               <el-input v-model="subTopic" />
@@ -128,7 +137,10 @@
           </el-col>
           <el-col :span="12">
             <el-form-item :label="$translateTitle('websocket.subscribe')">
-              <el-table :data="subscriptions" :max-height="320">
+              <el-table
+                :data="subscriptions"
+                :max-height="320"
+              >
                 <el-table-column
                   prop="topic"
                   min-width="150"
@@ -171,7 +183,10 @@
         <span>{{ $translateTitle('websocket.messages') }}</span>
       </div>
       <el-form size="medium">
-        <el-row :gutter="20" @keyup.enter.native="mqttPublish">
+        <el-row
+          :gutter="20"
+          @keyup.enter.native="mqttPublish"
+        >
           <el-col :span="6">
             <el-form-item :label="$translateTitle('websocket.topic')">
               <el-input v-model="publishTopic" />
@@ -191,7 +206,10 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col style="margin-top: 33px" :span="6">
+          <el-col
+            style="margin-top: 33px"
+            :span="6"
+          >
             <el-form-item>
               <el-checkbox v-model="publishRetain">
                 {{ $translateTitle('websocket.retained') }}
@@ -209,7 +227,10 @@
           </el-col>
         </el-row>
       </el-form>
-      <el-form size="medium" style="margin-top: 20px">
+      <el-form
+        size="medium"
+        style="margin-top: 20px"
+      >
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item
@@ -220,7 +241,11 @@
                 class="fa fa-refresh refresh-btn"
                 @click="clearMessage(false)"
               ></i>
-              <el-table border :data="publishedMessages" :max-height="600">
+              <el-table
+                border
+                :data="publishedMessages"
+                :max-height="600"
+              >
                 <el-table-column
                   prop="message"
                   min-width="100"
@@ -252,7 +277,11 @@
                 class="fa fa-refresh refresh-btn"
                 @click="clearMessage"
               ></i>
-              <el-table border :data="receivedMessages" :max-height="600">
+              <el-table
+                border
+                :data="receivedMessages"
+                :max-height="600"
+              >
                 <el-table-column
                   prop="message"
                   min-width="100"
@@ -283,21 +312,22 @@
 
 <script>
   import {
-    Input,
-    Checkbox,
-    Select,
-    Option,
     Button,
+    Card,
+    Checkbox,
+    Col,
     Form,
     FormItem,
+    Input,
+    Option,
+    Row,
+    Select,
     Table,
     TableColumn,
-    Row,
-    Col,
-    Card,
   } from 'element-ui'
   import MQTTConnect from '@/utils/MQTTConnect'
   import { _scokethost } from '@/utils/wxscoket'
+
   export default {
     name: 'WebsocketView',
     components: {
