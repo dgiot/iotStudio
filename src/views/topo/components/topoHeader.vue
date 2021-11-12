@@ -3,12 +3,12 @@
   <div class="topo-header">
     <el-drawer
       v-drawerDrag
-      :visible.sync="infoVisible"
       size="100%"
+      :visible.sync="infoVisible"
     >
       <div
-        :key="konva_key"
         id="konva_preview"
+        :key="konva_key"
         class="konva_preview"
       ></div>
     </el-drawer>
@@ -118,9 +118,7 @@
               class="ant-dropdown-link"
               @click="saveTopo"
             >
-              <a-icon
-                type="save"
-              />
+              <a-icon type="save" />
               <p>{{ $translateTitle('konva.save') }}</p>
             </a>
           </a-dropdown>
@@ -129,9 +127,7 @@
               class="ant-dropdown-link"
               @click="eyeTopo"
             >
-              <a-icon
-                type="eye"
-              />
+              <a-icon type="eye" />
               <p>{{ $translateTitle('application.preview') }}</p>
             </a>
           </a-dropdown>
@@ -173,11 +169,11 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
+
   export default {
     name: 'TopoHeader',
-    components: {
-    },
+    components: {},
     props: {
       productid: {
         type: String,
@@ -199,7 +195,7 @@
     data() {
       return {
         konva_key: moment(new Date()).valueOf(),
-        infoVisible:false,
+        infoVisible: false,
         topic: '',
         isshow: true,
         pickerColor: this.graphColor,
@@ -259,15 +255,15 @@
       saveTopo() {
         this.$baseEventBus.$emit('busUpdata')
       },
-      eyeTopo(){
-       this.infoVisible = !this.infoVisible
-       this.$nextTick(()=>{
-         this.initKonva({
-           data: JSON.parse(canvas.stage.toJSON()),
-           id: 'konva_preview',
-         })
-       })
-      this.konva_key =  moment(new Date()).valueOf()
+      eyeTopo() {
+        this.infoVisible = !this.infoVisible
+        this.$nextTick(() => {
+          this.initKonva({
+            data: JSON.parse(canvas.stage.toJSON()),
+            id: 'konva_preview',
+          })
+        })
+        this.konva_key = moment(new Date()).valueOf()
       },
       handFullscreen() {
         this.$parent.$parent.$parent.isFullscreen =
@@ -300,8 +296,11 @@
         })
       },
       flagFn(v) {
-        if (v == 'text')
-          this.setDrawParams({ text: '请输入相关文字' + moment().format('x') })
+        if (v == 'text') {
+          this.setDrawParams({
+            text: '请输入相关文字' + moment().format('x'),
+          })
+        }
 
         // this.$emit('createShape', v, this.graphColor)
         if (v) {
@@ -312,8 +311,11 @@
       },
       removeFn() {
         console.log(this.graphNow)
-        if (this.graphNow) this.$dgiotBus.$emit('removeShape', this.graphNow)
-        else this.$message.error('请选择图形')
+        if (this.graphNow) {
+          this.$dgiotBus.$emit('removeShape', this.graphNow)
+        } else {
+          this.$message.error('请选择图形')
+        }
       },
       showImageTable(type) {
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
@@ -368,7 +370,7 @@
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .topo-header {
     &-top {
       &-query {
@@ -377,6 +379,7 @@
             padding: 6px 8px;
             color: rgb(89, 89, 89);
             text-align: center;
+
             i {
               font-size: 18px !important;
             }

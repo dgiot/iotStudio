@@ -231,38 +231,38 @@
 
 <script>
   import {
-    BmNavigation,
     BaiduMap,
-    BmGeolocation,
-    BmCityList,
-    BmMarker,
-    BmLabel,
-    BmControl,
-    BmPanorama,
-    BmOverviewMap,
-    BmMapType,
-    BmScale,
-    BmCopyright,
-    BmlMarkerClusterer,
-    BmlLushu,
-    BmlHeatmap,
-    BmlCurveLine,
-    BmWalking,
-    BmView,
-    BmTransit,
-    BmTraffic,
-    BmTile,
-    BmPolyline,
-    BmPolygon,
-    BmPointCollection,
-    // BmOverlay,
-    BmLocalSearch,
-    BmGround,
-    BmDriving,
-    BmCircle,
-    BmBus,
     BmBoundary,
+    BmBus,
+    BmCircle,
+    BmCityList,
+    BmControl,
+    BmCopyright,
+    BmDriving,
+    BmGeolocation,
+    BmGround,
+    BmLabel,
+    BmlCurveLine,
+    BmlHeatmap,
+    BmlLushu,
+    BmlMarkerClusterer,
+    BmLocalSearch,
+    BmMapType,
+    BmMarker,
+    BmNavigation,
+    BmOverviewMap,
+    BmPanorama,
+    BmPointCollection,
+    BmPolygon,
+    BmPolyline,
+    BmScale,
+    BmTile,
+    BmTraffic,
+    BmTransit,
+    BmView,
+    BmWalking,
   } from 'vue-baidu-map'
+
   export default {
     name: 'VabBaiduMap',
     components: {
@@ -664,9 +664,18 @@
       gonPath: {
         type: Array,
         default: () => [
-          { lng: 116.412732, lat: 39.911707 },
-          { lng: 116.39455, lat: 39.910932 },
-          { lng: 116.403461, lat: 39.921336 },
+          {
+            lng: 116.412732,
+            lat: 39.911707,
+          },
+          {
+            lng: 116.39455,
+            lat: 39.910932,
+          },
+          {
+            lng: 116.403461,
+            lat: 39.921336,
+          },
         ],
       },
       polygonStrokeColor: {
@@ -779,7 +788,10 @@
         active: this.isActive,
         baiduCenter: this.mapCenter
           ? this.mapCenter
-          : { lng: 116.404, lat: 39.915 },
+          : {
+              lng: 116.404,
+              lat: 39.915,
+            },
       }
     },
     mounted() {
@@ -833,9 +845,10 @@
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .baidu_map {
     height: 500px;
+
     .sample {
       position: absolute;
       width: 120px;
@@ -848,6 +861,7 @@
       background: rgba(0, 0, 0, 0.5);
       box-shadow: 0 0 5px #000;
     }
+
     .sample.active {
       color: #fff;
       background: rgba(0, 0, 0, 0.75);

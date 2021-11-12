@@ -23,4 +23,9 @@ const actions = {
     commit('clearErrorLog')
   },
 }
-export default { state, getters, mutations, actions }
+export default {
+  state,
+  getters,
+  mutations,
+  actions,
+}

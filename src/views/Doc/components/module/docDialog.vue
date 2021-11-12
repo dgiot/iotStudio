@@ -123,7 +123,11 @@
         },
         rules: {
           name: [
-            { required: true, message: '请输入文档名', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入文档名',
+              trigger: 'blur',
+            },
             {
               min: 3,
               max: 15,
@@ -132,7 +136,11 @@
             },
           ],
           category: [
-            { required: true, message: '请输入类别', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入类别',
+              trigger: 'blur',
+            },
             {
               min: 3,
               max: 15,

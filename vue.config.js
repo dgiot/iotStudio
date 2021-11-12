@@ -36,7 +36,7 @@ const {
   isSmp,
   ogConfig,
   cdn,
-  CDN_URL
+  CDN_URL,
 } = require('./src/config')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
@@ -47,6 +47,8 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const smp = new SpeedMeasurePlugin()
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 const regUrl = /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
@@ -58,19 +60,23 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
-process.env.CDN_URL = process.env.NODE_ENV === 'development'?proxy[0].target+CDN_URL:CDN_URL
+process.env.CDN_URL =
+  process.env.NODE_ENV === 'development' ? proxy[0].target + CDN_URL : CDN_URL
 // process.env.CDN_URL = process.env.CDN_URL
 const staticUrl = process.env.CDN_URL
   ? `${process.env.CDN_URL}/assets/`
   : '/assets/'
 
 function getChainWebpack(config) {
-  config.plugin('monaco').use(new MonacoWebpackPlugin())
+  // config.plugin('monaco').use(new MonacoWebpackPlugin())
   config.plugin('html').tap((args) => {
     var _staticUrl = localUrl
     // if (useCdn || process.env.NODE_ENV !== 'development') {
     const { css, js } = _staticUrl
-    _staticUrl = { css: [], js: [] }
+    _staticUrl = {
+      css: [],
+      js: [],
+    }
     css.forEach((_css) => {
       _staticUrl.css.push(`${staticUrl}css/${_css}`)
     })
@@ -98,9 +104,11 @@ function getChainWebpack(config) {
   })
   // https://blog.csdn.net/weixin_34294049/article/details/97278751
   config.when(process.env.NODE_ENV === 'production', (config) => {
-    if (process.env.CDN_URL)
+    if (process.env.CDN_URL) {
       console.log(`当前使用了cdn,cdn资源链接地址为${process.env.CDN_URL}`)
-    else console.log(`当前未使用cdn,可能会导致打包体积过大`)
+    } else {
+      console.log(`当前未使用cdn,可能会导致打包体积过大`)
+    }
     config.performance.set('hints', false)
     config.plugins.delete('prefetch')
     config.devtool('none')
@@ -129,7 +137,7 @@ function getChainWebpack(config) {
     config
       .plugin('banner')
       .use(Webpack.BannerPlugin, [`${webpackBanner}${dateTime}`])
-    if (imageCompression)
+    if (imageCompression) {
       config.module
         .rule('images')
         .use('image-webpack-loader')
@@ -138,18 +146,20 @@ function getChainWebpack(config) {
           bypassOnDebug: true,
         })
         .end()
-    if (buildGzip)
+    }
+    if (buildGzip) {
       // https://blog.csdn.net/weixin_42164539/article/details/110389256
       config.plugin('compression').use(CompressionWebpackPlugin, [
         {
           filename: '[path][base].gz[query]',
           algorithm: 'gzip',
           test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
-          threshold: 8192,
+          threshold: 10240,
           minRatio: 0.8,
         },
       ])
-    if (build7z)
+    }
+    if (build7z) {
       config.plugin('fileManager').use(FileManagerPlugin, [
         {
           events: {
@@ -164,6 +174,7 @@ function getChainWebpack(config) {
           },
         },
       ])
+    }
   })
 }
 
@@ -182,8 +193,9 @@ const cssExport = {
         if (
           relativePath.replace(/\\/g, '/') !==
           'src/vab/styles/variables/variables.scss'
-        )
+        ) {
           return '@import "~@/vab/styles/variables/variables.scss";' + content
+        }
         return content
       },
     },
@@ -229,7 +241,6 @@ const configure = {
     qs: 'qs',
     Qs: 'qs',
     qs: 'Qs',
-    amis: 'amis',
     moment: 'moment',
     jsplumb: 'jsplumb',
     JSEncrypt: 'jsencrypt',
@@ -250,7 +261,9 @@ const configure = {
     },
   },
   plugins: [
-    // new MonacoWebpackPlugin(),
+    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
+    new MonacoWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),
     new Webpack.ProvidePlugin(providePlugin),
     new WebpackBar({

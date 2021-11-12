@@ -30,15 +30,18 @@
     height: 100%;
     padding: 20px;
     background: #ffffff;
+
     .wayheader {
       width: 100%;
       height: 400px;
+
       .wayheaderone {
         box-sizing: border-box;
         width: 100%;
         height: 80px;
         padding: 15px;
         background: #67c23a;
+
         .oneheader {
           display: inline-block;
           width: 200px;
@@ -50,6 +53,7 @@
           text-align: center;
           background: #409eff;
         }
+
         .twoheader {
           display: inline-block;
           width: 200px;
@@ -61,6 +65,7 @@
           text-align: center;
           background: #909399;
         }
+
         .threeheader {
           display: inline-block;
           width: 300px;

@@ -197,9 +197,10 @@
 </template>
 <!--eslint-disable-->
 <script>
-  import { Table, TableColumn, Popover, Tooltip } from 'element-ui'
+  import { Popover, Table, TableColumn, Tooltip } from 'element-ui'
   import { getDateDiff } from '@/utils/index'
   import dateformat from '@/utils/utilwen'
+
   export default {
     name: 'AlarmsView',
     components: {
@@ -242,7 +243,7 @@
           .catch((error) => {
             this.loading = false
             this.$message.error(
-              error || this.$translateTitle('error.networkError')
+              error || this.$translateTitle('error.networkError'),
             )
           })
       },
@@ -267,7 +268,7 @@
           })
           .catch((error) => {
             this.$message.error(
-              error || this.$translateTitle('error.networkError')
+              error || this.$translateTitle('error.networkError'),
             )
           })
       },
@@ -279,7 +280,7 @@
             confirmButtonClass: 'confirm-btn',
             cancelButtonClass: 'cache-btn el-button--text',
             type: 'warning',
-          }
+          },
         )
           .then(() => {
             this.$httpDelete('/alarms/deactivated')
@@ -288,11 +289,12 @@
               })
               .catch((error) => {
                 this.$message.error(
-                  error || this.$translateTitle('error.networkError')
+                  error || this.$translateTitle('error.networkError'),
                 )
               })
           })
-          .catch(() => {})
+          .catch(() => {
+          })
       },
     },
   }

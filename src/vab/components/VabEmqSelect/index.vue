@@ -1,8 +1,8 @@
 <template>
   <el-select
-    v-bind="$attrs"
     class="emq-select"
     :value="rawValue"
+    v-bind="$attrs"
     v-on="$listeners"
   >
     <slot>
@@ -114,7 +114,10 @@
         if (options) {
           value = options
         } else if (list) {
-          value = list.map(($) => ({ label: $, value: $ }))
+          value = list.map(($) => ({
+            label: $,
+            value: $,
+          }))
         } else if (api) {
           value = await api()
         }

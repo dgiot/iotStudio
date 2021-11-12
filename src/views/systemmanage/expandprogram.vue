@@ -237,17 +237,18 @@
   </div>
 </template>
 <script>
-  import { queryDict } from '@/api/Dict/index'
+  import { getAllunit, queryDict } from '@/api/Dict/index'
   import { getDeviceCountByProduct } from '@/api/Device/index'
   import { getChannelCountByProduct } from '@/api/Channel/index'
-  import { getAllunit, getDictCount } from '@/api/Dict/index'
   // const Base64 = require('js-base64').Base64
   import {
     delExproto,
-    putExproto,
-    postExproto,
     getExproto,
+    postExproto,
+    putExproto,
   } from '@/api/Exproto/index'
+  import { Compile, subupadte } from '@/api/System/index.js'
+
   var isupdatetrue = ''
   var editor
   var editor1
@@ -263,8 +264,7 @@
   var channelrow = {}
   var setdata = ''
   var isallchannel = false
-  import { Compile, subupadte } from '@/api/System/index.js'
-  import { returnLogin } from '@/utils/utilwen'
+
   export default {
     name: 'ThingsParse',
     components: {},
@@ -282,9 +282,19 @@
       return {
         fullscreenLoading: false,
         rules: {
-          name: [{ required: true, validator: validCode, trigger: 'blur' }],
+          name: [
+            {
+              required: true,
+              validator: validCode,
+              trigger: 'blur',
+            },
+          ],
           language: [
-            { required: true, message: '请选择编程语言', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择编程语言',
+              trigger: 'change',
+            },
           ],
         },
         labelPosition: 'right',
@@ -923,10 +933,11 @@
     },
   }
 </script>
-<style rel="stylesheet/scss" lang="scss">
+<style lang="scss" rel="stylesheet/scss">
   .things-parse {
     width: 100%;
     margin: 20px;
+
     .ace_editor {
       margin-right: 80px;
     }

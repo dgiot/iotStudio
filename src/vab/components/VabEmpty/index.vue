@@ -113,17 +113,21 @@
     line-height: 22px;
     text-align: center;
   }
+
   .image {
     height: 100px;
     margin-bottom: 8px;
   }
+
   .image img {
     height: 100%;
   }
+
   .image svg {
     height: 100%;
     margin: auto;
   }
+
   .description {
     margin: 0;
     color: rgba(0, 0, 0, 0.5);

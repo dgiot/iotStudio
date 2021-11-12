@@ -1,25 +1,23 @@
 <template>
   <div
-    class="box"
     ref="renderBox"
-  >
-  </div>
+    class="box"
+  ></div>
 </template>
 
 <script>
+  /**
+   * @description amis配置参数
+   */
+  // https://baidu.gitee.io/amis/zh-CN/docs/start/getting-started#props
   // eslint-disable
-  import {
-    tokenName,
-  } from '@/config'
-  import { render as renderSchema } from 'amis'
-  import {
-    toast,
-    alert,
-    confirm
-  } from 'amis';
+  import { tokenName } from '@/config'
+  import { render as renderAmis } from 'amis'
+  import { alert, confirm } from 'amis/lib/components/Alert'
+  import { toast } from 'amis/lib/components/Toast'
   import copy from 'copy-to-clipboard'
   import ReactDOM from 'react-dom'
-  // import axios from 'axios'
+
   export default {
     name: 'AmisRender',
     props: {
@@ -37,23 +35,27 @@
         required: false,
         default: () => {},
       },
+      theme: {
+        type: String,
+        required: false,
+        default: 'antd', // antd // cxd
+      },
     },
     data() {
-      return {
-        theme: 'default',
-      }
+      return {}
     },
 
     mounted() {
       this.initEnv()
+      console.log('ReactDOM', ReactDOM)
       ReactDOM.render(
-        renderSchema(
+        renderAmis(
           this.schema,
           {
             onAction: this.onAction || this.handleAction,
             theme: this.theme,
           },
-          this.envnpm
+          this.env
         ),
         this.$refs.renderBox
       )
@@ -104,7 +106,7 @@
               config.params = data
             } else if (data && data instanceof FormData) {
               // config.headers = config.headers || {};
-              config.headers['Content-Type'] = 'multipart/form-data';
+              config.headers['Content-Type'] = 'multipart/form-data'
             } else if (
               data &&
               typeof data !== 'string' &&
@@ -133,8 +135,8 @@
           copy: (contents, options = {}) => {
             const ret = copy(contents, options)
             ret &&
-            (!options || options.shutup !== true) &&
-            toast.info('内容已拷贝到剪切板')
+              (!options || options.shutup !== true) &&
+              toast.info('内容已拷贝到剪切板')
             return ret
           },
         }
@@ -167,8 +169,8 @@
         let pathname = ~idx
           ? to.substring(0, idx)
           : ~idx2
-            ? to.substring(0, idx2)
-            : to
+          ? to.substring(0, idx2)
+          : to
         const search = ~idx ? to.substring(idx, ~idx2 ? idx2 : undefined) : ''
         const hash = ~idx2 ? to.substring(idx2) : ''
         if (!pathname) {

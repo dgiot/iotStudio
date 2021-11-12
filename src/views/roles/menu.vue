@@ -254,6 +254,7 @@
   import { utc2beijing } from '@/utils'
   import { queryMenu } from '@/api/Menu/index'
   import { ExportParse, ImportParse } from '@/api/Export'
+
   export default {
     name: 'TreeTableDemo',
     components: { Edit },
@@ -619,13 +620,16 @@
     padding: 20px;
     background: #ffffff;
   }
+
   .option-item {
     display: inline-block;
     margin-right: 15px;
   }
+
   .menu .search .el-input {
     width: 200px;
   }
+
   .menu .el-cascader .el-input {
     width: 300px;
   }

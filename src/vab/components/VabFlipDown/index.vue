@@ -45,10 +45,22 @@
   export default {
     name: 'VabFlipDown',
     props: {
-      endDate: { type: [Date, Number, String], default: 0 }, // 截止时间
-      type: { type: [Number, String], default: 4 }, // 时间精度 4/3/2/1
-      theme: { type: [Number, String], default: 1 },
-      timeUnit: { type: Array, default: () => [] },
+      endDate: {
+        type: [Date, Number, String],
+        default: 0,
+      }, // 截止时间
+      type: {
+        type: [Number, String],
+        default: 4,
+      }, // 时间精度 4/3/2/1
+      theme: {
+        type: [Number, String],
+        default: 1,
+      },
+      timeUnit: {
+        type: Array,
+        default: () => [],
+      },
     },
     data() {
       return {
@@ -95,7 +107,10 @@
         const diff = []
         newV.forEach((value, index) => {
           if (value !== oldV[index]) {
-            diff.push({ value, index })
+            diff.push({
+              value,
+              index,
+            })
             this.$set(this.isAnimate, index, true)
           }
         })
@@ -229,6 +244,7 @@
         transform: rotateX(-0.01deg);
       }
     }
+
     &.ie {
       // 为了ie和老版edge（不支持clip-path）
       .base {
@@ -236,21 +252,26 @@
           clip: rect(15px, auto, auto, auto);
         }
       }
+
       .face {
         clip: rect(auto, auto, 15px, auto);
       }
+
       .back {
         clip: rect(15px, auto, auto, auto);
       }
     }
+
     &.theme2 {
       .time-box {
         min-width: 20px;
+
         & + .time-box {
           margin-left: 1px;
         }
       }
     }
+
     .time-unit {
       padding: 0 4px;
       font-size: 14px;
@@ -258,6 +279,7 @@
       color: #222;
       white-space: nowrap;
     }
+
     .time-box {
       position: relative;
       box-sizing: border-box;
@@ -271,6 +293,7 @@
       background-color: #6c96e8;
       border-radius: 3px;
       perspective: 60px;
+
       &:before {
         position: absolute;
         top: 50%;
@@ -282,6 +305,7 @@
         content: '';
         background: #a7c7ff;
       }
+
       &:after {
         position: absolute;
         top: 50%;
@@ -293,9 +317,11 @@
         content: '';
         background: #a7c7ff;
       }
+
       & + .time-box {
         margin-left: 8px;
       }
+
       & > div {
         overflow: hidden;
         border-radius: 3px;
@@ -303,8 +329,10 @@
         transform: rotateX(-0.01deg);
         animation-duration: 400ms;
         animation-timing-function: linear;
+
         &.base {
           position: relative;
+
           .base-b {
             position: absolute;
             bottom: 0;
@@ -317,6 +345,7 @@
             border-radius: 0 0 3px 3px;
           }
         }
+
         &.face {
           position: absolute;
           top: 0;
@@ -328,10 +357,12 @@
           background-color: #6c96e8;
           // background-color: #f00;
           backface-visibility: visible;
+
           &.anime {
             animation-name: animate-filp-face;
           }
         }
+
         &.back {
           position: absolute;
           top: 0;
@@ -343,6 +374,7 @@
           // background-color: #aa0;
           transform: rotateX(-180deg);
           backface-visibility: visible;
+
           &.anime {
             animation-name: animate-filp-back;
           }

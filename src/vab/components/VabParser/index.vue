@@ -242,7 +242,7 @@
       },
       // 规则引擎
       goRule(row, type = '') {
-        if (row?.table && row?.field)
+        if (row?.table && row?.field) {
           this.$router.push({
             path: '/dashboard/engine',
             query: {
@@ -251,6 +251,7 @@
               type: type == '' ? row.table : row.table + type,
             },
           })
+        }
       },
     },
   }

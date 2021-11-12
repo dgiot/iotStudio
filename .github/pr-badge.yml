@@ -1,0 +1,47 @@
+- label: "Hello"
+  message: "World"
+  color: "green"
+
+- message: "Go yellow"
+  color: "yellow"
+
+- label: "Preview"
+  message: "PR $prNumber"
+  color: "blue"
+  url: "https://pr-$prNumber.company.com"
+
+- label: "JIRA"
+  message: "$issuePrefix"
+  color: "blue"
+  url: "https://jira.company.com/browse/$issuePrefix"
+  when: "$issuePrefix"
+
+- label: "PR Size"
+  message: "Large"
+  color: "red"
+  when: "$additions > 500"
+
+- label: "PR Size"
+  message: "Medium"
+  color: "yellow"
+  when: "$additions > 200 && $additions < 500"
+
+- imageUrl: "https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=https://pr-$prNumber.company.com"
+  url: "https://pr-$prNumber.company.com"
+
+- message: "$payload.pull_request.user.login"
+  color: "green"
+
+- label: "Missing"
+  message: "Test plan"
+  color: "#ff0000"
+  when: "$payload.pull_request.body.includes('Test plan') === false"
+
+
+- label: "Label"
+  message: "Feature"
+  when: "$labels.includes('Feature')"
+
+- label: "Description length"
+  message: "$payload.pull_request.body.length"
+  color: "green"

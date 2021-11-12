@@ -8,16 +8,14 @@ import { uuid } from '@/utils'
  */
 function createThing(params) {
   console.log(params, 'params')
-  const
-    {
-      id = `uuid_${uuid(6)}`,
-      productid,
-      thingid,
-      name = 'thing',
-      text = '9528ac1c5d_flow_text',
-      event = 'mousemove',
-    }
-      = params
+  const {
+    id = `uuid_${uuid(6)}`,
+    productid,
+    thingid,
+    name = 'thing',
+    text = '9528ac1c5d_flow_text',
+    event = 'mousemove',
+  } = params
   const thing = {
     attrs: {
       name,
@@ -25,20 +23,22 @@ function createThing(params) {
       thingid,
       id: productid,
     },
-    'className': 'Label',
-    children: [{
-      'attrs': {
-        'name': event,
-      },
-      'className': 'Tag',
-    },
+    className: 'Label',
+    children: [
       {
-        'attrs': {
-          'id': '9528ac1c5d_flow_text',
+        attrs: {
+          name: event,
+        },
+        className: 'Tag',
+      },
+      {
+        attrs: {
+          id: '9528ac1c5d_flow_text',
           text,
         },
-        'className': 'Text',
-      }],
+        className: 'Text',
+      },
+    ],
   }
   return thing
 }

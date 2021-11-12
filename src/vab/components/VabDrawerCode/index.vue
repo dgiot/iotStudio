@@ -10,22 +10,22 @@
 <template>
   <div class="drawerCode-container">
     <el-button
-      @click="drawer = true"
-      class="el-icon-edit fixed-btn"
-      type="primary"
-      circle
       v-show="drawer == false"
+      circle
+      class="el-icon-edit fixed-btn"
       style="margin-left: 16px"
+      type="primary"
+      @click="drawer = true"
     />
     <div class="drawerCode-content">
       <el-drawer
-        append-to-body
         ref="drawer"
-        size="50%"
         v-drawerDrag
-        :with-header="false"
-        :visible.sync="drawer"
+        append-to-body
         :direction="direction"
+        size="50%"
+        :visible.sync="drawer"
+        :with-header="false"
       >
         <el-link
           href="https://fastdgiot.gitee.io/amis-editor-demo/#/edit/1"
@@ -37,17 +37,17 @@
         <vab-monaco-plus
           ref="monacoCode"
           :codes="monacoCode"
-          :read-only="false"
           :language="'json'"
+          :read-only="false"
         />
         <div class="demo-drawer__footer">
           <el-button @click="previewForm">
             {{ $translateTitle('application.preview') }}
           </el-button>
           <el-button
+            :loading="loading"
             type="primary"
             @click="submitForm"
-            :loading="loading"
           >
             {{
               loading
@@ -64,6 +64,7 @@
 <script>
   import VabMonacoPlus from '../VabMonacoPlus'
   import { mapMutations } from 'vuex'
+
   export default {
     name: 'VabDrawerCode',
     components: {
@@ -108,7 +109,9 @@
         set_amisJson: 'amis/set_amisJson',
       }),
       previewForm() {
-        this.set_amisJson(JSON.parse(this.$refs.monacoCode.monacoEditor.getValue()))
+        this.set_amisJson(
+          JSON.parse(this.$refs.monacoCode.monacoEditor.getValue())
+        )
         this.loading = false
         this.drawer = false
         clearTimeout(this.timer)
@@ -125,12 +128,14 @@
   .drawerCode-container {
     width: 100%;
     height: 100%;
+
     .fixed-btn {
       position: fixed;
       right: 24px;
       bottom: 48px;
       z-index: 999;
     }
+
     .demo-drawer__footer {
       text-align: center;
       cursor: pointer;

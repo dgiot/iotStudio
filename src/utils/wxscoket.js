@@ -12,10 +12,12 @@ var info = {
   topic: 'web/' + clientssession,
   qos: 2,
 }
-import { tokenTableName, storage } from '@/config'
+import { storage, tokenTableName } from '@/config'
 import { globalUrl } from './utilwen'
 import { getToken } from '@/utils/vuex'
+
 const { hostname } = window.location
+
 function getsession(session) {
   clientssession = session
   info = {
@@ -49,9 +51,11 @@ function formatDate(date, fmt) {
   }
   return fmt
 }
+
 function padLeftZero(str) {
   return ('00' + str).substr(str.length)
 }
+
 var sendInfo = {
   topic: '/test',
   text: 'Hello world!',
@@ -135,7 +139,10 @@ var Websocket = {
         }
       }
     }
-    _this.hooks.push({ re: Re, callback: Callback })
+    _this.hooks.push({
+      re: Re,
+      callback: Callback,
+    })
   },
 
   dispatch: function (message) {

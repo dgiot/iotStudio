@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+
 // 获取模板
 export function getReport(start, len) {
   return request({
@@ -7,6 +8,7 @@ export function getReport(start, len) {
     data: {},
   })
 }
+
 export function getReportdetail(id) {
   return request({
     url: '/pump/templet/' + id + '',
@@ -14,6 +16,7 @@ export function getReportdetail(id) {
     data: {},
   })
 }
+
 // 新增模板
 export function addReport(reportdata, id) {
   return request({
@@ -34,6 +37,7 @@ export function getModule() {
     data: {},
   })
 }
+
 export function deriveReport(reportId) {
   return request({
     url: '/pump/report/config?reportId=' + reportId,

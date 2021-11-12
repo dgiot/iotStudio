@@ -75,6 +75,7 @@
 <style lang="scss" scoped>
   .vab-layout-vertical {
     z-index: 99;
+
     .fixed-header {
       left: $base-left-menu-width;
       width: $base-right-content-width;

@@ -8,6 +8,7 @@
 import { getToken, setToken } from '@/utils/vuex'
 import { storage } from '@/config'
 import formItemCommonDefault from '@/assets/data/form-item-common'
+
 const state = () => ({
   _formItemCommon: getToken('_formItemCommon', storage, formItemCommonDefault),
 })
@@ -25,4 +26,9 @@ const actions = {
     commit('set_formItemCommon', formItem)
   },
 }
-export default { state, getters, mutations, actions }
+export default {
+  state,
+  getters,
+  mutations,
+  actions,
+}

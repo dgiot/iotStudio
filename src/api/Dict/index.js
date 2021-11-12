@@ -1,13 +1,15 @@
 import {
-  query_object,
-  get_object,
-  del_object,
-  update_object,
   create_object,
+  del_object,
+  get_object,
+  query_object,
+  update_object,
 } from '@/api/shuwa_parse'
+
 export async function queryDict(params) {
   return query_object('Dict', params)
 }
+
 export async function getBatchNumer() {
   const params = {
     order: '-createdAt',
@@ -35,12 +37,15 @@ export async function getIndustry(key, limit) {
 export async function queryIndustry(params) {
   return query_object('Instruct', params)
 }
+
 export async function postIndustry(params) {
   return create_object('Instruct', params)
 }
+
 export async function delIndustry(ObjectId) {
   return del_object('Instruct', ObjectId)
 }
+
 export async function updateIndustry(ObjectId, params) {
   return update_object('Instruct', ObjectId, params)
 }

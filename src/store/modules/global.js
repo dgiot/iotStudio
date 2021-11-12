@@ -7,6 +7,7 @@
  */
 import { getToken, setToken } from '@/utils/vuex'
 import { storage } from '@/config'
+
 const state = () => ({
   _tableDict: getToken('_tableDict', storage, {}),
   _tableParser: getToken('_tableParser', storage, {}),
@@ -78,4 +79,9 @@ const actions = {
     commit('set_tableDict', Parser)
   },
 }
-export default { state, getters, mutations, actions }
+export default {
+  state,
+  getters,
+  mutations,
+  actions,
+}

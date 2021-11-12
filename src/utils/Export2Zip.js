@@ -27,4 +27,5 @@ function export_txt_to_zip(jsonData, jsonName, zipName) {
       }
     )
 }
+
 export { export_txt_to_zip }

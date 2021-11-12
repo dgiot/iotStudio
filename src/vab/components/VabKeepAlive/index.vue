@@ -72,11 +72,12 @@
             .slice(0, this.dept + 1)
             .join(',')
           // 当前路由为一级路由 或 多级路由父组件相同的情况下, 更新key, 其他情况保持不变
-          if (this.dept === 1 || _parentNames === this.parentNames)
+          if (this.dept === 1 || _parentNames === this.parentNames) {
             this.key =
               this.dept === _matchedNames.length - 1
                 ? route.fullPath
                 : _parentNamesKey
+          }
         },
         immediate: true,
       },

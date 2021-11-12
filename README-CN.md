@@ -1,4 +1,5 @@
 ## dgiot-dashboard
+
 <p align="center">
   <img src="https://img.shields.io/github/commit-activity/m/dgiot/dgiot-dashboard" alt="ommit-activity">
 	<img src="https://badgen.net/badge/package/%40dgiot%2Fdgiot-dashboard/blue"
@@ -29,7 +30,6 @@ dgiot 前端框架
 
 简体中文 | [English](./README.md)
 
-
 ## 相关源码地址项目源码
 
 | 源码平台 | 源码地址                                                                                      |
@@ -38,6 +38,7 @@ dgiot 前端框架
 | gitee    | [https://gitee.com/dgiiot/dgiot-dashboard](https://gitee.com/dgiiot/dgiot-dashboard?from=git) |
 
 ## 开发环境
+
 [下载 dgiot_develop_tools](http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/dgiot/deploy/dgiot_develop_tools.zip)
 
 ## 安装使用
@@ -61,17 +62,18 @@ yarn dgiot:install
 ```bash
 yarn dev
 ```
-- 运行成功
- ![b65e47b3-afcf-9bf4-4190-ab6c557ef217.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/b65e47b3-afcf-9bf4-4190-ab6c557ef217.png)
 
-- [本地预览](http://localhost/)  
-  
+- 运行成功
+  ![b65e47b3-afcf-9bf4-4190-ab6c557ef217.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/b65e47b3-afcf-9bf4-4190-ab6c557ef217.png)
+
+- [本地预览](http://localhost/)
+
 - 登录
-  
+
   | 用户名       | 密码                                                                                      |
-  | -------------- | ----------------------------------------------------------------------------------------- |
+      | -------------- | ----------------------------------------------------------------------------------------- |
   | dgiot_admin         | dgiot_admin                             |
-  
+
 - 设备详情预览
   ![b87bd877-7cb6-f6b6-1eac-ae17b39bf928.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/b87bd877-7cb6-f6b6-1eac-ae17b39bf928.png)
 - [项目预览](https://tech.iotn2n.com/zh/frontend/web/#%E9%A1%B9%E7%9B%AE%E9%A2%84%E8%A7%88)
@@ -82,7 +84,6 @@ yarn build
 ```
 
 ## [线上预览](https://iotn2n.vercel.app/?ftom=git)
-
 
 ### 关于我们
 

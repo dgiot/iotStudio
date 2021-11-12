@@ -32,6 +32,7 @@
 
 <script>
   import empty from '@/views/Empty'
+
   export default {
     name: 'Dashboard',
     components: {

@@ -107,18 +107,40 @@
    * @document https://github.com/javaLuo/vue-puzzle-vcode/blob/master/src/app.vue
    */
   import resetSvg from './reset.png'
+
   export default {
     name: 'VabPuzzle',
     /** 父级参数 **/
     props: {
-      id: { type: String, default: 'vabpuzzle' },
-      canvasWidth: { type: Number, default: 310 }, // 主canvas的宽
-      canvasHeight: { type: Number, default: 160 }, // 主canvas的高
+      id: {
+        type: String,
+        default: 'vabpuzzle',
+      },
+      canvasWidth: {
+        type: Number,
+        default: 310,
+      }, // 主canvas的宽
+      canvasHeight: {
+        type: Number,
+        default: 160,
+      }, // 主canvas的高
       // 是否出现，由父级控制
-      show: { type: Boolean, default: false },
-      puzzleScale: { type: Number, default: 1 }, // 拼图块的大小缩放比例
-      sliderSize: { type: Number, default: 50 }, // 滑块的大小
-      range: { type: Number, default: 10 }, // 允许的偏差值
+      show: {
+        type: Boolean,
+        default: false,
+      },
+      puzzleScale: {
+        type: Number,
+        default: 1,
+      }, // 拼图块的大小缩放比例
+      sliderSize: {
+        type: Number,
+        default: 50,
+      }, // 滑块的大小
+      range: {
+        type: Number,
+        default: 10,
+      }, // 允许的偏差值
       // 所有的背景图片
       imgs: {
         default: () => [],

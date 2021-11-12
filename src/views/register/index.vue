@@ -183,7 +183,10 @@
               trigger: 'blur',
               message: this.$translateTitle('请输入用户名'),
             },
-            { validator: validateUsername, trigger: 'blur' },
+            {
+              validator: validateUsername,
+              trigger: 'blur',
+            },
           ],
           phone: [
             {
@@ -191,7 +194,10 @@
               trigger: 'blur',
               message: this.$translateTitle('请输入手机号'),
             },
-            { validator: validatePhone, trigger: 'blur' },
+            {
+              validator: validatePhone,
+              trigger: 'blur',
+            },
           ],
           password: [
             {
@@ -199,7 +205,10 @@
               trigger: 'blur',
               message: this.$translateTitle('请输入密码'),
             },
-            { validator: validatePassword, trigger: 'blur' },
+            {
+              validator: validatePassword,
+              trigger: 'blur',
+            },
           ],
           phoneCode: [
             {

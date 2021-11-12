@@ -505,9 +505,9 @@
             style="width: 100%; min-height: 300px"
           >
                       <textarea
-class="ace_text-input"
-style="overflow:scroll"
-/>
+                        class="ace_text-input"
+                        style="overflow:scroll"
+                      />
           </pre>
         </div>
         <span
@@ -535,14 +535,10 @@ style="overflow:scroll"
   import { queryRole } from '@/api/Role/index'
   import { resourceTypes } from '@/api/Rules'
   import { returnLogin } from '@/utils/utilwen'
+  import { Websocket } from '@/utils/wxscoket.js'
+
   var subdialog
-  import {
-    Websocket,
-    sendInfo,
-    TOPIC_EMPTY,
-    MSG_EMPTY,
-    DISCONNECT_MSG,
-  } from '@/utils/wxscoket.js'
+
   export default {
     inject: ['reload'],
     data() {
@@ -567,13 +563,25 @@ style="overflow:scroll"
         applicationList: [],
         addrules: {
           roles: [
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'blur',
+            },
           ],
           name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择服务类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择服务类型',
+              trigger: 'change',
+            },
           ],
         },
         length: 10,
@@ -739,7 +747,10 @@ style="overflow:scroll"
               console.log('addchannelForm', this.addchannel)
               const aclKey = 'role' + ':' + this.addchannel.applicationtText
               const aclObj = {}
-              aclObj[aclKey] = { read: true, write: true }
+              aclObj[aclKey] = {
+                read: true,
+                write: true,
+              }
               const data = {
                 ACL: aclObj,
                 config: obj,
@@ -831,13 +842,25 @@ style="overflow:scroll"
         var obj = {}
         var obj1 = {
           roles: [
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'blur',
+            },
           ],
           name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择服务类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择服务类型',
+              trigger: 'change',
+            },
           ],
         }
         for (var key in object) {
@@ -852,10 +875,18 @@ style="overflow:scroll"
         var obj = {}
         var obj1 = {
           name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择服务类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择服务类型',
+              trigger: 'change',
+            },
           ],
         }
         if (this.resourceid == '') {
@@ -871,10 +902,18 @@ style="overflow:scroll"
                 }
                 if (item.required) {
                   if (item.type == 'string' || item.type == 'integer') {
-                    obj1[item.showname] = [{ required: true, trigger: 'blur' }]
+                    obj1[item.showname] = [
+                      {
+                        required: true,
+                        trigger: 'blur',
+                      },
+                    ]
                   } else {
                     obj1[item.showname] = [
-                      { required: true, trigger: 'change' },
+                      {
+                        required: true,
+                        trigger: 'change',
+                      },
                     ]
                   }
                 }
@@ -899,11 +938,17 @@ style="overflow:scroll"
                   if (item.required) {
                     if (item.type == 'string' || item.type == 'integer') {
                       obj1[item.showname] = [
-                        { required: true, trigger: 'blur' },
+                        {
+                          required: true,
+                          trigger: 'blur',
+                        },
                       ]
                     } else {
                       obj1[item.showname] = [
-                        { required: true, trigger: 'change' },
+                        {
+                          required: true,
+                          trigger: 'change',
+                        },
                       ]
                     }
                   }
@@ -1052,15 +1097,19 @@ style="overflow:scroll"
     width: 100%;
     height: 100%;
     padding: 20px;
+
     ::v-deep .green_active {
       color: green;
     }
+
     ::v-deep .red_active {
       color: red;
     }
+
     ::v-deep .el-button + .el-button {
       margin-left: 0;
     }
+
     ::v-deep .el-tabs__item {
       height: 50px;
       margin: 0;
@@ -1069,38 +1118,47 @@ style="overflow:scroll"
       font-size: 16px;
       line-height: 50px;
     }
+
     ::v-deep .el-dialog__header {
       border-bottom: 1px solid #cccccc;
     }
+
     ::v-deep .el-dialog__body {
       .el-form {
         display: flex;
         flex-wrap: wrap;
+
         .el-form-item {
           width: 100%;
           margin-bottom: 22px;
+
           .el-select {
             width: 100%;
           }
         }
+
         .el-col {
           @media screen and (max-width: 1350px) {
             width: 100%;
           }
         }
       }
+
       ::v-deep .el-row {
         margin: 20px 0;
       }
     }
+
     ::v-deep .el-button--mini {
       margin: 2px 0;
     }
+
     ::v-deep .row-bg {
       .el-form-item__content {
         width: 100%;
       }
     }
+
     ::v-deep .el-dialog__wrapper {
       margin-bottom: 20px;
     }

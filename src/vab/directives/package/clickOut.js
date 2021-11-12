@@ -14,6 +14,7 @@ const clickOut = {
         value()
       }
     }
+
     // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
     el.handler = clickHandler
     //添加事件监听

@@ -131,6 +131,7 @@
 
           .el-menu {
             text-align: center;
+
             &.el-menu--horizontal {
               display: flex;
               align-items: center;

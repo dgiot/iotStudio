@@ -1,5 +1,6 @@
 /** @description 全局样式 */
 @import './transition.scss';
+
 @mixin base-scrollbar {
   &::-webkit-scrollbar {
     width: 8px;
@@ -54,7 +55,7 @@ html {
           transition: $base-transition;
 
           > section {
-            height: calc(100vh - #{$base-top-bar-height}* 2.7);
+            height: calc(100vh - #{$base-top-bar-height} * 2.7);
             overflow-x: hidden;
             overflow-y: scroll;
             background: $base-color-white;
@@ -95,10 +96,12 @@ html {
     /* vab-dropdown下拉动画 */
     .vab-dropdown {
       transition: $base-transition;
+
       &-active {
         transform: rotateZ(180deg);
       }
     }
+
     /* vab-fullscreen全屏 */
     .vab-fullscreen {
       position: fixed !important;
@@ -110,8 +113,9 @@ html {
       height: 100vh !important;
       padding-bottom: 15px !important;
       overflow: auto !important;
-      background:#fff;
+      background: #fff;
     }
+
     /* vab-dot圆点动画 */
     .vab-dot {
       position: relative;
@@ -209,6 +213,7 @@ html {
       opacity: 0.6;
       backdrop-filter: blur(10px);
     }
+
     //.el-dialog{
     //  position:absolute;
     //  top:50%;
@@ -228,6 +233,7 @@ html {
     .el-notification {
       max-width: 330px !important;
     }
+
     /* el-image-viewer遮罩 */
     .el-image-viewer__mask {
       background-color: rgba(0, 0, 0, 0.5);

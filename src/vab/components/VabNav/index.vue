@@ -61,8 +61,7 @@
 </template>
 
 <script>
-  import { uuid } from '@/utils'
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters } from 'vuex'
   import { openFirstMenu } from '@/config'
 
   export default {
@@ -122,7 +121,10 @@
       async Mqtt(md5Info) {
         const { VUE_APP_URL, NODE_ENV } = process.env
         const { hostname, protocol } = location
-        const ip = NODE_ENV == 'development' ? VUE_APP_URL.split('//')[1].split(':')[0] : hostname.split(':')[0] // 修复代理带端口的问题
+        const ip =
+          NODE_ENV == 'development'
+            ? VUE_APP_URL.split('//')[1].split(':')[0]
+            : hostname.split(':')[0] // 修复代理带端口的问题
         this.option = {
           keepalive: 60,
           clientId: 'dgiot_mqtt_' + md5(this.token),
@@ -147,8 +149,9 @@
         // })
       },
       handleTabClick(handler) {
-        if (handler !== true && openFirstMenu)
+        if (handler !== true && openFirstMenu) {
           this.$router.push(this.handlePartialRoutes[0].path)
+        }
       },
     },
   }

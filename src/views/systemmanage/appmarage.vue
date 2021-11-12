@@ -182,11 +182,11 @@
   import {
     Getapp,
     Getmodule,
+    GetReload,
     Getstart,
     Getstop,
-    GetReload,
   } from '@/api/System/index'
-  import Cookies from 'js-cookie'
+
   var table = []
   var table1 = []
   export default {

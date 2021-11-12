@@ -221,6 +221,7 @@
   import { queryRoledepartment } from '@/api/Role/index'
   import { Roletree } from '@/api/Menu'
   import { mapGetters, mapMutations } from 'vuex'
+
   export default {
     props: {
       detail: {
@@ -254,7 +255,11 @@
         rules: {
           reverse: true,
           'info.receiveusername': [
-            { required: true, message: '请选择分配人员', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择分配人员',
+              trigger: 'change',
+            },
           ],
         },
         curDepartmentId: '',
@@ -372,15 +377,18 @@
     .el-form-item {
       margin-bottom: 0;
     }
+
     .el-form-item__label {
       font-weight: 700;
     }
+
     .el-card__body {
       h3 {
         float: left;
         width: 90px;
         margin: 10px 0;
       }
+
       span {
         margin: 10px 0;
         font-size: 16px;

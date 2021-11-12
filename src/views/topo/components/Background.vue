@@ -11,11 +11,11 @@
   <div class="Background">
     <div class="demo-image__lazy">
       <el-image
-        @click.native="setKonvaBg(url)"
         v-for="url in urls"
         :key="url"
-        :src="url"
         lazy
+        :src="url"
+        @click.native="setKonvaBg(url)"
       />
     </div>
   </div>
@@ -23,23 +23,22 @@
 
 <script>
   import { mapActions } from 'vuex'
+
   export default {
     name: 'Background',
     components: {},
     data() {
       return {
-        BackgroundData:[],
-        productconfig:{},
+        BackgroundData: [],
+        productconfig: {},
         BackgroundDialog: false,
         infoData: 'Background',
         BackgroundArgs: {},
-        urls: [
-          '//img7.ddove.com/upload/20181127/134600237598.jpg',
-        ]
+        urls: ['//img7.ddove.com/upload/20181127/134600237598.jpg'],
       }
     },
     methods: {
-    ...mapActions({
+      ...mapActions({
         setKonvaBg: 'topo/setKonvaBg',
       }),
     },

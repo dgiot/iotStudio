@@ -21,6 +21,7 @@ for (let i = 0; i < count; i++) {
     })
   )
 }
+
 export function getList(query) {
   const { account, pageNo = 1, pageSize = 20 } = query
   const mockList = List.filter(

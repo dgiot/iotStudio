@@ -107,9 +107,10 @@
 </template>
 
 <script>
-  import { queryProductTemplet, delProductTemplet } from '@/api/ProductTemplet'
+  import { delProductTemplet, queryProductTemplet } from '@/api/ProductTemplet'
   import { queryProduct } from '@/api/Product'
   import { mapGetters } from 'vuex'
+
   export default {
     name: 'ProductTemplet',
     data() {

@@ -10,12 +10,10 @@
 
 import request from '@/utils/request'
 import {
-  query_object,
-  get_object,
-  del_object,
-  update_object,
   create_object,
-  query_object_header,
+  del_object,
+  get_object,
+  update_object,
 } from '@/api/shuwa_parse'
 
 export async function queryNotification(params) {

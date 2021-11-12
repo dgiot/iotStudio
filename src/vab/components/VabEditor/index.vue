@@ -25,6 +25,7 @@
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
+
   export default {
     name: 'VabEditor',
     props: {
@@ -241,7 +242,7 @@
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .VabEditor {
   }
 </style>

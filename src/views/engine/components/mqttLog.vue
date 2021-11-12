@@ -218,6 +218,7 @@
 </template>
 <script>
   import { queryDevice } from '@/api/Device/index'
+
   export default {
     name: 'MqttLog',
     components: {},
@@ -367,7 +368,10 @@
             where: {
               product: this.queryForm.product
                 ? this.queryForm.product
-                : { $ne: null, $exists: true },
+                : {
+                    $ne: null,
+                    $exists: true,
+                  },
             },
           }
           const { results } = await queryDevice(params)

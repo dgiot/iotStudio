@@ -58,9 +58,11 @@
     created() {
       const showChildren = this.handleChildren(this.item.children)
       if (showChildren.length) {
-        if (showChildren.length === 1 && this.item.alwaysShow !== true)
+        if (showChildren.length === 1 && this.item.alwaysShow !== true) {
           this.itemOrMenu = this.item.children[0]
-        else this.menuComponent = 'Submenu'
+        } else {
+          this.menuComponent = 'Submenu'
+        }
       }
     },
     methods: {

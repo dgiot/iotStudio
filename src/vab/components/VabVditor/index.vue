@@ -36,7 +36,8 @@
   </div>
 </template>
 <script>
-  import { getArticle, putArticle } from '@/api/Article'
+  import { putArticle } from '@/api/Article'
+
   export default {
     name: 'VabVditor',
     props: {
@@ -162,7 +163,8 @@
   .dgiot-doc-header {
     margin-top: 10px;
   }
+
   #vditor {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7 - 64px);
+    height: calc(100vh - #{$base-top-bar-height} * 2.7 - 64px);
   }
 </style>

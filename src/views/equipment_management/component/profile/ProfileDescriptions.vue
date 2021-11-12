@@ -6,9 +6,7 @@
       :visible.sync="amisFlag"
     >
       <vab-amis :schema="amisJson" />
-      <div
-        class="demo-drawer__footer"
-      >
+      <div class="demo-drawer__footer">
         <el-button @click="cancelForm">
           保存
         </el-button>
@@ -148,8 +146,8 @@
       style="width: 100%"
     >
       <div
-        :key="tableType+thingKey"
         v-if="tableType == 'things'"
+        :key="tableType + thingKey"
       >
         <el-table-column type="expand">
           <template
@@ -440,8 +438,9 @@
   </div>
 </template>
 <script>
-  import { mapGetters,mapMutations } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import Category from '@/api/Mock/Category'
+
   export default {
     name: 'ProfileDescriptions',
     props: {
@@ -489,14 +488,17 @@
     data() {
       return {
         key: moment(new Date()).valueOf(),
-        amisJsonPlus:'',
+        amisJsonPlus: '',
         ace_editor: '',
         codeFlag: false,
-        amisFlag:false,
-        activeName:'first',
+        amisFlag: false,
+        activeName: 'first',
         productDetail: {
           thing: { properties: [] },
-          config: { parser: [], profile: [] },
+          config: {
+            parser: [],
+            profile: [],
+          },
           decoder: { code: [] },
         },
         Category,
@@ -517,7 +519,7 @@
     },
     mounted() {},
     methods: {
-      cancelForm(){
+      cancelForm() {
         this.$message.success('待实现')
         console.log('保存到数据库')
         // 格式是 config{amis:this.amisJson} 记得_merge config 一下
@@ -534,7 +536,7 @@
         // editor.gotoLine(editor.session.getLength())
       },
       seeLowcode(params) {
-        const { amis= {}} = params
+        const { amis = {} } = params
         this.set_amisJson(amis)
         // this.amisJson = amis
         this.amisFlag = true
@@ -573,4 +575,3 @@
     }
   }
 </style>
-

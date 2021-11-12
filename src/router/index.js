@@ -10,7 +10,6 @@
  * @description router全局配置，如有必要可分文件抽离，其中asyncRoutes只有在intelligence模式下才会用到，pro版只支持remixIcon图标，具体配置请查看vip群文档
  */
 
-import Layout from '@/vab/layouts'
 /* 多级路由不需要缓存时可放开注释直接引入 用法component:VabEmptyLayout*/
 /* import VabEmptyLayout from '@/vab/layouts/VabEmptyLayout' */
 import { publicPath, routerMode } from '@/config'
@@ -43,6 +42,7 @@ export const constantRoutes = [
 export const asyncRoutes = []
 
 const router = createRouter()
+
 export function resetRouter(routes = constantRoutes) {
   router.matcher = createRouter(routes).matcher
 }
@@ -60,8 +60,9 @@ function createRouter(routes = constantRoutes) {
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location, onResolve, onReject) {
-  if (onResolve || onReject)
+  if (onResolve || onReject) {
     return originalPush.call(this, location, onResolve, onReject)
+  }
   return originalPush.call(this, location).catch((err) => err)
 }
 

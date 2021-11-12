@@ -5,6 +5,7 @@
  */
 // https://konvajs.org/api/Konva.Stage.html
 import { uuid } from '@/utils'
+
 function createState(type, offsetX, offsetY, color, params) {
   console.log(params, 'konva create params')
   var state
@@ -96,4 +97,5 @@ function createState(type, offsetX, offsetY, color, params) {
   console.log(state, 'konva  state')
   return state
 }
+
 export default createState

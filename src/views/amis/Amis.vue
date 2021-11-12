@@ -7,11 +7,12 @@
 
 <script>
   import { mapGetters } from 'vuex'
+
   export default {
     name: 'AmisDemo',
     data() {
       return {
-        amisKey:moment(new Date()).format('X')
+        amisKey: moment(new Date()).format('X'),
       }
     },
     computed: {

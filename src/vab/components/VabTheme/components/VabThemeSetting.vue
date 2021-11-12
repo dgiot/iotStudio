@@ -41,7 +41,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
 
   export default {
     name: 'VabThemeSetting',
@@ -93,6 +93,7 @@
     text-align: center;
     cursor: pointer;
   }
+
   .vab-theme-setting {
     position: fixed;
     top: 50%;

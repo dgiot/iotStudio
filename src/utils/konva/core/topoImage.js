@@ -9,9 +9,9 @@ const topoImage = {
     const { randomXy, json: konvaJson } = canvas
     const { stage, layer, saleInfo } = args
     if (konvaJson.findOne('#bg')) {
-      konvaJson.find("#bg").forEach(item=>{
+      konvaJson.find('#bg').forEach((item) => {
         item.class = 'isRemovebg'
-        item.type= "bg-image"
+        item.type = 'bg-image'
         layer.batchDraw()
       })
       const bgNode = konvaJson.findOne('#bg')
@@ -22,12 +22,18 @@ const topoImage = {
       canvas.bgNode = konvaJson.findOne('#bg')
       canvas.bgNode.attrs = bgNode.attrs
       canvas.bgSrc = bgNode.getAttrs('src').src
-      addNodeEvent({ type: 'bgMoveToBottom', bgNode, layer, stage })
-      if(konvaJson.find("#bg").length >2) canvas.removeBg('isRemovebg',konvaJson.find("#bg"),konvaJson)
+      addNodeEvent({
+        type: 'bgMoveToBottom',
+        bgNode,
+        layer,
+        stage,
+      })
+      if (konvaJson.find('#bg').length > 2)
+        canvas.removeBg('isRemovebg', konvaJson.find('#bg'), konvaJson)
     } else {
       const img = new Image()
       stage.find('Image').forEach((node) => {
-        console.log('node.getAttr(\'id\')',node.getAttr('id'))
+        console.log("node.getAttr('id')", node.getAttr('id'))
         if (node.getAttr('id') && node.getAttr('id') != 'bg') {
           if (node.getAttr('src')) {
             img.src = node.getAttr('src').includes('//')
@@ -50,8 +56,9 @@ const topoImage = {
         }
       })
     }
-    layer.find("#bg").forEach(item=>{
-      if(layer.find("#bg").length >=2 ) canvas.removeBg('isRemovebg',layer.find("#bg"),konvaJson)
+    layer.find('#bg').forEach((item) => {
+      if (layer.find('#bg').length >= 2)
+        canvas.removeBg('isRemovebg', layer.find('#bg'), konvaJson)
       layer.batchDraw()
       stage.batchDraw()
       // console.log(layer.toJSON())

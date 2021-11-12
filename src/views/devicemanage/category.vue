@@ -54,12 +54,12 @@
       @selection-change="setSelectRows"
     >
       <el-table-column
-        type="index"
-        width="50"
-        show-overflow-tooltip
-        sortable
         align="center"
         prop="name"
+        show-overflow-tooltip
+        sortable
+        type="index"
+        width="50"
       />
       <!--      <el-table-column-->
       <!--        align="center"-->
@@ -120,8 +120,9 @@
 
 <script>
   import categoryEdit from './categoryEdit'
-  import { queryCategory, delCategory } from '@/api/Category'
+  import { delCategory } from '@/api/Category'
   import { post_tree } from '@/api/Data'
+
   export default {
     name: 'Empty',
     components: { categoryEdit },
@@ -173,8 +174,11 @@
         this.handleHeight()
       },
       handleHeight() {
-        if (this.isFullscreen) this.height = this.$baseTableHeight(1) + 210
-        else this.height = this.$baseTableHeight(1)
+        if (this.isFullscreen) {
+          this.height = this.$baseTableHeight(1) + 210
+        } else {
+          this.height = this.$baseTableHeight(1)
+        }
       },
       setSelectRows(val) {
         this.selectRows = val

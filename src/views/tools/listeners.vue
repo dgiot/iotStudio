@@ -48,7 +48,8 @@
 <!--eslint-disable-->
 <script>
   import { mapActions } from 'vuex'
-  import { Select, Option, Table, TableColumn } from 'element-ui'
+  import { Option, Select, Table, TableColumn } from 'element-ui'
+
   export default {
     name: 'ListenersView',
     components: {
@@ -75,7 +76,7 @@
           })
           .catch((error) => {
             this.$message.error(
-              error || this.$translateTitle('error.networkError')
+              error || this.$translateTitle('error.networkError'),
             )
           })
       },
@@ -87,7 +88,7 @@
           })
           .catch((error) => {
             this.$message.error(
-              error || this.$translateTitle('error.networkError')
+              error || this.$translateTitle('error.networkError'),
             )
           })
       },

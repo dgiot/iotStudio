@@ -7,6 +7,7 @@
  * @FilePath: \dgiot-dashboard\src\api\Platform\index.js
  */
 import request from '@/utils/request'
+
 export async function postRelation(params) {
   return request({
     url: 'relation',

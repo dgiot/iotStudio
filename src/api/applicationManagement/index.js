@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+
 // 上传图片
 export function Upload({ file }) {
   return request({
@@ -126,6 +127,7 @@ export function handleZero(value) {
     return value
   }
 }
+
 export function uploadLicense(appid, appsecret, shuwa_iot_software) {
   return request({
     url: `/lictool`,
@@ -137,6 +139,7 @@ export function uploadLicense(appid, appsecret, shuwa_iot_software) {
     },
   })
 }
+
 export function uploadServer(license) {
   return request({
     url: `/licsetup`,
@@ -146,6 +149,7 @@ export function uploadServer(license) {
     },
   })
 }
+
 export function offlineServer(license) {
   return request({
     url: `/licupdate`,
@@ -155,6 +159,7 @@ export function offlineServer(license) {
     },
   })
 }
+
 export function setUpLictool(appname) {
   return request({
     url: '/iotapp',

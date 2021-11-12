@@ -18,7 +18,7 @@
 <script>
   import AmisDemo from './Amis'
   import { ReactInVue } from 'vuera'
-  import { ToastComponent, AlertComponent } from 'amis'
+  import { AlertComponent, ToastComponent } from 'amis'
 
   export default {
     name: 'App',

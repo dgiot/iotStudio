@@ -15,8 +15,8 @@
     />
     <el-collapse v-model="activeNames">
       <el-collapse-item
-        title="菜单参数配置项"
         name="1"
+        title="菜单参数配置项"
       >
         <menu-collapse />
       </el-collapse-item>
@@ -24,9 +24,9 @@
     <el-form
       ref="form"
       :inline="true"
+      label-width="100px"
       :model="form"
       :rules="rules"
-      label-width="100px"
       style="margin-top: 20px"
     >
       <!--      <el-form-item-->
@@ -126,8 +126,8 @@
                 <img
                   slot="error"
                   :src="$FileServe + form.meta.icon"
-                  :title="$FileServe + form.meta.icon"
                   style="width: 16px; height: 16px"
+                  :title="$FileServe + form.meta.icon"
                 />
               </el-image>
               <vab-icon

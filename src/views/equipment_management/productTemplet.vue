@@ -363,7 +363,6 @@
   </div>
 </template>
 <script>
-  import profile from '@/views/equipment_management/profile'
   import { uuid } from '@/utils'
   import { mapGetters } from 'vuex'
   import { delProduct, getProduct, putProduct } from '@/api/Product'
@@ -377,6 +376,7 @@
   import { queryProductTemplet } from '@/api/ProductTemplet'
   import { queryCategory } from '@/api/Category'
   import { post_tree } from '@/api/Data'
+
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
   context.keys().forEach((fileName) => {
@@ -401,7 +401,11 @@
           productDetail: {
             decoder: { code: '' },
             thing: { properties: [] },
-            config: { parser: [], profile: [], basedate: { params: [] } },
+            config: {
+              parser: [],
+              profile: [],
+              basedate: { params: [] },
+            },
           },
           parserTableList: [],
           tableLoading: false,
@@ -618,7 +622,10 @@
           where: {
             category: categorys ? { $in: categorys } : { $ne: null },
             name: args.name
-              ? { $regex: args.name, $options: 'i' }
+              ? {
+                  $regex: args.name,
+                  $options: 'i',
+                }
               : { $ne: null },
           },
         }
@@ -1066,13 +1073,25 @@
         }
         this.rule = {
           name: [
-            { required: true, message: '请输入字典模板名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入字典模板名称',
+              trigger: 'blur',
+            },
           ],
           cType: [
-            { required: true, message: '请输入字典模板类型', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入字典模板类型',
+              trigger: 'blur',
+            },
           ],
           enable: [
-            { required: true, message: '请选择状态', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择状态',
+              trigger: 'change',
+            },
           ],
         }
         console.log(this.dictTempForm, 'config')
@@ -1417,16 +1436,19 @@
     height: 80px !important;
   }
 </style>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .devproduct {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+
     &-prodialog {
       margin-left: 52px;
+
       &-content {
         margin: auto 30px;
       }
+
       &-footer {
         text-align: center;
       }
@@ -1434,10 +1456,10 @@
   }
 
   .devproduct ::v-deep .el-dialog__wrapper .el-dialog__header,
-  //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
-  //  display: none;
-  //}
-.devproduct .parserTable {
+    //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
+    //  display: none;
+    //}
+  .devproduct .parserTable {
     display: block;
   }
 

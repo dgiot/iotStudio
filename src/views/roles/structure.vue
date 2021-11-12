@@ -404,11 +404,11 @@
   import { Promise } from 'q'
   import { mapGetters, mapMutations } from 'vuex'
   import {
-    queryUser,
+    disableuser,
     EmployeesHired,
     EmployeeTurnover,
-    disableuser,
     getUser,
+    queryUser,
   } from '@/api/User/index'
   import { queryRoledepartment } from '@/api/Role/index'
   import { Roletree } from '@/api/Menu'
@@ -516,10 +516,18 @@
         },
         userFormRules: {
           account: [
-            { required: true, message: '请输入账号名', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入账号名',
+              trigger: 'blur',
+            },
           ],
           phone: [
-            { required: false, message: '请输入手机号', trigger: 'blur' },
+            {
+              required: false,
+              message: '请输入手机号',
+              trigger: 'blur',
+            },
             {
               validator: function (rule, value, callback) {
                 var MobileRegex = /^1[34578]\d{9}$/
@@ -537,20 +545,45 @@
             },
           ],
           password: [
-            { validator: validatePass, trigger: 'blur', required: true },
+            {
+              validator: validatePass,
+              trigger: 'blur',
+              required: true,
+            },
           ],
           checkPass: [
-            { validator: validatecheckPass, trigger: 'blur', required: true },
+            {
+              validator: validatecheckPass,
+              trigger: 'blur',
+              required: true,
+            },
           ],
           departmentid: [
-            { required: true, message: '请选择部门', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择部门',
+              trigger: 'blur',
+            },
           ],
           nick: [
-            { required: true, message: '请输入昵称', trigger: 'blur' },
-            { min: 2, max: 7, message: '昵称格式不正确', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入昵称',
+              trigger: 'blur',
+            },
+            {
+              min: 2,
+              max: 7,
+              message: '昵称格式不正确',
+              trigger: 'blur',
+            },
           ],
           email: [
-            { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入邮箱地址',
+              trigger: 'blur',
+            },
             {
               type: 'email',
               message: '请输入正确的邮箱地址',
@@ -1036,7 +1069,7 @@
     },
   }
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss" rel="stylesheet/scss" scoped>
   .elTable ::v-deep .el-table th > .cell,
   .elTable ::v-deep .el-table--enable-row-transition .el-table__body td {
     text-align: center;

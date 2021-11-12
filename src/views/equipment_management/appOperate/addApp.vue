@@ -396,6 +396,7 @@
   import { app_count } from '@/api/Platform/index'
   import { postProduct, putProduct } from '@/api/Product/index'
   import { postRelation } from '@/api/Relation/index'
+
   export default {
     data() {
       return {
@@ -415,13 +416,41 @@
           product: [],
           department: '', // 工程单位
           scaleDate: [
-            { id: 0, value: 100, label: '100' },
-            { id: 1, value: 1000, label: '1000' },
-            { id: 2, value: 10000, label: '1万' },
-            { id: 3, value: 100000, label: '10万' },
-            { id: 4, value: 1000000, label: '100万' },
-            { id: 5, value: 10000000, label: '1000万' },
-            { id: 6, value: 100000000, label: '1亿' },
+            {
+              id: 0,
+              value: 100,
+              label: '100',
+            },
+            {
+              id: 1,
+              value: 1000,
+              label: '1000',
+            },
+            {
+              id: 2,
+              value: 10000,
+              label: '1万',
+            },
+            {
+              id: 3,
+              value: 100000,
+              label: '10万',
+            },
+            {
+              id: 4,
+              value: 1000000,
+              label: '100万',
+            },
+            {
+              id: 5,
+              value: 10000000,
+              label: '1000万',
+            },
+            {
+              id: 6,
+              value: 100000000,
+              label: '1亿',
+            },
           ],
           productIdentifier: '', // 工程链接
           fileList: [], // 上传列表，
@@ -513,7 +542,10 @@
         this.argu = this.$route.query
         this.content.title = this.argu.title
         this.actionType = this.argu.actionType
-        const { results } = await app_count({ limit: 100, where: {} })
+        const { results } = await app_count({
+          limit: 100,
+          where: {},
+        })
         if (results) {
           this.applicationList = results
           // 从工程管理列表,的修改按钮 跳转过来的
@@ -750,7 +782,7 @@
           duration: 0,
           type: 'success',
           message: `<div><iframe
-                src='http://${this.form.dashboard}'
+                src="http://${this.form.dashboard}"
                 width="1000"
                 height="400"
                 frameborder="0"
@@ -766,18 +798,22 @@
     width: 100%;
     padding: 20px;
     margin: 0 auto;
+
     .head {
       display: flex;
       justify-content: space-between;
       margin: 20px 0;
     }
+
     .form {
       padding: 10px 30px;
       border: 3px solid #f7f7f7;
+
       .title {
         margin: 10px 0;
         text-align: right;
       }
+
       .el-form {
         // display: flex;
         // flex-wrap: wrap;
@@ -788,23 +824,28 @@
             width: 100%;
           }
         }
+
         .el-form-item {
           ::v-deep .el-slider__marks-text {
             width: 30px;
             margin-top: 5px;
           }
+
           ::v-deep .el-cascader {
             width: 100%;
           }
+
           ::v-deep .el-select {
             width: 100%;
           }
+
           ::v-deep .el-input-number {
             width: 100%;
           }
         }
       }
     }
+
     .btns {
       margin-top: 40px;
       text-align: center;
@@ -815,9 +856,11 @@
   .el-upload-list__item.is-success .el-upload-list__item-status-label {
     display: none;
   }
+
   .el-upload-list__item .el-icon-close {
     display: block;
   }
+
   .el-notification {
     width: 1000px;
   }

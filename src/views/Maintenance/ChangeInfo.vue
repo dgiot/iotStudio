@@ -91,7 +91,12 @@
 
   export default {
     name: 'ChangeInfo',
-    components: { Step1, Step2, Step3, Step4 },
+    components: {
+      Step1,
+      Step2,
+      Step3,
+      Step4,
+    },
     props: {
       detail: {
         type: Object,
@@ -132,7 +137,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .changeInfo {
     .steps {
       margin: 20px 0;

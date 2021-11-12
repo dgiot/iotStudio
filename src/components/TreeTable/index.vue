@@ -2,9 +2,9 @@
   <el-table
     ref="multipleTable"
     :data="tableData"
-    v-bind="$attrs"
     row-key="objectId"
     :row-style="showRow"
+    v-bind="$attrs"
     v-on="$listeners"
   >
     <slot name="selection" />
@@ -64,6 +64,7 @@
 
 <script>
   import treeToArray, { addAttrs } from './eval.js'
+
   export default {
     name: 'TreeTable',
     props: {
@@ -201,6 +202,7 @@
       opacity: 1;
     }
   }
+
   @-webkit-keyframes treeTableShow {
     from {
       opacity: 0;

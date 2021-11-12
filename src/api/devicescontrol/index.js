@@ -12,6 +12,7 @@ export function Pumpcontrol(addr, action, reportId) {
     },
   })
 }
+
 export function Pumpcurverdata(reportId, type, draw_type) {
   return request({
     url: '/pump/report/actual',
@@ -23,6 +24,7 @@ export function Pumpcurverdata(reportId, type, draw_type) {
     },
   })
 }
+
 // 获取平均值
 export function getaveragedata(reportId, type, start, end) {
   return request({
@@ -36,6 +38,7 @@ export function getaveragedata(reportId, type, start, end) {
     },
   })
 }
+
 export function CloundFile(objectid) {
   return request({
     url: '/pump/cloud_file',

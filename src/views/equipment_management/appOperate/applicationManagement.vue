@@ -146,7 +146,8 @@
   import { queryDevice } from '@/api/Device/index'
   import { delProduct, getProduct } from '@/api/Product'
   import { utc2beijing } from '@/utils'
-  import { setUpLictool, getProject, handleZero } from '@/api/License/index'
+  import { getProject, handleZero, setUpLictool } from '@/api/License/index'
+
   export default {
     data() {
       return {
@@ -397,6 +398,7 @@
     box-sizing: border-box;
     width: 100%;
     margin: 0 auto;
+
     ::v-deep .el-tabs {
     }
   }

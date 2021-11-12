@@ -21,11 +21,11 @@
         </h3>
         <div class="content">
           <el-form
+            ref="ruleForm"
+            class="demo-ruleForm"
+            label-width="100px"
             :model="ruleForm"
             :rules="rules"
-            ref="ruleForm"
-            label-width="100px"
-            class="demo-ruleForm"
           >
             <el-form-item
               :label="$translateTitle('cloudTest.Template name')"
@@ -41,30 +41,30 @@
             </el-form-item>
             <el-form-item
               :label="$translateTitle('cloudTest.Trade Names')"
-              required
               prop="factory"
+              required
             >
               <el-input v-model="ruleForm.factory" />
             </el-form-item>
             <el-form-item
-              required
               :label="$translateTitle('cloudTest.Template file')"
               prop="file"
+              required
             >
               <!--              <el-input v-model="ruleForm.name" />-->
               <el-upload
-                v-model="ruleForm.file"
                 :key="momentKey"
-                class="upload-demo"
                 ref="upload"
-                action="string"
-                :on-change="fileChange"
-                list-type="text"
-                :http-request="UploadImage"
-                :before-upload="onBeforeUploadImage"
+                v-model="ruleForm.file"
                 accept=".doc,.docx"
-                :limit="1"
+                action="string"
+                :before-upload="onBeforeUploadImage"
+                class="upload-demo"
                 :file-list="fileList"
+                :http-request="UploadImage"
+                :limit="1"
+                list-type="text"
+                :on-change="fileChange"
               >
                 <el-button
                   slot="trigger"
@@ -116,8 +116,8 @@
             </el-table-column>
             <el-table-column
               align="center"
-              prop="name"
               :label="$translateTitle('cloudTest.Template name')"
+              prop="name"
               show-overflow-tooltip
               width="auto"
             />
@@ -128,9 +128,9 @@
             >
               <template #default="{ row }">
                 <el-image
-                  style="width: 40px; height: 40px"
-                  :src="row.icon"
                   :preview-src-list="[row.icon]"
+                  :src="row.icon"
+                  style="width: 40px; height: 40px"
                 />
               </template>
             </el-table-column>
@@ -150,7 +150,7 @@
                 </el-button>
                 <el-button
                   type="warning"
-                  @click="handleDelete(row,1)"
+                  @click="handleDelete(row, 1)"
                 >
                   {{ $translateTitle(`cloudTest.delete`) }}
                 </el-button>
@@ -257,8 +257,8 @@
         >
           <el-checkbox-group v-model="checkList">
             <vab-draggable
-              v-bind="dragOptions"
               :list="columns"
+              v-bind="dragOptions"
             >
               <div
                 v-for="(item, index) in columns"
@@ -309,9 +309,9 @@
         v-for="(item, index) in finallyColumns"
         :key="index"
         align="center"
-        show-overflow-tooltip
         :label="$translateTitle(`cloudTest.${item.label}`)"
         :prop="item.prop"
+        show-overflow-tooltip
         :sortable="item.sortable"
         :width="item.width"
       />
@@ -331,7 +331,7 @@
           </el-button>
           <el-button
             type="warning"
-            @click="handleDelete(row,0)"
+            @click="handleDelete(row, 0)"
           >
             {{ $translateTitle(`cloudTest.delete`) }}
           </el-button>
@@ -349,9 +349,9 @@
     <el-pagination
       background
       layout="total, sizes, prev, pager, next, jumper"
-      :page-sizes="queryForm.pageSizes"
-      :page-size="queryForm.pageSize"
       :page.sync="queryForm.pageNo"
+      :page-size="queryForm.pageSize"
+      :page-sizes="queryForm.pageSizes"
       :total="queryForm.total"
       @current-change="currentChange"
       @size-change="sizeChange"
@@ -364,18 +364,13 @@
 </template>
 
 <script>
-  import { batch } from '@/api/Batch/index'
-  import { queryProduct, delProduct, postProduct } from '@/api/Product'
-  import { fileUpload, deleteFile } from '@/api/Proxy'
-  import { getDictCount } from '@/api/Dict'
-  import { cereteReport, postReportFile, putReportFile } from '@/api/Platform'
-  import { doDelete, getList } from '@/api/Mock/table'
+  import { delProduct, queryProduct } from '@/api/Product'
+  import { postReportFile } from '@/api/Platform'
   import TableEdit from '@/views/Empty/tableEdit'
   import VabDraggable from 'vuedraggable'
-  import { mapGetters, mapMutations } from 'vuex'
-  import {queryCategory} from "@/api/Category";
-  import alert from "@/views/Maintenance/alert";
-  import {post_tree} from "@/api/Data";
+  import { mapGetters } from 'vuex'
+  import { post_tree } from '@/api/Data'
+
   export default {
     name: 'Index',
     components: {
@@ -393,22 +388,22 @@
       return {
         categoryTreeData: [],
         amisJson: {
-          "type": "page",
-          "body": [
+          type: 'page',
+          body: [
             {
-              "type": "divider"
+              type: 'divider',
             },
             {
-              "type": "form",
-              "body": [
+              type: 'form',
+              body: [
                 {
-                  "type": "input-text",
-                  "name": "name",
-                  "label": "姓名"
-                }
-              ]
-            }
-          ]
+                  type: 'input-text',
+                  name: 'name',
+                  label: '姓名',
+                },
+              ],
+            },
+          ],
         },
         fileList: [],
         momentKey: moment(new Date()).valueOf(),
@@ -421,7 +416,11 @@
         },
         rules: {
           name: [
-            { required: true, message: '请输入模板名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入模板名称',
+              trigger: 'blur',
+            },
             {
               min: 3,
               max: 8,
@@ -430,7 +429,11 @@
             },
           ],
           category: [
-            { required: true, message: '请输入所属品类', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入所属品类',
+              trigger: 'blur',
+            },
             {
               min: 3,
               max: 8,
@@ -439,7 +442,11 @@
             },
           ],
           factory: [
-            { required: true, message: '请输入厂商名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入厂商名称',
+              trigger: 'blur',
+            },
             {
               min: 3,
               max: 8,
@@ -447,7 +454,12 @@
               trigger: 'blur',
             },
           ],
-          file: [{ validator: validateFile, trigger: 'blur' }],
+          file: [
+            {
+              validator: validateFile,
+              trigger: 'blur',
+            },
+          ],
         },
         activePopShow: false,
         tempPopShow: false,
@@ -500,7 +512,7 @@
         tempList: [],
         listLoading: true,
         layout: 'total, sizes, prev, pager, next, jumper',
-        temprow:{},
+        temprow: {},
         queryForm: {
           pageSizes: [10, 20, 30, 50],
           limit: 10,
@@ -587,7 +599,12 @@
       fileChange(file) {
         this.$refs.upload.clearFiles() //清除文件对象
         this.logo = file.raw // 取出上传文件的对象，在其它地方也可以使用
-        this.fileList = [{ name: file.name, url: file.url }] // 重新手动赋值filstList， 免得自定义上传成功了, 而fileList并没有动态改变， 这样每次都是上传一个对象
+        this.fileList = [
+          {
+            name: file.name,
+            url: file.url,
+          },
+        ] // 重新手动赋值filstList， 免得自定义上传成功了, 而fileList并没有动态改变， 这样每次都是上传一个对象
       },
       submitUpload() {
         this.$refs.upload.submit()
@@ -646,14 +663,17 @@
         this.handleHeight()
       },
       handleHeight() {
-        if (this.isFullscreen) this.height = this.$baseTableHeight(1) + 210
-        else this.height = this.$baseTableHeight(1)
+        if (this.isFullscreen) {
+          this.height = this.$baseTableHeight(1) + 210
+        } else {
+          this.height = this.$baseTableHeight(1)
+        }
       },
       handleAdd() {
         // this.$refs['edit'].showEdit()
         this.activePopShow = true
       },
-      handlekonva(row){
+      handlekonva(row) {
         // 取证类型模板跳转到组态
         this.$router.push({
           path: '/Topo',
@@ -678,8 +698,8 @@
                 objectId: this.temprow.objectId,
               },
               key: 'children',
-            }
             },
+          },
           order: 'createdAt',
         }
         const loading = this.$baseColorfullLoading(1)
@@ -690,16 +710,24 @@
         this.tempPopShow = true
         loading.close()
       },
-      handleDelete(row,flag) {
-          this.$baseConfirm(this.$translateTitle(
+      handleDelete(row, flag) {
+        this.$baseConfirm(
+          this.$translateTitle(
             'Maintenance.Are you sure you want to delete the current item'
-          ), null, async () => {
-            const res = await delProduct( row.objectId )
-            this.$baseMessage(this.$translateTitle(
-              'successfully deleted'
-            ), 'success', 'vab-hey-message-success')
-            flag==0 ? await this.fetchData(this.queryForm): await this.handleManagement(this.temprow)
-          })
+          ),
+          null,
+          async () => {
+            const res = await delProduct(row.objectId)
+            this.$baseMessage(
+              this.$translateTitle('successfully deleted'),
+              'success',
+              'vab-hey-message-success'
+            )
+            flag == 0
+              ? await this.fetchData(this.queryForm)
+              : await this.handleManagement(this.temprow)
+          }
+        )
       },
       async fetchData(args) {
         const params = {

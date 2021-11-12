@@ -210,9 +210,10 @@
 </template>
 
 <script>
-  import { getDictCount, delDict, queryDict, postDict } from '@/api/Dict/index'
+  import { delDict, getDictCount, postDict } from '@/api/Dict/index'
   import { queryProduct } from '@/api/Product/index'
   import { getHashClass } from '@/api/Hash/index'
+
   export default {
     name: 'Modules',
     components: {},
@@ -247,13 +248,25 @@
         },
         rules: {
           name: [
-            { required: true, message: '请输入产品名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入产品名称',
+              trigger: 'blur',
+            },
           ],
           devType: [
-            { required: true, message: '请输入产品类型', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入产品类型',
+              trigger: 'blur',
+            },
           ],
           category: [
-            { required: true, message: '请选择模型所属分类', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择模型所属分类',
+              trigger: 'blur',
+            },
           ],
         },
       }
@@ -428,6 +441,7 @@
   /* @import url() */
   .modules {
     margin: 20px;
+
     footer {
       margin-top: 20px;
       text-align: center;

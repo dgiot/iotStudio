@@ -3,8 +3,8 @@
   <div class="icon-selector-popper">
     <div class="dialog">
       <vab-input
-        :params="inputParams"
         ref="uploadFinish"
+        :params="inputParams"
         @fileInfo="fileInfo"
         @files="files"
       />
@@ -167,7 +167,7 @@
   // import TopoThing from '@/views/topo/components/TopoThing'
   import Background from '@/views/topo/components/Background'
   import Evidence from '@/views/topo/components/TopoEvidence'
-  import TopoScale from '@/views/topo/components/TopoScale'
+
   const regUrl =
     /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
   // const { cdn } = require('../../../config')
@@ -187,7 +187,11 @@
   const iconfont = require('./iconfont.json')
   export default {
     name: 'TopoTabs',
-    components: { Thing, Background, Evidence },
+    components: {
+      Thing,
+      Background,
+      Evidence,
+    },
     data() {
       return {
         inputParams: {},

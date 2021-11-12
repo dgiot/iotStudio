@@ -75,7 +75,7 @@
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .ys7-container {
     width: 100%;
     height: calc(100vh - 200px);

@@ -1,7 +1,6 @@
 import Konva from 'konva'
 import canvas from '@/utils/konva/core/canvas'
-import topoImage from '@/utils/konva/core/topoImage'
-import { KonvaBus } from '@/store/modules/topo'
+
 /**
  * @description 组态背景公共函数
  * @type {{bgMoveToBottom(*=): void, setTopoBg(*=): void}}
@@ -51,7 +50,10 @@ const topoBg = {
           }
         )
       )
-      yoda.setAttrs({ class: '不刪1111除', id: '不刪除' })
+      yoda.setAttrs({
+        class: '不刪1111除',
+        id: '不刪除',
+      })
       // removeBg(canvas.json.file)
       layer.add(yoda)
       console.warn(yoda)
@@ -82,23 +84,22 @@ const topoBg = {
     layer.batchDraw()
     stage.batchDraw()
     if (bgNode) {
-      canvas.layer.find('Image')
-        .forEach((bgImg) => {
-          console.log(bgImg, bgImg.getAttr('class'), bgImg.attrs.type)
-          if (bgImg.attrs.type == 'bg-image' || bgImg.attrs.id == 'bg') {
-            // 这里应该删掉所有的id为bg的元素 然后再创建
-            console.log('删除这个元素', bgImg)
-            bgImg.remove()
-            bgImg.destroy()
-          } else {
-            console.log('该图元不删除')
-          }
-          // bgImg.hide()
-          console.log(bgImg)
-          canvas.layer.batchDraw()
-          canvas.stage.batchDraw()
-          // canvas.bgNode = {}
-        })
+      canvas.layer.find('Image').forEach((bgImg) => {
+        console.log(bgImg, bgImg.getAttr('class'), bgImg.attrs.type)
+        if (bgImg.attrs.type == 'bg-image' || bgImg.attrs.id == 'bg') {
+          // 这里应该删掉所有的id为bg的元素 然后再创建
+          console.log('删除这个元素', bgImg)
+          bgImg.remove()
+          bgImg.destroy()
+        } else {
+          console.log('该图元不删除')
+        }
+        // bgImg.hide()
+        console.log(bgImg)
+        canvas.layer.batchDraw()
+        canvas.stage.batchDraw()
+        // canvas.bgNode = {}
+      })
       const BgimageObj = new Image()
       const bgSrc = src.includes('//')
         ? src
@@ -121,18 +122,18 @@ const topoBg = {
               image: BgimageObj,
             },
             {
-              src:bgSrc,
+              src: bgSrc,
               class: ' created',
               id: ' created',
-            },
+            }
           )
         )
         yoda.setAttrs({
-          "id":"bg",
-          "type":"bg-image",
-          "width":1200,
-          "height":700,
-          src:bgSrc,
+          id: 'bg',
+          type: 'bg-image',
+          width: 1200,
+          height: 700,
+          src: bgSrc,
         })
         // removeBg(canvas.json.file)
         layer.add(yoda)
@@ -153,8 +154,7 @@ const topoBg = {
       //   }
       // )
     }
-  }
-
+  },
 }
 
 export default topoBg

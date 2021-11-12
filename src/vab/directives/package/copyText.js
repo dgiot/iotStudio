@@ -38,7 +38,7 @@ const copyText = {
         textarea.focus()
       }
       const result = document.execCommand('Copy')
-      if (result)
+      if (result) {
         Vue.prototype.$baseMessage(
           Vue.prototype.$translateTitle('alert.Copy successfully') +
             `${el.$value}`,
@@ -46,6 +46,7 @@ const copyText = {
           false,
           'vab-hey-message-success'
         )
+      }
       el.removeChild(textarea)
     }
     el.addEventListener('click', el.handler) // 绑定点击事件

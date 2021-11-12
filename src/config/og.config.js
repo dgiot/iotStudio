@@ -14,7 +14,8 @@ module.exports = {
       'Anyone Can Map! Inspiration and an introduction to the world of mapping - Colby Fayock',
     'og:description':
       'Chef Gusteau was a visionary who created food experiences for the world to enjoy. How can we take his lessons and apply them to the world of…',
-    'og:url': 'https://www.colbyfayock.com/2020/03/anyone-can-map-inspiration-and-an-introduction-to-the-world-of-mapping/',
+    'og:url':
+      'https://www.colbyfayock.com/2020/03/anyone-can-map-inspiration-and-an-introduction-to-the-world-of-mapping/',
     'og:type': 'article',
     'article:publisher': 'https://www.colbyfayock.com',
     'article:section': 'Coding',

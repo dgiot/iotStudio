@@ -71,14 +71,16 @@
         this.active = val
       },
       personalCenter() {
-        if (this.objectId) this.$router.push(`/userinfo/${this.objectId}`)
-        else
+        if (this.objectId) {
+          this.$router.push(`/userinfo/${this.objectId}`)
+        } else {
           this.$baseMessage(
             '获取用户id失败',
             'error',
             false,
             'vab-hey-message-error'
           )
+        }
       },
       async logout() {
         await this._logout()

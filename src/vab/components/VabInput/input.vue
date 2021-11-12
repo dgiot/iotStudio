@@ -23,6 +23,7 @@
 
 <script>
   import { UploadImg } from '@/api/File'
+
   export default {
     name: 'VabInput',
     components: {},

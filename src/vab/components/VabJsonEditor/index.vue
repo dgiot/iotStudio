@@ -110,7 +110,7 @@
       this.editor = new JSONEditor(
         this.$el.querySelector('.jsoneditor-vue'),
         options,
-        this.json
+        this.json,
       )
     },
     methods: {
@@ -138,26 +138,33 @@
   .ace_line_group {
     text-align: left;
   }
+
   .json-editor-container {
     display: flex;
     width: 100%;
   }
+
   .json-editor-container .tree-mode {
     width: 50%;
   }
+
   .json-editor-container .code-mode {
     flex-grow: 1;
   }
+
   .jsoneditor-btns {
     margin-top: 10px;
     text-align: center;
   }
+
   .jsoneditor-vue .jsoneditor-outer {
     min-height: 150px;
   }
+
   .jsoneditor-vue div.jsoneditor-tree {
     min-height: 350px;
   }
+
   .json-save-btn {
     padding: 5px 10px;
     color: #fff;
@@ -166,13 +173,16 @@
     border: none;
     border-radius: 5px;
   }
+
   .json-save-btn:focus {
     outline: none;
   }
+
   .json-save-btn[disabled] {
     cursor: not-allowed;
     background-color: #1d8ce0;
   }
+
   code {
     background-color: #f5f5f5;
   }

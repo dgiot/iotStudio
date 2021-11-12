@@ -1260,7 +1260,6 @@
   // console.log('dataType', mockModules)
   import { getAllunit } from '@/api/Dict/index'
   import { mapGetters, mapMutations } from 'vuex'
-  import { putProject } from '@/api/Project'
 
   export default {
     name: 'Wmxdetail',
@@ -1325,9 +1324,18 @@
         dataList: [{}],
         dataType: mockModules.mockModules.dataType,
         options: [
-          { value: 'all', label: '全部' },
-          { value: 'first', label: '第一轮' },
-          { value: 'last', label: '最后一轮' },
+          {
+            value: 'all',
+            label: '全部',
+          },
+          {
+            value: 'first',
+            label: '第一轮',
+          },
+          {
+            value: 'last',
+            label: '最后一轮',
+          },
         ],
         wmxData: [],
         allunit: mockModules.mockModules.dataNnit,

@@ -675,10 +675,10 @@
 <script>
   import { requireModule } from '@/utils/file'
   import {
-    queryChannel,
     delChannel,
     postChannel,
     putChannel,
+    queryChannel,
     saveChanne,
   } from '@/api/Channel/index'
   import { queryProduct } from '@/api/Product/index'
@@ -687,8 +687,9 @@
   import { resourceTypes } from '@/api/Rules'
   import { mapGetters } from 'vuex'
   import defaultLogo from '../../../public/assets/images/logo/logo.png'
-  var subdialog
   import VabInput from '@/vab/components/VabInput/input'
+
+  var subdialog
 
   export default {
     components: {
@@ -746,16 +747,32 @@
         applicationList: [],
         addrules: {
           applicationtText: [
-            { required: true, message: '请选择所属应用', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'change',
+            },
           ],
           roles: [
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'blur',
+            },
           ],
           name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择服务类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择服务类型',
+              trigger: 'change',
+            },
           ],
         },
         length: 10,
@@ -948,7 +965,10 @@
               delete obj.name
               const aclKey = 'role' + ':' + this.addchannel.applicationtText
               const aclObj = {}
-              aclObj[aclKey] = { read: true, write: true }
+              aclObj[aclKey] = {
+                read: true,
+                write: true,
+              }
               const data = {
                 ACL: aclObj,
                 config: obj,
@@ -1051,8 +1071,14 @@
         res.forEach((item) => {
           if (!item.params.ico) {
             item.params.ico = {
-              title: { en: 'channel ICO', zh: '通道ICO' },
-              description: { en: 'channel ICO', zh: '通道ICO' },
+              title: {
+                en: 'channel ICO',
+                zh: '通道ICO',
+              },
+              description: {
+                en: 'channel ICO',
+                zh: '通道ICO',
+              },
               default: defaultLogo,
             }
           }
@@ -1201,16 +1227,32 @@
         var obj = {}
         var obj1 = {
           applicationtText: [
-            { required: true, message: '请选择所属应用', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'change',
+            },
           ],
           roles: [
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'blur',
+            },
           ],
           name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择服务类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择服务类型',
+              trigger: 'change',
+            },
           ],
         }
         if (this.resourceid == '') {
@@ -1227,10 +1269,18 @@
                 }
                 if (item.required) {
                   if (item.type == 'string' || item.type == 'integer') {
-                    obj1[item.showname] = [{ required: true, trigger: 'blur' }]
+                    obj1[item.showname] = [
+                      {
+                        required: true,
+                        trigger: 'blur',
+                      },
+                    ]
                   } else {
                     obj1[item.showname] = [
-                      { required: true, trigger: 'change' },
+                      {
+                        required: true,
+                        trigger: 'change',
+                      },
                     ]
                   }
                 }
@@ -1256,11 +1306,17 @@
                   if (item.required) {
                     if (item.type == 'string' || item.type == 'integer') {
                       obj1[item.showname] = [
-                        { required: true, trigger: 'blur' },
+                        {
+                          required: true,
+                          trigger: 'blur',
+                        },
                       ]
                     } else {
                       obj1[item.showname] = [
-                        { required: true, trigger: 'change' },
+                        {
+                          required: true,
+                          trigger: 'change',
+                        },
                       ]
                     }
                   }
@@ -1379,6 +1435,7 @@
     .el-dialog__header {
       display: none;
     }
+
     .dj-dialog-content {
       padding: 0;
       overflow: unset;
@@ -1418,11 +1475,13 @@
   ::v-deep .el-dialog__wrapper {
     margin-bottom: 20px;
   }
+
   .resourcechannel {
     box-sizing: border-box;
     width: 100%;
     //height: 100%;
-    height: calc(100vh - #{$base-top-bar-height}* 3 - 25px);
+    height: calc(100vh - #{$base-top-bar-height} * 3 - 25px);
+
     ::v-deep {
       .green_active {
         color: green;

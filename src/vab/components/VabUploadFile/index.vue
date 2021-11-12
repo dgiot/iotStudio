@@ -66,6 +66,7 @@
 
 <script>
   import { UploadImg } from '@/api/File'
+
   export default {
     name: 'VabUploadFile',
     props: {
@@ -146,6 +147,7 @@
     margin-top: -100px;
     margin-left: -100px; */
   }
+
   .loading {
     position: absolute;
     top: 0;
@@ -155,6 +157,7 @@
     background: black;
     opacity: 0.8;
   }
+
   .progress {
     position: absolute;
     top: 50%;
@@ -164,6 +167,7 @@
     margin-top: -100px;
     margin-left: -100px;
   }
+
   .tips {
     position: absolute;
     top: 50%;

@@ -1,4 +1,7 @@
-const colType = { Object, Array }
+const colType = {
+  Object,
+  Array,
+}
 
 export function getJsonPath(text, offSet) {
   let pos = 0
@@ -24,7 +27,10 @@ export function getJsonPath(text, offSet) {
         isInKey = true
         break
       case '[':
-        stack.push({ colType: colType.Array, index: 0 })
+        stack.push({
+          colType: colType.Array,
+          index: 0,
+        })
         break
       case '}':
       case ']':
@@ -45,7 +51,7 @@ export function getJsonPath(text, offSet) {
       pos++
     }
   }
-  return pathToString(stack);
+  return pathToString(stack)
 }
 
 function pathToString(path) {
@@ -66,14 +72,14 @@ function pathToString(path) {
         s += `[${frame.index}]`
       }
     }
-    return s;
+    return s
   } catch (ex) {
-    return '';
+    return ''
   }
 }
 
 function isEven(n) {
-  return n % 2 === 0;
+  return n % 2 === 0
 }
 
 function readString(text, pos) {
@@ -81,7 +87,7 @@ function readString(text, pos) {
   i = findEndQuote(text, i)
   var textpos = {
     text: text.substring(pos + 1, i),
-    pos: i + 1
+    pos: i + 1,
   }
   return textpos
 }
@@ -97,7 +103,7 @@ function findEndQuote(text, i) {
         bt--
       }
       if (isEven(i - bt)) {
-        break;
+        break
       }
     }
     i++

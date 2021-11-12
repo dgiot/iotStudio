@@ -5,6 +5,7 @@ function handleRandomImage(/* width = 50, height = 50 */) {
     38
   )}.jpg`
 }
+
 const List = []
 const count = 50
 for (let i = 0; i < count; i++) {

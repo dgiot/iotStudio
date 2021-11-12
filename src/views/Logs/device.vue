@@ -92,8 +92,8 @@
             <el-popover trigger="hover">
               <el-checkbox-group v-model="checkList">
                 <vue-draggable
-                  v-bind="dragOptions"
                   :list="logcolumns"
+                  v-bind="dragOptions"
                 >
                   <div
                     v-for="(item, index) in logcolumns"
@@ -350,8 +350,9 @@
     mounted() {
       if (this.productid) this.queryForm.productid = this.productid
       if (this.deviceid) this.queryForm.deviceid = this.deviceid
-      if (this.$route.query.deviceid)
+      if (this.$route.query.deviceid) {
         this.queryForm.deviceid = this.$route.query.deviceid
+      }
       this.queryTable({})
       this.rowDrop()
       this.queryProduct()
@@ -372,8 +373,11 @@
       },
       handleHeight() {
         this.isFullscreen = !this.isFullscreen
-        if (this.isFullscreen) this.height = this.$baseTableHeight(0) + 120
-        else this.height = this.$baseTableHeight(0)
+        if (this.isFullscreen) {
+          this.height = this.$baseTableHeight(0) + 120
+        } else {
+          this.height = this.$baseTableHeight(0)
+        }
         this.momentKey = moment(new Date()).valueOf()
       },
       // 设置表格row的class
@@ -510,7 +514,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .logs {
     //height: calc(100vh - #{$base-top-bar-height} * 5.2) !important;
 

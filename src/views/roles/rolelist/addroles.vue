@@ -104,8 +104,7 @@
 </template>
 <script>
   import { queryDict } from '@/api/Dict/index'
-  import { queryRole, addRoles } from '@/api/Role/index'
-  import { Roletree } from '@/api/Menu'
+  import { addRoles, queryRole } from '@/api/Role/index'
 
   export default {
     props: {
@@ -168,7 +167,11 @@
         },
         roleFormRules: {
           name: [
-            { required: true, message: '请输入角色名', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入角色名',
+              trigger: 'blur',
+            },
             {
               min: 2,
               max: 10,
@@ -176,12 +179,26 @@
               trigger: 'blur',
             },
           ],
-          depname: [{ required: true, message: '请选择部门', trigger: 'blur' }],
+          depname: [
+            {
+              required: true,
+              message: '请选择部门',
+              trigger: 'blur',
+            },
+          ],
           dictvalue: [
-            { required: true, message: '请选择岗位', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择岗位',
+              trigger: 'change',
+            },
           ],
           ParentId: [
-            { required: true, message: '请选择部门父级', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择部门父级',
+              trigger: 'blur',
+            },
           ],
         },
         roleList: [],
@@ -362,7 +379,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .app-container {
     //box-sizing: border-box;
     //width: 100%;

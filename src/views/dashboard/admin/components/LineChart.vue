@@ -1,8 +1,8 @@
-<template>
-  <div
-    :class="className"
-    :style="{ height: height, width: width }"
-  />
+template>
+<div
+  :class="className"
+  :style="{ height: height, width: width }"
+/>
 </template>
 
 <script>
@@ -79,10 +79,10 @@
       }
 
       this.sidebarElm &&
-        this.sidebarElm.removeEventListener(
-          'transitionend',
-          this.sidebarResizeHandler
-        )
+      this.sidebarElm.removeEventListener(
+        'transitionend',
+        this.sidebarResizeHandler,
+      )
 
       this.chart.dispose()
       this.chart = null
@@ -93,7 +93,12 @@
           this.__resizeHandler()
         }
       },
-      setOptions({ expectedData, actualData, title, max } = {}) {
+      setOptions({
+        expectedData,
+        actualData,
+        title,
+        max,
+      } = {}) {
         this.chart.setOption({
           xAxis: {
             data: actualData,
@@ -132,8 +137,14 @@
           },
           toolbox: {
             feature: {
-              dataView: { show: true, readOnly: false },
-              magicType: { show: true, type: ['line', 'bar'] },
+              dataView: {
+                show: true,
+                readOnly: false,
+              },
+              magicType: {
+                show: true,
+                type: ['line', 'bar'],
+              },
               restore: { show: true },
               saveAsImage: { show: true },
             },
@@ -181,9 +192,18 @@
                     // 折线图区域颜色线性渐变显示
                     normal: {
                       color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: '#7CF5A2' },
-                        { offset: 0.6, color: '#7EF57C' },
-                        { offset: 1, color: '#fff' },
+                        {
+                          offset: 0,
+                          color: '#7CF5A2',
+                        },
+                        {
+                          offset: 0.6,
+                          color: '#7EF57C',
+                        },
+                        {
+                          offset: 1,
+                          color: '#fff',
+                        },
                       ]),
                     },
                   },

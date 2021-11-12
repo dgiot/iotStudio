@@ -27,9 +27,11 @@ export function checkByPointInRect(frameRect, itemRect) {
     y > frameRect.y &&
     x < frameRect.x + frameRect.width &&
     y < frameRect.y + frameRect.height
-  )
+  ) {
     return true
-  else return false
+  } else {
+    return false
+  }
 }
 
 /**
@@ -47,7 +49,9 @@ export function checkByRectCollisionDetection(frameRect, itemRect) {
     y2 = itemRect.y + itemRect.height / 2,
     w2 = itemRect.width,
     h2 = itemRect.height
-  if (Math.abs(x1 - x2) < (w1 + w2) / 2 && Math.abs(y1 - y2) < (h1 + h2) / 2)
+  if (Math.abs(x1 - x2) < (w1 + w2) / 2 && Math.abs(y1 - y2) < (h1 + h2) / 2) {
     return true
-  else return false
+  } else {
+    return false
+  }
 }

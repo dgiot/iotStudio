@@ -250,9 +250,10 @@
 
 <script>
   import defaultLogo from '../../../public/assets/images/logo/logo.png'
-  import { resourceTypes, putResourceTypes } from '@/api/Rules'
+  import { putResourceTypes, resourceTypes } from '@/api/Rules'
   import { postChannel } from '@/api/Channel'
   import { mapActions, mapGetters } from 'vuex'
+
   export default {
     name: 'CreateResourcechannel',
     components: {},
@@ -269,13 +270,25 @@
         arrlist: [],
         addrules: {
           applicationtText: [
-            { required: true, message: '请选择所属应用', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'change',
+            },
           ],
           name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择通道类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择通道类型',
+              trigger: 'change',
+            },
           ],
         },
         addchannel: {
@@ -349,7 +362,10 @@
             delete obj.name
             const aclKey = 'role' + ':' + this.addchannel.applicationtText
             const aclObj = {}
-            aclObj[aclKey] = { read: true, write: true }
+            aclObj[aclKey] = {
+              read: true,
+              write: true,
+            }
             const data = {
               ACL: aclObj,
               config: obj,
@@ -382,13 +398,25 @@
         var obj = {}
         var obj1 = {
           applicationtText: [
-            { required: true, message: '请选择所属应用', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'change',
+            },
           ],
           name: [
-            { required: true, message: '请输入通道名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
           ],
           region: [
-            { required: true, message: '请选择通道类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择通道类型',
+              trigger: 'change',
+            },
           ],
         }
         if (this.resourceid == '') {
@@ -406,10 +434,18 @@
                 }
                 if (item.required) {
                   if (item.type == 'string' || item.type == 'integer') {
-                    obj1[item.showname] = [{ required: true, trigger: 'blur' }]
+                    obj1[item.showname] = [
+                      {
+                        required: true,
+                        trigger: 'blur',
+                      },
+                    ]
                   } else {
                     obj1[item.showname] = [
-                      { required: true, trigger: 'change' },
+                      {
+                        required: true,
+                        trigger: 'change',
+                      },
                     ]
                   }
                 }
@@ -436,11 +472,17 @@
                   if (item.required) {
                     if (item.type == 'string' || item.type == 'integer') {
                       obj1[item.showname] = [
-                        { required: true, trigger: 'blur' },
+                        {
+                          required: true,
+                          trigger: 'blur',
+                        },
                       ]
                     } else {
                       obj1[item.showname] = [
-                        { required: true, trigger: 'change' },
+                        {
+                          required: true,
+                          trigger: 'change',
+                        },
                       ]
                     }
                   }
@@ -507,8 +549,14 @@
         res.forEach((item) => {
           if (!item.params.ico) {
             item.params.ico = {
-              title: { en: 'channel ICO', zh: '通道ICO' },
-              description: { en: 'channel ICO', zh: '通道ICO' },
+              title: {
+                en: 'channel ICO',
+                zh: '通道ICO',
+              },
+              description: {
+                en: 'channel ICO',
+                zh: '通道ICO',
+              },
               default: defaultLogo,
             }
           }
@@ -529,11 +577,13 @@
   .el-card {
     margin-bottom: 0 !important;
   }
+
   .box-card {
     ::v-deep {
       .el-card__body {
         border: 1px solid #252528 !important;
       }
+
       //span {
       //  float: left;
       //}
@@ -550,6 +600,7 @@
       }
     }
   }
+
   /* @import url() */
   .createResourcechannel {
     margin: 20px;
@@ -566,6 +617,7 @@
         .clearfix {
           margin: 0;
         }
+
         .el-tree > .el-tree-node {
           display: inline-block;
           min-width: 100%;

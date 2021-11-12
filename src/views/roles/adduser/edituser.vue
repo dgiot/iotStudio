@@ -80,7 +80,7 @@
   </div>
 </template>
 <script>
-  import { putUser, getUser } from '@/api/User/index'
+  import { getUser, putUser } from '@/api/User/index'
   import { roletree } from '@/api/Role/index'
 
   export default {
@@ -177,22 +177,27 @@
     padding: 20px;
     background: #ffffff;
   }
+
   .admin {
     margin: 20px 0 10px 20px;
     font-size: 24px;
   }
+
   .admin .des {
     padding-left: 5px;
     font-size: 15px;
     color: #777;
   }
+
   .goodslist {
     margin-bottom: 10px;
     margin-left: 20px;
   }
+
   .el-input {
     width: 600px;
   }
+
   .el-form {
     margin-left: 20px;
   }
