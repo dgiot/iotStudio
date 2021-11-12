@@ -24,9 +24,9 @@
     <el-form
       ref="form"
       :inline="true"
-      label-width="100px"
       :model="form"
       :rules="rules"
+      label-width="100px"
       style="margin-top: 20px"
     >
       <!--      <el-form-item-->
@@ -126,8 +126,8 @@
                 <img
                   slot="error"
                   :src="$FileServe + form.meta.icon"
-                  style="width: 16px; height: 16px"
                   :title="$FileServe + form.meta.icon"
+                  style="width: 16px; height: 16px"
                 />
               </el-image>
               <vab-icon
@@ -350,7 +350,7 @@
         console.log(item, this.form)
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
         this.inputParams = {
           file: '',
@@ -381,8 +381,8 @@
           type == 'addChildMenu'
             ? '新增子菜单'
             : type == 'one'
-            ? '新增一级菜单'
-            : '编辑菜单'
+              ? '新增一级菜单'
+              : '编辑菜单'
         if (type == 'addChildMenu') {
           this.form = {
             orderBy: row.orderBy * 10 + 1, // 如果是新增子菜单

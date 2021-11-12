@@ -4,9 +4,9 @@
       <el-row>
         <el-form
           ref="record"
+          :model="record"
           class="clients-basic-form"
           label-suffix=":"
-          :model="record"
         >
           <el-col :span="12">
             <div class="card-subtitle">
@@ -191,9 +191,9 @@
         <el-form
           v-if="showMore"
           ref="record"
+          :model="record"
           class="clients-basic-form"
           label-suffix=":"
-          :model="record"
         >
           <el-row>
             <el-col :span="12">

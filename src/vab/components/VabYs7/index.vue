@@ -33,7 +33,8 @@
         player: {},
       }
     },
-    created() {},
+    created() {
+    },
     mounted() {
       this.initYs7()
     },

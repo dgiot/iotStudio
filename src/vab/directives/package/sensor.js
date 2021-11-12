@@ -50,20 +50,20 @@ const sensor = {
     }
     // 展示类埋点执行
     showObj.value &&
-      sensors.track(showObj.name, {
-        FileName: showObj.value,
-      })
+    sensors.track(showObj.name, {
+      FileName: showObj.value,
+    })
     //点击类埋点执行
     if (clickObj.value) {
       el.handler = function () {
         clickObj.name === '$WebClick' &&
-          sensors.track(clickObj.name, {
-            $element_name: clickObj.value,
-          })
+        sensors.track(clickObj.name, {
+          $element_name: clickObj.value,
+        })
         clickObj.name === 'PopupBtnClick' &&
-          sensors.track(clickObj.name, {
-            FileName: clickObj.value,
-          })
+        sensors.track(clickObj.name, {
+          FileName: clickObj.value,
+        })
       }
       el.addEventListener('click', el.handler)
     }

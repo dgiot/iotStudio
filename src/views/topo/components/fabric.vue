@@ -168,7 +168,7 @@
         // ctrl+z 删除最近添加的元素
         if (e.keyCode == 90 && e.ctrlKey) {
           this.canvas.remove(
-            this.canvas.getObjects()[this.canvas.getObjects().length - 1]
+            this.canvas.getObjects()[this.canvas.getObjects().length - 1],
           )
         }
       }
@@ -227,12 +227,13 @@
           false,
           false,
           0,
-          null
+          null,
         )
         save_link.dispatchEvent(event)
       },
       uploadImg() {
-        document.getElementById('imgInput').click()
+        document.getElementById('imgInput')
+          .click()
       },
       // 从已渲染的DOM元素加载图片至canvas
       loadExpImg() {
@@ -260,7 +261,7 @@
               imgTitle = _this.imgFile.name
               _this.imgSrc = this.result
             },
-            false
+            false,
           )
           reader.readAsDataURL(this.imgFile)
         }
@@ -367,9 +368,10 @@
         }
       },
       deleteObj() {
-        this.canvas.getActiveObjects().map((item) => {
-          this.canvas.remove(item)
-        })
+        this.canvas.getActiveObjects()
+          .map((item) => {
+            this.canvas.remove(item)
+          })
       },
       transformMouse(mouseX, mouseY) {
         return {
@@ -489,7 +491,8 @@
         this.lineArray.map((line, index) => {
           this.canvas.remove(line)
         })
-        this.canvas.remove(this.activeShape).remove(this.activeLine)
+        this.canvas.remove(this.activeShape)
+          .remove(this.activeLine)
         var polygon = new fabric.Polygon(points, {
           stroke: this.color,
           strokeWidth: this.drawWidth,
@@ -594,7 +597,7 @@
             var radius =
               Math.sqrt(
                 (mouseTo.x - left) * (mouseTo.x - left) +
-                  (mouseTo.y - top) * (mouseTo.y - top)
+                (mouseTo.y - top) * (mouseTo.y - top),
               ) / 2
             canvasObject = new fabric.Ellipse({
               left: (mouseTo.x - left) / 2 + left,

@@ -21,7 +21,7 @@ for (let i = 0; i < count; i++) {
       fontFamily: 'Calibri',
       fill: '@hex()',
       type: 'text',
-    })
+    }),
   )
 }
 const data = {

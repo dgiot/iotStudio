@@ -6,9 +6,9 @@
     />
     <el-form
       ref="addchannel"
-      label-width="auto"
       :model="addchannel"
       :rules="addrules"
+      label-width="auto"
       size="mini"
     >
       <div
@@ -40,8 +40,8 @@
               v-for="(item, index) in channelregion"
               :key="index"
               :label="item.title.zh"
-              style="display: block"
               :value="item.cType"
+              style="display: block"
             />
           </el-select>
         </el-form-item>
@@ -52,8 +52,8 @@
           >
             <el-input
               v-model="addchannel.name"
-              autocomplete="off"
               :placeholder="$translateTitle('developer.channelname')"
+              autocomplete="off"
               style="float: left"
             />
           </el-form-item>
@@ -74,8 +74,8 @@
             >
               <el-tree
                 :data="allApps"
-                default-expand-all
                 :props="defaultProps"
+                default-expand-all
                 @node-click="handleNodeClick"
               />
             </div>
@@ -126,12 +126,12 @@
               style="width: 98%"
             >
               <el-option
-                label="是"
                 :value="true"
+                label="是"
               />
               <el-option
-                label="否"
                 :value="false"
+                label="否"
               />
             </el-select>
             <el-select
@@ -153,9 +153,9 @@
           <el-form-item :label="$translateTitle('developer.describe')">
             <el-input
               v-model="addchannel.desc"
-              autocomplete="off"
               :placeholder="$translateTitle('developer.describe')"
               :rows="3"
+              autocomplete="off"
               type="textarea"
             />
           </el-form-item>
@@ -180,13 +180,13 @@
               style="padding: 10px; margin: 0px; cursor: pointer"
             >
               <el-card
-                class="box-card"
                 :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
-                size="mini"
                 :style="{
                   color:
                     addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                 }"
+                class="box-card"
+                size="mini"
               >
                 <!--                <div slot="header" class="clearfix">-->
                 <!--                  <el-button-->
@@ -209,12 +209,12 @@
                   <el-row :gutter="24">
                     <el-col :span="6">
                       <img
-                        class="image"
                         :src="
                           item.params.ico.default
                             ? item.params.ico.default
                             : require('../../../public/assets/images/logo/logo.png')
                         "
+                        class="image"
                         style="width: 50px; height: 50px"
                       />
                     </el-col>
@@ -305,13 +305,20 @@
     mounted() {
       this.getResource()
     },
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
+    beforeCreate() {
+    }, //生命周期 - 创建之前
+    beforeMount() {
+    }, //生命周期 - 挂载之前
+    beforeUpdate() {
+    }, //生命周期 - 更新之前
+    updated() {
+    }, //生命周期 - 更新之后
+    beforeDestroy() {
+    }, //生命周期 - 销毁之前
+    destroyed() {
+    }, //生命周期 - 销毁完成
+    activated() {
+    },
     methods: {
       ...mapActions({
         addVisitedRoute: 'tabs/addVisitedRoute',
@@ -332,7 +339,7 @@
         console.log(type, index)
         this.channeindex = index
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
       },
       async fileInfo(info) {
@@ -509,21 +516,22 @@
         this.addrules = obj1
       },
       async addchannelaxios(data) {
-        await postChannel(data).then((results) => {
-          if (results) {
-            this.$message({
-              type: 'success',
-              message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
-            })
-            // this.$refs['addchannel'].resetFields()
-            this.addchannel = {}
-            // this.reload()
-            this.channelForm = false
-            this.resourceid = ''
-            // 创建成功后返回通道管理页，关闭当前页
-            this.handleTabRemove()
-          }
-        })
+        await postChannel(data)
+          .then((results) => {
+            if (results) {
+              this.$message({
+                type: 'success',
+                message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
+              })
+              // this.$refs['addchannel'].resetFields()
+              this.addchannel = {}
+              // this.reload()
+              this.channelForm = false
+              this.resourceid = ''
+              // 创建成功后返回通道管理页，关闭当前页
+              this.handleTabRemove()
+            }
+          })
       },
       /**
        * 根据原生路径删除标签中的标签

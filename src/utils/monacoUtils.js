@@ -26,7 +26,11 @@ export function createMonacoComplete(hints, range, { word }) {
 
 function getValueName(hint) {
   // eslint-disable-next-line prefer-const
-  let { name, default: defaultValue, valueType } = hint
+  let {
+    name,
+    default: defaultValue,
+    valueType,
+  } = hint
   if (valueType) {
     name = `${name}: ${valueType}`
   }
@@ -47,7 +51,7 @@ export function createMonacoHover(key, hints) {
         },
         {
           value: hint.documentation,
-        }
+        },
       )
     }
   })

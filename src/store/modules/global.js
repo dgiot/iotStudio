@@ -57,25 +57,46 @@ const mutations = {
   },
 }
 const actions = {
-  set_docDetails({ commit, details }) {
+  set_docDetails({
+    commit,
+    details,
+  }) {
     commit('set_docDetails', details)
   },
-  setSelectedKeys({ commit, keys }) {
+  setSelectedKeys({
+    commit,
+    keys,
+  }) {
     commit('setSelectedKeys', keys)
   },
-  setCdnResource({ commit, resource }) {
+  setCdnResource({
+    commit,
+    resource,
+  }) {
     commit('setCdnResource', resource)
   },
-  set_deviceStep({ commit, step }) {
+  set_deviceStep({
+    commit,
+    step,
+  }) {
     commit('set_deviceStep', step)
   },
-  set_deviceFlag({ commit, flag }) {
+  set_deviceFlag({
+    commit,
+    flag,
+  }) {
     commit('set_deviceFlag', flag)
   },
-  set_tableDict({ commit, dict }) {
+  set_tableDict({
+    commit,
+    dict,
+  }) {
     commit('set_tableDict', dict)
   },
-  set_tableParser({ commit, Parser }) {
+  set_tableParser({
+    commit,
+    Parser,
+  }) {
     commit('set_tableDict', Parser)
   },
 }

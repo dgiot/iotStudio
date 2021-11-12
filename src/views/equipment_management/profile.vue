@@ -1,8 +1,8 @@
 <template>
   <div
     ref="custom-table"
-    class="devproduct devproduct-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
+    class="devproduct devproduct-container"
   >
     <!--添加物模型弹窗-->
     <el-dialog
@@ -10,8 +10,8 @@
       :before-close="wmxhandleClose"
       :close-on-click-modal="false"
       :title="wmxSituation + '自定义属性'"
-      top="5vh"
       :visible.sync="wmxdialogVisible"
+      top="5vh"
       width="60%"
     >
       <wmxdetail
@@ -59,8 +59,8 @@
     <el-dialog
       :append-to-body="true"
       :title="formConfig.uid"
-      top="1vh"
       :visible.sync="dialogVisible"
+      top="1vh"
     >
       <vab-parser
         :dba-table="DbaTable"
@@ -79,8 +79,8 @@
     </el-dialog>
     <el-dialog
       v-drag-dialog
-      append-to-body
       :visible.sync="parserView"
+      append-to-body
     >
       <f-render
         v-model="formConfig"
@@ -93,10 +93,10 @@
       <vab-query-form>
         <vab-query-form-top-panel>
           <el-form
-            class="demo-form-inline"
             :inline="true"
-            label-width="100px"
             :model="formInline"
+            class="demo-form-inline"
+            label-width="100px"
             @submit.native.prevent
           >
             <el-form-item :label="$translateTitle('resource.category')">
@@ -121,8 +121,8 @@
             <el-form-item :label="$translateTitle('alert.product name')">
               <el-input
                 v-model="queryForm.name"
-                clearable
                 :placeholder="$translateTitle('product.searchproductname')"
+                clearable
                 size="mini"
                 style="width: 90%"
               >
@@ -163,9 +163,9 @@
           :xs="12"
         >
           <ul
+            :style="{ height: tableHeight + 'px' }"
             class="infinite-list"
             style="overflow: auto"
-            :style="{ height: tableHeight + 'px' }"
           >
             <li
               v-for="(item, index) in categorysonList"
@@ -228,15 +228,15 @@
                 </template>
               </el-table-column>
               <el-table-column
-                fixed="right"
                 :label="$translateTitle('developer.operation')"
+                fixed="right"
                 width="145"
               >
                 <template slot-scope="scope">
                   <el-button
+                    :underline="false"
                     size="mini"
                     type="success"
-                    :underline="false"
                     @click.stop="editproducttemp(scope.row)"
                   >
                     {{ $translateTitle('concentrator.edit') }}
@@ -258,10 +258,10 @@
             style="margin-top: 20px"
           >
             <el-pagination
-              layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
               :page-sizes="[10, 20, 30, 50]"
               :total="total"
+              layout="total, sizes, prev, pager, next, jumper"
               @current-change="productCurrentChange"
               @size-change="productSizeChange"
             />
@@ -311,22 +311,22 @@
       @fetch-data="queryProduttemp({})"
     />
     <el-drawer
-      append-to-body
       :before-close="handleClose"
       :close-on-click-modal="false"
-      size="50%"
       :title="moduleTitle"
-      top="5vh"
       :visible.sync="dialogFormVisible"
+      append-to-body
+      size="50%"
+      top="5vh"
     >
       <div class="devproduct-prodialog-content">
         <!--产品信息-->
         <div class="contentone">
           <el-form
             ref="form"
-            label-width="150px"
             :model="form"
             :rules="rules"
+            label-width="150px"
           >
             <el-form-item
               :label="$translateTitle('product.Producttemplatename')"
@@ -358,8 +358,8 @@
             >
               <div v-if="imageUrl">
                 <img
-                  class="avatar"
                   :src="$FileServe + imageUrl"
+                  class="avatar"
                 />
                 <el-button
                   size="mini"

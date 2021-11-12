@@ -65,7 +65,8 @@
           // 该路由组件的判断条件, 根据当前route更新
           const _matchedNames = this.$route.matched.map((item) => item.name)
           // 该路由的父组件名, 判断是否是统一父组件下的路由
-          const _parentNames = _matchedNames.slice(0, this.dept).join(',')
+          const _parentNames = _matchedNames.slice(0, this.dept)
+            .join(',')
           if (!this.parentNames) this.parentNames = _parentNames
           // 该路由作为中间路由[1级-最后1级前一级]使用的Key
           const _parentNamesKey = _matchedNames
@@ -86,7 +87,7 @@
       findParent(node) {
         if (node.$options.name === 'VabAppMain') return ['VabAppMain']
         return node.$options.name === 'VabKeepAlive' ||
-          node.$options.name.startsWith('El')
+        node.$options.name.startsWith('El')
           ? this.findParent(node.$parent)
           : [...this.findParent(node.$parent), node.$options.name]
       },

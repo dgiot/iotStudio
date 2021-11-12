@@ -1,10 +1,10 @@
 <template>
   <el-scrollbar
-    class="column-bar-container"
     :class="{
       'is-collapse': collapse,
       ['column-bar-container-' + theme.columnStyle]: true,
     }"
+    class="column-bar-container"
   >
     <vab-logo />
     <el-tabs
@@ -19,11 +19,11 @@
       >
         <template slot="label">
           <div
-            class="column-grid"
             :class="{
               ['column-grid-' + theme.columnStyle]: true,
             }"
             :title="$translateTitle(`route.${item.meta.title}`)"
+            class="column-grid"
           >
             <div>
               <el-image
@@ -35,8 +35,8 @@
                 <img
                   slot="error"
                   :src="$FileServe + item.meta.icon"
-                  style="width: 16px; height: 16px"
                   :title="$FileServe + item.meta.icon"
+                  style="width: 16px; height: 16px"
                 />
               </el-image>
               <vab-icon
@@ -58,8 +58,8 @@
       :background-color="variables['column-second-menu-background']"
       :default-active="activeMenu"
       :default-openeds="defaultOpeneds"
-      mode="vertical"
       :unique-opened="uniqueOpened"
+      mode="vertical"
     >
       <el-divider>
         {{ $translateTitle(handleGroupTitle) }}

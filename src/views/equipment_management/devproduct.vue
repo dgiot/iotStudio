@@ -11,9 +11,9 @@
       >
         <div class="prosecond">
           <el-form
-            class="demo-form-inline"
             :inline="true"
             :model="formInline"
+            class="demo-form-inline"
             size="small"
           >
             <el-form-item>
@@ -110,9 +110,9 @@
               >
                 <template slot-scope="scope">
                   <el-link
+                    :underline="false"
                     icon="el-icon-view"
                     type="primary"
-                    :underline="false"
                     @click="deviceToDetail(scope.row)"
                   >
                     <!-- 配置 -->
@@ -124,7 +124,8 @@
                     width="300"
                   >
                     <p>
-                      {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                      {{ $translateTitle('product.qdsczg') }}{{
+                        scope.row.name
                       }}{{ $translateTitle('equipment.cpm') }}
                     </p>
                     <div style="margin: 0; text-align: right">
@@ -146,34 +147,34 @@
                     </div>
                     <el-link
                       slot="reference"
+                      :underline="false"
                       icon="el-icon-delete"
                       type="danger"
-                      :underline="false"
                     >
                       {{ $translateTitle('developer.delete') }}
                     </el-link>
                   </el-popover>
                   <el-link
+                    :underline="false"
                     icon="el-icon-attract"
                     type="primary"
-                    :underline="false"
                     @click="GoTodevices(scope.row)"
                   >
                     {{ $translateTitle('product.equipment') }}
                   </el-link>
                   <el-link
+                    :underline="false"
                     icon="el-icon-edit"
                     type="success"
-                    :underline="false"
                     @click="editorProduct(scope.row)"
                   >
                     <!-- 编辑 -->
                     {{ $translateTitle('concentrator.edit') }}
                   </el-link>
                   <el-link
+                    :underline="false"
                     icon="el-icon-s-promotion"
                     type="primary"
-                    :underline="false"
                     @click="proudctView(scope.row)"
                   >
                     <!-- 运行组态 -->
@@ -188,10 +189,10 @@
             style="margin-top: 20px"
           >
             <el-pagination
-              layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
               :page-sizes="[10, 20, 30, 50]"
               :total="total"
+              layout="total, sizes, prev, pager, next, jumper"
               @current-change="productCurrentChange"
               @size-change="productSizeChange"
             />
@@ -206,8 +207,8 @@
         :before-close="handleClose"
         :close-on-click-modal="false"
         :title="$translateTitle('product.createproduct')"
-        top="5vh"
         :visible.sync="dialogFormVisible"
+        top="5vh"
         width="40%"
       >
         <div class="content">
@@ -397,8 +398,8 @@
               <el-form-item :label="$translateTitle('developer.productmodel')">
                 <img
                   v-if="imageUrl"
-                  class="avatar"
                   :src="imageUrl"
+                  class="avatar"
                 />
                 <i
                   v-else
@@ -489,10 +490,8 @@
           -->
           <el-upload
             ref="fileUpload"
-            accept=".xls, .xlsx, .zip"
             :action="uploadAction"
             :auto-upload="false"
-            class="upload-demo"
             :data="uploadData"
             :file-list="fileList"
             :headers="uploadHeaders"
@@ -500,6 +499,8 @@
             :on-error="handleUploadError"
             :on-success="handleUploadSuccess"
             :with-credentials="true"
+            accept=".xls, .xlsx, .zip"
+            class="upload-demo"
           >
             <el-button
               slot="trigger"
@@ -544,12 +545,7 @@
   import { queryDict } from '@/api/Dict/index'
   import { app_count } from '@/api/Platform/index'
   import { queryDevice } from '@/api/Device/index'
-  import {
-    delProduct,
-    getProduct,
-    putProduct,
-    queryProduct,
-  } from '@/api/Product'
+  import { delProduct, getProduct, putProduct, queryProduct } from '@/api/Product'
   // import { getIndustry } from '@/api/applicationManagement'
   import { returnLogin } from '@/utils/utilwen'
   import { export_txt_to_zip } from '@/utils/Export2Zip.js'
@@ -817,18 +813,19 @@
         if (!val) {
           return
         }
-        getServer(val).then((resultes) => {
-          if (resultes) {
-            this.fileServer = resultes.file
-            this.access_token = resultes.access_token
-          }
-        })
+        getServer(val)
+          .then((resultes) => {
+            if (resultes) {
+              this.fileServer = resultes.file
+              this.access_token = resultes.access_token
+            }
+          })
       },
       treeData(paramData) {
         const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.id == child.parentid
+            (child) => father.id == child.parentid,
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parentid == 0 // 返回第一层
@@ -985,7 +982,10 @@
         if (this.formInline.productname != '') {
           params.where.name = this.formInline.productname
         }
-        const { results, count } = await queryProduct(params)
+        const {
+          results,
+          count,
+        } = await queryProduct(params)
         results.map((k, i) => {
           if (k.category != '' && k.category) {
             category.push(k.category)
@@ -1107,8 +1107,8 @@
             var ranNum = Math.ceil(Math.random() * 25)
             var productSecret = Base64.encode(
               String.fromCharCode(65 + ranNum) +
-                Math.ceil(Math.random() * 10000000) +
-                Number(new Date())
+              Math.ceil(Math.random() * 10000000) +
+              Number(new Date()),
             )
             if (this.productid == '') {
               this.addProduct()

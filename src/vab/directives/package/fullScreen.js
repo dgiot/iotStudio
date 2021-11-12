@@ -65,8 +65,8 @@ const toggleFullScreen = (el, binding) => {
   const escKeyDown = (e) => {
     if (Number(e.keyCode) === 27) {
       el.filter &&
-        el.filter &&
-        el.index.insertBefore(el.filter, el.filterNextSibling)
+      el.filter &&
+      el.index.insertBefore(el.filter, el.filterNextSibling)
       el.classList.remove('full-screen')
       el.fullScreen.isFullScreen = false
     }
@@ -172,7 +172,7 @@ const fullScreen = {
       el.filter = document.getElementById(`${binding.value.insertNode}`)
       el.filterNextSibling = el.filter.nextElementSibling
       el.index = document.getElementById(
-        `${binding.value.insertNode}`
+        `${binding.value.insertNode}`,
       ).parentNode
     }
   },

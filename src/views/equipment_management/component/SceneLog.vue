@@ -1,7 +1,7 @@
 <template>
   <div
-    class="logs logs-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
+    class="logs logs-container"
   >
     <vab-query-form>
       <vab-query-form-top-panel>
@@ -9,8 +9,8 @@
           v-if="!$loadsh.isEmpty(queryForm)"
           ref="form"
           :inline="true"
-          label-width="80px"
           :model="queryForm"
+          label-width="80px"
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('device.tracetype')">
@@ -28,11 +28,11 @@
           <el-form-item :label="$translateTitle('device.action')">
             <el-switch
               v-model="queryForm.action"
-              active-color="#13ce66"
               :active-text="$translateTitle('device.start')"
+              :inactive-text="$translateTitle('device.stop')"
+              active-color="#13ce66"
               active-value="start"
               inactive-color="#ff4949"
-              :inactive-text="$translateTitle('device.stop')"
               inactive-value="stop"
               style="display: block"
               @change="starttrace"
@@ -128,7 +128,6 @@
               ? Number($baseTableHeight(0)) + 80
               : Number($baseTableHeight(0)) + 40
           "
-          lang="json"
           :max-lines="
             isFullscreen
               ? Number($baseTableHeight(0) + 80) / 12
@@ -139,6 +138,7 @@
               ? Number($baseTableHeight(0) + 80) / 12
               : Number($baseTableHeight(0) - 80) / 12
           "
+          lang="json"
           theme="gob"
         />
       </a-tab-pane>
@@ -150,34 +150,34 @@
         <el-table
           :key="finallyColumns.length + momentKey"
           ref="dragTable"
+          :data="scroketMsg"
+          :height="height"
+          :row-class-name="tableRowClassName"
           border
           class="logs-table"
-          :data="scroketMsg"
           default-expand-all
-          :height="height"
           highlight-current-row
           resizable
-          :row-class-name="tableRowClassName"
           stripe
         >
           <el-table-column
             v-for="(item, index) in finallyColumns"
             :key="index"
-            align="center"
             :label="item"
             :prop="item"
-            show-overflow-tooltip
-            sortable
             :width="
               w80.includes(item) ? 80 : Wh120.includes(item) ? 120 : 'auto'
             "
+            align="center"
+            show-overflow-tooltip
+            sortable
           />
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-descriptions
+                :column="2"
                 border
                 class="margin-top"
-                :column="2"
               >
                 <el-descriptions-item>
                   <template slot="label">

@@ -33,7 +33,7 @@ const waterMarker = {
       binding.value.text,
       el,
       binding.value.font,
-      binding.value.textColor
+      binding.value.textColor,
     )
   },
 }

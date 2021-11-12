@@ -273,7 +273,8 @@
       },
       settings: {
         type: Object,
-        default: () => {},
+        default: () => {
+        },
       },
       datazoom: {
         type: Object,
@@ -283,7 +284,8 @@
       },
       toolbox: {
         type: Object,
-        default: () => {},
+        default: () => {
+        },
       },
       setOptionOpts: {
         type: Boolean,
@@ -309,7 +311,8 @@
         default: '400px',
       },
     },
-    mounted() {},
+    mounted() {
+    },
     methods: {},
   }
 </script>

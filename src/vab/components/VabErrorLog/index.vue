@@ -9,13 +9,13 @@
 
     <el-dialog
       :append-to-body="true"
-      title="dgiot-dashboard异常捕获(温馨提示：错误必须解决)"
       :visible.sync="dialogTableVisible"
+      title="dgiot-dashboard异常捕获(温馨提示：错误必须解决)"
       width="70%"
     >
       <el-table
-        border
         :data="errorLogs"
+        border
       >
         <el-table-column label="报错路由">
           <template #default="{ row }">

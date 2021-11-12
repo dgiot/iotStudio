@@ -8,8 +8,8 @@
         <el-col
           v-for="(item, index) in _tableDict"
           :key="index"
-          class="runData_col"
           :span="4"
+          class="runData_col"
         >
           <el-card
             class="box-card"

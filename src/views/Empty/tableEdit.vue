@@ -8,9 +8,9 @@
   >
     <el-form
       ref="form"
-      label-width="80px"
       :model="form"
       :rules="rules"
+      label-width="80px"
     >
       <el-form-item
         label="标题"
@@ -70,7 +70,8 @@
         dialogFormVisible: false,
       }
     },
-    created() {},
+    created() {
+    },
     methods: {
       showEdit(row) {
         if (!row) {

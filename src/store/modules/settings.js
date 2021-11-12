@@ -115,7 +115,7 @@ const mutations = {
     state.theme = { ...defaultTheme }
     localStorage.removeItem('theme')
     document.getElementsByTagName(
-      'body'
+      'body',
     )[0].className = `vab-theme-${state.theme.themeName}`
   },
 }

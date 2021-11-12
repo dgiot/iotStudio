@@ -118,12 +118,12 @@ export function paramObj(url) {
   }
   return JSON.parse(
     '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"')
-        .replace(/\+/g, ' ') +
-      '"}'
+    decodeURIComponent(search)
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"')
+      .replace(/\+/g, ' ') +
+    '"}',
   )
 }
 
@@ -154,10 +154,10 @@ export function getDateDiff(duration) {
  */
 export function translateDataToTree(data) {
   const parent = data.filter(
-    (value) => value.parentId === 'undefined' || value.parentId == null
+    (value) => value.parentId === 'undefined' || value.parentId == null,
   )
   const children = data.filter(
-    (value) => value.parentId !== 'undefined' && value.parentId !== null
+    (value) => value.parentId !== 'undefined' && value.parentId !== null,
   )
   const translator = (parent, children) => {
     parent.forEach((parent) => {
@@ -329,11 +329,11 @@ export function param2Obj(url) {
   }
   return JSON.parse(
     '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"') +
-      '"}'
+    decodeURIComponent(search)
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"') +
+    '"}',
   )
 }
 
@@ -497,7 +497,8 @@ export function handleZero(value) {
  */
 
 export function randomHexColor() {
-  var hex = Math.floor(Math.random() * 16777216).toString(16) //生成ffffff以内16进制数
+  var hex = Math.floor(Math.random() * 16777216)
+    .toString(16) //生成ffffff以内16进制数
   while (hex.length < 6) {
     //while循环判断hex位数，少于6位前面加0凑够6位
     hex = '0' + hex
@@ -688,7 +689,8 @@ export function strToHex(str) {
   let hexCharCode = []
   hexCharCode.push('0x')
   for (let i = 0; i < str.length; i++) {
-    hexCharCode.push(str.charCodeAt(i).toString(16))
+    hexCharCode.push(str.charCodeAt(i)
+      .toString(16))
   }
   return hexCharCode.join('')
 }
@@ -701,7 +703,8 @@ export function strToHex(str) {
 export function hexToStr(hexCharCodeStr) {
   let trimedStr = hexCharCodeStr.trim()
   let rawStr =
-    trimedStr.substr(0, 2).toLowerCase() === '0x'
+    trimedStr.substr(0, 2)
+      .toLowerCase() === '0x'
       ? trimedStr.substr(2)
       : trimedStr
   let len = rawStr.length

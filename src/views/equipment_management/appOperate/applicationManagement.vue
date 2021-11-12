@@ -63,8 +63,8 @@
         prop="creation_time"
       />
       <el-table-column
-        flex="right"
         :label="$translateTitle('developer.operation')"
+        flex="right"
         prop="operation"
         width="350"
       >
@@ -75,7 +75,8 @@
             width="300"
           >
             <p>
-              {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+              {{ $translateTitle('product.qdsczg') }}{{
+                scope.row.name
               }}{{ $translateTitle('equipment.yym') }}
             </p>
             <div style="margin: 0; text-align: right">
@@ -95,9 +96,9 @@
             </div>
             <el-link
               slot="reference"
+              :underline="false"
               icon="el-icon-delete"
               type="danger"
-              :underline="false"
             >
               {{ $translateTitle('developer.delete') }}
             </el-link>
@@ -120,8 +121,8 @@
             {{ $translateTitle('leftbar.management') }}
           </el-button>
           <el-link
-            type="primary"
             :underline="false"
+            type="primary"
             @click="applicationDeployment(scope.row)"
           >
             <!-- 部署 -->
@@ -132,10 +133,10 @@
     </el-table>
     <el-pagination
       :current-page="page.currentPage"
-      layout="total, sizes, prev, pager, next, jumper"
       :page-size="page.pageSize"
       :page-sizes="page.pageSizes"
       :total="page.total"
+      layout="total, sizes, prev, pager, next, jumper"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
     />
@@ -203,33 +204,34 @@
           skip: this.page.currentPage,
           count: 'objectId',
           where,
-        }).then((res) => {
-          const r = res.results
-          this.label = `我的应用(${res.count})`
-          this.description = `获取${r.length}条数据`
-          this.page.total = res.count
-          for (let i = 0; i < r.length; i++) {
-            const obj = {}
-            obj.name = r[i].title
-            obj.objectId = r[i].objectId
-            obj.productIdentifier = r[i].productIdentifier
-            obj.scale = handleZero(r[i].scale)
-            obj.creation_time = utc2beijing(r[i].createdAt)
-            obj.end_time = utc2beijing(r[i].updatedAt)
-            obj.category = r[i].category
-            obj.secret = r[i].secret
-            obj.logo = r[i].logo
-            obj.title = r[i].title
-            obj.userUnit = r[i].userUnit
-            obj.dashboard = r[i].dashboard
-            obj.background = r[i].background
-            obj.acl = r[i].ACL
-            obj.desc = r[i].desc
-            obj.copyright = r[i].copyright
-
-            this.tableData.push(obj)
-          }
         })
+          .then((res) => {
+            const r = res.results
+            this.label = `我的应用(${res.count})`
+            this.description = `获取${r.length}条数据`
+            this.page.total = res.count
+            for (let i = 0; i < r.length; i++) {
+              const obj = {}
+              obj.name = r[i].title
+              obj.objectId = r[i].objectId
+              obj.productIdentifier = r[i].productIdentifier
+              obj.scale = handleZero(r[i].scale)
+              obj.creation_time = utc2beijing(r[i].createdAt)
+              obj.end_time = utc2beijing(r[i].updatedAt)
+              obj.category = r[i].category
+              obj.secret = r[i].secret
+              obj.logo = r[i].logo
+              obj.title = r[i].title
+              obj.userUnit = r[i].userUnit
+              obj.dashboard = r[i].dashboard
+              obj.background = r[i].background
+              obj.acl = r[i].ACL
+              obj.desc = r[i].desc
+              obj.copyright = r[i].copyright
+
+              this.tableData.push(obj)
+            }
+          })
       },
       handleSizeChange(val) {
         this.page.pageSize = val

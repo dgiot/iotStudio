@@ -10,10 +10,11 @@
 function requireModule(context, path, flag, type) {
   let components = {}
   if (context) {
-    context.keys().forEach((fileName) => {
-      let comp = context(fileName)
-      components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
-    })
+    context.keys()
+      .forEach((fileName) => {
+        let comp = context(fileName)
+        components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
+      })
   }
   return components
 }

@@ -38,7 +38,7 @@
     computed: {
       formDesc() {
         return changeFormDescLabel(
-          this.VabRender.currentCompConfig?.config?.attrs?.config || {}
+          this.VabRender.currentCompConfig?.config?.attrs?.config || {},
         )
       },
       // 文档链接
@@ -71,7 +71,7 @@
             // this.VabRender.formItemCommon.config.default
             // this.VabRender.formItemCommon.config.label
             console.log(
-              this.VabRender.formItemList[this.VabRender.currentIndex]
+              this.VabRender.formItemList[this.VabRender.currentIndex],
             )
             console.log(this.VabRender.formItemCommon.config)
             console.log(this.VabRender)
@@ -87,7 +87,7 @@
         this.$set(
           this.VabRender.formItemCommon.config.field,
           'options',
-          _sourceField
+          _sourceField,
         )
         _sourceOption.map((e) => {
           if (
@@ -97,12 +97,12 @@
             this.$set(
               this.VabRender.formItemList[this.VabRender.currentIndex],
               'label',
-              e.label || ''
+              e.label || '',
             )
             this.$set(
               this.VabRender.formItemList[this.VabRender.currentIndex],
               'default',
-              e.default || ''
+              e.default || '',
             )
           }
         })

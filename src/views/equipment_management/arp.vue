@@ -7,10 +7,10 @@
       <div class="protolheader">
         <el-form
           ref="formInline"
-          class="demo-form-inline"
           :inline="true"
           :model="formInline"
           :rules="addRules"
+          class="demo-form-inline"
         >
           <el-form-item
             :label="$translateTitle('product.protocolname')"
@@ -78,8 +78,8 @@
       <el-dialog
         :append-to-body="true"
         :close-on-click-modal="false"
-        title="通道热加载"
         :visible.sync="protoldialog"
+        title="通道热加载"
         width="50%"
       >
         <el-table
@@ -149,24 +149,24 @@
           style="width: 100%; margin-top: 20px; text-align: center"
         >
           <el-table-column
-            align="center"
             :label="$translateTitle('product.protocolname')"
+            align="center"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.data.name }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            align="center"
             :label="$translateTitle('plugins.version')"
+            align="center"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.data.version }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            align="center"
             :label="$translateTitle('developer.describe')"
+            align="center"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.data.desc }}</span>
@@ -181,8 +181,8 @@
             </template>
           </el-table-column>
           <el-table-column
-            align="center"
             :label="$translateTitle('developer.operation')"
+            align="center"
             width="200"
           >
             <template slot-scope="scope">
@@ -208,10 +208,10 @@
           style="padding: 20px 0"
         >
           <el-pagination
-            layout="total, sizes, prev, pager, next, jumper"
             :page-size="decoderlength"
             :page-sizes="[10, 20, 30, 50]"
             :total="decodertotal"
+            layout="total, sizes, prev, pager, next, jumper"
             @current-change="devicerCurrentChange"
             @size-change="decoderSizeChange"
           />

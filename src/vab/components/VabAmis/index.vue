@@ -17,15 +17,6 @@
 <script>
   import AmisRender from './render'
   import DrawCode from '../VabDrawerCode'
-
-  console.groupCollapsed(
-    `%c amis Help`,
-    'color:#009a61; font-size: 28px; font-weight: 300'
-  )
-  console.info('edit ： https://aisuda.github.io/amis-editor-demo/#/edit/0')
-  console.info(
-    'demo ： https://baidu.gitee.io/amis/zh-CN/docs/concepts/schema?page=1'
-  )
   console.groupEnd()
   const amisdefault = {
     type: 'page',
@@ -49,13 +40,15 @@
     },
     data() {
       return {
-        amisKey: moment(new Date()).format('X'),
+        amisKey: moment(new Date())
+          .format('X'),
       }
     },
     watch: {
       schema: {
         handler(val) {
-          this.amisKey = moment(new Date()).format('X')
+          this.amisKey = moment(new Date())
+            .format('X')
         },
         immediate: true,
         deep: true,

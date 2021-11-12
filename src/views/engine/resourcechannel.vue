@@ -8,9 +8,9 @@
       >
         <div class="firsttable">
           <el-form
-            class="demo-form-inline"
             :inline="true"
             :model="channelformsearch"
+            class="demo-form-inline"
             size="small"
           >
             <el-form-item>
@@ -178,9 +178,9 @@
                 <el-button slot="reference" :disabled="scope.row.attributes.status=='OFFLINE'">hover 激活</el-button>
               </el-popover> -->
                 <el-tooltip
+                  :disabled="scope.row.status != 'OFFLINE'"
                   class="item"
                   content="请先启用通道"
-                  :disabled="scope.row.status != 'OFFLINE'"
                   effect="dark"
                   placement="top"
                 >
@@ -212,10 +212,10 @@
             style="margin-top: 20px"
           >
             <el-pagination
-              layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
               :page-sizes="[10, 20, 30, 50]"
               :total="total"
+              layout="total, sizes, prev, pager, next, jumper"
               @current-change="channelCurrentChange"
               @size-change="channelSizeChange"
             />
@@ -228,15 +228,15 @@
         :before-close="handleClose"
         :close-on-click-modal="false"
         :title="channelupdated + '通道'"
-        top="0"
         :visible.sync="channelForm"
+        top="0"
         width="50%"
       >
         <el-form
           ref="addchannel"
-          label-width="120px"
           :model="addchannel"
           :rules="addrules"
+          label-width="120px"
         >
           <el-form-item
             label="通道类型"
@@ -273,13 +273,13 @@
                 style="margin: 20px 0; cursor: pointer"
               >
                 <el-card
-                  class="box-card"
                   :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
-                  size="mini"
                   :style="{
                     color:
                       addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                   }"
+                  class="box-card"
+                  size="mini"
                 >
                   <div
                     slot="header"
@@ -288,11 +288,11 @@
                     <span>{{ item.title.zh }}</span>
                     <el-button
                       :disabled="resourceid != ''"
-                      size="mini"
-                      style="float: right"
                       :type="
                         addchannel.region == item.cType ? 'success' : 'primary'
                       "
+                      size="mini"
+                      style="float: right"
                       @click="setCard(item.cType)"
                     >
                       {{ addchannel.region == item.cType ? '已选择' : '选择' }}
@@ -322,8 +322,8 @@
           >
             <el-input
               v-model="addchannel.name"
-              autocomplete="off"
               :placeholder="$translateTitle('developer.channelname')"
+              autocomplete="off"
             />
           </el-form-item>
 
@@ -343,10 +343,10 @@
             </el-select>
           </el-form-item> -->
           <el-form-item
-            label="所属应用"
             :rules="[
               { required: true, message: '请选择所属应用', trigger: 'blur' },
             ]"
+            label="所属应用"
           >
             <el-input
               v-model="addchannel.applicationtText"
@@ -396,12 +396,12 @@
                 readonly
               >
                 <el-option
-                  label="是"
                   :value="true"
+                  label="是"
                 />
                 <el-option
-                  label="否"
                   :value="false"
+                  label="否"
                 />
               </el-select>
             </el-form-item>
@@ -410,9 +410,9 @@
           <el-form-item :label="$translateTitle('developer.describe')">
             <el-input
               v-model="addchannel.desc"
-              autocomplete="off"
               :placeholder="$translateTitle('developer.describe')"
               :rows="3"
+              autocomplete="off"
               type="textarea"
               @change="inputChange"
             />
@@ -436,8 +436,8 @@
       <!--详情展示-->
       <el-dialog
         :append-to-body="true"
-        title="通道详情"
         :visible.sync="dialogVisible"
+        title="通道详情"
         width="50%"
       >
         <div>
@@ -765,24 +765,25 @@
           },
           (error) => {
             returnLogin(error)
-          }
+          },
         )
       },
       async addchannelaxios(data) {
-        await postChannel(data).then((results) => {
-          if (results) {
-            this.$message({
-              type: 'success',
-              message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
-            })
-            this.$refs['addchannel'].resetFields()
-            this.addchannel = {}
-            // this.reload()
-            this.channelForm = false
-            this.resourceid = ''
-            this.Get_Re_Channel(0)
-          }
-        })
+        await postChannel(data)
+          .then((results) => {
+            if (results) {
+              this.$message({
+                type: 'success',
+                message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
+              })
+              this.$refs['addchannel'].resetFields()
+              this.addchannel = {}
+              // this.reload()
+              this.channelForm = false
+              this.resourceid = ''
+              this.Get_Re_Channel(0)
+            }
+          })
       },
       // 删除通道
       deleteChannel(scope) {

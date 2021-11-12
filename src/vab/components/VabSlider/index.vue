@@ -4,13 +4,13 @@
     class="slider"
   >
     <div
-      class="process"
       :style="{ width }"
+      class="process"
     ></div>
     <div
       ref="trunk"
-      class="thunk"
       :style="{ left }"
+      class="thunk"
     >
       <div class="block"></div>
       <div class="tips">

@@ -9,9 +9,9 @@
     </div>
     <el-form
       ref="ruleForm2"
+      :model="ruleForm2"
       class="demo-ruleForm"
       label-width="100px"
-      :model="ruleForm2"
       status-icon
     >
       <el-form-item
@@ -58,12 +58,12 @@
       <el-form-item :label="$translateTitle('developer.departmentselection')">
         <el-cascader
           v-model="ruleForm2.departmentid"
-          auto-complete="off"
-          change-on-select
           :options="data"
           :placeholder="$translateTitle('product.selectdepartment')"
           :props="treeprops"
           :show-all-levels="false"
+          auto-complete="off"
+          change-on-select
           style="width: 600px"
         />
       </el-form-item>

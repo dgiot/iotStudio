@@ -6,9 +6,9 @@
     />
     <div class="prosecond">
       <el-form
-        class="demo-form-inline"
         :inline="true"
         :model="formInline"
+        class="demo-form-inline"
         size="small"
       >
         <el-form-item :label="$translateTitle('product.classification')">
@@ -29,8 +29,8 @@
         <el-form-item>
           <el-input
             v-model="formInline.productname"
-            clearable
             :placeholder="$translateTitle('product.searchproductname')"
+            clearable
           />
         </el-form-item>
         <el-form-item>
@@ -96,15 +96,15 @@
             </template>
           </el-table-column>
           <el-table-column
-            fixed="right"
             :label="$translateTitle('developer.operation')"
+            fixed="right"
             width="340"
           >
             <template slot-scope="scope">
               <el-button
+                :underline="false"
                 size="mini"
                 type="primary"
-                :underline="false"
                 @click="deviceToDetail(scope.row)"
               >
                 {{ $translateTitle('product.config') }}
@@ -118,9 +118,9 @@
               </el-button>
 
               <el-button
+                :underline="false"
                 size="mini"
                 type="success"
-                :underline="false"
                 @click="editorProduct(scope.row)"
               >
                 {{ $translateTitle('concentrator.edit') }}
@@ -166,10 +166,10 @@
         style="margin-top: 20px"
       >
         <el-pagination
-          layout="total, sizes, prev, pager, next, jumper"
           :page-size="length"
           :page-sizes="[10, 20, 30, 50]"
           :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
           @current-change="productCurrentChange"
           @size-change="productSizeChange"
         />
@@ -180,10 +180,10 @@
       <el-drawer
         :before-close="handleClose"
         :close-on-click-modal="false"
-        size="60%"
         :title="moduleTitle"
-        top="5vh"
         :visible.sync="dialogFormVisible"
+        size="60%"
+        top="5vh"
       >
         <div class="devproduct-prodialog-content">
           <!--产品信息-->
@@ -240,14 +240,14 @@
                   placeholder="请选择"
                 >
                   <el-option
-                    style="height: auto; padding: 0"
                     :value="treeDataValue"
+                    style="height: auto; padding: 0"
                   >
                     <el-tree
                       ref="workGroup"
                       :data="categoryTreeData"
-                      default-expand-all
                       :expand-on-click-node="false"
+                      default-expand-all
                       node-key="index"
                     >
                       <div
@@ -292,8 +292,8 @@
               >
                 <div v-if="imageUrl">
                   <img
-                    class="avatar"
                     :src="imageUrl"
+                    class="avatar"
                   />
                   <el-button
                     size="mini"
@@ -379,10 +379,11 @@
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
-  context.keys().forEach((fileName) => {
-    let comp = context(fileName)
-    res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
-  })
+  context.keys()
+    .forEach((fileName) => {
+      let comp = context(fileName)
+      res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
+    })
 
   export default {
     components: {},
@@ -425,7 +426,8 @@
           keys: 'count(*)',
         },
         cascaderDrawer: false,
-        drawerWidth: Number($(window).width()) - 240,
+        drawerWidth: Number($(window)
+          .width()) - 240,
         height: this.$baseTableHeight(0),
         config: {},
         dataList: [{}],
@@ -623,15 +625,18 @@
             category: categorys ? { $in: categorys } : { $ne: null },
             name: args.name
               ? {
-                  $regex: args.name,
-                  $options: 'i',
-                }
+                $regex: args.name,
+                $options: 'i',
+              }
               : { $ne: null },
           },
         }
         console.log('params', params)
         try {
-          const { results = [], count = 0 } = await queryProductTemplet(params)
+          const {
+            results = [],
+            count = 0,
+          } = await queryProductTemplet(params)
           loading.close()
           this.tableData = results
           this.queryForm.total = count
@@ -653,7 +658,7 @@
         this.loading = true
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
       },
       fileInfo(info) {
@@ -796,18 +801,19 @@
         if (!val) {
           return
         }
-        getServer(val).then((resultes) => {
-          if (resultes) {
-            this.fileServer = resultes.file
-            this.access_token = resultes.access_token
-          }
-        })
+        getServer(val)
+          .then((resultes) => {
+            if (resultes) {
+              this.fileServer = resultes.file
+              this.access_token = resultes.access_token
+            }
+          })
       },
       treeData(paramData) {
         const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parent.objectId
+            (child) => father.objectId == child.parent.objectId,
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parent.objectId == 0 // 返回第一层
@@ -890,9 +896,12 @@
                 : { $ne: null },
             },
           }
-          const { results = [], count = 0 } = await this.$query_object(
+          const {
+            results = [],
+            count = 0,
+          } = await this.$query_object(
             'Product',
-            parsms
+            parsms,
           )
           // console.log("results", results)
           if (results) {
@@ -919,7 +928,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
       },
@@ -1024,13 +1033,13 @@
             config: type + 2 > 0 ? this.parserTableList : list,
           })
           this.$message.success(
-            this.$translateTitle('user.Save the template successfully')
+            this.$translateTitle('user.Save the template successfully'),
           )
           this.dialogVisible = false
           this.parserTable = false
         } catch (e) {
           this.$message.error(
-            this.$translateTitle('user.Save the template error') + `${e}`
+            this.$translateTitle('user.Save the template error') + `${e}`,
           )
           console.log(e, 'eeee')
         }
@@ -1169,15 +1178,16 @@
               },
             },
           }
-          queryCategory(params).then((res) => {
-            const ids = []
-            ids.push(objectId)
-            res.results.forEach((result) => {
-              ids.push(result.objectId)
+          queryCategory(params)
+            .then((res) => {
+              const ids = []
+              ids.push(objectId)
+              res.results.forEach((result) => {
+                ids.push(result.objectId)
+              })
+              console.log('ids', ids)
+              this.queryProdut({ categorys: ids })
             })
-            console.log('ids', ids)
-            this.queryProdut({ categorys: ids })
-          })
         }
       },
       submitForm() {
@@ -1230,7 +1240,7 @@
         const res = await this.$update_object(
           'Product',
           this.custom_row.objectId,
-          data
+          data,
         )
         if (res.updatedAt) {
           this.initQuery('产品修改成功', 'success')
@@ -1291,23 +1301,25 @@
             product: scope.row.objectId,
           },
         }
-        queryDevice(params).then((results) => {
-          if (results.count > 0) {
-            this.$message('请先删除该产品下设备')
-            return
-          } else {
-            delProduct(scope.row.objectId).then((response) => {
-              if (response) {
-                this.$message({
-                  type: 'success',
-                  message: '删除成功',
+        queryDevice(params)
+          .then((results) => {
+            if (results.count > 0) {
+              this.$message('请先删除该产品下设备')
+              return
+            } else {
+              delProduct(scope.row.objectId)
+                .then((response) => {
+                  if (response) {
+                    this.$message({
+                      type: 'success',
+                      message: '删除成功',
+                    })
+                    scope._self.$refs[`popover-${scope.$index}`].doClose()
+                    this.searchProduct()
+                  }
                 })
-                scope._self.$refs[`popover-${scope.$index}`].doClose()
-                this.searchProduct()
-              }
-            })
-          }
-        })
+            }
+          })
       },
       productSizeChange(val) {
         this.length = val
@@ -1343,7 +1355,10 @@
           name: row.attributes.name,
           thing: row.attributes.thing,
         }
-        const { objectId, code } = await getHashClass('Product', data)
+        const {
+          objectId,
+          code,
+        } = await getHashClass('Product', data)
         if (code == 200) {
           this.blackDict(objectId, data)
         }

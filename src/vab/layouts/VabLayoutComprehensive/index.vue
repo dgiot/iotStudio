@@ -1,24 +1,24 @@
 <template>
   <!--综合布局 -->
   <div
-    class="vab-layout-comprehensive"
     :class="{
       fixed: fixedHeader,
       'no-tabs-bar': !showTabs,
     }"
+    class="vab-layout-comprehensive"
   >
     <vab-side-bar layout="comprehensive" />
     <div
-      class="vab-main"
       :class="{
         'is-collapse-main': collapse,
       }"
+      class="vab-main"
     >
       <div
-        class="vab-layout-header"
         :class="{
           'fixed-header': fixedHeader,
         }"
+        class="vab-layout-header"
       >
         <vab-nav layout="comprehensive" />
         <vab-tabs v-show="showTabs" />

@@ -5,20 +5,20 @@
     <div class="adduserDiadlog">
       <a-drawer
         v-loading="isloading"
-        element-loading-background="rgba(0, 0, 0, 0.8)"
-        element-loading-spinner="el-icon-loading"
         :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
         :title="$translateTitle('user.newusers')"
         :visible.sync="adduserDiadlog"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        element-loading-spinner="el-icon-loading"
         width="600px"
         @close="adduserDiadlog = !adduserDiadlog"
       >
         <el-form
           ref="userInfoFormRef"
-          class="demo-ruleForm"
-          label-width="160px"
           :model="userInfoForm"
           :rules="userFormRules"
+          class="demo-ruleForm"
+          label-width="160px"
           status-icon
         >
           <el-form-item
@@ -63,21 +63,21 @@
           >
             <el-input
               v-model="userInfoForm.nick"
-              auto-complete="off"
               :placeholder="$translateTitle('product.eqwords')"
+              auto-complete="off"
             />
           </el-form-item>
 
           <el-form-item
             :label="$translateTitle('product.phone')"
-            prop="phone"
             :width="85"
+            prop="phone"
           >
             <el-input
               v-model="userInfoForm.phone"
-              auto-complete="off"
               :maxlength="11"
               :placeholder="$translateTitle('product.enterphonenumber')"
+              auto-complete="off"
             />
           </el-form-item>
           <el-form-item
@@ -86,8 +86,8 @@
           >
             <el-input
               v-model="userInfoForm.email"
-              auto-complete="off"
               :placeholder="$translateTitle('product.enteremail')"
+              auto-complete="off"
             />
           </el-form-item>
           <el-form-item
@@ -96,8 +96,8 @@
           >
             <el-input
               v-model="userInfoForm.account"
-              auto-complete="off"
               :placeholder="$translateTitle('product.enteraccount')"
+              auto-complete="off"
             />
           </el-form-item>
 
@@ -107,8 +107,8 @@
           >
             <el-input
               v-model="userInfoForm.password"
-              auto-complete="off"
               :placeholder="$translateTitle('product.entermmzh')"
+              auto-complete="off"
             />
           </el-form-item>
           <!-- <el-form-item label="确认密码" prop="checkPass"> -->
@@ -118,8 +118,8 @@
           >
             <el-input
               v-model="userInfoForm.checkPass"
-              auto-complete="off"
               :placeholder="$translateTitle('product.enterpwa')"
+              auto-complete="off"
             />
           </el-form-item>
           <!-- <el-form-item label="部门选择" prop="departmentid"> -->
@@ -171,8 +171,8 @@
                 <vab-query-form-top-panel>
                   <el-form
                     :inline="true"
-                    label-width="auto"
                     :model="queryForm"
+                    label-width="auto"
                     @submit.native.prevent
                   >
                     <el-form-item :label="$translateTitle('user.department')">
@@ -183,17 +183,17 @@
                         @visible-change="change($event)"
                       >
                         <el-option
-                          style="height: auto; padding: 0"
                           :value="treeDataValue"
+                          style="height: auto; padding: 0"
                         >
                           <el-tree
                             :key="upKey"
                             ref="workGroup"
                             :data="deptTreeData"
-                            default-expand-all
                             :expand-on-click-node="false"
-                            node-key="index"
                             :props="roleProps"
+                            default-expand-all
+                            node-key="index"
                           >
                             <div
                               slot-scope="{ node, data }"
@@ -209,8 +209,8 @@
                               </span>
                               <span>
                                 <i
-                                  class="el-icon-circle-plus-outline"
                                   :title="$translateTitle('developer.adduser')"
+                                  class="el-icon-circle-plus-outline"
                                   @click="addItemUser(data)"
                                 />
                               </span>
@@ -267,8 +267,8 @@
                   </el-table-column>
 
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('developer.operation')"
+                    align="center"
                     width="400"
                   >
                     <template slot-scope="scope">
@@ -298,11 +298,11 @@
                   </el-table-column>
 
                   <el-table-column
-                    align="center"
                     :label="
                       $translateTitle('user.Disable') +
                         $translateTitle('user.account')
                     "
+                    align="center"
                     width="140px"
                   >
                     <template slot-scope="scope">
@@ -317,10 +317,10 @@
                       >
                         <el-switch
                           v-model="scope.row.emailVerified"
-                          active-color="#13ce66"
                           :active-text="$translateTitle('user.Enable')"
-                          inactive-color="#ff4949"
                           :inactive-text="$translateTitle('user.Disable')"
+                          active-color="#13ce66"
+                          inactive-color="#ff4949"
                           @change="
                             disableRow(
                               scope.row.objectId,
@@ -357,16 +357,16 @@
             width="55"
           />
           <el-table-column
-            align="center"
             :label="$translateTitle('user.name')"
+            align="center"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.alias }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            align="center"
             :label="$translateTitle('developer.describe')"
+            align="center"
           >
             <template slot-scope="scope">
               <span>{{ scope.row.desc }}</span>
@@ -403,13 +403,7 @@
   import addroles from '@/views/roles/rolelist/addroles'
   import { Promise } from 'q'
   import { mapGetters, mapMutations } from 'vuex'
-  import {
-    disableuser,
-    EmployeesHired,
-    EmployeeTurnover,
-    getUser,
-    queryUser,
-  } from '@/api/User/index'
+  import { disableuser, EmployeesHired, EmployeeTurnover, getUser, queryUser } from '@/api/User/index'
   import { queryRoledepartment } from '@/api/Role/index'
   import { Roletree } from '@/api/Menu'
 
@@ -443,7 +437,8 @@
         tableHeight: this.$baseTableHeight(0) - 20,
         isloading: false,
         isStructures: true,
-        upKey: Number(moment().unix()),
+        upKey: Number(moment()
+          .unix()),
         isEvent: false,
         depobjectId: '',
         centerDialogRole: false,
@@ -685,11 +680,12 @@
       change(e) {
         console.log(e)
         if (e) {
-          $('.el-tree').css({
-            height: '300px',
-            display: 'block',
-            'overflow-x': 'auto',
-          })
+          $('.el-tree')
+            .css({
+              height: '300px',
+              display: 'block',
+              'overflow-x': 'auto',
+            })
         }
       },
       // 添加用户
@@ -807,12 +803,12 @@
             console.log(
               roleitem.objectId,
               roleitem,
-              this.userId == roleitem.objectId
+              this.userId == roleitem.objectId,
             )
             if (this.userId == roleitem.objectId) {
               this.$refs.multipleTable.toggleRowSelection(
                 this.rolelist[index],
-                true
+                true,
               )
               this.userrolelist.push(roleitem.objectId)
             }
@@ -842,15 +838,16 @@
             console.log(nowitems)
             this.testroles(nowitems)
           }),
-        ]).then((data) => {
-          if (data.length != 0) {
-            this.$message({
-              type: 'success',
-              message: '分配成功',
-            })
-            this.roleacl = false
-          }
-        })
+        ])
+          .then((data) => {
+            if (data.length != 0) {
+              this.$message({
+                type: 'success',
+                message: '分配成功',
+              })
+              this.roleacl = false
+            }
+          })
       },
       testroles(id) {
         console.log(id)
@@ -933,35 +930,36 @@
           userid: objectId,
           action: action,
         }
-        disableuser(params).then((res) => {
-          console.log(res)
-          if (res != undefined) {
-            if (emailVerified) {
-              this.$message({
-                type: 'success',
-                message: '启用成功!',
-              })
+        disableuser(params)
+          .then((res) => {
+            console.log(res)
+            if (res != undefined) {
+              if (emailVerified) {
+                this.$message({
+                  type: 'success',
+                  message: '启用成功!',
+                })
+              } else {
+                this.$message({
+                  type: 'success',
+                  message: '禁用成功!',
+                })
+              }
             } else {
-              this.$message({
-                type: 'success',
-                message: '禁用成功!',
-              })
+              this.userFordepartment()
+              if (emailVerified) {
+                this.$message({
+                  type: 'error',
+                  message: '权限不足,启用失败!',
+                })
+              } else {
+                this.$message({
+                  type: 'error',
+                  message: '权限不足,禁用失败!',
+                })
+              }
             }
-          } else {
-            this.userFordepartment()
-            if (emailVerified) {
-              this.$message({
-                type: 'error',
-                message: '权限不足,启用失败!',
-              })
-            } else {
-              this.$message({
-                type: 'error',
-                message: '权限不足,禁用失败!',
-              })
-            }
-          }
-        })
+          })
       },
       // 删除
       handleDetele(row) {
@@ -969,24 +967,25 @@
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
-        }).then(async () => {
-          // const data = {
-          //   department: this.curDepartmentId,
-          //   username: row.username,
-          // }
-          const params = {
-            department: this.curDepartmentId,
-            username: row.username,
-          }
-          const res = await EmployeeTurnover(params)
-          if (res) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!',
-            })
-            this.handleNodeClick({ name: this.departmentname })
-          }
         })
+          .then(async () => {
+            // const data = {
+            //   department: this.curDepartmentId,
+            //   username: row.username,
+            // }
+            const params = {
+              department: this.curDepartmentId,
+              username: row.username,
+            }
+            const res = await EmployeeTurnover(params)
+            if (res) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!',
+              })
+              this.handleNodeClick({ name: this.departmentname })
+            }
+          })
       },
       handleSizeChange(val) {
         this.pagesize = val
@@ -1111,8 +1110,8 @@
 </style>
 <style>
   .el-tree--highlight-current
-    .el-tree-node.is-current
-    > .el-tree-node__content {
+  .el-tree-node.is-current
+  > .el-tree-node__content {
     background-color: #cccccc;
   }
 

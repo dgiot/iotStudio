@@ -186,7 +186,10 @@ const mutations = {
   },
 }
 const actions = {
-  set_amisJson({ commit, json }) {
+  set_amisJson({
+    commit,
+    json,
+  }) {
     commit('set_amisJson', json)
   },
 }

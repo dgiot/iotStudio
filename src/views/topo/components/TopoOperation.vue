@@ -9,15 +9,15 @@
       <div class="unvisible">
         <el-upload
           ref="upload"
-          action="https://jsonplaceholder.typicode.com/posts/"
           :before-remove="beforeRemove"
-          class="upload-demo"
           :file-list="fileList"
           :limit="1"
-          multiple
           :on-exceed="handleExceed"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          class="upload-demo"
+          multiple
           style="display: none"
         >
           <el-button
@@ -36,8 +36,8 @@
           v-for="(item, key, index) in Shapeconfig.attrs"
           :key="index"
           ref="numberValidateForm"
-          class="demo-ruleForm"
           :disabled="disabledForm"
+          class="demo-ruleForm"
           label-width="80px"
         >
           <el-form-item :label="$translateTitle(`konva.${key}`)">
@@ -138,8 +138,8 @@
           :before-close="wmxhandleClose"
           :close-on-click-modal="false"
           :title="wmxSituation + '自定义属性'"
-          top="5vh"
           :visible.sync="wmxdialogVisible"
+          top="5vh"
           width="60%"
         >
           <wmxdetail

@@ -18,9 +18,9 @@
         <vue-aliplayer-v2
           :key="x"
           ref="VueAliplayerV2"
-          class="multiple-player"
           :options="options"
           :source="source"
+          class="multiple-player"
         />
       </template>
     </div>
@@ -180,7 +180,8 @@
       mediaDataSource: {
         required: false,
         type: Object,
-        default: () => {},
+        default: () => {
+        },
       },
       /**
        * @param {*} config 高级设置会覆盖上面设置
@@ -188,7 +189,8 @@
       config: {
         required: false,
         type: Object,
-        default: () => {},
+        default: () => {
+        },
       },
     },
     data() {

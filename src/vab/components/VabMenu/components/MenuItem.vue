@@ -20,8 +20,8 @@
       <img
         slot="error"
         :src="$FileServe + itemOrMenu.meta.icon"
-        style="width: 16px; height: 16px"
         :title="$FileServe + itemOrMenu.meta.icon"
+        style="width: 16px; height: 16px"
       />
     </el-image>
     <vab-icon

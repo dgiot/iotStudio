@@ -10,8 +10,8 @@
       </div>
       <div class="box-form">
         <el-form
-          label-width="80px"
           :model="engineform"
+          label-width="80px"
         >
           <el-form-item label="触发事件:">
             <span>{{ engineform.region }}</span>

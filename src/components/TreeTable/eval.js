@@ -22,7 +22,7 @@ export function addAttrs(
     children = 'children',
     show = true,
     select = false,
-  } = {}
+  } = {},
 ) {
   data.forEach((item, index) => {
     const _id = (preIndex ? `${preIndex}-${index}` : index) + ''

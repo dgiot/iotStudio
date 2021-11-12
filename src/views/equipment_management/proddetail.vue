@@ -25,9 +25,9 @@
             <span v-if="isshow == false">
               ********************
               <el-link
+                :underline="false"
                 style="margin-left: 5px; cursor: pointer"
                 type="primary"
-                :underline="false"
                 @click="isshow = true"
               >
                 {{ $translateTitle('product.display') }}
@@ -36,9 +36,9 @@
             <span v-else>
               <span v-copyText="ProductSecret">{{ ProductSecret }}</span>
               <el-link
+                :underline="false"
                 style="margin-left: 5px; cursor: pointer"
                 type="primary"
-                :underline="false"
                 @click="isshow = false"
               >
                 {{ $translateTitle('product.hidden') }}
@@ -50,9 +50,9 @@
             <span>
               {{ form.ProductAll }}
               <el-link
+                :underline="false"
                 style="margin-left: 10px; font-size: 16px"
                 type="primary"
-                :underline="false"
                 @click.native="goToDevices"
               >
                 {{ $translateTitle('product.gotoequipment') }}
@@ -128,13 +128,13 @@
             <div>
               <el-descriptions
                 v-loading="productName == ''"
-                border
                 :column="3"
-                element-loading-background="rgba(0, 0, 0, 0.8)"
-                element-loading-spinner="el-icon-loading"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
+                border
+                element-loading-background="rgba(0, 0, 0, 0.8)"
+                element-loading-spinner="el-icon-loading"
                 size="small"
               >
                 <el-descriptions-item
@@ -190,10 +190,10 @@
                   <span v-else>{{ $translateTitle('product.open') }}</span>
                   <el-switch
                     v-model="dynamicReg"
-                    active-color="#5eb058"
                     :active-value="true"
-                    inactive-color="#cccccc"
                     :inactive-value="false"
+                    active-color="#5eb058"
+                    inactive-color="#cccccc"
                     @change="handelUpdate($event, dynamicReg)"
                   />
                 </el-descriptions-item>
@@ -336,8 +336,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('product.operationauthority')"
+                align="center"
               >
                 <template slot-scope="scope">
                   <span v-if="scope.row.type == 'pub'">
@@ -349,13 +349,13 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('developer.describe')"
+                align="center"
                 prop="desc"
               />
               <el-table-column
-                align="center"
                 :label="$translateTitle('developer.operation')"
+                align="center"
               >
                 <template slot-scope="scope">
                   <el-button
@@ -404,10 +404,10 @@
               </el-table-column>
               <template #empty>
                 <el-image
-                  class="vab-data-empty"
                   :src="
                     require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                   "
+                  class="vab-data-empty"
                 />
               </template>
             </el-table>
@@ -416,10 +416,10 @@
               style="margin-top: 20px"
             >
               <el-pagination
-                layout="total, sizes, prev, pager, next, jumper"
                 :page-size="topiclength"
                 :page-sizes="[10, 20, 30, 50]"
                 :total="topicData.length"
+                layout="total, sizes, prev, pager, next, jumper"
                 @current-change="topicCurrentChange"
                 @size-change="topicSizeChange"
               />
@@ -523,9 +523,9 @@
             <div>
               <el-form
                 ref="sizeForm"
+                :model="machineForm"
                 label-position="left"
                 label-width="80px"
-                :model="machineForm"
                 size="mini"
               >
                 <el-row :gutter="24">
@@ -579,10 +579,10 @@
                   </vab-query-form-top-panel>
                 </vab-query-form>
                 <el-table
-                  border
                   :data="FromMachine"
                   :height="$baseTableHeight(2)"
                   :row-class-name="tableRowClassName"
+                  border
                   style="width: 60vh; overflow: auto"
                   @row-click="clickmachine"
                 >
@@ -605,10 +605,10 @@
                   />
                   <template #empty>
                     <el-image
-                      class="vab-data-empty"
                       :src="
                         require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                       "
+                      class="vab-data-empty"
                     />
                   </template>
                 </el-table>
@@ -631,7 +631,7 @@
                         <!-- 物模型采集公式 -->
                         {{
                           $translateTitle(
-                            'product.collectionformulaofobjectmodel'
+                            'product.collectionformulaofobjectmodel',
                           )
                         }}
                       </el-button>
@@ -663,7 +663,6 @@
                   </vab-query-form-right-panel>
                 </vab-query-form>
                 <el-table
-                  border
                   :data="
                     wmxData.slice(
                       (wmxstart - 1) * wmxPageSize,
@@ -674,6 +673,7 @@
                   :default-sort="{ prop: 'date', order: 'descending' }"
                   :height="$baseTableHeight(2)"
                   :row-class-name="getRowClass"
+                  border
                   row-key="identifier"
                   style="width: 100%; margin-top: 10px"
                 >
@@ -692,16 +692,16 @@
                         "
                       >
                         <el-table-column
-                          align="center"
                           :label="$translateTitle('product.identifier')"
+                          align="center"
                         >
                           <template slot-scope="scope1">
                             <span>{{ scope1.row.identifier }}</span>
                           </template>
                         </el-table-column>
                         <el-table-column
-                          align="center"
                           :label="$translateTitle('product.functionaltypes')"
+                          align="center"
                         >
                           <span>
                             {{ $translateTitle('product.attribute') }}
@@ -709,13 +709,13 @@
                         </el-table-column>
 
                         <el-table-column
-                          align="center"
                           :label="$translateTitle('product.functionname')"
+                          align="center"
                           prop="name"
                         />
                         <el-table-column
-                          align="center"
                           :label="$translateTitle('product.datadefinition')"
+                          align="center"
                         >
                           <template slot-scope="scope2">
                             <span>{{ scope2.row.dataType.type }}</span>
@@ -723,10 +723,10 @@
                         </el-table-column>
                         <template #empty>
                           <el-image
-                            class="vab-data-empty"
                             :src="
                               require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                             "
+                            class="vab-data-empty"
                           />
                         </template>
                       </el-table>
@@ -734,8 +734,8 @@
                   </el-table-column>
 
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.order')"
+                    align="center"
                     width="60"
                   >
                     <template #default="{ row }">
@@ -743,14 +743,14 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.devicetype')"
+                    align="center"
                     prop="devicetype"
                     width="80"
                   />
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.Rounds')"
+                    align="center"
                     width="60"
                   >
                     <template #default="{ row }">
@@ -759,8 +759,8 @@
                   </el-table-column>
 
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.Strategy')"
+                    align="center"
                     width="80"
                   >
                     <template #default="{ row }">
@@ -769,8 +769,8 @@
                   </el-table-column>
 
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.protocol')"
+                    align="center"
                     width="80"
                   >
                     <template #default="{ row }">
@@ -778,27 +778,27 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.functionaltypes')"
+                    align="center"
                     width="90"
                   >
                     <span>{{ $translateTitle('product.attribute') }}</span>
                   </el-table-column>
 
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.identifier')"
+                    align="center"
                     prop="identifier"
                     width="100"
                   />
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.functionname')"
+                    align="center"
                     prop="name"
                   />
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.datatype')"
+                    align="center"
                     width="90"
                   >
                     <template slot-scope="scope">
@@ -806,8 +806,8 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.datadefinition')"
+                    align="center"
                   >
                     <template slot-scope="scope">
                       <span
@@ -841,8 +841,8 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('developer.operation')"
+                    align="center"
                     width="160"
                   >
                     <template slot-scope="scope">
@@ -865,20 +865,20 @@
                   </el-table-column>
                   <template #empty>
                     <el-image
-                      class="vab-data-empty"
                       :src="
                         require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                       "
+                      class="vab-data-empty"
                     />
                   </template>
                 </el-table>
                 <!--功能定义分页-->
                 <el-pagination
-                  layout="total, sizes, prev, pager, next, jumper"
                   :page-size="wmxPageSize"
                   :page-sizes="[10, 20, 30, 50]"
-                  style="margin-top: 10px"
                   :total="wmxData.length"
+                  layout="total, sizes, prev, pager, next, jumper"
+                  style="margin-top: 10px"
                   @current-change="wmxCurrentChange"
                   @size-change="wmxSizeChange"
                 />
@@ -926,24 +926,24 @@
                     </template>
                   </el-table-column>
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.identifier')"
+                    align="center"
                   >
                     <template slot-scope="scope">
                       <span>{{ scope.row.type }}</span>
                     </template>
                   </el-table-column>
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('product.applicabletype')"
+                    align="center"
                   >
                     <template slot-scope="scope">
                       <span>{{ scope.row.data.CategoryName }}</span>
                     </template>
                   </el-table-column>
                   <el-table-column
-                    align="center"
                     :label="$translateTitle('developer.operation')"
+                    align="center"
                   >
                     <template slot-scope="scope">
                       <el-button
@@ -957,10 +957,10 @@
                   </el-table-column>
                   <template #empty>
                     <el-image
-                      class="vab-data-empty"
                       :src="
                         require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                       "
+                      class="vab-data-empty"
                     />
                   </template>
                 </el-table>
@@ -968,12 +968,12 @@
 
               <div>
                 <el-pagination
-                  layout="total, sizes, prev, pager, next, jumper"
                   :page-size="productlength"
                   :page-sizes="[10, 20, 30, 50]"
+                  :total="producttotal"
+                  layout="total, sizes, prev, pager, next, jumper"
                   small
                   style="margin-top: 10px"
-                  :total="producttotal"
                   @current-change="productCurrentChange"
                   @size-change="productSizeChange"
                 />
@@ -1004,8 +1004,8 @@
             :before-close="wmxhandleClose"
             :close-on-click-modal="false"
             :title="wmxSituation + '自定义属性'"
-            top="5vh"
             :visible.sync="wmxdialogVisible"
+            top="5vh"
             width="60%"
           >
             <dgiot-wmx
@@ -1022,8 +1022,8 @@
             :append-to-body="true"
             :close-on-click-modal="false"
             :title="$translateTitle('product.addparameter')"
-            top="15vh"
             :visible.sync="structdialog"
+            top="15vh"
             width="40%"
           >
             <div class="structheader">
@@ -1146,18 +1146,18 @@
                   >
                     <el-input
                       v-model="structform.step"
-                      controls-position="right"
                       :min="0"
                       :precision="2"
                       :step="0.01"
+                      controls-position="right"
                     />
                   </el-form-item>
 
                   <el-form-item :label="$translateTitle('product.unit')">
                     <el-select
                       v-model="structform.unit"
-                      filterable
                       :placeholder="$translateTitle('product.unit')"
+                      filterable
                     >
                       <el-option
                         v-for="(item, index) in allunit"
@@ -1178,10 +1178,10 @@
                         <el-form-item>
                           <el-input
                             v-model="structform.truevalue"
-                            class="inputnumber"
                             :placeholder="
                               $translateTitle('product.attributevalue')
                             "
+                            class="inputnumber"
                             readonly
                             type="number"
                           />
@@ -1194,8 +1194,8 @@
                         <el-form-item prop="true">
                           <el-input
                             v-model="structform.true"
-                            class="inputnumber"
                             :placeholder="$translateTitle('product.egopen')"
+                            class="inputnumber"
                           />
                         </el-form-item>
                       </el-col>
@@ -1205,10 +1205,10 @@
                         <el-form-item>
                           <el-input
                             v-model="structform.falsevalue"
-                            class="inputnumber"
                             :placeholder="
                               $translateTitle('product.attributevalue')
                             "
+                            class="inputnumber"
                             readonly
                             type="number"
                           />
@@ -1221,8 +1221,8 @@
                         <el-form-item prop="true">
                           <el-input
                             v-model="structform.false"
-                            class="inputnumber"
                             :placeholder="$translateTitle('product.egclost')"
+                            class="inputnumber"
                           />
                         </el-form-item>
                       </el-col>
@@ -1249,8 +1249,8 @@
                       </el-form-item>
                     </el-col>
                     <el-col
-                      class="line"
                       :span="2"
+                      class="line"
                     >
                       -
                     </el-col>
@@ -1267,18 +1267,18 @@
                       </el-form-item>
                     </el-col>
                     <el-col
-                      class="line"
                       :span="2"
+                      class="line"
                     />
                     <el-col
-                      class="line"
                       :span="4"
+                      class="line"
                     >
                       <el-link
+                        :underline="false"
                         icon="el-icon-minus"
                         style="margin-top: 30px; margin-left: 5px"
                         type="primary"
-                        :underline="false"
                         @click.prevent="removeDomain1(item)"
                       >
                         {{ $translateTitle('developer.delete') }}
@@ -1286,9 +1286,9 @@
                     </el-col>
                   </el-form-item>
                   <el-link
+                    :underline="false"
                     icon="el-icon-plus"
                     type="primary"
-                    :underline="false"
                     @click.native="addDomain1"
                   >
                     {{ $translateTitle('product.add') }}
@@ -1365,10 +1365,10 @@
           <div class="protolheader">
             <el-form
               ref="formInline"
-              class="demo-form-inline"
               :inline="true"
               :model="formInline"
               :rules="addRules"
+              class="demo-form-inline"
             >
               <el-form-item
                 :label="$translateTitle('product.protocolname')"
@@ -1502,10 +1502,10 @@
               </el-table-column>
               <template #empty>
                 <el-image
-                  class="vab-data-empty"
                   :src="
                     require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                   "
+                  class="vab-data-empty"
                 />
               </template>
             </el-table>
@@ -1535,24 +1535,24 @@
               style="width: 100%; margin-top: 20px; text-align: center"
             >
               <el-table-column
-                align="center"
                 :label="$translateTitle('product.protocolname')"
+                align="center"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.data.name }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('plugins.version')"
+                align="center"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.data.version }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('developer.describe')"
+                align="center"
               >
                 <template slot-scope="scope">
                   <span>{{ scope.row.data.desc }}</span>
@@ -1560,16 +1560,16 @@
               </el-table-column>
               <!-- <el-table-column label="创建时间" align="center"> -->
               <el-table-column
-                align="center"
                 :label="$translateTitle('equipment.createdAt')"
+                align="center"
               >
                 <template slot-scope="scope">
                   <span>{{ utc2beijing(scope.row.createdAt) }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('developer.operation')"
+                align="center"
                 width="200"
               >
                 <template slot-scope="scope">
@@ -1591,10 +1591,10 @@
               </el-table-column>
               <template #empty>
                 <el-image
-                  class="vab-data-empty"
                   :src="
                     require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                   "
+                  class="vab-data-empty"
                 />
               </template>
             </el-table>
@@ -1603,10 +1603,10 @@
               style="padding: 20px 0"
             >
               <el-pagination
-                layout="total, sizes, prev, pager, next, jumper"
                 :page-size="decoderlength"
                 :page-sizes="[10, 20, 30, 50]"
                 :total="decodertotal"
+                layout="total, sizes, prev, pager, next, jumper"
                 @current-change="devicerCurrentChange"
                 @size-change="decoderSizeChange"
               />
@@ -1750,10 +1750,10 @@
               </el-table-column>
               <template #empty>
                 <el-image
-                  class="vab-data-empty"
                   :src="
                     require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                   "
+                  class="vab-data-empty"
                 />
               </template>
             </el-table>
@@ -1762,10 +1762,10 @@
               style="margin-top: 20px"
             >
               <el-pagination
-                layout="total, sizes, prev, pager, next, jumper"
                 :page-size="channellength"
                 :page-sizes="[10, 20, 30, 50]"
                 :total="channeltotal"
+                layout="total, sizes, prev, pager, next, jumper"
                 @current-change="channelCurrentChange"
                 @size-change="channelSizeChange"
               />
@@ -1796,8 +1796,8 @@
                   @show="questionModel"
                 > -->
                 <el-popover
-                  placement="right"
                   :title="$translateTitle('developer.tipsforcustomdatamodel')"
+                  placement="right"
                   trigger="hover"
                   width="600"
                   @show="questionModel"
@@ -1921,10 +1921,10 @@
               </el-table-column>
               <template #empty>
                 <el-image
-                  class="vab-data-empty"
                   :src="
                     require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                   "
+                  class="vab-data-empty"
                 />
               </template>
             </el-table>
@@ -1933,10 +1933,10 @@
               style="margin-top: 20px"
             >
               <el-pagination
-                layout="total, sizes, prev, pager, next, jumper"
                 :page-size="resourcelength"
                 :page-sizes="[10, 20, 30, 50]"
                 :total="resourcetotal"
+                layout="total, sizes, prev, pager, next, jumper"
                 @current-change="resourcechannelCurrentChange"
                 @size-change="resourcechannelSizeChange"
               />
@@ -2137,10 +2137,10 @@
           </el-table-column>
           <template #empty>
             <el-image
-              class="vab-data-empty"
               :src="
                 require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
               "
+              class="vab-data-empty"
             />
           </template>
         </el-table>
@@ -2149,10 +2149,10 @@
           style="margin-top: 20px"
         >
           <el-pagination
-            layout="total, sizes, prev, pager, next, jumper"
             :page-size="allChannellength"
             :page-sizes="[10, 20, 30, 50]"
             :total="allChanneltotal"
+            layout="total, sizes, prev, pager, next, jumper"
             @current-change="allChannelCurrentChange"
             @size-change="allChannelSizeChange"
           />
@@ -2205,8 +2205,8 @@
       :before-close="closeWuDialog"
       :close-on-click-modal="false"
       :show-close="false"
-      top="1vh"
       :visible.sync="resourcedialogFormVisible"
+      top="1vh"
       width="90%"
     >
       <el-form
@@ -2316,8 +2316,8 @@
         <el-col :span="6">
           <div class="diaCollLeftCls">
             <el-menu
-              class="el-menu-vertical-demo"
               :default-active="activeIndex"
+              class="el-menu-vertical-demo"
             >
               <template v-for="(item, index) in wmxData">
                 <el-menu-item

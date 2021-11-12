@@ -5,12 +5,7 @@
 // * @Description:
 // * @FilePath: src\api\LogLevel\index.js
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/LogLevel
-import {
-  create_object,
-  del_object,
-  query_object,
-  update_object,
-} from '@/api/shuwa_parse'
+import { create_object, del_object, query_object, update_object } from '@/api/shuwa_parse'
 import request from '@/utils/request'
 
 export async function post_tree(params) {

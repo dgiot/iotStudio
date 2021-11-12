@@ -24,7 +24,8 @@ function generateTemplate(arr) {
 }
 
 function generateFunc(name, summary, type = 'post') {
-  const arr = name.slice(1).split('/')
+  const arr = name.slice(1)
+    .split('/')
   const fun = arr[arr.length - 1]
   return `
 // ${summary || ''}
@@ -46,7 +47,7 @@ function httpgetJson(url) {
         } else if (!/^application\/json/.test(contentType)) {
           error = new Error(
             '无效的 content-type.\n' +
-              `期望 application/json 但获取的是 ${contentType}`
+            `期望 application/json 但获取的是 ${contentType}`,
           )
         }
         if (error) {
@@ -93,11 +94,14 @@ async function main() {
     if (path.post) {
       const tag = path.post.tags[0]
       if (!tag) continue
-      const urlArray = name.slice(1).split('/')
-      if (name.slice(1).split('/').length === 4) {
+      const urlArray = name.slice(1)
+        .split('/')
+      if (name.slice(1)
+        .split('/').length === 4) {
         folder = urlArray[1]
       } else {
-        if (name.slice(1).split('/')[0] !== tag) {
+        if (name.slice(1)
+          .split('/')[0] !== tag) {
           continue
         }
       }
@@ -123,11 +127,14 @@ async function main() {
     } else if (path.get) {
       const tag = path.get.tags[0]
       if (!tag) continue
-      const urlArray = name.slice(1).split('/')
-      if (name.slice(1).split('/').length === 4) {
+      const urlArray = name.slice(1)
+        .split('/')
+      if (name.slice(1)
+        .split('/').length === 4) {
         folder = urlArray[1]
       } else {
-        if (name.slice(1).split('/')[0] !== tag) {
+        if (name.slice(1)
+          .split('/')[0] !== tag) {
           continue
         }
       }
@@ -167,7 +174,7 @@ async function main() {
     console.log(jsString)
     fs.writeFileSync(
       getPath(`..${srcFolder}/apis/${folder}/${tagName}.js`),
-      jsString
+      jsString,
     )
   }
   console.log('生成完毕')

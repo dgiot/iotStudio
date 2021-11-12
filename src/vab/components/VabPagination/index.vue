@@ -1,7 +1,7 @@
 <template>
   <div
-    class="pagination-container"
     :class="{ hidden: hidden }"
+    class="pagination-container"
   >
     <el-pagination
       :key="momentKey"
@@ -59,7 +59,8 @@
     },
     data() {
       return {
-        momentKey: moment(new Date()).format('X'),
+        momentKey: moment(new Date())
+          .format('X'),
       }
     },
     computed: {
@@ -94,12 +95,12 @@
         this.$emit('pagination', args)
         console.groupCollapsed(
           '%cpagination info',
-          'color:#009a61; font-size: 28px; font-weight: 300'
+          'color:#009a61; font-size: 28px; font-weight: 300',
         )
         console.info(
           '%c%s',
           'color: green;font-size: 24px;',
-          'handleSizeChange val:   ' + val + this.limit + this.currentPage
+          'handleSizeChange val:   ' + val + this.limit + this.currentPage,
         )
         console.table(args)
         console.groupEnd()
@@ -116,12 +117,12 @@
         }
         console.groupCollapsed(
           '%cpagination info',
-          'color:#009a61; font-size: 28px; font-weight: 300'
+          'color:#009a61; font-size: 28px; font-weight: 300',
         )
         console.info(
           '%c%s',
           'color: green;font-size: 24px;',
-          'handleCurrentChange val:   ' + val + this.limit + this.currentPage
+          'handleCurrentChange val:   ' + val + this.limit + this.currentPage,
         )
         console.table(args)
         console.groupEnd()

@@ -80,7 +80,7 @@ export async function UploadImg(params) {
       output: 'json',
       submit: 'upload',
     },
-    params
+    params,
   )
   console.log(params, 'params')
   var formData = new FormData()

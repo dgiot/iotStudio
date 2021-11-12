@@ -1,11 +1,11 @@
 <template>
   <!-- 纵向布局 -->
   <div
-    class="vab-layout-vertical"
     :class="{
       fixed: fixedHeader,
       'no-tabs-bar': !showTabs,
     }"
+    class="vab-layout-vertical"
   >
     <vab-side-bar />
     <div
@@ -14,16 +14,16 @@
       @click="handleFoldSideBar"
     />
     <div
-      class="vab-main"
       :class="{
         'is-collapse-main': collapse,
       }"
+      class="vab-main"
     >
       <div
-        class="vab-layout-header"
         :class="{
           'fixed-header': fixedHeader,
         }"
+        class="vab-layout-header"
       >
         <vab-nav />
         <vab-tabs v-show="showTabs" />

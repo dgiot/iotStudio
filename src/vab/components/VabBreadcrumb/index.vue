@@ -38,7 +38,7 @@
       getBreadcrumb() {
         return this.$route.matched.filter(
           (item) =>
-            item.meta && this.$translateTitle(`route.${item.meta.title}`)
+            item.meta && this.$translateTitle(`route.${item.meta.title}`),
         )
       },
       handleLink(redirect) {

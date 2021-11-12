@@ -169,16 +169,28 @@
           let arr = []
           if (Number(this.theme) === 1) {
             // 不分开
-            type >= 4 && arr.push(String(day).padStart(2, '0'))
-            type >= 3 && arr.push(String(hour).padStart(2, '0'))
-            type >= 2 && arr.push(String(min).padStart(2, '0'))
-            arr.push(String(second).padStart(2, '0'))
+            type >= 4 && arr.push(String(day)
+              .padStart(2, '0'))
+            type >= 3 && arr.push(String(hour)
+              .padStart(2, '0'))
+            type >= 2 && arr.push(String(min)
+              .padStart(2, '0'))
+            arr.push(String(second)
+              .padStart(2, '0'))
           } else {
             // 分开
-            type >= 4 && arr.push(...String(day).padStart(2, '0').split(''))
-            type >= 3 && arr.push(...String(hour).padStart(2, '0').split(''))
-            type >= 2 && arr.push(...String(min).padStart(2, '0').split(''))
-            arr.push(...String(second).padStart(2, '0').split(''))
+            type >= 4 && arr.push(...String(day)
+              .padStart(2, '0')
+              .split(''))
+            type >= 3 && arr.push(...String(hour)
+              .padStart(2, '0')
+              .split(''))
+            type >= 2 && arr.push(...String(min)
+              .padStart(2, '0')
+              .split(''))
+            arr.push(...String(second)
+              .padStart(2, '0')
+              .split(''))
           }
           this.timeArray = arr
           if (t > 0) {

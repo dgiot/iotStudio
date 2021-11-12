@@ -2,8 +2,8 @@
   <div :key="productId">
     <el-drawer
       v-drawerDrag
-      size="100%"
       :visible.sync="amisFlag"
+      size="100%"
     >
       <vab-amis :schema="amisJson" />
       <div class="demo-drawer__footer">
@@ -13,11 +13,11 @@
       </div>
     </el-drawer>
     <el-descriptions
-      border
-      class="margin-top"
       :column="2"
       :content-style="{ 'text-align': 'left' }"
       :label-style="{ 'text-align': 'center' }"
+      border
+      class="margin-top"
     >
       <!--      <el-descriptions-item :label="$translateTitle('home.category')">-->
       <!--        {{ productDetail.netType }}-->
@@ -160,16 +160,16 @@
               style="box-sizing: border-box; width: 60%; text-align: center"
             >
               <el-table-column
-                align="center"
                 :label="$translateTitle('product.identifier')"
+                align="center"
               >
                 <template slot-scope="scope1">
                   <span>{{ scope1.row.identifier }}</span>
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('product.functionaltypes')"
+                align="center"
               >
                 <span>
                   {{ $translateTitle('product.attribute') }}
@@ -177,20 +177,20 @@
               </el-table-column>
 
               <el-table-column
-                align="center"
                 :label="$translateTitle('product.functionname')"
+                align="center"
                 prop="name"
               />
               <el-table-column
-                align="center"
                 :label="$translateTitle('product.datadefinition')"
+                align="center"
               />
             </el-table>
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('product.order')"
+          align="center"
           sortable
           width="80"
         >
@@ -199,8 +199,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('product.Rounds')"
+          align="center"
           sortable
           width="80"
         >
@@ -210,8 +210,8 @@
         </el-table-column>
 
         <el-table-column
-          align="center"
           :label="$translateTitle('product.Strategy')"
+          align="center"
           sortable
           width="80"
         >
@@ -221,8 +221,8 @@
         </el-table-column>
 
         <el-table-column
-          align="center"
           :label="$translateTitle('product.protocol')"
+          align="center"
           sortable
           width="80"
         >
@@ -233,8 +233,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('product.functionaltypes')"
+          align="center"
           sortable
           width="120"
         >
@@ -242,20 +242,20 @@
         </el-table-column>
 
         <el-table-column
-          align="center"
           :label="$translateTitle('product.identifier')"
+          align="center"
           prop="identifier"
           sortable
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('product.functionname')"
+          align="center"
           prop="name"
           sortable
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('product.datatype')"
+          align="center"
           sortable
         >
           <template slot-scope="scope">
@@ -263,8 +263,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('product.datadefinition')"
+          align="center"
           sortable
         >
           <template slot-scope="scope">
@@ -299,8 +299,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('developer.operation')"
+          align="center"
           width="160"
         >
           <template slot-scope="scope">
@@ -331,8 +331,8 @@
           sortable
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('product.chinesetitle')"
+          align="center"
           prop="name"
           show-overflow-tooltip
           sortable
@@ -378,8 +378,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          align="center"
           :label="$translateTitle('product.functionaltypes')"
+          align="center"
           prop="type"
           show-overflow-tooltip
           sortable
@@ -467,7 +467,8 @@
       decoderTableList: {
         required: false,
         type: Object,
-        default: () => {},
+        default: () => {
+        },
       },
       parserTableList: {
         required: false,
@@ -487,7 +488,8 @@
     },
     data() {
       return {
-        key: moment(new Date()).valueOf(),
+        key: moment(new Date())
+          .valueOf(),
         amisJsonPlus: '',
         ace_editor: '',
         codeFlag: false,
@@ -517,7 +519,8 @@
         },
       },
     },
-    mounted() {},
+    mounted() {
+    },
     methods: {
       cancelForm() {
         this.$message.success('待实现')

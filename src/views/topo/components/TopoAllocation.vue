@@ -113,9 +113,9 @@
   const imgHost = regUrl.test(cdn)
     ? `${cdn}/assets/images/dgiot_release/topo/`
     : path.join(
-        __dirname,
-        `${process.env.BASE_URL}/assets/images/dgiot_release/topo/`
-      )
+      __dirname,
+      `${process.env.BASE_URL}/assets/images/dgiot_release/topo/`,
+    )
   // https://blog.csdn.net/u010007013/article/details/102674042
   // console.log(imgHost, process.env.BASE_URL, process.env)
   import { getMaterial } from '@/api/Material'
@@ -160,13 +160,20 @@
     mounted() {
       console.log(this.$router)
     },
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
+    beforeCreate() {
+    }, //生命周期 - 创建之前
+    beforeMount() {
+    }, //生命周期 - 挂载之前
+    beforeUpdate() {
+    }, //生命周期 - 更新之前
+    updated() {
+    }, //生命周期 - 更新之后
+    beforeDestroy() {
+    }, //生命周期 - 销毁之前
+    destroyed() {
+    }, //生命周期 - 销毁完成
+    activated() {
+    },
     methods: {
       coordinate(e) {
         const _coordinate = {
@@ -185,7 +192,7 @@
       },
       uploadCkick() {
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
       },
       ...mapMutations({
@@ -204,7 +211,10 @@
       // },
 
       async fetchData() {
-        const { data, totalCount } = await getMaterial(this.queryForm)
+        const {
+          data,
+          totalCount,
+        } = await getMaterial(this.queryForm)
         this.queryIcon = data
         this.total = totalCount
       },
@@ -241,7 +251,7 @@
             _this.$translateTitle('图片加载完成,可双击画图区域填充'),
             'success',
             false,
-            'vab-hey-message-success'
+            'vab-hey-message-success',
           )
         }
         _this.setFlag('image')

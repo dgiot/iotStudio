@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-dialog
-      append-to-body
       :title="$translateTitle('topo.topo') + $translateTitle('topo.tag')"
       :visible.sync="tagDialog"
+      append-to-body
       width="50%"
     >
       <span>这是一段信息</span>
@@ -19,9 +19,9 @@
       </span>
     </el-dialog>
     <el-dialog
-      append-to-body
       :title="$translateTitle('topo.topo') + $translateTitle('topo.thing')"
       :visible.sync="thingDialog"
+      append-to-body
       width="50%"
     >
       <span>这是一段信息</span>
@@ -37,8 +37,8 @@
       </span>
     </el-dialog>
     <div
-      class="topoBase"
       :class="{ 'topoBase-fullscreen': isDevice }"
+      class="topoBase"
       @contextmenu="showMenu"
     >
       <vue-context-menu
@@ -155,7 +155,8 @@
       },
     },
     watch: {},
-    mounted() {},
+    mounted() {
+    },
     methods: {
       ...mapMutations({
         contextMenu: 'topo/contextMenu',

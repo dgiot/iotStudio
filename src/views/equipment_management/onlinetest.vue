@@ -58,8 +58,8 @@
           实时日志
         </span>
         <span
-          class="status"
           :class="status"
+          class="status"
         />
         <!-- <span style="font-size:14px;color:grey">(未激活)真实设备</span> -->
         <div style="float: right">
@@ -122,8 +122,8 @@
               <div class="editorheader">
                 <el-form
                   :inline="true"
-                  label-width="80px"
                   :model="editor1"
+                  label-width="80px"
                   size="mini"
                 >
                   <el-form-item label="调试功能">
@@ -147,8 +147,8 @@
                       @click="addMessage"
                     />
                     <el-button
-                      circle
                       :disabled="editor1.function == ''"
+                      circle
                       icon="el-icon-delete"
                       type="danger"
                       @click="deleteMessage"
@@ -222,33 +222,33 @@
             >
               <el-button-group>
                 <el-button
+                  :type="primary1 == 1 ? 'primary' : 'info'"
                   plain
                   size="mini"
-                  :type="primary1 == 1 ? 'primary' : 'info'"
                   @click="primary1 = 1"
                 >
                   属性上报
                 </el-button>
                 <el-button
+                  :type="primary1 == 2 ? 'primary' : 'info'"
                   plain
                   size="mini"
-                  :type="primary1 == 2 ? 'primary' : 'info'"
                   @click="primary1 = 2"
                 >
                   事件上报
                 </el-button>
                 <el-button
+                  :type="primary1 == 3 ? 'primary' : 'info'"
                   plain
                   size="mini"
-                  :type="primary1 == 3 ? 'primary' : 'info'"
                   @click="functionClick"
                 >
                   属性调试
                 </el-button>
                 <el-button
+                  :type="primary1 == 4 ? 'primary' : 'info'"
                   plain
                   size="mini"
-                  :type="primary1 == 4 ? 'primary' : 'info'"
                   @click="primary1 = 4"
                 >
                   服务调用
@@ -343,8 +343,8 @@
                 <div class="editorheader">
                   <el-form
                     :inline="true"
-                    label-width="80px"
                     :model="editor2"
+                    label-width="80px"
                     size="mini"
                   >
                     <el-form-item label="调试功能">
@@ -448,8 +448,8 @@
     <el-dialog
       :append-to-body="true"
       :close-on-click-modal="false"
-      title="新建功能"
       :visible.sync="messageDialogVisible"
+      title="新建功能"
       width="50%"
     >
       <el-form
@@ -502,7 +502,7 @@
         bind(el, binding) {
           // 获取element-ui定义好的scroll盒子
           const SELECTWRAP_DOM = el.querySelector(
-            '.el-select-dropdown .el-select-dropdown__wrap'
+            '.el-select-dropdown .el-select-dropdown__wrap',
           )
           SELECTWRAP_DOM.addEventListener('scroll', function () {
             /**
@@ -604,8 +604,10 @@
     },
     methods: {
       // 发送指令
-      sendZl() {},
-      setJson() {},
+      sendZl() {
+      },
+      setJson() {
+      },
       nowtime() {
         var timestamp3 = Date.parse(new Date())
         var date = new Date(timestamp3)
@@ -645,11 +647,11 @@
         }
         var channeltopic = new RegExp(
           'log/channel/' +
-            this.devices.subtopic +
-            '/' +
-            this.devices.productid +
-            '/' +
-            this.devices.devicedevaddr
+          this.devices.subtopic +
+          '/' +
+          this.devices.productid +
+          '/' +
+          this.devices.devicedevaddr,
         )
 
         var _this = this
@@ -910,7 +912,7 @@
           this.channellength,
           this.channelstart,
           product,
-          type
+          type,
         )
           .then((res) => {
             if (res.count > 0) {

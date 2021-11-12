@@ -25,6 +25,7 @@ jobs:
           pnpm config set registry https://registry.npmmirror.com
           rm -rf pnpm-lock.yaml
           pnpm install
+          pnpm audit
           pnpm lint
           pnpm lint:fix
           pnpm lint:style

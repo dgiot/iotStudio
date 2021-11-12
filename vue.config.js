@@ -35,7 +35,10 @@ const {
   ogConfig,
   CDN_URL,
 } = require('./src/config')
-const { version, author } = require('./package.json')
+const {
+  version,
+  author,
+} = require('./package.json')
 const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
 const FileManagerPlugin = require('filemanager-webpack-plugin')
@@ -44,8 +47,8 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const smp = new SpeedMeasurePlugin()
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 process.env.VUE_APP_TITLE = title
@@ -65,30 +68,37 @@ const staticUrl = process.env.CDN_URL
 
 function getChainWebpack(config) {
   // config.plugin('monaco').use(new MonacoWebpackPlugin())
-  config.plugin('html').tap((args) => {
-    var _staticUrl = localUrl
-    // if (useCdn || process.env.NODE_ENV !== 'development') {
-    const { css, js } = _staticUrl
-    _staticUrl = {
-      css: [],
-      js: [],
-    }
-    css.forEach((_css) => {
-      _staticUrl.css.push(`${staticUrl}css/${_css}`)
+  config.plugin('html')
+    .tap((args) => {
+      var _staticUrl = localUrl
+      // if (useCdn || process.env.NODE_ENV !== 'development') {
+      const {
+        css,
+        js,
+      } = _staticUrl
+      _staticUrl = {
+        css: [],
+        js: [],
+      }
+      css.forEach((_css) => {
+        _staticUrl.css.push(`${staticUrl}css/${_css}`)
+      })
+      js.forEach((_js) => {
+        _staticUrl.js.push(`${staticUrl}js/${_js}`)
+      })
+      args[0].staticUrl = _staticUrl
+      args[0].ogConfig = ogConfig
+      return args
     })
-    js.forEach((_js) => {
-      _staticUrl.js.push(`${staticUrl}js/${_js}`)
-    })
-    args[0].staticUrl = _staticUrl
-    args[0].ogConfig = ogConfig
-    return args
-  })
   config.resolve.symlinks(true)
-  config.module.rule('svg').exclude.add(resolve('src/icon'))
+  config.module.rule('svg')
+    .exclude
+    .add(resolve('src/icon'))
   config.module
     .rule('vabIcon')
     .test(/\.svg$/)
-    .include.add(resolve('src/icon'))
+    .include
+    .add(resolve('src/icon'))
     .end()
     .use('svg-sprite-loader')
     .loader('svg-sprite-loader')
@@ -133,7 +143,7 @@ function getChainWebpack(config) {
     config
       .plugin('banner')
       .use(Webpack.BannerPlugin, [`${webpackBanner}${dateTime}`])
-    if (imageCompression)
+    if (imageCompression) {
       config.module
         .rule('images')
         .use('image-webpack-loader')
@@ -142,32 +152,38 @@ function getChainWebpack(config) {
           bypassOnDebug: true,
         })
         .end()
+    }
     if (buildGzip)
       // https://blog.csdn.net/weixin_42164539/article/details/110389256
-      config.plugin('compression').use(CompressionWebpackPlugin, [
-        {
-          filename: '[path][base].gz[query]',
-          algorithm: 'gzip',
-          test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
-          threshold: 8192,
-          minRatio: 0.8,
-        },
-      ])
-    if (build7z)
-      config.plugin('fileManager').use(FileManagerPlugin, [
-        {
-          events: {
-            onEnd: {
-              archive: [
-                {
-                  source: `./${outputDir}`,
-                  destination: `./${outputDir}/${abbreviation}_${dateTime}.zip`,
-                },
-              ],
+    {
+      config.plugin('compression')
+        .use(CompressionWebpackPlugin, [
+          {
+            filename: '[path][base].gz[query]',
+            algorithm: 'gzip',
+            test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
+            threshold: 8192,
+            minRatio: 0.8,
+          },
+        ])
+    }
+    if (build7z) {
+      config.plugin('fileManager')
+        .use(FileManagerPlugin, [
+          {
+            events: {
+              onEnd: {
+                archive: [
+                  {
+                    source: `./${outputDir}`,
+                    destination: `./${outputDir}/${abbreviation}_${dateTime}.zip`,
+                  },
+                ],
+              },
             },
           },
-        },
-      ])
+        ])
+    }
   })
 }
 
@@ -181,7 +197,10 @@ const cssExport = {
   loaderOptions: {
     scss: {
       additionalData(content, loaderContext) {
-        const { resourcePath, rootContext } = loaderContext
+        const {
+          resourcePath,
+          rootContext,
+        } = loaderContext
         const relativePath = path.relative(rootContext, resourcePath)
         if (
           relativePath.replace(/\\/g, '/') !==
@@ -254,7 +273,7 @@ const configure = {
     },
   },
   plugins: [
-    new CleanWebpackPlugin({cleanStaleWebpackAssets: false}),
+    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new MonacoWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),

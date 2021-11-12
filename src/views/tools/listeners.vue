@@ -4,9 +4,9 @@
       {{ $translateTitle('leftbar.listeners') }}
       <el-select
         v-model="nodeName"
-        class="select-radius"
         :disabled="$store.state.loading"
         :placeholder="$translateTitle('select.placeholder')"
+        class="select-radius"
         @change="loadListeners"
       >
         <el-option
@@ -19,8 +19,8 @@
     </div>
     <el-table
       v-loading="$store.state.loading"
-      border
       :data="listeners"
+      border
     >
       <el-table-column
         :label="$translateTitle('listeners.protocol')"

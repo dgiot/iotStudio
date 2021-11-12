@@ -43,7 +43,8 @@
     "rmEnv": "rimraf .env",
     "local:server": "node utils/server.js",
     "lighthouse": "node utils/lighthouse.js",
-    "prod": "lighthouse https://prod.iotn2n.com/"
+    "prod": "lighthouse https://prod.iotn2n.com/",
+    "template": "plop"
   },
   "repository": {
     "type": "git",
@@ -59,7 +60,7 @@
     "amis": "1.4.1",
     "axios": "0.24.0",
     "clean-webpack-plugin": "4.0.0",
-    "clone": "2.1.2",
+    "clone": "^2.1.2",
     "conventional-changelog-cli": "^2.1.1",
     "element-ui": "2.15.6",
     "file-loader": "6.2.0",
@@ -71,20 +72,19 @@
     "logrocket": "^2.1.1",
     "logrocket-vuex": "^0.0.3",
     "monaco-editor-webpack-plugin": "6.0.0",
-    "q": "1.5.1",
+    "plop": "^2.7.6",
+    "q": "^1.5.1",
     "qs": "6.10.1",
-    "react-dom": "17.0.2",
+    "react-dom": "^16.14.0",
     "register-service-worker": "1.7.2",
     "resize-detector": "0.3.0",
-    "sax": "^1.2.4",
     "standard-version": "^9.3.2",
     "vab-icons": "git+https://github.com.cnpmjs.org/zxcasvw/vab-icons.git",
+    "vab-templates": "^0.0.5",
     "vue-contextmenu": "1.5.10",
     "vue-ele-form-data-editor": "0.1.6",
     "vue-ele-form-dynamic": "0.4.3",
-    "vuera": "^0.2.7",
-    "q": "^1.5.1",
-    "clone": "^2.1.2"
+    "vuera": "^0.2.7"
   },
   "devDependencies": {
     "@babel/runtime": "7.16.3",
@@ -102,7 +102,7 @@
     "chokidar": "3.5.2",
     "chrome-launcher": "0.15.0",
     "commitizen": "4.2.4",
-    "compression-webpack-plugin": "^6.1.1",
+    "compression-webpack-plugin": "^9.0.0",
     "copy-to-clipboard": "3.3.1",
     "core-js": "3.19.1",
     "cross-env": "7.0.3",

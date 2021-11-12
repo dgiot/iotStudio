@@ -46,7 +46,10 @@
        * @Desc: 初始化
        */
       init() {
-        let { width, height } = this.$refs.content.getBoundingClientRect()
+        let {
+          width,
+          height,
+        } = this.$refs.content.getBoundingClientRect()
         this.width = width
         this.height = height
         this.stage = new Stage({

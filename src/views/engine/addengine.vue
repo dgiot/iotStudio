@@ -4,9 +4,9 @@
       <el-card class="box-card">
         <el-form
           ref="formInline"
-          label-width="80px"
           :model="formInline"
           :rules="formlinerule"
+          label-width="80px"
           size="medium"
         >
           <div class="form-block__title">
@@ -105,13 +105,11 @@
             <!--中间间隔-->
             <el-col :span="4" />
             <el-col
-              class="animated fadeInRightBig"
               :span="row2"
+              class="animated fadeInRightBig"
             >
               <el-form-item
                 v-show="formInline.sqltest == true"
-                label="clientid"
-                prop="clientid"
                 :rules="[
                   {
                     required: true,
@@ -119,13 +117,13 @@
                     trigger: 'blur',
                   },
                 ]"
+                label="clientid"
+                prop="clientid"
               >
                 <el-input v-model="formInline.clientid" />
               </el-form-item>
               <el-form-item
                 v-show="formInline.sqltest == true"
-                label="username"
-                prop="username"
                 :rules="[
                   {
                     required: true,
@@ -133,13 +131,13 @@
                     trigger: 'blur',
                   },
                 ]"
+                label="username"
+                prop="username"
               >
                 <el-input v-model="formInline.username" />
               </el-form-item>
               <el-form-item
                 v-show="formInline.sqltest == true"
-                label="topic"
-                prop="topic"
                 :rules="[
                   {
                     required: true,
@@ -147,26 +145,28 @@
                     trigger: 'blur',
                   },
                 ]"
+                label="topic"
+                prop="topic"
               >
                 <el-input v-model="formInline.topic" />
               </el-form-item>
               <el-form-item
                 v-if="formInline.sqltest == true"
-                label="qos"
-                prop="qos"
                 :rules="[
                   { required: true, message: 'qos 不能为空', trigger: 'blur' },
                 ]"
+                label="qos"
+                prop="qos"
               >
                 <el-input v-model.number="formInline.qos" />
               </el-form-item>
               <el-form-item
                 v-show="formInline.sqltest == true"
-                label="payload"
-                prop="payload"
                 :rules="[
                   { required: true, message: '请填写payload', trigger: 'blur' },
                 ]"
+                label="payload"
+                prop="payload"
               >
                 <el-input
                   v-model="formInline.payload"
@@ -294,17 +294,17 @@
                 :append-to-body="true"
                 :close-on-click-modal="false"
                 :title="$translateTitle('rule.ResponseAction')"
-                top="10%"
                 :visible.sync="dialogFormVisible"
+                top="10%"
                 width="40%"
                 @close="resetForm('params')"
               >
                 <el-form
                   ref="params"
-                  label-position="left"
-                  label-width="140px"
                   :model="params"
                   :rules="paramsrules"
+                  label-position="left"
+                  label-width="140px"
                 >
                   <el-form-item prop="channel">
                     <span slot="label">
@@ -350,8 +350,8 @@
                         <i class="icon-dd-schetit" />
                         <span>{{ $translateTitle('rule.resource') }}</span>
                         <el-tooltip
-                          class="item"
                           :content="$translateTitle('rule.resource')"
+                          class="item"
                           effect="dark"
                           placement="top-start"
                         >
@@ -486,14 +486,7 @@
 <script>
   var editor1
   var editor2
-  import {
-    addRule,
-    get_actions,
-    get_resources,
-    get_rule_id,
-    postResource,
-    put_rule_id,
-  } from '@/api/Rules'
+  import { addRule, get_actions, get_resources, get_rule_id, postResource, put_rule_id } from '@/api/Rules'
   import provider from '@/api/Ace/index'
 
   export default {
@@ -547,11 +540,11 @@
             'SELECT\n' +
             '      payload.msg as msg,\n' +
             '      clientid,\n' +
-            "      'productid' as productid\n" +
+            '      \'productid\' as productid\n' +
             '    FROM\n' +
             '      "t/#"\n' +
             '    WHERE\n' +
-            "      msg = 'hello'",
+            '      msg = \'hello\'',
           remarks: '',
           sqltest: false,
           clientid: 'c_swqx',
@@ -768,7 +761,8 @@
               actions: this.actionData,
               ctx: ctx,
               description: this.formInline.remarks,
-              for: editor1.getValue().match(regex)[1],
+              for: editor1.getValue()
+                .match(regex)[1],
               name: this.formInline.username,
               rawsql: editor1.getValue(),
               test: 'true',
@@ -781,7 +775,7 @@
                   this.formInline.result = response.data.msg
                   console.log(
                     '     this.formInline.result ',
-                    this.formInline.result
+                    this.formInline.result,
                   )
                 } else {
                   this.$message.error('SQL Not Match')
@@ -913,21 +907,22 @@
               { channel: this.resourceform.objectId },
               this.resourceform.desc,
               '',
-              'data_resource'
-            ).then((response) => {
-              if (response) {
-                this.$message('创建成功')
-                this.$refs[formName].resetFields()
-                this.dialogVisible = false
-                // getResource().then(response=>{
-                //   if(response){
-                //       this.resourcelist = response;
-                //   }
-                // }).catch(error=>{
-                //   this.$message(error)
-                // })
-              }
-            })
+              'data_resource',
+            )
+              .then((response) => {
+                if (response) {
+                  this.$message('创建成功')
+                  this.$refs[formName].resetFields()
+                  this.dialogVisible = false
+                  // getResource().then(response=>{
+                  //   if(response){
+                  //       this.resourcelist = response;
+                  //   }
+                  // }).catch(error=>{
+                  //   this.$message(error)
+                  // })
+                }
+              })
           } else {
             this.$message.error('error submit!!')
             return false

@@ -119,8 +119,14 @@
     },
     methods: {
       async Mqtt(md5Info) {
-        const { VUE_APP_URL, NODE_ENV } = process.env
-        const { hostname, protocol } = location
+        const {
+          VUE_APP_URL,
+          NODE_ENV,
+        } = process.env
+        const {
+          hostname,
+          protocol,
+        } = location
         const ip =
           NODE_ENV == 'development'
             ? VUE_APP_URL.split('//')[1].split(':')[0]
@@ -133,8 +139,9 @@
           port: protocol == 'http:' ? 8083 : 8084,
           userName: md5Info.username,
           passWord: await dcodeIO.bcrypt.hash(
-            this.objectId + moment().format('YYYY:MM:DD'),
-            3
+            this.objectId + moment()
+              .format('YYYY:MM:DD'),
+            3,
           ),
           connectTimeout: 10 * 1000,
           router: md5Info.router,

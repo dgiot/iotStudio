@@ -5,21 +5,16 @@
 // * @Description: dgiot doc api
 // * @FilePath: src\api\Article\index.js
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/Article
-import {
-  create_object,
-  del_object,
-  get_object,
-  query_object,
-  update_object,
-} from '@/api/shuwa_parse'
+import { create_object, del_object, get_object, query_object, update_object } from '@/api/shuwa_parse'
 
 export async function createArticle(params) {
   return create_object(
     'Article',
     // eslint-disable-next-line no-undef
     _.merge(params, {
-      timestamp: moment(new Date()).valueOf(),
-    })
+      timestamp: moment(new Date())
+        .valueOf(),
+    }),
   )
 }
 

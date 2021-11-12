@@ -1,7 +1,7 @@
 <template>
   <div
-    class="vue-admin-beautiful-wrapper"
     :class="classObj"
+    class="vue-admin-beautiful-wrapper"
   >
     <component
       :is="'vab-layout-' + theme.layout"

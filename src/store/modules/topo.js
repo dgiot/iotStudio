@@ -9,7 +9,11 @@
 import addNodeEvent from '@/utils/konva/common'
 import canvas from '@/utils/konva/core/canvas'
 
-const { konvaAttr, Layering, randomXy } = canvas
+const {
+  konvaAttr,
+  Layering,
+  randomXy,
+} = canvas
 window.canvas = canvas
 
 /**
@@ -57,7 +61,8 @@ export async function KonvaBus(args) {
   // if (!hash.includes('Topo') || $(`${attr}`).length === 0) return false
   var stage = Konva.Node.create(json, attr)
   canvas.json = stage
-  var layer = Konva.Node.create(json, attr).findOne('Layer')
+  var layer = Konva.Node.create(json, attr)
+    .findOne('Layer')
   canvas.layer = layer
   // const bg = layer.findOne('bg')
   // if (bg?.length) {
@@ -147,7 +152,10 @@ const mutations = {
     // 长与宽的比例是12:7
     // 比例值是1200/700 1.7142857142857142
     canvas.konvaAttr.scale = size
-    const { width, height } = canvas.konvaAttr
+    const {
+      width,
+      height,
+    } = canvas.konvaAttr
     const newWidth = (width * size) / 100
     const newHeight = (height * size) / 100
     const saleInfo = {
@@ -188,7 +196,7 @@ const mutations = {
       _.merge(canvas.handlerArgs, {
         type: 'createdEvidence',
         path: Evidence,
-      })
+      }),
     )
     canvas.layer.add(simpleEvidence)
     canvas.layer.batchDraw()

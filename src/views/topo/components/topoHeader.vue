@@ -3,8 +3,8 @@
   <div class="topo-header">
     <el-drawer
       v-drawerDrag
-      size="100%"
       :visible.sync="infoVisible"
+      size="100%"
     >
       <div
         id="konva_preview"
@@ -14,11 +14,11 @@
     </el-drawer>
     <div class="topo-header-drawer">
       <el-drawer
+        :visible.sync="drawer"
+        :with-header="false"
         append-to-body
         direction="rtl"
         size="40%"
-        :visible.sync="drawer"
-        :with-header="false"
       >
         <!--        <websocket :topic="topic" />-->
       </el-drawer>
@@ -194,7 +194,8 @@
     },
     data() {
       return {
-        konva_key: moment(new Date()).valueOf(),
+        konva_key: moment(new Date())
+          .valueOf(),
         infoVisible: false,
         topic: '',
         isshow: true,
@@ -235,12 +236,18 @@
         }
       })
     },
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    activated() {},
+    beforeCreate() {
+    }, //生命周期 - 创建之前
+    beforeMount() {
+    }, //生命周期 - 挂载之前
+    beforeUpdate() {
+    }, //生命周期 - 更新之前
+    updated() {
+    }, //生命周期 - 更新之后
+    beforeDestroy() {
+    }, //生命周期 - 销毁之前
+    activated() {
+    },
     methods: {
       ...mapMutations({
         initKonva: 'topo/initKonva',
@@ -263,7 +270,8 @@
             id: 'konva_preview',
           })
         })
-        this.konva_key = moment(new Date()).valueOf()
+        this.konva_key = moment(new Date())
+          .valueOf()
       },
       handFullscreen() {
         this.$parent.$parent.$parent.isFullscreen =
@@ -298,7 +306,8 @@
       flagFn(v) {
         if (v == 'text') {
           this.setDrawParams({
-            text: '请输入相关文字' + moment().format('x'),
+            text: '请输入相关文字' + moment()
+              .format('x'),
           })
         }
 
@@ -319,7 +328,7 @@
       },
       showImageTable(type) {
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
         // this.isshow = !this.isshow
         // this.$emit('ImageTable', type)

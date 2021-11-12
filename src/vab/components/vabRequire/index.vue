@@ -18,7 +18,8 @@
         default: '',
       },
     },
-    data() {},
+    data() {
+    },
     watch: {
       src: {
         handler(newVal, oldVal) {
@@ -37,13 +38,13 @@
         attrs:
           this.type == 'js'
             ? {
-                type: 'text/javascript',
-                src: this.src,
-              }
+              type: 'text/javascript',
+              src: this.src,
+            }
             : {
-                rel: 'stylesheet',
-                href: this.src,
-              },
+              rel: 'stylesheet',
+              href: this.src,
+            },
         on: {
           load: function (event) {
             self.$emit('load', event)

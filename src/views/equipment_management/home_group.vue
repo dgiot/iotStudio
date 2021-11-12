@@ -2,16 +2,16 @@
   <div class="devproduct">
     <div class="prosecond">
       <el-form
-        class="demo-form-inline"
         :inline="true"
         :model="formInline"
+        class="demo-form-inline"
         size="small"
       >
         <el-form-item>
           <el-input
             v-model="formInline.productname"
-            clearable
             :placeholder="$translateTitle('product.searchproductname')"
+            clearable
           />
         </el-form-item>
         <el-form-item>
@@ -89,15 +89,15 @@
             </template>
           </el-table-column>
           <el-table-column
-            fixed="right"
             :label="$translateTitle('developer.operation')"
+            fixed="right"
             width="420"
           >
             <template slot-scope="scope">
               <el-button
+                :underline="false"
                 size="mini"
                 type="primary"
-                :underline="false"
                 @click="deviceToDetail(scope.row)"
               >
                 {{ $translateTitle('product.config') }}
@@ -122,7 +122,8 @@
               >
                 <!-- <p>确定删除这个{{ scope.row.name }}产品吗？</p> -->
                 <p>
-                  {{ $translateTitle('product.qdsczg') }}{{ scope.row.name
+                  {{ $translateTitle('product.qdsczg') }}{{
+                    scope.row.name
                   }}{{ $translateTitle('equipment.cpm') }}
                 </p>
                 <div style="margin: 0; text-align: right">
@@ -166,10 +167,10 @@
         style="margin-top: 20px"
       >
         <el-pagination
-          layout="total, sizes, prev, pager, next, jumper"
           :page-size="length"
           :page-sizes="[10, 20, 30, 50]"
           :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
           @current-change="productCurrentChange"
           @size-change="productSizeChange"
         />
@@ -182,8 +183,8 @@
         :before-close="handleClose"
         :close-on-click-modal="false"
         :title="$translateTitle('product.createproduct')"
-        top="5vh"
         :visible.sync="dialogFormVisible"
+        top="5vh"
         width="40%"
       >
         <div class="content">
@@ -378,8 +379,8 @@
               <el-form-item :label="$translateTitle('product.productmodel')">
                 <img
                   v-if="imageUrl"
-                  class="avatar"
                   :src="imageUrl"
+                  class="avatar"
                 />
                 <i
                   v-else
@@ -458,9 +459,9 @@
       >
         <el-form
           ref="addGroup"
+          :model="addGroup"
           class="demo-ruleForm"
           label-width="80px"
-          :model="addGroup"
         >
           <el-row>
             <!-- <el-col :span="6">
@@ -472,13 +473,13 @@
             <el-col :span="6">
               <el-form-item
                 :label="$translateTitle('developer.groupname')"
-                prop="name"
                 :rules="[
                   {
                     required: true,
                     message: $translateTitle('developer.cannotbeempty'),
                   },
                 ]"
+                prop="name"
               />
             </el-col>
             <el-col :span="18">
@@ -532,10 +533,8 @@
           -->
           <el-upload
             ref="fileUpload"
-            accept=".xls, .xlsx, .zip"
             :action="uploadAction"
             :auto-upload="false"
-            class="upload-demo"
             :data="uploadData"
             :file-list="fileList"
             :headers="uploadHeaders"
@@ -543,6 +542,8 @@
             :on-error="handleUploadError"
             :on-success="handleUploadSuccess"
             :with-credentials="true"
+            accept=".xls, .xlsx, .zip"
+            class="upload-demo"
           >
             <el-button
               slot="trigger"
@@ -584,12 +585,7 @@
   </div>
 </template>
 <script>
-  import {
-    delProduct,
-    getProduct,
-    putProduct,
-    queryProduct,
-  } from '@/api/Product/index'
+  import { delProduct, getProduct, putProduct, queryProduct } from '@/api/Product/index'
   import { getRole, queryRole } from '@/api/Role/index'
   import { queryDevice } from '@/api/Device/index'
   import { getHashClass } from '@/api/Hash/index'
@@ -896,18 +892,19 @@
         if (!val) {
           return
         }
-        getRole(val).then((resultes) => {
-          if (resultes) {
-            this.fileServer = resultes.file
-            this.access_token = resultes.access_token
-          }
-        })
+        getRole(val)
+          .then((resultes) => {
+            if (resultes) {
+              this.fileServer = resultes.file
+              this.access_token = resultes.access_token
+            }
+          })
       },
       treeData(paramData) {
         const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.id == child.parentid
+            (child) => father.id == child.parentid,
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parentid == 0 // 返回第一层
@@ -1139,7 +1136,8 @@
         this.categoryListOptions = this.treeData(this.categoryList)
       },
 
-      submitForm(formName) {},
+      submitForm(formName) {
+      },
 
       resetProductForm() {
         this.form = {
@@ -1256,7 +1254,10 @@
           name: row.attributes.name,
           thing: row.attributes.thing,
         }
-        const { objectId, code } = await getHashClass('Product', data)
+        const {
+          objectId,
+          code,
+        } = await getHashClass('Product', data)
         if (code == 200) {
           this.blackDict(objectId, data)
         }

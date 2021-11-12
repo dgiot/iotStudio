@@ -65,7 +65,7 @@ export function Addtasks(
   meter,
   freq,
   unit,
-  upchannel
+  upchannel,
 ) {
   return request({
     url: '/shuwa_task/task',

@@ -13,7 +13,7 @@ module.exports = {
     },
   },
   rules: {
-    "indent": ["off", 2],
+    'indent': ['off', 2],
     'linebreak-style': [0, 'error', 'windows'],
     // "max-len" : ["error", {code : 3000}],
     'no-unused-vars': 'off',
@@ -23,12 +23,12 @@ module.exports = {
     'vue/no-template-shadow': 'off',
     'vue/no-v-html': 'off',
     'vue/attributes-order': 0,
-    "vue/html-indent": ["error", 2, {
-      "attribute": 1,
-      "baseIndent": 1,
-      "closeBracket": 0,
-      "alignAttributesVertically": true,
-      "ignores": []
+    'vue/html-indent': ['error', 2, {
+      'attribute': 1,
+      'baseIndent': 1,
+      'closeBracket': 0,
+      'alignAttributesVertically': true,
+      'ignores': [],
     }],
     'vue/html-self-closing': [
       'error',

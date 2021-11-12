@@ -4,11 +4,11 @@
       <!-- <el-amap-search-box class="search-box" :search-option="searchOption" :on-search-result="onSearchResult"></el-amap-search-box> -->
       <el-amap
         :center="mapCenter"
-        class="amap-demo"
         :map-style="mapStyle"
+        :zoom="15"
+        class="amap-demo"
         resize-enable
         vid="amapDemo"
-        :zoom="15"
       >
         <el-amap-marker
           v-for="(marker, i) in markers"
@@ -52,7 +52,10 @@
         let lngSum = 0
         if (pois.length > 0) {
           pois.forEach((poi) => {
-            let { lng, lat } = poi
+            let {
+              lng,
+              lat,
+            } = poi
             lngSum += lng
             latSum += lat
             this.markers.push([poi.lng, poi.lat])

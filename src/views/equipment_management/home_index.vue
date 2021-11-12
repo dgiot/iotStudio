@@ -3,8 +3,8 @@
     <div class="dialog">
       <el-dialog
         :append-to-body="true"
-        top="5vh"
         :visible.sync="popoverVisible"
+        top="5vh"
         width="40vh"
       >
         <div class="deviceTree">
@@ -14,10 +14,10 @@
           </p>
           <el-tree
             :data="deptTreeData"
-            default-expand-all
             :expand-on-click-node="false"
-            node-key="index"
             :props="roleProps"
+            default-expand-all
+            node-key="index"
           >
             <!-- @node-click="handleNodeClick" -->
             <!-- eslint-disable-next-line -->
@@ -36,24 +36,24 @@
       </el-dialog>
       <el-dialog
         :append-to-body="true"
-        top="5vh"
         :visible.sync="mapDialog"
+        top="5vh"
         width="80vh"
       >
         <baidu-map
-          ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
           :center="center"
           :map-click="false"
           :scroll-wheel-zoom="true"
-          style="height: 80vh"
           :zoom="zoom"
+          ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
+          style="height: 80vh"
           @click="mapClick"
           @ready="handler"
         >
           <bm-marker
-            animation="BMAP_ANIMATION_BOUNCE"
             :dragging="true"
             :position="center"
+            animation="BMAP_ANIMATION_BOUNCE"
           >
             <bm-label
               :content="deviceId"
@@ -67,8 +67,8 @@
       <el-dialog
         :append-to-body="true"
         :title="devicedetail.name"
-        top="5vh"
         :visible.sync="InfoDialog"
+        top="5vh"
         width="80%"
       >
         <el-tabs
@@ -112,8 +112,8 @@
         :append-to-body="true"
         :before-close="CloseState"
         :title="stateDialog.name"
-        top="5vh"
         :visible.sync="stateDialog"
+        top="5vh"
         width="80%"
       >
         <deviceState
@@ -178,8 +178,8 @@
             <vab-query-form-top-panel>
               <el-form
                 :inline="true"
-                label-width="100px"
                 :model="queryForm"
+                label-width="100px"
                 @submit.native.prevent
               >
                 <el-form-item :label="$translateTitle('equipment.Department')">
@@ -189,16 +189,16 @@
                     @visible-change="change($event)"
                   >
                     <el-option
-                      style="height: auto; padding: 0"
                       :value="treeDataValue"
+                      style="height: auto; padding: 0"
                     >
                       <el-tree
                         ref="workGroup"
                         :data="deptTreeData"
-                        default-expand-all
                         :expand-on-click-node="false"
-                        node-key="index"
                         :props="roleProps"
+                        default-expand-all
+                        node-key="index"
                       >
                         <div
                           slot-scope="{ node, data }"
@@ -220,8 +220,8 @@
                 <el-form-item :label="$translateTitle('equipment.Products')">
                   <el-select
                     v-model="equvalue"
-                    clearable
                     :disabled="!productenable"
+                    clearable
                     @change="selectProdChange"
                   >
                     <el-option
@@ -313,17 +313,17 @@
                 </el-form-item>
                 <el-form-item>
                   <el-button
+                    :title="$translateTitle('equipment.adddevice')"
                     class="el-icon-plus"
                     size="small"
-                    :title="$translateTitle('equipment.adddevice')"
                     type="primary"
                     @click="addDeviceForm"
                   />
                   <el-button
-                    class="el-icon-delete"
                     :disabled="!selectedList.length"
-                    size="small"
                     :title="$translateTitle('aintenance.batch deletion')"
+                    class="el-icon-delete"
+                    size="small"
                     type="danger"
                     @click="handleDelete(selectedList, 1)"
                   />
@@ -331,8 +331,8 @@
                 <el-form-item style="display: none">
                   <!-- <el-input v-model="devicenumber" placeholder="请输入设备编号" style="margin:0;"></el-input> -->
                   <el-button
-                    class="selectdetail"
                     :disabled="multipleTable.length == 0"
+                    class="selectdetail"
                     size="small"
                     type="primary"
                     @click="deleteDevcie"
@@ -340,8 +340,8 @@
                     {{ $translateTitle('developer.delete') }}
                   </el-button>
                   <el-button
-                    class="selectdetail"
                     :disabled="multipleTable.length == 0"
+                    class="selectdetail"
                     size="small"
                     type="primary"
                     @click="unactiveDevice(false)"
@@ -349,8 +349,8 @@
                     {{ $translateTitle('developer.prohibit') }}
                   </el-button>
                   <el-button
-                    class="selectdetail"
                     :disabled="multipleTable.length == 0"
+                    class="selectdetail"
                     size="small"
                     type="primary"
                     @click="unactiveDevice(true)"
@@ -392,16 +392,16 @@
                 width="55"
               />
               <el-table-column
-                align="center"
                 :label="$translateTitle('equipment.devicenumber')"
+                align="center"
                 prop="devaddr"
                 show-overflow-tooltip
                 sortable
                 width="120"
               />
               <el-table-column
-                align="center"
                 :label="$translateTitle('equipment.name')"
+                align="center"
                 prop="name"
                 show-overflow-tooltip
                 sortable
@@ -413,8 +413,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('equipment.state')"
+                align="center"
                 prop="status"
                 show-overflow-tooltip
                 sortable
@@ -471,8 +471,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('equipment.product')"
+                align="center"
                 prop="product.name"
                 show-overflow-tooltip
                 sortable
@@ -485,20 +485,20 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('developer.Company')"
+                align="center"
                 prop="Company"
                 show-overflow-tooltip
                 sortable
                 width="200"
               />
               <el-table-column
-                align="center"
                 :label="
                   $translateTitle('developer.enable') +
                     '/' +
                     $translateTitle('developer.prohibit')
                 "
+                align="center"
                 prop="isEnable"
                 show-overflow-tooltip
                 sortable
@@ -514,8 +514,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('developer.createdAt')"
+                align="center"
                 prop="createdAt"
                 show-overflow-tooltip
                 sortable
@@ -526,9 +526,9 @@
                 </template>
               </el-table-column>
               <el-table-column
+                :label="$translateTitle('developer.operation')"
                 align="center"
                 fixed="right"
-                :label="$translateTitle('developer.operation')"
                 width="300"
               >
                 <template slot-scope="scope">
@@ -626,8 +626,8 @@
                 width="55"
               />
               <el-table-column
-                align="center"
                 :label="$translateTitle('equipment.devicenumber')"
+                align="center"
                 show-overflow-tooltip
                 sortable
                 width="120"
@@ -637,8 +637,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('equipment.name')"
+                align="center"
                 show-overflow-tooltip
                 sortable
               >
@@ -649,8 +649,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('equipment.state')"
+                align="center"
                 show-overflow-tooltip
                 sortable
                 width="100"
@@ -695,8 +695,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('equipment.product')"
+                align="center"
                 show-overflow-tooltip
                 sortable
                 width="200"
@@ -708,8 +708,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('developer.Company')"
+                align="center"
                 show-overflow-tooltip
                 sortable
                 width="200"
@@ -722,12 +722,12 @@
               </el-table-column>
 
               <el-table-column
-                align="center"
                 :label="
                   $translateTitle('developer.enable') +
                     '/' +
                     $translateTitle('developer.prohibit')
                 "
+                align="center"
                 show-overflow-tooltip
                 sortable
                 width="120"
@@ -745,9 +745,9 @@
                 <el-table-column
                   v-if="item.type == 'bool' && item.isshow"
                   :key="index"
-                  align="center"
                   :label="item.name"
                   :prop="item.identifier"
+                  align="center"
                 >
                   <template slot-scope="scope">
                     <span v-if="scope.row[item.default]">
@@ -763,8 +763,8 @@
                 <el-table-column
                   v-else-if="item.type == 'enum' && item.isshow"
                   :key="index"
-                  align="center"
                   :label="item.name"
+                  align="center"
                 >
                   <template slot-scope="scope">
                     <span>
@@ -775,9 +775,9 @@
                 <el-table-column
                   v-else-if="item.isshow"
                   :key="index"
-                  align="center"
                   :label="item.name"
                   :prop="item.identifier"
+                  align="center"
                 >
                   <template slot-scope="scope">
                     <span>
@@ -787,8 +787,8 @@
                 </el-table-column>
               </template>
               <el-table-column
-                align="center"
                 :label="$translateTitle('developer.createdAt')"
+                align="center"
                 width="180"
               >
                 <template slot-scope="scope">
@@ -796,9 +796,9 @@
                 </template>
               </el-table-column>
               <el-table-column
+                :label="$translateTitle('developer.operation')"
                 align="center"
                 fixed="right"
-                :label="$translateTitle('developer.operation')"
                 width="300"
               >
                 <template slot-scope="scope">
@@ -907,12 +907,12 @@
           name="second"
         >
           <baidu-map
-            ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
             :center="{ lng: 116.404, lat: 39.915 }"
-            class="map"
             :scroll-wheel-zoom="true"
-            style="height: 67vh"
             :zoom="sizeZoom"
+            ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
+            class="map"
+            style="height: 67vh"
           >
             <bm-control>
               <el-button
@@ -934,28 +934,28 @@
                 缩放至最小
               </el-button>
               <bm-panorama
-                anchor="BMAP_ANCHOR_TOP_LEFT"
                 :offset="{ width: 460, height: 0 }"
+                anchor="BMAP_ANCHOR_TOP_LEFT"
               />
               <bm-overview-map :is-open="true" />
               <bm-scale :offset="{ width: 200, height: 0 }" />
               <bm-city-list :offset="{ width: 280, height: 0 }" />
               <bm-map-type
-                anchor="BMAP_ANCHOR_TOP_LEFT"
                 :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
                 :offset="{ width: 360, height: 0 }"
+                anchor="BMAP_ANCHOR_TOP_LEFT"
               />
             </bm-control>
             <bm-marker
               v-for="item in tableData"
               :key="item.objectId"
-              animation="BMAP_ANIMATION_BOUNCE"
               :content="item.name"
               :dragging="true"
               :position="{
                 lng: item.location.longitude,
                 lat: item.location.latitude,
               }"
+              animation="BMAP_ANIMATION_BOUNCE"
             >
               <bm-label
                 :content="item.name"
@@ -966,9 +966,9 @@
             </bm-marker>
             <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
             <bm-geolocation
-              anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
               :auto-location="true"
               :show-address-bar="true"
+              anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
             />
           </baidu-map>
         </el-tab-pane>
@@ -1077,9 +1077,9 @@
             >
               <el-form
                 ref="deviceform"
-                label-width="150px"
                 :model="deviceform"
                 :rules="rules"
+                label-width="150px"
               >
                 <el-row :gutter="20">
                   <el-col :span="12">
@@ -1191,8 +1191,8 @@
                       <el-select
                         v-if="item.type == 'bool'"
                         v-model="deviceform[item.identifier]"
-                        class="notauto"
                         :disabled="item.readonly"
+                        class="notauto"
                         style="width: 100%"
                       >
                         <el-option
@@ -1207,8 +1207,8 @@
                       <el-select
                         v-else-if="item.type == 'enum'"
                         v-model="deviceform[item.identifier]"
-                        class="notauto"
                         :disabled="item.readonly"
+                        class="notauto"
                         style="width: 100%"
                       >
                         <el-option
@@ -1221,10 +1221,10 @@
                       <el-switch
                         v-else-if="item.type == 'switch'"
                         v-model="deviceform[item.identifier]"
-                        active-color="#13ce66"
                         :active-value="item.activevalue"
-                        inactive-color="#ff4949"
                         :inactive-value="item.inactivevalue"
+                        active-color="#13ce66"
+                        inactive-color="#ff4949"
                       />
                       <!--                      <el-input-->
                       <!--                        v-else-if="item.unit != ''"-->
@@ -1287,9 +1287,9 @@
             >
               <el-form
                 ref="imeiform"
-                label-width="150px"
                 :model="imeiform"
                 :rules="rules"
+                label-width="150px"
               >
                 <el-row :gutter="20">
                   <el-col :span="12">
@@ -1393,12 +1393,12 @@
           </el-form>
           <!-- <label>地址：<input v-model="bmapfrom.keyword"></label> -->
           <baidu-map
-            ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
             :center="center"
             :map-click="false"
             :scroll-wheel-zoom="true"
-            style="height: 300px"
             :zoom="zoom"
+            ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
+            style="height: 300px"
             @click="mapClick"
             @ready="handler"
           >
@@ -1415,9 +1415,9 @@
             />
             <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
             <bm-geolocation
-              anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
               :auto-location="true"
               :show-address-bar="true"
+              anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
             />
             <bm-city-list anchor="BMAP_ANCHOR_TOP_LEFT" />
             <!-- <bm-marker :position="center" style="display:none">
@@ -1778,8 +1778,8 @@
         this.$route.query.deciceType == 'dev_online'
           ? '在线'
           : this.$route.query.deciceType == 'dev_unline'
-          ? '离线'
-          : ''
+            ? '离线'
+            : ''
       this.getMenu()
       this.selectdevice = this.language == 'zh' ? '设备名称' : 'devicename'
       this.queryProduct()
@@ -1800,8 +1800,8 @@
         } else {
           this.$message.info(
             this.$translateTitle(
-              'equipment.The device is not bound to the video address yet'
-            )
+              'equipment.The device is not bound to the video address yet',
+            ),
           )
           return false
         }
@@ -1867,15 +1867,16 @@
       handleSuccess(item) {
         if (item.table && item.field && item.config.order) {
           // 首先查一下这个表中对应的字段
-          this.$get_object(item.table, this.deviceId).then((res) => {
-            console.log(res)
-            this.queryInfo = res[`${item.field}`]
-            if (this.queryInfo) {
-              this.updateParse(item.table, item.field, this.deviceId, item)
-            } else {
-              this.$message.error(`${item.table} no field ${item.field}`)
-            }
-          })
+          this.$get_object(item.table, this.deviceId)
+            .then((res) => {
+              console.log(res)
+              this.queryInfo = res[`${item.field}`]
+              if (this.queryInfo) {
+                this.updateParse(item.table, item.field, this.deviceId, item)
+              } else {
+                this.$message.error(`${item.table} no field ${item.field}`)
+              }
+            })
         } else {
           this.$message.error(`${item.table} no field ${item.field}`)
         }
@@ -1908,7 +1909,7 @@
         console.log(batchParams, 'batchParams')
         this.$baseConfirm(
           this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item'
+            'Maintenance.Are you sure you want to delete the current item',
           ),
           null,
           async () => {
@@ -1916,17 +1917,17 @@
             this.$baseMessage(
               this.$translateTitle('Maintenance.successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'vab-hey-message-success',
             )
             setTimeout(() => {
               this.getDevices({ start: 0 })
             }, 1500)
-          }
+          },
         )
       },
       ParserSave(e) {
         console.log(
-          `如果监听到有修改,则更新vuex 并 存入到数据库 ${JSON.stringify(e)}`
+          `如果监听到有修改,则更新vuex 并 存入到数据库 ${JSON.stringify(e)}`,
         )
       },
       async queryProduct() {
@@ -1966,10 +1967,11 @@
       change(e) {
         console.log(e)
         if (e) {
-          $('.el-tree').css({
-            height: '120px',
-            display: 'block',
-          })
+          $('.el-tree')
+            .css({
+              height: '120px',
+              display: 'block',
+            })
         }
       },
       async selectProdChange(objectId) {
@@ -1978,17 +1980,18 @@
         if (objectId == '0') {
           this.isALL = true
         } else {
-          await getProduct(objectId).then((res) => {
-            this.listLoading = false
-            const { config = { basedate: {} } } = res
-            const { basedate = { params: [] } } = config
-            console.log(res, basedate)
-            this.dialogtempconfig = []
-            if (basedate.params != 'undefined') {
-              this.dialogtempconfig = basedate.params
-              console.log('this.dialogtempconfig', this.dialogtempconfig)
-            }
-          })
+          await getProduct(objectId)
+            .then((res) => {
+              this.listLoading = false
+              const { config = { basedate: {} } } = res
+              const { basedate = { params: [] } } = config
+              console.log(res, basedate)
+              this.dialogtempconfig = []
+              if (basedate.params != 'undefined') {
+                this.dialogtempconfig = basedate.params
+                console.log('this.dialogtempconfig', this.dialogtempconfig)
+              }
+            })
           this.isALL = false
           this.tableData = []
           const params = {
@@ -2025,9 +2028,12 @@
           params.where.product = objectId
           this.devicestart = 0
 
-          const { results = [], count = 0 } = await querycompanyDevice(
+          const {
+            results = [],
+            count = 0,
+          } = await querycompanyDevice(
             params,
-            this.queryForm.access_token
+            this.queryForm.access_token,
           )
           results.forEach((item) => {
             if (item.ACL) {
@@ -2089,12 +2095,12 @@
             console.info(
               '%c%s',
               'color: #fff; background: #20B2AA; font-size: 16px;',
-              `原始关联${from.table}表中${from.class}字段的值为`
+              `原始关联${from.table}表中${from.class}字段的值为`,
             )
             console.info(
               '%c%s',
               'color: #fff; background: #20B2AA; font-size: 16px;',
-              `${JSON.stringify(from.config)}`
+              `${JSON.stringify(from.config)}`,
             )
             if (data[`${from.class}`]) {
               for (let f in data[`${from.class}`]) {
@@ -2108,7 +2114,7 @@
                         from.config.formDesc[`${f}`].label,
                         from.config.formDesc[`${f}`].default,
                         'data[`${from.class}`][`${v}`] 为 ' +
-                          data[`${from.class}`][`${v}`]
+                        data[`${from.class}`][`${v}`],
                       )
                       _from.obj.push(f)
                       from.config.formDesc[`${f}`]['default'] =
@@ -2116,7 +2122,7 @@
                       console.log(
                         from.config.formDesc[`${f}`].label,
                         data[`${from.class}`],
-                        from.config.formDesc[`${f}`].default
+                        from.config.formDesc[`${f}`].default,
                       )
                     } else {
                       _from.isArr.push(v)
@@ -2138,12 +2144,12 @@
               console.info(
                 '%c%s',
                 'color: #fff; background: #20B2AA; font-size: 16px;',
-                `修改后${from.table}表中${from.class}字段的值为`
+                `修改后${from.table}表中${from.class}字段的值为`,
               )
               console.info(
                 '%c%s',
                 'color: #fff; background: #20B2AA; font-size: 16px;',
-                `${JSON.stringify(from.config)}`
+                `${JSON.stringify(from.config)}`,
               )
             }
           })
@@ -2156,14 +2162,17 @@
           this.$baseMessage(
             this.$translateTitle('product.No device template configured yet'),
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
       },
       // 显示设备位置
       showMap(location, objectId) {
         this.deviceId = objectId
-        const { latitude = 0, longitude = 0 } = location
+        const {
+          latitude = 0,
+          longitude = 0,
+        } = location
         if (Number(latitude) && Number(longitude)) {
           this.mapDialog = true
           this.center.lng = longitude
@@ -2191,24 +2200,25 @@
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning',
-          }
+          },
         )
           .then(async () => {
-            await putDevice(this.deviceId, parmas).then((res) => {
-              if (res.updatedAt) {
-                this.popoverVisible = false
-                this.getMenu()
-                this.$message({
-                  type: 'success',
-                  message: this.$translateTitle(`迁移成功`),
-                })
-              } else {
-                this.$message({
-                  type: 'success',
-                  message: this.$translateTitle(`迁移成功`),
-                })
-              }
-            })
+            await putDevice(this.deviceId, parmas)
+              .then((res) => {
+                if (res.updatedAt) {
+                  this.popoverVisible = false
+                  this.getMenu()
+                  this.$message({
+                    type: 'success',
+                    message: this.$translateTitle(`迁移成功`),
+                  })
+                } else {
+                  this.$message({
+                    type: 'success',
+                    message: this.$translateTitle(`迁移成功`),
+                  })
+                }
+              })
           })
           .catch((e) => {
             console.log(e)
@@ -2225,15 +2235,20 @@
         const aclRole = this._role.map((r) => {
           return r.name
         })
-        $('.el-tree').css({
-          height: '0px',
-          display: 'none',
-          'overflow-x': 'auto',
-        })
-        $('.el-select-dropdown').css({ display: 'none' })
+        $('.el-tree')
+          .css({
+            height: '0px',
+            display: 'none',
+            'overflow-x': 'auto',
+          })
+        $('.el-select-dropdown')
+          .css({ display: 'none' })
         this.queryForm.workGroupName = data.label
         // 点击的公司名
-        const { name, objectId } = data
+        const {
+          name,
+          objectId,
+        } = data
         this.curDepartmentId = objectId
         // this.Company = name
         if (aclRole.includes(data.name)) {
@@ -2303,7 +2318,10 @@
         localSearch.search(this.bmapform.keyword)
         this.bmapdialogVisible = false
       },
-      handler({ BMap, map }) {
+      handler({
+        BMap,
+        map,
+      }) {
         this.center.lng = 120.2
         this.center.lat = 30.26667
         this.zoom = this.zoom
@@ -2416,7 +2434,7 @@
         try {
           const { count = 0 } = await querycompanyDevice(
             params,
-            this.queryForm.access_token
+            this.queryForm.access_token,
           )
 
           this.chartOnlone.rows[1]['数量'] = this.devicetotal - count
@@ -2474,9 +2492,12 @@
           this.devicestart = 0
         }
         try {
-          const { results = [], count = 0 } = await querycompanyDevice(
+          const {
+            results = [],
+            count = 0,
+          } = await querycompanyDevice(
             params,
-            this.queryForm.access_token
+            this.queryForm.access_token,
           )
           this.listLoading = false
           loading.close()
@@ -2540,12 +2561,18 @@
               isEnable = !isEnable
             }
             deviceData.isEnable = isEnable
-            const { createdAt, ...data } = deviceData
-            const { updatedAt, ...data2 } = data
+            const {
+              createdAt,
+              ...data
+            } = deviceData
+            const {
+              updatedAt,
+              ...data2
+            } = data
             var result = await this.$update_object(
               'Device',
               row.objectId,
-              data2
+              data2,
             )
             if (result != undefined) {
               this.$message({
@@ -2699,14 +2726,17 @@
               i.type,
               'top-right',
               5000 * i.sortIndex,
-              i.dangerouslyUseHTMLString
+              i.dangerouslyUseHTMLString,
             )
           })
           this.getDevices()
         }
       },
       /* @pamras 选中高亮*/
-      rowClass({ row, rowIndex }) {
+      rowClass({
+        row,
+        rowIndex,
+      }) {
         if (this.selectRow.includes(rowIndex)) {
           return { 'background-color': 'rgba(185, 221, 249, 0.3)' }
         }
@@ -2835,10 +2865,10 @@
           row.detail == undefined
             ? ''
             : location == undefined
-            ? ''
-            : location.latitude + row.detail == undefined
-            ? ''
-            : location.longitude
+              ? ''
+              : location.latitude + row.detail == undefined
+                ? ''
+                : location.longitude
         this.equipmentEditor = '编辑'
         // this.rolesSelect(row.productid)
         // this.deviceform.batchId = row.detail.batchId.batch_name
@@ -2888,59 +2918,60 @@
       },
       selectChange(objectId, flag = 'add') {
         this.arrlist = []
-        getProduct(objectId).then((res) => {
-          const { config = { basedate: {} } } = res
-          if (config.basedate && config.basedate.params.length > 0) {
-            this.arrlist = config.basedate.params
-            if (flag == 'add') {
-              this.arrlist.map((item) => {
-                if (item.type == 'bool') {
-                  this.$set(
-                    this.deviceform,
-                    item.identifier ? item.identifier : '',
-                    item.default?.length ? item.default : ''
-                  )
-                } else if (item.type == 'enum') {
-                  this.$set(
-                    this.deviceform,
-                    item.identifier ? item.identifier : '',
-                    item.specs?.[0]?.attribute?.length
-                      ? item.specs[0].attribute
-                      : ''
-                  )
-                } else {
-                  this.$set(
-                    this.deviceform,
-                    item.identifier ? item.identifier : '',
-                    item.default?.length ? item.default : ''
-                  )
-                }
-                if (item.required) {
+        getProduct(objectId)
+          .then((res) => {
+            const { config = { basedate: {} } } = res
+            if (config.basedate && config.basedate.params.length > 0) {
+              this.arrlist = config.basedate.params
+              if (flag == 'add') {
+                this.arrlist.map((item) => {
                   if (item.type == 'bool') {
-                    this.rules[item.identifier] = [
-                      {
-                        required: true,
-                        message: '请选择' + item.name,
-                        trigger: 'change',
-                      },
-                    ]
+                    this.$set(
+                      this.deviceform,
+                      item.identifier ? item.identifier : '',
+                      item.default?.length ? item.default : '',
+                    )
+                  } else if (item.type == 'enum') {
+                    this.$set(
+                      this.deviceform,
+                      item.identifier ? item.identifier : '',
+                      item.specs?.[0]?.attribute?.length
+                        ? item.specs[0].attribute
+                        : '',
+                    )
                   } else {
-                    this.rules[item.identifier] = [
-                      {
-                        required: true,
-                        message: '请输入' + item.name,
-                        trigger: 'blur',
-                      },
-                    ]
+                    this.$set(
+                      this.deviceform,
+                      item.identifier ? item.identifier : '',
+                      item.default?.length ? item.default : '',
+                    )
                   }
-                }
-              })
+                  if (item.required) {
+                    if (item.type == 'bool') {
+                      this.rules[item.identifier] = [
+                        {
+                          required: true,
+                          message: '请选择' + item.name,
+                          trigger: 'change',
+                        },
+                      ]
+                    } else {
+                      this.rules[item.identifier] = [
+                        {
+                          required: true,
+                          message: '请输入' + item.name,
+                          trigger: 'blur',
+                        },
+                      ]
+                    }
+                  }
+                })
+              }
+              console.log('afd', this.arrlist)
+              console.log('deviceform', this.deviceform)
+              console.log('rules', this.rules)
             }
-            console.log('afd', this.arrlist)
-            console.log('deviceform', this.deviceform)
-            console.log('rules', this.rules)
-          }
-        })
+          })
       },
       async submitForm(formName) {
         this.$refs[formName].validate(async (valid) => {
@@ -3004,30 +3035,31 @@
                   devaddr: { $in: [this.deviceform.devaddr] },
                 },
               }
-              this.$query_object('Device', params).then((result) => {
-                if (result.count > 0) {
-                  this.$message('此设备已被创建')
-                } else {
-                  var devicesParmas = {
-                    product: {
-                      __type: 'Pointer',
-                      className: 'Product',
-                      objectId: this.deviceform.productName,
-                    },
-                    status: 'OFFLINE',
-                    isEnable: false,
-                    ACL: this.aclObj,
-                    name: this.deviceform.name,
-                    devaddr: this.deviceform.devaddr,
-                    objectId: this.deviceform.devaddr,
-                    lastOnlineTime: 0,
-                    detail: detail,
-                    location: location,
-                    basedata: obj,
+              this.$query_object('Device', params)
+                .then((result) => {
+                  if (result.count > 0) {
+                    this.$message('此设备已被创建')
+                  } else {
+                    var devicesParmas = {
+                      product: {
+                        __type: 'Pointer',
+                        className: 'Product',
+                        objectId: this.deviceform.productName,
+                      },
+                      status: 'OFFLINE',
+                      isEnable: false,
+                      ACL: this.aclObj,
+                      name: this.deviceform.name,
+                      devaddr: this.deviceform.devaddr,
+                      objectId: this.deviceform.devaddr,
+                      lastOnlineTime: 0,
+                      detail: detail,
+                      location: location,
+                      basedata: obj,
+                    }
+                    this.createDevice(devicesParmas)
                   }
-                  this.createDevice(devicesParmas)
-                }
-              })
+                })
             }
           } else {
             this.$message({
@@ -3048,18 +3080,19 @@
               latitude: this.center.lat ? this.center.lat : 0,
               longitude: this.center.lng ? this.center.lng : 0,
             }
-            addimeidevice(devicesParmas).then((res) => {
-              if (res.objectId) {
-                this.deviceform = {}
-                this.handleClose()
-                this.initQuery('设备创建成功', 'success')
-              } else {
-                this.$message({
-                  type: 'error',
-                  message: res,
-                })
-              }
-            })
+            addimeidevice(devicesParmas)
+              .then((res) => {
+                if (res.objectId) {
+                  this.deviceform = {}
+                  this.handleClose()
+                  this.initQuery('设备创建成功', 'success')
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: res,
+                  })
+                }
+              })
           } else {
             this.$message({
               type: 'error',

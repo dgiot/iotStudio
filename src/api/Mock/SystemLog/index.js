@@ -18,18 +18,22 @@ for (let i = 0; i < count; i++) {
       ],
       ip: '@ip',
       datetime: '@datetime',
-    })
+    }),
   )
 }
 
 export function getList(query) {
-  const { account, pageNo = 1, pageSize = 20 } = query
+  const {
+    account,
+    pageNo = 1,
+    pageSize = 20,
+  } = query
   const mockList = List.filter(
-    (item) => !(account && item.account.indexOf(account) < 0)
+    (item) => !(account && item.account.indexOf(account) < 0),
   )
   const list = mockList.filter(
     (item, index) =>
-      index < pageSize * pageNo && index >= pageSize * (pageNo - 1)
+      index < pageSize * pageNo && index >= pageSize * (pageNo - 1),
   )
   return {
     code: 200,

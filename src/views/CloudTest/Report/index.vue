@@ -10,22 +10,23 @@
 <template>
   <div
     ref="custom-table"
-    class="custom-table-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
+    class="custom-table-container"
   >
     <div class="components">
       <vab-dialog :show.sync="activePopShow">
         <h3 slot="title">
-          {{ $translateTitle('cloudTest.add')
+          {{
+            $translateTitle('cloudTest.add')
           }}{{ $translateTitle('cloudTest.report template') }}
         </h3>
         <div class="content">
           <el-form
             ref="ruleForm"
-            class="demo-ruleForm"
-            label-width="100px"
             :model="ruleForm"
             :rules="rules"
+            class="demo-ruleForm"
+            label-width="100px"
           >
             <el-form-item
               :label="$translateTitle('cloudTest.Template name')"
@@ -56,15 +57,15 @@
                 :key="momentKey"
                 ref="upload"
                 v-model="ruleForm.file"
-                accept=".doc,.docx"
-                action="string"
                 :before-upload="onBeforeUploadImage"
-                class="upload-demo"
                 :file-list="fileList"
                 :http-request="UploadImage"
                 :limit="1"
-                list-type="text"
                 :on-change="fileChange"
+                accept=".doc,.docx"
+                action="string"
+                class="upload-demo"
+                list-type="text"
               >
                 <el-button
                   slot="trigger"
@@ -105,8 +106,8 @@
             :stripe="stripe"
           >
             <el-table-column
-              align="center"
               :label="$translateTitle('cloudTest.number')"
+              align="center"
               show-overflow-tooltip
               width="80"
             >
@@ -115,15 +116,15 @@
               </template>
             </el-table-column>
             <el-table-column
-              align="center"
               :label="$translateTitle('cloudTest.Template name')"
+              align="center"
               prop="name"
               show-overflow-tooltip
               width="auto"
             />
             <el-table-column
-              align="center"
               :label="$translateTitle('cloudTest.Template content')"
+              align="center"
               width="auto"
             >
               <template #default="{ row }">
@@ -135,9 +136,9 @@
               </template>
             </el-table-column>
             <el-table-column
+              :label="$translateTitle(`product.Template management`)"
               align="center"
               flex="right"
-              :label="$translateTitle(`product.Template management`)"
               show-overflow-tooltip
               width="auto"
             >
@@ -158,10 +159,10 @@
             </el-table-column>
             <template #empty>
               <el-image
-                class="vab-data-empty"
                 :src="
                   require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                 "
+                class="vab-data-empty"
               />
             </template>
           </el-table>
@@ -173,8 +174,8 @@
         <el-form
           ref="form"
           :inline="true"
-          label-width="0"
           :model="queryForm"
+          label-width="0"
           @submit.native.prevent
         >
           <el-form-item>
@@ -296,8 +297,8 @@
       :stripe="stripe"
     >
       <el-table-column
-        align="center"
         :label="$translateTitle('cloudTest.number')"
+        align="center"
         show-overflow-tooltip
         width="95"
       >
@@ -308,17 +309,17 @@
       <el-table-column
         v-for="(item, index) in finallyColumns"
         :key="index"
-        align="center"
         :label="$translateTitle(`cloudTest.${item.label}`)"
         :prop="item.prop"
-        show-overflow-tooltip
         :sortable="item.sortable"
         :width="item.width"
+        align="center"
+        show-overflow-tooltip
       />
 
       <el-table-column
-        align="center"
         :label="$translateTitle(`cloudTest.operate`)"
+        align="center"
         show-overflow-tooltip
         width="185"
       >
@@ -339,20 +340,20 @@
       </el-table-column>
       <template #empty>
         <el-image
-          class="vab-data-empty"
           :src="
             require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
+          class="vab-data-empty"
         />
       </template>
     </el-table>
     <el-pagination
-      background
-      layout="total, sizes, prev, pager, next, jumper"
-      :page.sync="queryForm.pageNo"
       :page-size="queryForm.pageSize"
       :page-sizes="queryForm.pageSizes"
+      :page.sync="queryForm.pageNo"
       :total="queryForm.total"
+      background
+      layout="total, sizes, prev, pager, next, jumper"
       @current-change="currentChange"
       @size-change="sizeChange"
     />
@@ -406,7 +407,8 @@
           ],
         },
         fileList: [],
-        momentKey: moment(new Date()).valueOf(),
+        momentKey: moment(new Date())
+          .valueOf(),
         ruleForm: {
           file: null,
           name: '',
@@ -538,7 +540,7 @@
       },
       finallyColumns() {
         return this.columns.filter((item) =>
-          this.checkList.includes(item.label)
+          this.checkList.includes(item.label),
         )
       },
     },
@@ -579,7 +581,7 @@
           file.size,
           file.size / 1024 / 1024 < 30,
           docxType.includes(file.type),
-          file.type
+          file.type,
         )
         const isIMAGE = docxType.includes(file.type)
         const isLt30M = file.size / 1024 / 1024 < 30
@@ -589,7 +591,8 @@
         if (!isLt30M) {
           this.$message.error('上传文件大小不能超过 30MB!')
         }
-        this.momentKey = moment(new Date()).valueOf()
+        this.momentKey = moment(new Date())
+          .valueOf()
         return isIMAGE && isLt30M
       },
       UploadImage(param) {
@@ -629,13 +632,13 @@
               const { result } = await postReportFile(formData)
               console.log(result)
               this.$message.success(
-                this.$translateTitle('cloudTest.Template created successfully')
+                this.$translateTitle('cloudTest.Template created successfully'),
               )
               this.activePopShow = false
               this.fetchData(this.queryForm)
             } catch (e) {
               this.$message.error(
-                this.$translateTitle('cloudTest.Template creation failed')
+                this.$translateTitle('cloudTest.Template creation failed'),
               )
             }
             loading.close()
@@ -704,16 +707,20 @@
         }
         const loading = this.$baseColorfullLoading(1)
         try {
-          const { count = 0, results } = await queryProduct(params)
+          const {
+            count = 0,
+            results,
+          } = await queryProduct(params)
           this.tempList = results
-        } catch (e) {}
+        } catch (e) {
+        }
         this.tempPopShow = true
         loading.close()
       },
       handleDelete(row, flag) {
         this.$baseConfirm(
           this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item'
+            'Maintenance.Are you sure you want to delete the current item',
           ),
           null,
           async () => {
@@ -721,12 +728,12 @@
             this.$baseMessage(
               this.$translateTitle('successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'vab-hey-message-success',
             )
             flag == 0
               ? await this.fetchData(this.queryForm)
               : await this.handleManagement(this.temprow)
-          }
+          },
         )
       },
       async fetchData(args) {
@@ -745,9 +752,13 @@
           },
         }
         this.listLoading = true
-        const { count = 0, results = [] } = await queryProduct(params)
+        const {
+          count = 0,
+          results = [],
+        } = await queryProduct(params)
         results.forEach((item) => {
-          item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
+          item.createdAt = moment(item.createdAt)
+            .format('YYYY-MM-DD HH:mm:ss')
         })
         this.list = results
         this.queryForm.total = count

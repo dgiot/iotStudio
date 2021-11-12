@@ -1,6 +1,7 @@
 <template>
   <div
-    class="box"
+    :key="amisKey"
+    className="box"
     ref="renderBox"
   >
   </div>
@@ -15,11 +16,12 @@
   import {
     tokenName,
   } from '@/config'
-  import { render as renderAmis , ToastComponent, AlertComponent} from 'amis'
-  import {alert, confirm} from 'amis/lib/components/Alert';
-  import {toast} from 'amis/lib/components/Toast';
+  import { render as renderAmis, ToastComponent, AlertComponent } from 'amis'
+  import { alert, confirm } from 'amis/lib/components/Alert';
+  import { toast } from 'amis/lib/components/Toast';
   import copy from 'copy-to-clipboard'
   import ReactDOM from 'react-dom'
+
   export default {
     name: 'AmisRender',
     props: {
@@ -30,12 +32,14 @@
       updateLocation: {
         type: Function,
         required: false,
-        default: () => {},
+        default: () => {
+        },
       },
       onAction: {
         type: Function,
         required: false,
-        default: () => {},
+        default: () => {
+        },
       },
       theme: {
         type: String,
@@ -45,12 +49,22 @@
     },
     data() {
       return {
+        amisKey: moment(new Date()).format('X'),
       }
     },
 
     mounted() {
       this.initEnv()
-      console.log('ReactDOM',ReactDOM)
+      console.groupCollapsed(
+        `%c amis Help`,
+        'color:#009a61; font-size: 28px; font-weight: 300',
+      )
+      console.info('ReactDOM', ReactDOM)
+      console.info("code",this.schema)
+      console.info('edit ： https://aisuda.github.io/amis-editor-demo/#/edit/0')
+      console.info(
+        'demo ： https://baidu.gitee.io/amis/zh-CN/docs/concepts/schema?page=1',
+      )
       ReactDOM.render(
         renderAmis(
           this.schema,
@@ -85,15 +99,22 @@
               }
               const query = qs.parse(search.substring(1))
               const currentQuery = qs.parse(location.search.substring(1))
-              return Object.keys(query).every(
-                (key) => query[key] === currentQuery[key]
-              )
+              return Object.keys(query)
+                .every(
+                  (key) => query[key] === currentQuery[key]
+                )
             } else if (pathname === location.pathname) {
               return true
             }
             return false
           },
-          fetcher: ({ url, method, data, config, headers }) => {
+          fetcher: ({
+            url,
+            method,
+            data,
+            config,
+            headers
+          }) => {
             config = config || {}
             config.headers = config.headers || {}
             config.withCredentials = true
@@ -189,9 +210,20 @@
             }
             pathname = pathname.substring(m[0].length)
           }
-          pathname = paths.concat(pathname).join('/')
+          pathname = paths.concat(pathname)
+            .join('/')
         }
         return pathname + search + hash
+      },
+    },
+    schema: {
+      amisJson: {
+        handler(val) {
+          console.log(val)
+          this.amisKey = moment(new Date()).format('X') + 'j'
+        },
+        immediate: true,
+        deep: true,
       },
     },
   }

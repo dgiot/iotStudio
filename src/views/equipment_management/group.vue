@@ -5,8 +5,8 @@
         <el-main>
           <div class="main">
             <el-drawer
-              direction="ltr"
               :visible.sync="drawer"
+              direction="ltr"
             >
               <div
                 v-if="showTree"
@@ -23,13 +23,13 @@
                   ref="tree"
                   :allow-drag="allowDrag"
                   :allow-drop="allowDrop"
-                  class="treeitems"
                   :data="treeData"
+                  :filter-node-method="filterNode"
+                  :props="defaultProps"
+                  class="treeitems"
                   default-expand-all
                   draggable
-                  :filter-node-method="filterNode"
                   node-key="id"
-                  :props="defaultProps"
                   @node-drop="handleDrop"
                 >
                   <span
@@ -106,9 +106,9 @@
     </el-container>
     <el-dialog
       :append-to-body="true"
+      :visible="centerDialogRole"
       center
       title="添加角色"
-      :visible="centerDialogRole"
       width="35%"
       @close="closeDialogRole"
     >
@@ -184,7 +184,8 @@
             return 'platform'
           }
         },
-        set: function () {},
+        set: function () {
+        },
       },
     },
     watch: {

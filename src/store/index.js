@@ -25,12 +25,14 @@ LogRocket.identify('THE_USER_ID_IN_YOUR_APP', {
 const logrocketPlugin = createPlugin(LogRocket)
 const files = require.context('./modules', false, /\.js$/)
 const modules = {}
-files.keys().forEach((key) => {
-  modules[key.replace(/(\.\/|\.js)/g, '')] = files(key).default
-})
-Object.keys(modules).forEach((key) => {
-  modules[key]['namespaced'] = true
-})
+files.keys()
+  .forEach((key) => {
+    modules[key.replace(/(\.\/|\.js)/g, '')] = files(key).default
+  })
+Object.keys(modules)
+  .forEach((key) => {
+    modules[key]['namespaced'] = true
+  })
 const store = new Vuex.Store({
   modules,
   // plugins: [createLogger()],

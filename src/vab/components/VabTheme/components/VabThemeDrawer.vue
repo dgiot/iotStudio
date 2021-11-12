@@ -1,18 +1,18 @@
 <template>
   <el-drawer
+    :title="$translateTitle('主题配置')"
+    :visible.sync="drawerVisible"
     append-to-body
     custom-class="vab-drawer"
     direction="rtl"
     size="280px"
-    :title="$translateTitle('主题配置')"
-    :visible.sync="drawerVisible"
   >
     <el-scrollbar class="theme-scrollbar">
       <div class="el-drawer__body">
         <el-form
           ref="form"
-          label-position="left"
           :model="theme"
+          label-position="left"
         >
           <el-divider content-position="left">
             <vab-icon icon="settings-3-line" />
@@ -324,7 +324,8 @@
       })
       this.setTheme()
     },
-    mounted() {},
+    mounted() {
+    },
     methods: {
       ...mapActions({
         saveTheme: 'settings/saveTheme',
@@ -354,16 +355,16 @@
             console.log(res)
             this.$message.success(
               this.$translateTitle(
-                'title.Theme configuration saved successfully'
-              )
+                'title.Theme configuration saved successfully',
+              ),
             )
           })
           .catch((e) => {
             console.log(e)
             this.$message.success(
               this.$translateTitle(
-                'title.Theme configuration saved error' + e.error
-              )
+                'title.Theme configuration saved error' + e.error,
+              ),
             )
           })
         await this.saveTheme(theme)
@@ -387,19 +388,19 @@
           'ocean',
         ]
         this.theme.themeName = _.sample(
-          _.pull(themeNameArray, [this.theme.themeName])
+          _.pull(themeNameArray, [this.theme.themeName]),
         )
         const columnStyleArray = ['vertical', 'horizontal', 'card']
         this.theme.columnStyle = _.sample(
-          _.pull(columnStyleArray, [this.theme.columnStyle])
+          _.pull(columnStyleArray, [this.theme.columnStyle]),
         )
         const tabsBarStyleArray = ['card', 'smart', 'smooth']
         this.theme.tabsBarStyle = _.sample(
-          _.pull(tabsBarStyleArray, [this.theme.tabsBarStyle])
+          _.pull(tabsBarStyleArray, [this.theme.tabsBarStyle]),
         )
         const showTabsBarIconArray = [true, false]
         this.theme.showTabsBarIcon = _.sample(
-          _.pull(showTabsBarIconArray, [this.theme.showTabsBarIcon])
+          _.pull(showTabsBarIconArray, [this.theme.showTabsBarIcon]),
         )
         if (this.device === 'desktop') {
           const layoutArray = [
@@ -421,7 +422,7 @@
       },
       setTheme() {
         document.getElementsByTagName(
-          'body'
+          'body',
         )[0].className = `vab-theme-${this.theme.themeName}`
       },
     },

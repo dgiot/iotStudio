@@ -6,17 +6,17 @@
       :before-close="wmxhandleClose"
       :close-on-click-modal="false"
       :title="wmxSituation + '自定义属性'"
-      top="5vh"
       :visible.sync="wmxdialogVisible"
+      top="5vh"
       width="60%"
     >
       <div class="wmxheader">
         <el-form
           ref="sizeForm"
-          label-position="left"
-          label-width="150px"
           :model="sizeForm"
           :rules="sizerule"
+          label-position="left"
+          label-width="150px"
           size="mini"
         >
           <!-- update 2020 05-27 hughWang -->
@@ -92,10 +92,10 @@
                     >
                       <el-input-number
                         v-model="sizeForm.step"
-                        controls-position="right"
                         :min="0"
                         :precision="2"
                         :step="0.01"
+                        controls-position="right"
                         style="width: 100%"
                       />
                     </el-form-item>
@@ -175,8 +175,8 @@
                     <el-form-item :label="$translateTitle('product.unit')">
                       <el-select
                         v-model="sizeForm.unit"
-                        filterable
                         :placeholder="$translateTitle('product.unit')"
+                        filterable
                         style="width: 100%"
                       >
                         <el-option
@@ -233,11 +233,11 @@
                           </el-table-column>
                         </el-table>
                         <el-pagination
-                          layout="total, sizes, prev, pager, next, jumper"
                           :page-size="wmxPageSize"
                           :page-sizes="[10, 20, 30, 50]"
-                          style="margin-top: 10px"
                           :total="wmxData.length"
+                          layout="total, sizes, prev, pager, next, jumper"
+                          style="margin-top: 10px"
                           @current-change="wmxCurrentChange"
                           @size-change="wmxSizeChange"
                         />
@@ -296,8 +296,8 @@
                           v-for="item in sizeOption"
                           :key="item.val"
                           :label="item.label"
-                          size="mini"
                           :value="item.val"
+                          size="mini"
                         />
                       </el-select>
                     </el-form-item>
@@ -398,8 +398,8 @@
                     <el-form-item label="采集公式">
                       <el-input
                         v-model="sizeForm.collection"
-                        placeholder="%s"
                         :rows="1"
+                        placeholder="%s"
                         style="width: 95%"
                         type="textarea"
                       />
@@ -412,8 +412,8 @@
                     >
                       <el-input-number
                         v-model="sizeForm.Order"
-                        label="采集顺序"
                         :min="0"
+                        label="采集顺序"
                         style="width: 100%"
                       />
                     </el-form-item>
@@ -483,8 +483,8 @@
                     <el-form-item label="控制公式">
                       <el-input
                         v-model="sizeForm.control"
-                        placeholder="%s"
                         :rows="1"
+                        placeholder="%s"
                         style="width: 98%"
                         type="textarea"
                       />
@@ -633,8 +633,8 @@
                           ]"
                           :key="index"
                           :label="item"
-                          style="width: 100%"
                           :value="item"
+                          style="width: 100%"
                         />
                       </el-select>
                     </el-form-item>
@@ -664,8 +664,8 @@
                   <el-form-item>
                     <el-input
                       v-model="sizeForm.truevalue"
-                      class="inputnumber"
                       :placeholder="$translateTitle('product.attribute')"
+                      class="inputnumber"
                       readonly
                       style="width: 100%"
                       type="number"
@@ -679,8 +679,8 @@
                   <el-form-item prop="true">
                     <el-input
                       v-model="sizeForm.true"
-                      class="inputnumber"
                       :placeholder="$translateTitle('product.egopen')"
+                      class="inputnumber"
                     />
                   </el-form-item>
                 </el-col>
@@ -690,8 +690,8 @@
                   <el-form-item>
                     <el-input
                       v-model="sizeForm.falsevalue"
-                      class="inputnumber"
                       :placeholder="$translateTitle('product.attribute')"
+                      class="inputnumber"
                       readonly
                       type="number"
                     />
@@ -704,8 +704,8 @@
                   <el-form-item prop="true">
                     <el-input
                       v-model="sizeForm.false"
-                      class="inputnumber"
                       :placeholder="$translateTitle('product.egclose')"
+                      class="inputnumber"
                     />
                   </el-form-item>
                 </el-col>
@@ -732,8 +732,8 @@
                 </el-form-item>
               </el-col>
               <el-col
-                class="line"
                 :span="2"
+                class="line"
               >
                 -
               </el-col>
@@ -750,18 +750,18 @@
                 </el-form-item>
               </el-col>
               <el-col
-                class="line"
                 :span="2"
+                class="line"
               />
               <el-col
-                class="line"
                 :span="4"
+                class="line"
               >
                 <el-link
+                  :underline="false"
                   icon="el-icon-minus"
                   style="margin-top: 30px; margin-left: 5px"
                   type="primary"
-                  :underline="false"
                   @click.prevent="removeDomain(item)"
                 >
                   {{ $translateTitle('developer.delete') }}
@@ -769,9 +769,9 @@
               </el-col>
             </el-form-item>
             <el-link
+              :underline="false"
               icon="el-icon-plus"
               type="primary"
-              :underline="false"
               @click="addDomain"
             >
               {{ $translateTitle('product.add') }}
@@ -798,16 +798,16 @@
                   </div>
                   <div>
                     <el-link
+                      :underline="false"
                       style="margin-left: 20px"
                       type="primary"
-                      :underline="false"
                       @click="editStruct(item, index)"
                     >
                       {{ $translateTitle('developer.edit') }}
                     </el-link>
                     <el-link
-                      type="primary"
                       :underline="false"
+                      type="primary"
                       @click="deleteStruct(index)"
                     >
                       {{ $translateTitle('developer.delete') }}
@@ -816,9 +816,9 @@
                 </li>
               </ul>
               <el-link
+                :underline="false"
                 icon="el-icon-plus"
                 type="primary"
-                :underline="false"
                 @click="addStruct('structform')"
               >
                 {{ $translateTitle('product.addparameter') }}
@@ -882,14 +882,22 @@
       }
     },
     computed: {},
-    mounted() {},
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
+    mounted() {
+    },
+    beforeCreate() {
+    }, //生命周期 - 创建之前
+    beforeMount() {
+    }, //生命周期 - 挂载之前
+    beforeUpdate() {
+    }, //生命周期 - 更新之前
+    updated() {
+    }, //生命周期 - 更新之后
+    beforeDestroy() {
+    }, //生命周期 - 销毁之前
+    destroyed() {
+    }, //生命周期 - 销毁完成
+    activated() {
+    },
     methods: {}, //如果页面有keep-alive缓存功能，这个函数会触发
   }
 </script>

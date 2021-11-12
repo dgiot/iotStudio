@@ -26,7 +26,8 @@ if (checkNeed()) {
           info,
           url,
         })
-        .then(() => {})
+        .then(() => {
+        })
     })
   }
 }

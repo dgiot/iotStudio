@@ -2,7 +2,6 @@
   <div class="logs logs-container">
     <a-row class="logs-row">
       <a-col
-        class="logs-row-tree"
         :lg="6"
         :md="6"
         :sm="24"
@@ -10,16 +9,17 @@
         :xl="4"
         :xs="24"
         :xxl="4"
+        class="logs-row-tree"
       >
         <a-tree
           v-if="logTree.length"
           :auto-expand-parent="true"
           :block-node="true"
-          class="logs-row-tree-antd"
           :default-expand-all="true"
           :show-icon="true"
           :show-line="true"
           :tree-data="logTree"
+          class="logs-row-tree-antd"
           @rightClick="onRightClick"
           @select="onSelect"
         >
@@ -69,7 +69,6 @@
         </a-tree>
       </a-col>
       <a-col
-        class="logs-row-table"
         :class="{ 'vab-fullscreen': isFullscreen }"
         :lg="18"
         :md="18"
@@ -78,6 +77,7 @@
         :xl="20"
         :xs="24"
         :xxl="20"
+        class="logs-row-table"
       >
         <a-tabs default-active-key="editor">
           <a-tab-pane key="editor">
@@ -93,7 +93,6 @@
                   ? Number($baseTableHeight(0)) + 80
                   : Number($baseTableHeight(0)) + 40
               "
-              lang="json"
               :max-lines="
                 isFullscreen
                   ? Number($baseTableHeight(0) + 80) / 12
@@ -104,6 +103,7 @@
                   ? Number($baseTableHeight(0) + 80) / 12
                   : Number($baseTableHeight(0) - 80) / 12
               "
+              lang="json"
               theme="gob"
             />
           </a-tab-pane>
@@ -163,24 +163,24 @@
             <el-table
               :key="key"
               ref="dragTable"
-              border
               :data="
                 scroketMsg.slice(
                   (currentPage - 1) * pageSize,
                   currentPage * pageSize
                 )
               "
-              default-expand-all
               :height="height"
+              border
+              default-expand-all
               highlight-current-row
               resizable
               size="mini"
               stripe
             >
               <el-table-column
+                :label="$translateTitle('equipment.serialnumber')"
                 align="center"
                 fixed="left"
-                :label="$translateTitle('equipment.serialnumber')"
                 show-overflow-tooltip
                 width="55"
               >
@@ -201,8 +201,10 @@
                   <span>
                     {{
                       $moment(
-                        Number(row.time.toString().substring(0, 13))
-                      ).format('YYYY-MM-DD HH:mm:ss.SSS')
+                        Number(row.time.toString()
+                          .substring(0, 13)),
+                      )
+                        .format('YYYY-MM-DD HH:mm:ss.SSS')
                     }}
                   </span>
                 </template>
@@ -211,14 +213,14 @@
                 v-for="(item, index) in finallyColumns"
                 v-show="item != 'msg'"
                 :key="index"
-                align="center"
                 :label="item"
                 :prop="item"
-                show-overflow-tooltip
-                sortable
                 :width="
                   w80.includes(item) ? 80 : Wh120.includes(item) ? 120 : 180
                 "
+                align="center"
+                show-overflow-tooltip
+                sortable
               />
               <el-table-column
                 align="center"
@@ -237,10 +239,10 @@
             </el-table>
             <el-pagination
               :current-page="currentPage"
-              layout="total, sizes, prev, pager, next, jumper"
               :page-size="pageSize"
               :page-sizes="[10, 20, 30, 50, 100]"
               :total="scroketMsg.length"
+              layout="total, sizes, prev, pager, next, jumper"
               @current-change="handleCurrentChange"
               @size-change="handleSizeChange"
             />
@@ -260,9 +262,11 @@
       return {
         logMqtt: {
           channeltopic: '',
-          key: moment(new Date()).valueOf(),
+          key: moment(new Date())
+            .valueOf(),
         },
-        key: moment(new Date()).valueOf(),
+        key: moment(new Date())
+          .valueOf(),
         subtopic: '',
         topicKey: '',
         router: '',
@@ -382,20 +386,23 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'vab-hey-message-success',
           )
         } catch (error) {
           console.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
       },
       async handleChange(value) {
         try {
-          const { type, name } = this.dataRef
+          const {
+            type,
+            name,
+          } = this.dataRef
           const handloading = this.$baseColorfullLoading()
           const params = {
             type: type,
@@ -410,7 +417,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
         console.log(value) // { key: "lucy", label: "Lucy (101)" }
@@ -418,7 +425,8 @@
       subLog() {
         this.clickItem = ''
         this.scroketMsg = []
-        this.key = moment(new Date()).valueOf()
+        this.key = moment(new Date())
+          .valueOf()
         if (this.dataRef.objectId) {
           this.subtopic = `${this.dataRef.topic}`
           this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
@@ -433,7 +441,7 @@
             this.subtopic + this.$translateTitle('websocket.subscribeSuccess'),
             'success',
             false,
-            'vab-hey-message-success'
+            'vab-hey-message-success',
           )
           this.$baseNotify(this.subtopic, 'topic:', 'success', '', 5000)
           this.handleMqttMsg()
@@ -447,7 +455,8 @@
           console.log('收到消息', Msg)
           if (Msg.payload) {
             this.scroketMsg.push(JSON.parse(Msg.payload))
-            this.key = moment(new Date()).valueOf()
+            this.key = moment(new Date())
+              .valueOf()
             this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
           }
         })

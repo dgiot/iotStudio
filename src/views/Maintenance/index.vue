@@ -35,15 +35,15 @@
       <vab-query-form-top-panel>
         <el-form
           :inline="true"
-          label-width="auto"
           :model="queryForm"
+          label-width="auto"
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('Maintenance.Ticket number')">
             <el-input
               v-model.trim="queryForm.number"
-              clearable
               :placeholder="$translateTitle('Maintenance.Ticket number')"
+              clearable
             />
           </el-form-item>
           <el-form-item :label="$translateTitle('Maintenance.project')">
@@ -80,8 +80,8 @@
             <el-date-picker
               v-model="queryForm.searchDate"
               :end-placeholder="$translateTitle('Maintenance.end time')"
-              format="yyyy-MM-dd"
               :start-placeholder="$translateTitle('Maintenance.start time')"
+              format="yyyy-MM-dd"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -121,24 +121,24 @@
         width="55"
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
+        align="center"
         prop="number"
         show-overflow-tooltip
         sortablesortable
         width="120"
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Ticket type')"
+        align="center"
         prop="type"
         show-overflow-tooltip
         sortable
         width="140"
       />
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Ticket status')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -148,8 +148,8 @@
       </el-table-column>
 
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.project')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -159,8 +159,8 @@
       </el-table-column>
 
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Equipment name')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -169,8 +169,8 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.Initiator')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
@@ -179,18 +179,21 @@
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.the starting time')"
+        align="center"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
-          {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
+          {{
+            $moment(row.createdAt)
+              .format('YYYY-MM-DD HH:mm:ss')
+          }}
         </template>
       </el-table-column>
       <el-table-column
-        align="center"
         :label="$translateTitle('Maintenance.operating')"
+        align="center"
         prop="name"
         show-overflow-tooltip
       >
@@ -354,7 +357,7 @@
         } catch (error) {
           console.log(error)
           this.$message.error(
-            this.$translateTitle('node.export error') + `${error}`
+            this.$translateTitle('node.export error') + `${error}`,
           )
         }
       },
@@ -433,7 +436,10 @@
         await query_object('Maintenance', params)
           .then((res) => {
             console.log(res, 'res')
-            const { results = [], count = 0 } = res
+            const {
+              results = [],
+              count = 0,
+            } = res
             this.list = results
             this.list.forEach((e) => {
               e._user = '暂无'

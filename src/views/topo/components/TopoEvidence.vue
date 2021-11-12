@@ -258,7 +258,7 @@
         this.$dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
         (msg) => {
           this.dgiotEvidence(msg)
-        }
+        },
       )
     },
     methods: {
@@ -278,7 +278,7 @@
           _.merge(icon, {
             index: index,
             productid: this.$route.query.productid,
-          })
+          }),
         )
       },
     },
