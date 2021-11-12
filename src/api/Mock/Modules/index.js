@@ -835,7 +835,10 @@ const dataNnit = [
     ],
   },
 ]
-const mockModules = { dataNnit: dataNnit, dataType: dataType }
+const mockModules = {
+  dataNnit: dataNnit,
+  dataType: dataType,
+}
 export default { mockModules }
 
 let result = {

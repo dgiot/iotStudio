@@ -48,8 +48,8 @@
             <el-popover trigger="hover">
               <el-checkbox-group v-model="checkList">
                 <vue-draggable
-                  v-bind="dragOptions"
                   :list="logcolumns"
+                  v-bind="dragOptions"
                 >
                   <div
                     v-for="(item, index) in logcolumns"
@@ -145,6 +145,7 @@
 
 <script>
   import { queryLog } from '@/api/Logs'
+
   export default {
     name: 'AccessLog',
     data() {
@@ -216,8 +217,11 @@
     methods: {
       handleHeight() {
         this.isFullscreen = !this.isFullscreen
-        if (this.isFullscreen) this.height = this.$baseTableHeight(0) + 120
-        else this.height = this.$baseTableHeight(0)
+        if (this.isFullscreen) {
+          this.height = this.$baseTableHeight(0) + 120
+        } else {
+          this.height = this.$baseTableHeight(0)
+        }
         this.momentKey = moment(new Date()).valueOf()
       },
       // 设置表格row的class
@@ -343,9 +347,10 @@
     text-align: center !important;
   }
 </style>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .logs {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7) !important;
+    height: calc(100vh - #{$base-top-bar-height} * 2.7) !important;
+
     ::v-deep {
       .item-time {
         .el-form-item__content {
@@ -356,13 +361,16 @@
         }
       }
     }
+
     &-row {
       &-query {
       }
+
       &-tree {
         overflow: scroll;
       }
     }
+
     &-table {
       ::v-deep {
         * {

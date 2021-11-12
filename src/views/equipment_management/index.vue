@@ -832,18 +832,18 @@
   import { Promise } from 'q'
   import { Batchdelete } from '@/api/Batch'
   import { queryDict } from '@/api/Direct/index.js'
-  import { delDict } from '@/api/Dict'
+  import { delDict, getBatchNumer } from '@/api/Dict'
   import { mapGetters } from 'vuex'
   import {
-    BmNavigation,
     BaiduMap,
-    BmLocalSearch,
-    BmGeolocation,
     BmCityList,
+    BmGeolocation,
+    BmLocalSearch,
+    BmNavigation,
   } from 'vue-baidu-map'
   import { getProduct } from '@/api/Product/index.js'
   import { returnLogin } from '@/utils/utilwen'
-  import { getBatchNumer } from '@/api/Dict'
+
   var pcdata
   export default {
     components: {
@@ -908,32 +908,64 @@
         yysSelect: [],
         rules: {
           name: [
-            { required: true, message: '请输入设备名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入设备名称',
+              trigger: 'blur',
+            },
           ],
           devaddr: [
-            { required: true, message: '请输入设备编号', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入设备编号',
+              trigger: 'blur',
+            },
             { validator: CheckDevaddr },
           ],
           batchId: [
-            { required: true, message: '请输入设备批次', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入设备批次',
+              trigger: 'blur',
+            },
           ],
           nodeType: [
-            { required: true, message: '请输入设备类型', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入设备类型',
+              trigger: 'blur',
+            },
           ],
           netType: [
-            { required: true, message: '请选择网络格式', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择网络格式',
+              trigger: 'change',
+            },
           ],
           devType: [
-            { required: true, message: '请选择设备类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择设备类型',
+              trigger: 'change',
+            },
           ],
           productName: [
-            { required: true, message: '请选择产品名称', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择产品名称',
+              trigger: 'change',
+            },
           ],
         },
         aclObj: {},
         pcformrule: {
           pcname: [
-            { required: true, message: '请输入批次名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入批次名称',
+              trigger: 'blur',
+            },
           ],
           createdtime: [
             {
@@ -956,7 +988,10 @@
         proTableData1: [],
         activelength: [],
         onlinelength: [],
-        center: { lng: 0, lat: 0 }, // 经纬度
+        center: {
+          lng: 0,
+          lat: 0,
+        }, // 经纬度
         zoom: 13, // 地图展示级别
         bmapform: {
           keyword: '',
@@ -1014,7 +1049,12 @@
           },
         }
         queryDict(parsms).then((res) => {
-          this.yysSelect = [{ name: '空', key: '' }]
+          this.yysSelect = [
+            {
+              name: '空',
+              key: '',
+            },
+          ]
           res.results.map((item) => {
             this.yysSelect.push(item.data)
           })
@@ -1743,15 +1783,18 @@
     width: 100%;
     height: 100%;
     padding: 20px;
+
     .equ_header {
       box-sizing: border-box;
       width: 100%;
       height: 60px;
       padding-left: 40px;
+
       ul {
         box-sizing: border-box;
         display: flex;
         padding-left: 20px;
+
         li {
           width: 200px;
           height: 60px;
@@ -1768,9 +1811,11 @@
             text-align: right;
             border: 0;
           }
+
           &:nth-child(4) {
             border: 0;
           }
+
           p {
             font-size: 14px;
             line-height: 0;
@@ -1790,24 +1835,29 @@
     font-size: 16px;
     line-height: 50px;
   }
+
   .equipment .el-tabs__header {
     margin: 0;
   }
+
   .equipment .el-tabs__content {
     box-sizing: border-box;
     padding: 20px;
     background: #f4f4f4;
   }
+
   .equipment #pane-first {
     box-sizing: border-box;
     padding: 10px;
     background: #ffffff;
   }
+
   .equipment #pane-second {
     box-sizing: border-box;
     padding: 10px;
     background: #ffffff;
   }
+
   .equipment #pane-first .equdevices .el-input {
     width: 200px;
   }
@@ -1815,13 +1865,16 @@
   .equipment .el-dialog__footer {
     border-top: 1px solid #cccccc;
   }
+
   .equipment .devicecontent .el-form {
     display: flex;
     flex-wrap: wrap;
   }
+
   .equipment .devicecontent .el-form .el-input--suffix .el-input__inner {
     padding: 0 15px;
   }
+
   .equipment .devicecontent .el-form .el-icon-plus {
     width: 40px;
     height: 40px;
@@ -1831,26 +1884,33 @@
     cursor: pointer;
     background: cornflowerblue;
   }
+
   .equipment .devicecontent .el-form .el-form-item {
     width: 50%;
   }
+
   .equipment .devicecontent .el-form .el-form-item:last-child {
     width: 100%;
   }
+
   .equipment .devicecontent .el-form .el-select {
     width: 100%;
   }
+
   .equipment .ACTIVE,
   .equipment .ONLINE {
     color: green;
   }
+
   .equipment .OFFLINE,
   .equipment .UNACTIVE {
     color: red;
   }
+
   .equipment .selectdetail {
     margin: 10px 0;
   }
+
   /* .equipment .devicecontent .el-form .el-form-item .is-required:not(.is-no-asterisk):after{
     content: '*';
     color: #F56C6C;

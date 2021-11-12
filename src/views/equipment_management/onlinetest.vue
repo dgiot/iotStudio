@@ -93,9 +93,9 @@
             style="width: 100%; min-height: 300px"
           >
             <textarea
-class="ace_text-input"
-style="overflow:scroll"
-/>
+              class="ace_text-input"
+              style="overflow:scroll"
+            />
           </pre>
         </div>
       </div>
@@ -485,16 +485,11 @@ style="overflow:scroll"
   </div>
 </template>
 <script>
-  import {
-    Websocket,
-    sendInfo,
-    TOPIC_EMPTY,
-    MSG_EMPTY,
-    DISCONNECT_MSG,
-  } from '@/utils/wxscoket.js'
-  import { queryProduct, getProduct } from '@/api/Product/index'
-  import { postDict, delDict, queryDict, putDict } from '@/api/Dict/index'
+  import { Websocket } from '@/utils/wxscoket.js'
+  import { getProduct, queryProduct } from '@/api/Product/index'
+  import { delDict, postDict, putDict, queryDict } from '@/api/Dict/index'
   import { getChannelCountByProduct } from '@/api/Channel/index'
+
   var editor1
   var editor2
   var subprodevice

@@ -253,28 +253,33 @@
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   * {
     padding: 0;
     margin: 0;
   }
+
   .remove-text {
     padding: 20px;
     font-size: 24px;
     text-align: center;
   }
+
   .show-multiple {
     display: flex;
+
     .multiple-player {
       width: calc(100% / 4);
       margin: 20px;
     }
   }
+
   .player-btns {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
+
     span {
       display: inline-block;
       width: 150px;
@@ -290,17 +295,21 @@
       border-radius: 10px;
     }
   }
+
   .source-box {
     padding: 5px 10px;
     margin-bottom: 20px;
+
     .source-label {
       display: block;
       margin-right: 20px;
       font-size: 16px;
     }
+
     #source {
       margin-top: 10px;
     }
+
     .source-input {
       width: 80%;
       padding: 5px 10px;

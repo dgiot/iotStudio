@@ -56,8 +56,8 @@
             >
               <el-checkbox-group v-model="checkList">
                 <vue-draggable
-                  v-bind="dragOptions"
                   :list="logcolumns"
+                  v-bind="dragOptions"
                 >
                   <div
                     v-for="(item, index) in logcolumns"
@@ -216,299 +216,322 @@
 </template>
 <!--eslint-disable-->
 <script>
-import {postTrace} from '@/api/System'
-import {getProduct} from "@/api/Product";
-import { Websocket } from "@/utils/wxscoket.js";
-export default {
-  name: 'SceneLog',
-  props: {
-    name: {
-      type: String,
-      required: true,
-      default: 'name',
-    },
-    deviceInfo: {
-      type: Object,
-      required: true,
-      default() {
-        return {}
+  import { postTrace } from '@/api/System'
+  import { getProduct } from '@/api/Product'
+
+  export default {
+    name: 'SceneLog',
+    props: {
+      name: {
+        type: String,
+        required: true,
+        default: 'name',
+      },
+      deviceInfo: {
+        type: Object,
+        required: true,
+        default() {
+          return {}
+        },
       },
     },
-  },
-  data() {
-    return {
-      instruct: '',
-      instructtopic: '',
-      producttopic: [],
-      productId: '',
-      ttl: 1000 * 60 * 60 * 3,
-      topicKey: '',
-      topic: '',
-      logMqtt: {
-        channeltopic: '',
-        key: moment(new Date()).valueOf(),
-      },
-      subtopic: '',
-      router: '',
-      scroketMsg: [],
-      clickItem: '',
-      isFullscreen: false,
-      height: this.$baseTableHeight(0),
-      logdata: [],
-      momentKey: moment(new Date()).valueOf(),
-      checkList: ['time', 'topic', 'pid', 'peername'],
-      logcolumns: [
-        'topic',
-        'time',
-        'pid',
-        'peername',
-        'msg',
-        'level',
-        'gl',
-        'clientid',
-        'mfa',
-      ],
-      fold: true,
-      w80: ['line', 'level'],
-      Wh120: ['pid', 'domain', 'gl'],
-      Wh200: ['time', 'clientid', 'peername'],
-      leverData: [
-        'debug',
-        'info',
-        'notice',
-        'warning',
-        'error',
-        'crtical',
-        'alert',
-        'emergency',
-      ],
-      actionData: ['start', 'stop'],
-      traceData: ['clientid', 'topic'],
-      queryForm: {
-        total: 0,
-        count: 'objectId',
-        limit: 20,
-        pageNo: 1,
-        pageSize: 20,
-        skip: 0,
-        level: 'info',
-        logfile: 'test.txt',
-        order: 1,
-        action: 'start',
-        tracetype: 'clientid',
-      },
-    }
-  },
-  computed: {
-    dragOptions() {
+    data() {
       return {
-        animation: 600,
-        group: 'description',
-      }
-    },
-    finallyColumns() {
-      return this.logcolumns.filter((item) => this.checkList.includes(item))
-    },
-  },
-  watch: {
-    'deviceInfo.product.objectId': {
-      handler: function (newVal) {
-        if (newVal) this.productId = newVal
-      },
-      deep: true,
-      limit: true,
-    },
-    name: {
-      handler: function (newVal) {
-        if (newVal == 'task') this.queryTable()
-      },
-      deep: true,
-      limit: true,
-    },
-  },
-  mounted() {
-    this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
-    this.get_topic()
-  },
-  created() {
-  },
-  beforeCreate() {
-  }, //生命周期 - 创建之前
-  beforeMount() {
-  }, //生命周期 - 挂载之前
-  beforeUpdate() {
-  }, //生命周期 - 更新之前
-  updated() {
-  }, //生命周期 - 更新之后
-  beforeDestroy() {
-  }, //生命周期 - 销毁之前
-  destroyed() {
-  }, //生命周期 - 销毁完成
-  activated() {
-  },
-  methods: {
-    get_topic() {
-      // this.deviceInfo
-      console.log('this.deviceInfo', this.deviceInfo)
-      getProduct(this.deviceInfo.product.objectId).then(res=>{
-        this.producttopic = res.topics
-      })
-    },
-    sendinstruct(){
-      const pubtopic = this.instructtopic.replace('${DevAddr}', this.deviceInfo.devaddr);
-      this.$dgiotBus.$emit(
-        `MqttPublish`,
-        pubtopic,
-        this.instruct,
-        0,
-        false
-      )
-    },
-    handleHeight() {
-      this.isFullscreen = !this.isFullscreen
-      if (this.isFullscreen) this.height = this.$baseTableHeight(0) + 120
-      else this.height = this.$baseTableHeight(0)
-      this.momentKey = moment(new Date()).valueOf()
-    },
-    // 设置表格row的class
-    tableRowClassName({row}) {
-      if (row.disabled) {
-        return 'disabled'
-      }
-      return ''
-    },
-    // 行拖拽
-    rowDrop() {
-      // 此时找到的元素是要拖拽元素的父容器
-      const tbody = this.$refs.dragTable.$el.querySelector(
-        '.el-table__body-wrapper tbody'
-      )
-      const _this = this
-      Sortable.create(tbody, {
-        //  指定父元素下可被拖拽的子元素
-        draggable: '.el-table__row',
-        onEnd({newIndex, oldIndex}) {
-          const currRow = _this.logdata.splice(oldIndex, 1)[0]
-          _this.logdata.splice(newIndex, 0, currRow)
-        },
-      })
-    },
-    // 列拖拽
-    columnDrop() {
-      const _this = this
-      const wrapperTr = this.$refs.dragTable.$el.querySelector(
-        '.el-table__header-wrapper tr'
-      )
-      _this.sortable = Sortable.create(wrapperTr, {
-        animation: 180,
-        delay: 0,
-        onEnd: (evt) => {
-          const oldItem = _this.finallyColumns[evt.oldIndex]
-          _this.finallyColumns.splice(evt.oldIndex, 1)
-          _this.finallyColumns.splice(evt.newIndex, 0, oldItem)
-          _this.momentKey = moment(new Date()).valueOf()
-          setTimeout(() => {
-            _this.rowDrop()
-            _this.columnDrop()
-          }, 1500)
-        },
-      })
-    },
-    starttrace(val) {
-      console.log('aaa', val)
-      this.queryForm.action = val
-      this.queryTable()
-    },
-    queryTable() {
-      this.scroketMsg = []
-      this.clickItem = ''
-      this.queryForm.deviceid = this.deviceInfo.objectId
-      if (this.queryForm.action == 'start')
-        this.subtopic =
-          'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
-      this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-      this.$dgiotBus.$emit(`MqttSubscribe`, {
-        router: this.router,
-        topic: this.subtopic,
-        qos: 0,
+        instruct: '',
+        instructtopic: '',
+        producttopic: [],
+        productId: '',
         ttl: 1000 * 60 * 60 * 3,
-      })
-      this.$dgiotBus.$off(`${this.topicKey}`)
-      this.$dgiotBus.$on(`${this.topicKey}`, (Msg) => {
-        if (Msg.payload) {
-          this.scroketMsg.unshift(JSON.parse(Msg.payload))
-          this.logMqtt.key = this.topicKey
-          this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
-        }
-      })
-      if (this.queryForm.action == 'stop') {
-        this.MqttUnbscribe()
+        topicKey: '',
+        topic: '',
+        logMqtt: {
+          channeltopic: '',
+          key: moment(new Date())
+            .valueOf(),
+        },
+        subtopic: '',
+        router: '',
+        scroketMsg: [],
+        clickItem: '',
+        isFullscreen: false,
+        height: this.$baseTableHeight(0),
+        logdata: [],
+        momentKey: moment(new Date())
+          .valueOf(),
+        checkList: ['time', 'topic', 'pid', 'peername'],
+        logcolumns: [
+          'topic',
+          'time',
+          'pid',
+          'peername',
+          'msg',
+          'level',
+          'gl',
+          'clientid',
+          'mfa',
+        ],
+        fold: true,
+        w80: ['line', 'level'],
+        Wh120: ['pid', 'domain', 'gl'],
+        Wh200: ['time', 'clientid', 'peername'],
+        leverData: [
+          'debug',
+          'info',
+          'notice',
+          'warning',
+          'error',
+          'crtical',
+          'alert',
+          'emergency',
+        ],
+        actionData: ['start', 'stop'],
+        traceData: ['clientid', 'topic'],
+        queryForm: {
+          total: 0,
+          count: 'objectId',
+          limit: 20,
+          pageNo: 1,
+          pageSize: 20,
+          skip: 0,
+          level: 'info',
+          logfile: 'test.txt',
+          order: 1,
+          action: 'start',
+          tracetype: 'clientid',
+        },
       }
-      //   :
-      const loading = this.$baseColorfullLoading()
-      const {level, action, order, deviceid, tracetype} = this.queryForm
-      const handle =
-        this.queryForm.tracetype == 'clientid'
-          ? this.queryForm.deviceid
-          : this.queryForm.topic
-      try {
-        loading.close()
-        const params = {
+    },
+    computed: {
+      dragOptions() {
+        return {
+          animation: 600,
+          group: 'description',
+        }
+      },
+      finallyColumns() {
+        return this.logcolumns.filter((item) => this.checkList.includes(item))
+      },
+    },
+    watch: {
+      'deviceInfo.product.objectId': {
+        handler: function (newVal) {
+          if (newVal) this.productId = newVal
+        },
+        deep: true,
+        limit: true,
+      },
+      name: {
+        handler: function (newVal) {
+          if (newVal == 'task') this.queryTable()
+        },
+        deep: true,
+        limit: true,
+      },
+    },
+    mounted() {
+      this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
+      this.get_topic()
+    },
+    created() {
+    },
+    beforeCreate() {
+    }, //生命周期 - 创建之前
+    beforeMount() {
+    }, //生命周期 - 挂载之前
+    beforeUpdate() {
+    }, //生命周期 - 更新之前
+    updated() {
+    }, //生命周期 - 更新之后
+    beforeDestroy() {
+    }, //生命周期 - 销毁之前
+    destroyed() {
+    }, //生命周期 - 销毁完成
+    activated() {
+    },
+    methods: {
+      get_topic() {
+        // this.deviceInfo
+        console.log('this.deviceInfo', this.deviceInfo)
+        getProduct(this.deviceInfo.product.objectId)
+          .then(res => {
+            this.producttopic = res.topics
+          })
+      },
+      sendinstruct() {
+        const pubtopic = this.instructtopic.replace('${DevAddr}', this.deviceInfo.devaddr)
+        this.$dgiotBus.$emit(
+          `MqttPublish`,
+          pubtopic,
+          this.instruct,
+          0,
+          false,
+        )
+      },
+      handleHeight() {
+        this.isFullscreen = !this.isFullscreen
+        if (this.isFullscreen) {
+          this.height = this.$baseTableHeight(0) + 120
+        } else {
+          this.height = this.$baseTableHeight(0)
+        }
+        this.momentKey = moment(new Date())
+          .valueOf()
+      },
+      // 设置表格row的class
+      tableRowClassName({ row }) {
+        if (row.disabled) {
+          return 'disabled'
+        }
+        return ''
+      },
+      // 行拖拽
+      rowDrop() {
+        // 此时找到的元素是要拖拽元素的父容器
+        const tbody = this.$refs.dragTable.$el.querySelector(
+          '.el-table__body-wrapper tbody',
+        )
+        const _this = this
+        Sortable.create(tbody, {
+          //  指定父元素下可被拖拽的子元素
+          draggable: '.el-table__row',
+          onEnd({
+            newIndex,
+            oldIndex,
+          }) {
+            const currRow = _this.logdata.splice(oldIndex, 1)[0]
+            _this.logdata.splice(newIndex, 0, currRow)
+          },
+        })
+      },
+      // 列拖拽
+      columnDrop() {
+        const _this = this
+        const wrapperTr = this.$refs.dragTable.$el.querySelector(
+          '.el-table__header-wrapper tr',
+        )
+        _this.sortable = Sortable.create(wrapperTr, {
+          animation: 180,
+          delay: 0,
+          onEnd: (evt) => {
+            const oldItem = _this.finallyColumns[evt.oldIndex]
+            _this.finallyColumns.splice(evt.oldIndex, 1)
+            _this.finallyColumns.splice(evt.newIndex, 0, oldItem)
+            _this.momentKey = moment(new Date())
+              .valueOf()
+            setTimeout(() => {
+              _this.rowDrop()
+              _this.columnDrop()
+            }, 1500)
+          },
+        })
+      },
+      starttrace(val) {
+        console.log('aaa', val)
+        this.queryForm.action = val
+        this.queryTable()
+      },
+      queryTable() {
+        this.scroketMsg = []
+        this.clickItem = ''
+        this.queryForm.deviceid = this.deviceInfo.objectId
+        if (this.queryForm.action == 'start') {
+          this.subtopic =
+            'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
+        }
+        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        this.$dgiotBus.$emit(`MqttSubscribe`, {
+          router: this.router,
+          topic: this.subtopic,
+          qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
+        })
+        this.$dgiotBus.$off(`${this.topicKey}`)
+        this.$dgiotBus.$on(`${this.topicKey}`, (Msg) => {
+          if (Msg.payload) {
+            this.scroketMsg.unshift(JSON.parse(Msg.payload))
+            this.logMqtt.key = this.topicKey
+            this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
+          }
+        })
+        if (this.queryForm.action == 'stop') {
+          this.MqttUnbscribe()
+        }
+        //   :
+        const loading = this.$baseColorfullLoading()
+        const {
           level,
           action,
           order,
-          handle: handle,
-          tracetype,
           deviceid,
-        }
-        postTrace(params)
-          .then((res) => {
-            console.log(res)
-            const {code = 0, error = '', msg = ''} = res
-            if (code == 200) {
-              this.$baseMessage(
-                this.$translateTitle('alert.Data request successfully'),
-                'success',
-                'vab-hey-message-success'
-              )
-            } else {
+          tracetype,
+        } = this.queryForm
+        const handle =
+          this.queryForm.tracetype == 'clientid'
+            ? this.queryForm.deviceid
+            : this.queryForm.topic
+        try {
+          loading.close()
+          const params = {
+            level,
+            action,
+            order,
+            handle: handle,
+            tracetype,
+            deviceid,
+          }
+          postTrace(params)
+            .then((res) => {
+              console.log(res)
+              const {
+                code = 0,
+                error = '',
+                msg = '',
+              } = res
+              if (code == 200) {
+                this.$baseMessage(
+                  this.$translateTitle('alert.Data request successfully'),
+                  'success',
+                  'vab-hey-message-success',
+                )
+              } else {
+                this.$baseMessage(
+                  this.$translateTitle('alert.Data request error') + `${error}`,
+                  'error',
+                  'vab-hey-message-error',
+                )
+              }
+            })
+            .catch((error) => {
+              console.error(error)
               this.$baseMessage(
                 this.$translateTitle('alert.Data request error') + `${error}`,
                 'error',
-                'vab-hey-message-error'
+                'vab-hey-message-error',
               )
-            }
-          })
-          .catch((error) => {
-            console.error(error)
-            this.$baseMessage(
-              this.$translateTitle('alert.Data request error') + `${error}`,
-              'error',
-              'vab-hey-message-error'
-            )
-          })
+            })
 
-        loading.close()
-      } catch (error) {
-        loading.close()
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'vab-hey-message-error'
+          loading.close()
+        } catch (error) {
+          loading.close()
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error',
+          )
+        }
+        this.momentKey = moment(new Date())
+          .valueOf()
+      },
+      MqttUnbscribe() {
+        this.$dgiotBus.$emit(
+          'MqttUnbscribe',
+          this.topicKey,
+          this.subtopic,
         )
-      }
-      this.momentKey = moment(new Date()).valueOf()
+      },
     },
-    MqttUnbscribe() {
-      this.$dgiotBus.$emit(
-        'MqttUnbscribe',
-        this.topicKey,
-        this.subtopic
-      )
-    }
-  },
-}
+  }
 </script>
 <style>
   .el-switch {

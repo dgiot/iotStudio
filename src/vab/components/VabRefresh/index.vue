@@ -47,7 +47,9 @@
             this.extra.transferRouteName = ''
             this.$router.replace(currentRoute)
           })
-        } else this.$baseEventBus.$emit('reload-router-view')
+        } else {
+          this.$baseEventBus.$emit('reload-router-view')
+        }
       },
     },
   }

@@ -1,5 +1,3 @@
-import request from '@/utils/request'
-
 const data = [
   '24-hours-fill',
   '24-hours-line',

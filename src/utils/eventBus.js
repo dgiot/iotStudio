@@ -10,6 +10,7 @@
  * @type {Vue}
  */
 import { getMqttEventId } from '@/utils'
+
 const Bus = new Vue({
   methods: {
     emit(event, ...args) {

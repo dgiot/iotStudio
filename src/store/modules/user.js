@@ -9,9 +9,7 @@ const getLocalStorage = (key) => {
     return false
   }
 }
-const {
-  CDN_URL
-} = require('../../config')
+const { CDN_URL } = require('../../config')
 
 function queryAll(commit) {
   const params = {
@@ -65,6 +63,7 @@ import {
   i18n,
   layout,
   logo,
+  pictureSwitch,
   showFullScreen,
   showLanguage,
   showNotice,
@@ -75,14 +74,22 @@ import {
   showTabsBarIcon,
   showTheme,
   showThemeSetting,
+  storage,
   tabsBarStyle,
   themeName,
-  tokenTableName,
-  storage,
   title,
   tokenName,
-  pictureSwitch,
+  tokenTableName,
 } from '@/config'
+import { getUserInfo, login, logout, socialLogin } from '@/api/User/index'
+import { queryMenu } from '@/api/Menu/index'
+import { Permission } from '@/api/Permission/index'
+import { clearCookie, getToken, removeToken, setToken } from '@/utils/vuex'
+import { resetRouter } from '@/router'
+import { Roletree } from '@/api/Menu'
+import { queryProduct } from '@/api/Product'
+import { license } from '@/api/License'
+import { isJson } from '@/utils/validate'
 
 const defaultTheme = {
   layout,
@@ -102,17 +109,8 @@ const defaultTheme = {
   showThemeSetting,
   pictureSwitch,
 }
-import {getUserInfo, login, logout, socialLogin} from '@/api/User/index'
-import {queryMenu} from '@/api/Menu/index'
-import {Permission} from '@/api/Permission/index'
-import {getToken, removeToken, setToken, clearCookie} from '@/utils/vuex'
-import {resetRouter} from '@/router'
-import {Roletree} from '@/api/Menu'
-import {queryProduct} from '@/api/Product'
-import {license, SiteDefault} from '@/api/License'
-import {isJson} from '@/utils/validate'
 
-const {language} = getLocalStorage('language')
+const { language } = getLocalStorage('language')
 const state = () => ({
   loginInfo: getToken('loginInfo'),
   Menu: getToken('Menu'),
@@ -229,8 +227,8 @@ const actions = {
    * @description 登录拦截放行时，设置虚拟角色
    * @param {*} { commit, dispatch }
    */
-  setVirtualRoles({commit, dispatch}) {
-    dispatch('acl/setFull', true, {root: true})
+  setVirtualRoles({ commit, dispatch }) {
+    dispatch('acl/setFull', true, { root: true })
     commit('setUsername', 'admin(未开启登录拦截)')
   },
   /**
@@ -238,11 +236,14 @@ const actions = {
    * @param {*} { commit }
    * @param {*} userInfo
    */
-  async login({commit, dispatch}, userInfo) {
+  async login({ commit, dispatch }, userInfo) {
     const _userInfo = (await login(userInfo)) || {}
     let data = _.merge(
       {
-        fileServer:process.env.NODE_ENV === 'development' ? process.env.VUE_APP_URL : location.origin,
+        fileServer:
+          process.env.NODE_ENV === 'development'
+            ? process.env.VUE_APP_URL
+            : location.origin,
         tag: {
           companyinfo: {
             title: ``,
@@ -255,38 +256,45 @@ const actions = {
           userinfo: {
             avatar: '',
           },
-          theme: {...defaultTheme},
+          theme: { ...defaultTheme },
         },
       },
       _userInfo
     )
-    const {sessionToken = '', nick, objectId, roles, tag = {},fileServer} = data
+    const {
+      sessionToken = '',
+      nick,
+      objectId,
+      roles,
+      tag = {},
+      fileServer,
+    } = data
     if (sessionToken) {
       commit('setLoginInfo', userInfo)
-      sessionStorage.setItem('fileServer',fileServer)
+      sessionStorage.setItem('fileServer', fileServer)
       // clientMqtt()
       // initDgiotMqtt(objectId)
       commit('_setToken', sessionToken)
       if (nick) commit('setUsername', nick)
       const page_title = getToken('title') || title
       console.log(tag, 'tag info')
-      const {title, Copyright, name, logo, _pcimg, _mimg} = tag.companyinfo
+      const { title, Copyright, name, logo, _pcimg, _mimg } = tag.companyinfo
       console.log(Copyright, 'Copyright')
-      const {avatar} = tag.userinfo
+      const { avatar } = tag.userinfo
       commit('setAvatar', avatar)
       commit('setname', name)
       commit('setlogo', logo)
-      dispatch('settings/setTitle', title, {root: true})
-      dispatch('settings/saveTheme', tag.theme, {root: true})
+      dispatch('settings/setTitle', title, { root: true })
+      dispatch('settings/saveTheme', tag.theme, { root: true })
       dispatch('settings/togglePicture', tag.theme.pictureSwitch, {
         root: true,
       })
-      dispatch('dashboard/set_pcimg', _pcimg, {root: true})
-      dispatch('dashboard/set_mimg', _mimg, {root: true})
-      dispatch('acl/setRole', roles, {root: true})
-      dispatch('settings/setTitle', title, {root: true})
-      dispatch('acl/setCopyright', Copyright, {root: true})
-      dispatch('settings/setTag', tag, {root: true})
+      dispatch('dashboard/set_pcimg', _pcimg, { root: true })
+      dispatch('dashboard/set_mimg', _mimg, { root: true })
+      dispatch('acl/setRole', roles, { root: true })
+      dispatch('settings/setTitle', title, { root: true })
+      dispatch('acl/setCopyright', Copyright, { root: true })
+      dispatch('settings/setTag', tag, { root: true })
       commit('setObejectId', objectId)
       // 登录成功后,需要将以下参数存入vuex
 
@@ -297,10 +305,10 @@ const actions = {
           : hour <= 11
           ? '上午好'
           : hour <= 13
-            ? '中午好'
-            : hour < 18
-              ? '下午好'
-              : '晚上好'
+          ? '中午好'
+          : hour < 18
+          ? '下午好'
+          : '晚上好'
       Vue.prototype.$baseNotify(title, `${thisTime}！`)
       //  登录成功后设置文件服务器地址
       Vue.prototype.$FileServe = fileServer
@@ -321,7 +329,7 @@ const actions = {
    * @param commit
    * @return {Promise<void>}
    */
-  async queryAll({commit}) {
+  async queryAll({ commit }) {
     queryAll(commit)
   },
   /**
@@ -331,7 +339,7 @@ const actions = {
    */
   // eslint-disable-next-line no-empty-pattern
   async socialLogin({}, tokenData) {
-    const {data} = await socialLogin(tokenData)
+    const { data } = await socialLogin(tokenData)
     const token = data[tokenName]
     if (token) {
       const hour = new Date().getHours()
@@ -341,10 +349,10 @@ const actions = {
           : hour <= 11
           ? '上午好'
           : hour <= 13
-            ? '中午好'
-            : hour < 18
-              ? '下午好'
-              : '晚上好'
+          ? '中午好'
+          : hour < 18
+          ? '下午好'
+          : '晚上好'
       Vue.prototype.$baseNotify(`欢迎登录${title}`, `${thisTime}！`)
     } else {
       Vue.prototype.$baseMessage(
@@ -359,8 +367,8 @@ const actions = {
    * @param {*} { commit, dispatch, state }
    * @returns
    */
-  async getUserInfo({commit, dispatch}) {
-    const {results} = await getUserInfo({limit: 40})
+  async getUserInfo({ commit, dispatch }) {
+    const { results } = await getUserInfo({ limit: 40 })
     // if (
     //   results
     //   // (username && !isString(username)) ||
@@ -384,9 +392,9 @@ const actions = {
     // // 如不使用ability权限控制,可删除以下代码
     // if (ability) dispatch('acl/setAbility', ability, { root: true })
   },
-  async getlicense({commit, dispatch}) {
-    const {result} = await license()
-    if (result) dispatch('acl/setLicense', result, {root: true})
+  async getlicense({ commit, dispatch }) {
+    const { result } = await license()
+    if (result) dispatch('acl/setLicense', result, { root: true })
   },
   // async getDefault({ commit, dispatch }) {
   //   const Default = await SiteDefault()
@@ -400,7 +408,7 @@ const actions = {
    * @description 退出登录
    * @param {*} { dispatch }
    */
-  async logout({dispatch}) {
+  async logout({ dispatch }) {
     await logout()
     await dispatch('resetAll')
   },
@@ -408,16 +416,16 @@ const actions = {
    * @description 重置token、roles、ability、router、tabsBar等
    * @param {*} { commit, dispatch }
    */
-  async resetAll({commit, dispatch}) {
+  async resetAll({ commit, dispatch }) {
     commit('setUsername', '')
     commit('setObejectId', '')
     // commit('setAvatar', '')
-    commit('routes/setRoutes', [], {root: true})
+    commit('routes/setRoutes', [], { root: true })
     await dispatch('_setToken', '')
-    await dispatch('acl/setFull', false, {root: true})
-    await dispatch('acl/setRole', [], {root: true})
-    await dispatch('acl/setAbility', [], {root: true})
-    await dispatch('tabs/delAllVisitedRoutes', [], {root: true})
+    await dispatch('acl/setFull', false, { root: true })
+    await dispatch('acl/setRole', [], { root: true })
+    await dispatch('acl/setAbility', [], { root: true })
+    await dispatch('tabs/delAllVisitedRoutes', [], { root: true })
     // await dispatch('acl/setLicense', false, { root: true })
     // await dispatch('acl/setDefault', {}, { root: true })
     // await dispatch('settings/setTitle', '', { root: true })
@@ -428,7 +436,7 @@ const actions = {
     await resetRouter()
     removeToken()
   },
-  setObejectId({commit}, objectId) {
+  setObejectId({ commit }, objectId) {
     commit('setObejectId', objectId)
   },
   /**
@@ -436,20 +444,25 @@ const actions = {
    * @param {*} { commit }
    * @param {*} token
    */
-  _setToken({commit}, token) {
+  _setToken({ commit }, token) {
     commit('_setToken', token)
   },
-  setAvatar({commit}, avatar) {
+  setAvatar({ commit }, avatar) {
     commit('setAvatar', avatar)
   },
-  seMenu({commit}, Menu) {
+  seMenu({ commit }, Menu) {
     commit('seMenu', Menu)
   },
-  setPermission({commit}, Permission) {
+  setPermission({ commit }, Permission) {
     commit('setPermission', Permission)
   },
-  setLoginInfo({commit}, loginInfo) {
+  setLoginInfo({ commit }, loginInfo) {
     commit('setLoginInfo', loginInfo)
   },
 }
-export default {state, getters, mutations, actions}
+export default {
+  state,
+  getters,
+  mutations,
+  actions,
+}

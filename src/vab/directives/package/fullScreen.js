@@ -1,4 +1,5 @@
 import FullScreenComponent from './assets/fullScreen'
+
 const fullScreenID = 'clickID'
 let index = 1
 let nowClickID = ''

@@ -13,13 +13,13 @@
 <template>
   <div class="TopoEvidence">
     <el-dialog
-      append-to-body
       :title="$translateTitle('topo.topo') + $translateTitle('topo.thing')"
       :visible.sync="evidenceDialog"
+      append-to-body
       top="5vh"
     >
-      <el-card class="box-card" shadow="hover" v-if="evidence.id">
-        <div class="clearfix" slot="header">
+      <el-card v-if="evidence.id" class="box-card" shadow="hover">
+        <div slot="header" class="clearfix">
           <i class="material-icons">
             {{ evidence.node.attrs.icon }}
           </i>
@@ -50,9 +50,9 @@
           <div v-else-if="evidence.node.attrs.icon === 'volume_up'"></div>
           <div v-else-if="evidence.node.attrs.icon === 'image'">
             <el-image
-              style="width: 100px; height: 100px"
-              :src="url"
               :preview-src-list="srcList"
+              :src="url"
+              style="width: 100px; height: 100px"
             ></el-image>
           </div>
           <div v-else-if="evidence.node.attrs.icon === 'archive'"></div>
@@ -62,24 +62,24 @@
           </div>
         </div>
       </el-card>
-      <span class="dialog-footer" slot="footer">
+      <span slot="footer" class="dialog-footer">
         <el-button @click="evidenceDialog = false">取 消</el-button>
-        <el-button @click="evidenceDialog = false" type="primary">
+        <el-button type="primary" @click="evidenceDialog = false">
           确 定
         </el-button>
       </span>
     </el-dialog>
     <div class="TopoEvidence-content">
       <div
-        class="TopoEvidence-content-icons"
         v-for="(item, index) in materialIcons"
         :key="index"
+        class="TopoEvidence-content-icons"
       >
         <i
           v-dragBox
+          class="material-icons"
           draggable
           @click="evidenceHandle(item, index)"
-          class="material-icons"
         >
           {{ item.icon }}
         </i>
@@ -89,7 +89,8 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters, mapState, mapMutations } from 'vuex'
+  import { mapMutations } from 'vuex'
+
   export default {
     name: 'TopoEvidence',
     components: {},
@@ -161,12 +162,30 @@
         chartData: {
           columns: ['日期', '销售额'],
           rows: [
-            { 日期: '1月1日', 销售额: 123 },
-            { 日期: '1月2日', 销售额: 1223 },
-            { 日期: '1月3日', 销售额: 2123 },
-            { 日期: '1月4日', 销售额: 4123 },
-            { 日期: '1月5日', 销售额: 3123 },
-            { 日期: '1月6日', 销售额: 7123 },
+            {
+              日期: '1月1日',
+              销售额: 123,
+            },
+            {
+              日期: '1月2日',
+              销售额: 1223,
+            },
+            {
+              日期: '1月3日',
+              销售额: 2123,
+            },
+            {
+              日期: '1月4日',
+              销售额: 4123,
+            },
+            {
+              日期: '1月5日',
+              销售额: 3123,
+            },
+            {
+              日期: '1月6日',
+              销售额: 7123,
+            },
           ],
         },
         toolbox: {
@@ -192,7 +211,10 @@
                 'stack',
               ],
             },
-            dataView: { show: true, readOnly: false },
+            dataView: {
+              show: true,
+              readOnly: false,
+            },
             saveAsImage: { show: true },
             restore: { show: true },
           },
@@ -272,9 +294,11 @@
   .TopoEvidence {
     width: 100%;
     height: 100%;
+
     &--content {
       width: 100%;
       height: 100%;
+
       .material-icons {
         font-size: 48px !important;
       }

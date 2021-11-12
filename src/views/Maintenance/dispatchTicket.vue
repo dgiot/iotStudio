@@ -503,6 +503,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import { exlout, UploadImg } from '@/api/File'
   import ChangeStep from '@/views/Maintenance/ChangeStep'
+
   export default {
     name: 'DispatchTicket',
     components: {
@@ -544,11 +545,25 @@
         formLabelWidth: '140px',
         rules: {
           product: [
-            { required: true, message: '请选择所属项目', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属项目',
+              trigger: 'change',
+            },
           ],
-          name: [{ required: true, message: '请选择设备', trigger: 'change' }],
+          name: [
+            {
+              required: true,
+              message: '请选择设备',
+              trigger: 'change',
+            },
+          ],
           type: [
-            { required: true, message: '请输入工单类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请输入工单类型',
+              trigger: 'change',
+            },
           ],
         },
         list: [],
@@ -557,10 +572,22 @@
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         status: [
-          { key: 0, text: 'Maintenance.To be assigned' },
-          { key: 1, text: 'Maintenance.Assigned' },
-          { key: 2, text: 'Maintenance.Processed' },
-          { key: 3, text: 'Maintenance.Statement' },
+          {
+            key: 0,
+            text: 'Maintenance.To be assigned',
+          },
+          {
+            key: 1,
+            text: 'Maintenance.Assigned',
+          },
+          {
+            key: 2,
+            text: 'Maintenance.Processed',
+          },
+          {
+            key: 3,
+            text: 'Maintenance.Statement',
+          },
         ],
         queryForm: {
           devicename: '',
@@ -817,8 +844,11 @@
         )
       },
       handleHeight() {
-        if (this.fold) this.height = this.$baseTableHeight(0) - 20
-        else this.height = this.$baseTableHeight(0) - 30
+        if (this.fold) {
+          this.height = this.$baseTableHeight(0) - 20
+        } else {
+          this.height = this.$baseTableHeight(0) - 30
+        }
       },
       getStatus(type = 0) {
         // type == 0 ? '' : ''
@@ -905,10 +935,16 @@
         }
         if (this.queryForm.searchDate?.length) {
           params.where['createdAt'] = {
-            $gt: { __type: 'Date', iso: this.queryForm.searchDate[0] },
+            $gt: {
+              __type: 'Date',
+              iso: this.queryForm.searchDate[0],
+            },
           }
           params.where['updatedAt'] = {
-            $lt: { __type: 'Date', iso: this.queryForm.searchDate[1] },
+            $lt: {
+              __type: 'Date',
+              iso: this.queryForm.searchDate[1],
+            },
           }
         }
         await query_object('Maintenance', params)
@@ -1006,7 +1042,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .mycontainer {
     .ticker-dialog {
       .create-ticker {
@@ -1015,12 +1051,15 @@
         }
       }
     }
+
     .query-form {
       margin-top: 10px;
+
       ::v-deep {
         .el-form-item__label-wrap {
           margin-left: 10px;
         }
+
         .dialog-footer {
           text-align: center;
         }

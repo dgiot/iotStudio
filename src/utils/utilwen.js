@@ -2,10 +2,10 @@ import i18n from '@/i18n'
 import Bus from './eventBus'
 import dgiotBus from '@dgiot/dgiot-mqtt-dashboard/src/utils/bus'
 import dgiotMixin from '@dgiot/dgiot-mqtt-dashboard/src/mixins/mqtt'
-import {getToken, removeToken, setToken} from './vuex'
+import { getToken, removeToken, setToken } from './vuex'
 import globalConfig from './globalConfig'
 import store from '@/store'
-import {Message} from 'element-ui'
+import { Message } from 'element-ui'
 import {
   create_object,
   del_object,
@@ -13,16 +13,24 @@ import {
   query_object,
   query_object_header,
   shuwa_batch,
-  update_object
+  update_object,
 } from '@/api/shuwa_parse'
-
-const {
-  CDN_URL
-} = require('../config')
-import {delDict, getBatchNumer, getIndustry, postDict, putDict} from '@/api/Dict/index'
-import {delDevice, getDevice, postDevice, putDevice, queryDevice} from '@/api/Device/index'
-import {queryProduct} from '@/api/Product/index'
-import {getMqttEventId, getTopicEventId} from '@/utils'
+import {
+  delDict,
+  getBatchNumer,
+  getIndustry,
+  postDict,
+  putDict,
+} from '@/api/Dict/index'
+import {
+  delDevice,
+  getDevice,
+  postDevice,
+  putDevice,
+  queryDevice,
+} from '@/api/Device/index'
+import { queryProduct } from '@/api/Product/index'
+import { getMqttEventId, getTopicEventId } from '@/utils'
 
 // https://www.jianshu.com/p/abdee4e7875a
 /**
@@ -31,6 +39,8 @@ import {getMqttEventId, getTopicEventId} from '@/utils'
  * @returns {*}
  */
 import o2Log from './o2Console'
+
+const { CDN_URL } = require('../config')
 
 Vue.use(dgiotBus)
 Vue.mixin(dgiotMixin)
@@ -47,23 +57,22 @@ function moreHttp(option) {
     keys.push(key)
     arr.push(option[key])
   }
-  return axios.all(arr)
-    .then(
-      axios.spread(function () {
-        let result = {}
-        for (let i = 0; i < arguments.length; i++) {
-          let item = arguments[i]
-          if (item) {
-            if (item.data && item.data.data) {
-              result[keys[i]] = item.data.data
-            } else {
-              result[keys[i]] = item
-            }
+  return axios.all(arr).then(
+    axios.spread(function () {
+      let result = {}
+      for (let i = 0; i < arguments.length; i++) {
+        let item = arguments[i]
+        if (item) {
+          if (item.data && item.data.data) {
+            result[keys[i]] = item.data.data
+          } else {
+            result[keys[i]] = item
           }
         }
-        return result
-      }),
-    )
+      }
+      return result
+    })
+  )
 }
 
 function objGet(data, path) {
@@ -95,24 +104,19 @@ function dateFormat(fmt, date) {
     return ''
   }
   const opt = {
-    'Y+': date.getFullYear()
-      .toString(), // 年
+    'Y+': date.getFullYear().toString(), // 年
     'm+': (date.getMonth() + 1).toString(), // 月
-    'd+': date.getDate()
-      .toString(), // 日
-    'H+': date.getHours()
-      .toString(), // 时
-    'M+': date.getMinutes()
-      .toString(), // 分
-    'S+': date.getSeconds()
-      .toString(), // 秒
+    'd+': date.getDate().toString(), // 日
+    'H+': date.getHours().toString(), // 时
+    'M+': date.getMinutes().toString(), // 分
+    'S+': date.getSeconds().toString(), // 秒
   }
   for (const k in opt) {
     ret = new RegExp('(' + k + ')').exec(fmt)
     if (ret) {
       fmt = fmt.replace(
         ret[1],
-        ret[1].length == 1 ? opt[k] : opt[k].padStart(ret[1].length, '0'),
+        ret[1].length == 1 ? opt[k] : opt[k].padStart(ret[1].length, '0')
       )
     }
   }
@@ -258,11 +262,8 @@ function convertRes2Blob(response) {
  */
 function downBinary(res) {
   if (!res) return false
-  const {
-    data,
-    headers,
-  } = res
-  let blob = new Blob([data], {type: headers['content-type']}) // 这里标识下载文件类型
+  const { data, headers } = res
+  let blob = new Blob([data], { type: headers['content-type'] }) // 这里标识下载文件类型
   console.log(blob, res.data)
   let downloadElement = document.createElement('a')
   let href = window.URL.createObjectURL(blob) // 创建下载的链接
@@ -475,12 +476,11 @@ export const isVoid = (value) =>
 export const cleanObject = (object) => {
   // Object.assign({}, object)
   if (!object) return {}
-  const result = {...object}
-  Object.keys(result)
-    .forEach((key) => {
-      const value = result[key]
-      if (isVoid(value)) delete result[key]
-    })
+  const result = { ...object }
+  Object.keys(result).forEach((key) => {
+    const value = result[key]
+    if (isVoid(value)) delete result[key]
+  })
   return result
 }
 export default {
@@ -530,6 +530,6 @@ export default {
     Vue.prototype.$getMqttEventId = getMqttEventId
     Vue.prototype.$getTopicEventId = getTopicEventId
     Vue.prototype.$downBinary = downBinary
-    Vue.prototype.$FileServe =  sessionStorage.getItem('fileServer')
+    Vue.prototype.$FileServe = sessionStorage.getItem('fileServer')
   },
 }

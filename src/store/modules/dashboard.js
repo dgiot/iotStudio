@@ -6,6 +6,7 @@
  * @Description: 存储首页mqtt数据
  */
 import { getToken, setToken } from '@/utils/vuex'
+
 const state = () => ({
   _pcimg: getToken('_pcimg') || 'https://z3.ax1x.com/2021/06/16/2OxUUJ.png',
   _mimg:
@@ -22,8 +23,14 @@ const state = () => ({
   _ChartStatus: getToken('_ChartStatus') || {
     columns: ['状态', '数量'],
     rows: [
-      { 状态: '在线', 数量: 0 },
-      { 状态: '离线', 数量: 0 },
+      {
+        状态: '在线',
+        数量: 0,
+      },
+      {
+        状态: '离线',
+        数量: 0,
+      },
     ],
   },
   _tableData: getToken('_tableData') || [],
@@ -138,4 +145,9 @@ const actions = {
     commit('set_tableData', table)
   },
 }
-export default { state, getters, mutations, actions }
+export default {
+  state,
+  getters,
+  mutations,
+  actions,
+}

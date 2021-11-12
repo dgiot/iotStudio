@@ -3,6 +3,7 @@ const path = require('path')
 const http = require('http')
 const network = require('../config/net.config')
 const baseURL = network.proxy[0].target
+
 function mkdirsSync(dirname) {
   if (fs.existsSync(dirname)) {
     return true
@@ -13,12 +14,15 @@ function mkdirsSync(dirname) {
     }
   }
 }
+
 function getPath(pathUrl) {
   return path.resolve(__dirname, pathUrl)
 }
+
 function generateTemplate(arr) {
   return `import { ${arr.join(', ')} } from '@/utils/request'\n`
 }
+
 function generateFunc(name, summary, type = 'post') {
   const arr = name.slice(1).split('/')
   const fun = arr[arr.length - 1]
@@ -28,6 +32,7 @@ export function ${fun}(data, cb, errHandle) {
   return ${type}('${name}', data, cb, errHandle)
 }\n`
 }
+
 function httpgetJson(url) {
   return new Promise((resolve, reject) => {
     http
@@ -92,7 +97,9 @@ async function main() {
       if (name.slice(1).split('/').length === 4) {
         folder = urlArray[1]
       } else {
-        if (name.slice(1).split('/')[0] !== tag) continue
+        if (name.slice(1).split('/')[0] !== tag) {
+          continue
+        }
       }
       if (obj[path.post.tags[0]]) {
         obj[path.post.tags[0]].push({
@@ -104,7 +111,13 @@ async function main() {
         })
       } else {
         obj[path.post.tags[0]] = [
-          { summary: path.post.summary, tag, name, type: 'post', folder },
+          {
+            summary: path.post.summary,
+            tag,
+            name,
+            type: 'post',
+            folder,
+          },
         ]
       }
     } else if (path.get) {
@@ -114,7 +127,9 @@ async function main() {
       if (name.slice(1).split('/').length === 4) {
         folder = urlArray[1]
       } else {
-        if (name.slice(1).split('/')[0] !== tag) continue
+        if (name.slice(1).split('/')[0] !== tag) {
+          continue
+        }
       }
       if (obj[path.get.tags[0]]) {
         obj[path.get.tags[0]].push({
@@ -126,7 +141,13 @@ async function main() {
         })
       } else {
         obj[path.get.tags[0]] = [
-          { summary: path.get.summary, tag, name, type: 'get', folder },
+          {
+            summary: path.get.summary,
+            tag,
+            name,
+            type: 'get',
+            folder,
+          },
         ]
       }
     }

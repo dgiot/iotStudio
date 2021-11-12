@@ -45,15 +45,17 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
-/* eslint-disable */
-import { mapGetters, mapMutations } from 'vuex'
+  /* eslint-disable */
+  /* eslint-disable */
+  import { mapGetters, mapMutations } from 'vuex'
+
   export default {
     name: 'DeviceState',
     props: {
       devicedetail: {
         type: Object,
-        default: () => {},
+        default: () => {
+        },
       },
     },
     data() {
@@ -81,16 +83,18 @@ import { mapGetters, mapMutations } from 'vuex'
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .runData {
     height: 50%;
     overflow-y: auto;
+
     .devicedetail {
       width: 100%;
       height: 100%;
 
       .runData_row {
         width: 100%;
+
         .runData_col {
           margin: 10px;
           font-size: 14px;

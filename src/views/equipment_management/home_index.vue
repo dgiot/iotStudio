@@ -72,8 +72,8 @@
         width="80%"
       >
         <el-tabs
-          size="mini"
           v-model="activeparseTbas"
+          size="mini"
           type="border-card"
           @tab-click="handleTabClick"
         >
@@ -85,8 +85,8 @@
           >
             <ele-form
               v-model="item.config"
-              v-bind="item.config"
               :request-fn="handleSubmit"
+              v-bind="item.config"
               @request-success="handleSuccess(item)"
             />
             <!--            <f-render v-model="item.config" :config="item.config" pure />-->
@@ -240,7 +240,9 @@
                 size="small"
                 clearable
               > -->
-                <el-form-item :label="$translateTitle('equipment.device status')">
+                <el-form-item
+                  :label="$translateTitle('equipment.device status')"
+                >
                   <el-select
                     v-model="onlinedevices"
                     clearable
@@ -249,12 +251,16 @@
                     <!-- <el-option value="在线" /> -->
                     <el-option :value="$translateTitle('zetadevices.online')" />
                     <!-- <el-option value="离线" /> -->
-                    <el-option :value="$translateTitle('zetadevices.offline')" />
+                    <el-option
+                      :value="$translateTitle('zetadevices.offline')"
+                    />
                   </el-select>
                 </el-form-item>
                 <el-form-item :label="$translateTitle('equipment.condition')">
                   <el-input
-                    v-if="selectdevice == $translateTitle('equipment.devicename')"
+                    v-if="
+                      selectdevice == $translateTitle('equipment.devicename')
+                    "
                     v-model="deviceinput"
                     :placeholder="$translateTitle('equipment.enterproductname')"
                   >
@@ -271,16 +277,18 @@
                       />
                     </el-select>
                     <i
-                      style=" color: #606266;cursor: pointer; lineHeight: 32px"
                       slot="suffix"
                       class="el-icon-search"
+                      style="color: #606266; cursor: pointer; lineheight: 32px"
                       @click="getDevices({ start: 0 })"
                     ></i>
                   </el-input>
                   <el-input
                     v-else
                     v-model="deviceinput"
-                    :placeholder="$translateTitle('equipment.enterdevicenumber')"
+                    :placeholder="
+                      $translateTitle('equipment.enterdevicenumber')
+                    "
                   >
                     <el-select
                       slot="prepend"
@@ -305,18 +313,18 @@
                 </el-form-item>
                 <el-form-item>
                   <el-button
-                    size="small"
-                    type="primary"
                     class="el-icon-plus"
+                    size="small"
                     :title="$translateTitle('equipment.adddevice')"
+                    type="primary"
                     @click="addDeviceForm"
                   />
                   <el-button
+                    class="el-icon-delete"
                     :disabled="!selectedList.length"
                     size="small"
-                    type="danger"
-                    class="el-icon-delete"
                     :title="$translateTitle('aintenance.batch deletion')"
+                    type="danger"
                     @click="handleDelete(selectedList, 1)"
                   />
                 </el-form-item>
@@ -1447,21 +1455,21 @@
   import { getProduct, queryProduct } from '@/api/Product/index'
   import deviceState from '@/components/Device/deviceState'
   import {
-    BmNavigation,
     BaiduMap,
-    BmLocalSearch,
-    BmGeolocation,
     BmCityList,
-    BmMarker,
-    BmLabel,
     BmControl,
-    BmPanorama,
-    BmOverviewMap,
+    BmGeolocation,
+    BmLabel,
+    BmLocalSearch,
     BmMapType,
+    BmMarker,
+    BmNavigation,
+    BmOverviewMap,
+    BmPanorama,
     BmScale,
   } from 'vue-baidu-map'
   import { returnLogin } from '@/utils/utilwen'
-  import { querycompanyDevice, putDevice, addimeidevice } from '@/api/Device'
+  import { addimeidevice, putDevice, querycompanyDevice } from '@/api/Device'
   import { getToken } from '@/api/Menu'
 
   var pcdata
@@ -1539,8 +1547,14 @@
         chartOnlone: {
           columns: ['状态', '数量'],
           rows: [
-            { 状态: '在线', 数量: 0 },
-            { 状态: '离线', 数量: 0 },
+            {
+              状态: '在线',
+              数量: 0,
+            },
+            {
+              状态: '离线',
+              数量: 0,
+            },
           ],
         },
         chartwaring: {},
@@ -1632,35 +1646,71 @@
         },
         rules: {
           name: [
-            { required: true, message: '请输入设备名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入设备名称',
+              trigger: 'blur',
+            },
           ],
           devaddr: [
-            { required: true, message: '请输入设备编号', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入设备编号',
+              trigger: 'blur',
+            },
             { validator: CheckDevaddr },
           ],
           devimei: [
-            { required: true, message: '请输入设备IMEI', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入设备IMEI',
+              trigger: 'blur',
+            },
             { validator: isimei },
           ],
           batchId: [
-            { required: true, message: '请输入设备批次', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入设备批次',
+              trigger: 'blur',
+            },
           ],
           nodeType: [
-            { required: true, message: '请输入设备类型', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入设备类型',
+              trigger: 'blur',
+            },
           ],
           netType: [
-            { required: true, message: '请选择网络格式', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择网络格式',
+              trigger: 'change',
+            },
           ],
           devType: [
-            { required: true, message: '请选择设备类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择设备类型',
+              trigger: 'change',
+            },
           ],
           productName: [
-            { required: true, message: '请选择产品名称', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择产品名称',
+              trigger: 'change',
+            },
           ],
         },
         pcformrule: {
           pcname: [
-            { required: true, message: '请输入批次名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入批次名称',
+              trigger: 'blur',
+            },
           ],
           createdtime: [
             {
@@ -1684,7 +1734,10 @@
         proTableData1: [],
         activelength: [],
         onlinelength: [],
-        center: { lng: 0, lat: 0 }, // 经纬度
+        center: {
+          lng: 0,
+          lat: 0,
+        }, // 经纬度
         zoom: 13, // 地图展示级别
         bmapform: {
           keyword: '',
@@ -1913,7 +1966,10 @@
       change(e) {
         console.log(e)
         if (e) {
-          $('.el-tree').css({ height: '120px', display: 'block' })
+          $('.el-tree').css({
+            height: '120px',
+            display: 'block',
+          })
         }
       },
       async selectProdChange(objectId) {
@@ -1943,7 +1999,10 @@
             include: 'product,name',
             where: {
               product: { $ne: null },
-              name: { $ne: null, $exists: true },
+              name: {
+                $ne: null,
+                $exists: true,
+              },
             },
           }
           if (this.deviceinput != '') {
@@ -2315,8 +2374,14 @@
         this.chartOnlone = {
           columns: ['状态', '数量'],
           rows: [
-            { 状态: '在线', 数量: 0 },
-            { 状态: '离线', 数量: 0 },
+            {
+              状态: '在线',
+              数量: 0,
+            },
+            {
+              状态: '离线',
+              数量: 0,
+            },
           ],
         }
         var params = {
@@ -2327,7 +2392,10 @@
           where: {
             status: 'ONLINE',
             product: { $ne: null },
-            name: { $ne: null, $exists: true },
+            name: {
+              $ne: null,
+              $exists: true,
+            },
           },
         }
         if (this.deviceinput != '') {
@@ -2375,7 +2443,10 @@
           include: 'product,name',
           where: {
             product: { $ne: null },
-            name: { $ne: null, $exists: true },
+            name: {
+              $ne: null,
+              $exists: true,
+            },
           },
         }
         if (this.deviceinput != '') {
@@ -2411,7 +2482,12 @@
           loading.close()
           if (!results?.length) return
           results.forEach((item) => {
-            if (!item.location) item.location = { longitude: 0, latitude: 0 }
+            if (!item.location) {
+              item.location = {
+                longitude: 0,
+                latitude: 0,
+              }
+            }
             if (item.ACL) {
               for (var key in item.ACL) {
                 item.Company = key.substr(5)
@@ -3026,16 +3102,19 @@
       //padding: 0;
     }
   }
+
   .equtabs {
     margin-top: -40px;
     //height: calc(120vh - #{$base-top-bar-height} * 4);
     overflow-x: hidden;
     overflow-y: scroll;
+
     .equ_header {
       box-sizing: border-box;
       width: 100%;
 
       margin: 0 auto;
+
       .text {
         font-size: 14px;
       }
@@ -3049,6 +3128,7 @@
         display: table;
         content: '';
       }
+
       .clearfix:after {
         clear: both;
       }
@@ -3089,7 +3169,7 @@
 
   .equipment .el-tabs__content {
     box-sizing: border-box;
-    padding:0;
+    padding: 0;
     //background: #f4f4f4;
   }
 
@@ -3180,6 +3260,7 @@
     border-right: 1px solid #ebecec;
     border-bottom: 1px solid #ebecec;
   }
+
   .mailtable td {
     box-sizing: border-box;
     padding: 15px;

@@ -12,7 +12,6 @@
    */
   // https://baidu.gitee.io/amis/zh-CN/docs/start/getting-started#props
   // eslint-disable
-  import * as React from 'react';
   import {
     tokenName,
   } from '@/config'

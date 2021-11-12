@@ -281,9 +281,10 @@
 </template>
 <script>
   import { mapGetters, mapMutations } from 'vuex'
-  import { isPhone, isUrl } from '@/utils/validate'
+  import { isPhone } from '@/utils/validate'
   import { putUser } from '@/api/User'
   import { putProject } from '@/api/Project'
+
   export default {
     name: 'Userinfo',
     components: {},
@@ -306,7 +307,10 @@
               trigger: 'blur',
               message: this.$translateTitle('请输入手机号'),
             },
-            { validator: validatePhone, trigger: 'blur' },
+            {
+              validator: validatePhone,
+              trigger: 'blur',
+            },
           ],
         },
         filetype: '',
@@ -430,13 +434,14 @@
           pamams['password'] = this.password
         }
         const res = await putUser(this.objectId, pamams)
-        if (res)
+        if (res) {
           this.$baseMessage(
             this.$translateTitle('保存成功'),
             'success',
             false,
             'vab-hey-message-success'
           )
+        }
       },
       uploadCkick(type) {
         this.upNodeType = type
@@ -501,9 +506,11 @@
   #{$base}-container {
     padding: 0 !important;
     background: $base-color-background !important;
+
     i {
       cursor: pointer;
     }
+
     #{$base}-user-info {
       padding: $base-padding;
       text-align: center;
@@ -567,6 +574,7 @@
       }
     }
   }
+
   .userinfo {
     box-sizing: border-box;
     width: 100%;

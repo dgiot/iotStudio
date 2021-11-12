@@ -1212,9 +1212,9 @@ export default {
       'Template created successfully': '模板创建成功',
       'Template creation failed': '模板创建失败',
       'Inspection number': '质检编号',
-      'mission name':'质检名称',
+      'mission name': '质检名称',
       'Inspection template': '质检模板',
-      'Please select review status':'请选择审核状态'
+      'Please select review status': '请选择审核状态',
     },
   },
 }

@@ -133,8 +133,8 @@
             <el-popover trigger="hover">
               <el-checkbox-group v-model="checkList">
                 <vue-draggable
-                  v-bind="dragOptions"
                   :list="logcolumns"
+                  v-bind="dragOptions"
                 >
                   <div
                     v-for="(item, index) in logcolumns"
@@ -239,6 +239,7 @@
 
 <script>
   import { queryLog } from '@/api/Logs'
+
   export default {
     name: 'HistoryLog',
     data() {
@@ -314,8 +315,11 @@
     methods: {
       handleHeight() {
         this.isFullscreen = !this.isFullscreen
-        if (this.isFullscreen) this.height = this.$baseTableHeight(0) + 120
-        else this.height = this.$baseTableHeight(0)
+        if (this.isFullscreen) {
+          this.height = this.$baseTableHeight(0) + 120
+        } else {
+          this.height = this.$baseTableHeight(0)
+        }
         this.momentKey = moment(new Date()).valueOf()
       },
       // 设置表格row的class
@@ -381,10 +385,16 @@
                 ? this.queryForm.level
                 : { $ne: '3333' },
               pid: this.queryForm.pid
-                ? { $regex: this.queryForm.pid, $options: 'i' }
+                ? {
+                    $regex: this.queryForm.pid,
+                    $options: 'i',
+                  }
                 : { $ne: '3333' },
               mfa: this.queryForm.mfa
-                ? { $regex: this.queryForm.mfa, $options: 'i' }
+                ? {
+                    $regex: this.queryForm.mfa,
+                    $options: 'i',
+                  }
                 : { $ne: '3333' },
               domain: this.queryForm.domain
                 ? {
@@ -394,13 +404,22 @@
                   }
                 : { $ne: '' },
               topic: this.queryForm.topic
-                ? { $regex: this.queryForm.topic, $options: 'i' }
+                ? {
+                    $regex: this.queryForm.topic,
+                    $options: 'i',
+                  }
                 : { $ne: '3333' },
               peername: this.queryForm.peername
-                ? { $regex: this.queryForm.peername, $options: 'i' }
+                ? {
+                    $regex: this.queryForm.peername,
+                    $options: 'i',
+                  }
                 : { $ne: '3333' },
               clientid: this.queryForm.clientid
-                ? { $regex: this.queryForm.clientid, $options: 'i' }
+                ? {
+                    $regex: this.queryForm.clientid,
+                    $options: 'i',
+                  }
                 : { $ne: '3333' },
               createdAt: {
                 $gte: {
@@ -442,9 +461,10 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .logs {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7) !important;
+    height: calc(100vh - #{$base-top-bar-height} * 2.7) !important;
+
     ::v-deep {
       .item-time {
         .el-form-item__content {
@@ -455,13 +475,16 @@
         }
       }
     }
+
     &-row {
       &-query {
       }
+
       &-tree {
         overflow: scroll;
       }
     }
+
     &-table {
       ::v-deep {
         * {

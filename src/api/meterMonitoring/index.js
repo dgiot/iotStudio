@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+
 // 获取统计信息
 export function getMeterStatistic(objectId, time) {
   return request({
@@ -10,6 +11,7 @@ export function getMeterStatistic(objectId, time) {
     },
   })
 }
+
 // 获取电表信息
 export function getElectricity(objectId, time, limit, skip, metertype) {
   return request({
@@ -24,6 +26,7 @@ export function getElectricity(objectId, time, limit, skip, metertype) {
     },
   })
 }
+
 // 获取集中器信息
 export function getVcon(objectId, time, limit, skip) {
   return request({
@@ -37,6 +40,7 @@ export function getVcon(objectId, time, limit, skip) {
     },
   })
 }
+
 // 查询电表
 export function QueryMeter(addr, online_status, time, limit, skip, metertype) {
   return request({
@@ -52,6 +56,7 @@ export function QueryMeter(addr, online_status, time, limit, skip, metertype) {
     },
   })
 }
+
 // 查询集中器
 export function QueryVcon(vcaddr, online_status, time, limit, skip) {
   return request({

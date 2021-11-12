@@ -1,15 +1,19 @@
 import store from '@/store'
+
 function getKonva(type) {
   return store.getters[`konva/${type}`]
 }
+
 function Setkonva(key, value) {
   return store.commit(`konva/${key}`, value)
 }
+
 let graphNow = getKonva('graphNow')
 let graphColor = getKonva('graphColor')
 let draw = getKonva('draw')
 let pointStart = getKonva('pointStart')
 let flag = getKonva('flag')
+
 /**
  * 铅笔
  * @param points 点数组

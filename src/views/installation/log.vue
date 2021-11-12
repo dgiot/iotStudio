@@ -119,6 +119,7 @@
 </template>
 <script>
   import { getNode, joinNode } from '@/api/System/index'
+
   export default {
     data() {
       return {

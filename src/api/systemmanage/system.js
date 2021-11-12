@@ -11,6 +11,7 @@ export function Getapp(node, start, length) {
     },
   })
 }
+
 export function Getmodule(app) {
   return request({
     url: '/plugin/' + app,
@@ -20,6 +21,7 @@ export function Getmodule(app) {
     },
   })
 }
+
 export function Getmodule1(app) {
   return request({
     url: '/plugin/' + app,
@@ -29,6 +31,7 @@ export function Getmodule1(app) {
     },
   })
 }
+
 export function Getstart(app) {
   return request({
     url: '/plugin/' + app,
@@ -38,6 +41,7 @@ export function Getstart(app) {
     },
   })
 }
+
 export function Getstop(app) {
   return request({
     url: '/plugin/' + app,
@@ -47,6 +51,7 @@ export function Getstop(app) {
     },
   })
 }
+
 export function GetReload(app) {
   return request({
     url: '/plugin/' + app,
@@ -56,6 +61,7 @@ export function GetReload(app) {
     },
   })
 }
+
 export function Compile(code) {
   return request({
     url: '/compile',
@@ -65,6 +71,7 @@ export function Compile(code) {
     },
   })
 }
+
 export function getDev(addr, productId) {
   return request({
     url: `/device/${productId}/${addr}?keys=last_row(*)`,
@@ -72,6 +79,7 @@ export function getDev(addr, productId) {
     params: {},
   })
 }
+
 export function subupadte(channelId, action) {
   return request({
     url: `/control/channel`,

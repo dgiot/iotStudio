@@ -1,12 +1,15 @@
 version: 2
 updates:
-  - package-ecosystem: pnpm
+  - package-ecosystem: npm
     directory: "/"
     schedule:
       interval: daily
       time: "04:00"
     open-pull-requests-limit: 10
     ignore:
-      - dependency-name: webpack
-        versions:
-          - 5.0.0-3
+      - dependency-name: "compression-webpack-plugin"
+      - dependency-name: "eslint"
+      - dependency-name: "sass"
+      - dependency-name: "sass-loader"
+      - dependency-name: "stylelint"
+      - dependency-name: "stylelint-config-recess-order"

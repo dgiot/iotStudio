@@ -7,7 +7,7 @@
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/
 let localUrl = {
   css: [
-    'material_icons.css',// 谷歌字体图标
+    'material_icons.css', // 谷歌字体图标
     'iview.css',
     'antd.min.css',
     'vuetify.min.css',

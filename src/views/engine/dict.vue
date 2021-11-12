@@ -1157,9 +1157,10 @@
   </div>
 </template>
 <script>
-  import { queryDict, postDict, getDict, putDict } from '@/api/Direct/index.js'
+  import { getDict, postDict, putDict, queryDict } from '@/api/Direct/index.js'
   import { mapGetters } from 'vuex'
   import { resourceTypes } from '@/api/Rules'
+
   export default {
     name: 'Dict',
     components: {},
@@ -1357,13 +1358,25 @@
           this.arrlist = res.data.params
           var obj1 = {
             key: [
-              { required: true, message: '请输入字典名称', trigger: 'blur' },
+              {
+                required: true,
+                message: '请输入字典名称',
+                trigger: 'blur',
+              },
             ],
             templateId: [
-              { required: true, message: '请选择字典类型', trigger: 'blur' },
+              {
+                required: true,
+                message: '请选择字典类型',
+                trigger: 'blur',
+              },
             ],
             rolesObj: [
-              { required: true, message: '请选择所属应用', trigger: 'change' },
+              {
+                required: true,
+                message: '请选择所属应用',
+                trigger: 'change',
+              },
             ],
             // enable: [{ required: true, message: "请选择状态", trigger: "blur" }]
           }
@@ -1498,13 +1511,25 @@
         }
         this.rules = {
           name: [
-            { required: true, message: '请输入字典模板名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入字典模板名称',
+              trigger: 'blur',
+            },
           ],
           cType: [
-            { required: true, message: '请输入字典模板类型', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入字典模板类型',
+              trigger: 'blur',
+            },
           ],
           enable: [
-            { required: true, message: '请选择状态', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择状态',
+              trigger: 'change',
+            },
           ],
         }
       },
@@ -1518,12 +1543,26 @@
         this.addDictForm = {}
         this.arrlist = []
         this.rules1 = {
-          key: [{ required: true, message: '请输入字典名称', trigger: 'blur' }],
+          key: [
+            {
+              required: true,
+              message: '请输入字典名称',
+              trigger: 'blur',
+            },
+          ],
           templateId: [
-            { required: true, message: '请选择字典类型', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择字典类型',
+              trigger: 'blur',
+            },
           ],
           rolesObj: [
-            { required: true, message: '请选择所属应用', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'change',
+            },
           ],
           // enable: [{ required: true, message: "请选择状态", trigger: "blur" }]
         }
@@ -1695,7 +1734,10 @@
         }
         this.listLoading = false
         this.dictRecordOpt.push(
-          { data: { name: 'ALL' }, objectId: '0' },
+          {
+            data: { name: 'ALL' },
+            objectId: '0',
+          },
           ...results
         )
         // console.log('aa', this.dictRecordOpt);
@@ -1741,13 +1783,16 @@
     .device-tree {
       height: 100px;
       overflow: auto;
+
       ::v-deep {
         .el-scrollbar .el-scrollbar__wrap {
           overflow-x: hidden;
         }
+
         .clearfix {
           margin: 0;
         }
+
         .el-tree > .el-tree-node {
           display: inline-block;
           min-width: 100%;
@@ -1755,6 +1800,7 @@
         }
       }
     }
+
     ::v-deep .el-table .warning-row {
       background: oldlace;
     }
@@ -1770,6 +1816,7 @@
     ::v-deep .json-save-btn {
       cursor: pointer;
     }
+
     .dict_type ::v-deep .el-form-item {
     }
   }

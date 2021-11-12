@@ -37,8 +37,8 @@
         </el-dialog>
       </div>
       <div
-        :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
         class="map_header"
+        :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
       >
         <div
           v-show="cardHeight != '0px'"
@@ -46,28 +46,28 @@
         >
           <el-row>
             <el-col
+              class="card-panel-col"
               :lg="6"
               :md="6"
               :sm="12"
               :xl="6"
               :xs="24"
-              class="card-panel-col"
             >
               <el-card
                 v-loading="loadingConfig['product_count'] == false"
-                :element-loading-text="
-                  $translateTitle('developer.Waitingtoreturn')
-                "
                 class="box-card"
                 element-loading-background="rgba(0, 0, 0, 0.8)"
                 element-loading-spinner="el-icon-loading"
+                :element-loading-text="
+                  $translateTitle('developer.Waitingtoreturn')
+                "
               >
                 <el-col :span="12">
                   <vab-icon icon="projector-fill" />
                 </el-col>
                 <el-col
-                  :span="12"
                   class="card-right"
+                  :span="12"
                 >
                   <router-link to="/roles/product">
                     <p>{{ $translateTitle('home.pro_count') }}</p>
@@ -77,26 +77,26 @@
               </el-card>
             </el-col>
             <el-col
+              class="card-panel-col"
               :lg="6"
               :md="6"
               :sm="12"
               :xl="6"
               :xs="24"
-              class="card-panel-col"
             >
               <el-card
                 v-loading="loadingConfig['app_count'] == false"
+                class="box-card"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
-                class="box-card"
               >
                 <el-col :span="12">
                   <vab-icon icon="apps-fill" />
                 </el-col>
                 <el-col
-                  :span="12"
                   class="card-right"
+                  :span="12"
                 >
                   <router-link to="/roles/applicationManagement">
                     <p>{{ $translateTitle('home.app_count') }}</p>
@@ -106,26 +106,26 @@
               </el-card>
             </el-col>
             <el-col
+              class="card-panel-col"
               :lg="6"
               :md="6"
               :sm="12"
               :xl="6"
               :xs="24"
-              class="card-panel-col"
             >
               <el-card
                 v-loading="loadingConfig['device_count'] == false"
+                class="box-card"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
-                class="box-card"
               >
                 <el-col :span="12">
                   <vab-icon icon="device-recover-fill" />
                 </el-col>
                 <el-col
-                  :span="12"
                   class="card-right"
+                  :span="12"
                 >
                   <router-link to="/dashboard/devicelist">
                     <p>{{ $translateTitle('home.dev_count') }}</p>
@@ -135,29 +135,29 @@
               </el-card>
             </el-col>
             <el-col
+              class="card-panel-col"
               :lg="6"
               :md="6"
               :sm="12"
               :xl="6"
               :xs="24"
-              class="card-panel-col"
             >
               <el-card
                 v-loading="loadingConfig['warn_count'] == false"
+                class="box-card"
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
-                class="box-card"
               >
                 <el-col
-                  :span="12"
                   class="card-left"
+                  :span="12"
                 >
                   <vab-icon icon="projector-2-fill" />
                 </el-col>
                 <el-col
-                  :span="12"
                   class="card-right"
+                  :span="12"
                 >
                   <router-link to="/CloudOt/alarm">
                     <p>
@@ -174,8 +174,8 @@
           <vab-query-form-top-panel>
             <el-form
               :inline="true"
-              :model="queryForm"
               label-width="100px"
+              :model="queryForm"
               @submit.native.prevent
             >
               <el-form-item :label="$translateTitle('user.department')">
@@ -185,16 +185,16 @@
                   @visible-change="change($event)"
                 >
                   <el-option
-                    :value="treeDataValue"
                     style="height: auto; padding: 0"
+                    :value="treeDataValue"
                   >
                     <el-tree
                       ref="workGroup"
                       :data="deptTreeData"
-                      :expand-on-click-node="false"
-                      :props="roleProps"
                       default-expand-all
+                      :expand-on-click-node="false"
                       node-key="index"
+                      :props="roleProps"
                     >
                       <div
                         slot-scope="{ node, data }"
@@ -314,12 +314,12 @@
                 class="card_left"
               >
                 <el-row
-                  :gutter="24"
                   class="card_left-row"
+                  :gutter="24"
                 >
                   <el-col
-                    :span="6"
                     class="card_left-row-col"
+                    :span="6"
                   >
                     <Card
                       class="card_left-row-col-card"
@@ -338,9 +338,9 @@
                     </Card>
                   </el-col>
                   <el-col
+                    class="card_left-row-col"
                     :offset="2"
                     :span="6"
-                    class="card_left-row-col"
                   >
                     <Card
                       class="card_left-row-col-card"
@@ -359,9 +359,9 @@
                     </Card>
                   </el-col>
                   <el-col
+                    class="card_left-row-col"
                     :offset="2"
                     :span="6"
-                    class="card_left-row-col"
                   >
                     <Card
                       class="card_left-row-col-card"
@@ -467,11 +467,11 @@
               <!--                :center="{ lng: 106.553838, lat: 29.563216 }"-->
               <baidu-map
                 id="baidu_map"
+                ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
                 :center="{ lng: 120.187273, lat: 30.334877 }"
+                class="baidu_map"
                 :scroll-wheel-zoom="true"
                 :zoom="sizeZoom"
-                ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
-                class="baidu_map"
               >
                 <bm-control>
                   <el-button
@@ -498,16 +498,16 @@
                     @click="toggleFull()"
                   />
                   <bm-panorama
-                    :offset="{ width: 500, height: 0 }"
                     anchor="BMAP_ANCHOR_TOP_LEFT"
+                    :offset="{ width: 500, height: 0 }"
                   />
                   <bm-overview-map :is-open="true" />
                   <bm-scale :offset="{ width: 260, height: 0 }" />
                   <bm-city-list :offset="{ width: 330, height: 0 }" />
                   <bm-map-type
+                    anchor="BMAP_ANCHOR_TOP_LEFT"
                     :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"
                     :offset="{ width: 400, height: 0 }"
-                    anchor="BMAP_ANCHOR_TOP_LEFT"
                   />
                 </bm-control>
                 <bml-marker-clusterer :average-center="true">
@@ -638,9 +638,9 @@
                 </bml-marker-clusterer>
                 <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
                 <bm-geolocation
+                  anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
                   :auto-location="true"
                   :show-address-bar="true"
-                  anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
                 />
               </baidu-map>
             </div>
@@ -702,8 +702,8 @@
                               </el-table-column>
                               <el-table-column
                                 :label="$translateTitle('task.productname')"
-                                :show-overflow-tooltip="true"
                                 prop="name"
+                                :show-overflow-tooltip="true"
                                 width="120"
                               >
                                 <template slot-scope="scope">
@@ -757,9 +757,9 @@
                         :data="_ChartStatus"
                         :data-empty="!ChartStatus.rows"
                         :extend="chartExtend"
+                        height="160px"
                         :loading="loading"
                         :settings="chartSettings"
-                        height="160px"
                         type="ring"
                       />
                     </div>
@@ -777,8 +777,8 @@
                       class="clearfix"
                     >
                       <el-badge
-                        :value="_dev_off_count"
                         class="item"
+                        :value="_dev_off_count"
                       >
                         <el-button
                           size="small"
@@ -794,10 +794,10 @@
                           <div class="grid-content bg-purple">
                             <el-table
                               :cell-style="{ 'text-align': 'center' }"
+                              class="_el-table"
                               :data="_offlineData"
                               :header-cell-style="{ 'text-align': 'center' }"
                               :row-class-name="tableRowClassName"
-                              class="_el-table"
                               style="width: 100%"
                             >
                               <el-table-column
@@ -836,8 +836,8 @@
                       class="clearfix"
                     >
                       <el-badge
-                        :value="_dev_online_count"
                         class="item"
+                        :value="_dev_online_count"
                       >
                         <el-button
                           size="small"
@@ -853,10 +853,10 @@
                           <div class="grid-content bg-purple">
                             <el-table
                               :cell-style="{ 'text-align': 'center' }"
+                              class="_el-table"
                               :data="_onlineData"
                               :header-cell-style="{ 'text-align': 'center' }"
                               :row-class-name="tableRowClassName"
-                              class="_el-table"
                               style="width: 100%"
                             >
                               <el-table-column
@@ -917,6 +917,7 @@
     BmPanorama,
     BmScale,
   } from 'vue-baidu-map'
+
   window.dgiotEnv = process.env
   export default {
     name: 'Index',
@@ -1085,8 +1086,7 @@
         limit: true,
       },
     },
-    created() {
-    },
+    created() {},
     mounted() {
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.initDgiotMqtt()
@@ -1111,23 +1111,22 @@
         this.getRoletree()
         this.getProduct()
       },
-      async getWarnCount(params = {
-        count: '*',
-        where: {},
-      }) {
+      async getWarnCount(
+        params = {
+          count: '*',
+          where: {},
+        }
+      ) {
         params.where['createdAt'] = {
           $gt: {
             __type: 'Date',
-            iso: moment()
-              .subtract(1, 'days')
-              .format('YYYY-MM-DD'),
+            iso: moment().subtract(1, 'days').format('YYYY-MM-DD'),
           },
         }
         params.where['updatedAt'] = {
           $lt: {
             __type: 'Date',
-            iso: moment(new Date())
-              .format('YYYY-MM-DD'),
+            iso: moment(new Date()).format('YYYY-MM-DD'),
           },
         }
         try {
@@ -1157,10 +1156,7 @@
           }, 2000)
         }
       },
-      tableRowClassName({
-        row,
-        rowIndex,
-      }) {
+      tableRowClassName({ row, rowIndex }) {
         if (rowIndex === 1) {
           return 'warning-row'
         } else if (rowIndex === 2) {
@@ -1258,7 +1254,7 @@
         ]
         this.deviceInfo.product.topics
           ? (this.deviceInfo.topicData =
-            this.deviceInfo.product.topics.concat(_toppic))
+              this.deviceInfo.product.topics.concat(_toppic))
           : (this.deviceInfo.topicData = _toppic)
         this.deviceFlag = true
       },
@@ -1319,8 +1315,8 @@
                 item.icon === '0'
                   ? 'yellow'
                   : item.icon === '1'
-                    ? 'blue'
-                    : 'red'
+                  ? 'blue'
+                  : 'red'
               // item.iconUrl = require(`@/assets/images/Device/${
               //   item.icon
               // }.png?${new Date().getTime()}\``)
@@ -1340,69 +1336,49 @@
       toggleCard(height) {
         // console.log('cardHeight', height)
         if (height != '0px') {
-          $('.map_card')
-            .css({ height: '0px' })
+          $('.map_card').css({ height: '0px' })
           this.cardHeight = '0px'
         } else {
-          $('.map_card')
-            .css({ height: '98px' })
+          $('.map_card').css({ height: '98px' })
           this.cardHeight = '98px'
         }
       },
       toggleLeftWidth(width) {
         // console.log(width, 'width')
         if (width != '0px') {
-          $('.vab-side-bar')
-            .css({ width: '0px' })
-          $('.vab-main')
-            .css({ 'margin-left': '0px' })
+          $('.vab-side-bar').css({ width: '0px' })
+          $('.vab-main').css({ 'margin-left': '0px' })
           this.leftWidth = '0px'
         } else {
-          $('.vab-side-bar')
-            .css({ width: '200px' })
-          $('.vab-main')
-            .css({ 'margin-left': '200px' })
+          $('.vab-side-bar').css({ width: '200px' })
+          $('.vab-main').css({ 'margin-left': '200px' })
           this.leftWidth = '200px'
         }
       },
       setPadding(top) {
         // console.log(top, 'top')
         if (top != '0px') {
-          $('.fixed')
-            .css({ 'padding-top': '0px' })
-          $('.fixed-header')
-            .css({
-              height: '0px',
-              display: 'none',
-            })
-          $('.vab-tabs')
-            .css({ 'nim-height': '0px' })
-          $('.baidu_map')
-            .css({ height: 'calc(78vh + 90px + 140px)' })
-          $('_el-table')
-            .css({ height: 'calc(78vh + 90px + 140px)' })
-          $('.el-tabs')
-            .css({ height: 'calc(78vh + 90px + 140px)' })
-          $('section')
-            .css({ height: 'calc(100vh - 60px* 2.7 + 110px)' })
+          $('.fixed').css({ 'padding-top': '0px' })
+          $('.fixed-header').css({
+            height: '0px',
+            display: 'none',
+          })
+          $('.vab-tabs').css({ 'nim-height': '0px' })
+          $('.baidu_map').css({ height: 'calc(78vh + 90px + 140px)' })
+          $('_el-table').css({ height: 'calc(78vh + 90px + 140px)' })
+          $('.el-tabs').css({ height: 'calc(78vh + 90px + 140px)' })
+          $('section').css({ height: 'calc(100vh - 60px* 2.7 + 110px)' })
         } else {
-          $('.fixed')
-            .css({ 'padding-top': '110px' })
-          $('.fixed-header')
-            .css({
-              height: '110px',
-              display: 'block',
-            })
-          $('.vab-tabs')
-            .css({ 'nim-height': '50px' })
-          $('.baidu_map')
-            .css({ height: 'calc(78vh - 20px)' })
-          $('_el-table')
-            .css({ height: 'calc(78vh)' })
-          $('.el-tabs')
-            .css({ height: 'calc(78vh - 20px)' })
-          $('section')
-            .css({ height: 'calc(100vh - 60px* 2.7)' })
+          $('.fixed').css({ 'padding-top': '110px' })
+          $('.fixed-header').css({
+            height: '110px',
+            display: 'block',
+          })
+          $('.vab-tabs').css({ 'nim-height': '50px' })
+          $('.baidu_map').css({ height: 'calc(78vh - 20px)' })
+          $('_el-table').css({ height: 'calc(78vh)' })
+          $('.el-tabs').css({ height: 'calc(78vh - 20px)' })
+          $('section').css({ height: 'calc(100vh - 60px* 2.7)' })
         }
         // this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
         //   'padding-top'
@@ -1465,26 +1441,23 @@
       change(e) {
         // console.log(e)
         if (e) {
-          $('.el-tree')
-            .css({
-              height: '100px',
-              display: 'block',
-              'overflow-x': 'auto',
-            })
+          $('.el-tree').css({
+            height: '100px',
+            display: 'block',
+            'overflow-x': 'auto',
+          })
         }
       },
       async handleNodeClick(data, node) {
         const aclRole = this._role.map((r) => {
           return r.name
         })
-        $('.el-tree')
-          .css({
-            height: '0px',
-            display: 'none',
-            'overflow-x': 'auto',
-          })
-        $('.el-select-dropdown')
-          .css({ display: 'none' })
+        $('.el-tree').css({
+          height: '0px',
+          display: 'none',
+          'overflow-x': 'auto',
+        })
+        $('.el-select-dropdown').css({ display: 'none' })
         this.queryForm.workGroupName = data.label
         this.treeDataValue = data.label
         // console.log(this.treeDataValue)
@@ -1501,10 +1474,7 @@
         this.queryForm.workGroupTreeShow = !this.queryForm.workGroupTreeShow
 
         // 点击的公司名
-        const {
-          name,
-          objectId,
-        } = data
+        const { name, objectId } = data
         this.curDepartmentId = objectId
         this.subtopic = `dashboard/${this.token}/post`
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
@@ -1516,8 +1486,7 @@
         })
         StartDashboard(queryParams)
       },
-      handleChange() {
-      },
+      handleChange() {},
       handleClickVisit(project) {
         this.$router.push({
           path: '/Topo',
@@ -1578,8 +1547,8 @@
             } else {
               this.$message.info(
                 this.$translateTitle(
-                  'equipment.The device is not bound to the video address yet',
-                ),
+                  'equipment.The device is not bound to the video address yet'
+                )
               )
               return false
             }
@@ -1798,9 +1767,8 @@
 
       .card-panel-col .el-card {
         background: #2090ff !important;
-        opacity: 0.7
+        opacity: 0.7;
       }
-
     }
 
     .el-card__body {

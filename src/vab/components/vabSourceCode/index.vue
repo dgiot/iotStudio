@@ -47,10 +47,12 @@
     opacity: 1;
     -webkit-transition: all 0.3s;
     transition: all 0.3s;
+
     &:hover {
       right: -4px;
       background-color: rgba(0, 0, 0, 0.9);
     }
+
     i {
       margin-right: 3px;
       font-size: 12px;

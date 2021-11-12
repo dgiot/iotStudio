@@ -1,21 +1,21 @@
 import Konva from 'konva'
 import { uuid } from '@/utils'
-import addNodeEvent from '@/utils/konva/common'
 import Vue from 'vue'
 import canvas from '@/utils/konva/core/canvas'
+
 /**
  * @description 组态物模型公共函数
  * @type {{create(*, *, *): Text, on(*)}}
  */
 const topoThing = {
-  evidence(args){
+  evidence(args) {
     const params = {
       busTopicKey: dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
       msg: {
         type: 'bind_evidence',
         id: args.getAttr('id'),
         dgiotData: args.getAttr('dgiotData'),
-        node:args,
+        node: args,
       },
     }
     console.log(params)
@@ -33,12 +33,12 @@ const topoThing = {
     // console.log(params,Vue.prototype.$dgiotBus.emit(params.busTopicKey,params.msg))
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
-  contextMenu(args){
-    if(canvas.Layering.indexOf(args.handler) >0){
+  contextMenu(args) {
+    if (canvas.Layering.indexOf(args.handler) > 0) {
       const contextNode = canvas.clickItem
-      if(!_.isEmpty(contextNode)){
-        contextNode[`${args.handler}`]((e)=>{
-          console.log(e,'contextNode')
+      if (!_.isEmpty(contextNode)) {
+        contextNode[`${args.handler}`]((e) => {
+          console.log(e, 'contextNode')
           canvas.layer.batchDraw()
           // canvas.stage.batchDraw()
         })
@@ -47,10 +47,10 @@ const topoThing = {
       // canvas.layer.batchDraw()
       // canvas.stage.batchDraw()
       // if(args.handler === 'remove') contextNode.destroy()
-    }else{
+    } else {
       console.log(args)
     }
-    console.log("contextNode args",args)
+    console.log('contextNode args', args)
     canvas.layer.batchDraw()
     canvas.stage.batchDraw()
   },
@@ -61,7 +61,7 @@ const topoThing = {
    * @param text
    */
   create(thing, saleInfo, randomXy) {
-    const Axis ={
+    const Axis = {
       x: randomXy(600, 30),
       y: randomXy(450, 10),
     }
@@ -151,13 +151,13 @@ const topoThing = {
   },
   createdEvidence(args) {
     console.info('createdEvidence', args.path)
-    const Axis ={
+    const Axis = {
       x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
       y: 600 + canvas.randomXy(40, 10),
     }
     var simpEvidence = new Konva.Label({
       name: 'evidence',
-      icon:  args.path.icon,
+      icon: args.path.icon,
       x: Axis.x,
       y: Axis.y,
       id: `${args.path.productid}_evidence_${canvas.randomXy(40, 10)}_${
@@ -179,14 +179,14 @@ const topoThing = {
         args.path.icon
       }`,
       dgiotData: [],
-      icon:  args.path.icon,
+      icon: args.path.icon,
       x: Axis.x,
       y: Axis.y,
-      width:36,
-      height:36,
+      width: 36,
+      height: 36,
       draggable: true,
       data: args.path.path,
-      handler:"dblclick",
+      handler: 'dblclick',
       fill: 'black',
       size: 36,
       scale: {

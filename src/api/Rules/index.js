@@ -15,6 +15,7 @@ export function putResourceTypes(data) {
     data,
   })
 }
+
 export function get_actions() {
   return request({
     url: 'actions',
@@ -60,6 +61,7 @@ export function addRule(data) {
     data: data,
   })
 }
+
 export function getRule() {
   return request({
     url: 'rules',
@@ -67,6 +69,7 @@ export function getRule() {
     params: {},
   })
 }
+
 export function getRuleDetail(id) {
   return request({
     url: 'rule/' + id,
@@ -74,6 +77,7 @@ export function getRuleDetail(id) {
     params: {},
   })
 }
+
 export function ruleDelete(id) {
   return request({
     url: 'rule/' + id,
@@ -81,6 +85,7 @@ export function ruleDelete(id) {
     params: {},
   })
 }
+
 export function getActions() {
   return request({
     url: 'rule_actions',
@@ -88,6 +93,7 @@ export function getActions() {
     params: {},
   })
 }
+
 export function getResource() {
   return request({
     url: 'rule_resource',
@@ -95,6 +101,7 @@ export function getResource() {
     params: {},
   })
 }
+
 export function postResource(config, description, name, type) {
   return request({
     url: 'rule_resource',
@@ -107,6 +114,7 @@ export function postResource(config, description, name, type) {
     },
   })
 }
+
 export function ruleTest(actions, ctx, description, forname, name, rawsql) {
   return request({
     url: 'rule_test',

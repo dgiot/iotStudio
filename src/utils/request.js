@@ -2,10 +2,10 @@ import {
   baseURL,
   contentType,
   debounce,
+  errorCode,
   requestTimeout,
   statusName,
   successCode,
-  errorCode,
   tokenName,
 } from '@/config'
 import { globalUrl } from './utilwen'
@@ -112,7 +112,10 @@ instance.interceptors.request.use(
       config.headers[`${tokenName}`] = token
     } else if (noCookiePages.indexOf(path) == -1 && !headers[`${tokenName}`]) {
       Vue.prototype.$baseMessage(`当前页${path}未获取到${tokenName}`, 'error')
-      router.push({ path: '/login', replace: true })
+      router.push({
+        path: '/login',
+        replace: true,
+      })
       return
     }
 
@@ -120,10 +123,12 @@ instance.interceptors.request.use(
       config.data &&
       config.headers['Content-Type'] ===
         'application/x-www-form-urlencoded;charset=UTF-8'
-    )
+    ) {
       config.data = qs.stringify(config.data)
-    if (debounce.some((item) => config.url.includes(item)))
+    }
+    if (debounce.some((item) => config.url.includes(item))) {
       loadingInstance = Vue.prototype.$baseLoading()
+    }
     return config
   },
   (error) => {
@@ -159,8 +164,13 @@ instance.interceptors.response.use(
     // } else return handleData(response)
   }
 )
+
 function backHome() {
   store.dispatch('user/resetAll')
-  router.push({ path: '/login', replace: true })
+  router.push({
+    path: '/login',
+    replace: true,
+  })
 }
+
 export default instance

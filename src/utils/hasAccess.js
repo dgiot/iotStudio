@@ -3,19 +3,28 @@ import { isArray } from '@/utils/validate'
 
 export function hasAccess(value) {
   if (store.getters['acl/admin']) return true
-  if (isArray(value) && value.length > 0)
+  if (isArray(value) && value.length > 0) {
     return can(store.getters['acl/role'], {
       role: value,
       mode: 'oneOf',
     })
+  }
   const { role, ability, mode = 'oneOf' } = value
   let result = true
-  if (role) result = result && can(store.getters['acl/role'], { role, mode })
-  if (result && ability)
+  if (role) {
+    result =
+      result &&
+      can(store.getters['acl/role'], {
+        role,
+        mode,
+      })
+  }
+  if (result && ability) {
     result = can(store.getters['acl/ability'], {
       role: ability,
       mode,
     })
+  }
   return result
 }
 

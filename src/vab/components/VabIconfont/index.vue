@@ -81,7 +81,7 @@
     methods: {},
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   i {
     @font-face {
       font-family: 'iconfont'; /* Project id 2759556 */

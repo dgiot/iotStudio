@@ -38,8 +38,8 @@
           class="ace_editor"
           style="min-height: 400px"
         ><textarea
-class="ace_text-input"
-                   style="overflow:scroll"
+          class="ace_text-input"
+          style="overflow:scroll"
         /></pre>
       </div>
       <span
@@ -222,7 +222,9 @@ class="ace_text-input"
                 width="80"
               >
                 <template slot-scope="scope">
-                  <span>{{ scope.row.category?scope.row.category.name:'' }}</span>
+                  <span>
+                    {{ scope.row.category ? scope.row.category.name : '' }}
+                  </span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -273,7 +275,6 @@ class="ace_text-input"
           :xs="24"
         >
           <profile-descriptions
-            :thing-key="thingKey"
             ref="ProfileDescription"
             :decoder-table-list="decoderTableList"
             :dict-table-list="dictTableList"
@@ -282,6 +283,7 @@ class="ace_text-input"
             :product-id="producttempId"
             :table-loading="tableLoading"
             :table-type="tableType"
+            :thing-key="thingKey"
             :things="things"
           />
         </el-col>
@@ -335,12 +337,10 @@ class="ace_text-input"
                 autocomplete="off"
               />
             </el-form-item>
-            <el-form-item
-              :label="$translateTitle('product.classification')"
-            >
+            <el-form-item :label="$translateTitle('product.classification')">
               <el-input
-                :disabled="addflag"
                 v-model="form.categoryname"
+                :disabled="addflag"
                 :placeholder="$translateTitle('product.pleaseselectyourcate')"
                 @focus="showTree = !showTree"
               />
@@ -433,15 +433,9 @@ class="ace_text-input"
 </template>
 <!--eslint-disable-->
 <script>
-import {getCategory, queryCategory} from '@/api/Category'
-  const context = require.context('./component/profile', true, /\.vue$/)
-  let res_components = {}
-  context.keys().forEach((fileName) => {
-    let comp = context(fileName)
-    res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
-  })
+  import { queryCategory } from '@/api/Category'
   import { mapGetters, mapMutations } from 'vuex'
-  import { deleteThing, postThing, putProduct, putThing } from '@/api/Product'
+  import { putProduct } from '@/api/Product'
   import { getAllunit } from '@/api/Dict/index'
   import { export_txt_to_zip } from '@/utils/Export2Zip.js'
   import { getServer } from '@/api/Role/index'
@@ -459,10 +453,22 @@ import {getCategory, queryCategory} from '@/api/Category'
   import { uuid } from '@/utils'
   import wmxdetail from './component/wmxdetail'
   import { setTimeout } from 'timers'
-  import {post_tree} from "@/api/Data";
+  import { post_tree } from '@/api/Data'
+
+  const context = require.context('./component/profile', true, /\.vue$/)
+  let res_components = {}
+  context.keys()
+    .forEach((fileName) => {
+      let comp = context(fileName)
+      res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
+    })
+
   var editor1
   export default {
-    components: { ...res_components, wmxdetail },
+    components: {
+      ...res_components,
+      wmxdetail,
+    },
     props: {},
     data() {
       return {
@@ -473,11 +479,17 @@ import {getCategory, queryCategory} from '@/api/Category'
         things: [],
         tableType: 'things',
         multipleTable: [],
-        thingKey: moment(new Date()).valueOf().toString(),
+        thingKey: moment(new Date())
+          .valueOf()
+          .toString(),
         productDetail: {
           decoder: { code: '' },
           thing: { properties: [] },
-          config: { parser: [], profile: [], basedate: { params: [] } },
+          config: {
+            parser: [],
+            profile: [],
+            basedate: { params: [] },
+          },
         },
         linkType: '',
         productOptions: [],
@@ -676,11 +688,17 @@ import {getCategory, queryCategory} from '@/api/Category'
     },
     mounted() {
       this.$baseEventBus.$off('profileDialog')
-      this.$baseEventBus.$on('profileDialog', ({config, type, flag, productInfo, parserType}) => {
+      this.$baseEventBus.$on('profileDialog', ({
+        config,
+        type,
+        flag,
+        productInfo,
+        parserType,
+      }) => {
         this.productDetail = productInfo
         this.productInfo = productInfo
         this.parserType = type
-        this.productConfig = _.merge({basedate:{params:{}}},config)
+        this.productConfig = _.merge({ basedate: { params: {} } }, config)
         this.editorParser(config, type, flag)
       })
       const { project = '' } = this.$route.query
@@ -713,10 +731,11 @@ import {getCategory, queryCategory} from '@/api/Category'
         }
         const { results } = await queryCategory(parsms)
         this.categoryList = results
-        if (results && this.$route.fullPath == '/dashboard/profile')
+        if (results && this.$route.fullPath == '/dashboard/profile') {
           this.$nextTick(() => {
             this.categoryChange({ name: '所有领域' })
           })
+        }
       },
       async StepsListRowClick(params) {
         var productDetail = {}
@@ -730,12 +749,16 @@ import {getCategory, queryCategory} from '@/api/Category'
           productDetail = _.merge(res, {
             decoder: { code: '' },
             thing: { properties: [] },
-            config: { parser: [], profile: [], basedate: { params: [] } },
+            config: {
+              parser: [],
+              profile: [],
+              basedate: { params: [] },
+            },
           })
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'vab-hey-message-success',
           )
           if (isLoading) loading.close()
         } catch (error) {
@@ -743,7 +766,7 @@ import {getCategory, queryCategory} from '@/api/Category'
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
         // console.clear()
@@ -767,17 +790,19 @@ import {getCategory, queryCategory} from '@/api/Category'
         }
         if (data.name == '所有领域') {
           params.where = { level: { $gte: 1 } }
-          queryCategory(params).then((res) => {
-            this.categorysonList = res.results
-          })
+          queryCategory(params)
+            .then((res) => {
+              this.categorysonList = res.results
+            })
         } else {
           params.where = {
             parent: data.objectId,
           }
-          queryCategory(params).then((res) => {
-            // this.categorysonList.push(data)
-            this.categorysonList = [data].concat(res.results)
-          })
+          queryCategory(params)
+            .then((res) => {
+              // this.categorysonList.push(data)
+              this.categorysonList = [data].concat(res.results)
+            })
         }
         loading.close()
       },
@@ -799,7 +824,9 @@ import {getCategory, queryCategory} from '@/api/Category'
           categoryid: data.objectId,
         }
         this.dialogFormVisible = true
-        this.producttempId = moment(new Date()).valueOf().toString()
+        this.producttempId = moment(new Date())
+          .valueOf()
+          .toString()
       },
       editproducttemp(row) {
         console.log('row', row)
@@ -807,25 +834,26 @@ import {getCategory, queryCategory} from '@/api/Category'
         this.addflag = false
         this.form = row
         this.producttempId = row.objectId
-        this.$set(this.form, 'categoryname', row.category?row.category.name:'')
-        this.$set(this.form, 'categoryid', row.category?row.category.objectId:'')
+        this.$set(this.form, 'categoryname', row.category ? row.category.name : '')
+        this.$set(this.form, 'categoryid', row.category ? row.category.objectId : '')
         this.dialogFormVisible = true
       },
       deleteproducttemp(row) {
-        delProductTemplet(row.objectId).then(res=>{
-          if (res) {
-            this.$message({
-              type: 'success',
-              message: '产品模板删除成功',
-            })
-          } else {
-            this.$message({
-              type: 'error',
-              message: '产品模板删除失败',
-            })
-          }
-          this.queryProduttemp({ category: row.category.objectId })
-        })
+        delProductTemplet(row.objectId)
+          .then(res => {
+            if (res) {
+              this.$message({
+                type: 'success',
+                message: '产品模板删除成功',
+              })
+            } else {
+              this.$message({
+                type: 'error',
+                message: '产品模板删除失败',
+              })
+            }
+            this.queryProduttemp({ category: row.category.objectId })
+          })
       },
       handleNodeClick(data) {
         this.$set(this.form, 'categoryid', data.objectId)
@@ -855,15 +883,21 @@ import {getCategory, queryCategory} from '@/api/Category'
           include: 'category,name',
           where: {
             name: this.queryForm.name
-              ? { $regex: this.queryForm.name, $options: 'i' }
+              ? {
+                $regex: this.queryForm.name,
+                $options: 'i',
+              }
               : { $ne: null },
           },
         }
-        if(args.category){
+        if (args.category) {
           params.where.category = args.category
         }
         try {
-          const { results = [], count = 0 } = await queryProductTemplet(params)
+          const {
+            results = [],
+            count = 0,
+          } = await queryProductTemplet(params)
           loading.close()
           this.proTableData = results
           this.total = count
@@ -921,7 +955,10 @@ import {getCategory, queryCategory} from '@/api/Category'
         this.saveParse(rows, -1, false)
       },
       editorParser(config, type, flag) {
-        const { objectId, thing = {} } = this.productDetail
+        const {
+          objectId,
+          thing = {},
+        } = this.productDetail
         var _sourceDict = []
         var _sourceModule = []
         var _sourceField = []
@@ -930,7 +967,7 @@ import {getCategory, queryCategory} from '@/api/Category'
         this.editDictTempId = objectId
         this.parserType = type
         this.tableType = type
-        this.productConfig = _.merge({basedate:{params:{}}},config)
+        this.productConfig = _.merge({ basedate: { params: {} } }, config)
         var isArr = ['parser', 'profile', 'basedate.params']
         if (isArr.includes(type)) {
           console.log('type', type)
@@ -948,7 +985,7 @@ import {getCategory, queryCategory} from '@/api/Category'
           'this.parserTableList',
           this.parserTableList,
           this.parserTables,
-          this.tableType
+          this.tableType,
         )
         if (this.productDetail?.basedate?.params?.length) {
           this.productDetail.basedate.params.forEach((_dict) => {
@@ -986,7 +1023,7 @@ import {getCategory, queryCategory} from '@/api/Category'
             config: this.productConfig.config,
           })
           this.$message.success(
-            this.$translateTitle('user.Save the template successfully')
+            this.$translateTitle('user.Save the template successfully'),
           )
           this.dialogVisible = false
           if (mark) {
@@ -995,7 +1032,7 @@ import {getCategory, queryCategory} from '@/api/Category'
           }
         } catch (e) {
           this.$message.error(
-            this.$translateTitle('user.Save the template error') + `${e}`
+            this.$translateTitle('user.Save the template error') + `${e}`,
           )
           console.log(e, 'eeee')
         }
@@ -1015,7 +1052,7 @@ import {getCategory, queryCategory} from '@/api/Category'
         this.loading = true
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
         this.inputParams = {
           file: '',
@@ -1160,12 +1197,13 @@ import {getCategory, queryCategory} from '@/api/Category'
         if (!val) {
           return
         }
-        getServer(val).then((resultes) => {
-          if (resultes) {
-            this.fileServer = resultes.file
-            this.access_token = resultes.access_token
-          }
-        })
+        getServer(val)
+          .then((resultes) => {
+            if (resultes) {
+              this.fileServer = resultes.file
+              this.access_token = resultes.access_token
+            }
+          })
       },
       deleteImgsrc() {
         this.imageUrl = ''
@@ -1202,38 +1240,40 @@ import {getCategory, queryCategory} from '@/api/Category'
             if (this.addflag) {
               params.ACL = setAcl
               console.log('params', params)
-              postProductTemplet(params).then((res) => {
-                if (res.objectId) {
-                  this.$message({
-                    type: 'success',
-                    message: '产品模板创建成功',
-                  })
-                } else {
-                  this.$message({
-                    type: 'error',
-                    message: '产品模板创建失败',
-                  })
-                }
-                this.queryProduttemp({ category: this.form.categoryid })
-                this.dialogFormVisible = false
-              })
+              postProductTemplet(params)
+                .then((res) => {
+                  if (res.objectId) {
+                    this.$message({
+                      type: 'success',
+                      message: '产品模板创建成功',
+                    })
+                  } else {
+                    this.$message({
+                      type: 'error',
+                      message: '产品模板创建失败',
+                    })
+                  }
+                  this.queryProduttemp({ category: this.form.categoryid })
+                  this.dialogFormVisible = false
+                })
             } else {
-              putProductTemplet(this.producttempId, params).then((res) => {
-                console.log('resresresres', res)
-                if (res.updatedAt) {
-                  this.$message({
-                    type: 'success',
-                    message: '产品模板修改成功',
-                  })
-                } else {
-                  this.$message({
-                    type: 'error',
-                    message: '产品模板修改失败',
-                  })
-                }
-                this.queryProduttemp({ category: this.form.categoryid })
-                this.dialogFormVisible = false
-              })
+              putProductTemplet(this.producttempId, params)
+                .then((res) => {
+                  console.log('resresresres', res)
+                  if (res.updatedAt) {
+                    this.$message({
+                      type: 'success',
+                      message: '产品模板修改成功',
+                    })
+                  } else {
+                    this.$message({
+                      type: 'error',
+                      message: '产品模板修改失败',
+                    })
+                  }
+                  this.queryProduttemp({ category: this.form.categoryid })
+                  this.dialogFormVisible = false
+                })
             }
           } else {
             this.$message('必填项未填')
@@ -1274,7 +1314,10 @@ import {getCategory, queryCategory} from '@/api/Category'
           name: row.attributes.name,
           thing: row.attributes.thing,
         }
-        const { objectId, code } = await getHashClass('Product', data)
+        const {
+          objectId,
+          code,
+        } = await getHashClass('Product', data)
         if (code == 200) {
           this.blackDict(objectId, data)
         }
@@ -1421,19 +1464,21 @@ import {getCategory, queryCategory} from '@/api/Category'
         let data = {
           thing: { properties: this.productDetail.thing.properties },
         }
-        putProductTemplet(this.producttempId, data).then((res) => {
-          if (res.updatedAt) {
-            this.$message({
-              type: 'success',
-              message: '删除成功',
-            })
-          } else {
-            this.$message({
-              type: 'warning',
-              message: '删除失败',
-            })
-          }
-        }).catch((e) => {
+        putProductTemplet(this.producttempId, data)
+          .then((res) => {
+            if (res.updatedAt) {
+              this.$message({
+                type: 'success',
+                message: '删除成功',
+              })
+            } else {
+              this.$message({
+                type: 'warning',
+                message: '删除失败',
+              })
+            }
+          })
+          .catch((e) => {
             console.log(e)
           })
       },
@@ -1875,20 +1920,23 @@ import {getCategory, queryCategory} from '@/api/Category'
         console.log('obj', obj)
         // 检测到
         // if (this.wmxSituation == '新增') {
-          // console.log("新增");
+        // console.log("新增");
         if (this.wmxSituation == '新增') {
           // console.log("新增");
           this.productDetail.thing.properties.unshift(obj)
         } else if (this.wmxSituation == '编辑') {
           // console.log("编辑", obj);
           this.productDetail.thing.properties[this.modifyIndex] = obj
-          this.thingKey = moment(new Date()).valueOf().toString()
+          this.thingKey = moment(new Date())
+            .valueOf()
+            .toString()
         }
-          console.log(this.wmxSituation, this.productDetail.thing.properties)
-          let data = {
-            thing: { properties: this.productDetail.thing.properties },
-          }
-          putProductTemplet(this.producttempId, data).then((res) => {
+        console.log(this.wmxSituation, this.productDetail.thing.properties)
+        let data = {
+          thing: { properties: this.productDetail.thing.properties },
+        }
+        putProductTemplet(this.producttempId, data)
+          .then((res) => {
             if (res.updatedAt) {
               this.$message({
                 type: 'success',
@@ -1924,12 +1972,13 @@ import {getCategory, queryCategory} from '@/api/Category'
         const params = {
           thing: JSON.parse(editor1.getValue()),
         }
-        putProductTemplet(this.producttempId, params).then((res) => {
-          this.$message({
-            type: 'success',
-            message: this.wmxSituation + '成功',
+        putProductTemplet(this.producttempId, params)
+          .then((res) => {
+            this.$message({
+              type: 'success',
+              message: this.wmxSituation + '成功',
+            })
           })
-        })
         this.schemadialogVisible = false
       },
       //组态
@@ -1944,19 +1993,22 @@ import {getCategory, queryCategory} from '@/api/Category'
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .devproduct {
     ::v-deep .el-table--enable-row-hover .el-table__body tr:hover > td {
       color: #f19944;
       background-color: #fdf3ea;
     }
+
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+
     .infinite-list {
       padding: 0;
       margin: 0;
       list-style: none;
+
       .infinite-list-item {
         display: flex;
         align-items: center;
@@ -1978,9 +2030,11 @@ import {getCategory, queryCategory} from '@/api/Category'
     display: block;
     text-align: center;
   }
+
   .devproduct ::v-deep .el-dialog {
     margin: 0 auto;
   }
+
   .devproduct .el-tabs__header {
     margin: 0;
   }

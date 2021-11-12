@@ -24,19 +24,16 @@ const {
   imageCompression,
   webpackBanner,
   webpackBarName,
-  cdnUrl,
   localUrl,
   Keywords,
   Description,
   dateTime,
   proxy,
-  useCdn,
   isPwa,
   pwaConfig,
   isSmp,
   ogConfig,
-  cdn,
-  CDN_URL
+  CDN_URL,
 } = require('./src/config')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')
@@ -51,7 +48,6 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const smp = new SpeedMeasurePlugin()
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
-const regUrl = /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
 process.env.VUE_APP_TITLE = title
 process.env.VUE_APP_AUTHOR = author
 process.env.VUE_APP_UPDATE_TIME = dateTime
@@ -60,7 +56,8 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
-process.env.CDN_URL = process.env.NODE_ENV === 'development'?proxy[0].target+CDN_URL:CDN_URL
+process.env.CDN_URL =
+  process.env.NODE_ENV === 'development' ? proxy[0].target + CDN_URL : CDN_URL
 // process.env.CDN_URL = process.env.CDN_URL
 const staticUrl = process.env.CDN_URL
   ? `${process.env.CDN_URL}/assets/`
@@ -72,7 +69,10 @@ function getChainWebpack(config) {
     var _staticUrl = localUrl
     // if (useCdn || process.env.NODE_ENV !== 'development') {
     const { css, js } = _staticUrl
-    _staticUrl = { css: [], js: [] }
+    _staticUrl = {
+      css: [],
+      js: [],
+    }
     css.forEach((_css) => {
       _staticUrl.css.push(`${staticUrl}css/${_css}`)
     })
@@ -100,9 +100,11 @@ function getChainWebpack(config) {
   })
   // https://blog.csdn.net/weixin_34294049/article/details/97278751
   config.when(process.env.NODE_ENV === 'production', (config) => {
-    if (process.env.CDN_URL)
+    if (process.env.CDN_URL) {
       console.log(`当前使用了cdn,cdn资源链接地址为${process.env.CDN_URL}`)
-    else console.log(`当前未使用cdn,可能会导致打包体积过大`)
+    } else {
+      console.log(`当前未使用cdn,可能会导致打包体积过大`)
+    }
     config.performance.set('hints', false)
     config.plugins.delete('prefetch')
     config.devtool('none')
@@ -184,8 +186,9 @@ const cssExport = {
         if (
           relativePath.replace(/\\/g, '/') !==
           'src/vab/styles/variables/variables.scss'
-        )
+        ) {
           return '@import "~@/vab/styles/variables/variables.scss";' + content
+        }
         return content
       },
     },

@@ -18,10 +18,10 @@
       >
         <ele-form
           v-model="alertConfig.config"
-          v-bind="alertConfig.config"
           :config="formConfig"
           pure
           :request-fn="handleSubmit"
+          v-bind="alertConfig.config"
           @request-success="handleSuccess(alertConfig)"
         />
       </el-dialog>
@@ -315,13 +315,13 @@
 
 <script>
   import {
-    queryNotification,
-    putNotification,
     delNotification,
+    putNotification,
+    queryNotification,
   } from '@/api/Notification'
   import { batch } from '@/api/Batch'
   import { getProduct } from '@/api/Product'
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters } from 'vuex'
   import { Promise } from 'q'
 
   export default {
@@ -354,13 +354,25 @@
         devicename: '',
         rules: {
           product: [
-            { required: true, message: '请选择活动区域', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择活动区域',
+              trigger: 'change',
+            },
           ],
           name: [
-            { required: true, message: '请选择活动区域', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择活动区域',
+              trigger: 'change',
+            },
           ],
           type: [
-            { required: true, message: '请选择活动资源', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择活动资源',
+              trigger: 'change',
+            },
           ],
         },
         processAll: [
@@ -585,10 +597,16 @@
         }
         if (this.queryForm.searchDate.length) {
           params.where['createdAt'] = {
-            $gt: { __type: 'Date', iso: this.queryForm.searchDate[0] },
+            $gt: {
+              __type: 'Date',
+              iso: this.queryForm.searchDate[0],
+            },
           }
           params.where['updatedAt'] = {
-            $lt: { __type: 'Date', iso: this.queryForm.searchDate[1] },
+            $lt: {
+              __type: 'Date',
+              iso: this.queryForm.searchDate[1],
+            },
           }
         }
         await queryNotification(params)
@@ -641,7 +659,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .mycontainer {
     .ticker-dialog {
       .create-ticker {

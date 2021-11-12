@@ -98,8 +98,8 @@
         >
           <el-checkbox-group v-model="checkList">
             <vab-draggable
-              v-bind="dragOptions"
               :list="columns"
+              v-bind="dragOptions"
             >
               <div
                 v-for="(item, index) in columns"
@@ -224,9 +224,13 @@
   import { doDelete, getList } from '@/api/Mock/table'
   import TableEdit from '@/views/Empty/tableEdit'
   import VabDraggable from 'vuedraggable'
+
   export default {
     name: 'Empty',
-    components: { TableEdit, VabDraggable },
+    components: {
+      TableEdit,
+      VabDraggable,
+    },
     data() {
       return {
         infoData: 'Empty',
@@ -312,8 +316,11 @@
         this.handleHeight()
       },
       handleHeight() {
-        if (this.isFullscreen) this.height = this.$baseTableHeight(1) + 210
-        else this.height = this.$baseTableHeight(1)
+        if (this.isFullscreen) {
+          this.height = this.$baseTableHeight(1) + 210
+        } else {
+          this.height = this.$baseTableHeight(1)
+        }
       },
       setSelectRows(val) {
         this.selectRows = val

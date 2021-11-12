@@ -106,8 +106,14 @@ export default {
             content: {
               type: 'el-select',
               options: [
-                { text: '科学家', value: 'scientist' },
-                { text: '警察', value: 'policeman' },
+                {
+                  text: '科学家',
+                  value: 'scientist',
+                },
+                {
+                  text: '警察',
+                  value: 'policeman',
+                },
                 '程序员',
               ],
             },

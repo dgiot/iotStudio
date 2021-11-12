@@ -130,8 +130,8 @@
                 <el-popover trigger="hover">
                   <el-checkbox-group v-model="checkList">
                     <vue-draggable
-                      v-bind="dragOptions"
                       :list="logcolumns"
+                      v-bind="dragOptions"
                     >
                       <div
                         v-for="(item, index) in logcolumns"
@@ -253,7 +253,7 @@
 
 <script>
   import { post_tree, putLogLevel } from '@/api/Logs'
-  import { isBase64 } from '@/utils'
+
   export default {
     name: 'RealLog',
     data() {
@@ -345,8 +345,11 @@
       },
       handleHeight() {
         this.isFullscreen = !this.isFullscreen
-        if (this.isFullscreen) this.height = this.$baseTableHeight(1) + 120
-        else this.height = this.$baseTableHeight(1)
+        if (this.isFullscreen) {
+          this.height = this.$baseTableHeight(1) + 120
+        } else {
+          this.height = this.$baseTableHeight(1)
+        }
       },
       onRightClick(e) {
         this.clickItem = ''
@@ -452,7 +455,7 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .logs {
     ::v-deep {
       .el-table__body,
@@ -460,10 +463,13 @@
         width: 100% !important;
       }
     }
-    height: calc(100vh - #{$base-top-bar-height}* 2.7) !important;
+
+    height: calc(100vh - #{$base-top-bar-height} * 2.7) !important;
+
     &-row {
       &-query {
       }
+
       &-tree {
         overflow: scroll;
       }

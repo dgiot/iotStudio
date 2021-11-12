@@ -66,7 +66,7 @@ function topoUtils() {
    * @description 删除节点
    * @document https://konvajs.org/api/Konva.Container.html#remove
    */
-  function removeNode(){
+  function removeNode() {
     KonvaBus({
       type: 'removeNode',
       removeNode: canvas.contextmenu,
@@ -79,6 +79,7 @@ function topoUtils() {
     //   message: '删除节点!',
     // })
   }
+
   function updateCanvasAttr(scale) {
     const { width, height } = canvas.konvaAttr
     const newWidth = scale / 100
@@ -122,6 +123,6 @@ function topoUtils() {
     //   })
     // )
   }
-
 }
+
 export default topoUtils

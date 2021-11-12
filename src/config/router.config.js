@@ -57,7 +57,11 @@ const defaultRoutes = {
   ],
 }
 // 出错路由重定向
-const errorRoutes = { path: '*', redirect: '/404', hidden: true }
+const errorRoutes = {
+  path: '*',
+  redirect: '/404',
+  hidden: true,
+}
 module.exports = {
   indexRoutes,
   errorRoutes,

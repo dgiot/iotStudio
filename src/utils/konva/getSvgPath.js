@@ -42,4 +42,5 @@ function getSvgPath(item) {
   })
   return result
 }
+
 export default getSvgPath

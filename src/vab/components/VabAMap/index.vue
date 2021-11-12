@@ -73,11 +73,13 @@
     width: 100%;
     height: 100%;
   }
+
   .search-box {
     position: absolute !important;
     top: 10px;
     left: 20px;
   }
+
   .amap-page-container {
     position: relative;
     width: 100%;

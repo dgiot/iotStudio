@@ -15,4 +15,5 @@
 function createRect(params) {
   return new Konva.Rect(params)
 }
+
 export default createRect

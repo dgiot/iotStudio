@@ -1,21 +1,21 @@
 <template>
   <div
-    class="container"
     ref="container"
+    class="container"
   >
     <div
-      class="content"
       ref="content"
+      class="content"
     ></div>
   </div>
 </template>
 
 <script>
-  import { Stage, Layer, Circle, Rect } from 'konva'
+  import { Circle, Layer, Rect, Stage } from 'konva'
 
   export default {
     name: 'BallGame',
-    data () {
+    data() {
       return {
         width: 0,
         height: 0,
@@ -30,10 +30,10 @@
         speedStep: 0.01,
         maxSpeed: 20,
         rect: null,
-        rectWidth: 100
+        rectWidth: 100,
       }
     },
-    mounted () {
+    mounted() {
       this.init()
       this.createCircle()
       this.createRect()
@@ -45,14 +45,14 @@
        * @Date: 2021-02-02 09:31:09
        * @Desc: 初始化
        */
-      init () {
+      init() {
         let { width, height } = this.$refs.content.getBoundingClientRect()
         this.width = width
         this.height = height
         this.stage = new Stage({
           container: this.$refs.content,
           width: width,
-          height: height
+          height: height,
         })
         this.layer = new Layer()
         this.stage.add(this.layer)
@@ -63,7 +63,7 @@
        * @Date: 2021-02-02 09:58:12
        * @Desc: 渲染小球
        */
-      createCircle () {
+      createCircle() {
         this.centerX = this.stage.width() / 2
         this.centerY = 100
         this.circle = new Circle({
@@ -72,7 +72,7 @@
           radius: this.radius,
           fill: 'red',
           stroke: 'black',
-          strokeWidth: 4
+          strokeWidth: 4,
         })
         this.layer.add(this.circle)
         this.layer.draw()
@@ -83,7 +83,7 @@
        * @Date: 2021-02-02 10:30:22
        * @Desc: 渲染挡板
        */
-      createRect () {
+      createRect() {
         this.rect = new Rect({
           x: (this.stage.width() - 100) / 2,
           y: this.height - 50,
@@ -96,9 +96,9 @@
           dragBoundFunc: function (pos) {
             return {
               x: pos.x,
-              y: this.absolutePosition().y
+              y: this.absolutePosition().y,
             }
-          }
+          },
         })
         this.layer.add(this.rect)
         this.layer.draw()
@@ -109,13 +109,16 @@
        * @Date: 2021-02-02 10:01:32
        * @Desc: 小球运动
        */
-      runCircle () {
+      runCircle() {
         this.centerX += this.speedX
         this.centerY += this.speedY
         this.circle.x(this.centerX)
         this.circle.y(this.centerY)
         // 撞墙检测
-        if (this.centerX + this.radius >= this.width || this.centerX - this.radius <= 0) {
+        if (
+          this.centerX + this.radius >= this.width ||
+          this.centerX - this.radius <= 0
+        ) {
           this.speedX = -this.speedX
         }
         if (this.centerY - this.radius <= 0) {
@@ -129,10 +132,14 @@
         }
         // 加速度
         if (Math.abs(this.speedX) < this.maxSpeed) {
-          this.speedX > 0 ? this.speedX += this.speedStep : this.speedX -= this.speedStep
+          this.speedX > 0
+            ? (this.speedX += this.speedStep)
+            : (this.speedX -= this.speedStep)
         }
         if (Math.abs(this.speedY) < this.maxSpeed) {
-          this.speedY > 0 ? this.speedY += this.speedStep : this.speedY -= this.speedStep
+          this.speedY > 0
+            ? (this.speedY += this.speedStep)
+            : (this.speedY -= this.speedStep)
         }
       },
 
@@ -141,7 +148,7 @@
        * @Date: 2021-02-02 11:17:24
        * @Desc: 小球和挡板的碰撞检测
        */
-      collisionCheck () {
+      collisionCheck() {
         let minx = 0
         let miny = 0
         let rectX = this.rect.x()
@@ -162,7 +169,10 @@
         } else {
           miny = this.centerY
         }
-        if (this.getTwoPointDistance(minx, miny, this.centerX, this.centerY) <= this.radius) {
+        if (
+          this.getTwoPointDistance(minx, miny, this.centerX, this.centerY) <=
+          this.radius
+        ) {
           if (minx === rectX || minx === rectX + rectWidth) {
             this.speedX = -this.speedX
           }
@@ -177,7 +187,7 @@
        * @Date: 2021-02-02 10:44:59
        * @Desc: 游戏结束
        */
-      gameOver () {
+      gameOver() {
         alert('game over')
         this.speedX = Math.random() * 3
         this.speedY = Math.random() * 3
@@ -195,7 +205,7 @@
        * @Date: 2021-02-02 10:06:59
        * @Desc: 刷新
        */
-      update () {
+      update() {
         window.requestAnimationFrame(() => {
           this.runCircle()
           this.update()
@@ -208,10 +218,10 @@
        * @Date: 2021-02-02 14:10:19
        * @Desc: 两点距离公式
        */
-      getTwoPointDistance (x1, y1, x2, y2) {
+      getTwoPointDistance(x1, y1, x2, y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
-      }
-    }
+      },
+    },
   }
 </script>
 

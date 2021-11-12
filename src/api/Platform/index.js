@@ -7,6 +7,7 @@
  * @FilePath: \dgiot-dashboard\src\api\Platform\index.js
  */
 import request from '@/utils/request'
+
 export async function Project_count(params) {
   return request({
     url: '/classes/Project',
@@ -78,6 +79,7 @@ export async function dev_online_count(params) {
     params: params,
   })
 }
+
 /**
  * 新建报告模板
  * @param {*} data

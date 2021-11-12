@@ -221,8 +221,8 @@
             <!-- <h4>设备信息</h4> -->
             <div class="chartsinfo">
               <div
-                class="queryHeader"
                 :style="{ height: Device == 'desktop' ? '50px' : '240px' }"
+                class="queryHeader"
               >
                 <vab-query-form-top-panel>
                   <el-form
@@ -236,9 +236,9 @@
                     >
                       <el-date-picker
                         v-model="params.startTime"
-                        align="right"
                         :picker-options="pickerOptionsDay"
                         :placeholder="$translateTitle('developer.startTime')"
+                        align="right"
                         size="mini"
                         style="width: 83%"
                         type="datetime"
@@ -247,10 +247,10 @@
                     <el-form-item :label="$translateTitle('developer.EndTime')">
                       <el-date-picker
                         v-model="params.endTime"
-                        align="right"
                         :clearable="false"
                         :picker-options="pickerOptionsDay"
                         :placeholder="$translateTitle('developer.EndTime')"
+                        align="right"
                         size="mini"
                         style="width: 83%"
                         type="datetime"
@@ -377,13 +377,13 @@
                         :data-empty="dataEmpty"
                         :data-zoom="chartDataZoom"
                         :extend="chartExtend"
-                        height="300px"
                         :legend-visible="false"
                         :loading="loading"
                         :set-option-opts="false"
                         :settings="chartSettings"
                         :toolbox="toolbox"
                         :type="params.style"
+                        height="300px"
                       />
                     </el-card>
                   </el-col>
@@ -420,9 +420,9 @@
         >
           <div class="childrendevices">
             <el-form
-              class="demo-form-inline"
               :inline="true"
               :model="childrendevices"
+              class="demo-form-inline"
               size="small"
             >
               <el-form-item
@@ -480,8 +480,8 @@
               >
                 <el-table-column align="center" type="selection" width="55" />
                 <el-table-column
-                  align="center"
                   :label="$translateTitle('equipment.devicenumber')"
+                  align="center"
                 >
                   <template slot-scope="scope">
                     <span>{{ scope.row.devaddr }}</span>
@@ -489,8 +489,8 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  align="center"
                   :label="$translateTitle('equipment.state')"
+                  align="center"
                 >
                   <template slot-scope="scope">
                     <span :class="scope.row.status">
@@ -510,16 +510,16 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  align="center"
                   :label="$translateTitle('equipment.product')"
+                  align="center"
                 >
                   <template slot-scope="scope">
                     <span type="success">{{ scope.row.productName }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
-                  align="center"
                   :label="$translateTitle('equipment.nodetype')"
+                  align="center"
                 >
                   <!-- <template slot-scope="scope">
                     <svg-icon
@@ -535,12 +535,12 @@
                   </template> -->
                 </el-table-column>
                 <el-table-column
-                  align="center"
                   :label="
                     $translateTitle('developer.prohibit') +
                     '/' +
                     $translateTitle('developer.enable')
                   "
+                  align="center"
                 >
                   <template slot-scope="scope">
                     <el-switch
@@ -553,8 +553,8 @@
                 </el-table-column>
 
                 <el-table-column
-                  align="center"
                   :label="$translateTitle('equipment.lastonlinetime')"
+                  align="center"
                 >
                   <template slot-scope="scope">
                     <span v-if="scope.row.lastOnlineTime">
@@ -564,14 +564,14 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  align="center"
                   :label="$translateTitle('developer.operation')"
+                  align="center"
                 >
                   <template slot-scope="scope">
                     <el-link
+                      :underline="false"
                       icon="el-icon-view"
                       type="primary"
-                      :underline="false"
                       @click="deviceToDetail(scope.row)"
                     >
                       {{ $translateTitle('equipment.see') }}
@@ -604,9 +604,9 @@
                       </div>
                       <el-link
                         slot="reference"
+                        :underline="false"
                         icon="el-icon-delete"
                         type="danger"
-                        :underline="false"
                       >
                         {{ $translateTitle('equipment.RelievingAssociation') }}
                       </el-link>
@@ -617,10 +617,10 @@
             </div>
             <div class="elpagination" style="margin-top: 20px">
               <el-pagination
-                layout="total, sizes, prev, pager, next, jumper"
                 :page-size="childrenDeviceLength"
                 :page-sizes="[10, 20, 30, 50]"
                 :total="childrenDeviceTotal"
+                layout="total, sizes, prev, pager, next, jumper"
                 @current-change="childrenDeviceCurrentChange"
                 @size-change="childrenDeviceSizeChange"
               />
@@ -637,15 +637,15 @@
             <div class="childdialog">
               <el-form
                 ref="childrenForm"
-                class="demo-form-inline"
                 :model="childrenForm"
+                class="demo-form-inline"
               >
                 <el-form-item
                   :label="$translateTitle('equipment.products')"
-                  prop="product"
                   :rules="[
                     { required: true, message: '选择产品', trigger: 'change' },
                   ]"
+                  prop="product"
                 >
                   <el-select
                     v-model="childrenForm.product"
@@ -663,10 +663,10 @@
 
                 <el-form-item
                   :label="$translateTitle('product.equipment')"
-                  prop="device"
                   :rules="[
                     { required: true, message: '选择设备', trigger: 'change' },
                   ]"
+                  prop="device"
                 >
                   <el-select
                     v-model="childrenForm.device"
@@ -683,8 +683,6 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item
-                  label="子网地址"
-                  prop="route"
                   :rules="[
                     {
                       required: true,
@@ -692,6 +690,8 @@
                       trigger: 'blur',
                     },
                   ]"
+                  label="子网地址"
+                  prop="route"
                 >
                   <el-input
                     v-model="childrenForm.route"
@@ -726,9 +726,9 @@
         >
           <scene-log
             v-show="activeName == 'task'"
+            ref="SceneLog"
             :device-info="deviceInfo"
             :name="activeName"
-            ref="SceneLog"
           />
         </el-tab-pane>
         <el-tab-pane
@@ -759,6 +759,11 @@
   import info from '@/components/Device/info'
   import SceneLog from '@/views/equipment_management/component/SceneLog'
   import deviceLog from '@/views/Logs/device'
+  import { mapGetters } from 'vuex'
+  import { getCardDevice, getDabDevice, getDevice, queryDevice } from '@/api/Device/index.js'
+  import { utc2beijing } from '@/utils/index'
+  import Instruct from '../devicemanage/instruct_manage'
+  import chartType from '@/api/Mock/Chart'
   // import { requireModule } from '@/utils/file'
   const columns = [
     {
@@ -769,25 +774,28 @@
       key: 'imgurl',
       scopedSlots: { customRender: 'imgurl' },
     },
-    { title: '时间', dataIndex: 'time', key: 'time' },
-    { title: '名称', dataIndex: 'name', key: 'name' },
-    { title: '值', dataIndex: 'number', key: 'number' },
+    {
+      title: '时间',
+      dataIndex: 'time',
+      key: 'time',
+    },
+    {
+      title: '名称',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: '值',
+      dataIndex: 'number',
+      key: 'number',
+    },
     {
       title: '单位',
       dataIndex: 'unit',
       key: 'unit',
     },
   ]
-  import { mapGetters } from 'vuex'
-  import {
-    getDabDevice,
-    getCardDevice,
-    getDevice,
-    queryDevice,
-  } from '@/api/Device/index.js'
-  import { utc2beijing } from '@/utils/index'
-  import Instruct from '../devicemanage/instruct_manage'
-  import chartType from '@/api/Mock/Chart'
+
   export default {
     components: {
       Instruct,
@@ -810,7 +818,7 @@
         bind(el, binding) {
           // 获取element-ui定义好的scroll盒子
           const SELECTWRAP_DOM = el.querySelector(
-            '.el-select-dropdown .el-select-dropdown__wrap'
+            '.el-select-dropdown .el-select-dropdown__wrap',
           )
           SELECTWRAP_DOM.addEventListener('scroll', function () {
             /**
@@ -877,16 +885,21 @@
               'stack',
             ],
           },
-          dataView: { show: true, readOnly: false },
+          dataView: {
+            show: true,
+            readOnly: false,
+          },
           saveAsImage: { show: true },
           restore: { show: true },
         },
       }
       return {
         router: '',
-        chartKey: moment(new Date()).valueOf(),
+        chartKey: moment(new Date())
+          .valueOf(),
         machinelist: {},
-        thirdtbKey: moment(new Date()).valueOf(),
+        thirdtbKey: moment(new Date())
+          .valueOf(),
         deviceInfo: {},
         columns,
         productId: this.$route.query.productid,
@@ -1140,7 +1153,8 @@
     watch: {
       machinelist: {
         deep: true,
-        handler(val) {},
+        handler(val) {
+        },
       },
       sm(v) {
         this.$nextTick((_) => {
@@ -1156,7 +1170,7 @@
       console.log(' this.params.style', this.params.style)
       if (this.$route.query.deviceid) {
         this.deviceid = this.$route.query.deviceid
-        this.getDeviceDetail( this.deviceid)
+        this.getDeviceDetail(this.deviceid)
         this.initChart()
         this.getDeviceInfo(this.deviceid)
         window.addEventListener('resize', this.resizeTheChart)
@@ -1173,14 +1187,14 @@
       window.removeEventListener('resize', this.resizeTheChart)
     },
     methods: {
-      Unbscribe(){
+      Unbscribe() {
         const subtopic =
           'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
         const topicKey = this.$dgiotBus.topicKey(this.router, subtopic)
         this.$dgiotBus.$emit(
           'MqttUnbscribe',
           topicKey,
-          subtopic
+          subtopic,
         )
       },
       async getDeviceInfo(deviceid) {
@@ -1213,7 +1227,8 @@
         this.deviceInfo = resultes
       },
       toggleChart(e) {
-        this.chartKey = moment(new Date()).valueOf()
+        this.chartKey = moment(new Date())
+          .valueOf()
         this.loading = false
         console.log(e)
         this.chartExtend = {}
@@ -1286,9 +1301,10 @@
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
         this.params.datetimerange = [start, end]
         this.queryFlag = false
-        this.$queryProduct({}).then((res) => {
-          this.allProudct = res.results
-        })
+        this.$queryProduct({})
+          .then((res) => {
+            this.allProudct = res.results
+          })
       },
       async queryChart() {
         this.chartData = {
@@ -1299,7 +1315,7 @@
         if (this.params.startTime && this.params.endTime) {
           this.$baseColorfullLoading(
             1,
-            this.$translateTitle('home.messag_loding')
+            this.$translateTitle('home.messag_loding'),
           )
           let deviceid = this.$route.query.deviceid
           // let endTime = moment(this.params.datetimerange[1]).valueOf()
@@ -1318,8 +1334,10 @@
             endTime,
           } = this.params
           let params = {
-            starttime: moment(startTime).valueOf(),
-            endtime: moment(endTime).valueOf(),
+            starttime: moment(startTime)
+              .valueOf(),
+            endtime: moment(endTime)
+              .valueOf(),
             interval: number + interval,
             keys: keys,
             limit: limit,
@@ -1328,7 +1346,8 @@
           }
           await getDabDevice(deviceid, params)
             .then((res) => {
-              this.$baseColorfullLoading().close()
+              this.$baseColorfullLoading()
+                .close()
               console.log(res, 'res charts')
               if (res?.chartData) {
                 const { chartData = {} } = res
@@ -1347,11 +1366,12 @@
             .catch((e) => {
               console.log(e)
               this.loading = false
-              this.$baseColorfullLoading().close()
+              this.$baseColorfullLoading()
+                .close()
             })
         } else {
           this.$message.error(
-            this.$translateTitle('developer.Please select the query time')
+            this.$translateTitle('developer.Please select the query time'),
           )
         }
       },
@@ -1371,7 +1391,7 @@
           this.getDevices()
         } else if (tab.name == 'third') {
           this.queryChart()
-        } else if (tab.name == 'task'){
+        } else if (tab.name == 'task') {
           this.$refs.SceneLog.get_topic()
         }
       },
@@ -1456,86 +1476,88 @@
           include: 'product',
           where: { objectId: deviceid },
         }
-        queryDevice(params).then((res) => {
-          console.log(res, 'res')
-          if (res.results.length > 0) {
-            // console.log(resultes, 'resproduct')
-            // 产品
-            const resultes = res.results[0]
-            var obj = {}
-            vm.productid = vm.$objGet(resultes, 'product.objectId')
-            vm.devicedevaddr = vm.$objGet(resultes, 'devaddr')
-            obj.id = resultes.objectId
-            obj.createdAt = utc2beijing(resultes.createdAt)
-            obj.productName = vm.$objGet(resultes, 'product.name')
-            obj.productid = vm.$objGet(resultes, 'product.objectId')
-            // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
-            // obj.updatedAt = this.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'updatedAt'))
-            obj.ip = vm.$objGet(resultes, 'ip')
-            obj.basedata = JSON.stringify(resultes.basedata)
-            obj.DeviceName = resultes.name
-            obj.status = resultes.status
-            obj.desc = vm.$objGet(resultes, 'desc')
-            obj.devaddr = vm.$objGet(resultes, 'devaddr')
-            obj.nodeType = vm.$objGet(resultes, 'product.nodeType')
-            obj.devType = vm.$objGet(resultes, 'product.devType')
-            obj.productSecret = vm.$objGet(resultes, 'product.productSecret')
-            obj.address =
-              vm.$objGet(resultes, 'detail.address') ||
-              vm.$objGet(resultes, 'location.latitude') +
+        queryDevice(params)
+          .then((res) => {
+            console.log(res, 'res')
+            if (res.results.length > 0) {
+              // console.log(resultes, 'resproduct')
+              // 产品
+              const resultes = res.results[0]
+              var obj = {}
+              vm.productid = vm.$objGet(resultes, 'product.objectId')
+              vm.devicedevaddr = vm.$objGet(resultes, 'devaddr')
+              obj.id = resultes.objectId
+              obj.createdAt = utc2beijing(resultes.createdAt)
+              obj.productName = vm.$objGet(resultes, 'product.name')
+              obj.productid = vm.$objGet(resultes, 'product.objectId')
+              // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
+              // obj.updatedAt = this.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'updatedAt'))
+              obj.ip = vm.$objGet(resultes, 'ip')
+              obj.basedata = JSON.stringify(resultes.basedata)
+              obj.DeviceName = resultes.name
+              obj.status = resultes.status
+              obj.desc = vm.$objGet(resultes, 'desc')
+              obj.devaddr = vm.$objGet(resultes, 'devaddr')
+              obj.nodeType = vm.$objGet(resultes, 'product.nodeType')
+              obj.devType = vm.$objGet(resultes, 'product.devType')
+              obj.productSecret = vm.$objGet(resultes, 'product.productSecret')
+              obj.address =
+                vm.$objGet(resultes, 'detail.address') ||
+                vm.$objGet(resultes, 'location.latitude') +
                 '，' +
                 vm.$objGet(resultes, 'location.longitude')
-            const tddata = vm.$objGet(resultes, 'tddata')
-            // const thingTemp = this.$objGet(resultes, 'product.thing')
-            let resData = JSON.parse(
-              JSON.stringify(vm.$objGet(resultes, 'product.thing.properties'))
-            )
-            console.log(resData,'resData')
-            vm.Update()
-            let array = []
-            if(!resData) return
-            resData.forEach((item) => {
-              if (item.devicetype) {
-                array.push(item.devicetype)
-              }
-            })
-            array = _.uniqBy(array)
-            let machine = {}
-            array.forEach((item) => {
-              let arr = []
-              resData.forEach((item1) => {
-                if (item == item1.devicetype) {
-                  arr.push(item1)
+              const tddata = vm.$objGet(resultes, 'tddata')
+              // const thingTemp = this.$objGet(resultes, 'product.thing')
+              let resData = JSON.parse(
+                JSON.stringify(vm.$objGet(resultes, 'product.thing.properties')),
+              )
+              console.log(resData, 'resData')
+              vm.Update()
+              let array = []
+              if (!resData) return
+              resData.forEach((item) => {
+                if (item.devicetype) {
+                  array.push(item.devicetype)
                 }
               })
-              machine[item] = arr
-            })
-            vm.machinelist = machine
-            vm.thirdtbKey = moment(new Date()).valueOf()
-            console.log('this.machinelist', vm.machinelist)
-            vm.devicedetail = obj
-            if (vm.$route.query.nodeType != 0 && vm.ischildren == 'true') {
-              vm.activeName = 'children'
-              vm.isshowchild = true
-              vm.getDevices()
-              const params = {}
+              array = _.uniqBy(array)
+              let machine = {}
+              array.forEach((item) => {
+                let arr = []
+                resData.forEach((item1) => {
+                  if (item == item1.devicetype) {
+                    arr.push(item1)
+                  }
+                })
+                machine[item] = arr
+              })
+              vm.machinelist = machine
+              vm.thirdtbKey = moment(new Date())
+                .valueOf()
+              console.log('this.machinelist', vm.machinelist)
+              vm.devicedetail = obj
+              if (vm.$route.query.nodeType != 0 && vm.ischildren == 'true') {
+                vm.activeName = 'children'
+                vm.isshowchild = true
+                vm.getDevices()
+                const params = {}
+              } else {
+                vm.ischildren = false
+                vm.isshowchild = true
+              }
+              // 初始化物模型数据
+              vm.isupdate = true
+              // this.Update()
+              vm.updateTrue(true)
+              if (resultes.product.topics) {
+                vm.topicData = resultes.product.topics.concat(vm.topic)
+              } else {
+                vm.topicData = vm.topic
+              }
             } else {
-              vm.ischildren = false
-              vm.isshowchild = true
+              vm.$message('objectId 未返回')
             }
-            // 初始化物模型数据
-            vm.isupdate = true
-            // this.Update()
-            vm.updateTrue(true)
-            if (resultes.product.topics) {
-              vm.topicData = resultes.product.topics.concat(vm.topic)
-            } else {
-              vm.topicData = vm.topic
-            }
-          } else {
-            vm.$message('objectId 未返回')
-          }
-        })
+          })
       },
       Update() {
         var vm = this
@@ -1563,7 +1585,8 @@
                 machine[item] = arr
               })
               vm.machinelist = machine
-              vm.thirdtbKey = moment(new Date()).valueOf()
+              vm.thirdtbKey = moment(new Date())
+                .valueOf()
               console.log('this.machinelist', vm.machinelist)
             } else {
               this.updateTrue(false)
@@ -1629,14 +1652,15 @@
             product: val,
           },
         }
-        this.$queryDevice(params).then((response) => {
-          if (response.results && response.results.length > 0) {
-            this.productDevices = response.results
-          } else {
-            this.productDevices = []
-          }
-          this.childrenForm.device = ''
-        })
+        this.$queryDevice(params)
+          .then((response) => {
+            if (response.results && response.results.length > 0) {
+              this.productDevices = response.results
+            } else {
+              this.productDevices = []
+            }
+            this.childrenForm.device = ''
+          })
       },
       deviceToDetail(row) {
         console.log('row', row)
@@ -1669,18 +1693,19 @@
             }
             this.$putDevice(
               this.childrenForm.device,
-              childrenDevicesParmas
-            ).then((resultes) => {
-              if (resultes) {
-                this.$message({
-                  type: 'success',
-                  message: '添加成功',
-                })
-                this.childDialog = false
-                this.getDevices()
-                this.$refs['childrenForm'].resetFields()
-              }
-            })
+              childrenDevicesParmas,
+            )
+              .then((resultes) => {
+                if (resultes) {
+                  this.$message({
+                    type: 'success',
+                    message: '添加成功',
+                  })
+                  this.childDialog = false
+                  this.getDevices()
+                  this.$refs['childrenForm'].resetFields()
+                }
+              })
           } else {
             console.log('error submit!!')
             return false
@@ -1693,7 +1718,9 @@
             const params = {
               parentId: null,
             }
-            this.$putDevice(item.objectId, params).then((resultes) => {})
+            this.$putDevice(item.objectId, params)
+              .then((resultes) => {
+              })
           }),
         ])
           .then((data) => {
@@ -1721,7 +1748,9 @@
             const params = {
               isEnable: false,
             }
-            this.$putDevice(item.objectId, params).then((resultes) => {})
+            this.$putDevice(item.objectId, params)
+              .then((resultes) => {
+              })
           }),
         ])
           .then((data) => {
@@ -1748,7 +1777,9 @@
             const params = {
               isEnable: true,
             }
-            this.$putDevice(item.objectId, params).then((resultes) => {})
+            this.$putDevice(item.objectId, params)
+              .then((resultes) => {
+              })
           }),
         ])
           .then((data) => {
@@ -1780,16 +1811,17 @@
           parentId: null,
           route: objRoute,
         }
-        this.$putDevice(scope.row.objectId, params).then((response) => {
-          if (response) {
-            this.$message({
-              type: 'success',
-              message: '解除关联成功',
-            })
-            scope._self.$refs[`popover-${scope.$index}`].doClose()
-            this.getDevices()
-          }
-        })
+        this.$putDevice(scope.row.objectId, params)
+          .then((response) => {
+            if (response) {
+              this.$message({
+                type: 'success',
+                message: '解除关联成功',
+              })
+              scope._self.$refs[`popover-${scope.$index}`].doClose()
+              this.getDevices()
+            }
+          })
       },
       handelUpdate(event, row, index) {
         var newData1 = {}
@@ -1812,12 +1844,13 @@
             const params = {
               isEnable: newData2.isEnable,
             }
-            this.$putDevice(row.objectId, params).then((resultes) => {
-              this.$message({
-                type: 'success',
-                message: '状态修改成功',
+            this.$putDevice(row.objectId, params)
+              .then((resultes) => {
+                this.$message({
+                  type: 'success',
+                  message: '状态修改成功',
+                })
               })
-            })
             this.getDevices()
           })
           .catch(() => {
@@ -1833,19 +1866,22 @@
     },
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   ::v-deep {
     .el-tabs__header {
       margin: 0;
     }
+
     .el-icon-time {
       display: none;
     }
+
     .el-date-editor--datetime {
       input {
         padding: 0 10px;
       }
     }
+
     .el-card {
       overflow: hidden;
       color: #303133;
@@ -1855,25 +1891,31 @@
       transition: 0.3s;
     }
   }
+
   .chartsinfo {
     margin-top: 15px;
+
     .chartsmain {
       margin: 30px 0;
     }
   }
+
   .editdevices {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
     padding: 0 20px;
   }
+
   .editdevices .OFFLINE {
     color: red;
   }
+
   .editdevices .ACTIVE,
   .editdevices .ONLINE {
     color: green;
   }
+
   .mailtable .cloumn {
     font-weight: bold;
     color: #74777a;
@@ -1882,6 +1924,7 @@
     border-right: 1px solid #ebecec;
     border-bottom: 1px solid #ebecec;
   }
+
   .editdevices .updatedtable {
     box-sizing: border-box;
     width: 280px;
@@ -1897,10 +1940,12 @@
     border-radius: 5px;
     box-shadow: 10px 10px 10px 5px #f4f4f4;
   }
+
   .editdevices .buttonactive {
     color: white;
     background-color: #409eff;
   }
+
   .mailtable td {
     box-sizing: border-box;
     padding: 15px;
@@ -1909,6 +1954,7 @@
     text-align: left;
     border: 1px solid #ebecec;
   }
+
   .childrendevices {
     box-sizing: border-box;
     width: 100%;
@@ -1926,29 +1972,36 @@
     font-size: 16px;
     line-height: 50px;
   }
+
   .editdevices .el-tabs__content {
     box-sizing: border-box;
     padding: 20px;
     background: #f4f4f4;
   }
+
   .editdevices .childrendevices .el-form-item:last-child {
     float: right;
   }
+
   .editdevices .childdialog .el-form-item__content {
     clear: both;
   }
+
   .editdevices .childdialog .el-form-item__content .el-select {
     width: 100%;
   }
+
   .fontSize {
     font-size: 12px;
     color: #666666;
   }
+
   .editdevices .svg-icon {
     width: 3rem;
     height: 3rem;
     margin-top: 5px;
   }
+
   .stla {
     overflow: hidden;
     font-family: fantasy;
@@ -1958,6 +2011,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
   .ht7 {
     height: 70px;
   }

@@ -227,11 +227,14 @@
       margin: 24px 0;
       text-align: right;
     }
+
     .client-sub-table {
       margin-bottom: 24px;
     }
+
     .el-select--public {
       width: 100%;
+
       .el-input__inner {
         height: 32px !important;
         line-height: 32px !important;

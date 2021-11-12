@@ -1,18 +1,19 @@
 /* eslint-disable */
-import { mapGetters, mapMutations } from "vuex";
-import { getDeviceCountByProduct } from "@/api/Device/index";
-import { deleteThing, postThing, putThing } from "@/api/Product/index";
-import { downBinary } from "@/api/File/index";
-import { getAllunit, getDictCount } from "@/api/Dict/index";
-import { getChannelCountByProduct, saveChanne } from "@/api/Channel/index";
-import { getRule } from "@/api/Rules";
-import { postProductTemplet } from "@/api/ProductTemplet";
-import { Compile, subupadte } from "@/api/System/index";
-import { setTimeout } from "timers";
-import { Websocket } from "@/utils/wxscoket.js";
-import wmxdetail from "@/views/equipment_management/component/wmxdetail";
-import { returnLogin } from "@/utils/utilwen";
-import profile from "@/views/equipment_management/profile";
+import { mapGetters, mapMutations } from 'vuex'
+import { getDeviceCountByProduct } from '@/api/Device/index'
+import { deleteThing, postThing, putThing } from '@/api/Product/index'
+import { downBinary } from '@/api/File/index'
+import { getAllunit, getDictCount } from '@/api/Dict/index'
+import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
+import { getRule } from '@/api/Rules'
+import { postProductTemplet } from '@/api/ProductTemplet'
+import { Compile, subupadte } from '@/api/System/index'
+import { setTimeout } from 'timers'
+import { Websocket } from '@/utils/wxscoket.js'
+import wmxdetail from '@/views/equipment_management/component/wmxdetail'
+import { returnLogin } from '@/utils/utilwen'
+import profile from '@/views/equipment_management/profile'
+
 var editor
 var editor1
 var editor2
@@ -29,7 +30,7 @@ var isupdatetrue = ''
 export default {
   components: {
     'dgiot-wmx': wmxdetail,
-    'dgiot-profile':profile,
+    'dgiot-profile': profile,
   },
   data() {
     var validCode = (rule, value, callback) => {
@@ -132,7 +133,11 @@ export default {
       productInfo: {
         decoder: { code: '' },
         thing: { properties: [] },
-        config: { parser: [], profile: [], basedate: { params: [] } },
+        config: {
+          parser: [],
+          profile: [],
+          basedate: { params: [] },
+        },
       },
       FromMachine: [{ name: 'ALL' }],
       machineForm: {},
@@ -141,9 +146,18 @@ export default {
       machinestatus: 'add',
       machineindex: 0,
       options: [
-        { value: 'first', label: '第一轮' },
-        { value: 'last', label: '最后一轮' },
-        { value: 'all', label: '全部' },
+        {
+          value: 'first',
+          label: '第一轮',
+        },
+        {
+          value: 'last',
+          label: '最后一轮',
+        },
+        {
+          value: 'all',
+          label: '全部',
+        },
       ],
       activeIndex: '',
       editableTabsValue: '1',
@@ -555,7 +569,7 @@ export default {
       // console.log("cloneData", cloneData)
       return cloneData.filter((father) => {
         const branchArr = cloneData.filter(
-          (child) => father.id == child.parentid
+          (child) => father.id == child.parentid,
         ) // 返回每一项的子级数组
         branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
         return father.parentid == 0 // 返回第一层
@@ -585,7 +599,10 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.$refs._tabs.$children[0].$refs.tabs[3].style.display = 'none'
-      Websocket.subscribe({topic: 'log/channel/#' ,qos: 2, })
+      Websocket.subscribe({
+        topic: 'log/channel/#',
+        qos: 2,
+      })
     })
     this.Industry()
     this.getAllunit()
@@ -614,13 +631,21 @@ export default {
     feateditorParser1(config, type, flag) {
       let productInfo = this.productInfo
       this.parserType = type
-      this.$baseEventBus.$emit('profileDialog', ({config, type, flag, productInfo}))
+      this.$baseEventBus.$emit('profileDialog', ({
+        config,
+        type,
+        flag,
+        productInfo,
+      }))
       // this.codeFlag = false
     },
     ...mapMutations({
       setSizeForm: 'konva/setSizeForm',
     }),
-    tableRowClassName({ row, rowIndex }) {
+    tableRowClassName({
+      row,
+      rowIndex,
+    }) {
       if (rowIndex === 1) {
         return 'warning-row'
       } else if (rowIndex === 3) {
@@ -772,7 +797,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'vab-hey-message-success',
         )
         loading.close()
         this.$downBinary(res)
@@ -781,7 +806,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'vab-hey-message-error',
         )
       }
     },
@@ -923,18 +948,19 @@ export default {
         }
         const res = await postProductTemplet(params)
         console.log(res)
-        if (res)
+        if (res) {
           this.$baseMessage(
             this.$translateTitle('user.Save the template successfully'),
             'success',
-            'vab-hey-message-success'
+            'vab-hey-message-success',
           )
-        else
+        } else {
           this.$baseMessage(
             this.$translateTitle('user.Save the template error'),
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
+        }
         loading.close()
       } catch (error) {
         console.log(error)
@@ -942,7 +968,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('user.Save the template error'),
           'error',
-          'vab-hey-message-error'
+          'vab-hey-message-error',
         )
       }
     },
@@ -959,7 +985,7 @@ export default {
         this.channellength,
         this.channelstart,
         product,
-        type
+        type,
       )
         .then((res) => {
           this.protolchannel = res.results
@@ -991,7 +1017,7 @@ export default {
                 .catch((error) => {
                   reject(error)
                 })
-            })
+            }),
           )
         })
         Promise.all(arr)
@@ -1032,7 +1058,7 @@ export default {
         label != '' ? this.allChannellength : this.channellength,
         label != '' ? this.allChannelstart : this.channelstart,
         product,
-        type
+        type,
       )
         .then((res) => {
           this.allChanneltotal = res.count
@@ -1054,7 +1080,7 @@ export default {
         this.channellength,
         this.channelstart,
         product,
-        type
+        type,
       )
         .then((res) => {
           this.channeltotal = res.count
@@ -1088,7 +1114,7 @@ export default {
         this.channellength,
         this.channelstart,
         product,
-        type
+        type,
       )
         .then((res) => {
           this.allChanneltotal = res.count
@@ -1111,7 +1137,7 @@ export default {
         this.channellength,
         this.channelstart,
         product,
-        type
+        type,
       )
         .then((res) => {
           this.resourcetotal = res.count
@@ -1165,16 +1191,17 @@ export default {
           ],
         },
       }
-      saveChanne(row.objectId, params).then((res) => {
-        if (res) {
-          this.$message({
-            type: 'success',
-            message: '移除成功',
-          })
-        }
-        this.getProductChannel()
-        this.getResourceChannel()
-      })
+      saveChanne(row.objectId, params)
+        .then((res) => {
+          if (res) {
+            this.$message({
+              type: 'success',
+              message: '移除成功',
+            })
+          }
+          this.getProductChannel()
+          this.getResourceChannel()
+        })
     },
     // 关联服务通道分页
     channelSizeChange(val) {
@@ -1409,17 +1436,18 @@ export default {
       this.$update_object(
         'Channel',
         this.rproductdetailesourcechannelid,
-        params
-      ).then(
-        (response) => {
-          if (response) {
-            this.$message('添加成功')
-          }
-        },
-        (error) => {
-          returnLogin(error)
-        }
+        params,
       )
+        .then(
+          (response) => {
+            if (response) {
+              this.$message('添加成功')
+            }
+          },
+          (error) => {
+            returnLogin(error)
+          },
+        )
     },
     closeWuDialog() {
       this.resourcedialogFormVisible = false
@@ -1586,39 +1614,41 @@ export default {
       if (this.wmxSituation == '新增') {
         // console.log("新增");
         // this.productdetail.thing.properties.unshift(obj)
-        postThing(data).then((res) => {
-          console.log('新增', res)
-          if (res.code == 200) {
-            this.$message({
-              type: 'success',
-              message: '新增成功',
-            })
-            this.getProDetail()
-          } else {
-            this.$message({
-              type: 'warning',
-              message: '新增失败' + res.msg,
-            })
-          }
-        })
+        postThing(data)
+          .then((res) => {
+            console.log('新增', res)
+            if (res.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '新增成功',
+              })
+              this.getProDetail()
+            } else {
+              this.$message({
+                type: 'warning',
+                message: '新增失败' + res.msg,
+              })
+            }
+          })
       } else if (this.wmxSituation == '编辑') {
         // console.log("编辑" + obj);
         // this.productdetail.thing.properties[this.modifyIndex] = obj
-        putThing(data).then((res) => {
-          console.log('编辑', res)
-          if (res.code == 200) {
-            this.$message({
-              type: 'success',
-              message: '编辑成功',
-            })
-            this.getProDetail()
-          } else {
-            this.$message({
-              type: 'warning',
-              message: '编辑失败' + res.msg,
-            })
-          }
-        })
+        putThing(data)
+          .then((res) => {
+            console.log('编辑', res)
+            if (res.code == 200) {
+              this.$message({
+                type: 'success',
+                message: '编辑成功',
+              })
+              this.getProDetail()
+            } else {
+              this.$message({
+                type: 'warning',
+                message: '编辑失败' + res.msg,
+              })
+            }
+          })
       }
       this.wmxdialogVisible = false
       // const params = {
@@ -2114,11 +2144,12 @@ export default {
       } else if (item.dataType.type == 'enum') {
         this.structform.specs = []
         var obj = {}
-        Object.keys(item.dataType.specs).forEach((value, index) => {
-          obj.attribute = value
-          obj.attributevalue = item.dataType.specs[value]
-          this.structform.specs.push(obj)
-        })
+        Object.keys(item.dataType.specs)
+          .forEach((value, index) => {
+            obj.attribute = value
+            obj.attributevalue = item.dataType.specs[value]
+            this.structform.specs.push(obj)
+          })
       } else if (item.dataType.type == 'text') {
         this.structform.string = item.dataType.size
       }
@@ -2239,7 +2270,7 @@ export default {
           this.editorList[0].setValue(
             this.wmxData[0].dataForm == undefined
               ? ''
-              : this.wmxData[0].dataForm.collection
+              : this.wmxData[0].dataForm.collection,
           )
         }, 1)
       }
@@ -2275,13 +2306,13 @@ export default {
         setTimeout(() => {
           this.editorList.push(ace.edit(item.identifier))
           this.editorList[this.editorList.length - 1].session.setMode(
-            'ace/mode/erlang'
+            'ace/mode/erlang',
           ) // 设置语言
           this.editorList[this.editorList.length - 1].setTheme(
-            'ace/theme/monokai'
+            'ace/theme/monokai',
           ) // 设置主题
           this.editorList[this.editorList.length - 1].setHighlightActiveLine(
-            true
+            true,
           )
           this.editorList[this.editorList.length - 1].setFontSize(20) // 设置字号
           this.editorList[this.editorList.length - 1].setOptions({
@@ -2290,7 +2321,7 @@ export default {
             enableLiveAutocompletion: true, // 设置自动提示
           })
           this.editorList[this.editorList.length - 1].setValue(
-            item.dataForm == undefined ? '' : item.dataForm.collection
+            item.dataForm == undefined ? '' : item.dataForm.collection,
           )
         }, 1)
 
@@ -2301,7 +2332,7 @@ export default {
         this.editableTabsValue = item.identifier
         // console.log("this.editorList ==  " + this.editorList.length)
         this.editorList[mIndex].setValue(
-          item.dataForm == undefined ? '' : item.dataForm.collection
+          item.dataForm == undefined ? '' : item.dataForm.collection,
         )
       }
     },
@@ -2354,7 +2385,8 @@ export default {
         .then((_) => {
           done()
         })
-        .catch((_) => {})
+        .catch((_) => {
+        })
     },
 
     // 还原
@@ -2397,12 +2429,16 @@ export default {
       this.queryDeviceCount(this.productId)
       this.$get_object('Product', this.productId)
         .then((response) => {
-          console.log("response", response)
+          console.log('response', response)
           if (response) {
             this.productInfo = _.merge(response, {
               decoder: { code: '' },
               thing: { properties: [] },
-              config: { parser: [], profile: [], basedate: { params: [] } },
+              config: {
+                parser: [],
+                profile: [],
+                basedate: { params: [] },
+              },
             })
             this.productName = response.name
             for (var key in response) {
@@ -2418,11 +2454,12 @@ export default {
             this.dynamicReg = response.dynamicReg
             this.productdetail.isshow = 0
 
-            if(this.productdetail.category){
-              this.$get_object('Category', this.productdetail.category.objectId).then(cat=>{
-                console.log('catcat', cat)
-                this.$set(this.productdetail, 'categoryname', cat.name)
-              })
+            if (this.productdetail.category) {
+              this.$get_object('Category', this.productdetail.category.objectId)
+                .then(cat => {
+                  console.log('catcat', cat)
+                  this.$set(this.productdetail, 'categoryname', cat.name)
+                })
             }
 
             this.form.Productname = response.name
@@ -2454,7 +2491,7 @@ export default {
               (item, index) => {
                 item.index = index
                 return item.name && item.dataType
-              }
+              },
             )
             this.wmxDataBk = this.wmxData
             console.log('=====', this.wmxData)
@@ -2612,39 +2649,40 @@ export default {
               if (response.results && response.results.length >= 1) {
                 this.$message('此协议版本已存在')
               } else {
-                this.$get_object('Product', this.productId).then((response) => {
-                  if (response) {
-                    var obj = {
-                      name: this.formInline.name,
-                      version: this.formInline.version,
-                      code: Base64.encode(editor.getValue()),
-                      desc: this.formInline.desc,
+                this.$get_object('Product', this.productId)
+                  .then((response) => {
+                    if (response) {
+                      var obj = {
+                        name: this.formInline.name,
+                        version: this.formInline.version,
+                        code: Base64.encode(editor.getValue()),
+                        desc: this.formInline.desc,
+                      }
+                      const params = {
+                        key: this.formInline.name + ':' + this.formInline.version,
+                        type: 'decoder',
+                        data: obj,
+                        ACL: response.ACL,
+                      }
+                      this.$create_object('Dict', params)
+                        .then((resultes) => {
+                          if (resultes.error) {
+                            this.$message({
+                              type: 'error',
+                              message: resultes.error,
+                            })
+                          } else {
+                            this.$message({
+                              type: 'success',
+                              message: '保存到公共协议库成功',
+                            })
+                          }
+                        })
+                        .catch((e) => {
+                          console.log(e)
+                        })
                     }
-                    const params = {
-                      key: this.formInline.name + ':' + this.formInline.version,
-                      type: 'decoder',
-                      data: obj,
-                      ACL: response.ACL,
-                    }
-                    this.$create_object('Dict', params)
-                      .then((resultes) => {
-                        if (resultes.error) {
-                          this.$message({
-                            type: 'error',
-                            message: resultes.error,
-                          })
-                        } else {
-                          this.$message({
-                            type: 'success',
-                            message: '保存到公共协议库成功',
-                          })
-                        }
-                      })
-                      .catch((e) => {
-                        console.log(e)
-                      })
-                  }
-                })
+                  })
               }
             })
             .catch((e) => {
@@ -2732,7 +2770,7 @@ export default {
       } else {
         this.devicetype = row.name
         this.wmxData = this.wmxDataBk.filter(
-          (item) => item.devicetype == row.name
+          (item) => item.devicetype == row.name,
         )
         this.wmxstart = 1
       }
@@ -2754,13 +2792,14 @@ export default {
           obj.required = items.Required
           obj.identifier = items.Identifier
           obj.accessMode = items.RwFlag == 1 ? 'r' : 'rw'
-          JSON.parse(items.DataSpecsList).map((child) => {
-            for (var key in child) {
-              var attribute = child['value']
-              var value = child['name']
-              obj.dataType.specs[attribute] = value
-            }
-          })
+          JSON.parse(items.DataSpecsList)
+            .map((child) => {
+              for (var key in child) {
+                var attribute = child['value']
+                var value = child['name']
+                obj.dataType.specs[attribute] = value
+              }
+            })
           origin.push(obj)
         } else if (
           items.DataType == 'double' ||
@@ -2796,53 +2835,54 @@ export default {
           structobj.required = !items.Required
           structobj.identifier = items.Identifier
           structobj.accessMode = items.RwFlag == 1 ? 'r' : 'rw'
-          JSON.parse(items.DataSpecsList).map((children) => {
-            if (
-              children.childDataType == 'enum' ||
-              children.childDataType == 'bool'
-            ) {
-              var obj = {
-                dataType: {
-                  specs: {},
-                },
-              }
-              obj.name = children.childName
-              obj.dataType.type = children.childDataType.toLowerCase()
-              obj.required = children.Required
-              obj.identifier = children.identifier
-              obj.accessMode = children.RwFlag == 1 ? 'r' : 'rw'
-              children.childEnumSpecsDTO.map((child) => {
-                for (var key in child) {
-                  var attribute = child['value']
-                  var value = child['name']
-                  obj.dataType.specs[attribute] = value
+          JSON.parse(items.DataSpecsList)
+            .map((children) => {
+              if (
+                children.childDataType == 'enum' ||
+                children.childDataType == 'bool'
+              ) {
+                var obj = {
+                  dataType: {
+                    specs: {},
+                  },
                 }
-              })
-              structobj.dataType.specs.push(obj)
-            } else if (
-              children.childDataType == 'double' ||
-              children.childDataType == 'int' ||
-              children.childDataType == 'float'
-            ) {
-              var obj = {
-                dataType: {
-                  specs: {},
-                },
+                obj.name = children.childName
+                obj.dataType.type = children.childDataType.toLowerCase()
+                obj.required = children.Required
+                obj.identifier = children.identifier
+                obj.accessMode = children.RwFlag == 1 ? 'r' : 'rw'
+                children.childEnumSpecsDTO.map((child) => {
+                  for (var key in child) {
+                    var attribute = child['value']
+                    var value = child['name']
+                    obj.dataType.specs[attribute] = value
+                  }
+                })
+                structobj.dataType.specs.push(obj)
+              } else if (
+                children.childDataType == 'double' ||
+                children.childDataType == 'int' ||
+                children.childDataType == 'float'
+              ) {
+                var obj = {
+                  dataType: {
+                    specs: {},
+                  },
+                }
+                obj.name = children.childName
+                obj.dataType.type = children.childDataType.toLowerCase()
+                obj.required = children.Required
+                obj.identifier = children.identifier
+                obj.accessMode = children.RwFlag == 1 ? 'r' : 'rw'
+                for (var key in children.childSpecsDTO) {
+                  obj.dataType.specs.min = children.childSpecsDTO['min']
+                  obj.dataType.specs.max = children.childSpecsDTO['max']
+                  obj.dataType.specs.step = children.childSpecsDTO['precise']
+                  obj.dataType.specs.unit = children.childSpecsDTO['unit']
+                }
+                structobj.dataType.specs.push(obj)
               }
-              obj.name = children.childName
-              obj.dataType.type = children.childDataType.toLowerCase()
-              obj.required = children.Required
-              obj.identifier = children.identifier
-              obj.accessMode = children.RwFlag == 1 ? 'r' : 'rw'
-              for (var key in children.childSpecsDTO) {
-                obj.dataType.specs.min = children.childSpecsDTO['min']
-                obj.dataType.specs.max = children.childSpecsDTO['max']
-                obj.dataType.specs.step = children.childSpecsDTO['precise']
-                obj.dataType.specs.unit = children.childSpecsDTO['unit']
-              }
-              structobj.dataType.specs.push(obj)
-            }
-          })
+            })
           origin.push(structobj)
         }
       })
@@ -2862,33 +2902,34 @@ export default {
           'data.key': 'detail',
         },
       }
-      this.$query_object('Dict', params).then((res) => {
-        const results = res.results
-        if (results && results[0].data.Ability) {
-          this.TypeInstall(
-            this.productdetail.thing.properties,
-            results[0].data.Ability
-          )
-          const params = {
-            thing: this.productdetail.thing,
+      this.$query_object('Dict', params)
+        .then((res) => {
+          const results = res.results
+          if (results && results[0].data.Ability) {
+            this.TypeInstall(
+              this.productdetail.thing.properties,
+              results[0].data.Ability,
+            )
+            const params = {
+              thing: this.productdetail.thing,
+            }
+            this.$update_object('Product', this.productId, params)
+              .then((resultes) => {
+                if (resultes) {
+                  this.$message({
+                    type: 'success',
+                    message: '添加成功',
+                  })
+                  this.getProDetail()
+                }
+              })
+              .catch((e) => {
+                console.log(e)
+              })
+          } else {
+            console.log('此选项没有属性功能')
           }
-          this.$update_object('Product', this.productId, params)
-            .then((resultes) => {
-              if (resultes) {
-                this.$message({
-                  type: 'success',
-                  message: '添加成功',
-                })
-                this.getProDetail()
-              }
-            })
-            .catch((e) => {
-              console.log(e)
-            })
-        } else {
-          console.log('此选项没有属性功能')
-        }
-      })
+        })
     },
     /* 删除物模型*/
     deletewmx(row) {
@@ -2900,21 +2941,22 @@ export default {
         productid: this.productId,
         item: row,
       }
-      deleteThing(params).then((res) => {
-        console.log('删除', res)
-        if (res.code == 200) {
-          this.$message({
-            type: 'success',
-            message: '删除成功',
-          })
-          this.getProDetail()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '删除失败 ' + res.msg,
-          })
-        }
-      })
+      deleteThing(params)
+        .then((res) => {
+          console.log('删除', res)
+          if (res.code == 200) {
+            this.$message({
+              type: 'success',
+              message: '删除成功',
+            })
+            this.getProDetail()
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '删除失败 ' + res.msg,
+            })
+          }
+        })
     },
     wmxSizeChange(val) {
       this.wmxstart = 1
@@ -2969,7 +3011,7 @@ export default {
         qos: 2,
       }
       var channeltopic = new RegExp(
-        'log/channel/' + row.objectId + '/' + this.productId
+        'log/channel/' + row.objectId + '/' + this.productId,
       )
       var submessage = ''
       var _this = this
@@ -3048,43 +3090,44 @@ export default {
           var Topic =
             'thing/' + this.productId + '/${DevAddr}/' + this.topicform.topic
 
-          this.$get_object('Product', this.productId).then((resultes) => {
-            var addTopic = {
-              topic: Topic,
-              type: this.topicform.type,
-              desc: this.topicform.desc,
-            }
-            var arr = []
-            arr.push(addTopic)
-            const params = {}
-            if (isupdated == -1) {
-              arr = arr.concat(resultes.topics)
-              params.topics = arr
-            } else {
-              var topicupdated = resultes.topics.concat([])
-              topicupdated[isupdated] = addTopic
-              params.topics = topicupdated
-            }
-            this.$update_object('Product', this.productId, params)
-              .then((response) => {
-                if (response) {
-                  this.$message({
-                    type: 'success',
-                    message: '成功',
-                  })
-                  this.topicdialogVisible = false
-                  this.$refs[formName].resetFields()
-                  ;(this.topicform.isupdated = -1), (this.topicform.topic = '')
-                  this.topicform.desc = ''
-                  this.handleClick({
-                    name: 'second',
-                  })
-                }
-              })
-              .catch((e) => {
-                console.log(e)
-              })
-          })
+          this.$get_object('Product', this.productId)
+            .then((resultes) => {
+              var addTopic = {
+                topic: Topic,
+                type: this.topicform.type,
+                desc: this.topicform.desc,
+              }
+              var arr = []
+              arr.push(addTopic)
+              const params = {}
+              if (isupdated == -1) {
+                arr = arr.concat(resultes.topics)
+                params.topics = arr
+              } else {
+                var topicupdated = resultes.topics.concat([])
+                topicupdated[isupdated] = addTopic
+                params.topics = topicupdated
+              }
+              this.$update_object('Product', this.productId, params)
+                .then((response) => {
+                  if (response) {
+                    this.$message({
+                      type: 'success',
+                      message: '成功',
+                    })
+                    this.topicdialogVisible = false
+                    this.$refs[formName].resetFields()
+                    ;(this.topicform.isupdated = -1), (this.topicform.topic = '')
+                    this.topicform.desc = ''
+                    this.handleClick({
+                      name: 'second',
+                    })
+                  }
+                })
+                .catch((e) => {
+                  console.log(e)
+                })
+            })
         } else {
           console.log('error submit!!')
           return false
@@ -3117,7 +3160,7 @@ export default {
         const $update_object = this.$update_object(
           'Product',
           this.productId,
-          params
+          params,
         )
         // console.log($update_object)
         this.$message({
@@ -3140,8 +3183,10 @@ export default {
         })
     },
     // 分页
-    handleSizeChange(val) {},
-    handleCurrentChange(val) {},
+    handleSizeChange(val) {
+    },
+    handleCurrentChange(val) {
+    },
     addEngine() {
       this.$router.push({
         path: '/rules_engine/addengine',

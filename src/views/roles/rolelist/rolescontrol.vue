@@ -167,10 +167,11 @@
 <script>
   import {
     getPermission,
-    queryPermission,
     putPermission,
+    queryPermission,
   } from '@/api/Permission/index'
   import { utc2beijing } from '@/utils'
+
   export default {
     components: {},
     data() {
@@ -286,11 +287,12 @@
           alias: this.form.alias,
           description: this.form.description,
         })
-        if (res)
+        if (res) {
           this.$message({
             type: 'success',
             message: '更新成功',
           })
+        }
         this.roleEdit = false
       },
     },

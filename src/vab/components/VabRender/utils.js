@@ -1,5 +1,6 @@
 // import _ from 'lodash'
 const cloneDeep = require('clone')
+
 /**
  * 对象转为数组
  * @param {object} obj
@@ -43,7 +44,10 @@ export function changeFormDescLabel(formDesc = {}) {
       obj.attrs = {}
     }
     obj.attrs.placeholder = obj.label
-    return { ...obj, label }
+    return {
+      ...obj,
+      label,
+    }
   })
 }
 

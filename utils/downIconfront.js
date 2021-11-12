@@ -6,6 +6,7 @@ const resourceType = ['css', 'js', 'json', 'ttf', 'woff', 'woff2']
 const filePath = ['js', 'css', 'iconfont']
 const log = console.log
 const chalk = require('chalk')
+
 /**
  * @description Create resource folder
  * @param files
@@ -36,10 +37,13 @@ function downIconfront(_static) {
           .get(donwUrl)
           .then((res) => {
             if (res.status == 200) {
-              if (res.data && resource == 'json')
+              if (res.data && resource == 'json') {
                 res.data = JSON.stringify(res.data)
+              }
               writeFile(`iconfont/iconfont.${resource}`, res.data, resource)
-            } else log(chalk.red(donwUrl, 'downIconfront error'))
+            } else {
+              log(chalk.red(donwUrl, 'downIconfront error'))
+            }
           })
           .catch((e) => {
             log(chalk.red(e, donwUrl, 'downIconfront error'))
@@ -74,7 +78,7 @@ function writeFile(files, data, resource) {
     if (resource == 'json') {
       const jsonPath = path.join(
         __dirname,
-        `../src/views/topo/components/iconfont.json`
+        `../src/views/topo/components/iconfont.json`,
       )
       upIconJson(jsonPath, data)
     }

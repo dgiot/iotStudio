@@ -19,4 +19,5 @@ export async function setImg(shape, value) {
   }).play()
   return tween
 }
+
 export default setImg

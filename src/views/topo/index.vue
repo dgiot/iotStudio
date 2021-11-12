@@ -45,19 +45,19 @@
               ></div>
             </el-container>
           </el-col>
-<!--          <el-col-->
-<!--            :lg="isDevice ? 0 : 4"-->
-<!--            :md="isDevice ? 0 : 6"-->
-<!--            :sm="isDevice ? 0 : 6"-->
-<!--            :xl="isDevice ? 0 : 3"-->
-<!--            :xs="0"-->
-<!--            class="hidden-xs-only"-->
-<!--            hidden-xs-only-->
-<!--          >-->
-<!--            <el-aside class="konva-container-main-operationsSide">-->
-<!--              <TopoOperation ref="operation" @upconfig="saveKonvaitem" />-->
-<!--            </el-aside>-->
-<!--          </el-col>-->
+          <!--          <el-col-->
+          <!--            :lg="isDevice ? 0 : 4"-->
+          <!--            :md="isDevice ? 0 : 6"-->
+          <!--            :sm="isDevice ? 0 : 6"-->
+          <!--            :xl="isDevice ? 0 : 3"-->
+          <!--            :xs="0"-->
+          <!--            class="hidden-xs-only"-->
+          <!--            hidden-xs-only-->
+          <!--          >-->
+          <!--            <el-aside class="konva-container-main-operationsSide">-->
+          <!--              <TopoOperation ref="operation" @upconfig="saveKonvaitem" />-->
+          <!--            </el-aside>-->
+          <!--          </el-col>-->
         </el-row>
       </el-main>
     </el-container>
@@ -66,7 +66,7 @@
 <script>
   import 'element-ui/lib/theme-chalk/display.css'
   import { requireModule } from '@/utils/file'
-  import { mapMutations, mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   import { _getTopo } from '@/api/Topo'
   import { queryProduct } from '@/api/Product'
   import canvas from '@/utils/konva/core/canvas'
@@ -124,12 +124,12 @@
         ? localStorage.getItem('konvaStale')
         : this.defaultKonva
       this.router = this.$dgiotBus.router(this.$route.fullPath)
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         this.handleMqtt()
       })
     },
     destroyed() {
-      localStorage.setItem('konvaStale',JSON.stringify(canvas.stageJson))
+      localStorage.setItem('konvaStale', JSON.stringify(canvas.stageJson))
       this.$dgiotBus.$emit(
         'MqttUnbscribe',
         this.$dgiotBus.topicKey(this.router + this.topotopic),

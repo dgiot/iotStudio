@@ -10,9 +10,9 @@
     />
     <el-dialog
       :append-to-body="true"
+      :visible.sync="dialogVisible"
       style="margin: 0 auto"
       top="1vh"
-      :visible.sync="dialogVisible"
       width="90%"
     >
       <VabParser
@@ -28,8 +28,8 @@
     </el-dialog>
     <el-dialog
       :append-to-body="true"
-      class="parserTable"
       :visible.sync="parserTable"
+      class="parserTable"
     >
       <div slot="title" class="header-title parserTable">
         <el-button
@@ -47,20 +47,20 @@
       </div>
       <el-table :data="parserTableList.parser" :height="height">
         <el-table-column
-          align="center"
           :label="$translateTitle('product.chinesetitle')"
+          align="center"
           prop="name"
           sortable
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('product.englishtitle')"
+          align="center"
           prop="enname"
           sortable
         />
         <el-table-column
-          align="center"
           :label="$translateTitle('leftbar.settings')"
+          align="center"
           show-overflow-tooltip
           sortable
         >
@@ -93,16 +93,16 @@
     />
     <div class="prosecond">
       <el-form
-        class="demo-form-inline"
         :inline="true"
         :model="formInline"
+        class="demo-form-inline"
         size="small"
       >
         <el-form-item>
           <el-input
             v-model="formInline.productname"
-            clearable
             :placeholder="$translateTitle('product.searchproductname')"
+            clearable
           />
         </el-form-item>
         <el-form-item>
@@ -124,13 +124,13 @@
       </el-form>
       <div class="protable">
         <el-table
-          border
-          size="mini"
           v-loading="listLoading"
           :cell-style="{ 'text-align': 'center' }"
           :data="proTableData"
           :header-cell-style="{ 'text-align': 'center' }"
           :height="height"
+          border
+          size="mini"
           style="width: 100%"
         >
           <el-table-column
@@ -177,24 +177,24 @@
             </template>
           </el-table-column>
           <el-table-column
-            fixed="right"
             ref="rightCol"
             :label="$translateTitle('developer.operation')"
+            fixed="right"
             width="360"
           >
             <template slot-scope="scope">
               <el-button
+                :underline="false"
                 size="mini"
                 type="primary"
-                :underline="false"
                 @click="deviceToDetail(scope.row)"
               >
                 {{ $translateTitle('product.config') }}
               </el-button>
               <el-button
+                :underline="false"
                 size="mini"
                 type="warning"
-                :underline="false"
                 @click="editorDict(scope.row.objectId)"
               >
                 {{ $translateTitle('product.dict') }}
@@ -205,9 +205,9 @@
               </el-button>
 
               <el-button
+                :underline="false"
                 size="mini"
                 type="success"
-                :underline="false"
                 @click="editorProduct(scope.row)"
               >
                 {{ $translateTitle('concentrator.edit') }}
@@ -246,10 +246,10 @@
       </div>
       <div class="elpagination" style="margin-top: 20px">
         <el-pagination
-          layout="total, sizes, prev, pager, next, jumper"
           :page-size="length"
           :page-sizes="[10, 20, 30, 50]"
           :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
           @current-change="productCurrentChange"
           @size-change="productSizeChange"
         />
@@ -258,13 +258,13 @@
     <div class="devproduct-prodialog">
       <!-- 创建产品对话框 ###-->
       <el-drawer
-        append-to-body
         :before-close="handleClose"
         :close-on-click-modal="false"
-        size="60%"
         :title="moduleTitle"
-        top="5vh"
         :visible.sync="dialogFormVisible"
+        append-to-body
+        size="60%"
+        top="5vh"
       >
         <div class="devproduct-prodialog-content">
           <!--产品信息-->
@@ -376,8 +376,8 @@
               >
                 <el-select
                   v-model="form.otherchannel"
-                  multiple
                   :placeholder="$translateTitle('task.Select')"
+                  multiple
                   style="width: 100%"
                   value-key="objectId"
                 >
@@ -442,7 +442,7 @@
               </el-form-item>
               <el-form-item :label="$translateTitle('menu.icon')" prop="icon">
                 <div v-if="imageUrl">
-                  <img class="avatar" :src="$FileServe + imageUrl" />
+                  <img :src="$FileServe + imageUrl" class="avatar" />
                   <el-button
                     size="mini"
                     style="vertical-align: text-bottom"
@@ -498,8 +498,8 @@
         <!-- 分类对话框 ###-->
         <el-drawer
           :append-to-body="true"
-          size="40%"
           :visible.sync="cascaderDrawer"
+          size="40%"
         >
           <div>
             <el-row :gutter="20">
@@ -552,17 +552,17 @@
               </el-col>
             </el-row>
             <el-table
-              border
               :cell-style="{ 'text-align': 'center' }"
               :data="tableData"
               :header-cell-style="{ 'text-align': 'center' }"
               :height="$baseTableHeight(0) + 40"
+              border
               size="mini"
               style="width: 100%"
             >
               <el-table-column
-                align="center"
                 :label="$translateTitle('developer.Templatename')"
+                align="center"
               >
                 <template #default="{ row }">
                   {{ row.name }}
@@ -585,8 +585,8 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 :label="$translateTitle('developer.operation')"
+                align="center"
               >
                 <template #default="{ row }">
                   <el-button
@@ -609,7 +609,7 @@
           </div>
         </el-drawer>
       </el-drawer>
-      <el-dialog :append-to-body="true" top="1vh" :visible.sync="dialogProfile">
+      <el-dialog :append-to-body="true" :visible.sync="dialogProfile" top="1vh">
         <dgiot-profile ref="dialogProfile" :is-product="true" />
       </el-dialog>
       <!--新增字典-->
@@ -617,9 +617,9 @@
         v-if="dictVisible"
         :append-to-body="true"
         :close-on-click-modal="false"
-        style="z-index: 999"
         :title="title_temp_dialog"
         :visible="dictVisible"
+        style="z-index: 999"
         width="60%"
         @close="dictVisible = !dictVisible"
       >
@@ -632,8 +632,8 @@
           <el-row :gutter="20">
             <el-col :span="8">
               <el-form-item
-                label="字典模板名称"
                 :label-width="formLabelWidth"
+                label="字典模板名称"
                 prop="name"
               >
                 <el-input v-model="dictTempForm.name" autocomplete="off" />
@@ -641,8 +641,8 @@
             </el-col>
             <el-col :span="8">
               <el-form-item
-                label="字典模板类型"
                 :label-width="formLabelWidth"
+                label="字典模板类型"
                 prop="cType"
               >
                 <el-input v-model="dictTempForm.cType" autocomplete="off" />
@@ -650,8 +650,8 @@
             </el-col>
             <el-col :span="8">
               <el-form-item
-                label="字典模板状态"
                 :label-width="formLabelWidth"
+                label="字典模板状态"
                 prop="enable"
               >
                 <el-radio v-model="dictTempForm.enable" border label="1">
@@ -664,7 +664,7 @@
             </el-col>
           </el-row>
 
-          <el-form-item label="字典模板数据" :label-width="formLabelWidth">
+          <el-form-item :label-width="formLabelWidth" label="字典模板数据">
             <el-tabs v-model="elactiveName">
               <el-tab-pane label="Table" name="Table">
                 <el-button
@@ -731,14 +731,14 @@
               <el-tab-pane label="Json" name="Json">
                 <vab-json-editor
                   v-model="dictTempForm.params"
-                  lang="zh"
                   :mode="'code'"
+                  lang="zh"
                   @has-error="onError"
                 />
               </el-tab-pane>
             </el-tabs>
           </el-form-item>
-          <el-form-item label="描述" :label-width="formLabelWidth">
+          <el-form-item :label-width="formLabelWidth" label="描述">
             <el-input
               v-model="dictTempForm.description"
               :autosize="{ minRows: 2, maxRows: 4 }"
@@ -764,16 +764,16 @@
         :before-close="closeDict"
         :close-on-click-modal="false"
         :title="title_dict_edit_dialog"
-        top="5vh"
         :visible.sync="edit_dict_temp_dialog"
+        top="5vh"
         width="60%"
         @open="opendialog('tempparams')"
       >
         <el-form
           ref="tempparams"
+          :model="tempparams"
           label-position="left"
           label-width="100px"
-          :model="tempparams"
           size="mini"
         >
           <el-row :gutter="24">
@@ -851,8 +851,8 @@
               <el-form-item :label="$translateTitle('product.unit')">
                 <el-select
                   v-model="tempparams.unit"
-                  filterable
                   :placeholder="$translateTitle('product.unit')"
+                  filterable
                   style="width: 100%"
                 >
                   <el-option
@@ -919,9 +919,9 @@
           </el-row>
           <el-table
             v-show="tempparams.protocol == 'modbus'"
-            border
             :data="dataList"
             :height="height"
+            border
             size="small"
             style="width: 100%"
           >
@@ -1107,20 +1107,20 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item label="必填">
-                <el-radio v-model="tempparams.required" border :label="true">
+                <el-radio v-model="tempparams.required" :label="true" border>
                   是
                 </el-radio>
-                <el-radio v-model="tempparams.required" border :label="false">
+                <el-radio v-model="tempparams.required" :label="false" border>
                   否
                 </el-radio>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="只读">
-                <el-radio v-model="tempparams.readonly" border :label="true">
+                <el-radio v-model="tempparams.readonly" :label="true" border>
                   是
                 </el-radio>
-                <el-radio v-model="tempparams.readonly" border :label="false">
+                <el-radio v-model="tempparams.readonly" :label="false" border>
                   否
                 </el-radio>
               </el-form-item>
@@ -1129,10 +1129,10 @@
           <el-row :gutter="24">
             <el-col :span="12">
               <el-form-item label="列表显示">
-                <el-radio v-model="tempparams.isshow" border :label="true">
+                <el-radio v-model="tempparams.isshow" :label="true" border>
                   是
                 </el-radio>
-                <el-radio v-model="tempparams.isshow" border :label="false">
+                <el-radio v-model="tempparams.isshow" :label="false" border>
                   否
                 </el-radio>
               </el-form-item>
@@ -1161,8 +1161,8 @@
               class="notauto"
               readonly
             >
-              <el-option label="是" :value="true" />
-              <el-option label="否" :value="false" />
+              <el-option :value="true" label="是" />
+              <el-option :value="false" label="否" />
             </el-select>
             <el-input
               v-else-if="tempparams.type == 'int'"
@@ -1226,17 +1226,15 @@
     <div class="import-dialog">
       <el-dialog
         :append-to-body="true"
-        title="导入产品"
         :visible.sync="importDialogShow"
+        title="导入产品"
         width="25%"
       >
         <el-form ref="uploadProForm" :model="formPro">
           <el-upload
             ref="fileUpload"
-            accept=".xls, .xlsx, .zip"
             :action="uploadAction"
             :auto-upload="false"
-            class="upload-demo"
             :data="uploadData"
             :file-list="fileList"
             :headers="uploadHeaders"
@@ -1244,6 +1242,8 @@
             :on-error="handleUploadError"
             :on-success="handleUploadSuccess"
             :with-credentials="true"
+            accept=".xls, .xlsx, .zip"
+            class="upload-demo"
           >
             <el-button slot="trigger" size="small" type="primary">
               选泽文件
@@ -1292,12 +1292,14 @@
   import { ExportParse, ImportParse } from '@/api/Export'
   import { queryProductTemplet } from '@/api/ProductTemplet'
   import { getCategory, queryCategory } from '@/api/Category'
+
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
-  context.keys().forEach((fileName) => {
-    let comp = context(fileName)
-    res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
-  })
+  context.keys()
+    .forEach((fileName) => {
+      let comp = context(fileName)
+      res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
+    })
 
   export default {
     components: {
@@ -1330,7 +1332,11 @@
           productDetail: {
             decoder: { code: '' },
             thing: { properties: [] },
-            config: { parser: [], profile: [], basedate: { params: [] } },
+            config: {
+              parser: [],
+              profile: [],
+              basedate: { params: [] },
+            },
           },
           parserTableList: [],
           tableLoading: false,
@@ -1350,7 +1356,8 @@
           keys: 'count(*)',
         },
         cascaderDrawer: false,
-        drawerWidth: Number($(window).width()) - 240,
+        drawerWidth: Number($(window)
+          .width()) - 240,
         height: this.$baseTableHeight(0),
         config: {},
         dataList: [{}],
@@ -1623,16 +1630,17 @@
         console.log(
           'multipleSelection',
           this.multipleSelection,
-          this.selectfromtype
+          this.selectfromtype,
         )
-        if (!_.isObject(val))
+        if (!_.isObject(val)) {
           val.forEach((v) => {
             vals.push(v.objectId)
           })
+        }
 
-        if (this.selectfromtype == 'otherchannel')
+        if (this.selectfromtype == 'otherchannel') {
           this.form[this.selectfromtype] = vals
-        else {
+        } else {
           console.log(this.cType)
           this.form[this.selectfromtype] = val.objectId
         }
@@ -1687,12 +1695,18 @@
           where: {
             category: categorys ? { $in: categorys } : { $ne: null },
             name: args.name
-              ? { $regex: args.name, $options: 'i' }
+              ? {
+                $regex: args.name,
+                $options: 'i',
+              }
               : { $ne: null },
           },
         }
         try {
-          const { results = [], count = 0 } = await queryProductTemplet(params)
+          const {
+            results = [],
+            count = 0,
+          } = await queryProductTemplet(params)
           loading.close()
           this.tableData = results
           this.queryForm.total = count
@@ -1714,7 +1728,7 @@
         this.loading = true
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
         this.inputParams = {
           file: '',
@@ -1866,18 +1880,19 @@
         if (!val) {
           return
         }
-        getServer(val).then((resultes) => {
-          if (resultes) {
-            this.fileServer = resultes.file
-            this.access_token = resultes.access_token
-          }
-        })
+        getServer(val)
+          .then((resultes) => {
+            if (resultes) {
+              this.fileServer = resultes.file
+              this.access_token = resultes.access_token
+            }
+          })
       },
       treeData(paramData) {
         const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
         return cloneData.filter((father) => {
           const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parent.objectId
+            (child) => father.objectId == child.parent.objectId,
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parent.objectId == 0 // 返回第一层
@@ -1961,9 +1976,12 @@
                 : { $ne: null },
             },
           }
-          const { results = [], count = 0 } = await this.$query_object(
+          const {
+            results = [],
+            count = 0,
+          } = await this.$query_object(
             'Product',
-            parsms
+            parsms,
           )
           // console.log("results", results)
           if (results) {
@@ -1987,7 +2005,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'vab-hey-message-error',
           )
         }
       },
@@ -2048,7 +2066,9 @@
           roles: [],
           categoryname: '',
         }
-        this.productid = moment(new Date()).valueOf().toString()
+        this.productid = moment(new Date())
+          .valueOf()
+          .toString()
         this.dialogFormVisible = true
       },
       getParent(id, origin, returnarr) {
@@ -2103,13 +2123,13 @@
             config: type + 2 > 0 ? this.parserTableList : list,
           })
           this.$message.success(
-            this.$translateTitle('user.Save the template successfully')
+            this.$translateTitle('user.Save the template successfully'),
           )
           this.dialogVisible = false
           this.parserTable = false
         } catch (e) {
           this.$message.error(
-            this.$translateTitle('user.Save the template error') + `${e}`
+            this.$translateTitle('user.Save the template error') + `${e}`,
           )
           console.log(e, 'eeee')
         }
@@ -2152,13 +2172,25 @@
         }
         this.rule = {
           name: [
-            { required: true, message: '请输入字典模板名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入字典模板名称',
+              trigger: 'blur',
+            },
           ],
           cType: [
-            { required: true, message: '请输入字典模板类型', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入字典模板类型',
+              trigger: 'blur',
+            },
           ],
           enable: [
-            { required: true, message: '请选择状态', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择状态',
+              trigger: 'change',
+            },
           ],
         }
         console.log(this.dictTempForm, 'config')
@@ -2181,22 +2213,22 @@
         this.$set(
           this.form,
           'tdchannel',
-          row.channel ? row.channel.tdchannel : ''
+          row.channel ? row.channel.tdchannel : '',
         )
         this.$set(
           this.form,
           'taskchannel',
-          row.channel ? row.channel.taskchannel : ''
+          row.channel ? row.channel.taskchannel : '',
         )
         this.$set(
           this.form,
           'otherchannel',
-          row.channel ? row.channel.otherchannel : []
+          row.channel ? row.channel.otherchannel : [],
         )
         this.$set(
           this.form,
           'storageStrategy',
-          row.channel ? row.channel.storageStrategy : ''
+          row.channel ? row.channel.storageStrategy : '',
         )
         this.form.netType = row.netType
         this.form.devType = row.devType
@@ -2242,15 +2274,16 @@
               },
             },
           }
-          queryCategory(params).then((res) => {
-            const ids = []
-            ids.push(objectId)
-            res.results.forEach((result) => {
-              ids.push(result.objectId)
+          queryCategory(params)
+            .then((res) => {
+              const ids = []
+              ids.push(objectId)
+              res.results.forEach((result) => {
+                ids.push(result.objectId)
+              })
+              console.log('ids', ids)
+              this.queryProdut({ categorys: ids })
             })
-            console.log('ids', ids)
-            this.queryProdut({ categorys: ids })
-          })
         }
       },
       submitForm() {
@@ -2289,8 +2322,8 @@
               var ranNum = Math.ceil(Math.random() * 25)
               var productSecret = Base64.encode(
                 String.fromCharCode(65 + ranNum) +
-                  Math.ceil(Math.random() * 10000000) +
-                  Number(new Date())
+                Math.ceil(Math.random() * 10000000) +
+                Number(new Date()),
               )
               const aclKey = 'role' + ':' + this.form.relationApp
               const setAcl = {}
@@ -2308,7 +2341,7 @@
                   decoder: {},
                   config: {
                     konva: {
-                      Stage: this.defaultKonva
+                      Stage: this.defaultKonva,
                     },
                   },
                 },
@@ -2354,7 +2387,7 @@
         const res = await this.$update_object(
           'Product',
           this.custom_row.objectId,
-          data
+          data,
         )
         if (res.updatedAt) {
           this.initQuery('产品修改成功', 'success')
@@ -2415,23 +2448,25 @@
             product: scope.row.objectId,
           },
         }
-        queryDevice(params).then((results) => {
-          if (results.count > 0) {
-            this.$message('请先删除该产品下设备')
-            return
-          } else {
-            delProduct(scope.row.objectId).then((response) => {
-              if (response) {
-                this.$message({
-                  type: 'success',
-                  message: '删除成功',
+        queryDevice(params)
+          .then((results) => {
+            if (results.count > 0) {
+              this.$message('请先删除该产品下设备')
+              return
+            } else {
+              delProduct(scope.row.objectId)
+                .then((response) => {
+                  if (response) {
+                    this.$message({
+                      type: 'success',
+                      message: '删除成功',
+                    })
+                    scope._self.$refs[`popover-${scope.$index}`].doClose()
+                    this.searchProduct()
+                  }
                 })
-                scope._self.$refs[`popover-${scope.$index}`].doClose()
-                this.searchProduct()
-              }
-            })
-          }
-        })
+            }
+          })
       },
       productSizeChange(val) {
         this.length = val
@@ -2467,7 +2502,10 @@
           name: row.attributes.name,
           thing: row.attributes.thing,
         }
-        const { objectId, code } = await getHashClass('Product', data)
+        const {
+          objectId,
+          code,
+        } = await getHashClass('Product', data)
         if (code == 200) {
           this.blackDict(objectId, data)
         }
@@ -2560,16 +2598,19 @@
     height: 80px !important;
   }
 </style>
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .devproduct {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+
     &-prodialog {
       margin-left: 52px;
+
       &-content {
         margin: auto 30px;
       }
+
       &-footer {
         text-align: center;
       }
@@ -2577,10 +2618,10 @@
   }
 
   .devproduct ::v-deep .el-dialog__wrapper .el-dialog__header,
-  //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
-  //  display: none;
-  //}
-.devproduct .parserTable {
+    //.devproduct ::v-deep .el-dialog__wrapper .el-dialog__close {
+    //  display: none;
+    //}
+  .devproduct .parserTable {
     display: block;
   }
 

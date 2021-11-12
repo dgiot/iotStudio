@@ -13,6 +13,7 @@
     font-size: 14px;
     background: red;
   }
+
   .topheader {
     position: fixed;
     top: 0;
@@ -24,11 +25,13 @@
     font-size: 14px;
     transition: width 0.28s;
   }
+
   .main-container {
     position: relative;
     min-height: 100%;
     transition: margin-left 0.28s;
   }
+
   // 侧边栏
   .sidebar-container {
     position: fixed;
@@ -43,61 +46,76 @@
     //reset element-ui css
     .horizontal-collapse-transition {
       transition: 0s width ease-in-out, 0s padding-left ease-in-out,
-        0s padding-right ease-in-out;
+      0s padding-right ease-in-out;
     }
+
     .el-scrollbar__bar.is-vertical {
       right: 0px;
     }
+
     .scrollbar-wrapper {
       // overflow-x: hidden!important;
       .el-scrollbar__view {
         height: 100%;
       }
     }
+
     .is-horizontal {
       display: none;
     }
+
     a {
       display: inline-block;
       width: 100%;
     }
+
     .vab-icon {
       margin-right: 16px !important;
     }
+
     .el-menu {
       width: 100% !important;
       height: 100%;
       border: none;
     }
+
     .is-active > .el-submenu__title {
       color: #90d91b !important;
     }
   }
+
   .hideSidebar {
     .sidebar-container {
       width: 100%;
       background-color: #004898;
     }
+
     .main-container {
       margin-left: 0px;
     }
+
     .submenu-title-noDropdown {
       position: relative;
       padding-left: 10px !important;
+
       .el-tooltip {
         padding: 0 10px !important;
       }
     }
+
     .el-submenu {
       width: auto;
+
       & > .el-submenu__title {
         padding-left: 10px !important;
         color: transparent;
+
         .el-submenu__icon-arrow {
           margin-left: 8px;
         }
       }
     }
+
     .el-menu--collapse {
       .el-submenu {
         & > .el-submenu__title {
@@ -112,14 +130,17 @@
       }
     }
   }
+
   .sidebar-container .nest-menu .el-submenu > .el-submenu__title,
   .sidebar-container .el-submenu .el-menu-item {
     min-width: 180px !important;
     background-color: #f6fbff !important;
+
     &:hover {
       background-color: #001528 !important;
     }
   }
+
   .el-menu--collapse .el-menu .el-submenu {
     min-width: 180px !important;
   }
@@ -129,10 +150,12 @@
     .main-container {
       margin-left: 0px;
     }
+
     .sidebar-container {
       width: 180px !important;
       transition: transform 0.28s;
     }
+
     &.hideSidebar {
       .sidebar-container {
         transition-duration: 0.3s;
@@ -140,6 +163,7 @@
       }
     }
   }
+
   .withoutAnimation {
     .main-container,
     .sidebar-container {
@@ -147,6 +171,7 @@
     }
   }
 }
+
 .el-menu--vertical {
   & > .el-menu {
     .vab-icon {

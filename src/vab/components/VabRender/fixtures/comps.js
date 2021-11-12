@@ -61,7 +61,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           max: {
             type: 'input',
@@ -136,8 +144,14 @@ export default [
             label: '自适应内容高度值类型',
             default: 'switch',
             options: [
-              { text: '自适应', value: 'switch' },
-              { text: '最大最小值', value: 'data-editor' },
+              {
+                text: '自适应',
+                value: 'switch',
+              },
+              {
+                text: '最大最小值',
+                value: 'data-editor',
+              },
             ],
           },
           autosize: {
@@ -146,7 +160,10 @@ export default [
               if (data.autosizeType === 'switch') {
                 return false
               } else {
-                return { minRows: 2, maxRows: 6 }
+                return {
+                  minRows: 2,
+                  maxRows: 6,
+                }
               }
             },
             label: '自适应内容高度配置',
@@ -238,7 +255,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           clearable: {
             type: 'switch',
@@ -325,9 +350,18 @@ export default [
         data: {
           isOptions: true,
           options: [
-            { text: '选项1', value: 1 },
-            { text: '选项2', value: 2 },
-            { text: '选项3', value: 3 },
+            {
+              text: '选项1',
+              value: 1,
+            },
+            {
+              text: '选项2',
+              value: 2,
+            },
+            {
+              text: '选项3',
+              value: 3,
+            },
           ],
         },
       },
@@ -375,7 +409,14 @@ export default [
           size: {
             type: 'radio',
             label: '计数器尺寸',
-            options: [{ text: '默认', value: null }, 'large', 'small'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'large',
+              'small',
+            ],
           },
           controls: {
             type: 'switch',
@@ -384,7 +425,13 @@ export default [
           controlsPosition: {
             type: 'radio',
             label: '控制按钮位置',
-            options: [{ text: '默认', value: null }, 'right'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'right',
+            ],
           },
         },
         data: {},
@@ -410,7 +457,15 @@ export default [
           size: {
             type: 'select',
             label: '多选框组尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           min: {
             type: 'number',
@@ -442,9 +497,18 @@ export default [
         data: {
           isOptions: true,
           options: [
-            { text: '选项1', value: 1 },
-            { text: '选项2', value: 2 },
-            { text: '选项3', value: 3 },
+            {
+              text: '选项1',
+              value: 1,
+            },
+            {
+              text: '选项2',
+              value: 2,
+            },
+            {
+              text: '选项3',
+              value: 3,
+            },
           ],
         },
       },
@@ -461,7 +525,15 @@ export default [
           size: {
             type: 'select',
             label: '单选框组尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
         },
         data: {},
@@ -479,9 +551,18 @@ export default [
         data: {
           isOptions: true,
           options: [
-            { text: '选项1', value: 1 },
-            { text: '选项2', value: 2 },
-            { text: '选项3', value: 3 },
+            {
+              text: '选项1',
+              value: 1,
+            },
+            {
+              text: '选项2',
+              value: 2,
+            },
+            {
+              text: '选项3',
+              value: 3,
+            },
           ],
         },
       },
@@ -597,7 +678,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           popperClass: {
             type: 'input',
@@ -675,7 +764,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           unlinkPanels: {
             type: 'switch',
@@ -750,7 +847,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           popperClass: {
             type: 'input',
@@ -827,7 +932,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           unlinkPanels: {
             type: 'switch',
@@ -894,7 +1007,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           popperClass: {
             type: 'input',
@@ -948,7 +1069,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           popperClass: {
             type: 'input',
@@ -1021,7 +1150,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           align: {
             type: 'select',
@@ -1084,7 +1221,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           popperClass: {
             type: 'input',
@@ -1142,7 +1287,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           popperClass: {
             type: 'input',
@@ -1200,7 +1353,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           popperClass: {
             type: 'input',
@@ -1273,7 +1434,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           unlinkPanels: {
             type: 'switch',
@@ -1344,7 +1513,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           popperClass: {
             type: 'input',
@@ -1390,7 +1567,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           showAlpha: {
             type: 'switch',
@@ -1451,7 +1636,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           separator: {
             type: 'input',
@@ -1847,10 +2040,22 @@ export default [
         data: {
           isOptions: true,
           options: [
-            { key: 1, label: '选项1' },
-            { key: 2, label: '选项3' },
-            { key: 3, label: '选项3' },
-            { key: 4, label: '选项4' },
+            {
+              key: 1,
+              label: '选项1',
+            },
+            {
+              key: 2,
+              label: '选项3',
+            },
+            {
+              key: 3,
+              label: '选项3',
+            },
+            {
+              key: 4,
+              label: '选项4',
+            },
           ],
         },
       },
@@ -2213,7 +2418,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           autofocus: {
             type: 'switch',
@@ -2250,7 +2463,15 @@ export default [
           size: {
             type: 'select',
             label: 'Checkbox 的尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
             vif: (data) => data.border,
           },
           indeterminate: {
@@ -2388,7 +2609,15 @@ export default [
           size: {
             type: 'select',
             label: '单选框组尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           textColor: {
             type: 'color',
@@ -2414,9 +2643,18 @@ export default [
         data: {
           isOptions: true,
           options: [
-            { text: '选项1', value: 1 },
-            { text: '选项2', value: 2 },
-            { text: '选项3', value: 3 },
+            {
+              text: '选项1',
+              value: 1,
+            },
+            {
+              text: '选项2',
+              value: 2,
+            },
+            {
+              text: '选项3',
+              value: 3,
+            },
           ],
         },
       },
@@ -2441,7 +2679,15 @@ export default [
           size: {
             type: 'select',
             label: '多选框组尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           min: {
             type: 'input',
@@ -2475,9 +2721,18 @@ export default [
         data: {
           isOptions: true,
           options: [
-            { text: '选项1', value: 1 },
-            { text: '选项2', value: 2 },
-            { text: '选项3', value: 3 },
+            {
+              text: '选项1',
+              value: 1,
+            },
+            {
+              text: '选项2',
+              value: 2,
+            },
+            {
+              text: '选项3',
+              value: 3,
+            },
           ],
         },
       },
@@ -2754,7 +3009,15 @@ export default [
           size: {
             type: 'select',
             label: '输入框尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           clearable: {
             type: 'switch',
@@ -2836,13 +3099,24 @@ export default [
           size: {
             type: 'select',
             label: '尺寸',
-            options: [{ text: '默认', value: null }, 'medium', 'small', 'mini'],
+            options: [
+              {
+                text: '默认',
+                value: null,
+              },
+              'medium',
+              'small',
+              'mini',
+            ],
           },
           type: {
             type: 'select',
             label: '类型',
             options: [
-              { text: '默认', value: null },
+              {
+                text: '默认',
+                value: null,
+              },
               'primary',
               'success',
               'warning',

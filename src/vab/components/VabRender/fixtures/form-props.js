@@ -4,8 +4,14 @@ export default {
       type: 'radio-button',
       label: 'inline模式 / layout模式',
       options: [
-        { text: 'layout模式', value: undefined },
-        { text: 'inline模式', value: true },
+        {
+          text: 'layout模式',
+          value: undefined,
+        },
+        {
+          text: 'inline模式',
+          value: true,
+        },
       ],
     },
     isResponsive: {
@@ -13,8 +19,14 @@ export default {
       label: '是否响应式',
       vif: (data) => !data.inline,
       options: [
-        { text: '是', value: undefined },
-        { text: '否', value: false },
+        {
+          text: '是',
+          value: undefined,
+        },
+        {
+          text: '否',
+          value: false,
+        },
       ],
     },
     labelPosition: {
@@ -23,7 +35,10 @@ export default {
       options(data) {
         const options = ['left', 'right', 'top']
         if (data.isResponsive !== false && !data.inline) {
-          options.unshift({ text: '响应式', value: undefined })
+          options.unshift({
+            text: '响应式',
+            value: undefined,
+          })
         }
         return options
       },
@@ -34,9 +49,15 @@ export default {
       vif: (data) => !data.inline,
       options() {
         const options = Array.from({ length: 24 }, (v, i) => {
-          return { text: `${24 - i} / 24`, value: 24 - i }
+          return {
+            text: `${24 - i} / 24`,
+            value: 24 - i,
+          }
         })
-        options.unshift({ text: '响应式', value: undefined })
+        options.unshift({
+          text: '响应式',
+          value: undefined,
+        })
         return options
       },
       style: {
@@ -55,16 +76,28 @@ export default {
       type: 'radio-button',
       label: '是否为弹窗',
       options: [
-        { text: '非弹窗', value: undefined },
-        { text: '弹窗', value: true },
+        {
+          text: '非弹窗',
+          value: undefined,
+        },
+        {
+          text: '弹窗',
+          value: true,
+        },
       ],
     },
     isShowLabel: {
       type: 'radio-button',
       label: '是否显示标签',
       options: [
-        { text: '显示', value: undefined },
-        { text: '不显示', value: false },
+        {
+          text: '显示',
+          value: undefined,
+        },
+        {
+          text: '不显示',
+          value: false,
+        },
       ],
     },
     labelWidth: {
@@ -81,61 +114,111 @@ export default {
       type: 'radio-button',
       label: '全局禁用表单',
       options: [
-        { text: '正常', value: undefined },
-        { text: '禁用', value: true },
+        {
+          text: '正常',
+          value: undefined,
+        },
+        {
+          text: '禁用',
+          value: true,
+        },
       ],
     },
     readonly: {
       type: 'radio-button',
       label: '全局只读表单',
       options: [
-        { text: '正常', value: undefined },
-        { text: '只读', value: true },
+        {
+          text: '正常',
+          value: undefined,
+        },
+        {
+          text: '只读',
+          value: true,
+        },
       ],
     },
     isShowErrorNotify: {
       type: 'radio-button',
       label: '是否在校检错误后显示右上角提示',
       options: [
-        { text: '显示', value: undefined },
-        { text: '不显示', value: false },
+        {
+          text: '显示',
+          value: undefined,
+        },
+        {
+          text: '不显示',
+          value: false,
+        },
       ],
     },
     isShowSubmitBtn: {
       type: 'radio-button',
       label: '提交按钮',
       options: [
-        { text: '显示', value: undefined },
-        { text: '隐藏', value: false },
+        {
+          text: '显示',
+          value: undefined,
+        },
+        {
+          text: '隐藏',
+          value: false,
+        },
       ],
     },
     isShowBackBtn: {
       type: 'radio-button',
       label: '返回按钮',
       options: [
-        { text: '显示', value: undefined },
-        { text: '隐藏', value: false },
+        {
+          text: '显示',
+          value: undefined,
+        },
+        {
+          text: '隐藏',
+          value: false,
+        },
       ],
     },
     formBtnSize: {
       type: 'radio-button',
       label: '表单按钮大小',
-      options: [{ text: '默认', value: undefined }, 'medium', 'small', 'mini'],
+      options: [
+        {
+          text: '默认',
+          value: undefined,
+        },
+        'medium',
+        'small',
+        'mini',
+      ],
     },
     isShowResetBtn: {
       type: 'radio-button',
       label: '重置按钮',
       options: [
-        { text: '显示', value: true },
-        { text: '隐藏', value: undefined },
+        {
+          text: '显示',
+          value: true,
+        },
+        {
+          text: '隐藏',
+          value: undefined,
+        },
       ],
     },
     isShowCancelBtn: {
       type: 'radio-button',
       label: '取消按钮',
       options: [
-        { text: '显示', value: true },
-        { text: '隐藏', value: undefined },
+        {
+          text: '显示',
+          value: true,
+        },
+        {
+          text: '隐藏',
+          value: undefined,
+        },
       ],
     },
     submitBtnText: {

@@ -1,5 +1,5 @@
 const fuzzy = require('fuzzy')
-import { objectToArr, arrToObject } from '../../../utils'
+import { arrToObject, objectToArr } from '../../../utils'
 
 export default {
   data() {

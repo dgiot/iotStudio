@@ -14,6 +14,7 @@ export function Historytask(start, length, di, datetime, searchvalue) {
     },
   })
 }
+
 export function Historydi() {
   return request({
     url: '/shuwa_task/diList',
@@ -33,6 +34,7 @@ export function Histoymeterdetail(node, di, datetime, vcaddr) {
     },
   })
 }
+
 export function Diselect() {
   return request({
     url: '/shuwa_task/diList',
@@ -53,6 +55,7 @@ export function Alltasks(start, length, draw, searchvalue) {
     },
   })
 }
+
 export function Addtasks(
   name,
   frozendate,
@@ -80,6 +83,7 @@ export function Addtasks(
     },
   })
 }
+
 export function Taskdetail(start, length, tid, rid, starttime, freq, search) {
   return request({
     url: '/shuwa_task/vcaddr',
@@ -95,6 +99,7 @@ export function Taskdetail(start, length, tid, rid, starttime, freq, search) {
     },
   })
 }
+
 export function Taskmeterdetail(tid, rid, starttime, vcaddr, freq, fdate, di) {
   return request({
     url: 'shuwa_task/meter',
@@ -110,6 +115,7 @@ export function Taskmeterdetail(tid, rid, starttime, vcaddr, freq, fdate, di) {
     },
   })
 }
+
 export function Removetask(id) {
   return request({
     url: '/shuwa_task/task',
@@ -119,6 +125,7 @@ export function Removetask(id) {
     },
   })
 }
+
 // 抄表
 export function Supporttask(data) {
   return request({

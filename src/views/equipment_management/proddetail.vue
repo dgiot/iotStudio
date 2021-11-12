@@ -1807,9 +1807,9 @@
                     class="ace_editor"
                     style="min-height: 400px"
                   ><el-input
-class="ace_text-input"
-                             type="textarea"
-/></pre>
+                    class="ace_text-input"
+                    type="textarea"
+                  /></pre>
                   <el-button
                     slot="reference"
                     icon="el-icon-question"
@@ -2052,8 +2052,8 @@ class="ace_text-input"
           class="ace_editor"
           style="min-height: 400px"
         ><textarea
-class="ace_text-input"
-                   style="overflow:scroll"
+          class="ace_text-input"
+          style="overflow:scroll"
         /></pre>
       </div>
       <span
@@ -2175,9 +2175,9 @@ class="ace_text-input"
           style="width: 100%; min-height: 300px"
         >
                       <textarea
-class="ace_text-input"
-style="overflow:scroll"
-/>
+                        class="ace_text-input"
+                        style="overflow:scroll"
+                      />
         </pre>
       </div>
 
@@ -2224,8 +2224,8 @@ style="overflow:scroll"
                     class="ace_editor"
                     style="min-height: 600px"
                   ><el-input
-class="ace_text-input"
-                             type="textarea"
+                    class="ace_text-input"
+                    type="textarea"
                   /></pre>
                 </el-form-item>
               </div>
@@ -2241,8 +2241,8 @@ class="ace_text-input"
                     class="ace_editor"
                     style="min-height: 600px"
                   ><el-input
-class="ace_text-input"
-                             type="textarea"
+                    class="ace_text-input"
+                    type="textarea"
                   /></pre>
                 </el-form-item>
               </div>

@@ -13,4 +13,5 @@ function createImg(params) {
   imgconfig.imageObj = createimg
   return new Konva.Image(Object.assign(params, imgconfig))
 }
+
 export default createImg

@@ -45,8 +45,9 @@
 </template>
 
 <script>
-  import { putCategory, postCategory } from '@/api/Category'
+  import { postCategory, putCategory } from '@/api/Category'
   import { mapGetters } from 'vuex'
+
   export default {
     name: 'TableEdit',
     data() {

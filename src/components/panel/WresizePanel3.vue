@@ -138,6 +138,7 @@
   .wresize-panel-3 {
     position: relative;
     height: calc(100vh - 210px);
+
     .wresize-panel-left {
       position: absolute;
       top: 0px;

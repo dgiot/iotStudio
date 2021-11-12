@@ -5,6 +5,7 @@ function getInertText(text, preWord) {
   // let $text = text.replace(/\"/g, '')
   return text
 }
+
 export function createMonacoComplete(hints, range, { word }) {
   let customHints = []
   if (hints.length) {
@@ -31,6 +32,7 @@ function getValueName(hint) {
   }
   return defaultValue ? `${name}, value: ${defaultValue}` : name
 }
+
 export function createMonacoHover(key, hints) {
   const contents = []
   hints.forEach((hint) => {

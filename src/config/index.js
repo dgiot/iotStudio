@@ -16,5 +16,5 @@ module.exports = {
   ...pwa,
   ...mqtt,
   ...local,
-  ...og
+  ...og,
 }

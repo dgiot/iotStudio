@@ -10,7 +10,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
-    Microsoft YaHei, Arial, sans-serif;
+  Microsoft YaHei, Arial, sans-serif;
 }
 
 label {
@@ -77,18 +77,23 @@ a:hover {
 .app-container {
   padding: 20px;
 }
+
 .ta {
   text-align: center;
 }
+
 .tr {
   text-align: right;
 }
+
 .tr {
   text-align: left;
 }
+
 .block {
   display: block;
 }
+
 .ib {
   display: inline-block;
 }

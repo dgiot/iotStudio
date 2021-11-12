@@ -131,9 +131,9 @@
   </div>
 </template>
 <script>
-  import { getRule, getRuleDetail, ruleDelete, put_rule_id } from '@/api/Rules'
+  import { getRule, getRuleDetail, put_rule_id, ruleDelete } from '@/api/Rules'
   // import VabParser from '@/vab/components/VabParser'
-  import { getHashClass } from '@/api/Hash/index'
+
   export default {
     // components: { VabParser },
     data() {
@@ -236,7 +236,10 @@
       editRule(id) {
         this.$router.push({
           path: '/rules_engine/addengine',
-          query: { id: id, title: '编辑' },
+          query: {
+            id: id,
+            title: '编辑',
+          },
         })
       },
       deleteRule(id) {
@@ -259,17 +262,21 @@
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+
     .engintable {
       width: 100%;
       height: auto;
+
       .engineheader {
         h3 {
           float: left;
         }
       }
+
       .block {
       }
     }
+
     ::v-deep .firstcolumn {
       color: #34c388;
       cursor: pointer;

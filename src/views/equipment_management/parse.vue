@@ -91,6 +91,7 @@
 <script>
   import { getTable } from '@/api/Dba'
   import { ExportParse, ImportParse } from '@/api/Export'
+
   export default {
     name: 'Parse',
     components: {},

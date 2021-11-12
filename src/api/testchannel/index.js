@@ -28,6 +28,7 @@ export function channelConnect(
     },
   })
 }
+
 export function updateConnect(
   objectId,
   host,
@@ -58,6 +59,7 @@ export function updateConnect(
     },
   })
 }
+
 export function deleteConnect(objectId) {
   return request({
     url: '/resource/edit/' + objectId,

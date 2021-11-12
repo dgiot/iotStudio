@@ -2,7 +2,7 @@
   <div
     ref="container"
     class="login-container"
-    :style="{ backgroundImage:'url(' +backgroundImage + ')'}"
+    :style="{ backgroundImage: 'url(' + backgroundImage + ')' }"
   >
     <el-row>
       <el-col
@@ -142,6 +142,7 @@
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/validate'
   import { SiteDefault } from '@/api/License'
+
   export default {
     name: 'Login',
     directives: {
@@ -157,17 +158,22 @@
     },
     data() {
       const validateUsername = (rule, value, callback) => {
-        if ('' === value) callback(new Error(this.info.empty))
-        else callback()
+        if ('' === value) {
+          callback(new Error(this.info.empty))
+        } else {
+          callback()
+        }
       }
       const validatePassword = (rule, value, callback) => {
         let pwdlength = 4
-        if (!isPassword(value, pwdlength))
+        if (!isPassword(value, pwdlength)) {
           callback(new Error(this.info.than + pwdlength + this.info.Bit))
-        else callback()
+        } else {
+          callback()
+        }
       }
       return {
-        locationPath:location.href.split('/#')[0],
+        locationPath: location.href.split('/#')[0],
         info: {
           empty: this.$translateTitle('home.Username can not be empty'),
           than: this.$translateTitle('home.Password cannot be less than'),
@@ -357,11 +363,13 @@
       color: #096dd9;
       text-align: center;
     }
+
     .sbMc {
       ::v-deep {
         .el-input__inner {
           display: none;
         }
+
         .el-input-group__append {
           color: #fff;
           background-color: #409eff;
@@ -369,6 +377,7 @@
         }
       }
     }
+
     .login-btn {
       display: inherit;
       width: 100%;

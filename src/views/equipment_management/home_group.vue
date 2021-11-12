@@ -584,18 +584,20 @@
   </div>
 </template>
 <script>
-  import { queryProduct } from '@/api/Product/index'
-  import { queryRole } from '@/api/Role/index'
+  import {
+    delProduct,
+    getProduct,
+    putProduct,
+    queryProduct,
+  } from '@/api/Product/index'
+  import { getRole, queryRole } from '@/api/Role/index'
   import { queryDevice } from '@/api/Device/index'
   import { getHashClass } from '@/api/Hash/index'
-  import { queryDict, postDict } from '@/api/Dict/index'
+  import { postDict, queryDict } from '@/api/Dict/index'
   // const Base64 = require('js-base64').Base64
-  import { returnLogin } from '@/utils/utilwen'
   import { export_txt_to_zip } from '@/utils/Export2Zip.js'
   import Cookies from 'js-cookie'
-  import { getRole } from '@/api/Role/index'
   import { addGroup } from '@/api/Group/index'
-  import { delProduct, getProduct, putProduct } from '@/api/Product/index'
   import Category from '@/api/Mock/Category'
 
   export default {
@@ -642,9 +644,19 @@
         },
         rules: {
           roles: [
-            { required: true, message: '请选择所属应用', trigger: 'blur' },
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'blur',
+            },
           ],
-          name: [{ required: true, message: '请输入产品', trigger: 'blur' }],
+          name: [
+            {
+              required: true,
+              message: '请输入产品',
+              trigger: 'blur',
+            },
+          ],
           devType: [
             {
               required: true,
@@ -653,13 +665,25 @@
             },
           ],
           category: [
-            { required: true, message: '请选择所属分类', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择所属分类',
+              trigger: 'change',
+            },
           ],
           nodeType: [
-            { required: true, message: '请选择节点类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择节点类型',
+              trigger: 'change',
+            },
           ],
           netType: [
-            { required: true, message: '请选择联网方式', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择联网方式',
+              trigger: 'change',
+            },
           ],
           relationApp: [
             {
@@ -672,18 +696,54 @@
         option: [],
         ruleoptions: [],
         channel: [
-          { label: '蜂窝(2G/3G/4G)(直连)', value: 'CELLULAR' },
-          { label: 'NB-IOT通道', value: 'NB-IOT' },
-          { label: 'BLE(低功耗蓝牙)', value: 'Bluetooth' },
-          { label: '5G通道(直连)', value: '5G' },
-          { label: 'WIFI通道(直连)', value: 'WIFI' },
-          { label: 'ZigBee通道', value: 'ZigBee' },
-          { label: 'Modbus', value: 'Modbus' },
-          { label: 'LoRa(WAN)(直连)', value: 'LoRaWAN' },
-          { label: 'OPC UA', value: ' OPC UA' },
-          { label: 'ZETA通道', value: 'ZETA' },
-          { label: '网线连接(直连)', value: '网线连接' },
-          { label: '自定义', value: 'OTHER' },
+          {
+            label: '蜂窝(2G/3G/4G)(直连)',
+            value: 'CELLULAR',
+          },
+          {
+            label: 'NB-IOT通道',
+            value: 'NB-IOT',
+          },
+          {
+            label: 'BLE(低功耗蓝牙)',
+            value: 'Bluetooth',
+          },
+          {
+            label: '5G通道(直连)',
+            value: '5G',
+          },
+          {
+            label: 'WIFI通道(直连)',
+            value: 'WIFI',
+          },
+          {
+            label: 'ZigBee通道',
+            value: 'ZigBee',
+          },
+          {
+            label: 'Modbus',
+            value: 'Modbus',
+          },
+          {
+            label: 'LoRa(WAN)(直连)',
+            value: 'LoRaWAN',
+          },
+          {
+            label: 'OPC UA',
+            value: ' OPC UA',
+          },
+          {
+            label: 'ZETA通道',
+            value: 'ZETA',
+          },
+          {
+            label: '网线连接(直连)',
+            value: '网线连接',
+          },
+          {
+            label: '自定义',
+            value: 'OTHER',
+          },
         ],
         imageUrl: '',
         productid: '',
@@ -749,29 +809,86 @@
 
         if (val == 0) {
           this.channel = [
-            { label: '蜂窝(2G/3G/4G)', value: 'CELLULAR' },
-            { label: 'NB-IOT通道', value: 'NB-IOT' },
-            { label: 'BLE(低功耗蓝牙)', value: 'Bluetooth' },
-            { label: '5G通道', value: '5G' },
-            { label: 'WIFI通道', value: 'WIFI' },
-            { label: 'ZigBee通道', value: 'ZigBee' },
-            { label: 'LoRa(WAN)', value: 'LoRaWAN' },
-            { label: 'Modbus', value: 'Modbus' },
-            { label: 'OPC UA', value: ' OPC UA' },
-            { label: 'ZETA通道', value: 'ZETA' },
-            { label: '网线连接', value: '网线连接' },
+            {
+              label: '蜂窝(2G/3G/4G)',
+              value: 'CELLULAR',
+            },
+            {
+              label: 'NB-IOT通道',
+              value: 'NB-IOT',
+            },
+            {
+              label: 'BLE(低功耗蓝牙)',
+              value: 'Bluetooth',
+            },
+            {
+              label: '5G通道',
+              value: '5G',
+            },
+            {
+              label: 'WIFI通道',
+              value: 'WIFI',
+            },
+            {
+              label: 'ZigBee通道',
+              value: 'ZigBee',
+            },
+            {
+              label: 'LoRa(WAN)',
+              value: 'LoRaWAN',
+            },
+            {
+              label: 'Modbus',
+              value: 'Modbus',
+            },
+            {
+              label: 'OPC UA',
+              value: ' OPC UA',
+            },
+            {
+              label: 'ZETA通道',
+              value: 'ZETA',
+            },
+            {
+              label: '网线连接',
+              value: '网线连接',
+            },
 
-            { label: '自定义', value: 'OTHER' },
+            {
+              label: '自定义',
+              value: 'OTHER',
+            },
           ]
         } else {
           this.channel = [
-            { label: '蜂窝(2G/3G/4G)', value: 'CELLULAR' },
-            { label: '5G通道', value: '5G' },
-            { label: 'WIFI通道', value: 'WIFI' },
-            { label: 'NB-IOT通道', value: 'NB-IOT' },
-            { label: 'LoRaWAN', value: 'LoRaWAN' },
-            { label: '网线连接', value: '网线连接' },
-            { label: '自定义', value: 'OTHER' },
+            {
+              label: '蜂窝(2G/3G/4G)',
+              value: 'CELLULAR',
+            },
+            {
+              label: '5G通道',
+              value: '5G',
+            },
+            {
+              label: 'WIFI通道',
+              value: 'WIFI',
+            },
+            {
+              label: 'NB-IOT通道',
+              value: 'NB-IOT',
+            },
+            {
+              label: 'LoRaWAN',
+              value: 'LoRaWAN',
+            },
+            {
+              label: '网线连接',
+              value: '网线连接',
+            },
+            {
+              label: '自定义',
+              value: 'OTHER',
+            },
           ]
         }
       },

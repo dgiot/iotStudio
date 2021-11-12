@@ -45,6 +45,7 @@ function clipboard(text) {
     document.body.removeChild(input)
   })
 }
+
 const $clipboard = clipboard
 
 export { $clipboard }

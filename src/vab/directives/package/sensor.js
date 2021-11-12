@@ -12,8 +12,9 @@ const sensor = {
     if (
       !Object.prototype.toString.call(sensorObj) === '[object Object]' ||
       JSON.stringify(sensorObj) == '{}'
-    )
+    ) {
       return
+    }
     //遍历传入对象参数，根据key值确定埋点类型
     for (const key in sensorObj) {
       if (Object.hasOwnProperty.call(sensorObj, key)) {

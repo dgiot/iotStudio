@@ -18,18 +18,18 @@
 <body>
 <div id="container"></div>
 <script>
-  var width = window.innerWidth;
-  var height = window.innerHeight;
+  var width = window.innerWidth
+  var height = window.innerHeight
 
   var stage = new Konva.Stage({
     container: 'container',
     width: width,
-    height: height
-  });
+    height: height,
+  })
 
-  var layer = new Konva.Layer();
-  var rectX = stage.width() / 2 - 50;
-  var rectY = stage.height() / 2 - 25;
+  var layer = new Konva.Layer()
+  var rectX = stage.width() / 2 - 50
+  var rectY = stage.height() / 2 - 25
 
   var box = new Konva.Rect({
     x: rectX,
@@ -39,19 +39,19 @@
     fill: '#00D2FF',
     stroke: 'black',
     strokeWidth: 4,
-    draggable: true
-  });
+    draggable: true,
+  })
 
   // add cursor styling
-  box.on('mouseover', function() {
-    document.body.style.cursor = 'pointer';
-  });
-  box.on('mouseout', function() {
-    document.body.style.cursor = 'default';
-  });
+  box.on('mouseover', function () {
+    document.body.style.cursor = 'pointer'
+  })
+  box.on('mouseout', function () {
+    document.body.style.cursor = 'default'
+  })
 
-  layer.add(box);
-  stage.add(layer);
+  layer.add(box)
+  stage.add(layer)
   console.log(stage.toJSON())
 </script>
 </body>

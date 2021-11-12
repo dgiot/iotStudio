@@ -14,9 +14,7 @@
         size="small"
       >
         <el-form-item :label="$translateTitle('application.scene')">
-          <el-input
-            v-model="fileParams.scene"
-          />
+          <el-input v-model="fileParams.scene" />
         </el-form-item>
         <el-form-item :label="$translateTitle('developer.path')">
           <el-input
@@ -47,9 +45,9 @@
       <!----------------------------------------------------文件表格------------------>
       <el-table
         ref="tableRef"
+        v-loading="listLoading"
         :cell-style="{ 'text-align': 'center' }"
         :data="filelist"
-        v-loading="listLoading"
         :header-cell-style="{ 'text-align': 'center' }"
         style="width: 100%"
         @row-click="fileclick"
@@ -67,11 +65,9 @@
           sortable
           width="200"
         >
-          <template
-            slot-scope="scope"
-          >
+          <template slot-scope="scope">
             <span v-if="scope.row.is_dir">{{ '-' }}</span>
-            <span v-else>{{ Math.round(scope.row.size/1024) + 'kb' }}</span>
+            <span v-else>{{ Math.round(scope.row.size / 1024) + 'kb' }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -82,7 +78,11 @@
           width="260"
         >
           <template slot-scope="scope">
-            <span>{{ $moment(scope.row.mtime*1000).format('YYYY-MM-DD HH:mm:ss') }}</span>
+            <span>
+              {{
+                $moment(scope.row.mtime * 1000).format('YYYY-MM-DD HH:mm:ss')
+              }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column
@@ -91,8 +91,8 @@
           width="300"
         >
           <template
-            slot-scope="scope"
             v-if="!scope.row.is_dir"
+            slot-scope="scope"
           >
             <el-button
               size="mini"
@@ -122,9 +122,9 @@
         </el-table-column>
       </el-table>
       <el-dialog
+        :model="detailinfo"
         title="文件信息"
         :visible.sync="detailView"
-        :model="detailinfo"
         width="30%"
       >
         <el-form v-loading="ViewLoading">
@@ -162,13 +162,19 @@
             label="大小"
             label-width="200"
           >
-            <span>{{ Math.round(detailinfo.size/1024) + 'kb' }}</span>
+            <span>{{ Math.round(detailinfo.size / 1024) + 'kb' }}</span>
           </el-form-item>
           <el-form-item
             label="日期"
             label-width="200"
           >
-            <span>{{ $moment(detailinfo.timeStamp*1000).format('YYYY-MM-DD HH:mm:ss') }}</span>
+            <span>
+              {{
+                $moment(detailinfo.timeStamp * 1000).format(
+                  'YYYY-MM-DD HH:mm:ss'
+                )
+              }}
+            </span>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -176,257 +182,272 @@
   </div>
 </template>
 <script>
+  import { delete_file, file_info, list_dir } from '@/api/System/filemanagement'
 
-import {list_dir, file_info, delete_file} from "@/api/System/filemanagement";
-
-export default {
-  data() {
-    return {
-      filelist: [],
-      filebreadcrumb: [{name : '全部文件', path:'dgiot_file', is_dir: true}],
-      fileParams: {scene: 'app'},
-      inputParams: {},
-      parentfile: 'dgiot_file',
-      listLoading: false,
-      ViewLoading: false,
-      detailView: false,
-      detailinfo: {},
-    }
-  },
-  watch: {},
-  mounted() {
-    this.get_filelist(this.parentfile)
-  },
-  methods: {
-    breadcrumbClick(row){
-      if(row.name == '全部文件'){
-        this.filebreadcrumb = [{name : '全部文件', path:'dgiot_file'}]
-        this.get_filelist(row.path)
-      }else{
-        if(row.child){
-          for (var i = 0; i < this.filebreadcrumb.length; i++) {
-            if(this.filebreadcrumb[i].path == row.child.path){
-              this.filebreadcrumb.splice(i, 1);
+  export default {
+    data() {
+      return {
+        filelist: [],
+        filebreadcrumb: [
+          {
+            name: '全部文件',
+            path: 'dgiot_file',
+            is_dir: true,
+          },
+        ],
+        fileParams: { scene: 'app' },
+        inputParams: {},
+        parentfile: 'dgiot_file',
+        listLoading: false,
+        ViewLoading: false,
+        detailView: false,
+        detailinfo: {},
+      }
+    },
+    watch: {},
+    mounted() {
+      this.get_filelist(this.parentfile)
+    },
+    methods: {
+      breadcrumbClick(row) {
+        if (row.name == '全部文件') {
+          this.filebreadcrumb = [
+            {
+              name: '全部文件',
+              path: 'dgiot_file',
+            },
+          ]
+          this.get_filelist(row.path)
+        } else {
+          if (row.child) {
+            for (var i = 0; i < this.filebreadcrumb.length; i++) {
+              if (this.filebreadcrumb[i].path == row.child.path) {
+                this.filebreadcrumb.splice(i, 1)
+              }
             }
           }
+          this.get_filelist(row.path + '/' + row.name)
         }
-        this.get_filelist(row.path + '/' + row.name)
-      }
-    },
-    fileclick(row){
-      console.log(row)
-      if(row.is_dir){
-        this.get_filelist(row.path + '/' + row.name)
-        const len = this.filebreadcrumb.length - 1
-        var key = 'child';
-        this.filebreadcrumb[len][key] = row
-        this.filebreadcrumb.push(row)
-      }else{
-        window.open(this.$FileServe + '/' + row.path + '/' + row.name)
-      }
-    },
-    uploadCkick() {
-      this.loading = true
-      // 触发子组件的点击事件
-      this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-        new MouseEvent('click')
-      )
-      this.inputParams = {
-        file: '',
-        scene: this.fileParams.scene ? this.fileParams.scene : 'default',
-        path: this.fileParams.path ? this.fileParams.path : 'default',
-        filename: moment(new Date()).valueOf().toString(),
-      }
-    },
-    fileInfo(info) {
-      this.listLoading = true
-      if (info.url) {
-        this.$message({
-          type: 'success',
-          message: '上传成功',
-        })
-        this.get_filelist(this.parentfile)
-      } else {
-        this.$message({
-          type: 'error',
-          message: '上传失败',
-        })
-      }
-      this.listLoading = false
-    },
-    files(file) {
-      this.inputParams.filename = file.name
-      this.inputParams.file = file
-    },
-    get_filelist(path) {
-      this.listLoading = true
-      list_dir(path).then(res => {
-        if(res.status == 'ok'){
-          this.filelist = res.data
-        }else{
-          this.filelist = []
+      },
+      fileclick(row) {
+        console.log(row)
+        if (row.is_dir) {
+          this.get_filelist(row.path + '/' + row.name)
+          const len = this.filebreadcrumb.length - 1
+          var key = 'child'
+          this.filebreadcrumb[len][key] = row
+          this.filebreadcrumb.push(row)
+        } else {
+          window.open(this.$FileServe + '/' + row.path + '/' + row.name)
         }
-        this.listLoading = false
-      })
-    },
-    get_fileinfo(row){
-      this.detailView = true
-      this.ViewLoading = true
-      file_info('files/' + row.path + '/' + row.name).then(res=>{
-        this.detailinfo = res.data
-        this.detailinfo.url = this.$FileServe + '/' + row.path + '/' + row.name
-        this.ViewLoading = false
-      })
-    },
-    delete_file(row){
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        delete_file('files/' + row.path + '/' + row.name).then(res=>{
-          if (res.status == 'ok') {
-            this.$message({
-              type: 'success',
-              message: '删除成功',
-            })
-            this.get_filelist(row.path)
-          } else {
-            this.$message({
-              type: 'error',
-              message: res.message,
-            })
-          }
-        }).catch(() => {
+      },
+      uploadCkick() {
+        this.loading = true
+        // 触发子组件的点击事件
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
+        this.inputParams = {
+          file: '',
+          scene: this.fileParams.scene ? this.fileParams.scene : 'default',
+          path: this.fileParams.path ? this.fileParams.path : 'default',
+          filename: moment(new Date()).valueOf().toString(),
+        }
+      },
+      fileInfo(info) {
+        this.listLoading = true
+        if (info.url) {
+          this.$message({
+            type: 'success',
+            message: '上传成功',
+          })
+          this.get_filelist(this.parentfile)
+        } else {
           this.$message({
             type: 'error',
-            message: '删除失败'
-          });
+            message: '上传失败',
+          })
+        }
+        this.listLoading = false
+      },
+      files(file) {
+        this.inputParams.filename = file.name
+        this.inputParams.file = file
+      },
+      get_filelist(path) {
+        this.listLoading = true
+        list_dir(path).then((res) => {
+          if (res.status == 'ok') {
+            this.filelist = res.data
+          } else {
+            this.filelist = []
+          }
+          this.listLoading = false
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
-      });
+      },
+      get_fileinfo(row) {
+        this.detailView = true
+        this.ViewLoading = true
+        file_info('files/' + row.path + '/' + row.name).then((res) => {
+          this.detailinfo = res.data
+          this.detailinfo.url =
+            this.$FileServe + '/' + row.path + '/' + row.name
+          this.ViewLoading = false
+        })
+      },
+      delete_file(row) {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+          .then(() => {
+            delete_file('files/' + row.path + '/' + row.name)
+              .then((res) => {
+                if (res.status == 'ok') {
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功',
+                  })
+                  this.get_filelist(row.path)
+                } else {
+                  this.$message({
+                    type: 'error',
+                    message: res.message,
+                  })
+                }
+              })
+              .catch(() => {
+                this.$message({
+                  type: 'error',
+                  message: '删除失败',
+                })
+              })
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除',
+            })
+          })
+      },
+      download_file(row) {
+        window.open(this.$FileServe + '/' + row.path + '/' + row.name)
+      },
     },
-    download_file(row){
-       window.open(this.$FileServe + '/' + row.path + '/' + row.name)
-    },
-  },
-}
+  }
 </script>
 <style lang="scss">
-.dgiot_dialog {
-  .el-dialog__header {
-    display: none;
-  }
+  .dgiot_dialog {
+    .el-dialog__header {
+      display: none;
+    }
 
-  .dj-dialog-content {
-    padding: 0;
-    overflow: unset;
+    .dj-dialog-content {
+      padding: 0;
+      overflow: unset;
+    }
   }
-}
 </style>
 <style lang="scss" scoped>
-.el-button--goon.is-active,
-.el-button--goon:active {
-  color: #fff;
-  background: #20b2aa;
-  border-color: #20b2aa;
-}
-
-.el-button--goon:focus,
-.el-button--goon:hover {
-  color: #fff;
-  background: #48d1cc;
-  border-color: #48d1cc;
-}
-
-.el-button--goon {
-  color: #fff;
-  background-color: #20b2aa;
-  border-color: #20b2aa;
-}
-
-::v-deep .row-bg {
-  .el-form-item {
-    .el-form-item__content {
-      position: revert;
-      //width: 100%;
-    }
+  .el-button--goon.is-active,
+  .el-button--goon:active {
+    color: #fff;
+    background: #20b2aa;
+    border-color: #20b2aa;
   }
-}
 
-::v-deep .el-dialog__wrapper {
-  margin-bottom: 20px;
-}
+  .el-button--goon:focus,
+  .el-button--goon:hover {
+    color: #fff;
+    background: #48d1cc;
+    border-color: #48d1cc;
+  }
 
-.resourcechannel {
-  box-sizing: border-box;
-  width: 100%;
-  //height: 100%;
-  height: calc(100vh - #{$base-top-bar-height} * 3 - 25px);
+  .el-button--goon {
+    color: #fff;
+    background-color: #20b2aa;
+    border-color: #20b2aa;
+  }
 
-  ::v-deep {
-    .green_active {
-      color: green;
-    }
-
-    .dialog-footer {
-      text-align: center;
+  ::v-deep .row-bg {
+    .el-form-item {
+      .el-form-item__content {
+        position: revert;
+        //width: 100%;
+      }
     }
   }
 
-  ::v-deep .red_active {
-    color: red;
+  ::v-deep .el-dialog__wrapper {
+    margin-bottom: 20px;
   }
 
-  //::v-deep .el-button + .el-button {
-  //  margin-left: 0;
-  //}
+  .resourcechannel {
+    box-sizing: border-box;
+    width: 100%;
+    //height: 100%;
+    height: calc(100vh - #{$base-top-bar-height} * 3 - 25px);
 
-  ::v-deep .el-tabs__item {
-    height: 50px;
-    margin: 0;
-    margin-top: 20px;
-    font-family: auto;
-    font-size: 16px;
-    line-height: 50px;
-  }
-
-  ::v-deep .el-dialog__header {
-    border-bottom: 1px solid #cccccc;
-  }
-
-  ::v-deep .el-dialog__body {
-    .el-form {
-      display: flex;
-      flex-wrap: wrap;
-
-      .el-form-item {
-        width: 100%;
-        margin-bottom: 22px;
-
-        .el-select {
-          width: 100%;
-        }
+    ::v-deep {
+      .green_active {
+        color: green;
       }
 
-      .el-col {
-        @media screen and (max-width: 1350px) {
-          width: 100%;
-        }
+      .dialog-footer {
+        text-align: center;
       }
     }
 
-    ::v-deep .el-row {
-      margin: 20px 0;
+    ::v-deep .red_active {
+      color: red;
     }
-  }
 
-  //::v-deep .el-button--mini {
-  //  margin: 2px 0;
-  //}
-}
+    //::v-deep .el-button + .el-button {
+    //  margin-left: 0;
+    //}
+
+    ::v-deep .el-tabs__item {
+      height: 50px;
+      margin: 0;
+      margin-top: 20px;
+      font-family: auto;
+      font-size: 16px;
+      line-height: 50px;
+    }
+
+    ::v-deep .el-dialog__header {
+      border-bottom: 1px solid #cccccc;
+    }
+
+    ::v-deep .el-dialog__body {
+      .el-form {
+        display: flex;
+        flex-wrap: wrap;
+
+        .el-form-item {
+          width: 100%;
+          margin-bottom: 22px;
+
+          .el-select {
+            width: 100%;
+          }
+        }
+
+        .el-col {
+          @media screen and (max-width: 1350px) {
+            width: 100%;
+          }
+        }
+      }
+
+      ::v-deep .el-row {
+        margin: 20px 0;
+      }
+    }
+
+    //::v-deep .el-button--mini {
+    //  margin: 2px 0;
+    //}
+  }
 </style>

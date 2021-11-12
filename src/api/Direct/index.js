@@ -7,12 +7,13 @@
  * @FilePath: \dgiot-dashboard\src\api\Direct\index.js
  */
 import {
-  query_object,
-  get_object,
-  del_object,
-  update_object,
   create_object,
+  del_object,
+  get_object,
+  query_object,
+  update_object,
 } from '@/api/shuwa_parse'
+
 export async function queryDict(params) {
   return query_object('Dict', params)
 }

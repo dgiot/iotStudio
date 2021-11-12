@@ -19,4 +19,5 @@ export async function setText(shape, value) {
   }).play()
   return tween
 }
+
 export default setText

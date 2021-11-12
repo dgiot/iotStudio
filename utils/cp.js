@@ -8,6 +8,7 @@
 // * @FilePath: utils\cp.js
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/
 const shell = require('shelljs')
+
 // https://www.npmjs.com/package/shelljs
 function moveDist() {
   shell.exec(
@@ -16,7 +17,8 @@ function moveDist() {
       console.log('Exit code:', code)
       console.log('Program output:', stdout)
       console.log('Program stderr:', stderr)
-    }
+    },
   )
 }
+
 moveDist()

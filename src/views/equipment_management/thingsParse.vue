@@ -283,13 +283,15 @@
 <script>
   import { getDeviceCountByProduct } from '@/api/Device/index'
   import { getChannelCountByProduct } from '@/api/Channel/index'
-  import { getAllunit, getDictCount } from '@/api/Dict/index'
+  import { getAllunit } from '@/api/Dict/index'
   import { queryProduct } from '@/api/Product/index'
+  import { Compile, subupadte } from '@/api/System/index.js'
+
   var isupdatetrue = ''
   var editor
   var editor2
   var setdata = ''
-  import { Compile, subupadte } from '@/api/System/index.js'
+
   export default {
     name: 'ThingsParse',
     props: {},
@@ -718,7 +720,7 @@
     },
   }
 </script>
-<style rel="stylesheet/scss" lang="scss">
+<style lang="scss" rel="stylesheet/scss">
   .things-parse {
     width: 100%;
     margin: 40px;

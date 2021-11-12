@@ -62,13 +62,12 @@
   import { post_tree } from '@/api/Data'
   import {
     createArticle,
-    getArticle,
     delArticle,
+    getArticle,
     putArticle,
     queryArticle,
   } from '@/api/Article'
-  import { uuid } from '@/utils'
-  import { batch } from '@/api/Batch'
+
   export default {
     name: 'DgiotDoc',
     components: {
@@ -385,16 +384,19 @@
 
 <style lang="scss" scoped>
   .dgiot-doc {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7);
+    height: calc(100vh - #{$base-top-bar-height} * 2.7);
     overflow-x: hidden;
     overflow-y: scroll;
+
     &-tree {
-      height: calc(100vh - #{$base-top-bar-height}* 2.7);
+      height: calc(100vh - #{$base-top-bar-height} * 2.7);
       overflow-x: hidden;
       overflow-y: scroll;
     }
+
     //background-color: #ececec;
     transition: $base-transition;
+
     #components-layout-demo-custom-trigger .trigger {
       padding: 0 24px;
       font-size: 18px;

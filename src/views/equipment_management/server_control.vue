@@ -830,14 +830,15 @@
 </template>
 <script>
   import {
-    uploadServer,
-    uploadLicense,
     offlineServer,
+    postLicense,
     putLicense,
     queryLicense,
-    postLicense,
+    uploadLicense,
+    uploadServer,
   } from '@/api/License'
   import { app_count } from '@/api/Platform/index'
+
   var product = {}
   export default {
     data() {
@@ -929,23 +930,49 @@
         applist: [],
         rules: {
           name: [
-            { required: true, message: '请输入预计设计规模' },
-            { type: 'number', message: '预计设计规模 必须为数字值' },
+            {
+              required: true,
+              message: '请输入预计设计规模',
+            },
+            {
+              type: 'number',
+              message: '预计设计规模 必须为数字值',
+            },
           ],
           region: [
-            { required: true, message: '请选择应用类型', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择应用类型',
+              trigger: 'change',
+            },
           ],
           appname: [
-            { required: true, message: '请选择需要应用', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择需要应用',
+              trigger: 'change',
+            },
           ],
           licensekey: [
-            { required: true, message: 'license必填', trigger: 'blur' },
+            {
+              required: true,
+              message: 'license必填',
+              trigger: 'blur',
+            },
           ],
           username: [
-            { required: true, message: '客户名称必填', trigger: 'blur' },
+            {
+              required: true,
+              message: '客户名称必填',
+              trigger: 'blur',
+            },
           ],
           version: [
-            { required: true, message: '应用版本必填', trigger: 'blur' },
+            {
+              required: true,
+              message: '应用版本必填',
+              trigger: 'blur',
+            },
           ],
           date1: [
             {
@@ -966,25 +993,44 @@
         },
         serverrules: {
           app: [
-            { required: true, message: '请选择客户名称', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择客户名称',
+              trigger: 'change',
+            },
           ],
           serverip: [
-            { required: true, message: '请输入服务器私网IP', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入服务器私网IP',
+              trigger: 'blur',
+            },
             {
               validator: validUrl,
             },
           ],
           publicip: [
-            { required: true, message: '请输入服务器公网IP', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入服务器公网IP',
+              trigger: 'blur',
+            },
             {
               validator: validUrl,
             },
           ],
           mac: [
-            { required: true, message: '请输入服务器MAC地址', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入服务器MAC地址',
+              trigger: 'blur',
+            },
           ],
           serverhe: [
-            { required: true, message: '请输入服务器配置' },
+            {
+              required: true,
+              message: '请输入服务器配置',
+            },
             {
               validator: valiNumberPass1,
               type: 'number',
@@ -992,22 +1038,46 @@
             },
           ],
           serverg: [
-            { required: true, message: '请输入服务器配置' },
-            { type: 'number', message: '服务器配置必须为数字值' },
+            {
+              required: true,
+              message: '请输入服务器配置',
+            },
+            {
+              type: 'number',
+              message: '服务器配置必须为数字值',
+            },
           ],
           serverkey: [
-            { required: true, message: '请输入机器码', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入机器码',
+              trigger: 'blur',
+            },
             { validator: validKey },
           ],
           customer_name: [
-            { required: true, message: '请输入用户名称', trigger: 'blur' },
+            {
+              required: true,
+              message: '请输入用户名称',
+              trigger: 'blur',
+            },
           ],
           disk: [
-            { required: true, message: '请输入服务器内存' },
-            { type: 'number', message: '服务器内存必须为数字值' },
+            {
+              required: true,
+              message: '请输入服务器内存',
+            },
+            {
+              type: 'number',
+              message: '服务器内存必须为数字值',
+            },
           ],
           stauts: [
-            { required: true, message: '请选择服务器状态', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择服务器状态',
+              trigger: 'change',
+            },
           ],
         },
         pickerOptionsStart: {
@@ -1278,7 +1348,7 @@
       }, // 通用配置下载
       async downlictool() {
         const res = await uploadLicense(this.appid, this.appsecret)
-        if (res)
+        if (res) {
           window.open(
             window.location.origin +
               '/lictool?appid=' +
@@ -1287,6 +1357,7 @@
               this.appsecret,
             '_blank'
           )
+        }
       },
       // 详情查看
       handleDetail(index, row) {

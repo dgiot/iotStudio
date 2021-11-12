@@ -51,8 +51,20 @@
           author: '',
         },
         rules: {
-          title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
-          author: [{ required: true, trigger: 'blur', message: '请输入作者' }],
+          title: [
+            {
+              required: true,
+              trigger: 'blur',
+              message: '请输入标题',
+            },
+          ],
+          author: [
+            {
+              required: true,
+              trigger: 'blur',
+              message: '请输入作者',
+            },
+          ],
         },
         title: '',
         dialogFormVisible: false,

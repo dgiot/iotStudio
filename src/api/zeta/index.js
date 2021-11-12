@@ -9,6 +9,7 @@ export function ZetaEtag(tag, status) {
     },
   })
 }
+
 export function ZetaEtagHistroy(tag, limit, timestamp) {
   return request({
     url: 'zeta/etag/history/' + tag,

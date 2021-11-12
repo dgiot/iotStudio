@@ -17,7 +17,9 @@ export async function createArticle(params) {
   return create_object(
     'Article',
     // eslint-disable-next-line no-undef
-    _.merge(params, { timestamp: moment(new Date()).valueOf() })
+    _.merge(params, {
+      timestamp: moment(new Date()).valueOf(),
+    })
   )
 }
 

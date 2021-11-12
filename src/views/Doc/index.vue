@@ -117,12 +117,11 @@
   import { requireModule } from '@/utils/file'
   import {
     createArticle,
-    getArticle,
     delArticle,
     putArticle,
     queryArticle,
   } from '@/api/Article'
-  import { batch } from '@/api/Batch'
+
   export default {
     name: 'DgiotDoc',
     components: {
@@ -269,10 +268,11 @@
 
 <style lang="scss" scoped>
   .dgiot-doc {
-    height: calc(100vh - #{$base-top-bar-height}* 2.7);
+    height: calc(100vh - #{$base-top-bar-height} * 2.7);
     overflow-x: hidden;
     overflow-y: scroll;
     transition: $base-transition;
+
     &-center {
       &-row {
         margin: auto 60px !important;
@@ -280,8 +280,10 @@
 
         &-antdcol {
           margin-top: 20px;
+
           &-card {
             min-height: 220px;
+
             .el-image,
             .image-slot {
               width: 100px;

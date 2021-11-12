@@ -151,6 +151,7 @@
     border-right: 1px solid #ebecec;
     border-bottom: 1px solid #ebecec;
   }
+
   .mailtable td {
     box-sizing: border-box;
     padding: 15px;

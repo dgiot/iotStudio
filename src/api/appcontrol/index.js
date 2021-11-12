@@ -18,6 +18,7 @@ export function Addapp(expries, desc, secret, param) {
     },
   })
 }
+
 export function createRole(appid, secret, desc) {
   return request({
     url: '/approle',
@@ -29,6 +30,7 @@ export function createRole(appid, secret, desc) {
     },
   })
 }
+
 export function pumpToken() {
   return request({
     url: '/pump_token',
@@ -36,6 +38,7 @@ export function pumpToken() {
     params: {},
   })
 }
+
 export function getServer(pro) {
   return request({
     url: '/apihub',

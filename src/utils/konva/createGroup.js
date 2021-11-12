@@ -13,4 +13,5 @@ function createGroup(params) {
   })
   return group
 }
+
 export default createGroup

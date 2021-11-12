@@ -222,8 +222,9 @@
   </div>
 </template>
 <script>
-  import { hardInfo, iotHub, iotApp } from '@/api/License/index'
+  import { hardInfo, iotHub } from '@/api/License/index'
   import Cookies from 'js-cookie'
+
   export default {
     data() {
       return {
@@ -350,27 +351,34 @@
   .license {
     display: flex;
     min-width: 1100px !important;
+
     .licenseleft {
       box-sizing: border-box;
       width: 400px;
       padding: 40px 20px;
     }
+
     .licenseright {
       box-sizing: border-box;
       width: calc(100% - 400px);
       padding: 40px;
       background-size: cover;
+
       ::v-deep .is-process {
         color: white;
       }
+
       .rightcenter {
         margin-top: 40px;
       }
+
       .rightcomputer {
         box-sizing: border-box;
         padding: 0 50px;
+
         .el-row {
           margin: 50px 0;
+
           .el-col {
             //   text-align:center;
             span {
@@ -380,43 +388,52 @@
           }
         }
       }
+
       .buttongroup {
         box-sizing: border-box;
         padding: 0 50px;
         text-align: center;
       }
     }
+
     ::v-deep .originupdate {
       p {
         font-size: 18px;
         color: white;
       }
+
       span {
         font-size: 14px;
         color: white;
       }
     }
+
     ::v-deep p {
       font-weight: 700;
       color: white;
     }
+
     ::v-deep span {
       font-size: 16px;
       color: white;
     }
+
     ::v-deep .el-input {
       width: 200px;
     }
+
     ::v-deep .el-col {
       @media screen and (max-width: 1350px) {
         width: 100%;
         margin-bottom: 20px;
       }
     }
+
     ::v-deep .el-form-item__label {
       font-size: 16px;
       color: #ffffff;
     }
+
     ::v-deep .el-form-item {
       width: 500px !important;
     }

@@ -12,6 +12,7 @@ export function Getdata(node, start, length, draw, search) {
     },
   })
 }
+
 export function Getinstall(node) {
   return request({
     url: '/logger/get_loglevel?node=' + node,
@@ -32,6 +33,7 @@ export function Getdeveui(node, deveui) {
     },
   })
 }
+
 export function getLog() {
   return request({
     url: '/nodes',
@@ -39,6 +41,7 @@ export function getLog() {
     params: {},
   })
 }
+
 export function joinLog(action, node) {
   return request({
     url: '/cluster?action=' + action,

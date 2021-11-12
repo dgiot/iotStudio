@@ -115,7 +115,7 @@
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .uq-dialog-custom {
     .el-dialog__header {
     }

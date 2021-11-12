@@ -85,6 +85,7 @@
 
 <script>
   import { Tooltip } from 'element-ui'
+
   export default {
     name: 'FullScreenIcon',
     components: {
@@ -109,6 +110,7 @@
     line-height: 20px;
     text-align: center;
   }
+
   .full-screen-iconCover {
     position: absolute;
     top: 0;
@@ -119,12 +121,15 @@
     background-color: #fff;
     opacity: 0;
   }
+
   .window-relative {
     position: relative;
   }
+
   .hcp-tooltip__popper {
     z-index: 120000 !important;
   }
+
   .full-screen {
     position: fixed;
     top: 0px;

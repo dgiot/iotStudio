@@ -59,9 +59,9 @@
                   class="ace_editor"
                   style="min-height: 300px"
                 ><el-input
-v-model="formInline.enginesql"
-                           class="ace_text-input"
-type="textarea"
+                  v-model="formInline.enginesql"
+                  class="ace_text-input"
+                  type="textarea"
                 /></pre>
               </el-form-item>
               <!--备注-->
@@ -178,9 +178,9 @@ type="textarea"
                   class="ace_editor"
                   style="min-height: 300px"
                 ><el-input
-v-model="formInline.payload"
-                           class="ace_text-input"
-type="textarea"
+                  v-model="formInline.payload"
+                  class="ace_text-input"
+                  type="textarea"
                 /></pre>
               </el-form-item>
               <el-form-item
@@ -488,13 +488,14 @@ type="textarea"
   var editor2
   import {
     addRule,
-    postResource,
     get_actions,
     get_resources,
     get_rule_id,
+    postResource,
     put_rule_id,
   } from '@/api/Rules'
   import provider from '@/api/Ace/index'
+
   export default {
     data() {
       return {
@@ -521,10 +522,18 @@ type="textarea"
         },
         resourcerule: {
           objectId: [
-            { required: true, message: '请填写通道编号', trigger: 'blur' },
+            {
+              required: true,
+              message: '请填写通道编号',
+              trigger: 'blur',
+            },
           ],
           desc: [
-            { required: true, message: '请填写通道描述', trigger: 'blur' },
+            {
+              required: true,
+              message: '请填写通道描述',
+              trigger: 'blur',
+            },
           ],
         },
         row1: 24,
@@ -555,10 +564,18 @@ type="textarea"
         },
         formlinerule: {
           region: [
-            { required: true, message: '请选择触发事件', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择触发事件',
+              trigger: 'change',
+            },
           ],
           enginesql: [
-            { required: true, message: '请填写规则SQL', trigger: 'blur' },
+            {
+              required: true,
+              message: '请填写规则SQL',
+              trigger: 'blur',
+            },
           ],
         },
         actionData: [],
@@ -568,15 +585,27 @@ type="textarea"
         },
         paramsrules: {
           channel: [
-            { required: true, message: '请选择通道', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择通道',
+              trigger: 'change',
+            },
           ],
           resources: [
-            { required: true, message: '请选择关联资源', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择关联资源',
+              trigger: 'change',
+            },
           ],
         },
         formrule: {
           action: [
-            { required: true, message: '请选择动作', trigger: 'change' },
+            {
+              required: true,
+              message: '请选择动作',
+              trigger: 'change',
+            },
           ],
         },
         productid: '',
@@ -811,8 +840,9 @@ type="textarea"
               for: '["t/#"]',
               rawsql: editor1.getValue(),
             }
-            if (this.uid && this.productid)
+            if (this.uid && this.productid) {
               params.id = `rule:${this.ruleType}_${this.productid}_${this.uid}`
+            }
             // const params = {
             //   rawsql:
             //     'SELECT\n  payload.msg as msg\nFROM\n  "t/#"\nWHERE\n  msg = \'hello\'',
@@ -862,7 +892,7 @@ type="textarea"
         console.log(this.aisleRow)
         this._get_actions()
         this._get_resources()
-        if (this.aisleRow.name)
+        if (this.aisleRow.name) {
           this.params = {
             name: this.aisleRow.name,
             payload_tmpl: this.aisleRow.params.payload_tmpl,
@@ -873,6 +903,7 @@ type="textarea"
             resources: this.aisleRow.params.$resource,
             channel: this.aisleRow.params.channel,
           }
+        }
         this.dialogFormVisible = true
       },
       addRes(formName) {

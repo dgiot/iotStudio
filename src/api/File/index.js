@@ -1,7 +1,6 @@
 import request from '@/utils/request'
 import store from '@/store'
 import { Message } from 'element-ui'
-import { ExportParse } from '@/api/Export'
 
 export function Upload({ file }) {
   return request({

@@ -1,4 +1,3 @@
-
 # https://github.com/actions/create-release
 name: release
 
@@ -6,6 +5,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 jobs:
   release:
@@ -26,3 +26,57 @@ jobs:
           release_name: ${{ github.ref }}
           draft: false
           prerelease: false
+
+  changelog:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.3.0
+          run_install: false
+      - run: pnpm config set registry https://registry.npmmirror.com
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm changelog
+      - name: commit
+        run: |
+          tag_name=${{github.ref}}
+          git add CHANGELOG.ZH.md CHANGELOG.EN.md
+          git config --local user.email "h7ml@qq.com"
+          git config --local user.name "h7ml"
+          git commit --allow-empty -m ":bookmark: ${tag_name#*tags/}" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GIT_TOKEN }}
+          branch: master
+
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.15.4'
+          registry-url: https://registry.npmjs.org/
+      - run: npm publish --access=public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+      - name: Prepare the changelog from the tag message
+        run: |
+          # Parse version
+          VERSION=${GITHUB_REF/refs\/tags\//}
+          echo "Setting release version to $VERSION"
+          echo "release_version=$VERSION" >> $GITHUB_ENV
