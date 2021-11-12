@@ -6,6 +6,6 @@ module.exports = {
     {
       path: 'iotapi',
       target: 'http://prod.iotn2n.com',
-    },
+    }
   ],
 }

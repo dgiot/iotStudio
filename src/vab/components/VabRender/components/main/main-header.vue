@@ -61,7 +61,7 @@
           this.$set(
             this.operationBtns[key],
             'visible',
-            !this.operationBtns[key].visible
+            !this.operationBtns[key].visible,
           )
         }
       }

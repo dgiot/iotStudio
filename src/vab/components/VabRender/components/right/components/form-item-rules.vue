@@ -7,8 +7,8 @@
     }"
     :form-btns="formBtns"
     :form-desc="formDesc"
-    title="新增校检规则"
     :visible="visible"
+    title="新增校检规则"
     @request="handleAddRule"
     @update:visible="toggleDialog"
   />
@@ -117,9 +117,9 @@
                           fontSize: '13px',
                         },
                       },
-                      option.desc
+                      option.desc,
                     ),
-                  ])
+                  ]),
                 )
                 return res
               },
@@ -221,7 +221,7 @@
         this.$set(
           this.VabRender.formItemList[this.VabRender.currentIndex],
           'rules',
-          (currentItem.rules || []).concat(filteredData)
+          (currentItem.rules || []).concat(filteredData),
         )
 
         // 关闭弹窗

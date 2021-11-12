@@ -15,12 +15,7 @@ import VabProgress from 'nprogress'
 // import 'nprogress/nprogress.css'
 import getPageTitle from '@/utils/pageTitle'
 import { toLoginRoute } from '@/utils/routes'
-import {
-  authentication,
-  loginInterception,
-  routesWhiteList,
-  supportVisit,
-} from '@/config'
+import { authentication, loginInterception, routesWhiteList, supportVisit } from '@/config'
 
 VabProgress.configure({
   easing: 'ease',
@@ -31,7 +26,8 @@ VabProgress.configure({
 router.beforeEach(async (to, from, next) => {
   store.dispatch('routes/setRoutesOpenTime', {
     router: to.meta.component,
-    timestamp: moment(new Date()).valueOf(),
+    timestamp: moment(new Date())
+      .valueOf(),
   })
   // if (to.name == '404') {
   //   return false

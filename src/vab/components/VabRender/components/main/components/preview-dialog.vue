@@ -1,8 +1,8 @@
 <template>
   <el-dialog
     :append-to-body="true"
-    title="预览"
     :visible="visible"
+    title="预览"
     width="90%"
     @closed="isShowContent = false"
     @open="isShowContent = true"
