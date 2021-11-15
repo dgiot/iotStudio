@@ -150,7 +150,7 @@ function getChainWebpack(config) {
           filename: '[path][base].gz[query]',
           algorithm: 'gzip',
           test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
-          threshold: 8192,
+          threshold: 10240,
           minRatio: 0.8,
         },
       ])

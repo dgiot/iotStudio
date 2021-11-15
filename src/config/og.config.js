@@ -9,21 +9,18 @@
  */
 module.exports = {
   ogConfig: {
-    'og:site_name': 'Colby Fayock',
-    'og:title':
-      'Anyone Can Map! Inspiration and an introduction to the world of mapping - Colby Fayock',
-    'og:description':
-      'Chef Gusteau was a visionary who created food experiences for the world to enjoy. How can we take his lessons and apply them to the world of…',
-    'og:url':
-      'https://www.colbyfayock.com/2020/03/anyone-can-map-inspiration-and-an-introduction-to-the-world-of-mapping/',
+    'og:site_name': 'dgiot-物联网平台',
+    'og:title': '物联网开发平台',
+    'og:description': '提供物联网垂直领域应用使能平台及解决方案',
+    'og:url': 'https://prod.iotn2n.com',
     'og:type': 'article',
-    'article:publisher': 'https://www.colbyfayock.com',
-    'article:section': 'Coding',
-    'article:tag': 'Coding',
+    'article:publisher': 'https://www.iotn2n.com',
+    'article:section': 'dgiot',
+    'article:tag': 'dgiot',
     'og:image':
-      'https://res.cloudinary.com/fay/image/upload/w_1280,h_640,c_fill,q_auto,f_auto/w_860,c_fit,co_rgb:232129,g_west,x_80,y_-60,l_text:Source%20Sans%20Pro_70_line_spacing_-10_semibold:Anyone%20Can%20Map!%20Inspiration%20and%20an%20introduction%20to%20the%20world%20of%20mapping/blog-social-card-1.1',
+      'https://www.iotn2n.com/attachment/images/2021/08/09/image_1628483547_LQMfGmnU.jpg',
     'og:image:secure_url':
-      'https://res.cloudinary.com/fay/image/upload/w_1280,h_640,c_fill,q_auto,f_auto/w_860,c_fit,co_rgb:232129,g_west,x_80,y_-60,l_text:Source%20Sans%20Pro_70_line_spacing_-10_semibold:Anyone%20Can%20Map!%20Inspiration%20and%20an%20introduction%20to%20the%20world%20of%20mapping/blog-social-card-1.1',
+      'https://www.iotn2n.com/attachment/images/2021/08/09/image_1628483547_LQMfGmnU.jpg',
     'og:image:width': '1280',
     'og:image:height': '640',
     'twitter:card': 'summary_large_image',

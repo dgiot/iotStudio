@@ -95,7 +95,7 @@ const mutations = {
   },
   toggleCollapse(state) {
     state.collapse = !state.collapse
-    setToken('collapse', !state.collapse)
+    // setToken('collapse', `{"collapse":${state.collapse}}`)
   },
   togglePicture(state, flag) {
     state.pictureSwitch = flag
