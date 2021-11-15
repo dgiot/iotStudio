@@ -2,6 +2,11 @@
  * @description 全局加载动画
  */
 
+@import './loading/dots.css';
+@import './loading/plus.css';
+@import './loading/gauge.css';
+@import './loading/inner-circles.css';
+
 $base-loading: '.vab-loading-type';
 
 #{$base-loading}1 {

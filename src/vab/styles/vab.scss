@@ -1,6 +1,6 @@
 /** @description 全局样式 */
 @import './transition.scss';
-
+@import './loading.scss';
 @mixin base-scrollbar {
   &::-webkit-scrollbar {
     width: 8px;
