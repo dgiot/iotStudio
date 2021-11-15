@@ -63,6 +63,7 @@
   import { toLoginRoute } from '@/utils/routes'
 
   export default {
+    // eslint-disable-next-line
     name: 'Page404',
     beforeRouteLeave(to, from, next) {
       this.delVisitedRoute(this.$route.path)

@@ -18,6 +18,7 @@
   import { mapActions, mapGetters } from 'vuex'
 
   export default {
+    // eslint-disable-next-line
     name: 'Layouts',
     data() {
       return {

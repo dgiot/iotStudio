@@ -181,6 +181,7 @@
   import VabDraggable from 'vuedraggable'
 
   export default {
+    // eslint-disable-next-line
     name: 'Empty',
     components: {
       TableEdit,

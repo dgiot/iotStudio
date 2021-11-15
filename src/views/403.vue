@@ -44,6 +44,7 @@
   import { mapActions, mapGetters } from 'vuex'
 
   export default {
+    // eslint-disable-next-line
     name: 'Page403',
     beforeRouteLeave(to, from, next) {
       this.delVisitedRoute(this.$route.path)

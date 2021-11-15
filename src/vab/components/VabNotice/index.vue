@@ -11,7 +11,7 @@
               <ul>
                 <li v-for="(item, index) in list" :key="index">
                   <el-avatar :size="45" :src="item.image" />
-                  <span v-html="item.notice" />
+                  <span>{{ item.notice }}</span>
                 </li>
               </ul>
             </el-scrollbar>

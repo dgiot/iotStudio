@@ -225,6 +225,7 @@
                 show-overflow-tooltip
                 sortable
               />
+              <!--              eslint-disable-next-line-->
               <template #empty class="el_table_empty">
                 <vab-empty />
               </template>

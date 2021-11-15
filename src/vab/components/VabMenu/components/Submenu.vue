@@ -42,7 +42,7 @@
 
 <script>
   export default {
-    name: 'Submenu',
+    name: 'SubMenu',
     props: {
       itemOrMenu: {
         type: Object,

@@ -353,7 +353,7 @@
   import { post_tree } from '@/api/Data'
 
   export default {
-    name: 'Index',
+    name: 'ReportIndex',
     components: {
       VabDraggable,
       TableEdit,

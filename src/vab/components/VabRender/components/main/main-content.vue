@@ -59,11 +59,9 @@
                     :field="field"
                     :options="formItem._options"
                   />
-                  <div
-                    v-if="formItem.tip"
-                    class="ele-form-tip"
-                    v-html="formItem.tip"
-                  ></div>
+                  <div v-if="formItem.tip" class="ele-form-tip">
+                    {{ formItem.tip }}
+                  </div>
                 </el-form-item>
 
                 <!-- 删除按钮 -->

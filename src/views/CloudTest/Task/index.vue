@@ -385,7 +385,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
-    name: 'Index',
+    name: 'TaskIndex',
     components: {
       VabDraggable,
       TableEdit,

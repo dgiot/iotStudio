@@ -66,6 +66,7 @@
                 <vab-empty height="100px" width="100" />
               </div>
             </el-image>
+            <!--            eslint-disable-next-line-->
             <template slot="actions" class="ant-card-actions">
               <a-icon
                 key="edit"

@@ -1,24 +1,24 @@
 <!--eslint-disable-->
 <template>
   <!-- 1.设计阶段 -->
-  <multipane v-if='!pure' :style='{ height }' class='vab-render'>
+  <multipane v-if="!pure" :style="{ height }" class="vab-render">
     <!-- 左侧 -->
-    <slot :comps='sortedComps' :frender='this' name='left'>
+    <slot :comps="sortedComps" :frender="this" name="left">
       <vab-render-left />
       <multipane-resizer></multipane-resizer>
       <vab-render-main
-        :frender='this'
-        :loading='loading'
-        class='vab-render-main'
-        name='main'
-        @save='handleSave'
+        :frender="this"
+        :loading="loading"
+        class="vab-render-main"
+        name="main"
+        @save="handleSave"
       />
       <multipane-resizer></multipane-resizer>
       <vab-render-right
-        v-if='isShowRight && rightTabs.length'
-        :frender='this'
-        class='vab-render-right'
-        name='right'
+        v-if="isShowRight && rightTabs.length"
+        :frender="this"
+        class="vab-render-right"
+        name="right"
       />
     </slot>
     <multipane-resizer></multipane-resizer>
@@ -42,22 +42,19 @@
   <!-- 2.使用 -->
   <ele-form
     v-else
-    ref='form'
+    ref="form"
     :class="{ 'pure-form--loading': loading }"
-    :formData='value'
-    :formDesc='formDesc'
-    v-bind='formBindProps'
+    :formData="value"
+    :formDesc="formDesc"
+    v-bind="formBindProps"
     @input="$emit('input', value)"
-    v-on='$listeners'
+    v-on="$listeners"
   >
-    <form-skeleton v-if='loading' />
+    <form-skeleton v-if="loading" />
   </ele-form>
 </template>
 
 <script>
-  // 全局组件
-  import './global-components'
-
   // 组件
   import FormSkeleton from './form-skeleton'
   import VabRenderLeft from './components/left/index'

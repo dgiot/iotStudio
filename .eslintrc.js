@@ -79,8 +79,8 @@ module.exports = {
     'no-empty': 'off',
     'no-dupe-keys': 'off',
     'no-self-assign': 'off',
-    'no-console': 'off',
-    'no-debugger': 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off', // allow console during development
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off', // allow debugger during developmen
     'vue/no-unused-vars': 'off',
     'vue/no-template-shadow': 'off',
     'vue/no-unused-components': 'off',
