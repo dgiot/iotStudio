@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="24">
-    <el-col class="node-tree" :sm="tree ? 4 : 0">
-      <vab-role-tree />
+    <el-col class="node-tree" offset="1" :sm="tree ? 3 : 0">
+      <vab-role-tree :show-filter="true" />
     </el-col>
     <el-col :sm="tree ? 20 : 24">
       <div class="vab-app-main">
@@ -79,5 +79,7 @@
 <style scoped>
   .node-tree {
     height: 85vh;
+    margin: 12px 0 auto 12px;
+    text-align: center;
   }
 </style>

@@ -43,7 +43,7 @@
     data() {
       return {
         itemOrMenu: this.item,
-        menuComponent: 'MenuItem',
+        menuComponent: 'VabMenuItem',
       }
     },
     computed: {
@@ -57,7 +57,7 @@
         if (showChildren.length === 1 && this.item.alwaysShow !== true) {
           this.itemOrMenu = this.item.children[0]
         } else {
-          this.menuComponent = 'Submenu'
+          this.menuComponent = 'VabSubMenu'
         }
       }
     },

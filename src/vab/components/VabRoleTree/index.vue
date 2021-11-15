@@ -176,9 +176,7 @@
 </style>
 <style lang="scss">
   .role-tree {
-    padding: 10px 0;
     overflow: auto;
-
     .role-tree-select {
       margin-top: 12px;
       overflow: auto;

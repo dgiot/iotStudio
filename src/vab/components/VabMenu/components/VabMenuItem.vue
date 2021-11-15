@@ -51,7 +51,7 @@
   import { mapActions, mapGetters } from 'vuex'
 
   export default {
-    name: 'MenuItem',
+    name: 'VabMenuItem',
     props: {
       itemOrMenu: {
         type: Object,

@@ -42,7 +42,7 @@
 
 <script>
   export default {
-    name: 'SubMenu',
+    name: 'VabSubMenu',
     props: {
       itemOrMenu: {
         type: Object,
