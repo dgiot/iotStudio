@@ -1,10 +1,96 @@
 <template>
   <div :key="productId">
-    <el-drawer v-drawerDrag size="100%" :visible.sync="amisFlag">
-      <vab-amis :schema="amisJson" />
+    <vab-dialog :show.sync="dialogTableVisible" :width="'40%'">
+      <h3 slot="title">
+        {{ $translateTitle('product.lowcode') }}
+      </h3>
+      <vab-query-form>
+        <vab-query-form-left-panel>
+          <el-button
+            class="el-icon-circle-plus-outline"
+            size="mini"
+            title="增加一条"
+            @click="addAmis"
+          >
+            {{ $translateTitle('product.newlyadded') }}
+          </el-button>
+          <el-button
+            class="el-icon-check"
+            size="mini"
+            title="保存"
+            @click="saveAmis(productId, amisData, productDetail)"
+          >
+            {{ $translateTitle('product.preservation') }}
+          </el-button>
+        </vab-query-form-left-panel>
+      </vab-query-form>
+      <el-table :data="amisData">
+        <el-table-column
+          align="center"
+          :label="$translateTitle('application.createtime')"
+          prop="date"
+          show-overflow-tooltip
+          sortable
+          width="180"
+        >
+          <template #default="{ row }">
+            <i class="el-icon-time"></i>
+            {{ $moment(row.date).format('YYYY-MM-DD HH:mm:ss') }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          :label="$translateTitle('application.detail')"
+          show-overflow-tooltip
+          sortable
+          width="120"
+        >
+          <template #default="{ row }">
+            <el-popover placement="top" trigger="click">
+              <p>类型: {{ row.json.type }}</p>
+              <p>副标题: {{ row.json.subTitle }}</p>
+              <p>提示: {{ row.json.remark }}</p>
+              <!--              <p>body: {{ row.json.body }}</p>-->
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">{{ row.json.title }}</el-tag>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          :label="$translateTitle('node.operation')"
+        >
+          <template slot-scope="scope">
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">
+              {{ $translateTitle('task.Edit') }}
+            </el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+            >
+              {{ $translateTitle('konva.delete') }}
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </vab-dialog>
+    <el-drawer v-drawerDrag append-to-body size="100%" :visible.sync="amisFlag">
       <div class="demo-drawer__footer">
-        <el-button @click="cancelForm">保存</el-button>
+        <el-form ref="form" label-width="80px" :model="amisForm">
+          <el-form-item label="用途描述">
+            <el-input v-model="amisForm.description" />
+          </el-form-item>
+          <el-form-item label="标识">
+            <el-input v-model="amisForm.type" />
+          </el-form-item>
+          <el-form-item>
+            <el-button @click.native="cancelForm">保存</el-button>
+          </el-form-item>
+        </el-form>
       </div>
+      <vab-amis :schema="amisJson" />
     </el-drawer>
     <el-descriptions
       border
@@ -87,12 +173,30 @@
           </el-link>
         </template>
       </el-descriptions-item>
+      <!--      <el-descriptions-item>-->
+      <!--        <template slot="label">-->
+      <!--          <el-link type="primary" @click="seeLowcode(productDetail.config)">-->
+      <!--            {{ $translateTitle('product.lowcode') }}-->
+      <!--          </el-link>-->
+      <!--        </template>-->
+      <!--      </el-descriptions-item>-->
       <el-descriptions-item>
         <template slot="label">
-          <el-link type="primary" @click="seeLowcode(productDetail.config)">
+          <el-link
+            :disabled="productId.length != 10"
+            type="success"
+            @click="seeLowcode(productDetail.config)"
+          >
             {{ $translateTitle('product.lowcode') }}
           </el-link>
         </template>
+        <el-link
+          :disabled="productId.length != 10"
+          type="primary"
+          @click="seeLowcode(productDetail.config)"
+        >
+          {{ productDetail.config.amis.length || 0 }}
+        </el-link>
       </el-descriptions-item>
     </el-descriptions>
     <!--    查看物模型-->
@@ -394,7 +498,8 @@
 </template>
 <script>
   import { mapGetters, mapMutations } from 'vuex'
-
+  import moment from 'moment'
+  import { putProductTemplet } from '@/api/ProductTemplet'
   export default {
     name: 'ProfileDescriptions',
     props: {
@@ -441,19 +546,25 @@
     },
     data() {
       return {
+        amisForm: {},
+        dialogTableVisible: false,
+        amisData: [],
         key: moment(new Date()).valueOf(),
+        editType: 0,
         amisJsonPlus: '',
         ace_editor: '',
         codeFlag: false,
         amisFlag: false,
         activeName: 'first',
         productDetail: {
+          decoder: { code: '' },
           thing: { properties: [] },
           config: {
             parser: [],
             profile: [],
+            amis: [],
+            basedate: { params: [] },
           },
-          decoder: { code: [] },
         },
       }
     },
@@ -472,11 +583,188 @@
     },
     mounted() {},
     methods: {
+      async saveAmis(productId, amisData, productDetail) {
+        const mergeAmis = _.merge(this.productDetail, {
+          config: { amis: amisData },
+        })
+        console.log(productId, amisData, productDetail, mergeAmis)
+        const res = await putProductTemplet(productId, {
+          config: this.productDetail.config,
+        })
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        this.amisFlag = false
+      },
+      addAmis() {
+        const amis = {
+          date: moment(new Date()).valueOf(),
+          description: `${moment(new Date()).format(
+            'YYYY-MM-DD HH:mm:ss'
+          )} 新增低代码`,
+          json: {
+            type: 'page',
+            title: `${moment(new Date()).format(
+              'YYYY-MM-DD HH:mm:ss'
+            )} 新增低代码`,
+            body: [
+              {
+                type: 'chart',
+                config: {
+                  xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                  },
+                  yAxis: {
+                    type: 'value',
+                  },
+                  series: [
+                    {
+                      data: [820, 932, 901, 934, 1290, 1330, 1320],
+                      type: 'line',
+                    },
+                  ],
+                },
+                replaceChartOption: true,
+              },
+              {
+                label: '组合穿梭器',
+                type: 'tabs-transfer',
+                name: 'a',
+                sortable: true,
+                searchable: true,
+                options: [
+                  {
+                    label: '成员',
+                    selectMode: 'tree',
+                    children: [
+                      {
+                        label: '法师',
+                        children: [
+                          {
+                            label: '诸葛亮',
+                            value: 'zhugeliang',
+                          },
+                        ],
+                      },
+                      {
+                        label: '战士',
+                        children: [
+                          {
+                            label: '曹操',
+                            value: 'caocao',
+                          },
+                          {
+                            label: '钟无艳',
+                            value: 'zhongwuyan',
+                          },
+                        ],
+                      },
+                      {
+                        label: '打野',
+                        children: [
+                          {
+                            label: '李白',
+                            value: 'libai',
+                          },
+                          {
+                            label: '韩信',
+                            value: 'hanxin',
+                          },
+                          {
+                            label: '云中君',
+                            value: 'yunzhongjun',
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    label: '用户',
+                    selectMode: 'chained',
+                    children: [
+                      {
+                        label: '法师',
+                        children: [
+                          {
+                            label: '诸葛亮',
+                            value: 'zhugeliang2',
+                          },
+                        ],
+                      },
+                      {
+                        label: '战士',
+                        children: [
+                          {
+                            label: '曹操',
+                            value: 'caocao2',
+                          },
+                          {
+                            label: '钟无艳',
+                            value: 'zhongwuyan2',
+                          },
+                        ],
+                      },
+                      {
+                        label: '打野',
+                        children: [
+                          {
+                            label: '李白',
+                            value: 'libai2',
+                          },
+                          {
+                            label: '韩信',
+                            value: 'hanxin2',
+                          },
+                          {
+                            label: '云中君',
+                            value: 'yunzhongjun2',
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+            subTitle: '副标题',
+            remark: '标题提示信息',
+          },
+          type: 'add',
+        }
+        if (this.amisData?.length) {
+          this.amisData.every((item) => {
+            console.log(item)
+            if (item.type == 'add') {
+              console.log(item)
+              this.$message.warning('请设计上一条低代码数据')
+              return false
+            } else {
+              this.amisData.unshift(amis)
+            }
+          })
+        } else {
+          this.amisData = [amis]
+        }
+      },
+      handleEdit(index, row) {
+        this.amisForm = row
+        this.editType = index
+        console.log(index, row)
+        this.set_amisJson(row.json)
+        this.amisFlag = true
+      },
+      handleDelete(index, row) {
+        console.log(index, row)
+        this.amisData.splice(index, 1)
+      },
       cancelForm() {
-        this.$message.success('待实现')
-        console.log('保存到数据库')
-        // 格式是 config{amis:this.amisJson} 记得_merge config 一下
-        console.log(this.amisJson)
+        this.amisData[this.editType].json = this.amisJson
+        if (this.amisData[this.editType].type == 'add')
+          this.amisData[this.editType].type = 'edit'
+        this.amisFlag = false
       },
       ...mapMutations({
         set_amisJson: 'amis/set_amisJson',
@@ -489,10 +777,12 @@
         // editor.gotoLine(editor.session.getLength())
       },
       seeLowcode(params) {
-        const { amis = {} } = params
-        this.set_amisJson(amis)
+        const { amis = [] } = params
+        // this.set_amisJson(amis)
         // this.amisJson = amis
-        this.amisFlag = true
+        // this.amisFlag = true
+        this.dialogTableVisible = true
+        this.amisData = amis
       },
       featProperties(params) {
         this.codeFlag = false

@@ -86,7 +86,7 @@
         <h3 slot="title">
           {{ $translateTitle('cloudTest.report template') }}
         </h3>
-        <div class="content">
+        <div :key="height" class="content">
           <el-table
             ref="tableSort"
             v-loading="listLoading"
