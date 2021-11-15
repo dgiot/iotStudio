@@ -10,7 +10,6 @@ let localUrl = {
     'material_icons.css', // 谷歌字体图标
     'iview.css',
     'antd.min.css',
-    'vuetify.min.css',
     'google.css',
     'materialdesignicons.min.css',
     'jsoneditor.min.css',
@@ -20,7 +19,6 @@ let localUrl = {
     'codemirror.css',
     'lint.css',
     'rubyblue.css',
-    'loading.css',
     'prism-tomorrow.css',
     'prismeditor.min.css',
     'vue2-perfect-scrollbar.min.css',

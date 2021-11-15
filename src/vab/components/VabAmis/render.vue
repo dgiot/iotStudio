@@ -56,6 +56,7 @@
       console.info(
         'demo ： https://baidu.gitee.io/amis/zh-CN/docs/concepts/schema?page=1'
       )
+      console.groupEnd()
       ReactDOM.render(
         renderAmis(
           this.schema,

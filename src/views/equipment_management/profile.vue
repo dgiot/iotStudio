@@ -419,6 +419,7 @@
           config: {
             parser: [],
             profile: [],
+            amis:[],
             basedate: { params: [] },
           },
         },
@@ -680,6 +681,7 @@
             config: {
               parser: [],
               profile: [],
+              amis:[],
               basedate: { params: [] },
             },
           })

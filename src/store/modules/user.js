@@ -129,7 +129,8 @@ const state = () => ({
   logo: `./favicon.ico?t=${new Date().getTime()}`,
   // backgroundimage:
   //   getToken('backgroundimage') ||
-  backgroundimage: '/assets/images/platform/assets/login_images/background.jpg',
+  backgroundimage:
+    '//prod.iotn2n.com/dgiot_dashboard/public/assets/images/platform/assets/login_images/background.jpg',
   objectId: getToken('objectId'),
   treeKey: moment().format('x'),
 })

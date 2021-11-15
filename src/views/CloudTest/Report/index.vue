@@ -13,7 +13,7 @@
     class="custom-table-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
   >
-    <div class="components">
+    <div :key="height" class="components">
       <vab-dialog :show.sync="activePopShow">
         <h3 slot="title">
           {{ $translateTitle('cloudTest.add')
@@ -350,24 +350,7 @@
       }
       return {
         categoryTreeData: [],
-        amisJson: {
-          type: 'page',
-          body: [
-            {
-              type: 'divider',
-            },
-            {
-              type: 'form',
-              body: [
-                {
-                  type: 'input-text',
-                  name: 'name',
-                  label: '姓名',
-                },
-              ],
-            },
-          ],
-        },
+        amisJson: {},
         fileList: [],
         momentKey: moment(new Date()).valueOf(),
         ruleForm: {
@@ -530,8 +513,12 @@
           parent: 'parent',
         }
         console.log(params)
-        const { results = [] } = await post_tree(params)
-        this.categoryTreeData = results
+        try {
+          const { results = [] } = await post_tree(params)
+          this.categoryTreeData = results
+        } catch (e) {
+          console.log('categorytree error', e)
+        }
       },
       onBeforeUploadImage(file) {
         const docxType = [
