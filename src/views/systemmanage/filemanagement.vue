@@ -85,8 +85,9 @@
           :label="$translateTitle('developer.operation')"
           width="300"
         >
-          <template v-if="!row.is_dir" slot-scope="scope">
+          <template #default="{ row }">
             <el-button
+              v-if="!row.is_dir"
               size="mini"
               type="primary"
               @click.native.stop="get_fileinfo(row)"
@@ -95,6 +96,7 @@
               {{ $translateTitle('application.detail') }}
             </el-button>
             <el-button
+              v-if="!row.is_dir"
               size="mini"
               type="primary"
               @click.native.stop="download_file(row)"
@@ -103,6 +105,7 @@
               {{ $translateTitle('application.preview') }}
             </el-button>
             <el-button
+              v-if="!row.is_dir"
               slot="reference"
               size="mini"
               type="danger"

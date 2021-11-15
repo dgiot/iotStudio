@@ -213,7 +213,7 @@
                 {{ $translateTitle('concentrator.edit') }}
               </el-button>
               <el-popover
-                :ref="`popover-${scope.$index}`"
+                :ref="`popover-${row.$index}`"
                 placement="top"
                 style="margin-left: 10px"
                 width="300"
@@ -223,7 +223,7 @@
                   <el-button
                     size="mini"
                     @click="
-                      scope._self.$refs[`popover-${scope.$index}`].doClose()
+                      row._self.$refs[`popover-${row.$index}`].doClose()
                     "
                   >
                     {{ $translateTitle('developer.cancel') }}
@@ -231,7 +231,7 @@
                   <el-button
                     size="mini"
                     type="primary"
-                    @click="makeSure(scope)"
+                    @click="makeSure(row)"
                   >
                     {{ $translateTitle('developer.determine') }}
                   </el-button>
@@ -708,7 +708,7 @@
                         title="删除"
                         type="danger"
                         @click.native="
-                          delRow(scope.$index, dictTempForm.params)
+                          delRow(row.$index, dictTempForm.params)
                         "
                       >
                         删除
@@ -719,7 +719,7 @@
                         title="编辑"
                         type="info"
                         @click.native="
-                          editRow(row. scope.$index, dictTempForm.params)
+                          editRow(row.$index, dictTempForm.params)
                         "
                       >
                         编辑
@@ -2426,7 +2426,7 @@
         })
       },
       /* el-popover点击关闭*/
-      makeSure(scope) {
+      makeSure(row) {
         const params = {
           count: 'objectId',
           skip: 0,
@@ -2446,7 +2446,7 @@
                   type: 'success',
                   message: '删除成功',
                 })
-                scope._self.$refs[`popover-${scope.$index}`].doClose()
+                row._self.$refs[`popover-${row.$index}`].doClose()
                 this.searchProduct()
               }
             })

@@ -192,7 +192,7 @@
             <!--              {{ $translateTitle('product.details') }}-->
             <!--            </el-button>-->
             <el-popover
-              :ref="`popover-${scope.$index}`"
+              :ref="`popover-${row.$index}`"
               placement="top"
               style="margin-left: 10px"
               width="300"
@@ -206,17 +206,11 @@
                 <el-button
                   size="mini"
                   type="text"
-                  @click="
-                    scope._self.$refs[`popover-${scope.$index}`].doClose()
-                  "
+                  @click="row._self.$refs[`popover-${row.$index}`].doClose()"
                 >
                   {{ $translateTitle('developer.cancel') }}
                 </el-button>
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click="deleteChannel(scope)"
-                >
+                <el-button size="mini" type="text" @click="deleteChannel(row)">
                   {{ $translateTitle('developer.determine') }}
                 </el-button>
               </div>
@@ -1080,17 +1074,17 @@
       },
 
       // 删除通道
-      deleteChannel(scope) {
-        this.delchannelaxios(scope)
+      deleteChannel(row) {
+        this.delchannelaxios(row)
       },
-      delchannelaxios(scope) {
+      delchannelaxios(row) {
         delChannel(row.objectId)
           .then((results) => {
             this.$message({
               type: 'success',
               message: '删除成功',
             })
-            scope._self.$refs[`popover-${scope.$index}`].doClose()
+            row._self.$refs[`popover-${row.$index}`].doClose()
             this.Get_Re_Channel(this.start)
           })
           .catch((e) => {
