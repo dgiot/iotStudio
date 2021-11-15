@@ -67,8 +67,9 @@
   .vab-layout-horizontal {
     ::v-deep {
       .vab-main {
-        width: 92% !important;
+        width: 100% !important;
         margin: auto;
+        margin-left: 0px !important;
       }
     }
 
@@ -79,8 +80,11 @@
 
     .vab-nav {
       .fold-unfold {
-        display: none;
+        //display: none;
       }
+    }
+    .main-padding {
+      margin-left: 0 !important;
     }
   }
 </style>

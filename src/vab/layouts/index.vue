@@ -91,7 +91,7 @@
       }
 
       &.fixed {
-        padding-top: $base-nav-height + $base-tabs-height;
+        //padding-top: $base-nav-height + $base-tabs-height;
       }
 
       &.fixed.no-tabs-bar {
@@ -101,7 +101,7 @@
 
     ::v-deep {
       .fixed-header {
-        position: fixed;
+        //position: fixed;
         top: 0;
         right: 0;
         left: 0;
@@ -119,8 +119,8 @@
           margin-left: $base-left-menu-width-min;
 
           .fixed-header {
-            left: $base-left-menu-width-min;
-            width: calc(100% - #{$base-left-menu-width-min});
+            //left: $base-left-menu-width-min;
+            //width: calc(100% - #{$base-left-menu-width-min});
           }
         }
       }

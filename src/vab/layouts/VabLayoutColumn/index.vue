@@ -66,8 +66,8 @@
   .vab-layout-column {
     .vab-main {
       .fixed-header {
-        left: $base-left-menu-width;
-        width: $base-right-content-width;
+        //left: $base-left-menu-width;
+        //width: $base-right-content-width;
       }
 
       &.is-collapse-main {
@@ -77,8 +77,8 @@
 
           ::v-deep {
             .fixed-header {
-              left: $base-left-menu-width-min * 1.3;
-              width: calc(100% - #{$base-left-menu-width-min} * 1.3);
+              //left: $base-left-menu-width-min * 1.3;
+              //width: calc(100% - #{$base-left-menu-width-min} * 1.3);
             }
           }
         }

@@ -1265,7 +1265,7 @@
           $('.el-tabs').css({ height: 'calc(78vh + 90px + 140px)' })
           $('section').css({ height: 'calc(100vh - 60px* 2.7 + 110px)' })
         } else {
-          $('.fixed').css({ 'padding-top': '110px' })
+          // $('.fixed').css({ 'padding-top': '110px' })
           $('.fixed-header').css({
             height: '110px',
             display: 'block',

@@ -34,7 +34,7 @@
             <el-select
               v-model="theme.layout"
               :disabled="device === 'mobile'"
-              @click="setLayout(theme.layout)"
+              @click.native="setLayout(theme.layout)"
             >
               <el-option
                 key="column"
@@ -326,7 +326,6 @@
       },
       async handleSaveTheme(theme) {
         this.setTag(_.merge(this.tag, { theme: theme }))
-        console.log(this.tag, 'this.tag')
         const params = {
           tag: this.tag,
         }
@@ -384,10 +383,10 @@
         )
         if (this.device === 'desktop') {
           const layoutArray = [
-            'horizontal',
-            'vertical',
             'column',
             'comprehensive',
+            'vertical',
+            'horizontal',
             'common',
           ]
           this.theme.layout = _.sample(_.pull(layoutArray, [this.theme.layout]))

@@ -113,7 +113,7 @@ const mutations = {
     state.theme = theme
     setToken('theme', theme)
   },
-  saveLayout(state, layout) {
+  setLayout(state, layout) {
     state.theme.layout = layout
   },
   resetTheme(state) {
@@ -136,7 +136,7 @@ const actions = {
     commit('setLogo', logo)
   },
   setLayout({ commit }, layout) {
-    commit('saveLayout', title)
+    commit('setLayout', layout)
   },
   setTitle({ commit }, title) {
     commit('setTitle', title)
