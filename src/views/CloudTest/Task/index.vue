@@ -264,105 +264,85 @@
         </el-popover>
       </vab-query-form-right-panel>
     </vab-query-form>
-    <el-row :gutter="24">
-      <el-col
-        :lg="collapse ? 4 : 2"
-        :md="collapse ? 4 : 2"
-        :sm="collapse ? 10 : 2"
-        :xl="collapse ? 4 : 2"
-        :xs="collapse ? 8 : 2"
+    <el-table
+      ref="tableSort"
+      v-loading="listLoading"
+      :border="border"
+      :data="list"
+      :height="height"
+      :size="lineHeight"
+      :stripe="stripe"
+    >
+      <el-table-column
+        align="center"
+        :label="$translateTitle('cloudTest.number')"
+        show-overflow-tooltip
+        width="95"
       >
-        <vab-role-tree class="vab-role-tree" />
-      </el-col>
-      <el-col
-        :lg="collapse ? 20 : 22"
-        :md="collapse ? 20 : 22"
-        :sm="collapse ? 14 : 22"
-        :xl="collapse ? 21 : 22"
-        :xs="collapse ? 16 : 22"
-      >
-        <el-table
-          ref="tableSort"
-          v-loading="listLoading"
-          :border="border"
-          :data="list"
-          :height="height"
-          :size="lineHeight"
-          :stripe="stripe"
-        >
-          <el-table-column
-            align="center"
-            :label="$translateTitle('cloudTest.number')"
-            show-overflow-tooltip
-            width="95"
-          >
-            <template #default="{ $index }">
-              {{ $index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-for="(item, index) in finallyColumns"
-            :key="index"
-            align="center"
-            :label="$translateTitle(`cloudTest.${item.label}`)"
-            :prop="item.prop"
-            show-overflow-tooltip
-            :sortable="item.sortable"
-            :width="item.width"
-          />
+        <template #default="{ $index }">
+          {{ $index + 1 }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-for="(item, index) in finallyColumns"
+        :key="index"
+        align="center"
+        :label="$translateTitle(`cloudTest.${item.label}`)"
+        :prop="item.prop"
+        show-overflow-tooltip
+        :sortable="item.sortable"
+        :width="item.width"
+      />
 
-          <el-table-column
-            align="center"
-            :label="$translateTitle(`deviceLog.status`)"
-            show-overflow-tooltip
-            width="185"
+      <el-table-column
+        align="center"
+        :label="$translateTitle(`deviceLog.status`)"
+        show-overflow-tooltip
+        width="185"
+      >
+        <template #default="{ row }">
+          <el-tag
+            effect="dark"
+            :type="
+              ['success', 'info', 'warning', 'danger'][
+                row.basedata.testStatus
+              ] || 0
+            "
           >
-            <template #default="{ row }">
-              <el-tag
-                effect="dark"
-                :type="
-                  ['success', 'info', 'warning', 'danger'][
-                    row.basedata.testStatus
-                  ] || 0
-                "
-              >
-                {{
-                  [
-                    $translateTitle('product.notstarted'),
-                    $translateTitle('product.testing'),
-                    $translateTitle('product.finishtest'),
-                  ][row.basedata.testStatus] ||
-                  $translateTitle('product.notested')
-                }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            :label="$translateTitle(`cloudTest.operate`)"
-            show-overflow-tooltip
-            width="185"
-          >
-            <template #default="{ row }">
-              <el-button type="success" @click="handleManagement(row)">
-                {{ $translateTitle(`product.Template management`) }}
-              </el-button>
-              <el-button type="warning" @click="handleDelete(row, 0)">
-                {{ $translateTitle(`cloudTest.delete`) }}
-              </el-button>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-image
-              class="vab-data-empty"
-              :src="
-                require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
-              "
-            />
-          </template>
-        </el-table>
-      </el-col>
-    </el-row>
+            {{
+              [
+                $translateTitle('product.notstarted'),
+                $translateTitle('product.testing'),
+                $translateTitle('product.finishtest'),
+              ][row.basedata.testStatus] || $translateTitle('product.notested')
+            }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        :label="$translateTitle(`cloudTest.operate`)"
+        show-overflow-tooltip
+        width="185"
+      >
+        <template #default="{ row }">
+          <el-button type="success" @click="handleManagement(row)">
+            {{ $translateTitle(`product.Template management`) }}
+          </el-button>
+          <el-button type="warning" @click="handleDelete(row, 0)">
+            {{ $translateTitle(`cloudTest.delete`) }}
+          </el-button>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-image
+          class="vab-data-empty"
+          :src="
+            require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+          "
+        />
+      </template>
+    </el-table>
     <el-pagination
       background
       layout="total, sizes, prev, pager, next, jumper"

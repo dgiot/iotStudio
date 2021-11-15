@@ -50,6 +50,7 @@ const state = () => ({
   language: getToken('language') || i18n,
   theme: getToken('theme') || { ...defaultTheme },
   tag: getToken('tag') || {},
+  tree: false,
   extra: {
     first: '',
     transferRouteName: '',
@@ -65,9 +66,13 @@ const getters = {
   language: (state) => state.language,
   theme: (state) => state.theme,
   tag: (state) => state.tag,
+  tree: (state) => state.tree,
   extra: (state) => state.extra,
 }
 const mutations = {
+  setTree(state, flag) {
+    state.tree = flag
+  },
   setshowThemeSetting(state, type) {
     state.showThemeSetting = type
   },
@@ -120,6 +125,10 @@ const mutations = {
   },
 }
 const actions = {
+  setTree({ commit, dispatch }, type) {
+    commit('setTree', type)
+    dispatch('user/setTreeKey', moment().format('x'), { root: true })
+  },
   setshowThemeSetting({ commit }, type) {
     commit('setshowThemeSetting', type)
   },

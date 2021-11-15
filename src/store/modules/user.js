@@ -131,6 +131,7 @@ const state = () => ({
   //   getToken('backgroundimage') ||
   backgroundimage: '/assets/images/platform/assets/login_images/background.jpg',
   objectId: getToken('objectId'),
+  treeKey: moment().format('x'),
 })
 const getters = {
   loginInfo: (state) => state.loginInfo,
@@ -147,8 +148,12 @@ const getters = {
   objectId: (state) => state.objectId,
   Copyright: (state) => state.Copyright,
   name: (state) => state.name,
+  treeKey: (state) => state.treeKey,
 }
 const mutations = {
+  setTreeKey(state, key) {
+    state.treeKey = key
+  },
   setLoginInfo(state, loginInfo) {
     state.loginInfo = loginInfo
     setToken('loginInfo', loginInfo)
@@ -223,6 +228,9 @@ const mutations = {
   },
 }
 const actions = {
+  setTreeKey({ commit, key }) {
+    commit('setTreeKey', key)
+  },
   /**
    * @description 登录拦截放行时，设置虚拟角色
    * @param {*} { commit, dispatch }

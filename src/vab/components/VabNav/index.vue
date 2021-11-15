@@ -31,6 +31,7 @@
       </el-col>
       <el-col :lg="12" :md="12" :sm="12" :xl="12" :xs="20">
         <div class="right-panel">
+          <vab-role-switch />
           <vab-error-log />
           <vab-search />
           <vab-notice />

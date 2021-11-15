@@ -1,12 +1,19 @@
 <template>
-  <div class="vab-app-main">
-    <section>
-      <transition mode="out-in" name="fade-transform">
-        <vab-keep-alive v-if="routerView" />
-      </transition>
-    </section>
-    <vab-footer />
-  </div>
+  <el-row :gutter="24">
+    <el-col class="node-tree" :sm="tree ? 4 : 0">
+      <vab-role-tree />
+    </el-col>
+    <el-col :sm="tree ? 20 : 24">
+      <div class="vab-app-main">
+        <section>
+          <transition mode="out-in" name="fade-transform">
+            <vab-keep-alive v-if="routerView" />
+          </transition>
+        </section>
+        <vab-footer />
+      </div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -23,6 +30,7 @@
     computed: {
       ...mapGetters({
         theme: 'settings/theme',
+        tree: 'settings/tree',
         extra: 'settings/extra',
         visitedRoutes: 'tabs/visitedRoutes',
       }),
@@ -68,3 +76,8 @@
     },
   }
 </script>
+<style scoped>
+  .node-tree {
+    height: 85vh;
+  }
+</style>

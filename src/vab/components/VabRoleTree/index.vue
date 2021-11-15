@@ -8,7 +8,7 @@
 * @DocumentLink:
 -->
 <template>
-  <div class="role-tree">
+  <div :key="treeKey" class="role-tree">
     <el-input
       v-if="showFilter"
       v-model="filterText"
@@ -130,11 +130,17 @@
       ...mapGetters({
         // 角色树信息数据
         roleTree: 'user/roleTree',
+        treeKey: 'user/treeKey',
       }),
     },
     created() {},
     mounted() {
-      console.log('tree components')
+      console.groupCollapsed(
+        '%ctree components',
+        'color:#009a61; font-size: 28px; font-weight: 300'
+      )
+      console.table(this.roleTree)
+      console.groupEnd()
     },
     methods: {
       handleNodeClick(data, checked) {
@@ -168,7 +174,7 @@
     }
   }
 </style>
-<style lang="scss" scoped>
+<style lang="scss">
   .role-tree {
     padding: 10px 0;
     overflow: auto;

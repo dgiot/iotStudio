@@ -25,6 +25,7 @@
                 />
               </template>
             </el-menu>
+            <vab-role-switch />
             <vab-error-log />
             <vab-search />
             <vab-notice />
