@@ -1,9 +1,17 @@
 <template>
-  <el-row :gutter="24">
-    <el-col class="node-tree" offset="1" :sm="tree ? 3 : 0">
+  <multipane class="custom-resizer" layout="vertical">
+    <div
+      class="node-tree pane"
+      :style="{
+        width: tree ? '12%' : '0',
+        minWidth: tree ? '10%' : '0',
+        maxWidth: tree ? '30%' : '0%',
+      }"
+    >
       <vab-role-tree :show-filter="true" />
-    </el-col>
-    <el-col :sm="tree ? 20 : 24">
+    </div>
+    <multipane-resizer />
+    <div class="pane" :style="{ flexGrow: 1 }">
       <div class="vab-app-main">
         <section>
           <transition mode="out-in" name="fade-transform">
@@ -12,8 +20,8 @@
         </section>
         <vab-footer />
       </div>
-    </el-col>
-  </el-row>
+    </div>
+  </multipane>
 </template>
 
 <script>
@@ -76,10 +84,42 @@
     },
   }
 </script>
-<style scoped>
+<style>
   .node-tree {
     height: 85vh;
     margin: 12px 0 auto 12px;
     text-align: center;
+  }
+  .custom-resizer {
+    width: 100%;
+    height: 90vh;
+  }
+  .custom-resizer > .pane {
+    overflow: hidden;
+  }
+  .custom-resizer > .pane ~ .pane {
+  }
+  .custom-resizer > .multipane-resizer {
+    margin: 0;
+    left: 0;
+    position: relative;
+    &:before {
+      display: block;
+      content: '';
+      width: 3px;
+      height: 40px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -20px;
+      margin-left: -1.5px;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+    }
+    &:hover {
+      &:before {
+        border-color: #999;
+      }
+    }
   }
 </style>

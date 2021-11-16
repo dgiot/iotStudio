@@ -87,7 +87,7 @@ $base-keep-alive-height: calc(
         100vh - #{$base-nav-height} - #{$base-tabs-height} - #{$base-padding} * 2 - 55px
 );
 //纵向左侧导航未折叠的宽度
-$base-left-menu-width: 266px;
+$base-left-menu-width: 140px;
 //纵向左侧导航未折叠右侧内容的宽度
 $base-right-content-width: calc(100% - #{$base-left-menu-width});
 //纵向左侧导航已折叠的宽度

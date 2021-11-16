@@ -95,7 +95,7 @@
       }
 
       &.fixed.no-tabs-bar {
-        padding-top: $base-nav-height;
+        //padding-top: $base-nav-height;
       }
     }
 
