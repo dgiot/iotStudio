@@ -23,8 +23,7 @@ const topoStage = {
       })
       const bgSrc = node.getAttr('src').includes('//')
         ? node.getAttr('src')
-        : localStorage.getItem('fileServer') +
-          node.getAttr('src').includes('//')
+        : Cookies.get('fileServer') + node.getAttr('src').includes('//')
       localStorage.setItem('konvaBg', bgSrc)
       // node.destroy()
       canvas.bgNode = node

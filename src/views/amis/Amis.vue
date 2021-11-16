@@ -8,7 +8,9 @@
   export default {
     name: 'AmisDemo',
     data() {
-      return {}
+      return {
+        amisKey: moment(new Date()).format('X'),
+      }
     },
     computed: {
       ...mapGetters({

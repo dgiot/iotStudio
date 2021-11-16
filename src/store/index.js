@@ -22,7 +22,8 @@ LogRocket.identify('THE_USER_ID_IN_YOUR_APP', {
   subscriptionType: 'dgiot_dashboard',
 })
 
-const logrocketPlugin = createPlugin(LogRocket)
+const logrocketPlugin =
+  process.env.NODE_ENV === 'production' ? {} : createPlugin(LogRocket)
 const files = require.context('./modules', false, /\.js$/)
 const modules = {}
 files.keys().forEach((key) => {

@@ -23,7 +23,7 @@ const topoBg = {
     } = canvas
     const bgSrc = topobgSrc.includes('//')
       ? topobgSrc
-      : sessionStorage.getItem('fileServer') + topobgSrc
+      : Cookies.get('fileServer') + topobgSrc
     const setattrs = canvas.konvaAttr
     console.log('当前组态的背景底图是：', bgSrc, stage)
     // bgNode.on('contextmenu', (e) => {
@@ -101,9 +101,7 @@ const topoBg = {
         // canvas.bgNode = {}
       })
       const BgimageObj = new Image()
-      const bgSrc = src.includes('//')
-        ? src
-        : localStorage.getItem('fileServer') + src
+      const bgSrc = src.includes('//') ? src : Cookies.get('fileServer') + src
       // bgNode.on('contextmenu', (e) => {
       //   console.log('组态底图点击触发了鼠标右键事件 现在没有写处理事件 可能用得上 contextmenu', e.target)
       // })

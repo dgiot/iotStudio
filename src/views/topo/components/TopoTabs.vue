@@ -301,10 +301,7 @@
           //  直接设置背景图的地址
           localStorage.setItem('konvaBg', res.path)
           await this.setKonvaBg(res.path)
-          console.error(
-            'set konva bg \n',
-            localStorage.getItem('fileServer') + res.path
-          )
+          console.error('set konva bg \n', Cookies.get('fileServer') + res.path)
           //  然后重新绘制一下 使用vuex topo
         }
       },

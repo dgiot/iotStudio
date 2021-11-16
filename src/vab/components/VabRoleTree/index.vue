@@ -17,7 +17,7 @@
     <el-tree
       ref="tree"
       class="role-tree-select"
-      :data="roleTree"
+      :data="tree"
       :default-checked-keys="keys"
       :default-expand-all="defaultExpandAll"
       :default-expanded-keys="expandedKeys"
@@ -72,6 +72,11 @@
         type: Array,
         required: false,
         default: () => [],
+      },
+      tree: {
+        type: Array,
+        required: false,
+        default: () => this.roleTree,
       },
       // 是否重置滚动条
       resetScroll: {

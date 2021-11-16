@@ -39,7 +39,7 @@ const topoImage = {
           if (node.getAttr('src')) {
             img.src = node.getAttr('src').includes('//')
               ? node.getAttr('src') + randomXy(300, 10)
-              : localStorage.getItem('fileServer') +
+              : Cookies.get('fileServer') +
                 node.getAttr('src') +
                 randomXy(300, 10)
             img.onload = () => {

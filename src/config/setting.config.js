@@ -52,6 +52,7 @@ module.exports = {
     'name',
     '_pcimg',
     '_mimg',
+    'fileServer',
   ],
   // token失效回退到登录页时是否记录本次的路由
   recordRoute: process.env.NODE_ENV == 'development' ? true : false,

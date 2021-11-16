@@ -217,7 +217,7 @@
         process.env.NODE_ENV === 'development'
           ? process.env.VUE_APP_URL
           : location.origin
-      sessionStorage.setItem('fileServer', url)
+      Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
     },
     mounted() {
       this.initShuwa()

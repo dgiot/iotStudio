@@ -11,7 +11,8 @@ const getLocalStorage = (key) => {
 }
 const { CDN_URL } = require('../../config')
 
-function queryAll(commit) {
+function queryAllMsg(commit) {
+  console.log('queryAllMsg', commit)
   const params = {
     count: 'objectId',
     order: '-updatedAt',
@@ -49,6 +50,7 @@ function queryAll(commit) {
     })
   Roletree()
     .then((res) => {
+      console.log(`Roletree res`, res)
       commit('setRoleTree', res.results)
     })
     .catch((e) => {
@@ -116,7 +118,7 @@ const state = () => ({
   Menu: getToken('Menu'),
   Permission: getToken('Permission'),
   language: language || i18n,
-  roleTree: getToken('roleTree'), // 处理数据类型不匹配
+  roleTree: getToken('roleTree') || [], // 处理数据类型不匹配
   _Product: getToken('Product'),
   token: getToken(tokenTableName, storage),
   name: getToken('name'),
@@ -169,6 +171,8 @@ const mutations = {
   },
   setRoleTree(state, tree) {
     state.roleTree = tree
+    console.error('tree', tree)
+    state.setTreeKey = moment().format('x')
     setToken('roleTree', tree) // 解决数据持久化问题
   },
   set_Product(state, Product) {
@@ -275,7 +279,7 @@ const actions = {
       fileServer,
     } = data
     if (sessionToken) {
-      Vue.prototype.$FileServe = sessionStorage.getItem('fileServer')
+      Vue.prototype.$FileServe = Cookies.get('fileServer')
       commit('setLoginInfo', userInfo)
       // clientMqtt()
       // initDgiotMqtt(objectId)
@@ -301,8 +305,6 @@ const actions = {
       dispatch('acl/setCopyright', Copyright, { root: true })
       dispatch('settings/setTag', tag, { root: true })
       commit('setObejectId', objectId)
-      // 登录成功后,需要将以下参数存入vuex
-
       const hour = new Date().getHours()
       const thisTime =
         hour < 8
@@ -316,10 +318,6 @@ const actions = {
           : '晚上好'
       Vue.prototype.$baseNotify(title, `${thisTime}！`)
     } else {
-      // Vue.prototype.$baseMessage(
-      //   `登录接口异常，未正确返回${tokenName}...`,
-      //   'error'
-      // )
       Vue.prototype.$baseMessage(
         `登录失败，可能是密码错误或者账号被禁用！请与经销商或平台管理员联系。`,
         'error'
@@ -333,7 +331,7 @@ const actions = {
    * @return {Promise<void>}
    */
   async queryAll({ commit }) {
-    queryAll(commit)
+    await queryAllMsg(commit)
   },
   /**
    * @description 第三方登录

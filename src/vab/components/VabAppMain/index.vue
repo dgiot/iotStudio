@@ -1,5 +1,9 @@
 <template>
-  <multipane class="custom-resizer" layout="vertical">
+  <multipane
+    :key="treeKey"
+    :class="[tree ? 'custom-resizer' : 'custom']"
+    layout="vertical"
+  >
     <div
       class="node-tree pane"
       :style="{
@@ -8,7 +12,7 @@
         maxWidth: tree ? '30%' : '0%',
       }"
     >
-      <vab-role-tree :show-filter="true" />
+      <vab-role-tree :show-filter="true" :tree="roleTree" />
     </div>
     <multipane-resizer />
     <div class="pane" :style="{ flexGrow: 1 }">
@@ -41,6 +45,8 @@
         tree: 'settings/tree',
         extra: 'settings/extra',
         visitedRoutes: 'tabs/visitedRoutes',
+        treeKey: 'user/treeKey',
+        roleTree: 'user/roleTree',
       }),
       changeData() {
         return [
@@ -84,7 +90,7 @@
     },
   }
 </script>
-<style>
+<style scoped lang="scss">
   .node-tree {
     height: 85vh;
     margin: 12px 0 auto 12px;
@@ -93,6 +99,10 @@
   .custom-resizer {
     width: 100%;
     height: 90vh;
+  }
+  .custom {
+    width: auto;
+    height: auto;
   }
   .custom-resizer > .pane {
     overflow: hidden;
