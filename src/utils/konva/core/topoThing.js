@@ -14,7 +14,7 @@ const topoThing = {
       msg: {
         type: 'bind_evidence',
         id: args.getAttr('id'),
-        dgiotData: args.getAttr('dgiotData'),
+        evidenceList: args.getAttr('evidenceList'),
         node: args,
       },
     }
@@ -155,31 +155,15 @@ const topoThing = {
       x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
       y: 600 + canvas.randomXy(40, 10),
     }
-    var simpEvidence = new Konva.Label({
-      name: 'evidence',
-      icon: args.path.icon,
-      x: Axis.x,
-      y: Axis.y,
-      id: `${args.path.productid}_evidence_${canvas.randomXy(40, 10)}_${
-        args.path.icon
-      }`,
-      attrs: {
-        id: `${args.path.productid}_evidence_${canvas.randomXy(40, 10)}_${
-          args.path.icon
-        }`,
-        name: 'evidence',
-        x: Axis.x,
-        y: Axis.y,
-      },
-    })
     // https://konvajs.org/api/Konva.Path.html#Path__anchor
     const evidencePath = new Konva.Path({
       name: 'evidence',
       id: `${args.path.productid}_evidence_${canvas.randomXy(40, 10)}_${
         args.path.icon
       }`,
-      dgiotData: [],
+      evidenceList: [],
       icon: args.path.icon,
+      type: args.type,
       x: Axis.x,
       y: Axis.y,
       width: 36,
@@ -187,23 +171,13 @@ const topoThing = {
       draggable: true,
       data: args.path.path,
       handler: 'dblclick',
-      fill: 'black',
+      fill: args.path.fill,
       size: 36,
       scale: {
         x: 2,
         y: 2,
       },
     })
-    simpEvidence.add(evidencePath)
-
-    simpEvidence.add(
-      new Konva.Tag({
-        attrs: {
-          draggable: true,
-          name: 'dblclick',
-        },
-      })
-    )
     console.log(evidencePath)
     return evidencePath
   },
