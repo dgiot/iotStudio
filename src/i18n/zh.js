@@ -588,7 +588,7 @@ export default {
       productname: '产品名称',
       productgrouping: '产品分组',
       nodetype: '节点类型',
-      classification: '所属分类',
+      classification: '所属品类',
       producttemplet: '所属产品模板',
       addingtime: '添加时间',
       equipment: '网关子设备',

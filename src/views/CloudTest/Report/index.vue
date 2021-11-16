@@ -35,9 +35,17 @@
             </el-form-item>
             <el-form-item
               :label="$translateTitle('cloudTest.category')"
-              prop="category"
+              prop="categoryname"
             >
-              <el-input v-model="ruleForm.category" />
+              <!--              <el-input v-model="ruleForm.category" />-->
+              <el-input v-model="ruleForm.categoryname" readonly>
+                <el-icon
+                  slot="append"
+                  class="el-icon-edit el-input__icon"
+                  size="mini"
+                  @click.native="handlecateClick"
+                />
+              </el-input>
             </el-form-item>
             <el-form-item
               :label="$translateTitle('cloudTest.Trade Names')"
@@ -311,6 +319,109 @@
         />
       </template>
     </el-table>
+    <el-drawer :append-to-body="true" size="40%" :visible.sync="cascaderDrawer">
+      <div>
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <vab-query-form>
+              <vab-query-form-top-panel>
+                <el-form
+                  :inline="true"
+                  label-width="100px"
+                  @submit.native.prevent
+                >
+                  <el-form-item
+                    :label="$translateTitle('product.classification')"
+                  >
+                    <el-select
+                      v-model="queryForm.category"
+                      :placeholder="$translateTitle('task.Select')"
+                      style="width: 100%"
+                      @change="handleCateSearch"
+                    >
+                      <el-option
+                        v-for="(item, index) in categoryTreeData"
+                        :key="index"
+                        :label="item.name"
+                        :value="item.objectId"
+                      />
+                    </el-select>
+                  </el-form-item>
+
+                  <el-form-item
+                    :label="$translateTitle('developer.Templatename')"
+                  >
+                    <el-input
+                      v-model="queryForm.name"
+                      clearable
+                      placeholder="请输入模板名称"
+                    />
+                  </el-form-item>
+                  <el-form-item label-width="0">
+                    <el-button
+                      class="el-icon-search"
+                      native-type="submit"
+                      type="primary"
+                      @click="queryProdut({})"
+                    />
+                  </el-form-item>
+                </el-form>
+              </vab-query-form-top-panel>
+            </vab-query-form>
+          </el-col>
+        </el-row>
+        <el-table
+          border
+          :cell-style="{ 'text-align': 'center' }"
+          :data="tableData"
+          :header-cell-style="{ 'text-align': 'center' }"
+          :height="$baseTableHeight(0) + 40"
+          size="mini"
+          style="width: 100%"
+        >
+          <el-table-column
+            align="center"
+            :label="$translateTitle('developer.Templatename')"
+          >
+            <template #default="{ row }">
+              {{ row.name }}
+              <el-popover placement="left" trigger="click" width="800">
+                <i
+                  slot="reference"
+                  class="el-icon-info"
+                  @click="referenceHandle(row)"
+                ></i>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$translateTitle('department.category')"
+            prop="categoryname"
+          >
+            <template #default="{ row }">
+              {{ row.category.name }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            :label="$translateTitle('developer.operation')"
+          >
+            <template #default="{ row }">
+              <el-button size="mini" type="text" @click="chooseTemplate(row)">
+                {{ $translateTitle('product.choose') }}
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <vab-Pagination
+          v-show="queryForm.total > 0"
+          :limit.sync="queryForm.pageSize"
+          :page.sync="queryForm.pageNo"
+          :total="queryForm.total"
+          @pagination="categorytree"
+        />
+      </div>
+    </el-drawer>
 
     <el-pagination
       background
@@ -333,6 +444,8 @@
   import VabDraggable from 'vuedraggable'
   import { mapGetters } from 'vuex'
   import { post_tree } from '@/api/Data'
+  import { getCategory, queryCategory } from '@/api/Category'
+  import { queryProductTemplet } from '@/api/ProductTemplet'
 
   export default {
     name: 'ReportIndex',
@@ -349,6 +462,7 @@
         }
       }
       return {
+        tableData: [],
         categoryTreeData: [],
         amisJson: {},
         fileList: [],
@@ -374,16 +488,10 @@
               trigger: 'blur',
             },
           ],
-          category: [
+          categoryname: [
             {
               required: true,
-              message: '请输入所属品类',
-              trigger: 'blur',
-            },
-            {
-              min: 3,
-              max: 8,
-              message: '长度在 3 到 8 个字符',
+              message: '请选择所属品类',
               trigger: 'blur',
             },
           ],
@@ -470,6 +578,7 @@
           pageSize: 10,
           name: '',
         },
+        cascaderDrawer: false,
       }
     },
     computed: {
@@ -505,6 +614,79 @@
       this.categorytree()
     },
     methods: {
+      handlecateClick() {
+        this.categorytree()
+        this.cascaderDrawer = true
+      },
+      async queryProdut(args) {
+        const categorys = args.categorys
+        const loading = this.$baseColorfullLoading()
+        if (!args.limit) {
+          args = this.queryForm
+        }
+        let params = {
+          limit: args.limit,
+          order: args.order,
+          skip: args.skip,
+          keys: args.keys,
+          include: 'category',
+          where: {
+            category: categorys ? { $in: categorys } : { $ne: null },
+            name: args.name
+              ? {
+                  $regex: args.name,
+                  $options: 'i',
+                }
+              : { $ne: null },
+          },
+        }
+        try {
+          const { results = [], count = 0 } = await queryProductTemplet(params)
+          loading.close()
+          this.tableData = results
+          this.queryForm.total = count
+        } catch (error) {
+          loading.close()
+          console.log(error)
+          this.$message.error(`${error}`)
+        }
+      },
+      handleCateSearch(objectId) {
+        this.queryForm.category = objectId
+        this.showcateTree = !this.showcateTree
+        if (objectId == 'a60a85475a') {
+          this.queryProdut({})
+        } else {
+          let params = {
+            keys: 'objectId',
+            where: {
+              parent: {
+                className: 'Category',
+                objectId: objectId,
+                __type: 'Pointer',
+              },
+            },
+          }
+          queryCategory(params).then((res) => {
+            const ids = []
+            ids.push(objectId)
+            res.results.forEach((result) => {
+              ids.push(result.objectId)
+            })
+            this.queryProdut({ categorys: ids })
+          })
+        }
+      },
+      referenceHandle(row) {
+        console.log('prodtemp', row)
+      },
+      // 选择产品模板
+      async chooseTemplate(row) {
+        this.$set(this.ruleForm, 'categoryname', row.category.name)
+        this.$set(this.ruleForm, 'categoryid', row.category.objectId)
+        this.$set(this.ruleForm, 'producttempid', row.objectId)
+        this.cascaderDrawer = !this.cascaderDrawer
+      },
       async categorytree() {
         let params = {
           class: 'Category',
@@ -570,8 +752,10 @@
             const configTemp = {
               identifier: 'inspectionReportTemp',
               client: this.ruleForm.factory,
+              category: this.ruleForm.categoryid,
+              producttemplet: this.ruleForm.producttempid,
             }
-            formData.append('devType', this.ruleForm.category)
+            formData.append('devType', this.ruleForm.factory)
             formData.append('name', this.ruleForm.name)
             formData.append('config', JSON.stringify(configTemp))
             formData.append('file', this.ruleForm.file)
@@ -691,7 +875,7 @@
             name: this.queryForm.name
               ? { $regex: this.queryForm.name }
               : { $ne: null },
-            category: 'd6ad425529',
+            netType: 'Evidence',
             nodeType: 1,
           },
         }
