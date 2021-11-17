@@ -230,7 +230,7 @@
         this.listLoading = true
         this.data = []
         const { results, count } = await queryPermission({
-          count: '*',
+          count: 'objectId',
           limit: args.limit ? args.limit : this.queryForm.limit,
           order: this.queryForm.order,
           skip: args.skip ? args.skip : this.queryForm.skip,

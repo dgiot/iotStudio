@@ -1009,7 +1009,7 @@
       },
       async getWarnCount(
         params = {
-          count: '*',
+          count: 'objectId',
           where: {},
         }
       ) {

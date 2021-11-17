@@ -98,9 +98,9 @@
     </el-table>
     <el-pagination
       background
-      :current-page="pagination.pageNo"
+      :current-page="pagination.skip"
       :layout="pagination.layout"
-      :page-size="pagination.pageSize"
+      :page-size="pagination.limit"
       :total="pagination.total"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
@@ -150,8 +150,8 @@
         imgShow: true,
         list: [],
         pagination: {
-          pageNo: 20,
-          pageSize: 20,
+          limit: 10,
+          skip: 0,
           layout: 'total, sizes, prev, pager, next, jumper',
           total: 0,
         },
@@ -175,6 +175,14 @@
       this.fetchData()
     },
     methods: {
+      handleCurrentChange(val) {
+        this.pagination.limit = val
+        this.fetchData()
+      },
+      handleSizeChange(val) {
+        this.pagination.skip = (val - 1) * this.pagination.limit
+        this.fetchData()
+      },
       handleHeight() {
         if (this.fold) this.height = this.$baseTableHeight(2) - 47
         else this.height = this.$baseTableHeight(3) - 30
@@ -213,8 +221,10 @@
         console.log(this.queryForm)
         this.listLoading = true
         const { results, count } = await queryView({
-          keys: 'count(*)',
+          count: 'objectId',
           order: '-updatedAt',
+          limit: this.pagination.limit,
+          skip: this.pagination.skip,
           where: {
             class: this.queryForm.class
               ? { $regex: this.queryForm.class }

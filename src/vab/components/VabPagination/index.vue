@@ -83,9 +83,8 @@
         const args = {
           skip: this.currentPage,
           limit: this.pageSize,
-          count: '*',
+          count: 'objectId',
           order: '-createdAt',
-          keys: 'count(*)',
         }
         // this.momentKey = moment(new Date()).format('X')
         this.$emit('pagination', args)
