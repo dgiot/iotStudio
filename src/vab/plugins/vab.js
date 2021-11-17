@@ -190,7 +190,7 @@ Vue.prototype.$baseTableHeight = (formType) => {
   } else {
     height = height - paddingHeight
   }
-  return height
+  // return height
 }
 
 /**

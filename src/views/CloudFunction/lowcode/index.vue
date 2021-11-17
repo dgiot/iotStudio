@@ -96,15 +96,15 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--    <el-pagination-->
-    <!--      background-->
-    <!--      :current-page="queryForm.pageNo"-->
-    <!--      :layout="layout"-->
-    <!--      :page-size="queryForm.pageSize"-->
-    <!--      :total="total"-->
-    <!--      @current-change="handleCurrentChange"-->
-    <!--      @size-change="handleSizeChange"-->
-    <!--    />-->
+    <el-pagination
+      background
+      :current-page="pagination.pageNo"
+      :layout="pagination.layout"
+      :page-size="pagination.pageSize"
+      :total="pagination.total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
     <table-edit ref="edit" @fetch-data="fetchData" />
   </div>
 </template>
@@ -137,7 +137,7 @@
     },
     props: {
       viewForm: {
-        required: true,
+        required: false,
         type: Object,
         default: () => defaultQuery,
       },
@@ -149,10 +149,14 @@
         height: this.$baseTableHeight(3) - 30,
         imgShow: true,
         list: [],
+        pagination: {
+          pageNo: 20,
+          pageSize: 20,
+          layout: 'total, sizes, prev, pager, next, jumper',
+          total: 0,
+        },
         imageList: [],
         listLoading: true,
-        layout: 'total, sizes, prev, pager, next, jumper',
-        total: 0,
         selectRows: '',
       }
     },
@@ -212,12 +216,18 @@
           keys: 'count(*)',
           order: '-updatedAt',
           where: {
-            class: this.queryForm.class,
-            type: this.queryForm.type,
-            title: this.queryForm.title.length
+            class: this.queryForm.class
+              ? { $regex: this.queryForm.class }
+              : { $ne: null },
+            type: this.queryForm.type
+              ? { $regex: this.queryForm.type }
+              : { $ne: null },
+            title: this.queryForm.title
               ? { $regex: this.queryForm.title }
               : { $ne: null },
-            key: this.queryForm.key,
+            key: this.queryForm.key
+              ? { $regex: this.queryForm.class }
+              : { $ne: null },
           },
         })
         if (results)
