@@ -1,85 +1,6 @@
 <template>
   <div class="proddetail proddetail-container">
-    <div class="editheader">
-      <dgiot-profile v-show="false" :product-info="productInfo" />
-      <!--      <el-breadcrumb separator-class="el-icon-arrow-right">-->
-      <!--        <el-breadcrumb-item :to="{ path: '/roles/product' }">-->
-      <!--          {{ $translateTitle('route.产品管理') }}-->
-      <!--        </el-breadcrumb-item>-->
-      <!--        <el-breadcrumb-item>-->
-      <!--          {{ $translateTitle('route.产品详情') }}-->
-      <!--        </el-breadcrumb-item>-->
-      <!--      </el-breadcrumb>-->
-      <div class="product">
-        <ul>
-          <li>
-            <!-- <span>产品名称:</span> -->
-            {{ $translateTitle('product.productname') }}:
-            <span>{{ productName }}</span>
-          </li>
-          <li>
-            <span>ProductSecret:</span>
-            <span v-if="isshow == false">
-              ********************
-              <el-link
-                style="margin-left: 5px; cursor: pointer"
-                type="primary"
-                :underline="false"
-                @click="isshow = true"
-              >
-                {{ $translateTitle('product.display') }}
-              </el-link>
-            </span>
-            <span v-else>
-              <span v-copyText="ProductSecret">{{ ProductSecret }}</span>
-              <el-link
-                style="margin-left: 5px; cursor: pointer"
-                type="primary"
-                :underline="false"
-                @click="isshow = false"
-              >
-                {{ $translateTitle('product.hidden') }}
-              </el-link>
-            </span>
-          </li>
-          <li>
-            <span>{{ $translateTitle('product.numberofequipment') }}:</span>
-            <span>
-              {{ form.ProductAll }}
-              <el-link
-                style="margin-left: 10px; font-size: 16px"
-                type="primary"
-                :underline="false"
-                @click.native="goToDevices"
-              >
-                {{ $translateTitle('product.gotoequipment') }}
-              </el-link>
-            </span>
-          </li>
-          <li>
-            <!--            <div class="block">-->
-            <!--              <el-image-->
-            <!--                v-if="productimg"-->
-            <!--                :src="$FileServe + productimg"-->
-            <!--                style="-->
-            <!--                  position: relative;-->
-            <!--                  top: -40px;-->
-            <!--                  max-width: 200px;-->
-            <!--                  height: auto;-->
-            <!--                "-->
-            <!--              >-->
-            <!--                <div-->
-            <!--                  slot="error"-->
-            <!--                  class="image-slot"-->
-            <!--                >-->
-            <!--                  <i class="el-icon-picture-outline" />-->
-            <!--                </div>-->
-            <!--              </el-image>-->
-            <!--            </div>-->
-          </li>
-        </ul>
-      </div>
-    </div>
+    <dgiot-profile v-show="false" :product-info="productInfo" />
     <div>
       <el-tabs ref="_tabs" v-model="activeName" @tab-click="handleClick">
         <!--产品信息-->
@@ -128,12 +49,49 @@
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
-                size="small"
               >
                 <el-descriptions-item
                   :label="$translateTitle('product.productname')"
                 >
                   {{ productdetail.name }}
+                </el-descriptions-item>
+                <el-descriptions-item
+                  :label="$translateTitle('product.ProductSecret')"
+                >
+                  <span v-if="isshow == false">
+                    ********************
+                    <el-link
+                      style="margin-left: 5px; cursor: pointer"
+                      type="primary"
+                      :underline="false"
+                      @click="isshow = true"
+                    >
+                      {{ $translateTitle('product.display') }}
+                    </el-link>
+                  </span>
+                  <span v-else>
+                    <span v-copyText="ProductSecret">{{ ProductSecret }}</span>
+                    <el-link
+                      style="margin-left: 5px; cursor: pointer"
+                      type="primary"
+                      :underline="false"
+                      @click="isshow = false"
+                    >
+                      {{ $translateTitle('product.hidden') }}
+                    </el-link>
+                  </span>
+                </el-descriptions-item>
+                <el-descriptions-item
+                  :label="$translateTitle('product.numberofequipment')"
+                >
+                  <el-link
+                    style="margin-left: 10px; font-size: 16px"
+                    type="primary"
+                    :underline="false"
+                    @click.native="goToDevices"
+                  >
+                    {{ form.ProductAll }}
+                  </el-link>
                 </el-descriptions-item>
                 <el-descriptions-item
                   :label="$translateTitle('product.nodetype')"
@@ -339,7 +297,7 @@
                     v-if="!row.isdef"
                     size="mini"
                     type="primary"
-                    @click.native="updatetopic(row.scope.$index)"
+                    @click.native="updatetopic(row.$index)"
                   >
                     {{ $translateTitle('developer.edit') }}
                   </el-button>
@@ -372,7 +330,7 @@
                     slot="reference"
                     size="mini"
                     type="danger"
-                    @click.native="deletetopic(scope, scope.$index)"
+                    @click.native="deletetopic(row, row.$index)"
                   >
                     {{ $translateTitle('developer.delete') }}
                   </el-button>
@@ -540,7 +498,7 @@
                   >
                     <template #default="{ row }">
                       <span>
-                        {{ scope.$index + 1 }}
+                        {{ row.$index + 1 }}
                       </span>
                     </template>
                   </el-table-column>

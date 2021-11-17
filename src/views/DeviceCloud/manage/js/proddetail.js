@@ -768,10 +768,16 @@ export default {
       })
     },
     getTopic() {
+      const topics = []
       this.$get_object('Product', this.productId)
         .then((resultes) => {
-          if (resultes) {
-            this.topicData = resultes.topics.concat(this.topic)
+          if (resultes?.topics) {
+            resultes.topics.forEach((topic) => {
+               if(topic)   topics.push(topic)
+            })
+            console.log('resultes', resultes.topics)
+            console.log('topics', topics)
+            this.topicData = topics.concat(this.topic)
           }
         })
         .catch((err) => {

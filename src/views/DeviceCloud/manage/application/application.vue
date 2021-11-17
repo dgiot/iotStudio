@@ -410,6 +410,7 @@
         }
       }
       return {
+        url: '',
         total: 0,
         pagesize: 10,
         start: 0,

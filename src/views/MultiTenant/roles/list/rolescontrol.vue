@@ -25,6 +25,7 @@
       </el-button>
     </div>
     <el-table
+      :key="treeData.length"
       v-loading="listLoading"
       border
       :data="treeData"
@@ -44,34 +45,21 @@
       <el-table-column
         align="center"
         :label="$translateTitle('equipment.name')"
+        prop="name"
         show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span>
-            {{ row.name }}
-          </span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         align="center"
         :label="$translateTitle('product.alias')"
+        prop="alias"
         show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span>
-            {{ row.alias }}
-          </span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         align="center"
         :label="$translateTitle('user.createdtime')"
+        prop="createtime"
         show-overflow-tooltip
-      >
-        <template #default="{ row }">
-          <span>{{ row.createtime }}</span>
-        </template>
-      </el-table-column>
+      />
       <el-table-column
         align="center"
         :label="$translateTitle('task.Operation')"
@@ -176,7 +164,7 @@
           product: '',
           type: '',
           searchDate: [],
-          limit: 20,
+          limit: 100,
           skip: 0,
           order: '-createdAt',
           keys: 'count(*)',
@@ -217,20 +205,10 @@
           },
         ],
         data: [],
+        treeData: [],
       }
     },
-    computed: {
-      treeData() {
-        const cloneData = JSON.parse(JSON.stringify(this.data)) // 对源数据深度克隆
-        return cloneData.filter((father) => {
-          const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parent
-          ) // 返回每一项的子级数组
-          branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
-          return father.parent == 0 // 返回第一层
-        })
-      },
-    },
+    computed: {},
     mounted() {
       this.getcontrolrole({})
     },
@@ -275,6 +253,20 @@
         } else {
           this.data = []
         }
+        console.log('results', this.data)
+        this.setTreeData(this.data)
+
+        console.log(this.treeData, 'cloneData')
+      },
+      async setTreeData(tree) {
+        const cloneData = JSON.parse(JSON.stringify(tree)) // 对源数据深度克隆
+        this.treeData = cloneData.filter((father) => {
+          const branchArr = cloneData.filter(
+            (child) => father.objectId == child.parent
+          ) // 返回每一项的子级数组
+          branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
+          return father.parent == 0 // 返回第一层
+        })
       },
       async updaterole() {
         const res = await putPermission(this.permissionid, {

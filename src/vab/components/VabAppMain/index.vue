@@ -5,7 +5,7 @@
     layout="vertical"
   >
     <div
-      class="node-tree pane"
+      :class="[tree ? 'node-tree pane' : 'pane']"
       :style="{
         width: tree ? '12%' : '0',
         minWidth: tree ? '10%' : '0',
