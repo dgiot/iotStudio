@@ -3,7 +3,7 @@
     <el-pagination
       :key="momentKey"
       :background="background"
-      :current-page.sync="currentPage"
+      :current-page="currentPage"
       :layout="layout"
       :page-size.sync="pageSize"
       :page-sizes="pageSizes"

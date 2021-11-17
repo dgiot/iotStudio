@@ -19,6 +19,18 @@
   export default {
     name: 'DgiotKonva',
     components: {},
+    props: {
+      objectId: {
+        default: '',
+        required: true,
+        type: String,
+      },
+      code: {
+        default: () => {},
+        required: true,
+        type: Object,
+      },
+    },
     data() {
       return {
         infoData: 'dgiotKonva',

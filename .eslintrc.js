@@ -67,6 +67,7 @@ module.exports = {
     },
   },
   rules: {
+    'no-unused-labels': 'off',
     'no-unused-vars': 'off',
     'no-undef': 'off',
     'no-redeclare': 'off',

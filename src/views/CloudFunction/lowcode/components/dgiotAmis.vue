@@ -10,22 +10,42 @@
 <template>
   <div class="dgiotAmis-container">
     <div class="dgiotAmis-content">
-      {{ infoData }}
+      <vab-amis :key="objectId" :schema="amisJson" />
     </div>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   export default {
     name: 'DgiotAmis',
     components: {},
+    props: {
+      objectId: {
+        default: '',
+        required: true,
+        type: String,
+      },
+    },
     data() {
       return {
         infoData: 'dgiotAmis',
       }
     },
-    computed: {},
-    mounted() {},
+    computed: {
+      ...mapGetters({
+        amisJson: 'amis/amisJson',
+      }),
+    },
+    mounted() {
+      this.$baseEventBus.$off('submitCode')
+      this.$baseEventBus.$on('submitCode', (code) => {
+        this.$baseEventBus.$emit('saveLowCode', {
+          id: this.objectId,
+          data: { data: code },
+        })
+      })
+    },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前

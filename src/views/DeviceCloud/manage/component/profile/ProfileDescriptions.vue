@@ -500,6 +500,7 @@
               title: '',
               disabled: true,
               data: {},
+              hiddenRow: ['class', 'key', 'createdAt'],
             }
           console.log(this.viewForm)
         },

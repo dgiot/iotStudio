@@ -4,38 +4,34 @@
       <vab-query-form-top-panel>
         <el-form
           ref="form"
-          :disabled="queryForm.disabled"
           :inline="true"
           label-width="49px"
           :model="queryForm"
           size="mini"
           @submit.native.prevent
         >
-          <el-form-item label="表名">
+          <el-form-item :label="$translateTitle('product.Table Name')">
             <el-input v-model="queryForm.class" size="mini" />
           </el-form-item>
-          <el-form-item label="标题">
+          <el-form-item :label="$translateTitle('product.title')">
             <el-input v-model="queryForm.title" />
           </el-form-item>
-          <el-form-item label="类型">
+          <el-form-item :label="$translateTitle('rule.Type')">
             <el-input v-model="queryForm.type" />
           </el-form-item>
           <el-form-item label="key">
             <el-input v-model="queryForm.key" />
           </el-form-item>
-        </el-form>
-        <el-form size="mini" style="margin-left: 20px">
+          <el-form-item label="id">
+            <el-input v-model="queryForm.objectId" size="mini" />
+          </el-form-item>
           <el-form-item>
-            <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
-              添加
-            </el-button>
+            <el-button icon="el-icon-plus" type="primary" @click="handleAdd" />
             <el-button
-              icon="el-icon-delete"
+              icon="el-icon-search"
               type="success"
               @click="fetchData()"
-            >
-              查询
-            </el-button>
+            />
           </el-form-item>
         </el-form>
       </vab-query-form-top-panel>
@@ -59,71 +55,83 @@
         show-overflow-tooltip
       />
       <el-table-column
+        v-show="!queryForm.hiddenRow.includes('title')"
         align="center"
-        label="标题"
+        :label="$translateTitle('product.title')"
         prop="title"
         show-overflow-tooltip
       />
       <el-table-column
+        v-show="!queryForm.hiddenRow.includes('class')"
         align="center"
-        label="表名"
+        :label="$translateTitle('product.Table Name')"
         prop="class"
         show-overflow-tooltip
       />
       <el-table-column
         align="center"
-        label="类型"
+        label="key"
+        prop="key"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        align="center"
+        :label="$translateTitle('rule.Type')"
         prop="type"
         show-overflow-tooltip
       />
       <el-table-column
+        v-show="!queryForm.hiddenRow.includes('createdAt')"
         align="center"
-        label="创建时间"
+        :label="$translateTitle('application.createtime')"
         prop="createdAt"
         show-overflow-tooltip
-        width="200"
+        width="140"
       />
       <el-table-column
         align="center"
-        label="操作"
+        :label="$translateTitle('node.operation')"
         show-overflow-tooltip
         width="130"
       >
         <template #default="{ row }">
-          <el-button type="text" @click="handleDetail(row)">设计</el-button>
+          <el-button type="text" @click="handleLowCode(row.objectId)">
+            设计
+          </el-button>
           <el-button type="text" @click="handleEdit(row)">编辑</el-button>
           <el-button type="text" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination
-      background
-      :current-page="pagination.skip"
-      :layout="pagination.layout"
-      :page-size="pagination.limit"
-      :total="pagination.total"
-      @current-change="handleCurrentChange"
-      @size-change="handleSizeChange"
+    <vab-parser-pagination
+      :pagination="paginations"
+      :query-payload="queryPayload"
+      @pagination="fetchData"
+      @paginationQuery="paginationQuery"
     />
     <table-edit ref="edit" @fetch-data="fetchData" />
+    <lowcodeDesign ref="lowcodeDesign" @objectId="lowcodeId" />
   </div>
 </template>
 
 <script>
+  import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
   import { queryView, putView, postView, delView, getView } from '@/api/View'
   import TableEdit from './components/TableEdit'
-  import moment from 'moment'
-  import { delProduct } from '@/api/Product'
   const defaultQuery = {
     class: '',
     type: '',
     title: '',
     key: '',
+    data: [],
+    disabled: false,
+    hiddenRow: [],
   }
   export default {
     name: 'ComprehensiveTable',
     components: {
       TableEdit,
+      lowcodeDesign,
     },
     filters: {
       statusFilter(status) {
@@ -144,49 +152,64 @@
     },
     data() {
       return {
-        fold: false,
-        queryForm: this.viewForm,
-        height: this.$baseTableHeight(3) - 30,
-        imgShow: true,
-        list: [],
-        pagination: {
+        lowcodeId: '',
+        paginations: {
+          // 每页显示个数选择器的选项设置
+          pageSizes: [5, 10, 20, 50, 100, 200, 500],
+          // 组件布局，子组件名用逗号分隔
+          layout: 'total, sizes, prev, pager, next, jumper',
+          // 是否为分页按钮添加背景色
+          background: true,
+          // 是否显示本控件
+          hidden: false,
+          // 是否使用小型分页样式
+          small: false,
+          // 每页显示条目个数，支持 .sync 修饰符
+          pageSize: 10,
+          // 总条目数
+          total: 0,
+          // 总页数，total 和 page-count 设置任意一个就可以达到显示页码的功能；如果要支持 page-sizes 的更改，则需要使用 total 属性
+          pageCount: 0,
+          // 页码按钮的数量，当总页数超过该值时会折叠 大于等于 5 且小于等于 21 的奇数
+          pagerCount: 7,
+          // 当前页数，支持 .sync 修饰符
+          currentPage: 1,
+          // 每页显示个数选择器的下拉框类名
+          popperClass: '',
+          // 替代图标显示的上一页文字
+          prevText: '',
+          // 替代图标显示的下一页文字
+          nextText: '',
+          // 是否禁用
+          disabled: false,
+          // 只有一页时是否隐藏
+          hideOnSinglePage: false,
+        },
+        queryPayload: {
+          excludeKeys: 'data',
+          include: '',
+          order: '-createdAt',
           limit: 10,
           skip: 0,
-          layout: 'total, sizes, prev, pager, next, jumper',
-          total: 0,
+          count: 'objectId',
         },
+        queryForm: this.viewForm,
+        list: [],
         imageList: [],
         listLoading: true,
         selectRows: '',
       }
     },
-    computed: {
-      // queryForm: function () {
-      //   return this.viewForm
-      // },
-    },
-    beforeMount() {
-      window.addEventListener('resize', this.handleHeight)
-    },
-    beforeDestroy() {
-      window.removeEventListener('resize', this.handleHeight)
-    },
     created() {
       this.fetchData()
     },
+    mounted() {
+      this.$baseEventBus.$off('saveLowCode')
+      this.$baseEventBus.$on('saveLowCode', (params) => {
+        this.saveLowCode(params.id, params.data)
+      })
+    },
     methods: {
-      handleCurrentChange(val) {
-        this.pagination.limit = val
-        this.fetchData()
-      },
-      handleSizeChange(val) {
-        this.pagination.skip = (val - 1) * this.pagination.limit
-        this.fetchData()
-      },
-      handleHeight() {
-        if (this.fold) this.height = this.$baseTableHeight(2) - 47
-        else this.height = this.$baseTableHeight(3) - 30
-      },
       handleAdd() {
         this.$refs['edit'].type = 'add'
         this.$refs['edit'].showEdit(this.queryForm)
@@ -214,31 +237,49 @@
           }
         )
       },
-      handleDetail(row) {
-        this.$baseEventBus.$emit('lowcodeDesign', row)
+      async handleLowCode(lowcodeId) {
+        const loading = this.$baseColorfullLoading(1)
+        const res = await getView(lowcodeId)
+        loading.close()
+        this.$baseEventBus.$emit('lowcodeDesign', res)
       },
-      async fetchData() {
+      async saveLowCode(lowcodeId, payload) {
+        const loading = this.$baseColorfullLoading(1)
+        const res = await putView(lowcodeId, payload)
+        loading.close()
+      },
+      async paginationQuery(queryPayload) {
+        this.queryPayload = queryPayload
+      },
+      async fetchData(params) {
+        if (_.isEmpty(params)) params = this.queryPayload
+        this.queryPayload.where = {
+          class: this.queryForm.class
+            ? { $regex: this.queryForm.class }
+            : { $ne: null },
+          type: this.queryForm.type
+            ? { $regex: this.queryForm.type }
+            : { $ne: null },
+          title: this.queryForm.title
+            ? { $regex: this.queryForm.title }
+            : { $ne: null },
+          key: this.queryForm.key
+            ? { $regex: this.queryForm.key }
+            : { $ne: null },
+          objectId: this.queryForm.objectId
+            ? { $regex: this.queryForm.objectId }
+            : { $ne: null },
+        }
+        const { count, order, excludeKeys, limit, skip, where } = params
         console.log(this.queryForm)
         this.listLoading = true
-        const { results, count } = await queryView({
-          count: 'objectId',
-          order: '-updatedAt',
-          limit: this.pagination.limit,
-          skip: this.pagination.skip,
-          where: {
-            class: this.queryForm.class
-              ? { $regex: this.queryForm.class }
-              : { $ne: null },
-            type: this.queryForm.type
-              ? { $regex: this.queryForm.type }
-              : { $ne: null },
-            title: this.queryForm.title
-              ? { $regex: this.queryForm.title }
-              : { $ne: null },
-            key: this.queryForm.key
-              ? { $regex: this.queryForm.class }
-              : { $ne: null },
-          },
+        const { results, count: total } = await queryView({
+          count,
+          order,
+          excludeKeys,
+          limit,
+          skip,
+          where,
         })
         if (results)
           results.forEach((item) => {
@@ -247,8 +288,8 @@
             )
           })
         this.list = results
-        this.$baseEventBus.$emit('lowcodeLen', count)
-        this.total = count
+        this.$baseEventBus.$emit('lowcodeLen', total)
+        this.paginations.total = total
         this.listLoading = false
       },
     },

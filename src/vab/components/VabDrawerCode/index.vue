@@ -39,12 +39,18 @@
           :codes="monacoCode"
           :language="'json'"
           :read-only="false"
+          :theme="'vs-dark'"
         />
         <div class="demo-drawer__footer">
-          <el-button @click="previewForm">
+          <el-button size="mini" @click="previewForm">
             {{ $translateTitle('application.preview') }}
           </el-button>
-          <el-button :loading="loading" type="primary" @click="submitForm">
+          <el-button
+            :loading="loading"
+            size="mini"
+            type="primary"
+            @click="submitForm"
+          >
             {{
               loading
                 ? $translateTitle('developer.Waitingtoreturn')
@@ -111,11 +117,18 @@
         this.loading = false
         this.drawer = false
         clearTimeout(this.timer)
-      },
-      submitForm() {
         console.log('在编辑器中的json')
         console.table(JSON.parse(this.$refs.monacoCode.monacoEditor.getValue()))
-        console.log('提交具体操作')
+        console.log('预览操作')
+      },
+      submitForm() {
+        this.set_amisJson(
+          JSON.parse(this.$refs.monacoCode.monacoEditor.getValue())
+        )
+        this.$baseEventBus.$emit(
+          'submitCode',
+          JSON.parse(this.$refs.monacoCode.monacoEditor.getValue())
+        )
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }

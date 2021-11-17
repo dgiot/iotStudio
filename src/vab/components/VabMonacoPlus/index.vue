@@ -82,6 +82,6 @@
   }
 
   .monaco-editor {
-    height: 90vh;
+    height: 93vh;
   }
 </style>
