@@ -9,7 +9,7 @@
     "dev": "vue-cli-service serve",
     "start": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
-    "dgiot:install": "start ./install.sh",
+    "dgiot:install": "start ./pnpm.sh",
     "build": "vue-cli-service build --report && npm run cp && rimraf dist/example/",
     "lint": "eslint --ext .js --fix&&vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
