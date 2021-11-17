@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-02-22 17:26:57
  * @LastEditors: h7ml
  * @Description: In User Settings Edit
- * @FilePath: \dgiot-dashboard\src\api\Direct\index.js
+ * @FilePath: \dgiot-Dashboard\src\api\Direct\index.js
  */
 import {
   create_object,

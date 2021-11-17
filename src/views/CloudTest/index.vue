@@ -1,15 +1,15 @@
 <!--
 * @Author: vivi
-* @Date: 2021-11-15 10:08:49
+* @Date: 2021-11-17 11:13:46
 * @LastEditors: vivi
-* @LastEditTime: 2021-11-15 10:08:49
+* @LastEditTime: 2021-11-17 11:13:46
 * @Description:
 * @FilePath: src\views\CloudTest\index.vue
 * @DocumentLink:
 -->
 <template>
-  <div class="index-container">
-    <div class="index-content">
+  <div class="CloudTest-container">
+    <div class="CloudTest-content">
       {{ infoData }}
     </div>
   </div>
@@ -21,7 +21,7 @@
     components: {},
     data() {
       return {
-        infoData: 'index',
+        infoData: 'CloudTest',
       }
     },
     computed: {},
@@ -37,7 +37,7 @@
   }
 </script>
 <style lang="scss" scoped>
-  .index-container {
+  .CloudTest-container {
     width: 100%;
     height: 100%;
     &-container {

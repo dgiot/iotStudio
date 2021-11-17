@@ -3,7 +3,7 @@
  * @Date: 2021-03-15 09:07:01
  * @LastEditTime: 2021-03-18 15:18:53
  * @LastEditors: h7ml
- * @FilePath: \dgiot-dashboard\src\config\cdn.config.js
+ * @FilePath: \dgiot-Dashboard\src\config\cdn.config.js
  * @Description:
  */
 let cdnUrl = {

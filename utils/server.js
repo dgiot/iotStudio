@@ -22,4 +22,5 @@ const messages = [
     `http://${ip.address('public', 'ipv4')}:${serverConfig.port}`
   )}`,
 ]
+// eslint-disable-next-line no-console
 console.log(messages.join('\n'))

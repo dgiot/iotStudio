@@ -3,7 +3,7 @@
  * @Date: 2021-03-18 10:18:03
  * @LastEditTime: 2021-03-18 10:19:01
  * @LastEditors: h7ml
- * @FilePath: \dgiot-dashboard\src\api\Exproto\index.js
+ * @FilePath: \dgiot-Dashboard\src\api\Exproto\index.js
  * @Description:拓展编程api整合
  */
 import request from '@/utils/request'

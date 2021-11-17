@@ -3,7 +3,7 @@
  * @Date: 2021-03-17 10:37:21
  * @LastEditTime: 2021-03-17 19:55:31
  * @LastEditors: h7ml
- * @FilePath: \dgiot-dashboard\src\router\index.js
+ * @FilePath: \dgiot-Dashboard\src\router\index.js
  * @Description:
  */
 /**
@@ -17,12 +17,12 @@ import { publicPath, routerMode } from '@/config'
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login'),
+    component: () => import('@/views/MultiTenant/user/login'),
     hidden: true,
   },
   {
     path: '/register',
-    component: () => import('@/views/register'),
+    component: () => import('@/views/MultiTenant/user/register'),
     hidden: true,
   },
   {

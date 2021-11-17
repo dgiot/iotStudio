@@ -3,7 +3,7 @@
  * @Date: 2021-03-15 09:07:01
  * @LastEditTime: 2021-03-15 17:24:20
  * @LastEditors: h7ml
- * @FilePath: \dgiot-dashboard\src\api\Role\index.js
+ * @FilePath: \dgiot-Dashboard\src\api\Role\index.js
  * @Description:
  */
 import {

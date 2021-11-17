@@ -3,7 +3,7 @@
  * @Date: 2021-01-14 14:35:36
  * @LastEditTime: 2021-03-19 22:11:37
  * @LastEditors: h7ml
- * @FilePath: \dgiot-dashboard\src\vab\components\VabMenu\components\Submenu.vue
+ * @FilePath: \dgiot-Dashboard\src\vab\components\VabMenu\components\Submenu.vue
  * @Description:
 -->
 <template>

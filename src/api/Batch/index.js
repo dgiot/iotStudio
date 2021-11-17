@@ -3,7 +3,7 @@
  * @Date: 2021-02-01 16:45:26
  * @LastEditTime: 2021-02-22 11:11:56
  * @Description: this.Batchdelete('Dict', ['id1','id2'])
- * @FilePath: \dgiot-dashboard\src\api\batch\index.js
+ * @FilePath: \dgiot-Dashboard\src\api\batch\index.js
  */
 // https://docs.parseplatform.org/rest/guide/#batch-operations
 // http://132.232.119.105:5080/swagger/#/Data/post_batch

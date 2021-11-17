@@ -3,7 +3,7 @@
  * @Date: 2021-03-12 12:02:44
  * @LastEditTime: 2021-03-15 15:31:35
  * @LastEditors: h7ml
- * @FilePath: \dgiot-dashboard\src\vab\components\VabLanguage\index.vue
+ * @FilePath: \dgiot-Dashboard\src\vab\components\VabLanguage\index.vue
  * @Description:
 -->
 <template>

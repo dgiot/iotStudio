@@ -298,8 +298,8 @@ const actions = {
       dispatch('settings/togglePicture', tag.theme.pictureSwitch, {
         root: true,
       })
-      dispatch('dashboard/set_pcimg', _pcimg, { root: true })
-      dispatch('dashboard/set_mimg', _mimg, { root: true })
+      dispatch('Dashboard/set_pcimg', _pcimg, { root: true })
+      dispatch('Dashboard/set_mimg', _mimg, { root: true })
       dispatch('acl/setRole', roles, { root: true })
       dispatch('settings/setTitle', title, { root: true })
       dispatch('acl/setCopyright', Copyright, { root: true })
@@ -399,7 +399,7 @@ const actions = {
   },
   // async getDefault({ commit, dispatch }) {
   //   const Default = await SiteDefault()
-  //   // // console.log(copyright, dashboard, logo, objectId, title)
+  //   // // console.log(copyright, Dashboard, logo, objectId, title)
   //   // const { copyright, logo, objectId, title } = Default
   //   // if (title) dispatch('settings/setTitle', title, { root: true })
   //   // if (copyright) dispatch('acl/setCopyright', copyright, { root: true })
