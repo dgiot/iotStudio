@@ -7,5 +7,9 @@ module.exports = {
       path: 'iotapi',
       target: 'https://pump.dgiotcloud.com',
     },
+    {
+      path: 'dgiot_dashboard',
+      target: 'https://pump.dgiotcloud.com',
+    },
   ],
 }
