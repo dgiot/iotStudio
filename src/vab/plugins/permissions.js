@@ -49,7 +49,7 @@ router.beforeEach(async (to, from, next) => {
       // 禁止已登录用户返回登录页
       if (to.path === '/login') {
         next({
-          path: '/Dashboard',
+          path: '/dashboard',
         })
         if (showProgressBar) VabProgress.done()
       } else {

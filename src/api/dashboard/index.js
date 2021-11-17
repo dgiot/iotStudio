@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export async function StartDashboard(data) {
+export async function Startdashboard(data) {
   return request({
     url: `dashboard`,
     method: 'post',

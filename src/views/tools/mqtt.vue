@@ -5,12 +5,12 @@
 </template>
 
 <script>
-  import dgiotMqttDashboard from '@dgiot/dgiot-mqtt-dashboard/src/components/mqtt'
+  import dgiotMqttdashboard from '@dgiot/dgiot-mqtt-dashboard/src/components/mqtt'
 
   export default {
     name: 'Mqtt',
     components: {
-      dgiotMqttDashboard,
+      dgiotMqttdashboard,
     },
     mounted() {
       this.hiddenClass([

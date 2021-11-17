@@ -64,6 +64,7 @@ const staticUrl = process.env.CDN_URL
   : '/assets/'
 
 function getChainWebpack(config) {
+  config.plugins.delete('prefetch')
   // config.plugin('monaco').use(new MonacoWebpackPlugin())
   config.plugin('html').tap((args) => {
     var _staticUrl = localUrl
@@ -106,7 +107,6 @@ function getChainWebpack(config) {
       console.log(`当前未使用cdn,可能会导致打包体积过大`)
     }
     config.performance.set('hints', false)
-    config.plugins.delete('prefetch')
     config.devtool('none')
     config.optimization.splitChunks({
       chunks: 'all',

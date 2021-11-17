@@ -52,7 +52,7 @@ git clone https://github.com.cnpmjs.org/dgiot/dgiot-dashboard.git
 - 安装依赖
 
 ```bash
-cd dgiot-Dashboard
+cd dgiot-dashboard
 
 yarn dgiot:install
 ```

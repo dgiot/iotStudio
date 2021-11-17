@@ -976,7 +976,7 @@
       "createdAt": "2021-08-13T10:51:36.318Z",
       "updatedAt": "2021-08-13T10:51:36.318Z",
       "icon": "home-3-fill",
-      "name": "Dashboard",
+      "name": "dashboard",
       "orderBy": 1,
       "parent": {
         "objectId": "0         ",

@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-03-15 12:42:33
  * @LastEditors: h7ml
  * @Description: In User Settings Edit
- * @FilePath: \dgiot-Dashboard\src\views\equipment_management\platform_overview.vue
+ * @FilePath: \dgiot-dashboard\src\views\equipment_management\platform_overview.vue
 -->
 <template>
   <div>
@@ -795,10 +795,10 @@
   import { getDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import { getToken, Roletree } from '@/api/Menu'
-  import { StartDashboard } from '@/api/Dashboard'
+  import { Startdashboard } from '@/api/dashboard'
   import { isBase64 } from '@/utils'
   import info from '@/components/Device/info'
-  import queryParams from '@/api/Mock/Dashboard'
+  import queryParams from '@/api/Mock/dashboard'
   import {
     BaiduMap,
     BmCityList,
@@ -952,20 +952,20 @@
         collapse: 'settings/collapse',
         _Product: 'user/_Product',
         language: 'settings/language',
-        _dev_count: 'Dashboard/_dev_count',
-        _project_count: 'Dashboard/_project_count',
-        _app_count: 'Dashboard/_app_count',
-        _product_count: 'Dashboard/_product_count',
+        _dev_count: 'dashboard/_dev_count',
+        _project_count: 'dashboard/_project_count',
+        _app_count: 'dashboard/_app_count',
+        _product_count: 'dashboard/_product_count',
         token: 'user/token',
-        _dev_online_count: 'Dashboard/_dev_online_count',
-        _onlineData: 'Dashboard/_onlineData',
-        _dev_off_count: 'Dashboard/_dev_off_count',
-        _offlineData: 'Dashboard/_offlineData',
-        _ChartStatus: 'Dashboard/_ChartStatus',
-        _tableData: 'Dashboard/_tableData',
-        _pcimg: 'Dashboard/_pcimg',
+        _dev_online_count: 'dashboard/_dev_online_count',
+        _onlineData: 'dashboard/_onlineData',
+        _dev_off_count: 'dashboard/_dev_off_count',
+        _offlineData: 'dashboard/_offlineData',
+        _ChartStatus: 'dashboard/_ChartStatus',
+        _tableData: 'dashboard/_tableData',
+        _pcimg: 'dashboard/_pcimg',
         _role: 'acl/role',
-        _mimg: 'Dashboard/_mimg',
+        _mimg: 'dashboard/_mimg',
         mqttInfo: 'mqttDB/mqttInfo',
       }),
     },
@@ -1064,17 +1064,17 @@
         resaveMqttInfo: 'mqttDB/resaveMqttInfo',
         setRoleTree: 'user/setRoleTree',
         set_Product: 'user/set_Product',
-        set_dev_count: 'Dashboard/set_dev_count',
-        set_project_count: 'Dashboard/set_project_count',
-        set_app_count: 'Dashboard/set_app_count',
-        set_product_count: 'Dashboard/set_product_count',
-        // set_Product: 'Dashboard/set_Product',
-        set_dev_online_count: 'Dashboard/set_dev_online_count',
-        set_onlineData: 'Dashboard/set_onlineData',
-        set_dev_off_count: 'Dashboard/set_dev_off_count',
-        set_offlineData: 'Dashboard/set_offlineData',
-        set_ChartStatus: 'Dashboard/set_ChartStatus',
-        set_tableData: 'Dashboard/set_tableData',
+        set_dev_count: 'dashboard/set_dev_count',
+        set_project_count: 'dashboard/set_project_count',
+        set_app_count: 'dashboard/set_app_count',
+        set_product_count: 'dashboard/set_product_count',
+        // set_Product: 'dashboard/set_Product',
+        set_dev_online_count: 'dashboard/set_dev_online_count',
+        set_onlineData: 'dashboard/set_onlineData',
+        set_dev_off_count: 'dashboard/set_dev_off_count',
+        set_offlineData: 'dashboard/set_offlineData',
+        set_ChartStatus: 'dashboard/set_ChartStatus',
+        set_tableData: 'dashboard/set_tableData',
       }),
       // 设备详情
       deviceToDetail(row) {
@@ -1380,7 +1380,7 @@
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        StartDashboard(queryParams)
+        Startdashboard(queryParams)
       },
       handleChange() {},
       handleClickVisit(project) {
@@ -1393,7 +1393,7 @@
       },
       goDevice(name) {
         this.$router.push({
-          path: '/Dashboard/devicelist',
+          path: '/dashboard/devicelist',
           query: {
             product: name,
           },
@@ -1401,7 +1401,7 @@
       },
       _goDevice(type) {
         this.$router.push({
-          path: '/Dashboard/devicelist',
+          path: '/dashboard/devicelist',
           query: {
             deciceType: type,
           },
@@ -1453,7 +1453,7 @@
       },
       Gotoproduct(name) {
         this.$router.push({
-          path: '/Dashboard/productlist',
+          path: '/dashboard/productlist',
           query: {
             project: name,
           },

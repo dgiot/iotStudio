@@ -4,7 +4,7 @@
  * @LastEditTime: 2021-03-01 10:22:52
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \dgiot-Dashboard\src\api\Platform\index.js
+ * @FilePath: \dgiot-dashboard\src\api\Platform\index.js
  */
 import request from '@/utils/request'
 

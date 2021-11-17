@@ -3,7 +3,7 @@
  * @Date: 2021-03-15 09:06:30
  * @LastEditTime: 2021-03-15 12:34:26
  * @LastEditors: h7ml
- * @FilePath: \dgiot-Dashboard\src\store\modules\acl.js
+ * @FilePath: \dgiot-dashboard\src\store\modules\acl.js
  * @Description:
  */
 import { getToken, setToken } from '@/utils/vuex'

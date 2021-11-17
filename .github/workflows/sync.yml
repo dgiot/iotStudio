@@ -18,9 +18,9 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
         with:
           # GitHub 源仓库地址
-          source-repo: git@github.com:dgiot/dgiot-Dashboard.git
+          source-repo: git@github.com:dgiot/dgiot-dashboard.git
           # Gitee 目标仓库地址
-          destination-repo: git@gitee.com:dgiot-Dashboard/dgiot-Dashboard.git
+          destination-repo: git@gitee.com:dgiot-dashboard/dgiot-dashboard.git
 
       # 绕过手机验证码：https://github.com/yanglbme/gitee-pages-action/issues/6#issuecomment-664812675
       - name: Build Gitee Pages
@@ -31,7 +31,7 @@ jobs:
           # Gitee 密码
           gitee-password: ${{ secrets.GITEE_PASSWORD }}
           # Gitee 仓库
-          gitee-repo: dgiot-Dashboard/dgiot-Dashboard
+          gitee-repo: dgiot-dashboard/dgiot-dashboard
           # 要部署的分支
           branch: cdn-pages
 
@@ -45,9 +45,9 @@ jobs:
 #          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
 #        with:
 #          # GitHub 源仓库地址
-#          source-repo: git@github.com:dgiot/dgiot-Dashboard.git
+#          source-repo: git@github.com:dgiot/dgiot-dashboard.git
 #          # Gitee 目标仓库地址
-#          destination-repo: git@gitee.com:dgiot-Dashboard/dgiot-Dashboard.git
+#          destination-repo: git@gitee.com:dgiot-dashboard/dgiot-dashboard.git
 #
 #      # 绕过手机验证码：https://github.com/yanglbme/gitee-pages-action/issues/6#issuecomment-664812675
 #      - name: Build Gitee Pages
@@ -58,6 +58,6 @@ jobs:
 #          # Gitee 密码
 #          gitee-password: ${{ secrets.GITEE_PASSWORD }}
 #          # Gitee 仓库
-#          gitee-repo: dgiiot/dgiot-Dashboard
+#          gitee-repo: dgiiot/dgiot-dashboard
 #          # 要部署的分支
 #          branch: master

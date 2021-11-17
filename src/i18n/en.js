@@ -174,7 +174,7 @@ export default {
       任务采集: 'Task collection',
       物联网开发平台: 'Internet of things development platform',
       总控台: 'Home',
-      仪表盘: 'Dashboard',
+      仪表盘: 'dashboard',
       工作台: 'Workbench',
       更新日志: 'Change log',
       配置: 'Settings',

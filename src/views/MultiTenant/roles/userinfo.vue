@@ -276,8 +276,8 @@
       ...mapGetters({
         avatar: 'user/avatar',
         token: 'user/token',
-        _pcimg: 'Dashboard/_pcimg',
-        _mimg: 'Dashboard/_mimg',
+        _pcimg: 'dashboard/_pcimg',
+        _mimg: 'dashboard/_mimg',
         Default: 'acl/Default',
         ObjectId: 'user/objectId',
         theme: 'settings/theme',
@@ -295,8 +295,8 @@
         setBackgroundimage: 'user/setBackgroundimage',
         setname: 'user/setname',
         setcopyright: 'user/setCopyright',
-        set_pcimg: 'Dashboard/set_pcimg',
-        set_mimg: 'Dashboard/set_mimg',
+        set_pcimg: 'dashboard/set_pcimg',
+        set_mimg: 'dashboard/set_mimg',
       }),
       fileInfo(info) {
         console.log('uploadFinish', info)

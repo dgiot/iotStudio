@@ -1,6 +1,6 @@
 ```
 │   ├── views                                   # 页面组件目录结构图
-│   │   ├── Dashboard                           # 总控台
+│   │   ├── dashboard                           # 总控台
 │   │   ├── DeviceCloud                         # 设备云
 │   │   ├── MultiTenant                         # 多租户
 │   │   ├── CloudOT                             # 云运维

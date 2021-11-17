@@ -162,8 +162,8 @@
     computed: {
       activeName: {
         get: function () {
-          if (this.$route.path.replace('/Dashboard/', '') != '') {
-            return this.$route.path.replace('/Dashboard/', '')
+          if (this.$route.path.replace('/dashboard/', '') != '') {
+            return this.$route.path.replace('/dashboard/', '')
           } else {
             return 'platform'
           }
@@ -187,7 +187,7 @@
       // 页面跳转
       goTo(tab) {
         this.$router.push({
-          path: '/Dashboard/' + tab.name,
+          path: '/dashboard/' + tab.name,
         })
       },
       // toggleTree

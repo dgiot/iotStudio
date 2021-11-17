@@ -659,7 +659,7 @@
         }
         const { results } = await queryCategory(parsms)
         this.categoryList = results
-        if (results && this.$route.fullPath == '/Dashboard/profile') {
+        if (results && this.$route.fullPath == '/dashboard/profile') {
           this.$nextTick(() => {
             this.categoryChange({ name: '所有领域' })
           })

@@ -244,7 +244,7 @@
       goRule(row, type = '') {
         if (row?.table && row?.field) {
           this.$router.push({
-            path: '/Dashboard/engine',
+            path: '/dashboard/engine',
             query: {
               productid: this.productid,
               uuid: row.uid,

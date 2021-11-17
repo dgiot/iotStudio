@@ -1,6 +1,6 @@
 /**
  * 首页订阅查询mqtt参数
- * @type {[{vuekey: string, dataType: string, query: {keys: string[], limit: number}, table: string}, {vuekey: string, dataType: string, query: {keys: string[], limit: number, where: {}}, table: string}, {vuekey: string, dataType: string, query: {keys: string[], limit: number, where: {category: string}}, table: string}, {vuekey: string, dataType: string, query: {keys: string[], limit: number, where: {status: string}, order: string}, table: string}, {vuekey: string, dataType: string, query: {keys: string[], limit: number, where: {status: string}, order: string}, table: string}, null, null]}
+ * @type {[{vuekey: string, dataType: string, query: {keys: string[]}, table: string}, {vuekey: string, dataType: string, query: {keys: string[], limit: number, where: {}}, table: string}, {vuekey: string, dataType: string, query: {keys: string[], where: {}}, table: string}, {vuekey: string, dataType: string, query: {keys: string[], limit: number, where: {status: string}, order: string}, table: string}, {vuekey: string, dataType: string, query: {keys: string[], limit: number, where: {status: string}, order: string}, table: string}, null, null, null, null]}
  */
 const queryParams = [
   {

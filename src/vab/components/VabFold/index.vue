@@ -18,8 +18,8 @@
     computed: {
       ...mapGetters({
         collapse: 'settings/collapse',
-        _pcimg: 'Dashboard/_pcimg',
-        _mimg: 'Dashboard/_mimg',
+        _pcimg: 'dashboard/_pcimg',
+        _mimg: 'dashboard/_mimg',
         pictureSwitch: 'settings/pictureSwitch',
       }),
     },

@@ -3,7 +3,7 @@
  * @Date: 2021-03-10 20:20:16
  * @LastEditTime: 2021-03-17 14:45:04
  * @LastEditors: h7ml
- * @FilePath: \dgiot-Dashboard\src\components\ScrollPane\index.vue
+ * @FilePath: \dgiot-dashboard\src\components\ScrollPane\index.vue
  * @Description:
 -->
 <template>

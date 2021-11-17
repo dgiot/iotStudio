@@ -1518,7 +1518,7 @@ packages:
     dev: false
 
   /@dgiot/dgiot-mqtt-dashboard/1.1.5:
-    resolution: {integrity: sha1-nGDvjv0fqiAakf/0eZh0xVSVk0U=, tarball: '@dgiot/dgiot-mqtt-Dashboard/download/@dgiot/dgiot-mqtt-Dashboard-1.1.5.tgz'}
+    resolution: {integrity: sha1-nGDvjv0fqiAakf/0eZh0xVSVk0U=, tarball: '@dgiot/dgiot-mqtt-dashboard/download/@dgiot/dgiot-mqtt-dashboard-1.1.5.tgz'}
     engines: {node: '>= 12.0.0', npm: '>= 3.0.0'}
     dependencies:
       babel-plugin-component: 1.1.1

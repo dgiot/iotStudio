@@ -34,7 +34,7 @@
     },
     data() {
       return {
-        currentRole: 'adminDashboard',
+        currentRole: 'admindashboard',
         isshow: 0,
         childshow: 0,
         form: {
@@ -53,10 +53,10 @@
     },
     computed: {},
     mounted() {
-      this.getDashboard()
+      this.getdashboard()
     },
     methods: {
-      getDashboard() {
+      getdashboard() {
         if (process.env.NODE_ENV != 'development') {
           this.dashboardrul =
             location.protocol + '//' + location.hostname + ':3000'
@@ -64,11 +64,11 @@
         var dashboard = document.getElementById('iframe')
         dashboard.setAttribute('src', this.dashboardrul)
         // if (
-        //   sessionStorage.getItem('Dashboard') != '' &&
-        //   sessionStorage.getItem('Dashboard') != 'undefined'
+        //   sessionStorage.getItem('dashboard') != '' &&
+        //   sessionStorage.getItem('dashboard') != 'undefined'
         // ) {
-        //   this.dashboardrul = sessionStorage.getItem('Dashboard')
-        //   Dashboard.setAttribute('src', this.dashboardrul)
+        //   this.dashboardrul = sessionStorage.getItem('dashboard')
+        //   dashboard.setAttribute('src', this.dashboardrul)
         // } else {
         //   this.dashboardrul = false
         // }

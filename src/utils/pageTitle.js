@@ -3,7 +3,7 @@
  * @Date: 2021-03-12 10:00:15
  * @LastEditTime: 2021-03-15 12:41:02
  * @LastEditors: h7ml
- * @FilePath: \dgiot-Dashboard\src\utils\pageTitle.js
+ * @FilePath: \dgiot-dashboard\src\utils\pageTitle.js
  * @Description:
  */
 import { title, titleReverse, titleSeparator } from '@/config'
