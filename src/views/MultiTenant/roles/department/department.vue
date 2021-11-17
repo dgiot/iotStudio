@@ -45,7 +45,7 @@
         </el-table>
       </el-col>
 
-      <el-col :span="9">
+      <el-col :span="10">
         <el-col :span="12">
           <!--权限 -->
           <div class="footerleft">
@@ -179,7 +179,7 @@
           </div>
         </el-col>
       </el-col>
-      <el-col :span="9">
+      <el-col :span="8">
         <div class="footerleft2">
           <p class="top">
             <span class="svg-container">

@@ -113,8 +113,8 @@
         v-model="msg"
         :height="
           isFullscreen
-            ? Number($baseTableHeight(1))
-            : Number($baseTableHeight(1))
+            ? Number($baseTableHeight(0))
+            : Number($baseTableHeight(0))
         "
         lang="json"
         :max-lines="
@@ -264,7 +264,7 @@
           'parse_api',
         ],
         isFullscreen: false,
-        height: this.$baseTableHeight(2),
+        height: this.$baseTableHeight(0),
         logdata: [],
         refreshFlag: moment(new Date()).valueOf(),
         momentKey: moment(new Date()).valueOf(),

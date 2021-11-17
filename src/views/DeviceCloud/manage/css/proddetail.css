@@ -1,4 +1,6 @@
-/* <!--李宏杰新增--> */
+.proddetail {
+  padding: 0 20px;
+}
 .diaCollLeftCls {
   width: 100%;
   height: calc(100vh - 100px);

@@ -1,5 +1,5 @@
 <template>
-  <div class="proddetail proddetail-container">
+  <div class="proddetail">
     <dgiot-profile v-show="false" :product-info="productInfo" />
     <div>
       <el-tabs ref="_tabs" v-model="activeName" @tab-click="handleClick">
@@ -49,6 +49,8 @@
                 :element-loading-text="
                   $translateTitle('developer.Waitingtoreturn')
                 "
+                :height="$baseTableHeight(0) - 60"
+                size="'medium'"
               >
                 <el-descriptions-item
                   :label="$translateTitle('product.productname')"
@@ -260,7 +262,7 @@
                   topicstart * topiclength
                 )
               "
-              :height="$baseTableHeight(2)"
+              :height="$baseTableHeight(0) - 60"
               style="width: 100%; text-align: center"
             >
               <el-table-column align="left" label="Topic">
@@ -485,7 +487,7 @@
                 <el-table
                   border
                   :data="FromMachine"
-                  :height="$baseTableHeight(2)"
+                  :height="$baseTableHeight(0) - 60"
                   :row-class-name="tableRowClassName"
                   style="width: 60vh; overflow: auto"
                   @row-click="clickmachine"
@@ -570,7 +572,7 @@
                   "
                   :default-expand-all="false"
                   :default-sort="{ prop: 'date', order: 'descending' }"
-                  :height="$baseTableHeight(2)"
+                  :height="$baseTableHeight(0) - 60"
                   :row-class-name="getRowClass"
                   row-key="identifier"
                   style="width: 100%; margin-top: 10px"
@@ -1504,7 +1506,7 @@
           <div>
             <el-table
               :data="channelData"
-              :height="$baseTableHeight(2)"
+              :height="$baseTableHeight(0) - 60"
               :row-class-name="getChannelEnable"
               style="width: 100%"
             >
@@ -1670,7 +1672,7 @@
           <div>
             <el-table
               :data="resourcechannelData"
-              :height="$baseTableHeight(2)"
+              :height="$baseTableHeight(0) - 60"
               :row-class-name="getChannelEnable"
               style="width: 100%"
             >

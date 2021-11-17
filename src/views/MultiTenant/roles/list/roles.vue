@@ -1,7 +1,7 @@
 <template>
   <div class="roles dgiot-container">
-    <el-row :gutter="20">
-      <el-col :span="14" :xs="8">
+    <el-row :gutter="24">
+      <el-col :span="13" :xs="8">
         <div class="rightTable">
           <div class="search">
             <vab-query-form style="margin-top: 20px">
@@ -186,7 +186,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="10" :xs="16">
+      <el-col :span="11" :xs="16">
         <!--菜单-->
         <div class="rolefooter">
           <div class="footerleft">

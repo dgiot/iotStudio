@@ -430,7 +430,7 @@
               >
                 <el-input
                   v-model="childrendevices.devicesname"
-                  :placeholder="$t('equipment.devicenumber')"
+                  :placeholder="$translateTitle('equipment.devicenumber')"
                 />
               </el-form-item>
               <el-form-item>
@@ -476,6 +476,7 @@
                 ref="filterTable"
                 :data="devicesTableData"
                 style="width: 100%; margin-top: 20px; text-align: center"
+                :height="$baseTableHeight(0) - 120"
                 @selection-change="DevicesSelectionChange"
               >
                 <el-table-column align="center" type="selection" width="55" />
