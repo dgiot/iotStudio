@@ -124,7 +124,7 @@
             type="primary"
             @click="isFullscreen = !isFullscreen"
           >
-            <vab-icon
+            <dgiot-icon
               :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
             />
             {{

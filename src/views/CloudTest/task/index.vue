@@ -210,7 +210,7 @@
           type="primary"
           @click="clickFullScreen"
         >
-          <vab-icon
+          <dgiot-icon
             :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
           />
           {{ $translateTitle('cloudTest.full screen') }}
@@ -233,7 +233,7 @@
           </el-radio-group>
           <template #reference>
             <el-button style="margin: 0 10px 10px 0 !important" type="primary">
-              <vab-icon icon="line-height" />
+              <dgiot-icon icon="line-height" />
               {{ $translateTitle('cloudTest.size') }}
             </el-button>
           </template>
@@ -242,7 +242,7 @@
           <el-checkbox-group v-model="checkList">
             <vab-draggable :list="columns" v-bind="dragOptions">
               <div v-for="(item, index) in columns" :key="item + index">
-                <vab-icon icon="drag-drop-line" />
+                <dgiot-icon icon="drag-drop-line" />
                 <el-checkbox
                   :disabled="item.disableCheck === true"
                   :label="item.label"

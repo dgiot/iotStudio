@@ -19,7 +19,7 @@
 
     <el-col v-for="(item, index) in queryIcon" :key="index" :span="6">
       <el-card shadow="hover" @click.native="handleIcon(item)">
-        <vab-icon :icon="item" />
+        <dgiot-icon :icon="item" />
       </el-card>
     </el-col>
     <el-col :span="24">

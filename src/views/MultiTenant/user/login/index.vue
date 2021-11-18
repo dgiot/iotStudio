@@ -28,7 +28,7 @@
               type="text"
             >
               <template #prefix>
-                <vab-icon icon="user-line" />
+                <dgiot-icon icon="user-line" />
               </template>
             </el-input>
           </el-form-item>
@@ -51,21 +51,21 @@
               <!--                {{ $translateTitle('home.Forgot password') }}-->
               <!--              </el-link>-->
               <template #prefix>
-                <vab-icon v-if="form.password.length" icon="lock-line" />
+                <dgiot-icon v-if="form.password.length" icon="lock-line" />
               </template>
 
               <template
                 v-if="passwordType === 'password' && form.password.length"
                 #suffix
               >
-                <vab-icon
+                <dgiot-icon
                   class="show-password"
                   icon="eye-off-line"
                   @click.native="handlePassword"
                 />
               </template>
               <template v-else #suffix>
-                <vab-icon
+                <dgiot-icon
                   v-if="form.password.length"
                   class="show-password"
                   icon="eye-line"

@@ -87,14 +87,14 @@ function getChainWebpack(config) {
   config.resolve.symlinks(true)
   config.module.rule('svg').exclude.add(resolve('src/icon'))
   config.module
-    .rule('vabIcon')
+    .rule('dgiotIcon')
     .test(/\.svg$/)
     .include.add(resolve('src/icon'))
     .end()
     .use('svg-sprite-loader')
     .loader('svg-sprite-loader')
     .options({
-      symbolId: 'vab-icon-[name]',
+      symbolId: 'dgiot-icon-[name]',
     })
   config.when(process.env.NODE_ENV === 'development', (config) => {
     config.devtool('source-map')
@@ -188,9 +188,9 @@ const cssExport = {
         const relativePath = path.relative(rootContext, resourcePath)
         if (
           relativePath.replace(/\\/g, '/') !==
-          'src/vab/styles/variables/variables.scss'
+          'src/dgiot/styles/variables/variables.scss'
         ) {
-          return '@import "~@/vab/styles/variables/variables.scss";' + content
+          return '@import "~@/dgiot/styles/variables/variables.scss";' + content
         }
         return content
       },

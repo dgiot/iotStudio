@@ -51,7 +51,7 @@
           <div class="footerleft">
             <p class="top">
               <span class="svg-container">
-                <vab-icon icon="role_group" />
+                <dgiot-icon icon="role_group" />
               </span>
               <span>
                 <!-- 分配权限 -->
@@ -117,7 +117,7 @@
           <div class="footerright">
             <p class="top">
               <span class="svg-container">
-                <vab-icon icon="menu_group" />
+                <dgiot-icon icon="menu_group" />
               </span>
               <span>
                 <!-- 菜单分配 -->
@@ -183,7 +183,7 @@
         <div class="footerleft2">
           <p class="top">
             <span class="svg-container">
-              <vab-icon icon="role_group" />
+              <dgiot-icon icon="role_group" />
             </span>
             <span>
               <!-- 标签信息 -->

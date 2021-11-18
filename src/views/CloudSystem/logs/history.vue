@@ -60,7 +60,7 @@
                 {{ $translateTitle('Maintenance.Unfold') }}
               </span>
               <span v-else>{{ $translateTitle('Maintenance.merge') }}</span>
-              <vab-icon
+              <dgiot-icon
                 class="vab-dropdown"
                 :class="{ 'vab-dropdown-active': fold }"
                 icon="arrow-up-s-line"
@@ -77,7 +77,7 @@
               type="success"
               @click="handleHeight"
             >
-              <vab-icon
+              <dgiot-icon
                 :icon="
                   isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'
                 "
@@ -88,7 +88,7 @@
               <el-checkbox-group v-model="checkList">
                 <vue-draggable :list="logcolumns" v-bind="dragOptions">
                   <div v-for="(item, index) in logcolumns" :key="item + index">
-                    <vab-icon icon="drag-drop-line" />
+                    <dgiot-icon icon="drag-drop-line" />
                     <el-checkbox
                       :disabled="item.disableCheck === true"
                       :label="item"

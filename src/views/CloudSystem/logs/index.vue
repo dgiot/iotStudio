@@ -82,7 +82,7 @@
         <a-tabs default-active-key="editor">
           <a-tab-pane key="editor">
             <span slot="tab">
-              <vab-icon icon="aspect-ratio-fill" />
+              <dgiot-icon icon="aspect-ratio-fill" />
               {{ $translateTitle('Logs.console') }}
             </span>
             <vab-editor
@@ -109,7 +109,7 @@
           </a-tab-pane>
           <a-tab-pane key="table">
             <span slot="tab">
-              <vab-icon icon="table-2" />
+              <dgiot-icon icon="table-2" />
               {{ $translateTitle('Logs.table') }}
             </span>
 
@@ -120,7 +120,7 @@
                   type="success"
                   @click="handleHeight"
                 >
-                  <vab-icon
+                  <dgiot-icon
                     :icon="
                       isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'
                     "
@@ -134,7 +134,7 @@
                         v-for="(item, index) in logcolumns"
                         :key="item + index"
                       >
-                        <vab-icon icon="drag-drop-line" />
+                        <dgiot-icon icon="drag-drop-line" />
                         <el-checkbox
                           :disabled="item.disableCheck === true"
                           :label="item"

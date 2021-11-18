@@ -270,7 +270,7 @@
             <!--                {{ $translateTitle('Maintenance.Unfold') }}-->
             <!--              </span>-->
             <!--              <span v-else>{{ $translateTitle('Maintenance.merge') }}</span>-->
-            <!--              <vab-icon-->
+            <!--              <dgiot-icon-->
             <!--                class="vab-dropdown"-->
             <!--                :class="{ 'vab-dropdown-active': fold }"-->
             <!--                icon="arrow-up-s-line"-->

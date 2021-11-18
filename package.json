@@ -78,7 +78,7 @@
     "register-service-worker": "1.7.2",
     "resize-detector": "0.3.0",
     "standard-version": "^9.3.2",
-    "vab-icons": "git+https://github.com.cnpmjs.org/zxcasvw/vab-icons.git",
+    "@dgiot/dgiot-icons": "0.0.19",
     "vab-templates": "^0.0.5",
     "vue-contextmenu": "1.5.10",
     "vue-ele-form-data-editor": "0.1.6",

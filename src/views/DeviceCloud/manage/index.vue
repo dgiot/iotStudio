@@ -5,7 +5,7 @@
         <li>
           <p>
             <span class="svg-container">
-              <vab-icon icon="device-line" />
+              <dgiot-icon icon="device-line" />
             </span>
             {{ $translateTitle('equipment.totalequipment') }}
             <el-tooltip
@@ -20,7 +20,7 @@
         <li>
           <p>
             <span class="svg-container">
-              <vab-icon icon="numbers-line" />
+              <dgiot-icon icon="numbers-line" />
             </span>
             {{ $translateTitle('equipment.activationdevice') }}
             <el-tooltip
@@ -35,7 +35,7 @@
         <li>
           <p>
             <span class="svg-container">
-              <vab-icon icon="contrast-drop-fill" />
+              <dgiot-icon icon="contrast-drop-fill" />
             </span>
             {{ $translateTitle('equipment.onlinedevices') }}
             <el-tooltip
@@ -252,7 +252,7 @@
                 width="200"
               >
                 <template #default="{ row }">
-                  <vab-icon
+                  <dgiot-icon
                     :icon="row.nodeType == 0 ? 'hotel-bed-fill' : 'hotel-fill'"
                     style="width: 2rem; height: 2rem"
                   />

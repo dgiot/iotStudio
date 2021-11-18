@@ -128,7 +128,7 @@
       <!--          <li>-->
       <!--            <p>-->
       <!--              <span class="svg-container">-->
-      <!--                <vab-icon icon="device-fill" />-->
+      <!--                <dgiot-icon icon="device-fill" />-->
       <!--              </span>-->
 
       <!--              <el-tooltip-->
@@ -143,7 +143,7 @@
       <!--          <li>-->
       <!--            <p>-->
       <!--              <span class="svg-container">-->
-      <!--                <vab-icon icon="24-hours-line" />-->
+      <!--                <dgiot-icon icon="24-hours-line" />-->
       <!--              </span>-->
       <!--              {{ $translateTitle('equipment.onlinedevices') }}-->
       <!--              <el-tooltip-->

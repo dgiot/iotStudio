@@ -615,7 +615,7 @@
   import { resourceTypes } from '@/api/Rules'
   import { mapGetters } from 'vuex'
   import defaultLogo from '../../../../public/assets/images/logo/logo.png'
-  import VabInput from '@/vab/components/VabInput/input'
+  import VabInput from '@/dgiot/components/VabInput/input'
 
   var subdialog
 

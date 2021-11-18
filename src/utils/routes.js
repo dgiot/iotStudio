@@ -13,7 +13,7 @@ export function convertRouter(asyncRoutes) {
   return asyncRoutes.map((route) => {
     if (route.component) {
       if (route.component === 'Layout') {
-        route.component = (resolve) => require(['@/vab/layouts'], resolve)
+        route.component = (resolve) => require(['@/dgiot/layouts'], resolve)
       } else {
         const index = route.component.indexOf('views')
         const path =

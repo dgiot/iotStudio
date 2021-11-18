@@ -30,7 +30,7 @@
       <!--        v-show="title != '编辑菜单'"-->
       <!--        label="菜单选择"-->
       <!--      >-->
-      <!--        <vab-icon-->
+      <!--        <dgiot-icon-->
       <!--          class="el-input-group__prepend"-->
       <!--          icon="pages-line"-->
       <!--        />-->
@@ -50,35 +50,35 @@
           :readonly="title == '编辑菜单'"
         >
           <template slot="prepend">
-            <vab-icon icon="pages-line" />
+            <dgiot-icon icon="pages-line" />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item label="路径" prop="url">
         <el-input v-model="form.url">
           <template slot="prepend">
-            <vab-icon icon="route-fill" />
+            <dgiot-icon icon="route-fill" />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item label="vue文件路径" prop="meta.component">
         <el-input v-model="form.meta.component">
           <template slot="prepend">
-            <vab-icon icon="vuejs-fill" />
+            <dgiot-icon icon="vuejs-fill" />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item label="重定向" prop="redirect">
         <el-input v-model="form.meta.redirect">
           <template slot="prepend">
-            <vab-icon icon="infrared-thermometer-fill" />
+            <dgiot-icon icon="infrared-thermometer-fill" />
           </template>
         </el-input>
       </el-form-item>
       <el-form-item label="标题" prop="meta.title">
         <el-input v-model="form.meta.title">
           <template slot="prepend">
-            <vab-icon icon="article-line" />
+            <dgiot-icon icon="article-line" />
           </template>
         </el-input>
       </el-form-item>
@@ -109,16 +109,16 @@
                   :title="$FileServe + form.meta.icon"
                 />
               </el-image>
-              <vab-icon v-else :icon="form.meta.icon" />
+              <dgiot-icon v-else :icon="form.meta.icon" />
             </template>
-            <vab-icon-selector @handle-icon="handleIcon" />
+            <dgiot-icon-selector @handle-icon="handleIcon" />
           </el-popover>
         </el-input>
       </el-form-item>
       <el-form-item label="badge" prop="badge">
         <el-input v-model="form.meta.badge">
           <template slot="prepend">
-            <vab-icon icon="notification-badge-fill" />
+            <dgiot-icon icon="notification-badge-fill" />
           </template>
         </el-input>
       </el-form-item>
@@ -161,7 +161,7 @@
 </template>
 
 <script>
-  import VabIconSelector from '@/vab/components/VabIconSelector'
+  import VabIconSelector from '@/dgiot/components/VabIconSelector'
   import { postMenu, putMenu } from '@/api/Menu'
   import menuCollapse from './menuCollapse.vue'
   import router from '@/router/router'

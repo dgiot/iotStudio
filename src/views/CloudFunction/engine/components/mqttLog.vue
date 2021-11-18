@@ -4,7 +4,7 @@
       <a-tabs default-active-key="editor" @change="stopchannel">
         <a-tab-pane key="editor">
           <span slot="tab">
-            <vab-icon icon="aspect-ratio-fill" />
+            <dgiot-icon icon="aspect-ratio-fill" />
             {{ $translateTitle('Logs.console') }}
           </span>
           <vab-editor
@@ -31,7 +31,7 @@
         </a-tab-pane>
         <a-tab-pane key="table">
           <span slot="tab">
-            <vab-icon icon="table-2" />
+            <dgiot-icon icon="table-2" />
             {{ $translateTitle('Logs.table') }}
           </span>
           <el-table
@@ -96,7 +96,7 @@
 
         <a-tab-pane key="device" :disabled="!product.length">
           <span slot="tab">
-            <vab-icon icon="traffic-light-line" />
+            <dgiot-icon icon="traffic-light-line" />
             {{ $translateTitle('system.Accurate log') }}
           </span>
           <el-row :gutter="24">

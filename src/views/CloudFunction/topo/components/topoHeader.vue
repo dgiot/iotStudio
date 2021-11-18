@@ -128,7 +128,7 @@
           <!--          />-->
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
-          <!--          <vab-icon-->
+          <!--          <dgiot-icon-->
           <!--            style="cursor: pointer"-->
           <!--            :icon="-->
           <!--              $parent.$parent.$parent.isFullscreen-->

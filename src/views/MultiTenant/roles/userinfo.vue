@@ -18,23 +18,23 @@
               />
               <ul class="personal-center-user-info-list">
                 <li>
-                  <vab-icon icon="user-2-line" />
+                  <dgiot-icon icon="user-2-line" />
                   {{ username }}
                 </li>
                 <li>
-                  <vab-icon icon="user-3-line" />
+                  <dgiot-icon icon="user-3-line" />
                   {{ nick }}
                 </li>
                 <li>
-                  <vab-icon icon="women-line" />
+                  <dgiot-icon icon="women-line" />
                   {{ userinfo.sex }}
                 </li>
                 <li>
-                  <vab-icon icon="phone-line" />
+                  <dgiot-icon icon="phone-line" />
                   {{ userinfo.phone }}
                 </li>
                 <li>
-                  <vab-icon icon="file-text-line" />
+                  <dgiot-icon icon="file-text-line" />
                   {{ userinfo.description }}
                 </li>
               </ul>
@@ -99,7 +99,7 @@
                       <el-form-item label="企业名称">
                         <el-input v-model="companyinfo.name">
                           <template slot="prepend">
-                            <vab-icon
+                            <dgiot-icon
                               icon="community-fill"
                               style="color: #3492ed"
                             />
@@ -109,13 +109,13 @@
                       <el-form-item label="企业logo">
                         <el-input v-model="companyinfo.logo" disabled readonly>
                           <template slot="prepend">
-                            <vab-icon
+                            <dgiot-icon
                               icon="remixicon-fill"
                               style="color: #3492ed"
                             />
                           </template>
                           <template slot="append">
-                            <vab-icon
+                            <dgiot-icon
                               icon="chat-upload-fill"
                               style="color: #3492ed"
                               @click.native="uploadCkick('companyinfo.logo')"
@@ -126,14 +126,14 @@
                       <el-form-item label="登录提示欢迎语">
                         <el-input v-model="companyinfo.title">
                           <template slot="prepend">
-                            <vab-icon icon="text" style="color: #3492ed" />
+                            <dgiot-icon icon="text" style="color: #3492ed" />
                           </template>
                         </el-input>
                       </el-form-item>
                       <el-form-item label="企业版权信息">
                         <el-input v-model="companyinfo.Copyright">
                           <template slot="prepend">
-                            <vab-icon
+                            <dgiot-icon
                               icon="copyright-fill"
                               style="color: #3492ed"
                             />
@@ -147,13 +147,13 @@
                           readonly
                         >
                           <template slot="prepend">
-                            <vab-icon
+                            <dgiot-icon
                               icon="bank-card-line"
                               style="color: #3492ed"
                             />
                           </template>
                           <template slot="append">
-                            <vab-icon
+                            <dgiot-icon
                               icon="chat-upload-fill"
                               style="color: #3492ed"
                               @click.native="
@@ -166,13 +166,13 @@
                       <el-form-item label="侧边栏展开图">
                         <el-input v-model="companyinfo._mimg" disabled readonly>
                           <template slot="prepend">
-                            <vab-icon
+                            <dgiot-icon
                               icon="bank-card-line"
                               style="color: #3492ed"
                             />
                           </template>
                           <template slot="append">
-                            <vab-icon
+                            <dgiot-icon
                               icon="chat-upload-fill"
                               style="color: #3492ed"
                               @click.native="uploadCkick('companyinfo._mimg')"
@@ -187,13 +187,13 @@
                           readonly
                         >
                           <template slot="prepend">
-                            <vab-icon
+                            <dgiot-icon
                               icon="bank-card-line"
                               style="color: #3492ed"
                             />
                           </template>
                           <template slot="append">
-                            <vab-icon
+                            <dgiot-icon
                               icon="chat-upload-fill"
                               style="color: #3492ed"
                               @click.native="uploadCkick('companyinfo._pcimg')"

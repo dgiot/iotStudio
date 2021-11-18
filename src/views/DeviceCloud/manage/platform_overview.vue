@@ -51,7 +51,7 @@
                 "
               >
                 <el-col :span="12">
-                  <vab-icon icon="projector-fill" />
+                  <dgiot-icon icon="projector-fill" />
                 </el-col>
                 <el-col class="card-right" :span="12">
                   <router-link to="/roles/product">
@@ -77,7 +77,7 @@
                 "
               >
                 <el-col :span="12">
-                  <vab-icon icon="apps-fill" />
+                  <dgiot-icon icon="apps-fill" />
                 </el-col>
                 <el-col class="card-right" :span="12">
                   <router-link to="/roles/applicationManagement">
@@ -103,7 +103,7 @@
                 "
               >
                 <el-col :span="12">
-                  <vab-icon icon="device-recover-fill" />
+                  <dgiot-icon icon="device-recover-fill" />
                 </el-col>
                 <el-col class="card-right" :span="12">
                   <router-link to="/dashboard/devicelist">
@@ -129,7 +129,7 @@
                 "
               >
                 <el-col class="card-left" :span="12">
-                  <vab-icon icon="projector-2-fill" />
+                  <dgiot-icon icon="projector-2-fill" />
                 </el-col>
                 <el-col class="card-right" :span="12">
                   <router-link to="/CloudOt/alarm">

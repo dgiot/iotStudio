@@ -180,7 +180,7 @@
                 </p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="medium">
-                    <vab-icon v-if="row.meta.icon" :icon="row.meta.icon" />
+                    <dgiot-icon v-if="row.meta.icon" :icon="row.meta.icon" />
                   </el-tag>
                 </div>
               </el-popover>

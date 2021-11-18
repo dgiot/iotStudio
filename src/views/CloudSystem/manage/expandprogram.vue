@@ -108,7 +108,7 @@
                 :title="$translateTitle('rule.testnewequipment')"
                 @click="handleTest(scope.$index, row.type, row.mod)"
               >
-                <vab-icon icon="bug-line" />
+                <dgiot-icon icon="bug-line" />
               </el-button>
               <!-- <el-button
                 size="mini"
@@ -124,7 +124,7 @@
                 type="primary"
                 @click="handleRelease(scope.$index, row.type, row.mod)"
               >
-                <vab-icon icon="run-line" />
+                <dgiot-icon icon="run-line" />
               </el-button>
               <!-- <el-button
                 size="mini"
@@ -140,7 +140,7 @@
                 type="danger"
                 @click="handleDelete(scope.$index, row.type, row.mod)"
               >
-                <vab-icon icon="delete-bin-2-fill" />
+                <dgiot-icon icon="delete-bin-2-fill" />
               </el-button>
             </template>
           </el-table-column>

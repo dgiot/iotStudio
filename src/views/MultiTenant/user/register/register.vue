@@ -16,7 +16,7 @@
 
         <el-form-item prop="phone">
           <span class="svg-container">
-            <vab-icon icon="user" />
+            <dgiot-icon icon="user" />
           </span>
           <el-input
             v-model="ruleForm2.phone"
@@ -30,7 +30,7 @@
         </el-form-item>
         <el-form-item prop="password" required>
           <span class="svg-container">
-            <vab-icon icon="password" />
+            <dgiot-icon icon="password" />
           </span>
           <el-input
             v-model="ruleForm2.password"
@@ -40,13 +40,13 @@
             :type="pwdType"
           />
           <span class="show-pwd" @click="showPwd">
-            <vab-icon icon="eye" />
+            <dgiot-icon icon="eye" />
           </span>
         </el-form-item>
 
         <el-form-item prop="checkPass" required>
           <span class="svg-container">
-            <vab-icon icon="password" />
+            <dgiot-icon icon="password" />
           </span>
           <el-input
             v-model="ruleForm2.checkPass"
@@ -55,7 +55,7 @@
             :type="pwdType"
           />
           <span class="show-pwd" @click="showPwd">
-            <vab-icon icon="eye" />
+            <dgiot-icon icon="eye" />
           </span>
         </el-form-item>
         <el-form-item style="margin-top: 50px">

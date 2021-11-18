@@ -25,9 +25,9 @@
       },
       svgClass() {
         if (this.className) {
-          return 'vab-icon ' + this.className
+          return 'dgiot-icon ' + this.className
         } else {
-          return 'vab-icon'
+          return 'dgiot-icon'
         }
       },
     },
@@ -35,7 +35,7 @@
 </script>
 
 <style scoped>
-  .vab-icon {
+  .dgiot-icon {
     width: 1em;
     height: 1em;
     overflow: hidden;

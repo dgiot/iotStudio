@@ -6,7 +6,7 @@
       @command="handleSetLanguage"
     >
       <div>
-        <vab-icon class-name="international-icon" icon-class="language" />
+        <dgiot-icon class-name="international-icon" icon-class="language" />
       </div>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="zh" :disabled="language === 'zh'">
