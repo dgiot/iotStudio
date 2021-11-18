@@ -97,7 +97,7 @@
           <el-link
             :disabled="productId.length != 10"
             type="success"
-            @click.native="dialogTableVisible = true"
+            @click.native="openView"
           >
             {{ $translateTitle('product.lowcode') }}
           </el-link>
@@ -120,6 +120,13 @@
             {{ $translateTitle('product.dict') }}
           </el-link>
         </template>
+        <el-link
+          :disabled="productId.length != 10"
+          type="success"
+          @click.native="openDict"
+        >
+          {{ dictLen }}
+        </el-link>
       </el-descriptions-item>
     </el-descriptions>
     <vab-query-form
@@ -414,7 +421,6 @@
 </template>
 <script>
   import { mapGetters, mapMutations } from 'vuex'
-  import { queryView } from '@/api/View'
   import moment from 'moment'
   import { putProductTemplet } from '@/api/ProductTemplet'
   import dgiotViews from '@/views/CloudFunction/lowcode'
@@ -470,6 +476,7 @@
     data() {
       return {
         lowcodeLen: 0,
+        dictLen: 0,
         viewForm: {},
         dictForm: {},
         amisconfig: [],
@@ -522,7 +529,7 @@
             }
           this.dictForm = {
             class: 'ProductTemplet',
-            type: 'dict',
+            type: '',
             key: val,
             title: '',
             disabled: true,
@@ -539,11 +546,17 @@
       this.$baseEventBus.$on('lowcodeLen', (length) => {
         this.lowcodeLen = length
       })
+      this.$baseEventBus.$off('dictLen')
+      this.$baseEventBus.$on('dictLen', (length) => {
+        this.dictLen = length
+      })
     },
     methods: {
       openView() {
         this.dialogTableVisible = true
         this.dialogDictVisible = false
+        console.log('this.dialogTableVisible', this.dialogTableVisible)
+        console.log('this.dialogDictVisible', this.dialogDictVisible)
       },
       openDict() {
         this.dialogDictVisible = true

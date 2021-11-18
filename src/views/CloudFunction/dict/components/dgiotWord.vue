@@ -9,7 +9,7 @@
 -->
 <template>
   <div>
-    <el-form ref="data" label-width="100px" :model="data">
+    <el-form ref="dataform" label-width="100px" :model="dataform">
       <el-button
         class="mt-3"
         icon="el-icon-plus"
@@ -21,7 +21,7 @@
         {{ $translateTitle('product.newlyadded') }}
       </el-button>
       <el-table
-        :data="data.params"
+        :data="dataform.params"
         :height="height"
         style="width: 100%; text-align: center"
       >
@@ -67,16 +67,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-form-item size="mini" style="text-align: center">
-        <el-button type="primary" @click.native="submitdata">
-          <!-- 提交 -->
-          {{ $translateTitle('application.submit') }}
-        </el-button>
-        <el-button @click="dict_temp_dialog = false">
-          <!-- 取消 -->
-          {{ $translateTitle('developer.cancel') }}
-        </el-button>
-      </el-form-item>
     </el-form>
     <el-drawer
       ref="param"
@@ -162,7 +152,7 @@
 
 <script>
   export default {
-    name: 'DgiotDict',
+    name: 'DgiotWord',
     components: {},
     props: {
       objectId: {
@@ -170,10 +160,15 @@
         required: true,
         type: String,
       },
+      data: {
+        default: () => {},
+        required: true,
+        type: Object,
+      },
     },
     data() {
       return {
-        data: { params: [] },
+        dataform: {},
         param: {},
         rules: {
           name: [
@@ -216,7 +211,11 @@
       }
     },
     computed: {},
-    mounted() {},
+    mounted() {
+      this.dataform = this.data
+      console.log('this.data', this.data)
+      console.log('this.dataform', this.dataform)
+    },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前
@@ -231,7 +230,7 @@
         })
       },
       delRow(index) {
-        this.data.params.splice(index, 1)
+        this.dataform.params.splice(index, 1)
         this.saveDict()
       },
       editRow(index, row) {
@@ -245,7 +244,7 @@
         this.title_param_dialog = '新增字典数据'
         this.edit_param_dialog = true
         this.param = {
-          order: this.data.params.length + 1,
+          order: this.dataform.params.length + 1,
           identifier: '',
           name: '',
           type: '',
@@ -255,21 +254,21 @@
         this.$refs[param].validate(async (valid) => {
           if (valid) {
             if (this.editIndexId != undefined) {
-              this.data.params[this.editIndexId] = this.param
+              this.dataform.params[this.editIndexId] = this.param
               this.$message.success('编辑成功')
             } else {
-              this.data.params.push(this.param)
+              this.dataform.params.push(this.param)
               this.$message.success('新增成功')
             }
-            console.log('this.data', this.data)
             this.saveDict()
+            this.edit_param_dialog = false
           }
         })
       },
       saveDict() {
         this.$baseEventBus.$emit('saveDict', {
           id: this.objectId,
-          data: { data: this.data },
+          data: { data: this.dataform },
         })
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发

@@ -313,7 +313,7 @@
               >
                 <el-row :gutter="24">
                   <el-col :span="10">
-                    <el-radio-group v-model="form.type">
+                    <el-radio-group v-model="form.type" :disabled="custom_status == 'edit' && form.type != ''">
                       <el-radio :label="1">
                         {{ $translateTitle('product.Standard category') }}
                       </el-radio>

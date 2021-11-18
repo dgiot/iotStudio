@@ -4,7 +4,7 @@
 * @LastEditors: vivi
 * @LastEditTime: 2021-11-17 10:41:37
 * @Description:
-* @FilePath: src\views\Lowcode\components\index.vue
+* @FilePath: src\views\dict\components\index.vue
 * @DocumentLink:
 -->
 <template>
@@ -13,12 +13,21 @@
       ref="dgiotDict"
       v-drawerDrag
       append-to-body
-      size="80%"
-      :title="dictId"
+      size="50%"
+      title="字典"
       :visible.sync="dictFlag"
-      :with-header="false"
     >
       <dgiot-dict :object-id="dictId" />
+    </el-drawer>
+    <el-drawer
+      ref="dgiotWord"
+      v-drawerDrag
+      append-to-body
+      size="50%"
+      title="字典"
+      :visible.sync="wordFlag"
+    >
+      <dgiot-word :data="data" :object-id="dictId" />
     </el-drawer>
   </div>
 </template>
@@ -26,27 +35,29 @@
 <script>
   import dgiotDict from '@/views/CloudFunction/dict/components/dgiotDict'
   import dgiotRule from '@/views/CloudFunction/dict/components/dgiotRule'
+  import dgiotWord from '@/views/CloudFunction/dict/components/dgiotWord'
   import { mapMutations } from 'vuex'
   export default {
     name: 'Index',
     components: {
       dgiotDict,
       dgiotRule,
+      dgiotWord,
     },
     data() {
       return {
-        code: {},
+        data: {},
         dictId: '',
         infoData: 'index',
         dictFlag: false,
+        wordFlag: false,
         ruleFlag: false,
       }
     },
     mounted() {
       this.$baseEventBus.$off('dictDesign')
       this.$baseEventBus.$on('dictDesign', (params) => {
-        const typePayload = ['dict', 'rule']
-        console.log('dictaaa', params)
+        const typePayload = ['dict', 'word', 'rule']
         const { type, data, objectId } = params
         if (typePayload.includes(type)) this.designDict(type, objectId, data)
         else {
@@ -73,16 +84,26 @@
        * @return {Promise<void>}
        */
       async designDict(type, objectId, data) {
-        console.log('type', type)
         this.dictId = objectId
+        this.data = data
+        console.log('data', data)
+        console.log('objectId', objectId)
+        console.log('type', type)
         switch (type) {
+          case 'word':
+            this.wordFlag = true
+            this.dictFlag = false
+            this.ruleFlag = false
+            break
           case 'dict':
             this.dictFlag = true
+            this.wordFlag = false
             this.ruleFlag = false
             break
           case 'rule':
-            this.dictFlag = false
             this.ruleFlag = true
+            this.dictFlag = false
+            this.wordFlag = false
             break
         }
       },

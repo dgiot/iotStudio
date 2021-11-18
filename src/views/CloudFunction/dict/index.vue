@@ -17,7 +17,18 @@
             <el-input v-model="queryForm.title" />
           </el-form-item>
           <el-form-item :label="$translateTitle('rule.Type')">
-            <el-input v-model="queryForm.type" />
+            <el-select
+              v-model="queryForm.type"
+              :placeholder="$translateTitle('rule.Type')"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in dicttype"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="key">
             <el-input v-model="queryForm.key" />
@@ -194,6 +205,7 @@
           count: 'objectId',
         },
         queryForm: this.dictForm,
+        dicttype: ['dict', 'word', 'rule'],
         list: [],
         imageList: [],
         listLoading: true,
@@ -288,7 +300,7 @@
             )
           })
         this.list = results
-        this.$baseEventBus.$emit('lowcodeLen', total)
+        this.$baseEventBus.$emit('dictLen', total)
         this.paginations.total = total
         this.listLoading = false
       },

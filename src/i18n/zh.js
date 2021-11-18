@@ -308,6 +308,7 @@ export default {
       powersupply: '供电单位',
     },
     developer: {
+      dictinfo: '字典信息',
       back: '返回',
       'Data is loading': '数据加载中',
       'Please select the query time': '请选择查询时间',

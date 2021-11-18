@@ -11,7 +11,18 @@
         <el-input v-model="form.class" />
       </el-form-item>
       <el-form-item label="类型" prop="type">
-        <el-input v-model="form.type" />
+        <el-select
+          v-model="form.type"
+          :placeholder="$translateTitle('rule.Type')"
+          style="width: 100%"
+        >
+          <el-option
+            v-for="item in dicttype"
+            :key="item"
+            :label="item"
+            :value="item"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="key" prop="key">
         <el-input v-model.trim="form.key" />
@@ -41,7 +52,6 @@
 
 <script>
   import { putDict, postDict } from '@/api/Dict'
-  import { mapGetters, mapMutations } from 'vuex'
   export default {
     name: 'DictEdit',
     data() {
@@ -55,6 +65,7 @@
           title: '',
           author: '',
         },
+        dicttype: ['dict', 'word', 'rule'],
         rules: {
           title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
           author: [{ required: true, trigger: 'blur', message: '请输入作者' }],
@@ -63,11 +74,7 @@
         dialogFormVisible: false,
       }
     },
-    computed: {
-      ...mapGetters({
-        amisJson: 'amis/amisJson',
-      }),
-    },
+    computed: {},
     watch: {
       'form.data': {
         handler(val) {
@@ -79,9 +86,6 @@
     },
     created() {},
     methods: {
-      ...mapMutations({
-        set_amisJson: 'amis/set_amisJson',
-      }),
       showEdit(row) {
         if (!row) {
           this.title = '添加'
