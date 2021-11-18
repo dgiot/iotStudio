@@ -134,7 +134,7 @@
     type: '',
     title: '',
     key: '',
-    data: [],
+    data: {},
     disabled: false,
     hiddenRow: [],
   }
@@ -224,11 +224,13 @@
     methods: {
       handleAdd() {
         this.$refs['edit'].type = 'add'
+        console.log('this.queryForm', this.queryForm)
         this.$refs['edit'].showEdit(this.queryForm)
       },
       handleEdit(row) {
         this.$refs['edit'].dictId = row.objectId
         this.$refs['edit'].type = 'edit'
+        console.log('row', row)
         this.$refs['edit'].showEdit(row)
       },
       handleDelete(row) {

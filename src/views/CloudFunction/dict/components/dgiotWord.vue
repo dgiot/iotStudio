@@ -9,65 +9,89 @@
 -->
 <template>
   <div>
-    <el-form ref="dataform" label-width="100px" :model="dataform">
-      <el-button
-        class="mt-3"
-        icon="el-icon-plus"
-        size="small"
-        type="primary"
-        @click.native="addparam"
+    <el-tabs v-model="activeName">
+      <el-tab-pane
+        :label="$translateTitle('developer.dictinfo')"
+        name="字典管理"
       >
-        <!-- 新增 -->
-        {{ $translateTitle('product.newlyadded') }}
-      </el-button>
-      <el-table
-        :data="dataform.params"
-        :height="height"
-        style="width: 100%; text-align: center"
-      >
-        <el-table-column
-          :label="$translateTitle('equipment.serialnumber')"
-          prop="order"
-        />
-        <el-table-column
-          :label="$translateTitle('deviceLog.identifier')"
-          prop="identifier"
-        />
-        <el-table-column
-          :label="$translateTitle('equipment.name')"
-          prop="name"
-        />
-        <el-table-column :label="$translateTitle('rule.Type')" prop="type" />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('task.Operation')"
-          width="160"
-        >
-          <template slot-scope="scope">
-            <el-button
-              plain
-              size="mini"
-              :title="$translateTitle('task.Edit')"
-              type="info"
-              @click.native="editRow(scope.$index, scope.row)"
+        <el-form ref="dataform" label-width="100px" :model="dataform">
+          <el-button
+            class="mt-3"
+            icon="el-icon-plus"
+            size="small"
+            type="primary"
+            @click.native="addparam"
+          >
+            <!-- 新增 -->
+            {{ $translateTitle('product.newlyadded') }}
+          </el-button>
+          <el-table
+            :data="dataform.params"
+            style="width: 100%; text-align: center"
+          >
+            <el-table-column
+              :label="$translateTitle('equipment.serialnumber')"
+              prop="order"
+            />
+            <el-table-column
+              :label="$translateTitle('deviceLog.identifier')"
+              prop="identifier"
+            />
+            <el-table-column
+              :label="$translateTitle('equipment.name')"
+              prop="name"
+            />
+            <el-table-column
+              :label="$translateTitle('rule.Type')"
+              prop="type"
+            />
+            <el-table-column
+              align="center"
+              :label="$translateTitle('task.Operation')"
+              width="160"
             >
-              <!-- 编辑 -->
-              {{ $translateTitle('task.Edit') }}
-            </el-button>
-            <el-button
-              plain
-              size="mini"
-              :title="$translateTitle('task.Delete')"
-              type="danger"
-              @click.native="delRow(scope.$index)"
-            >
-              <!-- 删除 -->
-              {{ $translateTitle('task.Delete') }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-form>
+              <template slot-scope="scope">
+                <el-button
+                  plain
+                  size="mini"
+                  :title="$translateTitle('task.Edit')"
+                  type="info"
+                  @click.native="editRow(scope.$index, scope.row)"
+                >
+                  <!-- 编辑 -->
+                  {{ $translateTitle('task.Edit') }}
+                </el-button>
+                <el-button
+                  plain
+                  size="mini"
+                  :title="$translateTitle('task.Delete')"
+                  type="danger"
+                  @click.native="delRow(scope.$index)"
+                >
+                  <!-- 删除 -->
+                  {{ $translateTitle('task.Delete') }}
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane label="Json" name="Json">
+        <el-form ref="dataform" label-width="100px" :model="dataform">
+          <el-form-item :label="$translateTitle('task.data')" prop="data">
+            <div style="height: 30vh; overflow: auto">
+              <vab-monaco-plus
+                ref="monacoCode"
+                :codes="dataform.data"
+                :language="'json'"
+                :read-only="false"
+                :theme="'vs-dark'"
+              />
+            </div>
+          </el-form-item>
+        </el-form>
+      </el-tab-pane>
+    </el-tabs>
     <el-drawer
       ref="param"
       v-drawerDrag
@@ -161,14 +185,18 @@
         type: String,
       },
       data: {
-        default: () => {},
+        default: function () {
+          return {
+            params: [],
+          }
+        },
         required: true,
         type: Object,
       },
     },
     data() {
       return {
-        dataform: {},
+        dataform: this.data,
         param: {},
         rules: {
           name: [
@@ -195,7 +223,6 @@
         },
         title_param_dialog: '',
         edit_param_dialog: false,
-        height: this.$baseTableHeight(0) - 50,
         activeName: '字典管理',
         infoData: 'DgiotDict',
         dictOptions: [
@@ -212,7 +239,6 @@
     },
     computed: {},
     mounted() {
-      this.dataform = this.data
       console.log('this.data', this.data)
       console.log('this.dataform', this.dataform)
     },

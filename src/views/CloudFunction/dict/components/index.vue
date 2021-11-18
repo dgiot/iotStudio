@@ -24,7 +24,6 @@
       v-drawerDrag
       append-to-body
       size="50%"
-      title="字典"
       :visible.sync="wordFlag"
     >
       <dgiot-word :data="data" :object-id="dictId" />

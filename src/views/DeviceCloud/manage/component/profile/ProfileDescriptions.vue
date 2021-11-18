@@ -533,7 +533,9 @@
             key: val,
             title: '',
             disabled: true,
-            data: {},
+            data: {
+              params: [],
+            },
             hiddenRow: ['class', 'key', 'createdAt'],
           }
           console.log('viewForm', this.viewForm)
