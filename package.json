@@ -88,7 +88,7 @@
   "devDependencies": {
     "@babel/runtime": "7.16.3",
     "@commitlint/cli": "14.1.0",
-    "@commitlint/config-conventional": "14.1.0",
+    "@commitlint/config-conventional": "15.0.0",
     "@vue/cli-plugin-babel": "^4.5.14",
     "@vue/cli-plugin-eslint": "^4.5.14",
     "@vue/cli-plugin-router": "^4.5.14",
