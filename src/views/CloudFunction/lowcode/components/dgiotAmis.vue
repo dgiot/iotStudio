@@ -4,7 +4,7 @@
 * @LastEditors: vivi
 * @LastEditTime: 2021-11-17 10:40:36
 * @Description:
-* @FilePath: src\views\Lowcode\components\dgiotAmis.vue
+* @FilePath: src\views\Lowcode\components\dgiotDict.vue
 * @DocumentLink:
 -->
 <template>

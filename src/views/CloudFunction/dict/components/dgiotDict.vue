@@ -1,23 +1,24 @@
 <!--
 * @Author: vivi
-* @Date: 2021-11-17 10:41:18
+* @Date: 2021-11-17 10:40:36
 * @LastEditors: vivi
-* @LastEditTime: 2021-11-17 10:41:18
+* @LastEditTime: 2021-11-17 10:40:36
 * @Description:
-* @FilePath: src\views\Lowcode\components\dgiotRule.vue
+* @FilePath: src\views\Lowcode\components\dgiotDict.vue
 * @DocumentLink:
 -->
 <template>
-  <div class="dgiotKonva-container">
-    <div class="dgiotKonva-content">
-      {{ infoData }}
+  <div>
+    <div>
+      {{ 'dict' }}
     </div>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   export default {
-    name: 'DgiotKonva',
+    name: 'DgiotDict',
     components: {},
     props: {
       objectId: {
@@ -25,19 +26,26 @@
         required: true,
         type: String,
       },
-      code: {
-        default: () => {},
-        required: true,
-        type: Object,
-      },
     },
     data() {
       return {
-        infoData: 'dgiotKonva',
+        infoData: 'DgiotDict',
       }
     },
-    computed: {},
-    mounted() {},
+    computed: {
+      ...mapGetters({
+        amisJson: 'amis/amisJson',
+      }),
+    },
+    mounted() {
+      this.$baseEventBus.$off('submitDict')
+      this.$baseEventBus.$on('submitDict', (code) => {
+        this.$baseEventBus.$emit('saveDict', {
+          id: this.objectId,
+          data: { data: code },
+        })
+      })
+    },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前
@@ -49,7 +57,7 @@
   }
 </script>
 <style lang="scss" scoped>
-  .dgiotKonva-container {
+  .dgiotAmis-container {
     width: 100%;
     height: 100%;
     &-container {

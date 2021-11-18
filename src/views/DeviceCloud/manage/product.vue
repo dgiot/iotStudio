@@ -157,13 +157,13 @@
               </span>
             </template>
           </el-table-column>
-          <!--          <el-table-column :label="$translateTitle('product.classification')">-->
-          <!--            <template #default="{ row }">-->
-          <!--              <span>-->
-          <!--                {{ row.category ? row.category.name : '' }}-->
-          <!--              </span>-->
-          <!--            </template>-->
-          <!--          </el-table-column>-->
+          <el-table-column :label="$translateTitle('product.classification')">
+            <template #default="{ row }">
+              <span>
+                {{ row.category ? row.category.name : '' }}
+              </span>
+            </template>
+          </el-table-column>
           <!--          <el-table-column :label="$translateTitle('product.producttemplet')">-->
           <!--            <template #default="{ row }">-->
           <!--              <span>-->
@@ -307,6 +307,7 @@
                 <el-input v-model="form.devType" autocomplete="off" />
               </el-form-item>
               <el-form-item
+                :disabled="custom_status == 'edit' && form.type != ''"
                 :label="$translateTitle('product.classification')"
                 :prop="form.type == 0 ? '' : 'categoryname'"
               >
@@ -321,7 +322,7 @@
                       </el-radio>
                     </el-radio-group>
                   </el-col>
-                  <el-col :span="13" style="padding: 0">
+                  <el-col :span="13" style="padding: 0" v-if="form.type == 1">
                     <el-input v-model="form.categoryname" readonly>
                       <el-icon
                         slot="append"

@@ -20,7 +20,10 @@
       <!--      </el-descriptions-item>-->
       <el-descriptions-item>
         <template slot="label">
-          <el-link type="success" @click.native="dialogTableVisible = false">
+          <el-link
+            type="success"
+            @click.native="feateditorParser(productDetail, 'things', false)"
+          >
             {{ $translateTitle('product.physicalmodel') }}
           </el-link>
         </template>
@@ -32,7 +35,10 @@
           {{ productDetail.thing.properties.length || 0 }}
         </el-link>
       </el-descriptions-item>
-      <el-descriptions-item :label="$translateTitle('product.parser')">
+      <el-descriptions-item
+        v-if="false"
+        :label="$translateTitle('product.parser')"
+      >
         <template slot="label">
           <el-link
             type="success"
@@ -48,7 +54,7 @@
           {{ productDetail.config.parser.length || 0 }}
         </el-link>
       </el-descriptions-item>
-      <el-descriptions-item>
+      <el-descriptions-item v-if="false">
         <template slot="label">
           <el-link
             type="success"
@@ -91,7 +97,7 @@
           <el-link
             :disabled="productId.length != 10"
             type="success"
-            @click.native="dialogTableVisible = !dialogTableVisible"
+            @click.native="dialogTableVisible = true"
           >
             {{ $translateTitle('product.lowcode') }}
           </el-link>
@@ -99,13 +105,31 @@
         <el-link
           :disabled="productId.length != 10"
           type="success"
-          @click.native="dialogTableVisible = !dialogTableVisible"
+          @click.native="openView"
         >
           {{ lowcodeLen }}
         </el-link>
       </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <el-link
+            :disabled="productId.length != 10"
+            type="success"
+            @click.native="openDict"
+          >
+            {{ $translateTitle('product.dict') }}
+          </el-link>
+        </template>
+      </el-descriptions-item>
     </el-descriptions>
-    <vab-query-form v-show="productId.length == 10 && !dialogTableVisible">
+    <vab-query-form
+      v-show="
+        productId.length == 10 &&
+        !dialogTableVisible &&
+        tableType == 'things' &&
+        !dialogDictVisible
+      "
+    >
       <vab-query-form-left-panel>
         <el-button size="small" type="primary" @click.native="checkschema">
           {{ $translateTitle('product.viewobjectmodel') }}
@@ -119,8 +143,12 @@
     <div v-if="dialogTableVisible" style="margin-top: 10px">
       <dgiot-views :view-form="viewForm" />
     </div>
+    <!--   字典 -->
+    <div v-if="dialogDictVisible" style="margin-top: 10px">
+      <dgiot-dict :dict-form="dictForm" />
+    </div>
     <el-table
-      v-if="!codeFlag && !dialogTableVisible"
+      v-if="!codeFlag && !dialogTableVisible && !dialogDictVisible"
       :key="tableType"
       v-loading="tableLoading"
       :cell-style="{ 'text-align': 'center' }"
@@ -370,20 +398,6 @@
           sortable
         />
       </div>
-      <div v-else-if="tableType == 'basedate.params'">
-        <el-table-column label="序号" prop="order" />
-        <el-table-column label="标识符" prop="identifier" />
-        <el-table-column label="功能名称" prop="name" />
-        <el-table-column label="数据类型" prop="type" />
-        <el-table-column label="数据地址" prop="address" />
-        <el-table-column label="数据长度" prop="bytes" />
-        <el-table-column label="是否必填" prop="required">
-          <template #default="{ row }">
-            <span v-if="row.required">是</span>
-            <span v-else>否</span>
-          </template>
-        </el-table-column>
-      </div>
       <div v-else>
         <el-empty :image-size="200" />
       </div>
@@ -404,10 +418,12 @@
   import moment from 'moment'
   import { putProductTemplet } from '@/api/ProductTemplet'
   import dgiotViews from '@/views/CloudFunction/lowcode'
+  import dgiotDict from '@/views/CloudFunction/dict'
   export default {
     name: 'ProfileDescriptions',
     components: {
       dgiotViews,
+      dgiotDict,
     },
     props: {
       thingKey: {
@@ -455,9 +471,11 @@
       return {
         lowcodeLen: 0,
         viewForm: {},
+        dictForm: {},
         amisconfig: [],
         amisForm: {},
         dialogTableVisible: false,
+        dialogDictVisible: false,
         key: moment(new Date()).valueOf(),
         editType: 0,
         amisJsonPlus: '',
@@ -502,7 +520,17 @@
               data: {},
               hiddenRow: ['class', 'key', 'createdAt'],
             }
-          console.log(this.viewForm)
+          this.dictForm = {
+            class: 'ProductTemplet',
+            type: 'dict',
+            key: val,
+            title: '',
+            disabled: true,
+            data: {},
+            hiddenRow: ['class', 'key', 'createdAt'],
+          }
+          console.log('viewForm', this.viewForm)
+          console.log('dictForm', this.dictForm)
         },
       },
     },
@@ -513,6 +541,14 @@
       })
     },
     methods: {
+      openView() {
+        this.dialogTableVisible = true
+        this.dialogDictVisible = false
+      },
+      openDict() {
+        this.dialogDictVisible = true
+        this.dialogTableVisible = false
+      },
       async saveAmis(productId, amisconfig, productDetail) {
         const mergeAmis = _.merge(this.productDetail, {
           config: { amis: amisconfig },
@@ -709,10 +745,14 @@
       featProperties(params) {
         console.log(params)
         this.codeFlag = false
+        this.dialogTableVisible = false
+        this.dialogDictVisible = false
         this.$parent.$parent.$parent.properties(params)
       },
       feateditorParser(config, type, flag) {
         this.codeFlag = false
+        this.dialogTableVisible = false
+        this.dialogDictVisible = false
         this.$parent.$parent.$parent.editorParser(config, type, flag)
       },
       createProperty() {

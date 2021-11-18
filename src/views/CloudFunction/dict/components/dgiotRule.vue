@@ -17,7 +17,7 @@
 
 <script>
   export default {
-    name: 'DgiotKonva',
+    name: 'DgiotRule',
     components: {},
     props: {
       objectId: {

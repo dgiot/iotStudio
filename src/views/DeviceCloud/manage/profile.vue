@@ -721,6 +721,7 @@
           queryCategory(params).then((res) => {
             this.categorysonList = res.results
           })
+          this.queryProduttemp({})
         } else {
           params.where = {
             parent: data.objectId,
@@ -728,6 +729,11 @@
           queryCategory(params).then((res) => {
             // this.categorysonList.push(data)
             this.categorysonList = [data].concat(res.results)
+            var categorys = []
+            this.categorysonList.forEach(son=>{
+              categorys.push(son.objectId)
+            })
+            this.queryProduttemp({categorys:{"$in":categorys}})
           })
         }
         loading.close()
@@ -824,6 +830,9 @@
         if (args.category) {
           params.where.category = args.category
         }
+        if (args.categorys) {
+          params.where.category = args.categorys
+        }
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
           loading.close()
@@ -900,11 +909,6 @@
           this.parserTables = this.productDetail.config[`${this.tableType}`]
           this.parserTableList = this.productDetail.config[`${this.tableType}`]
           this.dictTableList = this.productConfig.config.basedate.params || []
-        }
-        if (type == 'basedate.params') {
-          this.parserTable = false
-          this.editorDict(config)
-          this.dictVisible = flag ? true : false
         }
         console.log(
           'this.parserTableList',

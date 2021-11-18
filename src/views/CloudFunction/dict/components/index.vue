@@ -10,57 +10,45 @@
 <template>
   <div class="index-container">
     <el-drawer
-      ref="dgiotKonva"
+      ref="dgiotDict"
       v-drawerDrag
       append-to-body
       size="80%"
-      :title="lowcodeId"
-      :visible.sync="konvaFlag"
+      :title="dictId"
+      :visible.sync="dictFlag"
       :with-header="false"
     >
-      <dgiot-konva :object-id="lowcodeId" />
-    </el-drawer>
-
-    <el-drawer
-      ref="dgiotAmis"
-      v-drawerDrag
-      append-to-body
-      size="80%"
-      :title="lowcodeId"
-      :visible.sync="amisFlag"
-      :with-header="false"
-    >
-      <dgiot-amis :code="code" :object-id="lowcodeId" />
+      <dgiot-dict :object-id="dictId" />
     </el-drawer>
   </div>
 </template>
 
 <script>
-  import dgiotAmis from '@/views/CloudFunction/lowcode/components/dgiotAmis'
-  import dgiotKonva from '@/views/CloudFunction/lowcode/components/dgiotKonva'
+  import dgiotDict from '@/views/CloudFunction/dict/components/dgiotDict'
+  import dgiotRule from '@/views/CloudFunction/dict/components/dgiotRule'
   import { mapMutations } from 'vuex'
   export default {
     name: 'Index',
     components: {
-      dgiotKonva,
-      dgiotAmis,
+      dgiotDict,
+      dgiotRule,
     },
     data() {
       return {
         code: {},
-        lowcodeId: '',
+        dictId: '',
         infoData: 'index',
-        amisFlag: false,
-        konvaFlag: false,
+        dictFlag: false,
+        ruleFlag: false,
       }
     },
     mounted() {
-      this.$baseEventBus.$off('lowcodeDesign')
-      this.$baseEventBus.$on('lowcodeDesign', (params) => {
-        const typePayload = ['amis', 'konva']
-        console.log('amis', params)
+      this.$baseEventBus.$off('dictDesign')
+      this.$baseEventBus.$on('dictDesign', (params) => {
+        const typePayload = ['dict', 'rule']
+        console.log('dictaaa', params)
         const { type, data, objectId } = params
-        if (typePayload.includes(type)) this.designLowCode(type, objectId, data)
+        if (typePayload.includes(type)) this.designDict(type, objectId, data)
         else {
           this.$message.error('暂不支持该类型低代码设计')
         }
@@ -75,7 +63,7 @@
     activated() {},
     methods: {
       ...mapMutations({
-        set_amisJson: 'amis/set_amisJson',
+        set_dictJson: 'dict/set_dictJson',
       }),
       /**
        * @description 代码设计
@@ -84,18 +72,17 @@
        * @param data
        * @return {Promise<void>}
        */
-      async designLowCode(type, objectId, data) {
-        this.code = data
-        this.lowcodeId = objectId
+      async designDict(type, objectId, data) {
+        console.log('type', type)
+        this.dictId = objectId
         switch (type) {
-          case 'amis':
-            this.set_amisJson(this.code)
-            this.amisFlag = true
-            this.konvaFlag = false
+          case 'dict':
+            this.dictFlag = true
+            this.ruleFlag = false
             break
-          case 'konva':
-            this.amisFlag = false
-            this.konvaFlag = true
+          case 'rule':
+            this.dictFlag = false
+            this.ruleFlag = true
             break
         }
       },

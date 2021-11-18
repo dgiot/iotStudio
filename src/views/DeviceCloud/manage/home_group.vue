@@ -68,7 +68,7 @@
           </el-table-column>
           <el-table-column :label="$translateTitle('product.classification')">
             <template #default="{ row }">
-              <span>{{ row.category }}</span>
+              <span>{{ row.category.name }}</span>
             </template>
           </el-table-column>
           <el-table-column :label="$translateTitle('product.addingtime')">
@@ -97,7 +97,7 @@
                 {{ $translateTitle('product.equipment') }}
               </el-button>
               <el-popover
-                :ref="`popover-${scope.$index}`"
+                :ref="`popover-${row.$index}`"
                 placement="top"
                 style="margin-left: 10px"
               >
@@ -109,17 +109,11 @@
                 <div style="margin: 0; text-align: right">
                   <el-button
                     size="mini"
-                    @click="
-                      scope._self.$refs[`popover-${scope.$index}`].doClose()
-                    "
+                    @click="row._self.$refs[`popover-${row.$index}`].doClose()"
                   >
                     {{ $translateTitle('developer.cancel') }}
                   </el-button>
-                  <el-button
-                    size="mini"
-                    type="primary"
-                    @click="makeSure(scope)"
-                  >
+                  <el-button size="mini" type="primary" @click="makeSure(row)">
                     {{ $translateTitle('developer.determine') }}
                   </el-button>
                 </div>
@@ -965,6 +959,7 @@
           order: '-updatedAt',
           skip: this.start,
           limit: this.length,
+          include: 'category',
           where: {
             nodeType: '2',
             name: this.formInline.productname.length
@@ -1097,7 +1092,7 @@
         })
       },
       /* el-popover点击关闭*/
-      makeSure(scope) {
+      makeSure(row) {
         const params = {
           count: 'objectId',
           skip: 0,
@@ -1122,7 +1117,7 @@
                           type: 'success',
                           message: '删除成功',
                         })
-                        scope._self.$refs[`popover-${scope.$index}`].doClose()
+                        row._self.$refs[`popover-${row.$index}`].doClose()
                         this.searchProduct()
                       }
                     })
