@@ -684,7 +684,6 @@
         this.$set(this.ruleForm, 'categoryname', row.category.name)
         this.$set(this.ruleForm, 'categoryid', row.category.objectId)
         this.$set(this.ruleForm, 'producttempid', row.objectId)
-        copydict()
         this.cascaderDrawer = !this.cascaderDrawer
       },
       async categorytree() {

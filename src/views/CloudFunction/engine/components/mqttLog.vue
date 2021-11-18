@@ -9,22 +9,10 @@
           </span>
           <vab-editor
             :key="refreshFlag"
-            :height="
-              isFullscreen
-                ? Number($baseTableHeight(0))
-                : Number($baseTableHeight(0))
-            "
+            :height="isFullscreen ? 1000 + 80 : 1000 + 40"
             lang="text"
-            :max-lines="
-              isFullscreen
-                ? Number($baseTableHeight(0)) / 12
-                : Number($baseTableHeight(0)) / 12
-            "
-            :min-lines="
-              isFullscreen
-                ? Number($baseTableHeight(0)) / 12
-                : Number($baseTableHeight(0)) / 12
-            "
+            :max-lines="isFullscreen ? 1000 / 12 : 1000 / 12"
+            :min-lines="isFullscreen ? 1000 / 12 : 1000 / 12"
             theme="gob"
             :value="msg"
           />
@@ -178,22 +166,10 @@
       >
         <vab-editor
           :key="editorKey"
-          :height="
-            isFullscreen
-              ? Number($baseTableHeight(0))
-              : Number($baseTableHeight(0))
-          "
+          :height="isFullscreen ? 1000 + 80 : 1000 + 40"
           lang="text"
-          :max-lines="
-            isFullscreen
-              ? Number($baseTableHeight(0)) / 12
-              : Number($baseTableHeight(0)) / 12
-          "
-          :min-lines="
-            isFullscreen
-              ? Number($baseTableHeight(0)) / 12
-              : Number($baseTableHeight(0)) / 12
-          "
+          :max-lines="isFullscreen ? 1000 / 12 : 1000 / 12"
+          :min-lines="isFullscreen ? 1000 / 12 : 1000 / 12"
           theme="gob"
           :value="deviceLog"
         />

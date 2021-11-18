@@ -105,22 +105,10 @@
         <vab-editor
           :key="logMqtt.key"
           v-model="clickItem"
-          :height="
-            isFullscreen
-              ? Number($baseTableHeight(0)) + 80
-              : Number($baseTableHeight(0)) + 40
-          "
+          :height="isFullscreen ? 1000 + 80 : 1000 + 40"
           lang="json"
-          :max-lines="
-            isFullscreen
-              ? Number($baseTableHeight(0) + 80) / 12
-              : Number($baseTableHeight(0) - 80) / 12
-          "
-          :min-lines="
-            isFullscreen
-              ? Number($baseTableHeight(0) + 80) / 12
-              : Number($baseTableHeight(0) - 80) / 12
-          "
+          :max-lines="isFullscreen ? 1000 / 12 : 1000 / 12"
+          :min-lines="isFullscreen ? 1000 / 12 : 1000 / 12"
           theme="gob"
         />
       </a-tab-pane>

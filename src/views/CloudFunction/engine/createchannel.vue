@@ -218,7 +218,7 @@
   import { mapActions, mapGetters } from 'vuex'
 
   export default {
-    name: 'CreateResourcechannel',
+    name: 'Createchannel',
     components: {},
     data() {
       return {

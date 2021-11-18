@@ -1096,7 +1096,7 @@
         // this.channelForm = true
         // this.channelupdated = '新增'
         this.$router.push({
-          path: '/CreateResourcechannel',
+          path: '/Createhannel',
           query: {
             type: 'create',
           },
