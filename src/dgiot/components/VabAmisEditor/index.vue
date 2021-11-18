@@ -9,6 +9,15 @@
 -->
 <template>
   <div class="amis">
+    <div
+      v-show="objectId"
+      class="wrapper"
+      :title="$translateTitle('konva.save')"
+      @click="saveAmis(objectId)"
+    >
+      <dgiot-icon icon="save-2-fill" />
+      {{ $translateTitle('konva.save') }}
+    </div>
     <div id="editor"></div>
     <div ref="renderWrap"></div>
   </div>
@@ -28,12 +37,20 @@
         required: false,
         default: () => {},
       },
+      viewId: {
+        type: String,
+        required: false,
+        default: '',
+      },
     },
     data() {
-      return {}
+      return {
+        objectId: this.viewId,
+      }
     },
     computed: {},
     mounted() {
+      this.objectId = this.$route.query.viewId
       this.initEditor()
       this.render({})
     },
@@ -63,9 +80,46 @@
         console.log(amis, this.$refs.renderWrap, amisJSON)
         amis.embed(this.$refs.renderBox, amisJSON)
       },
+      async saveAmis(viewId) {
+        console.log('viewId', viewId)
+        console.log('schema', this.schema)
+      },
     },
   }
 </script>
+<style lang="scss" scoped>
+  .wrapper {
+    position: fixed;
+    right: -11.5px;
+    bottom: 145px;
+    z-index: 9999;
+    padding: 7px 15px;
+    padding-right: 19px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 12px;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid #000;
+    border-radius: 4px;
+    opacity: 1;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+
+    &:hover {
+      right: -4px;
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    i {
+      margin-right: 3px;
+      font-size: 12px;
+    }
+  }
+</style>
+
 <style lang="scss">
   .amis {
     width: 100%;

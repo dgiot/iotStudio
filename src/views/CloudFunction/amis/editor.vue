@@ -8,7 +8,7 @@
 * @DocumentLink:
 -->
 <template>
-  <vab-amis-editor :schema="amisJson" />
+  <vab-amis-editor ref="vabAmis" :schema="amisJson" :view-id="viewId" />
 </template>
 
 <script>
@@ -19,10 +19,18 @@
   import { mapGetters, mapMutations } from 'vuex'
   export default {
     name: 'Editor',
+    data() {
+      return {
+        viewId: '',
+      }
+    },
     computed: {
       ...mapGetters({
         amisJson: 'amis/amisJson',
       }),
+    },
+    mounted() {
+      this.viewId = this.$route.query.viewId
     },
   }
 </script>
