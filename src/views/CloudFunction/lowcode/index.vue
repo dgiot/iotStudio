@@ -96,10 +96,15 @@
       >
         <template #default="{ row }">
           <el-button type="text" @click="handleLowCode(row.objectId)">
-            设计
+            {{ $translateTitle('application.preview') }}
           </el-button>
-          <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-          <el-button type="text" @click="handleDelete(row)">删除</el-button>
+          <el-button type="text" @click="handleEdit(row)">
+            {{ $translateTitle('product.Design') }}
+          </el-button>
+          <!--          <el-button type="text" @click="handleEdit(row)">编辑</el-button>-->
+          <el-button type="text" @click="handleDelete(row)">
+            {{ $translateTitle('task.Delete') }}
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -115,6 +120,7 @@
 </template>
 
 <script>
+  import { mapMutations } from 'vuex'
   import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
   import { queryView, putView, postView, delView, getView } from '@/api/View'
   import ViewEdit from './components/ViewEdit'
@@ -210,17 +216,24 @@
       })
     },
     methods: {
+      ...mapMutations({
+        set_amisJson: 'amis/set_amisJson',
+      }),
       handleAdd() {
         this.$refs['edit'].type = 'add'
         this.$refs['edit'].showEdit(this.queryForm)
       },
       async handleEdit(row) {
         const loading = this.$baseLoading(1)
-        this.$refs['edit'].viewId = row.objectId
-        const res = await getView(row.objectId)
-        this.$refs['edit'].type = 'edit'
-        this.$refs['edit'].showEdit(res)
+        const { data = {} } = await getView(row.objectId)
+        this.$router.push({
+          path: '/design/editor',
+          query: {
+            viewId: row.objectId,
+          },
+        })
         loading.close()
+        this.set_amisJson(data)
       },
       handleDelete(row) {
         console.log(row.data, row.objectId)
@@ -244,7 +257,7 @@
         const loading = this.$baseColorfullLoading(1)
         const res = await getView(lowcodeId)
         loading.close()
-        this.$baseEventBus.$emit('lowcodeDesign', res)
+        this.$baseEventBus.$emit('lowcodePreview', res)
       },
       async saveLowCode(lowcodeId, payload) {
         const loading = this.$baseColorfullLoading(1)

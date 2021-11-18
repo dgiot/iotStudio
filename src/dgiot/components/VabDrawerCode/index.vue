@@ -27,13 +27,12 @@
         :visible.sync="drawer"
         :with-header="false"
       >
-        <el-link
-          href="https://fastdgiot.gitee.io/amis-editor-demo/#/edit/1"
-          target="_blank"
-          type="primary"
-        >
+        <!--        <router-link to="/design/editor">-->
+        <!--         -->
+        <!--        </router-link>-->
+        <el-button @click.native="toEditor('/design/editor')">
           请在amis编辑器中设计页面，并将页面配置好的json数据复制到下面的json组件中并保存
-        </el-link>
+        </el-button>
         <vab-monaco-plus
           ref="monacoCode"
           :codes="monacoCode"
@@ -110,6 +109,15 @@
       ...mapMutations({
         set_amisJson: 'amis/set_amisJson',
       }),
+      toEditor(path) {
+        this.set_amisJson(
+          JSON.parse(this.$refs.monacoCode.monacoEditor.getValue())
+        )
+        //
+        this.$router.push({
+          path: path,
+        })
+      },
       previewForm() {
         this.set_amisJson(
           JSON.parse(this.$refs.monacoCode.monacoEditor.getValue())

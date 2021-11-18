@@ -10,7 +10,7 @@
 <template>
   <div :key="amisKey">
     <amis-render :schema="schema" />
-    <draw-code :code="schema" />
+    <draw-code v-show="showHelp" :code="schema" />
   </div>
 </template>
 
@@ -37,6 +37,11 @@
         type: Object,
         required: false,
         default: () => amisdefault,
+      },
+      showHelp: {
+        type: Boolean,
+        required: false,
+        default: true,
       },
     },
     data() {
