@@ -1,13 +1,9 @@
 {
   "compilerOptions": {
-//    "module": "commonjs",
+    "module": "commonjs",
     "target": "es5",
     "sourceMap": true,
-    "allowJs": true,
-    "moduleResolution": "node",
-    "module": "esnext",
-    "strict": true,
-    "importHelpers": true
+    "allowJs": true
   },
   "exclude": ["node_modules"]
 }
