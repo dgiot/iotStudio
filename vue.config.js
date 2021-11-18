@@ -79,6 +79,7 @@ function getChainWebpack(config) {
     })
     js.forEach((_js) => {
       _staticUrl.js.push(`${staticUrl}js/${_js}`)
+      _staticUrl.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
     })
     args[0].staticUrl = _staticUrl
     args[0].ogConfig = ogConfig
