@@ -8,11 +8,7 @@
 * @DocumentLink:
 -->
 <template>
-  <div
-    ref="custom-table"
-    class="custom-table-container"
-    :class="{ 'vab-fullscreen': isFullscreen }"
-  >
+  <div ref="custom-table" class="custom-table-container">
     <div class="components">
       <vab-dialog :show.sync="activePopShow">
         <h3 slot="title">
@@ -86,7 +82,7 @@
         <h3 slot="title">
           {{ $translateTitle('cloudTest.report template') }}
         </h3>
-        <div :key="height" class="content">
+        <div class="content">
           <el-table
             ref="tableSort"
             v-loading="listLoading"
@@ -159,8 +155,8 @@
         <el-form
           ref="form"
           :inline="true"
-          label-width="0"
           :model="queryForm"
+          size="mini"
           @submit.native.prevent
         >
           <el-form-item>
@@ -188,7 +184,11 @@
             >
               {{ $translateTitle('cloudTest.search') }}
             </el-button>
-            <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
+            <el-button
+              icon="el-icon-plus"
+              type="primary"
+              @click.native="activePopShow = !activePopShow"
+            >
               {{ $translateTitle('cloudTest.add') }}
             </el-button>
           </el-form-item>
@@ -205,16 +205,6 @@
         <!--            {{ $translateTitle('cloudTest.frame') }}-->
         <!--          </el-checkbox>-->
         <!--        </div>-->
-        <el-button
-          style="margin: 0 10px 10px 0 !important"
-          type="primary"
-          @click="clickFullScreen"
-        >
-          <dgiot-icon
-            :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
-          />
-          {{ $translateTitle('cloudTest.full screen') }}
-        </el-button>
         <el-popover
           ref="popover"
           popper-class="custom-table-checkbox"
@@ -645,10 +635,6 @@
           this.height = this.$baseTableHeight(1)
         }
       },
-      handleAdd() {
-        // this.$refs['edit'].showEdit()
-        this.activePopShow = true
-      },
       handlekonva(row) {
         // 取证类型模板跳转到组态
         this.$router.push({
@@ -714,492 +700,8 @@
           },
         }
         this.listLoading = true
-        const tempList = {
-          results: [
-            {
-              objectId: '0ac4f9eb2f',
-              createdAt: '2021-04-29T14:31:28.274Z',
-              updatedAt: '2021-10-30T07:28:16.718Z',
-              basedata: {
-                name: 'taskInfo',
-                index: 0,
-                layer: {
-                  width: 600,
-                  height: 850,
-                  backColor: '#eee',
-                  backgroundImage: '',
-                  widthHeightRatio: '',
-                },
-                client: ['电动泵'],
-                remark: '',
-                bedaddr: '9f7c90228fff',
-                bedname: '南方泵业台体',
-                endtime: 1618884000000,
-                deviceid: '',
-                reportId: '633e7fa7d6',
-                BasicInfo: {
-                  guige: '/',
-                  pizun: '',
-                  wendu: '',
-                  beizhu: '/',
-                  daqiya: '',
-                  dengji: '/',
-                  shenhe: '',
-                  taishu: '/',
-                  xiaolv: '/',
-                  bianhao: 'BB2021042-(1)',
-                  bianzhi: '',
-                  lianxidh: '',
-                  scdwAdrr: '/',
-                  wtdwAdrr: '/',
-                  chanpinxh: '/',
-                  jianceren: '',
-                  pizhunren: '',
-                  shenheren: '',
-                  chuchangbh: '/',
-                  qianfaData: '',
-                  shengchanN: '/',
-                  shiyanName: '/',
-                  chanpinName: '/',
-                  chouyangNum: '',
-                  daoyangData: '',
-                  dynamicTags: [],
-                  jianyanData: '',
-                  jianyanyiju: '',
-                  yangpinName: '管道式离心泵',
-                  chouyangAddr: '/',
-                  chouyangAdrr: '厂成品库',
-                  chouyangData: '',
-                  weituodanwei: '/',
-                  chouyangjishu: '0',
-                  yanshoudengji: '',
-                  chanpinbianhao: '/',
-                  jianyanxingzhi: '委托校验',
-                  shengchangData: '',
-                  shiyanDateTime: '',
-                  songyangdanwei: '/',
-                  jianyanbiaozhun: '/',
-                  songyangDateTime: '',
-                  yangpinzhuangtai: '',
-                },
-                groupname: '南方泵业',
-                starttime: 1618880400000,
-                components: [],
-                identifier: 'inspectionReportTemp',
-                reportList: [
-                  {
-                    ACL: {
-                      'role:方威检测室': {
-                        read: true,
-                        write: true,
-                      },
-                    },
-                    desc: '0',
-                    icon: '',
-                    name: '南方泵业管道循环泵',
-                    config: {
-                      name: '南方泵业管道循环泵',
-                      index: 0,
-                      layer: {
-                        width: 600,
-                        height: 850,
-                        backColor: '#eee',
-                        backgroundImage: '',
-                        widthHeightRatio: '',
-                      },
-                      client: ['电动泵'],
-                      deviceid: '',
-                      components: [],
-                      identifier: 'inspectionReportTemp',
-                    },
-                    devType: '管道循环泵',
-                    category: 'Evidence',
-                    children: {
-                      __type: 'Relation',
-                      className: 'Product',
-                    },
-                    nodeType: 1,
-                    objectId: '633e7fa7d6',
-                    createdAt: '2021-04-29T03:52:10.368Z',
-                    updatedAt: '2021-04-29T03:52:10.368Z',
-                    productSecret: 'c6b084b31bfe5553c0a4a4eae76bf6e3',
-                  },
-                  {
-                    ACL: {
-                      'role:方威检测室': {
-                        read: true,
-                        write: true,
-                      },
-                    },
-                    desc: '0',
-                    icon: '',
-                    name: '南方家用泵',
-                    config: {
-                      name: '南方家用泵',
-                      index: 0,
-                      layer: {
-                        width: 600,
-                        height: 850,
-                        backColor: '#eee',
-                        backgroundImage: '',
-                        widthHeightRatio: '',
-                      },
-                      client: '潜水泵',
-                      deviceid: '',
-                      components: [],
-                      identifier: 'a28b149a-0f31-fe7d-cadc-0be47faf8a8d',
-                    },
-                    devType: '潜水泵',
-                    category: 'Evidence',
-                    children: {
-                      __type: 'Relation',
-                      className: 'Product',
-                    },
-                    nodeType: 1,
-                    objectId: 'c5f31fa3a4',
-                    createdAt: '2021-01-12T12:18:59.570Z',
-                    updatedAt: '2021-01-12T12:18:59.570Z',
-                    productSecret: 'productSecret',
-                  },
-                ],
-                testStatus: 2,
-                TestSetting: {
-                  BasicSetting: {
-                    AcceptParam: {
-                      tHf: 0.1,
-                      tQz: 0.16,
-                      tp_up: 0.16,
-                      te_down: -0.05,
-                      th_down: 0,
-                      tq_down: 0,
-                    },
-                    dengji_test: '2U',
-                    testPrecision: '1',
-                  },
-                  FormulaSetting: { SpeedConversionFormula: 'GB/t3216-2016' },
-                  ParameterSetting: {
-                    SumAverage: false,
-                    RemoveMaxMinGetAverage: false,
-                  },
-                  StabilitySetting: {
-                    Speed: 'GB/T3216-2016',
-                    FlowHeadEfficiency: 'GB/T3216-2016',
-                  },
-                  QualifiedConditionsSetting: {
-                    QualifiedConditions: 'GB/T3216-2016',
-                  },
-                },
-                verifyStatus: 0,
-                insectionName: '南方泵业管道循环泵',
-                PrescribedPoint: {
-                  H1: '',
-                  H2: '',
-                  H3: '',
-                  Q1: '',
-                  Q2: '',
-                  Q3: '',
-                  tR: '',
-                  rpm: '',
-                  DJXL: '',
-                  NpRC: '',
-                  NpshG: '',
-                  glysG: '',
-                  point: '',
-                  glysRC: '',
-                  qishi1: '',
-                  qishi2: '',
-                  qishi3: '',
-                  temzcG: '',
-                  xiaolv1: '',
-                  xiaolv2: '',
-                  xiaolv3: '',
-                  zhougv1: '',
-                  zhougv2: '',
-                  zhougv3: '',
-                  zhendongG: '',
-                  pointDataArr: [],
-                },
-                SouthPrescribedPoint: {
-                  H1: '',
-                  H2: '',
-                  H3: '',
-                  Q1: '',
-                  Q2: '',
-                  Q3: '',
-                  tR: '',
-                  rpm: '',
-                  DJXL: '',
-                  NpRC: '',
-                  NpshG: '',
-                  glysG: '',
-                  point: '',
-                  glysRC: '',
-                  qishi1: '',
-                  qishi2: '',
-                  qishi3: '',
-                  temzcG: '',
-                  xiaolv1: '',
-                  xiaolv2: '',
-                  xiaolv3: '',
-                  zhougv1: '',
-                  zhougv2: '',
-                  zhougv3: '',
-                  zhendongG: '',
-                  pointDataArr: [],
-                },
-              },
-              detail: {
-                desc: '南方泵业管道循环泵检测',
-                brand: '数蛙桌面采集网关',
-                batchId: {
-                  batch_name: '2021429',
-                  createdtime: 1619706688,
-                },
-                devModel: 'SW_WIN_CAPTURE',
-                isEnable: true,
-              },
-              devaddr: 'a4889298366f',
-              ip: '',
-              isEnable: true,
-              name: '南方泵业管道循环泵检测',
-              product: {
-                objectId: '633e7fa7d6',
-                __type: 'Pointer',
-                className: 'Product',
-              },
-              status: 'ONLINE',
-              ACL: {
-                'role:方威检测室': {
-                  read: true,
-                  write: true,
-                },
-              },
-            },
-            {
-              objectId: 'd19ed1c4c0',
-              createdAt: '2021-01-12T12:25:15.088Z',
-              updatedAt: '2021-04-21T03:58:48.584Z',
-              basedata: {
-                name: 'taskInfo',
-                remark: '',
-                bedaddr: '9f7c90228fff',
-                bedname: '南方泵业台体',
-                endtime: 1610157600000,
-                reportId: 'c5f31fa3a4',
-                BasicInfo: {
-                  name: '南方泵业集团',
-                  guige: 'IG40-100',
-                  pizun: '霍林',
-                  wendu: '33',
-                  beizhu: '/',
-                  daqiya: '1',
-                  dengji: '样品状态完好，适于检验',
-                  shenhe: '唐炜炜',
-                  taishu: '1',
-                  xiaolv: '76',
-                  bianhao: '2021GJW00198',
-                  bianzhi: '刘晓冬',
-                  xinghao: '6',
-                  lianxidh: '0571-86390083',
-                  scdwAdrr: '杭州市余杭区仁和街道',
-                  wtdwAdrr: '杭州市余杭区仁和街道',
-                  chanpinxh: 'IG40-100',
-                  jianceren: '李少清',
-                  pizhunren: '霍林',
-                  shenheren: '唐炜炜',
-                  chuchangbh: '201217',
-                  qianfaData: '2021-01-10T16:00:00.000Z',
-                  shengchanN: '南方泵业集团',
-                  shiyanName: '王国军',
-                  chanpinName: '中开泵',
-                  chouyangNum: '1',
-                  daoyangData: '2021-01-09T16:00:00.000Z',
-                  dynamicTags: ['流量计', '温度计', '压力变送器'],
-                  jianyanData: '2021-01-10T16:00:00.000Z',
-                  jianyanyiju:
-                    'JB/T 6878-2006、GB/T 3216-2016、GB/T 29531-2013、GB/T 29529-2013',
-                  yangpinName: '中开泵',
-                  chouyangAddr: '南方泵业集团',
-                  chouyangAdrr: '厂成品库',
-                  chouyangData: '2021-01-04T16:00:00.000Z',
-                  weituodanwei: '南方泵业集团',
-                  chouyangjishu: '10',
-                  yanshoudengji: '2B',
-                  chanpinbianhao: '2101084523',
-                  jianyanxingzhi: '委托校验',
-                  shengchangData: '2020-12-16T16:00:00.000Z',
-                  shiyanDateTime: '2021-01-10T16:00:00.000Z',
-                  songyangdanwei: '南方泵业集团',
-                  chuchangbianhao: '8',
-                  jianyanbiaozhun: '/',
-                  songyangDateTime: '2021-01-09T16:00:00.000Z',
-                  yangpinzhuangtai: '样品状态完好，适于检验',
-                },
-                groupname: '南方泵业',
-                starttime: 1610154000000,
-                identifier: 'inspectionReportTemp',
-                reportList: [
-                  {
-                    ACL: {
-                      'role:方威检测室': {
-                        read: true,
-                        write: true,
-                      },
-                    },
-                    desc: '0',
-                    icon: '',
-                    name: '南方家用泵',
-                    config: {
-                      name: '南方家用泵',
-                      index: 0,
-                      layer: {
-                        width: 600,
-                        height: 850,
-                        backColor: '#eee',
-                        backgroundImage: '',
-                        widthHeightRatio: '',
-                      },
-                      client: '潜水泵',
-                      deviceid: '',
-                      components: [],
-                      identifier: 'a28b149a-0f31-fe7d-cadc-0be47faf8a8d',
-                    },
-                    devType: '潜水泵',
-                    category: 'Evidence',
-                    children: {
-                      __type: 'Relation',
-                      className: 'Product',
-                    },
-                    nodeType: 1,
-                    objectId: 'c5f31fa3a4',
-                    createdAt: '2021-01-12T12:18:59.570Z',
-                    updatedAt: '2021-01-12T12:18:59.570Z',
-                    productSecret: 'productSecret',
-                  },
-                ],
-                testStatus: 1,
-                TestSetting: {
-                  BasicSetting: {
-                    AcceptParam: {
-                      tHf: 0.05,
-                      tQz: 0.08,
-                      tp_up: 0.08,
-                      te_down: -0.05,
-                      th_down: -0.05,
-                      tq_down: -0.08,
-                    },
-                    dengji_test: '2B',
-                    testPrecision: '2',
-                  },
-                  FormulaSetting: { SpeedConversionFormula: 'GB/t3216-2016' },
-                  ParameterSetting: {
-                    SumAverage: false,
-                    AverageNumber: '15',
-                    AcquisitionCycle: '30',
-                    RemoveMaxMinGetAverage: false,
-                    HeightOfSubmersiblePump: '0.5',
-                    GravitationalAcceleration: '9.81',
-                  },
-                  StabilitySetting: {
-                    Speed: 'GB/T3216-2016',
-                    FlowHeadEfficiency: 'GB/T3216-2016',
-                  },
-                  QualifiedConditionsSetting: {
-                    QualifiedConditions: 'GB/T3216-2016',
-                  },
-                },
-                verifyStatus: 0,
-                insectionName: '南方家用泵',
-                PrescribedPoint: {
-                  H1: '',
-                  H2: '43',
-                  H3: '',
-                  Q1: '',
-                  Q2: '10',
-                  Q3: '',
-                  tR: '0.05',
-                  rpm: '2950',
-                  DJXL: '',
-                  NpRC: '0.01',
-                  NpshG: '2',
-                  gddxl: '72',
-                  glysG: '0.86',
-                  point: '',
-                  glysRC: '0.08',
-                  qishi1: '',
-                  qishi2: '2',
-                  qishi3: '',
-                  temzcG: '35',
-                  xiaolv1: '',
-                  xiaolv2: '72',
-                  xiaolv3: '',
-                  zhougv1: '',
-                  zhougv2: '2200',
-                  zhougv3: '',
-                  zhendongG: '4.5',
-                  pointDataArr: [],
-                },
-                SouthPrescribedPoint: {
-                  H1: '',
-                  H2: '43',
-                  H3: '',
-                  Q1: '',
-                  Q2: '10',
-                  Q3: '',
-                  tR: '0.05',
-                  rpm: '2950',
-                  DJXL: '',
-                  NpRC: '0.01',
-                  NpshG: '2',
-                  gddxl: '72',
-                  glysG: '0.86',
-                  point: '',
-                  glysRC: '0.08',
-                  qishi1: '',
-                  qishi2: '2',
-                  qishi3: '',
-                  temzcG: '35',
-                  xiaolv1: '',
-                  xiaolv2: '72',
-                  xiaolv3: '',
-                  zhougv1: '',
-                  zhougv2: '2200',
-                  zhougv3: '',
-                  zhendongG: '4.5',
-                  pointDataArr: [],
-                },
-              },
-              detail: {
-                desc: '南方泵业家用泵检测',
-                brand: '数蛙桌面采集网关',
-                batchId: {
-                  batch_name: '2021112',
-                  createdtime: 1610454315,
-                },
-                devModel: 'SW_WIN_CAPTURE',
-                isEnable: true,
-              },
-              devaddr: 'cf4f2e4c63e2',
-              ip: '',
-              isEnable: true,
-              name: '南方泵业家用泵检测',
-              product: {
-                objectId: 'c5f31fa3a4',
-                __type: 'Pointer',
-                className: 'Product',
-              },
-              status: 'ONLINE',
-              ACL: {
-                'role:方威检测室': {
-                  read: true,
-                  write: true,
-                },
-              },
-            },
-          ],
-        }
         const { count = 0, results = [] } = await queryDevice(params)
-        this.list = results.length ? results : tempList.results
+        this.list = results
         results.forEach((item) => {
           item.basedata.endtime = moment(item.basedata.endtime).format(
             'YYYY-MM-DD HH:mm:ss'

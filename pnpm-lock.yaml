@@ -18,6 +18,8 @@ specifiers:
   '@vue/cli-service': ^4.5.14
   '@vue/eslint-config-prettier': 6.0.0
   amis: 1.4.1
+  amis-editor: ^3.3.7
+  amis-editor-sdk: ^0.1.3
   axios: 0.24.0
   babel-plugin-transform-remove-console: 6.9.4
   body-parser: 1.19.0
@@ -93,6 +95,8 @@ dependencies:
   '@vue/babel-helper-vue-jsx-merge-props': 1.2.1
   '@vue/cli-plugin-pwa': 4.5.15_@vue+cli-service@4.5.15
   amis: 1.4.1
+  amis-editor: 3.3.11_amis@1.4.1+react-dom@16.14.0
+  amis-editor-sdk: 0.1.3_react-dom@16.14.0
   axios: 0.24.0
   clean-webpack-plugin: 4.0.0
   clone: 2.1.2
@@ -1943,6 +1947,10 @@ packages:
       '@types/node': 16.11.7
     dev: true
 
+  /@types/deep-diff/1.0.1:
+    resolution: {integrity: sha1-6uFRGcaLcrVBcxhyoog9qJ3Dk5Y=, tarball: '@types/deep-diff/download/@types/deep-diff-1.0.1.tgz'}
+    dev: false
+
   /@types/express-serve-static-core/4.17.25:
     resolution: {integrity: sha512-OUJIVfRMFijZukGGwTpKNFprqCCXk5WjNGvUgB/CxxBR40QWSjsNK86+yvGKlCOGc7sbwfHLaXhkG+NsytwBaQ==, tarball: '@types/express-serve-static-core/download/@types/express-serve-static-core-4.17.25.tgz'}
     dependencies:
@@ -2719,6 +2727,56 @@ packages:
     resolution: {integrity: sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=, tarball: alphanum-sort/download/alphanum-sort-1.0.2.tgz}
     dev: true
 
+  /amis-editor-sdk/0.1.3_react-dom@16.14.0:
+    resolution: {integrity: sha1-rOg654FxjSHgNawtCI2mvJXB+eU=, tarball: amis-editor-sdk/download/amis-editor-sdk-0.1.3.tgz}
+    dependencies:
+      amis: 1.4.1
+      amis-editor: 2.0.14_react-dom@16.14.0
+      axios: 0.21.4
+    transitivePeerDependencies:
+      - debug
+      - react
+      - react-dom
+      - react-native
+    dev: false
+
+  /amis-editor/2.0.14_react-dom@16.14.0:
+    resolution: {integrity: sha1-yuR9sEj4xkTBRKF2HipX/ZQ3FSw=, tarball: amis-editor/download/amis-editor-2.0.14.tgz}
+    dependencies:
+      '@types/deep-diff': 1.0.1
+      amis: 1.4.1
+      copy-to-clipboard: 3.3.1
+      deep-diff: 1.0.2
+      dom-helpers: 3.4.0
+      json-ast-comments: 1.0.9
+      mobx: 4.15.7
+      mobx-react: 6.3.1_mobx@4.15.7+react-dom@16.14.0
+      mobx-state-tree: 3.17.3_mobx@4.15.7
+    transitivePeerDependencies:
+      - react
+      - react-dom
+      - react-native
+    dev: false
+
+  /amis-editor/3.3.11_amis@1.4.1+react-dom@16.14.0:
+    resolution: {integrity: sha1-MhEY+7SOG/3UBKgcyR7hf6tZ90Q=, tarball: amis-editor/download/amis-editor-3.3.11.tgz}
+    peerDependencies:
+      amis: '*'
+    dependencies:
+      '@types/deep-diff': 1.0.1
+      amis: 1.4.1
+      deep-diff: 1.0.2
+      json-ast-comments: 1.0.9
+      mobx: 4.15.7
+      mobx-react: 6.3.1_mobx@4.15.7+react-dom@16.14.0
+      mobx-state-tree: 3.17.3_mobx@4.15.7
+      react-json-view: 1.21.3_react-dom@16.14.0
+    transitivePeerDependencies:
+      - react
+      - react-dom
+      - react-native
+    dev: false
+
   /amis/1.4.1:
     resolution: {integrity: sha512-eIIzevvdoLGa//sO2YQcJLyM5wsI1Fxukwze8GCjCitsO83hplULa/1obt7r1sYFSRXN/mcDryQLO5amsEYXHA==, tarball: amis/download/amis-1.4.1.tgz}
     dependencies:
@@ -3091,6 +3149,14 @@ packages:
     resolution: {integrity: sha1-Kjr8My8AMbQvYC9KPeA8IRypj3I=, tarball: axe-core/download/axe-core-4.2.3.tgz}
     engines: {node: '>=4'}
     dev: true
+
+  /axios/0.21.4:
+    resolution: {integrity: sha1-xnuQ3AVo5cHPKwuFjEO6KOLtpXU=, tarball: axios/download/axios-0.21.4.tgz}
+    dependencies:
+      follow-redirects: 1.14.5
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /axios/0.24.0:
     resolution: {integrity: sha1-gE5voeS5xSiFAd2d/1anoJQNINY=, tarball: axios/download/axios-0.24.0.tgz}
@@ -4463,7 +4529,6 @@ packages:
     resolution: {integrity: sha1-EVqhqZmP+rYZb5MHatbaO5E2Yq4=, tarball: copy-to-clipboard/download/copy-to-clipboard-3.3.1.tgz}
     dependencies:
       toggle-selection: 1.0.6
-    dev: true
 
   /copy-webpack-plugin/5.1.2_webpack@4.46.0:
     resolution: {integrity: sha1-ioieHcr6bJHGzUvhrRWPHTgjuuI=, tarball: copy-webpack-plugin/download/copy-webpack-plugin-5.1.2.tgz?cache=0&sync_timestamp=1637199410487&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fcopy-webpack-plugin%2Fdownload%2Fcopy-webpack-plugin-5.1.2.tgz}
@@ -5005,6 +5070,10 @@ packages:
   /dedent/0.7.0:
     resolution: {integrity: sha1-JJXduvbrh0q7Dhvp3yLS5aVEMmw=, tarball: dedent/download/dedent-0.7.0.tgz}
 
+  /deep-diff/1.0.2:
+    resolution: {integrity: sha1-r9PR90kRW+ll6Jxj7cersVBrnCY=, tarball: deep-diff/download/deep-diff-1.0.2.tgz}
+    dev: false
+
   /deep-equal/1.1.1:
     resolution: {integrity: sha1-tcmMlCzv+vfLBR4k4UNKJaLmB2o=, tarball: deep-equal/download/deep-equal-1.1.1.tgz}
     dependencies:
@@ -5232,6 +5301,12 @@ packages:
     resolution: {integrity: sha1-ZyGp2u4uKTaClVtq/kFncWJ7t2g=, tarball: dom-converter/download/dom-converter-0.2.0.tgz}
     dependencies:
       utila: 0.4.0
+
+  /dom-helpers/3.4.0:
+    resolution: {integrity: sha1-6bNpcA+Vn2Ls3lprq95LzNkWmvg=, tarball: dom-helpers/download/dom-helpers-3.4.0.tgz}
+    dependencies:
+      '@babel/runtime': 7.16.3
+    dev: false
 
   /dom-helpers/5.2.1:
     resolution: {integrity: sha1-2UAFNrK/giWtmP4FLgKUUaxA6QI=, tarball: dom-helpers/download/dom-helpers-5.2.1.tgz}
@@ -6324,6 +6399,15 @@ packages:
     dependencies:
       inherits: 2.0.4
       readable-stream: 2.3.7
+
+  /flux/4.0.2:
+    resolution: {integrity: sha1-1x3K9stRygWfMD89lk1vMl1ESVI=, tarball: flux/download/flux-4.0.2.tgz}
+    peerDependencies:
+      react: ^15.0.2 || ^16.0.0 || ^17.0.0
+    dependencies:
+      fbemitter: 3.0.0
+      fbjs: 3.0.1
+    dev: false
 
   /flux/4.0.2_react@16.14.0:
     resolution: {integrity: sha1-1x3K9stRygWfMD89lk1vMl1ESVI=, tarball: flux/download/flux-4.0.2.tgz}
@@ -7997,6 +8081,10 @@ packages:
     hasBin: true
     dev: true
 
+  /json-ast-comments/1.0.9:
+    resolution: {integrity: sha1-NkO8zEcgZa85Zt2gKVxKEmMPwUY=, tarball: json-ast-comments/download/json-ast-comments-1.0.9.tgz}
+    dev: false
+
   /json-buffer/3.0.0:
     resolution: {integrity: sha1-Wx85evx11ne96Lz8Dkfh+aPZqJg=, tarball: json-buffer/download/json-buffer-3.0.0.tgz}
     dev: true
@@ -9103,6 +9191,23 @@ packages:
       react-dom: 16.14.0_react@16.14.0
     dev: false
 
+  /mobx-react-lite/2.2.2_mobx@4.15.7+react-dom@16.14.0:
+    resolution: {integrity: sha1-h8IX3HK05HsiST2vFV2vN1n4aKY=, tarball: mobx-react-lite/download/mobx-react-lite-2.2.2.tgz}
+    peerDependencies:
+      mobx: ^4.0.0 || ^5.0.0
+      react: ^16.8.0
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      mobx: 4.15.7
+      react-dom: 16.14.0
+    dev: false
+
   /mobx-react/6.3.1_e98576d7b318dc515d875aefe88d0b88:
     resolution: {integrity: sha1-IE+XVuQuGdkctlmINwY7fn3ofFI=, tarball: mobx-react/download/mobx-react-6.3.1.tgz}
     peerDependencies:
@@ -9112,6 +9217,19 @@ packages:
       mobx: 4.15.7
       mobx-react-lite: 2.2.2_e98576d7b318dc515d875aefe88d0b88
       react: 16.14.0
+    transitivePeerDependencies:
+      - react-dom
+      - react-native
+    dev: false
+
+  /mobx-react/6.3.1_mobx@4.15.7+react-dom@16.14.0:
+    resolution: {integrity: sha1-IE+XVuQuGdkctlmINwY7fn3ofFI=, tarball: mobx-react/download/mobx-react-6.3.1.tgz}
+    peerDependencies:
+      mobx: ^5.15.4 || ^4.15.4
+      react: ^16.8.0 || 16.9.0-alpha.0
+    dependencies:
+      mobx: 4.15.7
+      mobx-react-lite: 2.2.2_mobx@4.15.7+react-dom@16.14.0
     transitivePeerDependencies:
       - react-dom
       - react-native
@@ -10946,6 +11064,19 @@ packages:
     resolution: {integrity: sha1-5pHUqOnHiTZWVVOas3J2Kw77VPA=, tarball: react-is/download/react-is-17.0.2.tgz}
     dev: false
 
+  /react-json-view/1.21.3_react-dom@16.14.0:
+    resolution: {integrity: sha1-8YQgnujxvzdPsMQbCBPP9UVJxHU=, tarball: react-json-view/download/react-json-view-1.21.3.tgz}
+    peerDependencies:
+      react: ^17.0.0 || ^16.3.0 || ^15.5.4
+      react-dom: ^17.0.0 || ^16.3.0 || ^15.5.4
+    dependencies:
+      flux: 4.0.2
+      react-base16-styling: 0.6.0
+      react-dom: 16.14.0
+      react-lifecycles-compat: 3.0.4
+      react-textarea-autosize: 8.3.3
+    dev: false
+
   /react-json-view/1.21.3_react-dom@16.14.0+react@16.14.0:
     resolution: {integrity: sha1-8YQgnujxvzdPsMQbCBPP9UVJxHU=, tarball: react-json-view/download/react-json-view-1.21.3.tgz}
     peerDependencies:
@@ -10990,6 +11121,17 @@ packages:
       react-dom: 16.14.0_react@16.14.0
       uncontrollable: 7.2.1_react@16.14.0
       warning: 4.0.3
+    dev: false
+
+  /react-textarea-autosize/8.3.3:
+    resolution: {integrity: sha1-9wkTlFNp2kU/1VTBaPa6rNH6BNg=, tarball: react-textarea-autosize/download/react-textarea-autosize-8.3.3.tgz}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0
+    dependencies:
+      '@babel/runtime': 7.16.3
+      use-composed-ref: 1.1.0
+      use-latest: 1.2.0
     dev: false
 
   /react-textarea-autosize/8.3.3_react@16.14.0:
@@ -12777,7 +12919,6 @@ packages:
 
   /toggle-selection/1.0.6:
     resolution: {integrity: sha1-bkWxJj8gF/oKzH2J14sVuL932jI=, tarball: toggle-selection/download/toggle-selection-1.0.6.tgz}
-    dev: true
 
   /toidentifier/1.0.0:
     resolution: {integrity: sha1-fhvjRw8ed5SLxD2Uo8j013UrpVM=, tarball: toidentifier/download/toidentifier-1.0.0.tgz}
@@ -13198,6 +13339,14 @@ packages:
       punycode: 1.3.2
       querystring: 0.2.0
 
+  /use-composed-ref/1.1.0:
+    resolution: {integrity: sha1-kiDk6UqXt7AtfSfq6rCzcDRDi7w=, tarball: use-composed-ref/download/use-composed-ref-1.1.0.tgz}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0
+    dependencies:
+      ts-essentials: 2.0.12
+    dev: false
+
   /use-composed-ref/1.1.0_react@16.14.0:
     resolution: {integrity: sha1-kiDk6UqXt7AtfSfq6rCzcDRDi7w=, tarball: use-composed-ref/download/use-composed-ref-1.1.0.tgz}
     peerDependencies:
@@ -13207,12 +13356,26 @@ packages:
       ts-essentials: 2.0.12
     dev: false
 
+  /use-isomorphic-layout-effect/1.1.1:
+    resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0
+    dev: false
+
   /use-isomorphic-layout-effect/1.1.1_react@16.14.0:
     resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0
     dependencies:
       react: 16.14.0
+    dev: false
+
+  /use-latest/1.2.0:
+    resolution: {integrity: sha1-pE9lcrgojgly7EEb3QhAraNm8jI=, tarball: use-latest/download/use-latest-1.2.0.tgz}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0
+    dependencies:
+      use-isomorphic-layout-effect: 1.1.1
     dev: false
 
   /use-latest/1.2.0_react@16.14.0:

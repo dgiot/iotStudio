@@ -25,10 +25,9 @@
       ref="dgiotAmis"
       v-drawerDrag
       append-to-body
-      size="80%"
+      size="90%"
       :title="lowcodeId"
       :visible.sync="amisFlag"
-      :with-header="false"
     >
       <amis :code="code" :object-id="lowcodeId" />
     </el-drawer>
@@ -55,8 +54,8 @@
       }
     },
     mounted() {
-      this.$baseEventBus.$off('lowcodeDesign')
-      this.$baseEventBus.$on('lowcodeDesign', (params) => {
+      this.$baseEventBus.$off('lowcodePreview')
+      this.$baseEventBus.$on('lowcodePreview', (params) => {
         const typePayload = ['amis', 'konva']
         console.log('amis', params)
         const { type, data, objectId } = params

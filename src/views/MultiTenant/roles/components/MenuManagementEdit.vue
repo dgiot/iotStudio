@@ -111,7 +111,7 @@
               </el-image>
               <dgiot-icon v-else :icon="form.meta.icon" />
             </template>
-            <dgiot-icon-selector @handle-icon="handleIcon" />
+            <vab-icon-selector @handle-icon="handleIcon" />
           </el-popover>
         </el-input>
       </el-form-item>
