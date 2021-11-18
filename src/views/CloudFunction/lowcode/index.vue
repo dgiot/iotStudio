@@ -214,10 +214,13 @@
         this.$refs['edit'].type = 'add'
         this.$refs['edit'].showEdit(this.queryForm)
       },
-      handleEdit(row) {
+      async handleEdit(row) {
+        const loading = this.$baseLoading(1)
         this.$refs['edit'].viewId = row.objectId
+        const res = await getView(row.objectId)
         this.$refs['edit'].type = 'edit'
-        this.$refs['edit'].showEdit(row)
+        this.$refs['edit'].showEdit(res)
+        loading.close()
       },
       handleDelete(row) {
         console.log(row.data, row.objectId)

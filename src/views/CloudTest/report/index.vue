@@ -13,8 +13,8 @@
     class="custom-table-container"
     :class="{ 'vab-fullscreen': isFullscreen }"
   >
-    <div :key="height" class="components">
-      <vab-dialog :show.sync="activePopShow">
+    <div>
+      <el-dialog append-to-body :visible.sync="activePopShow">
         <h3 slot="title">
           {{ $translateTitle('cloudTest.add')
           }}{{ $translateTitle('cloudTest.report template') }}
@@ -196,7 +196,7 @@
             />
           </div>
         </el-drawer>
-      </vab-dialog>
+      </el-dialog>
       <vab-dialog :show.sync="tempPopShow">
         <h3 slot="title">
           {{ $translateTitle('cloudTest.report template') }}
@@ -890,3 +890,8 @@
     },
   }
 </script>
+<style>
+  .el-dialog__wrapper {
+    transition-duration: 0.3s;
+  }
+</style>

@@ -116,12 +116,15 @@
 
             config.headers = headers || {}
             config.method = method
-            config.headers['author'] = 'iotn2n'
-            config.headers['platform'] = 'amis'
-            config.headers['departmentToken'] = this.departmentToken
-            config.headers[`${tokenName}`] = this.token
+            _.merge(config.headers, {
+              author: 'iotn2n',
+              platform: 'amis',
+              departmentToken: this.departmentToken,
+              sessionToken: this.token,
+            })
             if (method === 'get' && data) {
               config.params = data
+              console.log('请求参数', config, config.data, data)
             } else if (data && data instanceof FormData) {
               // config.headers = config.headers || {};
               config.headers['Content-Type'] = 'multipart/form-data'
@@ -135,8 +138,8 @@
               // config.headers = config.headers || {};
               config.headers['Content-Type'] = 'application/json'
             }
-
             data && (config.data = data)
+            console.log('请求参数', config, config.data, data)
             return axios(url, config)
           },
           isCancel: (e) => axios.isCancel(e),
