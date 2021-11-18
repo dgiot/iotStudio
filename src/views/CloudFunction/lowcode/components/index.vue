@@ -18,7 +18,7 @@
       :visible.sync="konvaFlag"
       :with-header="false"
     >
-      <dgiot-konva :object-id="lowcodeId" />
+      <dgiot-konva />
     </el-drawer>
 
     <el-drawer
@@ -30,20 +30,20 @@
       :visible.sync="amisFlag"
       :with-header="false"
     >
-      <dgiot-amis :code="code" :object-id="lowcodeId" />
+      <amis :code="code" :object-id="lowcodeId" />
     </el-drawer>
   </div>
 </template>
 
 <script>
-  import dgiotAmis from '@/views/CloudFunction/lowcode/components/dgiotAmis'
+  import amis from '@/views/CloudFunction/lowcode/components/amis'
   import dgiotKonva from '@/views/CloudFunction/lowcode/components/dgiotKonva'
   import { mapMutations } from 'vuex'
   export default {
     name: 'Index',
     components: {
       dgiotKonva,
-      dgiotAmis,
+      amis,
     },
     data() {
       return {
@@ -60,6 +60,7 @@
         const typePayload = ['amis', 'konva']
         console.log('amis', params)
         const { type, data, objectId } = params
+        this.lowcodeId = objectId
         if (typePayload.includes(type)) this.designLowCode(type, objectId, data)
         else {
           this.$message.error('暂不支持该类型低代码设计')
@@ -75,7 +76,7 @@
     activated() {},
     methods: {
       ...mapMutations({
-        set_amisJson: 'amis/set_amisJson',
+        setData: 'view/setData',
       }),
       /**
        * @description 代码设计
@@ -86,10 +87,10 @@
        */
       async designLowCode(type, objectId, data) {
         this.code = data
-        this.lowcodeId = objectId
+        console.log('code')
         switch (type) {
           case 'amis':
-            this.set_amisJson(this.code)
+            this.setData(this.code)
             this.amisFlag = true
             this.konvaFlag = false
             break

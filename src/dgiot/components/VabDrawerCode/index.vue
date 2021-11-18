@@ -118,6 +118,10 @@
         this.drawer = false
         clearTimeout(this.timer)
         console.log('在编辑器中的json')
+        this.$baseEventBus.$emit(
+          'setViewData',
+          JSON.parse(this.$refs.monacoCode.monacoEditor.getValue())
+        )
         console.table(JSON.parse(this.$refs.monacoCode.monacoEditor.getValue()))
         console.log('预览操作')
       },

@@ -9,6 +9,7 @@
 -->
 <template>
   <div :key="treeKey" class="role-tree">
+    {{ depname }}
     <el-input
       v-if="showFilter"
       v-model="filterText"
@@ -17,7 +18,7 @@
     <el-tree
       ref="tree"
       class="role-tree-select"
-      :data="tree"
+      :data="treeData"
       :default-checked-keys="keys"
       :default-expand-all="defaultExpandAll"
       :default-expanded-keys="expandedKeys"
@@ -35,7 +36,9 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
+  import { departmentToken } from '@/api/Role'
+  import moment from 'moment'
 
   export default {
     name: 'VabRoleTree',
@@ -122,6 +125,9 @@
     },
     data() {
       return {
+        depname: '',
+        treeKey: moment().format('x'),
+        treeData: [],
         // 在需要对节点进行过滤时，调用 Tree 实例的filter方法，参数为关键字。
         filterText: '',
         // 角色树展开信息
@@ -134,25 +140,90 @@
     computed: {
       ...mapGetters({
         // 角色树信息数据
+        treeFlag: 'settings/treeFlag',
         roleTree: 'user/roleTree',
-        treeKey: 'user/treeKey',
+        currentDepartment: 'user/currentDepartment',
       }),
+    },
+    watch: {
+      treeFlag: {
+        handler(val) {
+          this.treeData = JSON.parse(localStorage.getItem('roleTree'))
+          this.treeKey = moment().format('x')
+          this.depname = JSON.parse(this.currentDepartment).depname
+        },
+      },
     },
     created() {},
     mounted() {
+      this.treeData = JSON.parse(localStorage.getItem('roleTree'))
+      this.treeKey = moment().format('x')
+      this.depname = JSON.parse(this.currentDepartment).depname
       console.groupCollapsed(
         '%ctree components',
         'color:#009a61; font-size: 28px; font-weight: 300'
       )
-      console.table(this.roleTree)
       console.groupEnd()
     },
     methods: {
-      handleNodeClick(data, checked) {
-        console.log(data, checked)
+      ...mapMutations({
+        setDepartmentToken: 'user/setDepartmentToken',
+        setCurrentDepartment: 'user/setCurrentDepartment',
+      }),
+      /**
+       * @Author: h7ml
+       * @Date: 2021-11-18 11:49:59
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async handleNodeClick(data, checked) {
+        try {
+          const loading = this.$baseLoading()
+          const { access_token, expires_in } = await departmentToken(data.name)
+          Cookies.set('departmentToken', access_token, {
+            expires: new Date(new Date().getTime() + expires_in),
+          })
+          loading.close()
+          this.setDepartmentToken(access_token)
+          this.setCurrentDepartment(JSON.stringify(data))
+          // this._setToken(access_token)
+          console.groupCollapsed(
+            '%ctree handleNodeClick',
+            'color:#009a61; font-size: 28px; font-weight: 300'
+          )
+          this.treeKey = moment().format('x')
+          this.depname = data.depname
+          setTimeout(() => {
+            this.$baseEventBus.$emit('reload-router-view')
+          }, 800)
+          console.log(data)
+          console.log(checked)
+          console.groupEnd()
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request successfully'),
+            'success',
+            'vab-hey-message-success'
+          )
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
       },
       handleCheckClick(data, checked) {
-        console.log(data, checked)
+        console.groupCollapsed(
+          '%ctree handleCheckClick',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.log(data, checked, 'handleCheckClick')
+        console.log(data)
+        console.log(checked)
+        console.groupEnd()
       },
       filterNode(value, data) {
         if (!value) return true

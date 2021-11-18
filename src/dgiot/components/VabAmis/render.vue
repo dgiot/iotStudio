@@ -3,6 +3,7 @@
 </template>
 
 <script>
+  import { mapGetters, mapMutations } from 'vuex'
   /**
    * @description amis配置参数
    */
@@ -43,7 +44,12 @@
         amisKey: moment(new Date()).format('X'),
       }
     },
-
+    computed: {
+      ...mapGetters({
+        token: 'user/token',
+        departmentToken: 'user/departmentToken',
+      }),
+    },
     mounted() {
       this.initEnv()
       console.groupCollapsed(
@@ -110,7 +116,10 @@
 
             config.headers = headers || {}
             config.method = method
-
+            config.headers['author'] = 'iotn2n'
+            config.headers['platform'] = 'amis'
+            config.headers['departmentToken'] = this.departmentToken
+            config.headers[`${tokenName}`] = this.token
             if (method === 'get' && data) {
               config.params = data
             } else if (data && data instanceof FormData) {
@@ -128,8 +137,6 @@
             }
 
             data && (config.data = data)
-            const { sessionToken = '' } = config.headers
-            config.headers[`${tokenName}`] = sessionToken
             return axios(url, config)
           },
           isCancel: (e) => axios.isCancel(e),

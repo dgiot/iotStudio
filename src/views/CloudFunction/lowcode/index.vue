@@ -109,7 +109,7 @@
       @pagination="fetchData"
       @paginationQuery="paginationQuery"
     />
-    <table-edit ref="edit" @fetch-data="fetchData" />
+    <view-edit ref="edit" @fetch-data="fetchData" />
     <lowcodeDesign ref="lowcodeDesign" @objectId="lowcodeId" />
   </div>
 </template>
@@ -117,7 +117,7 @@
 <script>
   import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
   import { queryView, putView, postView, delView, getView } from '@/api/View'
-  import TableEdit from './components/TableEdit'
+  import ViewEdit from './components/ViewEdit'
   const defaultQuery = {
     class: '',
     type: '',
@@ -130,7 +130,7 @@
   export default {
     name: 'ComprehensiveTable',
     components: {
-      TableEdit,
+      ViewEdit,
       lowcodeDesign,
     },
     filters: {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <dgiot-icon icon="node-tree" @click.native="setTree(!tree)" />
+    <dgiot-icon icon="node-tree" @click.native="switchTree(treeFlag)" />
   </div>
 </template>
 
@@ -17,14 +17,19 @@
     },
     computed: {
       ...mapGetters({
-        tree: 'settings/tree',
+        roleTree: 'user/roleTree',
+        treeFlag: 'settings/treeFlag',
       }),
     },
     created() {},
     methods: {
       ...mapActions({
-        setTree: 'settings/setTree',
+        setTreeFlag: 'settings/setTreeFlag',
       }),
+      switchTree(flag) {
+        localStorage.setItem('roleTree', JSON.stringify(this.roleTree))
+        this.setTreeFlag(!flag)
+      },
     },
   }
 </script>

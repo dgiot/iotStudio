@@ -73,7 +73,7 @@
             </el-form-item>
           </el-form>
         </div>
-        <Vab-amis :schema="amisJson" />
+        <dgiot-amis :schema="amisJson" />
         <div slot="footer">
           <el-button type="primary" @click="submitForm('ruleForm')">
             {{ $translateTitle('product.createnow') }}

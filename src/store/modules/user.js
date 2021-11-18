@@ -12,7 +12,12 @@ const getLocalStorage = (key) => {
 const { CDN_URL } = require('../../config')
 
 function queryAllMsg(commit) {
+  console.groupCollapsed(
+    '%ctree queryAllMsg',
+    'color:#009a61; font-size: 28px; font-weight: 300'
+  )
   console.log('queryAllMsg', commit)
+  console.groupEnd()
   const params = {
     count: 'objectId',
     order: '-updatedAt',
@@ -121,6 +126,7 @@ const state = () => ({
   roleTree: getToken('roleTree') || [], // 处理数据类型不匹配
   _Product: getToken('Product'),
   token: getToken(tokenTableName, storage),
+  departmentToken: '',
   name: getToken('name'),
   username: getToken('username'),
   setlogo: getToken('logo'),
@@ -135,8 +141,10 @@ const state = () => ({
     '//prod.iotn2n.com/dgiot_dashboard/public/assets/images/platform/assets/login_images/background.jpg',
   objectId: getToken('objectId'),
   treeKey: moment().format('x'),
+  currentDepartment: {},
 })
 const getters = {
+  currentDepartment: (state) => state.currentDepartment,
   loginInfo: (state) => state.loginInfo,
   Menu: (state) => state.Menu,
   Permission: (state) => state.Permission,
@@ -144,6 +152,7 @@ const getters = {
   roleTree: (state) => state.roleTree,
   _Product: (state) => state._Product,
   token: (state) => state.token,
+  departmentToken: (state) => state.departmentToken,
   username: (state) => state.username,
   avatar: (state) => state.avatar,
   logo: (state) => state.logo,
@@ -154,6 +163,9 @@ const getters = {
   treeKey: (state) => state.treeKey,
 }
 const mutations = {
+  setCurrentDepartment(state, department) {
+    state.currentDepartment = department
+  },
   setTreeKey(state, key) {
     state.treeKey = key
   },
@@ -214,6 +226,14 @@ const mutations = {
     setToken(tokenTableName, token, storage)
   },
   /**
+   * @description 设置部门token
+   * @param state
+   * @param token
+   */
+  setDepartmentToken(state, token) {
+    state.departmentToken = token
+  },
+  /**
    * @description 设置用户名
    * @param {*} state
    * @param {*} username
@@ -233,6 +253,12 @@ const mutations = {
   },
 }
 const actions = {
+  setDepartmentToken({ commit, token }) {
+    commit('setDepartmentToken', token)
+  },
+  setCurrentDepartment({ commit, department }) {
+    commit('setCurrentDepartment', department)
+  },
   setTreeKey({ commit, key }) {
     commit('setTreeKey', key)
   },
@@ -279,11 +305,13 @@ const actions = {
       fileServer,
     } = data
     if (sessionToken) {
+      queryAllMsg(commit)
       Vue.prototype.$FileServe = Cookies.get('fileServer')
       commit('setLoginInfo', userInfo)
       // clientMqtt()
       // initDgiotMqtt(objectId)
       commit('_setToken', sessionToken)
+      commit('setDepartmentToken', sessionToken)
       if (nick) commit('setUsername', nick)
       const page_title = getToken('title') || title
       console.log(tag, 'tag info')
@@ -324,14 +352,6 @@ const actions = {
       )
       return Promise.reject()
     }
-  },
-  /**
-   * @description 通用批量查询接口
-   * @param commit
-   * @return {Promise<void>}
-   */
-  async queryAll({ commit }) {
-    await queryAllMsg(commit)
   },
   /**
    * @description 第三方登录

@@ -50,6 +50,32 @@ export function roletree() {
   })
 }
 
+/**
+ * @description 切换部门时的token
+ * @docs-api https://pump.dgiotcloud.com/dgiot_swagger/#/_User/get_token
+ * @param department
+ * @return {Promise<*>}
+ */
+export async function departmentToken(department) {
+  return request({
+    url: `token?name=${department}`,
+    method: 'get',
+  })
+}
+
+/**
+ * @description 刷新用户token
+ * @docs-api https://pump.dgiotcloud.com/dgiot_swagger/#/_User/get_refresh_session
+ * @param department
+ * @return {Promise<*>}
+ */
+export async function refreshToken(department) {
+  return request({
+    url: 'refresh_session',
+    method: 'get',
+  })
+}
+
 export async function saveRole(data) {
   return request({
     url: 'role',

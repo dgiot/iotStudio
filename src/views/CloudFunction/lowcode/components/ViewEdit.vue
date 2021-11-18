@@ -41,7 +41,7 @@
       <!--            :label="$translateTitle('application.preview')"-->
       <!--            name="code"-->
       <!--          >-->
-      <!--            <vab-amis :schema="amisJson" />-->
+      <!--            <dgiot-amis :schema="amisJson" />-->
       <!--          </el-tab-pane>-->
       <!--        </el-tabs>-->
       <!--      </el-form-item>-->

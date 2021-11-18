@@ -94,9 +94,11 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const { NODE_ENV = '' } = process.env
-    const token = store.getters['user/token']
+    const usertoken = store.getters['user/token']
+    const departmentToken = store.getters['user/departmentToken']
     const { path = '/' } = router.history.current
     let { headers = {} } = config
+    config.headers['departmentToken'] = departmentToken
     if (headers['proxy'] == true) {
       console.log(config, 'config')
       NODE_ENV == 'production'
@@ -108,8 +110,8 @@ instance.interceptors.request.use(
     if (headers['_company']) {
       const { sessionToken = '' } = config.headers
       config.headers[`${tokenName}`] = sessionToken
-    } else if (token) {
-      config.headers[`${tokenName}`] = token
+    } else if (usertoken) {
+      config.headers[`${tokenName}`] = usertoken
     } else if (noCookiePages.indexOf(path) == -1 && !headers[`${tokenName}`]) {
       Vue.prototype.$baseMessage(`当前页${path}未获取到${tokenName}`, 'error')
       router.push({
@@ -129,6 +131,22 @@ instance.interceptors.request.use(
     if (debounce.some((item) => config.url.includes(item))) {
       loadingInstance = Vue.prototype.$baseLoading()
     }
+    /**
+     * @description 不刷新token规则
+     * @type {string[]}
+     */
+    const ignoreApi = ['Navigation']
+    // 二次拦截
+    /**
+     * @description 当用户切换token 后。api中含有/class/ 并且该规则出现在首位时，使用部门token
+     */
+    if (config.url.indexOf('/classes/') == 0) {
+      config.headers[`${tokenName}`] = departmentToken
+      if (!ignoreApi.includes(config.url)) {
+        config.headers[`${tokenName}`] = usertoken
+      }
+    }
+
     return config
   },
   (error) => {

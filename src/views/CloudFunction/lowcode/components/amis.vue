@@ -8,15 +8,11 @@
 * @DocumentLink:
 -->
 <template>
-  <div class="dgiotAmis-container">
-    <div class="dgiotAmis-content">
-      <vab-amis :key="objectId" :schema="amisJson" />
-    </div>
-  </div>
+  <vab-amis :key="objectId" :schema="viewData" />
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
   export default {
     name: 'DgiotAmis',
     components: {},
@@ -34,10 +30,14 @@
     },
     computed: {
       ...mapGetters({
-        amisJson: 'amis/amisJson',
+        viewData: 'view/viewData',
       }),
     },
     mounted() {
+      this.$baseEventBus.$off('setViewData')
+      this.$baseEventBus.$on('setViewData', (data) => {
+        this.setData(data)
+      })
       this.$baseEventBus.$off('submitCode')
       this.$baseEventBus.$on('submitCode', (code) => {
         this.$baseEventBus.$emit('saveLowCode', {
@@ -53,16 +53,10 @@
     beforeDestroy() {}, //生命周期 - 销毁之前
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
-    methods: {}, //如果页面有keep-alive缓存功能，这个函数会触发
+    methods: {
+      ...mapMutations({
+        setData: 'view/setData',
+      }),
+    }, //如果页面有keep-alive缓存功能，这个函数会触发
   }
 </script>
-<style lang="scss" scoped>
-  .dgiotAmis-container {
-    width: 100%;
-    height: 100%;
-    &-container {
-      width: 100%;
-      height: 100%;
-    }
-  }
-</style>

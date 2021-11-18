@@ -1,15 +1,15 @@
 <template>
   <multipane
     :key="treeKey"
-    :class="[tree ? 'custom-resizer' : 'custom']"
+    :class="[treeFlag ? 'custom-resizer' : 'custom']"
     layout="vertical"
   >
     <div
-      :class="[tree ? 'node-tree pane' : 'pane']"
+      :class="[treeFlag ? 'node-tree pane' : 'pane']"
       :style="{
-        width: tree ? '12%' : '0',
-        minWidth: tree ? '10%' : '0',
-        maxWidth: tree ? '30%' : '0%',
+        width: treeFlag ? '12%' : '0',
+        minWidth: treeFlag ? '10%' : '0',
+        maxWidth: treeFlag ? '30%' : '0%',
       }"
     >
       <vab-role-tree :show-filter="true" :tree="roleTree" />
@@ -42,7 +42,7 @@
     computed: {
       ...mapGetters({
         theme: 'settings/theme',
-        tree: 'settings/tree',
+        treeFlag: 'settings/treeFlag',
         extra: 'settings/extra',
         visitedRoutes: 'tabs/visitedRoutes',
         treeKey: 'user/treeKey',
