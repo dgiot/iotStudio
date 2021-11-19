@@ -7,3 +7,11 @@ export async function postRelation(params) {
     params: params,
   })
 }
+
+export function postreport(data) {
+  return request({
+    url: 'report',
+    method: 'post',
+    data,
+  })
+}

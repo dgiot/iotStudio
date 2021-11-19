@@ -90,6 +90,7 @@
           xl: 21,
         },
         productid: this.$route.query.productid || '',
+        viewid: this.$route.query.viewid || '',
       }
     },
     computed: {
@@ -150,10 +151,15 @@
         }
         const loading = _this.$baseColorfullLoading(3)
         try {
-          const { productid, devaddr = undefined } = _this.$route.query
+          const {
+            productid,
+            viewid = undefined,
+            devaddr = undefined,
+          } = _this.$route.query
           let params = {
             productid: productid,
             devaddr: devaddr,
+            viewid: viewid,
           }
           const { message = '', data = {} } = await _getTopo(params)
           // 绘制前不光需要获取到组态数据，还需要获取产品数据

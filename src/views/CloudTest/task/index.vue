@@ -10,12 +10,22 @@
 <template>
   <div ref="custom-table" class="custom-table-container">
     <div class="components">
-      <vab-dialog :show.sync="activePopShow">
+      <vab-dialog :show.sync="activePopShow" width="60%">
         <h3 slot="title">
-          {{ $translateTitle('cloudTest.add')
-          }}{{ $translateTitle('cloudTest.report template') }}
+          {{ $translateTitle('cloudTest.addwordtask') }}
         </h3>
+        <div style="margin: 0 0 20px 0; text-align: right">
+          <el-button plain type="primary" @click="nextpage('ruleForm')">
+            {{ $translateTitle('cloudTest.nextpage') }}
+          </el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">
+            <i class="el-icon-finished">
+              {{ $translateTitle('product.createnow') }}
+            </i>
+          </el-button>
+        </div>
         <div class="content">
+          <el-divider content-position="left">检测任务基本信息</el-divider>
           <el-form
             ref="ruleForm"
             class="demo-ruleForm"
@@ -23,130 +33,92 @@
             :model="ruleForm"
             :rules="rules"
           >
-            <el-form-item
-              :label="$translateTitle('cloudTest.Template name')"
-              prop="name"
-            >
-              <el-input v-model="ruleForm.name" />
-            </el-form-item>
-            <el-form-item
-              :label="$translateTitle('cloudTest.category')"
-              prop="category"
-            >
-              <el-input v-model="ruleForm.category" />
-            </el-form-item>
-            <el-form-item
-              :label="$translateTitle('cloudTest.Trade Names')"
-              prop="factory"
-              required
-            >
-              <el-input v-model="ruleForm.factory" />
-            </el-form-item>
-            <el-form-item
-              :label="$translateTitle('cloudTest.Template file')"
-              prop="file"
-              required
-            >
-              <!--              <el-input v-model="ruleForm.name" />-->
-              <el-upload
-                :key="momentKey"
-                ref="upload"
-                v-model="ruleForm.file"
-                accept=".doc,.docx"
-                action="string"
-                :before-upload="onBeforeUploadImage"
-                class="upload-demo"
-                :file-list="fileList"
-                :http-request="UploadImage"
-                :limit="1"
-                list-type="text"
-                :on-change="fileChange"
-              >
-                <el-button slot="trigger" size="small" type="primary">
-                  {{ $translateTitle('application.selectfile') }}
-                </el-button>
-              </el-upload>
-            </el-form-item>
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('cloudTest.taskname')"
+                  prop="name"
+                >
+                  <el-input v-model="ruleForm.name" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('cloudTest.starttime')"
+                  prop="starttime"
+                >
+                  <el-date-picker
+                    v-model="ruleForm.starttime"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    placeholder="选择开始时间"
+                    style="width: 100%"
+                    type="datetime"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('cloudTest.wordtemplate')"
+                  prop="wordtemplate"
+                >
+                  <el-select
+                    v-model="ruleForm.wordtemplatename"
+                    :placeholder="$translateTitle('task.Select')"
+                    style="width: 100%"
+                    @change="wordtemplateChange"
+                  >
+                    <el-option
+                      v-for="(item, index) in wordtemplist"
+                      :key="index"
+                      :label="item.name"
+                      :value="item"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('cloudTest.endtime')"
+                  prop="endtime"
+                >
+                  <el-date-picker
+                    v-model="ruleForm.endtime"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    placeholder="选择结束时间"
+                    style="width: 100%"
+                    type="datetime"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-divider content-position="left">检测资源信息</el-divider>
+            <el-row :gutter="24">
+              <el-col :span="12">
+                <el-form-item
+                  :label="$translateTitle('cloudTest.testbed')"
+                  prop="testbed"
+                >
+                  <el-select
+                    v-model="ruleForm.testbed"
+                    :placeholder="$translateTitle('task.Select')"
+                    style="width: 100%"
+                    @change="testbedChange"
+                  >
+                    <el-option
+                      v-for="(item, index) in grouplist"
+                      :key="index"
+                      :label="item.name"
+                      :value="item"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
           </el-form>
-        </div>
-        <div slot="footer">
-          <el-button type="primary" @click="submitForm('ruleForm')">
-            {{ $translateTitle('product.createnow') }}
-          </el-button>
-          <el-button @click="resetForm('ruleForm')">
-            {{ $translateTitle('zetadevices.reset') }}
-          </el-button>
-        </div>
-      </vab-dialog>
-      <vab-dialog :show.sync="tempPopShow">
-        <h3 slot="title">
-          {{ $translateTitle('cloudTest.report template') }}
-        </h3>
-        <div class="content">
-          <el-table
-            ref="tableSort"
-            v-loading="listLoading"
-            :border="border"
-            :data="tempList"
-            :height="$baseTableHeight(3)"
-            :size="lineHeight"
-            :stripe="stripe"
-          >
-            <el-table-column
-              align="center"
-              :label="$translateTitle('cloudTest.number')"
-              show-overflow-tooltip
-              width="80"
-            >
-              <template #default="{ $index }">
-                {{ $index + 1 }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              :label="$translateTitle('cloudTest.Template name')"
-              prop="name"
-              show-overflow-tooltip
-              width="auto"
-            />
-            <el-table-column
-              align="center"
-              :label="$translateTitle('cloudTest.Template content')"
-              width="auto"
-            >
-              <template #default="{ row }">
-                <el-image
-                  :preview-src-list="[`${$FileServe + row.icon}`]"
-                  :src="$FileServe + row.icon"
-                  style="width: 40px; height: 40px"
-                />
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              flex="right"
-              :label="$translateTitle(`product.Template management`)"
-              show-overflow-tooltip
-              width="auto"
-            >
-              <template #default="{ row }">
-                <el-button type="success" @click="handlekonva(row)">
-                  {{ $translateTitle(`developer.mapping`) }}
-                </el-button>
-                <el-button type="warning" @click="handleDelete(row, 1)">
-                  {{ $translateTitle(`cloudTest.delete`) }}
-                </el-button>
-              </template>
-            </el-table-column>
-            <template #empty>
-              <el-image
-                class="vab-data-empty"
-                :src="
-                  require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
-                "
-              />
-            </template>
-          </el-table>
         </div>
       </vab-dialog>
     </div>
@@ -156,7 +128,6 @@
           ref="form"
           :inline="true"
           :model="queryForm"
-          size="mini"
           @submit.native.prevent
         >
           <el-form-item>
@@ -195,16 +166,6 @@
         </el-form>
       </vab-query-form-left-panel>
       <vab-query-form-right-panel>
-        <!--        <div class="stripe-panel">-->
-        <!--          <el-checkbox v-model="stripe">-->
-        <!--            {{ $translateTitle('cloudTest.Zebra pattern') }}-->
-        <!--          </el-checkbox>-->
-        <!--        </div>-->
-        <!--        <div class="border-panel">-->
-        <!--          <el-checkbox v-model="border">-->
-        <!--            {{ $translateTitle('cloudTest.frame') }}-->
-        <!--          </el-checkbox>-->
-        <!--        </div>-->
         <el-popover
           ref="popover"
           popper-class="custom-table-checkbox"
@@ -348,9 +309,10 @@
 
 <script>
   import { queryDevice } from '@/api/Device'
-  import { postReportFile } from '@/api/Platform'
   import VabDraggable from 'vuedraggable'
   import { mapGetters } from 'vuex'
+  import { queryProduct } from '@/api/Product'
+  import { postreport } from '@/api/Report'
 
   export default {
     name: 'TaskIndex',
@@ -358,13 +320,6 @@
       VabDraggable,
     },
     data() {
-      const validateFile = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请上传文件'))
-        } else {
-          callback()
-        }
-      }
       return {
         options: [
           {
@@ -376,73 +331,69 @@
             label: '审核完成',
           },
         ],
-        fileList: [],
-        momentKey: moment(new Date()).valueOf(),
         ruleForm: {
-          file: null,
+          testbedid: '',
+          testbed: '',
+          wordtemplatename: '',
+          endtime: '',
+          starttime: '',
+          wordtemplateid: '',
           name: '',
-          category: '',
-          factory: '',
-          date2: '',
         },
         rules: {
           name: [
             {
               required: true,
-              message: '请输入模板名称',
-              trigger: 'blur',
-            },
-            {
-              min: 3,
-              max: 8,
-              message: '长度在 3 到 8 个字符',
+              message: '请输入任务名称',
               trigger: 'blur',
             },
           ],
-          category: [
+          wordtemplatename: [
             {
               required: true,
-              message: '请输入所属品类',
-              trigger: 'blur',
-            },
-            {
-              min: 3,
-              max: 8,
-              message: '长度在 3 到 8 个字符',
-              trigger: 'blur',
+              message: '请选择报告模板',
+              trigger: 'change',
             },
           ],
-          factory: [
+          starttime: [
             {
               required: true,
-              message: '请输入厂商名称',
-              trigger: 'blur',
-            },
-            {
-              min: 3,
-              max: 8,
-              message: '长度在 3 到 8 个字符',
-              trigger: 'blur',
+              message: '请选择开始时间',
+              trigger: 'change',
             },
           ],
-          file: [
+          endtime: [
             {
-              validator: validateFile,
-              trigger: 'blur',
+              required: true,
+              message: '请选择结束时间',
+              trigger: 'change',
+            },
+          ],
+          testbed: [
+            {
+              required: true,
+              message: '请选择测试台体',
+              trigger: 'change',
+            },
+          ],
+          organization: [
+            {
+              required: true,
+              message: '请选择所属组织',
+              trigger: 'change',
             },
           ],
         },
         activePopShow: false,
-        tempPopShow: false,
-        isFullscreen: false,
         border: true,
-        height: this.$baseTableHeight(0) - 20,
+        height: 1000 - 20,
         stripe: true,
         lineHeight: 'medium',
         checkList: [
-          'Inspection number',
           'mission name',
+          'Inspection number',
           'Inspection template',
+          'testbed',
           'Trade Names',
           'Creation time',
           'Starting time',
@@ -450,22 +401,28 @@
         ],
         columns: [
           {
-            label: 'Inspection number',
-            width: 'auto',
-            prop: 'basedata.BasicInfo.bianhao',
-            sortable: true,
-            disableCheck: true,
-          },
-          {
             label: 'mission name',
             width: 'auto',
             prop: 'name',
             sortable: true,
           },
           {
+            label: 'Inspection number',
+            width: 'auto',
+            prop: 'devaddr',
+            sortable: true,
+            disableCheck: true,
+          },
+          {
             label: 'Inspection template',
             width: 'auto',
-            prop: 'basedata.bedname',
+            prop: 'basedata.wordtemplatename',
+            sortable: true,
+          },
+          {
+            label: 'testbed',
+            width: 'auto',
+            prop: 'basedata.testbed',
             sortable: true,
           },
           {
@@ -488,10 +445,7 @@
           },
         ],
         list: [],
-        tempList: [],
         listLoading: true,
-        layout: 'total, sizes, prev, pager, next, jumper',
-        temprow: {},
         queryForm: {
           pageSizes: [10, 20, 30, 50],
           limit: 10,
@@ -503,6 +457,8 @@
           pageSize: 10,
           name: ['审核中', '审核完成'],
         },
+        wordtemplist: [],
+        grouplist: [],
       }
     },
     computed: {
@@ -533,77 +489,70 @@
     },
     created() {
       this.fetchData(this.queryForm)
+      this.getwordtemp()
+      this.getgroup()
     },
     methods: {
-      onBeforeUploadImage(file) {
-        const docxType = [
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-          'application/msword',
-        ]
-        console.error(
-          file,
-          file.size,
-          file.size / 1024 / 1024 < 30,
-          docxType.includes(file.type),
-          file.type
-        )
-        const isIMAGE = docxType.includes(file.type)
-        const isLt30M = file.size / 1024 / 1024 < 30
-        if (!isIMAGE) {
-          this.$message.error('上传文件只能是doc/docx格式!')
-        }
-        if (!isLt30M) {
-          this.$message.error('上传文件大小不能超过 30MB!')
-        }
-        this.momentKey = moment(new Date()).valueOf()
-        return isIMAGE && isLt30M
+      wordtemplateChange(val) {
+        this.$set(this.ruleForm, 'wordtemplatename', val.name),
+          this.$set(this.ruleForm, 'wordtemplateid', val.objectId),
+          console.log('this.ruleForm', this.ruleForm)
       },
-      UploadImage(param) {
-        console.error(param, 'param')
-        this.ruleForm.file = param.file
+      testbedChange(val) {
+        this.$set(this.ruleForm, 'testbed', val.name),
+          this.$set(this.ruleForm, 'testbedid', val.objectId),
+          console.log('this.ruleForm', this.ruleForm)
       },
-      fileChange(file) {
-        this.$refs.upload.clearFiles() //清除文件对象
-        this.logo = file.raw // 取出上传文件的对象，在其它地方也可以使用
-        this.fileList = [
-          {
-            name: file.name,
-            url: file.url,
+      nextpage() {
+        if (this.ruleForm.wordtemplate) {
+          console.log(this.ruleForm.wordtemplate)
+        } else {
+          this.$message({
+            type: 'error',
+            message: '请选择报告模板',
+          })
+        }
+      },
+      async getwordtemp() {
+        const params = {
+          skip: 0,
+          where: {
+            netType: 'Evidence',
+            nodeType: 1,
           },
-        ] // 重新手动赋值filstList， 免得自定义上传成功了, 而fileList并没有动态改变， 这样每次都是上传一个对象
+        }
+        const res = await queryProduct(params)
+        this.wordtemplist = res.results
       },
-      submitUpload() {
-        this.$refs.upload.submit()
-      },
-      handlePreview(file) {
-        console.log(file)
+      async getgroup() {
+        const params = {
+          skip: 0,
+          where: {
+            nodeType: 2,
+          },
+        }
+        const res = await queryProduct(params)
+        this.grouplist = res.results
       },
       submitForm(formName) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            const formData = new FormData()
-            const configTemp = {
-              identifier: 'inspectionReportTemp',
-              client: this.ruleForm.factory,
+            const task = {
+              basedata: {
+                testbedid: this.ruleForm.testbedid,
+                testbed: this.ruleForm.testbed,
+                wordtemplatename: this.ruleForm.wordtemplatename,
+                endtime: this.ruleForm.endtime,
+                starttime: this.ruleForm.starttime,
+                reportId: this.ruleForm.wordtemplateid,
+                identifier: 'inspectionReportTemp',
+              },
+              name: this.ruleForm.name,
+              product: this.ruleForm.wordtemplateid,
             }
-            formData.append('devType', this.ruleForm.category)
-            formData.append('name', this.ruleForm.name)
-            formData.append('config', JSON.stringify(configTemp))
-            formData.append('file', this.ruleForm.file)
             const loading = this.$baseColorfullLoading(1)
-            try {
-              const { result } = await postReportFile(formData)
-              console.log(result)
-              this.$message.success(
-                this.$translateTitle('cloudTest.Template created successfully')
-              )
-              this.activePopShow = false
-              this.fetchData(this.queryForm)
-            } catch (e) {
-              this.$message.error(
-                this.$translateTitle('cloudTest.Template creation failed')
-              )
-            }
+            postreport(task)
+            this.fetchData(this.queryForm)
             loading.close()
           } else {
             console.log('error submit!!')
@@ -619,72 +568,8 @@
         this.queryForm.skip = (val - 1) * this.queryForm.limit
         this.fetchData(this.queryForm)
       },
-      resetForm(formName) {
-        this.ruleForm.file = null
-        this.fileList = []
-        this.$refs[formName].resetFields()
-      },
-      clickFullScreen() {
-        this.isFullscreen = !this.isFullscreen
-        this.handleHeight()
-      },
-      handleHeight() {
-        if (this.isFullscreen) {
-          this.height = this.$baseTableHeight(1) + 210
-        } else {
-          this.height = this.$baseTableHeight(1)
-        }
-      },
-      handlekonva(row) {
-        // 取证类型模板跳转到组态
-        this.$router.push({
-          path: '/Topo',
-          query: {
-            productid: row.objectId,
-            icon: row.icon,
-            type: 'Evidence',
-          },
-        })
-      },
-      async handleManagement(row) {
-        this.temprow = row
-        const params = {
-          limit: 50,
-          skip: 0,
-          keys: 'count(*)',
-          where: {
-            devType: this.temprow.devType,
-            nodeType: 0,
-          },
-          order: 'createdAt',
-        }
-        const loading = this.$baseColorfullLoading(1)
-        try {
-          const { count = 0, results } = await queryDevice(params)
-          this.tempList = results
-        } catch (e) {}
-        this.tempPopShow = true
-        loading.close()
-      },
-      handleDelete(row, flag) {
-        this.$baseConfirm(
-          this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item'
-          ),
-          null,
-          async () => {
-            const res = await delProduct(row.objectId)
-            this.$baseMessage(
-              this.$translateTitle('successfully deleted'),
-              'success',
-              'vab-hey-message-success'
-            )
-            flag == 0
-              ? await this.fetchData(this.queryForm)
-              : await this.handleManagement(this.temprow)
-          }
-        )
-      },
+      async handleManagement(row) {},
+      handleDelete(row, flag) {},
       async fetchData(args) {
         const params = {
           limit: args.limit,
@@ -692,11 +577,7 @@
           skip: this.queryForm.name.length ? 0 : args.skip,
           keys: args.keys,
           where: {
-            // name: this.queryForm.name
-            //   ? { $regex: this.queryForm.name }
-            //   : { $ne: null },
             'basedata.identifier': 'inspectionReportTemp',
-            // nodeType: 1,
           },
         }
         this.listLoading = true
@@ -718,3 +599,8 @@
     },
   }
 </script>
+<style>
+  .el-divider__text {
+    font-size: 18px;
+  }
+</style>

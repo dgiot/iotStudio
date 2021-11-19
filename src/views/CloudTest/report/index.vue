@@ -214,20 +214,17 @@
             <el-table-column
               align="center"
               :label="$translateTitle('cloudTest.number')"
+              prop="title"
               show-overflow-tooltip
               width="80"
-            >
-              <template #default="{ $index }">
-                {{ $index + 1 }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              :label="$translateTitle('cloudTest.Template name')"
-              prop="name"
-              show-overflow-tooltip
-              width="auto"
             />
+            <!--            <el-table-column-->
+            <!--              align="center"-->
+            <!--              :label="$translateTitle('cloudTest.Template name')"-->
+            <!--              prop="name"-->
+            <!--              show-overflow-tooltip-->
+            <!--              width="auto"-->
+            <!--            />-->
             <el-table-column
               align="center"
               :label="$translateTitle('cloudTest.Template content')"
@@ -235,8 +232,8 @@
             >
               <template #default="{ row }">
                 <el-image
-                  :preview-src-list="[$FileServe + row.icon]"
-                  :src="$FileServe + row.icon"
+                  :preview-src-list="[$FileServe + row.data.icon]"
+                  :src="$FileServe + row.data.icon"
                   style="width: 40px; height: 40px"
                 />
               </template>
@@ -441,6 +438,7 @@
 
 <script>
   import { delProduct, queryProduct } from '@/api/Product'
+  import { queryView } from '@/api/View'
   import { postReportFile } from '@/api/Platform'
   import VabDraggable from 'vuedraggable'
   import { mapGetters } from 'vuex'
@@ -812,7 +810,8 @@
         this.$router.push({
           path: '/Topo',
           query: {
-            productid: row.objectId,
+            productid: row.key,
+            viewid: row.objectId,
             icon: row.icon,
             type: 'Evidence',
           },
@@ -825,20 +824,15 @@
           skip: 0,
           keys: 'count(*)',
           where: {
-            $relatedTo: {
-              object: {
-                __type: 'Pointer',
-                className: 'Product',
-                objectId: this.temprow.objectId,
-              },
-              key: 'children',
-            },
+            type: 'topo',
+            class: 'Product',
+            key: row.objectId,
           },
-          order: 'createdAt',
+          order: 'title',
         }
         const loading = this.$baseColorfullLoading(1)
         try {
-          const { count = 0, results } = await queryProduct(params)
+          const { count = 0, results } = await queryView(params)
           this.tempList = results
         } catch (e) {}
         this.tempPopShow = true
