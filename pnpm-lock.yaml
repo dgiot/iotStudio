@@ -2734,6 +2734,7 @@ packages:
       amis-editor: 2.0.14_react-dom@16.14.0
       axios: 0.21.4
     transitivePeerDependencies:
+      - '@types/react'
       - debug
       - react
       - react-dom
@@ -2753,6 +2754,7 @@ packages:
       mobx-react: 6.3.1_mobx@4.15.7+react-dom@16.14.0
       mobx-state-tree: 3.17.3_mobx@4.15.7
     transitivePeerDependencies:
+      - '@types/react'
       - react
       - react-dom
       - react-native
@@ -2772,6 +2774,7 @@ packages:
       mobx-state-tree: 3.17.3_mobx@4.15.7
       react-json-view: 1.21.3_react-dom@16.14.0
     transitivePeerDependencies:
+      - '@types/react'
       - react
       - react-dom
       - react-native
@@ -2830,6 +2833,7 @@ packages:
       uncontrollable: 7.2.1_react@16.14.0
       video-react: 0.14.1_react-dom@16.14.0+react@16.14.0
     transitivePeerDependencies:
+      - '@types/react'
       - react-native
     dev: false
 
@@ -11075,6 +11079,8 @@ packages:
       react-dom: 16.14.0
       react-lifecycles-compat: 3.0.4
       react-textarea-autosize: 8.3.3
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-json-view/1.21.3_react-dom@16.14.0+react@16.14.0:
@@ -11089,6 +11095,8 @@ packages:
       react-dom: 16.14.0_react@16.14.0
       react-lifecycles-compat: 3.0.4
       react-textarea-autosize: 8.3.3_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-lifecycles-compat/3.0.4:
@@ -11132,6 +11140,8 @@ packages:
       '@babel/runtime': 7.16.3
       use-composed-ref: 1.1.0
       use-latest: 1.2.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-textarea-autosize/8.3.3_react@16.14.0:
@@ -11144,6 +11154,8 @@ packages:
       react: 16.14.0
       use-composed-ref: 1.1.0_react@16.14.0
       use-latest: 1.2.0_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-transition-group/4.4.2_react-dom@16.14.0+react@16.14.0:
@@ -13359,13 +13371,21 @@ packages:
   /use-isomorphic-layout-effect/1.1.1:
     resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dev: false
 
   /use-isomorphic-layout-effect/1.1.1_react@16.14.0:
     resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: 16.14.0
     dev: false
@@ -13373,7 +13393,11 @@ packages:
   /use-latest/1.2.0:
     resolution: {integrity: sha1-pE9lcrgojgly7EEb3QhAraNm8jI=, tarball: use-latest/download/use-latest-1.2.0.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       use-isomorphic-layout-effect: 1.1.1
     dev: false
@@ -13381,7 +13405,11 @@ packages:
   /use-latest/1.2.0_react@16.14.0:
     resolution: {integrity: sha1-pE9lcrgojgly7EEb3QhAraNm8jI=, tarball: use-latest/download/use-latest-1.2.0.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: 16.14.0
       use-isomorphic-layout-effect: 1.1.1_react@16.14.0
