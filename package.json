@@ -1,6 +1,6 @@
 {
   "name": "@dgiot/dgiot-dashboard",
-  "version": "4.3.7",
+  "version": "4.3.9",
   "author": "iotn2n",
   "license": "Mozilla Public License Version 2.0",
   "private": false,
@@ -39,7 +39,7 @@
     "downCdn": "node utils/downCdn.js",
     "downIconfront": "node utils/downIconfront.js",
     "changelog": "standard-version 0.0.1 && pnpm changelog:zh && pnpm changelog:en",
-    "cp:git": "rimraf .git && cp -r .git .git",
+    "cp:git": "rimraf github && cp -r .git github",
     "rmEnv": "rimraf .env",
     "local:server": "node utils/server.js",
     "lighthouse": "node utils/lighthouse.js",
