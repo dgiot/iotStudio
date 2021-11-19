@@ -46,6 +46,7 @@ specifiers:
   hard-source-webpack-plugin: 0.13.1
   html-webpack-plugin: 5.5.0
   husky: 7.0.4
+  increase-memory-limit: ^1.0.7
   indent-string: 5.0.0
   ip: 1.1.5
   konva: 8.2.3
@@ -105,6 +106,7 @@ dependencies:
   file-loader: 6.2.0
   fork-ts-checker-webpack-plugin: 6.4.0_79d5386a1cbf2ce51f20748cd0e82c5e
   html-webpack-plugin: 5.5.0
+  increase-memory-limit: 1.0.7
   indent-string: 5.0.0
   ip: 1.1.5
   konva: 8.2.3
@@ -7472,6 +7474,13 @@ packages:
   /imurmurhash/0.1.4:
     resolution: {integrity: sha1-khi5srkoojixPcT7a21XbyMUU+o=, tarball: imurmurhash/download/imurmurhash-0.1.4.tgz}
     engines: {node: '>=0.8.19'}
+
+  /increase-memory-limit/1.0.7:
+    resolution: {integrity: sha1-gEF+c25F/P1qPVFbQ14urqTmIjM=, tarball: increase-memory-limit/download/increase-memory-limit-1.0.7.tgz}
+    hasBin: true
+    dependencies:
+      glob: 7.2.0
+    dev: false
 
   /indent-string/4.0.0:
     resolution: {integrity: sha1-Yk+PRJfWGbLZdoUx1Y9BIoVNclE=, tarball: indent-string/download/indent-string-4.0.0.tgz}
