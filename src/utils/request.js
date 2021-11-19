@@ -153,14 +153,22 @@ instance.interceptors.request.use(
      */
     if (config.url.indexOf('/classes/') == 0) {
       console.groupCollapsed(
-        `%c部门切换token拦截url日志\n拦截的url为${config.url}\n当前请求使用了部门token：为${departmentToken}\n用户登录token为${usertoken}`,
+        `%c部门切换token拦截url日志`,
+        'color:black; font-size: 18px; font-weight: 300'
+      )
+      console.log(
+        `拦截的url为${config.url}\n当前请求使用了部门token：为${departmentToken}\n用户登录token为${usertoken}`,
         'color:black; font-size: 18px; font-weight: 300'
       )
       console.groupEnd()
       config.headers[`${tokenName}`] = departmentToken
       if (ignoreApi.includes(config.url)) {
         console.groupCollapsed(
-          `%忽略url拦截日志\n忽略的url为${config.url}\n当前请求用户登录token：为${usertoken}\n部门token为${departmentToken}`,
+          `%c忽略url拦截日志`,
+          'color:black; font-size: 18px; font-weight: 300'
+        )
+        console.log(
+          `忽略的url为${config.url}\n当前请求用户登录token：为${usertoken}\n部门token为${departmentToken}`,
           'color:black; font-size: 18px; font-weight: 300'
         )
         console.groupEnd()

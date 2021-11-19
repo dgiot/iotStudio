@@ -199,7 +199,7 @@
           this.setCurrentDepartment(data)
           const { access_token: sessionToken, expires_in } =
             await departmentToken(data.name)
-          console.log(`当前部门token为${sessionToken}`)
+          console.log(`部门：${data.name}\ntoken为${sessionToken}`)
           // Cookies.set('departmentToken', access_token, {
           //   expires: new Date(new Date().getTime() + expires_in),
           // })

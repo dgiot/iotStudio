@@ -222,17 +222,11 @@
                 <div style="margin: 0; text-align: right">
                   <el-button
                     size="mini"
-                    @click="
-                      row._self.$refs[`popover-${row.$index}`].doClose()
-                    "
+                    @click="row._self.$refs[`popover-${row.$index}`].doClose()"
                   >
                     {{ $translateTitle('developer.cancel') }}
                   </el-button>
-                  <el-button
-                    size="mini"
-                    type="primary"
-                    @click="makeSure(row)"
-                  >
+                  <el-button size="mini" type="primary" @click="makeSure(row)">
                     {{ $translateTitle('developer.determine') }}
                   </el-button>
                 </div>
@@ -266,6 +260,13 @@
         size="60%"
         top="5vh"
       >
+        <el-alert
+          v-show="!currentDepartment.name"
+          :closable="false"
+          description="请先选择部门后,再来新增产品"
+          title="温馨提示"
+          type="success"
+        />
         <div class="devproduct-prodialog-content">
           <!--产品信息-->
           <div class="contentone">
@@ -313,7 +314,10 @@
               >
                 <el-row :gutter="24">
                   <el-col :span="10">
-                    <el-radio-group v-model="form.type" :disabled="custom_status == 'edit' && form.type != ''">
+                    <el-radio-group
+                      v-model="form.type"
+                      :disabled="custom_status == 'edit' && form.type != ''"
+                    >
                       <el-radio :label="1">
                         {{ $translateTitle('product.Standard category') }}
                       </el-radio>
@@ -391,23 +395,15 @@
                 </el-select>
               </el-form-item>
               <el-form-item
-                :label="$translateTitle('developer.applicationtype')"
+                v-show="custom_status != 'edit'"
+                :label="$translateTitle('product.Current department')"
                 prop="relationApp"
               >
                 <el-input
                   v-model="form.relationApp"
-                  :disabled="custom_status == 'edit' && form.relationApp != ''"
-                  :placeholder="$translateTitle('product.pleaseselectyourapp')"
+                  :placeholder="$translateTitle('product.Current department')"
                   readonly
-                  @focus="showTree = !showTree"
                 />
-                <div v-if="showTree">
-                  <el-tree
-                    :data="allApps"
-                    :props="defaultProps"
-                    @node-click="handleNodeClick"
-                  />
-                </div>
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.nodetype')"
@@ -708,9 +704,7 @@
                         size="mini"
                         title="删除"
                         type="danger"
-                        @click.native="
-                          delRow(row.$index, dictTempForm.params)
-                        "
+                        @click.native="delRow(row.$index, dictTempForm.params)"
                       >
                         删除
                       </el-button>
@@ -719,9 +713,7 @@
                         size="mini"
                         title="编辑"
                         type="info"
-                        @click.native="
-                          editRow(row.$index, dictTempForm.params)
-                        "
+                        @click.native="editRow(row.$index, dictTempForm.params)"
                       >
                         编辑
                       </el-button>
@@ -1279,19 +1271,19 @@
 <!--eslint-disable-->
 <script>
   // import Pagination from '@dgiot/dgiot-component/src/components/Pagination'
-  import profile from "@/views/DeviceCloud/manage/profile";
-  import { uuid } from "@/utils";
-  import { queryChannel } from "@/api/Channel/index";
-  import { mapGetters } from "vuex";
-  import { delProduct, getProduct, putProduct } from "@/api/Product";
-  import { getAllunit } from "@/api/Dict/index";
-  import { queryDevice } from "@/api/Device/index";
-  import { getServer } from "@/api/Role/index";
-  import { postDict } from "@/api/Dict";
-  import { getHashClass } from "@/api/Hash";
-  import { ExportParse, ImportParse } from "@/api/Export";
-  import { queryProductTemplet } from "@/api/ProductTemplet";
-  import { getCategory, queryCategory } from "@/api/Category";
+  import profile from '@/views/DeviceCloud/manage/profile'
+  import { uuid } from '@/utils'
+  import { queryChannel } from '@/api/Channel/index'
+  import { mapGetters } from 'vuex'
+  import { delProduct, getProduct, putProduct } from '@/api/Product'
+  import { getAllunit } from '@/api/Dict/index'
+  import { queryDevice } from '@/api/Device/index'
+  import { getServer } from '@/api/Role/index'
+  import { postDict } from '@/api/Dict'
+  import { getHashClass } from '@/api/Hash'
+  import { ExportParse, ImportParse } from '@/api/Export'
+  import { queryProductTemplet } from '@/api/ProductTemplet'
+  import { getCategory, queryCategory } from '@/api/Category'
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
@@ -1402,10 +1394,6 @@
         custom_row: {},
         custom_status: 'add',
         hashkey: '',
-        defaultProps: {
-          children: 'children',
-          label: 'label',
-        },
         length: 10,
         total: 0,
         start: 0,
@@ -1584,7 +1572,6 @@
         Parserzh: '',
         parseren: '',
         loading: false,
-        allApps: [],
         categoryList: [],
         fileServer: '',
         access_token: '',
@@ -1600,7 +1587,7 @@
       ...mapGetters({
         defaultKonva: 'topo/defaultKonva',
         token: 'user/token',
-        roleTree: 'user/roleTree',
+        currentDepartment: 'user/currentDepartment',
       }),
     },
     mounted() {
@@ -1867,10 +1854,6 @@
       onError() {
         this.$message('非Json数据类型')
       },
-      handleNodeClick(data) {
-        this.$set(this.form, 'relationApp', data.name)
-        this.showTree = !this.showTree
-      },
       selectApp(val) {
         if (!val) {
           return
@@ -1989,7 +1972,6 @@
             this.proTableData = results
             this.total = count
           }
-          this.getApps()
         } catch (error) {
           this.listLoading = false
           console.log(error)
@@ -1999,9 +1981,6 @@
             'vab-hey-message-error'
           )
         }
-      },
-      getApps() {
-        this.allApps = this.roleTree
       },
       handleClose() {
         this.dialogFormVisible = false
@@ -2043,7 +2022,6 @@
         // return false
         this.moduleTitle = this.$translateTitle('product.createproduct')
         this.imageUrl = ''
-        this.handleNodeClick(this.allApps[0])
         this.form = {
           name: '',
           type: 1,
@@ -2053,7 +2031,7 @@
           netType: ' ',
           devType: '',
           productSecret: '',
-          relationApp: this.allApps[0].name,
+          relationApp: this.currentDepartment.name,
           roles: [],
           categoryname: '',
         }
@@ -2227,13 +2205,8 @@
         if (row.icon) {
           this.imageUrl = row.icon
         }
-        let rows = []
-        for (var key in row.ACL) {
-          rows.push(key)
-          if (key.includes('role')) {
-            this.form.relationApp = key ? key.substr(5) : ''
-          }
-        }
+
+        // this.form.relationApp = this.currentDepartment.name
         console.log('row', row)
         console.log('form', this.form)
       },

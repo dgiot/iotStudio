@@ -13,7 +13,7 @@
             {{ deciceCompany }}
           </p>
           <el-tree
-            :data="deptTreeData"
+            :data="roleTree"
             default-expand-all
             :expand-on-click-node="false"
             node-key="index"
@@ -167,41 +167,6 @@
                 :model="queryForm"
                 @submit.native.prevent
               >
-                <el-form-item :label="$translateTitle('equipment.Department')">
-                  <el-select
-                    v-model="queryForm.workGroupName"
-                    placeholder="请选择"
-                    @visible-change="change($event)"
-                  >
-                    <el-option
-                      style="height: auto; padding: 0"
-                      :value="treeDataValue"
-                    >
-                      <el-tree
-                        ref="workGroup"
-                        :data="deptTreeData"
-                        default-expand-all
-                        :expand-on-click-node="false"
-                        node-key="index"
-                        :props="roleProps"
-                      >
-                        <div
-                          slot-scope="{ node, data }"
-                          class="custom-tree-node"
-                        >
-                          <span
-                            :class="{
-                              selected: data.objectId == curDepartmentId,
-                            }"
-                            @click="handleNodeClick(data, node)"
-                          >
-                            {{ node.label }}
-                          </span>
-                        </div>
-                      </el-tree>
-                    </el-option>
-                  </el-select>
-                </el-form-item>
                 <el-form-item :label="$translateTitle('equipment.Products')">
                   <el-select
                     v-model="equvalue"
@@ -358,7 +323,6 @@
               v-loading="listLoading"
               :border="border"
               :data="tableData"
-              :height="height"
               :row-style="rowClass"
               :size="lineHeight"
               :stripe="stripe"
@@ -579,7 +543,6 @@
               ref="filterTable"
               v-loading="listLoading"
               :data="tableData"
-              :height="height"
               :row-style="rowClass"
               style="width: 100%"
               @selection-change="changeBox"
@@ -1457,7 +1420,6 @@
         editRow: {},
         selectedList: [],
         formData: {},
-        height: this.$baseTableHeight(0) - 120,
         topicData: [],
         InfoDialog: false,
         devicedetail: {},
@@ -1514,7 +1476,6 @@
         vabicon: 'ancient-gate-fill',
         Company: sessionStorage.getItem('title') || '',
         curDepartmentId: '',
-        deptTreeData: [],
         roleProps: {
           children: 'children',
           label: 'name',
@@ -1699,7 +1660,6 @@
           : this.$route.query.deciceType == 'dev_unline'
           ? '离线'
           : ''
-      this.getMenu()
       this.selectdevice = this.language == 'zh' ? '设备名称' : 'devicename'
       this.queryProduct()
       this.aclObj = this.$aclObj(this._role)
@@ -2116,7 +2076,6 @@
             await putDevice(this.deviceId, parmas).then((res) => {
               if (res.updatedAt) {
                 this.popoverVisible = false
-                this.getMenu()
                 this.$message({
                   type: 'success',
                   message: this.$translateTitle(`迁移成功`),
@@ -2133,12 +2092,6 @@
             console.log(e)
           })
         console.log(data.name)
-      },
-      getMenu() {
-        console.log('this.roleTree', this.roleTree)
-        this.deptTreeData = this.roleTree
-        console.log(this.deptTreeData)
-        this.handleNodeClick(this.deptTreeData[0], 0)
       },
       async handleNodeClick(data, node) {
         const aclRole = this._role.map((r) => {
