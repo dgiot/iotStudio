@@ -179,8 +179,8 @@
 </template>
 <!--eslint-disable-->
 <script>
-  import { postTrace } from '@/api/System'
-  import { getProduct } from '@/api/Product'
+  import { postTrace } from "@/api/System";
+  import { getProduct } from "@/api/Product";
 
   export default {
     name: 'SceneLog',

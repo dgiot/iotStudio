@@ -1279,19 +1279,19 @@
 <!--eslint-disable-->
 <script>
   // import Pagination from '@dgiot/dgiot-component/src/components/Pagination'
-  import profile from '@/views/DeviceCloud/manage/profile'
-  import { uuid } from '@/utils'
-  import { queryChannel } from '@/api/Channel/index'
-  import { mapGetters } from 'vuex'
-  import { delProduct, getProduct, putProduct } from '@/api/Product'
-  import { getAllunit } from '@/api/Dict/index'
-  import { queryDevice } from '@/api/Device/index'
-  import { getServer } from '@/api/Role/index'
-  import { postDict } from '@/api/Dict'
-  import { getHashClass } from '@/api/Hash'
-  import { ExportParse, ImportParse } from '@/api/Export'
-  import { queryProductTemplet } from '@/api/ProductTemplet'
-  import { getCategory, queryCategory } from '@/api/Category'
+  import profile from "@/views/DeviceCloud/manage/profile";
+  import { uuid } from "@/utils";
+  import { queryChannel } from "@/api/Channel/index";
+  import { mapGetters } from "vuex";
+  import { delProduct, getProduct, putProduct } from "@/api/Product";
+  import { getAllunit } from "@/api/Dict/index";
+  import { queryDevice } from "@/api/Device/index";
+  import { getServer } from "@/api/Role/index";
+  import { postDict } from "@/api/Dict";
+  import { getHashClass } from "@/api/Hash";
+  import { ExportParse, ImportParse } from "@/api/Export";
+  import { queryProductTemplet } from "@/api/ProductTemplet";
+  import { getCategory, queryCategory } from "@/api/Category";
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}

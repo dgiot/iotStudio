@@ -748,19 +748,14 @@
 </template>
 <!--eslint-disable-->
 <script>
-  import info from '@/components/Device/info'
-  import SceneLog from '@/views/DeviceCloud/manage/component/SceneLog'
-  import deviceLog from '@/views/CloudSystem/logs/device'
-  import { mapGetters } from 'vuex'
-  import {
-    getCardDevice,
-    getDabDevice,
-    getDevice,
-    queryDevice,
-  } from '@/api/Device/index.js'
-  import { utc2beijing } from '@/utils/index'
-  import Instruct from '@/views/DeviceCloud/category/instruct_manage'
-  import chartType from '@/api/Mock/Chart'
+  import info from "@/components/Device/info";
+  import SceneLog from "@/views/DeviceCloud/manage/component/SceneLog";
+  import deviceLog from "@/views/CloudSystem/logs/device";
+  import { mapGetters } from "vuex";
+  import { getCardDevice, getDabDevice, getDevice, queryDevice } from "@/api/Device/index.js";
+  import { utc2beijing } from "@/utils/index";
+  import Instruct from "@/views/DeviceCloud/category/instruct_manage";
+  import chartType from "@/api/Mock/Chart";
   // import { requireModule } from '@/utils/file'
   const columns = [
     {

@@ -10,7 +10,6 @@ const getLocalStorage = (key) => {
     return false
   }
 }
-const { CDN_URL } = require('../../config')
 
 function queryAllMsg(commit) {
   console.groupCollapsed(
@@ -82,12 +81,10 @@ import {
   showTabsBarIcon,
   showTheme,
   showThemeSetting,
-  storage,
   tabsBarStyle,
   themeName,
   title,
   tokenName,
-  tokenTableName,
 } from '@/config'
 import { getUserInfo, login, logout, socialLogin } from '@/api/User/index'
 import { queryMenu } from '@/api/Menu/index'

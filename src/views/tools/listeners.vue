@@ -43,8 +43,8 @@
 </template>
 <!--eslint-disable-->
 <script>
-  import { mapActions } from 'vuex'
-  import { Option, Select, Table, TableColumn } from 'element-ui'
+  import { mapActions } from "vuex";
+  import { Option, Select, Table, TableColumn } from "element-ui";
 
   export default {
     name: 'ListenersView',

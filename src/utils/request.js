@@ -1,17 +1,18 @@
 import {
+  authentication,
   baseURL,
   contentType,
   debounce,
   errorCode,
+  expiredTime,
+  ignoreApi,
+  localHost,
+  noCookiePages,
+  refreshSession,
   requestTimeout,
   statusName,
   successCode,
   tokenName,
-  refreshSession,
-  noCookiePages,
-  localHost,
-  ignoreApi,
-  expiredTime,
 } from '@/config'
 import { globalUrl } from './utilwen'
 import store from '@/store'
@@ -196,10 +197,24 @@ function refreshAuthToken(tokens) {
     `%c refreshAuthToken`,
     'color:#009a61; font-size: 28px; font-weight: 300'
   )
-  tokens.forEach((token) => {
+  tokens.forEach(async (token) => {
     if (!_.isEmpty(token.value)) {
-      refreshToken(token.value)
-    } else console.warn(`token：${token.name}的存储值是${token.value}`)
+      await refreshToken(token.value)
+      // 根据路由模式获取路由并根据权限过滤
+      await store.dispatch('user/_setToken', {
+        sessionToken: Cookies.get('dgiot_auth_token'),
+        expires_in: 86400,
+      })
+      await store.dispatch('user/setDepartmentToken', {
+        sessionToken: Cookies.get('departmentToken'),
+        expires_in: 86400,
+      })
+      await store.dispatch('user/setExpired', {
+        time: (Date.parse(new Date()) / 1000 + 86400) * 1000,
+        expires_in: 7,
+      })
+      console.warn(`持续检查更新token有效期`)
+    }
   })
   console.groupEnd()
 }

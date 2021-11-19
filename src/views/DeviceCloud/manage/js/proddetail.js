@@ -1,18 +1,18 @@
 /* eslint-disable */
-import { mapGetters, mapMutations } from 'vuex'
-import { getDeviceCountByProduct } from '@/api/Device/index'
-import { deleteThing, postThing, putThing } from '@/api/Product/index'
-import { downBinary } from '@/api/File/index'
-import { getAllunit, getDictCount } from '@/api/Dict/index'
-import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
-import { getRule } from '@/api/Rules'
-import { postProductTemplet } from '@/api/ProductTemplet'
-import { Compile, subupadte } from '@/api/System/index'
-import { setTimeout } from 'timers'
-import { Websocket } from '@/utils/wxscoket.js'
-import wmxdetail from '@/views/DeviceCloud/manage/component/wmxdetail'
-import { returnLogin } from '@/utils/utilwen'
-import profile from '@/views/DeviceCloud/manage/profile'
+import { mapGetters, mapMutations } from "vuex";
+import { getDeviceCountByProduct } from "@/api/Device/index";
+import { deleteThing, postThing, putThing } from "@/api/Product/index";
+import { downBinary } from "@/api/File/index";
+import { getAllunit, getDictCount } from "@/api/Dict/index";
+import { getChannelCountByProduct, saveChanne } from "@/api/Channel/index";
+import { getRule } from "@/api/Rules";
+import { postProductTemplet } from "@/api/ProductTemplet";
+import { Compile, subupadte } from "@/api/System/index";
+import { setTimeout } from "timers";
+import { Websocket } from "@/utils/wxscoket.js";
+import wmxdetail from "@/views/DeviceCloud/manage/component/wmxdetail";
+import { returnLogin } from "@/utils/utilwen";
+import profile from "@/views/DeviceCloud/manage/profile";
 
 var editor
 var editor1

@@ -3,13 +3,12 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters } from 'vuex'
   /**
    * @description amis配置参数
    */
   // https://baidu.gitee.io/amis/zh-CN/docs/start/getting-started#props
   // eslint-disable
-  import { tokenName } from '@/config'
   import { render as renderAmis } from 'amis'
   import { alert, confirm } from 'amis/lib/components/Alert'
   import { toast } from 'amis/lib/components/Toast'

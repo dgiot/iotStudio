@@ -445,7 +445,7 @@
   import VabDraggable from 'vuedraggable'
   import { mapGetters } from 'vuex'
   import { post_tree } from '@/api/Data'
-  import { getCategory, queryCategory } from '@/api/Category'
+  import { queryCategory } from '@/api/Category'
   import { queryProductTemplet } from '@/api/ProductTemplet'
 
   export default {

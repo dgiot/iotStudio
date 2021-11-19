@@ -51,7 +51,8 @@
 </template>
 
 <script>
-  import { putDict, postDict } from '@/api/Dict'
+  import { postDict, putDict } from '@/api/Dict'
+
   export default {
     name: 'DictEdit',
     data() {

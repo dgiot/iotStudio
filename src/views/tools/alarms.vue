@@ -166,9 +166,9 @@
 </template>
 <!--eslint-disable-->
 <script>
-  import { Popover, Table, TableColumn, Tooltip } from 'element-ui'
-  import { getDateDiff } from '@/utils/index'
-  import dateformat from '@/utils/utilwen'
+  import { Popover, Table, TableColumn, Tooltip } from "element-ui";
+  import { getDateDiff } from "@/utils/index";
+  import dateformat from "@/utils/utilwen";
 
   export default {
     name: 'AlarmsView',

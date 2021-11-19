@@ -367,27 +367,27 @@
 </template>
 <!--eslint-disable-->
 <script>
-  import { queryCategory } from '@/api/Category'
-  import { mapGetters, mapMutations } from 'vuex'
-  import { putProduct } from '@/api/Product'
-  import { getAllunit } from '@/api/Dict/index'
-  import { export_txt_to_zip } from '@/utils/Export2Zip.js'
-  import { getServer } from '@/api/Role/index'
-  import { postDict } from '@/api/Dict'
-  import { getHashClass } from '@/api/Hash'
-  import { getTable } from '@/api/Dba'
+  import { queryCategory } from "@/api/Category";
+  import { mapGetters, mapMutations } from "vuex";
+  import { putProduct } from "@/api/Product";
+  import { getAllunit } from "@/api/Dict/index";
+  import { export_txt_to_zip } from "@/utils/Export2Zip.js";
+  import { getServer } from "@/api/Role/index";
+  import { postDict } from "@/api/Dict";
+  import { getHashClass } from "@/api/Hash";
+  import { getTable } from "@/api/Dba";
   import {
     delProductTemplet,
     getProductTemplet,
     postProductTemplet,
     putProductTemplet,
-    queryProductTemplet,
-  } from '@/api/ProductTemplet'
-  import { ImportParse } from '@/api/Export'
-  import { uuid } from '@/utils'
-  import wmxdetail from './component/wmxdetail'
-  import { setTimeout } from 'timers'
-  import { post_tree } from '@/api/Data'
+    queryProductTemplet
+  } from "@/api/ProductTemplet";
+  import { ImportParse } from "@/api/Export";
+  import { uuid } from "@/utils";
+  import wmxdetail from "./component/wmxdetail";
+  import { setTimeout } from "timers";
+  import { post_tree } from "@/api/Data";
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}

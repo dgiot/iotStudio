@@ -106,6 +106,7 @@
   import { delRole, putRole, roletree } from '@/api/Role/index.js'
   import { addGroup } from '@/api/Group/index.js'
   import addroles from '@/views/MultiTenant/roles/list/roles'
+
   export default {
     name: 'Group',
     components: { addroles },

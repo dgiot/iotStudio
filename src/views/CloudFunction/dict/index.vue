@@ -127,8 +127,9 @@
 
 <script>
   import dictDesign from '@/views/CloudFunction/dict/components/index'
-  import { queryDict, putDict, delDict, getDict } from '@/api/Dict'
+  import { delDict, getDict, putDict, queryDict } from '@/api/Dict'
   import dictEdit from './components/dictEdit'
+
   const defaultQuery = {
     class: '',
     type: '',

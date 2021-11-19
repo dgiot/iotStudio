@@ -16,7 +16,8 @@
   // this.$baseEventBus.$on('setViewData', (data) => {
   //   this.setData(data)
   // })
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'Editor',
     data() {

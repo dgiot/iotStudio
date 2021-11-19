@@ -425,6 +425,7 @@
   import { putProductTemplet } from '@/api/ProductTemplet'
   import dgiotViews from '@/views/CloudFunction/lowcode'
   import dgiotDict from '@/views/CloudFunction/dict'
+
   export default {
     name: 'ProfileDescriptions',
     components: {
