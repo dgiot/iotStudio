@@ -152,9 +152,20 @@ instance.interceptors.request.use(
      * @description 当用户切换token 后。api中含有/class/ 并且该规则出现在首位时，使用部门token
      */
     if (config.url.indexOf('/classes/') == 0) {
+      console.groupCollapsed(
+        `%c部门切换token拦截url日志\n拦截的url为${config.url}\n当前请求使用了部门token：为${departmentToken}\n用户登录token为${usertoken}`,
+        'color:black; font-size: 18px; font-weight: 300'
+      )
+      console.groupEnd()
       config.headers[`${tokenName}`] = departmentToken
-      if (!ignoreApi.includes(config.url))
+      if (ignoreApi.includes(config.url)) {
+        console.groupCollapsed(
+          `%忽略url拦截日志\n忽略的url为${config.url}\n当前请求用户登录token：为${usertoken}\n部门token为${departmentToken}`,
+          'color:black; font-size: 18px; font-weight: 300'
+        )
+        console.groupEnd()
         config.headers[`${tokenName}`] = usertoken
+      }
     }
 
     return config

@@ -43,7 +43,6 @@
   import { Roletree } from '@/api/Menu'
   import { mapGetters, mapMutations } from 'vuex'
   import { departmentToken } from '@/api/Role'
-  import moment from 'moment'
 
   export default {
     name: 'VabRoleTree',
@@ -200,17 +199,18 @@
           this.setCurrentDepartment(data)
           const { access_token: sessionToken, expires_in } =
             await departmentToken(data.name)
+          console.log(`当前部门token为${sessionToken}`)
           // Cookies.set('departmentToken', access_token, {
           //   expires: new Date(new Date().getTime() + expires_in),
           // })
           loading.close()
           this.setDepartmentToken({ sessionToken, expires_in })
           // this._setToken(access_token)
+          this.$dgiotBus.$emit('reload-router-view')
           console.groupCollapsed(
             '%ctree handleNodeClick',
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
-          this.$dgiotBus.$emit('reload-router-view')
           console.log(data)
           console.log(checked)
           console.groupEnd()
