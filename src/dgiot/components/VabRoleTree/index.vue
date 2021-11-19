@@ -8,7 +8,7 @@
 * @DocumentLink:
 -->
 <template>
-  <div :key="treeKey" class="role-tree">
+  <div class="role-tree">
     {{ depname }}
     <el-input
       v-if="showFilter"
@@ -16,6 +16,7 @@
       :placeholder="$translateTitle('concentrator.input')"
     />
     <el-tree
+      :key="treeKey"
       ref="tree"
       class="role-tree-select"
       :data="treeData"
@@ -193,10 +194,11 @@
             '%ctree handleNodeClick',
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
-          this.treeKey = moment().format('x')
           this.depname = data.depname
           setTimeout(() => {
+            this.treeKey = moment().format('x')
             this.$baseEventBus.$emit('reload-router-view')
+            this.treeData = JSON.parse(localStorage.getItem('roleTree'))
           }, 800)
           console.log(data)
           console.log(checked)
