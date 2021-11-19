@@ -197,19 +197,19 @@ function refreshAuthToken(tokens) {
     `%c refreshAuthToken`,
     'color:#009a61; font-size: 28px; font-weight: 300'
   )
-  tokens.forEach(async (token) => {
+  tokens.forEach((token) => {
     if (!_.isEmpty(token.value)) {
-      await refreshToken(token.value)
+      refreshToken(token.value)
       // 根据路由模式获取路由并根据权限过滤
-      await store.dispatch('user/_setToken', {
+      store.dispatch('user/_setToken', {
         sessionToken: Cookies.get('dgiot_auth_token'),
         expires_in: 86400,
       })
-      await store.dispatch('user/setDepartmentToken', {
+      store.dispatch('user/setDepartmentToken', {
         sessionToken: Cookies.get('departmentToken'),
         expires_in: 86400,
       })
-      await store.dispatch('user/setExpired', {
+      store.dispatch('user/setExpired', {
         time: (Date.parse(new Date()) / 1000 + 86400) * 1000,
         expires_in: 7,
       })

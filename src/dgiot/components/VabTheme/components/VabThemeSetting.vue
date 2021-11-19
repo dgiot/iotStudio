@@ -69,10 +69,10 @@
         setshowThemeSetting: 'settings/setshowThemeSetting',
       }),
       handleOpenTheme() {
-        this.$baseEventBus.$emit('theme')
+        this.$dgiotBus.$emit('theme')
       },
       randomTheme() {
-        this.$baseEventBus.$emit('random-theme')
+        this.$dgiotBus.$emit('random-theme')
       },
       removeLocalStorage() {
         localStorage.clear()

@@ -22,13 +22,14 @@
           status-icon
         >
           <el-form-item
-            :label="$translateTitle('developer.departmentselection')"
+            :label="$translateTitle('product.Current department')"
             prop="departmentid"
           >
             <el-select
               v-model="userInfoForm.departmentid"
-              :placeholder="$translateTitle('product.selectdepartment')"
-              style="width: 75%"
+              disabled
+              :placeholder="$translateTitle('product.Current department')"
+              style="width: 100%"
             >
               <el-option
                 v-for="item in deptOption"
@@ -38,14 +39,14 @@
                 :value="item.objectId"
               />
             </el-select>
-            <span style="float: right; font-size: 14px; color: #8492a6">
-              <a-button
-                type="danger"
-                @click="centerDialogRole = !centerDialogRole"
-              >
-                {{ $translateTitle('user.new group') }}
-              </a-button>
-            </span>
+            <!--            <span style="float: right; font-size: 14px; color: #8492a6">-->
+            <!--              <a-button-->
+            <!--                type="danger"-->
+            <!--                @click="centerDialogRole = !centerDialogRole"-->
+            <!--              >-->
+            <!--                {{ $translateTitle('user.new group') }}-->
+            <!--              </a-button>-->
+            <!--            </span>-->
           </el-form-item>
           <el-form-item v-if="centerDialogRole" label-width="78px">
             <addroles
@@ -149,7 +150,7 @@
         <div class="tabContent">
           <el-row :gutter="24">
             <el-col :span="24">
-              <vab-query-form style="margin-top: 20px">
+              <vab-query-form v-show="currentDepartment.depname">
                 <vab-query-form-top-panel>
                   <el-form
                     :inline="true"
@@ -157,49 +158,13 @@
                     :model="queryForm"
                     @submit.native.prevent
                   >
-                    <el-form-item :label="$translateTitle('user.department')">
-                      <el-select
-                        v-model="queryForm.workGroupName"
-                        clearable
-                        placeholder="请选择"
-                        @visible-change="change($event)"
-                      >
-                        <el-option
-                          style="height: auto; padding: 0"
-                          :value="treeDataValue"
-                        >
-                          <el-tree
-                            :key="upKey"
-                            ref="workGroup"
-                            :data="deptTreeData"
-                            default-expand-all
-                            :expand-on-click-node="false"
-                            node-key="index"
-                            :props="roleProps"
-                          >
-                            <div
-                              slot-scope="{ node, data }"
-                              class="custom-tree-node"
-                            >
-                              <span
-                                :class="{
-                                  selected: data.objectId == curDepartmentId,
-                                }"
-                                @click="handleNodeClick(data, node)"
-                              >
-                                {{ node.label }}
-                              </span>
-                              <span>
-                                <i
-                                  class="el-icon-circle-plus-outline"
-                                  :title="$translateTitle('developer.adduser')"
-                                  @click="addItemUser(data)"
-                                />
-                              </span>
-                            </div>
-                          </el-tree>
-                        </el-option>
-                      </el-select>
+                    <el-form-item
+                      :label="$translateTitle('product.Current department')"
+                    >
+                      {{ currentDepartment.depname }}
+                      <el-button @click.native="addItemUser(currentDepartment)">
+                        {{ $translateTitle('user.newusers') }}
+                      </el-button>
                     </el-form-item>
                   </el-form>
                 </vab-query-form-top-panel>
@@ -208,7 +173,6 @@
                 <el-table
                   v-loading="pictLoading"
                   :data="tableFilterData"
-                  :height="tableHeight"
                   style="width: 100%; margin-top: 20px"
                 >
                   <el-table-column :label="$translateTitle('user.username')">
@@ -325,7 +289,6 @@
         <el-table
           ref="multipleTable"
           :data="rolelist"
-          :height="tableHeight"
           size="mini"
           @selection-change="handleSelectionChange"
         >
@@ -465,7 +428,6 @@
         multipleSelection: [],
         userrolelist: [],
         tempData: [],
-        roleData: [],
         adduserDiadlog: false,
         userInfoForm: {
           account: '',
@@ -561,17 +523,11 @@
       }
     },
     computed: {
-      roleTree: {
-        get: function () {
-          return this.$store.state.user.roleTree
-        },
-        set: function (v) {
-          return this.setRoleTree(v)
-        },
-      },
       ...mapGetters({
+        roleTree: 'user/roleTree',
         title: 'settings/title',
         objectId: 'user/objectId',
+        currentDepartment: 'user/currentDepartment',
       }),
       tableFilterData() {
         return this.tempData
@@ -581,7 +537,7 @@
       this.isEvent = false
       this.searchAllOption()
       this.userFordepartment()
-      this.$baseEventBus.$on('dialogHide2', (depobjectId) => {
+      this.$dgiotBus.$on('dialogHide2', (depobjectId) => {
         console.log(depobjectId)
         if (depobjectId?.length) {
           this.depobjectId = depobjectId
@@ -602,8 +558,13 @@
         this.upKey++
         const { results = [] } = await Roletree()
         console.log(results, 'results')
-        this.setRoleTree(results)
-        this.deptTreeData = results
+        this.$dgiotBus.$emit('asyncTreeData')
+        this.deptTreeData = this.currentDepartment
+        console.log(
+          this.deptTreeData,
+          'this.deptTreeData',
+          this.currentDepartment
+        )
         this.isloading = true
         setTimeout(() => {
           if (this.isEvent) {
@@ -941,6 +902,7 @@
             username: row.username,
           }
           const res = await EmployeeTurnover(params)
+          this.$dgiotBus.$emit('asyncTreeData')
           if (res) {
             this.$message({
               type: 'success',

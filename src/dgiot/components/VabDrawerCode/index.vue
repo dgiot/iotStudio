@@ -126,7 +126,7 @@
         this.drawer = false
         clearTimeout(this.timer)
         console.log('在编辑器中的json')
-        this.$baseEventBus.$emit(
+        this.$dgiotBus.$emit(
           'setViewData',
           JSON.parse(this.$refs.monacoCode.monacoEditor.getValue())
         )
@@ -137,7 +137,7 @@
         this.set_amisJson(
           JSON.parse(this.$refs.monacoCode.monacoEditor.getValue())
         )
-        this.$baseEventBus.$emit(
+        this.$dgiotBus.$emit(
           'submitCode',
           JSON.parse(this.$refs.monacoCode.monacoEditor.getValue())
         )

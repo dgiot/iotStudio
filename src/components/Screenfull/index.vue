@@ -75,16 +75,16 @@
       }
     },
     mounted() {
-      this.$baseEventBus.$emit('isshow', '全屏')
+      this.$dgiotBus.$emit('isshow', '全屏')
     },
     methods: {
       click() {
         if (screenfullModule.isFullscreen == true) {
           this.isscreen = true
-          this.$baseEventBus.$emit('isshow', '全屏')
+          this.$dgiotBus.$emit('isshow', '全屏')
         } else {
           this.isscreen = false
-          this.$baseEventBus.$emit('isshow', '退出全屏')
+          this.$dgiotBus.$emit('isshow', '退出全屏')
         }
         if (!screenfullModule.enabled) {
           this.$message({

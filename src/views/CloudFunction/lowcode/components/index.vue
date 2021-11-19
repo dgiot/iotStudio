@@ -54,8 +54,8 @@
       }
     },
     mounted() {
-      this.$baseEventBus.$off('lowcodePreview')
-      this.$baseEventBus.$on('lowcodePreview', (params) => {
+      this.$dgiotBus.$off('lowcodePreview')
+      this.$dgiotBus.$on('lowcodePreview', (params) => {
         const typePayload = ['amis', 'konva']
         console.log('amis', params)
         const { type, data, objectId } = params

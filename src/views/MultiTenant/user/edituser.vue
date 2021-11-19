@@ -63,7 +63,6 @@
 </template>
 <script>
   import { getUser, putUser } from '@/api/User/index'
-  import { roletree } from '@/api/Role/index'
 
   export default {
     data() {
@@ -123,28 +122,13 @@
             this.ruleForm2.phone = res.phone
             this.ruleForm2.account = res.username
             this.ruleForm2.email = res.email
-            this.getDepartment()
+            this.$dgiotBus.$emit('asyncTreeData')
           })
           .catch((err) => {
             this.$message({
               type: 'error',
               message: '用户详情获取失败',
             })
-            console.log(err)
-          })
-      },
-      getDepartment() {
-        roletree()
-          .then((res) => {
-            const results = res.results
-            results.forEach((element) => {
-              console.log(element)
-            })
-            this.data = res.results
-          })
-          .catch((err) => {
-            this.$message('部门列表获取失败')
-            this.data = []
             console.log(err)
           })
       },

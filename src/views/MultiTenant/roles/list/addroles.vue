@@ -9,21 +9,8 @@
         :model="roleFormObj"
         :rules="roleFormRules"
       >
-        <el-form-item v-if="!isStructures" label="父及部门" prop="ParentId">
-          <el-select
-            v-model="roleFormObj.ParentId"
-            placeholder="请选择Parent"
-            style="width: 100%"
-            @change="handleChangeDeptId($event)"
-          >
-            <el-option
-              v-for="(item, index) in roleList"
-              :key="index"
-              :label="item.name"
-              :title="item.name + ':' + item.desc"
-              :value="item.objectId"
-            />
-          </el-select>
+        <el-form-item v-if="!isStructures" label="父级部门" prop="ParentId">
+          <el-input v-model="currentDepartment.depname" readonly />
         </el-form-item>
 
         <!--        <el-form-item label="角色名" prop="name">-->
@@ -81,7 +68,7 @@
 <script>
   import { queryDict } from '@/api/Dict/index'
   import { addRoles, queryRole } from '@/api/Role/index'
-
+  import { mapGetters, mapMutations } from 'vuex'
   export default {
     props: {
       deptData: {
@@ -181,7 +168,11 @@
         deptInfo: {},
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters({
+        currentDepartment: 'user/currentDepartment',
+      }),
+    },
     mounted() {
       this.searchAllOption()
       if (this.deptData?.objectId) {
@@ -326,8 +317,9 @@
                   message: '新增成功',
                   type: 'success',
                 })
-                this.$baseEventBus.$emit('dialogHide')
-                this.$baseEventBus.$emit('dialogHide2', res.objectId)
+                this.$dgiotBus.$emit('asyncTreeData')
+                this.$dgiotBus.$emit('dialogHide')
+                this.$dgiotBus.$emit('dialogHide2', res.objectId)
               } else {
                 console.log(res)
                 this.$message({

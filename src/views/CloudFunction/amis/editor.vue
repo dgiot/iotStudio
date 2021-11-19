@@ -12,8 +12,8 @@
 </template>
 
 <script>
-  // this.$baseEventBus.$off('setViewData')
-  // this.$baseEventBus.$on('setViewData', (data) => {
+  // this.$dgiotBus.$off('setViewData')
+  // this.$dgiotBus.$on('setViewData', (data) => {
   //   this.setData(data)
   // })
   import { mapGetters } from 'vuex'

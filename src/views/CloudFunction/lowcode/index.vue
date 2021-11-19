@@ -210,8 +210,8 @@
       this.fetchData()
     },
     mounted() {
-      this.$baseEventBus.$off('saveLowCode')
-      this.$baseEventBus.$on('saveLowCode', (params) => {
+      this.$dgiotBus.$off('saveLowCode')
+      this.$dgiotBus.$on('saveLowCode', (params) => {
         this.saveLowCode(params.id, params.data)
       })
     },
@@ -257,7 +257,7 @@
         const loading = this.$baseColorfullLoading(1)
         const res = await getView(lowcodeId)
         loading.close()
-        this.$baseEventBus.$emit('lowcodePreview', res)
+        this.$dgiotBus.$emit('lowcodePreview', res)
       },
       async saveLowCode(lowcodeId, payload) {
         const loading = this.$baseColorfullLoading(1)
@@ -304,7 +304,7 @@
             )
           })
         this.list = results
-        this.$baseEventBus.$emit('lowcodeLen', total)
+        this.$dgiotBus.$emit('lowcodeLen', total)
         this.paginations.total = total
         this.listLoading = false
       },

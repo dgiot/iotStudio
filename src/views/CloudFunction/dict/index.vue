@@ -217,8 +217,8 @@
       this.fetchData()
     },
     mounted() {
-      this.$baseEventBus.$off('saveDict')
-      this.$baseEventBus.$on('saveDict', (params) => {
+      this.$dgiotBus.$off('saveDict')
+      this.$dgiotBus.$on('saveDict', (params) => {
         this.saveDict(params.id, params.data)
       })
     },
@@ -256,7 +256,7 @@
         const loading = this.$baseColorfullLoading(1)
         const res = await getDict(dictId)
         loading.close()
-        this.$baseEventBus.$emit('dictDesign', res)
+        this.$dgiotBus.$emit('dictDesign', res)
       },
       async saveDict(dictId, payload) {
         const loading = this.$baseColorfullLoading(1)
@@ -303,7 +303,7 @@
             )
           })
         this.list = results
-        this.$baseEventBus.$emit('dictLen', total)
+        this.$dgiotBus.$emit('dictLen', total)
         this.paginations.total = total
         this.listLoading = false
       },

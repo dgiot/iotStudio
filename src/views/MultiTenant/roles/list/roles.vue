@@ -4,58 +4,9 @@
       <el-col :span="13" :xs="8">
         <div class="rightTable">
           <div class="search">
-            <vab-query-form style="margin-top: 20px">
+            <vab-query-form v-show="currentDepartment.depname">
               <vab-query-form-top-panel>
-                <el-form
-                  :inline="true"
-                  label-width="100px"
-                  :model="queryForm"
-                  @submit.native.prevent
-                >
-                  <el-form-item :label="$translateTitle('user.department')">
-                    <el-select
-                      v-model="queryForm.workGroupName"
-                      clearable
-                      placeholder="请选择"
-                      @visible-change="change($event)"
-                    >
-                      <el-option
-                        style="height: auto; padding: 0"
-                        :value="treeDataValue"
-                      >
-                        <el-tree
-                          ref="workGroup"
-                          class="workGroup"
-                          :data="roleTree"
-                          default-expand-all
-                          :expand-on-click-node="false"
-                          node-key="index"
-                          :props="roleProps"
-                        >
-                          <div
-                            slot-scope="{ node, data }"
-                            class="custom-tree-node"
-                          >
-                            <span
-                              :class="{
-                                selected: data.objectId == curDepartmentId,
-                              }"
-                              @click="handleNodeClick(data)"
-                            >
-                              {{ node.label }}
-                            </span>
-                            <span>
-                              <i
-                                class="el-icon-circle-plus-outline"
-                                :title="$translateTitle('product.addrole')"
-                                @click="setDialogRole(data)"
-                              />
-                            </span>
-                          </div>
-                        </el-tree>
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
+                <el-form :inline="true" label-width="100px" :model="queryForm">
                   <el-form-item :label="$translateTitle('user.rolename')">
                     <el-input
                       v-model="search"
@@ -85,10 +36,18 @@
                     <el-button
                       size="mini"
                       type="primary"
-                      @click="getRolesList()"
+                      @click.native="getRolesList()"
                     >
                       <!-- 所有角色 -->
                       {{ $translateTitle('product.allroles') }}
+                    </el-button>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button
+                      type="primary"
+                      @click.native="setDialogRole(currentDepartment)"
+                    >
+                      {{ $translateTitle('user.new group') }}
                     </el-button>
                   </el-form-item>
                 </el-form>
@@ -443,8 +402,7 @@
     saveRoletemp,
   } from '@/api/Role/index'
   import { mapGetters, mapMutations } from 'vuex'
-  import addroles from '@/views/MultiTenant/roles/list/roles'
-  import { Roletree } from '@/api/Menu'
+  import addroles from '@/views/MultiTenant/roles/list/addroles'
 
   export default {
     name: 'Role',
@@ -502,16 +460,9 @@
       }
     },
     computed: {
-      roleTree: {
-        get: function () {
-          return this.$store.state.user.roleTree
-        },
-        set: function (v) {
-          return this.setRoleTree(v)
-        },
-      },
       ...mapGetters({
-        // roleTree: 'user/roleTree',
+        currentDepartment: 'user/currentDepartment',
+        roleTree: 'user/roleTree',
         Menu: 'user/Menu',
         Permission: 'user/Permission',
       }),
@@ -548,11 +499,10 @@
       addroles,
     },
     mounted() {
-      this.getRoletree()
       this.getRoleschema()
       this.getMenu()
       this.getRolesList()
-      this.$baseEventBus.$on('dialogHide', () => {
+      this.$dgiotBus.$on('dialogHide', () => {
         this.centerDialogRole = false
         this.getMenu()
       })
@@ -598,13 +548,7 @@
         }
       },
       ...mapMutations({
-        setRoleTree: 'user/setRoleTree',
       }),
-      async getRoletree() {
-        const { results = [] } = await Roletree()
-        console.log(results, 'results')
-        this.setRoleTree(results)
-      },
       change(e) {
         console.log(e)
         if (e) {
@@ -708,7 +652,7 @@
           )
 
           this.getRolesList()
-          this.getRoletree()
+          this.$dgiotBus.$emit('asyncTreeData')
           this.getMenu()
         }
       },
@@ -719,7 +663,7 @@
 
         // this.dialogVisible = true;
         this.getMenu()
-        this.getRoletree()
+        this.$dgiotBus.$emit('asyncTreeData')
       },
       tableRowClassName({ row, rowIndex }) {
         //把每一行的索引放进row
@@ -1044,7 +988,7 @@
       setDialogRole(data) {
         this.deptData = data
         // this.$store.commit("set_DeptObj", data);
-        // this.$baseEventBus.$emit("set_DeptObj", data)
+        // this.$dgiotBus.$emit("set_DeptObj", data)
         this.centerDialogRole = true
         // this.$nextTick(() => {
         //   this.$refs['addRoleRef'].getData(data)
@@ -1052,7 +996,6 @@
       },
       closeDialogRole() {
         this.centerDialogRole = false
-        this.getRoletree()
       },
     },
   }

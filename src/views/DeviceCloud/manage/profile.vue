@@ -618,8 +618,8 @@
       },
     },
     mounted() {
-      this.$baseEventBus.$off('profileDialog')
-      this.$baseEventBus.$on(
+      this.$dgiotBus.$off('profileDialog')
+      this.$dgiotBus.$on(
         'profileDialog',
         ({ config, type, flag, productInfo, parserType }) => {
           this.productDetail = productInfo
@@ -649,7 +649,7 @@
           console.log('error', error)
           this.$message.error(`${error}`)
         }
-        this.$baseEventBus.$emit('reload-router-view')
+        this.$dgiotBus.$emit('reload-router-view')
       },
       async querycategorylist() {
         const parsms = {

@@ -260,7 +260,7 @@
       }
     },
     mounted() {
-      this.$baseEventBus.$on(
+      this.$dgiotBus.$on(
         this.$dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
         (msg) => {
           this.dgiotEvidence(msg)

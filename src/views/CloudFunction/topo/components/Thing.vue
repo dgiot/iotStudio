@@ -53,11 +53,11 @@
       }),
     },
     mounted() {
-      this.$baseEventBus.$on('busUpdata', () => {
+      this.$dgiotBus.$on('busUpdata', () => {
         this.updataTopo()
       })
-      // this.$baseEventBus.$off(this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'))
-      this.$baseEventBus.$on(
+      // this.$dgiotBus.$off(this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'))
+      this.$dgiotBus.$on(
         this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'),
         (args) => {
           console.log(args)

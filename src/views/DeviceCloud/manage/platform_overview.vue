@@ -151,38 +151,6 @@
               :model="queryForm"
               @submit.native.prevent
             >
-              <el-form-item :label="$translateTitle('user.department')">
-                <el-select
-                  v-model="queryForm.workGroupName"
-                  placeholder="请选择"
-                  @visible-change="change($event)"
-                >
-                  <el-option
-                    style="height: auto; padding: 0"
-                    :value="treeDataValue"
-                  >
-                    <el-tree
-                      ref="workGroup"
-                      :data="deptTreeData"
-                      default-expand-all
-                      :expand-on-click-node="false"
-                      node-key="index"
-                      :props="roleProps"
-                    >
-                      <div slot-scope="{ node, data }" class="custom-tree-node">
-                        <span
-                          :class="{
-                            selected: data.objectId == curDepartmentId,
-                          }"
-                          @click="handleNodeClick(data, node)"
-                        >
-                          {{ node.label }}
-                        </span>
-                      </div>
-                    </el-tree>
-                  </el-option>
-                </el-select>
-              </el-form-item>
               <el-form-item :label="$translateTitle('equipment.products')">
                 <el-select
                   v-model="queryForm.account"
@@ -794,7 +762,7 @@
   import { queryProduct } from '@/api/Product'
   import { getDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
-  import { getToken, Roletree } from '@/api/Menu'
+  import { getToken } from '@/api/Menu'
   import { Startdashboard } from '@/api/dashboard'
   import { isBase64 } from '@/utils'
   import info from '@/components/Device/info'
@@ -1062,7 +1030,6 @@
       },
       ...mapMutations({
         resaveMqttInfo: 'mqttDB/resaveMqttInfo',
-        setRoleTree: 'user/setRoleTree',
         set_Product: 'user/set_Product',
         set_dev_count: 'dashboard/set_dev_count',
         set_project_count: 'dashboard/set_project_count',
@@ -1307,16 +1274,6 @@
         // this.leftWidth = window.getComputedStyle($('.vab-side-bar')[0])['width']
         this.cardHeight = window.getComputedStyle($('.map_card')[0])['height']
         // console.log(this.fixedPaddingTop, this.leftWidth, this.cardHeight)
-        await Roletree()
-          .then((res) => {
-            // console.log(res)
-            this.setRoleTree(res.results)
-            this.handleNodeClick(res.results[0], 0)
-            this.queryForm.workGroupTreeShow = false
-          })
-          .catch((e) => {
-            // console.log(e)
-          })
         this.deptTreeData = this.roleTree
       },
       async getProduct() {

@@ -55,7 +55,7 @@ function queryAllMsg(commit) {
     })
   Roletree()
     .then((res) => {
-      console.log(`Roletree res`, res)
+      console.error(`Roletree res 關係了 `, res)
       commit('setRoleTree', res.results)
     })
     .catch((e) => {
@@ -139,7 +139,7 @@ const state = () => ({
     '//prod.iotn2n.com/dgiot_dashboard/public/assets/images/platform/assets/login_images/background.jpg',
   objectId: getToken('objectId'),
   treeKey: moment().format('x'),
-  currentDepartment: {},
+  currentDepartment: localStorage.getItem('currentDepartment') || {},
   expired_timestamp: Cookies.get('expired_timestamp') || '',
 })
 const getters = {
@@ -165,6 +165,7 @@ const getters = {
 const mutations = {
   setCurrentDepartment(state, department) {
     state.currentDepartment = department
+    localStorage.setItem('currentDepartment', JSON.stringify(department))
   },
   setTreeKey(state, key) {
     state.treeKey = key
@@ -183,7 +184,6 @@ const mutations = {
   },
   setRoleTree(state, tree) {
     state.roleTree = tree
-    console.error('tree', tree)
     state.setTreeKey = moment().format('x')
     setToken('roleTree', tree) // 解决数据持久化问题
   },

@@ -233,7 +233,7 @@
         setDrawParams: 'konva/setDrawParams',
       }),
       saveTopo() {
-        this.$baseEventBus.$emit('busUpdata')
+        this.$dgiotBus.$emit('busUpdata')
       },
       eyeTopo() {
         this.infoVisible = !this.infoVisible

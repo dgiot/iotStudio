@@ -48,7 +48,7 @@
             this.$router.replace(currentRoute)
           })
         } else {
-          this.$baseEventBus.$emit('reload-router-view')
+          this.$dgiotBus.$emit('reload-router-view')
         }
       },
     },

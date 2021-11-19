@@ -1159,7 +1159,7 @@
           console.log('error', error)
           this.$message.error(`${error}`)
         }
-        this.$baseEventBus.$emit('reload-router-view')
+        this.$dgiotBus.$emit('reload-router-view')
       },
       async createProduct(params) {
         const res = await this.$create_object('Product', params)

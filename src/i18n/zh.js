@@ -526,6 +526,7 @@ export default {
       Expandcollapsemenu: '展开/收起菜单',
       alias: '别名',
       selectdepartment: '请选择部门',
+      'Current department': '当前部门',
       enterpwa: '请再次输入密码',
       entermmzh: '请输入4-10位数字字母组合',
       enteraccount: '请输入账号',
@@ -1132,6 +1133,8 @@ export default {
       cancel: '取消',
     },
     message: {
+      Tips: '温馨提示',
+      'Department has been switched to': '已切换部门为',
       success: '成功',
       failure: '失败',
       error: '出错',

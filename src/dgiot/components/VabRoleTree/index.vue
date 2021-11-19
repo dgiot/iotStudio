@@ -9,17 +9,20 @@
 -->
 <template>
   <div class="role-tree">
-    {{ depname }}
+    <h4 v-show="currentDepartment.depname">
+      {{ $translateTitle('product.Current department') }}
+      {{ currentDepartment.depname }}
+    </h4>
     <el-input
       v-if="showFilter"
       v-model="filterText"
       :placeholder="$translateTitle('concentrator.input')"
     />
     <el-tree
-      :key="treeKey"
+      :key="treeKey + updateKey"
       ref="tree"
       class="role-tree-select"
-      :data="treeData"
+      :data="roleTree"
       :default-checked-keys="keys"
       :default-expand-all="defaultExpandAll"
       :default-expanded-keys="expandedKeys"
@@ -37,6 +40,7 @@
 </template>
 
 <script>
+  import { Roletree } from '@/api/Menu'
   import { mapGetters, mapMutations } from 'vuex'
   import { departmentToken } from '@/api/Role'
   import moment from 'moment'
@@ -80,7 +84,7 @@
       tree: {
         type: Array,
         required: false,
-        default: () => this.roleTree,
+        default: () => {},
       },
       // 是否重置滚动条
       resetScroll: {
@@ -126,9 +130,7 @@
     },
     data() {
       return {
-        depname: '',
-        treeKey: moment().format('x'),
-        treeData: [],
+        updateKey: 1,
         // 在需要对节点进行过滤时，调用 Tree 实例的filter方法，参数为关键字。
         filterText: '',
         // 角色树展开信息
@@ -142,43 +144,48 @@
       ...mapGetters({
         // 角色树信息数据
         treeFlag: 'settings/treeFlag',
-        roleTree: 'user/roleTree',
         currentDepartment: 'user/currentDepartment',
+        treeKey: 'user/treeKey',
       }),
-    },
-    watch: {
-      treeFlag: {
-        handler(val) {
-          this.treeData = JSON.parse(localStorage.getItem('roleTree'))
-          this.treeKey = moment().format('x')
-          this.depname = JSON.parse(this.currentDepartment).depname
+      roleTree: {
+        get: function () {
+          return this.$store.state.user.roleTree
         },
-      },
-      currentDepartment: {
-        handler(val) {
-          console.log(val)
-          this.treeData = JSON.parse(localStorage.getItem('roleTree'))
-          this.treeKey = moment().format('x')
-          this.depname = val.depname
+        set: function (v) {
+          return this.setRoleTree(v)
         },
       },
     },
+    watch: {},
     created() {},
     mounted() {
-      this.treeData = JSON.parse(localStorage.getItem('roleTree'))
-      this.treeKey = moment().format('x')
-      this.depname = JSON.parse(this.currentDepartment).depname
+      // this.$dgiotBus.$off('asyncTreeData')
+      this.$dgiotBus.$on('asyncTreeData', () => {
+        console.error('asyncTreeData')
+        this.asyncTreeData()
+      })
       console.groupCollapsed(
         '%ctree components',
-        'color:#009a61; font-size: 28px; font-weight: 300'
+        'color:red; font-size: 28px; font-weight: 300'
       )
       console.groupEnd()
+      this.updateKey++
+      console.log(this.roleTree)
     },
     methods: {
       ...mapMutations({
+        setTreeKey: 'user/setTreeKey',
+        setRoleTree: 'user/setRoleTree',
         setDepartmentToken: 'user/setDepartmentToken',
         setCurrentDepartment: 'user/setCurrentDepartment',
       }),
+      async asyncTreeData() {
+        const { results } = await Roletree()
+        console.error(results, 'results')
+        this.setRoleTree(results)
+        // this.$dgiotBus.$emit('reload-router-view')
+        this.updateKey++
+      },
       /**
        * @Author: h7ml
        * @Date: 2021-11-18 11:49:59
@@ -203,19 +210,17 @@
             '%ctree handleNodeClick',
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
-          this.depname = data.depname
-          setTimeout(() => {
-            this.treeKey = moment().format('x')
-            this.$baseEventBus.$emit('reload-router-view')
-            this.treeData = JSON.parse(localStorage.getItem('roleTree'))
-          }, 800)
+          this.$dgiotBus.$emit('reload-router-view')
           console.log(data)
           console.log(checked)
           console.groupEnd()
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request successfully'),
+          this.$baseNotify(
+            this.$translateTitle('message.Department has been switched to') +
+              data.depname,
+            this.$translateTitle('message.Tips'),
             'success',
-            'vab-hey-message-success'
+            '',
+            5000
           )
         } catch (error) {
           console.log(error)

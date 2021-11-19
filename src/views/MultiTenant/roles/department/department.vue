@@ -425,7 +425,7 @@
       this.getMenu()
       this.getRoleschema()
 
-      /* this.$baseEventBus.$on("dialogHide", () => {
+      /* this.$dgiotBus.$on("dialogHide", () => {
       this.centerDialogRole = false;
     }); */
     },

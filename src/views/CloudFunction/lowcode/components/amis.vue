@@ -34,13 +34,13 @@
       }),
     },
     mounted() {
-      this.$baseEventBus.$off('setViewData')
-      this.$baseEventBus.$on('setViewData', (data) => {
+      this.$dgiotBus.$off('setViewData')
+      this.$dgiotBus.$on('setViewData', (data) => {
         this.setData(data)
       })
-      this.$baseEventBus.$off('submitCode')
-      this.$baseEventBus.$on('submitCode', (code) => {
-        this.$baseEventBus.$emit('saveLowCode', {
+      this.$dgiotBus.$off('submitCode')
+      this.$dgiotBus.$on('submitCode', (code) => {
+        this.$dgiotBus.$emit('saveLowCode', {
           id: this.objectId,
           data: { data: code },
         })

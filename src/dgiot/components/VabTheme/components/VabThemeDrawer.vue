@@ -297,10 +297,10 @@
       // },
     },
     created() {
-      this.$baseEventBus.$on('theme', () => {
+      this.$dgiotBus.$on('theme', () => {
         this.handleOpenTheme()
       })
-      this.$baseEventBus.$on('random-theme', () => {
+      this.$dgiotBus.$on('random-theme', () => {
         this.randomTheme()
       })
       this.setTheme()

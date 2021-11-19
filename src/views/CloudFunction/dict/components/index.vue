@@ -55,8 +55,8 @@
       }
     },
     mounted() {
-      this.$baseEventBus.$off('dictDesign')
-      this.$baseEventBus.$on('dictDesign', (params) => {
+      this.$dgiotBus.$off('dictDesign')
+      this.$dgiotBus.$on('dictDesign', (params) => {
         const typePayload = ['dict', 'word', 'rule']
         const { type, data, objectId } = params
         if (typePayload.includes(type)) this.designDict(type, objectId, data)

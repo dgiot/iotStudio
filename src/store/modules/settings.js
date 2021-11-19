@@ -50,7 +50,7 @@ const state = () => ({
   language: getToken('language') || i18n,
   theme: getToken('theme') || { ...defaultTheme },
   tag: getToken('tag') || {},
-  treeFlag: false,
+  treeFlag: true,
   extra: {
     first: '',
     transferRouteName: '',
@@ -125,8 +125,9 @@ const mutations = {
   },
 }
 const actions = {
-  setTreeFlag({ commit }, type) {
+  setTreeFlag({ commit, dispatch }, type) {
     commit('setTreeFlag', type)
+    dispatch('settings/setTreeKey', moment().format('x'), { root: true })
   },
   setshowThemeSetting({ commit }, type) {
     commit('setshowThemeSetting', type)

@@ -178,7 +178,7 @@
       },
     },
     mounted() {
-      this.$baseEventBus.$on('dialogHide', () => {
+      this.$dgiotBus.$on('dialogHide', () => {
         this.centerDialogRole = false
         this.getTree()
       })

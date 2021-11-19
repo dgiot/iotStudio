@@ -7,12 +7,12 @@
     <div
       :class="[treeFlag ? 'node-tree pane' : 'pane']"
       :style="{
-        width: treeFlag ? '12%' : '0',
-        minWidth: treeFlag ? '10%' : '0',
-        maxWidth: treeFlag ? '30%' : '0%',
+        width: treeFlag ? '20%' : '0',
+        minWidth: treeFlag ? '15%' : '0',
+        maxWidth: treeFlag ? '40%' : '0%',
       }"
     >
-      <vab-role-tree :show-filter="true" :tree="roleTree" />
+      <vab-role-tree />
     </div>
     <multipane-resizer />
     <div class="pane" :style="{ flexGrow: 1 }">
@@ -46,7 +46,6 @@
         extra: 'settings/extra',
         visitedRoutes: 'tabs/visitedRoutes',
         treeKey: 'user/treeKey',
-        roleTree: 'user/roleTree',
       }),
       changeData() {
         return [
@@ -72,7 +71,7 @@
     created() {
       const { showProgressBar } = this.theme
       // 单页面情况下重载路由
-      this.$baseEventBus.$on('reload-router-view', () => {
+      this.$dgiotBus.$on('reload-router-view', () => {
         this.routerView = false
         if (showProgressBar) VabProgress.start()
         this.$nextTick(() => {

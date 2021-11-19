@@ -16,7 +16,7 @@
     },
     methods: {
       handleOpenTheme() {
-        this.$baseEventBus.$emit('theme')
+        this.$dgiotBus.$emit('theme')
       },
     },
   }

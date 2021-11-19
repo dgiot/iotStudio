@@ -267,7 +267,7 @@
         })
       },
       saveDict() {
-        this.$baseEventBus.$emit('saveDict', {
+        this.$dgiotBus.$emit('saveDict', {
           id: this.objectId,
           data: { data: this.data },
         })

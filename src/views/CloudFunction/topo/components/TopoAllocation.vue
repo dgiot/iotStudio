@@ -159,7 +159,7 @@
         const paths = JSON.stringify(el.topo)
         console.info(`getSvgPath function return ${paths}`)
         this.busData.paths = paths
-        this.$baseEventBus.$emit('busTopo', 'path', this.busData)
+        this.$dgiotBus.$emit('busTopo', 'path', this.busData)
       },
       uploadCkick() {
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(

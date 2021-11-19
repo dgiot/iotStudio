@@ -133,10 +133,10 @@
       this.$dgiotBus.$on('removeShape', (topo) => {
         if (topo.attrs.id) this.removeShape(topo)
       })
-      this.$baseEventBus.$on('busTopo', (type, data) => {
+      this.$dgiotBus.$on('busTopo', (type, data) => {
         this.newTopo(type, data)
       })
-      // this.$baseEventBus.$on('busUpdata', () => {
+      // this.$dgiotBus.$on('busUpdata', () => {
       //   this.updataTopo()
       // })
     },

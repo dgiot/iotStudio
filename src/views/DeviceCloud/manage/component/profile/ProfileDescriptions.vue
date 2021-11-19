@@ -545,12 +545,12 @@
       },
     },
     mounted() {
-      this.$baseEventBus.$off('lowcodeLen')
-      this.$baseEventBus.$on('lowcodeLen', (length) => {
+      this.$dgiotBus.$off('lowcodeLen')
+      this.$dgiotBus.$on('lowcodeLen', (length) => {
         this.lowcodeLen = length
       })
-      this.$baseEventBus.$off('dictLen')
-      this.$baseEventBus.$on('dictLen', (length) => {
+      this.$dgiotBus.$off('dictLen')
+      this.$dgiotBus.$on('dictLen', (length) => {
         this.dictLen = length
       })
     },
