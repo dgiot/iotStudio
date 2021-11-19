@@ -69,9 +69,9 @@ export async function departmentToken(department) {
  * @param department
  * @return {Promise<*>}
  */
-export async function refreshToken(department) {
+export async function refreshToken(token) {
   return request({
-    url: 'refresh_session',
+    url: `refresh_session/${token}`,
     method: 'get',
   })
 }

@@ -7,10 +7,15 @@ import {
   statusName,
   successCode,
   tokenName,
+  refreshSession,
+  noCookiePages,
+  localHost,
+  ignoreApi,
+  expiredTime,
 } from '@/config'
 import { globalUrl } from './utilwen'
 import store from '@/store'
-
+import { refreshToken } from '@/api/Role/index'
 import router from '@/router'
 import { isArray } from '@/utils/validate'
 
@@ -20,8 +25,6 @@ let loadingInstance
 const codeVerificationArray = isArray(successCode)
   ? [...successCode]
   : [...[successCode]]
-// 不需要token请求的路由
-const noCookiePages = ['', '/login']
 // 返回失败的code
 // 操作正常Code数组
 const errorcodeVerificationArray = isArray(errorCode)
@@ -71,20 +74,16 @@ const handleData = ({ config, data, status, statusText }) => {
 let serviceBaseUrl = baseURL
 // 判断当前环境是否为github page和gitee page
 const { hostname } = window.location
-let localHost = ['tcloudbaseapp.com', 'gitee.io', 'github.io', 'vercel.app']
-
-// if (process.env.NODE_ENV == 'development') {
-//   localHost.push('localhost', '127.0.0.1')
-// }
-
+/**
+ * @description 不刷新token规则
+ * @type {string[]}
+ */
 serviceBaseUrl = globalUrl(hostname, localHost) + '/iotapi/'
 const instance = axios.create({
   baseURL: serviceBaseUrl,
   timeout: requestTimeout,
   headers: {
     'Content-Type': contentType,
-    Auth: 'h7ml',
-    Timestamp: moment(new Date()).unix() + '',
   },
 })
 
@@ -94,8 +93,25 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const { NODE_ENV = '' } = process.env
-    const usertoken = store.getters['user/token']
     const departmentToken = store.getters['user/departmentToken']
+    const usertoken = store.getters['user/token']
+    const expired_timestamp = store.getters['user/expired_timestamp']
+    const nowTimestamp = new Date().getTime()
+    if (
+      refreshSession &&
+      (expired_timestamp - nowTimestamp) / 1000 <= expiredTime
+    ) {
+      refreshAuthToken([
+        {
+          name: 'departmentToken',
+          value: departmentToken,
+        },
+        {
+          name: 'dgiot_auth_token',
+          value: usertoken,
+        },
+      ])
+    }
     const { path = '/' } = router.history.current
     let { headers = {} } = config
     config.headers['departmentToken'] = departmentToken
@@ -105,14 +121,13 @@ instance.interceptors.request.use(
         ? (config.baseURL = headers.produrl)
         : (config.baseURL = headers.devurl)
     }
-    // 不规范写法 可根据setting.config.js tokenName配置随意自定义headers
-    // if (token) config.headers[tokenName] = token
-    if (headers['_company']) {
-      const { sessionToken = '' } = config.headers
-      config.headers[`${tokenName}`] = sessionToken
-    } else if (usertoken) {
-      config.headers[`${tokenName}`] = usertoken
-    } else if (noCookiePages.indexOf(path) == -1 && !headers[`${tokenName}`]) {
+    _.merge(headers, {
+      departmentToken: departmentToken,
+      sessionToken: usertoken,
+      Auth: 'h7ml',
+      Timestamp: moment(new Date()).unix() + '',
+    })
+    if (noCookiePages.indexOf(path) == -1 && !headers[`${tokenName}`]) {
       Vue.prototype.$baseMessage(`当前页${path}未获取到${tokenName}`, 'error')
       router.push({
         path: '/login',
@@ -120,31 +135,25 @@ instance.interceptors.request.use(
       })
       return
     }
-
+    // 每次请求检查token过期时间,如果即将过去,refreshToken
     if (
       config.data &&
       config.headers['Content-Type'] ===
         'application/x-www-form-urlencoded;charset=UTF-8'
-    ) {
+    )
       config.data = qs.stringify(config.data)
-    }
-    if (debounce.some((item) => config.url.includes(item))) {
+
+    if (debounce.some((item) => config.url.includes(item)))
       loadingInstance = Vue.prototype.$baseLoading()
-    }
-    /**
-     * @description 不刷新token规则
-     * @type {string[]}
-     */
-    const ignoreApi = ['Navigation']
+
     // 二次拦截
     /**
      * @description 当用户切换token 后。api中含有/class/ 并且该规则出现在首位时，使用部门token
      */
     if (config.url.indexOf('/classes/') == 0) {
       config.headers[`${tokenName}`] = departmentToken
-      if (!ignoreApi.includes(config.url)) {
+      if (!ignoreApi.includes(config.url))
         config.headers[`${tokenName}`] = usertoken
-      }
     }
 
     return config
@@ -182,6 +191,18 @@ instance.interceptors.response.use(
     // } else return handleData(response)
   }
 )
+function refreshAuthToken(tokens) {
+  console.groupCollapsed(
+    `%c refreshAuthToken`,
+    'color:#009a61; font-size: 28px; font-weight: 300'
+  )
+  tokens.forEach((token) => {
+    if (!_.isEmpty(token.value)) {
+      refreshToken(token.value)
+    } else console.warn(`token：${token.name}的存储值是${token.value}`)
+  })
+  console.groupEnd()
+}
 
 function backHome() {
   store.dispatch('user/resetAll')

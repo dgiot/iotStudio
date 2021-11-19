@@ -154,6 +154,14 @@
           this.depname = JSON.parse(this.currentDepartment).depname
         },
       },
+      currentDepartment: {
+        handler(val) {
+          console.log(val)
+          this.treeData = JSON.parse(localStorage.getItem('roleTree'))
+          this.treeKey = moment().format('x')
+          this.depname = val.depname
+        },
+      },
     },
     created() {},
     mounted() {
@@ -182,13 +190,14 @@
       async handleNodeClick(data, checked) {
         try {
           const loading = this.$baseLoading()
-          const { access_token, expires_in } = await departmentToken(data.name)
-          Cookies.set('departmentToken', access_token, {
-            expires: new Date(new Date().getTime() + expires_in),
-          })
+          this.setCurrentDepartment(data)
+          const { access_token: sessionToken, expires_in } =
+            await departmentToken(data.name)
+          // Cookies.set('departmentToken', access_token, {
+          //   expires: new Date(new Date().getTime() + expires_in),
+          // })
           loading.close()
-          this.setDepartmentToken(access_token)
-          this.setCurrentDepartment(JSON.stringify(data))
+          this.setDepartmentToken({ sessionToken, expires_in })
           // this._setToken(access_token)
           console.groupCollapsed(
             '%ctree handleNodeClick',

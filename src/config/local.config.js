@@ -37,7 +37,7 @@ let localUrl = {
     'cos-js-sdk-v5.min.js',
     'nprogress.js',
     'md5.min.js',
-    // 'ace.js',
+    'ace.js',
     'ext-language_tools.js',
     'mode-json.js',
     'theme-monokai.js',
@@ -100,7 +100,7 @@ let localUrl = {
     'antd.min.js',
     'iview.min.js',
     'vuetify.min.js',
-    // 'ace-builds.js',
+    'ace-builds.js',
     'resize-observer-polyfill.js',
     'vditor.js',
     // 'fabric.js', 加载速度慢 暂时用不上

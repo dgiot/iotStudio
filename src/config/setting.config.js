@@ -38,6 +38,15 @@ module.exports = {
   expiresTime: 60 * 1000 * 30,
   // token存储位置localStorage sessionStorage cookie
   storage: 'cookie',
+  // session 即将过期是否刷新cookie
+  refreshSession: true,
+  // 不需要token请求的路由
+  noCookiePages: ['', '/login'],
+  localHost: ['tcloudbaseapp.com', 'gitee.io', 'github.io', 'vercel.app'],
+  // token过期刷新时间秒 当前设置为十分钟
+  expiredTime: 60 * 10,
+  // 部门token刷新后,页面刷新,不需要刷新的api规则
+  ignoreApi: ['Navigation'],
   // 退出登录后不清空的cookie列表
   cookieWhiteList: [
     'cdnResource',

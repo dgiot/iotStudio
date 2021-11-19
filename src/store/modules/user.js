@@ -1,6 +1,7 @@
 /**
  * @description 登录、获取用户信息、退出登录、清除token逻辑，不建议修改
  */
+
 const getLocalStorage = (key) => {
   const value = localStorage.getItem(key)
   if (isJson(value)) {
@@ -125,8 +126,8 @@ const state = () => ({
   language: language || i18n,
   roleTree: getToken('roleTree') || [], // 处理数据类型不匹配
   _Product: getToken('Product'),
-  token: getToken(tokenTableName, storage),
-  departmentToken: '',
+  token: Cookies.get('dgiot_auth_token') || '',
+  departmentToken: Cookies.get('departmentToken') || '',
   name: getToken('name'),
   username: getToken('username'),
   setlogo: getToken('logo'),
@@ -142,6 +143,7 @@ const state = () => ({
   objectId: getToken('objectId'),
   treeKey: moment().format('x'),
   currentDepartment: {},
+  expired_timestamp: Cookies.get('expired_timestamp') || '',
 })
 const getters = {
   currentDepartment: (state) => state.currentDepartment,
@@ -153,6 +155,7 @@ const getters = {
   _Product: (state) => state._Product,
   token: (state) => state.token,
   departmentToken: (state) => state.departmentToken,
+  expired_timestamp: (state) => state.expired_timestamp,
   username: (state) => state.username,
   avatar: (state) => state.avatar,
   logo: (state) => state.logo,
@@ -221,17 +224,35 @@ const mutations = {
    * @param {*} state
    * @param {*} token
    */
-  _setToken(state, token) {
-    state.token = token
-    setToken(tokenTableName, token, storage)
+  _setToken(state, { sessionToken, expires_in = 86400 }) {
+    state.token = sessionToken
+    // setToken(tokenTableName, token, storage)
+    Cookies.set('dgiot_auth_token', sessionToken, {
+      expires: new Date((Date.parse(new Date()) / 1000 + expires_in) * 1000),
+    })
+  },
+  /**
+   * @description 设置登录过去时间
+   * @param state
+   * @param time
+   * @param expires_in
+   */
+  setExpired(state, { time, expires_in = 86400 }) {
+    state.expired_timestamp = time
+    Cookies.set('expired_timestamp', time, {
+      expires: expires_in,
+    })
   },
   /**
    * @description 设置部门token
    * @param state
    * @param token
    */
-  setDepartmentToken(state, token) {
-    state.departmentToken = token
+  setDepartmentToken(state, { sessionToken, expires_in = 86400 }) {
+    state.departmentToken = sessionToken
+    Cookies.set('departmentToken', sessionToken, {
+      expires: new Date((Date.parse(new Date()) / 1000 + expires_in) * 1000),
+    })
   },
   /**
    * @description 设置用户名
@@ -253,8 +274,11 @@ const mutations = {
   },
 }
 const actions = {
-  setDepartmentToken({ commit, token }) {
-    commit('setDepartmentToken', token)
+  setExpired({ commit }, { time, expires_in }) {
+    commit('setExpired', { time, expires_in })
+  },
+  setDepartmentToken({ commit }, { sessionToken, expires_in }) {
+    commit('setDepartmentToken', { sessionToken, expires_in })
   },
   setCurrentDepartment({ commit, department }) {
     commit('setCurrentDepartment', department)
@@ -303,6 +327,7 @@ const actions = {
       roles,
       tag = {},
       fileServer,
+      expires_in = 86400,
     } = data
     if (sessionToken) {
       queryAllMsg(commit)
@@ -310,8 +335,12 @@ const actions = {
       commit('setLoginInfo', userInfo)
       // clientMqtt()
       // initDgiotMqtt(objectId)
-      commit('_setToken', sessionToken)
-      commit('setDepartmentToken', sessionToken)
+      commit('_setToken', { sessionToken, expires_in })
+      commit('setExpired', {
+        time: (Date.parse(new Date()) / 1000 + expires_in) * 1000,
+        expires_in: 7,
+      })
+      commit('setDepartmentToken', { sessionToken, expires_in })
       if (nick) commit('setUsername', nick)
       const page_title = getToken('title') || title
       console.log(tag, 'tag info')
@@ -333,6 +362,7 @@ const actions = {
       dispatch('acl/setCopyright', Copyright, { root: true })
       dispatch('settings/setTag', tag, { root: true })
       commit('setObejectId', objectId)
+      // 登录后设置当前部门
       const hour = new Date().getHours()
       const thisTime =
         hour < 8
@@ -442,7 +472,7 @@ const actions = {
     commit('setObejectId', '')
     // commit('setAvatar', '')
     commit('routes/setRoutes', [], { root: true })
-    await dispatch('_setToken', '')
+    await dispatch('_setToken', {})
     await dispatch('acl/setFull', false, { root: true })
     await dispatch('acl/setRole', [], { root: true })
     await dispatch('acl/setAbility', [], { root: true })
@@ -465,8 +495,8 @@ const actions = {
    * @param {*} { commit }
    * @param {*} token
    */
-  _setToken({ commit }, token) {
-    commit('_setToken', token)
+  _setToken({ commit }, { sessionToken, expires_in }) {
+    commit('_setToken', { sessionToken, expires_in })
   },
   setAvatar({ commit }, avatar) {
     commit('setAvatar', avatar)
