@@ -9,15 +9,35 @@
 -->
 <template>
   <div>
-    <el-button
-      class="wrapper"
-      :title="$translateTitle('konva.save')"
-      @click.native="saveAmis()"
-    >
-      <dgiot-icon icon="save-2-fill" />
-      {{ $translateTitle('konva.save') }}
-    </el-button>
-    <vab-amis-editor ref="vabAmis" :value="amisJson" />
+    <div class="wrapper">
+      <el-button
+        size="mini"
+        :title="$translateTitle('konva.save')"
+        type="success"
+        @click.native="saveAmis()"
+      >
+        {{ $translateTitle('konva.save') }}
+      </el-button>
+      <el-button
+        size="mini"
+        type="warning"
+        @click.native="isPreview = !isPreview"
+      >
+        {{
+          !isPreview
+            ? $translateTitle('application.preview')
+            : $translateTitle('task.Edit')
+        }}
+      </el-button>
+    </div>
+    <vab-amis-editor
+      ref="vabAmis"
+      :is-mobile="isMobile"
+      :is-preview="isPreview"
+      :theme="theme"
+      :value="amisJson"
+      @onChange="onChange"
+    />
   </div>
 </template>
 
@@ -28,6 +48,9 @@
     name: 'Editor',
     data() {
       return {
+        theme: 'antd',
+        isPreview: false,
+        isMobile: false,
         amisJson: {},
       }
     },
@@ -40,6 +63,9 @@
       ...mapActions({
         setTreeFlag: 'settings/setTreeFlag',
       }),
+      async onChange(e) {
+        this.$refs['vabAmis'].setSchema(e)
+      },
       /**
        * @Author: h7ml
        * @Date: 2021-11-22 11:05:29
@@ -81,7 +107,7 @@
         try {
           const loading = this.$baseColorfullLoading()
           const payload = {
-            data: this.$refs['vabAmis'].schema,
+            data: this.$refs['vabAmis'].getSchema(),
           }
           const res = await putView(this.$route.query.viewId, payload)
           console.groupCollapsed(
@@ -114,7 +140,7 @@
 <style lang="scss" scoped>
   .wrapper {
     position: fixed;
-    right: -11.5px;
+    right: -10.5px;
     bottom: 145px;
     z-index: 9999;
     padding: 7px 15px;
@@ -125,7 +151,7 @@
     color: #fff;
     cursor: pointer;
     user-select: none;
-    background-color: rgba(0, 0, 0, 0.7);
+    //background-color: rgba(0, 0, 0, 0.7);
     border: 1px solid #000;
     border-radius: 4px;
     opacity: 1;
@@ -133,7 +159,7 @@
     transition: all 0.3s;
     &:hover {
       right: -4px;
-      background-color: rgba(0, 0, 0, 0.9);
+      //background-color: rgba(0, 0, 0, 0.9);
     }
     i {
       margin-right: 3px;

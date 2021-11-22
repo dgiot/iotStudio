@@ -9,7 +9,7 @@
 -->
 <template>
   <div class="amis">
-    <editor
+    <dgiot-amis-editor
       id="editorName"
       :key="refreshKey"
       class-name="is-fixed"
@@ -27,7 +27,7 @@
   export default {
     name: 'VabAmisEditor',
     components: {
-      Editor: ReactInVue(Editor),
+      dgiotAmisEditor: ReactInVue(Editor),
     },
     props: {
       isPreview: {
@@ -36,11 +36,11 @@
       },
       isMobile: {
         type: Boolean,
-        default: true,
+        default: false,
       },
       theme: {
         type: String,
-        default: 'antd',
+        default: 'ang',
       },
       value: {
         type: Object,
@@ -67,7 +67,6 @@
       },
       onChange(e) {
         this.$emit('onChange', e)
-        this.setSchema(e)
       },
     },
   }
