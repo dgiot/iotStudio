@@ -30,10 +30,11 @@
         }}
       </el-button>
     </div>
+    <vab-amis v-show="isPreview" :schema="renderSchema" :show-help="false" />
     <vab-amis-editor
+      v-show="!isPreview"
       ref="vabAmis"
-      :is-mobile="isMobile"
-      :is-preview="isPreview"
+      :amis-key="viewId"
       :theme="theme"
       :value="amisJson"
       @onChange="onChange"
@@ -48,15 +49,16 @@
     name: 'Editor',
     data() {
       return {
+        renderSchema: {},
         theme: 'antd',
-        isPreview: false,
-        isMobile: false,
+        viewId: this.$route.query.viewId || '',
+        isPreview: this.$route.query.isPreview || false,
         amisJson: {},
       }
     },
     computed: {},
     mounted() {
-      if (this.$route.query.viewId) this.viewData(this.$route.query.viewId)
+      if (this.viewId) this.viewData(this.viewId)
       this.setTreeFlag(false)
     },
     methods: {
@@ -65,6 +67,7 @@
       }),
       async onChange(e) {
         this.$refs['vabAmis'].setSchema(e)
+        this.renderSchema = e
       },
       /**
        * @Author: h7ml
@@ -80,6 +83,7 @@
           const { data = {} } = await getView(viewId)
           this.amisJson = data
           this.$refs['vabAmis'].schema = data
+          this.renderSchema = this.$refs['vabAmis'].schema
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',

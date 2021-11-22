@@ -40,7 +40,7 @@
       },
       theme: {
         type: String,
-        default: 'ang',
+        default: 'antd',
       },
       value: {
         type: Object,

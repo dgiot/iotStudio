@@ -16,7 +16,7 @@
   import ReactDOM from 'react-dom'
 
   export default {
-    name: 'AmisRender',
+    name: 'AmisRenderX',
     props: {
       // eslint-disable-next-line
       schema: {
@@ -35,7 +35,7 @@
       theme: {
         type: String,
         required: false,
-        default: 'antd', // antd // cxd
+        default: 'cxd', // antd // cxd
       },
     },
     data() {
@@ -52,7 +52,7 @@
     mounted() {
       this.initEnv()
       console.groupCollapsed(
-        `%c amis Help`,
+        `%c amis logs`,
         'color:#009a61; font-size: 28px; font-weight: 300'
       )
       console.info('ReactDOM', ReactDOM)
@@ -62,17 +62,6 @@
         'demo ： https://baidu.gitee.io/amis/zh-CN/docs/concepts/schema?page=1'
       )
       console.groupEnd()
-      ReactDOM.render(
-        renderAmis(
-          this.schema,
-          {
-            onAction: this.onAction || this.handleAction,
-            theme: this.theme,
-          },
-          this.env
-        ),
-        this.$refs.renderBox
-      )
     },
 
     methods: {
@@ -104,7 +93,15 @@
             }
             return false
           },
-          fetcher: ({ url, method, data, config, headers }) => {
+          // 下面三个接口必须实现
+          fetcher: ({
+            url, // 接口地址
+            method, // 请求方法 get、post、put、delete
+            data, // 请求数据
+            responseType,
+            config, // 其他配置
+            headers, // 请求头
+          }) => {
             config = config || {}
             config.headers = config.headers || {}
             config.withCredentials = true
@@ -163,8 +160,35 @@
             return ret
           },
         }
+        this.$nextTick((e) => {
+          this.render(
+            this.schema,
+            this.env,
+            this.handleAction,
+            this.theme,
+            this.$refs.renderBox
+          )
+        })
       },
-
+      render(schema, env, handleAction, theme, dom) {
+        const res = ReactDOM.render(
+          renderAmis(
+            schema,
+            {
+              onAction: handleAction,
+              theme: theme,
+            },
+            env
+          ),
+          dom
+        )
+        console.groupCollapsed(
+          `%c amis render logs`,
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.info(res)
+        console.groupEnd()
+      },
       updateRoute(location, replace) {
         if (location === 'goBack') {
           return this.$router.go(-1)
