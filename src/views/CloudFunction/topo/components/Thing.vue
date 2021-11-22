@@ -269,7 +269,11 @@
             }),
           }
           this.$message.success(this.$translateTitle('user.update completed'))
-          const res = await putProduct(this.$route.query.productid, params)
+          const topoId =
+            this.$route.query.type == 'Evidence'
+              ? this.$route.query.viewid
+              : this.$route.query.productid
+          const res = await putProduct(topoId, params)
           loading.close()
         } catch (e) {
           loading.close()

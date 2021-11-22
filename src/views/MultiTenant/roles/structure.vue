@@ -633,7 +633,7 @@
           // } else {
           //   var departmentStr = "";
           // }
-          const { tag } = await getUser('Klht7ERlYn')
+          const { tag } = await getUser(this.objectId)
           this.$delete(tag, 'wechat')
           console.log('tag', tag)
           const params = {

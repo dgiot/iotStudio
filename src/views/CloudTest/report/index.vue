@@ -145,7 +145,6 @@
               :cell-style="{ 'text-align': 'center' }"
               :data="tableData"
               :header-cell-style="{ 'text-align': 'center' }"
-              :height="$baseTableHeight(0) + 40"
               size="mini"
               style="width: 100%"
             >
@@ -207,7 +206,6 @@
             v-loading="listLoading"
             :border="border"
             :data="tempList"
-            :height="$baseTableHeight(3)"
             :size="lineHeight"
             :stripe="stripe"
           >
@@ -373,7 +371,6 @@
       v-loading="listLoading"
       :border="border"
       :data="list"
-      :height="height"
       :size="lineHeight"
       :stripe="stripe"
     >
