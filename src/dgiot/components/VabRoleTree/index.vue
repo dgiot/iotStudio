@@ -163,11 +163,6 @@
         console.error('asyncTreeData')
         this.asyncTreeData()
       })
-      console.groupCollapsed(
-        '%ctree components',
-        'color:red; font-size: 28px; font-weight: 300'
-      )
-      console.groupEnd()
       this.updateKey++
       console.log(this.roleTree)
     },

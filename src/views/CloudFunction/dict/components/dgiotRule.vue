@@ -1,7 +1,7 @@
 <!--
-* @Author: vivi
+* @Author: h7ml
 * @Date: 2021-11-17 10:41:18
-* @LastEditors: vivi
+* @LastEditors: h7ml
 * @LastEditTime: 2021-11-17 10:41:18
 * @Description:
 * @FilePath: src\views\Lowcode\components\dgiotRule.vue

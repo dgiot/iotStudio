@@ -1,7 +1,7 @@
 <!--
-* @Author: vivi
+* @Author: h7ml
 * @Date: 2021-11-17 10:41:37
-* @LastEditors: vivi
+* @LastEditors: h7ml
 * @LastEditTime: 2021-11-17 10:41:37
 * @Description:
 * @FilePath: src\views\dict\components\index.vue

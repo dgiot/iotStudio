@@ -9,116 +9,75 @@
 -->
 <template>
   <div class="amis">
-    <div
-      v-show="objectId"
-      class="wrapper"
-      :title="$translateTitle('konva.save')"
-      @click="saveAmis(objectId)"
-    >
-      <dgiot-icon icon="save-2-fill" />
-      {{ $translateTitle('konva.save') }}
-    </div>
-    <div id="editor"></div>
-    <div ref="renderWrap"></div>
+    <editor
+      id="editorName"
+      :key="refreshKey"
+      class-name="is-fixed"
+      :is-mobile="isMobile"
+      :preview="isPreview"
+      :theme="theme"
+      :value="schema"
+      @onChange="onChange"
+    />
   </div>
 </template>
-
 <script>
-  // @ is an alias to /src
+  import 'amis/lib/themes/ang.css'
+  import 'amis/lib/themes/cxd.css'
+  import 'amis/lib/helper.css'
+  import 'amis/sdk/sdk.css'
+  import 'amis-editor/dist/style.css'
   import { Editor } from 'amis-editor'
-  import { setup } from 'amis-editor-sdk'
-
+  import { ReactInVue } from 'vuera'
+  import moment from 'moment'
   export default {
     name: 'VabAmisEditor',
-    components: {},
+    components: {
+      Editor: ReactInVue(Editor),
+    },
     props: {
-      schema: {
-        type: Object,
-        required: false,
-        default: () => {},
+      isPreview: {
+        type: Boolean,
+        default: false,
       },
-      viewId: {
+      isMobile: {
+        type: Boolean,
+        default: true,
+      },
+      theme: {
         type: String,
-        required: false,
-        default: '',
+        default: 'antd',
+      },
+      value: {
+        type: Object,
+        default: function () {
+          return { message: 'hello' }
+        },
       },
     },
     data() {
       return {
-        objectId: this.viewId,
+        refreshKey: moment().format('x'),
+        schema: {},
       }
     },
-    computed: {},
     mounted() {
-      this.objectId = this.$route.query.viewId
-      this.initEditor()
-      this.render({})
+      this.schema = this.value
     },
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
     methods: {
-      initEditor() {
-        setup({
-          id: 'editor',
-          Editor,
-          onChange() {},
-          initSchema: this.schema, // 可选
-        })
+      setSchema(obj) {
+        this.schema = obj
       },
-      // 渲染函数
-      render(amisJSON) {
-        if (this.schema) amisJSON = JSON.stringify(this.schema)
-        if (!window.amisRequire) {
-          return false
-        }
-        const amis = window.amisRequire('amis/embed')
-        console.log(amis, this.$refs.renderWrap, amisJSON)
-        amis.embed(this.$refs.renderBox, amisJSON)
+      getSchema() {
+        return this.schema
       },
-      async saveAmis(viewId) {
-        console.log('viewId', viewId)
-        console.log('schema', this.schema)
+      onChange(e) {
+        this.$emit('onChange', e)
+        this.setSchema(e)
       },
     },
   }
 </script>
-<style lang="scss" scoped>
-  .wrapper {
-    position: fixed;
-    right: -11.5px;
-    bottom: 145px;
-    z-index: 9999;
-    padding: 7px 15px;
-    padding-right: 19px;
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 12px;
-    color: #fff;
-    cursor: pointer;
-    user-select: none;
-    background-color: rgba(0, 0, 0, 0.7);
-    border: 1px solid #000;
-    border-radius: 4px;
-    opacity: 1;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
-
-    &:hover {
-      right: -4px;
-      background-color: rgba(0, 0, 0, 0.9);
-    }
-
-    i {
-      margin-right: 3px;
-      font-size: 12px;
-    }
-  }
-</style>
 
 <style lang="scss">
   .amis {
