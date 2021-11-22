@@ -374,7 +374,7 @@ const actions = {
       Vue.prototype.$baseNotify(title, `${thisTime}！`)
     } else {
       Vue.prototype.$baseMessage(
-        `登录失败，可能是密码错误或者账号被禁用！请与经销商或平台管理员联系。`,
+        `登录失败，可能是密码错误或者账号被禁用！请与平台管理员联系。`,
         'error'
       )
       return Promise.reject()

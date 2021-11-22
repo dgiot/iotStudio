@@ -4,6 +4,9 @@
 // import 'amis/sdk/iconfont.css'
 // import 'amis/lib/themes/antd.css'
 // import 'amis/sdk/sdk.js'
+import 'amis/lib/themes/ang.css'
+import 'amis/sdk/sdk.css'
+import 'amis-editor/dist/style.css'
 import * as Qs from 'qs'
 
 window.qs = Qs

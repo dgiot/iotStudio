@@ -227,9 +227,10 @@
         const loading = this.$baseLoading(1)
         const { data = {} } = await getView(row.objectId)
         this.$router.push({
-          path: '/design/editor',
+          path: `/design/editor/${row.type}`,
           query: {
             viewId: row.objectId,
+            type: row.type,
           },
         })
         loading.close()
