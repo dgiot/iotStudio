@@ -498,9 +498,9 @@
                     prop="sort"
                     width="50"
                   >
-                    <template #default="{ row }">
+                    <template slot-scope="scope2">
                       <span>
-                        {{ row.$index + 1 }}
+                        {{ scope2.$index + 1 }}
                       </span>
                     </template>
                   </el-table-column>
@@ -756,7 +756,7 @@
                       <el-button
                         size="mini"
                         type="primary"
-                        @click.native="wmxDataFill(row.row.index)"
+                        @click.native="wmxDataFill(row, row.index)"
                       >
                         <!-- 编辑 -->
                         {{ $translateTitle('task.Edit') }}
