@@ -105,6 +105,7 @@
             return false
           },
           fetcher: ({ url, method, data, config, headers }) => {
+            let replaceArr = {}
             config = config || {}
             config.headers = config.headers || {}
             config.withCredentials = true
@@ -138,12 +139,47 @@
               config.headers['Content-Type'] = 'application/json'
             }
             data && (config.data = data)
+            //
+            if (headers?.dgiotReplace?.length) {
+              const dgiotReplace = headers['dgiotReplace'].split(',')
+              console.info(
+                'dgiotReplace',
+                dgiotReplace,
+                dgiotReplace.length,
+                typeof dgiotReplace
+              )
+              // eslint-disable-next-line no-useless-catch
+              try {
+                dgiotReplace.forEach((h) => {
+                  replaceArr[h] = localStorage.getItem(h)
+                  if (localStorage.getItem(h) && url.indexOf(h) !== -1) {
+                    console.groupCollapsed(
+                      `%caxios dgiotReplace logs \n${h}`,
+                      'color:#009a61; font-size: 28px; font-weight: 300'
+                    )
+                    url = url.replaceAll(h, localStorage.getItem(h))
+                    console.log(`将变量${h}替换为了${localStorage.getItem(h)}`)
+                    console.log(`替换后的url为\n${url}`)
+                    console.groupEnd()
+                  } else
+                    console.warn(
+                      `需要替换的变量${h}值为${localStorage.getItem(h)}`
+                    )
+                })
+              } catch (e) {
+                throw e
+              }
+            }
+
             console.groupCollapsed(
-              `%c amis axios logs`,
+              `%c axios logs \n${url}`,
               'color:#009a61; font-size: 28px; font-weight: 300'
             )
-            console.info('config', config)
-            console.info('data', config.data)
+            console.log('请求的headers', headers)
+            console.log('请求的config', config)
+            console.log('replaceArr', replaceArr)
+            console.info('请求url', url)
+            console.groupEnd()
             return axios(url, config)
           },
           isCancel: (e) => axios.isCancel(e),

@@ -207,6 +207,7 @@
       }
     },
     created() {
+      this.setTreeFlag(false)
       this.fetchData()
     },
     mounted() {
@@ -218,6 +219,7 @@
     methods: {
       ...mapMutations({
         set_amisJson: 'amis/set_amisJson',
+        setTreeFlag: 'settings/setTreeFlag',
       }),
       handleAdd() {
         this.$refs['edit'].type = 'add'

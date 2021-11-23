@@ -8,7 +8,7 @@
 * @DocumentLink:
 -->
 <template>
-  <vab-amis :key="objectId" :schema="viewData" :show-help="false" />
+  <vab-amis :key="objectId" :schema="code" :show-help="false" />
 </template>
 
 <script>
@@ -21,6 +21,11 @@
         default: '',
         required: true,
         type: String,
+      },
+      code: {
+        default: () => {},
+        required: true,
+        type: Object,
       },
     },
     data() {

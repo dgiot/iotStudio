@@ -10,57 +10,43 @@
 <template>
   <div class="index-container">
     <el-drawer
-      ref="dgiotKonva"
-      v-drawerDrag
-      append-to-body
-      size="80%"
-      :title="lowcodeId"
-      :visible.sync="konvaFlag"
-      :with-header="false"
-    >
-      <dgiot-konva />
-    </el-drawer>
-
-    <el-drawer
-      ref="dgiotAmis"
+      :key="type + objectId"
       v-drawerDrag
       append-to-body
       size="90%"
-      :title="lowcodeId"
-      :visible.sync="amisFlag"
+      :title="objectId"
+      :visible.sync="flag"
     >
-      <amis :code="code" :object-id="lowcodeId" />
+      <topo v-if="type === 'topo'" />
+      <amis v-else-if="type === 'amis'" :code="code" :object-id="objectId" />
     </el-drawer>
   </div>
 </template>
 
 <script>
   import amis from '@/views/CloudFunction/lowcode/components/amis'
-  import dgiotKonva from '@/views/CloudFunction/lowcode/components/dgiotKonva'
+  import topo from '@/views/CloudFunction/lowcode/components/dgiotKonva'
   import { mapMutations } from 'vuex'
   export default {
     name: 'Index',
     components: {
-      dgiotKonva,
+      topo,
       amis,
     },
     data() {
       return {
+        types: ['amis', 'topo'],
         code: {},
-        lowcodeId: '',
-        infoData: 'index',
-        amisFlag: false,
-        konvaFlag: false,
+        objectId: '',
+        flag: false,
+        type: 'amis',
       }
     },
     mounted() {
       this.$dgiotBus.$off('lowcodePreview')
       this.$dgiotBus.$on('lowcodePreview', (params) => {
-        const typePayload = ['amis', 'konva']
-        console.log('amis', params)
         const { type, data, objectId } = params
-        this.lowcodeId = objectId
-        if (typePayload.includes(type)) this.designLowCode(type, objectId, data)
+        if (this.types.includes(type)) this.designLowCode(type, objectId, data)
         else {
           this.$message.error('暂不支持该类型低代码设计')
         }
@@ -85,19 +71,11 @@
        * @return {Promise<void>}
        */
       async designLowCode(type, objectId, data) {
+        console.log(type, objectId, data)
         this.code = data
-        console.log('code')
-        switch (type) {
-          case 'amis':
-            this.setData(this.code)
-            this.amisFlag = true
-            this.konvaFlag = false
-            break
-          case 'konva':
-            this.amisFlag = false
-            this.konvaFlag = true
-            break
-        }
+        this.type = type
+        this.objectId = objectId
+        this.flag = true
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }

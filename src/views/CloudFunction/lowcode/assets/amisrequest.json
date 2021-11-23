@@ -1,0 +1,561 @@
+{
+  "type": "page",
+  "body": [
+    {
+      "body": [
+        {
+          "mode": "inline",
+          "name": "deviceid",
+          "size": "lg",
+          "type": "input-text",
+          "label": "报告编号",
+          "value": "0d82547a51"
+        },
+        {
+          "mode": "inline",
+          "name": "taskname",
+          "size": "lg",
+          "type": "input-text",
+          "label": "任务名称"
+        },
+        {
+          "mode": "inline",
+          "name": "taskitems",
+          "size": "lg",
+          "type": "select",
+          "label": "质检项目",
+          "source": "",
+          "options": [
+            {
+              "label": "南方家用泵",
+              "value": "c5f31fa3a4"
+            }
+          ],
+          "autoFill": {
+          },
+          "checkAll": false,
+          "autoComplete": ""
+        },
+        {
+          "mode": "inline",
+          "name": "starttime",
+          "size": "lg",
+          "type": "input-datetime",
+          "label": "开始时间"
+        },
+        {
+          "mode": "inline",
+          "name": "endtime",
+          "size": "lg",
+          "type": "input-datetime",
+          "label": "结束时间"
+        }
+      ],
+      "type": "collapse",
+      "title": "检测任务基本信息",
+      "visible": "",
+      "className": "bg-white wrapper b-2x p-b-xs m-b-xs",
+      "collapsed": false,
+      "bodyClassName": "m",
+      "headingClassName": "font-thin text-lg b-light m-t-xs",
+      "clearValueOnHidden": false
+    },
+    {
+      "body": [
+        {
+          "mode": "inline",
+          "name": "product",
+          "size": "lg",
+          "type": "select",
+          "label": "测试台体",
+          "source": "",
+          "options": [
+            {
+              "label": "南方泵业台体",
+              "value": "0399cc8e58"
+            }
+          ],
+          "autoFill": {
+          },
+          "checkAll": false,
+          "autoComplete": ""
+        },
+        {
+          "mode": "inline",
+          "name": "ack",
+          "size": "lg",
+          "type": "select",
+          "label": "所属组织",
+          "source": "",
+          "options": [
+            {
+              "label": "admin",
+              "value": "A"
+            },
+            {
+              "label": "立欧泵业",
+              "value": "B"
+            }
+          ],
+          "autoFill": {
+          },
+          "checkAll": false,
+          "autoComplete": ""
+        }
+      ],
+      "type": "collapse",
+      "title": "检测资源信息",
+      "className": "bg-white wrapper b-2x p-b-xs m-b-xs",
+      "collapsed": false,
+      "bodyClassName": "m",
+      "headingClassName": "font-thin text-lg b-light m-t-xs"
+    },
+    {
+      "tabs": [
+        {
+          "body": [
+            {
+              "mode": "inline",
+              "name": "productname",
+              "size": "lg",
+              "type": "select",
+              "label": "产品名称",
+              "options": [
+                {
+                  "label": "中开泵",
+                  "value": "中开泵"
+                },
+                {
+                  "label": "多级泵",
+                  "value": "多级泵"
+                },
+                {
+                  "label": "斜流泵",
+                  "value": "斜流泵"
+                },
+                {
+                  "label": "长轴泵",
+                  "value": "长轴泵"
+                },
+                {
+                  "label": "渣浆泵",
+                  "value": "渣浆泵"
+                },
+                {
+                  "label": "中开多级泵",
+                  "value": "中开多级泵"
+                },
+                {
+                  "label": "液下多级泵",
+                  "value": "液下多级泵"
+                },
+                {
+                  "label": "离心泵",
+                  "value": "离心泵"
+                },
+                {
+                  "label": "多级离心泵",
+                  "value": "多级离心泵"
+                }
+              ],
+              "checkAll": false
+            },
+            {
+              "mode": "inline",
+              "name": "pumptype",
+              "size": "lg",
+              "type": "input-text",
+              "label": "水泵型号"
+            },
+            {
+              "mode": "inline",
+              "name": "factorynumber",
+              "size": "lg",
+              "type": "input-text",
+              "label": "出厂编号"
+            },
+            {
+              "mode": "inline",
+              "name": "wordnumber",
+              "size": "lg",
+              "type": "input-text",
+              "label": "报告编号"
+            },
+            {
+              "mode": "inline",
+              "name": "productnumber",
+              "size": "lg",
+              "type": "input-text",
+              "label": "产品编号"
+            }
+          ],
+          "title": "基本信息"
+        },
+        {
+          "body": [
+            {
+              "mode": "inline",
+              "name": "select",
+              "size": "lg",
+              "type": "select",
+              "label": "测试点个数",
+              "options": [
+                {
+                  "label": "1",
+                  "value": 1
+                },
+                {
+                  "label": "2",
+                  "value": 2
+                },
+                {
+                  "label": "3",
+                  "value": 3
+                },
+                {
+                  "label": "4",
+                  "value": 4
+                },
+                {
+                  "label": "5",
+                  "value": 5
+                }
+              ],
+              "checkAll": false
+            }
+          ],
+          "title": "规定点信息"
+        },
+        {
+          "body": [
+            {
+              "name": "radios",
+              "type": "radios",
+              "label": "检测精度",
+              "options": [
+                {
+                  "label": "一级",
+                  "value": "A"
+                },
+                {
+                  "label": "二级",
+                  "value": "B"
+                },
+                {
+                  "label": "三级",
+                  "value": "C"
+                }
+              ],
+              "joinValues": true
+            }
+          ],
+          "title": "测试设置"
+        }
+      ],
+      "type": "tabs",
+      "tabsMode": "card",
+      "className": "",
+      "contentClassName": "m"
+    },
+    {
+      "body": [
+        {
+          "body": [
+            {
+              "mode": "inline",
+              "name": "deviceid",
+              "size": "lg",
+              "type": "input-text",
+              "label": "报告编号",
+              "value": "0d82547a51"
+            },
+            {
+              "mode": "inline",
+              "name": "taskname",
+              "size": "lg",
+              "type": "input-text",
+              "label": "任务名称"
+            },
+            {
+              "mode": "inline",
+              "name": "taskitems",
+              "size": "lg",
+              "type": "select",
+              "label": "质检项目",
+              "source": "",
+              "options": [
+                {
+                  "label": "南方家用泵",
+                  "value": "c5f31fa3a4"
+                }
+              ],
+              "autoFill": {
+              },
+              "checkAll": false,
+              "autoComplete": ""
+            },
+            {
+              "mode": "inline",
+              "name": "starttime",
+              "size": "lg",
+              "type": "input-datetime",
+              "label": "开始时间"
+            },
+            {
+              "mode": "inline",
+              "name": "endtime",
+              "size": "lg",
+              "type": "input-datetime",
+              "label": "结束时间"
+            }
+          ],
+          "type": "collapse",
+          "title": "检测任务基本信息",
+          "visible": "",
+          "className": "bg-white wrapper b-2x p-b-xs m-b-xs",
+          "collapsed": false,
+          "bodyClassName": "m",
+          "headingClassName": "font-thin text-lg b-light m-t-xs",
+          "clearValueOnHidden": false
+        },
+        {
+          "body": [
+            {
+              "mode": "inline",
+              "name": "product",
+              "size": "lg",
+              "type": "select",
+              "label": "测试台体",
+              "source": "",
+              "options": [
+                {
+                  "label": "南方泵业台体",
+                  "value": "0399cc8e58"
+                }
+              ],
+              "autoFill": {
+              },
+              "checkAll": false,
+              "autoComplete": ""
+            },
+            {
+              "mode": "inline",
+              "name": "ack",
+              "size": "lg",
+              "type": "select",
+              "label": "所属组织",
+              "source": "",
+              "options": [
+                {
+                  "label": "admin",
+                  "value": "A"
+                },
+                {
+                  "label": "立欧泵业",
+                  "value": "B"
+                }
+              ],
+              "autoFill": {
+              },
+              "checkAll": false,
+              "autoComplete": ""
+            }
+          ],
+          "type": "collapse",
+          "title": "检测资源信息",
+          "className": "bg-white wrapper b-2x p-b-xs m-b-xs",
+          "collapsed": false,
+          "bodyClassName": "m",
+          "headingClassName": "font-thin text-lg b-light m-t-xs"
+        },
+        {
+          "tabs": [
+            {
+              "body": [
+                {
+                  "mode": "inline",
+                  "name": "productname",
+                  "size": "lg",
+                  "type": "select",
+                  "label": "产品名称",
+                  "options": [
+                    {
+                      "label": "中开泵",
+                      "value": "中开泵"
+                    },
+                    {
+                      "label": "多级泵",
+                      "value": "多级泵"
+                    },
+                    {
+                      "label": "斜流泵",
+                      "value": "斜流泵"
+                    },
+                    {
+                      "label": "长轴泵",
+                      "value": "长轴泵"
+                    },
+                    {
+                      "label": "渣浆泵",
+                      "value": "渣浆泵"
+                    },
+                    {
+                      "label": "中开多级泵",
+                      "value": "中开多级泵"
+                    },
+                    {
+                      "label": "液下多级泵",
+                      "value": "液下多级泵"
+                    },
+                    {
+                      "label": "离心泵",
+                      "value": "离心泵"
+                    },
+                    {
+                      "label": "多级离心泵",
+                      "value": "多级离心泵"
+                    }
+                  ],
+                  "checkAll": false
+                },
+                {
+                  "mode": "inline",
+                  "name": "pumptype",
+                  "size": "lg",
+                  "type": "input-text",
+                  "label": "水泵型号"
+                },
+                {
+                  "mode": "inline",
+                  "name": "factorynumber",
+                  "size": "lg",
+                  "type": "input-text",
+                  "label": "出厂编号"
+                },
+                {
+                  "mode": "inline",
+                  "name": "wordnumber",
+                  "size": "lg",
+                  "type": "input-text",
+                  "label": "报告编号"
+                },
+                {
+                  "mode": "inline",
+                  "name": "productnumber",
+                  "size": "lg",
+                  "type": "input-text",
+                  "label": "产品编号"
+                }
+              ],
+              "title": "基本信息"
+            },
+            {
+              "body": [
+                {
+                  "mode": "inline",
+                  "name": "select",
+                  "size": "lg",
+                  "type": "select",
+                  "label": "测试点个数",
+                  "options": [
+                    {
+                      "label": "1",
+                      "value": 1
+                    },
+                    {
+                      "label": "2",
+                      "value": 2
+                    },
+                    {
+                      "label": "3",
+                      "value": 3
+                    },
+                    {
+                      "label": "4",
+                      "value": 4
+                    },
+                    {
+                      "label": "5",
+                      "value": 5
+                    }
+                  ],
+                  "checkAll": false
+                }
+              ],
+              "title": "规定点信息"
+            },
+            {
+              "body": [
+                {
+                  "name": "radios",
+                  "type": "radios",
+                  "label": "检测精度",
+                  "options": [
+                    {
+                      "label": "一级",
+                      "value": "A"
+                    },
+                    {
+                      "label": "二级",
+                      "value": "B"
+                    },
+                    {
+                      "label": "三级",
+                      "value": "C"
+                    }
+                  ],
+                  "joinValues": true
+                }
+              ],
+              "title": "测试设置"
+            }
+          ],
+          "type": "tabs",
+          "tabsMode": "card",
+          "className": "",
+          "contentClassName": "m"
+        }
+      ],
+      "type": "page",
+      "style": {
+      },
+      "title": "任务详情",
+      "initApi": {
+        "url": "iotapi/classes/Device/${deviceid}",
+        "data": {
+        },
+        "method": "get",
+        "sendOn": "",
+        "adaptor": "return {\r\n  \"status\": 0,\r\n  \"msg\": \"\",\r\n  \"data\": {\r\n    \"taskname\":response.data.basedata.taskname,\r\n  }\r\n}",
+        "dataType": "json",
+        "requestAdaptor": "return {  \r\n  data{basedata:\r\n   ...api.data\r\n   }\r\n}\r\n  "
+      },
+      "regions": [
+        "header",
+        "body"
+      ],
+      "messages": {
+      },
+      "className": "",
+      "bodyClassName": "",
+      "headerClassName": ""
+    }
+  ],
+  "style": {
+  },
+  "title": "任务详情",
+  "initApi": {
+    "url": "iotapi/classes/Device/${deviceid}",
+    "method": "get",
+    "adaptor": "return {\r\n    data:response.data.basedata\r\n}"
+  },
+  "regions": [
+    "header",
+    "body"
+  ],
+  "messages": {
+  },
+  "className": "",
+  "bodyClassName": "",
+  "headerClassName": ""
+}

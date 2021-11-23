@@ -59,12 +59,8 @@
     computed: {},
     mounted() {
       if (this.viewId) this.viewData(this.viewId)
-      this.setTreeFlag(false)
     },
     methods: {
-      ...mapActions({
-        setTreeFlag: 'settings/setTreeFlag',
-      }),
       async onChange(e) {
         this.$refs['vabAmis'].setSchema(e)
         this.renderSchema = e
