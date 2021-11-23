@@ -17,7 +17,7 @@
       :title="objectId"
       :visible.sync="flag"
     >
-      <topo v-if="type === 'topo'" />
+      <topo v-if="type === 'topo'" :code="code.konva" :object-id="objectId" />
       <amis v-else-if="type === 'amis'" :code="code" :object-id="objectId" />
     </el-drawer>
   </div>
@@ -45,7 +45,34 @@
     mounted() {
       this.$dgiotBus.$off('lowcodePreview')
       this.$dgiotBus.$on('lowcodePreview', (params) => {
-        const { type, data, objectId } = params
+        const amisEnv = {}
+        const {
+          type,
+          data,
+          objectId,
+          class: _class,
+          key: parse_objectid,
+        } = params
+        if (_class == 'Device') {
+          console.log(data)
+          // const { headers = { store: 'localStorage' } } = data.initApi
+          // 设置amis中的变量参数。
+          // 目前只设置了parse_objectid
+          amisEnv['parse_objectid'] = parse_objectid
+          localStorage.setItem('parse_objectid', parse_objectid)
+          // headers.store == 'localStorage'
+          //   ? localStorage.setItem('parse_objectid', parse_objectid)
+          //   : store === 'sessionStorage'
+          //   ? sessionStorage.setItem('parse_objectid', parse_objectid)
+          //   : Cookies.set('parse_objectid', parse_objectid)
+
+          console.groupCollapsed(
+            `%c amis env`,
+            'color:#009a61; font-size: 28px'
+          )
+          console.log('amisEnv', amisEnv)
+          console.groupEnd()
+        }
         if (this.types.includes(type)) this.designLowCode(type, objectId, data)
         else {
           this.$message.error('暂不支持该类型低代码设计')

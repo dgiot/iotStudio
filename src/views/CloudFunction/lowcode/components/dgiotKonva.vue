@@ -8,14 +8,11 @@
 * @DocumentLink:
 -->
 <template>
-  <div class="dgiotKonva-container">
-    <div class="dgiotKonva-content">
-      {{ infoData }}
-    </div>
-  </div>
+  <div id="topo"></div>
 </template>
 
 <script>
+  import { mapMutations } from 'vuex'
   export default {
     name: 'DgiotKonva',
     components: {},
@@ -36,16 +33,17 @@
         infoData: 'dgiotKonva',
       }
     },
-    computed: {},
-    mounted() {},
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
-    methods: {}, //如果页面有keep-alive缓存功能，这个函数会触发
+    mounted() {
+      this.initKonva({
+        data: this.code.Stage,
+        id: 'topo',
+      })
+    },
+    methods: {
+      ...mapMutations({
+        initKonva: 'topo/initKonva',
+      }),
+    }, //如果页面有keep-alive缓存功能，这个函数会触发
   }
 </script>
 <style lang="scss" scoped>

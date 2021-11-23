@@ -43,7 +43,6 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
   import { putView, getView } from '@/api/View'
   export default {
     name: 'Editor',
@@ -74,9 +73,32 @@
        * @Description:
        */
       async viewData(viewId) {
+        const amisEnv = {}
         try {
           const loading = this.$baseLoading(1)
-          const { data = {} } = await getView(viewId)
+          const {
+            data,
+            class: _class,
+            key: parse_objectid,
+          } = await getView(viewId)
+          if (_class == 'Device') {
+            // const { headers = { store: 'localStorage' } } = data.initApi
+            // 设置amis中的变量参数。
+            // 目前只设置了parse_objectid
+            amisEnv['parse_objectid'] = parse_objectid
+            localStorage.setItem('parse_objectid', parse_objectid)
+            // headers.store == 'localStorage'
+            //   ? localStorage.setItem('parse_objectid', parse_objectid)
+            //   : store === 'sessionStorage'
+            //   ? sessionStorage.setItem('parse_objectid', parse_objectid)
+            //   : Cookies.set('parse_objectid', parse_objectid)
+            console.groupCollapsed(
+              `%c amis env`,
+              'color:#009a61; font-size: 28px'
+            )
+            console.log('amisEnv', amisEnv)
+            console.groupEnd()
+          }
           this.amisJson = data
           this.$refs['vabAmis'].schema = data
           this.renderSchema = this.$refs['vabAmis'].schema
