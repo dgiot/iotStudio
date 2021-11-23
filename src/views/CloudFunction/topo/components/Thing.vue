@@ -33,7 +33,7 @@
   import { putProduct, putThing } from '@/api/Product'
   import { edit_konva_thing, get_konva_thing } from '@/api/Topo'
   import { mapGetters, mapMutations } from 'vuex'
-
+  import { putView, getView } from '@/api/View'
   export default {
     name: 'Thing',
     components: { wmxdetail },
@@ -45,6 +45,7 @@
         thingArgs: {},
         text: 'text',
         shapeid: '',
+        viewInfo: {},
       }
     },
     computed: {
@@ -53,6 +54,7 @@
       }),
     },
     mounted() {
+      if (this.$route.query.viewid) this.view(this.$route.query.viewid)
       this.$dgiotBus.$on('busUpdata', () => {
         this.updataTopo()
       })
@@ -81,6 +83,10 @@
       ...mapMutations({
         setSizeForm: 'konva/setSizeForm',
       }),
+      async view(viewId) {
+        const { data = {} } = await getView(viewId)
+        this.viewInfo = data
+      },
       wmxhandleClose() {
         this.wmxdialogVisible = false
         this.setSizeForm({})
@@ -269,11 +275,17 @@
             }),
           }
           this.$message.success(this.$translateTitle('user.update completed'))
-          const topoId =
+          const res =
             this.$route.query.type == 'Evidence'
-              ? this.$route.query.viewid
-              : this.$route.query.productid
-          const res = await putProduct(topoId, params)
+              ? await putView(this.$route.query.viewid, {
+                  data: _.merge(
+                    {
+                      konva: { Stage: JSON.parse(canvas.stage.toJSON()) },
+                    },
+                    this.viewInfo
+                  ),
+                })
+              : await putProduct(this.$route.query.productid, params)
           loading.close()
         } catch (e) {
           loading.close()
