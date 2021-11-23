@@ -229,7 +229,7 @@
                     <i
                       slot="suffix"
                       class="el-icon-search"
-                      style="color: #606266; cursor: pointer; lineheight: 32px"
+                      style="color: #606266; cursor: pointer; line-height: 32px"
                       @click="getDevices({ start: 0 })"
                     ></i>
                   </el-input>
@@ -1662,6 +1662,7 @@
           : ''
       this.selectdevice = this.language == 'zh' ? '设备名称' : 'devicename'
       this.queryProduct()
+      this.getDevices()
       this.aclObj = this.$aclObj(this._role)
       console.log('this.aclObj', this.aclObj)
     },

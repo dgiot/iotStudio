@@ -19,6 +19,62 @@ export async function queryRole(params) {
   return query_object('_Role', params)
 }
 
+/**
+ * @description 查询部门用户
+ * @docs-api https://prod.iotn2n.com/dgiot_swagger/#/_Role/get_roleuser
+ * @param params
+ * @return {Promise<*>}
+ */
+export async function getRoleuser(params) {
+  return request({
+    url: `roleuser`,
+    method: 'get',
+    params: params,
+  })
+}
+
+/**
+ * @description 用户转岗
+ * @docs-api https://prod.iotn2n.com/dgiot_swagger/#/_Role/put_roleuser
+ * @param params
+ * @return {Promise<*>}
+ */
+export async function putRoleuser(params) {
+  return request({
+    url: `roleuser`,
+    method: 'put',
+    params: params,
+  })
+}
+
+/**
+ * @description 入职多部门
+ * @docs-api https://prod.iotn2n.com/dgiot_swagger/#/_Role/post_roleuser
+ * @param params
+ * @return {Promise<*>}
+ */
+export async function postRoleuser(data) {
+  return request({
+    url: `roleuser`,
+    method: 'post',
+    data: data,
+  })
+}
+
+/**
+ * @description 离职
+ * @docs-api https://prod.iotn2n.com/dgiot_swagger/#/_Role/delete_roleuser
+ * @param params
+ * @return {Promise<*>}
+ */
+export async function deleteRoleuser(params) {
+  return request({
+    url: `roleuser`,
+    method: 'delete',
+    params: params,
+  })
+}
+
 export async function queryRoledepartment(params) {
   return request({
     url: 'role',

@@ -6,6 +6,7 @@
  * @FilePath: \dgiot-dashboard\src\config\setting.config.js
  * @Description:
  */
+const moment = require('moment')
 /**
  * @description 导出通用配置
  */
@@ -96,7 +97,7 @@ module.exports = {
   templateFolder: 'project',
   webpackBarName: '杭州数蛙科技有限公司',
   // 控制台输出的名称
-  dateTime: new Date(),
+  dateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
   // 打包时间
   webpackBanner:
     ' build: 杭州数蛙科技有限公司 \n copyright: dgiot-dashboard \n author: h7ml(h7ml@qq.com) \n time: ',

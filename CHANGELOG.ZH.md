@@ -489,7 +489,7 @@
 * **src/utils/iotmqtt/index.js:** :new:	 mqtt supports https port 8084 ([cd33b96](https://github.com/dgiot/dgiot-dashboard/commit/cd33b969fc8f73bb20352fd4ad8c52f1799da99a))
 * **src/vab/components/vabtheme/components/vabthemesetting.vue:** user personalized configuration ([af3c04f](https://github.com/dgiot/dgiot-dashboard/commit/af3c04f0630131e5ff811d644dee565e1234051c))
 * **src/vab/directives/package/*:** :zap: ([f21f6b3](https://github.com/dgiot/dgiot-dashboard/commit/f21f6b3e4d2ee93804e2a410f70094f09210c867))
-* **src/vab/plugins/vab.js && src/views/equipment_management/home_index.vue:** loading text ([3e510cb](https://github.com/dgiot/dgiot-dashboard/commit/3e510cbcd98453434c3021e34be8c97a7da59d36))
+* **src/vab/plugins/dgiot.js && src/views/equipment_management/home_index.vue:** loading text ([3e510cb](https://github.com/dgiot/dgiot-dashboard/commit/3e510cbcd98453434c3021e34be8c97a7da59d36))
 * src/views/devicemanage/category.vue ([cf7238b](https://github.com/dgiot/dgiot-dashboard/commit/cf7238b4b69ee7734e532b3ac6911bbd886cdebd))
 * **src/views/engine/addengine.vue:** customize ace editor tips ([2cd926a](https://github.com/dgiot/dgiot-dashboard/commit/2cd926a92848ccda243c3d104dfa87262ce90706))
 * **src/views/engine/addengine.vue:** new rule interface ([f525bc7](https://github.com/dgiot/dgiot-dashboard/commit/f525bc796fd9f83f7b5993547394e1c90152767d))

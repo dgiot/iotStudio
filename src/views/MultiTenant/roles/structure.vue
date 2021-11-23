@@ -1,5 +1,4 @@
 <!-- eslint-disable-next-line -->
-
 <template>
   <div class="structure dgiot-container">
     <div class="adduserDiadlog">
@@ -207,20 +206,25 @@
                   >
                     <template #default="{ row }">
                       <el-button
-                        :disabled="row.objectId !== objectId"
                         size="small"
                         type="success"
-                        @click="handleEditor(row)"
+                        @click="handleLeaving(row)"
                       >
-                        {{ $translateTitle('developer.edit') }}
+                        {{ $translateTitle('developer.leaving') }}
                       </el-button>
                       <el-button
-                        :disabled="!curDepartmentId"
                         size="small"
                         type="danger"
                         @click="handleDetele(row)"
                       >
-                        {{ $translateTitle('developer.delete') }}
+                        {{ $translateTitle('task.Delete') }}
+                      </el-button>
+                      <el-button
+                        size="small"
+                        type="warning"
+                        @click="handleResign(row)"
+                      >
+                        {{ $translateTitle('developer.resign') }}
                       </el-button>
                       <!-- <el-button
                         size="mini"
@@ -267,6 +271,19 @@
           </el-row>
         </div>
       </el-col>
+      <!--转岗-->
+      <el-dialog
+        append-to-body
+        center
+        title="提示"
+        :visible.sync="leaving"
+        width="30%"
+      >
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="leaving = false">取 消</el-button>
+          <el-button type="primary" @click="leaving = false">确 定</el-button>
+        </span>
+      </el-dialog>
       <!--分配角色-->
       <el-dialog
         :append-to-body="true"
@@ -316,14 +333,14 @@
   import addroles from '@/views/MultiTenant/roles/list/roles'
   import { Promise } from 'q'
   import { mapGetters, mapMutations } from 'vuex'
+  import { disableuser, EmployeesHired, EmployeeTurnover } from '@/api/User'
   import {
-    disableuser,
-    EmployeesHired,
-    EmployeeTurnover,
-    getUser,
-    queryUser,
-  } from '@/api/User/index'
-  import { queryRoledepartment } from '@/api/Role/index'
+    queryRoledepartment,
+    getRoleuser,
+    putRoleuser,
+    postRoleuser,
+    deleteRoleuser,
+  } from '@/api/Role'
   import { Roletree } from '@/api/Menu'
 
   var arr = []
@@ -353,6 +370,8 @@
         }
       }
       return {
+        leaving: false,
+        leavingUser: {},
         tableHeight: this.$baseTableHeight(0) - 20,
         isloading: false,
         isStructures: true,
@@ -825,15 +844,79 @@
           this.multipleSelection.push(items.id)
         })
       },
-      // 编辑
-      handleEditor(row) {
-        console.log(row)
-        this.$router.push({
-          path: '/roles/edituser',
-          query: {
-            id: row.objectId,
-          },
-        })
+      // handleLeaving
+      handleLeaving(row) {
+        if (this.currentDepartment.depname)
+          this.$baseConfirm(
+            this.$translateTitle(
+              'Maintenance.Are you sure you want to remove the user from this post'
+            ) + this.currentDepartment.depname,
+            null,
+            async () => {
+              const params = {
+                userid: row.objectId,
+                filter: {
+                  where: {
+                    name: this.currentDepartment.depname,
+                  },
+                },
+              }
+              console.log(typeof params)
+              const res = await deleteRoleuser(params)
+              this.$baseMessage(
+                this.$translateTitle(
+                  'user.Role information updated successfully'
+                ),
+                'success',
+                'vab-hey-message-success'
+              )
+              // this.fetchData()
+            }
+          )
+        else this.$baseMessage(this.$translateTitle('product.selectdepartment'))
+      },
+      /**
+       * @Author: h7ml
+       * @Date: 2021-11-23 18:53:09
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description: 用户转岗
+       */
+      async leavingInfo(params) {
+        this.leaving = true
+        try {
+          const loading = this.$baseColorfullLoading()
+          console.log(row)
+          const params = {
+            addfilter: {
+              where: {
+                name: 'test2',
+              },
+            },
+            delfilter: {
+              where: {
+                name: 'test',
+              },
+            },
+            userid: row.objectId,
+          }
+          const res = await putRoleuser(params)
+          console.log(res)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request successfully'),
+            'success',
+            'vab-hey-message-success'
+          )
+          loading.close()
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
       },
       disableRow(objectId, emailVerified) {
         let action = 'enable'
@@ -876,31 +959,63 @@
           }
         })
       },
+      /**
+       * @Author: h7ml
+       * @Date: 2021-11-23 20:20:42
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description: 用户转岗
+       */
+      async handleResign(params) {
+        try {
+          this.$baseMessage('还没有实现', 'info', 'vab-hey-message-success')
+          // const loading = this.$baseColorfullLoading()
+          // topo 未实现 用户转岗
+          // const res = await postRoleuser(params.objectId)
+          // console.log(res)
+          // this.$baseMessage(
+          //   this.$translateTitle('alert.Data request successfully'),
+          //   'success',
+          //   'vab-hey-message-success'
+          // )
+          // loading.close()
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
+      },
       // 删除
       handleDetele(row) {
-        this.$confirm('此操作将永久删除此用户, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }).then(async () => {
-          // const data = {
-          //   department: this.curDepartmentId,
-          //   username: row.username,
-          // }
-          const params = {
-            department: this.curDepartmentId,
-            username: row.username,
-          }
-          const res = await EmployeeTurnover(params)
-          this.$dgiotBus.$emit('asyncTreeData')
-          if (res) {
-            this.$message({
-              type: 'success',
-              message: '删除成功!',
-            })
-            this.handleNodeClick({ name: this.departmentname })
-          }
-        })
+        if (this.currentDepartment.depname)
+          this.$confirm('此操作将永久删除此用户, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }).then(async () => {
+            // const data = {
+            //   department: this.curDepartmentId,
+            //   username: row.username,
+            // }
+            const params = {
+              department: this.currentDepartment.objectId,
+              username: row.username,
+            }
+            const res = await EmployeeTurnover(params)
+            // this.$dgiotBus.$emit('asyncTreeData')
+            if (res) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!',
+              })
+              this.searchAllOption()
+            }
+          })
+        else this.$baseMessage(this.$translateTitle('product.selectdepartment'))
       },
       handleSizeChange(val) {
         this.pagesize = val
@@ -920,12 +1035,12 @@
           this.query.value = ''
         }
         let params = {
-          limit: this.pagesize,
-          skip: this.start,
-          where: {},
-          count: 'objectId',
+          where: {
+            objectId: this.currentDepartment.objectId,
+          },
+          limit: 10,
         }
-        const { results } = await queryUser(params)
+        const { results } = await getRoleuser(params)
         if (results) {
           if (this.query.value) {
             this.tempData = results.filter((item) => {

@@ -308,6 +308,8 @@ export default {
       powersupply: '供电单位',
     },
     developer: {
+      leaving: '离岗',
+      resign: '转岗',
       dictinfo: '字典信息',
       back: '返回',
       'Data is loading': '数据加载中',
@@ -1033,6 +1035,8 @@ export default {
     Maintenance: {
       'Are you sure you want to delete the current item':
         '你确定要删除当前项吗',
+      'Are you sure you want to remove the user from this post':
+        '你确认要将用户从本部门移除吗？',
       'successfully deleted': '删除成功',
       'Delete reminder': '删除提示',
       Unfold: '展开',
