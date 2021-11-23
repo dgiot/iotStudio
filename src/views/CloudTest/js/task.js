@@ -229,7 +229,8 @@ export default {
             product: this.ruleForm.wordtemplateid,
           }
           const loading = this.$baseColorfullLoading(1)
-          postreport(task)
+          this.activePopShow = false
+          await postreport(task)
           this.fetchData(this.queryForm)
           loading.close()
         } else {

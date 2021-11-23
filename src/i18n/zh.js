@@ -1037,6 +1037,9 @@ export default {
         '你确定要删除当前项吗',
       'Are you sure you want to remove the user from this post':
         '你确认要将用户从本部门移除吗？',
+      'The current user department': '当前用户所在部门',
+      'Are you sure you want to transfer this user to':
+        '你确定要将本用户转岗到',
       'successfully deleted': '删除成功',
       'Delete reminder': '删除提示',
       Unfold: '展开',

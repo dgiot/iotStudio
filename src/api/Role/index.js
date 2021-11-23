@@ -39,11 +39,12 @@ export async function getRoleuser(params) {
  * @param params
  * @return {Promise<*>}
  */
-export async function putRoleuser(params) {
+export async function putRoleuser(data) {
   return request({
+    headers: { 'Content-Type': 'application/json' },
     url: `roleuser`,
     method: 'put',
-    params: params,
+    data: data,
   })
 }
 

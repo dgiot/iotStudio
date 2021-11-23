@@ -273,16 +273,22 @@
       </el-col>
       <!--转岗-->
       <el-dialog
+        v-if="leaving"
         append-to-body
         center
-        title="提示"
+        :title="
+          $translateTitle('Maintenance.The current user department') +
+          leavingUser.role.depname
+        "
         :visible.sync="leaving"
         width="30%"
       >
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="leaving = false">取 消</el-button>
-          <el-button type="primary" @click="leaving = false">确 定</el-button>
-        </span>
+        <el-tree
+          :data="deptTreeData"
+          default-expand-all
+          :props="defaultProps"
+          @node-click="Resign"
+        />
       </el-dialog>
       <!--分配角色-->
       <el-dialog
@@ -863,6 +869,7 @@
               }
               console.log(typeof params)
               const res = await deleteRoleuser(params)
+              this.searchAllOption()
               this.$baseMessage(
                 this.$translateTitle(
                   'user.Role information updated successfully'
@@ -874,49 +881,6 @@
             }
           )
         else this.$baseMessage(this.$translateTitle('product.selectdepartment'))
-      },
-      /**
-       * @Author: h7ml
-       * @Date: 2021-11-23 18:53:09
-       * @LastEditors:
-       * @param
-       * @return {Promise<void>}
-       * @Description: 用户转岗
-       */
-      async leavingInfo(params) {
-        this.leaving = true
-        try {
-          const loading = this.$baseColorfullLoading()
-          console.log(row)
-          const params = {
-            addfilter: {
-              where: {
-                name: 'test2',
-              },
-            },
-            delfilter: {
-              where: {
-                name: 'test',
-              },
-            },
-            userid: row.objectId,
-          }
-          const res = await putRoleuser(params)
-          console.log(res)
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request successfully'),
-            'success',
-            'vab-hey-message-success'
-          )
-          loading.close()
-        } catch (error) {
-          console.log(error)
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request error') + `${error}`,
-            'error',
-            'vab-hey-message-error'
-          )
-        }
       },
       disableRow(objectId, emailVerified) {
         let action = 'enable'
@@ -961,25 +925,41 @@
       },
       /**
        * @Author: h7ml
-       * @Date: 2021-11-23 20:20:42
+       * @Date: 2021-11-23 21:30:04
        * @LastEditors:
        * @param
        * @return {Promise<void>}
-       * @Description: 用户转岗
+       * @Description:
        */
-      async handleResign(params) {
+      async Resign(data) {
+        console.log(data)
         try {
-          this.$baseMessage('还没有实现', 'info', 'vab-hey-message-success')
-          // const loading = this.$baseColorfullLoading()
-          // topo 未实现 用户转岗
-          // const res = await postRoleuser(params.objectId)
-          // console.log(res)
-          // this.$baseMessage(
-          //   this.$translateTitle('alert.Data request successfully'),
-          //   'success',
-          //   'vab-hey-message-success'
-          // )
-          // loading.close()
+          this.$baseConfirm(
+            this.$translateTitle(
+              'Maintenance.Are you sure you want to transfer this user to'
+            ) + data.depname,
+            null,
+            async () => {
+              const params = {
+                addfilter: {
+                  where: {
+                    depname: data.depname,
+                  },
+                },
+                delfilter: {
+                  where: {
+                    depname: this.leavingUser.role.depname,
+                  },
+                },
+                userid: this.leavingUser.objectId,
+              }
+              const loading = this.$baseLoading(1)
+              const res = await putRoleuser(params)
+              loading.close()
+              this.leaving = false
+              this.searchAllOption()
+            }
+          )
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -988,6 +968,18 @@
             'vab-hey-message-error'
           )
         }
+      },
+      /**
+       * @Author: h7ml
+       * @Date: 2021-11-23 20:20:42
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description: 用户转岗
+       */
+      handleResign(row) {
+        this.leaving = true
+        this.leavingUser = row
       },
       // 删除
       handleDetele(row) {

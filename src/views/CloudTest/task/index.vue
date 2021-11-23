@@ -36,31 +36,6 @@
             <el-row :gutter="24">
               <el-col :span="12">
                 <el-form-item
-                  :label="$translateTitle('cloudTest.taskname')"
-                  prop="name"
-                >
-                  <el-input v-model="ruleForm.name" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item
-                  :label="$translateTitle('cloudTest.starttime')"
-                  prop="starttime"
-                >
-                  <el-date-picker
-                    v-model="ruleForm.starttime"
-                    format="yyyy-MM-dd HH:mm:ss"
-                    placeholder="选择开始时间"
-                    style="width: 100%"
-                    type="datetime"
-                    value-format="yyyy-MM-dd HH:mm:ss"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="12">
-                <el-form-item
                   :label="$translateTitle('cloudTest.wordtemplate')"
                   prop="wordtemplate"
                 >
@@ -79,24 +54,6 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item
-                  :label="$translateTitle('cloudTest.endtime')"
-                  prop="endtime"
-                >
-                  <el-date-picker
-                    v-model="ruleForm.endtime"
-                    format="yyyy-MM-dd HH:mm:ss"
-                    placeholder="选择结束时间"
-                    style="width: 100%"
-                    type="datetime"
-                    value-format="yyyy-MM-dd HH:mm:ss"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-divider content-position="left">检测资源信息</el-divider>
-            <el-row :gutter="24">
               <el-col :span="12">
                 <el-form-item
                   :label="$translateTitle('cloudTest.testbed')"
