@@ -152,21 +152,9 @@
             <el-col :span="24">
               <vab-query-form v-show="currentDepartment.depname">
                 <vab-query-form-top-panel>
-                  <el-form
-                    :inline="true"
-                    label-width="auto"
-                    :model="queryForm"
-                    @submit.native.prevent
-                  >
-                    <el-form-item
-                      :label="$translateTitle('product.Current department')"
-                    >
-                      {{ currentDepartment.depname }}
-                      <el-button @click.native="addItemUser(currentDepartment)">
-                        {{ $translateTitle('user.newusers') }}
-                      </el-button>
-                    </el-form-item>
-                  </el-form>
+                  <el-button @click.native="addItemUser(currentDepartment)">
+                    {{ $translateTitle('user.newusers') }}
+                  </el-button>
                 </vab-query-form-top-panel>
               </vab-query-form>
               <div class="elTable">
@@ -526,6 +514,7 @@
       ...mapGetters({
         roleTree: 'user/roleTree',
         title: 'settings/title',
+        tag: 'settings/tag',
         objectId: 'user/objectId',
         currentDepartment: 'user/currentDepartment',
       }),
@@ -618,6 +607,8 @@
       // 添加用户
       addUser() {
         this.$refs['userInfoFormRef'].validate(async (valid) => {
+          console.log('tag', this.tag)
+          this.$delete(this.tag, 'wechat')
           if (!valid) {
             this.$message({
               message: '用户信息不完整',
@@ -633,9 +624,8 @@
           // } else {
           //   var departmentStr = "";
           // }
-          const { tag } = await getUser(this.objectId)
-          this.$delete(tag, 'wechat')
-          console.log('tag', tag)
+          // const { tag } = await getUser(this.objectId)
+          // console.log('tag', this.tag)
           const params = {
             username: this.userInfoForm.account,
             nick: this.userInfoForm.nick,
@@ -644,7 +634,7 @@
             email: this.userInfoForm.email,
             department: this.userInfoForm.departmentid,
             emailVerified: true,
-            tag: tag,
+            tag: this.tag,
             // aclId:this.aclId
           }
           // {

@@ -139,9 +139,11 @@
               config.headers['Content-Type'] = 'application/json'
             }
             data && (config.data = data)
-            //
+            // amis headers 拦截扩展
+            // 请求url变量替换
             if (headers?.dgiotReplace?.length) {
-              const dgiotReplace = headers['dgiotReplace'].split(',')
+              const dgiotReplace = headers['dgiotReplace'].split(',') // 将dgiotReplace参数string格式转化为对象格式
+              const { store = 'localStorage' } = headers // token 存储方式 默认存储在localStorage中
               console.info(
                 'dgiotReplace',
                 dgiotReplace,
@@ -151,26 +153,34 @@
               // eslint-disable-next-line no-useless-catch
               try {
                 dgiotReplace.forEach((h) => {
-                  replaceArr[h] = localStorage.getItem(h)
-                  if (localStorage.getItem(h) && url.indexOf(h) !== -1) {
+                  replaceArr[h] =
+                    store === 'localStorage'
+                      ? localStorage.getItem(h)
+                      : store === 'sessionStorage'
+                      ? sessionStorage.getItem(h)
+                      : Cookies.get(h)
+                  if (replaceArr[h] && url.indexOf(h) !== -1) {
                     console.groupCollapsed(
                       `%caxios dgiotReplace logs \n${h}`,
                       'color:#009a61; font-size: 28px; font-weight: 300'
                     )
-                    url = url.replaceAll(h, localStorage.getItem(h))
-                    console.log(`将变量${h}替换为了${localStorage.getItem(h)}`)
+                    // 如果有默认值,就使用默认值进行替换。
+                    if (headers?.amisdefault?.length) {
+                      console.log('amisdefault', headers.amisdefault)
+                    }
+                    url = headers?.amisdefault?.length
+                      ? ''
+                      : url.replaceAll(h, replaceArr[h])
+                    console.log(`将变量${h}替换为了${replaceArr[h]}`)
                     console.log(`替换后的url为\n${url}`)
                     console.groupEnd()
-                  } else
-                    console.warn(
-                      `需要替换的变量${h}值为${localStorage.getItem(h)}`
-                    )
+                  } else console.warn(`需要替换的变量${h}值为${replaceArr[h]}`)
                 })
               } catch (e) {
                 throw e
               }
             }
-
+            //
             console.groupCollapsed(
               `%c axios logs \n${url}`,
               'color:#009a61; font-size: 28px; font-weight: 300'

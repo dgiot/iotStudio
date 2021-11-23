@@ -1,7 +1,6 @@
 <template>
   <el-dialog
     append-to-body
-    :title="title"
     :visible.sync="dialogFormVisible"
     width="100vh"
     @close="close"
@@ -109,12 +108,7 @@
         set_amisJson: 'amis/set_amisJson',
       }),
       showEdit(row) {
-        if (!row) {
-          this.title = '添加'
-        } else {
-          this.title = '编辑'
-          this.form = row
-        }
+        this.form = row
         this.dialogFormVisible = true
       },
       close() {

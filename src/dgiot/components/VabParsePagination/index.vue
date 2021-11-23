@@ -52,7 +52,7 @@
           }
           excludeKeys: ''
           include: ''
-          order: '-createdAt'
+          order: '-updatedAt'
           limit: 10
           skip: 0
           count: 'objectId'

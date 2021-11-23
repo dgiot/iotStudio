@@ -8,7 +8,6 @@
           label-width="49px"
           :model="queryForm"
           size="mini"
-          @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('product.Table Name')">
             <el-input v-model="queryForm.class" size="mini" />
@@ -129,7 +128,43 @@
     type: '',
     title: '',
     key: '',
-    data: [],
+    data: {
+      type: 'page',
+      initApi: {
+        url: 'iotapi/classes/Device/parse_objectid',
+        method: 'get',
+        adaptor:
+          'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
+        headers: {
+          store: 'localStorage',
+          dgiotReplace: 'parse_objectid',
+        },
+        dataType: 'json',
+      },
+      body: [
+        {
+          type: 'form',
+          api: {
+            method: 'put',
+            url: 'iotapi/classes/Device/parse_objectid',
+            headers: {
+              store: 'localStorage',
+              dgiotReplace: 'parse_objectid',
+            },
+            dataType: 'json',
+            requestAdaptor:
+              'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
+          },
+          body: [
+            {
+              type: 'input-text',
+              label: '设备名称',
+              name: 'name',
+            },
+          ],
+        },
+      ],
+    },
     disabled: false,
     hiddenRow: [],
   }
@@ -194,7 +229,7 @@
         queryPayload: {
           excludeKeys: 'data',
           include: '',
-          order: '-createdAt',
+          order: '-updatedAt',
           limit: 10,
           skip: 0,
           count: 'objectId',

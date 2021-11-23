@@ -525,7 +525,43 @@
               key: val,
               title: '',
               disabled: true,
-              data: {},
+              data: {
+                type: 'page',
+                initApi: {
+                  url: 'iotapi/classes/Device/parse_objectid',
+                  method: 'get',
+                  adaptor:
+                    'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
+                  headers: {
+                    store: 'localStorage',
+                    dgiotReplace: 'parse_objectid',
+                  },
+                  dataType: 'json',
+                },
+                body: [
+                  {
+                    type: 'form',
+                    api: {
+                      method: 'put',
+                      url: 'iotapi/classes/Device/parse_objectid',
+                      headers: {
+                        store: 'localStorage',
+                        dgiotReplace: 'parse_objectid',
+                      },
+                      dataType: 'json',
+                      requestAdaptor:
+                        'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
+                    },
+                    body: [
+                      {
+                        type: 'input-text',
+                        label: '设备名称',
+                        name: 'name',
+                      },
+                    ],
+                  },
+                ],
+              },
               hiddenRow: ['class', 'key', 'createdAt'],
             }
           this.dictForm = {
