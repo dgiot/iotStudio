@@ -326,7 +326,7 @@
                 :label="$translateTitle('developer.operation')"
                 width="180"
               >
-                <template #default="{ row }">
+                <template #default="{ row, $index }">
                   <!--                  <el-link-->
                   <!--                    :underline="false"-->
                   <!--                    type="primary"-->
@@ -343,7 +343,7 @@
                     编辑
                   </el-link>
                   <el-popover
-                    :ref="`popover-${row.$index}`"
+                    :ref="`popover-${$index}`"
                     placement="top"
                     width="300"
                   >

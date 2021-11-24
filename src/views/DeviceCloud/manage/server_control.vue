@@ -281,8 +281,8 @@
           :label="$translateTitle('node.operation')"
           width="500"
         >
-          <template #default="{ row }">
-            <el-button size="mini" @click="handleDetail(row.$index, row)">
+          <template #default="{ row, $index }">
+            <el-button size="mini" @click="handleDetail($index, row)">
               <!-- 详情 -->
               {{ $translateTitle('application.detail') }}
             </el-button>

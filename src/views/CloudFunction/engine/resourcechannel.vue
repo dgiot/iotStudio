@@ -90,7 +90,7 @@
               :label="$translateTitle('developer.operation')"
               width="350"
             >
-              <template #default="{ row }">
+              <template #default="{ row, $index }">
                 <el-button
                   slot="reference"
                   size="mini"
@@ -124,7 +124,7 @@
                   详情
                 </el-button>
                 <el-popover
-                  :ref="`popover-${row.$index}`"
+                  :ref="`popover-${$index}`"
                   placement="top"
                   width="300"
                 >

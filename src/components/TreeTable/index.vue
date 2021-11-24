@@ -18,14 +18,14 @@
         :label="item.label"
         :width="item.width"
       >
-        <template #default="{ row }">
+        <template #default="{ row, $index }">
           <slot :name="item.key" :scope="scope">
             <template v-if="item.expand">
               <span :style="{ 'padding-left': 20 + 'px' }" />
               <span
                 v-show="showSperadIcon(row)"
                 class="tree-ctrl"
-                @click="toggleExpanded(row.$index)"
+                @click="toggleExpanded($index)"
               />
               <i
                 v-if="!row._expand && !row.children"

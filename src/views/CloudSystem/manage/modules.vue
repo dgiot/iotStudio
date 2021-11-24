@@ -140,14 +140,14 @@
               size="mini"
             />
           </template>
-          <template #default="{ row }">
-            <el-button size="mini" @click="handleEdit(row.$index, row)">
+          <template #default="{ row, $index }">
+            <el-button size="mini" @click="handleEdit($index, row)">
               修改
             </el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="handleDelete(row.$index, row.tableData)"
+              @click="handleDelete($index, row.tableData)"
             >
               删除
             </el-button>

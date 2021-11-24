@@ -543,12 +543,12 @@
                   "
                   align="center"
                 >
-                  <template #default="{ row }">
+                  <template #default="{ row,$index }">
                     <el-switch
                       v-model="row.isEnable"
                       active-color="#5eb058"
                       inactive-color="#cccccc"
-                      @change="handelUpdate($event, row. row.$index)"
+                      @change="handelUpdate($event, row. $index)"
                     />
                   </template>
                 </el-table-column>
@@ -568,7 +568,7 @@
                   :label="$translateTitle('developer.operation')"
                   align="center"
                 >
-                  <template #default="{ row }">
+                  <template #default="{ row,$index }">
                     <el-link
                       :underline="false"
                       icon="el-icon-view"
@@ -579,7 +579,7 @@
                     </el-link>
 
                     <el-popover
-                      :ref="`popover-${row.$index}`"
+                      :ref="`popover-${$index}`"
                       placement="top"
                       width="300"
                     >
@@ -589,7 +589,7 @@
                           size="mini"
                           @click="
                             row._self.$refs[
-                              `popover-${row.$index}`
+                              `popover-${$index}`
                             ].doClose()
                           "
                         >

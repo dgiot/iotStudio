@@ -45,7 +45,7 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-// const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const smp = new SpeedMeasurePlugin()
 const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 process.env.VUE_APP_TITLE = title
@@ -148,11 +148,12 @@ function getChainWebpack(config) {
       // https://blog.csdn.net/weixin_42164539/article/details/110389256
       config.plugin('compression').use(CompressionWebpackPlugin, [
         {
-          filename: '[path][base].gz[query]',
-          algorithm: 'gzip',
-          test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
-          threshold: 10240,
-          minRatio: 0.8,
+          filename: '[path][base].gz[query]', // 一个 {Function} (asset) => asset 函数，接收原资源名（通过 asset 选项）返回新资源名
+          algorithm: 'gzip', // 可以是 (buffer, cb) => cb(buffer) 或者是使用 zlib 里面的算法的 {String}
+          test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'), //匹配文件名
+          threshold: 10240, //对10K以上的数据进行压缩
+          minRatio: 0.8, // 只有压缩率比这个值小的资源才会被处理
+          deleteOriginalAssets: true, //是否删除源文件
         },
       ])
     }
@@ -260,7 +261,7 @@ const configure = {
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new MonacoWebpackPlugin(),
-    // new ForkTsCheckerWebpackPlugin(),
+    new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),
     new Webpack.ProvidePlugin(providePlugin),
     new WebpackBar({

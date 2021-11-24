@@ -64,8 +64,8 @@
           show-overflow-tooltip
           sortable
         >
-          <template #default="{ row }">
-            <el-button plain type="primary" @click="editParse(row.$index, row)">
+          <template #default="{ row,$index }">
+            <el-button plain type="primary" @click="editParse($index, row)">
               {{ $translateTitle('concentrator.edit') }}
             </el-button>
             <el-button plain type="success" @click="previewParse(row.config)">
@@ -76,7 +76,7 @@
               size="small"
               type="danger"
               @click.native.prevent="
-                deleteParse(row.$index, parserTableList.parser)
+                deleteParse($index, parserTableList.parser)
               "
             >
               {{ $translateTitle('task.Delete') }}
@@ -182,7 +182,7 @@
             fixed="right"
             width="360"
           >
-            <template #default="{ row }">
+            <template #default="{ row ,$index}">
               <el-button
                 :underline="false"
                 size="mini"
@@ -213,7 +213,7 @@
                 {{ $translateTitle('concentrator.edit') }}
               </el-button>
               <el-popover
-                :ref="`popover-${row.$index}`"
+                :ref="`popover-${$index}`"
                 placement="top"
                 style="margin-left: 10px"
                 width="300"
@@ -222,7 +222,7 @@
                 <div style="margin: 0; text-align: right">
                   <el-button
                     size="mini"
-                    @click="row._self.$refs[`popover-${row.$index}`].doClose()"
+                    @click="row._self.$refs[`popover-${$index}`].doClose()"
                   >
                     {{ $translateTitle('developer.cancel') }}
                   </el-button>
@@ -698,13 +698,13 @@
                   <!--                    </template>-->
                   <!--                  </el-table-column>-->
                   <el-table-column align="center" label="操作" width="160">
-                    <template #default="{ row }">
+                    <template #default="{ row ,$index}">
                       <el-button
                         plain
                         size="mini"
                         title="删除"
                         type="danger"
-                        @click.native="delRow(row.$index, dictTempForm.params)"
+                        @click.native="delRow($index, dictTempForm.params)"
                       >
                         删除
                       </el-button>
@@ -713,7 +713,7 @@
                         size="mini"
                         title="编辑"
                         type="info"
-                        @click.native="editRow(row.$index, dictTempForm.params)"
+                        @click.native="editRow($index, dictTempForm.params)"
                       >
                         编辑
                       </el-button>
@@ -2420,7 +2420,7 @@
                   type: 'success',
                   message: '删除成功',
                 })
-                row._self.$refs[`popover-${row.$index}`].doClose()
+                row._self.$refs[`popover-${$index}`].doClose()
                 this.searchProduct()
               }
             })
