@@ -1100,7 +1100,7 @@
         // this.channelForm = true
         // this.channelupdated = '新增'
         this.$router.push({
-          path: '/Createhannel',
+          path: '/Createchannel',
           query: {
             type: 'create',
           },
