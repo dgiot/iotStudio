@@ -884,13 +884,8 @@
           // loadsh uniq 去重，否则则报错 https://blog.csdn.net/qq_38519358/article/details/103330249
           await saveRole({
             objectId: this.roleItem.objectId,
-            name: row.name,
-            alias: row.alias,
-            desc: row.desc,
             rules: _.uniq(checkrole),
             menus: _.uniq(checkmenu),
-            roles: _.uniq(rolesList),
-            users: _.uniq(usersList),
           })
             .then((res) => {
               if (res) {
