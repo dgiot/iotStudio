@@ -69,7 +69,7 @@
             <div style="margin: 0; text-align: right">
               <el-button
                 size="mini"
-                @click="scope._self.$refs[`popover-${$index}`].doClose()"
+                @click="row._self.$refs[`popover-${$index}`].doClose()"
               >
                 {{ $translateTitle('developer.cancel') }}
               </el-button>
@@ -262,7 +262,7 @@
       },
       // 跳转修改
       handleClickUpdate(scope) {
-        const row = scope.row
+        const row = scope
         console.log('$row', row)
 
         this.$router.push({

@@ -112,9 +112,7 @@
                     <div style="margin: 0; text-align: right">
                       <el-button
                         size="mini"
-                        @click="
-                          scope._self.$refs[`popover-${$index}`].doClose()
-                        "
+                        @click="row._self.$refs[`popover-${$index}`].doClose()"
                       >
                         {{ $translateTitle('developer.cancel') }}
                       </el-button>

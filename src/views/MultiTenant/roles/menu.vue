@@ -492,7 +492,7 @@
         ++this.key
       },
       click(scope) {
-        const row = scope.row
+        const row = scope
         const message = Object.keys(row)
           .map((i) => {
             return `<p>${i}: ${row[i]}</p>`

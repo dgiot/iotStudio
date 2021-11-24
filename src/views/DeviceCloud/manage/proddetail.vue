@@ -580,7 +580,7 @@
                   <el-table-column type="expand">
                     <template
                       v-if="row.dataType.type == 'struct'"
-                      #default="{ row }"
+                      slot-scope="{ row }"
                       class="opentable"
                     >
                       <el-table
