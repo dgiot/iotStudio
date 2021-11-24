@@ -153,7 +153,7 @@ function getChainWebpack(config) {
           test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'), //匹配文件名
           threshold: 10240, //对10K以上的数据进行压缩
           minRatio: 0.8, // 只有压缩率比这个值小的资源才会被处理
-          deleteOriginalAssets: true, //是否删除源文件
+          // deleteOriginalAssets: true, //是否删除源文件
         },
       ])
     }
