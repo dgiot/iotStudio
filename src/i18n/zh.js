@@ -538,7 +538,7 @@ export default {
       eqwords: '2-7个文字',
       eqwords1: '2-5个文字',
       phone: '手机号',
-      savetemplate: '保存模版',
+      savetemplate: '保存岗位',
       allroles: '所有角色',
       addrole: '添加角色',
       commandoperation: '指令操作',

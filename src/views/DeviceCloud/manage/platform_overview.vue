@@ -54,7 +54,7 @@
                   <dgiot-icon icon="projector-fill" />
                 </el-col>
                 <el-col class="card-right" :span="12">
-                  <router-link to="/roles/product">
+                  <router-link to="/dashboard/productlist">
                     <p>{{ $translateTitle('home.pro_count') }}</p>
                     <p>{{ _product_count }}</p>
                   </router-link>

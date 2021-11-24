@@ -159,17 +159,17 @@
               </span>
             </p>
             <div class="rolecontrol">
-              <div>
-                <el-button
-                  size="mini"
-                  type="primary"
-                  @click="expand('permissionTree', 'isExpand')"
-                >
-                  <span v-if="!isExpand">
-                    {{ $translateTitle('button.Unfold') }}
-                  </span>
-                  <span v-else>{{ $translateTitle('button.fold') }}</span>
-                </el-button>
+              <div style="text-align: center; margin-top: 5px">
+                <!--                <el-button-->
+                <!--                  size="mini"-->
+                <!--                  type="primary"-->
+                <!--                  @click="expand('permissionTree', 'isExpand')"-->
+                <!--                >-->
+                <!--                  <span v-if="!isExpand">-->
+                <!--                    {{ $translateTitle('button.Unfold') }}-->
+                <!--                  </span>-->
+                <!--                  <span v-else>{{ $translateTitle('button.fold') }}</span>-->
+                <!--                </el-button>-->
                 <el-button
                   size="mini"
                   type="primary"
@@ -184,13 +184,13 @@
                 >
                   {{ $translateTitle('button.Reverse election') }}
                 </el-button>
-                <el-button
-                  size="mini"
-                  type="primary"
-                  @click="checkNot('permissionTree')"
-                >
-                  {{ $translateTitle('button.unselect all') }}
-                </el-button>
+                <!--                <el-button-->
+                <!--                  size="mini"-->
+                <!--                  type="primary"-->
+                <!--                  @click="checkNot('permissionTree')"-->
+                <!--                >-->
+                <!--                  {{ $translateTitle('button.unselect all') }}-->
+                <!--                </el-button>-->
               </div>
               <el-tree
                 ref="permissionTree"
@@ -227,17 +227,17 @@
                 {{ $translateTitle('user.assignmenu') }}
               </span>
             </p>
-            <div>
-              <el-button
-                size="mini"
-                type="primary"
-                @click="expand('menusTree', 'menuExpand')"
-              >
-                <span v-if="!menuExpand">
-                  {{ $translateTitle('button.Unfold') }}
-                </span>
-                <span v-else>{{ $translateTitle('button.fold') }}</span>
-              </el-button>
+            <div style="text-align: center; margin-top: 5px">
+              <!--              <el-button-->
+              <!--                size="mini"-->
+              <!--                type="primary"-->
+              <!--                @click="expand('menusTree', 'menuExpand')"-->
+              <!--              >-->
+              <!--                <span v-if="!menuExpand">-->
+              <!--                  {{ $translateTitle('button.Unfold') }}-->
+              <!--                </span>-->
+              <!--                <span v-else>{{ $translateTitle('button.fold') }}</span>-->
+              <!--              </el-button>-->
               <el-button
                 size="mini"
                 type="primary"
@@ -252,13 +252,13 @@
               >
                 {{ $translateTitle('button.Reverse election') }}
               </el-button>
-              <el-button
-                size="mini"
-                type="primary"
-                @click="checkNot('menusTree')"
-              >
-                {{ $translateTitle('button.unselect all') }}
-              </el-button>
+              <!--              <el-button-->
+              <!--                size="mini"-->
+              <!--                type="primary"-->
+              <!--                @click="checkNot('menusTree')"-->
+              <!--              >-->
+              <!--                {{ $translateTitle('button.unselect all') }}-->
+              <!--              </el-button>-->
             </div>
             <div class="menucontrol" style="margin-top: 0px">
               <el-tree
@@ -547,8 +547,7 @@
           })
         }
       },
-      ...mapMutations({
-      }),
+      ...mapMutations({}),
       change(e) {
         console.log(e)
         if (e) {

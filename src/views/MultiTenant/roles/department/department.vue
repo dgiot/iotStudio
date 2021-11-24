@@ -1,7 +1,7 @@
 <template>
   <div class="department department-container">
     <el-row :gutter="20">
-      <el-col :span="6">
+      <el-col :span="10">
         <el-table
           border
           :data="roletempList"
@@ -45,7 +45,7 @@
         </el-table>
       </el-col>
 
-      <el-col :span="10">
+      <el-col :span="14">
         <el-col :span="12">
           <!--权限 -->
           <div class="footerleft">
@@ -58,17 +58,17 @@
                 {{ $translateTitle('user.assignroles1') }}
               </span>
             </p>
-            <div>
-              <el-button
-                size="mini"
-                type="primary"
-                @click="expand('permissionTree', 'isExpand')"
-              >
-                <span v-if="!isExpand">
-                  {{ $translateTitle('button.Unfold') }}
-                </span>
-                <span v-else>{{ $translateTitle('button.fold') }}</span>
-              </el-button>
+            <div style="text-align: center; margin-top: 5px">
+              <!--              <el-button-->
+              <!--                size="mini"-->
+              <!--                type="primary"-->
+              <!--                @click="expand('permissionTree', 'isExpand')"-->
+              <!--              >-->
+              <!--                <span v-if="!isExpand">-->
+              <!--                  {{ $translateTitle('button.Unfold') }}-->
+              <!--                </span>-->
+              <!--                <span v-else>{{ $translateTitle('button.fold') }}</span>-->
+              <!--              </el-button>-->
               <el-button
                 size="mini"
                 type="primary"
@@ -83,13 +83,13 @@
               >
                 {{ $translateTitle('button.Reverse election') }}
               </el-button>
-              <el-button
-                size="mini"
-                type="primary"
-                @click="checkNot('permissionTree')"
-              >
-                {{ $translateTitle('button.unselect all') }}
-              </el-button>
+              <!--              <el-button-->
+              <!--                size="mini"-->
+              <!--                type="primary"-->
+              <!--                @click="checkNot('permissionTree')"-->
+              <!--              >-->
+              <!--                {{ $translateTitle('button.unselect all') }}-->
+              <!--              </el-button>-->
             </div>
             <div class="rolecontrol">
               <el-tree
@@ -124,17 +124,17 @@
                 {{ $translateTitle('user.assignmenu') }}
               </span>
             </p>
-            <div>
-              <el-button
-                size="mini"
-                type="primary"
-                @click="expand('menusTree', 'menuExpand')"
-              >
-                <span v-if="!menuExpand">
-                  {{ $translateTitle('button.Unfold') }}
-                </span>
-                <span v-else>{{ $translateTitle('button.fold') }}</span>
-              </el-button>
+            <div style="text-align: center; margin-top: 5px">
+              <!--              <el-button-->
+              <!--                size="mini"-->
+              <!--                type="primary"-->
+              <!--                @click="expand('menusTree', 'menuExpand')"-->
+              <!--              >-->
+              <!--                <span v-if="!menuExpand">-->
+              <!--                  {{ $translateTitle('button.Unfold') }}-->
+              <!--                </span>-->
+              <!--                <span v-else>{{ $translateTitle('button.fold') }}</span>-->
+              <!--              </el-button>-->
               <el-button
                 size="mini"
                 type="primary"
@@ -149,13 +149,13 @@
               >
                 {{ $translateTitle('button.Reverse election') }}
               </el-button>
-              <el-button
-                size="mini"
-                type="primary"
-                @click="checkNot('menusTree')"
-              >
-                {{ $translateTitle('button.unselect all') }}
-              </el-button>
+              <!--              <el-button-->
+              <!--                size="mini"-->
+              <!--                type="primary"-->
+              <!--                @click="checkNot('menusTree')"-->
+              <!--              >-->
+              <!--                {{ $translateTitle('button.unselect all') }}-->
+              <!--              </el-button>-->
             </div>
             <div class="menucontrol">
               <el-tree
@@ -179,15 +179,11 @@
           </div>
         </el-col>
       </el-col>
-      <el-col :span="8">
+      <el-col v-show="false" :span="8">
         <div class="footerleft2">
           <p class="top">
             <span class="svg-container">
               <dgiot-icon icon="role_group" />
-            </span>
-            <span>
-              <!-- 标签信息 -->
-              {{ $translateTitle('user.labelinformation') }}
             </span>
           </p>
         </div>
