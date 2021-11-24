@@ -2315,6 +2315,7 @@
           count: 'objectId',
           include: 'product,name',
           where: {
+            'profile.identifier': { $ne: 'inspectionReportTemp' },
             product: { $ne: null },
             name: {
               $ne: null,

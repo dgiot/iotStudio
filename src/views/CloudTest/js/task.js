@@ -3,8 +3,6 @@ import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
-import md5 from 'md5'
-import product from '@/views/DeviceCloud/manage/product'
 export default {
   name: 'TaskIndex',
   components: {
@@ -132,7 +130,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({}),
+    ...mapGetters({
+      currentDepartment: 'user/currentDepartment',
+    }),
     dragOptions() {
       return {
         animation: 600,
@@ -175,10 +175,21 @@ export default {
       this.grouplist = results
     },
     submitForm(formName) {
+      const aclKey1 = 'role' + ':' + this.currentDepartment.name
+      const aclObj = {}
+      aclObj[aclKey1] = {
+        read: true,
+        write: true,
+      }
       this.$refs[formName].validate(async (valid) => {
+        if (!this.currentDepartment.name) {
+          this.$message.error('请先选择部门后,再来新增报告')
+          return
+        }
         if (valid) {
           const task = {
             basedata: {},
+            ACL: aclObj,
             profile: {
               testbedid: this.ruleForm.testbedid,
               testbed: this.ruleForm.testbed.name,

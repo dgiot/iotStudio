@@ -260,7 +260,9 @@ const configure = {
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
-    new MonacoWebpackPlugin(),
+    new MonacoWebpackPlugin({
+      filename: 'output/assets/js/[name].worker.js',
+    }),
     new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),
     new Webpack.ProvidePlugin(providePlugin),
