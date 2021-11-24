@@ -16,6 +16,7 @@
       size="90%"
       :title="objectId"
       :visible.sync="flag"
+      :with-header="withHeader"
     >
       <topo v-if="type === 'topo'" :code="code.konva" :object-id="objectId" />
       <amis v-else-if="type === 'amis'" :code="code" :object-id="objectId" />
@@ -35,6 +36,7 @@
     },
     data() {
       return {
+        withHeader: true,
         types: ['amis', 'topo'],
         code: {},
         objectId: '',

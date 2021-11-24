@@ -1,3 +1,4 @@
+import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
 import { queryDevice, delDevice, postDevice } from '@/api/Device'
 import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
@@ -7,9 +8,11 @@ export default {
   name: 'TaskIndex',
   components: {
     VabDraggable,
+    lowcodeDesign,
   },
   data() {
     return {
+      lowcodeId: '',
       loading: false,
       options: [
         {
@@ -236,7 +239,18 @@ export default {
       this.queryForm.skip = (val - 1) * this.queryForm.limit
       this.fetchData(this.queryForm)
     },
-    async handleManagement(taskid) {},
+    async handleManagement(row) {
+      this.$refs['lowcodeDesign'].withHeader = false
+      localStorage.setItem('parse_objectid', row.objectId)
+      const params = {
+        limit: 1,
+        where: { type: 'amis', key: row.product.objectId },
+      }
+      const { results } = await queryView(params)
+      console.log(results)
+      this.lowcodeId = results[0].objectId
+      this.$dgiotBus.$emit('lowcodePreview', results[0])
+    },
     /**
      * @Author: h7ml
      * @Date: 2021-11-24 16:17:16

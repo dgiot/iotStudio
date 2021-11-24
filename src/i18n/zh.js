@@ -1196,6 +1196,7 @@ export default {
     },
     cloudTest: {
       'Basic information of inspection tasks': '检测任务基本信息',
+      'task configuration': '任务配置',
       nextpage: '下一页',
       addwordtask: '任务新增',
       taskname: '任务名称',

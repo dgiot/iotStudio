@@ -245,10 +245,14 @@
         width="185"
       >
         <template #default="{ row }">
-          <el-button type="success" @click="handleManagement(row)">
-            {{ $translateTitle(`product.Template management`) }}
+          <el-button size="mini" type="success" @click="handleManagement(row)">
+            {{ $translateTitle(`cloudTest.task configuration`) }}
           </el-button>
-          <el-button type="warning" @click="handleDelete(row.objectId)">
+          <el-button
+            size="mini"
+            type="danger"
+            @click="handleDelete(row.objectId)"
+          >
             {{ $translateTitle(`cloudTest.delete`) }}
           </el-button>
         </template>
@@ -272,6 +276,7 @@
       @current-change="currentChange"
       @size-change="sizeChange"
     />
+    <lowcode-design ref="lowcodeDesign" @objectId="lowcodeId" />
   </div>
 </template>
 
