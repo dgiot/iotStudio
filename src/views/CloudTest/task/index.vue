@@ -10,71 +10,104 @@
 <template>
   <div ref="custom-table" class="custom-table-container">
     <div class="components">
-      <vab-dialog :show.sync="activePopShow" width="60%">
+      <vab-dialog :show.sync="activePopShow">
         <h3 slot="title">
           {{ $translateTitle('cloudTest.addwordtask') }}
         </h3>
-        <div style="margin: 0 0 20px 0; text-align: right">
-          <el-button plain type="primary" @click="nextpage('ruleForm')">
+        <div style="text-align: right">
+          <el-button
+            plain
+            size="mini"
+            type="primary"
+            @click="nextpage('ruleForm')"
+          >
             {{ $translateTitle('cloudTest.nextpage') }}
           </el-button>
-          <el-button type="primary" @click="submitForm('ruleForm')">
+          <el-button size="mini" type="primary" @click="submitForm('ruleForm')">
             <i class="el-icon-finished">
               {{ $translateTitle('product.createnow') }}
             </i>
           </el-button>
         </div>
         <div class="content">
-          <el-divider content-position="left">检测任务基本信息</el-divider>
+          <el-divider>
+            {{
+              $translateTitle('cloudTest.Basic information of inspection tasks')
+            }}
+          </el-divider>
           <el-form
             ref="ruleForm"
+            v-loading="loading"
             class="demo-ruleForm"
+            element-loading-background="rgba(0, 0, 0, 0.8)"
+            element-loading-spinner="el-icon-loading"
+            :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
             label-width="100px"
             :model="ruleForm"
             :rules="rules"
+            size="mini"
           >
-            <el-row :gutter="24">
-              <el-col :span="12">
-                <el-form-item
-                  :label="$translateTitle('cloudTest.wordtemplate')"
-                  prop="wordtemplate"
+            <el-form-item
+              :label="$translateTitle('cloudTest.report category')"
+              prop="wordtemplate"
+            >
+              <el-select
+                v-model="ruleForm.category"
+                :placeholder="$translateTitle('task.Select')"
+                style="width: 100%"
+                value-key="objectId"
+                @change="categoryChange"
+              >
+                <el-option
+                  v-for="item in categorylist"
+                  :key="item.objectId"
+                  :label="item.name"
+                  :value="item"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              :label="$translateTitle('cloudTest.wordtemplate')"
+              prop="wordtemplate"
+            >
+              <el-select
+                v-model="ruleForm.templatename"
+                :placeholder="$translateTitle('task.Select')"
+                style="width: 100%"
+                value-key="objectId"
+                @change="wordChange"
+              >
+                <el-option
+                  v-for="item in wordtemplist"
+                  :key="item.objectId"
+                  :label="item.title"
+                  :value="item"
                 >
-                  <el-select
-                    v-model="ruleForm.wordtemplatename"
-                    :placeholder="$translateTitle('task.Select')"
-                    style="width: 100%"
-                    @change="wordtemplateChange"
-                  >
-                    <el-option
-                      v-for="(item, index) in wordtemplist"
-                      :key="index"
-                      :label="item.name"
-                      :value="item"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item
-                  :label="$translateTitle('cloudTest.testbed')"
-                  prop="testbed"
-                >
-                  <el-select
-                    v-model="ruleForm.testbed"
-                    :placeholder="$translateTitle('task.Select')"
-                    style="width: 100%"
-                    @change="testbedChange"
-                  >
-                    <el-option
-                      v-for="(item, index) in grouplist"
-                      :key="index"
-                      :label="item.name"
-                      :value="item"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
+                  <span style="float: left">{{ item.title }}</span>
+                  <span style="float: right; color: #8492a6">
+                    {{ item.objectId }}
+                  </span>
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              :label="$translateTitle('cloudTest.testbed')"
+              prop="testbed"
+            >
+              <el-select
+                v-model="ruleForm.testbed"
+                :placeholder="$translateTitle('task.Select')"
+                style="width: 100%"
+                @change="testbedChange"
+              >
+                <el-option
+                  v-for="(item, index) in grouplist"
+                  :key="index"
+                  :label="item.name"
+                  :value="item"
+                />
+              </el-select>
+            </el-form-item>
           </el-form>
         </div>
       </vab-dialog>

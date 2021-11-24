@@ -329,18 +329,18 @@
           :label="$translateTitle('developer.operation')"
           width="160"
         >
-          <template #default="{ row }">
+          <template #default="{ row, $index }">
             <el-button
               size="mini"
               type="danger"
-              @click.native="deletewmx(scope.$index)"
+              @click.native="deletewmx($index)"
             >
               {{ $translateTitle('developer.delete') }}
             </el-button>
             <el-button
               size="mini"
               type="primary"
-              @click.native="wmxDataFill(row.scope.$index)"
+              @click.native="wmxDataFill(row, $index)"
             >
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}

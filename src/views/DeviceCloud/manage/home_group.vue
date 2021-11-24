@@ -81,7 +81,7 @@
             :label="$translateTitle('developer.operation')"
             width="420"
           >
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <el-button
                 size="mini"
                 type="primary"
@@ -97,7 +97,7 @@
                 {{ $translateTitle('product.equipment') }}
               </el-button>
               <el-popover
-                :ref="`popover-${row.$index}`"
+                :ref="`popover-${$index}`"
                 placement="top"
                 style="margin-left: 10px"
               >
@@ -109,7 +109,7 @@
                 <div style="margin: 0; text-align: right">
                   <el-button
                     size="mini"
-                    @click="row._self.$refs[`popover-${row.$index}`].doClose()"
+                    @click="row._self.$refs[`popover-${$index}`].doClose()"
                   >
                     {{ $translateTitle('developer.cancel') }}
                   </el-button>
@@ -1117,7 +1117,7 @@
                           type: 'success',
                           message: '删除成功',
                         })
-                        row._self.$refs[`popover-${row.$index}`].doClose()
+                        row._self.$refs[`popover-${$index}`].doClose()
                         this.searchProduct()
                       }
                     })

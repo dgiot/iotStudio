@@ -245,7 +245,7 @@
                     :label="$translateTitle('developer.operation')"
                     width="180"
                   >
-                    <template #default="{ row }">
+                    <template #default="{ row, $index }">
                       <el-button
                         size="mini"
                         type="warning"
@@ -256,7 +256,7 @@
                       <el-button
                         size="mini"
                         type="danger"
-                        @click="deleteOneData(scope.$index)"
+                        @click="deleteOneData($index)"
                       >
                         {{ $translateTitle('button.delete') }}
                       </el-button>

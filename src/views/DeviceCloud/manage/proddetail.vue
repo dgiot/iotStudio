@@ -294,12 +294,12 @@
                 align="center"
                 :label="$translateTitle('developer.operation')"
               >
-                <template #default="{ row }">
+                <template #default="{ row, $index }">
                   <el-button
                     v-if="!row.isdef"
                     size="mini"
                     type="primary"
-                    @click.native="updatetopic(row.$index)"
+                    @click.native="updatetopic($index)"
                   >
                     {{ $translateTitle('developer.edit') }}
                   </el-button>
@@ -332,7 +332,7 @@
                     slot="reference"
                     size="mini"
                     type="danger"
-                    @click.native="deletetopic(row, row.$index)"
+                    @click.native="deletetopic(row, $index)"
                   >
                     {{ $translateTitle('developer.delete') }}
                   </el-button>
@@ -498,9 +498,9 @@
                     prop="sort"
                     width="50"
                   >
-                    <template slot-scope="scope2">
+                    <template #default="{ $index }">
                       <span>
-                        {{ scope2.$index + 1 }}
+                        {{ $index + 1 }}
                       </span>
                     </template>
                   </el-table-column>

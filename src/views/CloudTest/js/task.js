@@ -11,6 +11,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       options: [
         {
           value: 'Underreview',
@@ -22,9 +23,10 @@ export default {
         },
       ],
       ruleForm: {
+        templatename: '',
         testbedid: '',
         testbed: '',
-        wordtemplatename: '',
+        category: '',
         endtime: '',
         starttime: '',
         wordtemplateid: '',
@@ -38,10 +40,10 @@ export default {
             trigger: 'blur',
           },
         ],
-        wordtemplatename: [
+        category: [
           {
             required: true,
-            message: '请选择报告模板',
+            message: '请选择报告类别',
             trigger: 'change',
           },
         ],
@@ -147,6 +149,7 @@ export default {
         pageSize: 10,
         name: ['审核中', '审核完成'],
       },
+      categorylist: [],
       wordtemplist: [],
       grouplist: [],
     }
@@ -167,14 +170,17 @@ export default {
     this.fetchData(this.queryForm)
   },
   methods: {
-    async wordtemplateChange(val) {
+    async categoryChange(val) {
+      this.loading = true
+      console.log(val)
       const params = {
-        where: { key: val.objectId },
+        where: { key: val.objectId, type: 'amis' },
       }
-      const res = await queryView(params)
-      this.$set(this.ruleForm, 'wordtemplatename', val.name)
-      this.$set(this.ruleForm, 'wordtemplateid', val.objectId)
-      console.log(res, res)
+      const { results = {} } = await queryView(params)
+      // this.$set(this.ruleForm, 'wordtemplatename', val.name)
+      // this.$set(this.ruleForm, 'wordtemplateid', val.objectId)
+      this.wordtemplist = results
+      this.loading = false
     },
     testbedChange(val) {
       this.$set(this.ruleForm, 'testbed', val.name)
@@ -191,6 +197,9 @@ export default {
         })
       }
     },
+    wordChange(e) {
+      console.log(e)
+    },
     async getwordtemp() {
       const params = {
         skip: 0,
@@ -200,7 +209,7 @@ export default {
         },
       }
       const { results = {} } = await queryProduct(params)
-      this.wordtemplist = results
+      this.categorylist = results
     },
     async getgroup() {
       const params = {

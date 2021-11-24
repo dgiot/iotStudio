@@ -89,8 +89,8 @@
         :label="$translateTitle('developer.operation')"
         width="200"
       >
-        <template #default="{ row }">
-          <el-button type="text" @click="editParse(row.$index, row)">
+        <template #default="{ row, $index }">
+          <el-button type="text" @click="editParse($index, row)">
             {{ $translateTitle('concentrator.edit') }}
           </el-button>
           <el-button
@@ -103,9 +103,7 @@
           <el-button
             size="small"
             type="text"
-            @click.native.prevent="
-              lockingParse(row.uid, scope.$index, parserTables)
-            "
+            @click.native.prevent="lockingParse(row.uid, $index, parserTables)"
           >
             {{ $translateTitle('application.locking') }}
           </el-button>

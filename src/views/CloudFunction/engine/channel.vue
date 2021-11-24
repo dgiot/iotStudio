@@ -168,7 +168,7 @@
           :label="$translateTitle('developer.operation')"
           width="240"
         >
-          <template #default="{ row }">
+          <template #default="{ row, $index }">
             <el-button
               :disabled="row.status == 'OFFLINE'"
               size="mini"
@@ -192,7 +192,7 @@
             <!--              {{ $translateTitle('product.details') }}-->
             <!--            </el-button>-->
             <el-popover
-              :ref="`popover-${row.$index}`"
+              :ref="`popover-${$index}`"
               placement="top"
               style="margin-left: 10px"
               width="300"
@@ -206,7 +206,7 @@
                 <el-button
                   size="mini"
                   type="text"
-                  @click="row._self.$refs[`popover-${row.$index}`].doClose()"
+                  @click="row._self.$refs[`popover-${$index}`].doClose()"
                 >
                   {{ $translateTitle('developer.cancel') }}
                 </el-button>
@@ -1084,7 +1084,7 @@
               type: 'success',
               message: '删除成功',
             })
-            row._self.$refs[`popover-${row.$index}`].doClose()
+            row._self.$refs[`popover-${$index}`].doClose()
             this.Get_Re_Channel(this.start)
           })
           .catch((e) => {

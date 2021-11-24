@@ -402,14 +402,14 @@
                           delRow(scope.$index, dictTempForm.params)
                         "
                       > -->
-                    <template #default="{ row }">
+                    <template #default="{ row, $index }">
                       <el-button
                         plain
                         size="mini"
                         :title="$translateTitle('task.Delete')"
                         type="danger"
                         @click.native="
-                          delRow(scope.$index, dictTempForm.params)
+                          delRow($index, dictTempForm.params)
                         "
                       >
                         <!-- 删除 -->
