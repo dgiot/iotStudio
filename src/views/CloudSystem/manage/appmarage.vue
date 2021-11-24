@@ -35,7 +35,7 @@
           :label="$translateTitle('developer.operation')"
         >
           <!-- eslint-disable-next-line -->
-          <template slot="header" slot-scope="scope">
+          <template slot="header">
             <el-input
               v-model="search"
               :placeholder="$translateTitle('plugins.enterappsearch')"

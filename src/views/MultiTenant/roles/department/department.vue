@@ -23,7 +23,7 @@
             :label="$translateTitle('developer.operation')"
             width="180"
           >
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <el-button
                 size="small"
                 type="primary"
@@ -35,7 +35,7 @@
               <el-button
                 size="small"
                 type="danger"
-                @click.stop="handleDelete(scope.$index, row.roletempList)"
+                @click.stop="handleDelete($index, row.roletempList)"
               >
                 <!-- 删除 -->
                 {{ $translateTitle('task.Delete') }}

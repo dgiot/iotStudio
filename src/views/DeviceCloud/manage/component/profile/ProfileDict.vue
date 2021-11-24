@@ -89,14 +89,14 @@
                 <!--                    </template>-->
                 <!--                  </el-table-column>-->
                 <el-table-column align="center" label="操作" width="160">
-                  <template #default="{ row }">
+                  <template #default="{ row, $index }">
                     <el-button
                       plain
                       size="mini"
                       title="删除"
                       type="danger"
                       @click.native="
-                        $parent.delRow(scope.$index, dictTempForm.params)
+                        $parent.delRow($index, dictTempForm.params)
                       "
                     >
                       删除
@@ -107,7 +107,7 @@
                       title="编辑"
                       type="info"
                       @click.native="
-                        $parent.editRow(row.scope.$index, dictTempForm.params)
+                        $parent.editRow($index, dictTempForm.params)
                       "
                     >
                       编辑

@@ -392,25 +392,13 @@
                     :label="$translateTitle('task.Operation')"
                     width="160"
                   >
-                    <!-- <template #default="{ row }">
-                      <el-button
-                        size="mini"
-                        type="danger"
-                        plain
-                        title="删除"
-                        @click.native="
-                          delRow(scope.$index, dictTempForm.params)
-                        "
-                      > -->
                     <template #default="{ row, $index }">
                       <el-button
                         plain
                         size="mini"
                         :title="$translateTitle('task.Delete')"
                         type="danger"
-                        @click.native="
-                          delRow($index, dictTempForm.params)
-                        "
+                        @click.native="delRow($index, dictTempForm.params)"
                       >
                         <!-- 删除 -->
                         {{ $translateTitle('task.Delete') }}
@@ -421,7 +409,7 @@
                         plain
                         title="编辑"
                         @click.native="
-                          editRow(row,scope.$index, dictTempForm.params)
+                          editRow($index, dictTempForm.params)
                         "
                       > -->
                       <el-button
@@ -429,9 +417,7 @@
                         size="mini"
                         :title="$translateTitle('task.Edit')"
                         type="info"
-                        @click.native="
-                          editRow(row.scope.$index, dictTempForm.params)
-                        "
+                        @click.native="editRow($index, dictTempForm.params)"
                       >
                         <!-- 编辑 -->
                         {{ $translateTitle('task.Edit') }}
@@ -691,7 +677,7 @@
             :label="$translateTitle('developer.dictionarytemplatenumber')"
             width="200"
           >
-            <template v-if="row.objectId" slot-scope="scope">
+            <template v-if="row.objectId" #default="{ row }">
               {{ row.objectId }}
             </template>
           </el-table-column>
@@ -737,7 +723,7 @@
             :label="$translateTitle('task.Operation')"
             width="500"
           >
-            <template v-if="row.objectId" slot-scope="scope">
+            <template v-if="row.objectId" #default="{ row }">
               <el-button
                 plain
                 size="mini"

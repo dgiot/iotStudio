@@ -210,7 +210,11 @@
                 >
                   {{ $translateTitle('developer.cancel') }}
                 </el-button>
-                <el-button size="mini" type="text" @click="deleteChannel(row)">
+                <el-button
+                  size="mini"
+                  type="text"
+                  @click="deleteChannel(row, $index)"
+                >
                   {{ $translateTitle('developer.determine') }}
                 </el-button>
               </div>
@@ -1074,10 +1078,10 @@
       },
 
       // 删除通道
-      deleteChannel(row) {
-        this.delchannelaxios(row)
+      deleteChannel(row, $index) {
+        this.delchannelaxios(row, $index)
       },
-      delchannelaxios(row) {
+      delchannelaxios(row, $index) {
         delChannel(row.objectId)
           .then((results) => {
             this.$message({

@@ -97,16 +97,16 @@
             align="center"
             :label="$translateTitle('task.Operation')"
           >
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <!-- <el-button
                 size="mini"
                 title="调测"
-                @click="handleTest(scope.$index, row.type, row.mod)"
+                @click="handleTest($index, row.type, row.mod)"
               > -->
               <el-button
                 size="mini"
                 :title="$translateTitle('rule.testnewequipment')"
-                @click="handleTest(scope.$index, row.type, row.mod)"
+                @click="handleTest($index, row.type, row.mod)"
               >
                 <dgiot-icon icon="bug-line" />
               </el-button>
@@ -115,14 +115,14 @@
                 type="primary"
                 title="发布"
                 @click="
-                  handleRelease(scope.$index, row.type, row.mod)
+                  handleRelease($index, row.type, row.mod)
                 "
               > -->
               <el-button
                 size="mini"
                 :title="$translateTitle('product.pub')"
                 type="primary"
-                @click="handleRelease(scope.$index, row.type, row.mod)"
+                @click="handleRelease($index, row.type, row.mod)"
               >
                 <dgiot-icon icon="run-line" />
               </el-button>
@@ -131,14 +131,14 @@
                 type="danger"
                 title="下架"
                 @click="
-                  handleDelete(scope.$index, row.type, row.mod)
+                  handleDelete($index, row.type, row.mod)
                 "
               > -->
               <el-button
                 size="mini"
                 :title="$translateTitle('equipment.Offtheshelf')"
                 type="danger"
-                @click="handleDelete(scope.$index, row.type, row.mod)"
+                @click="handleDelete($index, row.type, row.mod)"
               >
                 <dgiot-icon icon="delete-bin-2-fill" />
               </el-button>

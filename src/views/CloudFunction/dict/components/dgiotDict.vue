@@ -43,13 +43,13 @@
           :label="$translateTitle('task.Operation')"
           width="160"
         >
-          <template slot-scope="scope">
+          <template #default="{ row, $index }">
             <el-button
               plain
               size="mini"
               :title="$translateTitle('task.Edit')"
               type="info"
-              @click.native="editRow(scope.$index, scope.row)"
+              @click.native="editRow($index, row)"
             >
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
@@ -59,7 +59,7 @@
               size="mini"
               :title="$translateTitle('task.Delete')"
               type="danger"
-              @click.native="delRow(scope.$index)"
+              @click.native="delRow($index)"
             >
               <!-- 删除 -->
               {{ $translateTitle('task.Delete') }}

@@ -282,7 +282,7 @@
                 show-overflow-tooltip
                 sortable
               >
-                <template #default="{ row }">
+                <template #default="{ row, $index }">
                   <!-- <span
                     style="display:inline-block;width:5px;height:5px;border-radius:50%;background:#cccccc;vertical-align:middle"
                     v-if="row.isEnable==false"
@@ -297,7 +297,7 @@
                     v-model="row.isEnable"
                     active-color="#5eb058"
                     inactive-color="#cccccc"
-                    @change="handelUpdate($event, row.scope.$index)"
+                    @change="handelUpdate($event, $index)"
                   />
                 </template>
               </el-table-column>
@@ -352,7 +352,7 @@
                       <el-button
                         size="mini"
                         @click="
-                          scope._self.$refs[`popover-${scope.$index}`].doClose()
+                          scope._self.$refs[`popover-${$index}`].doClose()
                         "
                       >
                         {{ $translateTitle('developer.cancel') }}
@@ -360,7 +360,7 @@
                       <el-button
                         size="mini"
                         type="primary"
-                        @click="makeSure(scope)"
+                        @click="makeSure(scope, $index)"
                       >
                         {{ $translateTitle('developer.determine') }}
                       </el-button>
@@ -1376,15 +1376,15 @@
         }
       },
       /* el-popover点击关闭*/
-      makeSure(scope) {
+      makeSure(scope, $index) {
         // 可以在这里执行删除数据的回调操作.......删除操作.....
         this.$deleteDevice(row.objectId).then((response) => {
           if (!response.error) {
             this.initQuery('删除成功', 'success')
-            scope._self.$refs[`popover-${scope.$index}`].doClose()
+            scope._self.$refs[`popover-${$index}`].doClose()
             this.getDevices()
           } else {
-            scope._self.$refs[`popover-${scope.$index}`].doClose()
+            scope._self.$refs[`popover-${$index}`].doClose()
             this.initQuery('删除失败', 'error')
           }
         })

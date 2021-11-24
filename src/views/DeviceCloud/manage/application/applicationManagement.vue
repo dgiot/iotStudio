@@ -60,12 +60,8 @@
         prop="operation"
         width="350"
       >
-        <template #default="{ row }">
-          <el-popover
-            :ref="`popover-${scope.$index}`"
-            placement="top"
-            width="300"
-          >
+        <template #default="{ row, $index }">
+          <el-popover :ref="`popover-${$index}`" placement="top" width="300">
             <p>
               {{ $translateTitle('product.qdsczg') }}{{ row.name
               }}{{ $translateTitle('equipment.yym') }}
@@ -73,11 +69,15 @@
             <div style="margin: 0; text-align: right">
               <el-button
                 size="mini"
-                @click="scope._self.$refs[`popover-${scope.$index}`].doClose()"
+                @click="scope._self.$refs[`popover-${$index}`].doClose()"
               >
                 {{ $translateTitle('developer.cancel') }}
               </el-button>
-              <el-button size="mini" type="primary" @click="makeSure(scope)">
+              <el-button
+                size="mini"
+                type="primary"
+                @click="makeSure(scope, $index)"
+              >
                 {{ $translateTitle('developer.determine') }}
               </el-button>
             </div>
@@ -165,8 +165,8 @@
     },
     methods: {
       // 访问
-      handleClickVisit(scope) {
-        const index = scope.$index
+      handleClickVisit(scope, $index) {
+        const index = $index
         const productIdentifier = this.tableData[index].productIdentifier
         const url =
           window.location.origin + '/iot/' + productIdentifier + '#/login'
@@ -224,8 +224,8 @@
         this.getAppMange()
       },
       // 查看
-      handleClickLook(scope) {
-        const index = scope.$index
+      handleClickLook(scope, $index) {
+        const index = $index
         console.log(scope)
         const html = `
             <table
@@ -289,7 +289,7 @@
         })
       },
 
-      makeSure(scope) {
+      makeSure(scope, $index) {
         const params = {
           count: 'objectId',
           skip: 0,
@@ -315,7 +315,7 @@
                           type: 'success',
                           message: '删除成功',
                         })
-                        scope._self.$refs[`popover-${scope.$index}`].doClose()
+                        scope._self.$refs[`popover-${$index}`].doClose()
                         this.getAppMange()
                       }
                     })

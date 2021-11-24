@@ -598,7 +598,7 @@
                         <el-button
                           size="mini"
                           type="primary"
-                          @click="makeSure(row)"
+                          @click="makeSure(row,$index)"
                         >
                           {{ $translateTitle('developer.determine') }}
                         </el-button>
@@ -1768,7 +1768,7 @@
           })
       },
       /* el-popover点击关闭*/
-      makeSure(scope) {
+      makeSure(scope,$index) {
         // 可以在这里执行删除数据的回调操作.......删除操作.....
         const objRoute = JSON.parse(JSON.stringify(row.route))
         const routeKey = this.devicedevaddr
@@ -1784,7 +1784,7 @@
               type: 'success',
               message: '解除关联成功',
             })
-            scope._self.$refs[`popover-${scope.$index}`].doClose()
+            scope._self.$refs[`popover-${$index}`].doClose()
             this.getDevices()
           }
         })

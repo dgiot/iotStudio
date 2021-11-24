@@ -3144,7 +3144,7 @@ export default {
     async deletetopic(scope, index) {
       const { topics } = await this.$get_object('Product', this.productId)
       if (topics) {
-        // scope._self.$refs[`popover-${scope.$index}`].doClose();
+        // scope._self.$refs[`popover-${$index}`].doClose();
         var topic = topics.concat([])
         topic.splice(index, 1)
         const params = {

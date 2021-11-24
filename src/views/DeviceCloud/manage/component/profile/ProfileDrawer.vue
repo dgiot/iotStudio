@@ -111,9 +111,7 @@
             :disabled="row.disable"
             size="small"
             type="text"
-            @click.native.prevent="
-              deleteParse(row.uid, scope.$index, parserTables)
-            "
+            @click.native.prevent="deleteParse(row.uid, $index, parserTables)"
           >
             {{ $translateTitle('task.Delete') }}
           </el-button>

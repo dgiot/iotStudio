@@ -179,7 +179,7 @@
           :label="$translateTitle('product.Serverconfiguration')"
           width="150"
         >
-          <template v-if="row.private_ip" slot-scope="scope">
+          <template v-if="row.private_ip" #default="{ row }">
             <el-popover placement="top" trigger="hover">
               <p>
                 {{ $translateTitle('equipment.ipaddress') }}:

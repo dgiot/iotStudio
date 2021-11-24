@@ -85,7 +85,7 @@
             :label="$translateTitle('developer.operation')"
             width="340"
           >
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <el-button
                 size="mini"
                 type="primary"
@@ -108,7 +108,7 @@
                 {{ $translateTitle('concentrator.edit') }}
               </el-button>
               <el-popover
-                :ref="`popover-${scope.$index}`"
+                :ref="`popover-${$index}`"
                 placement="top"
                 style="margin-left: 10px"
                 width="300"
@@ -117,16 +117,14 @@
                 <div style="margin: 0; text-align: right">
                   <el-button
                     size="mini"
-                    @click="
-                      scope._self.$refs[`popover-${scope.$index}`].doClose()
-                    "
+                    @click="scope._self.$refs[`popover-${$index}`].doClose()"
                   >
                     {{ $translateTitle('developer.cancel') }}
                   </el-button>
                   <el-button
                     size="mini"
                     type="primary"
-                    @click="makeSure(scope)"
+                    @click="makeSure(scope, $index)"
                   >
                     {{ $translateTitle('developer.determine') }}
                   </el-button>
@@ -1228,7 +1226,7 @@
         })
       },
       /* el-popover点击关闭*/
-      makeSure(scope) {
+      makeSure(scope, $index) {
         const params = {
           count: 'objectId',
           skip: 0,
@@ -1248,7 +1246,7 @@
                   type: 'success',
                   message: '删除成功',
                 })
-                scope._self.$refs[`popover-${scope.$index}`].doClose()
+                scope._self.$refs[`popover-${$index}`].doClose()
                 this.searchProduct()
               }
             })

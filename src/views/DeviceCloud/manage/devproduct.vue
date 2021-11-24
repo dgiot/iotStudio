@@ -90,7 +90,7 @@
                 :label="$translateTitle('developer.operation')"
                 width="320"
               >
-                <template #default="{ row }">
+                <template #default="{ row, $index }">
                   <el-link
                     icon="el-icon-view"
                     type="primary"
@@ -101,7 +101,7 @@
                     {{ $translateTitle('product.config') }}
                   </el-link>
                   <el-popover
-                    :ref="`popover-${scope.$index}`"
+                    :ref="`popover-${$index}`"
                     placement="top"
                     width="300"
                   >
@@ -113,7 +113,7 @@
                       <el-button
                         size="mini"
                         @click="
-                          scope._self.$refs[`popover-${scope.$index}`].doClose()
+                          scope._self.$refs[`popover-${$index}`].doClose()
                         "
                       >
                         {{ $translateTitle('developer.cancel') }}
@@ -121,7 +121,7 @@
                       <el-button
                         size="mini"
                         type="primary"
-                        @click="makeSure(scope)"
+                        @click="makeSure(scope, $index)"
                       >
                         {{ $translateTitle('developer.determine') }}
                       </el-button>
@@ -1081,7 +1081,7 @@
         })
       },
       /* el-popover点击关闭*/
-      makeSure(scope) {
+      makeSure(scope, $index) {
         const params = {
           count: 'objectId',
           skip: 0,
@@ -1090,7 +1090,7 @@
             product: row.objectId,
           },
         }
-        queryDevice(params)
+        queryDevice(params, $index)
           .then((results) => {
             // console.log(results, "jkjjjj")
             if (results.count > 0) {
@@ -1107,7 +1107,7 @@
                           type: 'success',
                           message: '删除成功',
                         })
-                        scope._self.$refs[`popover-${scope.$index}`].doClose()
+                        scope._self.$refs[`popover-${$index}`].doClose()
                         this.searchProduct()
                       }
                     })

@@ -441,12 +441,12 @@
                 sortable
                 width="120"
               >
-                <template #default="{ row }">
+                <template #default="{ row, $index }">
                   <el-switch
                     v-model="row.isEnable"
                     active-color="#5eb058"
                     inactive-color="#cccccc"
-                    @change="handelUpdate($event, row.scope.$index)"
+                    @change="handelUpdate($event, $index)"
                   />
                 </template>
               </el-table-column>
@@ -653,12 +653,12 @@
                 sortable
                 width="120"
               >
-                <template #default="{ row }">
+                <template #default="{ row, $index }">
                   <el-switch
                     v-model="row.isEnable"
                     active-color="#5eb058"
                     inactive-color="#cccccc"
-                    @change="handelUpdate($event, row.scope.$index)"
+                    @change="handelUpdate($event, $index)"
                   />
                 </template>
               </el-table-column>
@@ -2646,7 +2646,7 @@
         }
       },
       /* el-popover点击关闭*/
-      async makeSure(scope) {
+      async makeSure(scope, $index) {
         // 可以在这里执行删除数据的回调操作.......删除操作.....
         const res = await this.$del_object('Device', row.objectId)
         if (res.error) {
@@ -2661,7 +2661,7 @@
           })
           this.getDevices()
         }
-        scope._self.$refs[`popover-${scope.$index}`].doClose()
+        scope._self.$refs[`popover-${$index}`].doClose()
       },
       /* device表单修改*/
       async editorDevice(row) {

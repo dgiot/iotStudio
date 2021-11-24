@@ -304,7 +304,7 @@
                     {{ $translateTitle('developer.edit') }}
                   </el-button>
                   <!--                  <el-popover-->
-                  <!--                    :ref="`popover-${scope.$index}`"-->
+                  <!--                    :ref="`popover-${$index}`"-->
                   <!--                    placement="top"-->
                   <!--                    width="300"-->
                   <!--                  >-->
@@ -314,7 +314,7 @@
                   <!--                      size="mini"-->
                   <!--                      size="mini"-->
                   <!--                      @click.native="-->
-                  <!--                        scope._self.$refs[`popover-${scope.$index}`].doClose()-->
+                  <!--                        scope._self.$refs[`popover-${$index}`].doClose()-->
                   <!--                      "-->
                   <!--                    >-->
                   <!--                      {{  $translateTitle("developer.cancel") }}</el-button-->
@@ -322,7 +322,7 @@
                   <!--                    <el-button-->
                   <!--                      type="primary"-->
                   <!--                      size="mini"-->
-                  <!--                      @click.native="deletetopic(scope, scope.$index)"-->
+                  <!--                      @click.native="deletetopic(row, $index)"-->
                   <!--                    >-->
                   <!--                      {{  $translateTitle("developer.determine") }}</el-button-->
                   <!--                      >-->
@@ -580,7 +580,7 @@
                   <el-table-column type="expand">
                     <template
                       v-if="row.dataType.type == 'struct'"
-                      slot-scope="scope"
+                      #default="{ row }"
                       class="opentable"
                     >
                       <el-table
@@ -745,7 +745,7 @@
                     :label="$translateTitle('developer.operation')"
                     width="160"
                   >
-                    <template #default="{ row }">
+                    <template #default="{ row, $index }">
                       <el-button
                         size="mini"
                         type="danger"
@@ -756,7 +756,7 @@
                       <el-button
                         size="mini"
                         type="primary"
-                        @click.native="wmxDataFill(row, row.index)"
+                        @click.native="wmxDataFill(row, $index)"
                       >
                         <!-- 编辑 -->
                         {{ $translateTitle('task.Edit') }}
