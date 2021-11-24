@@ -1,9 +1,10 @@
-import { queryDevice } from '@/api/Device'
+import { queryDevice, delDevice, postDevice } from '@/api/Device'
 import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
-import { postreport } from '@/api/Report'
 import { queryView } from '@/api/View'
+import md5 from 'md5'
+import product from '@/views/DeviceCloud/manage/product'
 export default {
   name: 'TaskIndex',
   components: {
@@ -22,56 +23,25 @@ export default {
           label: '审核完成',
         },
       ],
-      ruleForm: {
-        templatename: '',
-        testbedid: '',
-        testbed: '',
-        category: '',
-        endtime: '',
-        starttime: '',
-        wordtemplateid: '',
-        name: '',
-      },
       rules: {
-        name: [
-          {
-            required: true,
-            message: '请输入任务名称',
-            trigger: 'blur',
-          },
-        ],
-        category: [
-          {
-            required: true,
-            message: '请选择报告类别',
-            trigger: 'change',
-          },
-        ],
-        starttime: [
-          {
-            required: true,
-            message: '请选择开始时间',
-            trigger: 'change',
-          },
-        ],
-        endtime: [
-          {
-            required: true,
-            message: '请选择结束时间',
-            trigger: 'change',
-          },
-        ],
         testbed: [
           {
             required: true,
             message: '请选择测试台体',
-            trigger: 'change',
+            trigger: 'blur',
           },
         ],
-        organization: [
+        name: [
           {
             required: true,
-            message: '请选择所属组织',
+            message: '请输入报告名称',
+            trigger: 'blur',
+          },
+        ],
+        templatename: [
+          {
+            required: true,
+            message: '请选择报告模板',
             trigger: 'change',
           },
         ],
@@ -108,13 +78,13 @@ export default {
         {
           label: 'Inspection template',
           width: 'auto',
-          prop: 'basedata.wordtemplatename',
+          prop: 'profile.wordtemplatename',
           sortable: true,
         },
         {
           label: 'testbed',
           width: 'auto',
-          prop: 'basedata.testbed',
+          prop: 'profile.testbed',
           sortable: true,
         },
         {
@@ -152,6 +122,13 @@ export default {
       categorylist: [],
       wordtemplist: [],
       grouplist: [],
+      ruleForm: {
+        name: '',
+        templatename: '',
+        testbed: '',
+        testbedid: '',
+        templatenameid: '',
+      },
     }
   },
   computed: {
@@ -171,34 +148,11 @@ export default {
   },
   methods: {
     async categoryChange(val) {
-      this.loading = true
-      console.log(val)
-      const params = {
-        where: { key: val.objectId, type: 'amis' },
-      }
-      const { results = {} } = await queryView(params)
-      // this.$set(this.ruleForm, 'wordtemplatename', val.name)
-      // this.$set(this.ruleForm, 'wordtemplateid', val.objectId)
-      this.wordtemplist = results
-      this.loading = false
+      this.$set(this.ruleForm, 'templatenameid', val.objectId)
     },
     testbedChange(val) {
-      this.$set(this.ruleForm, 'testbed', val.name)
       this.$set(this.ruleForm, 'testbedid', val.objectId)
       console.log('this.ruleForm', this.ruleForm)
-    },
-    nextpage() {
-      if (this.ruleForm.wordtemplate) {
-        console.log(this.ruleForm.wordtemplate)
-      } else {
-        this.$message({
-          type: 'error',
-          message: '请选择报告模板',
-        })
-      }
-    },
-    wordChange(e) {
-      console.log(e)
     },
     async getwordtemp() {
       const params = {
@@ -213,38 +167,53 @@ export default {
     },
     async getgroup() {
       const params = {
-        skip: 0,
         where: {
-          nodeType: 2,
+          'detail.devModel': 'DGIOT_GROUP',
         },
       }
-      const { results } = await queryProduct(params)
+      const { results } = await queryDevice(params)
       this.grouplist = results
     },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           const task = {
-            basedata: {
+            basedata: {},
+            profile: {
               testbedid: this.ruleForm.testbedid,
-              testbed: this.ruleForm.testbed,
-              wordtemplatename: this.ruleForm.wordtemplatename,
-              endtime: this.ruleForm.endtime,
-              starttime: this.ruleForm.starttime,
-              reportId: this.ruleForm.wordtemplateid,
+              testbed: this.ruleForm.testbed.name,
+              wordtemplatename: this.ruleForm.templatename.name,
+              reportId: this.ruleForm.templatenameid,
               identifier: 'inspectionReportTemp',
             },
+            parentId: {
+              objectId: this.ruleForm.testbedid,
+              __type: 'Pointer',
+              className: 'Device',
+            },
             name: this.ruleForm.name,
-            product: this.ruleForm.wordtemplateid,
+            devaddr: md5(this.ruleForm.name).substr(0, 10),
+            product: {
+              objectId: this.ruleForm.templatenameid,
+              __type: 'Pointer',
+              className: 'Product',
+            },
           }
           const loading = this.$baseColorfullLoading(1)
           this.activePopShow = false
-          await postreport(task)
+          await postDevice(task)
           this.fetchData(this.queryForm)
           loading.close()
         } else {
           console.log('error submit!!')
           return false
+        }
+        this.ruleForm = {
+          name: '',
+          templatename: '',
+          testbed: '',
+          testbedid: '',
+          templatenameid: '',
         }
       })
     },
@@ -256,8 +225,35 @@ export default {
       this.queryForm.skip = (val - 1) * this.queryForm.limit
       this.fetchData(this.queryForm)
     },
-    async handleManagement(row) {},
-    handleDelete(row, flag) {},
+    async handleManagement(taskid) {},
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-24 16:17:16
+     * @LastEditors:
+     * @param 删除任务
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async handleDelete(taskid) {
+      try {
+        const loading = this.$baseColorfullLoading()
+        const res = await delDevice(taskid)
+        this.$baseMessage(
+          this.$translateTitle('user.successfully deleted'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+        this.fetchData(this.queryForm)
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('user.error deleted') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
     async fetchData(args) {
       this.getwordtemp()
       this.getgroup()
@@ -266,20 +262,21 @@ export default {
         order: args.order,
         skip: this.queryForm.name.length ? 0 : args.skip,
         keys: args.keys,
+        include: 'product,parentId',
         where: {
-          'basedata.identifier': 'inspectionReportTemp',
+          'profile.identifier': 'inspectionReportTemp',
         },
       }
       this.listLoading = true
       const { count = 0, results = [] } = await queryDevice(params)
       this.list = results
       results.forEach((item) => {
-        item.basedata.endtime = moment(item.basedata.endtime).format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
-        item.basedata.starttime = moment(item.basedata.starttime).format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
+        item.basedata.endtime = item.basedata.endtime
+          ? moment(item.basedata.endtime).format('YYYY-MM-DD HH:mm:ss')
+          : ''
+        item.basedata.starttime = item.basedata.starttime
+          ? moment(item.basedata.starttime).format('YYYY-MM-DD HH:mm:ss')
+          : ''
         item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
       })
       // this.list = results

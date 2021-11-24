@@ -11,24 +11,9 @@
   <div ref="custom-table" class="custom-table-container">
     <div class="components">
       <vab-dialog :show.sync="activePopShow">
-        <h3 slot="title">
+        <h2 slot="title">
           {{ $translateTitle('cloudTest.addwordtask') }}
-        </h3>
-        <div style="text-align: right">
-          <el-button
-            plain
-            size="mini"
-            type="primary"
-            @click="nextpage('ruleForm')"
-          >
-            {{ $translateTitle('cloudTest.nextpage') }}
-          </el-button>
-          <el-button size="mini" type="primary" @click="submitForm('ruleForm')">
-            <i class="el-icon-finished">
-              {{ $translateTitle('product.createnow') }}
-            </i>
-          </el-button>
-        </div>
+        </h2>
         <div class="content">
           <el-divider>
             {{
@@ -48,11 +33,17 @@
             size="mini"
           >
             <el-form-item
-              :label="$translateTitle('cloudTest.report category')"
-              prop="wordtemplate"
+              :label="$translateTitle('cloudTest.taskname')"
+              prop="name"
+            >
+              <el-input v-model="ruleForm.name" />
+            </el-form-item>
+            <el-form-item
+              :label="$translateTitle('cloudTest.wordtemplate')"
+              prop="templatename"
             >
               <el-select
-                v-model="ruleForm.category"
+                v-model="ruleForm.templatename"
                 :placeholder="$translateTitle('task.Select')"
                 style="width: 100%"
                 value-key="objectId"
@@ -64,30 +55,6 @@
                   :label="item.name"
                   :value="item"
                 />
-              </el-select>
-            </el-form-item>
-            <el-form-item
-              :label="$translateTitle('cloudTest.wordtemplate')"
-              prop="wordtemplate"
-            >
-              <el-select
-                v-model="ruleForm.templatename"
-                :placeholder="$translateTitle('task.Select')"
-                style="width: 100%"
-                value-key="objectId"
-                @change="wordChange"
-              >
-                <el-option
-                  v-for="item in wordtemplist"
-                  :key="item.objectId"
-                  :label="item.title"
-                  :value="item"
-                >
-                  <span style="float: left">{{ item.title }}</span>
-                  <span style="float: right; color: #8492a6">
-                    {{ item.objectId }}
-                  </span>
-                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item
@@ -109,6 +76,17 @@
               </el-select>
             </el-form-item>
           </el-form>
+          <div slot="footer" style="text-align: right">
+            <el-button
+              size="mini"
+              type="primary"
+              @click="submitForm('ruleForm')"
+            >
+              <i class="el-icon-finished">
+                {{ $translateTitle('product.createnow') }}
+              </i>
+            </el-button>
+          </div>
         </div>
       </vab-dialog>
     </div>
@@ -270,7 +248,7 @@
           <el-button type="success" @click="handleManagement(row)">
             {{ $translateTitle(`product.Template management`) }}
           </el-button>
-          <el-button type="warning" @click="handleDelete(row, 0)">
+          <el-button type="warning" @click="handleDelete(row.objectId)">
             {{ $translateTitle(`cloudTest.delete`) }}
           </el-button>
         </template>
