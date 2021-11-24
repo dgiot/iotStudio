@@ -35,7 +35,7 @@
               <el-button
                 size="small"
                 type="danger"
-                @click.stop="handleDelete($index, row.roletempList)"
+                @click.stop="handleDelete($index, row.objectId, roletempList)"
               >
                 <!-- 删除 -->
                 {{ $translateTitle('task.Delete') }}
@@ -578,8 +578,8 @@
         this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
       },
       // 删除模板
-      async handleDelete(index, row, data) {
-        const res = await delDict(row.objectId)
+      async handleDelete(index, objectId, data) {
+        const res = await delDict(objectId)
         if (res) {
           this.$message({
             type: 'success',
