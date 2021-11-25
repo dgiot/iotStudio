@@ -244,10 +244,14 @@
               width="auto"
             >
               <template #default="{ row }">
-                <el-button type="success" @click="handlekonva(row)">
+                <el-button size="mini" type="success" @click="handlekonva(row)">
                   {{ $translateTitle(`developer.mapping`) }}
                 </el-button>
-                <el-button type="warning" @click="handleDelete(row, 1)">
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click="handleDelete(row, 1)"
+                >
                   {{ $translateTitle(`cloudTest.delete`) }}
                 </el-button>
               </template>
@@ -402,10 +406,10 @@
         width="185"
       >
         <template #default="{ row }">
-          <el-button type="success" @click="handleManagement(row)">
+          <el-button size="mini" type="success" @click="handleManagement(row)">
             {{ $translateTitle(`product.Template management`) }}
           </el-button>
-          <el-button type="warning" @click="handleDelete(row, 0)">
+          <el-button size="mini" type="danger" @click="handleDelete(row, 0)">
             {{ $translateTitle(`cloudTest.delete`) }}
           </el-button>
         </template>

@@ -188,7 +188,6 @@
       v-loading="listLoading"
       :border="border"
       :data="list"
-      :height="height"
       :size="lineHeight"
       :stripe="stripe"
     >
@@ -266,15 +265,11 @@
         />
       </template>
     </el-table>
-    <el-pagination
-      background
-      layout="total, sizes, prev, pager, next, jumper"
-      :page.sync="queryForm.pageNo"
-      :page-size="queryForm.pageSize"
-      :page-sizes="queryForm.pageSizes"
-      :total="queryForm.total"
-      @current-change="currentChange"
-      @size-change="sizeChange"
+    <vab-parser-pagination
+      :pagination="paginations"
+      :query-payload="queryPayload"
+      @pagination="fetchData"
+      @paginationQuery="paginationQuery"
     />
     <lowcode-design ref="lowcodeDesign" @objectId="lowcodeId" />
   </div>

@@ -12,6 +12,46 @@ export default {
   },
   data() {
     return {
+      paginations: {
+        // 每页显示个数选择器的选项设置
+        pageSizes: [5, 10, 20, 50, 100, 200, 500],
+        // 组件布局，子组件名用逗号分隔
+        layout: 'total, sizes, prev, pager, next, jumper',
+        // 是否为分页按钮添加背景色
+        background: true,
+        // 是否显示本控件
+        hidden: false,
+        // 是否使用小型分页样式
+        small: false,
+        // 每页显示条目个数，支持 .sync 修饰符
+        pageSize: 10,
+        // 总条目数
+        total: 0,
+        // 总页数，total 和 page-count 设置任意一个就可以达到显示页码的功能；如果要支持 page-sizes 的更改，则需要使用 total 属性
+        pageCount: 0,
+        // 页码按钮的数量，当总页数超过该值时会折叠 大于等于 5 且小于等于 21 的奇数
+        pagerCount: 7,
+        // 当前页数，支持 .sync 修饰符
+        currentPage: 1,
+        // 每页显示个数选择器的下拉框类名
+        popperClass: '',
+        // 替代图标显示的上一页文字
+        prevText: '',
+        // 替代图标显示的下一页文字
+        nextText: '',
+        // 是否禁用
+        disabled: false,
+        // 只有一页时是否隐藏
+        hideOnSinglePage: false,
+      },
+      queryPayload: {
+        excludeKeys: 'data',
+        include: '',
+        order: '-createdAt',
+        limit: 10,
+        skip: 0,
+        count: 'objectId',
+      },
       lowcodeId: '',
       loading: false,
       options: [
@@ -69,13 +109,13 @@ export default {
           prop: 'name',
           sortable: true,
         },
-        {
-          label: 'Inspection number',
-          width: 'auto',
-          prop: 'devaddr',
-          sortable: true,
-          disableCheck: true,
-        },
+        // {
+        //   label: 'Inspection number',
+        //   width: 'auto',
+        //   prop: 'devaddr',
+        //   sortable: true,
+        //   disableCheck: true,
+        // },
         {
           label: 'Inspection template',
           width: 'auto',
@@ -88,12 +128,12 @@ export default {
           prop: 'profile.testbed',
           sortable: true,
         },
-        {
-          label: 'Creation time',
-          width: 'auto',
-          prop: 'createdAt',
-          sortable: true,
-        },
+        // {
+        //   label: 'Creation time',
+        //   width: 'auto',
+        //   prop: 'createdAt',
+        //   sortable: true,
+        // },
         {
           label: 'Starting time',
           width: 'auto',
@@ -150,6 +190,9 @@ export default {
     this.fetchData(this.queryForm)
   },
   methods: {
+    async paginationQuery(queryPayload) {
+      this.queryPayload = queryPayload
+    },
     async categoryChange(val) {
       this.$set(this.ruleForm, 'templatenameid', val.objectId)
     },
@@ -282,18 +325,23 @@ export default {
     async fetchData(args) {
       this.getwordtemp()
       this.getgroup()
-      const params = {
-        limit: args.limit,
-        order: args.order,
-        skip: this.queryForm.name.length ? 0 : args.skip,
-        keys: args.keys,
-        include: 'product,parentId',
-        where: {
-          'profile.identifier': 'inspectionReportTemp',
-        },
+      // const params = {
+      //   limit: args.limit,
+      //   order: args.order,
+      //   skip: this.queryForm.name.length ? 0 : args.skip,
+      //   keys: args.keys,
+      //   include: 'product,parentId',
+      //   where: {
+      //     'profile.identifier': 'inspectionReportTemp',
+      //   },
+      // }
+      this.queryPayload.include = 'product,parentId'
+      this.queryPayload.where = {
+        'profile.identifier': 'inspectionReportTemp',
       }
       this.listLoading = true
-      const { count = 0, results = [] } = await queryDevice(params)
+      const { count = 0, results = [] } = await queryDevice(this.queryPayload)
+      this.paginations.total = count
       this.list = results
       results.forEach((item) => {
         item.basedata.endtime = item.basedata.endtime
@@ -305,7 +353,6 @@ export default {
         item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
       })
       // this.list = results
-      this.queryForm.total = count
       this.listLoading = false
     },
   },
