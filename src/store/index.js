@@ -9,19 +9,20 @@
 /**
  * @description 导入所有 vuex 模块，自动加入namespaced:true，用于解决vuex命名冲突，请勿修改。
  */
-
+import { appId, uid, name, email, subscriptionType } from '@/config'
 Vue.use(Vuex)
 // https://app.logrocket.com/wj9jpe/dgiot/settings/setup
 import LogRocket from 'logrocket'
 import createPlugin from 'logrocket-vuex'
 
-LogRocket.init('wj9jpe/dgiot')
-LogRocket.identify('THE_USER_ID_IN_YOUR_APP', {
-  name: 'lsxredrain',
-  email: 'lsxredrain@163.com',
-  subscriptionType: 'dgiot_dashboard',
-})
-
+if (process.env.NODE_ENV === 'production') {
+  LogRocket.init(appId)
+  LogRocket.identify(uid, {
+    name: name,
+    email: email,
+    subscriptionType: subscriptionType,
+  })
+}
 const logrocketPlugin = createPlugin(LogRocket)
 const files = require.context('./modules', false, /\.js$/)
 const modules = {}

@@ -32,7 +32,7 @@
       // $regex	Requires that a key’s value match a regular expression
       // $text	Performs a full text search on indexed fields
     },
-    excludeKeys: '',
+    // excludeKeys: '',
     include: '',
     order: '-updatedAt',
     limit: 10,

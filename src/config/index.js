@@ -7,6 +7,7 @@ const local = require('./local.config')
 const pwa = require('./pwa.config')
 const og = require('./og.config')
 const mqtt = require('./mqtt.config')
+const logRocket = require('./logRocket.config')
 module.exports = {
   ...cli,
   ...setting,
@@ -17,4 +18,5 @@ module.exports = {
   ...mqtt,
   ...local,
   ...og,
+  ...logRocket,
 }

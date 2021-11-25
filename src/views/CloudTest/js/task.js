@@ -243,13 +243,15 @@ export default {
         }
       })
     },
-    sizeChange(val) {
-      this.queryForm.limit = val
-      this.fetchData(this.queryForm)
-    },
-    currentChange(val) {
-      this.queryForm.skip = (val - 1) * this.queryForm.limit
-      this.fetchData(this.queryForm)
+    forensics(row) {
+      console.log(row)
+      this.$router.push({
+        path: '/cloudTest/evidence',
+        query: {
+          tsakid: row.objectId,
+          productid: row.product.objectId,
+        },
+      })
     },
     async handleManagement(row) {
       this.$refs['lowcodeDesign'].withHeader = false

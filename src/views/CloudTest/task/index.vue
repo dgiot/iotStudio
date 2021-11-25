@@ -216,7 +216,7 @@
         align="center"
         :label="$translateTitle(`deviceLog.status`)"
         show-overflow-tooltip
-        width="185"
+        width="auto"
       >
         <template #default="{ row }">
           <el-tag
@@ -239,13 +239,16 @@
       </el-table-column>
       <el-table-column
         align="center"
+        fixed="right"
         :label="$translateTitle(`cloudTest.operate`)"
-        show-overflow-tooltip
-        width="185"
+        width="300"
       >
         <template #default="{ row }">
           <el-button size="mini" type="success" @click="handleManagement(row)">
-            {{ $translateTitle(`cloudTest.task configuration`) }}
+            {{ $translateTitle(`cloudTest.configuration`) }}
+          </el-button>
+          <el-button size="mini" type="warning" @click="forensics(row)">
+            {{ $translateTitle(`cloudTest.forensics`) }}
           </el-button>
           <el-button
             size="mini"
