@@ -116,7 +116,7 @@
     "filemanager-webpack-plugin": "6.1.7",
     "hard-source-webpack-plugin": "0.13.1",
     "husky": "7.0.4",
-    "lighthouse": "8.6.0",
+    "lighthouse": "9.1.0",
     "lint-staged": "11.2.6",
     "mini-css-extract-plugin": "2.4.4",
     "monaco-editor": "0.30.1",
