@@ -586,6 +586,7 @@ export default {
       decoder: '解码器',
       lowcode: '低代码',
       edit: '设备',
+      view: '视图',
       myproduct: '我的产品',
       createproduct: '创建产品',
       createproducttemplate: '创建产品模板',

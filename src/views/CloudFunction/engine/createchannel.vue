@@ -126,6 +126,27 @@
             />
           </el-form-item>
         </el-col>
+        <!-- 低代码-->
+        <el-col :span="24">
+          <el-form-item :label="$translateTitle('product.view')">
+            <!--            <el-input-->
+            <!--              v-model="addchannel.data"-->
+            <!--              autocomplete="off"-->
+            <!--              :placeholder="$translateTitle('product.view')"-->
+            <!--              :rows="3"-->
+            <!--              type="textarea"-->
+            <!--            />-->
+            <div style="height: 30vh; overflow: auto">
+              <vab-monaco-plus
+                ref="monacoCode"
+                :codes="addchannel.codes"
+                :language="'json'"
+                :read-only="false"
+                :theme="'vs-dark'"
+              />
+            </div>
+          </el-form-item>
+        </el-col>
         <el-col :span="24">
           <el-row
             :gutter="24"
@@ -255,6 +276,7 @@
           ],
         },
         addchannel: {
+          codes: '',
           name: '',
           region: '',
         },
@@ -264,6 +286,15 @@
       ...mapGetters({
         roleTree: 'user/roleTree',
       }),
+    },
+    watch: {
+      // 'addchannel.codes': {
+      //   handler(val) {
+      //     this.addchannel.codes = JSON.stringify(val, null, 4)
+      //   },
+      //   immediate: true,
+      //   deep: true,
+      // },
     },
     mounted() {
       this.getResource()
@@ -286,7 +317,7 @@
       }),
       // initFrom
       initFrom() {
-        this.addchannel = {}
+        // this.addchannel = {}
         this.channelForm = false
         this.$refs['addchannel'].resetFields()
         this.resourceid = ''
@@ -330,6 +361,7 @@
               write: true,
             }
             const data = {
+              data: JSON.parse(this.$refs.monacoCode.monacoEditor.getValue()),
               ACL: aclObj,
               config: obj,
               name: this.addchannel.name,

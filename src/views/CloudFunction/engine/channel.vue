@@ -1,5 +1,42 @@
 <template>
   <div class="resourcechannel resourcechannel-container">
+    <el-drawer v-drawerDrag append-to-body size="80%" :visible.sync="amisFlag">
+      <div v-show="amisFlag" class="wrapper">
+        <el-button
+          size="mini"
+          :title="$translateTitle('konva.save')"
+          type="success"
+          @click.native="saveAmis()"
+        >
+          {{ $translateTitle('konva.save') }}
+        </el-button>
+        <el-button
+          size="mini"
+          type="warning"
+          @click.native="isPreview = !isPreview"
+        >
+          {{
+            !isPreview
+              ? $translateTitle('application.preview')
+              : $translateTitle('task.Edit')
+          }}
+        </el-button>
+      </div>
+      <vab-amis
+        v-show="isPreview"
+        :key="channelid"
+        :schema="renderSchema"
+        :show-help="false"
+      />
+      <vab-amis-editor
+        v-show="!isPreview"
+        ref="vabAmis"
+        :amis-key="channelid"
+        :theme="'antd'"
+        :value="amisJson"
+        @onChange="onChange"
+      />
+    </el-drawer>
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="firsttable">
       <el-form
@@ -32,7 +69,6 @@
         :cell-style="{ 'text-align': 'center' }"
         :data="tableData"
         :header-cell-style="{ 'text-align': 'center' }"
-        :height="height"
         :row-class-name="getChannelEnable"
         row-key="objectId"
         style="width: 100%"
@@ -42,14 +78,14 @@
           prop="objectId"
           show-overflow-tooltip
           sortable
-          width="150"
+          width="auto"
         />
         <el-table-column
           :label="$translateTitle('developer.channelname')"
           prop="name"
           show-overflow-tooltip
           sortable
-          width="160"
+          width="auto"
         >
           <template #default="{ row }">
             <span>{{ row.name }}</span>
@@ -60,7 +96,7 @@
           prop="type"
           show-overflow-tooltip
           sortable
-          width="180"
+          width="auto"
         >
           <template #default="{ row }">
             <span v-if="row.type == 1">
@@ -80,7 +116,7 @@
           prop="cType"
           show-overflow-tooltip
           sortable
-          width="140"
+          width="80"
         >
           <template #default="{ row }">
             <span>{{ row.config.port }}</span>
@@ -159,10 +195,17 @@
         </el-table-column>
         <el-table-column
           :label="$translateTitle('developer.describe')"
-          prop="desc"
+          prop="objectId"
           show-overflow-tooltip
           sortable
         />
+        <el-table-column :label="$translateTitle('product.view')">
+          <template #default="{ row }">
+            <el-button @click="viewDesign(row.data, row.objectId)">
+              {{ $translateTitle('product.view') }}
+            </el-button>
+          </template>
+        </el-table-column>
         <el-table-column
           fixed="right"
           :label="$translateTitle('developer.operation')"
@@ -620,6 +663,7 @@
   import { mapGetters } from 'vuex'
   import defaultLogo from '../../../../public/assets/images/logo/logo.png'
   import VabInput from '@/dgiot/components/VabInput/input'
+  import { putView } from '@/api/View'
 
   var subdialog
 
@@ -631,6 +675,10 @@
     // inject: ['reload'],
     data() {
       return {
+        amisFlag: false,
+        isPreview: true,
+        renderSchema: {},
+        amisJson: {},
         selectedData: [],
         pagination: {
           currentPage: 4,
@@ -669,7 +717,6 @@
         channelformsearch: {
           name: '',
         },
-        height: this.$baseTableHeight(0),
         channelregion: [],
         addchannel: {
           region: '',
@@ -766,9 +813,52 @@
       this.Get_Re_Channel(0)
       this.dialogType()
       this.getApplication()
-      // this.bus('')
     },
     methods: {
+      /**
+       * @Author: h7ml
+       * @Date: 2021-11-22 11:07:21
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async saveAmis() {
+        try {
+          const loading = this.$baseColorfullLoading()
+          const payload = {
+            data: this.$refs['vabAmis'].getSchema(),
+          }
+          const res = await putChannel(this.channelid, payload)
+          this.$baseMessage(
+            this.$translateTitle('user.update completed'),
+            'success',
+            'vab-hey-message-success'
+          )
+          loading.close()
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
+      },
+
+      viewDesign(data = {}, channelid) {
+        this.renderSchema = data
+        this.amisFlag = true
+        console.log(this.renderSchema, e)
+        this.$refs['vabAmis'].setSchema(data)
+        this.channelid = channelid
+      },
+      async onChange(e) {
+        this.$refs['vabAmis'].setSchema(e)
+        this.renderSchema = e
+        this.amisJson = e
+        console.log(this.renderSchema, e)
+      },
       handleSelectionChange(data) {
         this.selectedData = data
       },
@@ -1474,5 +1564,35 @@
     //::v-deep .el-button--mini {
     //  margin: 2px 0;
     //}
+  }
+</style>
+<style lang="scss" scoped>
+  .wrapper {
+    position: fixed;
+    right: -10.5px;
+    bottom: 145px;
+    z-index: 9999;
+    padding: 7px 15px;
+    padding-right: 19px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 12px;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    //background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid #000;
+    border-radius: 4px;
+    opacity: 1;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    &:hover {
+      right: -4px;
+      //background-color: rgba(0, 0, 0, 0.9);
+    }
+    i {
+      margin-right: 3px;
+      font-size: 12px;
+    }
   }
 </style>
