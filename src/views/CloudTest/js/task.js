@@ -1,5 +1,6 @@
 import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
-import { queryDevice, delDevice, postDevice } from '@/api/Device'
+import { queryDevice, delDevice } from '@/api/Device'
+import { postreport } from '@/api/Report'
 import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
@@ -203,8 +204,6 @@ export default {
         }
         if (valid) {
           const task = {
-            basedata: {},
-            ACL: aclObj,
             profile: {
               testbedid: this.ruleForm.testbedid,
               testbed: this.ruleForm.testbed.name,
@@ -212,22 +211,13 @@ export default {
               reportId: this.ruleForm.templatenameid,
               identifier: 'inspectionReportTemp',
             },
-            parentId: {
-              objectId: this.ruleForm.testbedid,
-              __type: 'Pointer',
-              className: 'Device',
-            },
+            parentId: this.ruleForm.testbedid,
             name: this.ruleForm.name,
-            devaddr: md5(this.ruleForm.name).substr(0, 10),
-            product: {
-              objectId: this.ruleForm.templatenameid,
-              __type: 'Pointer',
-              className: 'Product',
-            },
+            product: this.ruleForm.templatenameid,
           }
           const loading = this.$baseColorfullLoading(1)
           this.activePopShow = false
-          await postDevice(task)
+          await postreport(task)
           this.fetchData(this.queryForm)
           loading.close()
         } else {

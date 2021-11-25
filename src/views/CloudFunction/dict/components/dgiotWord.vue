@@ -162,6 +162,32 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row v-if="param.type == 'dynamicTable'" :gutter="24">
+            <el-col :span="10">
+              <el-form-item
+                :label="$translateTitle('equipment.row')"
+                prop="order"
+              >
+                <el-input-number
+                  v-model="param.row"
+                  :min="1"
+                  style="width: 100%"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item
+                :label="$translateTitle('equipment.column')"
+                prop="order"
+              >
+                <el-input-number
+                  v-model="param.column"
+                  :min="1"
+                  style="width: 100%"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-form-item>
             <el-button type="primary" @click.native="submitparam('param')">
               <!-- 确定 -->
@@ -227,9 +253,9 @@
         infoData: 'DgiotDict',
         dictOptions: [
           'text',
-          'table',
-          'dynamicTable',
           'image',
+          'dynamicTable',
+          'table',
           'string',
           'boolean',
           'number',
@@ -271,6 +297,8 @@
         this.edit_param_dialog = true
         this.param = {
           order: this.dataform.params.length + 1,
+          row: 1,
+          column: 1,
           identifier: '',
           name: '',
           type: '',

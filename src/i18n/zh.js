@@ -178,6 +178,8 @@ export default {
       see: '查看',
       subdevice: '子设备',
       serialnumber: '序号',
+      row: '行',
+      column: '列',
       batchname: '批次名称',
       entername: '请选择产品名称',
       assetnumber: '资产编号',

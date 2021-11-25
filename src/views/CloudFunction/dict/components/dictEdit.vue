@@ -8,7 +8,10 @@
   >
     <el-form ref="form" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="表名" prop="class">
-        <el-input v-model="form.class" />
+        <el-input v-model="form.class" readonly />
+      </el-form-item>
+      <el-form-item label="key" prop="key">
+        <el-input v-model="form.key" readonly />
       </el-form-item>
       <el-form-item label="类型" prop="type">
         <el-select
@@ -24,11 +27,24 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="key" prop="key">
-        <el-input v-model.trim="form.key" />
-      </el-form-item>
       <el-form-item :label="$translateTitle('product.title')" prop="title">
-        <el-input v-model="form.title" />
+        <!--        <el-input v-model="form.title" />-->
+        <el-select
+          v-model="form.title"
+          allow-create
+          default-first-option
+          filterable
+          placeholder="请选择"
+          size="mini"
+          style="width: 100%"
+        >
+          <el-option
+            v-for="(item, index) in titleOption"
+            :key="index"
+            :label="item"
+            :value="item"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item :label="$translateTitle('task.data')" prop="data">
         <div style="height: 30vh; overflow: auto">
@@ -67,6 +83,7 @@
           author: '',
         },
         dicttype: ['dict', 'word', 'rule'],
+        titleOption: ['worddict', 'ruledict'],
         rules: {
           title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
           author: [{ required: true, trigger: 'blur', message: '请输入作者' }],

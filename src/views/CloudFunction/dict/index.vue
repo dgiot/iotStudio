@@ -11,30 +11,47 @@
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('product.Table Name')">
-            <el-input v-model="queryForm.class" size="mini" />
+            <el-input v-model="queryForm.class" readonly size="mini" />
+          </el-form-item>
+          <el-form-item label="key">
+            <el-input v-model="queryForm.key" readonly size="mini" />
           </el-form-item>
           <el-form-item :label="$translateTitle('product.title')">
-            <el-input v-model="queryForm.title" />
-          </el-form-item>
-          <el-form-item :label="$translateTitle('rule.Type')">
+            <!--            <el-input v-model="queryForm.title" />-->
             <el-select
-              v-model="queryForm.type"
-              :placeholder="$translateTitle('rule.Type')"
-              style="width: 100%"
+              v-model="queryForm.title"
+              allow-create
+              default-first-option
+              filterable
+              placeholder="请选择"
+              size="mini"
+              style="width: 95%"
             >
               <el-option
-                v-for="item in dicttype"
-                :key="item"
+                v-for="(item, index) in titleOption"
+                :key="index"
                 :label="item"
                 :value="item"
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="key">
-            <el-input v-model="queryForm.key" />
-          </el-form-item>
-          <el-form-item label="id">
-            <el-input v-model="queryForm.objectId" size="mini" />
+          <el-form-item :label="$translateTitle('rule.Type')">
+            <el-select
+              v-model="queryForm.type"
+              allow-create
+              default-first-option
+              filterable
+              :placeholder="$translateTitle('rule.Type')"
+              size="mini"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="(item, index) in dicttype"
+                :key="index"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button icon="el-icon-plus" type="primary" @click="handleAdd" />
@@ -198,7 +215,6 @@
           hideOnSinglePage: false,
         },
         queryPayload: {
-          excludeKeys: 'data',
           include: '',
           order: '-createdAt',
           limit: 10,
@@ -207,6 +223,7 @@
         },
         queryForm: this.dictForm,
         dicttype: ['dict', 'word', 'rule'],
+        titleOption: ['worddict', 'ruledict'],
         list: [],
         imageList: [],
         listLoading: true,
