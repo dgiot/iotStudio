@@ -266,6 +266,7 @@
       </template>
     </el-table>
     <vab-parser-pagination
+      ref="pagination"
       :pagination="paginations"
       :query-payload="queryPayload"
       @pagination="fetchData"
