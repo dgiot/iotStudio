@@ -198,10 +198,6 @@ export default {
         write: true,
       }
       this.$refs[formName].validate(async (valid) => {
-        if (!this.currentDepartment.name) {
-          this.$message.error('请先选择部门后,再来新增报告')
-          return
-        }
         if (valid) {
           const task = {
             profile: {
