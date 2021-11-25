@@ -1183,6 +1183,7 @@
           })
           .catch((e) => {
             console.log(e.error)
+            this.Get_Re_Channel(this.start)
           })
       },
       addchanneltype() {
