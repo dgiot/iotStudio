@@ -40,7 +40,7 @@ dgiot Front framemaker
 
 ## development environment
 
-[down dgiot_develop_tools](http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/dgiot/deploy/dgiot_develop_tools.zip)
+[down dgiot_develop_tools](https://dgiot-dev-1306147891.cos.ap-nanjing.myqcloud.com/msys64/msys64.zip)
 
 ## Install and use
 
@@ -55,14 +55,21 @@ git clone https://github.com.cnpmjs.org/dgiot/dgiot-dashboard.git
 ```bash
 cd dgiot-dashboard
 
-yarn dgiot:install
+
+npm i -g pnpm --registry=https://registry.npmmirror.com
+
+pnpm config set registry https://registry.npmmirror.com
+
+pnpm -v
+
+pnpm install
 
 ```
 
 - run
 
 ```bash
-yarn serve
+pnpm serve
 ```
 
 - run success
@@ -88,7 +95,7 @@ yarn serve
 yarn build
 ```
 
-## [Online preview](https://iotn2n.vercel.app/?ftom=git)
+## [Online preview](https://prod.iotn2n.com?from=git)
 
 ### adbout
 
@@ -98,5 +105,5 @@ yarn build
 | gitee            | [https://gitee.com/dgiot](https://gitee.com/dgiiot?from=git)                              |
 | Official website | [https://www.iotn2n.com](https://www.iotn2n.com?from=git)                                 |
 | blog             | [https://tech.iotn2n.com](https://tech.iotn2n.com?from=git)                               |
-| platform         | [https://dgiot.iotn2n.com](https://dgiot.iotn2n.com?from=git)                             |
+| platform         | [https://dgiot.iotn2n.com](https://prod.iotn2n.com?from=git)                              |
 | WeChat           | ![qrcode.png](http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/wechat/qrcode.png) |

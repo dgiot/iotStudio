@@ -39,7 +39,7 @@ dgiot 前端框架
 
 ## 开发环境
 
-[下载 dgiot_develop_tools](http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/dgiot/deploy/dgiot_develop_tools.zip)
+[下载 dgiot_develop_tools](https://dgiot-dev-1306147891.cos.ap-nanjing.myqcloud.com/msys64/msys64.zip)
 
 ## 安装使用
 
@@ -54,13 +54,19 @@ git clone https://github.com.cnpmjs.org/dgiot/dgiot-dashboard.git
 ```bash
 cd dgiot-dashboard
 
-yarn dgiot:install
+npm i -g pnpm --registry=https://registry.npmmirror.com
+
+pnpm config set registry https://registry.npmmirror.com
+
+pnpm -v
+
+pnpm install
 ```
 
 - 运行
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 - 运行成功
@@ -83,7 +89,7 @@ yarn dev
 yarn build
 ```
 
-## [线上预览](https://iotn2n.vercel.app/?ftom=git)
+## [线上预览](https://prod.iotn2n.com?from=git)
 
 ### 关于我们
 
@@ -93,5 +99,5 @@ yarn build
 | gitee          | [https://gitee.com/dgiot](https://gitee.com/dgiiot?from=git)                              |
 | 官网           | [https://www.iotn2n.com](https://www.iotn2n.com?from=git)                                 |
 | 博客           | [https://tech.iotn2n.com](https://tech.iotn2n.com?from=git)                               |
-| 物联网接入平台 | [https://dgiot.iotn2n.com](https://dgiot.iotn2n.com?from=git)                             |
+| 物联网接入平台 | [https://dgiot.iotn2n.com](https://prod.iotn2n.com?from=git)                              |
 | 公众号         | ![qrcode.png](http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/wechat/qrcode.png) |
