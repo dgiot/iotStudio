@@ -236,6 +236,7 @@ export default {
         query: {
           tsakid: row.objectId,
           productid: row.product.objectId,
+          suite: 1,
         },
       })
     },

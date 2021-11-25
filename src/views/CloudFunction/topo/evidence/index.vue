@@ -12,13 +12,19 @@
     <el-header class="evidence_header">
       <el-row class="evidence_header_row" :gutter="24">
         <el-col :span="1">
-          <dgiot-icon
-            color="red"
-            icon="file-list-line"
-            @click="asideShow = !asideShow"
-          />
+          <el-button type="success" @click.native="asideShow = !asideShow">
+            <dgiot-icon color="red" icon="file-list-line" />
+          </el-button>
         </el-col>
-        <el-col :span="23">{{ task.name }}</el-col>
+        <el-col :span="21">{{ task.name }}</el-col>
+        <el-col :span="1">
+          <el-button type="success">{{ role[0].org_type }}</el-button>
+        </el-col>
+        <el-col :span="1">
+          <el-button type="success" @click.native="taskFlag = !taskFlag">
+            <dgiot-icon color="red" icon="file-list-line" />
+          </el-button>
+        </el-col>
       </el-row>
     </el-header>
     <el-container
@@ -28,22 +34,55 @@
       element-loading-spinner="el-icon-loading"
       :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
     >
-      <el-aside v-show="asideShow" class="evidence_container_aside">
-        <div v-for="(btn, index) in evidence" :key="btn.objectId" class="btns">
-          <el-button
-            circle
-            :type="btn.type.length ? btn.type : 'info'"
-            @click.native="activeBtn(btn)"
+      <transition name="el-fade-in-linear">
+        <el-aside v-show="asideShow" class="evidence_container_aside">
+          <div
+            v-for="(btn, index) in evidence"
+            :key="btn.objectId"
+            class="btns"
           >
-            {{ index + 1 }}
-          </el-button>
-        </div>
-      </el-aside>
+            <el-button
+              circle
+              :type="btn.type.length ? btn.type : 'info'"
+              @click.native="activeBtn(btn, index)"
+            >
+              {{ index + 1 }}
+            </el-button>
+          </div>
+        </el-aside>
+      </transition>
       <el-main class="evidence_main">
         <div id="konva" class="evidence_main_konva"></div>
       </el-main>
+      <transition name="el-fade-in-linear">
+        <el-aside
+          v-show="taskFlag"
+          style="width: 300px !important; background: #fff"
+        >
+          <div
+            v-for="(item, index) in taskList"
+            :key="item.objectId"
+            :style="{ height: scrollerHeight }"
+          >
+            <el-card shadow="hover" @click.native="headerTask(item, index)">
+              <div slot="header" class="clearfix">
+                <span>{{ item.name }}</span>
+              </div>
+              {{ item.detail.brand }}
+              {{ item.profile.testbed }}
+            </el-card>
+          </div>
+          <vab-parser-pagination
+            ref="pagination"
+            :pagination="paginations"
+            :query-payload="queryPayload"
+            @pagination="fetchData"
+            @paginationQuery="paginationQuery"
+          />
+        </el-aside>
+      </transition>
     </el-container>
-    <el-footer class="evidence_footer">Footer</el-footer>
+    <!--    <el-footer class="evidence_footer">Footer</el-footer>-->
   </el-container>
 </template>
 <script src="../js/evidence.js"></script>
@@ -64,7 +103,6 @@
 
     .el-aside {
       width: 60px !important;
-      line-height: 200px;
       color: #333;
       text-align: center;
       background-color: #d3dce6;
