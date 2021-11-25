@@ -16,6 +16,7 @@ function createThing(thing, saleInfo, randomXy) {
  * @return {*}
  */
 function thingEVent(type, event, node) {
+  console.error(type, event, node)
   return node.on(`${event}`, (e) => {
     if (type == 'thing') {
       topoThing.on(node)

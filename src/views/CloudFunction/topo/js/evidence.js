@@ -1,6 +1,8 @@
 import { mapActions, mapGetters } from 'vuex'
-import { queryView } from '@/api/View'
 import { getDevice, delDevice, postDevice, queryDevice } from '@/api/Device'
+import { getEvidence } from '@/api/Evidence'
+import { queryView } from '@/api/View'
+
 export default {
   name: 'Index',
   components: {},
@@ -17,8 +19,8 @@ export default {
       paginations: {
         layout: 'total, sizes',
       },
-      productid: this.$route.query.productid || '',
-      tsakid: this.$route.query.tsakid || '',
+      deviceid: this.$route.query.deviceid || '',
+      taskid: this.$route.query.taskid || '',
       suite:
         this.$route.query.suite && this.$route.query.suite > 0
           ? this.$route.query.suite - 1
@@ -46,8 +48,8 @@ export default {
   },
   mounted() {
     this.fetchData()
-    if (this.productid) this.queryEvidence(this.productid)
-    if (this.tsakid) this.queryTask(this.tsakid)
+    if (this.deviceid) this.queryEvidence(this.deviceid)
+    if (this.taskid) this.queryTask(this.taskid)
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
@@ -63,6 +65,33 @@ export default {
     }),
     async paginationQuery(queryPayload) {
       this.queryPayload = queryPayload
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-25 21:22:14
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async headerTask(item, index) {
+      try {
+        const loading = this.$baseColorfullLoading()
+        console.log(item, index)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
     },
     /**
      * @Author: h7ml
@@ -82,11 +111,11 @@ export default {
         const { count = 0, results = [] } = await queryDevice(this.queryPayload)
         this.$refs['pagination'].ination.total = count
         this.taskList = results
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'vab-hey-message-success'
-        )
+        // this.$baseMessage(
+        //   this.$translateTitle('alert.Data request successfully'),
+        //   'success',
+        //   'vab-hey-message-success'
+        // )
         loading.close()
       } catch (error) {
         console.log(error)
@@ -105,11 +134,11 @@ export default {
      * @return {Promise<void>}
      * @Description: 查询取证列表
      */
-    async queryEvidence(productid) {
+    async queryEvidence(deviceid) {
       try {
         const loading = this.$baseColorfullLoading()
         const params = {
-          where: { type: 'topo', class: 'Product', key: productid },
+          where: { type: 'topo', class: 'Device', key: deviceid },
         }
         const { results = [] } = await queryView(params)
         results.forEach((i) => {
@@ -164,6 +193,7 @@ export default {
       const query = JSON.parse(JSON.stringify(this.$route.query))
       query.suite = index
       this.$router.push({ path: this.$route.path, query })
+      this.getevidence(item.objectId)
       this.loading = true
       this.evidence.forEach((el) => {
         el.type = 'info'
@@ -179,6 +209,34 @@ export default {
         this.loading = false
         window.location.href
       }, 1000)
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-25 21:32:16
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async getevidence(evid) {
+      try {
+        const loading = this.$baseColorfullLoading()
+        const res = await getEvidence(evid)
+        console.log(res)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
     },
   }, //如果页面有keep-alive缓存功能，这个函数会触发
 }

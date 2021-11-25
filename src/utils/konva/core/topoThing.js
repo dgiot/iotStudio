@@ -9,6 +9,7 @@ import canvas from '@/utils/konva/core/canvas'
  */
 const topoThing = {
   evidence(args) {
+    console.log('args', args)
     const params = {
       busTopicKey: dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
       msg: {
@@ -18,7 +19,7 @@ const topoThing = {
         node: args,
       },
     }
-    console.log(params)
+    console.log('我是取证控件', params)
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   on(args) {

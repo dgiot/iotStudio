@@ -234,8 +234,8 @@ export default {
       this.$router.push({
         path: '/cloudTest/evidence',
         query: {
-          tsakid: row.objectId,
-          productid: row.product.objectId,
+          taskid: row.objectId,
+          deviceid: row.objectId,
           suite: 1,
         },
       })
