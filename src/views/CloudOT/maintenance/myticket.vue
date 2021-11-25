@@ -92,7 +92,7 @@
                 @change="prodChange"
               >
                 <el-option
-                  v-for="(item, index) in _Product"
+                  v-for="(item, index) in Product"
                   v-show="item.objectId != 0"
                   :key="index"
                   :label="item.name"
@@ -189,7 +189,7 @@
               :placeholder="$translateTitle('Maintenance.project')"
             >
               <el-option
-                v-for="(item, index) in _Product"
+                v-for="(item, index) in Product"
                 v-show="item.objectId != 0"
                 :key="index"
                 :label="item.name"
@@ -464,6 +464,7 @@
   import { batch } from '@/api/Batch'
   import { queryDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
+  import { queryProduct } from '@/api/Product'
   import ChangeInfo from '@/views/CloudOT/maintenance/ChangeInfo'
   import { exlout, UploadImg } from '@/api/File'
 
@@ -474,6 +475,7 @@
     },
     data() {
       return {
+        Product: {},
         created: 0,
         Assigned: 0,
         form: {
@@ -570,7 +572,6 @@
     },
     computed: {
       ...mapGetters({
-        _Product: 'user/_Product',
         objectid: 'user/objectId',
         role: 'acl/role',
         username: 'user/username',
@@ -621,7 +622,6 @@
       },
     },
     created() {
-      console.log(this._Product, '_Product')
       console.log('role', this.role)
 
       console.log('this.aclObj', this.aclObj)
@@ -862,6 +862,11 @@
       handleCreated(type) {
         type == 'created' ? this.created++ : this.Assigned++
         this.fetchData()
+        this.getProduct()
+      },
+      async getProduct() {
+        const { results = {} } = await queryProduct({})
+        this.Product = results
       },
       async fetchData(args = {}) {
         console.log(this.created % 2, this.created, 'this.created')
@@ -933,7 +938,7 @@
       async prodChange(e) {
         console.log(e)
         this.Device = []
-        this._Product.map((p) => {
+        this.Product.map((p) => {
           if (p.objectId == e) {
             this.form.productname = p.name
           }
