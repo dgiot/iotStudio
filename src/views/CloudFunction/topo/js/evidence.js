@@ -2,13 +2,14 @@ import { mapActions, mapGetters } from 'vuex'
 import { getDevice, delDevice, postDevice, queryDevice } from '@/api/Device'
 import { getEvidence, queryEvidence, postEvidence } from '@/api/Evidence'
 import { queryView } from '@/api/View'
-import { dgiotUpload } from '@/api/Upload'
+import { uppyUpload } from '@/api/Upload'
 const VueAliplayerV2 = window['vue-aliplayer-v2'].default
 export default {
   name: 'Index',
   components: { VueAliplayerV2 },
   data() {
     return {
+      evidences: [],
       timer: new Date(),
       evidenceid: '',
       ukey: '',
@@ -67,7 +68,6 @@ export default {
         }
         this.timeout = setTimeout(() => {
           this.dgiotEvidence(msg)
-          this.getUkey()
         }, 500)
       }
     )
@@ -126,10 +126,14 @@ export default {
           formData.append(key, Evidence[key])
         }
         console.error(formData, 'formData')
-        const res = await dgiotUpload(formData)
-        console.error('file', res)
-        if (res) {
-          this.depositEvidence(res)
+        const { NODE_ENV = 'development' } = process.env
+        const url =
+          NODE_ENV == 'development'
+            ? `${process.env.VUE_APP_URL}/upload`
+            : 'upload'
+        const { data } = await uppyUpload(url, formData)
+        if (data?.md5) {
+          this.depositEvidence(data)
         }
         const loading = this.$baseColorfullLoading()
         this.$baseMessage(
@@ -156,25 +160,23 @@ export default {
      * @Description:
      */
     async depositEvidence(params) {
+      console.error(params)
       try {
         const loading = this.$baseColorfullLoading()
-        const params = {
-          id: this.taskid,
-          data: {
-            objetcId: this.evidenceid,
-            ukey: this.ukey,
-            timestamp: Math.round(this.timer) + '',
-            md5: params.md5,
-            original: {
-              taskid: this.taskid,
-              controlid: this.evidenceList.node.attrs.id,
-              path: params.path,
-              type: this.evidenceList.node.attrs.type,
-            },
+        const Evidence = {
+          objetcId: this.evidenceid,
+          ukey: this.ukey,
+          timestamp: Math.round(this.timer),
+          md5: params.md5,
+          original: {
+            taskid: this.taskid,
+            controlid: this.evidenceList.node.attrs.id,
+            path: params.path,
+            type: this.evidenceList.node.attrs.type,
           },
         }
         loading.close()
-        const res = await postEvidence(params)
+        const res = await postEvidence(this.taskid, Evidence)
         console.log(res)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
@@ -190,6 +192,7 @@ export default {
           'vab-hey-message-error'
         )
       }
+      this.queryevidences()
     },
     /**
      * @Author: h7ml
@@ -208,13 +211,13 @@ export default {
           skip: 0,
           keys: 'devaddr',
           where: {
-            parentId: this.task.objectId,
-            product: this.task.product.objectId,
+            parentId: this.task.parentId.objectId,
+            product: '3f95880e09',
           },
         }
         const loading = this.$baseColorfullLoading()
         const { results = [] } = await queryDevice(params)
-        console.log(results)
+        console.error(results, 'getUkey')
         if (results?.[0]?.devaddr) {
           this.ukey = results[0].devaddr
         } else {
@@ -224,6 +227,44 @@ export default {
             )
           )
         }
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-26 16:55:01
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async queryevidences() {
+      try {
+        const loading = this.$baseColorfullLoading()
+        const _params = {
+          order: '-createdAt',
+          skip: 0,
+          where: {
+            reportId: this.taskid,
+            'original.controlid': this.evidenceList.node.attrs.id,
+          },
+        }
+        const { results = [] } = await queryEvidence(_params)
+        console.error(results)
+        this.evidences = results
+        console.log(results)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
         loading.close()
       } catch (error) {
         console.log(error)
@@ -246,17 +287,7 @@ export default {
       try {
         const loading = this.$baseColorfullLoading()
         this.evidenceList = params
-        console.error(this.evidenceList.node.attrs.id)
-        const _params = {
-          order: '-createdAt',
-          skip: 0,
-          where: {
-            reportId: this.taskid,
-            'original.controlid': this.evidenceList.node.attrs.id,
-          },
-        }
-        const res = await queryEvidence(_params)
-        console.error(res)
+        this.queryevidences()
         this.evidenceDialog = true
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
@@ -398,6 +429,7 @@ export default {
           'vab-hey-message-error'
         )
       }
+      this.getUkey()
     },
     async activeBtn(item, index) {
       const query = JSON.parse(JSON.stringify(this.$route.query))

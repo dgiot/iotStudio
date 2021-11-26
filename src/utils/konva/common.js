@@ -75,7 +75,6 @@ function addNodeEvent(args) {
         return thingEVent(type, event, node)
         break
       case 'evidence': // 取证类型图元处理
-        console.log(evidenceEVent, 'evidenceEVent')
         return evidenceEVent(type, node.getAttr('handler'), node)
         break
       case 'handleImage': // 图片类图元处理函数

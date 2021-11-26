@@ -257,6 +257,13 @@
           >
             {{ $translateTitle(`cloudTest.delete`) }}
           </el-button>
+          <el-button
+            size="mini"
+            type="primary"
+            @click="handleReport(row.objectId)"
+          >
+            {{ $translateTitle(`product.report`) }}
+          </el-button>
         </template>
       </el-table-column>
       <template #empty>

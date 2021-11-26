@@ -20,35 +20,50 @@
           </el-button>
         </div>
         <div>
-          <div v-if="evidenceList.node.attrs.type === 'video'">
-            <div v-for="item in evidenceList.evidenceList" :key="item">
-              <vue-aliplayer-v2 :source="item" />
+          <div
+            v-if="
+              evidenceList.node.attrs.icon === 'video' ||
+              evidenceList.node.attrs.icon === 'personal_video'
+            "
+          >
+            <div v-for="(item, index) in evidences" :key="index">
+              <vue-aliplayer-v2 :source="$FileServe + item.original.path" />
             </div>
           </div>
-          <div v-else-if="evidenceList.node.attrs.type === 'audio'">
-            <div v-for="item in evidenceList.evidenceList" :key="item">
-              <av-bars :audio-src="item" />
+          <div
+            v-else-if="
+              evidenceList.node.attrs.icon === 'audio' ||
+              evidenceList.node.attrs.icon === 'volume_up'
+            "
+          >
+            <div v-for="(item, index) in evidences" :key="index">
+              <av-bars :audio-src="$FileServe + item.original.path" />
             </div>
           </div>
-          <div v-else-if="evidenceList.node.attrs.type === 'image'">
-            <div v-for="item in evidenceList.evidenceList" :key="item">
+          <div v-else-if="evidenceList.node.attrs.icon === 'image'">
+            <div v-for="(item, index) in evidences" :key="index">
               <el-image
-                :preview-src-list="[item]"
-                :src="item"
+                :preview-src-list="[$FileServe + item.original.path]"
+                :src="$FileServe + item.original.path"
                 style="width: 100px; height: 100px"
               />
             </div>
           </div>
-          <div v-else-if="evidenceList.node.attrs.type === 'type'">
-            <div v-for="item in evidenceList.evidenceList" :key="item">
-              {{ item }}
+          <div
+            v-else-if="
+              evidenceList.node.attrs.icon === 'file' ||
+              evidenceList.node.attrs.icon === 'archive'
+            "
+          >
+            <div v-for="(item, index) in evidences" :key="index">
+              {{ $FileServe + item.original.path }}
             </div>
           </div>
           <input
             ref="uploader"
             accept="image/*"
             type="file"
-            @change="doUpload($event, evidenceList.node.attrs.type)"
+            @change="doUpload($event, evidenceList.node.attrs.icon)"
           />
         </div>
       </el-card>

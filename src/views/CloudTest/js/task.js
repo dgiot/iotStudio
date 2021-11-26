@@ -5,6 +5,7 @@ import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
+import { generatereport } from '@/api/Evidence'
 export default {
   name: 'TaskIndex',
   components: {
@@ -239,6 +240,59 @@ export default {
           state: 'preview',
         },
       })
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-26 17:08:39
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async downDocx(url) {
+      try {
+        const ele = document.createElement('a')
+        ele.setAttribute('href', url) //设置下载文件的url地址
+        ele.setAttribute('download', 'download') //用于设置下载文件的文件名
+        ele.click()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-26 17:05:16
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async handleReport(reportId) {
+      try {
+        const loading = this.$baseColorfullLoading()
+        const { code, msg, path } = await generatereport(reportId)
+        if (code == 0 && path) {
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request successfully'),
+            'success',
+            'vab-hey-message-success'
+          )
+          this.downDocx(path)
+        }
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
     },
     async handleManagement(row) {
       this.$refs['lowcodeDesign'].withHeader = false

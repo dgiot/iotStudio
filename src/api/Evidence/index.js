@@ -47,10 +47,22 @@ export async function putEvidence(ObjectId, params) {
  * @param params
  * @return {Promise<*|ElMessageComponent>}
  */
-export async function postEvidence(params) {
+export async function postEvidence(id, params) {
   return request({
-    url: 'Evidence',
+    url: `evidence/?id=${id}`,
     method: 'post',
     data: params,
+  })
+}
+
+/**
+ * @doc-api http://pump.dgiotcloud.com/dgiot_swagger/#/Evidence/post_generatereport
+ * @param params
+ * @return {Promise<*|ElMessageComponent>}
+ */
+export async function generatereport(id) {
+  return request({
+    url: `generatereport/?id=${id}`,
+    method: 'post',
   })
 }
