@@ -46,6 +46,10 @@
               prop="type"
             />
             <el-table-column
+              :label="$translateTitle('cloudTest.datasources')"
+              prop="sources"
+            />
+            <el-table-column
               align="center"
               :label="$translateTitle('task.Operation')"
               width="160"
@@ -162,6 +166,27 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row :gutter="24">
+            <el-col :span="20">
+              <el-form-item
+                :label="$translateTitle('cloudTest.datasources')"
+                prop="sources"
+              >
+                <el-select
+                  v-model="param.sources"
+                  :placeholder="$translateTitle('task.Select')"
+                  style="width: 100%"
+                >
+                  <el-option
+                    v-for="item in sourcesOptions"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-row v-if="param.type == 'dynamicTable'" :gutter="24">
             <el-col :span="10">
               <el-form-item
@@ -232,6 +257,13 @@
               trigger: 'blur',
             },
           ],
+          sources: [
+            {
+              required: true,
+              message: '请选择数据来源',
+              trigger: 'change',
+            },
+          ],
           identifier: [
             {
               required: true,
@@ -260,6 +292,7 @@
           'boolean',
           'number',
         ],
+        sourcesOptions: ['amis', 'thing'],
         editIndexId: '',
       }
     },
@@ -302,6 +335,7 @@
           identifier: '',
           name: '',
           type: '',
+          sources: '',
         }
       },
       submitparam(param) {
