@@ -889,7 +889,7 @@
           console.log('selectRermission', checkrole)
           console.log(row, 'row', row)
           console.log(_.uniq(checkrole))
-          if (_.uniq(checkrole) || _.uniq(checkmenu)) {
+          if (_.uniq(checkrole).length == 0 || _.uniq(checkmenu) == 0) {
             this.$message.warning(
               `${this.$translateTitle(
                 'user.It is forbidden to set permissions/menus to empty'

@@ -19,7 +19,6 @@ export default {
       paginations: {
         layout: 'total, sizes',
       },
-      deviceid: this.$route.query.deviceid || '',
       taskid: this.$route.query.taskid || '',
       suite:
         this.$route.query.suite && this.$route.query.suite > 0
@@ -37,7 +36,7 @@ export default {
   },
   computed: {
     scrollerHeight: function () {
-      return $('.evidence_container_aside').height() - 60 + 'px'
+      return 260 + 'px'
     },
     ...mapGetters({
       role: 'acl/role',
@@ -48,8 +47,10 @@ export default {
   },
   mounted() {
     this.fetchData()
-    if (this.deviceid) this.queryEvidence(this.deviceid)
-    if (this.taskid) this.queryTask(this.taskid)
+    if (this.taskid) {
+      this.queryTask(this.taskid)
+      this.queryEvidence(this.taskid)
+    }
   },
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
@@ -78,12 +79,13 @@ export default {
       try {
         const loading = this.$baseColorfullLoading()
         console.log(item, index)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'vab-hey-message-success'
-        )
+        const query = JSON.parse(JSON.stringify(this.$route.query))
+        query.taskid = item.objectId
+        query.suite = 1
+        this.$router.push({ path: this.$route.path, query })
         loading.close()
+        this.queryTask(query.taskid)
+        this.queryEvidence(query.taskid)
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -134,11 +136,11 @@ export default {
      * @return {Promise<void>}
      * @Description: 查询取证列表
      */
-    async queryEvidence(deviceid) {
+    async queryEvidence(taskid) {
       try {
         const loading = this.$baseColorfullLoading()
         const params = {
-          where: { type: 'topo', class: 'Device', key: deviceid },
+          where: { type: 'topo', class: 'Device', key: taskid },
         }
         const { results = [] } = await queryView(params)
         results.forEach((i) => {
@@ -179,7 +181,8 @@ export default {
     async queryTask(taskid) {
       try {
         const task = await getDevice(taskid)
-        this.task = task
+        if (task) this.task = task
+        else this.task = { name: '111' }
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -223,11 +226,11 @@ export default {
         const loading = this.$baseColorfullLoading()
         const res = await getEvidence(evid)
         console.log(res)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'vab-hey-message-success'
-        )
+        // this.$baseMessage(
+        //   this.$translateTitle('alert.Data request successfully'),
+        //   'success',
+        //   'vab-hey-message-success'
+        // )
         loading.close()
       } catch (error) {
         console.log(error)

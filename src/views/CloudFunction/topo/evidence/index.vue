@@ -16,7 +16,9 @@
             <dgiot-icon color="red" icon="file-list-line" />
           </el-button>
         </el-col>
-        <el-col :span="21">{{ task.name }}</el-col>
+        <el-col :span="21">
+          <p>{{ task.name }}</p>
+        </el-col>
         <el-col :span="1">
           <el-button type="success">{{ role[0].org_type }}</el-button>
         </el-col>
@@ -64,12 +66,22 @@
             :key="item.objectId"
             :style="{ height: scrollerHeight }"
           >
-            <el-card shadow="hover" @click.native="headerTask(item, index)">
+            <el-card
+              :shadow="
+                $route.query.taskid == item.objectId ? 'always' : 'hover'
+              "
+              @click.native="headerTask(item, index)"
+            >
               <div slot="header" class="clearfix">
                 <span>{{ item.name }}</span>
               </div>
               {{ item.detail.brand }}
+              <br />
               {{ item.profile.testbed }}
+              <br />
+              {{ item.createdAt }}
+              <br />
+              {{ item.devaddr }}
             </el-card>
           </div>
           <vab-parser-pagination

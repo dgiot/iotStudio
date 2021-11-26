@@ -235,7 +235,6 @@ export default {
         path: '/cloudTest/evidence',
         query: {
           taskid: row.objectId,
-          deviceid: row.objectId,
           suite: 1,
         },
       })
