@@ -98,6 +98,11 @@ export async function KonvaBus(args) {
     args: canvas.handlerArgs,
   })
   stage.batchDraw()
+
+  if (canvas?.json?.attrs?.height)
+    saleInfo.height = Number(canvas.json.attrs.height)
+  if (canvas?.json?.attrs?.width)
+    saleInfo.width = Number(canvas.json.attrs.width)
   const konvaDom = new Konva.Stage({
     container: attr,
     // width: setattrs.width ? setattrs.width : konvaAttr.width,
