@@ -236,6 +236,7 @@ export default {
         query: {
           taskid: row.objectId,
           suite: 1,
+          state: 'preview',
         },
       })
     },

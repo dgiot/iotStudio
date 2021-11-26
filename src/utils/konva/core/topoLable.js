@@ -7,7 +7,7 @@ import canvas from '@/utils/konva/core/canvas'
  * @description 组态物模型公共函数
  * @type {{create(*, *, *): Text, on(*)}}
  */
-const topoThing = {
+const topoLable = {
   evidence(args) {
     console.error('args', args)
     const params = {
@@ -109,9 +109,9 @@ const topoThing = {
         },
       ],
     })
-    console.log('topoThing')
+    console.log('topoLable')
     console.log(topoThing)
-    // return topoThing
+    // return topoLable
 
     var simpleLabel = new Konva.Label({
       name: 'thing',
@@ -180,6 +180,7 @@ const topoThing = {
       },
     })
     console.log(evidencePath)
+    if (args.path.type === 'delete') window.deletePath = evidencePath
     return evidencePath
   },
   /**
@@ -200,4 +201,4 @@ const topoThing = {
   upTopo() {},
 }
 
-export default topoThing
+export default topoLable

@@ -54,6 +54,10 @@ const canvas = {
   setBg: (url) => {
     return canvas.stage.toJSON()
   },
+  deleteTopo: (topo) => {
+    topo.remove()
+    topo.destroy()
+  },
   removeBg: (type, allnode, json) => {
     try {
       json.find(`.${type}`).forEach((item) => {

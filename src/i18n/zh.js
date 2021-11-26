@@ -1200,6 +1200,8 @@ export default {
       'Draggable column settings': '可拖拽列设置',
     },
     cloudTest: {
+      'There is no uKey for this product, please contact the administrator':
+        '该产品暂无uKey 请联系管理员',
       'Basic information of inspection tasks': '检测任务基本信息',
       forensics: '取证',
       configuration: '任务配置',

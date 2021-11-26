@@ -129,6 +129,7 @@ const state = () => ({
   konva: canvas.konva,
   konvaBg: localStorage.getItem('konvaBg'),
   createdEvidence: {},
+  deleteTopo: function () {},
   activeShape: {},
 })
 const getters = {
@@ -137,8 +138,12 @@ const getters = {
   Sale: (state) => state.Sale,
   activeShape: (state) => state.activeShape,
   createdEvidence: (state) => state.createdEvidence,
+  deleteTopo: (state) => state.deleteTopo,
 }
 const mutations = {
+  deleteTopo(state, args) {
+    canvas.deleteTopo(args)
+  },
   initKonva(state, args) {
     //  初始化konva
     KonvaBus({
@@ -255,6 +260,9 @@ const mutations = {
   },
 }
 const actions = {
+  deleteTopo({ commit }, topo) {
+    commit('deleteTopo', topo)
+  },
   createdEvidence({ commit }, evidence) {
     commit('createdEvidence', evidence)
   },

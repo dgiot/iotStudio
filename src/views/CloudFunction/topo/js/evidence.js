@@ -1,13 +1,18 @@
 import { mapActions, mapGetters } from 'vuex'
 import { getDevice, delDevice, postDevice, queryDevice } from '@/api/Device'
-import { getEvidence } from '@/api/Evidence'
+import { getEvidence, queryEvidence, postEvidence } from '@/api/Evidence'
 import { queryView } from '@/api/View'
-
+import { dgiotUpload } from '@/api/Upload'
+const VueAliplayerV2 = window['vue-aliplayer-v2'].default
 export default {
   name: 'Index',
-  components: {},
+  components: { VueAliplayerV2 },
   data() {
     return {
+      timer: new Date(),
+      evidenceid: '',
+      ukey: '',
+      timeout: null,
       queryPayload: {
         excludeKeys: 'data,basedata,content',
         include: '',
@@ -22,9 +27,11 @@ export default {
       taskid: this.$route.query.taskid || '',
       suite:
         this.$route.query.suite && this.$route.query.suite > 0
-          ? this.$route.query.suite - 1
+          ? this.$route.query.suite
           : 0,
       evidence: [],
+      evidenceList: [],
+      evidenceDialog: false,
       task: {
         name: '',
       },
@@ -46,6 +53,24 @@ export default {
     this.setTreeFlag(false)
   },
   mounted() {
+    this.$dgiotBus.$off(
+      this.$dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence')
+    )
+    this.$baseEventBus.$on(
+      this.$dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
+      (msg) => {
+        /**
+         * @description 防抖
+         */
+        if (this.timeout) {
+          clearTimeout(this.timeout)
+        }
+        this.timeout = setTimeout(() => {
+          this.dgiotEvidence(msg)
+          this.getUkey()
+        }, 500)
+      }
+    )
     this.fetchData()
     if (this.taskid) {
       this.queryTask(this.taskid)
@@ -61,11 +86,192 @@ export default {
   activated() {},
   methods: {
     ...mapActions({
+      deleteTopo: 'topo/deleteTopo',
       initKonva: 'topo/initKonva',
       setTreeFlag: 'settings/setTreeFlag',
+      createdEvidence: 'topo/createdEvidence',
     }),
     async paginationQuery(queryPayload) {
       this.queryPayload = queryPayload
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-26 15:14:34
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async doUpload(event, type) {
+      this.timer = new Date()
+      this.evidenceid = md5(
+        'Evidence' + this.ukey + Math.round(this.timer) + ''
+      )
+      const file = event.target.files[0]
+      const fileType = file.name.substring(file.name.lastIndexOf('.'))
+      try {
+        const Evidence = {
+          auth_token: Cookies.get('dgiot_auth_token'),
+          scene: 'evidence',
+          code: '',
+          path: `dgiot_file/evidence/${type}`,
+          output: 'json',
+          submit: 'upload',
+          file: file,
+          filename: `${this.evidenceid}${fileType}`,
+        }
+        console.error('Evidence', Evidence)
+        var formData = new FormData()
+        for (let key in Evidence) {
+          formData.append(key, Evidence[key])
+        }
+        console.error(formData, 'formData')
+        const res = await dgiotUpload(formData)
+        console.error('file', res)
+        if (res) {
+          this.depositEvidence(res)
+        }
+        const loading = this.$baseColorfullLoading()
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-26 16:01:56
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async depositEvidence(params) {
+      try {
+        const loading = this.$baseColorfullLoading()
+        const params = {
+          id: this.taskid,
+          data: {
+            objetcId: this.evidenceid,
+            ukey: this.ukey,
+            timestamp: Math.round(this.timer) + '',
+            md5: params.md5,
+            original: {
+              taskid: this.taskid,
+              controlid: this.evidenceList.node.attrs.id,
+              path: params.path,
+              type: this.evidenceList.node.attrs.type,
+            },
+          },
+        }
+        loading.close()
+        const res = await postEvidence(params)
+        console.log(res)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-26 14:40:55
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async getUkey() {
+      console.error()
+      try {
+        const params = {
+          limit: 1,
+          order: '-createdAt',
+          skip: 0,
+          keys: 'devaddr',
+          where: {
+            parentId: this.task.objectId,
+            product: this.task.product.objectId,
+          },
+        }
+        const loading = this.$baseColorfullLoading()
+        const { results = [] } = await queryDevice(params)
+        console.log(results)
+        if (results?.[0]?.devaddr) {
+          this.ukey = results[0].devaddr
+        } else {
+          this.$message.error(
+            this.$translateTitle(
+              'cloudTest.There is no uKey for this product, please contact the administrator'
+            )
+          )
+        }
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-26 14:21:24
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async dgiotEvidence(params) {
+      try {
+        const loading = this.$baseColorfullLoading()
+        this.evidenceList = params
+        console.error(this.evidenceList.node.attrs.id)
+        const _params = {
+          order: '-createdAt',
+          skip: 0,
+          where: {
+            reportId: this.taskid,
+            'original.controlid': this.evidenceList.node.attrs.id,
+          },
+        }
+        const res = await queryEvidence(_params)
+        console.error(res)
+        this.evidenceDialog = true
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
     },
     /**
      * @Author: h7ml
@@ -82,6 +288,7 @@ export default {
         const query = JSON.parse(JSON.stringify(this.$route.query))
         query.taskid = item.objectId
         query.suite = 1
+        query.state = 'preview'
         this.$router.push({ path: this.$route.path, query })
         loading.close()
         this.queryTask(query.taskid)
@@ -210,7 +417,20 @@ export default {
       })
       setTimeout(() => {
         this.loading = false
-        window.location.href
+        const icon = {
+          icon: 'timeline',
+          type: 'delete',
+          path: 'M23,8c0,1.1-0.9,2-2,2c-0.18,0-0.35-0.02-0.51-0.07l-3.56,3.55C16.98,13.64,17,13.82,17,14c0,1.1-0.9,2-2,2s-2-0.9-2-2 c0-0.18,0.02-0.36,0.07-0.52l-2.55-2.55C10.36,10.98,10.18,11,10,11s-0.36-0.02-0.52-0.07l-4.55,4.56C4.98,15.65,5,15.82,5,16 c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2c0.18,0,0.35,0.02,0.51,0.07l4.56-4.55C8.02,9.36,8,9.18,8,9c0-1.1,0.9-2,2-2s2,0.9,2,2 c0,0.18-0.02,0.36-0.07,0.52l2.55,2.55C14.64,12.02,14.82,12,15,12s0.36,0.02,0.52,0.07l3.55-3.56C19.02,8.35,19,8.18,19,8 c0-1.1,0.9-2,2-2S23,6.9,23,8z',
+        }
+        this.createdEvidence(
+          _.merge(icon, {
+            index: 7,
+            // 灰色表示取证阶段，黄色表示审核阶段，绿色标识审核通过，红色标识审核不过
+            fill: 'grey',
+            productid: this.$route.query.taskid,
+          })
+        )
+        this.deleteTopo(window.deletePath)
       }, 1000)
     },
     /**

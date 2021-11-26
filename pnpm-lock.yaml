@@ -78,6 +78,7 @@ specifiers:
   svg-sprite-loader: 6.0.11
   url-loader: 4.1.1
   vab-templates: ^0.0.5
+  vue-audio-visual: ^2.3.0
   vue-contextmenu: 1.5.10
   vue-ele-form-data-editor: 0.1.6
   vue-ele-form-dynamic: 0.4.3
@@ -119,6 +120,7 @@ dependencies:
   resize-detector: 0.3.0
   standard-version: 9.3.2
   vab-templates: 0.0.5
+  vue-audio-visual: 2.3.0
   vue-contextmenu: 1.5.10
   vue-ele-form-data-editor: 0.1.6
   vue-ele-form-dynamic: 0.4.3
@@ -3120,6 +3122,14 @@ packages:
     resolution: {integrity: sha1-Kjr8My8AMbQvYC9KPeA8IRypj3I=, tarball: axe-core/download/axe-core-4.2.3.tgz}
     engines: {node: '>=4'}
     dev: true
+
+  /axios/0.21.4:
+    resolution: {integrity: sha1-xnuQ3AVo5cHPKwuFjEO6KOLtpXU=, tarball: axios/download/axios-0.21.4.tgz}
+    dependencies:
+      follow-redirects: 1.14.5
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /axios/0.24.0:
     resolution: {integrity: sha1-gE5voeS5xSiFAd2d/1anoJQNINY=, tarball: axios/download/axios-0.24.0.tgz}
@@ -8397,7 +8407,7 @@ packages:
       json5: 1.0.1
 
   /loader-utils/2.0.2:
-    resolution: {integrity: sha1-1uO0+4GHByGuTghoqxHdY4NowSk=, tarball: loader-utils/download/loader-utils-2.0.2.tgz?cache=0&sync_timestamp=1636688516560&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-2.0.2.tgz}
+    resolution: {integrity: sha1-1uO0+4GHByGuTghoqxHdY4NowSk=, tarball: loader-utils/download/loader-utils-2.0.2.tgz?cache=0&sync_timestamp=1636701869317&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-2.0.2.tgz}
     engines: {node: '>=8.9.0'}
     dependencies:
       big.js: 5.2.2
@@ -13518,6 +13528,16 @@ packages:
 
   /vm-browserify/1.1.2:
     resolution: {integrity: sha1-eGQcSIuObKkadfUR56OzKobl3aA=, tarball: vm-browserify/download/vm-browserify-1.1.2.tgz}
+
+  /vue-audio-visual/2.3.0:
+    resolution: {integrity: sha1-t8Y8A4tt0x6tiktKaOJvR/wyYO4=, tarball: vue-audio-visual/download/vue-audio-visual-2.3.0.tgz}
+    dependencies:
+      axios: 0.21.4
+      core-js: 3.19.1
+      vue: 2.6.14
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /vue-contextmenu/1.5.10:
     resolution: {integrity: sha1-sIAIO6WGfGjO1UmnMEJer3W5ja0=, tarball: vue-contextmenu/download/vue-contextmenu-1.5.10.tgz}

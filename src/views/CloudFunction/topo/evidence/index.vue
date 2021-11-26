@@ -9,21 +9,83 @@
 -->
 <template>
   <el-container class="evidence">
+    <el-dialog append-to-body :visible.sync="evidenceDialog">
+      <el-card v-if="evidenceList.id" class="box-card" shadow="hover">
+        <div slot="header" class="clearfix">
+          <i class="material-icons">
+            {{ evidenceList.node.attrs.icon }}
+          </i>
+          <el-button style="float: right; padding: 3px 0" type="text">
+            {{ evidenceList.id ? evidenceList.id.split('_')[0] : '' }}
+          </el-button>
+        </div>
+        <div>
+          <div v-if="evidenceList.node.attrs.type === 'video'">
+            <div v-for="item in evidenceList.evidenceList" :key="item">
+              <vue-aliplayer-v2 :source="item" />
+            </div>
+          </div>
+          <div v-else-if="evidenceList.node.attrs.type === 'audio'">
+            <div v-for="item in evidenceList.evidenceList" :key="item">
+              <av-bars :audio-src="item" />
+            </div>
+          </div>
+          <div v-else-if="evidenceList.node.attrs.type === 'image'">
+            <div v-for="item in evidenceList.evidenceList" :key="item">
+              <el-image
+                :preview-src-list="[item]"
+                :src="item"
+                style="width: 100px; height: 100px"
+              />
+            </div>
+          </div>
+          <div v-else-if="evidenceList.node.attrs.type === 'type'">
+            <div v-for="item in evidenceList.evidenceList" :key="item">
+              {{ item }}
+            </div>
+          </div>
+          <input
+            ref="uploader"
+            accept="image/*"
+            type="file"
+            @change="doUpload($event, evidenceList.node.attrs.type)"
+          />
+        </div>
+      </el-card>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="evidenceDialog = false">取 消</el-button>
+        <el-button type="primary" @click="evidenceDialog = false">
+          确 定
+        </el-button>
+      </span>
+    </el-dialog>
     <el-header class="evidence_header">
       <el-row class="evidence_header_row" :gutter="24">
-        <el-col :span="1">
-          <el-button type="success" @click.native="asideShow = !asideShow">
+        <el-col :lg="1" :md="1" :sm="1" :xl="1" :xs="1">
+          <el-button
+            plain
+            size="mini"
+            type="success"
+            @click.native="asideShow = !asideShow"
+          >
             <dgiot-icon color="red" icon="file-list-line" />
           </el-button>
         </el-col>
-        <el-col :span="21">
+        <el-col :lg="22" :md="22" :sm="22" :xl="22" :xs="22">
           <p>{{ task.name }}</p>
         </el-col>
-        <el-col :span="1">
-          <el-button type="success">{{ role[0].org_type }}</el-button>
-        </el-col>
-        <el-col :span="1">
-          <el-button type="success" @click.native="taskFlag = !taskFlag">
+        <!--        <el-col :lg="2" :md="2" :sm="2" :xl="1" :xs="2">-->
+        <!--          <el-button size="mini" type="success">-->
+        <!--            {{ role[0].org_type }}-->
+        <!--          </el-button>-->
+        <!--        </el-col>-->
+        <el-col :lg="1" :md="1" :sm="1" :xl="1" :xs="1">
+          <el-button
+            plain
+            size="mini"
+            type="success"
+            @click.native="taskFlag = !taskFlag"
+          >
             <dgiot-icon color="red" icon="file-list-line" />
           </el-button>
         </el-col>

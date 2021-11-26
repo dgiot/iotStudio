@@ -1,11 +1,13 @@
-import topoThing from './core/topoThing'
+import topoLable from './core/topoLable'
 import topoVideo from './core/topoVideo'
 import topoBg from './core/topoBg'
 import topoImage from './core/topoImage'
 import topoStage from '@/utils/konva/core/topoStage'
+import canvas from '@/utils/konva/core/canvas'
+import topoPath from '@/utils/konva/core/topoPath'
 
 function createThing(thing, saleInfo, randomXy) {
-  return topoThing.create(thing, saleInfo, randomXy)
+  return topoLable.create(thing, saleInfo, randomXy)
 }
 
 /**
@@ -16,18 +18,24 @@ function createThing(thing, saleInfo, randomXy) {
  * @return {*}
  */
 function thingEVent(type, event, node) {
-  console.error(type, event, node)
-  return node.on(`${event}`, (e) => {
+  node.on(`${event}`, (e) => {
+    console.error(e)
     if (type == 'thing') {
-      topoThing.on(node)
+      return topoLable.on(node)
     }
-    if (type == 'evidence') {
-      topoThing.evidence(node)
-    }
+
     if (type == 'video') {
-      topoVideo.on({
+      return topoVideo.on({
         node,
       })
+    }
+  })
+}
+
+function evidenceEVent(type, event, node) {
+  node.on(`${event}`, (e) => {
+    if (type == 'evidence') {
+      return topoPath.emitBus(node)
     }
   })
 }
@@ -58,7 +66,7 @@ function addNodeEvent(args) {
         return topoStage.handleChildren(args)
         break
       case 'createdEvidence': // 创建取证图元
-        return topoThing.createdEvidence(args)
+        return topoLable.createdEvidence(args)
         break
       case 'createThing': // 创建物模型
         return createThing(thing, saleInfo, randomXy)
@@ -67,7 +75,8 @@ function addNodeEvent(args) {
         return thingEVent(type, event, node)
         break
       case 'evidence': // 取证类型图元处理
-        return thingEVent(type, node.getAttr('handler'), node)
+        console.log(evidenceEVent, 'evidenceEVent')
+        return evidenceEVent(type, node.getAttr('handler'), node)
         break
       case 'handleImage': // 图片类图元处理函数
         return topoImage.handleImage(args)
@@ -79,7 +88,7 @@ function addNodeEvent(args) {
         return topoBg.setTopoBg(args)
         break
       case 'contextMenu': // 右键菜单
-        return topoThing.contextMenu(args)
+        return topoLable.contextMenu(args)
         break
     }
   }
