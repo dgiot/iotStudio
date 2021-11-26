@@ -242,6 +242,7 @@ export default {
           taskid: row.objectId,
           suite: 1,
           state: 'preview',
+          step: 1,
         },
       })
     },
@@ -330,9 +331,10 @@ export default {
     async downDocx(url) {
       try {
         const ele = document.createElement('a')
-        ele.setAttribute('href', url) //设置下载文件的url地址
+        ele.setAttribute('href', this.$FileServe + url) //设置下载文件的url地址
         ele.setAttribute('download', 'download') //用于设置下载文件的文件名
         ele.click()
+        // window.location.href = this.$FileServe + url
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -360,7 +362,9 @@ export default {
             'success',
             'vab-hey-message-success'
           )
-          this.downDocx(path)
+          setTimeout(() => {
+            this.downDocx(path)
+          }, 1200)
         }
         loading.close()
       } catch (error) {
@@ -377,7 +381,7 @@ export default {
       localStorage.setItem('parse_objectid', row.objectId)
       const params = {
         limit: 1,
-        where: { type: 'amis', key: row.product.objectId },
+        where: { type: 'amis', key: row.objectId },
       }
       const { results } = await queryView(params)
       console.log(results)
