@@ -844,6 +844,8 @@ export default {
       Position: '位置',
     },
     user: {
+      'It is forbidden to set permissions/menus to empty':
+        '禁止将权限/菜单设置为空',
       'The correct role permissions and menus are not selected':
         '未选择正确的角色权限和菜单',
       'Role information updated successfully': '角色信息更新成功',

@@ -101,6 +101,7 @@
                   <!-- <el-button size="mini" type="primary" >增加用户</el-button> -->
 
                   <el-dropdown
+                    :disabled="row.disabled"
                     size="mini"
                     split-button
                     type="primary"
@@ -680,6 +681,10 @@
         }
       },
       async getDetailmenu(row, column, event, cell) {
+        this.roleList.forEach((roles) => {
+          roles.disabled = true
+        })
+        row.disabled = false
         if (column && column.label == '操作') {
           return
         }
@@ -765,6 +770,9 @@
           count: 'objectId',
         }
         let { results, count } = await queryRole(params)
+        results.forEach((role) => {
+          role.disable = true
+        })
         if (results) {
           loading.close()
           this.roleList = results
@@ -880,6 +888,15 @@
           })
           console.log('selectRermission', checkrole)
           console.log(row, 'row', row)
+          console.log(_.uniq(checkrole))
+          if (_.uniq(checkrole) || _.uniq(checkmenu)) {
+            this.$message.warning(
+              `${this.$translateTitle(
+                'user.It is forbidden to set permissions/menus to empty'
+              )}`
+            )
+            return false
+          }
           // loadsh uniq 去重，否则则报错 https://blog.csdn.net/qq_38519358/article/details/103330249
           await saveRole({
             objectId: this.roleItem.objectId,

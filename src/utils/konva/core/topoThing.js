@@ -9,7 +9,7 @@ import canvas from '@/utils/konva/core/canvas'
  */
 const topoThing = {
   evidence(args) {
-    console.log('args', args)
+    console.error('args', args)
     const params = {
       busTopicKey: dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
       msg: {

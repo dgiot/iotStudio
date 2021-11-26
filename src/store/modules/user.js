@@ -55,7 +55,6 @@ function queryAllMsg(commit) {
     })
   Roletree()
     .then((res) => {
-      console.error(`Roletree res 關係了 `, res)
       commit('setRoleTree', res.results)
     })
     .catch((e) => {
