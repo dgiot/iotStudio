@@ -78,7 +78,7 @@
       <el-row class="evidence_header_row" :gutter="24">
         <el-col :lg="1" :md="1" :sm="1" :xl="1" :xs="1">
           <el-button
-            plain
+            round
             size="mini"
             type="success"
             @click.native="asideShow = !asideShow"
@@ -96,7 +96,7 @@
         <!--        </el-col>-->
         <el-col :lg="1" :md="1" :sm="1" :xl="1" :xs="1">
           <el-button
-            plain
+            round
             size="mini"
             type="success"
             @click.native="taskFlag = !taskFlag"
@@ -171,7 +171,17 @@
         </el-aside>
       </transition>
     </el-container>
-    <!--    <el-footer class="evidence_footer">Footer</el-footer>-->
+    <el-footer class="evidence_footer">
+      <el-row :gutter="10">
+        <el-col :lg="3" :md="4" :sm="6" :xl="1" :xs="8">
+          <el-button round type="success" @click.native="finishEvidence(task)">
+            {{ $translateTitle('product.finish') }}
+          </el-button>
+        </el-col>
+        <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4" />
+        <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4" />
+      </el-row>
+    </el-footer>
   </el-container>
 </template>
 <script src="../js/evidence.js"></script>
@@ -247,6 +257,11 @@
         display: inline-block;
         overflow: scroll;
       }
+    }
+    &_footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
     }
   }
 </style>

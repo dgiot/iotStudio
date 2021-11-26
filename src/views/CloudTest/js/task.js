@@ -1,11 +1,12 @@
 import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
-import { queryDevice, delDevice } from '@/api/Device'
+import { queryDevice, delDevice, putDevice } from '@/api/Device'
 import { postreport } from '@/api/Report'
 import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
 import { generatereport } from '@/api/Evidence'
+import profile from '@/views/DeviceCloud/manage/profile'
 export default {
   name: 'TaskIndex',
   components: {
@@ -108,13 +109,13 @@ export default {
         {
           label: 'Starting time',
           width: 'auto',
-          prop: 'basedata.starttime',
+          prop: 'profile.starttime',
           sortable: true,
         },
         {
           label: 'end time',
           width: 'auto',
-          prop: 'basedata.endtime',
+          prop: 'profile.endtime',
           sortable: true,
         },
       ],
@@ -158,7 +159,7 @@ export default {
     },
   },
   created() {
-    this.fetchData(this.queryForm)
+    this.fetchData()
   },
   methods: {
     async paginationQuery(queryPayload) {
@@ -207,6 +208,9 @@ export default {
               wordtemplatename: this.ruleForm.templatename.name,
               reportId: this.ruleForm.templatenameid,
               identifier: 'inspectionReportTemp',
+              step: 0,
+              // 0 1 2 3 4
+              // 开始 取证 完成 生成报告
             },
             parentId: this.ruleForm.testbedid,
             name: this.ruleForm.name,
@@ -215,7 +219,7 @@ export default {
           const loading = this.$baseColorfullLoading(1)
           this.activePopShow = false
           await postreport(task)
-          this.fetchData(this.queryForm)
+          this.fetchData()
           loading.close()
         } else {
           console.log('error submit!!')
@@ -240,6 +244,80 @@ export default {
           state: 'preview',
         },
       })
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-26 18:59:54
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    taskEnd(row) {
+      this.$baseConfirm(
+        this.$translateTitle(
+          'Maintenance.Are you sure you end to start the current mission'
+        ),
+        null,
+        async () => {
+          try {
+            const loading = this.$baseColorfullLoading()
+            const params = {
+              profile: _.merge(row.profile, {
+                step: 3,
+                endtime: moment(new Date()).format('x'),
+              }),
+            }
+            const res = await putDevice(row.objectId, params)
+            this.fetchData()
+            loading.close()
+          } catch (error) {
+            console.log(error)
+            this.$baseMessage(
+              this.$translateTitle('alert.Data request error') + `${error}`,
+              'error',
+              'vab-hey-message-error'
+            )
+          }
+        }
+      )
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-26 18:38:00
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    taskStart(row) {
+      this.$baseConfirm(
+        this.$translateTitle(
+          'Maintenance.Are you sure you want to start the current mission'
+        ),
+        null,
+        async () => {
+          try {
+            const loading = this.$baseColorfullLoading()
+            const params = {
+              profile: _.merge(row.profile, {
+                step: 1,
+                starttime: moment(new Date()).format('x'),
+              }),
+            }
+            const res = await putDevice(row.objectId, params)
+            this.fetchData()
+            loading.close()
+          } catch (error) {
+            console.log(error)
+            this.$baseMessage(
+              this.$translateTitle('alert.Data request error') + `${error}`,
+              'error',
+              'vab-hey-message-error'
+            )
+          }
+        }
+      )
     },
     /**
      * @Author: h7ml
@@ -324,7 +402,7 @@ export default {
           'vab-hey-message-success'
         )
         loading.close()
-        this.fetchData(this.queryForm)
+        this.fetchData()
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -334,7 +412,7 @@ export default {
         )
       }
     },
-    async fetchData(args) {
+    async fetchData() {
       this.getwordtemp()
       this.getgroup()
       // const params = {
@@ -354,17 +432,18 @@ export default {
       this.listLoading = true
       const { count = 0, results = [] } = await queryDevice(this.queryPayload)
       this.$refs['pagination'].ination.total = count
-      this.list = results
       results.forEach((item) => {
-        item.basedata.endtime = item.basedata.endtime
-          ? moment(item.basedata.endtime).format('YYYY-MM-DD HH:mm:ss')
+        if (!item.profile.step) item.profile.step = 0
+        item.profile.endtime = item.profile.endtime
+          ? moment(Number(item.profile.endtime)).format('YYYY-MM-DD HH:mm:ss')
           : ''
-        item.basedata.starttime = item.basedata.starttime
-          ? moment(item.basedata.starttime).format('YYYY-MM-DD HH:mm:ss')
+        item.profile.starttime = item.profile.starttime
+          ? moment(Number(item.profile.starttime)).format('YYYY-MM-DD HH:mm:ss')
           : ''
         item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
       })
-      // this.list = results
+      this.list = results
+      console.error(results)
       this.listLoading = false
     },
   },

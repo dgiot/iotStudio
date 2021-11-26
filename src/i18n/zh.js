@@ -497,6 +497,7 @@ export default {
       notstarted: '未开始',
       testing: '正在测试',
       finishtest: '完成测试',
+      'Wait for the end': '等待结束',
       notested: '未测试',
       Inspectiontestnumber: '检验/试验编号',
       Newtasks: '新增任务',
@@ -950,7 +951,7 @@ export default {
     task: {
       private: '私',
       public: '公',
-      strat: '开始',
+      start: '开始',
       Tasktemplate: '任务模板',
       starttime: '开始时间',
       endtime: '结束时间',
@@ -1040,6 +1041,10 @@ export default {
     Maintenance: {
       'Are you sure you want to delete the current item':
         '你确定要删除当前项吗',
+      'Are you sure you want to start the current mission':
+        '你确定要开始当前任务吗?',
+      'Are you sure you want to end the current mission':
+        '你确定要结束当前任务吗?',
       'Are you sure you want to remove the user from this post':
         '你确认要将用户从本部门移除吗？',
       'The current user department': '当前用户所在部门',

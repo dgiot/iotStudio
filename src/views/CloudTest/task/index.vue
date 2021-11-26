@@ -80,7 +80,7 @@
             <el-button
               size="mini"
               type="primary"
-              @click="submitForm('ruleForm')"
+              @click.native="submitForm('ruleForm')"
             >
               <i class="el-icon-finished">
                 {{ $translateTitle('product.createnow') }}
@@ -119,7 +119,7 @@
               icon="el-icon-search"
               native-type="submit"
               type="primary"
-              @click="fetchData(queryForm)"
+              @click.native="fetchData()"
             >
               {{ $translateTitle('cloudTest.search') }}
             </el-button>
@@ -222,8 +222,8 @@
           <el-tag
             effect="dark"
             :type="
-              ['success', 'info', 'warning', 'danger'][
-                row.basedata.testStatus ? row.basedata.testStatus : 0
+              ['info', 'warning', 'primary', 'primary'][
+                row.profile.step ? row.profile.step : 0
               ]
             "
           >
@@ -232,7 +232,7 @@
                 $translateTitle('product.notstarted'),
                 $translateTitle('product.testing'),
                 $translateTitle('product.finishtest'),
-              ][row.basedata.testStatus] || $translateTitle('product.notested')
+              ][row.profile.step] || $translateTitle('product.finishtest')
             }}
           </el-tag>
         </template>
@@ -244,25 +244,51 @@
         width="300"
       >
         <template #default="{ row }">
-          <el-button size="mini" type="success" @click="handleManagement(row)">
-            {{ $translateTitle(`cloudTest.configuration`) }}
+          <el-button
+            size="mini"
+            type="success"
+            @click.native="handleManagement(row)"
+          >
+            {{ $translateTitle(`task.Configurationtask`) }}
           </el-button>
-          <el-button size="mini" type="warning" @click="forensics(row)">
+          <el-button
+            v-show="row.profile.step == 0"
+            size="mini"
+            type="info"
+            @click.native="taskStart(row)"
+          >
+            {{ $translateTitle(`task.start`) }}
+          </el-button>
+          <el-button
+            v-show="row.profile.step == 1"
+            size="mini"
+            type="warning"
+            @click.native="forensics(row)"
+          >
             {{ $translateTitle(`cloudTest.forensics`) }}
+          </el-button>
+          <el-button
+            v-show="row.profile.step == 2"
+            size="mini"
+            type="success"
+            @click.native="taskEnd(row)"
+          >
+            {{ $translateTitle(`concentrator.end`) }}
+          </el-button>
+          <el-button
+            v-show="row.profile.step == 3"
+            size="mini"
+            type="primary"
+            @click.native="handleReport(row.objectId)"
+          >
+            {{ $translateTitle(`product.report`) }}
           </el-button>
           <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(row.objectId)"
+            @click.native="handleDelete(row.objectId)"
           >
             {{ $translateTitle(`cloudTest.delete`) }}
-          </el-button>
-          <el-button
-            size="mini"
-            type="primary"
-            @click="handleReport(row.objectId)"
-          >
-            {{ $translateTitle(`product.report`) }}
           </el-button>
         </template>
       </el-table-column>

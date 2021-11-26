@@ -1,5 +1,5 @@
 import { mapActions, mapGetters } from 'vuex'
-import { getDevice, delDevice, postDevice, queryDevice } from '@/api/Device'
+import { getDevice, putDevice, postDevice, queryDevice } from '@/api/Device'
 import { getEvidence, queryEvidence, postEvidence } from '@/api/Evidence'
 import { queryView } from '@/api/View'
 import { uppyUpload } from '@/api/Upload'
@@ -406,6 +406,36 @@ export default {
           this.suite = 0
           this.activeBtn(this.evidence[this.suite], this.suite)
         }
+      }
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-26 19:06:10
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async finishEvidence(params) {
+      try {
+        const loading = this.$baseColorfullLoading()
+        const finish = {
+          profile: _.merge(params.profile, {
+            step: 2,
+          }),
+        }
+        const res = await putDevice(params.objectId, finish)
+        this.$router.push({
+          path: '/cloudTest/Task',
+        })
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
       }
     },
     /**
