@@ -370,6 +370,9 @@ const actions = {
           ? '下午好'
           : '晚上好'
       Vue.prototype.$baseNotify(title, `${thisTime}！`)
+      setTimeout(() => {
+        document.querySelector('.el-tree-node__content').click()
+      }, 800)
     } else {
       Vue.prototype.$baseMessage(
         `登录失败，可能是密码错误或者账号被禁用！请与平台管理员联系。`,

@@ -59,12 +59,12 @@
         </el-button>
       </span>
     </el-dialog>
-    <el-steps :active="Number($route.query.step)" align-center>
-      <el-step title="取证" />
-      <el-step title="存证" />
-      <el-step title="审核" />
-      <el-step title="查证" />
-    </el-steps>
+    <!--    <el-steps :active="Number($route.query.step)" align-center>-->
+    <!--      <el-step title="取证" />-->
+    <!--      <el-step title="存证" />-->
+    <!--      <el-step title="审核" />-->
+    <!--      <el-step title="查证" />-->
+    <!--    </el-steps>-->
     <el-header class="evidence_header">
       <el-row class="evidence_header_row" :gutter="24">
         <el-col :lg="1" :md="1" :sm="1" :xl="1" :xs="1">
