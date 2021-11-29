@@ -213,6 +213,33 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row v-if="param.type == 'dynamicTable'" :gutter="24">
+            <el-col :span="20">
+              <el-form-item
+                :label="$translateTitle('equipment.parameter')"
+                prop="order"
+              >
+                <span slot="label">
+                  <el-tooltip
+                    effect="dark"
+                    placement="right-start"
+                    style="float: left"
+                  >
+                    <div slot="content">
+                      物模型标识符，用‘,’分隔，例：'flow,power,head'
+                    </div>
+                    <i class="el-icon-question" />
+                  </el-tooltip>
+                </span>
+                <el-input
+                  v-model="param.parameter"
+                  :min="1"
+                  placeholder="flow,power,head"
+                  style="width: 96%"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-form-item>
             <el-button type="primary" @click.native="submitparam('param')">
               <!-- 确定 -->
@@ -268,6 +295,13 @@
             {
               required: true,
               message: '请输入标识符',
+              trigger: 'blur',
+            },
+          ],
+          parameter: [
+            {
+              required: true,
+              message: '请输入表头参数标识符',
               trigger: 'blur',
             },
           ],

@@ -34,48 +34,6 @@
             </vab-query-form-right-panel>
           </vab-query-form>
           <div>
-            <!--            <div style="text-align: right">-->
-            <!--              <div style="float: left">-->
-            <!--                <span>-->
-            <!--                  {{ $translateTitle('equipment.realtimerefresh') }}-->
-            <!--                </span>-->
-            <!--                <el-switch-->
-            <!--                  v-model="isupdate"-->
-            <!--                  active-color="#13ce66"-->
-            <!--                  inactive-color="#cccccc"-->
-            <!--                  @change="updateTrue($event)"-->
-            <!--                />-->
-            <!--              </div>-->
-
-            <!--              &lt;!&ndash; 右上角(图表,表格)的按钮 &ndash;&gt;-->
-            <!--              &lt;!&ndash;              <el-button-group>&ndash;&gt;-->
-            <!--              &lt;!&ndash;                <el-button&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  type="primary"&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  plain&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  size="small"&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  @click="buttonactive = 1"&ndash;&gt;-->
-            <!--              &lt;!&ndash;                >&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  {{ $translateTitle('equipment.chart') }}&ndash;&gt;-->
-            <!--              &lt;!&ndash;                </el-button>&ndash;&gt;-->
-            <!--              &lt;!&ndash;                <el-button&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  type="primary"&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  plain&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  size="small"&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  @click="buttonactive = 2"&ndash;&gt;-->
-            <!--              &lt;!&ndash;                >&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  {{ $translateTitle('equipment.table') }}&ndash;&gt;-->
-            <!--              &lt;!&ndash;                </el-button>&ndash;&gt;-->
-            <!--              &lt;!&ndash;                <el-button&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  type="primary"&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  plain&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  size="small"&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  @click="buttonactive = 3"&ndash;&gt;-->
-            <!--              &lt;!&ndash;                >&ndash;&gt;-->
-            <!--              &lt;!&ndash;                  {{ $translateTitle('equipment.lists') }}&ndash;&gt;-->
-            <!--              &lt;!&ndash;                </el-button>&ndash;&gt;-->
-            <!--              &lt;!&ndash;              </el-button-group>&ndash;&gt;-->
-            <!--            </div>-->
-
             <div class="thirdtb">
               <!--运行状态卡片-->
               <el-row :key="thirdtbKey">
@@ -483,10 +441,18 @@
                 <el-table-column
                   :label="$translateTitle('equipment.devicenumber')"
                   align="center"
+                  width="170"
                 >
                   <template #default="{ row }">
                     <span>{{ row.devaddr }}</span>
-                    <p style="margin: 0; color: green">{{ row.name }}</p>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  :label="$translateTitle('equipment.devicename')"
+                  align="center"
+                >
+                  <template #default="{ row }">
+                    <span>{{ row.name }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -499,13 +465,13 @@
                     </span>
                   </template>
                 </el-table-column>
-                <el-table-column align="center" label="子网地址">
+                <el-table-column align="center" label="子网地址" width="165">
                   <template #default="{ row }">
                     <span>
                       {{
                         row.route == undefined
                           ? ''
-                          : row.route[devicedetail.devaddr]
+                          : row.route[deviceInfo.devaddr]
                       }}
                     </span>
                   </template>
@@ -518,23 +484,7 @@
                     <span type="success">{{ row.productName }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column
-                  :label="$translateTitle('equipment.nodetype')"
-                  align="center"
-                >
-                  <!-- <template #default="{ row }">
-                    <svg-icon
-                      v-if="row.nodeType == 0"
-                      icon-class="iot"
-                      style="width: 2rem; height: 2rem"
-                    />
-                    <svg-icon
-                      v-else
-                      icon-class="wgicon"
-                      style="width: 2rem; height: 2rem"
-                    />
-                  </template> -->
-                </el-table-column>
+
                 <el-table-column
                   :label="
                     $translateTitle('developer.prohibit') +
@@ -631,7 +581,7 @@
           <el-dialog
             :append-to-body="true"
             :close-on-click-modal="false"
-            :title="$t('equipment.addchilddevice')"
+            :title="$translateTitle('equipment.addchilddevice')"
             :visible.sync="childDialog"
             width="30%"
           >
@@ -1080,7 +1030,6 @@
         activeName: 'first',
         text: '1111111',
         deviceid: '',
-        devicedetail: {},
         topicData: [],
         thirdstart: 1,
         thirdlength: 10,
@@ -1159,7 +1108,6 @@
       console.log(' this.params.style', this.params.style)
       if (this.$route.query.deviceid) {
         this.deviceid = this.$route.query.deviceid
-        this.getDeviceDetail(this.deviceid)
         this.initChart()
         this.getDeviceInfo(this.deviceid)
         window.addEventListener('resize', this.resizeTheChart)
@@ -1188,7 +1136,6 @@
           ? (ProductId = resultes.product.objectId)
           : (ProductId = '')
         const DevAddr = resultes.devaddr
-        console.log('ProductId', ProductId)
         let _toppic = [
           {
             topic: `thing/${ProductId}/${DevAddr}/post`,
@@ -1402,21 +1349,17 @@
           this.childrenDeviceStart = 0
         }
         this.devicesTableData = []
-        // devices.matches(`route.${this.devicedetail.devaddr}`, '.+')
-        const key = 'route.' + this.devicedetail.devaddr
-        const setkey = {}
-        setkey[key] = { $regex: '.+' }
         const params = {
           limit: this.childrenDeviceLength,
           skip: this.childrenDeviceStart,
           count: 'objectId',
           include: 'product',
-          parentId: this.deviceId,
-          where: setkey,
+          where: {  parentId: this.deviceInfo.objectId},
         }
         if (this.childrendevices.devicesname != '') {
           params.where.devaddr = this.childrendevices.devicesname
         }
+        console.log('this.params', params)
         this.$queryDevice(params)
           .then((res) => {
             this.childrenDeviceTotal = res.count
@@ -1425,9 +1368,6 @@
                 var obj = {}
                 obj.objectId = items.objectId
                 obj.name = items.name
-                // obj.lastOnlineTime = this.$dateFormat(
-                //   this.$objGet(items, 'tag.lastOnlineTime')
-                // )
                 obj.status = items.status
                 obj.originstatus = items.status
                 obj.nodeType = items.product.nodeType
@@ -1443,97 +1383,6 @@
             console.log(err)
             this.$baseMessage('请求出错11', err.error, 3000)
           })
-      },
-      // 详情
-      async getDeviceDetail(deviceid) {
-        const vm = this
-        vm.ischildren = vm.$route.query.ischildren
-        const params = {
-          limit: 1,
-          count: 'objectId',
-          include: 'product',
-          where: { objectId: deviceid },
-        }
-        queryDevice(params).then((res) => {
-          console.log(res, 'res')
-          if (res.results.length > 0) {
-            // console.log(resultes, 'resproduct')
-            // 产品
-            const resultes = res.results[0]
-            var obj = {}
-            vm.productid = vm.$objGet(resultes, 'product.objectId')
-            vm.devicedevaddr = vm.$objGet(resultes, 'devaddr')
-            obj.id = resultes.objectId
-            obj.createdAt = utc2beijing(resultes.createdAt)
-            obj.productName = vm.$objGet(resultes, 'product.name')
-            obj.productid = vm.$objGet(resultes, 'product.objectId')
-            // obj.lastOnlineTime = this.$timestampToTime(this.$objGet(resultes, 'lastOnlineTime'), true)
-            // obj.updatedAt = this.$dateFormat('YYYY-mm-dd HH:MM', this.$objGet(resultes, 'updatedAt'))
-            obj.ip = vm.$objGet(resultes, 'ip')
-            obj.basedata = JSON.stringify(resultes.basedata)
-            obj.DeviceName = resultes.name
-            obj.status = resultes.status
-            obj.desc = vm.$objGet(resultes, 'desc')
-            obj.devaddr = vm.$objGet(resultes, 'devaddr')
-            obj.nodeType = vm.$objGet(resultes, 'product.nodeType')
-            obj.devType = vm.$objGet(resultes, 'product.devType')
-            obj.productSecret = vm.$objGet(resultes, 'product.productSecret')
-            obj.address =
-              vm.$objGet(resultes, 'detail.address') ||
-              vm.$objGet(resultes, 'location.latitude') +
-                '，' +
-                vm.$objGet(resultes, 'location.longitude')
-            const tddata = vm.$objGet(resultes, 'tddata')
-            // const thingTemp = this.$objGet(resultes, 'product.thing')
-            let resData = JSON.parse(
-              JSON.stringify(vm.$objGet(resultes, 'product.thing.properties'))
-            )
-            console.log(resData, 'resData')
-            vm.Update()
-            let array = []
-            if (!resData) return
-            resData.forEach((item) => {
-              if (item.devicetype) {
-                array.push(item.devicetype)
-              }
-            })
-            array = _.uniqBy(array)
-            let machine = {}
-            array.forEach((item) => {
-              let arr = []
-              resData.forEach((item1) => {
-                if (item == item1.devicetype) {
-                  arr.push(item1)
-                }
-              })
-              machine[item] = arr
-            })
-            vm.machinelist = machine
-            vm.thirdtbKey = moment(new Date()).valueOf()
-            console.log('this.machinelist', vm.machinelist)
-            vm.devicedetail = obj
-            if (vm.$route.query.nodeType != 0 && vm.ischildren == 'true') {
-              vm.activeName = 'children'
-              vm.isshowchild = true
-              vm.getDevices()
-              const params = {}
-            } else {
-              vm.ischildren = false
-              vm.isshowchild = true
-            }
-            // 初始化物模型数据
-            vm.isupdate = true
-            // this.Update()
-            vm.updateTrue(true)
-            if (resultes.product.topics) {
-              vm.topicData = resultes.product.topics.concat(vm.topic)
-            } else {
-              vm.topicData = vm.topic
-            }
-          } else {
-            vm.$message('objectId 未返回')
-          }
-        })
       },
       Update() {
         var vm = this

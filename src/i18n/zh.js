@@ -188,6 +188,7 @@ export default {
       subdevice: '子设备',
       serialnumber: '序号',
       row: '行',
+      parameter: '数据参数',
       column: '列',
       batchname: '批次名称',
       entername: '请选择产品名称',
