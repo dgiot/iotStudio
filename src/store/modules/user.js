@@ -340,9 +340,7 @@ const actions = {
       commit('setDepartmentToken', { sessionToken, expires_in })
       if (nick) commit('setUsername', nick)
       const page_title = getToken('title') || title
-      console.log(tag, 'tag info')
       const { title, Copyright, name, logo, _pcimg, _mimg } = tag.companyinfo
-      console.log(Copyright, 'Copyright')
       const { avatar } = tag.userinfo
       commit('setAvatar', avatar)
       commit('setname', name)

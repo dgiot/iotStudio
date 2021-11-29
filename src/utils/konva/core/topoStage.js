@@ -99,7 +99,6 @@ const topoStage = {
       info['Path'] = stage.find('Path')
       if (node.getAttr('name') == 'evidence') {
         if (location.href.includes('preview')) {
-          console.error(node)
           node.setAttrs({
             draggable: false,
           })

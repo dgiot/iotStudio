@@ -88,12 +88,10 @@ export function removeToken() {
 function foreach() {
   const strCookie = document.cookie
   const arrCookie = strCookie.split('; ')
-  console.log(`退出后清除Cookies ${arrCookie}`)
   for (var i = 0; i < arrCookie.length; i++) {
     var arr = arrCookie[i].split('=')
     if (arr.length > 0) DelCookie(arr[0])
   }
-  console.log('tempToken', tempToken)
 }
 
 function GetCookieVal(offset) {

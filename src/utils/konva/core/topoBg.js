@@ -35,7 +35,6 @@ const topoBg = {
     //   console.log('点击了组态底图 现在没有写处理事件 可能用得上 contextmenu', e.target)
     // })
     BgimageObj.onload = () => {
-      console.warn('创建的元素加载好了')
       // layer.add(yoda)
       console.warn('setBg', layer)
       var yoda = new Konva.Image(
@@ -111,7 +110,6 @@ const topoBg = {
       //   console.log('点击了组态底图 现在没有写处理事件 可能用得上 contextmenu', e.target)
       // })
       BgimageObj.onload = () => {
-        console.warn('创建的元素加载好了')
         // layer.add(yoda)
         console.warn('setBg', layer)
         const yoda = new Konva.Image(

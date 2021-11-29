@@ -41,5 +41,5 @@ const store = new Vuex.Store({
   plugins,
 })
 export default store
-window.dgiot = info
-dgiot.store = store
+window.dashboard = info
+dashboard.store = store

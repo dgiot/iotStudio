@@ -9,6 +9,12 @@ export default {
   components: { VueAliplayerV2 },
   data() {
     return {
+      typs: {
+        video: ['video', 'personal_video'],
+        audio: ['audio', 'volume_up'],
+        image: ['image'],
+        file: ['file', 'archive'],
+      },
       evidences: [],
       timer: new Date(),
       evidenceid: '',
@@ -52,6 +58,7 @@ export default {
   },
   created() {
     this.setTreeFlag(false)
+    if (this.$route.query.suite == 1) this.$route.query.suite = 0
   },
   mounted() {
     this.$dgiotBus.$off(
@@ -177,7 +184,6 @@ export default {
         }
         loading.close()
         const res = await postEvidence(this.taskid, Evidence)
-        console.log(res)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
@@ -202,7 +208,7 @@ export default {
      * @return {Promise<void>}
      * @Description:
      */
-    async getUkey() {
+    async getUkey(parentId) {
       console.error()
       try {
         const params = {
@@ -211,7 +217,7 @@ export default {
           skip: 0,
           keys: 'devaddr',
           where: {
-            parentId: this.task.parentId.objectId,
+            parentId: parentId,
             product: '3f95880e09',
           },
         }
@@ -220,6 +226,7 @@ export default {
         console.error(results, 'getUkey')
         if (results?.[0]?.devaddr) {
           this.ukey = results[0].devaddr
+          console.info('-----------------this.ukey', this.ukey)
         } else {
           this.$message.error(
             this.$translateTitle(
@@ -378,7 +385,12 @@ export default {
       try {
         const loading = this.$baseColorfullLoading()
         const params = {
-          where: { type: 'topo', class: 'Device', key: taskid },
+          order: 'createdAt',
+          where: {
+            type: 'topo',
+            class: 'Device',
+            key: taskid,
+          },
         }
         const { results = [] } = await queryView(params)
         results.forEach((i) => {
@@ -449,8 +461,11 @@ export default {
     async queryTask(taskid) {
       try {
         const task = await getDevice(taskid)
-        if (task) this.task = task
-        else this.task = { name: '111' }
+        if (task) {
+          this.task = task
+          if (task?.parentId?.objectId)
+            await this.getUkey(task.parentId.objectId)
+        } else this.task = { name: '111' }
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -459,13 +474,11 @@ export default {
           'vab-hey-message-error'
         )
       }
-      this.getUkey()
     },
     async activeBtn(item, index) {
       const query = JSON.parse(JSON.stringify(this.$route.query))
       query.suite = index
       this.$router.push({ path: this.$route.path, query })
-      this.getevidence(item.objectId)
       this.loading = true
       this.evidence.forEach((el) => {
         el.type = 'info'
@@ -494,34 +507,6 @@ export default {
         )
         this.deleteTopo(window.deletePath)
       }, 1000)
-    },
-    /**
-     * @Author: h7ml
-     * @Date: 2021-11-25 21:32:16
-     * @LastEditors:
-     * @param
-     * @return {Promise<void>}
-     * @Description:
-     */
-    async getevidence(evid) {
-      try {
-        const loading = this.$baseColorfullLoading()
-        const res = await getEvidence(evid)
-        console.log(res)
-        // this.$baseMessage(
-        //   this.$translateTitle('alert.Data request successfully'),
-        //   'success',
-        //   'vab-hey-message-success'
-        // )
-        loading.close()
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'vab-hey-message-error'
-        )
-      }
     },
   }, //如果页面有keep-alive缓存功能，这个函数会触发
 }

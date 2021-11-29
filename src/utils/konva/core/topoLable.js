@@ -9,7 +9,6 @@ import canvas from '@/utils/konva/core/canvas'
  */
 const topoLable = {
   evidence(args) {
-    console.error('args', args)
     const params = {
       busTopicKey: dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
       msg: {
@@ -151,7 +150,7 @@ const topoLable = {
     return simpleLabel
   },
   createdEvidence(args) {
-    console.info('createdEvidence', args.path)
+    console.info('createdEvidence', args.path, args)
     const Axis = {
       x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
       y: 600 + canvas.randomXy(40, 10),
@@ -164,7 +163,7 @@ const topoLable = {
       }`,
       evidenceList: [],
       icon: args.path.icon,
-      type: args.type,
+      type: args.path.type,
       x: Axis.x,
       y: Axis.y,
       width: 36,
@@ -179,7 +178,6 @@ const topoLable = {
         y: 2,
       },
     })
-    console.log(evidencePath)
     if (args.path.type === 'delete') window.deletePath = evidencePath
     return evidencePath
   },
