@@ -35,6 +35,7 @@ specifiers:
   cross-env: 7.0.3
   cz-conventional-changelog: 3.3.0
   cz-customizable: 6.3.0
+  docx-preview: ^0.1.7
   element-ui: 2.15.6
   eslint: ^7.32.0
   eslint-plugin-prettier: 4.0.0
@@ -53,6 +54,7 @@ specifiers:
   lint-staged: 11.2.6
   logrocket: ^2.1.1
   logrocket-vuex: ^0.0.3
+  mammoth: ^1.4.19
   mini-css-extract-plugin: 2.4.4
   monaco-editor: 0.30.1
   monaco-editor-webpack-plugin: 6.0.0
@@ -101,6 +103,7 @@ dependencies:
   clean-webpack-plugin: 4.0.0
   clone: 2.1.2
   conventional-changelog-cli: 2.1.1
+  docx-preview: 0.1.7
   element-ui: 2.15.6
   file-loader: 6.2.0
   fork-ts-checker-webpack-plugin: 6.4.0_79d5386a1cbf2ce51f20748cd0e82c5e
@@ -111,6 +114,7 @@ dependencies:
   konva: 8.2.3
   logrocket: 2.1.2
   logrocket-vuex: 0.0.3
+  mammoth: 1.4.19
   monaco-editor-webpack-plugin: 6.0.0_monaco-editor@0.30.1
   plop: 2.7.6
   q: 1.5.1
@@ -5234,6 +5238,10 @@ packages:
       miller-rabin: 4.0.1
       randombytes: 2.1.0
 
+  /dingbat-to-unicode/1.0.1:
+    resolution: {integrity: sha1-UJHdZzJBRT5rWGXiblpEUs3vXIM=, tarball: dingbat-to-unicode/download/dingbat-to-unicode-1.0.1.tgz}
+    dev: false
+
   /dir-glob/2.2.2:
     resolution: {integrity: sha1-+gnwaUFTyJGLGLoN6vrpR2n8UMQ=, tarball: dir-glob/download/dir-glob-2.2.2.tgz}
     engines: {node: '>=4'}
@@ -5270,6 +5278,12 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
+
+  /docx-preview/0.1.7:
+    resolution: {integrity: sha512-chbicG8pLT6yXr7x6XxFUUbx0OQSOc+JLyBWNs7f3Uaosf1oNOYDSwY0O6saM4OGbPVvDm1Cwl4Az9rA9Yncsw==, tarball: docx-preview/download/docx-preview-0.1.7.tgz}
+    dependencies:
+      jszip: 3.7.1
+    dev: false
 
   /dom-converter/0.2.0:
     resolution: {integrity: sha1-ZyGp2u4uKTaClVtq/kFncWJ7t2g=, tarball: dom-converter/download/dom-converter-0.2.0.tgz}
@@ -5385,6 +5399,12 @@ packages:
       react: 16.14.0
       react-is: 17.0.2
       tslib: 2.3.1
+    dev: false
+
+  /duck/0.1.12:
+    resolution: {integrity: sha1-3nrfdYQhIwtteu55nOQmcFhrnvo=, tarball: duck/download/duck-0.1.12.tgz}
+    dependencies:
+      underscore: 1.13.1
     dev: false
 
   /duplexer/0.1.2:
@@ -8407,7 +8427,7 @@ packages:
       json5: 1.0.1
 
   /loader-utils/2.0.2:
-    resolution: {integrity: sha1-1uO0+4GHByGuTghoqxHdY4NowSk=, tarball: loader-utils/download/loader-utils-2.0.2.tgz?cache=0&sync_timestamp=1636701869317&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-2.0.2.tgz}
+    resolution: {integrity: sha1-1uO0+4GHByGuTghoqxHdY4NowSk=, tarball: loader-utils/download/loader-utils-2.0.2.tgz}
     engines: {node: '>=8.9.0'}
     dependencies:
       big.js: 5.2.2
@@ -8633,6 +8653,14 @@ packages:
       js-tokens: 4.0.0
     dev: false
 
+  /lop/0.4.1:
+    resolution: {integrity: sha1-dE8Wlu9IDmjOGUf+VXsJ21rypzg=, tarball: lop/download/lop-0.4.1.tgz}
+    dependencies:
+      duck: 0.1.12
+      option: 0.2.4
+      underscore: 1.13.1
+    dev: false
+
   /lower-case-first/1.0.2:
     resolution: {integrity: sha1-5dp8JvKacHO+AtUrrJmA5ZIq36E=, tarball: lower-case-first/download/lower-case-first-1.0.2.tgz}
     dependencies:
@@ -8705,6 +8733,21 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       kind-of: 6.0.3
+    dev: false
+
+  /mammoth/1.4.19:
+    resolution: {integrity: sha1-ek2C4GVqgkpWh0bfX6/v3ueMiS4=, tarball: mammoth/download/mammoth-1.4.19.tgz}
+    hasBin: true
+    dependencies:
+      argparse: 1.0.10
+      bluebird: 3.4.7
+      dingbat-to-unicode: 1.0.1
+      jszip: 3.7.1
+      lop: 0.4.1
+      path-is-absolute: 1.0.1
+      sax: 1.1.6
+      underscore: 1.13.1
+      xmlbuilder: 10.1.1
     dev: false
 
   /map-cache/0.2.2:
@@ -9684,6 +9727,10 @@ packages:
       is-wsl: 1.1.0
     dev: true
 
+  /option/0.2.4:
+    resolution: {integrity: sha1-/Udc35jcq7PLOXo7pShP60Xtv+Q=, tarball: option/download/option-0.2.4.tgz}
+    dev: false
+
   /optionator/0.9.1:
     resolution: {integrity: sha1-TyNqY3Pa4FZqbUPhMmZ09QwpFJk=, tarball: optionator/download/optionator-0.9.1.tgz}
     engines: {node: '>= 0.8.0'}
@@ -9855,7 +9902,7 @@ packages:
     dev: true
 
   /pako/1.0.11:
-    resolution: {integrity: sha1-bJWZ00DVTf05RjgCUqNXBaa5kr8=, tarball: pako/download/pako-1.0.11.tgz?cache=0&sync_timestamp=1636619392717&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fpako%2Fdownload%2Fpako-1.0.11.tgz}
+    resolution: {integrity: sha1-bJWZ00DVTf05RjgCUqNXBaa5kr8=, tarball: pako/download/pako-1.0.11.tgz}
 
   /papaparse/5.3.1:
     resolution: {integrity: sha1-dwt6kSTYIdSyEyEyt719znGUtbE=, tarball: papaparse/download/papaparse-5.3.1.tgz}
@@ -11660,6 +11707,10 @@ packages:
     dependencies:
       chokidar: 3.5.2
 
+  /sax/1.1.6:
+    resolution: {integrity: sha1-XWFr6KXmB9VOEUr65Vt+ry/MMkA=, tarball: sax/download/sax-1.1.6.tgz}
+    dev: false
+
   /sax/1.2.4:
     resolution: {integrity: sha1-KBYjTiN4vdxOU1T6tcqold9xANk=, tarball: sax/download/sax-1.2.4.tgz}
     dev: true
@@ -13095,6 +13146,10 @@ packages:
       react-lifecycles-compat: 3.0.4
     dev: false
 
+  /underscore/1.13.1:
+    resolution: {integrity: sha1-DBxr0t9UtrafIxQGbWW2zeb8+dE=, tarball: underscore/download/underscore-1.13.1.tgz}
+    dev: false
+
   /unicode-canonical-property-names-ecmascript/2.0.0:
     resolution: {integrity: sha1-MBrNxSVjFnDTn2FG4Od/9rvevdw=, tarball: unicode-canonical-property-names-ecmascript/download/unicode-canonical-property-names-ecmascript-2.0.0.tgz}
     engines: {node: '>=4'}
@@ -13405,7 +13460,7 @@ packages:
     dev: true
 
   /util-deprecate/1.0.2:
-    resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=, tarball: util-deprecate/download/util-deprecate-1.0.2.tgz?cache=0&sync_timestamp=1636619290552&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Futil-deprecate%2Fdownload%2Futil-deprecate-1.0.2.tgz}
+    resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=, tarball: util-deprecate/download/util-deprecate-1.0.2.tgz}
 
   /util.promisify/1.0.0:
     resolution: {integrity: sha1-RA9xZaRZyaFtwUXrjnLzVocJcDA=, tarball: util.promisify/download/util.promisify-1.0.0.tgz}
@@ -14129,6 +14184,11 @@ packages:
     resolution: {integrity: sha1-S8jZmEQDaWIl74OhVzy7y0552xM=, tarball: xdg-basedir/download/xdg-basedir-4.0.0.tgz}
     engines: {node: '>=8'}
     dev: true
+
+  /xmlbuilder/10.1.1:
+    resolution: {integrity: sha1-jK5miMybONhQt8jTwKQWHcr0dbA=, tarball: xmlbuilder/download/xmlbuilder-10.1.1.tgz}
+    engines: {node: '>=4.0'}
+    dev: false
 
   /xmlchars/2.2.0:
     resolution: {integrity: sha1-Bg/hvLf5x2/ioX24apvDq4lCEMs=, tarball: xmlchars/download/xmlchars-2.2.0.tgz}

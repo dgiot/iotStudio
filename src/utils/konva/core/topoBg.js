@@ -62,8 +62,6 @@ const topoBg = {
     BgimageObj.src = bgSrc
     layer.batchDraw()
     stage.batchDraw()
-    // BgimageObj.src = bgSrc
-    console.error('bgNode', bgNode)
   },
   /**
    * @description 设置背景图

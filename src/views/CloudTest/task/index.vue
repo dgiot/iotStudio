@@ -9,6 +9,15 @@
 -->
 <template>
   <div ref="custom-table" class="custom-table-container">
+    <el-drawer
+      v-drawerDrag
+      append-to-body
+      size="90%"
+      :visible.sync="dialogVisible"
+      :with-header="false"
+    >
+      <iframe :src="officeapps" style="width: 100%; height: 100%" />
+    </el-drawer>
     <div class="components">
       <vab-dialog :show.sync="activePopShow">
         <h2 slot="title">
@@ -99,20 +108,26 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <el-select
+            <!--            <el-select-->
+            <!--              v-model="queryForm.name"-->
+            <!--              multiple-->
+            <!--              :placeholder="-->
+            <!--                $translateTitle('cloudTest.Please select review status')-->
+            <!--              "-->
+            <!--            >-->
+            <!--              <el-option-->
+            <!--                v-for="item in options"-->
+            <!--                :key="item.value"-->
+            <!--                :label="item.label"-->
+            <!--                :value="item.value"-->
+            <!--              />-->
+            <!--            </el-select>-->
+            <el-input
               v-model="queryForm.name"
-              multiple
               :placeholder="
                 $translateTitle('cloudTest.Please select review status')
               "
-            >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+            />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -231,7 +246,9 @@
               [
                 $translateTitle('product.notstarted'),
                 $translateTitle('product.testing'),
+                $translateTitle('product.pending review'),
                 $translateTitle('product.finishtest'),
+                $translateTitle('product.review completed'),
               ][row.profile.step] || $translateTitle('product.finishtest')
             }}
           </el-tag>
@@ -241,7 +258,7 @@
         align="center"
         fixed="right"
         :label="$translateTitle(`cloudTest.operate`)"
-        width="300"
+        width="380"
       >
         <template #default="{ row }">
           <el-button
@@ -249,7 +266,7 @@
             type="success"
             @click.native="handleManagement(row)"
           >
-            {{ $translateTitle(`task.Configurationtask`) }}
+            {{ $translateTitle(`task.Configuration`) }}
           </el-button>
           <el-button
             v-show="row.profile.step == 0"
@@ -270,18 +287,34 @@
           <el-button
             v-show="row.profile.step == 2"
             size="mini"
+            type="primary"
+            @click.native="handleUnderreview(row.objectId)"
+          >
+            {{ $translateTitle(`product.Underreview`) }}
+          </el-button>
+          <el-button
+            v-show="row.profile.step == 3"
+            size="mini"
             type="success"
             @click.native="taskEnd(row)"
           >
             {{ $translateTitle(`concentrator.end`) }}
           </el-button>
           <el-button
-            v-show="row.profile.step == 3"
+            v-show="row.profile.step >= 4"
             size="mini"
             type="primary"
-            @click.native="handleReport(row.objectId)"
+            @click.native="handleReport(row)"
           >
-            {{ $translateTitle(`product.report`) }}
+            {{ $translateTitle(`product.generate`) }}
+          </el-button>
+          <el-button
+            v-show="row.profile.step == 5"
+            size="mini"
+            type="primary"
+            @click.native="handlePreview(row)"
+          >
+            {{ $translateTitle(`application.preview`) }}
           </el-button>
           <el-button
             size="mini"

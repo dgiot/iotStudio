@@ -6,7 +6,8 @@ import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
 import { generatereport } from '@/api/Evidence'
-import profile from '@/views/DeviceCloud/manage/profile'
+const docx = require('docx-preview')
+import mammoth from 'mammoth'
 export default {
   name: 'TaskIndex',
   components: {
@@ -15,6 +16,8 @@ export default {
   },
   data() {
     return {
+      officeapps: '',
+      dialogVisible: false,
       paginations: {},
       queryPayload: {
         excludeKeys: 'data',
@@ -109,13 +112,13 @@ export default {
         {
           label: 'Starting time',
           width: 'auto',
-          prop: 'profile.starttime',
+          prop: 'starttime',
           sortable: true,
         },
         {
           label: 'end time',
           width: 'auto',
-          prop: 'profile.endtime',
+          prop: 'endtime',
           sortable: true,
         },
       ],
@@ -130,7 +133,7 @@ export default {
         skip: 0,
         pageNo: 1,
         pageSize: 10,
-        name: ['审核中', '审核完成'],
+        name: '',
       },
       categorylist: [],
       wordtemplist: [],
@@ -234,13 +237,28 @@ export default {
         }
       })
     },
+    handlePreview(report) {
+      const fileUrl = this.$FileServe + report.profile.docx
+      this.dialogVisible = true
+      this.officeapps =
+        'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
+      // window.open(this.officeapps)
+      // axios({
+      //   method: 'get',
+      //   responseType: 'blob', // 设置响应文件格式
+      //   url: fileUrl,
+      // }).then(({ data }) => {
+      //   console.error(data)
+      //   this.dialogVisible = true
+      //   docx.renderAsync(data, this.$refs.file) // 渲染到页面预览
+      // })
+    },
     forensics(row) {
-      console.log(row)
       this.$router.push({
         path: '/cloudTest/evidence',
         query: {
           taskid: row.objectId,
-          suite: 1,
+          suite: 0,
           state: 'preview',
           step: 1,
         },
@@ -257,7 +275,7 @@ export default {
     taskEnd(row) {
       this.$baseConfirm(
         this.$translateTitle(
-          'Maintenance.Are you sure you end to start the current mission'
+          'Maintenance.Are you sure you want to end the current mission'
         ),
         null,
         async () => {
@@ -265,7 +283,7 @@ export default {
             const loading = this.$baseColorfullLoading()
             const params = {
               profile: _.merge(row.profile, {
-                step: 3,
+                step: 4,
                 endtime: moment(new Date()).format('x'),
               }),
             }
@@ -346,16 +364,44 @@ export default {
     },
     /**
      * @Author: h7ml
+     * @Date: 2021-11-29 17:13:25
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async handleUnderreview(taskId) {
+      try {
+        this.$router.push({
+          path: '/cloudTest/evidence',
+          query: {
+            taskid: taskId,
+            suite: 0,
+            state: 'preview',
+            step: 3,
+          },
+        })
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
      * @Date: 2021-11-26 17:05:16
      * @LastEditors:
      * @param
      * @return {Promise<void>}
      * @Description:
      */
-    async handleReport(reportId) {
+    async handleReport(row) {
       try {
         const loading = this.$baseColorfullLoading()
-        const { code, msg, path } = await generatereport(reportId)
+        const { code, msg, path } = await generatereport(row.objectId)
         if (code == 0 && path) {
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
@@ -363,7 +409,14 @@ export default {
             'vab-hey-message-success'
           )
           setTimeout(() => {
-            this.downDocx(path)
+            const params = {
+              profile: _.merge(row.profile, {
+                step: 5,
+                docx: path,
+              }),
+            }
+            const _res = putDevice(row.objectId, params)
+            // this.downDocx(path)
           }, 1200)
         }
         loading.close()
@@ -432,16 +485,19 @@ export default {
       this.queryPayload.include = 'product,parentId'
       this.queryPayload.where = {
         'profile.identifier': 'inspectionReportTemp',
+        name: this.queryForm.name.length
+          ? { $regex: this.queryForm.name }
+          : { $ne: null },
       }
       this.listLoading = true
       const { count = 0, results = [] } = await queryDevice(this.queryPayload)
       this.$refs['pagination'].ination.total = count
       results.forEach((item) => {
         if (!item.profile.step) item.profile.step = 0
-        item.profile.endtime = item.profile.endtime
+        item.endtime = item.profile.endtime
           ? moment(Number(item.profile.endtime)).format('YYYY-MM-DD HH:mm:ss')
           : ''
-        item.profile.starttime = item.profile.starttime
+        item.starttime = item.profile.starttime
           ? moment(Number(item.profile.starttime)).format('YYYY-MM-DD HH:mm:ss')
           : ''
         item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')

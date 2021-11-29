@@ -67,7 +67,7 @@
     <!--    </el-steps>-->
     <el-header class="evidence_header">
       <el-row class="evidence_header_row" :gutter="24">
-        <el-col :lg="1" :md="1" :sm="1" :xl="1" :xs="1">
+        <el-col :lg="1" :md="1" :sm="1" title="检测详情" :xl="1" :xs="1">
           <el-button
             round
             size="mini"
@@ -85,7 +85,7 @@
         <!--            {{ role[0].org_type }}-->
         <!--          </el-button>-->
         <!--        </el-col>-->
-        <el-col :lg="1" :md="1" :sm="1" :xl="1" :xs="1">
+        <el-col :lg="1" :md="1" :sm="1" title="检测列表" :xl="1" :xs="1">
           <el-button
             round
             size="mini"
@@ -162,14 +162,30 @@
         </el-aside>
       </transition>
     </el-container>
-    <el-footer class="evidence_footer">
+    <el-footer v-if="task.name" class="evidence_footer">
       <el-row :gutter="10">
         <el-col :lg="3" :md="4" :sm="6" :xl="1" :xs="8">
-          <el-button round type="success" @click.native="finishEvidence(task)">
-            {{ $translateTitle('product.finish') }}
+          <el-button
+            round
+            type="success"
+            @click.native="
+              finishEvidence(task, Number($route.query.step) == 1 ? 2 : 3)
+            "
+          >
+            {{
+              $translateTitle(
+                `${
+                  Number($route.query.step) == 1
+                    ? 'cloudTest.forensics'
+                    : 'cloudTest.Underreview'
+                }`
+              ) + $translateTitle('product.finish')
+            }}
           </el-button>
         </el-col>
-        <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4" />
+        <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4">
+          <el-tag v-if="ukey" effect="dark" title="ukey">{{ ukey }}</el-tag>
+        </el-col>
         <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4" />
       </el-row>
     </el-footer>
@@ -229,6 +245,7 @@
       }
     }
     &_container {
+      height: 80vh;
       &_aside {
         .btns {
           display: grid;

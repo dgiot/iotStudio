@@ -33,7 +33,7 @@ export default {
       },
       taskid: this.$route.query.taskid || '',
       suite:
-        this.$route.query.suite && this.$route.query.suite > 0
+        this.$route.query.suite && this.$route.query.suite >= 0
           ? this.$route.query.suite
           : 0,
       evidence: [],
@@ -58,7 +58,6 @@ export default {
   },
   created() {
     this.setTreeFlag(false)
-    if (this.$route.query.suite == 1) this.$route.query.suite = 0
   },
   mounted() {
     this.$dgiotBus.$off(
@@ -209,7 +208,7 @@ export default {
      * @Description:
      */
     async getUkey(parentId) {
-      console.error()
+      this.ukey = ''
       try {
         const params = {
           limit: 1,
@@ -223,7 +222,6 @@ export default {
         }
         const loading = this.$baseColorfullLoading()
         const { results = [] } = await queryDevice(params)
-        console.error(results, 'getUkey')
         if (results?.[0]?.devaddr) {
           this.ukey = results[0].devaddr
           console.info('-----------------this.ukey', this.ukey)
@@ -385,7 +383,8 @@ export default {
       try {
         const loading = this.$baseColorfullLoading()
         const params = {
-          order: 'createdAt',
+          order: 'title',
+          skip: 0,
           where: {
             type: 'topo',
             class: 'Device',
@@ -428,12 +427,12 @@ export default {
      * @return {Promise<void>}
      * @Description:
      */
-    async finishEvidence(params) {
+    async finishEvidence(params, step) {
       try {
         const loading = this.$baseColorfullLoading()
         const finish = {
           profile: _.merge(params.profile, {
-            step: 2,
+            step: step,
           }),
         }
         const res = await putDevice(params.objectId, finish)
