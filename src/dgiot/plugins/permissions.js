@@ -104,7 +104,8 @@ router.afterEach((to) => {
   } else {
     routecInfo = to
   }
-  console.log('%c%s', 'color: red;font-size: 12px;', routecInfo)
+  if (!_.isPlainObject(routecInfo))
+    console.log('%c%s', 'color: red;font-size: 12px;', routecInfo)
 
   if (VabProgress.status) VabProgress.done()
 })

@@ -340,9 +340,7 @@ const actions = {
       commit('setDepartmentToken', { sessionToken, expires_in })
       if (nick) commit('setUsername', nick)
       const page_title = getToken('title') || title
-      console.log(tag, 'tag info')
       const { title, Copyright, name, logo, _pcimg, _mimg } = tag.companyinfo
-      console.log(Copyright, 'Copyright')
       const { avatar } = tag.userinfo
       commit('setAvatar', avatar)
       commit('setname', name)
@@ -372,6 +370,9 @@ const actions = {
           ? '下午好'
           : '晚上好'
       Vue.prototype.$baseNotify(title, `${thisTime}！`)
+      setTimeout(() => {
+        document.querySelector('.el-tree-node__content').click()
+      }, 800)
     } else {
       Vue.prototype.$baseMessage(
         `登录失败，可能是密码错误或者账号被禁用！请与平台管理员联系。`,

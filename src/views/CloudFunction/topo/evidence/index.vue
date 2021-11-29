@@ -20,27 +20,17 @@
           </el-button>
         </div>
         <div>
-          <div
-            v-if="
-              evidenceList.node.attrs.icon === 'video' ||
-              evidenceList.node.attrs.icon === 'personal_video'
-            "
-          >
+          <div v-if="typs.video.includes[evidenceList.node.attrs.icon]">
             <div v-for="(item, index) in evidences" :key="index">
               <vue-aliplayer-v2 :source="$FileServe + item.original.path" />
             </div>
           </div>
-          <div
-            v-else-if="
-              evidenceList.node.attrs.icon === 'audio' ||
-              evidenceList.node.attrs.icon === 'volume_up'
-            "
-          >
+          <div v-else-if="typs.audio.includes[evidenceList.node.attrs.icon]">
             <div v-for="(item, index) in evidences" :key="index">
               <av-bars :audio-src="$FileServe + item.original.path" />
             </div>
           </div>
-          <div v-else-if="evidenceList.node.attrs.icon === 'image'">
+          <div v-else-if="typs.image.includes[evidenceList.node.attrs.icon]">
             <div v-for="(item, index) in evidences" :key="index">
               <el-image
                 :preview-src-list="[$FileServe + item.original.path]"
@@ -49,12 +39,7 @@
               />
             </div>
           </div>
-          <div
-            v-else-if="
-              evidenceList.node.attrs.icon === 'file' ||
-              evidenceList.node.attrs.icon === 'archive'
-            "
-          >
+          <div v-else-if="typs.file.includes[evidenceList.node.attrs.icon]">
             <div v-for="(item, index) in evidences" :key="index">
               {{ $FileServe + item.original.path }}
             </div>
@@ -74,9 +59,15 @@
         </el-button>
       </span>
     </el-dialog>
+    <!--    <el-steps :active="Number($route.query.step)" align-center>-->
+    <!--      <el-step title="取证" />-->
+    <!--      <el-step title="存证" />-->
+    <!--      <el-step title="审核" />-->
+    <!--      <el-step title="查证" />-->
+    <!--    </el-steps>-->
     <el-header class="evidence_header">
       <el-row class="evidence_header_row" :gutter="24">
-        <el-col :lg="1" :md="1" :sm="1" :xl="1" :xs="1">
+        <el-col :lg="1" :md="1" :sm="1" title="检测详情" :xl="1" :xs="1">
           <el-button
             round
             size="mini"
@@ -87,12 +78,6 @@
           </el-button>
         </el-col>
         <el-col :lg="22" :md="22" :sm="22" :xl="22" :xs="22">
-          <el-steps :active="2" align-center>
-            <el-step title="取证" />
-            <el-step title="存证" />
-            <el-step title="审核" />
-            <el-step title="查证" />
-          </el-steps>
           <p>{{ task.name }}</p>
         </el-col>
         <!--        <el-col :lg="2" :md="2" :sm="2" :xl="1" :xs="2">-->
@@ -100,7 +85,7 @@
         <!--            {{ role[0].org_type }}-->
         <!--          </el-button>-->
         <!--        </el-col>-->
-        <el-col :lg="1" :md="1" :sm="1" :xl="1" :xs="1">
+        <el-col :lg="1" :md="1" :sm="1" title="检测列表" :xl="1" :xs="1">
           <el-button
             round
             size="mini"
@@ -177,14 +162,30 @@
         </el-aside>
       </transition>
     </el-container>
-    <el-footer class="evidence_footer">
+    <el-footer v-if="task.name" class="evidence_footer">
       <el-row :gutter="10">
         <el-col :lg="3" :md="4" :sm="6" :xl="1" :xs="8">
-          <el-button round type="success" @click.native="finishEvidence(task)">
-            {{ $translateTitle('product.finish') }}
+          <el-button
+            round
+            type="success"
+            @click.native="
+              finishEvidence(task, Number($route.query.step) == 1 ? 2 : 3)
+            "
+          >
+            {{
+              $translateTitle(
+                `${
+                  Number($route.query.step) == 1
+                    ? 'cloudTest.forensics'
+                    : 'cloudTest.Underreview'
+                }`
+              ) + $translateTitle('product.finish')
+            }}
           </el-button>
         </el-col>
-        <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4" />
+        <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4">
+          <el-tag v-if="ukey" effect="dark" title="ukey">{{ ukey }}</el-tag>
+        </el-col>
         <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4" />
       </el-row>
     </el-footer>
@@ -244,6 +245,7 @@
       }
     }
     &_container {
+      height: 80vh;
       &_aside {
         .btns {
           display: grid;

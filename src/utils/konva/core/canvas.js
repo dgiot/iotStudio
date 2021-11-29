@@ -60,10 +60,7 @@ const canvas = {
   },
   removeBg: (type, allnode, json) => {
     try {
-      json.find(`.${type}`).forEach((item) => {
-        console.error(item)
-        console.error(item)
-      })
+      json.find(`.${type}`).forEach((item) => {})
       console.groupCollapsed(
         `%cremoveBg info`,
         'color:#0091ca; font-size: 28px'
@@ -87,7 +84,6 @@ const canvas = {
           // node.destroy()
         } else {
           console.log(allnode)
-          console.error(node, node)
           if (node.getAttr('class') === type || node.class === type) {
             node.remove()
             node.destroy()

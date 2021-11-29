@@ -162,6 +162,9 @@
       })
     },
     mounted() {
+      this.$nextTick(() => {
+        this.$refs.tree.setCurrentKey(this.currentDepartment.objectId)
+      })
       // this.$dgiotBus.$off('asyncTreeData')
       this.$dgiotBus.$on('asyncTreeData', () => {
         console.error('asyncTreeData')

@@ -49,4 +49,3 @@ requireComponent.keys().forEach((fileName) => {
     })
   }
 })
-console.log(components)

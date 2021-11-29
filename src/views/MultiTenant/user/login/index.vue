@@ -199,7 +199,6 @@
       },
       'Default.background': {
         handler(e) {
-          console.log(e)
           this.backgroundImage = e
         },
         immediate: true,
@@ -241,7 +240,6 @@
         )
         this.$set(this.info, 'Bit', this.$translateTitle('home.Bit'))
         this.$forceUpdate()
-        console.log(this.info)
       },
       forgotPwd() {
         this.$message(this.$translateTitle('home.Forgot password'))
@@ -262,9 +260,6 @@
         return name
       },
       async initShuwa() {
-        console.log(process.env.cdnUrl, 'process.env')
-        console.log(`VUE_APP_URL is ${process.env.VUE_APP_URL}`)
-        console.log(`NODE_ENV is ${process.env.NODE_ENV}`)
         if (this.backgroundimage) {
           this.backgroundImage = this.backgroundimage
         }
