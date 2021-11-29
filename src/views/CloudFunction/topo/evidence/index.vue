@@ -87,6 +87,12 @@
           </el-button>
         </el-col>
         <el-col :lg="22" :md="22" :sm="22" :xl="22" :xs="22">
+          <el-steps :active="2" align-center>
+            <el-step title="取证" />
+            <el-step title="存证" />
+            <el-step title="审核" />
+            <el-step title="查证" />
+          </el-steps>
           <p>{{ task.name }}</p>
         </el-col>
         <!--        <el-col :lg="2" :md="2" :sm="2" :xl="1" :xs="2">-->

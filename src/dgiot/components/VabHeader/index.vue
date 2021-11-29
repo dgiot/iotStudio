@@ -25,15 +25,17 @@
                 />
               </template>
             </el-menu>
-            <vab-role-switch />
-            <vab-error-log />
-            <vab-search />
-            <vab-notice />
-            <vab-full-screen />
-            <vab-language />
-            <vab-theme />
-            <vab-refresh />
-            <vab-avatar />
+            <vab-role-switch
+              :title="$translateTitle(`home.department switch`)"
+            />
+            <vab-error-log :title="$translateTitle(`home.error log`)" />
+            <vab-search :title="$translateTitle(`home.search`)" />
+            <vab-notice :title="$translateTitle(`home.notice`)" />
+            <vab-full-screen :title="$translateTitle(`home.full screen`)" />
+            <vab-language :title="$translateTitle(`home.language`)" />
+            <vab-theme :title="$translateTitle(`home.theme`)" />
+            <vab-refresh :title="$translateTitle(`home.refresh`)" />
+            <vab-avatar :title="$translateTitle(`home.avatar`)" />
           </div>
         </el-col>
       </el-row>

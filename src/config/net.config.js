@@ -1,24 +1,7 @@
 /**
  * @description 导出网络配置
  **/
-var proxy = [
-  {
-    path: 'iotapi',
-    target: 'http://prod.iotn2n.com',
-  },
-  {
-    path: 'group1',
-    target: 'http://prod.iotn2n.com:1250',
-  },
-  {
-    path: 'group2',
-    target: 'http://prod.iotn2n.com:8012',
-  },
-]
-if (process.env.NODE_ENV == 'development') {
-  const developer = require('./developer.config')
-  proxy = developer.proxy
-}
+const proxy = require('./developer.config').proxy
 module.exports = {
   // 默认的接口地址，开发环境和生产环境走/mock-server
   // 当然你也可以选择自己配置成需要的接口地址，如"https://api.xxx.com"

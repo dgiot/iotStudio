@@ -10,6 +10,7 @@
  * @description 导入所有 vuex 模块，自动加入namespaced:true，用于解决vuex命名冲突，请勿修改。
  */
 import { appId, uid, name, email, subscriptionType } from '@/config'
+const info = require('@/config/index')
 Vue.use(Vuex)
 // https://app.logrocket.com/wj9jpe/dgiot/settings/setup
 import LogRocket from 'logrocket'
@@ -40,4 +41,5 @@ const store = new Vuex.Store({
   plugins,
 })
 export default store
-window.store = store
+window.dgiot = info
+dgiot.store = store

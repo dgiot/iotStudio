@@ -9,7 +9,7 @@
 -->
 <template>
   <div class="role-tree">
-    <h4 v-show="currentDepartment.depname">
+    <h4 v-show="currentDepartment.depname" class="role-tree-header">
       {{ $translateTitle('product.Current department') }}
       {{ currentDepartment.depname }}
     </h4>
@@ -112,13 +112,13 @@
       nodekey: {
         type: String,
         required: false,
-        default: 'id',
+        default: 'objectId',
       },
       // 是否高亮当前选中节点，默认值是 false。
       highlight: {
         type: Boolean,
         required: false,
-        default: false,
+        default: true,
       },
       // 是否默认展开所有节点
       defaultExpandAll: {
@@ -156,7 +156,11 @@
       },
     },
     watch: {},
-    created() {},
+    created() {
+      this.$nextTick(() => {
+        this.$refs.tree.setCurrentKey(this.currentDepartment.objectId)
+      })
+    },
     mounted() {
       // this.$dgiotBus.$off('asyncTreeData')
       this.$dgiotBus.$on('asyncTreeData', () => {
@@ -245,7 +249,28 @@
 </script>
 
 <style lang="scss">
+  /* 点击后的当前节点的样式 */
+  .el-tree-node.is-current > .el-tree-node__content {
+    color: rgb(64, 158, 255);
+    background: rgb(48, 65, 86);
+  }
+  ///* 点击后的当前节点的子节点的背景颜色 */
+  //.el-tree > .el-tree-node.is-current {
+  //  background: #1f2d3d;
+  //}
+  /* 鼠标悬浮的当前节点  */
+  .el-tree-node__content:hover {
+    background: #baf !important;
+  }
   .role-tree {
+    &-header {
+      margin: 10px 0;
+    }
+    overflow: auto;
+    .role-tree-select {
+      margin-top: 12px;
+      overflow: auto;
+    }
     .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
       background-color: #409eff;
       border-color: #409eff;
@@ -258,15 +283,6 @@
     .el-checkbox__input.is-disabled.is-indeterminate .el-checkbox__inner {
       background-color: #409eff;
       border-color: #409eff;
-    }
-  }
-</style>
-<style lang="scss">
-  .role-tree {
-    overflow: auto;
-    .role-tree-select {
-      margin-top: 12px;
-      overflow: auto;
     }
   }
 </style>
