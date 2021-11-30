@@ -6,7 +6,7 @@ import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
 import { generatereport } from '@/api/Evidence'
-const docx = require('docx-preview')
+// const docx = require('docx-preview')
 import mammoth from 'mammoth'
 export default {
   name: 'TaskIndex',

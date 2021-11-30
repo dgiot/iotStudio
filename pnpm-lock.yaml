@@ -35,7 +35,6 @@ specifiers:
   cross-env: 7.0.3
   cz-conventional-changelog: 3.3.0
   cz-customizable: 6.3.0
-  docx-preview: ^0.1.7
   element-ui: 2.15.6
   eslint: ^7.32.0
   eslint-plugin-prettier: 4.0.0
@@ -103,7 +102,6 @@ dependencies:
   clean-webpack-plugin: 4.0.0
   clone: 2.1.2
   conventional-changelog-cli: 2.1.1
-  docx-preview: 0.1.7
   element-ui: 2.15.6
   file-loader: 6.2.0
   fork-ts-checker-webpack-plugin: 6.4.0_79d5386a1cbf2ce51f20748cd0e82c5e
@@ -5278,12 +5276,6 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
-
-  /docx-preview/0.1.7:
-    resolution: {integrity: sha512-chbicG8pLT6yXr7x6XxFUUbx0OQSOc+JLyBWNs7f3Uaosf1oNOYDSwY0O6saM4OGbPVvDm1Cwl4Az9rA9Yncsw==, tarball: docx-preview/download/docx-preview-0.1.7.tgz}
-    dependencies:
-      jszip: 3.7.1
-    dev: false
 
   /dom-converter/0.2.0:
     resolution: {integrity: sha1-ZyGp2u4uKTaClVtq/kFncWJ7t2g=, tarball: dom-converter/download/dom-converter-0.2.0.tgz}

@@ -64,7 +64,6 @@
     "clean-webpack-plugin": "4.0.0",
     "clone": "^2.1.2",
     "conventional-changelog-cli": "^2.1.1",
-    "docx-preview": "^0.1.7",
     "element-ui": "2.15.6",
     "file-loader": "6.2.0",
     "fork-ts-checker-webpack-plugin": "6.4.0",
