@@ -1223,6 +1223,7 @@ export default {
         '该产品暂无uKey 请联系管理员',
       'Basic information of inspection tasks': '检测任务基本信息',
       forensics: '取证',
+      evidence: '证据',
       Underreview: '审核',
       datasources: '数据来源',
       configuration: '任务配置',

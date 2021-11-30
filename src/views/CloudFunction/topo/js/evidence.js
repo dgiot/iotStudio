@@ -1,6 +1,12 @@
 import { mapActions, mapGetters } from 'vuex'
 import { getDevice, putDevice, postDevice, queryDevice } from '@/api/Device'
-import { getEvidence, queryEvidence, postEvidence } from '@/api/Evidence'
+import {
+  getEvidence,
+  queryEvidence,
+  postEvidence,
+  putEvidence,
+  delEvidence,
+} from '@/api/Evidence'
 import { queryView } from '@/api/View'
 import { uppyUpload } from '@/api/Upload'
 const VueAliplayerV2 = window['vue-aliplayer-v2'].default
@@ -9,12 +15,11 @@ export default {
   components: { VueAliplayerV2 },
   data() {
     return {
-      typs: {
-        video: ['video', 'personal_video'],
-        audio: ['audio', 'volume_up'],
-        image: ['image'],
-        file: ['file', 'archive'],
-      },
+      nowItem: {},
+      video: ['video', 'personal_video'],
+      audio: ['audio', 'volume_up'],
+      image: ['image', 'image'],
+      file: ['file', 'archive'],
       evidences: [],
       timer: new Date(),
       evidenceid: '',
@@ -102,6 +107,67 @@ export default {
     },
     /**
      * @Author: h7ml
+     * @Date: 2021-11-29 21:22:54
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async deleteFile(objectId, index, evidences) {
+      evidences.splice(index, 1)
+      try {
+        const loading = this.$baseColorfullLoading()
+        const res = await delEvidence(objectId)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-29 21:10:50
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async changeItem(row, v) {
+      try {
+        const loading = this.$baseColorfullLoading()
+        const params = {
+          original: _.merge(row.original, {
+            status: v,
+          }),
+        }
+        const res = await putEvidence(row.objetcId, params)
+        console.log(res)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
      * @Date: 2021-11-26 15:14:34
      * @LastEditors:
      * @param
@@ -131,7 +197,6 @@ export default {
         for (let key in Evidence) {
           formData.append(key, Evidence[key])
         }
-        console.error(formData, 'formData')
         const { NODE_ENV = 'development' } = process.env
         const url =
           NODE_ENV == 'development'
@@ -166,7 +231,6 @@ export default {
      * @Description:
      */
     async depositEvidence(params) {
-      console.error(params)
       try {
         const loading = this.$baseColorfullLoading()
         const Evidence = {
@@ -182,7 +246,7 @@ export default {
           },
         }
         loading.close()
-        const res = await postEvidence(this.taskid, Evidence)
+        const res = await postEvidence(this.nowItem.objectId, Evidence)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
@@ -251,6 +315,7 @@ export default {
      * @Description:
      */
     async queryevidences() {
+      this.evidences = []
       try {
         const loading = this.$baseColorfullLoading()
         const _params = {
@@ -262,7 +327,6 @@ export default {
           },
         }
         const { results = [] } = await queryEvidence(_params)
-        console.error(results)
         this.evidences = results
         console.log(results)
         this.$baseMessage(
@@ -475,6 +539,7 @@ export default {
       }
     },
     async activeBtn(item, index) {
+      this.nowItem = item
       const query = JSON.parse(JSON.stringify(this.$route.query))
       query.suite = index
       this.$router.push({ path: this.$route.path, query })
@@ -483,7 +548,6 @@ export default {
         el.type = 'info'
       })
       item.type = 'success'
-      console.log(item)
       const { konva } = item.data
       await this.initKonva({
         data: konva.Stage,

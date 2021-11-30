@@ -503,7 +503,6 @@ export default {
         item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
       })
       this.list = results
-      console.error(results)
       this.listLoading = false
     },
   },

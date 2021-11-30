@@ -12,45 +12,105 @@
     <el-dialog append-to-body :visible.sync="evidenceDialog">
       <el-card v-if="evidenceList.id" class="box-card" shadow="hover">
         <div slot="header" class="clearfix">
-          <i class="material-icons">
+          <i class="material-icons" :title="evidenceList.node.attrs.icon">
             {{ evidenceList.node.attrs.icon }}
           </i>
-          <el-button style="float: right; padding: 3px 0" type="text">
-            {{ evidenceList.id ? evidenceList.id.split('_')[0] : '' }}
-          </el-button>
-        </div>
-        <div>
-          <div v-if="typs.video.includes[evidenceList.node.attrs.icon]">
-            <div v-for="(item, index) in evidences" :key="index">
-              <vue-aliplayer-v2 :source="$FileServe + item.original.path" />
-            </div>
-          </div>
-          <div v-else-if="typs.audio.includes[evidenceList.node.attrs.icon]">
-            <div v-for="(item, index) in evidences" :key="index">
-              <av-bars :audio-src="$FileServe + item.original.path" />
-            </div>
-          </div>
-          <div v-else-if="typs.image.includes[evidenceList.node.attrs.icon]">
-            <div v-for="(item, index) in evidences" :key="index">
-              <el-image
-                :preview-src-list="[$FileServe + item.original.path]"
-                :src="$FileServe + item.original.path"
-                style="width: 100px; height: 100px"
-              />
-            </div>
-          </div>
-          <div v-else-if="typs.file.includes[evidenceList.node.attrs.icon]">
-            <div v-for="(item, index) in evidences" :key="index">
-              {{ $FileServe + item.original.path }}
-            </div>
-          </div>
+          <i
+            v-show="Number($route.query.step) == 1"
+            class="el-icon-upload"
+            style="
+              float: right;
+              padding: 3px 0;
+              font-size: 46px;
+              cursor: pointer;
+            "
+            title="上传"
+            @click="$refs.uploader.click()"
+          />
           <input
             ref="uploader"
-            accept="image/*"
+            accept="*"
+            style="display: none"
             type="file"
             @change="doUpload($event, evidenceList.node.attrs.icon)"
           />
         </div>
+        <el-table border :data="evidences" stripe>
+          <el-table-column
+            align="center"
+            :label="$translateTitle('cloudTest.number')"
+            show-overflow-tooltip
+            width="100"
+          >
+            <template #default="{ $index }">
+              {{ $index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            :label="$translateTitle('cloudTest.evidence')"
+            show-overflow-tooltip
+            width="auto"
+          >
+            <template #default="{ row }">
+              <vue-aliplayer-v2
+                v-if="video.includes(`${row.original.type}`)"
+                :autoplay="false"
+                height="290"
+                :source="$FileServe + row.original.path"
+                width="290"
+              />
+
+              <av-bars
+                v-else-if="audio.includes(`${row.original.type})`)"
+                :audio-src="$FileServe + row.original.path"
+              />
+              <el-image
+                v-else-if="image.includes(`${row.original.type})`)"
+                :preview-src-list="[$FileServe + row.original.path]"
+                :src="$FileServe + row.original.path"
+                style="width: 100px; height: 100px"
+              />
+
+              <el-link
+                v-else-if="file.includes(`${row.original.type})`)"
+                :href="$FileServe + row.original.path"
+              >
+                {{ $FileServe + row.original.path }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            :label="
+              Number($route.query.step) == 1
+                ? $translateTitle('concentrator.operation')
+                : $translateTitle('cloudTest.Underreview')
+            "
+            show-overflow-tooltip
+            :width="Number($route.query.step) == 1 ? '120' : auto"
+          >
+            <template #default="{ row, $index }">
+              <el-button
+                v-if="Number($route.query.step) == 1"
+                sizes="mini"
+                type="danger"
+                @click.native="deleteFile(row.objectId, $index, evidences)"
+              >
+                {{ $translateTitle('cloudTest.delete') }}
+              </el-button>
+              <el-radio-group
+                v-if="Number($route.query.step) == 2"
+                v-model="row.original.status"
+                @change="changeItem(row, row.original.status)"
+              >
+                <el-radio label="未审核">未审核</el-radio>
+                <el-radio label="通过审核">通过审核</el-radio>
+                <el-radio label="不通过审核">不通过审核</el-radio>
+              </el-radio-group>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-card>
       <span slot="footer" class="dialog-footer">
         <el-button @click="evidenceDialog = false">取 消</el-button>
@@ -218,7 +278,6 @@
       line-height: 160px;
       color: #333;
       text-align: center;
-      background-color: #e9eef3;
     }
 
     body > .el-container {
