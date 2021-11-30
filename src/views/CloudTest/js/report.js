@@ -379,7 +379,7 @@ export default {
           class: 'Product',
           key: row.objectId,
         },
-        order: 'title',
+        order: 'createdAt,title',
       }
       const loading = this.$baseColorfullLoading(1)
       try {

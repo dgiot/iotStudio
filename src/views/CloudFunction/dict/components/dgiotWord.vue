@@ -219,18 +219,20 @@
                 :label="$translateTitle('equipment.parameter')"
                 prop="order"
               >
-                <span slot="label">
-                  <el-tooltip
-                    effect="dark"
-                    placement="right-start"
-                    style="float: left"
-                  >
-                    <div slot="content">
-                      物模型标识符，用‘,’分隔，例：'flow,power,head'
-                    </div>
-                    <i class="el-icon-question" />
-                  </el-tooltip>
-                </span>
+                <el-tooltip
+                  effect="dark"
+                  placement="right-start"
+                  style="float: left"
+                >
+                  <div slot="content">
+                    物模型标识符，
+                    <br />
+                    用 ‘,’ 分隔，
+                    <br />
+                    例：flow,power,head
+                  </div>
+                  <i class="el-icon-question" />
+                </el-tooltip>
                 <el-input
                   v-model="param.parameter"
                   :min="1"

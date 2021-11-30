@@ -627,6 +627,7 @@ export default {
       productinformation: '产品信息',
       productidentification: '产品标识',
       gateway: '网关设备',
+      groupgateway: '网关分组设备',
       direct: '直连设备',
       networkinganddescription: '连网与描述',
       networking: '连网方式',

@@ -1505,7 +1505,7 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             var route = {}
-            route[this.devicedevaddr] = this.childrenForm.route
+            route[this.deviceInfo.devaddr] = this.childrenForm.route
             var childrenDevicesParmas = {
               parentId: {
                 __type: 'Pointer',
@@ -1620,7 +1620,7 @@
       makeSure(scope,$index) {
         // 可以在这里执行删除数据的回调操作.......删除操作.....
         const objRoute = JSON.parse(JSON.stringify(row.route))
-        const routeKey = this.devicedevaddr
+        const routeKey = this.deviceInfo.devaddr
         // 删除key为上级设备地址值
         delete objRoute[routeKey]
         const params = {
