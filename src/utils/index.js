@@ -864,3 +864,20 @@ export function getMqttEventId(type, Identifier = 'dmmd34r23fdew') {
 export function getTopicEventId(topic, fullPath) {
   return md5(topic + fullPath)
 }
+
+/**
+ * @description 将url地址栏参数格式为对象
+ * @param url
+ */
+export function parseQueryString(url) {
+  const str = url.split('?')[1], //通过?得到一个数组,取?后面的参数
+    items = str.split('&') //分割成数组
+  let arr, name, value
+
+  for (let i = 0; i < items.length; i++) {
+    arr = items[i].split('=') //["key0", "0"]
+    name = arr[0]
+    value = arr[1]
+    this[`${name}`] = value
+  }
+}

@@ -11,12 +11,15 @@
   <el-container class="evidence">
     <el-dialog append-to-body :visible.sync="evidenceDialog">
       <el-card v-if="evidenceList.id" class="box-card" shadow="hover">
-        <div slot="header" class="clearfix">
+        <div
+          v-show="Number($route.query.step) == 1"
+          slot="header"
+          class="clearfix"
+        >
           <i class="material-icons" :title="evidenceList.node.attrs.icon">
             {{ evidenceList.node.attrs.icon }}
           </i>
           <i
-            v-show="Number($route.query.step) == 1"
             class="el-icon-upload"
             style="
               float: right;
@@ -24,7 +27,7 @@
               font-size: 46px;
               cursor: pointer;
             "
-            title="上传"
+            title="取证"
             @click="$refs.uploader.click()"
           />
           <input
@@ -83,10 +86,9 @@
             :label="
               Number($route.query.step) == 1
                 ? $translateTitle('concentrator.operation')
-                : $translateTitle('cloudTest.Underreview')
+                : $translateTitle('cloudTest.single audit')
             "
-            show-overflow-tooltip
-            :width="Number($route.query.step) == 1 ? '120' : auto"
+            :width="Number($route.query.step) == 1 ? '120' : '320'"
           >
             <template #default="{ row, $index }">
               <el-button
@@ -97,32 +99,50 @@
               >
                 {{ $translateTitle('cloudTest.delete') }}
               </el-button>
-              <el-radio-group
-                v-if="Number($route.query.step) == 2"
-                v-model="row.original.status"
-                @change="changeItem(row, row.original.status)"
-              >
-                <el-radio label="未审核">未审核</el-radio>
-                <el-radio label="通过审核">通过审核</el-radio>
-                <el-radio label="不通过审核">不通过审核</el-radio>
+              <el-radio-group v-else v-model="row.original.status" size="mini">
+                <el-radio label="未审核">
+                  {{ $translateTitle('cloudTest.Unreviewed') }}
+                </el-radio>
+                <el-radio label="通过审核">
+                  {{ $translateTitle('cloudTest.Approved') }}
+                </el-radio>
+                <el-radio label="不通过审核">
+                  {{ $translateTitle('cloudTest.notapproved') }}
+                </el-radio>
               </el-radio-group>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            v-if="Number($route.query.step) == 3"
+            align="center"
+            :label="$translateTitle('cloudTest.audit opinion')"
+            width="auto"
+          >
+            <template #default="{ row, $index }">
+              <el-input v-model="row.original.message" size="mini" />
+            </template>
+          </el-table-column>
+          <el-table-column
+            v-if="Number($route.query.step) == 3"
+            align="center"
+            :label="$translateTitle('cloudTest.submit review')"
+            width="auto"
+          >
+            <template #default="{ row }">
+              <el-button plain @click.native="changeItem(row)">
+                {{ $translateTitle('cloudTest.submit review') }}
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-card>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="evidenceDialog = false">取 消</el-button>
-        <el-button type="primary" @click="evidenceDialog = false">
-          确 定
-        </el-button>
-      </span>
+      <!--      <span slot="footer" class="dialog-footer">-->
+      <!--        <el-button type="primary" @click="evidenceDialog = false">-->
+      <!--          {{ $translateTitle('cloudTest.save evidence') }}-->
+      <!--        </el-button>-->
+      <!--      </span>-->
     </el-dialog>
-    <!--    <el-steps :active="Number($route.query.step)" align-center>-->
-    <!--      <el-step title="取证" />-->
-    <!--      <el-step title="存证" />-->
-    <!--      <el-step title="审核" />-->
-    <!--      <el-step title="查证" />-->
-    <!--    </el-steps>-->
     <el-header class="evidence_header">
       <el-row class="evidence_header_row" :gutter="24">
         <el-col :lg="1" :md="1" :sm="1" title="检测详情" :xl="1" :xs="1">
@@ -137,6 +157,7 @@
         </el-col>
         <el-col :lg="22" :md="22" :sm="22" :xl="22" :xs="22">
           <p>{{ task.name }}</p>
+          <el-tag v-if="ukey" effect="dark" title="ukey">{{ ukey }}</el-tag>
         </el-col>
         <!--        <el-col :lg="2" :md="2" :sm="2" :xl="1" :xs="2">-->
         <!--          <el-button size="mini" type="success">-->
@@ -234,16 +255,14 @@
               $translateTitle(
                 `${
                   Number($route.query.step) == 1
-                    ? 'cloudTest.forensics'
-                    : 'cloudTest.Underreview'
+                    ? 'cloudTest.submit review'
+                    : 'cloudTest.audit opinion'
                 }`
-              ) + $translateTitle('product.finish')
+              )
             }}
           </el-button>
         </el-col>
-        <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4">
-          <el-tag v-if="ukey" effect="dark" title="ukey">{{ ukey }}</el-tag>
-        </el-col>
+        <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4" />
         <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4" />
       </el-row>
     </el-footer>

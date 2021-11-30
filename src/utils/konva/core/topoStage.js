@@ -1,6 +1,6 @@
 import canvas from '@/utils/konva/core/canvas'
 import addNodeEvent from '@/utils/konva/common'
-
+import { parseQueryString } from '@/utils'
 let info = {
   tagevent: [],
   tag: [],
@@ -97,14 +97,22 @@ const topoStage = {
     })
     stage.find('Path').forEach((node) => {
       info['Path'] = stage.find('Path')
+
       if (node.getAttr('name') == 'evidence') {
         if (location.href.includes('preview')) {
           node.setAttrs({
             draggable: false,
           })
-          // canvas.layer.batchDraw()
-          // canvas.stage.batchDraw()
+          const urlObj = new parseQueryString(location.href)
+          if (urlObj.step == 3)
+            node.setAttrs({
+              fill: 'yellow',
+            })
         }
+
+        // canvas.layer.batchDraw()
+        // canvas.stage.batchDraw()
+
         info['evidence'].push(node)
         addNodeEvent({
           type: node.getAttr('name'),

@@ -143,15 +143,16 @@ export default {
      * @return {Promise<void>}
      * @Description:
      */
-    async changeItem(row, v) {
+    async changeItem(row) {
       try {
         const loading = this.$baseColorfullLoading()
         const params = {
           original: _.merge(row.original, {
-            status: v,
+            status: row.original.status,
+            message: row.original.message,
           }),
         }
-        const res = await putEvidence(row.objetcId, params)
+        const res = await putEvidence(row.objectId, params)
         console.log(res)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
@@ -493,26 +494,73 @@ export default {
      * @Description:
      */
     async finishEvidence(params, step) {
-      try {
-        const loading = this.$baseColorfullLoading()
-        const finish = {
-          profile: _.merge(params.profile, {
-            step: step,
-          }),
-        }
-        const res = await putDevice(params.objectId, finish)
-        this.$router.push({
-          path: '/cloudTest/Task',
-        })
-        loading.close()
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'vab-hey-message-error'
-        )
-      }
+      const message =
+        step == 2
+          ? this.$translateTitle(
+              'cloudTest.Please confirm that all review items have been completed'
+            )
+          : this.$translateTitle(
+              'cloudTest.Please confirm that all testing items have been completed'
+            )
+      const title =
+        step == 2 ? null : this.$translateTitle('cloudTest.audit opinion')
+      const options =
+        step == 2
+          ? {}
+          : {
+              confirmButtonText: this.$translateTitle('cloudTest.notapproved'),
+              cancelButtonText: this.$translateTitle('cloudTest.notapproved'),
+            }
+      this.$baseConfirm(
+        message,
+        title,
+        async () => {
+          try {
+            const loading = this.$baseColorfullLoading()
+            const finish = {
+              profile: _.merge(params.profile, {
+                step: step,
+              }),
+            }
+            const res = await putDevice(params.objectId, finish)
+            this.$router.push({
+              path: '/cloudTest/Task',
+            })
+            loading.close()
+          } catch (error) {
+            console.log(error)
+            this.$baseMessage(
+              this.$translateTitle('alert.Data request error') + `${error}`,
+              'error',
+              'vab-hey-message-error'
+            )
+          }
+        },
+        async () => {
+          try {
+            const loading = this.$baseColorfullLoading()
+            const finish = {
+              profile: _.merge(params.profile, {
+                step: 1,
+              }),
+            }
+            const res = await putDevice(params.objectId, finish)
+            this.$router.push({
+              path: '/cloudTest/Task',
+            })
+            loading.close()
+          } catch (error) {
+            console.log(error)
+            this.$baseMessage(
+              this.$translateTitle('alert.Data request error') + `${error}`,
+              'error',
+              'vab-hey-message-error'
+            )
+          }
+        },
+        step != 2 ? options.confirmButtonText : '',
+        step != 2 ? options.cancelButtonText : ''
+      )
     },
     /**
      * @Author: h7ml
