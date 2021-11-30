@@ -26,6 +26,7 @@ export default {
       timer: new Date(),
       evidenceid: '',
       ukey: '',
+      auditDialog: false,
       timeout: null,
       queryPayload: {
         excludeKeys: 'data,basedata,content',
@@ -330,6 +331,11 @@ export default {
           },
         }
         const { results = [] } = await queryEvidence(_params)
+        if (results?.length)
+          results.forEach((item) => {
+            item.original.path =
+              '/dgiot_file' + item.original.path.split('/dgiot_file')[1]
+          })
         this.evidences = results
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
@@ -487,6 +493,43 @@ export default {
     },
     /**
      * @Author: h7ml
+     * @Date: 2021-11-30 19:28:06
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async notapproved(params, step) {
+      try {
+        const loading = this.$baseColorfullLoading()
+        const finish = {
+          profile: _.merge(params.profile, {
+            message: params.profile.message,
+            step: step,
+          }),
+        }
+        const res = await putDevice(params.objectId, finish)
+        this.auditDialog = false
+        this.$router.push({
+          path: '/cloudTest/Task',
+        })
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
      * @Date: 2021-11-26 19:06:10
      * @LastEditors:
      * @param
@@ -494,26 +537,11 @@ export default {
      * @Description:
      */
     async finishEvidence(params, step) {
-      const message =
-        step == 2
-          ? this.$translateTitle(
-              'cloudTest.Please confirm that all review items have been completed'
-            )
-          : this.$translateTitle(
-              'cloudTest.Please confirm that all testing items have been completed'
-            )
-      const title =
-        step == 2 ? null : this.$translateTitle('cloudTest.audit opinion')
-      const options =
-        step == 2
-          ? {}
-          : {
-              confirmButtonText: this.$translateTitle('cloudTest.notapproved'),
-              cancelButtonText: this.$translateTitle('cloudTest.notapproved'),
-            }
       this.$baseConfirm(
-        message,
-        title,
+        this.$translateTitle(
+          'cloudTest.Please confirm that all review items have been completed'
+        ),
+        null,
         async () => {
           try {
             const loading = this.$baseColorfullLoading()
@@ -535,31 +563,7 @@ export default {
               'vab-hey-message-error'
             )
           }
-        },
-        async () => {
-          try {
-            const loading = this.$baseColorfullLoading()
-            const finish = {
-              profile: _.merge(params.profile, {
-                step: 1,
-              }),
-            }
-            const res = await putDevice(params.objectId, finish)
-            this.$router.push({
-              path: '/cloudTest/Task',
-            })
-            loading.close()
-          } catch (error) {
-            console.log(error)
-            this.$baseMessage(
-              this.$translateTitle('alert.Data request error') + `${error}`,
-              'error',
-              'vab-hey-message-error'
-            )
-          }
-        },
-        step != 2 ? options.confirmButtonText : '',
-        step != 2 ? options.cancelButtonText : ''
+        }
       )
     },
     /**

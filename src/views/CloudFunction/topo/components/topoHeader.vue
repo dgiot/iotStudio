@@ -1,7 +1,12 @@
 <!-- 组件说明 -->
 <template>
   <div class="topo-header">
-    <el-drawer v-drawerDrag size="100%" :visible.sync="infoVisible">
+    <el-drawer
+      v-drawerDrag
+      append-to-body
+      size="100%"
+      :visible.sync="infoVisible"
+    >
       <div id="konva_preview" :key="konva_key" class="konva_preview"></div>
     </el-drawer>
     <div class="topo-header-drawer">

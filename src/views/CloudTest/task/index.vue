@@ -234,7 +234,11 @@
         width="auto"
       >
         <template #default="{ row }">
+          <el-tag v-show="row.profile.step == -1" effect="dark" type="warning">
+            {{ $translateTitle('cloudTest.notapproved') }}
+          </el-tag>
           <el-tag
+            v-show="row.profile.step != -1"
             effect="dark"
             :type="
               ['info', 'warning', 'primary', 'primary'][
@@ -277,7 +281,7 @@
             {{ $translateTitle(`task.start`) }}
           </el-button>
           <el-button
-            v-show="row.profile.step == 1"
+            v-show="row.profile.step == 1 || row.profile.step == -1"
             size="mini"
             type="warning"
             @click.native="forensics(row)"

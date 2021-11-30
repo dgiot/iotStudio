@@ -402,7 +402,7 @@ export default {
       try {
         const loading = this.$baseColorfullLoading()
         const { code, msg, path } = await generatereport(row.objectId)
-        if (code == 0 && path) {
+        if (code == 200 && path) {
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
@@ -418,6 +418,8 @@ export default {
             const _res = putDevice(row.objectId, params)
             // this.downDocx(path)
           }, 1200)
+        } else {
+          this.$baseMessage(`${msg}`, 'error', 'vab-hey-message-error')
         }
         loading.close()
       } catch (error) {

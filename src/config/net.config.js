@@ -16,7 +16,20 @@ module.exports = {
   // 最长请求时间
   requestTimeout: 1000 * 1 * 30,
   // 操作正常code，支持String、Array、int多种类型
-  successCode: [200, 0, 201, 204, '200', '0', '201', '204'],
+  successCode: [
+    200,
+    0,
+    201,
+    204,
+    404,
+    500,
+    '200',
+    '0',
+    '201',
+    '204',
+    '404',
+    '500',
+  ],
   // 操作失败code，支持String、Array、int多种类型
   errorCode: [401, 209, '209', '401'],
   // 数据状态的字段名称

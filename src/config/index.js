@@ -8,6 +8,7 @@ const pwa = require('./pwa.config')
 const og = require('./og.config')
 const mqtt = require('./mqtt.config')
 const logRocket = require('./logRocket.config')
+const gov = require('./gov.config')
 const packages = require('../../package.json')
 const info = {
   ...cli,
@@ -20,6 +21,7 @@ const info = {
   ...local,
   ...og,
   ...logRocket,
+  ...gov,
   ...packages,
 }
 module.exports = info

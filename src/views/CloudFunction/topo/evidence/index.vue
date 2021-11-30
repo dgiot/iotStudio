@@ -9,6 +9,23 @@
 -->
 <template>
   <el-container class="evidence">
+    <el-dialog append-to-body :visible.sync="auditDialog" width="30%">
+      <span>
+        <el-form ref="form" label-width="80px" :model="task">
+          <el-form-item :label="$translateTitle('cloudTest.audit opinion')">
+            <el-input v-model="task.profile.message" />
+          </el-form-item>
+        </el-form>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="notapproved(task, -1)">
+          {{ $translateTitle('cloudTest.notapproved') }}
+        </el-button>
+        <el-button type="primary" @click="notapproved(task, 5)">
+          {{ $translateTitle('cloudTest.Approved') }}
+        </el-button>
+      </span>
+    </el-dialog>
     <el-dialog append-to-body :visible.sync="evidenceDialog">
       <el-card v-if="evidenceList.id" class="box-card" shadow="hover">
         <div
@@ -156,8 +173,13 @@
           </el-button>
         </el-col>
         <el-col :lg="22" :md="22" :sm="22" :xl="22" :xs="22">
-          <p>{{ task.name }}</p>
-          <el-tag v-if="ukey" effect="dark" title="ukey">{{ ukey }}</el-tag>
+          <p>
+            {{ task.name }}
+            <el-tag v-if="ukey" effect="dark" title="ukey">{{ ukey }}</el-tag>
+            <el-tag v-if="ukey" effect="dark" title="ukey">
+              {{ task.objectId }}
+            </el-tag>
+          </p>
         </el-col>
         <!--        <el-col :lg="2" :md="2" :sm="2" :xl="1" :xs="2">-->
         <!--          <el-button size="mini" type="success">-->
@@ -245,6 +267,7 @@
       <el-row :gutter="10">
         <el-col :lg="3" :md="4" :sm="6" :xl="1" :xs="8">
           <el-button
+            v-if="Number($route.query.step) == 1"
             round
             type="success"
             @click.native="
@@ -260,6 +283,14 @@
                 }`
               )
             }}
+          </el-button>
+          <el-button
+            v-if="Number($route.query.step) == 3"
+            round
+            type="success"
+            @click.native="auditDialog = !auditDialog"
+          >
+            {{ $translateTitle('cloudTest.audit opinion') }}
           </el-button>
         </el-col>
         <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4" />

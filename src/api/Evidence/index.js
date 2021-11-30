@@ -62,7 +62,7 @@ export async function postEvidence(id, params) {
  */
 export async function generatereport(id) {
   return request({
-    url: `generatereport/?id=${id}`,
+    url: `generatereport?id=${id}`,
     method: 'post',
   })
 }
