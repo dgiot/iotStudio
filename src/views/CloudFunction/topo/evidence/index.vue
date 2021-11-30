@@ -54,26 +54,24 @@
           >
             <template #default="{ row }">
               <vue-aliplayer-v2
-                v-if="video.includes(`${row.original.type}`)"
+                v-if="types.video.includes(`${row.original.type}`)"
                 :autoplay="false"
                 height="290"
                 :source="$FileServe + row.original.path"
                 width="290"
               />
-
-              <av-bars
-                v-else-if="audio.includes(`${row.original.type})`)"
-                :audio-src="$FileServe + row.original.path"
-              />
               <el-image
-                v-else-if="image.includes(`${row.original.type})`)"
+                v-else-if="types.image.includes(`${row.original.type}`)"
                 :preview-src-list="[$FileServe + row.original.path]"
                 :src="$FileServe + row.original.path"
                 style="width: 100px; height: 100px"
               />
-
+              <av-bars
+                v-else-if="types.audio.includes(`${row.original.type}`)"
+                :audio-src="$FileServe + row.original.path"
+              />
               <el-link
-                v-else-if="file.includes(`${row.original.type})`)"
+                v-else-if="types.file.includes(`${row.original.type}`)"
                 :href="$FileServe + row.original.path"
               >
                 {{ $FileServe + row.original.path }}

@@ -16,10 +16,12 @@ export default {
   data() {
     return {
       nowItem: {},
-      video: ['video', 'personal_video'],
-      audio: ['audio', 'volume_up'],
-      image: ['image', 'image'],
-      file: ['file', 'archive'],
+      types: {
+        video: ['video', 'personal_video'],
+        audio: ['audio', 'volume_up'],
+        image: ['image', 'image'],
+        file: ['file', 'archive'],
+      },
       evidences: [],
       timer: new Date(),
       evidenceid: '',
@@ -322,13 +324,12 @@ export default {
           order: '-createdAt',
           skip: 0,
           where: {
-            reportId: this.taskid,
+            reportId: this.nowItem.objectId,
             'original.controlid': this.evidenceList.node.attrs.id,
           },
         }
         const { results = [] } = await queryEvidence(_params)
         this.evidences = results
-        console.log(results)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
