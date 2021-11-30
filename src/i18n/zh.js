@@ -1236,6 +1236,8 @@ export default {
       'submit review': '提交审核',
       Approved: '审核通过',
       notapproved: '审核不过',
+      'The reason is not reviewed': '审核不过原因',
+      're-review': '重新审核',
       'examination passed': '报告上链',
       datasources: '数据来源',
       configuration: '任务配置',

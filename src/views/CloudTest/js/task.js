@@ -254,6 +254,7 @@ export default {
       // })
     },
     forensics(row) {
+      console.error(row)
       this.$router.push({
         path: '/cloudTest/evidence',
         query: {
@@ -261,6 +262,7 @@ export default {
           suite: 0,
           state: 'preview',
           step: 1,
+          message: row.profile.message,
         },
       })
     },

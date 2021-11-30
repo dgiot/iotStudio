@@ -286,7 +286,11 @@
             type="warning"
             @click.native="forensics(row)"
           >
-            {{ $translateTitle(`cloudTest.forensics`) }}
+            {{
+              row.profile.step == 1
+                ? $translateTitle(`cloudTest.forensics`)
+                : $translateTitle(`cloudTest.re-review`)
+            }}
           </el-button>
           <el-button
             v-show="row.profile.step == 2"

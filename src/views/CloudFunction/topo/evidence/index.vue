@@ -9,9 +9,103 @@
 -->
 <template>
   <el-container class="evidence">
-    <el-dialog append-to-body :visible.sync="auditDialog" width="30%">
+    <el-dialog append-to-body :visible.sync="auditDialog" width="80%">
       <span>
-        <el-form ref="form" label-width="80px" :model="task">
+        <el-table border :data="auditList" stripe>
+          <el-table-column
+            align="center"
+            :label="$translateTitle('cloudTest.number')"
+            prop="original.path"
+            show-overflow-tooltip
+            width="80"
+          >
+            <template #default="{ $index }">
+              {{ $index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            :label="$translateTitle('cloudTest.evidence')"
+            prop="original.path"
+            width="auto"
+          >
+            <template #default="{ row }">
+              <vue-aliplayer-v2
+                v-if="types.video.includes(`${row.original.type}`)"
+                :autoplay="false"
+                height="290"
+                :source="$FileServe + row.original.path"
+                width="290"
+              />
+              <el-image
+                v-else-if="types.image.includes(`${row.original.type}`)"
+                :preview-src-list="[$FileServe + row.original.path]"
+                :src="$FileServe + row.original.path"
+                style="width: 100px; height: 100px"
+              />
+              <av-bars
+                v-else-if="types.audio.includes(`${row.original.type}`)"
+                :audio-src="$FileServe + row.original.path"
+              />
+              <el-link
+                v-else-if="types.file.includes(`${row.original.type}`)"
+                :href="$FileServe + row.original.path"
+              >
+                {{ $FileServe + row.original.path }}
+              </el-link>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            :label="$translateTitle('cloudTest.number')"
+            prop="original.path"
+            show-overflow-tooltip
+            width="auto"
+          >
+            <template #default="{ row }">
+              <el-link :href="$FileServe + row.original.path" type="success">
+                {{ row.original.path }}
+              </el-link>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            align="center"
+            :label="$translateTitle('user.Current state')"
+            prop="original.status"
+            width="100"
+          >
+            <template #default="{ row }">
+              <el-tag
+                effect="dark"
+                :type="
+                  ['success', 'info', 'danger'][
+                    row.original.status == '未审核'
+                      ? 1
+                      : row.original.status == '通过审核'
+                      ? 0
+                      : 2
+                  ]
+                "
+              >
+                {{ row.original.status }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            fixed="right"
+            :label="$translateTitle('cloudTest.audit opinion')"
+            prop="original.message"
+            show-overflow-tooltip
+          />
+        </el-table>
+        <el-form
+          v-show="auditDialog"
+          ref="form"
+          label-width="80px"
+          :model="task"
+        >
           <el-form-item :label="$translateTitle('cloudTest.audit opinion')">
             <el-input v-model="task.profile.message" />
           </el-form-item>
@@ -27,8 +121,9 @@
       </span>
     </el-dialog>
     <el-dialog append-to-body :visible.sync="evidenceDialog">
-      <el-card v-if="evidenceList.id" class="box-card" shadow="hover">
+      <el-card class="box-card" shadow="hover">
         <div
+          v-if="evidenceList.id"
           v-show="Number($route.query.step) == 1"
           slot="header"
           class="clearfix"
@@ -176,7 +271,7 @@
           <p>
             {{ task.name }}
             <el-tag v-if="ukey" effect="dark" title="ukey">{{ ukey }}</el-tag>
-            <el-tag v-if="ukey" effect="dark" title="ukey">
+            <el-tag v-if="ukey" effect="dark" title="objectId">
               {{ task.objectId }}
             </el-tag>
           </p>
@@ -265,7 +360,7 @@
     </el-container>
     <el-footer v-if="task.name" class="evidence_footer">
       <el-row :gutter="10">
-        <el-col :lg="3" :md="4" :sm="6" :xl="1" :xs="8">
+        <el-col :lg="3" :md="2" :sm="3" :xl="1" :xs="4">
           <el-button
             v-if="Number($route.query.step) == 1"
             round
@@ -288,13 +383,57 @@
             v-if="Number($route.query.step) == 3"
             round
             type="success"
-            @click.native="auditDialog = !auditDialog"
+            @click.native="auditQuery(1)"
           >
             {{ $translateTitle('cloudTest.audit opinion') }}
           </el-button>
         </el-col>
-        <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4" />
-        <el-col :lg="9" :md="8" :sm="6" :xl="11" :xs="4" />
+        <el-col :lg="16" :md="13" :sm="11" :xl="18" :xs="10">
+          <el-link
+            v-if="$route.query.message"
+            type="warning"
+            :underline="false"
+          >
+            {{ $translateTitle('cloudTest.The reason is not reviewed') }}：
+            {{ $route.query.message }}
+          </el-link>
+          <el-link
+            v-if="Number($route.query.step) == 3"
+            type="success"
+            :underline="false"
+          >
+            {{ task.profile.message || '' }}
+          </el-link>
+        </el-col>
+        <el-col :lg="4" :md="9" :sm="10" :xl="4" :xs="10">
+          <el-badge
+            type="warning"
+            :value="badge.Unreviewed.length"
+            @click.native="evidenceClick(badge.Unreviewed)"
+          >
+            <el-button circle size="mini" type="warning">
+              {{ $translateTitle('cloudTest.Unreviewed') }}
+            </el-button>
+          </el-badge>
+          <el-badge
+            type="primary"
+            :value="badge.Approved.length"
+            @click.native="evidenceClick(badge.Approved)"
+          >
+            <el-button circle size="mini" type="primary">
+              {{ $translateTitle('cloudTest.Approved') }}
+            </el-button>
+          </el-badge>
+          <el-badge
+            type="danger"
+            :value="badge.notapproved.length"
+            @click.native="evidenceClick(badge.notapproved)"
+          >
+            <el-button circle size="mini" type="danger">
+              {{ $translateTitle('cloudTest.notapproved') }}
+            </el-button>
+          </el-badge>
+        </el-col>
       </el-row>
     </el-footer>
   </el-container>
@@ -377,6 +516,7 @@
       position: fixed;
       bottom: 0;
       width: 100%;
+      text-align: left !important;
     }
   }
 </style>

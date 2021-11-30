@@ -15,6 +15,11 @@ export default {
   components: { VueAliplayerV2 },
   data() {
     return {
+      badge: {
+        Unreviewed: [],
+        Approved: [],
+        notapproved: [],
+      },
       nowItem: {},
       types: {
         video: ['video', 'personal_video'],
@@ -27,6 +32,7 @@ export default {
       evidenceid: '',
       ukey: '',
       auditDialog: false,
+      auditList: [],
       timeout: null,
       queryPayload: {
         excludeKeys: 'data,basedata,content',
@@ -68,27 +74,21 @@ export default {
     this.setTreeFlag(false)
   },
   mounted() {
-    this.$dgiotBus.$off(
+    this.$baseEventBus.$off(
       this.$dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence')
     )
     this.$baseEventBus.$on(
       this.$dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
       (msg) => {
-        /**
-         * @description 防抖
-         */
-        if (this.timeout) {
-          clearTimeout(this.timeout)
-        }
-        this.timeout = setTimeout(() => {
-          this.dgiotEvidence(msg)
-        }, 500)
+        this.evidenceList = msg
+        this.queryevidences()
       }
     )
     this.fetchData()
     if (this.taskid) {
       this.queryTask(this.taskid)
       this.queryEvidence(this.taskid)
+      this.auditQuery('init')
     }
   },
   beforeCreate() {}, //生命周期 - 创建之前
@@ -238,7 +238,7 @@ export default {
       try {
         const loading = this.$baseColorfullLoading()
         const Evidence = {
-          objetcId: this.evidenceid,
+          objectId: this.evidenceid,
           ukey: this.ukey,
           timestamp: Math.round(this.timer),
           md5: params.md5,
@@ -312,6 +312,35 @@ export default {
     },
     /**
      * @Author: h7ml
+     * @Date: 2021-11-30 21:54:24
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async evidenceClick(params) {
+      this.evidences = []
+      try {
+        const loading = this.$baseColorfullLoading()
+        if (params?.length)
+          params.forEach((item) => {
+            item.original.path =
+              '/dgiot_file' + item.original.path.split('/dgiot_file')[1]
+          })
+        this.evidences = params
+        this.evidenceDialog = true
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
      * @Date: 2021-11-26 16:55:01
      * @LastEditors:
      * @param
@@ -321,6 +350,15 @@ export default {
     async queryevidences() {
       this.evidences = []
       try {
+        // /**
+        //  * @description 防抖
+        //  */
+        // if (this.timeout) {
+        //   clearTimeout(this.timeout)
+        // }
+        // this.timeout = setTimeout(() => {
+        //   this.queryevidences()
+        // }, 500)
         const loading = this.$baseColorfullLoading()
         const _params = {
           order: '-createdAt',
@@ -337,34 +375,6 @@ export default {
               '/dgiot_file' + item.original.path.split('/dgiot_file')[1]
           })
         this.evidences = results
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'vab-hey-message-success'
-        )
-        loading.close()
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'vab-hey-message-error'
-        )
-      }
-    },
-    /**
-     * @Author: h7ml
-     * @Date: 2021-11-26 14:21:24
-     * @LastEditors:
-     * @param
-     * @return {Promise<void>}
-     * @Description:
-     */
-    async dgiotEvidence(params) {
-      try {
-        const loading = this.$baseColorfullLoading()
-        this.evidenceList = params
-        this.queryevidences()
         this.evidenceDialog = true
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
@@ -426,13 +436,62 @@ export default {
           'profile.identifier': 'inspectionReportTemp',
         }
         const { count = 0, results = [] } = await queryDevice(this.queryPayload)
-        this.$refs['pagination'].ination.total = count
+        this.$nextTick(() => {
+          this.$refs['pagination'].ination.total = count
+        })
         this.taskList = results
         // this.$baseMessage(
         //   this.$translateTitle('alert.Data request successfully'),
         //   'success',
         //   'vab-hey-message-success'
         // )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
+     * @Date: 2021-11-30 20:18:51
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async auditQuery(type) {
+      this.badge = {
+        Unreviewed: [],
+        Approved: [],
+        notapproved: [],
+      }
+      try {
+        const params = {
+          order: '-createdAt',
+          skip: 0,
+          where: {
+            'original.taskid': this.taskid,
+          },
+        }
+        const loading = this.$baseColorfullLoading()
+        if (type == 1) this.auditDialog = true
+        const { results } = await queryEvidence(params)
+        results.forEach((item) => {
+          if (item.original.status == '未审核') this.badge.Unreviewed.push(item)
+          else if (item.original.status == '通过审核')
+            this.badge.Approved.push(item)
+          else this.badge.notapproved.push(item)
+        })
+        this.auditList = results
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
         loading.close()
       } catch (error) {
         console.log(error)
@@ -578,10 +637,10 @@ export default {
       try {
         const task = await getDevice(taskid)
         if (task) {
-          this.task = task
+          this.task = _.merge({ profile: { message: '' } }, task)
           if (task?.parentId?.objectId)
             await this.getUkey(task.parentId.objectId)
-        } else this.task = { name: '111' }
+        } else this.task = { name: '111', profile: { message: '' } }
       } catch (error) {
         console.log(error)
         this.$baseMessage(
