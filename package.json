@@ -1,6 +1,6 @@
 {
   "name": "@dgiot/dgiot-dashboard",
-  "version": "4.3.9",
+  "version": "4.4.0",
   "author": "iotn2n",
   "license": "Mozilla Public License Version 2.0",
   "private": false,
@@ -31,7 +31,7 @@
     "use:gitbit": "rimraf .git/config && rimraf .git && mkdir .git && cp -r gitbit/* .git && npm run remoteinfo && git pull origin master && npm run changelog:zh && npm run changelog:en  && git add . && git cz",
     "remoteinfo": "git remote -v",
     "genSwagger": "node src/utils/genSwagger.js",
-    "set:github": "npm run remoteinfo && git push origin master && rimraf .git && mkdir .git && cp -r .git/* .git && if exist .git echo '.git'",
+    "set:github": "npm run remoteinfo && git push origin master && rimraf github && mkdir github && cp -r .git/* github && if exist github echo '.git'",
     "push": "npm run use:github && npm run set:github",
     "set:github:main": "npm run remoteinfo && git push origin main && rimraf .git && mkdir .git && cp -r gitbit .git && if exist .git echo '.git'",
     "set:gitbit": "npm run remoteinfo && git push origin master && rimraf gitbit && mkdir gitbit && cp -r gitbit gitbit && if exist gitbit echo 'gitbit'",
