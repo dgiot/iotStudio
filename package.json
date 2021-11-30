@@ -85,7 +85,7 @@
     "standard-version": "^9.3.2",
     "vab-templates": "^0.0.5",
     "vue-audio-visual": "^2.3.0",
-    "vue-contextmenu": "1.5.10",
+    "vue-contextmenu": "1.5.11",
     "vue-ele-form-data-editor": "0.1.6",
     "vue-ele-form-dynamic": "0.4.3",
     "vuera": "^0.2.7"
