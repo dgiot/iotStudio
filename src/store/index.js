@@ -9,14 +9,14 @@
 /**
  * @description 导入所有 vuex 模块，自动加入namespaced:true，用于解决vuex命名冲突，请勿修改。
  */
-import { appId, uid, name, email, subscriptionType } from '@/config'
+import { appId, uid, name, email, subscriptionType, isPwa } from '@/config'
 const info = require('@/config/index')
 Vue.use(Vuex)
 // https://app.logrocket.com/wj9jpe/dgiot/settings/setup
 import LogRocket from 'logrocket'
 import createPlugin from 'logrocket-vuex'
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && isPwa) {
   LogRocket.init(appId)
   LogRocket.identify(uid, {
     name: name,
