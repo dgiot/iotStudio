@@ -242,6 +242,28 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row v-if="param.type == 'dynamicTable'" :gutter="24">
+            <el-col :span="20">
+              <el-form-item
+                :label="$translateTitle('equipment.samplingnumber')"
+                prop="samplingnumber"
+              >
+                <el-tooltip
+                  effect="dark"
+                  placement="right-start"
+                  style="float: left"
+                >
+                  <div slot="content">稳态值个数</div>
+                  <i class="el-icon-question" />
+                </el-tooltip>
+                <el-input-number
+                  v-model="param.samplingnumber"
+                  :min="1"
+                  style="width: 96%"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
           <el-form-item>
             <el-button type="primary" @click.native="submitparam('param')">
               <!-- 确定 -->
@@ -372,6 +394,7 @@
           name: '',
           type: '',
           sources: '',
+          samplingnumber: 10,
         }
       },
       submitparam(param) {
