@@ -31,6 +31,7 @@
     >
       <vue-context-menu
         :context-menu-data="contextMenuData"
+        style="font-size: 14px"
         @copy="contextMenu('copy')"
         @deleteSahpe="contextMenu('remove')"
         @getPicture="contextMenu('getPicture')"
@@ -39,7 +40,6 @@
         @moveToTop="contextMenu('moveToTop')"
         @moveUp="contextMenu('moveUp')"
       />
-      <topo-scale style="position: fixed; display: inline-block" />
       <div id="kevCurrent" :key="Sale" class="konvaTest"></div>
     </div>
   </div>
@@ -47,7 +47,7 @@
 
 <script>
   // eslint-disable
-  import TopoScale from './TopoScale'
+
   import { mapActions, mapGetters, mapMutations } from 'vuex'
 
   var width = window.innerWidth
@@ -67,7 +67,7 @@
       //   default: moment(new Date()).valueOf(),
       // },
     },
-    components: { TopoScale },
+    components: {},
     data() {
       return {
         contextMenuData: {

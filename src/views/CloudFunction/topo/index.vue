@@ -17,10 +17,10 @@
         <el-row :gutter="gutter.gutter">
           <!--       明诚发布注释18 到 27 行-->
           <el-col
-            :lg="isDevice ? 0 : 3"
-            :md="isDevice ? 0 : 3"
-            :sm="isDevice ? 0 : 4"
-            :xl="isDevice ? 0 : 3"
+            :lg="isDevice || isFull ? 0 : 3"
+            :md="isDevice || isFull ? 0 : 3"
+            :sm="isDevice || isFull ? 0 : 4"
+            :xl="isDevice || isFull ? 0 : 3"
             :xs="0"
             class="hidden-xs-only konva-container-main-allocation"
           >
@@ -28,14 +28,14 @@
           </el-col>
 
           <el-col
-            :lg="isDevice ? 24 : gutter.lg"
-            :md="isDevice ? 24 : gutter.md"
-            :sm="isDevice ? 24 : gutter.sm"
-            :xl="isDevice ? 24 : gutter.xl"
-            :xs="isDevice ? 24 : gutter.xs"
+            :lg="isDevice || isFull ? 24 : gutter.lg"
+            :md="isDevice || isFull ? 24 : gutter.md"
+            :sm="isDevice || isFull ? 24 : gutter.sm"
+            :xl="isDevice || isFull ? 24 : gutter.xl"
+            :xs="isDevice || isFull ? 24 : gutter.xs"
             class="konva-container-main-baseCol"
           >
-            <el-container class="konva-container-baseCol-baseContainer">
+            <el-main class="konva-container-baseCol-baseContainer">
               <Topo-base ref="topobase" />
               <div
                 id="konva"
@@ -43,21 +43,8 @@
                 class="konva, _center"
                 style="display: none"
               ></div>
-            </el-container>
+            </el-main>
           </el-col>
-          <!--          <el-col-->
-          <!--            :lg="isDevice ? 0 : 4"-->
-          <!--            :md="isDevice ? 0 : 6"-->
-          <!--            :sm="isDevice ? 0 : 6"-->
-          <!--            :xl="isDevice ? 0 : 3"-->
-          <!--            :xs="0"-->
-          <!--            class="hidden-xs-only"-->
-          <!--            hidden-xs-only-->
-          <!--          >-->
-          <!--            <el-aside class="konva-container-main-operationsSide">-->
-          <!--              <TopoOperation ref="operation" @upconfig="saveKonvaitem" />-->
-          <!--            </el-aside>-->
-          <!--          </el-col>-->
         </el-row>
       </el-main>
     </el-container>
@@ -79,6 +66,7 @@
       return {
         Stage: {},
         router: '',
+        isFull: false,
         topicKey: '',
         isFullscreen: false,
         gutter: {
@@ -113,14 +101,22 @@
           id: 'container',
         }
       },
-      isDevice: function () {
-        return this.$route.query.type == 'device' || this.$route.query.deviceid
-          ? true
-          : false
+      isDevice: {
+        get: function () {
+          return this.$route.query.type == 'device' ||
+            this.$route.query.deviceid
+            ? true
+            : false
+        },
       },
     },
     watch: {},
     mounted() {
+      this.$baseEventBus.$off('ToggleView')
+      this.$baseEventBus.$on('ToggleView', () => {
+        this.isFull = !this.isFull
+        console.log(this.isFull)
+      })
       this.Stage = _.isEmpty(localStorage.getItem('konvaStale'))
         ? localStorage.getItem('konvaStale')
         : this.defaultKonva
@@ -128,6 +124,7 @@
       this.$nextTick(() => {
         this.handleMqtt()
       })
+      this.setTreeFlag(false)
     },
     destroyed() {
       localStorage.setItem('konvaStale', JSON.stringify(canvas.stageJson))
@@ -142,6 +139,7 @@
       ...mapMutations({
         initKonva: 'topo/initKonva',
         createThing: 'topo/createThing',
+        setTreeFlag: 'settings/setTreeFlag',
       }),
       saveKonvaitem() {},
       async handleMqtt() {
@@ -254,6 +252,8 @@
           overflow: auto;
 
           &-baseContainer {
+            overflow: auto;
+            width: 100%;
             height: calc(
               100vh - #{$base-top-bar-height} * 2.7 - #{$base-padding} * 2 -
                 90px

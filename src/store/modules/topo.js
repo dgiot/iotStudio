@@ -156,7 +156,9 @@ const mutations = {
     // 长与宽的比例是12:7
     // 比例值是1200/700 1.7142857142857142
     canvas.konvaAttr.scale = size
-    const { width, height } = canvas.konvaAttr
+    // const { width, height } = canvas.konvaAttr
+    const width = Number($('.topoBase').css('width').replace('px', ''))
+    const height = Number($('.topoBase').css('height').replace('px', ''))
     const newWidth = (width * size) / 100
     const newHeight = (height * size) / 100
     const saleInfo = {
@@ -173,8 +175,7 @@ const mutations = {
     }
     canvas.konvaAttr = canvasAttr
     state.Sale = size
-    canvas.sale(saleInfo.scaleX)
-    console.error('缩放大小参数')
+    canvas.sale(saleInfo)
     console.table(canvas.konvaAttr)
   },
   setKonva(state, attr) {

@@ -33,9 +33,9 @@ async function queryAllMsg(commit) {
             objectId: '0',
           })
         : [],
-      Menu: res?.[1]?.results ? res[1].results : [],
-      Permission: res?.[2]?.results ? res[2].results : [],
-      Tree: res?.[3]?.results ? res[3].results : [],
+      Menu: res?.[1]?.results ?? [],
+      Permission: res?.[2]?.results ?? [],
+      Tree: res?.[3]?.results ?? [],
     }
     commit('set_Product', promiseRes.Product)
     commit('setMenu', promiseRes.Menu)

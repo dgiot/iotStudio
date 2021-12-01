@@ -24,89 +24,15 @@
     <div class="topo-header-top">
       <vab-query-form class="topo-header-top-query">
         <vab-query-form-left-panel class="topo-header-top-query-left-panel">
-          <!--          <a-dropdown class="topo-header-top-query-left-panel-dropdown">-->
-          <!--            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">-->
-          <!--              <a-icon type="tool" />-->
-          <!--              <p>{{ $translateTitle('konva.socket') }}</p>-->
-          <!--            </a>-->
-          <!--            <a-menu slot="overlay">-->
-          <!--              <a-sub-menu key="websocket" title="websocket">-->
-          <!--                <a-menu-item @click="drawerFlag">-->
-          <!--                  {{ $translateTitle('konva.socket') }}-->
-          <!--                </a-menu-item>-->
-          <!--              </a-sub-menu>-->
-
-          <!--              <a-sub-menu key="mqtt" title="mqtt">-->
-          <!--                <a-menu-item-->
-          <!--                  :disabled="productid.length < 0"-->
-          <!--                  @click="subscribe(productid)"-->
-          <!--                >-->
-          <!--                  {{ $translateTitle('leftbar.subscriptions') }} mqtt-->
-          <!--                </a-menu-item>-->
-          <!--                <a-menu-item :disabled="stopMqtt" @click="CloseSub()">-->
-          <!--                  {{ $translateTitle('leftbar. cancel') }} mqtt-->
-          <!--                </a-menu-item>-->
-          <!--              </a-sub-menu>-->
-
-          <!--              <a-menu-item key="test" title="sub menu">-->
-          <!--                <el-switch-->
-          <!--                  v-model="switchvalue"-->
-          <!--                  :disabled="productid.length < 0"-->
-          <!--                  active-color="#13ce66"-->
-          <!--                  inactive-color="#ff4949"-->
-          <!--                  :active-text="$translateTitle('tagsView.close')"-->
-          <!--                  :inactive-text="$translateTitle('tagsView.open')"-->
-          <!--                  @change="stopsub"-->
-          <!--                />-->
-          <!--              </a-menu-item>-->
-          <!--            </a-menu>-->
-          <!--          </a-dropdown>-->
-
-          <!--          <a-dropdown class="topo-header-top-query-left-panel-dropdown">-->
-          <!--            <a-->
-          <!--              class="ant-dropdown-link"-->
-          <!--              @click="(e) => e.preventDefault()"-->
-          <!--            >-->
-          <!--              <a-icon type="edit" />-->
-          <!--              <p>-->
-          <!--                {{ $translateTitle('konva.edit') }}-->
-          <!--              </p>-->
-          <!--            </a>-->
-          <!--            <a-menu slot="overlay">-->
-          <!--              &lt;!&ndash;              <a-menu-item @click="flagFn('pencil')">铅笔</a-menu-item>&ndash;&gt;-->
-          <!--              <a-menu-item>-->
-          <!--                <el-link @click="flagFn('ellipse')">-->
-          <!--                  椭圆-空心-->
-          <!--                </el-link>-->
-          <!--              </a-menu-item>-->
-          <!--              <a-menu-item>-->
-          <!--                <el-link @click="flagFn('rect')">-->
-          <!--                  矩形-->
-          <!--                </el-link>-->
-          <!--              </a-menu-item>-->
-          <!--              <a-menu-item>-->
-          <!--                <el-link @click="flagFn('rectH')">-->
-          <!--                  矩形-空心-->
-          <!--                </el-link>-->
-          <!--              </a-menu-item>-->
-          <!--              <a-menu-item>-->
-          <!--                <el-link @click="flagFn('text')">-->
-          <!--                  文字-->
-          <!--                </el-link>-->
-          <!--              </a-menu-item>-->
-          <!--            </a-menu>-->
-          <!--          </a-dropdown>-->
-
-          <!--          <a-dropdown class="topo-header-top-query-left-panel-dropdown">-->
-          <!--            <a-->
-          <!--              class="ant-dropdown-link"-->
-          <!--              @click="removeFn()"-->
-          <!--              @keyup.delete="removeFn()"-->
-          <!--            >-->
-          <!--              <a-icon type="delete" />-->
-          <!--              <p>{{ $translateTitle('konva.delete') }}</p>-->
-          <!--            </a>-->
-          <!--          </a-dropdown>-->
+          <a-dropdown
+            class="topo-header-top-query-left-panel-dropdown"
+            @click.native="ToggleView"
+          >
+            <a class="ant-dropdown-link">
+              <a-icon type="tool" />
+              <p>{{ $translateTitle('leftbar.tools') }}</p>
+            </a>
+          </a-dropdown>
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
             <a class="ant-dropdown-link" @click="saveTopo">
               <a-icon type="save" />
@@ -125,7 +51,12 @@
               <p>{{ $translateTitle('konva.share') }}</p>
             </a>
           </a-dropdown>
-
+          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+            <a class="ant-dropdown-link">
+              <a-icon type="plus" />
+              <p><topo-scale /></p>
+            </a>
+          </a-dropdown>
           <!--          <el-color-picker-->
           <!--            v-model="pickerColor"-->
           <!--            size="medium"-->
@@ -155,10 +86,10 @@
 
 <script>
   import { mapGetters, mapMutations } from 'vuex'
-
+  import TopoScale from './TopoScale'
   export default {
     name: 'TopoHeader',
-    components: {},
+    components: { TopoScale },
     props: {
       productid: {
         type: String,
@@ -237,6 +168,9 @@
         setGraphColor: 'konva/setGraphColor',
         setDrawParams: 'konva/setDrawParams',
       }),
+      ToggleView() {
+        this.$baseEventBus.$emit('ToggleView')
+      },
       saveTopo() {
         this.$dgiotBus.$emit('busUpdata')
       },
