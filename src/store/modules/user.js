@@ -1,7 +1,6 @@
 /**
  * @description 登录、获取用户信息、退出登录、清除token逻辑，不建议修改
  */
-
 const getLocalStorage = (key) => {
   const value = localStorage.getItem(key)
   if (isJson(value)) {
@@ -10,14 +9,8 @@ const getLocalStorage = (key) => {
     return false
   }
 }
-
-function queryAllMsg(commit) {
-  console.groupCollapsed(
-    '%ctree queryAllMsg',
-    'color:#009a61; font-size: 28px; font-weight: 300'
-  )
-  console.log('queryAllMsg', commit)
-  console.groupEnd()
+const { language } = getLocalStorage('language')
+async function queryAllMsg(commit) {
   const params = {
     count: 'objectId',
     order: '-updatedAt',
@@ -26,41 +19,37 @@ function queryAllMsg(commit) {
       // category: 'IotHub',
     },
   }
-  queryProduct(params)
-    .then((res) => {
-      let results = res.results
-      results.unshift({
-        name: language == 'zh' ? '全部产品' : 'All Products',
-        objectId: '0',
-      })
-      commit('set_Product', results)
-    })
-    .catch((e) => {
-      console.log(`query role error ${e}`)
-      commit('set_Product', [])
-    })
-  queryMenu({})
-    .then((res) => {
-      commit('setMenu', res.results)
-    })
-    .catch((e) => {
-      commit('setMenu', [])
-    })
-  Permission()
-    .then((res) => {
-      commit('setPermission', res.results)
-    })
-    .catch((e) => {
-      commit('setPermission', [])
-    })
-  Roletree()
-    .then((res) => {
-      commit('setRoleTree', res.results)
-    })
-    .catch((e) => {
-      console.log(`get role error ${e}`)
-      commit('setRoleTree', [])
-    })
+  try {
+    const res = await Promise.all([
+      queryProduct(params),
+      queryMenu({}),
+      Permission(),
+      Roletree(),
+    ])
+    const promiseRes = {
+      Product: res?.[0]?.results
+        ? res[0].results.unshift({
+            name: language == 'zh' ? '全部产品' : 'All Products',
+            objectId: '0',
+          })
+        : [],
+      Menu: res?.[1]?.results ? res[1].results : [],
+      Permission: res?.[2]?.results ? res[2].results : [],
+      Tree: res?.[3]?.results ? res[3].results : [],
+    }
+    commit('set_Product', promiseRes.Product)
+    commit('setMenu', promiseRes.Menu)
+    commit('setPermission', promiseRes.Permission)
+    commit('setRoleTree', promiseRes.Tree)
+    console.groupCollapsed(
+      '%c login promise.all log',
+      'color:#009a61; font-size: 28px; font-weight: 300'
+    )
+    console.info(promiseRes)
+    console.groupEnd()
+  } catch (e) {
+    console.error(`await Promise.all error ${e}`)
+  }
 }
 
 import {
@@ -114,7 +103,6 @@ const defaultTheme = {
   pictureSwitch,
 }
 
-const { language } = getLocalStorage('language')
 const state = () => ({
   loginInfo: getToken('loginInfo'),
   Menu: getToken('Menu'),
