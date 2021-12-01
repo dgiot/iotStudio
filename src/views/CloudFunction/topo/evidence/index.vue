@@ -115,7 +115,7 @@
         <el-button @click="notapproved(task, -1)">
           {{ $translateTitle('cloudTest.notapproved') }}
         </el-button>
-        <el-button type="primary" @click="notapproved(task, 5)">
+        <el-button type="primary" @click="notapproved(task, 3)">
           {{ $translateTitle('cloudTest.Approved') }}
         </el-button>
       </span>
@@ -269,11 +269,35 @@
         </el-col>
         <el-col :lg="22" :md="22" :sm="22" :xl="22" :xs="22">
           <p>
-            {{ task.name }}
-            <el-tag v-if="ukey" effect="dark" title="ukey">{{ ukey }}</el-tag>
-            <el-tag v-if="ukey" effect="dark" title="objectId">
-              {{ task.objectId }}
-            </el-tag>
+            <el-tooltip
+              v-if="task.name"
+              class="item"
+              content="报告名称"
+              effect="dark"
+              placement="top-start"
+            >
+              <el-tag>{{ task.name }}</el-tag>
+            </el-tooltip>
+            <el-tooltip
+              v-if="ukey"
+              class="item"
+              content="ukey"
+              effect="dark"
+              placement="top-start"
+            >
+              <el-tag effect="dark" title="ukey">{{ ukey }}</el-tag>
+            </el-tooltip>
+            <el-tooltip
+              v-if="ukey"
+              class="item"
+              content="报告id"
+              effect="dark"
+              placement="top-start"
+            >
+              <el-tag effect="dark" title="objectId">
+                {{ task.objectId }}
+              </el-tag>
+            </el-tooltip>
           </p>
         </el-col>
         <!--        <el-col :lg="2" :md="2" :sm="2" :xl="1" :xs="2">-->
@@ -323,7 +347,12 @@
       <transition name="el-fade-in-linear">
         <el-aside
           v-show="taskFlag"
-          style="width: 300px !important; background: #fff"
+          style="
+            width: 400px !important;
+            background: #fff;
+            height: 100vh;
+            overflow: scroll;
+          "
         >
           <div
             v-for="(item, index) in taskList"
@@ -334,18 +363,66 @@
               :shadow="
                 $route.query.taskid == item.objectId ? 'always' : 'hover'
               "
+              style="cursor: pointer"
               @click.native="headerTask(item, index)"
             >
-              <div slot="header" class="clearfix">
-                <span>{{ item.name }}</span>
-              </div>
-              {{ item.detail.brand }}
-              <br />
-              {{ item.profile.testbed }}
-              <br />
-              {{ item.createdAt }}
-              <br />
-              {{ item.devaddr }}
+              <el-descriptions
+                border
+                :column="2"
+                direction="vertical"
+                size="medium"
+              >
+                <el-descriptions-item label="检测任务">
+                  <el-tag
+                    :type="
+                      $route.query.taskid == item.objectId ? 'success' : 'info'
+                    "
+                  >
+                    {{ item.name }}
+                  </el-tag>
+                </el-descriptions-item>
+                <el-descriptions-item label="检测进度">
+                  <el-tag
+                    v-if="item.profile.step == -1"
+                    effect="dark"
+                    type="warning"
+                  >
+                    {{ $translateTitle('cloudTest.notapproved') }}
+                  </el-tag>
+                  <el-tag
+                    v-if="item.profile.step != -1"
+                    effect="dark"
+                    :type="
+                      ['info', 'warning', 'primary', 'primary'][
+                        item.profile.step ? item.profile.step : 0
+                      ]
+                    "
+                  >
+                    {{
+                      [
+                        $translateTitle('product.notstarted'),
+                        $translateTitle('product.testing'),
+                        $translateTitle('product.pending review'),
+                        $translateTitle('product.finishtest'),
+                        $translateTitle('product.review completed'),
+                      ][item.profile.step] ||
+                      $translateTitle('product.finishtest')
+                    }}
+                  </el-tag>
+                </el-descriptions-item>
+                <el-descriptions-item label="任务id">
+                  {{ item.objectId }}
+                </el-descriptions-item>
+                <el-descriptions-item label="检测台体">
+                  {{ item.detail.brand }}
+                </el-descriptions-item>
+                <el-descriptions-item label="开始时间">
+                  {{ utc2beijing(item.createdAt) }}
+                </el-descriptions-item>
+                <el-descriptions-item label="设备地址">
+                  {{ item.devaddr }}
+                </el-descriptions-item>
+              </el-descriptions>
             </el-card>
           </div>
           <vab-parser-pagination
@@ -390,7 +467,7 @@
         </el-col>
         <el-col :lg="16" :md="13" :sm="11" :xl="18" :xs="10">
           <el-link
-            v-if="$route.query.message"
+            v-if="$route.query.message && Number($route.query.step) != 5"
             type="warning"
             :underline="false"
           >
@@ -473,7 +550,7 @@
 
     .el-container:nth-child(5) .el-aside,
     .el-container:nth-child(6) .el-aside {
-      line-height: 260px;
+      line-height: 280px;
     }
 
     .el-container:nth-child(7) .el-aside {

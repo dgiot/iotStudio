@@ -16,9 +16,10 @@ export default {
   },
   data() {
     return {
+      activeName: 'forensics',
       officeapps: '',
       dialogVisible: false,
-      paginations: {},
+      paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
       queryPayload: {
         excludeKeys: 'data',
         include: '',
@@ -122,7 +123,7 @@ export default {
           sortable: true,
         },
       ],
-      list: [],
+      list: { forensics: [], examination: [] },
       listLoading: true,
       queryForm: {
         pageSizes: [10, 20, 30, 50],
@@ -165,6 +166,52 @@ export default {
     this.fetchData()
   },
   methods: {
+    handleClick(tab, event) {
+      this.paginations = {
+        // 每页显示个数选择器的选项设置
+        pageSizes: [5, 10, 20, 50, 100, 200, 500],
+        // 组件布局，子组件名用逗号分隔
+        layout: 'total, sizes, prev, pager, next, jumper',
+        // 是否为分页按钮添加背景色
+        background: true,
+        // 是否显示本控件
+        hidden: false,
+        // 是否使用小型分页样式
+        small: false,
+        // 每页显示条目个数，支持 .sync 修饰符
+        pageSize: 10,
+        // 总页数，total 和 page-count 设置任意一个就可以达到显示页码的功能；如果要支持 page-sizes 的更改，则需要使用 total 属性
+        pageCount: 0,
+        // 页码按钮的数量，当总页数超过该值时会折叠 大于等于 5 且小于等于 21 的奇数
+        pagerCount: 7,
+        // 当前页数，支持 .sync 修饰符
+        currentPage: 1,
+        // 每页显示个数选择器的下拉框类名
+        popperClass: '',
+        // 替代图标显示的上一页文字
+        prevText: '',
+        // 替代图标显示的下一页文字
+        nextText: '',
+        // 是否禁用
+        disabled: false,
+        // 只有一页时是否隐藏
+        hideOnSinglePage: false,
+      }
+      this.queryPayload = {
+        excludeKeys: 'data',
+        include: '',
+        order: '-createdAt',
+        limit: 10,
+        skip: 0,
+        count: 'objectId',
+      }
+      this.fetchData()
+      if (tab.name == 'forensics')
+        this.$refs['forensics'].ination.total = this.list.forensics.length
+      else
+        this.$refs['examination'].ination.total = this.list.examination.length
+      // this.$refs['examination'].ination.total = this.list.examination.length
+    },
     async paginationQuery(queryPayload) {
       this.queryPayload = queryPayload
     },
@@ -236,22 +283,6 @@ export default {
           templatenameid: '',
         }
       })
-    },
-    handlePreview(report) {
-      const fileUrl = this.$FileServe + report.profile.docx
-      this.dialogVisible = true
-      this.officeapps =
-        'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
-      // window.open(this.officeapps)
-      // axios({
-      //   method: 'get',
-      //   responseType: 'blob', // 设置响应文件格式
-      //   url: fileUrl,
-      // }).then(({ data }) => {
-      //   console.error(data)
-      //   this.dialogVisible = true
-      //   docx.renderAsync(data, this.$refs.file) // 渲染到页面预览
-      // })
     },
     forensics(row) {
       console.error(row)
@@ -401,6 +432,13 @@ export default {
      * @Description:
      */
     async handleReport(row) {
+      if (row.profile.step == 5 && row.profile.docx) {
+        const fileUrl = this.$FileServe + row.profile.docx
+        this.dialogVisible = true
+        this.officeapps =
+          'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
+        return false
+      }
       try {
         const loading = this.$baseColorfullLoading()
         const { code, msg, path } = await generatereport(row.objectId)
@@ -418,7 +456,10 @@ export default {
               }),
             }
             const _res = putDevice(row.objectId, params)
-            // this.downDocx(path)
+            const fileUrl = this.$FileServe + path
+            this.dialogVisible = true
+            this.officeapps =
+              'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
           }, 1200)
         } else {
           this.$baseMessage(`${msg}`, 'error', 'vab-hey-message-error')
@@ -474,6 +515,7 @@ export default {
       }
     },
     async fetchData() {
+      this.list = { forensics: [], examination: [] }
       this.getwordtemp()
       this.getgroup()
       // const params = {
@@ -490,12 +532,15 @@ export default {
       this.queryPayload.where = {
         'profile.identifier': 'inspectionReportTemp',
         name: this.queryForm.name.length
-          ? { $regex: this.queryForm.name }
+          ? { $in: this.queryForm.name }
           : { $ne: null },
+        'profile.step':
+          this.activeName == 'forensics' ? { $lte: 1 } : { $gt: 1 },
       }
       this.listLoading = true
       const { count = 0, results = [] } = await queryDevice(this.queryPayload)
-      this.$refs['pagination'].ination.total = count
+      this.$refs['forensics'].ination.total = count
+      this.$refs['examination'].ination.total = count
       results.forEach((item) => {
         if (!item.profile.step) item.profile.step = 0
         item.endtime = item.profile.endtime
@@ -505,8 +550,12 @@ export default {
           ? moment(Number(item.profile.starttime)).format('YYYY-MM-DD HH:mm:ss')
           : ''
         item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
+        if (item.profile.step <= 1) {
+          this.list.forensics.push(item)
+        } else {
+          this.list.examination.push(item)
+        }
       })
-      this.list = results
       this.listLoading = false
     },
   },

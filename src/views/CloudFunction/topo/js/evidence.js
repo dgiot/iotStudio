@@ -64,7 +64,7 @@ export default {
   },
   computed: {
     scrollerHeight: function () {
-      return 260 + 'px'
+      return 280 + 'px'
     },
     ...mapGetters({
       role: 'acl/role',
@@ -182,7 +182,7 @@ export default {
       this.timer = new Date()
       this.evidenceid = md5(
         'Evidence' + this.ukey + Math.round(this.timer) + ''
-      )
+      ).substring(0, 10)
       const file = event.target.files[0]
       const fileType = file.name.substring(file.name.lastIndexOf('.'))
       try {
@@ -225,6 +225,14 @@ export default {
           'vab-hey-message-error'
         )
       }
+    },
+    utc2beijing(utc_datetime) {
+      // 转为正常的时间格式 年-月-日 时:分:秒
+      var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1000)
+        .toISOString()
+        .replace(/T/g, ' ')
+        .replace(/\.[\d]{3}Z/, '')
+      return date // 2017-03-31 16:02:06
     },
     /**
      * @Author: h7ml
@@ -407,6 +415,8 @@ export default {
         query.taskid = item.objectId
         query.suite = 1
         query.state = 'preview'
+        query.message = item.profile.message
+        query.step = item.profile.step
         this.$router.push({ path: this.$route.path, query })
         loading.close()
         this.queryTask(query.taskid)
