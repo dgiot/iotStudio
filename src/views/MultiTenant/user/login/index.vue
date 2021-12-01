@@ -290,6 +290,9 @@
               this.loading = true
               await this.login(this.form)
               await this.$router.push(this.handleRoute())
+              setTimeout(() => {
+                document.querySelector('.el-tree-node__content').click()
+              }, 1200)
             } finally {
               this.loading = false
             }
