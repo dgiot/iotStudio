@@ -546,7 +546,7 @@
                           class="el-icon-search"
                           native-type="submit"
                           type="primary"
-                          @click="queryProdut({})"
+                          @click="queryprodut({})"
                         />
                       </el-form-item>
                     </el-form>
@@ -1600,7 +1600,7 @@ export default {
     const {project = ''} = this.$route.query
     this.formInline.productname = project
     this.Get_Re_Channel()
-    this.queryProdut({})
+    this.queryprodut({})
     this.searchProduct(0)
   },
   beforeDestroy() {
@@ -1671,7 +1671,7 @@ export default {
     async referenceHandle(row) {
       await this.$refs.profile.StepsListRowClick(row)
     },
-    async queryProdut(args) {
+    async queryprodut(args) {
       const categorys = args.categorys
       const loading = this.$baseColorfullLoading()
       if (!args.limit) {
@@ -2230,7 +2230,7 @@ export default {
       this.queryForm.category = objectId
       this.showcateTree = !this.showcateTree
       if (objectId == 'a60a85475a') {
-        this.queryProdut({})
+        this.queryprodut({})
       } else {
         let params = {
           keys: 'objectId',
@@ -2249,7 +2249,7 @@ export default {
             ids.push(result.objectId)
           })
           dgiotlog.log('ids', ids)
-          this.queryProdut({categorys: ids})
+          this.queryprodut({categorys: ids})
         })
       }
     },
