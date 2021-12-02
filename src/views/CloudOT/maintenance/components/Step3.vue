@@ -182,7 +182,7 @@
             }
           } else {
             this.$message.error('请选择分配人员')
-            console.log('error submit!!')
+            dgiotlog.log('error submit!!')
             return false
           }
         })

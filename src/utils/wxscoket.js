@@ -71,12 +71,12 @@ let _scokethost =
 //   return hostname.indexOf(i) > -1
 // })
 // if (result) {
-//   console.log(process.env.VUE_APP_URL)
+//   dgiotlog.log(process.env.VUE_APP_URL)
 //   _scokethost = process.env.VUE_APP_URL.split('//')[1]
 // } else {
 //   _scokethost = ''
 // }
-console.info(`%_scokethost is : ${_scokethost}`, 'color: green;')
+dgiotlog.info(`%_scokethost is : ${_scokethost}`, 'color: green;')
 // eslint-disable-next-line no-unused-vars
 var Websocket = {
   modName: 'websocket',
@@ -101,7 +101,7 @@ var Websocket = {
   send: function () {
     var _this = this
     var sendInfo = JSON.parse(_this.sendInfo)
-    console.log(sendInfo)
+    dgiotlog.log(sendInfo)
     _this.sendMessage(sendInfo)
   },
   log: function (Msg) {
@@ -125,7 +125,7 @@ var Websocket = {
     _this.cInfo.useSSL ? (_this.cInfo.port = 8084) : (_this.cInfo.port = 8083)
   },
   recive: function (msg) {
-    console.log(msg)
+    dgiotlog.log(msg)
   },
 
   add_hook: function (Re, Callback) {
@@ -146,7 +146,7 @@ var Websocket = {
   },
 
   dispatch: function (message) {
-    console.log('message', message)
+    dgiotlog.log('message', message)
     var _this = this
     var topic = message.destinationName
     const hooks = _this.hooks
@@ -167,7 +167,7 @@ var Websocket = {
     }
     _this.client.onConnectionLost = function (responseObject) {
       if (responseObject.errorCode !== 0) {
-        console.log('onConnectionLost: ' + responseObject.errorMessage)
+        dgiotlog.log('onConnectionLost: ' + responseObject.errorMessage)
         setTimeout(function () {
           _this.connect()
         }, 1000)
@@ -189,7 +189,7 @@ var Websocket = {
     var options = {
       onFailure: function (err) {
         _this.connState = false
-        console.log('连接失败 ' + err.errorMessage)
+        dgiotlog.log('连接失败 ' + err.errorMessage)
         setTimeout(function () {
           _this.connect()
         }, 5000)
@@ -198,8 +198,8 @@ var Websocket = {
         _this.connState = true
         _this.subscribe(_this.subInfo, function (res) {
           if (res.result) {
-            console.log(_this.subInfo)
-            console.log('订阅成功')
+            dgiotlog.log(_this.subInfo)
+            dgiotlog.log('订阅成功')
           }
         })
       },
@@ -229,7 +229,7 @@ var Websocket = {
       _this.client.disconnect()
       _this.client = null
     }
-    console.log('已经断开连接！')
+    dgiotlog.log('已经断开连接！')
     _this.connState = false
     setTimeout(function () {
       _this.connect()
@@ -238,28 +238,28 @@ var Websocket = {
   subscribe: function (subInfo, callback) {
     var _this = this
     if (!_this.client || !_this.client.isConnected()) {
-      console.log(DISCONNECT_MSG)
+      dgiotlog.log(DISCONNECT_MSG)
       _this.connect()
       return
     }
     if (!subInfo.topic) {
-      console.log(TOPIC_EMPTY)
+      dgiotlog.log(TOPIC_EMPTY)
       return
     }
     _this.client.subscribe(subInfo.topic, {
       qos: Number(subInfo.qos),
       onSuccess: function (msg) {
         subInfo.msg = msg
-        console.log(subInfo.msg)
+        dgiotlog.log(subInfo.msg)
         subInfo.result = true
         callback && callback(subInfo)
       },
       onFailure: function (err) {
         if (err.errorCode[0] === 128) {
-          console.log('The topic cannot SUBSCRIBE for ACL Deny')
+          dgiotlog.log('The topic cannot SUBSCRIBE for ACL Deny')
         }
         subInfo.msg = err
-        console.log(err)
+        dgiotlog.log(err)
         subInfo.result = false
         callback && callback(subInfo)
       },
@@ -272,7 +272,7 @@ var Websocket = {
         date: formatDate(new Date(), 'yyyy-MM-dd hh:mm'),
         content: DISCONNECT_MSG,
       })
-      console.log(DISCONNECT_MSG)
+      dgiotlog.log(DISCONNECT_MSG)
       _this.connect()
       return
     }
@@ -281,19 +281,19 @@ var Websocket = {
         date: formatDate(new Date(), 'yyyy-MM-dd hh:mm'),
         content: TOPIC_EMPTY,
       })
-      console.log(TOPIC_EMPTY)
+      dgiotlog.log(TOPIC_EMPTY)
       return
     }
     _this.client.unsubscribe(subInfo.topic, {
       onSuccess: function (msg) {
         subInfo.msg = msg
-        console.log(subInfo)
+        dgiotlog.log(subInfo)
         subInfo.result = true
         callback && callback(subInfo)
       },
       onFailure: function (err) {
         subInfo.msg = err
-        console.log(err)
+        dgiotlog.log(err)
         subInfo.result = true
         callback && callback(subInfo)
       },
@@ -303,16 +303,16 @@ var Websocket = {
     var _this = this
     var text = sendInfo.text
     if (!_this.client || !_this.client.isConnected()) {
-      console.log(DISCONNECT_MSG)
+      dgiotlog.log(DISCONNECT_MSG)
       _this.connect()
       return
     }
     if (!sendInfo.topic) {
-      console.log(TOPIC_EMPTY)
+      dgiotlog.log(TOPIC_EMPTY)
       return
     }
     if (!text) {
-      console.log(MSG_EMPTY)
+      dgiotlog.log(MSG_EMPTY)
       return
     }
     // eslint-disable-next-line no-undef
@@ -321,7 +321,7 @@ var Websocket = {
     message.qos = Number(sendInfo.qos)
     message.retained = sendInfo.retained
     _this.client.send(message)
-    console.log(sendInfo)
+    dgiotlog.log(sendInfo)
   },
 }
 export {

@@ -1170,7 +1170,7 @@
 <script>
   import mockModules from '@/api/Mock/Modules'
 
-  // console.log('dataType', mockModules)
+  // dgiotlog.log('dataType', mockModules)
   import { getAllunit } from '@/api/Dict/index'
   import { mapGetters, mapMutations } from 'vuex'
 
@@ -1189,7 +1189,7 @@
         }
       }
       var validminnumber = (rule, value, callback) => {
-        // console.log(value);
+        // dgiotlog.log(value);
         if (value === '') {
           callback(new Error('最小值不能为空'))
         } else {
@@ -1422,10 +1422,10 @@
     methods: {
       // 数据类型
       changeGroup(type) {
-        console.log(type)
+        dgiotlog.log(type)
       },
       fileInfo(info) {
-        console.error('========================', info)
+        dgiotlog.error('========================', info)
         this.sizeForm.ico = info.path
       },
       uploadCkick(type) {
@@ -1454,8 +1454,8 @@
       }),
       changeThing(item) {
         let that = this
-        console.log('this.sizeFormaaa', that.$refs.sizeForm.model.name)
-        console.log('item', item)
+        dgiotlog.log('this.sizeFormaaa', that.$refs.sizeForm.model.name)
+        dgiotlog.log('item', item)
         var obj = {}
         // 提交之前需要先判断类型
         if (
@@ -1801,7 +1801,7 @@
         obj.nobound = this.sizeForm.nobound
         obj.dis = item.dataForm.address
         obj.isdis = this.sizeForm.isdis
-        console.log('obj', obj)
+        dgiotlog.log('obj', obj)
         that.setSizeForm(obj)
       },
       wmxCurrentChange(val) {
@@ -1843,12 +1843,12 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(this.sizeForm, 'dsaf')
+            dgiotlog.log(this.sizeForm, 'dsaf')
             this.$emit('submitForm', this.sizeForm)
             // this.$refs[formName].resetFields()
           } else {
-            console.log(valid)
-            console.log('error submit!!')
+            dgiotlog.log(valid)
+            dgiotlog.log('error submit!!')
             return false
           }
         })

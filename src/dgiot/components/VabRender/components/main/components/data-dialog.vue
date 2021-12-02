@@ -111,7 +111,7 @@
         } catch (err) {
           // 错误提示
           this.$message.error('解析失败，非 JS 对象，请检查')
-          console.error(err)
+          dgiotlog.error(err)
         }
       },
       // 复制数据

@@ -201,12 +201,12 @@
     },
     watch: {
       // headerInfo(data, headerInfo) {
-      //   console.log(data, 'headerInfo')
+      //   dgiotlog.log(data, 'headerInfo')
       // },
     },
     mounted() {
       this.headerInfo = this.formConfig
-      console.log('this.formConfig', this.formConfig)
+      dgiotlog.log('this.formConfig', this.formConfig)
       // 模拟异步加载
       this.loading = true
       setTimeout(() => {
@@ -216,7 +216,7 @@
     methods: {
       setLabel(row) {
         const { name, identifier, defaultvalue } = row
-        console.log(name, identifier, defaultvalue, 'row')
+        dgiotlog.log(name, identifier, defaultvalue, 'row')
       },
       // changeClass(_class) {
       //   this.headerInfo.class = _class
@@ -224,7 +224,7 @@
       // },
       handleSave(res) {
         this.headerInfo.config = JSON.parse(res)
-        console.log('this.headerInfo', this.headerInfo)
+        dgiotlog.log('this.headerInfo', this.headerInfo)
         this.$emit('ParserSave', this.headerInfo, this.parserindex)
       },
       changeTable(e) {

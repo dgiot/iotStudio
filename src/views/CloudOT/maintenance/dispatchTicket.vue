@@ -583,14 +583,14 @@
       }),
       _deviceStep: {
         get() {
-          console.log(
+          dgiotlog.log(
             'this.$store.state.global._deviceStep',
             this.$store.state.global._deviceStep
           )
           return this.$store.state.global._deviceStep
         },
         set(v) {
-          console.log(
+          dgiotlog.log(
             'this.$store.state.global._deviceStep',
             this.$store.state.global._deviceStep,
             v
@@ -601,7 +601,7 @@
       aclObj() {
         let aclObj = {}
         this.role.map((e) => {
-          console.log(e.name, '')
+          dgiotlog.log(e.name, '')
           aclObj[`${'role' + ':' + e.name}`] = {
             read: true,
             write: true,
@@ -612,7 +612,7 @@
     },
     watch: {
       _deviceStep: function (e) {
-        console.log(e)
+        dgiotlog.log(e)
         if (e == -1) {
           this.showdeviceFlag = false
           this.fetchData()
@@ -622,7 +622,7 @@
         // }
       },
       'queryForm.status': function (e) {
-        console.log(e)
+        dgiotlog.log(e)
         if (e != '') {
           this.queryForm.statusFlag = true
         } else {
@@ -631,10 +631,10 @@
       },
     },
     created() {
-      console.log(this._Product, '_Product')
-      console.log('role', this.role)
+      dgiotlog.log(this._Product, '_Product')
+      dgiotlog.log('role', this.role)
 
-      console.log('this.aclObj', this.aclObj)
+      dgiotlog.log('this.aclObj', this.aclObj)
     },
     mounted() {
       this.fetchData()
@@ -642,7 +642,7 @@
     },
     methods: {
       myUpload(content) {
-        console.log('e', content.file)
+        dgiotlog.log('e', content.file)
         let config = {
           headers: {
             proxy: true, // 是否开启代理
@@ -654,13 +654,13 @@
           .then((res) => {
             if (res.data.url) {
               this.form.photo.push(res.data.url)
-              console.log('上传成功的回调', res.data.url, this.form.photo)
+              dgiotlog.log('上传成功的回调', res.data.url, this.form.photo)
             } else {
-              console.log('no up url ', res)
+              dgiotlog.log('no up url ', res)
             }
           })
           .catch((e) => {
-            console.log('出错了', e)
+            dgiotlog.log('出错了', e)
           })
       },
       submitForm(formName) {
@@ -668,7 +668,7 @@
           if (valid) {
             this.createdTicket(this.form)
           } else {
-            console.log('error submit!!')
+            dgiotlog.log('error submit!!')
             return false
           }
         })
@@ -731,7 +731,7 @@
         const loading = this.$baseColorfullLoading()
         const res = await create_object('Maintenance', params)
         loading.close()
-        console.log('res', res)
+        dgiotlog.log('res', res)
         this.fetchData()
         this.dialogFormVisible = false
       },
@@ -743,7 +743,7 @@
         val.forEach((item) => {
           this.selectedList.push(item)
         })
-        console.log(this.selectedList)
+        dgiotlog.log(this.selectedList)
       },
       ...mapMutations({
         set_deviceStep: 'global/set_deviceStep',
@@ -758,7 +758,7 @@
        * @return {Promise<void>}
        */
       async batchExport(row) {
-        console.log(row)
+        dgiotlog.log(row)
         try {
           const params = {
             results: [],
@@ -768,7 +768,7 @@
           this.$convertRes2Blob(res)
           this.$message.success(this.$translateTitle('node.export success'))
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$message.error(
             this.$translateTitle('node.export error') + `${error}`
           )
@@ -792,7 +792,7 @@
             })
           })
         }
-        console.log(batchParams, 'batchParams')
+        dgiotlog.log(batchParams, 'batchParams')
         this.$baseConfirm(
           this.$translateTitle(
             'Maintenance.Are you sure you want to delete the current item'
@@ -835,7 +835,7 @@
             break
           default:
             return type
-            console.log('other', type)
+            dgiotlog.log('other', type)
         }
       },
       showInfo(row, ishard = false, isfooter = true) {
@@ -864,7 +864,7 @@
       },
       // async handleDelete(objectId) {
       //   const res = await del_object('Maintenance', objectId)
-      //   // console.log('res', res)
+      //   // dgiotlog.log('res', res)
       //   this.$message.success('删除成功')
       //   this.fetchData()
       // },
@@ -873,11 +873,11 @@
         this.fetchData()
       },
       async fetchData(args = {}) {
-        console.log(this.created % 2, this.created, 'this.created')
+        dgiotlog.log(this.created % 2, this.created, 'this.created')
         if (!args.limit) {
           args = this.queryForm
         }
-        console.log(this.queryForm, 'queryForm', args)
+        dgiotlog.log(this.queryForm, 'queryForm', args)
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
         let params = {
@@ -917,7 +917,7 @@
         }
         await query_object('Maintenance', params)
           .then((res) => {
-            console.log(res, 'res')
+            dgiotlog.log(res, 'res')
             const { results = [], count = 0 } = res
             this.list = results
             this.list.forEach((e) => {
@@ -935,10 +935,10 @@
             this.$message.error(`${e}`)
             loading.close()
           })
-        console.log(this.list, 'this.list')
+        dgiotlog.log(this.list, 'this.list')
       },
       async prodChange(e) {
-        console.log(e)
+        dgiotlog.log(e)
         this.Device = []
         this._Product.map((p) => {
           if (p.objectId == e) {
@@ -950,7 +950,7 @@
           where: { product: e },
         }
         const { results } = await queryDevice(params)
-        console.log(results, '设备')
+        dgiotlog.log(results, '设备')
         this.Device = results
       },
       deviceChange(e) {
@@ -959,11 +959,11 @@
             this.form.devicename = p.name
           }
         })
-        console.log(this.form.productname, this.form.devicename)
+        dgiotlog.log(this.form.productname, this.form.devicename)
       },
       dispatch() {
         this.$refs.ChangeStep.$refs.step1.dispatchUser()
-        // console.log()
+        // dgiotlog.log()
       },
       async backChange(detail) {
         const { objectId, info } = detail
@@ -977,7 +977,7 @@
           status: 0,
           info: info,
         }
-        console.log(objectId, params)
+        dgiotlog.log(objectId, params)
         const res = await update_object('Maintenance', objectId, params)
         if (res.updatedAt) {
           this.set_deviceStep(-1)
@@ -995,7 +995,7 @@
           status: 0,
           info: info,
         }
-        console.log(objectId, params)
+        dgiotlog.log(objectId, params)
         const res = await update_object('Maintenance', objectId, params)
         if (res.updatedAt) {
           this.set_deviceStep(-1)

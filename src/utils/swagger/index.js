@@ -17,14 +17,14 @@ http
     resp.on('end', () => {
       fs.writeFile(swaggerFile, data, function (err) {
         if (err) {
-          return console.log('Failed to crawl' + err)
+          return dgiotlog.log('Failed to crawl' + err)
         }
-        console.log(
+        dgiotlog.log(
           'File created swagger successfully, address：' + swaggerFile
         )
       })
     })
   })
   .on('error', (err) => {
-    console.log('Error: ' + err.message)
+    dgiotlog.log('Error: ' + err.message)
   })

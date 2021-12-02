@@ -65,25 +65,25 @@ const canvas = {
         `%cremoveBg info`,
         'color:#0091ca; font-size: 28px'
       )
-      console.info('删除标识:', '\n:' + type)
-      console.info('删除的节点:\n')
-      console.info('图元含有id为:bg的:\n')
-      console.info(json.find('#bg'))
-      console.info('所有图片图元\n')
-      console.log(json.find('Image'))
+      dgiotlog.info('删除标识:', '\n:' + type)
+      dgiotlog.info('删除的节点:\n')
+      dgiotlog.info('图元含有id为:bg的:\n')
+      dgiotlog.info(json.find('#bg'))
+      dgiotlog.info('所有图片图元\n')
+      dgiotlog.log(json.find('Image'))
       console.groupEnd()
       // 批量删除掉id不为  created的
       // node.removeName('selected');
       // canvas.removeBg('isRemovebg')
       allnode.forEach((node) => {
         if (allnode.length <= 1) {
-          console.info('节点只有一个,不删除')
+          dgiotlog.info('节点只有一个,不删除')
           // allnode.remove()
           // allnode.destroy()
           // node.remove()
           // node.destroy()
         } else {
-          console.log(allnode)
+          dgiotlog.log(allnode)
           if (node.getAttr('class') === type || node.class === type) {
             node.remove()
             node.destroy()
@@ -92,7 +92,7 @@ const canvas = {
             node.remove()
             node.destroy()
           } else {
-            console.log('该图元不删除')
+            dgiotlog.log('该图元不删除')
           }
         }
       })

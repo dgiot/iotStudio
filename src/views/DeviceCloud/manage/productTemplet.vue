@@ -546,8 +546,8 @@
         await this.$refs.dialogProfile.StepsListRowClick(this.selectedRow)
       },
       handleCateClick(node, data) {
-        console.log('node', node)
-        console.log('data', data)
+        dgiotlog.log('node', node)
+        dgiotlog.log('data', data)
         this.form.category = data.objectId
         this.curCatementId = data.name
       },
@@ -557,7 +557,7 @@
         if (!args.limit) {
           args = this.queryForm
         }
-        console.log('args', args)
+        dgiotlog.log('args', args)
         let params = {
           limit: args.limit,
           order: args.order,
@@ -573,7 +573,7 @@
               : { $ne: null },
           },
         }
-        console.log('params', params)
+        dgiotlog.log('params', params)
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
           loading.close()
@@ -581,7 +581,7 @@
           this.queryForm.total = count
         } catch (error) {
           loading.close()
-          console.log(error)
+          dgiotlog.log(error)
           this.$message.error(`${error}`)
         }
       },
@@ -601,7 +601,7 @@
         )
       },
       fileInfo(info) {
-        console.log('info', info)
+        dgiotlog.log('info', info)
         this.imageUrl = info.url
         this.loading = false
       },
@@ -648,16 +648,16 @@
       },
       onJsonSave(formName) {
         // 点击保存触发
-        // console.log("onJsonSave", this.dictTempForm.params);
+        // dgiotlog.log("onJsonSave", this.dictTempForm.params);
         this.$refs[formName].validate((valid) => {
-          console.log(this.editDictTempId)
+          dgiotlog.log(this.editDictTempId)
           if (valid) {
             this.put_Dict_temp(this.editDictTempId, this.dictTempForm)
           }
         })
       },
       async put_Dict_temp(editDictId, row) {
-        console.log(row)
+        dgiotlog.log(row)
         const {
           config = {
             basedate: {},
@@ -732,7 +732,7 @@
         this.$message('非Json数据类型')
       },
       handleNodeClick(data) {
-        console.log(data, 'data')
+        dgiotlog.log(data, 'data')
         this.$set(this.form, 'relationApp', data.name)
         this.showTree = !this.showTree
       },
@@ -781,7 +781,7 @@
         // this.uploadAction = 'http://cad.iotn2n.com:5080/product?appid=' + Cookies.get("appids");
 
         this.$nextTick(() => {
-          // console.log('uploadHeaders',this.uploadHeaders);
+          // dgiotlog.log('uploadHeaders',this.uploadHeaders);
 
           this.uploadData.appid = Cookies.get('appids')
           // this.uploadData.key = "key";
@@ -789,7 +789,7 @@
         })
       },
       handleUploadSuccess(response, file, fileList) {
-        // console.log('### Success response', response)
+        // dgiotlog.log('### Success response', response)
         this.$message({
           type: 'success',
           message: '产品导入成功',
@@ -838,7 +838,7 @@
             'Product',
             parsms
           )
-          // console.log("results", results)
+          // dgiotlog.log("results", results)
           if (results) {
             results.map((items) => {
               if (
@@ -859,7 +859,7 @@
           this.getApps()
         } catch (error) {
           this.listLoading = false
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -875,7 +875,7 @@
       },
       // 选择产品模板
       chooseTemplate(row) {
-        console.log('row', row)
+        dgiotlog.log('row', row)
         this.selectedRow = row
         this.form.category = row.category
         this.cascaderDrawer = !this.cascaderDrawer
@@ -890,7 +890,7 @@
       },
       properties(things, type = 'things') {
         this.descriptions.tableLoading = true
-        console.log(things)
+        dgiotlog.log(things)
         this.descriptions.things = things
         this.descriptions.tableType = type
         setTimeout(() => (this.descriptions.tableLoading = false), 1200)
@@ -946,11 +946,11 @@
             thing = {},
           } = await getProduct(ObjectId)
           this.parserTableList = config
-          console.log(this.parserTableList)
+          dgiotlog.log(this.parserTableList)
           this.parserDict = _.merge(thing, config)
         } catch (e) {
           this.parserTableList = { parser: [] }
-          console.log('eeeeeeeeeeeee', e)
+          dgiotlog.log('eeeeeeeeeeeee', e)
         }
         this.parserTable = true
       },
@@ -976,14 +976,14 @@
           this.$message.error(
             this.$translateTitle('user.Save the template error') + `${e}`
           )
-          console.log(e, 'eeee')
+          dgiotlog.log(e, 'eeee')
         }
-        console.log(list)
+        dgiotlog.log(list)
       },
       previewParse(row) {
         this.parserView = true
         this.formConfig = row
-        console.log('previewParse', row)
+        dgiotlog.log('previewParse', row)
       },
       addParse(row) {
         row['parser'].push({
@@ -1000,7 +1000,7 @@
         const row = await getProduct(ObjectId)
         const { config = { basedate: {} } } = row
         this.productInfo = row
-        console.log(' this.parserDict', this.parserDict)
+        dgiotlog.log(' this.parserDict', this.parserDict)
         this.editDictTempId = ObjectId
         this.dictTempForm = {
           name: '',
@@ -1010,7 +1010,7 @@
           params: [],
         }
         this.title_temp_dialog = '创建字典模板'
-        console.log(config)
+        dgiotlog.log(config)
         if (config.basedate && config.basedate.name) {
           this.title_temp_dialog = '修改字典模板'
           this.dictTempForm = config.basedate
@@ -1038,7 +1038,7 @@
             },
           ],
         }
-        console.log(this.dictTempForm, 'config')
+        dgiotlog.log(this.dictTempForm, 'config')
         this.dictVisible = true
       },
       editorProduct(row) {
@@ -1064,7 +1064,7 @@
         for (var key in row.ACL) {
           rows.push(key)
           if (key.includes('role')) {
-            console.log(key, 'key')
+            dgiotlog.log(key, 'key')
             this.form.relationApp = key ? key.substr(5) : ''
           }
         }
@@ -1077,7 +1077,7 @@
         }
         const { results } = await queryCategory(parsms)
         this.categoryList = results
-        console.log('this', this.categoryList)
+        dgiotlog.log('this', this.categoryList)
       },
       async categorytree() {
         let name = this.queryForm.name.length
@@ -1092,7 +1092,7 @@
             '}}',
           parent: 'parent',
         }
-        console.log(params)
+        dgiotlog.log(params)
         const { results = [] } = await post_tree(params)
         this.categoryTreeData = results
         this.listLoading = false
@@ -1119,7 +1119,7 @@
             res.results.forEach((result) => {
               ids.push(result.objectId)
             })
-            console.log('ids', ids)
+            dgiotlog.log('ids', ids)
             this.queryProdut({ categorys: ids })
           })
         }
@@ -1150,11 +1150,11 @@
         try {
           const res = await ImportParse('Product', parseFile)
           loading.close()
-          console.log('eresresrror', res)
+          dgiotlog.log('eresresrror', res)
           this.$message.success(``)
         } catch (error) {
           loading.close()
-          console.log('error', error)
+          dgiotlog.log('error', error)
           this.$message.error(`${error}`)
         }
         this.$dgiotBus.$emit('reload-router-view')

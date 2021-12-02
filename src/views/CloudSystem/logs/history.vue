@@ -312,7 +312,7 @@
           args = this.queryForm
         }
         const loading = this.$baseColorfullLoading()
-        console.log(this.queryForm, 'queryForm', args)
+        dgiotlog.log(this.queryForm, 'queryForm', args)
         try {
           loading.close()
           const params = {
@@ -390,7 +390,7 @@
           loading.close()
         } catch (error) {
           loading.close()
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',

@@ -75,9 +75,9 @@
           )
           const res = await putArticle(this.$route.query.article, params)
           loading.close()
-          console.warn(this.contentEditor.getValue(), value)
+          dgiotlog.warn(this.contentEditor.getValue(), value)
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',

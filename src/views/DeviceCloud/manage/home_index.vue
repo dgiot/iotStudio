@@ -1664,7 +1664,7 @@
       this.queryProduct()
       this.getDevices()
       this.aclObj = this.$aclObj(this._role)
-      console.log('this.aclObj', this.aclObj)
+      dgiotlog.log('this.aclObj', this.aclObj)
     },
     methods: {
       goLink(type, item) {
@@ -1687,29 +1687,29 @@
         }
       },
       handleTabClick(tab, event) {
-        console.log(this.activeparseTbas)
-        console.log(this.parseTbas)
+        dgiotlog.log(this.activeparseTbas)
+        dgiotlog.log(this.parseTbas)
       },
       async updateParse(table, field, deviceId, item, params = {}) {
         console.clear()
-        console.log('字段', field)
+        dgiotlog.log('字段', field)
         params[`${field}`] = {}
         let isField = [] // parse表中存在字段
         let noField = [] // parse表中不存在的字段
-        console.log(this.queryInfo)
-        console.log('frender ', item)
+        dgiotlog.log(this.queryInfo)
+        dgiotlog.log('frender ', item)
         for (let v in item.config) {
           if (this.queryInfo[`${v}`]) {
             //字段存在去做一下判斷 更新数据
-            console.log(item.config[`${v}`], v)
+            dgiotlog.log(item.config[`${v}`], v)
             params[`${field}`][`${v}`] = item.config[`${v}`]
           } else {
-            console.log(item.config[`${v}`], '字段不存在')
+            dgiotlog.log(item.config[`${v}`], '字段不存在')
             noField.push[item.config[`${v}`]]
             // 字段不存在的话，从 formDesc 中找
             // if (typeof item.config.formDesc[`${v}`] == 'object') {
-            //   console.log(' item.config', item.config)
-            //   console.log(' item.config', `${item.config.formDesc[`${v}`]}`)
+            //   dgiotlog.log(' item.config', item.config)
+            //   dgiotlog.log(' item.config', `${item.config.formDesc[`${v}`]}`)
             //   params.field[`${item.config.formDesc[`${v}`]}`] =
             //     item.config.formDesc[`${v}`].default
             // } else {
@@ -1717,21 +1717,21 @@
           }
         }
 
-        console.log('isField', isField)
-        console.log('noField', noField)
-        console.log('params', params.field)
+        dgiotlog.log('isField', isField)
+        dgiotlog.log('noField', noField)
+        dgiotlog.log('params', params.field)
         // 对数据进行合并处理
         let mergerInfo = {}
         mergerInfo[`${field}`] = this.queryInfo
         const _mergeparams = _.merge(mergerInfo, params)
-        console.log(_mergeparams, '合并后的數據')
-        console.log({ field: _mergeparams[`${field}`] })
+        dgiotlog.log(_mergeparams, '合并后的數據')
+        dgiotlog.log({ field: _mergeparams[`${field}`] })
         try {
           const res = await this.$update_object(table, deviceId, _mergeparams)
-          console.log(res)
+          dgiotlog.log(res)
           this.$message.success(this.$translateTitle('user.update completed'))
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$message.error(`${error}`)
         }
       },
@@ -1740,7 +1740,7 @@
         set_tableParser: 'global/set_tableParser',
       }),
       handleSubmit(data) {
-        console.log('data', data)
+        dgiotlog.log('data', data)
         // eslint-disable-next-line no-console
         return Promise.resolve()
       },
@@ -1748,7 +1748,7 @@
         if (item.table && item.field && item.config.order) {
           // 首先查一下这个表中对应的字段
           this.$get_object(item.table, this.deviceId).then((res) => {
-            console.log(res)
+            dgiotlog.log(res)
             this.queryInfo = res[`${item.field}`]
             if (this.queryInfo) {
               this.updateParse(item.table, item.field, this.deviceId, item)
@@ -1765,7 +1765,7 @@
         val.forEach((item) => {
           this.selectedList.push(item)
         })
-        console.log(this.selectedList)
+        dgiotlog.log(this.selectedList)
       },
       handleDelete(row, type) {
         let batchParams = []
@@ -1785,7 +1785,7 @@
             })
           })
         }
-        console.log(batchParams, 'batchParams')
+        dgiotlog.log(batchParams, 'batchParams')
         this.$baseConfirm(
           this.$translateTitle(
             'Maintenance.Are you sure you want to delete the current item'
@@ -1805,7 +1805,7 @@
         )
       },
       ParserSave(e) {
-        console.log(
+        dgiotlog.log(
           `如果监听到有修改,则更新vuex 并 存入到数据库 ${JSON.stringify(e)}`
         )
       },
@@ -1821,7 +1821,7 @@
         })
         this.proTableData = results
 
-        console.log(this.proTableData, '  this.proTableData')
+        dgiotlog.log(this.proTableData, '  this.proTableData')
 
         if (this.$route.query.product) {
           this.proTableData.forEach((i, index) => {
@@ -1841,10 +1841,10 @@
           this.equvalue = this.$route.query.productid
           this.productenable = false
         }
-        console.log('this.equvalue', this.equvalue)
+        dgiotlog.log('this.equvalue', this.equvalue)
       },
       change(e) {
-        console.log(e)
+        dgiotlog.log(e)
         if (e) {
           $('.el-tree').css({
             height: '120px',
@@ -1862,11 +1862,11 @@
             this.listLoading = false
             const { config = { basedate: {} } } = res
             const { basedate = { params: [] } } = config
-            console.log(res, basedate)
+            dgiotlog.log(res, basedate)
             this.dialogtempconfig = []
             if (basedate.params != 'undefined') {
               this.dialogtempconfig = basedate.params
-              console.log('this.dialogtempconfig', this.dialogtempconfig)
+              dgiotlog.log('this.dialogtempconfig', this.dialogtempconfig)
             }
           })
           this.isALL = false
@@ -1923,11 +1923,11 @@
               }
             }
           })
-          console.log(results)
+          dgiotlog.log(results)
           this.tableData = results
           this.devicetotal = count
           this.chartOnlone.rows[1]['数量'] = this.devicetotal
-          console.log('tableData', this.tableData)
+          dgiotlog.log('tableData', this.tableData)
         }
         this.listLoading = false
       },
@@ -1948,7 +1948,7 @@
           obj: [],
         }
         let parseTbas = []
-        console.log(data)
+        dgiotlog.log(data)
         this.devicedetail = data
         if (data.product.config.parser) {
           parseTbas.push(...data.product.config.parser)
@@ -1961,17 +1961,17 @@
           return e.visible
           // && e.field == 'Device'
         })
-        console.log(this.parseTbas)
+        dgiotlog.log(this.parseTbas)
         if (this.devicedetail && parseTbas.length) {
           // 拿到设备数据中对应的class
           parseTbas.forEach((from) => {
-            console.log(from.class)
-            console.info(
+            dgiotlog.log(from.class)
+            dgiotlog.info(
               '%c%s',
               'color: #fff; background: #20B2AA; font-size: 16px;',
               `原始关联${from.table}表中${from.class}字段的值为`
             )
-            console.info(
+            dgiotlog.info(
               '%c%s',
               'color: #fff; background: #20B2AA; font-size: 16px;',
               `${JSON.stringify(from.config)}`
@@ -1981,7 +1981,7 @@
                 for (let v in from.config) {
                   if (f == v) {
                     if (typeof from.config.formDesc[`${f}`] == 'object') {
-                      console.log(
+                      dgiotlog.log(
                         f,
                         v,
                         'f ==== v object',
@@ -1993,7 +1993,7 @@
                       _from.obj.push(f)
                       from.config.formDesc[`${f}`]['default'] =
                         data[`${from.class}`][`${v}`]
-                      console.log(
+                      dgiotlog.log(
                         from.config.formDesc[`${f}`].label,
                         data[`${from.class}`],
                         from.config.formDesc[`${f}`].default
@@ -2013,14 +2013,14 @@
                   }
                 }
               }
-              console.log(`对象数据${_from.obj}`)
-              console.log(`数组数据${_from.isArr}`)
-              console.info(
+              dgiotlog.log(`对象数据${_from.obj}`)
+              dgiotlog.log(`数组数据${_from.isArr}`)
+              dgiotlog.info(
                 '%c%s',
                 'color: #fff; background: #20B2AA; font-size: 16px;',
                 `修改后${from.table}表中${from.class}字段的值为`
               )
-              console.info(
+              dgiotlog.info(
                 '%c%s',
                 'color: #fff; background: #20B2AA; font-size: 16px;',
                 `${JSON.stringify(from.config)}`
@@ -2090,9 +2090,9 @@
             })
           })
           .catch((e) => {
-            console.log(e)
+            dgiotlog.log(e)
           })
-        console.log(data.name)
+        dgiotlog.log(data.name)
       },
       async handleNodeClick(data, node) {
         const aclRole = this._role.map((r) => {
@@ -2164,9 +2164,9 @@
         localSearch.enableAutoViewport() // 允许自动调节窗体大小
         var _this = this
         //       localSearch.setSearchCompleteCallback(function (searchResult) {
-        //         console.log(searchResult)
+        //         dgiotlog.log(searchResult)
         // 　　　　var poi = searchResult.getPoi(0);
-        // 　　　　console.log(poi.point.lng + "," + poi.point.lat) //获取经度和纬度，将结果显示在文本框中
+        // 　　　　dgiotlog.log(poi.point.lng + "," + poi.point.lat) //获取经度和纬度，将结果显示在文本框中
         // 　　　　_this.map.centerAndZoom(poi.point, 13);
         // 　　});
         if (this.bmapform.address == '') {
@@ -2192,20 +2192,20 @@
         geocoder.getLocation(e.point, (rs) => {
           // this.add.site = rs.address;
           //  Marker.closeInfoWindow()
-          //   console.log(rs)
+          //   dgiotlog.log(rs)
           this.bmapform.address = rs.address
           this.deviceform.address = rs.address
           this.imeiform.address = rs.address
           // 地址描述(string)=
-          // console.log(rs.address);    //这里打印可以看到里面的详细地址信息，可以根据需求选择想要的
-          // console.log(rs.addressComponents);//结构化的地址描述(object)
-          // console.log(rs.addressComponents.province); //省
-          // console.log(rs.addressComponents.city); //城市
-          // console.log(rs.addressComponents.district); //区县
-          // console.log(rs.addressComponents.street); //街道
-          // console.log(rs.addressComponents.streetNumber); //门牌号
-          // console.log(rs.surroundingPois); //附近的POI点(array)
-          // console.log(rs.business); //商圈字段，代表此点所属的商圈(string)
+          // dgiotlog.log(rs.address);    //这里打印可以看到里面的详细地址信息，可以根据需求选择想要的
+          // dgiotlog.log(rs.addressComponents);//结构化的地址描述(object)
+          // dgiotlog.log(rs.addressComponents.province); //省
+          // dgiotlog.log(rs.addressComponents.city); //城市
+          // dgiotlog.log(rs.addressComponents.district); //区县
+          // dgiotlog.log(rs.addressComponents.street); //街道
+          // dgiotlog.log(rs.addressComponents.streetNumber); //门牌号
+          // dgiotlog.log(rs.surroundingPois); //附近的POI点(array)
+          // dgiotlog.log(rs.business); //商圈字段，代表此点所属的商圈(string)
         })
       },
       // 地图更新
@@ -2296,7 +2296,7 @@
           this.chartOnlone.rows[0]['数量'] = count
           // this.$message.success(`${res}`)
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$message.error(`${error}`)
         }
       },
@@ -2304,7 +2304,7 @@
         if (!args.limit) {
           args = this.queryForm
         }
-        console.log('args', args)
+        dgiotlog.log('args', args)
         this.listLoading = true
         const loading = this.$baseColorfullLoading(3)
         this.tableData = []
@@ -2376,7 +2376,7 @@
           // 查询在线设备
           this.getOnlineDevices()
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.listLoading = false
           loading.close()
           this.tableData = []
@@ -2428,7 +2428,7 @@
               })
               this.getDevices()
             } else {
-              console.log('Device error', error)
+              dgiotlog.log('Device error', error)
               returnLogin(error)
             }
           })
@@ -2543,7 +2543,7 @@
           isEnable: isEnable,
         }
         const res = await Batchdelete('PUT', 'Device', idarr, body)
-        // console.log(res)
+        // dgiotlog.log(res)
         if (res) {
           // 处理不规则的返回参数
           res.forEach((li, index) => {
@@ -2565,7 +2565,7 @@
               dangerouslyUseHTMLString: li.dangerouslyUseHTMLString,
             })
           })
-          // console.log(requests)
+          // dgiotlog.log(requests)
           requests.forEach((i, index) => {
             this.$baseNotify(
               i.message,
@@ -2670,7 +2670,7 @@
         this.selectChange(row.product.objectId, 'edit')
         this.deviceform = {}
         // 这里再去查询tag
-        console.log('row', row)
+        dgiotlog.log('row', row)
         this.editRow = row
         this.deviceid = row.objectId
         this.devicedialogVisible = true
@@ -2690,12 +2690,12 @@
           videoSrc: row.detail.videoSrc,
           address: row.detail.address,
         }
-        console.log('this.deviceform12131', this.deviceform)
-        console.log('row.basedata', row.basedata)
+        dgiotlog.log('this.deviceform12131', this.deviceform)
+        dgiotlog.log('row.basedata', row.basedata)
         for (var key in row.basedata) {
           this.$set(this.deviceform, key, row.basedata[key])
         }
-        console.log('this.deviceform', this.deviceform)
+        dgiotlog.log('this.deviceform', this.deviceform)
         this.bmapform = {
           address: row.detail.address,
         }
@@ -2810,9 +2810,9 @@
                 }
               })
             }
-            console.log('afd', this.arrlist)
-            console.log('deviceform', this.deviceform)
-            console.log('rules', this.rules)
+            dgiotlog.log('afd', this.arrlist)
+            dgiotlog.log('deviceform', this.deviceform)
+            dgiotlog.log('rules', this.rules)
           }
         })
       },

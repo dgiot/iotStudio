@@ -59,16 +59,16 @@
             JSON.parse(_sourceOption).map((e) => {
               _sourceField.push(e.field)
             })
-            console.log(_sourceField)
+            dgiotlog.log(_sourceField)
             this.setRender(JSON.parse(_sourceOption), _sourceField)
 
             // this.VabRender.formItemCommon.config.default
             // this.VabRender.formItemCommon.config.label
-            console.log(
+            dgiotlog.log(
               this.VabRender.formItemList[this.VabRender.currentIndex]
             )
-            console.log(this.VabRender.formItemCommon.config)
-            console.log(this.VabRender)
+            dgiotlog.log(this.VabRender.formItemCommon.config)
+            dgiotlog.log(this.VabRender)
           }
         },
         immediate: true,
@@ -77,7 +77,7 @@
     },
     methods: {
       setRender(_sourceOption, _sourceField) {
-        console.log(_sourceField, 'resOpt')
+        dgiotlog.log(_sourceField, 'resOpt')
         this.$set(
           this.VabRender.formItemCommon.config.field,
           'options',

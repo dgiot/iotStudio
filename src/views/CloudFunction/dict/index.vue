@@ -242,17 +242,17 @@
     methods: {
       handleAdd() {
         this.$refs['edit'].type = 'add'
-        console.log('this.queryForm', this.queryForm)
+        dgiotlog.log('this.queryForm', this.queryForm)
         this.$refs['edit'].showEdit(this.queryForm)
       },
       handleEdit(row) {
         this.$refs['edit'].dictId = row.objectId
         this.$refs['edit'].type = 'edit'
-        console.log('row', row)
+        dgiotlog.log('row', row)
         this.$refs['edit'].showEdit(row)
       },
       handleDelete(row) {
-        console.log(row.data, row.objectId)
+        dgiotlog.log(row.data, row.objectId)
         this.$baseConfirm(
           this.$translateTitle(
             'Maintenance.Are you sure you want to delete the current item'
@@ -303,7 +303,7 @@
             : { $ne: null },
         }
         const { count, order, excludeKeys, limit, skip, where } = params
-        console.log(this.queryForm)
+        dgiotlog.log(this.queryForm)
         this.listLoading = true
         const { results, count: total } = await queryDict({
           count,

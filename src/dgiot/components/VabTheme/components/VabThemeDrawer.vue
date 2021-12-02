@@ -281,7 +281,7 @@
       // pictureSwitch: {
       //   handler(pictureSwitch) {
       //     $('.appendLogo').remove()
-      //     console.log(pictureSwitch, 'this.pictureSwitch')
+      //     dgiotlog.log(pictureSwitch, 'this.pictureSwitch')
       //     if (pictureSwitch) {
       //       $('.logo-container .router-link-active').css({
       //         display: 'none',
@@ -331,7 +331,7 @@
         }
         await putUser(this.objectId, params)
           .then((res) => {
-            console.log(res)
+            dgiotlog.log(res)
             this.$message.success(
               this.$translateTitle(
                 'title.Theme configuration saved successfully'
@@ -339,7 +339,7 @@
             )
           })
           .catch((e) => {
-            console.log(e)
+            dgiotlog.log(e)
             this.$message.success(
               this.$translateTitle(
                 'title.Theme configuration saved error' + e.error

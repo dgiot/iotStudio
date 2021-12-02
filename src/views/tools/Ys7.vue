@@ -27,7 +27,7 @@
           .get('https://hotel.coboriel.com/api_screen')
           .then((res) => {
             const { data } = res
-            console.log(data)
+            dgiotlog.log(data)
 
             // // https://hotel.coboriel.com/api_screen
             if (data.data.data.accessToken && data.data.data.look_url) {
@@ -36,7 +36,7 @@
             }
           })
           .catch((e) => {
-            console.log('e', e)
+            dgiotlog.log('e', e)
           })
       },
       init(url, accessToken) {
@@ -52,18 +52,18 @@
           // 视频下方底部控件
           // footer: ["talk", "broadcast", "hd", "fullScreen"], // 如果template参数不为simple,该字段将被覆盖
           // audio: 1, // 是否默认开启声音 0 - 关闭 1 - 开启
-          // openSoundCallBack: data => console.log("开启声音回调", data),
-          // closeSoundCallBack: data => console.log("关闭声音回调", data),
-          // startSaveCallBack: data => console.log("开始录像回调", data),
-          // stopSaveCallBack: data => console.log("录像回调", data),
-          // capturePictureCallBack: data => console.log("截图成功回调", data),
-          // fullScreenCallBack: data => console.log("全屏回调", data),
-          // getOSDTimeCallBack: data => console.log("获取OSDTime回调", data),
+          // openSoundCallBack: data => dgiotlog.log("开启声音回调", data),
+          // closeSoundCallBack: data => dgiotlog.log("关闭声音回调", data),
+          // startSaveCallBack: data => dgiotlog.log("开始录像回调", data),
+          // stopSaveCallBack: data => dgiotlog.log("录像回调", data),
+          // capturePictureCallBack: data => dgiotlog.log("截图成功回调", data),
+          // fullScreenCallBack: data => dgiotlog.log("全屏回调", data),
+          // getOSDTimeCallBack: data => dgiotlog.log("获取OSDTime回调", data),
           width: 600, //如果指定了width、height则以这里为准
           height: 400, //如果没指定宽高，则以容器video-container为准
         })
         setTimeout(() => {
-          console.log(player)
+          dgiotlog.log(player)
           player.play()
         }, 2000)
       },

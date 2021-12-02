@@ -17,7 +17,7 @@ if (!!window.ActiveXObject || 'ActiveXObject' in window) {
 }
 if (process.env.NODE_ENV !== 'development') {
   // eslint-disable-next-line no-console
-  console.log(
+  dgiotlog.log(
     ` %c ${title}  %c 基于dgiot构建 `,
     'color: #fadfa3; background: #030307; padding:5px 0;',
     'background: #fadfa3; padding:5px 0;'

@@ -468,8 +468,8 @@ export function utc2beijing(utc_datetime) {
 
 // 万亿零转换
 export function handleZero(value) {
-  // console.log(value);
-  // console.log(typeof(value));
+  // dgiotlog.log(value);
+  // dgiotlog.log(typeof(value));
   if (typeof value === 'number') {
     value = String(value)
     const Y = /0{8}$/
@@ -827,7 +827,7 @@ export default function () {
 export function Map2Json(map) {
   let obj = Object.create(null)
   for (let [k, v] of map) {
-    // console.log(k, v)
+    // dgiotlog.log(k, v)
     obj[k] = v
   }
   return obj

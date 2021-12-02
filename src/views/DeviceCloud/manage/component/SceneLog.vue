@@ -304,7 +304,7 @@
     methods: {
       get_topic() {
         // this.deviceInfo
-        console.log('this.deviceInfo', this.deviceInfo)
+        dgiotlog.log('this.deviceInfo', this.deviceInfo)
         getProduct(this.deviceInfo.product.objectId).then((res) => {
           this.producttopic = res.topics
         })
@@ -370,7 +370,7 @@
         })
       },
       starttrace(val) {
-        console.log('aaa', val)
+        dgiotlog.log('aaa', val)
         this.queryForm.action = val
         this.queryTable()
       },
@@ -419,7 +419,7 @@
           }
           postTrace(params)
             .then((res) => {
-              console.log(res)
+              dgiotlog.log(res)
               const { code = 0, error = '', msg = '' } = res
               if (code == 200) {
                 this.$baseMessage(
@@ -436,7 +436,7 @@
               }
             })
             .catch((error) => {
-              console.error(error)
+              dgiotlog.error(error)
               this.$baseMessage(
                 this.$translateTitle('alert.Data request error') + `${error}`,
                 'error',
@@ -447,7 +447,7 @@
           loading.close()
         } catch (error) {
           loading.close()
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',

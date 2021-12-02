@@ -366,7 +366,7 @@
       },
       // 得到产品详情
       getProDetail(productId) {
-        // console.log('===')
+        // dgiotlog.log('===')
         this.productId = productId
         editor = ace.edit('editor')
         editor.session.setMode('ace/mode/erlang') // 设置语言
@@ -378,7 +378,7 @@
         })
         this.$get_object('Product', productId).then((response) => {
           if (response) {
-            console.log('response', response.decoder)
+            dgiotlog.log('response', response.decoder)
             this.productName = response.name
             for (var key in response) {
               this.productdetail[key] = response[key]
@@ -530,7 +530,7 @@
                         }
                       })
                       .catch((e) => {
-                        console.log(e)
+                        dgiotlog.log(e)
                       })
                   }
                 })
@@ -637,7 +637,7 @@
             }
           })
           .catch((err) => {
-            console.log(err)
+            dgiotlog.log(err)
             this.$baseMessage('请求出错', err.error, 3000)
           })
       },

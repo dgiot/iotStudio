@@ -7,7 +7,7 @@ import { uuid } from '@/utils'
  * @return {{children: [{className: string, attrs: {name: string}}, {className: string, attrs: {id: string, text: string}}], className: string, attrs: {productid, name: string, id, thingid}}}
  */
 function createThing(params) {
-  console.log(params, 'params')
+  dgiotlog.log(params, 'params')
   const {
     id = `uuid_${uuid(6)}`,
     productid,

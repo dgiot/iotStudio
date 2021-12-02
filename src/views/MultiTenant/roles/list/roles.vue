@@ -513,9 +513,9 @@
       expand(tree, isExpand) {
         // 展开/折叠
         this[isExpand] = !this[isExpand]
-        console.log('tree', tree, this.$refs[tree], isExpand)
+        dgiotlog.log('tree', tree, this.$refs[tree], isExpand)
         const nodes = this.$refs[tree].store._getAllNodes()
-        console.log(nodes)
+        dgiotlog.log(nodes)
         // 或者方法二
         // const nodes = this.$refs.tree.store.nodesMap
         for (let i in nodes) {
@@ -550,7 +550,7 @@
       },
       ...mapMutations({}),
       change(e) {
-        console.log(e)
+        dgiotlog.log(e)
         if (e) {
           $('.el-tree').css({
             height: '300px',
@@ -560,7 +560,7 @@
         }
       },
       getMenu() {
-        console.log('this.Menu', this.Menu)
+        dgiotlog.log('this.Menu', this.Menu)
         this.menusTreeloading = true
         this.data = []
         this.dataMenus = []
@@ -576,7 +576,7 @@
             this.data.push(obj)
             this.dataMenus.push(obj)
           })
-          console.log('this.dataMenus', this.dataMenus)
+          dgiotlog.log('this.dataMenus', this.dataMenus)
           this.handleNodeClick(this.roleTree[0])
         }
         this.menusTreeloading = false
@@ -584,7 +584,7 @@
       diguiquchu(datas, arr, v, needdelarr) {
         // 递归找出半选中的数据
         arr.map((item) => {
-          // console.log(item.key, v, "----------");
+          // dgiotlog.log(item.key, v, "----------");
           if (item.key == v && item.children.length > 0) {
             // datas.splice(i, 1);//因为每次截取会改变原数组，所以不能这样
             needdelarr.push(v)
@@ -658,7 +658,7 @@
       },
       //增加菜单
       addmenu(row) {
-        // console.log(row)
+        // dgiotlog.log(row)
         this.rolename = row.attributes.name
 
         // this.dialogVisible = true;
@@ -707,7 +707,7 @@
           roles: roles,
           objectId: objectId,
         }
-        console.log(' this.roleItem', this.roleItem)
+        dgiotlog.log(' this.roleItem', this.roleItem)
         this.loadingService.close()
         if (menus && rules) {
           this.checkMenus = menus
@@ -731,9 +731,9 @@
             }
           })
         })
-        // console.log("this.Menu", this.Menu)
-        // console.log("this.checkMenus", this.checkMenus)
-        // console.log("this.roleMenuList", this.roleMenuList)
+        // dgiotlog.log("this.Menu", this.Menu)
+        // dgiotlog.log("this.checkMenus", this.checkMenus)
+        // dgiotlog.log("this.roleMenuList", this.roleMenuList)
         // set ###
         this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
 
@@ -788,11 +788,11 @@
         this.getRolesList()
       },
       handleCheckChange(data, checked) {
-        console.log(data, checked)
+        dgiotlog.log(data, checked)
       },
       // 获取权限
       getRoleschema() {
-        console.log('this.Permission', this.Permission)
+        dgiotlog.log('this.Permission', this.Permission)
         this.permissionTreeloading = true
         this.dataPermissions = []
         if (this.Permission) {
@@ -874,21 +874,21 @@
           usersList.push(item.username)
         })
         rolesData.forEach((item) => {
-          console.log('loadsh', _.assign(...rolesData))
-          console.log('item', item)
+          dgiotlog.log('loadsh', _.assign(...rolesData))
+          dgiotlog.log('item', item)
           rolesList.push(item.name)
         })
         if (selectMenu && selectRermission) {
           selectMenu.forEach((item) => {
             checkmenu.push(item.label)
           })
-          console.log('selectMenu', checkmenu)
+          dgiotlog.log('selectMenu', checkmenu)
           selectRermission.forEach((item) => {
             checkrole.push(item.alias)
           })
-          console.log('selectRermission', checkrole)
-          console.log(row, 'row', row)
-          console.log(_.uniq(checkrole))
+          dgiotlog.log('selectRermission', checkrole)
+          dgiotlog.log(row, 'row', row)
+          dgiotlog.log(_.uniq(checkrole))
           if (_.uniq(checkrole).length == 0 || _.uniq(checkmenu) == 0) {
             this.$message.warning(
               `${this.$translateTitle(
@@ -977,7 +977,7 @@
       },
       // 添加子节点
       appendChildTree(data) {
-        console.log(data, '添加子节点')
+        dgiotlog.log(data, '添加子节点')
       },
       renderContent(h, { node, data, store }) {
         return (

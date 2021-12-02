@@ -128,7 +128,7 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -154,7 +154,7 @@ export default {
           }),
         }
         const res = await putEvidence(row.objectId, params)
-        console.log(res)
+        dgiotlog.log(res)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
@@ -162,7 +162,7 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -196,7 +196,7 @@ export default {
           file: file,
           filename: `${this.evidenceid}${fileType}`,
         }
-        console.error('Evidence', Evidence)
+        dgiotlog.warn('Evidence', Evidence)
         var formData = new FormData()
         for (let key in Evidence) {
           formData.append(key, Evidence[key])
@@ -218,7 +218,7 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -266,7 +266,7 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -300,7 +300,7 @@ export default {
         const { results = [] } = await queryDevice(params)
         if (results?.[0]?.devaddr) {
           this.ukey = results[0].devaddr
-          console.info('-----------------this.ukey', this.ukey)
+          dgiotlog.info('-----------------this.ukey', this.ukey)
         } else {
           this.$message.error(
             this.$translateTitle(
@@ -310,7 +310,7 @@ export default {
         }
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -339,7 +339,7 @@ export default {
         this.evidenceDialog = true
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -391,7 +391,7 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -410,7 +410,7 @@ export default {
     async headerTask(item, index) {
       try {
         const loading = this.$baseColorfullLoading()
-        console.log(item, index)
+        dgiotlog.log(item, index)
         const query = JSON.parse(JSON.stringify(this.$route.query))
         query.taskid = item.objectId
         query.suite = 1
@@ -422,7 +422,7 @@ export default {
         this.queryTask(query.taskid)
         this.queryEvidence(query.taskid)
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -457,7 +457,7 @@ export default {
         // )
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -504,7 +504,7 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -544,7 +544,7 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -589,7 +589,7 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -625,7 +625,7 @@ export default {
             })
             loading.close()
           } catch (error) {
-            console.log(error)
+            dgiotlog.log(error)
             this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
@@ -652,7 +652,7 @@ export default {
             await this.getUkey(task.parentId.objectId)
         } else this.task = { name: '111', profile: { message: '' } }
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',

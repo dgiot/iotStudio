@@ -940,7 +940,7 @@
     mounted() {
       // Todo 这里拿到的还是空的
       // this.userId = this.$route.query.__ob__.dep.id; 我注释的
-      // console.log(this.$route)
+      // dgiotlog.log(this.$route)
       this.getDevices(0)
       this.addDeviceBatch(0)
       this.queryYysId()
@@ -1027,9 +1027,9 @@
         localSearch.enableAutoViewport() // 允许自动调节窗体大小
         var _this = this
         //       localSearch.setSearchCompleteCallback(function (searchResult) {
-        //         console.log(searchResult)
+        //         dgiotlog.log(searchResult)
         // 　　　　var poi = searchResult.getPoi(0);
-        // 　　　　console.log(poi.point.lng + "," + poi.point.lat) //获取经度和纬度，将结果显示在文本框中
+        // 　　　　dgiotlog.log(poi.point.lng + "," + poi.point.lat) //获取经度和纬度，将结果显示在文本框中
         // 　　　　_this.map.centerAndZoom(poi.point, 13);
         // 　　});
         if (this.bmapform.address == '') {
@@ -1054,19 +1054,19 @@
         geocoder.getLocation(e.point, (rs) => {
           // this.add.site = rs.address;
           //  Marker.closeInfoWindow()
-          //   console.log(rs)
+          //   dgiotlog.log(rs)
           this.bmapform.address = rs.address
           this.deviceform.address = rs.address
           // 地址描述(string)=
-          // console.log(rs.address);    //这里打印可以看到里面的详细地址信息，可以根据需求选择想要的
-          // console.log(rs.addressComponents);//结构化的地址描述(object)
-          // console.log(rs.addressComponents.province); //省
-          // console.log(rs.addressComponents.city); //城市
-          // console.log(rs.addressComponents.district); //区县
-          // console.log(rs.addressComponents.street); //街道
-          // console.log(rs.addressComponents.streetNumber); //门牌号
-          // console.log(rs.surroundingPois); //附近的POI点(array)
-          // console.log(rs.business); //商圈字段，代表此点所属的商圈(string)
+          // dgiotlog.log(rs.address);    //这里打印可以看到里面的详细地址信息，可以根据需求选择想要的
+          // dgiotlog.log(rs.addressComponents);//结构化的地址描述(object)
+          // dgiotlog.log(rs.addressComponents.province); //省
+          // dgiotlog.log(rs.addressComponents.city); //城市
+          // dgiotlog.log(rs.addressComponents.district); //区县
+          // dgiotlog.log(rs.addressComponents.street); //街道
+          // dgiotlog.log(rs.addressComponents.streetNumber); //门牌号
+          // dgiotlog.log(rs.surroundingPois); //附近的POI点(array)
+          // dgiotlog.log(rs.business); //商圈字段，代表此点所属的商圈(string)
         })
       },
       // 地图更新
@@ -1173,7 +1173,7 @@
       },
       // 状态设备编辑
       handelUpdate(event, row, index) {
-        console.log('row', row)
+        dgiotlog.log('row', row)
         var newData1 = {}
         for (var key in row) {
           newData1[key] = row[key]
@@ -1195,7 +1195,7 @@
             var params = {
               isEnable: newData2.isEnable,
             }
-            console.log('row', row)
+            dgiotlog.log('row', row)
             this.$putDevice(row.objectId, params).then((respone) => {
               if (!respone.error) {
                 this.initQuery('状态修改成功', 'success')
@@ -1256,7 +1256,7 @@
       /* 设备列表选中 */
       handleSelectionChange(val) {
         this.multipleTable = val
-        console.log(this.multipleTable)
+        dgiotlog.log(this.multipleTable)
       },
       // 批量删除设备
       async deleteDevcie(val) {
@@ -1309,7 +1309,7 @@
       //       }
       //     })
       //     .catch(error => {
-      //       console.log(error);
+      //       dgiotlog.log(error);
       //     });
       // },
       /* @pamras 选中高亮*/
@@ -1401,7 +1401,7 @@
       },
       /* device添加表单提交*/
       editorDevice(row) {
-        console.log('row', row)
+        dgiotlog.log('row', row)
         this.deviceid = row.objectId
         this.devicedialogVisible = true
         this.deviceform = {
@@ -1430,16 +1430,16 @@
         this.rolesSelect(row.productid)
         // this.getBatch()
         //   .then(results => {
-        //     console.log(results);
+        //     dgiotlog.log(results);
         //     this.pctableData.map(item => {
         //       if (item.id == row.batchid) {
-        //         console.log(item);
+        //         dgiotlog.log(item);
         //         this.deviceform.batchId = item.data.batch_name;
         //       }
         //     });
         //   })
         //   .catch(error => {
-        //     console.log(error);
+        //     dgiotlog.log(error);
         //   });
       },
       getBatch() {
@@ -1617,7 +1617,7 @@
               })
             }
           } else {
-            console.log('error submit!!')
+            dgiotlog.log('error submit!!')
             return false
           }
         })
@@ -1636,12 +1636,12 @@
       async deletebatch(id) {
         try {
           const res = await delDict(id)
-          console.log(res)
+          dgiotlog.log(res)
           this.queryDict()
           this.addDeviceBatch()
           // this.$message.success(`${error}`)
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$message.error(`${error}`)
         }
       },
@@ -1653,7 +1653,7 @@
         this.deviceform.batchId = row.data.batch_name
         this.pcdialogVisible = false
 
-        console.log(this.batchid, 'this.batchid ')
+        dgiotlog.log(this.batchid, 'this.batchid ')
       },
       // 设备详情
       deviceToDetail(row) {

@@ -224,14 +224,14 @@
               }
             } catch (err) {
               this.$message.error('数据解析失败')
-              console.error(err)
+              dgiotlog.error(err)
               return
             }
           }
 
           if (!_.isPlainObject(formConfig)) {
             // 如果不是对象，则也抛出异常
-            console.error('[vab-render]: config 不是对象', formConfig)
+            dgiotlog.error('[vab-render]: config 不是对象', formConfig)
             return
           }
 

@@ -422,7 +422,7 @@
         )
       },
       handleSubmit(data) {
-        console.log('data', data)
+        dgiotlog.log('data', data)
         // eslint-disable-next-line no-console
         return Promise.resolve()
       },
@@ -440,11 +440,11 @@
         const loading = this.$baseColorfullLoading(3)
         try {
           const res = await this.$update_object(table, this.alertId, params)
-          console.log(res)
+          dgiotlog.log(res)
           loading.close()
           // this.$message.success(`${res}`)
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           loading.close()
           this.$message.error(`${error}`)
         }
@@ -458,7 +458,7 @@
         val.forEach((item) => {
           this.selectedList.push(item)
         })
-        console.log(this.selectedList)
+        dgiotlog.log(this.selectedList)
       },
       async submitAlert(alertId) {
         const Loading = this.$baseColorfullLoading(4)
@@ -469,10 +469,10 @@
         }
         try {
           const res = await putNotification(alertId, alertParams)
-          console.log(res)
+          dgiotlog.log(res)
           this.$message.success('处理成功')
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$message.error('处理失败')
         }
         this.fetchData()
@@ -485,10 +485,10 @@
         this.status = String(status)
         this.devicename = devicename
         let dFrom = []
-        console.log(dynamicform)
+        dgiotlog.log(dynamicform)
         for (let d in dynamicform) {
           for (let j in dynamicform[d]) {
-            console.log(j, dynamicform[d][j])
+            dgiotlog.log(j, dynamicform[d][j])
             let arr = {
               key: j,
               value: dynamicform[d][j],
@@ -497,14 +497,14 @@
           }
         }
         this.dynamicformInfo = dFrom
-        console.log(this.dynamicformInfo)
+        dgiotlog.log(this.dynamicformInfo)
         this.dynamicformView = true
       },
       async showInfo(type, content, alertId) {
         const Loading = this.$baseColorfullLoading(4)
-        console.log(type, content)
+        dgiotlog.log(type, content)
         var [productId, profileId] = type.split('_')
-        console.log(productId, profileId)
+        dgiotlog.log(productId, profileId)
         // 拿到Product 中的profile
         this.alertId = alertId
         try {
@@ -512,24 +512,24 @@
           Loading.close()
           const { parser = [], profile = [] } = config
           const _mergeProfile = [].concat(profile, parser)
-          console.log(_mergeProfile, '_mergeProfile')
+          dgiotlog.log(_mergeProfile, '_mergeProfile')
           let _profileConfig = _mergeProfile.map((e) => {
             if (e.uid == profileId) {
               return e
             }
           })
-          console.log(_profileConfig, '_profileConfig')
+          dgiotlog.log(_profileConfig, '_profileConfig')
           this.formConfig = _profileConfig[0].config
           this.alertConfig = _profileConfig[0]
-          console.log(this.formConfig, 'formConfig')
+          dgiotlog.log(this.formConfig, 'formConfig')
           // this.$message.success(`${res}`)
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           Loading.close()
           this.$message.error(`${error}`)
         }
         this.formConfig = _.merge(content, this.formConfig)
-        console.log('_profileConfig', this.formConfig)
+        dgiotlog.log('_profileConfig', this.formConfig)
         this.$nextTick(() => {
           this.parserView = true
         })
@@ -548,7 +548,7 @@
         if (!args.limit) {
           args = this.queryForm
         }
-        console.log(this.queryForm, 'queryForm', args)
+        dgiotlog.log(this.queryForm, 'queryForm', args)
         this.listLoading = false
         const loading = this.$baseColorfullLoading(3)
         let params = {
@@ -583,7 +583,7 @@
         }
         await queryNotification(params)
           .then((res) => {
-            console.log(res, 'res')
+            dgiotlog.log(res, 'res')
             const { results = [], count = 0 } = res
             this.list = results
             this.total = count
@@ -593,7 +593,7 @@
             this.$message.error(`${e}`)
             loading.close()
           })
-        console.log(this.list, 'this.list')
+        dgiotlog.log(this.list, 'this.list')
       },
       async prodChange(e) {
         this.Device = []
@@ -601,12 +601,12 @@
           where: { product: e },
         }
         const { results } = await queryDevice(params)
-        console.log(results, '设备')
+        dgiotlog.log(results, '设备')
         this.Device = results
       },
       handleRemove(file) {
         this.form.photo.forEach((i, index) => {
-          // console.log(
+          // dgiotlog.log(
           //   i,
           //   index,
           //   file.name,
@@ -615,10 +615,10 @@
           if (i.split('/')[`${i.split('/').length - 1}`] == file.name) {
             // delete this.form.photo[index]
             this.form.photo.splice(index, 1)
-            // console.log(this.form.photo, index)
+            // dgiotlog.log(this.form.photo, index)
           }
         })
-        console.log(this.form.photo)
+        dgiotlog.log(this.form.photo)
       },
       handleSizeChange(val) {
         this.queryForm.limit = val

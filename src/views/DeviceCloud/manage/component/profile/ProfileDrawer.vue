@@ -146,7 +146,7 @@
         this.$parent.addParse(table)
       },
       saveParse(table) {
-        console.log('Preservation', table)
+        dgiotlog.log('Preservation', table)
         this.$parent.saveParse(table)
       },
       editParse(index, row) {

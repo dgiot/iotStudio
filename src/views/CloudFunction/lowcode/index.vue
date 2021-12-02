@@ -274,7 +274,7 @@
         this.set_amisJson(data)
       },
       handleDelete(row) {
-        console.log(row.data, row.objectId)
+        dgiotlog.log(row.data, row.objectId)
         this.$baseConfirm(
           this.$translateTitle(
             'Maintenance.Are you sure you want to delete the current item'
@@ -325,7 +325,7 @@
             : { $ne: null },
         }
         const { count, order, excludeKeys, limit, skip, where } = params
-        console.log(this.queryForm)
+        dgiotlog.log(this.queryForm)
         this.listLoading = true
         const { results, count: total } = await queryView({
           count,

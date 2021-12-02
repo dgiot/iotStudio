@@ -157,7 +157,7 @@ export default {
       deep: true,
       limit: true,
       handler(val) {
-        console.error(val)
+        dgiotlog.warn(val)
       },
     },
   },
@@ -203,7 +203,7 @@ export default {
         this.queryForm.total = count
       } catch (error) {
         loading.close()
-        console.log(error)
+        dgiotlog.log(error)
         this.$message.error(`${error}`)
       }
     },
@@ -234,7 +234,7 @@ export default {
       }
     },
     referenceHandle(row) {
-      console.log('prodtemp', row)
+      dgiotlog.log('prodtemp', row)
     },
     // 选择产品模板
     async chooseTemplate(row) {
@@ -250,12 +250,12 @@ export default {
           '{"order": "createdAt","keys":["parent","name","level"],"where":{"parent": "d6ad425529"}}',
         parent: 'parent',
       }
-      console.log(params)
+      dgiotlog.log(params)
       try {
         const { results = [] } = await post_tree(params)
         this.categoryTreeData = results
       } catch (e) {
-        console.log('categorytree error', e)
+        dgiotlog.log('categorytree error', e)
       }
     },
     onBeforeUploadImage(file) {
@@ -263,7 +263,7 @@ export default {
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'application/msword',
       ]
-      console.error(
+      dgiotlog.warn(
         file,
         file.size,
         file.size / 1024 / 1024 < 30,
@@ -282,7 +282,7 @@ export default {
       return isIMAGE && isLt30M
     },
     UploadImage(param) {
-      console.error(param, 'param')
+      dgiotlog.warn(param, 'param')
       this.ruleForm.file = param.file
     },
     fileChange(file) {
@@ -299,7 +299,7 @@ export default {
       this.$refs.upload.submit()
     },
     handlePreview(file) {
-      console.log(file)
+      dgiotlog.log(file)
     },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
@@ -318,7 +318,7 @@ export default {
           const loading = this.$baseColorfullLoading(1)
           try {
             const { result } = await postReportFile(formData)
-            console.log(result)
+            dgiotlog.log(result)
             this.$message.success(
               this.$translateTitle('cloudTest.Template created successfully')
             )
@@ -331,7 +331,7 @@ export default {
           }
           loading.close()
         } else {
-          console.log('error submit!!')
+          dgiotlog.log('error submit!!')
           return false
         }
       })
@@ -416,7 +416,7 @@ export default {
         netType: 'Evidence',
         nodeType: 1,
       }
-      console.log(this.queryPayload)
+      dgiotlog.log(this.queryPayload)
       this.listLoading = true
       const { count = 0, results = [] } = await queryProduct(this.queryPayload)
       this.$refs['paginations'].ination.total = count

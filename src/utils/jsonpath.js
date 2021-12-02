@@ -95,7 +95,7 @@ function readString(text, pos) {
 // Find the next end quote
 function findEndQuote(text, i) {
   while (i < text.length) {
-    // console.log('findEndQuote: ' + i + ' : ' + text[i])
+    // dgiotlog.log('findEndQuote: ' + i + ' : ' + text[i])
     if (text[i] === '"') {
       var bt = i
       // Handle backtracking to find if this quote is escaped (or, if the escape is escaping a slash)

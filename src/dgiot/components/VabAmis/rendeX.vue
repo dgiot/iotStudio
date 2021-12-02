@@ -55,10 +55,12 @@
         `%c amis logs`,
         'color:#009a61; font-size: 28px; font-weight: 300'
       )
-      console.info('ReactDOM', ReactDOM)
-      console.info('code', this.schema)
-      console.info('edit ： https://aisuda.github.io/amis-editor-demo/#/edit/0')
-      console.info(
+      dgiotlog.info('ReactDOM', ReactDOM)
+      dgiotlog.info('code', this.schema)
+      dgiotlog.info(
+        'edit ： https://aisuda.github.io/amis-editor-demo/#/edit/0'
+      )
+      dgiotlog.info(
         'demo ： https://baidu.gitee.io/amis/zh-CN/docs/concepts/schema?page=1'
       )
       console.groupEnd()
@@ -120,7 +122,7 @@
             })
             if (method === 'get' && data) {
               config.params = data
-              console.log('请求参数', config, config.data, data)
+              dgiotlog.log('请求参数', config, config.data, data)
             } else if (data && data instanceof FormData) {
               // config.headers = config.headers || {};
               config.headers['Content-Type'] = 'multipart/form-data'
@@ -139,8 +141,8 @@
               `%c amis axios logs`,
               'color:#009a61; font-size: 28px; font-weight: 300'
             )
-            console.info('config', config)
-            console.info('data', config.data)
+            dgiotlog.info('config', config)
+            dgiotlog.info('data', config.data)
             return axios(url, config)
           },
           isCancel: (e) => axios.isCancel(e),
@@ -148,8 +150,8 @@
           notify: (type, msg) => {
             toast[type]
               ? toast[type](msg, type === 'error' ? '系统错误' : '系统消息')
-              : console.warn('[Notify]', type, msg)
-            console.log('[notify]', type, msg)
+              : dgiotlog.warn('[Notify]', type, msg)
+            dgiotlog.log('[notify]', type, msg)
           },
           confirm,
           copy: (contents, options = {}) => {
@@ -186,7 +188,7 @@
           `%c amis render logs`,
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-        console.info(res)
+        dgiotlog.info(res)
         console.groupEnd()
       },
       updateRoute(location, replace) {
@@ -241,7 +243,7 @@
     schema: {
       amisJson: {
         handler(val) {
-          console.log(val)
+          dgiotlog.log(val)
           this.amisKey = moment(new Date()).format('X') + 'j'
         },
         immediate: true,

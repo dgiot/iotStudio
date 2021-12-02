@@ -82,13 +82,13 @@ export async function UploadImg(params) {
     },
     params
   )
-  console.log(params, 'params')
+  dgiotlog.log(params, 'params')
   var formData = new FormData()
   params.path = 'dgiot_file/' + params.path
   for (let key in params) {
     formData.append(key, params[key])
   }
-  console.log('formData', formData)
+  dgiotlog.log('formData', formData)
   const isParamsKey = [
     'file',
     'scene',
@@ -103,7 +103,7 @@ export async function UploadImg(params) {
     // eslint-disable-next-line no-prototype-builtins
     return params.hasOwnProperty(`${e}`)
   })
-  console.log(process.env.VUE_APP_URL)
+  dgiotlog.log(process.env.VUE_APP_URL)
   let url = 'upload'
   const { NODE_ENV = 'development' } = process.env
 
@@ -117,7 +117,7 @@ export async function UploadImg(params) {
         'Content-Type': 'application/json; charset=utf-8',
       })
       .catch((e) => {
-        console.log(e)
+        dgiotlog.log(e)
         return { data: {} }
       })
   } else {
@@ -143,7 +143,7 @@ export function exlout(params) {
       'Content-Type': 'application/json; charset=utf-8',
       responseType: 'blob',
     })
-    .catch((err) => console.log(err))
+    .catch((err) => dgiotlog.log(err))
 }
 
 /**
@@ -164,5 +164,5 @@ export async function downBinary(url, params) {
       },
       responseType: 'blob',
     })
-    .catch((err) => console.log(err))
+    .catch((err) => dgiotlog.log(err))
 }

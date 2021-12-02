@@ -16,7 +16,7 @@ let shuwaDb = {
   openDB(name, version, table, callback) {
     var request = window.indexedDB.open(name, version)
     request.onerror = function (e) {
-      console.log(e.currentTarget.error.message)
+      dgiotlog.log(e.currentTarget.error.message)
     }
     request.onsuccess = function (e) {
       Salt.db = e.target.result
@@ -49,7 +49,7 @@ let shuwaDb = {
         }
         shuwaDb.closeDB()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
       }
     })
   },
@@ -116,7 +116,7 @@ let shuwaDb = {
     })
   },
   closeDB() {
-    console.log(Salt)
+    dgiotlog.log(Salt)
     Salt.db.close()
   },
 }

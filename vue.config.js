@@ -103,9 +103,9 @@ function getChainWebpack(config) {
   // https://blog.csdn.net/weixin_34294049/article/details/97278751
   config.when(process.env.NODE_ENV === 'production', (config) => {
     if (process.env.CDN_URL) {
-      console.log(`当前使用了cdn,cdn资源链接地址为${process.env.CDN_URL}`)
+      dgiotlog.log(`当前使用了cdn,cdn资源链接地址为${process.env.CDN_URL}`)
     } else {
-      console.log(`当前未使用cdn,可能会导致打包体积过大`)
+      dgiotlog.log(`当前未使用cdn,可能会导致打包体积过大`)
     }
     config.performance.set('hints', false)
     config.devtool('none')

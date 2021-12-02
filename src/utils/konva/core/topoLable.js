@@ -18,7 +18,7 @@ const topoLable = {
         node: args,
       },
     }
-    console.log('我是取证控件', params)
+    dgiotlog.log('我是取证控件', params)
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   on(args) {
@@ -30,7 +30,7 @@ const topoLable = {
         text: args.findOne('Text').getAttr('text'),
       },
     }
-    // console.log(params,Vue.prototype.$dgiotBus.emit(params.busTopicKey,params.msg))
+    // dgiotlog.log(params,Vue.prototype.$dgiotBus.emit(params.busTopicKey,params.msg))
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   contextMenu(args) {
@@ -38,7 +38,7 @@ const topoLable = {
       const contextNode = canvas.clickItem
       if (!_.isEmpty(contextNode)) {
         contextNode[`${args.handler}`]((e) => {
-          console.log(e, 'contextNode')
+          dgiotlog.log(e, 'contextNode')
           canvas.layer.batchDraw()
           // canvas.stage.batchDraw()
         })
@@ -48,9 +48,9 @@ const topoLable = {
       // canvas.stage.batchDraw()
       // if(args.handler === 'remove') contextNode.destroy()
     } else {
-      console.log(args)
+      dgiotlog.log(args)
     }
-    console.log('contextNode args', args)
+    dgiotlog.log('contextNode args', args)
     canvas.layer.batchDraw()
     canvas.stage.batchDraw()
   },
@@ -108,8 +108,8 @@ const topoLable = {
         },
       ],
     })
-    console.log('topoLable')
-    console.log(topoThing)
+    dgiotlog.log('topoLable')
+    dgiotlog.log(topoThing)
     // return topoLable
 
     var simpleLabel = new Konva.Label({
@@ -146,11 +146,11 @@ const topoLable = {
         fill: 'white',
       })
     )
-    console.log(simpleLabel)
+    dgiotlog.log(simpleLabel)
     return simpleLabel
   },
   createdEvidence(args) {
-    console.info('createdEvidence', args.path, args)
+    dgiotlog.info('createdEvidence', args.path, args)
     const Axis = {
       x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
       y: 600 + canvas.randomXy(40, 10),

@@ -16,7 +16,7 @@ export default function createShape(group, Shape) {
         break
       default:
         group.add(createText(_item))
-        console.log(_item.type, _item)
+        dgiotlog.log(_item.type, _item)
         break
     }
   })

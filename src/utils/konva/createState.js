@@ -7,7 +7,7 @@
 import { uuid } from '@/utils'
 
 function createState(type, offsetX, offsetY, color, params) {
-  console.log(params, 'konva create params')
+  dgiotlog.log(params, 'konva create params')
   var state
   switch (type) {
     case 'pencil':
@@ -72,7 +72,7 @@ function createState(type, offsetX, offsetY, color, params) {
       break
     case 'image':
       var imageObj = new Image()
-      console.log(params)
+      dgiotlog.log(params)
       state = new Konva.Image({
         x: offsetX,
         y: offsetY,
@@ -94,7 +94,7 @@ function createState(type, offsetX, offsetY, color, params) {
     default:
       break
   }
-  console.log(state, 'konva  state')
+  dgiotlog.log(state, 'konva  state')
   return state
 }
 

@@ -19,7 +19,9 @@ export default {
   },
   methods: {
     handleRequest(data) {
-      console.log(data);
+          dgiotlog
+      .getDgiotlog('src/dgiot/components/VabRender/components/main/components/tpl/vab-render.js')
+      .info(data)
       return Promise.resolve();
     },
     handleRequestSuccess() {

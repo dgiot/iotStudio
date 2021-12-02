@@ -112,7 +112,7 @@
       },
     },
     mounted() {
-      console.log(this.defaultExpandAll)
+      dgiotlog.log(this.defaultExpandAll)
     },
     methods: {
       addBrother(row, data) {

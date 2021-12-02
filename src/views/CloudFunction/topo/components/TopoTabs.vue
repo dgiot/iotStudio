@@ -155,7 +155,7 @@
         `${process.env.BASE_URL}/assets/images/dgiot_release/topo/`
       )
   // https://blog.csdn.net/u010007013/article/details/102674042
-  // console.log(imgHost, process.env.BASE_URL, process.env)
+  // dgiotlog.log(imgHost, process.env.BASE_URL, process.env)
   //   20210821112723
   //   https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json
   // const iconfont = require('https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json')
@@ -201,7 +201,7 @@
       this.fetchData()
       // this.$dgiotBus.$off(location.hash)
       // this.$dgiotBus.$on(location.hash, (args) => {
-      //   console.log(args, 'args')
+      //   dgiotlog.log(args, 'args')
       // })
     },
     mounted() {},
@@ -224,7 +224,7 @@
       moveSvg(item) {
         let el = getSvgPath(item, 'path')
         const paths = JSON.stringify(el.topo)
-        console.info(`getSvgPath function return ${paths}`)
+        dgiotlog.info(`getSvgPath function return ${paths}`)
         this.busData.paths = paths
         this.$dgiotBus.$emit('busTopo', 'path', this.busData)
       },
@@ -238,7 +238,7 @@
           productid: 'productid',
           thingid: 'thingid',
         })
-        console.log(res)
+        dgiotlog.log(res)
       },
       uploadCkick(type) {
         this.upImgType = type
@@ -267,7 +267,7 @@
       // },
       // mousemove(item) {
       //   this.$emit('fatherMousemove', item)
-      //   // console.log(item)
+      //   // dgiotlog.log(item)
       // },
       // mouseup(item) {
       //   this.$emit('fatherMouseup', item)
@@ -279,7 +279,7 @@
         this.total = totalCount
       },
       handleChange(val) {
-        console.log(val)
+        dgiotlog.log(val)
       },
       handleSizeChange(val) {
         this.queryForm.pageSize = val
@@ -294,14 +294,17 @@
         this.fetchData()
       },
       async fileInfo(res) {
-        console.log(res)
+        dgiotlog.log(res)
         if (this.upImgType === 'img') {
           await this.handleIcon(res.url)
         } else {
           //  直接设置背景图的地址
           localStorage.setItem('konvaBg', res.path)
           await this.setKonvaBg(res.path)
-          console.error('set konva bg \n', Cookies.get('fileServer') + res.path)
+          dgiotlog.error(
+            'set konva bg \n',
+            Cookies.get('fileServer') + res.path
+          )
           //  然后重新绘制一下 使用vuex topo
         }
       },
@@ -313,7 +316,7 @@
           _this.$set(_this.imgParams, 'width', img.width)
           _this.$set(_this.imgParams, 'height', img.height)
           _this.$set(_this.imgParams, 'src', img.src)
-          console.log('图片加载完成', _this.imgParams)
+          dgiotlog.log('图片加载完成', _this.imgParams)
           _this.$baseMessage(
             _this.$translateTitle('图片加载完成,可双击画图区域填充'),
             'success',

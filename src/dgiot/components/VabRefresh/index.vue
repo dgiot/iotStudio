@@ -21,7 +21,7 @@
     created() {
       this.$dgiotBus.$off('refresh')
       this.$dgiotBus.$on('refresh', (args) => {
-        console.log('我调用了', args)
+        dgiotlog.log('我调用了', args)
         // location.reload()
         // this.$router.go(0)
         this.refreshRoute()

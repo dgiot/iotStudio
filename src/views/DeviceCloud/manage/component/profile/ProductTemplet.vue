@@ -134,7 +134,7 @@
       aclObj() {
         let aclObj = {}
         this.role.map((e) => {
-          console.log(e.name, '')
+          dgiotlog.log(e.name, '')
           aclObj[`${'role' + ':' + e.name}`] = {
             read: true,
             write: true,
@@ -152,7 +152,7 @@
       //     const branchArr = cloneData.filter(
       //       (child) => father.id == child.parentid
       //     ) // 返回每一项的子级数组
-      //     console.log(branchArr, 'branchArr')
+      //     dgiotlog.log(branchArr, 'branchArr')
       //     branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
       //     // father.parentid == 0 ? (father.parentid = '0') : ''
       //     return father.parentid == 0 // 返回第一层
@@ -160,7 +160,7 @@
       // },
       selectType(e) {
         this.form.data = e
-        console.log(e)
+        dgiotlog.log(e)
       },
       categoryChange(item) {},
       async Industry(args = {}) {
@@ -175,13 +175,13 @@
         }
         try {
           const loading = this.$baseColorfullLoading()
-          // console.log(this.categoryListOptions, 'categoryListOptions')
+          // dgiotlog.log(this.categoryListOptions, 'categoryListOptions')
           const { results, count = 0 } = await queryProductTemplet(params)
           loading.close()
           this.tableData = results
           this.queryForm.total = count
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$message.error(`${error}`)
         }
       },
@@ -189,7 +189,7 @@
       async queryProduct() {
         try {
           const loading = this.$baseColorfullLoading()
-          // console.log(this.categoryListOptions, 'categoryListOptions')
+          // dgiotlog.log(this.categoryListOptions, 'categoryListOptions')
           const { results } = await queryProduct({
             keys: 'name',
             where: {},
@@ -197,7 +197,7 @@
           loading.close()
           this.productData = results
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
         }
       },
       /**
@@ -208,10 +208,10 @@
       async updateTemplate(params) {
         try {
           const res = await api(params)
-          console.log(res)
+          dgiotlog.log(res)
           // this.$message.success(`${res}`)
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
         }
       },
       /**
@@ -224,13 +224,13 @@
           const loading = this.$baseColorfullLoading()
           const res = await delProductTemplet(templateId)
           loading.close()
-          console.log(res)
+          dgiotlog.log(res)
           this.$message.success(
             this.$translateTitle('user.successfully deleted')
           )
           this.Industry()
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$message.error(
             this.$translateTitle('user.error deleted') + `${error}`
           )
@@ -247,7 +247,7 @@
         this.dialogFormVisible = false
       },
       save(mark) {
-        console.log(mark)
+        dgiotlog.log(mark)
         const setAcl = {}
         setAcl['*'] = {
           read: true,
@@ -283,7 +283,7 @@
               })
             : params
         this.$refs['form'].validate(async (valid) => {
-          console.log('setparams', setparams)
+          dgiotlog.log('setparams', setparams)
           if (valid) {
             const { msg } =
               mark == 'edit'

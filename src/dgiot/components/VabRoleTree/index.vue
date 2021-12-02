@@ -167,11 +167,11 @@
       })
       // this.$dgiotBus.$off('asyncTreeData')
       this.$dgiotBus.$on('asyncTreeData', () => {
-        console.error('asyncTreeData')
+        dgiotlog.error('asyncTreeData')
         this.asyncTreeData()
       })
       this.updateKey++
-      console.log(this.roleTree)
+      dgiotlog.log(this.roleTree)
     },
     methods: {
       ...mapMutations({
@@ -182,7 +182,7 @@
       }),
       async asyncTreeData() {
         const { results } = await Roletree()
-        console.error(results, 'results')
+        dgiotlog.error(results, 'results')
         this.setRoleTree(results)
         // this.$dgiotBus.$emit('reload-router-view')
         this.updateKey++
@@ -201,7 +201,7 @@
           this.setCurrentDepartment(data)
           const { access_token: sessionToken, expires_in } =
             await departmentToken(data.name)
-          console.log(`部门：${data.name}\ntoken为${sessionToken}`)
+          dgiotlog.log(`部门：${data.name}\ntoken为${sessionToken}`)
           // Cookies.set('departmentToken', access_token, {
           //   expires: new Date(new Date().getTime() + expires_in),
           // })
@@ -213,8 +213,9 @@
             '%ctree handleNodeClick',
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
-          console.log(data)
-          console.log(checked)
+          dgiotlog
+            .getDgiotlog('src/dgiot/components/VabRoleTree/index.vue')
+            .info('VabRoleTree ->', data, checked)
           console.groupEnd()
           this.$baseNotify(
             this.$translateTitle('message.Department has been switched to') +
@@ -225,7 +226,7 @@
             5000
           )
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -238,9 +239,9 @@
           '%ctree handleCheckClick',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-        console.log(data, checked, 'handleCheckClick')
-        console.log(data)
-        console.log(checked)
+        dgiotlog.log(data, checked, 'handleCheckClick')
+        dgiotlog.log(data)
+        dgiotlog.log(checked)
         console.groupEnd()
       },
       filterNode(value, data) {

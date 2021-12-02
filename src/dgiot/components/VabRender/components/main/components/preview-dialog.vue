@@ -48,7 +48,7 @@
     methods: {
       handleRequest(data) {
         // eslint-disable-next-line
-        console.log(data)
+        dgiotlog.log(data)
         return Promise.resolve(data)
       },
       handleRequestSuccess() {

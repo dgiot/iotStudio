@@ -196,7 +196,7 @@
 
           this.$emit('change', false)
         } catch (err) {
-          console.error(err)
+          dgiotlog.error(err)
         }
       },
     },

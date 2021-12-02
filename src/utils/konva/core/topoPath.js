@@ -29,7 +29,7 @@ const topoPath = {
         text: args.findOne('Text').getAttr('text'),
       },
     }
-    // console.log(params,Vue.prototype.$dgiotBus.emit(params.busTopicKey,params.msg))
+    // dgiotlog.log(params,Vue.prototype.$dgiotBus.emit(params.busTopicKey,params.msg))
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
 }

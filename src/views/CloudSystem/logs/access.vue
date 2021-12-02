@@ -302,8 +302,8 @@
               }
             }
             if (index == 0) {
-              console.log(item)
-              console.log(item.body)
+              dgiotlog.log(item)
+              dgiotlog.log(item.body)
             }
           })
           this.logdata = results

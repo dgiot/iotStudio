@@ -23,7 +23,7 @@
       src: {
         handler(newVal, oldVal) {
           console.clear()
-          console.log(newVal, oldVal, 'src')
+          dgiotlog.log(newVal, oldVal, 'src')
         },
         deep: true,
         immediate: true,
@@ -32,7 +32,7 @@
     render: function (createElement) {
       var self = this
 
-      console.log(createElement, 'createElement~~~~~~~~~~~~~~~~~~')
+      dgiotlog.log(createElement, 'createElement~~~~~~~~~~~~~~~~~~')
       return createElement(this.type == 'js' ? 'script' : 'link', {
         attrs:
           this.type == 'js'

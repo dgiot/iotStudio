@@ -668,7 +668,7 @@
       },
       async queryRule(ruleId) {
         const { data } = await get_rule_id(ruleId)
-        console.log(data)
+        dgiotlog.log(data)
         // this.formInline.username = data.ctx
         this.actionData = data.actions
         this.formInline.enginesql = data.rawsql
@@ -682,13 +682,13 @@
           if (valid) {
             this.relationChannel(this.params)
           } else {
-            console.log('error submit!!')
+            dgiotlog.log('error submit!!')
             return false
           }
         })
       },
       editFom(formName) {
-        console.log(this.params)
+        dgiotlog.log(this.params)
         this.aisleRow.name = this.params.name
         this.aisleRow.params.payload_tmpl = this.params.payload_tmpl
         this.aisleRow.params.target_qos = this.params.target_qos
@@ -704,7 +704,7 @@
         this.aisleRow = {}
       },
       relationChannel(row) {
-        console.log(row)
+        dgiotlog.log(row)
         this.actionData.push({
           name: 'dgiot',
           params: {
@@ -716,7 +716,7 @@
           },
           fallbacks: [],
         })
-        console.log(this.actionData, 'this.actionData')
+        dgiotlog.log(this.actionData, 'this.actionData')
         this.dialogFormVisible = !this.dialogFormVisible
       },
       async _get_actions() {
@@ -763,21 +763,21 @@
             }
             addRule(params)
               .then((response) => {
-                console.log('response', response)
+                dgiotlog.log('response', response)
                 const { code } = response
                 if (code == 0) {
                   this.formInline.result = response.data.msg
-                  console.log(
+                  dgiotlog.log(
                     '     this.formInline.result ',
                     this.formInline.result
                   )
                 } else {
                   this.$message.error('SQL Not Match')
-                  console.log('error response', response)
+                  dgiotlog.log('error response', response)
                 }
               })
               .catch((error) => {
-                console.log(error)
+                dgiotlog.log(error)
                 this.$message.error(error)
               })
           }
@@ -799,7 +799,7 @@
           rawsql: editor1.getValue(),
         }
         const res = await put_rule_id(ruleid, params)
-        console.log(ruleid, forName, res)
+        dgiotlog.log(ruleid, forName, res)
         this.$message('修改成功')
         this.$router.push({
           path: '/dashboard/engine',
@@ -858,7 +858,7 @@
             // }
             addRule(params)
               .then((resultes) => {
-                console.log(resultes)
+                dgiotlog.log(resultes)
                 if (resultes) {
                   this.$message('创建成功')
                   this.$router.push({
@@ -867,7 +867,7 @@
                 }
               })
               .catch((e) => {
-                console.log(e)
+                dgiotlog.log(e)
                 this.$message.error(e.error)
               })
           } else {
@@ -877,7 +877,7 @@
       },
       // 初始化resource通道
       addresouce() {
-        console.log(this.aisleRow)
+        dgiotlog.log(this.aisleRow)
         this._get_actions()
         this._get_resources()
         if (this.aisleRow.name) {

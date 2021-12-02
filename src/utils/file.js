@@ -1,6 +1,6 @@
 // import requireFile from '@/utils/File/requireFile'
 // const FileModule = requireFile(require.context('./File', true, /.js$/))
-// console.log(FileModule, 'FileModule')
+// dgiotlog.log(FileModule, 'FileModule')
 // module.exports = {
 //   ...FileModule,
 // }

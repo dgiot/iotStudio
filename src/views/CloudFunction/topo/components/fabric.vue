@@ -300,7 +300,7 @@
               this.addPoint(e)
             }
           } catch (error) {
-            console.log(error)
+            dgiotlog.log(error)
           }
         }
       },

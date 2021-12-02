@@ -1,5 +1,5 @@
 import store from '@/store'
-// console.log('glolab store', store)
+// dgiotlog.log('glolab store', store)
 /**
  *
  * @type {{inserted(*=, *, *): void}}

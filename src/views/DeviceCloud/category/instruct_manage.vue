@@ -409,14 +409,14 @@
         handler(val) {
           if (!val) {
             this.$refs.form.resetFields()
-            console.log(val)
+            dgiotlog.log(val)
           }
         },
         deep: true,
       },
       devicesId: {
         handler(val) {
-          console.log(val)
+          dgiotlog.log(val)
         },
         deep: true,
       },
@@ -570,7 +570,7 @@
           opt = Object.assign({}, opt1)
           this.instructid = data.objectId
         } else {
-          console.log(data)
+          dgiotlog.log(data)
           opt = Object.assign({}, data)
         }
         this.openDialog(formName, type, opt)

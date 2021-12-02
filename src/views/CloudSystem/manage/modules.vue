@@ -287,7 +287,7 @@
             }
           })
           .catch((error) => {
-            console.log(error, 'error')
+            dgiotlog.log(error, 'error')
           })
       },
       async blackDict(hashkey, data, type) {
@@ -363,21 +363,21 @@
         }
       },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`)
+        dgiotlog.log(`每页 ${val} 条`)
         this.limit = val
         this.searchModule(this.searchText)
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`)
+        dgiotlog.log(`当前页: ${val}`)
         this.skip = this.limit * (val - 1)
         this.searchModule(this.searchText)
       },
       handleEdit(index, row) {
         ;(this.edit_module = true), (this.editForm = row.data)
-        console.log(index, row)
+        dgiotlog.log(index, row)
       },
       editPostForm(form) {
-        console.log(form)
+        dgiotlog.log(form)
       },
       async handleDelete(index, row, rows) {
         const res = await delDict(row.objectId)

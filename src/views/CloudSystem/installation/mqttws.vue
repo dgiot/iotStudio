@@ -27,7 +27,7 @@
     },
     created() {
       this.client = new Paho.MQTT.Client(this.host, this.port, this.clientId)
-      console.log(this.client)
+      dgiotlog.log(this.client)
       var _client = this.client
       var opt = (this.options = {
         invocationContext: {
@@ -43,18 +43,18 @@
         userName: 'test',
         password: 'test123',
         onSuccess: function () {
-          console.log('onConnected')
+          dgiotlog.log('onConnected')
           _client.subscribe('001/in') // 订阅主题
         },
         onFailure: function (e) {
-          console.log(e)
+          dgiotlog.log(e)
         },
       })
       this.client.connect(opt) // 连接服务器并注册连接成功处理事件
       this.client.onConnectionLost = this.onConnectionLost // 注册连接断开处理事件
 
       this.client.onMessageArrived = this.onMessageArrived // 注册消息接收处理事件
-      //      console.log('after onlost');
+      //      dgiotlog.log('after onlost');
     },
     //    mounted : function (){
     //      var opt = this.options;
@@ -62,20 +62,20 @@
     //      this.client.onConnectionLost = this.onConnectionLost;//注册连接断开处理事件
     //
     //      this.client.onMessageArrived = this.onMessageArrived;//注册消息接收处理事件
-    //      console.log('after onlost');
+    //      dgiotlog.log('after onlost');
     //    },
     methods: {
       onConnectionLost: function (responseObject) {
         if (responseObject.errorCode !== 0) {
-          console.log('onConnectionLost:' + responseObject.errorMessage)
-          console.log('连接已断开')
+          dgiotlog.log('onConnectionLost:' + responseObject.errorMessage)
+          dgiotlog.log('连接已断开')
         }
       },
       onMessageArrived: function (message) {
-        console.log('收到消息:' + message.payloadString)
+        dgiotlog.log('收到消息:' + message.payloadString)
       },
       onConnect: function () {
-        console.log('onConnected')
+        dgiotlog.log('onConnected')
         this.client.subscribe('001/in') // 订阅主题
       },
       send: function () {

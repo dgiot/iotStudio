@@ -176,7 +176,7 @@
     mounted() {
       this.searchAllOption()
       if (this.deptData?.objectId) {
-        console.log(this.deptData)
+        dgiotlog.log(this.deptData)
         this.isloading = this.$baseLoading(3)
         this.getData(this.deptData)
         setTimeout(() => {
@@ -188,19 +188,19 @@
       handleChangeDeptId(e) {
         this.roleList.forEach((r) => {
           if (r.objectId == e) {
-            console.log(r)
+            dgiotlog.log(r)
             this.deptLevel = r.level
             this.searchAllOption()
           }
         })
-        console.log(this.deptLevel, 'deptLevel')
+        dgiotlog.log(this.deptLevel, 'deptLevel')
       },
       getData(departData) {
         this.deptInfo = departData
         this.deptLevel = departData.level
         this.roleFormObj.ParentId = this.deptInfo.objectId // this.$store.state.user.departmentObj.objectId
 
-        console.log('this.deptInfo', this.deptLevel, this.deptInfo.objectId)
+        dgiotlog.log('this.deptInfo', this.deptLevel, this.deptInfo.objectId)
 
         // 这里有点多余,但不加的话,parent select在视图上无法选中
         this.searchAllOption()
@@ -225,7 +225,7 @@
       },
       // 查询部门  角色
       async searchAllOption() {
-        console.log(this.deptInfo, 'deptInfo')
+        dgiotlog.log(this.deptInfo, 'deptInfo')
         const { results } = await queryDict({
           where: {
             'data.level': { $gt: this.deptLevel },
@@ -235,10 +235,10 @@
         if (results?.length) {
           this.Option.dictOption = results
           this.roleFormObj.dictvalue = results[0].key
-          console.log(this.roleFormObj.dictvalue, results[0].key)
+          dgiotlog.log(this.roleFormObj.dictvalue, results[0].key)
         }
         const { results: roleresults = [] } = await queryRole({})
-        console.log(roleresults, 'roleresults')
+        dgiotlog.log(roleresults, 'roleresults')
         const tempResults = []
 
         if (roleresults?.length) {
@@ -297,7 +297,7 @@
       },
       addroles(formName) {
         this.$refs[formName].validate(async (valid) => {
-          console.log(this.$refs[formName], this.roleFormObj)
+          dgiotlog.log(this.$refs[formName], this.roleFormObj)
           if (valid) {
             const params = {
               depname: this.roleFormObj.depname,
@@ -321,7 +321,7 @@
                 this.$dgiotBus.$emit('dialogHide')
                 this.$dgiotBus.$emit('dialogHide2', res.objectId)
               } else {
-                console.log(res)
+                dgiotlog.log(res)
                 this.$message({
                   message: `角色添加出錯${res}`,
                   type: 'error',
@@ -332,7 +332,7 @@
                 message: `角色添加出錯${_error}`,
                 type: 'error',
               })
-              console.log(_error, '_error')
+              dgiotlog.log(_error, '_error')
             }
           } else {
             return false

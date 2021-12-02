@@ -106,8 +106,8 @@ export function setUpLictool(appname) {
 
 // 万亿零转换
 export function handleZero(value) {
-  // console.log(value);
-  // console.log(typeof(value));
+  // dgiotlog.log(value);
+  // dgiotlog.log(typeof(value));
   if (typeof value === 'number') {
     value = String(value)
     const Y = /0{8}$/

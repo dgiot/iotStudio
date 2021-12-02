@@ -56,13 +56,13 @@ function o2Log(arg) {
 
 o2Log.prototype = {
   log: function (obj) {
-    if (this.debug) console.log(obj)
+    if (this.debug) dgiotlog.log(obj)
   },
   warn: function (obj) {
-    if (this.debug) console.warn(obj)
+    if (this.debug) dgiotlog.warn(obj)
   },
   error: function (obj) {
-    if (this.debug) console.error(obj)
+    if (this.debug) dgiotlog.warn(obj)
   },
 
   debug: function (obj) {

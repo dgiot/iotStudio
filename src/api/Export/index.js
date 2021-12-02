@@ -45,7 +45,7 @@ export async function ExportParse(className, params) {
   //   },
   // })
   const _token = store.getters['user/token']
-  console.log('_token', _token)
+  dgiotlog.log('_token', _token)
   // eslint-disable-next-line no-undef
   return axios
     .post(`iotapi/export_data?classname=${className}`, params, {
@@ -56,7 +56,7 @@ export async function ExportParse(className, params) {
         sessionToken: _token,
       },
     })
-    .catch((err) => console.log(err))
+    .catch((err) => dgiotlog.log(err))
 }
 
 /**
@@ -68,7 +68,7 @@ export async function ImportParse(className, file) {
   let formData = new FormData()
   formData.append('className', className)
   formData.append('file', file)
-  console.log('formdata', formData, className, file)
+  dgiotlog.log('formdata', formData, className, file)
   return request({
     url: 'import_data',
     method: 'post',

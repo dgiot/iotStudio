@@ -6,6 +6,7 @@ import { getToken, removeToken, setToken } from './vuex'
 import globalConfig from './globalConfig'
 import store from '@/store'
 import { Message } from 'element-ui'
+import dgiotlog from './dgiotlog'
 import {
   create_object,
   del_object,
@@ -159,7 +160,7 @@ export function aclObj(roles) {
   if (!roles) return
   let aclObj = {}
   roles.map((e) => {
-    console.log(e.name, '')
+    dgiotlog.log(e.name, '')
     aclObj[`${'role' + ':' + e.name}`] = {
       read: true,
       write: true,
@@ -264,7 +265,7 @@ function downBinary(res) {
   if (!res) return false
   const { data, headers } = res
   let blob = new Blob([data], { type: headers['content-type'] }) // 这里标识下载文件类型
-  console.log(blob, res.data)
+  dgiotlog.log(blob, res.data)
   let downloadElement = document.createElement('a')
   let href = window.URL.createObjectURL(blob) // 创建下载的链接
   downloadElement.href = href
@@ -524,12 +525,14 @@ export default {
     Vue.prototype.$bus = Bus
     Vue.prototype.$o2Log = o2Log
     // https://shufei021.github.io/rutils/library/
-    // Vue.prototype.$dgiotUtils = rutils
+    // Vue.prototype.$dg
+    // otUtils = rutils
     // https://shufei021.github.io/rdate/
     // Vue.prototype.$dgiotRdate = rdate
     Vue.prototype.$getMqttEventId = getMqttEventId
     Vue.prototype.$getTopicEventId = getTopicEventId
     Vue.prototype.$downBinary = downBinary
     Vue.prototype.$FileServe = Cookies.get('fileServer')
+    Vue.prototype.$dgiotlog = dgiotlog
   },
 }

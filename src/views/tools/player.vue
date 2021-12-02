@@ -106,7 +106,7 @@
         // this.width = Number(
         //   document.getElementsByTagName('section')[0].offsetWidth
         // )
-        console.log(e, res[0].url)
+        dgiotlog.log(e, res[0].url)
         this.flvsrc = res[0].url
         // setTimeout(() => {
         //   this.mp4Play = true

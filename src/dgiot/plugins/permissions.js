@@ -45,7 +45,7 @@ router.beforeEach(async (to, from, next) => {
   if (hasToken) {
     if (store.getters['routes/routes'].length) {
       // 这里判断下存储的路由表  并且过滤掉白名单
-      // console.log(store.getters['routes/routes'])
+      // dgiotlog.log(store.getters['routes/routes'])
       // 禁止已登录用户返回登录页
       if (to.path === '/login') {
         next({
@@ -73,7 +73,7 @@ router.beforeEach(async (to, from, next) => {
           replace: true,
         })
       } catch (err) {
-        console.error('错误拦截:', err)
+        dgiotlog.warn('错误拦截:', err)
         await store.dispatch('user/resetAll')
         next(toLoginRoute(to))
       }
@@ -105,7 +105,9 @@ router.afterEach((to) => {
     routecInfo = to
   }
   if (!_.isPlainObject(routecInfo))
-    console.log('%c%s', 'color: red;font-size: 12px;', routecInfo)
+    dgiotlog
+      .getDgiotlog('src/dgiot/plugins/permissions.js')
+      .info('router ->', routecInfo)
 
   if (VabProgress.status) VabProgress.done()
 })

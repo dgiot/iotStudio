@@ -430,9 +430,9 @@
       expand(tree, isExpand) {
         // 展开/折叠
         this[isExpand] = !this[isExpand]
-        console.log('tree', tree, this.$refs[tree], isExpand)
+        dgiotlog.log('tree', tree, this.$refs[tree], isExpand)
         const nodes = this.$refs[tree].store._getAllNodes()
-        console.log(nodes)
+        dgiotlog.log(nodes)
         // 或者方法二
         // const nodes = this.$refs.tree.store.nodesMap
         for (let i in nodes) {
@@ -644,7 +644,7 @@
             }
           })
           .catch((e) => {
-            console.log(e)
+            dgiotlog.log(e)
           })
       },
     },

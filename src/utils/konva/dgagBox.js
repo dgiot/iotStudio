@@ -8,7 +8,7 @@ function getCss(ele, prop) {
 }
 
 export default function dragBox(drag, wrap) {
-  console.log(drag, wrap)
+  dgiotlog.log(drag, wrap)
   var initX,
     initY,
     dragable = false,

@@ -552,7 +552,7 @@
       this.searchAllOption()
       this.userFordepartment()
       this.$dgiotBus.$on('dialogHide2', (depobjectId) => {
-        console.log(depobjectId)
+        dgiotlog.log(depobjectId)
         if (depobjectId?.length) {
           this.depobjectId = depobjectId
           this.isEvent = true
@@ -571,10 +571,10 @@
       async getRoletree() {
         this.upKey++
         const { results = [] } = await Roletree()
-        console.log(results, 'results')
+        dgiotlog.log(results, 'results')
         this.$dgiotBus.$emit('asyncTreeData')
         this.deptTreeData = this.currentDepartment
-        console.log(
+        dgiotlog.log(
           this.deptTreeData,
           'this.deptTreeData',
           this.currentDepartment
@@ -598,7 +598,7 @@
                 }
               })
               .catch((e) => {
-                console.log(e)
+                dgiotlog.log(e)
               })
           }
           this.isloading = false
@@ -608,19 +608,19 @@
         this.centerDialogRole = false
       },
       addGroup(item) {
-        console.log(item)
+        dgiotlog.log(item)
       },
       // addItemUser
       addItemUser(item) {
         this.deptOption = []
         this.departmentObj = item
-        console.log(item)
+        dgiotlog.log(item)
         this.deptOption.push(item)
         this.adduserDiadlog = true
         this.userInfoForm.departmentid = item.objectId
       },
       change(e) {
-        console.log(e)
+        dgiotlog.log(e)
         if (e) {
           $('.el-tree').css({
             height: '300px',
@@ -632,7 +632,7 @@
       // 添加用户
       addUser() {
         this.$refs['userInfoFormRef'].validate(async (valid) => {
-          console.log('tag', this.tag)
+          dgiotlog.log('tag', this.tag)
           this.$delete(this.tag, 'wechat')
           if (!valid) {
             this.$message({
@@ -650,7 +650,7 @@
           //   var departmentStr = "";
           // }
           // const { tag } = await getUser(this.objectId)
-          // console.log('tag', this.tag)
+          // dgiotlog.log('tag', this.tag)
           const params = {
             username: this.userInfoForm.account,
             nick: this.userInfoForm.nick,
@@ -739,10 +739,10 @@
         const req = await this.$query_object('_Role', params)
         const result = req.results
         this.rolelist = result
-        console.log('result', req.results)
+        dgiotlog.log('result', req.results)
         if (result.length) {
           result.map((roleitem, index) => {
-            console.log(
+            dgiotlog.log(
               roleitem.objectId,
               roleitem,
               this.userId == roleitem.objectId
@@ -755,12 +755,12 @@
               this.userrolelist.push(roleitem.objectId)
             }
           })
-          console.log(this.userrolelist)
+          dgiotlog.log(this.userrolelist)
           this.roleacl = true
         }
       },
       seleItem(arr1, arr2, arr3) {
-        console.log('arr1, arr2, arr3', arr1, arr2, arr3)
+        dgiotlog.log('arr1, arr2, arr3', arr1, arr2, arr3)
         arr1.map((items) => {
           if (!arr2.includes(items)) {
             arr3.push(items)
@@ -777,7 +777,7 @@
       userRolereset(disroles) {
         Promise.all([
           disroles.map((nowitems) => {
-            console.log(nowitems)
+            dgiotlog.log(nowitems)
             this.testroles(nowitems)
           }),
         ]).then((data) => {
@@ -791,7 +791,7 @@
         })
       },
       testroles(id) {
-        console.log(id)
+        dgiotlog.log(id)
         // var Roles = Parse.Object.extend("_Role");
         // var roles = new Roles();
         // var User = Parse.Object.extend("_User");
@@ -867,7 +867,7 @@
                   },
                 },
               }
-              console.log(typeof params)
+              dgiotlog.log(typeof params)
               const res = await deleteRoleuser(params)
               this.searchAllOption()
               this.$baseMessage(
@@ -894,7 +894,7 @@
           action: action,
         }
         disableuser(params).then((res) => {
-          console.log(res)
+          dgiotlog.log(res)
           if (res != undefined) {
             if (emailVerified) {
               this.$message({
@@ -932,7 +932,7 @@
        * @Description:
        */
       async Resign(data) {
-        console.log(data)
+        dgiotlog.log(data)
         try {
           this.$baseConfirm(
             this.$translateTitle(
@@ -961,7 +961,7 @@
             }
           )
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -1062,7 +1062,7 @@
         //   'overflow-x': 'auto',
         // })
         // $('.el-select-dropdown').css({ display: 'none' })
-        console.log(this.treeDataValue)
+        dgiotlog.log(this.treeDataValue)
         this.departmentname = data.name
         this.curDepartmentId = data.objectId
         this.tempData = []

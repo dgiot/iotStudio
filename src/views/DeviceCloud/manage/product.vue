@@ -1618,7 +1618,7 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val
       let vals = []
-      console.log(
+      dgiotlog.log(
         'multipleSelection',
         this.multipleSelection,
         this.selectfromtype
@@ -1632,10 +1632,10 @@ export default {
       if (this.selectfromtype == 'otherchannel') {
         this.form[this.selectfromtype] = vals
       } else {
-        console.log(this.cType)
+        dgiotlog.log(this.cType)
         this.form[this.selectfromtype] = val.objectId
       }
-      console.log('multipleSelection', this.form)
+      dgiotlog.log('multipleSelection', this.form)
     },
     async getResource(text, type, cType) {
       this.cType = cType
@@ -1700,7 +1700,7 @@ export default {
         this.queryForm.total = count
       } catch (error) {
         loading.close()
-        console.log(error)
+        dgiotlog.log(error)
         this.$message.error(`${error}`)
       }
     },
@@ -1726,7 +1726,7 @@ export default {
       }
     },
     fileInfo(info) {
-      console.log('info', info)
+      dgiotlog.log('info', info)
       this.imageUrl = info.path
       this.loading = false
     },
@@ -1777,16 +1777,16 @@ export default {
     },
     onJsonSave(formName) {
       // 点击保存触发
-      // console.log("onJsonSave", this.dictTempForm.params);
+      // dgiotlog.log("onJsonSave", this.dictTempForm.params);
       this.$refs[formName].validate((valid) => {
-        console.log(this.editDictTempId)
+        dgiotlog.log(this.editDictTempId)
         if (valid) {
           this.put_Dict_temp(this.editDictTempId, this.dictTempForm)
         }
       })
     },
     async put_Dict_temp(editDictId, row) {
-      console.log(row)
+      dgiotlog.log(row)
       const {
         config = {
           basedate: {},
@@ -1905,7 +1905,7 @@ export default {
       // this.uploadAction = 'http://cad.iotn2n.com:5080/product?appid=' + Cookies.get("appids");
 
       this.$nextTick(() => {
-        // console.log('uploadHeaders',this.uploadHeaders);
+        // dgiotlog.log('uploadHeaders',this.uploadHeaders);
 
         this.uploadData.appid = Cookies.get('appids')
         // this.uploadData.key = "key";
@@ -1913,7 +1913,7 @@ export default {
       })
     },
     handleUploadSuccess(response, file, fileList) {
-      // console.log('### Success response', response)
+      // dgiotlog.log('### Success response', response)
       this.$message({
         type: 'success',
         message: '产品导入成功',
@@ -1963,7 +1963,7 @@ export default {
           'Product',
           parsms
         )
-        // console.log("results", results)
+        // dgiotlog.log("results", results)
         if (results) {
           results.map((items) => {
             if (
@@ -1980,7 +1980,7 @@ export default {
         }
       } catch (error) {
         this.listLoading = false
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -2017,7 +2017,7 @@ export default {
     },
     properties(things, type = 'things') {
       this.descriptions.tableLoading = true
-      console.log(things)
+      dgiotlog.log(things)
       this.descriptions.things = things
       this.descriptions.tableType = type
       setTimeout(() => (this.descriptions.tableLoading = false), 1200)
@@ -2074,11 +2074,11 @@ export default {
           thing = {},
         } = await getProduct(ObjectId)
         this.parserTableList = config
-        console.log(this.parserTableList)
+        dgiotlog.log(this.parserTableList)
         this.parserDict = _.merge(thing, config)
       } catch (e) {
         this.parserTableList = {parser: []}
-        console.log('eeeeeeeeeeeee', e)
+        dgiotlog.log('eeeeeeeeeeeee', e)
       }
       this.parserTable = true
     },
@@ -2104,14 +2104,14 @@ export default {
         this.$message.error(
           this.$translateTitle('user.Save the template error') + `${e}`
         )
-        console.log(e, 'eeee')
+        dgiotlog.log(e, 'eeee')
       }
-      console.log(list)
+      dgiotlog.log(list)
     },
     previewParse(row) {
       this.parserView = true
       this.formConfig = row
-      console.log('previewParse', row)
+      dgiotlog.log('previewParse', row)
     },
     addParse(row) {
       row['parser'].push({
@@ -2128,7 +2128,7 @@ export default {
       const row = await getProduct(ObjectId)
       const {config = {basedate: {}}} = row
       this.productInfo = row
-      console.log(' this.parserDict', this.parserDict)
+      dgiotlog.log(' this.parserDict', this.parserDict)
       this.editDictTempId = ObjectId
       this.dictTempForm = {
         name: '',
@@ -2138,7 +2138,7 @@ export default {
         params: [],
       }
       this.title_temp_dialog = '创建字典模板'
-      console.log(config)
+      dgiotlog.log(config)
       if (config.basedate && config.basedate.name) {
         this.title_temp_dialog = '修改字典模板'
         this.dictTempForm = config.basedate
@@ -2166,7 +2166,7 @@ export default {
           },
         ],
       }
-      console.log(this.dictTempForm, 'config')
+      dgiotlog.log(this.dictTempForm, 'config')
       this.dictVisible = true
     },
     editorProduct(row) {
@@ -2213,8 +2213,8 @@ export default {
       }
 
       // this.form.relationApp = this.currentDepartment.name
-      console.log('row', row)
-      console.log('form', this.form)
+      dgiotlog.log('row', row)
+      dgiotlog.log('form', this.form)
     },
     async categorytree() {
       const parsms = {
@@ -2224,7 +2224,7 @@ export default {
       }
       const {results} = await queryCategory(parsms)
       this.categoryList = results
-      console.log('this', this.categoryList)
+      dgiotlog.log('this', this.categoryList)
     },
     handleCateSearch(objectId) {
       this.queryForm.category = objectId
@@ -2248,7 +2248,7 @@ export default {
           res.results.forEach((result) => {
             ids.push(result.objectId)
           })
-          console.log('ids', ids)
+          dgiotlog.log('ids', ids)
           this.queryProdut({categorys: ids})
         })
       }
@@ -2313,10 +2313,10 @@ export default {
                 },
               },
               params = _.merge(initparams, addparams)
-            console.log('createProduct', params)
+            dgiotlog.log('createProduct', params)
             this.createProduct(params)
           } else {
-            console.log('editProduct', initparams)
+            dgiotlog.log('editProduct', initparams)
             this.editProduct(initparams)
           }
         } else {
@@ -2330,11 +2330,11 @@ export default {
       try {
         const res = await ImportParse('Product', parseFile)
         loading.close()
-        console.log('eresresrror', res)
+        dgiotlog.log('eresresrror', res)
         this.$message.success(``)
       } catch (error) {
         loading.close()
-        console.log('error', error)
+        dgiotlog.log('error', error)
         this.$message.error(`${error}`)
       }
       this.$dgiotBus.$emit('reload-router-view')

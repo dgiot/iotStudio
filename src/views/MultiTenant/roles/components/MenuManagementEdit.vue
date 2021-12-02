@@ -303,11 +303,11 @@
           })
         }
       })
-      console.log('router', router)
+      dgiotlog.log('router', router)
     },
     methods: {
       uploadIcon(item) {
-        console.log(item, this.form)
+        dgiotlog.log(item, this.form)
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
           new MouseEvent('click')
@@ -320,7 +320,7 @@
         }
       },
       fileInfo({ path = '' } = img) {
-        console.log(path)
+        dgiotlog.log(path)
         this.form.meta.icon = path
       },
       files(file) {
@@ -329,8 +329,8 @@
       },
       handleChange(value) {
         const obj = this.$refs['menuCascader'].getCheckedNodes()
-        console.log(obj[0].data)
-        console.log(value, this.cascadervalue)
+        dgiotlog.log(obj[0].data)
+        dgiotlog.log(value, this.cascadervalue)
         this.form = obj[0].data
       },
       handleIcon(item) {
@@ -366,7 +366,7 @@
         } else if (type == 'editMenu') {
           this.form = row
         } else {
-          console.log('row', row)
+          dgiotlog.log('row', row)
           this.form = {
             orderBy: row.orderBy,
             name: '',
@@ -414,7 +414,7 @@
           meta: form.meta,
         }
         const { updatedAt } = await putMenu(objectId, params)
-        console.log('updatedAt', updatedAt)
+        dgiotlog.log('updatedAt', updatedAt)
         if (updatedAt) {
           this.closeDialog()
         }

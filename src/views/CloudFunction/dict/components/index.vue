@@ -86,9 +86,9 @@
       async designDict(type, objectId, data) {
         this.dictId = objectId
         this.data = data
-        console.log('data', data)
-        console.log('objectId', objectId)
-        console.log('type', type)
+        dgiotlog.log('data', data)
+        dgiotlog.log('objectId', objectId)
+        dgiotlog.log('type', type)
         switch (type) {
           case 'word':
             this.wordFlag = true

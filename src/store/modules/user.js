@@ -45,10 +45,12 @@ async function queryAllMsg(commit) {
       '%c login promise.all log',
       'color:#009a61; font-size: 28px; font-weight: 300'
     )
-    console.info(promiseRes)
+    dgiotlog
+      .getDgiotlog('src/store/modules/user.js')
+      .info('login promise.all log ->', promiseRes)
     console.groupEnd()
   } catch (e) {
-    console.error(`await Promise.all error ${e}`)
+    dgiotlog.warn(`await Promise.all error ${e}`)
   }
 }
 
@@ -432,7 +434,7 @@ const actions = {
   },
   // async getDefault({ commit, dispatch }) {
   //   const Default = await SiteDefault()
-  //   // // console.log(copyright, dashboard, logo, objectId, title)
+  //   // // dgiotlog.log(copyright, dashboard, logo, objectId, title)
   //   // const { copyright, logo, objectId, title } = Default
   //   // if (title) dispatch('settings/setTitle', title, { root: true })
   //   // if (copyright) dispatch('acl/setCopyright', copyright, { root: true })

@@ -494,7 +494,7 @@
       }
       Websocket.unsubscribe(info, function (res) {
         if (res.result) {
-          console.log('取消订阅')
+          dgiotlog.log('取消订阅')
         }
       })
       subprodevice.setValue('')
@@ -565,8 +565,8 @@
         var text0 = JSON.stringify({ action: 'start_logger' })
         Websocket.subscribe(info, function (res) {
           if (res.result) {
-            console.log(info)
-            console.log('订阅成功')
+            dgiotlog.log(info)
+            dgiotlog.log('订阅成功')
             var sendInfo = {
               topic:
                 'channel/' +
@@ -675,12 +675,12 @@
                   }
                 })
                 .catch((e) => {
-                  console.log('postDict ', e.error)
+                  dgiotlog.log('postDict ', e.error)
                 })
             }
           })
           .catch((e) => {
-            console.log('getProduct ', e.error)
+            dgiotlog.log('getProduct ', e.error)
           })
       },
       // dataslist初始化数据
@@ -699,7 +699,7 @@
             }
           })
           .catch((e) => {
-            console.log('queryDict ', e.error)
+            dgiotlog.log('queryDict ', e.error)
           })
       },
       isInterval(val) {
@@ -762,7 +762,7 @@
             }
           })
           .catch((e) => {
-            console.log('delDict ', e.error)
+            dgiotlog.log('delDict ', e.error)
           })
       },
       editorMessage() {
@@ -778,7 +778,7 @@
             }
           })
           .catch((e) => {
-            console.log('putDict ' + e.error)
+            dgiotlog.log('putDict ' + e.error)
           })
       },
       getProduct() {
@@ -794,7 +794,7 @@
             this.getDict()
           })
           .catch((e) => {
-            console.log('queryProduct ', e.error)
+            dgiotlog.log('queryProduct ', e.error)
           })
       },
       getChannel(objectid) {
@@ -820,7 +820,7 @@
             }
           })
           .catch((err) => {
-            console.log(err)
+            dgiotlog.log(err)
             this.$baseMessage('请求出错', err.error, 3000)
           })
       },
@@ -846,7 +846,7 @@
             }
           })
           .catch((err) => {
-            console.log(err)
+            dgiotlog.log(err)
             this.$baseMessage('请求出错', err.error, 3000)
           })
       },
@@ -862,7 +862,7 @@
       // 清空选择框1
       // clearEditor1(){
       //      this.editor1.function=''
-      //      console.log(this.editor1.function)
+      //      dgiotlog.log(this.editor1.function)
       // },
       functionClick() {
         this.primary1 = 3

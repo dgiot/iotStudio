@@ -223,10 +223,10 @@
         roletree()
           .then((res) => {
             this.treeData = deepClone(res.results)
-            console.log(this.treeData)
+            dgiotlog.log(this.treeData)
           })
           .catch((e) => {
-            console.log(e)
+            dgiotlog.log(e)
             this.treeData = []
           })
       },
@@ -309,7 +309,7 @@
               data.alias = this.editLabel
             })
             .catch((e) => {
-              console.log(e)
+              dgiotlog.log(e)
             })
         }
         data.roles.seen = false

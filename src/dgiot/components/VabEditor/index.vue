@@ -89,7 +89,7 @@
         const style = {
           height: height + 'px !important',
         }
-        // console.log('height', height, style)
+        // dgiotlog.log('height', height, style)
         return style
       },
     },
@@ -233,7 +233,7 @@
       },
     },
     render(h) {
-      // console.log(h, 'hhh')
+      // dgiotlog.log(h, 'hhh')
       return h('div')
     },
   }

@@ -78,7 +78,7 @@
     methods: {
       //http-request的钩子
       FileRequest(file) {
-        console.log('file', file)
+        dgiotlog.log('file', file)
         let config = {
           onUploadProgress: (progressEvent) => {
             //progressEvent.loaded:已上传文件大小
@@ -101,11 +101,11 @@
           .then((res) => {
             this.loading = false
             this.$emit('fileInfo', res.data)
-            console.log('上传成功的回调', res)
+            dgiotlog.log('上传成功的回调', res)
           })
           .catch((e) => {
             this.loading = false
-            console.log('出错了', e)
+            dgiotlog.log('出错了', e)
           })
       },
       handleExceed() {},

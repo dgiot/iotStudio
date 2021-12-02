@@ -117,7 +117,7 @@ instance.interceptors.request.use(
     let { headers = {} } = config
     config.headers['departmentToken'] = departmentToken
     if (headers['proxy'] == true) {
-      console.log(config, 'config')
+      dgiotlog.log(config, 'config')
       NODE_ENV == 'production'
         ? (config.baseURL = headers.produrl)
         : (config.baseURL = headers.devurl)
@@ -156,7 +156,7 @@ instance.interceptors.request.use(
         `%c部门切换token拦截url日志`,
         'color:black; font-size: 18px; font-weight: 300'
       )
-      console.log(
+      dgiotlog.log(
         `拦截的url为${config.url}\n当前请求使用了部门token：为${departmentToken}\n用户登录token为${usertoken}`,
         'color:black; font-size: 18px; font-weight: 300'
       )
@@ -167,7 +167,7 @@ instance.interceptors.request.use(
           `%c忽略url拦截日志`,
           'color:black; font-size: 18px; font-weight: 300'
         )
-        console.log(
+        dgiotlog.log(
           `忽略的url为${config.url}\n当前请求用户登录token：为${usertoken}\n部门token为${departmentToken}`,
           'color:black; font-size: 18px; font-weight: 300'
         )
@@ -193,9 +193,9 @@ instance.interceptors.response.use(
     if (response) {
       return handleData(response)
     } else {
-      console.log('error', error)
-      console.log('config', config)
-      console.log('response', response)
+      dgiotlog.log('error', error)
+      dgiotlog.log('config', config)
+      dgiotlog.log('response', response)
       Vue.prototype.$baseMessage(
         `请求出错：请求链接：${config.url}，错误信息：${error}`,
         'error'
@@ -232,7 +232,7 @@ function refreshAuthToken(tokens) {
         time: (Date.parse(new Date()) / 1000 + 86400) * 1000,
         expires_in: 7,
       })
-      console.warn(`持续检查更新token有效期`)
+      dgiotlog.warn(`持续检查更新token有效期`)
     }
   })
   console.groupEnd()

@@ -356,8 +356,8 @@
     },
     computed: {},
     mounted() {
-      console.log('this.data', this.data)
-      console.log('this.dataform', this.dataform)
+      dgiotlog.log('this.data', this.data)
+      dgiotlog.log('this.dataform', this.dataform)
     },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前

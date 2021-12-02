@@ -44,7 +44,7 @@ function screenfull(elemId) {
 
 function exitFull(id) {
   function exitFullScreen(element) {
-    console.log('exitFullscreen', element)
+    dgiotlog.log('exitFullscreen', element)
     if (document.exitFullscreen) {
       document.exitFullscreen()
     } else if (document.mozCancelFullScreen) {

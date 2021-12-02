@@ -4,7 +4,7 @@ const path = require('path')
 const axios = require('axios')
 const resourceType = ['css', 'js', 'json', 'ttf', 'woff', 'woff2']
 const filePath = ['js', 'css', 'iconfont']
-const log = console.log
+const log = dgiotlog.log
 const chalk = require('chalk')
 
 /**
@@ -66,7 +66,7 @@ function writeFile(files, data, resource) {
 
   fs.readFile(dirPath, function (err, _data) {
     // if (err) {
-    //   console.log(err, 'err')
+    //   dgiotlog.log(err, 'err')
     //   return err
     // }
     fs.writeFile(dirPath, data, function (err) {

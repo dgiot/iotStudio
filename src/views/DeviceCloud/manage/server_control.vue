@@ -1068,13 +1068,13 @@
       async getApp() {
         this.appid = this.$route.query.appid
         this.appsecret = this.$route.query.appsecret
-        console.log(this.appid, this.appsecret)
+        dgiotlog.log(this.appid, this.appsecret)
         const { results } = await app_count({})
         if (results) this.applist = results
       },
       // 初始化数
       async getOrigin(isstart) {
-        console.log('isstart', isstart)
+        dgiotlog.log('isstart', isstart)
         if (isstart == 0) {
           this.start = 0
         }
@@ -1098,7 +1098,7 @@
         if (this.formInline.version !== '') {
           params.type = this.formInline.version
         }
-        // console.log('search license is', params)
+        // dgiotlog.log('search license is', params)
         const { count, results } = await queryLicense(params)
         if (count) this.total = count
         if (results) this.tableData = results
@@ -1178,7 +1178,7 @@
                 }
               })
               .catch((e) => {
-                console.log('updatedLicense faild ' + e.error)
+                dgiotlog.log('updatedLicense faild ' + e.error)
                 return false
               })
             return true
@@ -1220,7 +1220,7 @@
                 }
               })
               .catch((e) => {
-                console.log('updatedLicense faild ' + e.error)
+                dgiotlog.log('updatedLicense faild ' + e.error)
                 return false
               })
           }

@@ -20,6 +20,6 @@ export default async function updateShape(Shape) {
         break
     }
   })
-  console.log(_errorDate, '此类型数据更新暂不支持')
+  dgiotlog.log(_errorDate, '此类型数据更新暂不支持')
   return Shape
 }

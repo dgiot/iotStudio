@@ -188,7 +188,7 @@
           this.$translateTitle('Maintenance.Delete reminder'),
           async () => {
             const res = await delCategory(CategoryId)
-            console.log(res, 'res')
+            dgiotlog.log(res, 'res')
             if (_.isEmpty(res)) {
               this.$baseMessage(
                 this.$translateTitle('user.successfully deleted'),
@@ -231,7 +231,7 @@
             '}}',
           parent: 'parent',
         }
-        console.log(params)
+        dgiotlog.log(params)
         const { results = [] } = await post_tree(params)
         this.categoryList = results
         this.listLoading = false

@@ -299,20 +299,20 @@
         const { thing = { properties: [] } } = this.productconfig
         let properties = thing.properties
         this.properties = properties
-        console.log('properties', properties)
-        console.log('Shapeconfig', this.Shapeconfig)
+        dgiotlog.log('properties', properties)
+        dgiotlog.log('Shapeconfig', this.Shapeconfig)
         let params = {
           productid: this.$route.query.productid,
           shapeid: this.Shapeconfig.attrs.id,
         }
         const { data } = await get_konva_thing(params)
         const { konvathing, nobound } = data
-        console.log(konvathing, 'konvathing')
-        console.log(nobound, 'nobound')
+        dgiotlog.log(konvathing, 'konvathing')
+        dgiotlog.log(nobound, 'nobound')
         if (Object.values(konvathing).length > 0) {
           this.wmxSituation = '修改'
-          console.log(`物模型存在这个属性`, konvathing)
-          console.log(`this.wmxSituation`, this.wmxSituation)
+          dgiotlog.log(`物模型存在这个属性`, konvathing)
+          dgiotlog.log(`this.wmxSituation`, this.wmxSituation)
           this.reset(nobound)
           var obj = {}
           // 提交之前需要先判断类型
@@ -694,8 +694,8 @@
           this.setSizeForm(obj)
         } else {
           this.wmxSituation = '新增'
-          console.log(`this.wmxSituation`, this.wmxSituation)
-          console.log('物模型不为空，但不存在这个属性', this.Shapeconfig)
+          dgiotlog.log(`this.wmxSituation`, this.wmxSituation)
+          dgiotlog.log('物模型不为空，但不存在这个属性', this.Shapeconfig)
           this.reset(nobound)
           this.wmxData = []
           this.sizeForm.name = this.Shapeconfig.attrs.text
@@ -711,13 +711,13 @@
         this.$dgiotBus.$emit('refresh', this.$route)
       },
       updataForm(from) {
-        console.log('子组件改变的值')
-        console.log(from)
+        dgiotlog.log('子组件改变的值')
+        dgiotlog.log(from)
         this.setSizeForm(from)
       },
       // 提交
       submitForm(sizeForm) {
-        console.log('sizeForm', sizeForm)
+        dgiotlog.log('sizeForm', sizeForm)
         var obj = {
           name: sizeForm.name,
           devicetype: sizeForm.devicetype,
@@ -851,7 +851,7 @@
           productid: this.$route.query.productid,
         }
         putThing(data).then((res) => {
-          console.log('编辑', res)
+          dgiotlog.log('编辑', res)
           if (res.code == 200) {
             this.$message({
               type: 'success',
@@ -864,7 +864,7 @@
               shapeid: this.Shapeconfig.attrs.id,
             }
             edit_konva_thing(params).then((res) => {
-              console.log(res)
+              dgiotlog.log(res)
               this.handleCloseSub()
             })
             this.wmxhandleClose()
@@ -894,7 +894,7 @@
       },
       saveKonvaitem(config) {
         // 触发父组件更新事件
-        console.log(config)
+        dgiotlog.log(config)
         this.$emit('upconfig', config)
       },
       handleCloseSub() {
@@ -908,10 +908,10 @@
         this.$refs['upload'].$children[0].$refs.input.click()
       },
       handleRemove(file, fileList) {
-        console.log(file, fileList)
+        dgiotlog.log(file, fileList)
       },
       handlePreview(file) {
-        console.log(file)
+        dgiotlog.log(file)
       },
       handleExceed(files, fileList) {
         this.$message.warning(

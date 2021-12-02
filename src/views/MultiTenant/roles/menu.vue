@@ -408,7 +408,7 @@
         })
       },
       SelectTopmenu(val) {
-        console.log(val)
+        dgiotlog.log(val)
       },
       getoriginmenu(menu) {
         menu.map((items) => {
@@ -437,7 +437,7 @@
         const loading = this.$baseColorfullLoading(2)
         try {
           const res = await ExportParse('Menu', {})
-          console.log(res, 'res')
+          dgiotlog.log(res, 'res')
           loading.close()
           this.$convertRes2Blob(res)
           // this.$message.success(`${res}`)
@@ -462,7 +462,7 @@
           try {
             const res = await ImportParse('Menu', this.file)
             loading.close()
-            console.log('eresresrror', res)
+            dgiotlog.log('eresresrror', res)
             this.$message.success(``)
             this.$message({
               type: 'success',
@@ -481,7 +481,7 @@
               type: 'error',
               message: '菜单导入失败' + error,
             })
-            console.log('error', error)
+            dgiotlog.log('error', error)
             this.$message.error(`${error}`)
           }
           loading.close()
@@ -517,7 +517,7 @@
         if (arrRes.length >= 1 && arrRes[0] != 0) {
           arrRes.unshift('0')
         }
-        //  console.log(arrRes)
+        //  dgiotlog.log(arrRes)
         return arrRes
       },
       // 删除菜单

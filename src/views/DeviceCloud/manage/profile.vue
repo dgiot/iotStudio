@@ -642,11 +642,11 @@
         try {
           const res = await ImportParse('Product', parseFile)
           loading.close()
-          console.log('eresresrror', res)
+          dgiotlog.log('eresresrror', res)
           this.$message.success(``)
         } catch (error) {
           loading.close()
-          console.log('error', error)
+          dgiotlog.log('error', error)
           this.$message.error(`${error}`)
         }
         this.$dgiotBus.$emit('reload-router-view')
@@ -690,7 +690,7 @@
           )
           if (isLoading) loading.close()
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -698,7 +698,7 @@
           )
         }
         // console.clear()
-        console.log('productDetail', productDetail)
+        dgiotlog.log('productDetail', productDetail)
         this.producttempId = params.objectId
         this.productDetail = productDetail
         this.$refs.ProfileDescription.productDetail = productDetail
@@ -759,7 +759,7 @@
         this.producttempId = moment(new Date()).valueOf().toString()
       },
       editproducttemp(row) {
-        console.log('row', row)
+        dgiotlog.log('row', row)
         this.fetchData()
         this.addflag = false
         this.form = row
@@ -840,7 +840,7 @@
           this.total = count
         } catch (error) {
           loading.close()
-          console.log(error)
+          dgiotlog.log(error)
           this.$message.error(`${error}`)
         }
       },
@@ -870,7 +870,7 @@
         this.saveParse(row, -1, false)
       },
       editParse(index, row) {
-        console.log(row)
+        dgiotlog.log(row)
         this.formConfig = row
         this.editIndex = index
         this.parserTable = false
@@ -881,12 +881,12 @@
         })
       },
       deleteParse(uid, index, rows) {
-        console.log('uid', uid)
+        dgiotlog.log('uid', uid)
         rows.forEach((e, i) => {
           if (e.uid == uid) {
             rows.splice(i, 1)
           }
-          console.log('rows', rows)
+          dgiotlog.log('rows', rows)
         })
         // rows.splice(index, 1)
         this.saveParse(rows, -1, false)
@@ -904,13 +904,13 @@
         this.productConfig = _.merge({ basedate: { params: {} } }, config)
         var isArr = ['parser', 'profile', 'basedate.params']
         if (isArr.includes(type)) {
-          console.log('type', type)
+          dgiotlog.log('type', type)
           this.parserTable = flag
           this.parserTables = this.productDetail.config[`${this.tableType}`]
           this.parserTableList = this.productDetail.config[`${this.tableType}`]
           this.dictTableList = this.productConfig.config.basedate.params || []
         }
-        console.log(
+        dgiotlog.log(
           'this.parserTableList',
           this.parserTableList,
           this.parserTables,
@@ -938,7 +938,7 @@
         localStorage.setItem('_sourceModule', _sourceModule)
         localStorage.setItem('_sourceField', _sourceField)
         this.decoderTableList = {}
-        console.log('this.tableType ', this.tableType)
+        dgiotlog.log('this.tableType ', this.tableType)
       },
       async saveParse(list, type = -1, mark = true) {
         const parserType = this.productConfig.config[`${this.parserType}`]
@@ -963,19 +963,19 @@
           this.$message.error(
             this.$translateTitle('user.Save the template error') + `${e}`
           )
-          console.log(e, 'eeee')
+          dgiotlog.log(e, 'eeee')
         }
-        console.log(list)
+        dgiotlog.log(list)
       },
       async featchTable() {
         try {
           const { results: table = [] } = await getTable()
           this.DbaTable = table
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$message.error(`${error}`)
         }
-        // console.log(this.DbaTable)
+        // dgiotlog.log(this.DbaTable)
       },
       uploadCkick(type) {
         this.loading = true
@@ -991,7 +991,7 @@
         }
       },
       fileInfo(info) {
-        console.log('info', info)
+        dgiotlog.log('info', info)
         this.imageUrl = info.path
         this.loading = false
       },
@@ -1005,16 +1005,16 @@
         this.allunit = results.concat([])
       },
       onJsonSave(formName, dictTempForm) {
-        console.log('this.$refs', this.$refs.dict)
+        dgiotlog.log('this.$refs', this.$refs.dict)
         // 点击保存触发
-        // console.log("onJsonSave", this.dictTempForm.params);
+        // dgiotlog.log("onJsonSave", this.dictTempForm.params);
         this.$refs.dict.$refs[formName].validate((valid) => {
-          console.log(this.editDictTempId)
+          dgiotlog.log(this.editDictTempId)
           if (valid) this.put_Dict_temp(this.editDictTempId, dictTempForm)
         })
       },
       async put_Dict_temp(editDictId, row) {
-        console.log(row)
+        dgiotlog.log(row)
         const {
           config = {
             basedate: {},
@@ -1167,7 +1167,7 @@
           if (valid) {
             if (this.addflag) {
               params.ACL = setAcl
-              console.log('params', params)
+              dgiotlog.log('params', params)
               postProductTemplet(params).then((res) => {
                 if (res.objectId) {
                   this.$message({
@@ -1185,7 +1185,7 @@
               })
             } else {
               putProductTemplet(this.producttempId, params).then((res) => {
-                console.log('resresresres', res)
+                dgiotlog.log('resresresres', res)
                 if (res.updatedAt) {
                   this.$message({
                     type: 'success',
@@ -1402,7 +1402,7 @@
             }
           })
           .catch((e) => {
-            console.log(e)
+            dgiotlog.log(e)
           })
       },
       wmxDataFill(rowData, index) {
@@ -1718,11 +1718,11 @@
           }
         }
         this.setSizeForm(obj)
-        // console.log('this.sizeForm', this.sizeForm)
+        // dgiotlog.log('this.sizeForm', this.sizeForm)
       },
       // 物模型提交
       submitFormwmx(sizeForm) {
-        console.log('sizeForm', sizeForm)
+        dgiotlog.log('sizeForm', sizeForm)
         var obj = {
           name: sizeForm.name,
           devicetype: sizeForm.devicetype,
@@ -1840,19 +1840,19 @@
           Object.assign(obj, obj1)
         }
         delete obj.index
-        console.log('obj', obj)
+        dgiotlog.log('obj', obj)
         // 检测到
         // if (this.wmxSituation == '新增') {
-        // console.log("新增");
+        // dgiotlog.log("新增");
         if (this.wmxSituation == '新增') {
-          // console.log("新增");
+          // dgiotlog.log("新增");
           this.productDetail.thing.properties.unshift(obj)
         } else if (this.wmxSituation == '编辑') {
-          // console.log("编辑", obj);
+          // dgiotlog.log("编辑", obj);
           this.productDetail.thing.properties[this.modifyIndex] = obj
           this.thingKey = moment(new Date()).valueOf().toString()
         }
-        console.log(this.wmxSituation, this.productDetail.thing.properties)
+        dgiotlog.log(this.wmxSituation, this.productDetail.thing.properties)
         let data = {
           thing: { properties: this.productDetail.thing.properties },
         }

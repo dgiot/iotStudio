@@ -62,7 +62,7 @@
       this.$dgiotBus.$on(
         this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'),
         (args) => {
-          console.log(args)
+          dgiotlog.log(args)
           if (args) {
             // 绑定物模型
             if (args.type == 'bind_topo') {
@@ -93,13 +93,13 @@
         this.$dgiotBus.$emit('refresh', this.$route)
       },
       updataForm(from) {
-        console.log('子组件改变的值')
-        console.log(from)
+        dgiotlog.log('子组件改变的值')
+        dgiotlog.log(from)
         this.setSizeForm(from)
       },
       // 提交
       submitForm(sizeForm) {
-        console.log('sizeForm', sizeForm)
+        dgiotlog.log('sizeForm', sizeForm)
         var obj = {
           name: sizeForm.name,
           devicetype: sizeForm.devicetype,
@@ -227,7 +227,7 @@
           productid: this.$route.query.productid,
         }
         putThing(data).then((res) => {
-          console.log('编辑', res)
+          dgiotlog.log('编辑', res)
           if (res.code == 200) {
             this.$message({
               type: 'success',
@@ -240,7 +240,7 @@
               shapeid: this.shapeid,
             }
             edit_konva_thing(params).then((res) => {
-              console.log(res)
+              dgiotlog.log(res)
               this.handleCloseSub()
             })
             this.wmxhandleClose()
@@ -289,7 +289,7 @@
           loading.close()
         } catch (e) {
           loading.close()
-          console.log(e)
+          dgiotlog.log(e)
         }
       },
       async bindTopo(args) {
@@ -309,10 +309,10 @@
           this.shapeid = args.id
           const { data } = await get_konva_thing(params)
           const { konvathing, nobound } = data
-          console.log(konvathing, 'konvathing')
-          console.log(nobound, 'nobound')
+          dgiotlog.log(konvathing, 'konvathing')
+          dgiotlog.log(nobound, 'nobound')
           if (Object.values(konvathing).length > 0) {
-            console.log(`物模型存在这个属性`, konvathing)
+            dgiotlog.log(`物模型存在这个属性`, konvathing)
             this.reset(nobound)
             var obj = {}
             // 提交之前需要先判断类型
@@ -726,12 +726,12 @@
           // 显示物模型弹窗
           this.thingDialog = true
           // this.productconfig = config
-          // console.log(thing)
+          // dgiotlog.log(thing)
           // this.thingData = thing
           loading.close()
         } catch (e) {
           loading.close()
-          console.log(e)
+          dgiotlog.log(e)
         }
       },
       reset(nobound) {

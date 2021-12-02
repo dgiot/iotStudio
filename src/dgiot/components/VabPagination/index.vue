@@ -92,7 +92,7 @@
           '%cpagination info',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-        console.info(
+        dgiotlog.info(
           '%c%s',
           'color: green;font-size: 24px;',
           'handleSizeChange val:   ' + val + this.limit + this.currentPage
@@ -114,7 +114,7 @@
           '%cpagination info',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-        console.info(
+        dgiotlog.info(
           '%c%s',
           'color: green;font-size: 24px;',
           'handleCurrentChange val:   ' + val + this.limit + this.currentPage

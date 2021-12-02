@@ -57,7 +57,7 @@
       }),
       _tableParser: {
         get: function () {
-          console.log(this.$store.state.global._tableParser)
+          dgiotlog.log(this.$store.state.global._tableParser)
           return this.$store.state.global._tableParser
         },
         set: function (val) {

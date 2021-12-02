@@ -103,7 +103,7 @@
       },
     },
     mounted() {
-      console.log(
+      dgiotlog.log(
         // this.$router,
         this.detailsId,
         this.articleId,
@@ -134,7 +134,7 @@
         set_docDetails: 'global/set_docDetails',
       }),
       onContextMenuClick(treeKey, menuKey) {
-        console.log(treeKey, menuKey)
+        dgiotlog.log(treeKey, menuKey)
         switch (menuKey) {
           case 'child':
             this.newCategory(menuKey, treeKey)
@@ -147,7 +147,7 @@
             this.deletDoc(treeKey)
             break
         }
-        console.log(`treeKey: ${treeKey}, menuKey: ${menuKey}`)
+        dgiotlog.log(`treeKey: ${treeKey}, menuKey: ${menuKey}`)
       },
       async editCategory(treeKey) {
         const res = await getArticle(treeKey)
@@ -193,7 +193,7 @@
           filter: filter,
           parent: 'parent',
         }
-        console.log(params.filter, 'params')
+        dgiotlog.log(params.filter, 'params')
         const { results = [] } = await post_tree(params)
         this.docDetails = results
       },
@@ -207,7 +207,7 @@
           const loading = this.$baseColorfullLoading()
           const data = await getArticle(this.articleId)
           this.productDetail = data
-          console.log('productDetail', this.productDetail)
+          dgiotlog.log('productDetail', this.productDetail)
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
@@ -215,7 +215,7 @@
           )
           loading.close()
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -229,7 +229,7 @@
        * @returns
        */
       async getSetting(params) {
-        console.log(params, 'params')
+        dgiotlog.log(params, 'params')
         try {
           const loading = this.$baseColorfullLoading()
           const { results = [] } = await queryArticle({
@@ -242,7 +242,7 @@
           loading.close()
           this.init()
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -251,7 +251,7 @@
         }
       },
       onSelect(id, da_title) {
-        console.log('da_title', da_title.dataRef)
+        dgiotlog.log('da_title', da_title.dataRef)
         // this.$refs.DocDialog.form = da_title.dataRef
         this.$nextTick(() => {
           this.$refs.DocDialog.form.category = da_title.category
@@ -263,9 +263,9 @@
         const keys = []
         const { children = [] } = da_title.dataRef
         keys.push(da_title.eventKey)
-        console.log(keys, 'keys')
+        dgiotlog.log(keys, 'keys')
         this.setSelectedKeys(keys)
-        console.log(id, da_title, da_title.eventKey, this.productDetail)
+        dgiotlog.log(id, da_title, da_title.eventKey, this.productDetail)
         // if (children.length == 0) {
         const rawPath = this.$route.path
         const query = {
@@ -273,7 +273,7 @@
           article: da_title.dataRef.objectId,
         }
         this.delVisitedRoute(rawPath)
-        console.log(rawPath, query)
+        dgiotlog.log(rawPath, query)
         // this.$router.go(-1)
         this.$router.push({
           path: '/doc/details',
@@ -296,7 +296,7 @@
           Icon: '',
           desc: '',
         }
-        console.log(type, treeKey)
+        dgiotlog.log(type, treeKey)
         try {
           const loading = this.$baseColorfullLoading()
           const res = await getArticle(treeKey)
@@ -305,11 +305,11 @@
           this.$refs.DocDialog.form.parent.objectId = res.objectId
           this.$refs.DocDialog.form.category = res.category
           this.$refs.DocDialog.form.type = 'add'
-          console.log(this.$refs.DocDialog.form, 'this.$refs.DocDialog.form')
+          dgiotlog.log(this.$refs.DocDialog.form, 'this.$refs.DocDialog.form')
           this.$refs.DocDialog.dialogFormVisible = true
           loading.close()
         } catch (e) {
-          console.error(e)
+          dgiotlog.error(e)
         }
       },
       createDoc(formName, form) {
@@ -323,7 +323,7 @@
             loading.close()
             if (createdAt.length) this.init()
           } else {
-            console.log('error submit!!')
+            dgiotlog.log('error submit!!')
             return false
           }
         })
@@ -345,7 +345,7 @@
               this.init()
             }, 800)
           } else {
-            console.log('error submit!!')
+            dgiotlog.log('error submit!!')
             return false
           }
         })
@@ -367,7 +367,7 @@
           )
           loading.close()
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',

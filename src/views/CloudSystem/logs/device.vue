@@ -403,13 +403,13 @@
        */
       showDetail(row) {
         this.preDialog = true
-        console.log(row)
+        dgiotlog.log(row)
         this.msg = JSON.stringify(row, null, 2)
         this.refreshFlag = moment(new Date()).valueOf()
       },
       async queryTable(args = {}) {
         this.loading = true
-        console.log(this.queryForm.domain)
+        dgiotlog.log(this.queryForm.domain)
         if (!args.limit) {
           args = this.queryForm
         }

@@ -43,13 +43,13 @@ export default Bus
 
 // created() {
 // this.$dgiotBus.$on('log',(res)=>{
-//   console.log(res);
+//   dgiotlog.log(res);
 // })
 // this.$dgiotBus.$on('log1',(res)=>{
-//   console.log(res);
+//   dgiotlog.log(res);
 // })
 // this.$dgiotBus.$on('log2',(res)=>{
-//   console.log(res);
+//   dgiotlog.log(res);
 // })
 // }
 

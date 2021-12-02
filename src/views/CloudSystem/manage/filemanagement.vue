@@ -204,7 +204,7 @@
         }
       },
       fileclick(row) {
-        console.log(row)
+        dgiotlog.log(row)
         if (row.is_dir) {
           this.get_filelist(row.path + '/' + row.name)
           const len = this.filebreadcrumb.length - 1

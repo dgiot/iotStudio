@@ -96,7 +96,7 @@
               `%c amis env`,
               'color:#009a61; font-size: 28px'
             )
-            console.log('amisEnv', amisEnv)
+            dgiotlog.log('amisEnv', amisEnv)
             console.groupEnd()
           }
           this.amisJson = data
@@ -109,7 +109,7 @@
           )
           loading.close()
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -148,7 +148,7 @@
           )
           loading.close()
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',

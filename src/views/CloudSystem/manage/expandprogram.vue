@@ -343,7 +343,7 @@
     },
     methods: {
       setPath() {
-        console.log(process.env.NODE_ENV)
+        dgiotlog.log(process.env.NODE_ENV)
         if (process.env.NODE_ENV !== 'development') {
           this.swaggerPath = location.origin + '/swagger/#/'
         }
@@ -379,7 +379,7 @@
             type: 'success',
           })
         } else {
-          console.log(e)
+          dgiotlog.log(e)
           this.$message.error('api有错误,请检查')
         }
       },
@@ -502,7 +502,7 @@
         })
       },
       handleCurrentChange(val) {
-        console.log(val, 'val')
+        dgiotlog.log(val, 'val')
         const { swagger = {} } = val
         this.itemSwagger = swagger
         // this.currentRow = val.code;
@@ -520,7 +520,7 @@
         // this.getProDetail(val.objectId);
       },
       toggle(type) {
-        console.log(type)
+        dgiotlog.log(type)
       },
       async getAllDict() {
         const { results } = await getExproto({
@@ -530,7 +530,7 @@
         })
         if (results) {
           this.AllDict = results
-          console.log(this.AllDict)
+          dgiotlog.log(this.AllDict)
           if (this.AllDict.length) {
             this.handleCurrentChange(results[0])
           }
@@ -556,7 +556,7 @@
       },
       // 得到产品详情
       getProDetail(productId) {
-        // console.log('===')
+        // dgiotlog.log('===')
         this.productId = productId
         editor = ace.edit('editor')
         editor.session.setMode('ace/mode/erlang') // 设置语言
@@ -675,7 +675,7 @@
                 this.issub = true
               })
               .catch((e) => {
-                console.log(e)
+                dgiotlog.log(e)
               })
           } else {
             this.$message({
@@ -733,7 +733,7 @@
                             }
                           })
                           .catch((e) => {
-                            console.log(e)
+                            dgiotlog.log(e)
                           })
                       }
                     }
@@ -741,7 +741,7 @@
                 }
               })
               .catch((e) => {
-                console.log(e)
+                dgiotlog.log(e)
               })
           } else {
             this.$message({
@@ -825,7 +825,7 @@
             }
           })
           .catch((e) => {
-            console.log(e)
+            dgiotlog.log(e)
           })
       },
       // 热加载弹窗
@@ -848,7 +848,7 @@
             this.$refs.multipleTable.toggleAllSelection()
           })
           .catch((err) => {
-            console.log(err)
+            dgiotlog.log(err)
             this.$baseMessage('请求出错', err.error, 3000)
           })
       },
@@ -870,7 +870,7 @@
             }
           })
           .catch((e) => {
-            console.log(e)
+            dgiotlog.log(e)
           })
       },
       // 协议编辑

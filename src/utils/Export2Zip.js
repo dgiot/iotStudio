@@ -22,7 +22,7 @@ function export_txt_to_zip(jsonData, jsonName, zipName) {
         saveAs(blob, `${zip_name}.zip`)
       },
       (err) => {
-        console.log(err)
+        dgiotlog.log(err)
         alert('导出失败')
       }
     )

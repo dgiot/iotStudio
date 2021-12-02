@@ -78,7 +78,7 @@
           return this.show
         },
         set(val) {
-          console.log(val)
+          dgiotlog.log(val)
           this.$emit('update:show', val) // visible 改变的时候通知父组件
         },
       },
@@ -86,7 +86,7 @@
     methods: {
       handleClose(done) {
         // 关闭前回调
-        console.log('beforeClose')
+        dgiotlog.log('beforeClose')
         this.$emit('beforeClose')
         done()
       },
@@ -101,12 +101,12 @@
       close() {
         // Dialog 关闭的回调
         this.$emit('close')
-        console.log('close')
+        dgiotlog.log('close')
       },
       closed() {
         // Dialog 关闭动画结束时的回调
         this.$emit('closed')
-        console.log('closed')
+        dgiotlog.log('closed')
       },
     },
   }

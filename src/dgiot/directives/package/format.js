@@ -11,7 +11,7 @@ const format = {
     if (modifiers.toFixed) {
       formatValue = value.toFixed(2)
     }
-    console.log(formatValue)
+    dgiotlog.log(formatValue)
     if (modifiers.price) {
       formatValue = formatNumber(formatValue)
     }

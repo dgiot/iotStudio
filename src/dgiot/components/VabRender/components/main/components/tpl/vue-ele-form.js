@@ -18,7 +18,10 @@ export default {
   },
   methods: {
     handleRequest(data) {
-      console.log(data);
+      dgiotlog.log(data);
+                dgiotlog
+      .getDgiotlog('src/dgiot/components/VabRender/components/main/components/tpl/vue-ele-form.js')
+      .info(data)
       return Promise.resolve();
     },
     handleRequestSuccess() {

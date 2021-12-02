@@ -496,7 +496,7 @@
     //   watch:{
     //      appdata:{
     //          handler(newVal) {
-    //          console.log(newVal)
+    //          dgiotlog.log(newVal)
     //       },
     //       deep:true
     //      }
@@ -505,7 +505,7 @@
     mounted() {
       this.getAppdetail(this.pagesize, this.start)
 
-      console.log('this.$route.query', this.$route.query)
+      dgiotlog.log('this.$route.query', this.$route.query)
 
       if (this.$route.query && this.$route.query.projectName) {
         this.dialogVisible = true
@@ -518,7 +518,7 @@
           if (valid) {
             this.submit()
           } else {
-            console.log('error submit!!')
+            dgiotlog.log('error submit!!')
             return false
           }
         })
@@ -542,7 +542,7 @@
       },
 
       async getAppdetail(pagesize, start) {
-        console.log(pagesize, start)
+        dgiotlog.log(pagesize, start)
         const params = {
           skip: start,
           limit: pagesize,
@@ -553,16 +553,16 @@
           .then((res) => {
             this.appdata = res.results
             this.appdata.map((item) => {
-              // console.log(item)
+              // dgiotlog.log(item)
               if (item.tag.appconfig.secret) {
                 item.isshow = false
               }
             })
             this.total = res.count
-            // console.log(this.appdata, "appdata");
+            // dgiotlog.log(this.appdata, "appdata");
           })
           .catch((e) => {
-            console.log(e)
+            dgiotlog.log(e)
           })
       },
       handleClickRefresh() {
@@ -604,7 +604,7 @@
           if (valid) {
             this.updateObj(this.form1.objectId)
           } else {
-            console.log('error submit!!')
+            dgiotlog.log('error submit!!')
             return false
           }
         })
@@ -625,7 +625,7 @@
           appconfig: {},
         }
         tag.appconfig = formParam
-        // console.log(tag.appconfig);
+        // dgiotlog.log(tag.appconfig);
         await putRole(objectId, tag)
           .then((res) => {
             this.$message({
@@ -640,12 +640,12 @@
               type: 'error',
               message: '应用修改失败' + e.error,
             })
-            console.log(e)
+            dgiotlog.log(e)
           })
       },
       // 跳转新增
       nodeDeployment(row) {
-        // console.log(row)
+        // dgiotlog.log(row)
         this.$router.push({
           path: '/roles/server_control',
           query: {
@@ -668,7 +668,7 @@
       },
       // 显示，隐藏
       xianshi(objectId) {
-        // console.log(objectId)
+        // dgiotlog.log(objectId)
         var obj
         for (var i = 0; i < this.appdata.length; i++) {
           if (this.appdata[i].objectId == objectId) {

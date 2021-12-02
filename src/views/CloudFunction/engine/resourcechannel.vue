@@ -561,7 +561,7 @@
         this.removeauto(item)
       },
       inputChange(val) {
-        console.log(val)
+        dgiotlog.log(val)
       },
       // 验证
       validUrl(rule, value, callback) {
@@ -662,7 +662,7 @@
       },
       // 编辑设备
       updateChannel(row) {
-        console.log(row)
+        dgiotlog.log(row)
         this.dialogVisible = true
         this.resourceid = row.objectId
         this.detailchannel = row.config
@@ -682,7 +682,7 @@
               delete obj.type
               delete obj.isEnable
               delete obj.name
-              console.log('addchannelForm', this.addchannel)
+              dgiotlog.log('addchannelForm', this.addchannel)
               const aclKey = 'role' + ':' + this.addchannel.applicationtText
               const aclObj = {}
               aclObj[aclKey] = {
@@ -734,7 +734,7 @@
             this.Get_Re_Channel(0)
           })
           .catch((e) => {
-            console.log(e.error)
+            dgiotlog.log(e.error)
           })
       },
       addchanneltype() {
@@ -808,8 +808,8 @@
         return arr.sort(this.arrSort)
       },
       removeauto(val) {
-        console.log(val)
-        console.log(this.channelregion, this.allApps)
+        dgiotlog.log(val)
+        dgiotlog.log(this.channelregion, this.allApps)
         var obj = {}
         var obj1 = {
           name: [
@@ -901,7 +901,7 @@
           })
         }
         // 读取acl列表,获取所属应用名称
-        console.log('this.channelrow', this.channelrow)
+        dgiotlog.log('this.channelrow', this.channelrow)
         if (this.channelrow.length > 0) {
           for (var key in this.channelrow.ACL.permissionsById) {
             obj.applicationtText = key ? key.substr(5) : ''
@@ -981,8 +981,8 @@
         var text0 = JSON.stringify({ action: 'start_logger' })
         Websocket.subscribe(info, function (res) {
           if (res.result) {
-            console.log(info)
-            console.log('订阅成功')
+            dgiotlog.log(info)
+            dgiotlog.log('订阅成功')
             var sendInfo = {
               topic: 'channel/' + row.objectId,
               text: text0,

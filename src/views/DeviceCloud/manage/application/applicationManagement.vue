@@ -226,7 +226,7 @@
       // 查看
       handleClickLook(scope, $index) {
         const index = $index
-        console.log(scope)
+        dgiotlog.log(scope)
         const html = `
             <table
                 class="mailtable"
@@ -263,7 +263,7 @@
       // 跳转修改
       handleClickUpdate(scope) {
         const row = scope
-        console.log('$row', row)
+        dgiotlog.log('$row', row)
 
         this.$router.push({
           path: '/applicationManagement/addApp',
@@ -300,14 +300,14 @@
         }
         queryDevice(params)
           .then((results) => {
-            // console.log(results, "jkjjjj")
+            // dgiotlog.log(results, "jkjjjj")
             if (results.count > 0) {
               this.$message('请先删除该产品下设备')
               return
             } else {
               getProduct(row.objectId)
                 .then((results) => {
-                  console.log(results)
+                  dgiotlog.log(results)
                   delProduct(row.objectId)
                     .then((response) => {
                       if (response) {
@@ -320,23 +320,23 @@
                       }
                     })
                     .catch((e) => {
-                      console.log('delProduct ', e.error)
+                      dgiotlog.log('delProduct ', e.error)
                     })
                 })
                 .catch((e) => {
-                  console.log('getProduct ', e.error)
+                  dgiotlog.log('getProduct ', e.error)
                 })
             }
           })
           .catch((e) => {
-            console.log('queryDevice ', e.error)
+            dgiotlog.log('queryDevice ', e.error)
           })
       },
 
       Gotoproduct(scope) {
         var projectRoles = []
         for (var key in row.acl) {
-          console.log(key.substring(5))
+          dgiotlog.log(key.substring(5))
           projectRoles.push(key.substring(5))
         }
         this.$store.dispatch('setProjectRole', projectRoles)
@@ -349,7 +349,7 @@
         })
       },
       serverlictool(row) {
-        console.log(row)
+        dgiotlog.log(row)
         this.$router.push({
           path: '/roles/server_control',
           query: {

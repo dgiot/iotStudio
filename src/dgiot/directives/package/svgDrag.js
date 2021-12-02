@@ -11,7 +11,7 @@ const svgDrag = {
   bind: function (el, bind) {
     el.$value = bind.value
     el.onmousedown = (e) => {
-      // console.log(el, bind)
+      // dgiotlog.log(el, bind)
       isDraggable = false
       //算出鼠标相对元素的位置
       disX = e.clientX - el.offsetLeft

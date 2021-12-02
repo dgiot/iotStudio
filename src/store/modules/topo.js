@@ -61,25 +61,25 @@ export async function KonvaBus(args) {
   // const bg = layer.findOne('bg')
   // if (bg?.length) {
   //   bg.moveToBottom()
-  //   console.log("topo log: \n"+'设置背景图\n',bg.getAttrs('src'))
+  //   dgiotlog.log("topo log: \n"+'设置背景图\n',bg.getAttrs('src'))
   //   stage.batchDraw()
   //   // this.emit('clickNode', bg[0].attrs)
   // }
   if (Layering.indexOf(type) > 0) {
     // https://github.dev/fastdgiot/vue-konva-demo
-    console.error('Layering', type, node, node[`${type}`]())
+    dgiotlog.warn('Layering', type, node, node[`${type}`]())
     node[`${type}`]()
     layer.draw()
   } else if (type === 'setSale') {
-    console.log('缩放', saleInfo)
+    dgiotlog.log('缩放', saleInfo)
     // updateCanvasAttr(scaleX)
     stage.batchDraw()
     layer.batchDraw()
   } else {
-    console.log(type, 'type')
+    dgiotlog.log(type, 'type')
   }
   if (type === 'removeNode') {
-    console.error('removeNode', removeNode)
+    dgiotlog.warn('removeNode', removeNode)
     removeNode.remove()
     removeNode.destroy()
     stage.batchDraw()
@@ -116,8 +116,8 @@ export async function KonvaBus(args) {
   canvas.json = stage
   canvas.layer = layer
   canvas.stage = konvaDom
-  console.log(canvas)
-  // console.log('将传入的json添加到layer里', canvas.Konvajson)
+  dgiotlog.log(canvas)
+  // dgiotlog.log('将传入的json添加到layer里', canvas.Konvajson)
   canvas.stage.add(canvas.layer)
   canvas.toDataURL = konvaDom.toDataURL()
 }

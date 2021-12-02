@@ -8,7 +8,7 @@ const token = store.getters['user/token']
 
 const language = store.getters['settings/language']
 
-// console.info(`language in s ${language}`, i18n)
+// dgiotlog.info(`language in s ${language}`, i18n)
 const loadingText = i18n.t(`vabI18n.${'developer.Data is loading'}`)
 /**
  * @description 全局token

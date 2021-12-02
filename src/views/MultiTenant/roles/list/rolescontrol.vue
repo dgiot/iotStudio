@@ -215,9 +215,9 @@
     methods: {
       async handleEdit(row) {
         this.permissionid = row.objectId
-        // console.log(row, this.permissionid)
+        // dgiotlog.log(row, this.permissionid)
         const resultes = await getPermission(row.objectId)
-        // console.log("QueryP", resultes)
+        // dgiotlog.log("QueryP", resultes)
         this.form.name = resultes.name
         this.form.description = resultes.description
         this.form.alias = resultes.alias
@@ -226,7 +226,7 @@
       handleDelete(row) {},
       addcontrol() {},
       async getcontrolrole(args) {
-        console.log(args)
+        dgiotlog.log(args)
         this.listLoading = true
         this.data = []
         const { results, count } = await queryPermission({
@@ -253,10 +253,10 @@
         } else {
           this.data = []
         }
-        console.log('results', this.data)
+        dgiotlog.log('results', this.data)
         this.setTreeData(this.data)
 
-        console.log(this.treeData, 'cloneData')
+        dgiotlog.log(this.treeData, 'cloneData')
       },
       async setTreeData(tree) {
         const cloneData = JSON.parse(JSON.stringify(tree)) // 对源数据深度克隆

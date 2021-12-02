@@ -162,7 +162,7 @@
     activated() {},
     methods: {
       handleClose(done) {
-        console.log(done)
+        dgiotlog.log(done)
         this.$refs.form.resetFields()
         this.form = {
           type: '',

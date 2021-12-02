@@ -310,7 +310,7 @@
       aclObj() {
         let aclObj = {}
         this.role.map((e) => {
-          console.log(e.name, '')
+          dgiotlog.log(e.name, '')
           aclObj[`${'role' + ':' + e.name}`] = {
             read: true,
             write: true,
@@ -321,10 +321,10 @@
     },
 
     created() {
-      console.log(this._Product, '_Product')
-      console.log('role', this.role)
+      dgiotlog.log(this._Product, '_Product')
+      dgiotlog.log('role', this.role)
 
-      console.log('this.height', this.height)
+      dgiotlog.log('this.height', this.height)
     },
     mounted() {
       this.fetchData()
@@ -335,10 +335,10 @@
         val.forEach((item) => {
           this.selectedList.push(item)
         })
-        console.log(this.selectedList)
+        dgiotlog.log(this.selectedList)
       },
       async Export(row) {
-        console.log(row)
+        dgiotlog.log(row)
         try {
           const params = {
             results: [],
@@ -348,7 +348,7 @@
           this.$convertRes2Blob(res)
           this.$message.success(this.$translateTitle('node.export success'))
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$message.error(
             this.$translateTitle('node.export error') + `${error}`
           )
@@ -358,7 +358,7 @@
         this.ishard = true
         this.isfooter = false
         let { status = 0 } = row
-        console.log('row', row)
+        dgiotlog.log('row', row)
         this.detail = row
         this.step = status + 1
         this.deviceFlag = true
@@ -380,7 +380,7 @@
             break
           default:
             return type
-            console.log('other', type)
+            dgiotlog.log('other', type)
         }
       },
       // async handleDelete(objectId) {
@@ -392,7 +392,7 @@
         if (!args.limit) {
           args = this.queryForm
         }
-        console.log(this.queryForm, 'queryForm', args)
+        dgiotlog.log(this.queryForm, 'queryForm', args)
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
         let params = {
@@ -428,7 +428,7 @@
         }
         await query_object('Maintenance', params)
           .then((res) => {
-            console.log(res, 'res')
+            dgiotlog.log(res, 'res')
             const { results = [], count = 0 } = res
             this.list = results
             this.list.forEach((e) => {
@@ -446,7 +446,7 @@
             this.$message.error(`${e}`)
             loading.close()
           })
-        console.log(this.list, 'this.list')
+        dgiotlog.log(this.list, 'this.list')
       },
       async prodChange(e) {
         this.Device = []
@@ -454,12 +454,12 @@
           where: { product: e },
         }
         const { results } = await queryDevice(params)
-        console.log(results, '设备')
+        dgiotlog.log(results, '设备')
         this.Device = results
       },
       handleRemove(file) {
         this.form.photo.forEach((i, index) => {
-          // console.log(
+          // dgiotlog.log(
           //   i,
           //   index,
           //   file.name,
@@ -468,10 +468,10 @@
           if (i.split('/')[`${i.split('/').length - 1}`] == file.name) {
             // delete this.form.photo[index]
             this.form.photo.splice(index, 1)
-            // console.log(this.form.photo, index)
+            // dgiotlog.log(this.form.photo, index)
           }
         })
-        console.log(this.form.photo)
+        dgiotlog.log(this.form.photo)
       },
       handleSizeChange(val) {
         this.queryForm.limit = val

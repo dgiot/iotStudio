@@ -2,7 +2,7 @@ const { cdnUrl, useCdn, ignoreCdn } = require('../src/config')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
-const log = console.log
+const log = dgiotlog.log
 const chalk = require('chalk')
 
 /**
@@ -33,7 +33,7 @@ function download(_static) {
   log(chalk.yellow('Execute download cdn resource script'))
   const { css, js } = _static
   createFile(['js', 'css'])
-  // console.log(css, js)
+  // dgiotlog.log(css, js)
   css.forEach((_css) => {
     ignoreCdn.forEach((i) => {
       if (_css.indexOf(i) == -1) {
@@ -80,7 +80,7 @@ function writeFile(files, data) {
   log(chalk.green(files, dirPath))
   fs.readFile(dirPath, function (err, _data) {
     // if (err) {
-    //   console.log(err, 'err')
+    //   dgiotlog.log(err, 'err')
     //   return err
     // }
     fs.writeFile(dirPath, data, function (err) {

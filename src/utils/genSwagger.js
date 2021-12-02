@@ -50,7 +50,7 @@ function httpgetJson(url) {
           )
         }
         if (error) {
-          console.error(error.message)
+          dgiotlog.warn(error.message)
           // 消耗响应数据以释放内存
           res.resume()
           return
@@ -79,12 +79,12 @@ function httpgetJson(url) {
 const srcFolder = '/src'
 const url = `${baseURL}/swagger.json`
 // const argv = process.argv
-// console.log(argv)
+// dgiotlog.log(argv)
 
 async function main() {
-  console.log('获取远程json文件中...')
+  dgiotlog.log('获取远程json文件中...')
   const { paths } = await httpgetJson(url)
-  console.log('获取成功正在生成api文件')
+  dgiotlog.log('获取成功正在生成api文件')
   const obj = {}
   for (const name in paths) {
     const path = paths[name]
@@ -164,13 +164,13 @@ async function main() {
     }
     jsString = generateTemplate(requestTypes) + jsString
     mkdirsSync(getPath(`..${srcFolder}/apis/${folder}`))
-    console.log(jsString)
+    dgiotlog.log(jsString)
     fs.writeFileSync(
       getPath(`..${srcFolder}/apis/${folder}/${tagName}.js`),
       jsString
     )
   }
-  console.log('生成完毕')
+  dgiotlog.log('生成完毕')
 }
 
 main()

@@ -128,7 +128,7 @@
         } else {
           this.$refs.uploader.click()
         }
-        console.log(type, row)
+        dgiotlog.log(type, row)
       },
       async doUpload(event) {
         this.parseFile = event.target.files[0]
@@ -136,11 +136,11 @@
         try {
           const res = await ImportParse(this.parseClass, this.parseFile)
           loading.close()
-          console.log('eresresrror', res)
+          dgiotlog.log('eresresrror', res)
           this.$message.success(``)
         } catch (error) {
           loading.close()
-          console.log('error', error)
+          dgiotlog.log('error', error)
           this.$message.error(`${error}`)
         }
       },

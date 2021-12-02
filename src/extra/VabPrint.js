@@ -143,7 +143,7 @@ Print.prototype = {
         frameWindow.close()
       }, 10)
     } catch (err) {
-      console.log('err', err)
+      dgiotlog.log('err', err)
     }
   },
   isInBody: function (node) {

@@ -42,7 +42,7 @@ export default {
       }
     }
     var validminnumber = (rule, value, callback) => {
-      // console.log(value);
+      // dgiotlog.log(value);
       if (value === '') {
         callback(new Error('最小值不能为空'))
       } else {
@@ -566,7 +566,7 @@ export default {
   computed: {
     treeData() {
       const cloneData = JSON.parse(JSON.stringify(this.option)) // 对源数据深度克隆
-      // console.log("cloneData", cloneData)
+      // dgiotlog.log("cloneData", cloneData)
       return cloneData.filter((father) => {
         const branchArr = cloneData.filter(
           (child) => father.id == child.parentid
@@ -651,7 +651,7 @@ export default {
       return ''
     },
     selectStruct(v) {
-      // console.log(v);
+      // dgiotlog.log(v);
     },
     toggleList() {
       this.showList = !this.showList
@@ -775,8 +775,8 @@ export default {
             resultes.topics.forEach((topic) => {
                if(topic)   topics.push(topic)
             })
-            console.log('resultes', resultes.topics)
-            console.log('topics', topics)
+            dgiotlog.log('resultes', resultes.topics)
+            dgiotlog.log('topics', topics)
             this.topicData = topics.concat(this.topic)
           }
         })
@@ -796,7 +796,7 @@ export default {
         }
         const loading = this.$baseColorfullLoading()
         const res = await downBinary('iotapi/product', params)
-        console.log(res)
+        dgiotlog.log(res)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
@@ -805,7 +805,7 @@ export default {
         loading.close()
         this.$downBinary(res)
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -825,7 +825,7 @@ export default {
       try {
         this.ace_editor = Base64.decode(decoder.code)
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
       }
     },
     /**
@@ -950,7 +950,7 @@ export default {
           thing,
         }
         const res = await postProductTemplet(params)
-        console.log(res)
+        dgiotlog.log(res)
         if (res) {
           this.$baseMessage(
             this.$translateTitle('user.Save the template successfully'),
@@ -966,7 +966,7 @@ export default {
         }
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         loading.close()
         this.$baseMessage(
           this.$translateTitle('user.Save the template error'),
@@ -995,7 +995,7 @@ export default {
           this.$refs.multipleTable.toggleAllSelection()
         })
         .catch((err) => {
-          console.log(err)
+          dgiotlog.log(err)
           this.$baseMessage('请求出错', err.error, 3000)
         })
     },
@@ -1044,7 +1044,7 @@ export default {
 
     // 物接入选择通道
     showAllChannel(label = '') {
-      console.log(this.allChannelstart, this.allChannellength)
+      dgiotlog.log(this.allChannelstart, this.allChannellength)
       this.allChanneltotal = 0
       this.allchannelData = []
       this.channeltype = 1
@@ -1068,7 +1068,7 @@ export default {
           this.allchannelData = res.results
         })
         .catch((e) => {
-          console.log(e)
+          dgiotlog.log(e)
         })
     },
     // 物接入
@@ -1095,7 +1095,7 @@ export default {
           }
         })
         .catch((e) => {
-          console.log(e)
+          dgiotlog.log(e)
         })
     },
 
@@ -1124,7 +1124,7 @@ export default {
           this.allchannelData = res.results
         })
         .catch((e) => {
-          console.log(e)
+          dgiotlog.log(e)
         })
     },
 
@@ -1147,7 +1147,7 @@ export default {
           this.resourcechannelData = res.results
         })
         .catch((e) => {
-          console.log(e)
+          dgiotlog.log(e)
         })
     },
 
@@ -1241,7 +1241,7 @@ export default {
       //   channelrow[key] = row.config[key];
       // }
       channelrow = JSON.parse(JSON.stringify(row.config))
-      // console.log(row,channelrow)
+      // dgiotlog.log(row,channelrow)
       setTimeout(() => {
         editormodel = ace.edit('editormodel')
         editormodel.session.setMode('ace/mode/json') // 设置语言
@@ -1430,7 +1430,7 @@ export default {
     },
     // 添加自定义模型
     addData() {
-      // console.log(channelrow)
+      // dgiotlog.log(channelrow)
       channelrow.datamodel = editorcreate.getValue()
       const params = {
         config: channelrow,
@@ -1605,7 +1605,7 @@ export default {
       }
       delete obj.index
 
-      console.log('obj', obj)
+      dgiotlog.log('obj', obj)
       let data = {
         item: obj,
         productid: this.productId,
@@ -1613,10 +1613,10 @@ export default {
 
       // 检测到
       if (this.wmxSituation == '新增') {
-        // console.log("新增");
+        // dgiotlog.log("新增");
         // this.productdetail.thing.properties.unshift(obj)
         postThing(data).then((res) => {
-          console.log('新增', res)
+          dgiotlog.log('新增', res)
           if (res.code == 200) {
             this.$message({
               type: 'success',
@@ -1631,10 +1631,10 @@ export default {
           }
         })
       } else if (this.wmxSituation == '编辑') {
-        // console.log("编辑" + obj);
+        // dgiotlog.log("编辑" + obj);
         // this.productdetail.thing.properties[this.modifyIndex] = obj
         putThing(data).then((res) => {
-          console.log('编辑', res)
+          dgiotlog.log('编辑', res)
           if (res.code == 200) {
             this.$message({
               type: 'success',
@@ -1665,7 +1665,7 @@ export default {
       //     }
       //   })
       //   .catch((e) => {
-      //     console.log(e)
+      //     dgiotlog.log(e)
       //   })
     },
     createProperty() {
@@ -1676,7 +1676,7 @@ export default {
     // 物模型修改submitForm
     wmxDataFill(rowData, index) {
       this.modifyIndex = index
-      // console.log("rowData ", rowData);
+      // dgiotlog.log("rowData ", rowData);
       this.wmxdialogVisible = true
       this.wmxSituation = '编辑'
       var obj = {}
@@ -1987,7 +1987,7 @@ export default {
         }
       }
       this.setSizeForm(obj)
-      // console.log('this.sizeForm', this.sizeForm)
+      // dgiotlog.log('this.sizeForm', this.sizeForm)
     },
     // 物模型结构体
     submitStruct(formName) {
@@ -2121,7 +2121,7 @@ export default {
       }
     },
     editStruct(item, index) {
-      console.log(item, index)
+      dgiotlog.log(item, index)
       this.isupdatedstruct = index
       this.structdialog = true
       this.structform.type = item.dataType.type.toUpperCase()
@@ -2171,7 +2171,7 @@ export default {
           }
         })
         .catch((e) => {
-          console.log(e)
+          dgiotlog.log(e)
         })
     },
     async Industry() {
@@ -2217,7 +2217,7 @@ export default {
           this.PropData = res.results
         })
         .catch((e) => {
-          console.log(e)
+          dgiotlog.log(e)
         })
     },
     productSizeChange(val) {
@@ -2264,7 +2264,7 @@ export default {
           })
           this.ed3isShow = true
           //  this.editorList.push(editor3);
-          // console.log(this.wmxData);
+          // dgiotlog.log(this.wmxData);
           this.editorList[0].setValue(
             this.wmxData[0].dataForm == undefined
               ? ''
@@ -2277,11 +2277,11 @@ export default {
     //
     handleRightTopTabClick(tab, event) {
       this.activeIndex = tab.label
-      // console.log(tab.label);
+      // dgiotlog.log(tab.label);
     },
     // 左边切换,先判断是否添加过
     menuTabClick(item, itemPos) {
-      // console.log(item)
+      // dgiotlog.log(item)
       // 先判断是否添加过
       this.activeIndex = item.identifier
       const tabs = this.editableTabs
@@ -2289,7 +2289,7 @@ export default {
       let mIndex = 0
       tabs.forEach((tab, index) => {
         if (tab.name === item.identifier) {
-          // console.log("tab.name   " + tab.name, "   item.identifier   " + item.identifier, "   index  " + index);
+          // dgiotlog.log("tab.name   " + tab.name, "   item.identifier   " + item.identifier, "   index  " + index);
           isAdd = true
           mIndex = index
         }
@@ -2328,7 +2328,7 @@ export default {
           item.dataForm == undefined ? '' : item.dataForm.collection
       } else {
         this.editableTabsValue = item.identifier
-        // console.log("this.editorList ==  " + this.editorList.length)
+        // dgiotlog.log("this.editorList ==  " + this.editorList.length)
         this.editorList[mIndex].setValue(
           item.dataForm == undefined ? '' : item.dataForm.collection
         )
@@ -2374,7 +2374,7 @@ export default {
           }
         })
         .catch((e) => {
-          console.log(e)
+          dgiotlog.log(e)
         })
     },
 
@@ -2389,7 +2389,7 @@ export default {
     // 还原
     onReductionTap(index) {
       const leftPos = this.editableTabs[index].leftItemPos
-      // console.log(this.wmxData[leftPos].dataForm.collection)
+      // dgiotlog.log(this.wmxData[leftPos].dataForm.collection)
 
       this.editorList[index].setValue(this.wmxData[leftPos].dataForm.collection)
     },
@@ -2426,7 +2426,7 @@ export default {
       this.queryDeviceCount(this.productId)
       this.$get_object('Product', this.productId)
         .then((response) => {
-          console.log('response', response)
+          dgiotlog.log('response', response)
           if (response) {
             this.productInfo = _.merge(response, {
               decoder: { code: '' },
@@ -2456,7 +2456,7 @@ export default {
                 'Category',
                 this.productdetail.category.objectId
               ).then((cat) => {
-                console.log('catcat', cat)
+                dgiotlog.log('catcat', cat)
                 this.$set(this.productdetail, 'categoryname', cat.name)
               })
             }
@@ -2483,7 +2483,7 @@ export default {
                 properties: [],
               }
             }
-            // console.log('=====', this.wmxData)
+            // dgiotlog.log('=====', this.wmxData)
             this.wmxData = []
             this.wmxDataBk = []
             this.wmxData = this.productdetail.thing.properties.filter(
@@ -2493,7 +2493,7 @@ export default {
               }
             )
             this.wmxDataBk = this.wmxData
-            console.log('=====', this.wmxData)
+            dgiotlog.log('=====', this.wmxData)
             // let array = []
             this.wmxDataBk.forEach((item) => {
               if (item.devicetype) {
@@ -2510,7 +2510,7 @@ export default {
           }
         })
         .catch((err) => {
-          console.log('err', err)
+          dgiotlog.log('err', err)
           this.$baseMessage('请求出错', err.error, 3000)
         })
     },
@@ -2542,7 +2542,7 @@ export default {
           }
         })
         .catch((e) => {
-          console.log(e)
+          dgiotlog.log(e)
         })
     },
     wmxhandleClose() {
@@ -2594,7 +2594,7 @@ export default {
           }
         })
         .catch((e) => {
-          console.log(e)
+          dgiotlog.log(e)
         })
     },
     subAce(formName, istrue) {
@@ -2624,7 +2624,7 @@ export default {
               this.issub = true
             })
             .catch((e) => {
-              console.log(e)
+              dgiotlog.log(e)
             })
         } else {
           this.$message({
@@ -2677,14 +2677,14 @@ export default {
                         }
                       })
                       .catch((e) => {
-                        console.log(e)
+                        dgiotlog.log(e)
                       })
                   }
                 })
               }
             })
             .catch((e) => {
-              console.log(e)
+              dgiotlog.log(e)
             })
         } else {
           this.$message({
@@ -2725,7 +2725,7 @@ export default {
           }
         })
         .catch((e) => {
-          console.log(e)
+          dgiotlog.log(e)
         })
     },
     editordata(row) {
@@ -2774,7 +2774,7 @@ export default {
       }
     },
     handleChange(value, direction, movedKeys) {
-      // console.log(value, direction, movedKeys);
+      // dgiotlog.log(value, direction, movedKeys);
     },
     // 用于处理定义好的物模型模板
     TypeInstall(origin, arr) {
@@ -2919,10 +2919,10 @@ export default {
               }
             })
             .catch((e) => {
-              console.log(e)
+              dgiotlog.log(e)
             })
         } else {
-          console.log('此选项没有属性功能')
+          dgiotlog.log('此选项没有属性功能')
         }
       })
     },
@@ -2937,7 +2937,7 @@ export default {
         item: row,
       }
       deleteThing(params).then((res) => {
-        console.log('删除', res)
+        dgiotlog.log('删除', res)
         if (res.code == 200) {
           this.$message({
             type: 'success',
@@ -3025,8 +3025,8 @@ export default {
       })
       Websocket.subscribe(info, function (res) {
         if (res.result) {
-          // console.log(info);
-          // console.log("订阅成功");
+          // dgiotlog.log(info);
+          // dgiotlog.log("订阅成功");
           var sendInfo = {
             topic: 'channel/' + row.objectId + '/' + _this.productId,
             text: text0,
@@ -3118,11 +3118,11 @@ export default {
                 }
               })
               .catch((e) => {
-                console.log(e)
+                dgiotlog.log(e)
               })
           })
         } else {
-          console.log('error submit!!')
+          dgiotlog.log('error submit!!')
           return false
         }
       })
@@ -3155,7 +3155,7 @@ export default {
           this.productId,
           params
         )
-        // console.log($update_object)
+        // dgiotlog.log($update_object)
         this.$message({
           type: 'success',
           message: '删除成功',

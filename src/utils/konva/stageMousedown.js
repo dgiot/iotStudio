@@ -226,7 +226,7 @@ function drawText(x, y, fill, fs) {
  * @param ev 传入的event对象
  */
 export default function stageMousedown(flag, ev) {
-  console.log('stageMousedown', flag, ev)
+  dgiotlog.log('stageMousedown', flag, ev)
   if (flag) {
     let x = ev.evt.offsetX,
       y = ev.evt.offsetY

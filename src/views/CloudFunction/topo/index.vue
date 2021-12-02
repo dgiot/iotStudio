@@ -115,7 +115,7 @@
       this.$baseEventBus.$off('ToggleView')
       this.$baseEventBus.$on('ToggleView', () => {
         this.isFull = !this.isFull
-        console.log(this.isFull)
+        dgiotlog.log(this.isFull)
       })
       this.Stage = _.isEmpty(localStorage.getItem('konvaStale'))
         ? localStorage.getItem('konvaStale')
@@ -165,12 +165,12 @@
             where: { objectId: _this.$route.query.productid },
           })
           _this.productconfig = results[0]
-          // console.log(_this.productconfig)
+          // dgiotlog.log(_this.productconfig)
           if (message == 'SUCCESS') {
-            // console.log(this.$refs['edrawer'].$refs, 'edrawer')
+            // dgiotlog.log(this.$refs['edrawer'].$refs, 'edrawer')
             _this.$refs['operation']
               ? (_this.$refs['operation'].productconfig = results[0])
-              : console.log(
+              : dgiotlog.log(
                   " _this.$refs['operation']",
                   _this.$refs['operation']
                 )
@@ -178,7 +178,7 @@
             // _this.createKonva(data, _this.globalStageid, 'create')
             _this.paramsconfig = { konva: data }
             //
-            console.log(
+            dgiotlog.log(
               'topo info msg 请求数据有组态 就设置这个组态为请求回来的组态',
               data.Stage
             )
@@ -188,7 +188,7 @@
             })
           } else {
             this.$message.info('暂无组态。显示默认组态')
-            console.log(
+            dgiotlog.log(
               'topo info msg 请求数据没有组态 就设置这个组态为默认',
               this.Stage
             )
@@ -203,7 +203,7 @@
             data: this.Stage,
             id: 'kevCurrent',
           })
-          console.log('topo info msg 组态请求出错', e)
+          dgiotlog.log('topo info msg 组态请求出错', e)
           loading.close()
         }
         // setTimeout(async() => {

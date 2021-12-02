@@ -88,8 +88,8 @@
     },
     methods: {
       showEdit(row, type) {
-        console.log('row', row)
-        console.log('type', type)
+        dgiotlog.log('row', row)
+        dgiotlog.log('type', type)
         this.flagType = type
         this.title =
           this.flagType == 'top'
@@ -115,7 +115,7 @@
                 order: 0,
                 level: 0,
               }
-        console.log('this.form', this.form)
+        dgiotlog.log('this.form', this.form)
         this.dialogFormVisible = true
       },
       close() {
@@ -124,7 +124,7 @@
         this.dialogFormVisible = false
       },
       save(mark) {
-        console.log(mark)
+        dgiotlog.log(mark)
         const setAcl = {}
         setAcl['*'] = {
           read: true,
@@ -157,7 +157,7 @@
               })
             : params
         this.$refs['form'].validate(async (valid) => {
-          console.log('setparams', setparams)
+          dgiotlog.log('setparams', setparams)
           if (valid) {
             const { msg } =
               mark == 'edit'

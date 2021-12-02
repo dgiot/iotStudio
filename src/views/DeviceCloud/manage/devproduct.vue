@@ -842,7 +842,7 @@
         // this.uploadAction = 'http://cad.iotn2n.com:5080/product?appid=' + Cookies.get("appids");
 
         this.$nextTick(() => {
-          // console.log('uploadHeaders',this.uploadHeaders);
+          // dgiotlog.log('uploadHeaders',this.uploadHeaders);
 
           this.uploadData.appid = Cookies.get('appids')
           // this.uploadData.key = "key";
@@ -850,7 +850,7 @@
         })
       },
       handleUploadSuccess(response, file, fileList) {
-        console.log('### Success response', response)
+        dgiotlog.log('### Success response', response)
         this.$message({
           type: 'success',
           message: '产品导入成功',
@@ -884,7 +884,7 @@
           limit: 1000,
           where: { type: { $in: category } },
         })
-        console.log(results, 'resresres')
+        dgiotlog.log(results, 'resresres')
         this.allTableDate = results
         resultes.map((items) => {
           results.map((category) => {
@@ -933,7 +933,7 @@
       },
       // 添加产品弹窗
       addproduct() {
-        console.log(new Date())
+        dgiotlog.log(new Date())
         this.dialogFormVisible = true
       },
       getParent(id, origin, returnarr) {
@@ -957,7 +957,7 @@
         })
       },
       editorProduct(row) {
-        console.log('row', row)
+        dgiotlog.log('row', row)
         // this.form.roles = [];
         this.form.relationApp = ''
         this.dialogFormVisible = true
@@ -974,7 +974,7 @@
           this.imageUrl = row.icon
         }
         for (var key in row.ACL) {
-          console.log(key)
+          dgiotlog.log(key)
           this.form.relationApp = key ? key.substr(5) : ''
         }
         this.selectApp(this.form.relationApp)
@@ -1043,7 +1043,7 @@
               this.editProduct(this.productid)
             }
           } else {
-            console.log('error submit!!')
+            dgiotlog.log('error submit!!')
             return false
           }
         })
@@ -1090,14 +1090,14 @@
         }
         queryDevice(params, $index)
           .then((results) => {
-            // console.log(results, "jkjjjj")
+            // dgiotlog.log(results, "jkjjjj")
             if (results.count > 0) {
               this.$message('请先删除该产品下设备')
               return
             } else {
               getProduct(row.objectId)
                 .then((results) => {
-                  console.log(results)
+                  dgiotlog.log(results)
                   delProduct(row.objectId)
                     .then((response) => {
                       if (response) {
@@ -1110,16 +1110,16 @@
                       }
                     })
                     .catch((e) => {
-                      console.log('delProduct ', e.error)
+                      dgiotlog.log('delProduct ', e.error)
                     })
                 })
                 .catch((e) => {
-                  console.log('getProduct ', e.error)
+                  dgiotlog.log('getProduct ', e.error)
                 })
             }
           })
           .catch((e) => {
-            console.log('queryDevice ', e.error)
+            dgiotlog.log('queryDevice ', e.error)
           })
       },
       productSizeChange(val) {

@@ -242,7 +242,7 @@
             user
               .save()
               .then((resultes) => {
-                console.log(resultes.attributes.sessionToken)
+                dgiotlog.log(resultes.attributes.sessionToken)
                 Cookies.set('sessionToken', resultes.attributes.sessionToken)
                 this.$router.push({
                   path: '/phonelogin',

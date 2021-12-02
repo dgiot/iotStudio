@@ -244,7 +244,7 @@ function drawText(x, y, fill, fs) {
  */
 
 export default function stageMousemove(flag, ev, layer) {
-  console.log('stageMousemove', flag, ev)
+  dgiotlog.log('stageMousemove', flag, ev)
   let res
   switch (flag) {
     case 'pencil':

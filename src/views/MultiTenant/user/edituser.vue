@@ -91,7 +91,7 @@
 
     methods: {
       async submit_edituser(formName) {
-        console.log(formName)
+        dgiotlog.log(formName)
         // 更新用户详情
         const params = {
           username: this.ruleForm2.account,
@@ -129,7 +129,7 @@
               type: 'error',
               message: '用户详情获取失败',
             })
-            console.log(err)
+            dgiotlog.log(err)
           })
       },
     },

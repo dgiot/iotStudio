@@ -776,18 +776,18 @@
     },
     methods: {
       _handleSearchComplete(e) {
-        console.log(e, 'handleSearchComplete')
+        dgiotlog.log(e, 'handleSearchComplete')
         this.lushupath = res.getPlan(0).getRoute(0).getPath()
       },
       _reset() {
         this.lushuplay = false
       },
       _updatepoints(e) {
-        console.log(e)
+        dgiotlog.log(e)
         this.linepoints = e.target.cornerPoints
       },
       _updatePolylinePath(e) {
-        console.log(e)
+        dgiotlog.log(e)
         this.polylinePath = e.target.getPath()
       },
       _updatePolygonPath(e) {

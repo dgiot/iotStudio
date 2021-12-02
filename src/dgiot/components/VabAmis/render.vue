@@ -55,10 +55,12 @@
         `%c amis Help`,
         'color:#009a61; font-size: 28px; font-weight: 300'
       )
-      console.info('ReactDOM', ReactDOM)
-      console.info('code', this.schema)
-      console.info('edit ： https://aisuda.github.io/amis-editor-demo/#/edit/0')
-      console.info(
+      dgiotlog.info('ReactDOM', ReactDOM)
+      dgiotlog.info('code', this.schema)
+      dgiotlog.info(
+        'edit ： https://aisuda.github.io/amis-editor-demo/#/edit/0'
+      )
+      dgiotlog.info(
         'demo ： https://baidu.gitee.io/amis/zh-CN/docs/concepts/schema?page=1'
       )
       console.groupEnd()
@@ -124,7 +126,7 @@
             })
             if (method === 'get' && data) {
               config.params = data
-              console.log('请求参数', config, config.data, data)
+              dgiotlog.log('请求参数', config, config.data, data)
             } else if (data && data instanceof FormData) {
               // config.headers = config.headers || {};
               config.headers['Content-Type'] = 'multipart/form-data'
@@ -144,7 +146,7 @@
             if (headers?.dgiotReplace?.length) {
               const dgiotReplace = headers['dgiotReplace'].split(',') // 将dgiotReplace参数string格式转化为对象格式
               const { store = 'localStorage' } = headers // token 存储方式 默认存储在localStorage中
-              console.info(
+              dgiotlog.info(
                 'dgiotReplace',
                 dgiotReplace,
                 dgiotReplace.length,
@@ -166,15 +168,15 @@
                     )
                     // 如果有默认值,就使用默认值进行替换。
                     if (headers?.amisdefault?.length) {
-                      console.log('amisdefault', headers.amisdefault)
+                      dgiotlog.log('amisdefault', headers.amisdefault)
                     }
                     url = headers?.amisdefault?.length
                       ? ''
                       : url.replaceAll(h, replaceArr[h])
-                    console.log(`将变量${h}替换为了${replaceArr[h]}`)
-                    console.log(`替换后的url为\n${url}`)
+                    dgiotlog.log(`将变量${h}替换为了${replaceArr[h]}`)
+                    dgiotlog.log(`替换后的url为\n${url}`)
                     console.groupEnd()
-                  } else console.warn(`需要替换的变量${h}值为${replaceArr[h]}`)
+                  } else dgiotlog.warn(`需要替换的变量${h}值为${replaceArr[h]}`)
                 })
               } catch (e) {
                 throw e
@@ -185,10 +187,10 @@
               `%c axios logs \n${url}`,
               'color:#009a61; font-size: 28px; font-weight: 300'
             )
-            console.log('请求的headers', headers)
-            console.log('请求的config', config)
-            console.log('replaceArr', replaceArr)
-            console.info('请求url', url)
+            dgiotlog.log('请求的headers', headers)
+            dgiotlog.log('请求的config', config)
+            dgiotlog.log('replaceArr', replaceArr)
+            dgiotlog.info('请求url', url)
             console.groupEnd()
             return axios(url, config)
           },
@@ -197,8 +199,8 @@
           notify: (type, msg) => {
             toast[type]
               ? toast[type](msg, type === 'error' ? '系统错误' : '系统消息')
-              : console.warn('[Notify]', type, msg)
-            console.log('[notify]', type, msg)
+              : dgiotlog.warn('[Notify]', type, msg)
+            dgiotlog.log('[notify]', type, msg)
           },
           confirm,
           copy: (contents, options = {}) => {
@@ -263,7 +265,7 @@
     schema: {
       amisJson: {
         handler(val) {
-          console.log(val)
+          dgiotlog.log(val)
           this.amisKey = moment(new Date()).format('X') + 'j'
         },
         immediate: true,

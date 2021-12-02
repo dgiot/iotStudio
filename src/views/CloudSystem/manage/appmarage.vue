@@ -302,7 +302,7 @@
             }
           })
           .catch((error) => {
-            console.log(error)
+            dgiotlog.log(error)
           })
       },
       // 停止
@@ -318,7 +318,7 @@
             }
           })
           .catch((error) => {
-            console.log(error)
+            dgiotlog.log(error)
           })
       },
       reupload() {

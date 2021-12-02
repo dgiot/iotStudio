@@ -319,9 +319,9 @@
         this.currentPage = val
       },
       onSelect(selectedKeys, e) {
-        console.log('selected', selectedKeys, e.node.dataRef)
+        dgiotlog.log('selected', selectedKeys, e.node.dataRef)
         this.dataRef = e.node.dataRef
-        console.log(e.node.dataRef)
+        dgiotlog.log(e.node.dataRef)
         this.defaultLever = this.dataRef.level
         // this.clickItem = JSON.stringify(this.dataRef, null, 2)
         this.subLog()
@@ -338,7 +338,7 @@
         this.clickItem = ''
         // this.dataRef = {}
         this.dataRef = e.node.dataRef
-        console.log(e.node.dataRef)
+        dgiotlog.log(e.node.dataRef)
         this.defaultLever = this.dataRef.level
         // this.clickItem = JSON.stringify(this.dataRef, null, 2)
         // this.subLog()
@@ -348,7 +348,7 @@
           case 'Level':
             break
         }
-        console.log(tree, menuKey)
+        dgiotlog.log(tree, menuKey)
       },
       /**
        *
@@ -368,7 +368,7 @@
             'vab-hey-message-success'
           )
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -389,14 +389,14 @@
           this.getTree(this.treeQueryForm)
           handloading.close()
         } catch (error) {
-          console.log(error)
+          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
             'vab-hey-message-error'
           )
         }
-        console.log(value) // { key: "lucy", label: "Lucy (101)" }
+        dgiotlog.log(value) // { key: "lucy", label: "Lucy (101)" }
       },
       subLog() {
         this.clickItem = ''
@@ -427,7 +427,7 @@
         this.clickItem = ''
         this.$dgiotBus.$off(this.topicKey)
         this.$dgiotBus.$on(this.topicKey, (Msg) => {
-          console.log('收到消息', Msg)
+          dgiotlog.log('收到消息', Msg)
           if (Msg.payload) {
             this.scroketMsg.push(JSON.parse(Msg.payload))
             this.key = moment(new Date()).valueOf()

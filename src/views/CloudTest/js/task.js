@@ -220,7 +220,7 @@ export default {
     },
     testbedChange(val) {
       this.$set(this.ruleForm, 'testbedid', val.objectId)
-      console.log('this.ruleForm', this.ruleForm)
+      dgiotlog.log('this.ruleForm', this.ruleForm)
     },
     async getwordtemp() {
       const params = {
@@ -272,7 +272,7 @@ export default {
           this.fetchData()
           loading.close()
         } else {
-          console.log('error submit!!')
+          dgiotlog.log('error submit!!')
           return false
         }
         this.ruleForm = {
@@ -285,7 +285,7 @@ export default {
       })
     },
     forensics(row) {
-      console.error(row)
+      dgiotlog.warn(row)
       this.$router.push({
         path: '/cloudTest/evidence',
         query: {
@@ -324,7 +324,7 @@ export default {
             this.fetchData()
             loading.close()
           } catch (error) {
-            console.log(error)
+            dgiotlog.log(error)
             this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
@@ -361,7 +361,7 @@ export default {
             this.fetchData()
             loading.close()
           } catch (error) {
-            console.log(error)
+            dgiotlog.log(error)
             this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
@@ -387,7 +387,7 @@ export default {
         ele.click()
         // window.location.href = this.$FileServe + url
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -415,7 +415,7 @@ export default {
           },
         })
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -466,7 +466,7 @@ export default {
         }
         loading.close()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -482,7 +482,7 @@ export default {
         where: { type: 'amis', key: row.objectId },
       }
       const { results } = await queryView(params)
-      console.log(results)
+      dgiotlog.log(results)
       this.lowcodeId = results[0].objectId
       this.$dgiotBus.$emit('lowcodePreview', results[0])
     },
@@ -506,7 +506,7 @@ export default {
         loading.close()
         this.fetchData()
       } catch (error) {
-        console.log(error)
+        dgiotlog.log(error)
         this.$baseMessage(
           this.$translateTitle('user.error deleted') + `${error}`,
           'error',

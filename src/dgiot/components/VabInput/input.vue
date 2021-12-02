@@ -59,7 +59,7 @@
         const type = name.split('.').pop().toLowerCase()
         this.$emit('files', file, type)
         const params = this.params
-        console.log('extension', params)
+        dgiotlog.log('extension', params)
         try {
           UploadImg(params)
             .then((res) => {
@@ -69,13 +69,13 @@
               res.data.timestamp = new Date().getTime()
               res.data.Date = new Date()
               this.$emit('fileInfo', res.data)
-              console.log('上传成功的回调', res.data)
+              dgiotlog.log('上传成功的回调', res.data)
             })
             .catch((e) => {
-              console.log('出错了', e)
+              dgiotlog.log('出错了', e)
             })
         } catch (e) {
-          console.log(e)
+          dgiotlog.log(e)
         }
       },
       //文件删除操作

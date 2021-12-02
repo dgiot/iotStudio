@@ -119,7 +119,7 @@
         // this.step = 0
         this.isStep = 4
       }
-      console.log(this.step)
+      dgiotlog.log(this.step)
     },
     methods: {
       next() {

@@ -1105,7 +1105,7 @@
     },
     mounted() {
       this.params.style = this.chartType[0].type
-      console.log(' this.params.style', this.params.style)
+      dgiotlog.log(' this.params.style', this.params.style)
       if (this.$route.query.deviceid) {
         this.deviceid = this.$route.query.deviceid
         this.initChart()
@@ -1160,7 +1160,7 @@
       toggleChart(e) {
         this.chartKey = moment(new Date()).valueOf()
         this.loading = false
-        console.log(e)
+        dgiotlog.log(e)
         this.chartExtend = {}
         this.chartDataZoom = []
         let type = ['funnel', 'radar', 'radar']
@@ -1210,7 +1210,7 @@
           charts.forEach((chart) => {
             chart.$children[0].resize()
           })
-          console.log('重绘完成', charts)
+          dgiotlog.log('重绘完成', charts)
         } else {
           charts.$children[0].resize()
         }
@@ -1249,8 +1249,8 @@
           let deviceid = this.$route.query.deviceid
           // let endTime = moment(this.params.datetimerange[1]).valueOf()
           // let startTime = moment(this.params.datetimerange[0]).valueOf()
-          console.log('endTime', endTime)
-          console.log('startTime', startTime)
+          dgiotlog.log('endTime', endTime)
+          dgiotlog.log('startTime', startTime)
           // const limit = moment(endTime).diff(moment(startTime), 'days')
           const {
             interval,
@@ -1274,7 +1274,7 @@
           await getDabDevice(deviceid, params)
             .then((res) => {
               this.$baseColorfullLoading().close()
-              console.log(res, 'res charts')
+              dgiotlog.log(res, 'res charts')
               if (res?.chartData) {
                 const { chartData = {} } = res
                 this.chartData = chartData
@@ -1285,12 +1285,12 @@
                   }, 1000)
                 })
               }
-              console.log('this.chartData', this.chartData)
+              dgiotlog.log('this.chartData', this.chartData)
               this.loading = false
               this.dataEmpty = false
             })
             .catch((e) => {
-              console.log(e)
+              dgiotlog.log(e)
               this.loading = false
               this.$baseColorfullLoading().close()
             })
@@ -1301,7 +1301,7 @@
         }
       },
       print(item) {
-        console.log(item)
+        dgiotlog.log(item)
       },
       tabHandleClick(tab) {
         if (tab.name == 'ninth') {
@@ -1359,7 +1359,7 @@
         if (this.childrendevices.devicesname != '') {
           params.where.devaddr = this.childrendevices.devicesname
         }
-        console.log('this.params', params)
+        dgiotlog.log('this.params', params)
         this.$queryDevice(params)
           .then((res) => {
             this.childrenDeviceTotal = res.count
@@ -1380,13 +1380,13 @@
             }
           })
           .catch((err) => {
-            console.log(err)
+            dgiotlog.log(err)
             this.$baseMessage('请求出错11', err.error, 3000)
           })
       },
       Update() {
         var vm = this
-        console.log('实时刷新')
+        dgiotlog.log('实时刷新')
         getCardDevice(vm.deviceid)
           .then((response) => {
             vm.machinelist = {}
@@ -1411,14 +1411,14 @@
               })
               vm.machinelist = machine
               vm.thirdtbKey = moment(new Date()).valueOf()
-              console.log('this.machinelist', vm.machinelist)
+              dgiotlog.log('this.machinelist', vm.machinelist)
             } else {
               this.updateTrue(false)
               this.isupdate = false
             }
           })
           .catch((error) => {
-            console.log('update error 清除timer', error)
+            dgiotlog.log('update error 清除timer', error)
             this.updateTrue(false)
             this.isupdate = false
           })
@@ -1486,7 +1486,7 @@
         })
       },
       deviceToDetail(row) {
-        console.log('row', row)
+        dgiotlog.log('row', row)
         this.$router.push({
           path: '/roles/editdevices',
           query: {
@@ -1529,7 +1529,7 @@
               }
             })
           } else {
-            console.log('error submit!!')
+            dgiotlog.log('error submit!!')
             return false
           }
         })
@@ -1558,7 +1558,7 @@
             }
           })
           .catch((error) => {
-            console.log(error)
+            dgiotlog.log(error)
           })
       },
       // 设备多个启用和禁用
@@ -1586,7 +1586,7 @@
             }
           })
           .catch((error) => {
-            console.log(error)
+            dgiotlog.log(error)
           })
       },
       activeDevice(val) {
@@ -1613,7 +1613,7 @@
             }
           })
           .catch((error) => {
-            console.log(error)
+            dgiotlog.log(error)
           })
       },
       /* el-popover点击关闭*/

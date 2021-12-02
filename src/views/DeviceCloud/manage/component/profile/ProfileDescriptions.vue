@@ -575,8 +575,8 @@
             },
             hiddenRow: ['class', 'key', 'createdAt'],
           }
-          console.log('viewForm', this.viewForm)
-          console.log('dictForm', this.dictForm)
+          dgiotlog.log('viewForm', this.viewForm)
+          dgiotlog.log('dictForm', this.dictForm)
         },
       },
     },
@@ -594,8 +594,8 @@
       openView() {
         this.dialogTableVisible = true
         this.dialogDictVisible = false
-        console.log('this.dialogTableVisible', this.dialogTableVisible)
-        console.log('this.dialogDictVisible', this.dialogDictVisible)
+        dgiotlog.log('this.dialogTableVisible', this.dialogTableVisible)
+        dgiotlog.log('this.dialogDictVisible', this.dialogDictVisible)
       },
       openDict() {
         this.dialogDictVisible = true
@@ -605,7 +605,7 @@
         const mergeAmis = _.merge(this.productDetail, {
           config: { amis: amisconfig },
         })
-        console.log(productId, amisconfig, productDetail, mergeAmis)
+        dgiotlog.log(productId, amisconfig, productDetail, mergeAmis)
         const res = await putProductTemplet(productId, {
           config: this.productDetail.config,
         })
@@ -754,9 +754,9 @@
         // }
         // if (this.amisconfig?.length) {
         //   this.amisconfig.every((item) => {
-        //     console.log(item)
+        //     dgiotlog.log(item)
         //     if (item.type == 'add') {
-        //       console.log(item)
+        //       dgiotlog.log(item)
         //       this.$message.warning('请设计上一条低代码数据')
         //       return false
         //     } else {
@@ -770,12 +770,12 @@
       handleEdit(index, row) {
         this.amisForm = row
         this.editType = index
-        console.log(index, row)
+        dgiotlog.log(index, row)
         this.set_amisJson(row.json)
         this.amisFlag = true
       },
       handleDelete(index, row) {
-        console.log(index, row)
+        dgiotlog.log(index, row)
         this.amisconfig.splice(index, 1)
       },
       cancelForm() {
@@ -788,14 +788,14 @@
         set_amisJson: 'amis/set_amisJson',
       }),
       seeDecoder(productDetail) {
-        console.log(ace, 'ace', this.ace_editor)
+        dgiotlog.log(ace, 'ace', this.ace_editor)
         const { decoder = {} } = productDetail
         this.codeFlag = !this.codeFlag
         this.ace_editor = Base64.decode(decoder.code)
         // editor.gotoLine(editor.session.getLength())
       },
       featProperties(params) {
-        console.log(params)
+        dgiotlog.log(params)
         this.codeFlag = false
         this.dialogTableVisible = false
         this.dialogDictVisible = false

@@ -50,12 +50,12 @@
       },
       socketOnClose() {
         this.socket.onclose = () => {
-          console.log('close socket')
+          dgiotlog.log('close socket')
         }
       },
       socketOnError() {
         this.socket.onerror = () => {
-          console.log('socket 链接失败')
+          dgiotlog.log('socket 链接失败')
         }
       },
     },

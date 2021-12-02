@@ -245,7 +245,7 @@
             // this.queryForm.workGroupTreeShow = false
           })
           .catch((e) => {
-            console.log(e)
+            dgiotlog.log(e)
           })
       },
       async handleNodeClick(data, node) {
@@ -255,7 +255,7 @@
         this.user = []
         this.roleName = data.name
         const { users } = await queryRoledepartment({ name: data.name })
-        console.log('res', users)
+        dgiotlog.log('res', users)
         this.user = users
         this.loading = false
       },
@@ -272,7 +272,7 @@
               h4: '已分配',
               p: `${this.username} 分配给 ${_user[0].nick}`,
             })
-            console.log('_user', _user)
+            dgiotlog.log('_user', _user)
             // ACL[`${'role' + ':' + this.form.info.user}`] = {
             //   read: true,
             //   write: true,
@@ -309,7 +309,7 @@
                 className: '_User',
               },
             }
-            console.log(objectId, params, setAcl)
+            dgiotlog.log(objectId, params, setAcl)
             const res = await update_object('Maintenance', objectId, params)
             if (res.updatedAt) {
               this.set_deviceFlag(false)
@@ -317,7 +317,7 @@
             }
           } else {
             this.$message.error('请选择分配人员')
-            console.log('error submit!!')
+            dgiotlog.log('error submit!!')
             return false
           }
         })

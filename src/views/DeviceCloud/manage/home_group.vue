@@ -706,7 +706,7 @@
         // for (let i = 1; i <= 1000; i++) {
         //   const groupname = "Repository_" + ("0000" + i).slice(-4)
         //
-        //   // console.log('sss',groupname)
+        //   // dgiotlog.log('sss',groupname)
         //   addGroup(groupname)
         // }
       },
@@ -905,7 +905,7 @@
         // this.uploadAction = 'http://cad.iotn2n.com:5080/product?appid=' + Cookies.get("appids");
 
         this.$nextTick(() => {
-          // console.log('uploadHeaders',this.uploadHeaders);
+          // dgiotlog.log('uploadHeaders',this.uploadHeaders);
 
           this.uploadData.appid = Cookies.get('appids')
           // this.uploadData.key = "key";
@@ -968,10 +968,10 @@
           },
         }
         const { results } = await queryProduct(params)
-        // console.log("results", results)
+        // dgiotlog.log("results", results)
         this.groupData = results
         this.total = this.groupData.length
-        // console.log(this.groupData)
+        // dgiotlog.log(this.groupData)
 
         const resApps = await queryRole({
           limit: 100,
@@ -1103,7 +1103,7 @@
         }
         queryDevice(params)
           .then((results) => {
-            // console.log(results, "jkjjjj")
+            // dgiotlog.log(results, "jkjjjj")
             if (results.count > 0) {
               this.$message('请先删除该产品下设备')
               return
@@ -1122,16 +1122,16 @@
                       }
                     })
                     .catch((e) => {
-                      console.log('delProduct ', e.error)
+                      dgiotlog.log('delProduct ', e.error)
                     })
                 })
                 .catch((e) => {
-                  console.log('getProduct ', e.error)
+                  dgiotlog.log('getProduct ', e.error)
                 })
             }
           })
           .catch((e) => {
-            console.log('queryDevice ', e.error)
+            dgiotlog.log('queryDevice ', e.error)
           })
       },
       productSizeChange(val) {

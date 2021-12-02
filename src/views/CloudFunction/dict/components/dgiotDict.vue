@@ -261,7 +261,7 @@
               this.data.params.push(this.param)
               this.$message.success('新增成功')
             }
-            console.log('this.data', this.data)
+            dgiotlog.log('this.data', this.data)
             this.saveDict()
           }
         })

@@ -299,9 +299,9 @@
         set_mimg: 'dashboard/set_mimg',
       }),
       fileInfo(info) {
-        console.log('uploadFinish', info)
+        dgiotlog.log('uploadFinish', info)
         let type = this.upNodeType
-        console.log('upNodeType', this[type])
+        dgiotlog.log('upNodeType', this[type])
         this[type] = info.path
         switch (type) {
           case 'userinfo.avatar':
@@ -325,7 +325,7 @@
             this.setBackgroundimage(info.path)
             putProject(this.Default.objectId, { background: info.url })
               .then((res) => {
-                console.log(res)
+                dgiotlog.log(res)
                 this.$baseMessage(
                   this.$translateTitle('保存成功'),
                   'success',
@@ -334,7 +334,7 @@
                 )
               })
               .catch((e) => {
-                console.log(e)
+                dgiotlog.log(e)
                 this.$baseMessage(
                   this.$translateTitle('保存失败' + e),
                   'success',
@@ -344,7 +344,7 @@
               })
             break
           default:
-            console.log('type', this.filetype)
+            dgiotlog.log('type', this.filetype)
             break
         }
         this.$forceUpdate()
@@ -357,7 +357,7 @@
           this.$refs['userinfo'].validateField('phone')
           return
         }
-        console.log('this.companyinfo===========', this.companyinfo)
+        dgiotlog.log('this.companyinfo===========', this.companyinfo)
         let pamams = {
           tag: {
             companyinfo: this.companyinfo,
@@ -433,8 +433,8 @@
           _mimg: this._mimg || '',
         })
 
-        console.log('this.userinfo', this.userinfo)
-        console.log('this.companyinfo', this.$FileServe + this.userinfo.avatar)
+        dgiotlog.log('this.userinfo', this.userinfo)
+        dgiotlog.log('this.companyinfo', this.$FileServe + this.userinfo.avatar)
       },
     },
   }
