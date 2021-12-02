@@ -10,7 +10,7 @@
     "start": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "dgiot:install": "start ./pnpm.sh",
-    "build": "vue-cli-service build --report && rimraf dist/example/",
+    "build": "vue-cli-service build --report",
     "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
     "lint": "eslint --ext .js --fix&&vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
