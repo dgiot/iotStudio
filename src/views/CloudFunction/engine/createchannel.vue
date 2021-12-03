@@ -276,7 +276,7 @@
           ],
         },
         addchannel: {
-          codes: '',
+          codes: '{}',
           name: '',
           region: '',
         },
