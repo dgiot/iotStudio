@@ -952,6 +952,7 @@
     },
     created() {},
     mounted() {
+      console.error(this._Product)
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.initDgiotMqtt()
       // dgiotlog.log(`global static url ${this._role}`)
@@ -972,8 +973,8 @@
        * @returns
        */
       initDgiotMqtt() {
-        this.getRoletree()
         this.getProduct()
+        this.queryData()
       },
       async getWarnCount(
         params = {
@@ -1252,29 +1253,16 @@
       selectProdChange(objectId) {
         // dgiotlog.log(objectId)
       },
-      queryData() {
-        const loading = this.$baseColorfullLoading(3)
-        setTimeout(() => {
-          loading.close()
-        }, 3000)
-      },
-      async getRoletree() {
-        // mqtt 未返回时的容错处理
-        setTimeout((_) => {
-          this.loadingConfig = {
-            product_count: true,
-            app_count: true,
-            device_count: true,
-            warn_count: true,
-          }
-        }, 3000)
-        // this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
-        //   'padding-top'
-        // ]
-        // this.leftWidth = window.getComputedStyle($('.vab-side-bar')[0])['width']
-        this.cardHeight = window.getComputedStyle($('.map_card')[0])['height']
-        // dgiotlog.log(this.fixedPaddingTop, this.leftWidth, this.cardHeight)
-        this.deptTreeData = this.roleTree
+      async queryData() {
+        this.subtopic = `dashboard/${this.token}/post`
+        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        this.$dgiotBus.$emit('MqttSubscribe', {
+          router: this.router,
+          topic: this.subtopic,
+          qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
+        })
+        const res = await Startdashboard(queryParams)
       },
       async getProduct() {
         const { results } = await queryProduct({
@@ -1282,7 +1270,7 @@
           order: '-updatedAt',
           keys: 'name,icon',
           where: {
-            category: 'IotHub',
+            // category: 'IotHub',
           },
         })
         results.unshift({
@@ -1329,15 +1317,6 @@
         // 点击的公司名
         const { name, objectId } = data
         this.curDepartmentId = objectId
-        this.subtopic = `dashboard/${this.token}/post`
-        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        this.$dgiotBus.$emit('MqttSubscribe', {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
-        Startdashboard(queryParams)
       },
       handleChange() {},
       handleClickVisit(project) {
