@@ -151,7 +151,10 @@ instance.interceptors.request.use(
     /**
      * @description 当用户切换token 后。api中含有/class/ 并且该规则出现在首位时，使用部门token
      */
-    if (config.url.indexOf('/classes/') == 0) {
+    if (
+      config.url.indexOf('/classes/') == 0 &&
+      ignoreApi.includes(config.url)
+    ) {
       console.groupCollapsed(
         `%c部门切换token拦截url日志`,
         'color:black; font-size: 18px; font-weight: 300'

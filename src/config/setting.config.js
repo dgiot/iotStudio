@@ -47,7 +47,7 @@ module.exports = {
   // token过期刷新时间秒 当前设置为十分钟
   expiredTime: 60 * 10,
   // 部门token刷新后,页面刷新,不需要刷新的api规则
-  ignoreApi: ['Navigation'],
+  ignoreApi: ['Navigation', 'Notification', '_User'],
   // 退出登录后不清空的cookie列表
   cookieWhiteList: [
     'cdnResource',
