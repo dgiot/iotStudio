@@ -1409,6 +1409,7 @@
         }
       }
       return {
+        addACL: {},
         videoOptions: ['m3u8', 'mp4', 'flv', 'mp3'],
         queryInfo: {},
         isFullscreen: false,
@@ -2763,7 +2764,8 @@
       selectChange(objectId, flag = 'add') {
         this.arrlist = []
         getProduct(objectId).then((res) => {
-          const { config = { basedate: {} } } = res
+          const { config = { basedate: {} }, ACL } = res
+          this.addACL = ACL
           if (config.basedate && config.basedate.params.length > 0) {
             this.arrlist = config.basedate.params
             if (flag == 'add') {
@@ -2882,6 +2884,12 @@
                 if (result.count > 0) {
                   this.$message('此设备已被创建')
                 } else {
+                  // const aclKey1 = 'role' + ':' + data.name
+                  // const aclObj = {}
+                  // aclObj[aclKey1] = {
+                  //   read: true,
+                  //   write: true,
+                  // }
                   var devicesParmas = {
                     product: {
                       __type: 'Pointer',
@@ -2890,7 +2898,7 @@
                     },
                     status: 'OFFLINE',
                     isEnable: false,
-                    ACL: this.aclObj,
+                    ACL: this.addACL,
                     name: this.deviceform.name,
                     devaddr: this.deviceform.devaddr,
                     objectId: this.deviceform.devaddr,
