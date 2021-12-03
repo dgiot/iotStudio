@@ -802,7 +802,7 @@
         dgiotlog.log(ruleid, forName, res)
         this.$message('修改成功')
         this.$router.push({
-          path: '/dashboard/engine',
+          path: '/rules_engine/engine',
         })
       },
       addrules(forName) {
@@ -862,7 +862,7 @@
                 if (resultes) {
                   this.$message('创建成功')
                   this.$router.push({
-                    path: '/dashboard/engine',
+                    path: '/rules_engine/engine',
                   })
                 }
               })
