@@ -58,7 +58,7 @@
     "@material/icon-button": "13.0.0",
     "@vue/babel-helper-vue-jsx-merge-props": "1.2.1",
     "@vue/cli-plugin-pwa": "^4.5.14",
-    "amis": "1.5.1",
+    "amis": "1.5.2",
     "amis-editor": "^3.3.11",
     "axios": "0.24.0",
     "clean-webpack-plugin": "4.0.0",
