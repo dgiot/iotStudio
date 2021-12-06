@@ -98,7 +98,7 @@
       dragBox: function (el) {
         let dragBox = el //获取当前元素
         dragBox.onclick = (e) => {
-          // dgiotlog.log(e,'点击的节点')
+          // console.log(e,'点击的节点')
         }
         dragBox.onmousedown = (e) => {
           //算出鼠标相对元素的位置
@@ -111,7 +111,7 @@
             //移动当前元素
             dragBox.style.left = left + 'px'
             dragBox.style.top = top + 'px'
-            // dgiotlog.error(dragBox,'dragBox')
+            // console.error(dragBox,'dragBox')
           }
           dragBox.onmouseup = (e) => {
             // //鼠标弹起来的时候不再移动

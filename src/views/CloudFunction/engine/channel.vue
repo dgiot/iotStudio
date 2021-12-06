@@ -786,13 +786,13 @@
     watch: {
       topicKey: {
         handler: function (newVal, oldval) {
-          dgiotlog.log('newVal topicKey', newVal)
-          dgiotlog.log('oldval topicKey', oldval)
+          console.log('newVal topicKey', newVal)
+          console.log('oldval topicKey', oldval)
           let _this = this
           if (newVal) {
             this.$dgiotBus.$off(newVal)
             this.$dgiotBus.$on(newVal, (res) => {
-              dgiotlog.error(res)
+              console.error(res)
               const { payload } = res
               this.mqttMsg(payload)
             })
@@ -837,7 +837,7 @@
           )
           loading.close()
         } catch (error) {
-          dgiotlog.log(error)
+          console.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -849,7 +849,7 @@
       viewDesign(data = {}, channelid) {
         this.renderSchema = data
         this.amisFlag = true
-        dgiotlog.log(this.renderSchema, e)
+        console.log(this.renderSchema, e)
         this.$refs['vabAmis'].setSchema(data)
         this.channelid = channelid
       },
@@ -857,7 +857,7 @@
         this.$refs['vabAmis'].setSchema(e)
         this.renderSchema = e
         this.amisJson = e
-        dgiotlog.log(this.renderSchema, e)
+        console.log(this.renderSchema, e)
       },
       handleSelectionChange(data) {
         this.selectedData = data
@@ -899,7 +899,7 @@
           }
           const loading = this.$baseColorfullLoading()
           const res = await saveChanne(this.channelid, params)
-          dgiotlog.log(res)
+          console.log(res)
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
@@ -907,7 +907,7 @@
           )
           loading.close()
         } catch (error) {
-          dgiotlog.log(error)
+          console.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -943,7 +943,7 @@
           this.channelInfo = results
           // this.channelDialog = true
         } catch (error) {
-          dgiotlog.log(error)
+          console.log(error)
           loading.close()
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
@@ -953,7 +953,7 @@
         }
       },
       uploadCkick(type, index, channeType) {
-        dgiotlog.log(type, index)
+        console.log(type, index)
         this.channeindex = index
         this.channeType = channeType
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
@@ -961,10 +961,10 @@
         )
       },
       fileInfo(info) {
-        dgiotlog.log('uploadFinish', info)
+        console.log('uploadFinish', info)
         if (this.channeType == 'arrlist') {
           this.arrlist[this.channeindex].default = info.url
-          dgiotlog.log(this.arrlist[this.channeindex])
+          console.log(this.arrlist[this.channeindex])
         } else {
           this.channelregion[this.channeindex].params.ico.default = info.url
         }
@@ -1028,7 +1028,7 @@
         this.$set(this.addchannel, 'applicationtText', data.name)
       },
       inputChange(val) {
-        dgiotlog.log(val)
+        console.log(val)
       },
       // 验证
       validUrl(rule, value, callback) {
@@ -1112,7 +1112,7 @@
         action = action ? 'enable' : 'disable'
         try {
           const { updatedAt } = await subupadte(objectId, action)
-          dgiotlog.log(updatedAt)
+          console.log(updatedAt)
           if (updatedAt) {
             this.$message.success(
               this.$translateTitle(`developer.${action}`) +
@@ -1124,7 +1124,7 @@
 
           // this.$message.success(`${res}`)
         } catch (error) {
-          dgiotlog.log(error)
+          console.log(error)
           this.$message.error(`${error}`)
         }
         // this.$message(error.error)
@@ -1182,7 +1182,7 @@
             this.Get_Re_Channel(this.start)
           })
           .catch((e) => {
-            dgiotlog.log(e.error)
+            console.log(e.error)
             this.Get_Re_Channel(this.start)
           })
       },
@@ -1220,7 +1220,7 @@
       channelCurrentChange(val) {
         // this.total = 0
         if (val <= 1) this.total = 0
-        dgiotlog.log(val)
+        console.log(val)
         this.start = (val - 1) * this.length
         this.Get_Re_Channel(1)
       },
@@ -1365,7 +1365,7 @@
         this.addrules = obj1
       },
       editorChannel(row) {
-        dgiotlog.log(row)
+        console.log(row)
         this.channelrow = row
         this.resourceid = row.objectId
         this.channelForm = true

@@ -245,13 +245,13 @@
       },
       topicKey: {
         handler: function (newVal, oldval) {
-          dgiotlog.log('newVal topicKey', newVal)
-          dgiotlog.log('oldval topicKey', oldval)
+          console.log('newVal topicKey', newVal)
+          console.log('oldval topicKey', oldval)
           let _this = this
           if (newVal) {
             this.$dgiotBus.$off(newVal)
             this.$dgiotBus.$on(newVal, (res) => {
-              dgiotlog.error(res)
+              console.error(res)
               const { payload } = res
               this.mqttMsg(payload)
             })
@@ -339,7 +339,7 @@
           loading.close()
           this.Device = results
         } catch (error) {
-          dgiotlog.log(error)
+          console.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',

@@ -209,13 +209,13 @@
         var Imgage = this.stage.find('Image')
         Imgage.forEach((node) => {
           node.setAttrs({ source: url })
-          dgiotlog.log('img node ', node)
+          console.log('img node ', node)
           node.draw()
           // $('#current1').css('background-image', `url(${url})`)
         })
         // Imgage.draw()
         // Imgage.batchDraw()
-        dgiotlog.log('this.stage', this.stage, JSON.parse(this.stage.toJSON()))
+        console.log('this.stage', this.stage, JSON.parse(this.stage.toJSON()))
         this.updataProduct(this.productid)
         // this.createKonva(
         //   JSON.parse(this.stage.toJSON()),
@@ -235,19 +235,19 @@
       removeShape(node) {
         let _this = this
         const Layer = _this.stage.find('Layer')[0]
-        dgiotlog.log('删除的节点', node)
+        console.log('删除的节点', node)
         var Image = _this.stage.find('Image')
         var tweens = []
         for (var n = 0; n < tweens.length; n++) {
           tweens[n].destroy()
         }
         if (node?.attrs?.image) {
-          dgiotlog.log('is img', node.attrs.id)
+          console.log('is img', node.attrs.id)
           Image.each((shape) => {
-            dgiotlog.log('图片相关', shape)
+            console.log('图片相关', shape)
             if (shape.attrs.id == node.attrs.id) {
-              dgiotlog.log(shape, 'shape.target 找到了这个node 节点')
-              dgiotlog.log(node, 'shape.target 找到了这个node 节点')
+              console.log(shape, 'shape.target 找到了这个node 节点')
+              console.log(node, 'shape.target 找到了这个node 节点')
               shape.remove()
               shape.destroy()
               node.remove()
@@ -256,12 +256,12 @@
             }
           })
         }
-        dgiotlog.log('删除的节点', node.remove())
+        console.log('删除的节点', node.remove())
         _this.stage.find('Transformer')
           .map((_Transformer) => {
-            dgiotlog.log(_Transformer, '_Transformer')
+            console.log(_Transformer, '_Transformer')
           })
-        dgiotlog.log(_this.stage.find('Transformer'), _this.stage.find())
+        console.log(_this.stage.find('Transformer'), _this.stage.find())
         // _this.stage.find('Transformer').destroy()
         node.remove()
         Layer.draw()
@@ -282,15 +282,15 @@
         opacity: 1,
       }) {
         let _this = this
-        dgiotlog.log(_this.stage.find(`#${config.attrs.id}`))
-        dgiotlog.log('config.attrs.id', config.attrs.id)
+        console.log(_this.stage.find(`#${config.attrs.id}`))
+        console.log('config.attrs.id', config.attrs.id)
         const Text = _this.stage.find('Text')
         const Image = _this.stage.find('Image')
         const Group = _this.stage.find('Group')
         const stage = _this.stage.find(config.attrs.id)
         const Layer = _this.stage.find('Layer')[0]
         let upshape = stage
-        dgiotlog.log('stage', stage)
+        console.log('stage', stage)
         const tweens = []
         for (let n = 0; n < tweens.length; n++) {
           tweens[n].destroy()
@@ -298,7 +298,7 @@
         }
         Image.each((shape) => {
           if (shape.attrs.id == config.attrs.id) {
-            dgiotlog.log('updata type is image', shape, config)
+            console.log('updata type is image', shape, config)
             upshape = shape
             _this.kovaUpType = 'Image'
             upshape.zIndex(ShapeConfig.zIndex)
@@ -354,9 +354,9 @@
           _this.stage = config
         }
         console.clear()
-        dgiotlog.info(`updata type is ${_this.kovaUpType}`)
+        console.info(`updata type is ${_this.kovaUpType}`)
         // _this.ShapeVisible = false
-        dgiotlog.log('konva数据更新成功')
+        console.log('konva数据更新成功')
         _this.updataProduct(_this.productid)
       },
       // 预览
@@ -394,8 +394,8 @@
         if (isVisible) {
           img = this.backgroundImage
         }
-        dgiotlog.log(isVisible)
-        dgiotlog.log(this.backgroundImage)
+        console.log(isVisible)
+        console.log(this.backgroundImage)
         this.$refs['operation'].bachgroundurl = img
       },
       async upProduct(img) {
@@ -406,7 +406,7 @@
             config: config,
           }
           let res = await putProduct(this.productid, params)
-          dgiotlog.log(res)
+          console.log(res)
           if (res) {
             this.$message.success(this.$translateTitle('组态背景更新成功'))
           }
@@ -416,7 +416,7 @@
       },
       // 更新产品
       async updataProduct(productid) {
-        dgiotlog.log('updatatopo')
+        console.log('updatatopo')
         let config = this.productconfig.config
         let stage
         if (this.kovaUpType != 'Layer') {
@@ -432,10 +432,10 @@
           config: upconfig,
         }
         // console.clear()
-        // dgiotlog.log('11111111')
+        // console.log('11111111')
         await putProduct(productid, params)
           .then((res) => {
-            dgiotlog.log(res, '产品组态更新成功')
+            console.log(res, '产品组态更新成功')
             // this.handleCloseSub()
             this.$message.success(this.$translateTitle('产品组态更新成功'))
           })
@@ -451,21 +451,21 @@
         Websocket.add_hook(channeltopic, (Msg) => {
           let decodeMqtt
           let updataId = []
-          dgiotlog.log('收到消息', Msg)
+          console.log('收到消息', Msg)
           if (!isBase64(Msg)) {
-            dgiotlog.log('非base64数据类型')
+            console.log('非base64数据类型')
             return
           } else {
             decodeMqtt = JSON.parse(Base64.decode(Msg))
-            dgiotlog.log('消息解密消息', decodeMqtt)
+            console.log('消息解密消息', decodeMqtt)
           }
 
-          dgiotlog.log(decodeMqtt.konva)
+          console.log(decodeMqtt.konva)
           const Shape = decodeMqtt.konva
           // apply transition to all nodes in the array
           // Text.each(function (shape) {
           const Text = this.stage.find('Text')
-          dgiotlog.log(Text)
+          console.log(Text)
           const tweens = []
           for (var n = 0; n < tweens.length; n++) {
             tweens[n].destroy()
@@ -474,8 +474,8 @@
           Shape.each((i) => {
             Text.each((shape) => {
               if (i.id == shape.attrs.id) {
-                dgiotlog.log('更新节点', i)
-                dgiotlog.log(shape)
+                console.log('更新节点', i)
+                console.log(shape)
                 shape.text(i.text)
                 tweens.push(
                   new Konva.Tween({
@@ -490,10 +490,10 @@
             })
           })
           if (updataId) {
-            dgiotlog.log('以下组态id未更新', updataId)
+            console.log('以下组态id未更新', updataId)
           }
           _this.stage.batchDraw()
-          dgiotlog.log('konva数据更新成功')
+          console.log('konva数据更新成功')
           // _this.updataProduct(this.productid)
         })
       },
@@ -512,9 +512,9 @@
           retained: true,
           qos: 2,
         }
-        dgiotlog.log('sendInfo', sendInfo)
+        console.log('sendInfo', sendInfo)
         if (_this.$refs.topoheader) {
-          dgiotlog.log('订阅mqtt')
+          console.log('订阅mqtt')
           _this.$refs.topoheader.handleCloseSub(sendInfo)
         }
         const {
@@ -534,13 +534,13 @@
           where: { objectId: _this.$route.query.productid },
         })
         _this.productconfig = results[0]
-        dgiotlog.log(_this.productconfig)
+        console.log(_this.productconfig)
         if (message == 'SUCCESS') {
-          // dgiotlog.log(this.$refs['edrawer'].$refs, 'edrawer')
+          // console.log(this.$refs['edrawer'].$refs, 'edrawer')
           _this.$refs['operation']
             ? (_this.$refs['operation'].productconfig = results[0])
-            : dgiotlog.log(' _this.$refs[\'operation\']', _this.$refs['operation'])
-          dgiotlog.log(data.Stage.attrs.id)
+            : console.log(' _this.$refs[\'operation\']', _this.$refs['operation'])
+          console.log(data.Stage.attrs.id)
           _this.globalStageid = data.Stage.attrs.id
           _this.createKonva(data, _this.globalStageid, 'create')
           _this.paramsconfig = { konva: data }
@@ -550,7 +550,7 @@
       },
       // js 绘制
       createKonva(data, globalStageid, type) {
-        dgiotlog.log('type', type)
+        console.log('type', type)
         let Stage
         let _this = this
         if (type != 'create') {
@@ -558,47 +558,47 @@
         } else {
           Stage = data.Stage
         }
-        dgiotlog.log(data)
-        dgiotlog.log(Stage.attrs.height, Stage.attrs.width, '450')
+        console.log(data)
+        console.log(Stage.attrs.height, Stage.attrs.width, '450')
         Stage.attrs.height = _this.stageConfig.height
         Stage.attrs.width = _this.stageConfig.width
-        dgiotlog.log(Stage.attrs.height, Stage.attrs.width, '453')
+        console.log(Stage.attrs.height, Stage.attrs.width, '453')
         var _konvarow = document.querySelectorAll('._center')[0]
         let div = document.createElement('div')
         _konvarow.appendChild(div)
         div.setAttribute('id', globalStageid)
-        dgiotlog.log('globalStageid', globalStageid)
-        dgiotlog.log(JSON.stringify(Stage), 'Stage')
+        console.log('globalStageid', globalStageid)
+        console.log(JSON.stringify(Stage), 'Stage')
         _this.stage = Konva.Node.create(Stage, globalStageid)
         _this.$refs.topobase.createTopo(
           _this.stage.toJSON(),
           moment(new Date())
             .valueOf(),
         )
-        dgiotlog.log('_this.$refs.topobase', _this.$refs.topobase)
-        dgiotlog.log('data', data)
+        console.log('_this.$refs.topobase', _this.$refs.topobase)
+        console.log('data', data)
         var Layer = _this.stage.find('Layer')[0]
         _this.stage.on('click', (e) => {
           var node = e.target
-          dgiotlog.log(e, 'stage node')
-          dgiotlog.log(node, 'stage target')
+          console.log(e, 'stage node')
+          console.log(node, 'stage target')
           // 判断是否为产品界面
           if (_this.isDevice) {
             node.attrs.draggable = false
-            dgiotlog.log('isDevice', node)
+            console.log('isDevice', node)
           }
           // 如果点击空白处 移除图形选择框
           // 移除图形选择框
           if (node == _this.stage) {
             // _this.stage.find('Transformer')?.length
             //   ? _this.stage.find('Transformer').destroy()
-            //   : dgiotlog.log(
+            //   : console.log(
             //       " _this.stage.find('Transformer')",
             //       _this.stage.find('Transformer')
             //     )
             Layer.draw()
           }
-          dgiotlog.log(node.toJSON())
+          console.log(node.toJSON())
           if (_this.isDevice) return
           _this.setGraphNow(e.target)
 
@@ -606,13 +606,13 @@
           if (!_this.flag) {
             return
           }
-          dgiotlog.log('类型', _this.flag)
-          dgiotlog.log('this.draw', _this.draw)
-          dgiotlog.log('color', _this.graphColor)
-          dgiotlog.log('drawParams', _this.drawParams)
+          console.log('类型', _this.flag)
+          console.log('this.draw', _this.draw)
+          console.log('color', _this.graphColor)
+          console.log('drawParams', _this.drawParams)
           const color = _this.graphColor
           const type = _this.flag
-          dgiotlog.log('params', _this.drawParams)
+          console.log('params', _this.drawParams)
           const _group = _this.stage.find('Group')[0]
           const {
             offsetX,
@@ -625,7 +625,7 @@
             color,
             _this.drawParams,
           )
-          dgiotlog.log('createState', state)
+          console.log('createState', state)
           _group.add(state)
           Layer.draw()
           Layer.batchDraw()
@@ -635,26 +635,26 @@
         const Group = _this.stage.find('Group')
         const Text = _this.stage.find('Text')
         // console.clear()
-        dgiotlog.log(Text, 'Text')
+        console.log(Text, 'Text')
         // if (!_this.isDevice && Text?.length) {
         if (!_this.isDevice && Text?.length) {
           Text.forEach((_G) => {
             _G.on('mouseenter', function (e) {
-              dgiotlog.log(e, 'Text mouseenter')
+              console.log(e, 'Text mouseenter')
               _this.stage.container().style.cursor = 'move'
             })
 
             _G.on('mouseleave', function (e) {
-              dgiotlog.log(e, 'Text mouseleave')
+              console.log(e, 'Text mouseleave')
               _this.stage.container().style.cursor = 'default'
             })
             _G.on('dblclick', function (e) {
-              dgiotlog.log(e, 'Text dblclick')
-              dgiotlog.log(_this.stage.find('Transformer'), _this.stage.find())
+              console.log(e, 'Text dblclick')
+              console.log(_this.stage.find('Transformer'), _this.stage.find())
               _this.stage.find('Transformer')?.length
                 ? _this.stage.find('Transformer')
                   .destroy()
-                : dgiotlog.log(
+                : console.log(
                   '_this.stage.find(\'Transformer\')',
                   _this.stage.find('Transformer'),
                 )
@@ -670,7 +670,7 @@
                 .getBoundingClientRect()
 
               // 因此textarea的位置将是上面位置的和
-              dgiotlog.log('eeeeeeeeeeeeeeeee', e)
+              console.log('eeeeeeeeeeeeeeeee', e)
               let areaPosition = {
                 x: stageBox.left + textPosition.x,
                 y: stageBox.top + textPosition.y,
@@ -734,12 +734,12 @@
         //   // _this.leftrow = 3
         //   _this.rightrow = 6
         // }
-        dgiotlog.log(Group, 'Group')
+        console.log(Group, 'Group')
         // https://github.com/xiongshuang/konva-palette/blob/master/palette/index.html
         if (!_this.isDevice && Group?.length) {
           Group.forEach(function (_G) {
             _G.on('dblclick', (e) => {
-              dgiotlog.log(e, 'Group dblclick')
+              console.log(e, 'Group dblclick')
               // 创建图形选框事件
               const tr = new Konva.Transformer({
                 borderStroke: '#000', // 虚线颜色
@@ -752,9 +752,9 @@
               tr.attachTo(e.target)
               Layer.draw()
               // _this.ShapeVisible = true
-              dgiotlog.log(`#${e.target.attrs.id}`)
+              console.log(`#${e.target.attrs.id}`)
               var node = e.target
-              dgiotlog.log('当前图层层级', Number(node.zIndex()))
+              console.log('当前图层层级', Number(node.zIndex()))
               _this.setGraphNow(e.target)
               _this.$refs['operation'].ShapeIndex = Number(node.zIndex())
               _this.$refs['operation'].ShapeOpacity = node.opacity()
@@ -762,17 +762,17 @@
               // _this.$refs['operation'].Shapeconfig = node.toJSON()
             })
             _G.on('mouseup', (e) => {
-              dgiotlog.log(e, '_G mouseup')
+              console.log(e, '_G mouseup')
               if (!_this.isDevice && _this.productid) _this.headevisible = true
 
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseover', (e) => {
-              dgiotlog.log(e, '_G mouseover')
+              console.log(e, '_G mouseover')
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseout', (e) => {
-              dgiotlog.log(e, '_G mouseout')
+              console.log(e, '_G mouseout')
               // _this.stage.find('Transformer').destroy() // 禁用后 无法拖动
               const id = e.target.id()
               const item = _this.stage.find((i) => i.id === id)
@@ -784,7 +784,7 @@
         }
         var Imgage = _this.stage.find('Image')
         Imgage.forEach((node) => {
-          dgiotlog.log('img node ', node)
+          console.log('img node ', node)
           const img = new Image()
           img.src = node.getAttr('source')
 
@@ -800,7 +800,7 @@
           // }
           // img.with = $('#konva').width()
           // img.height = $('#konva').height()
-          dgiotlog.log('img', img, '$(\'#konva\')', $('#current1'))
+          console.log('img', img, '$(\'#konva\')', $('#current1'))
           $('#current1')
             .css('background-image', `url(${img_url})`)
           $('#current1')
@@ -809,14 +809,14 @@
             .css('background-size', '100%,100%')
           // img.onload = () => {
           //   node.image(img)
-          //   dgiotlog.log(node.image(img), 'node.image(img)')
+          //   console.log(node.image(img), 'node.image(img)')
           //   _this.stage.batchDraw()
           // }
         })
         if (!_this.isDevice && Group?.length) {
           Group.forEach(function (_G) {
             _G.on('dblclick', (e) => {
-              dgiotlog.log(e, 'Group dblclick')
+              console.log(e, 'Group dblclick')
               // 创建图形选框事件
               const tr = new Konva.Transformer({
                 borderStroke: '#000', // 虚线颜色
@@ -829,9 +829,9 @@
               tr.attachTo(e.target)
               Layer.draw()
               // _this.ShapeVisible = true
-              dgiotlog.log(`#${e.target.attrs.id}`)
+              console.log(`#${e.target.attrs.id}`)
               var node = e.target
-              dgiotlog.log('当前图层层级', Number(node.zIndex()))
+              console.log('当前图层层级', Number(node.zIndex()))
               _this.setGraphNow(e.target)
               _this.$refs['operation'].ShapeIndex = Number(node.zIndex())
               _this.$refs['operation'].ShapeOpacity = node.opacity()
@@ -839,17 +839,17 @@
               // _this.$refs['operation'].Shapeconfig = node.toJSON()
             })
             _G.on('mouseup', (e) => {
-              dgiotlog.log(e, 'Group mouseup')
+              console.log(e, 'Group mouseup')
               if (!_this.isDevice && _this.productid) _this.headevisible = true
 
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseover', (e) => {
-              dgiotlog.log(e, 'Group mouseover')
+              console.log(e, 'Group mouseover')
               document.body.style.cursor = 'pointer'
             })
             _G.on('mouseout', (e) => {
-              dgiotlog.log(e, 'Group mouseout')
+              console.log(e, 'Group mouseout')
               // _this.stage.find('Transformer').destroy() // 禁用后 无法拖动
               const id = e.target.id()
               const item = _this.stage.find((i) => i.id === id)
@@ -861,7 +861,7 @@
         }
         Layer.draw()
         Layer.batchDraw()
-        dgiotlog.log('绘制完成')
+        console.log('绘制完成')
         if (this.$refs.topoheader) {
           this.$refs.topoheader.subscribe(_this.productid)
         }

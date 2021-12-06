@@ -1174,7 +1174,7 @@
         } else {
           getDict(objectId).then((res) => {
             this.dialogtempconfig = res.data.params
-            // dgiotlog.log(res.data.params)
+            // console.log(res.data.params)
             // this.dialogtempconfig.key = res.key
           })
           this.listLoading = true
@@ -1198,7 +1198,7 @@
             }
             this.dictList.push(data)
           })
-          dgiotlog.log(this.dictList)
+          console.log(this.dictList)
         }
       },
       async dialogType() {
@@ -1292,7 +1292,7 @@
           this.rules1 = obj1
           if (!this.editDictId) {
             this.addDictForm = obj
-            dgiotlog.log(obj)
+            console.log(obj)
           }
           this.addDictForm.templateId = objectId
           this.addDictForm.templateName = res.data.name
@@ -1349,11 +1349,11 @@
       },
       onJsonChange() {
         // 数据改变时触发
-        // dgiotlog.log("onJsonChange", this.dictTempForm.params);
+        // console.log("onJsonChange", this.dictTempForm.params);
       },
       onJsonSave(formName) {
         // 点击保存触发
-        // dgiotlog.log("onJsonSave", this.dictTempForm.params);
+        // console.log("onJsonSave", this.dictTempForm.params);
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if (this.editDictTempId) {
@@ -1623,7 +1623,7 @@
           },
           ...results
         )
-        // dgiotlog.log('aa', this.dictRecordOpt);
+        // console.log('aa', this.dictRecordOpt);
       },
       channelSizeChange1(val) {
         this.length1 = val

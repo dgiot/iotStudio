@@ -180,7 +180,7 @@
           this.HomePageForDetails = results
           loading.close()
         } catch (error) {
-          dgiotlog.log(error)
+          console.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -201,7 +201,7 @@
             loading.close()
             if (createdAt.length) this.init()
           } else {
-            dgiotlog.log('error submit!!')
+            console.log('error submit!!')
             return false
           }
         })
@@ -222,13 +222,13 @@
               this.init()
             }, 800)
           } else {
-            dgiotlog.log('error submit!!')
+            console.log('error submit!!')
             return false
           }
         })
       },
       goChild(itme) {
-        dgiotlog.log(itme)
+        console.log(itme)
         this.$router.push({
           path: '/doc/details',
           query: {

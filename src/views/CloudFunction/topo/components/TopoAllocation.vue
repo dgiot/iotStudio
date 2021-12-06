@@ -95,7 +95,7 @@
         `${process.env.BASE_URL}/assets/images/dgiot_release/topo/`
       )
   // https://blog.csdn.net/u010007013/article/details/102674042
-  // dgiotlog.log(imgHost, process.env.BASE_URL, process.env)
+  // console.log(imgHost, process.env.BASE_URL, process.env)
   import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
   import { getSvgPath } from '@/utils/konva'
@@ -136,7 +136,7 @@
       this.fetchData()
     },
     mounted() {
-      dgiotlog.log(this.$router)
+      console.log(this.$router)
     },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
@@ -157,7 +157,7 @@
       moveSvg(item) {
         let el = getSvgPath(item, 'path')
         const paths = JSON.stringify(el.topo)
-        dgiotlog.info(`getSvgPath function return ${paths}`)
+        console.info(`getSvgPath function return ${paths}`)
         this.busData.paths = paths
         this.$dgiotBus.$emit('busTopo', 'path', this.busData)
       },
@@ -175,7 +175,7 @@
       // },
       // mousemove(item) {
       //   this.$emit('fatherMousemove', item)
-      //   // dgiotlog.log(item)
+      //   // console.log(item)
       // },
       // mouseup(item) {
       //   this.$emit('fatherMouseup', item)
@@ -187,7 +187,7 @@
         this.total = totalCount
       },
       handleChange(val) {
-        dgiotlog.log(val)
+        console.log(val)
       },
       handleSizeChange(val) {
         this.queryForm.pageSize = val
@@ -202,7 +202,7 @@
         this.fetchData()
       },
       fileInfo(res) {
-        dgiotlog.log(res)
+        console.log(res)
         this.dialogVisible = !this.dialogVisible
         this.handleIcon(res.url)
       },
@@ -214,7 +214,7 @@
           _this.$set(_this.imgParams, 'width', img.width)
           _this.$set(_this.imgParams, 'height', img.height)
           _this.$set(_this.imgParams, 'src', img.src)
-          dgiotlog.log('图片加载完成', _this.imgParams)
+          console.log('图片加载完成', _this.imgParams)
           _this.$baseMessage(
             _this.$translateTitle('图片加载完成,可双击画图区域填充'),
             'success',

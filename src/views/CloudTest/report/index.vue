@@ -238,7 +238,7 @@
             >
               <template #default="{ row }">
                 <el-button size="mini" type="success" @click="handlekonva(row)">
-                  {{ $translateTitle(`developer.mapping`) }}
+                  {{ $translateTitle(`developer.task mapping`) }}
                 </el-button>
                 <el-button
                   size="mini"
@@ -288,7 +288,7 @@
               {{ $translateTitle('cloudTest.search') }}
             </el-button>
             <el-button icon="el-icon-plus" type="primary" @click="handleAdd">
-              {{ $translateTitle('cloudTest.add') }}
+              {{ $translateTitle('cloudTest.template') }}
             </el-button>
           </el-form-item>
         </el-form>
@@ -400,7 +400,7 @@
       >
         <template #default="{ row }">
           <el-button size="mini" type="success" @click="handleManagement(row)">
-            {{ $translateTitle(`product.Template management`) }}
+            {{ $translateTitle(`product.task management`) }}
           </el-button>
           <el-button size="mini" type="danger" @click="handleDelete(row, 0)">
             {{ $translateTitle(`cloudTest.delete`) }}

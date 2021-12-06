@@ -42,6 +42,7 @@
 ### Performance Improvements
 
 * **4.4.0:** :bookmark: ([242ab51](https://github.com/dgiot/dgiot-dashboard/commit/242ab51d00bb753c073240c5519c12b22b77259a))
+* **package.json:** :bookmark: ([7cae5ee](https://github.com/dgiot/dgiot-dashboard/commit/7cae5ee9b56a1147109f9cd8ddc51c894540332c))
 
 
 ### Reverts

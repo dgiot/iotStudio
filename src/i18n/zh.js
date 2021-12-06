@@ -354,6 +354,7 @@ export default {
       Templatename: '模板名称',
       Newstandardtemplate: '新增标准模版',
       mapping: '绘图',
+      'task mapping': '取证绘图',
       Templatemanagement: '模块管理',
       Templatemanagement1: '模版管理',
       Inspectionstandardmanagement: '检测标准管理',
@@ -620,6 +621,7 @@ export default {
       'Product template': '产品模板',
       Producttemplatename: '产品模板名称',
       'Template management': '模板管理',
+      'task management': '取证管理',
       'Set as template': '设为模板',
       'Update template': '更新模板',
       'View template': '查看模板',
@@ -1220,6 +1222,7 @@ export default {
       'Draggable column settings': '可拖拽列设置',
     },
     cloudTest: {
+      template: '添加模板',
       'Please confirm that all testing items have been completed':
         '请确认所有检测项都已完成',
       'Please confirm that all review items have been completed':
@@ -1234,6 +1237,8 @@ export default {
       Unreviewed: '未审核',
       'single audit': '单项审核',
       'audit opinion': '审核意见',
+      'report audit opinion': '报告审核意见',
+      'single audit opinion': '质检项审核意见',
       'submit review': '提交审核',
       Approved: '审核通过',
       notapproved: '审核不过',

@@ -16,7 +16,10 @@ export default {
   },
   data() {
     return {
-      activeName: 'forensics',
+      activeName:
+        this?.$route?.query?.tabs ?? this.$route.query.tabs == 'examination'
+          ? 'examination'
+          : 'forensics',
       officeapps: '',
       dialogVisible: false,
       paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
@@ -167,6 +170,9 @@ export default {
   },
   methods: {
     handleClick(tab, event) {
+      const query = JSON.parse(JSON.stringify(this.$route.query))
+      query.tabs = tab.name
+      this.$router.push({ path: this.$route.path, query })
       this.paginations = {
         // 每页显示个数选择器的选项设置
         pageSizes: [5, 10, 20, 50, 100, 200, 500],
@@ -293,6 +299,7 @@ export default {
           suite: 0,
           state: 'preview',
           step: 1,
+          back: row.profile.step,
           message: row.profile.message,
         },
       })
@@ -432,7 +439,7 @@ export default {
      * @Description:
      */
     async handleReport(row) {
-      if (row.profile.step == 5 && row.profile.docx) {
+      if (row.profile.step == 4 && row.profile.docx) {
         const fileUrl = this.$FileServe + row.profile.docx
         this.dialogVisible = true
         this.officeapps =
@@ -451,7 +458,7 @@ export default {
           setTimeout(() => {
             const params = {
               profile: _.merge(row.profile, {
-                step: 5,
+                step: 4,
                 docx: path,
               }),
             }
@@ -475,7 +482,7 @@ export default {
       }
     },
     async handleManagement(row) {
-      this.$refs['lowcodeDesign'].withHeader = false
+      this.$refs['lowcodeDesign'].withHeader = true
       localStorage.setItem('parse_objectid', row.objectId)
       const params = {
         limit: 1,

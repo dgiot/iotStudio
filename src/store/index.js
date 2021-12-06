@@ -42,6 +42,7 @@ const store = new Vuex.Store({
 })
 export default store
 window.dashboard = info
+window.dgiot = info
 console.log(
   `%c dashboard %c version v${dashboard.version} %c`,
   'background:#35495e ; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff',

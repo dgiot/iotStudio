@@ -14,17 +14,7 @@
       append-to-body
       size="90%"
       :visible.sync="dialogVisible"
-      :with-header="false"
     >
-      <el-link
-        style="width: 100%"
-        :target="officeapps"
-        :title="officeapps"
-        type="success"
-        :underline="false"
-      >
-        {{ officeapps }}
-      </el-link>
       <iframe :src="officeapps" style="width: 100%; height: 100%" />
     </el-drawer>
     <div class="components">
@@ -378,7 +368,7 @@
         />
       </el-tab-pane>
       <el-tab-pane
-        :label="$translateTitle('cloudTest.examination passed')"
+        :label="$translateTitle('cloudTest.Underreview')"
         name="examination"
       >
         <vab-query-form>
@@ -537,7 +527,6 @@
                     $translateTitle('product.notstarted'),
                     $translateTitle('product.testing'),
                     $translateTitle('product.pending review'),
-                    $translateTitle('product.finishtest'),
                     $translateTitle('product.review completed'),
                   ][row.profile.step] || $translateTitle('product.finishtest')
                 }}
@@ -588,17 +577,9 @@
                 {{ $translateTitle(`product.Underreview`) }}
               </el-button>
               <el-button
-                v-show="row.profile.step == 3"
+                v-show="row.profile.step >= 3"
                 size="mini"
                 type="success"
-                @click.native="taskEnd(row)"
-              >
-                {{ $translateTitle(`concentrator.end`) }}
-              </el-button>
-              <el-button
-                v-show="row.profile.step >= 4"
-                size="mini"
-                type="primary"
                 @click.native="handleReport(row)"
               >
                 {{ $translateTitle(`product.generate`) }}

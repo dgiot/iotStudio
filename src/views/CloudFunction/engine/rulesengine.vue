@@ -136,7 +136,7 @@
     },
     methods: {
       featchData(args) {
-        dgiotlog.log(args)
+        console.log(args)
         if (this.productid && this.uid && this.ruleType) {
           this.alarmsRuleId = `rule:${this.ruleType}_${this.productid}_${this.uid}`
           this.getalarmsRule(this.alarmsRuleId)
@@ -147,11 +147,11 @@
       },
       async getalarmsRule(ruleId) {
         const response = await getRuleDetail(ruleId)
-        dgiotlog.log(response, 'response')
+        console.log(response, 'response')
         let res = []
         res.push(response.data)
         this.engineData = res
-        dgiotlog.log(this.engineData, '  this.engineData')
+        console.log(this.engineData, '  this.engineData')
         this.total = this.engineData.length
       },
       // 初始化数据
@@ -192,7 +192,7 @@
       async changeRule(ruleid, status) {
         const params = { enabled: status }
         const res = await put_rule_id(ruleid, params)
-        dgiotlog.log(res)
+        console.log(res)
         this.$message('状态修改成功')
       },
       actions(row) {

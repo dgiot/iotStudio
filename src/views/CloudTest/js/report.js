@@ -48,12 +48,6 @@ export default {
             message: '请输入模板名称',
             trigger: 'blur',
           },
-          {
-            min: 1,
-            max: 20,
-            message: '长度在 1 到 20 个字符',
-            trigger: 'blur',
-          },
         ],
         categoryname: [
           {
@@ -66,12 +60,6 @@ export default {
           {
             required: true,
             message: '请输入厂商名称',
-            trigger: 'blur',
-          },
-          {
-            min: 3,
-            max: 8,
-            message: '长度在 3 到 8 个字符',
             trigger: 'blur',
           },
         ],

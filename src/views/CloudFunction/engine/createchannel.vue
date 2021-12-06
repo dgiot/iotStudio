@@ -323,26 +323,26 @@
         this.resourceid = ''
       },
       uploadCkick(type, index) {
-        dgiotlog.log(type, index)
+        console.log(type, index)
         this.channeindex = index
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
           new MouseEvent('click')
         )
       },
       async fileInfo(info) {
-        dgiotlog.log('uploadFinish', info)
-        dgiotlog.log(this.channelregion)
+        console.log('uploadFinish', info)
+        console.log(this.channelregion)
         this.channelregion[this.channeindex].params.ico.default = info.url
-        dgiotlog.log(this.channelregion[this.channeindex].params.ico.default)
+        console.log(this.channelregion[this.channeindex].params.ico.default)
         const res = await putResourceTypes(this.channelregion)
-        dgiotlog.log(res)
+        console.log(res)
       },
       // 关闭本页面
       handleClose() {
         this.handleTabRemove()
       },
       addchannelForm(formName) {
-        dgiotlog.log(this.addchannel.applicationtText)
+        console.log(this.addchannel.applicationtText)
         this.$refs[formName].validate((valid) => {
           if (valid) {
             var obj = {}
@@ -389,7 +389,7 @@
         return arr.sort(this.arrSort)
       },
       removeauto(val) {
-        dgiotlog.log(val)
+        console.log(val)
         var obj = {}
         var obj1 = {
           applicationtText: [
@@ -445,7 +445,7 @@
                   }
                 }
               })
-              dgiotlog.log('arr', this.arrlist)
+              console.log('arr', this.arrlist)
               obj.region = val
               obj.desc = ''
               obj.name = ''
@@ -498,7 +498,7 @@
             obj.applicationtText = key ? key.substr(5) : ''
           }
         }
-        dgiotlog.log('obj', obj)
+        console.log('obj', obj)
         this.addchannel = obj
         this.addchannel.region = val
         this.addrules = obj1
@@ -535,7 +535,7 @@
         this.showTree = !this.showTree
       },
       clearValidate(type) {
-        dgiotlog.log(`清除了 ${type} 的规则校验`)
+        console.log(`清除了 ${type} 的规则校验`)
         this.$refs.addchannel.clearValidate(`${type}`)
       },
       async getResource() {
@@ -562,7 +562,7 @@
         })
       },
       onSubmit() {
-        dgiotlog.log('submit!')
+        console.log('submit!')
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }

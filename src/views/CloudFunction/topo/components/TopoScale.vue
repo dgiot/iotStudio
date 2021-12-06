@@ -64,7 +64,7 @@
         // bgNode.setAttrs({
         //   image: setImg,
         // })
-        // dgiotlog.log('change image bg')
+        // console.log('change image bg')
         // }, 1000)
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发

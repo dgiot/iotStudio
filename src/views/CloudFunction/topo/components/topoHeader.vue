@@ -226,10 +226,10 @@
           this.setDraw(true)
           this.setFlag(v)
         }
-        dgiotlog.info('我要绘制', v)
+        console.info('我要绘制', v)
       },
       removeFn() {
-        dgiotlog.log(this.graphNow)
+        console.log(this.graphNow)
         if (this.graphNow) {
           this.$dgiotBus.$emit('removeShape', this.graphNow)
         } else {
@@ -244,7 +244,7 @@
         // this.$emit('ImageTable', type)
       },
       destroyed() {
-        dgiotlog.log('取消订阅mqtt')
+        console.log('取消订阅mqtt')
         this.handleCloseSub()
       },
       fileInfo(info) {
@@ -261,7 +261,7 @@
           qos: 2,
         }
         Websocket.unsubscribe(sendInfo, (res) => {
-          dgiotlog.log('取消订阅mqtt', res.msg)
+          console.log('取消订阅mqtt', res.msg)
         })
       },
       // 是否自动刷新mqtt消息
@@ -283,7 +283,7 @@
       // 取消订阅mqtt
       handleCloseSub(sendInfo) {
         Websocket.unsubscribe(sendInfo, (res) => {
-          dgiotlog.log('取消订阅mqtt', res.msg)
+          console.log('取消订阅mqtt', res.msg)
         })
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发

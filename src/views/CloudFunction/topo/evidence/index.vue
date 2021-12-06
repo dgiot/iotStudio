@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column
             align="center"
-            :label="$translateTitle('cloudTest.number')"
+            :label="$translateTitle('developer.filepath')"
             prop="original.path"
             show-overflow-tooltip
             width="auto"
@@ -70,6 +70,7 @@
           </el-table-column>
 
           <el-table-column
+            v-if="taskType != 'review'"
             align="center"
             :label="$translateTitle('user.Current state')"
             prop="original.status"
@@ -93,31 +94,46 @@
             </template>
           </el-table-column>
           <el-table-column
+            v-if="taskType != 'review'"
             align="center"
             fixed="right"
-            :label="$translateTitle('cloudTest.audit opinion')"
+            :label="$translateTitle('cloudTest.single audit opinion')"
             prop="original.message"
             show-overflow-tooltip
           />
         </el-table>
         <el-form
-          v-show="auditDialog"
+          v-if="taskType != 'review'"
           ref="form"
           label-width="80px"
           :model="task"
         >
-          <el-form-item :label="$translateTitle('cloudTest.audit opinion')">
+          <el-form-item
+            :label="$translateTitle('cloudTest.report audit opinion')"
+          >
             <el-input v-model="task.profile.message" />
           </el-form-item>
         </el-form>
       </span>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="notapproved(task, -1)">
-          {{ $translateTitle('cloudTest.notapproved') }}
-        </el-button>
-        <el-button type="primary" @click="notapproved(task, 3)">
-          {{ $translateTitle('cloudTest.Approved') }}
-        </el-button>
+        <div v-if="taskType == 'review'">
+          <el-button
+            type="primary"
+            @click="
+              finishEvidence(task, Number($route.query.step) == 1 ? 2 : 3)
+            "
+          >
+            {{ $translateTitle('cloudTest.submit review') }}
+          </el-button>
+        </div>
+        <div v-if="taskType == 'evidence'">
+          <el-button @click="notapproved(task, -1)">
+            {{ $translateTitle('cloudTest.notapproved') }}
+          </el-button>
+          <el-button type="primary" @click="notapproved(task, 3)">
+            {{ $translateTitle('cloudTest.Approved') }}
+          </el-button>
+        </div>
       </span>
     </el-dialog>
     <el-dialog append-to-body :visible.sync="evidenceDialog">
@@ -228,7 +244,7 @@
           <el-table-column
             v-if="Number($route.query.step) == 3"
             align="center"
-            :label="$translateTitle('cloudTest.audit opinion')"
+            :label="$translateTitle('cloudTest.single audit opinion')"
             width="auto"
           >
             <template #default="{ row, $index }">
@@ -442,9 +458,7 @@
             v-if="Number($route.query.step) == 1"
             round
             type="success"
-            @click.native="
-              finishEvidence(task, Number($route.query.step) == 1 ? 2 : 3)
-            "
+            @click.native="auditQuery(1, 'review')"
           >
             {{
               $translateTitle(
@@ -460,7 +474,7 @@
             v-if="Number($route.query.step) == 3"
             round
             type="success"
-            @click.native="auditQuery(1)"
+            @click.native="auditQuery(1, 'evidence')"
           >
             {{ $translateTitle('cloudTest.audit opinion') }}
           </el-button>
@@ -482,7 +496,14 @@
             {{ task.profile.message || '' }}
           </el-link>
         </el-col>
-        <el-col :lg="4" :md="9" :sm="10" :xl="4" :xs="10">
+        <el-col
+          v-if="Number($route.query.step) != 1"
+          :lg="4"
+          :md="9"
+          :sm="10"
+          :xl="4"
+          :xs="10"
+        >
           <el-badge
             type="warning"
             :value="badge.Unreviewed.length"
