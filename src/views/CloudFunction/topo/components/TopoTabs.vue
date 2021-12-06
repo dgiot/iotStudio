@@ -10,7 +10,10 @@
       />
     </div>
     <Thing />
-    <a-collapse accordion>
+    <div v-show="isDirver" style="text-align: center; margin: 0 auto">
+      <Evidence />
+    </div>
+    <a-collapse v-show="!isDirver" accordion>
       <a-collapse-panel key="1" :header="$translateTitle('topo.background')">
         <el-button size="mini" type="primary" @click.native="uploadCkick('bg')">
           {{ $translateTitle('topo.Upload background') }}
@@ -166,6 +169,13 @@
       Thing,
       Background,
       Evidence,
+    },
+    props: {
+      isDirver: {
+        type: Boolean,
+        default: false,
+        required: false,
+      },
     },
     data() {
       return {

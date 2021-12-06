@@ -236,8 +236,12 @@
               show-overflow-tooltip
               width="auto"
             >
-              <template #default="{ row }">
-                <el-button size="mini" type="success" @click="handlekonva(row)">
+              <template #default="{ row, $index }">
+                <el-button
+                  size="mini"
+                  type="success"
+                  @click="handlekonva(row, $index)"
+                >
                   {{ $translateTitle(`developer.task mapping`) }}
                 </el-button>
                 <el-button

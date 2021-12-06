@@ -10,12 +10,11 @@
         v-show="!isDevice"
         class="konva-container-header hidden-xs-only"
       >
-        <topo-header />
+        <topo-header :noTools="Boolean($route.query.noTools)" />
       </el-header>
 
       <el-main class="konva-container-main">
-        <el-row :gutter="gutter.gutter">
-          <!--       明诚发布注释18 到 27 行-->
+        <el-row :gutter="gutter.gutter" class="user-content">
           <el-col
             :lg="isDevice || isFull ? 0 : 3"
             :md="isDevice || isFull ? 0 : 3"
@@ -24,7 +23,10 @@
             :xs="0"
             class="hidden-xs-only konva-container-main-allocation"
           >
-            <Topo-tabs />
+            <Topo-tabs
+              class="tabs"
+              :isDirver="Boolean($route.query.isDirver)"
+            />
           </el-col>
 
           <el-col
@@ -36,7 +38,36 @@
             class="konva-container-main-baseCol"
           >
             <el-main class="konva-container-baseCol-baseContainer">
-              <Topo-base ref="topobase" />
+              <Topo-base
+                ref="topobase"
+                style="position: absolute; width: 100%"
+              />
+              <el-button
+                v-show="Boolean($route.query.guide)"
+                size="mini"
+                type="primary"
+                :disabled="$route.query.page < 0"
+                icon="el-icon-arrow-left"
+                style="position: relative; left: 0"
+                @click.native="
+                  nextPage($route.query.list, $route.query.page, 'left')
+                "
+              >
+                {{ $translateTitle('button.previous') }}
+              </el-button>
+              <el-button
+                :disabled="$route.query.page > $route.query.list.length"
+                v-show="Boolean($route.query.guide)"
+                type="primary"
+                size="mini"
+                icon="el-icon-arrow-right"
+                @click.native="
+                  nextPage($route.query.list, $route.query.page, 'right')
+                "
+                style="position: fixed; right: 30px"
+              >
+                {{ $translateTitle('button.next') }}
+              </el-button>
               <div
                 id="konva"
                 ref="konva"
@@ -51,6 +82,7 @@
   </div>
 </template>
 <script>
+  import steps from './js/guide'
   import 'element-ui/lib/theme-chalk/display.css'
   import { requireModule } from '@/utils/file'
   import { mapGetters, mapMutations } from 'vuex'
@@ -64,6 +96,7 @@
     },
     data() {
       return {
+        driver: null,
         Stage: {},
         router: '',
         isFull: false,
@@ -112,10 +145,28 @@
     },
     watch: {},
     mounted() {
+      this.driver = new this.$Driver({
+        className: 'vue-admin-beautiful-wrapper', // className to wrap driver.js popover
+        animate: true, // Animate while changing highlighted element
+        opacity: 0.75, // Background opacity (0 means only popovers and without overlay)
+        padding: 10, // Distance of element from around the edges
+        allowClose: true, // Whether clicking on overlay should close or not
+        overlayClickNext: false, // Should it move to next step on overlay click
+        doneBtnText: '完成', // Text on the final button
+        closeBtnText: '关闭', // Text on the close button for this step
+        nextBtnText: '下一步', // Next button text for this step
+        prevBtnText: '上一步', // Previous button text for this step
+        // Called when moving to next step on any step
+      })
+      if (
+        this?.$router?.query?.guide &&
+        Boolean(this.$router.query.guide) == true
+      )
+        this.guide()
+
       this.$baseEventBus.$off('ToggleView')
       this.$baseEventBus.$on('ToggleView', () => {
         this.isFull = !this.isFull
-        console.log(this.isFull)
       })
       this.Stage = _.isEmpty(localStorage.getItem('konvaStale'))
         ? localStorage.getItem('konvaStale')
@@ -143,6 +194,26 @@
         setTreeFlag: 'settings/setTreeFlag',
         createdEvidence: 'topo/createdEvidence',
       }),
+      nextPage(list, page, type) {
+        console.error(page, type)
+        let query = JSON.parse(JSON.stringify(this.$route.query))
+        query.page =
+          type == 'left'
+            ? Number(query.page) - 1 < 0
+              ? Number(query.page) - 1
+              : 0
+            : Number(query.page) + 1 > query.list.length
+            ? Number(query.page) + 1
+            : query.list.length
+        query.viewid = query.list[query.page].viewid
+        console.error(query.page)
+        this.$router.push({ path: this.$route.path, query })
+        this.handleMqtt()
+      },
+      guide() {
+        this.driver.defineSteps(steps)
+        this.driver.start()
+      },
       saveKonvaitem() {},
       async handleMqtt() {
         let _this = this

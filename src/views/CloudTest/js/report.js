@@ -119,6 +119,7 @@ export default {
       ],
       list: [],
       tempList: [],
+      views: [],
       listLoading: true,
       layout: 'total, sizes, prev, pager, next, jumper',
       temprow: {},
@@ -344,15 +345,19 @@ export default {
       // this.$refs['edit'].showEdit()
       this.activePopShow = true
     },
-    handlekonva(row) {
+    handlekonva(row, index) {
       // 取证类型模板跳转到组态
       this.$router.push({
         path: '/Topo',
         query: {
-          productid: row.key,
           viewid: row.objectId,
-          icon: row.icon,
+          guide: true,
+          page: index,
+          productid: row.key,
           type: 'Evidence',
+          noTools: true,
+          isDirver: true,
+          list: JSON.stringify(this.views),
         },
       })
     },
@@ -373,6 +378,13 @@ export default {
       try {
         const { count = 0, results } = await queryView(params)
         this.tempList = results
+        this.views = []
+        this.tempList.forEach((item, index) => {
+          this.views.push({
+            page: index,
+            viewid: item.objectId,
+          })
+        })
       } catch (e) {}
       this.tempPopShow = true
       loading.close()

@@ -25,6 +25,7 @@
       <vab-query-form class="topo-header-top-query">
         <vab-query-form-left-panel class="topo-header-top-query-left-panel">
           <a-dropdown
+            v-show="!noTools"
             class="topo-header-top-query-left-panel-dropdown"
             @click.native="ToggleView"
           >
@@ -45,13 +46,19 @@
               <p>{{ $translateTitle('application.preview') }}</p>
             </a>
           </a-dropdown>
-          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+          <a-dropdown
+            v-show="!noTools"
+            class="topo-header-top-query-left-panel-dropdown"
+          >
             <a v-copyText="copyText" class="ant-dropdown-link">
               <a-icon type="share-alt" />
               <p>{{ $translateTitle('konva.share') }}</p>
             </a>
           </a-dropdown>
-          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+          <a-dropdown
+            v-show="!noTools"
+            class="topo-header-top-query-left-panel-dropdown"
+          >
             <a class="ant-dropdown-link">
               <a-icon type="plus" />
               <p><topo-scale /></p>
@@ -98,6 +105,11 @@
       stopMqtt: {
         type: Boolean,
         default: false,
+      },
+      noTools: {
+        type: Boolean,
+        default: false,
+        required: false,
       },
       drawerflag: {
         type: Boolean,

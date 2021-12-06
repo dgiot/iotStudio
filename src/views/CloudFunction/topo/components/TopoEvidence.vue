@@ -81,7 +81,8 @@
           draggable
           @click="evidenceHandle(item, index)"
         >
-          {{ item.icon }}
+          {{ item.icon }} <br>
+          <el-link :underline="false">{{ item.text }}</el-link>
         </i>
       </div>
     </div>
@@ -239,21 +240,25 @@
           {
             icon: 'personal_video',
             type: 'video',
+            text: '视频',
             path: 'M21 3H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.11-.9-2-2-2zm0 14H3V5h18v12z',
           },
           {
             icon: 'volume_up',
             type: 'audio',
+            text: '音频',
             path: 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z',
           },
           {
             icon: 'image',
             type: 'image',
+            text: '图片',
             path: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z',
           },
           {
             icon: 'archive',
             type: 'file',
+            text: '文件',
             path: 'M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z',
           },
         ],
