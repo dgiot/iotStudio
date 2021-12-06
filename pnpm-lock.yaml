@@ -33,6 +33,7 @@ specifiers:
   copy-to-clipboard: 3.3.1
   core-js: 3.19.1
   cross-env: 7.0.3
+  csijs: ^1.0.9
   cz-conventional-changelog: 3.3.0
   cz-customizable: 6.3.0
   driver.js: ^0.9.8
@@ -104,6 +105,7 @@ dependencies:
   clean-webpack-plugin: 4.0.0
   clone: 2.1.2
   conventional-changelog-cli: 2.1.1
+  csijs: 1.0.9
   driver.js: 0.9.8
   element-ui: 2.15.6
   file-loader: 6.2.0
@@ -4743,6 +4745,12 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /csijs/1.0.9:
+    resolution: {integrity: sha512-ZwJgVK3zZOd89Bbwo88LOihq51muEYTeDR7NxEzI8oHJGdiDuwsjwmTKCrtb2AM7IRjAm/1zBTyUtTDeNMFy2w==, tarball: csijs/download/csijs-1.0.9.tgz}
+    dependencies:
+      excellentexport: 3.7.3
+    dev: false
+
   /csp_evaluator/1.1.0:
     resolution: {integrity: sha1-f7M3iggWPeTK8KUpfpKl9w70LSE=, tarball: csp_evaluator/download/csp_evaluator-1.1.0.tgz}
     dev: true
@@ -5903,6 +5911,10 @@ packages:
       tmp: 0.2.1
       unzipper: 0.10.11
       uuid: 8.3.2
+    dev: false
+
+  /excellentexport/3.7.3:
+    resolution: {integrity: sha1-q7yO0HB8IijYXZpxySawj+BJVEg=, tarball: excellentexport/download/excellentexport-3.7.3.tgz}
     dev: false
 
   /execa/0.8.0:
