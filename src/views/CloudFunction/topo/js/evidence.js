@@ -584,10 +584,7 @@ export default {
         const res = await putDevice(params.objectId, finish)
         this.auditDialog = false
         this.$router.push({
-          path: '/cloudTest/Task',
-          query: {
-            tabs: 'examination',
-          },
+          path: '/cloudTest/review',
         })
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
@@ -629,9 +626,6 @@ export default {
             const res = await putDevice(params.objectId, finish)
             this.$router.push({
               path: '/cloudTest/Task',
-              query: {
-                tabs: 'examination',
-              },
             })
             loading.close()
           } catch (error) {

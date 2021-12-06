@@ -9,7 +9,7 @@ import { generatereport } from '@/api/Evidence'
 // const docx = require('docx-preview')
 import mammoth from 'mammoth'
 export default {
-  name: 'TaskIndex',
+  name: 'ReviewIndex',
   components: {
     VabDraggable,
     lowcodeDesign,
@@ -498,11 +498,11 @@ export default {
         name: this.queryForm.name.length
           ? { $in: this.queryForm.name }
           : { $ne: null },
-        'profile.step': { $lte: 1 },
+        'profile.step': { $gt: 1 },
       }
       this.listLoading = true
       const { count = 0, results = [] } = await queryDevice(this.queryPayload)
-      this.$refs['forensics'].ination.total = count
+      this.$refs['examination'].ination.total = count
       results.forEach((item) => {
         if (!item.profile.step) item.profile.step = 0
         item.endtime = item.profile.endtime

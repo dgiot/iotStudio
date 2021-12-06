@@ -9,14 +9,14 @@
  */
 import CSI from 'csijs'
 
-// 示例：自定义上报
-const csi = new CSI({
-  feID: 'dgiot',
-  report: (lines) => {
-    // todo 自定义你的上报逻辑
-    console.log('error lins', lines)
-  },
-})
-
-// 如果你想主动上报
-csi.report()
+// // 示例：自定义上报
+// const csi = new CSI({
+//   feID: 'dgiot',
+//   report: (lines) => {
+//     // todo 自定义你的上报逻辑
+//     console.log('error lins', lines)
+//   },
+// })
+//
+// // 如果你想主动上报
+// csi.report()

@@ -138,13 +138,6 @@
             >
               {{ $translateTitle('cloudTest.search') }}
             </el-button>
-            <el-button
-              icon="el-icon-plus"
-              type="primary"
-              @click.native="activePopShow = !activePopShow"
-            >
-              {{ $translateTitle('cloudTest.add') }}
-            </el-button>
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
@@ -202,7 +195,7 @@
       ref="tableSort"
       v-loading="listLoading"
       :border="border"
-      :data="list.forensics"
+      :data="list.examination"
       :size="lineHeight"
       :stripe="stripe"
     >
@@ -259,7 +252,6 @@
                 $translateTitle('product.notstarted'),
                 $translateTitle('product.testing'),
                 $translateTitle('product.pending review'),
-                $translateTitle('product.finishtest'),
                 $translateTitle('product.review completed'),
               ][row.profile.step] || $translateTitle('product.finishtest')
             }}
@@ -270,7 +262,7 @@
         align="center"
         fixed="right"
         :label="$translateTitle(`cloudTest.operate`)"
-        width="380"
+        width="280"
       >
         <template #default="{ row }">
           <el-button
@@ -310,17 +302,9 @@
             {{ $translateTitle(`product.Underreview`) }}
           </el-button>
           <el-button
-            v-show="row.profile.step == 3"
+            v-show="row.profile.step >= 3"
             size="mini"
             type="success"
-            @click.native="taskEnd(row)"
-          >
-            {{ $translateTitle(`concentrator.end`) }}
-          </el-button>
-          <el-button
-            v-show="row.profile.step >= 4"
-            size="mini"
-            type="primary"
             @click.native="handleReport(row)"
           >
             {{ $translateTitle(`product.generate`) }}
@@ -333,13 +317,6 @@
           <!--          >-->
           <!--            {{ $translateTitle(`application.preview`) }}-->
           <!--          </el-button>-->
-          <el-button
-            size="mini"
-            type="danger"
-            @click.native="handleDelete(row.objectId)"
-          >
-            {{ $translateTitle(`cloudTest.delete`) }}
-          </el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -352,8 +329,8 @@
       </template>
     </el-table>
     <vab-parser-pagination
-      :key="list.forensics.length + 'forensics'"
-      ref="forensics"
+      :key="list.examination.length + 'examination'"
+      ref="examination"
       :pagination="paginations"
       :query-payload="queryPayload"
       @pagination="fetchData"
@@ -363,7 +340,7 @@
   </div>
 </template>
 
-<script src="../js/task.js"></script>
+<script src="../js/review.js"></script>
 <style>
   .el-divider__text {
     font-size: 18px;

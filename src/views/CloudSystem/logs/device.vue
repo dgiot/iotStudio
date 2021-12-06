@@ -111,22 +111,10 @@
       <vab-editor
         :key="refreshFlag"
         v-model="msg"
-        :height="
-          isFullscreen
-            ? Number($baseTableHeight(0))
-            : Number($baseTableHeight(0))
-        "
+        :height="isFullscreen ? 300 + 80 : 300 + 40"
         lang="json"
-        :max-lines="
-          isFullscreen
-            ? Number($baseTableHeight(1)) / 12
-            : Number($baseTableHeight(1)) / 12
-        "
-        :min-lines="
-          isFullscreen
-            ? Number($baseTableHeight(1)) / 12
-            : Number($baseTableHeight(1)) / 12
-        "
+        :max-lines="isFullscreen ? 600 / 12 : 1000 / 12"
+        :min-lines="isFullscreen ? 600 / 12 : 1000 / 12"
         theme="gob"
       />
     </el-dialog>
@@ -403,7 +391,7 @@
        */
       showDetail(row) {
         this.preDialog = true
-        dgiotlog.log(row)
+        console.log(row)
         this.msg = JSON.stringify(row, null, 2)
         this.refreshFlag = moment(new Date()).valueOf()
       },
