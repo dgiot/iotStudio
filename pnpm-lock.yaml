@@ -35,6 +35,7 @@ specifiers:
   cross-env: 7.0.3
   cz-conventional-changelog: 3.3.0
   cz-customizable: 6.3.0
+  driver.js: ^0.9.8
   element-ui: 2.15.6
   eslint: ^7.32.0
   eslint-plugin-prettier: 4.0.0
@@ -103,6 +104,7 @@ dependencies:
   clean-webpack-plugin: 4.0.0
   clone: 2.1.2
   conventional-changelog-cli: 2.1.1
+  driver.js: 0.9.8
   element-ui: 2.15.6
   file-loader: 6.2.0
   fork-ts-checker-webpack-plugin: 6.5.0_79d5386a1cbf2ce51f20748cd0e82c5e
@@ -2747,6 +2749,7 @@ packages:
       mobx-state-tree: 3.17.3_mobx@4.15.7
       react-json-view: 1.21.3_react-dom@16.14.0
     transitivePeerDependencies:
+      - '@types/react'
       - react
       - react-dom
       - react-native
@@ -2815,6 +2818,7 @@ packages:
       uncontrollable: 7.2.1_react@16.14.0
       video-react: 0.14.1_react-dom@16.14.0+react@16.14.0
     transitivePeerDependencies:
+      - '@types/react'
       - react-native
     dev: false
 
@@ -5401,6 +5405,10 @@ packages:
       react: 16.14.0
       react-is: 17.0.2
       tslib: 2.3.1
+    dev: false
+
+  /driver.js/0.9.8:
+    resolution: {integrity: sha1-SzJ/RTexybn7GUGd6GF0voIa4yo=, tarball: driver.js/download/driver.js-0.9.8.tgz}
     dev: false
 
   /duck/0.1.12:
@@ -11095,6 +11103,8 @@ packages:
       react-dom: 16.14.0
       react-lifecycles-compat: 3.0.4
       react-textarea-autosize: 8.3.3
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-json-view/1.21.3_react-dom@16.14.0+react@16.14.0:
@@ -11109,6 +11119,8 @@ packages:
       react-dom: 16.14.0_react@16.14.0
       react-lifecycles-compat: 3.0.4
       react-textarea-autosize: 8.3.3_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-lifecycles-compat/3.0.4:
@@ -11152,6 +11164,8 @@ packages:
       '@babel/runtime': 7.16.3
       use-composed-ref: 1.1.0
       use-latest: 1.2.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-textarea-autosize/8.3.3_react@16.14.0:
@@ -11164,6 +11178,8 @@ packages:
       react: 16.14.0
       use-composed-ref: 1.1.0_react@16.14.0
       use-latest: 1.2.0_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-transition-group/4.4.2_react-dom@16.14.0+react@16.14.0:
@@ -13392,13 +13408,21 @@ packages:
   /use-isomorphic-layout-effect/1.1.1:
     resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dev: false
 
   /use-isomorphic-layout-effect/1.1.1_react@16.14.0:
     resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: 16.14.0
     dev: false
@@ -13406,7 +13430,11 @@ packages:
   /use-latest/1.2.0:
     resolution: {integrity: sha1-pE9lcrgojgly7EEb3QhAraNm8jI=, tarball: use-latest/download/use-latest-1.2.0.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       use-isomorphic-layout-effect: 1.1.1
     dev: false
@@ -13414,7 +13442,11 @@ packages:
   /use-latest/1.2.0_react@16.14.0:
     resolution: {integrity: sha1-pE9lcrgojgly7EEb3QhAraNm8jI=, tarball: use-latest/download/use-latest-1.2.0.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: 16.14.0
       use-isomorphic-layout-effect: 1.1.1_react@16.14.0

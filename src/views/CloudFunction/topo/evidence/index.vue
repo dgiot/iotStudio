@@ -9,9 +9,9 @@
 -->
 <template>
   <el-container class="evidence">
-    <el-dialog append-to-body :visible.sync="auditDialog" width="80%">
+    <el-dialog append-to-body :visible.sync="auditDialog">
       <span>
-        <el-table border :data="auditList" stripe>
+        <el-table border :data="auditList" size="mini" stripe>
           <el-table-column
             align="center"
             :label="$translateTitle('cloudTest.number')"
@@ -105,7 +105,7 @@
         <el-form
           v-if="taskType != 'review'"
           ref="form"
-          label-width="80px"
+          label-width="120px"
           :model="task"
         >
           <el-form-item

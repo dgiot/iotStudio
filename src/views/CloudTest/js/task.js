@@ -16,10 +16,11 @@ export default {
   },
   data() {
     return {
-      activeName:
-        this?.$route?.query?.tabs ?? this.$route.query.tabs == 'examination'
+      activeName: this?.$route?.query?.tabs
+        ? this.$route.query.tabs == 'examination'
           ? 'examination'
-          : 'forensics',
+          : 'forensics'
+        : 'forensics',
       officeapps: '',
       dialogVisible: false,
       paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
@@ -226,7 +227,12 @@ export default {
     },
     testbedChange(val) {
       this.$set(this.ruleForm, 'testbedid', val.objectId)
-      dgiotlog.log('this.ruleForm', this.ruleForm)
+      dgiotlog.log(
+        'src/views/CloudTest/js/task.js',
+        'this.ruleForm',
+        this.ruleForm,
+        val.objectId
+      )
     },
     async getwordtemp() {
       const params = {

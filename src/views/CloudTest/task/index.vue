@@ -73,11 +73,12 @@
                 v-model="ruleForm.testbed"
                 :placeholder="$translateTitle('task.Select')"
                 style="width: 100%"
+                value-key="objectId"
                 @change="testbedChange"
               >
                 <el-option
-                  v-for="(item, index) in grouplist"
-                  :key="index"
+                  v-for="item in grouplist"
+                  :key="item.objectId"
                   :label="item.name"
                   :value="item"
                 />
