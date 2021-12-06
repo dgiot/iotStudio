@@ -49,9 +49,7 @@
                 :disabled="$route.query.page < 0"
                 icon="el-icon-arrow-left"
                 style="position: relative; left: 0"
-                @click.native="
-                  nextPage($route.query.list, $route.query.page, 'left')
-                "
+                @click.native="nextPage('left')"
               >
                 {{ $translateTitle('button.previous') }}
               </el-button>
@@ -61,9 +59,7 @@
                 type="primary"
                 size="mini"
                 icon="el-icon-arrow-right"
-                @click.native="
-                  nextPage($route.query.list, $route.query.page, 'right')
-                "
+                @click.native="nextPage('right')"
                 style="position: fixed; right: 30px"
               >
                 {{ $translateTitle('button.next') }}
@@ -89,6 +85,7 @@
   import { _getTopo } from '@/api/Topo'
   import { queryProduct } from '@/api/Product'
   import canvas from '@/utils/konva/core/canvas'
+  import { handleActivePath } from '@/utils/routes'
 
   export default {
     components: {
@@ -143,7 +140,14 @@
         },
       },
     },
-    watch: {},
+    watch: {
+      '$route.query.page': {
+        handler(route) {
+          console.error(route)
+        },
+        immediate: true,
+      },
+    },
     mounted() {
       this.driver = new this.$Driver({
         className: 'vue-admin-beautiful-wrapper', // className to wrap driver.js popover
@@ -194,19 +198,20 @@
         setTreeFlag: 'settings/setTreeFlag',
         createdEvidence: 'topo/createdEvidence',
       }),
-      nextPage(list, page, type) {
-        console.error(page, type)
+      nextPage(type) {
         let query = JSON.parse(JSON.stringify(this.$route.query))
+        const list = JSON.parse(this.$route.query.list)
+        const length = query.length
+        query.page = Number(query.page)
         query.page =
           type == 'left'
-            ? Number(query.page) - 1 < 0
-              ? Number(query.page) - 1
-              : 0
-            : Number(query.page) + 1 > query.list.length
-            ? Number(query.page) + 1
-            : query.list.length
-        query.viewid = query.list[query.page].viewid
-        console.error(query.page)
+            ? query.page-- <= -1
+              ? query.page
+              : length
+            : query.page++ >= length
+            ? 0
+            : query.page
+        query.viewid = list[query.page].viewid
         this.$router.push({ path: this.$route.path, query })
         this.handleMqtt()
       },

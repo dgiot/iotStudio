@@ -358,6 +358,7 @@ export default {
           noTools: true,
           isDirver: true,
           list: JSON.stringify(this.views),
+          length: this.views.length - 1,
         },
       })
     },
