@@ -6,7 +6,7 @@ import { mapGetters } from 'vuex'
 import { post_tree } from '@/api/Data'
 import { queryCategory } from '@/api/Category'
 import { queryProductTemplet } from '@/api/ProductTemplet'
-
+import { queryEvidence } from '@/api/Evidence'
 export default {
   name: 'ReportIndex',
   components: {

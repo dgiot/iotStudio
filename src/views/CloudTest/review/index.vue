@@ -18,6 +18,98 @@
       <iframe :src="officeapps" style="width: 100%; height: 100%" />
     </el-drawer>
     <div class="components">
+      <el-dialog append-to-body :visible.sync="evidenceDialog">
+        <el-card class="box-card" shadow="hover">
+          <el-table border :data="evidences" stripe>
+            <el-table-column
+              align="center"
+              :label="$translateTitle('cloudTest.number')"
+              show-overflow-tooltip
+              width="100"
+            >
+              <template #default="{ $index }">
+                {{ $index + 1 }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              :label="$translateTitle('cloudTest.evidence')"
+              show-overflow-tooltip
+              width="auto"
+            >
+              <template #default="{ row }">
+                <vue-aliplayer-v2
+                  v-if="types.video.includes(`${row.original.type}`)"
+                  :autoplay="false"
+                  height="290"
+                  :source="$FileServe + row.original.path"
+                  width="290"
+                />
+                <el-image
+                  v-else-if="types.image.includes(`${row.original.type}`)"
+                  :preview-src-list="[$FileServe + row.original.path]"
+                  :src="$FileServe + row.original.path"
+                  style="width: 100px; height: 100px"
+                />
+                <av-bars
+                  v-else-if="types.audio.includes(`${row.original.type}`)"
+                  :audio-src="$FileServe + row.original.path"
+                />
+                <el-link
+                  v-else-if="types.file.includes(`${row.original.type}`)"
+                  :href="$FileServe + row.original.path"
+                >
+                  {{ $FileServe + row.original.path }}
+                </el-link>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" :width="180">
+              <template #default="{ row }">
+                <el-tag
+                  effect="dark"
+                  :type="
+                    ['', 'success', 'danger'][
+                      ['未审核', '通过审核', '不通过审核'].indexOf(
+                        row.original.status
+                      )
+                    ]
+                  "
+                >
+                  {{ row.original.status }}
+                </el-tag>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              v-if="Number($route.query.step) == 3"
+              align="center"
+              :label="$translateTitle('cloudTest.single audit opinion')"
+              width="auto"
+            >
+              <template #default="{ row, $index }">
+                <el-input v-model="row.original.message" size="mini" />
+              </template>
+            </el-table-column>
+            <el-table-column
+              v-if="Number($route.query.step) == 3"
+              align="center"
+              :label="$translateTitle('cloudTest.submit review')"
+              width="auto"
+            >
+              <template #default="{ row }">
+                <el-button plain @click.native="changeItem(row)">
+                  {{ $translateTitle('cloudTest.submit review') }}
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-card>
+        <!--      <span slot="footer" class="dialog-footer">-->
+        <!--        <el-button type="primary" @click="evidenceDialog = false">-->
+        <!--          {{ $translateTitle('cloudTest.save evidence') }}-->
+        <!--        </el-button>-->
+        <!--      </span>-->
+      </el-dialog>
       <vab-dialog :show.sync="activePopShow">
         <h2 slot="title">
           {{ $translateTitle('cloudTest.addwordtask') }}
@@ -253,6 +345,7 @@
                 $translateTitle('product.testing'),
                 $translateTitle('product.pending review'),
                 $translateTitle('product.review completed'),
+                $translateTitle('product.report generated'),
               ][row.profile.step] || $translateTitle('product.finishtest')
             }}
           </el-tag>
@@ -302,21 +395,24 @@
             {{ $translateTitle(`product.Underreview`) }}
           </el-button>
           <el-button
-            v-show="row.profile.step >= 3"
+            v-show="row.profile.step == 3"
             size="mini"
             type="success"
             @click.native="handleReport(row)"
           >
             {{ $translateTitle(`product.generate`) }}
           </el-button>
-          <!--          <el-button-->
-          <!--            v-show="row.profile.step == 5"-->
-          <!--            size="mini"-->
-          <!--            type="primary"-->
-          <!--            @click.native="handlePreview(row)"-->
-          <!--          >-->
-          <!--            {{ $translateTitle(`application.preview`) }}-->
-          <!--          </el-button>-->
+          <el-button
+            v-show="row.profile.step == 4"
+            size="mini"
+            type="primary"
+            @click.native="handleReport(row)"
+          >
+            {{ $translateTitle(`application.preview report`) }}
+          </el-button>
+          <el-button size="mini" @click.native="handleEvidence(row.objectId)">
+            {{ $translateTitle(`application.evidence`) }}
+          </el-button>
         </template>
       </el-table-column>
       <template #empty>

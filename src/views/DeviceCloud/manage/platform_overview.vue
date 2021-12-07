@@ -952,7 +952,6 @@
     },
     created() {},
     mounted() {
-      console.error(this._Product)
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.initDgiotMqtt()
       // dgiotlog.log(`global static url ${this._role}`)
@@ -1219,37 +1218,6 @@
           this.leftWidth = '200px'
         }
       },
-      setPadding(top) {
-        // dgiotlog.log(top, 'top')
-        if (top != '0px') {
-          $('.fixed').css({ 'padding-top': '0px' })
-          $('.fixed-header').css({
-            height: '0px',
-            display: 'none',
-          })
-          $('.vab-tabs').css({ 'nim-height': '0px' })
-          $('.baidu_map').css({ height: 'calc(78vh + 90px + 140px)' })
-          $('_el-table').css({ height: 'calc(78vh + 90px + 140px)' })
-          $('.el-tabs').css({ height: 'calc(78vh + 90px + 140px)' })
-          $('section').css({ height: 'calc(100vh - 60px* 2.7 + 110px)' })
-        } else {
-          // $('.fixed').css({ 'padding-top': '110px' })
-          $('.fixed-header').css({
-            height: '110px',
-            display: 'block',
-          })
-          $('.vab-tabs').css({ 'nim-height': '50px' })
-          $('.baidu_map').css({ height: 'calc(78vh - 20px)' })
-          $('_el-table').css({ height: 'calc(78vh)' })
-          $('.el-tabs').css({ height: 'calc(78vh - 20px)' })
-          $('section').css({ height: 'calc(100vh - 60px* 2.7)' })
-        }
-        // this.fixedPaddingTop = window.getComputedStyle($('.fixed')[0])[
-        //   'padding-top'
-        // ]
-        // dgiotlog.log($('.fixed')[0].style)
-        // // dgiotlog.log(this.fixedPaddingTop)
-      },
       selectProdChange(objectId) {
         // dgiotlog.log(objectId)
       },
@@ -1263,6 +1231,13 @@
           ttl: 1000 * 60 * 60 * 3,
         })
         const res = await Startdashboard(queryParams)
+        // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
+        setTimeout(() => {
+          queryParams.forEach((e) => {
+            let key = e.vuekey
+            this.loadingConfig[`${key}`] = true
+          })
+        }, 3000)
       },
       async getProduct() {
         const { results } = await queryProduct({

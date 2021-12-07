@@ -5,9 +5,9 @@ import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
-import { generatereport } from '@/api/Evidence'
+import { generatereport, queryEvidence } from '@/api/Evidence'
 // const docx = require('docx-preview')
-import mammoth from 'mammoth'
+// import mammoth from 'mammoth'
 export default {
   name: 'ReviewIndex',
   components: {
@@ -16,6 +16,14 @@ export default {
   },
   data() {
     return {
+      types: {
+        video: ['video', 'personal_video'],
+        audio: ['audio', 'volume_up'],
+        image: ['image', 'image'],
+        file: ['file', 'archive'],
+      },
+      evidences: [],
+      evidenceDialog: false,
       activeName: this?.$route?.query?.tabs
         ? this.$route.query.tabs == 'examination'
           ? 'examination'
@@ -389,6 +397,50 @@ export default {
     },
     /**
      * @Author: h7ml
+     * @Date: 2021-12-07 12:32:34
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async handleEvidence(objectId) {
+      this.evidences = []
+      try {
+        const params = {
+          order: '-createdAt',
+          skip: 0,
+          where: {
+            'original.taskid': objectId,
+          },
+        }
+        const loading = this.$baseColorfullLoading()
+        const { results } = await queryEvidence(params)
+        if (results?.length)
+          results.forEach((item) => {
+            item.original.path =
+              '/dgiot_file' + item.original.path.split('/dgiot_file')[1]
+          })
+        this.evidenceDialog = true
+        this.evidences = results
+
+        console.log(results)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
      * @Date: 2021-11-26 17:05:16
      * @LastEditors:
      * @param
@@ -407,24 +459,25 @@ export default {
         const loading = this.$baseColorfullLoading()
         const { code, msg, path } = await generatereport(row.objectId)
         if (code == 200 && path) {
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request successfully'),
-            'success',
-            'vab-hey-message-success'
-          )
-          setTimeout(() => {
-            const params = {
-              profile: _.merge(row.profile, {
-                step: 4,
-                docx: path,
-              }),
-            }
-            const _res = putDevice(row.objectId, params)
-            const fileUrl = this.$FileServe + path
-            this.dialogVisible = true
-            this.officeapps =
-              'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
-          }, 1200)
+          this.fetchData()
+          // this.$baseMessage(
+          //   this.$translateTitle('alert.Data request successfully'),
+          //   'success',
+          //   'vab-hey-message-success'
+          // )
+          // setTimeout(() => {
+          //   const params = {
+          //     profile: _.merge(row.profile, {
+          //       step: 4,
+          //       docx: path,
+          //     }),
+          //   }
+          //   const _res = putDevice(row.objectId, params)
+          //   const fileUrl = this.$FileServe + path
+          //   this.dialogVisible = true
+          //   this.officeapps =
+          //     'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
+          // }, 1200)
         } else {
           this.$baseMessage(`${msg}`, 'error', 'vab-hey-message-error')
         }
