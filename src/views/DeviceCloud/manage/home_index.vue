@@ -446,7 +446,7 @@
                     v-model="row.isEnable"
                     active-color="#5eb058"
                     inactive-color="#cccccc"
-                    @change="handelUpdate($event, $index)"
+                    @change="handelUpdate($event, row, $index)"
                   />
                 </template>
               </el-table-column>
@@ -658,7 +658,7 @@
                     v-model="row.isEnable"
                     active-color="#5eb058"
                     inactive-color="#cccccc"
-                    @change="handelUpdate($event, $index)"
+                    @change="handelUpdate($event, row, $index)"
                   />
                 </template>
               </el-table-column>
@@ -2375,7 +2375,7 @@
           this.tableData = results
           this.devicetotal = count
           // 查询在线设备
-          this.getOnlineDevices()
+          // this.getOnlineDevices()
         } catch (error) {
           dgiotlog.log(error)
           this.listLoading = false
@@ -2401,27 +2401,20 @@
           type: 'warning',
         })
           .then(async () => {
-            // var newData2 = {}
-            // for (var key in row) {
-            //   newData2[key] = row[key]
+            console.log('row', row)
+            // var deviceData = await get_object('Device', row.objectId)
+            // var isEnable = deviceData.isEnable
+            // if (isEnable == undefined) {
+            //   isEnable = false
+            // } else {
+            //   isEnable = !isEnable
             // }
-            // newData2.isEnable = newData2.isEnable == true
-            // this.tableData[index] = newData2
-            var deviceData = await get_object('Device', row.objectId)
-            var isEnable = deviceData.isEnable
-            if (isEnable == undefined) {
-              isEnable = false
-            } else {
-              isEnable = !isEnable
-            }
-            deviceData.isEnable = isEnable
-            const { createdAt, ...data } = deviceData
-            const { updatedAt, ...data2 } = data
-            var result = await this.$update_object(
-              'Device',
-              row.objectId,
-              data2
-            )
+            // deviceData.isEnable = isEnable
+            // const { createdAt, ...data } = deviceData
+            // const { updatedAt, ...data2 } = data
+            var result = await this.$update_object('Device', row.objectId, {
+              isEnable: event,
+            })
             if (result != undefined) {
               this.$message({
                 type: 'success',

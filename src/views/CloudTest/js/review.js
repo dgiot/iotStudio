@@ -459,25 +459,25 @@ export default {
         const loading = this.$baseColorfullLoading()
         const { code, msg, path } = await generatereport(row.objectId)
         if (code == 200 && path) {
-          this.fetchData()
-          // this.$baseMessage(
-          //   this.$translateTitle('alert.Data request successfully'),
-          //   'success',
-          //   'vab-hey-message-success'
-          // )
-          // setTimeout(() => {
-          //   const params = {
-          //     profile: _.merge(row.profile, {
-          //       step: 4,
-          //       docx: path,
-          //     }),
-          //   }
-          //   const _res = putDevice(row.objectId, params)
-          //   const fileUrl = this.$FileServe + path
-          //   this.dialogVisible = true
-          //   this.officeapps =
-          //     'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
-          // }, 1200)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request successfully'),
+            'success',
+            'vab-hey-message-success'
+          )
+          setTimeout(() => {
+            const params = {
+              profile: _.merge(row.profile, {
+                step: 4,
+                docx: path,
+              }),
+            }
+            const _res = putDevice(row.objectId, params)
+            const fileUrl = this.$FileServe + path
+            this.dialogVisible = true
+            this.officeapps =
+              'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
+            this.fetchData()
+          }, 1200)
         } else {
           this.$baseMessage(`${msg}`, 'error', 'vab-hey-message-error')
         }
