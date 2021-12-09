@@ -52,8 +52,8 @@ jobs:
         run: |
           tag_name=${{github.ref}}
           git add CHANGELOG.ZH.md CHANGELOG.EN.md
-          git config --local user.email "h7ml@qq.com"
-          git config --local user.name "h7ml"
+          git config --global user.email "h7ml@qq.com"
+          git config --global user.name "h7ml"
           git commit --allow-empty -m ":bookmark: ${tag_name#*tags/}" -a
       - name: Push changes
         uses: ad-m/github-push-action@master
