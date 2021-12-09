@@ -1227,6 +1227,10 @@ export default {
       'Draggable column settings': '可拖拽列设置',
     },
     cloudTest: {
+      file: '文件',
+      image: '图片',
+      video: '视频',
+      audio: '音频',
       template: '添加模板',
       'Please confirm that all testing items have been completed':
         '请确认所有检测项都已完成',

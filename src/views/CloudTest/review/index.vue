@@ -34,7 +34,9 @@
             <el-table-column
               align="center"
               :label="$translateTitle('cloudTest.evidence')"
+              prop="row.original.path"
               show-overflow-tooltip
+              sortable
               width="auto"
             >
               <template #default="{ row }">
@@ -63,7 +65,26 @@
                 </el-link>
               </template>
             </el-table-column>
-            <el-table-column align="center" :width="180">
+            <el-table-column
+              align="center"
+              :label="$translateTitle('deviceLog.type')"
+              prop="row.original.type"
+              show-overflow-tooltip
+              sortable
+              :width="180"
+            >
+              <template #default="{ row }">
+                <el-tag effect="plain">
+                  {{ $translateTitle(`cloudTest.${row.original.type}`) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              :label="$translateTitle('cloudTest.single audit')"
+              show-overflow-tooltip
+              :width="180"
+            >
               <template #default="{ row }">
                 <el-tag
                   effect="dark"
