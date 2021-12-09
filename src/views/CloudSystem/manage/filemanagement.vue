@@ -117,6 +117,7 @@
         </el-table-column>
       </el-table>
       <el-dialog
+        append-to-body
         :model="detailinfo"
         title="文件信息"
         :visible.sync="detailView"
