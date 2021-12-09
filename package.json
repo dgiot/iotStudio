@@ -79,7 +79,7 @@
     "mammoth": "^1.4.19",
     "monaco-editor-webpack-plugin": "6.0.0",
     "node-cmd": "^5.0.0",
-    "plop": "^2.7.6",
+    "plop": "^3.0.3",
     "q": "^1.5.1",
     "qs": "6.10.1",
     "react-dom": "^16.14.0",
