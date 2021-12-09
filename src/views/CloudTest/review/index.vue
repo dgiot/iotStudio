@@ -431,7 +431,20 @@
           >
             {{ $translateTitle(`application.preview report`) }}
           </el-button>
-          <el-button size="mini" @click.native="handleEvidence(row.objectId)">
+          <el-button
+            v-show="row.profile.step >= 4"
+            size="mini"
+            type="info"
+            @click.native="handleEvidence(row.objectId)"
+          >
+            {{ $translateTitle(`application.List evidence`) }}
+          </el-button>
+          <el-button
+            v-show="row.profile.step >= 4"
+            size="mini"
+            type="success"
+            @click.native="handleRouter(row)"
+          >
             {{ $translateTitle(`application.evidence`) }}
           </el-button>
         </template>

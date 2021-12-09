@@ -397,6 +397,37 @@ export default {
     },
     /**
      * @Author: h7ml
+     * @Date: 2021-12-09 10:57:46
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async handleRouter(row) {
+      try {
+        this.$router.push({
+          path: '/cloudTest/evidence',
+          query: {
+            taskid: row.objectId,
+            suite: 0,
+            state: 'preview',
+            step: row.profile.step,
+            back: row.profile.step,
+            message: row.profile.message,
+            disable: true,
+          },
+        })
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: h7ml
      * @Date: 2021-12-07 12:32:34
      * @LastEditors:
      * @param
@@ -464,20 +495,7 @@ export default {
             'success',
             'vab-hey-message-success'
           )
-          setTimeout(() => {
-            const params = {
-              profile: _.merge(row.profile, {
-                step: 4,
-                docx: path,
-              }),
-            }
-            const _res = putDevice(row.objectId, params)
-            const fileUrl = this.$FileServe + path
-            this.dialogVisible = true
-            this.officeapps =
-              'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
-            this.fetchData()
-          }, 1200)
+          this.fetchData()
         } else {
           this.$baseMessage(`${msg}`, 'error', 'vab-hey-message-error')
         }

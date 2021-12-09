@@ -248,7 +248,7 @@ export default {
       })
     },
     forensics(row) {
-      dgiotlog.warn(row)
+      console.warn(row)
       this.$router.push({
         path: '/cloudTest/evidence',
         query: {

@@ -211,6 +211,20 @@
           </el-table-column>
           <el-table-column
             align="center"
+            :label="$translateTitle('deviceLog.type')"
+            prop="row.original.type"
+            show-overflow-tooltip
+            sortable
+            :width="120"
+          >
+            <template #default="{ row }">
+              <el-tag effect="plain">
+                {{ $translateTitle(`cloudTest.${row.original.type}`) }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
             :label="
               Number($route.query.step) == 1
                 ? $translateTitle('concentrator.operation')
@@ -227,7 +241,14 @@
               >
                 {{ $translateTitle('cloudTest.delete') }}
               </el-button>
-              <el-radio-group v-else v-model="row.original.status" size="mini">
+              <el-radio-group
+                v-if="
+                  Number($route.query.step) > 1 &&
+                  Number($route.query.step) != 4
+                "
+                v-model="row.original.status"
+                size="mini"
+              >
                 <el-radio label="未审核">
                   {{ $translateTitle('cloudTest.Unreviewed') }}
                 </el-radio>
@@ -238,6 +259,20 @@
                   {{ $translateTitle('cloudTest.notapproved') }}
                 </el-radio>
               </el-radio-group>
+
+              <el-tag
+                v-else
+                effect="dark"
+                :type="
+                  ['', 'success', 'danger'][
+                    ['未审核', '通过审核', '不通过审核'].indexOf(
+                      row.original.status
+                    )
+                  ]
+                "
+              >
+                {{ row.original.status }}
+              </el-tag>
             </template>
           </el-table-column>
 
@@ -323,6 +358,7 @@
         <!--        </el-col>-->
         <el-col :lg="1" :md="1" :sm="1" title="检测列表" :xl="1" :xs="1">
           <el-button
+            v-show="!$route.query.disable"
             round
             size="mini"
             type="success"

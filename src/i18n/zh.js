@@ -780,6 +780,7 @@ export default {
       preview: '预览',
       'preview report': '查看报告',
       evidence: '证据链',
+      'List evidence': '证据列表',
       applicationaccessscale: '应用接入规模',
       expectednumberofaccessequipment: '预计接入设备数量',
       applicationconfiguration: '应用配置',
