@@ -67,7 +67,6 @@ specifiers:
   qs: 6.10.1
   raw-loader: 4.0.2
   react-dom: ^16.14.0
-  react-jwchat: ^1.1.0
   register-service-worker: 1.7.2
   resize-detector: 0.3.0
   rimraf: 3.0.2
@@ -125,7 +124,6 @@ dependencies:
   q: 1.5.1
   qs: 6.10.1
   react-dom: 16.14.0
-  react-jwchat: 1.1.0
   register-service-worker: 1.7.2
   resize-detector: 0.3.0
   standard-version: 9.3.2
@@ -8438,7 +8436,7 @@ packages:
     dev: true
 
   /loader-utils/1.4.0:
-    resolution: {integrity: sha1-xXm140yzSxp07cbB+za/o3HVphM=, tarball: loader-utils/download/loader-utils-1.4.0.tgz?cache=0&sync_timestamp=1636701869317&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Floader-utils%2Fdownload%2Floader-utils-1.4.0.tgz}
+    resolution: {integrity: sha1-xXm140yzSxp07cbB+za/o3HVphM=, tarball: loader-utils/download/loader-utils-1.4.0.tgz}
     engines: {node: '>=4.0.0'}
     dependencies:
       big.js: 5.2.2
@@ -11074,17 +11072,6 @@ packages:
       scheduler: 0.19.1
     dev: false
 
-  /react-dom/17.0.2_react@17.0.2:
-    resolution: {integrity: sha1-7P+2hF462Nv83EmPDQqTlzZQLCM=, tarball: react-dom/download/react-dom-17.0.2.tgz}
-    peerDependencies:
-      react: 17.0.2
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      react: 17.0.2
-      scheduler: 0.20.2
-    dev: false
-
   /react-dropzone/11.4.2_react@16.14.0:
     resolution: {integrity: sha1-Hrmene9Mx1IPT1joXIU85SxIPVY=, tarball: react-dropzone/download/react-dropzone-11.4.2.tgz}
     engines: {node: '>= 10'}
@@ -11146,16 +11133,6 @@ packages:
       react-textarea-autosize: 8.3.3_react@16.14.0
     transitivePeerDependencies:
       - '@types/react'
-    dev: false
-
-  /react-jwchat/1.1.0:
-    resolution: {integrity: sha1-hqiLB4K7u5nnVOnqPSLJjp4h344=, tarball: react-jwchat/download/react-jwchat-1.1.0.tgz}
-    dependencies:
-      dayjs: 1.10.7
-      md5: 2.3.0
-      prop-types: 15.7.2
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
     dev: false
 
   /react-lifecycles-compat/3.0.4:
@@ -11249,14 +11226,6 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       prop-types: 15.7.2
-    dev: false
-
-  /react/17.0.2:
-    resolution: {integrity: sha1-0LXMUW0p6z7uOD91tihkz7aAADc=, tarball: react/download/react-17.0.2.tgz}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
     dev: false
 
   /reactcss/1.2.3:
@@ -11777,13 +11746,6 @@ packages:
 
   /scheduler/0.19.1:
     resolution: {integrity: sha1-Tz4u0sGn1laB9MhU+oxaHMtA8ZY=, tarball: scheduler/download/scheduler-0.19.1.tgz}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-    dev: false
-
-  /scheduler/0.20.2:
-    resolution: {integrity: sha1-S67jlDbjSqk7SHS93L8P6Li1DpE=, tarball: scheduler/download/scheduler-0.20.2.tgz}
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1

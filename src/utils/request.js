@@ -197,9 +197,9 @@ instance.interceptors.response.use(
     if (response) {
       return handleData(response)
     } else {
-      dgiotlog.log('src/utils/request.js', 'error', error)
-      dgiotlog.log('src/utils/request.js', 'config', config)
-      dgiotlog.log('src/utils/request.js', 'response', response)
+      console.log('src/utils/request.js', 'error', error)
+      console.log('src/utils/request.js', 'config', config)
+      console.log('src/utils/request.js', 'response', response)
       Vue.prototype.$baseMessage(
         `请求出错：请求链接：${config.url}，错误信息：${error}`,
         'error'
@@ -236,7 +236,7 @@ function refreshAuthToken(tokens) {
         time: (Date.parse(new Date()) / 1000 + 86400) * 1000,
         expires_in: 7,
       })
-      dgiotlog.warn('src/utils/request.js', `持续检查更新token有效期`)
+      console.warn('src/utils/request.js', `持续检查更新token有效期`)
     }
   })
   console.groupEnd()

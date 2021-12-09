@@ -306,6 +306,7 @@
         objectId: 'user/objectId',
         role: 'acl/role',
         username: 'user/username',
+        currentDepartment: 'user/currentDepartment',
       }),
       aclObj() {
         let aclObj = {}

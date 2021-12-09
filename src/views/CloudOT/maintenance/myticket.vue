@@ -574,6 +574,7 @@
       ...mapGetters({
         objectid: 'user/objectId',
         role: 'acl/role',
+        currentDepartment: 'user/currentDepartment',
         username: 'user/username',
       }),
       _deviceFlag: {
@@ -675,6 +676,10 @@
           read: true,
           write: true,
         }
+        setAcl[`${'role' + ':' + this.currentDepartment.name}`] = {
+          read: true,
+          write: true,
+        }
         const params = {
           number: moment(new Date()).unix() + '',
           type: from.type,
@@ -691,6 +696,7 @@
           //   className: '_User',
           // },
           // ACL: this.aclObj,
+          status: 0,
           ACL: _.merge(setAcl, this.aclObj),
           info: {
             photo: from.photo,

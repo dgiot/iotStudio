@@ -581,6 +581,7 @@
         objectid: 'user/objectId',
         role: 'acl/role',
         username: 'user/username',
+        currentDepartment: 'user/currentDepartment',
       }),
       _deviceStep: {
         get() {
@@ -682,11 +683,15 @@
           read: true,
           write: true,
         }
+        setAcl[`${'role' + ':' + this.currentDepartment.name}`] = {
+          read: true,
+          write: true,
+        }
 
         const params = {
           number: moment(new Date()).unix() + '',
           type: from.type,
-          // status: 0,
+          status: 0,
           // product: {
           //   objectId: from.product,
           //   __type: 'Pointer',
