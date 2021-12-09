@@ -81,7 +81,7 @@
     "node-cmd": "^5.0.0",
     "plop": "^2.7.6",
     "q": "^1.5.1",
-    "qs": "6.10.1",
+    "qs": "6.10.2",
     "react-dom": "^16.14.0",
     "react-jwchat": "^1.1.0",
     "register-service-worker": "1.7.2",
