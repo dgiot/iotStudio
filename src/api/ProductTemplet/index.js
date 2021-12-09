@@ -15,7 +15,7 @@ import {
 
 export async function queryProductTemplet(params) {
   return request({
-    url: `classes/ProductTemplet`,
+    url: `/classes/ProductTemplet`,
     method: 'get',
     params: params,
   })

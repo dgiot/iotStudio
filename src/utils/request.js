@@ -117,7 +117,7 @@ instance.interceptors.request.use(
     let { headers = {} } = config
     config.headers['departmentToken'] = departmentToken
     if (headers['proxy'] == true) {
-      dgiotlog.log(config, 'config')
+      dgiotlog.log('src/utils/request.js', config, 'config')
       NODE_ENV == 'production'
         ? (config.baseURL = headers.produrl)
         : (config.baseURL = headers.devurl)
@@ -146,31 +146,32 @@ instance.interceptors.request.use(
 
     if (debounce.some((item) => config.url.includes(item)))
       loadingInstance = Vue.prototype.$baseLoading()
-
     // 二次拦截
     /**
      * @description 当用户切换token 后。api中含有/class/ 并且该规则出现在首位时，使用部门token
      */
     if (
       config.url.indexOf('/classes/') == 0 &&
-      ignoreApi.includes(config.url)
+      !ignoreApi.some((item) => config.url.includes(item))
     ) {
       console.groupCollapsed(
         `%c部门切换token拦截url日志`,
         'color:black; font-size: 18px; font-weight: 300'
       )
       dgiotlog.log(
+        'src/utils/request.js',
         `拦截的url为${config.url}\n当前请求使用了部门token：为${departmentToken}\n用户登录token为${usertoken}`,
         'color:black; font-size: 18px; font-weight: 300'
       )
       console.groupEnd()
       config.headers[`${tokenName}`] = departmentToken
-      if (ignoreApi.includes(config.url)) {
+      if (ignoreApi.some((item) => config.url.includes(item))) {
         console.groupCollapsed(
           `%c忽略url拦截日志`,
           'color:black; font-size: 18px; font-weight: 300'
         )
         dgiotlog.log(
+          'src/utils/request.js',
           `忽略的url为${config.url}\n当前请求用户登录token：为${usertoken}\n部门token为${departmentToken}`,
           'color:black; font-size: 18px; font-weight: 300'
         )
@@ -196,9 +197,9 @@ instance.interceptors.response.use(
     if (response) {
       return handleData(response)
     } else {
-      dgiotlog.log('error', error)
-      dgiotlog.log('config', config)
-      dgiotlog.log('response', response)
+      dgiotlog.log('src/utils/request.js', 'error', error)
+      dgiotlog.log('src/utils/request.js', 'config', config)
+      dgiotlog.log('src/utils/request.js', 'response', response)
       Vue.prototype.$baseMessage(
         `请求出错：请求链接：${config.url}，错误信息：${error}`,
         'error'
@@ -235,7 +236,7 @@ function refreshAuthToken(tokens) {
         time: (Date.parse(new Date()) / 1000 + 86400) * 1000,
         expires_in: 7,
       })
-      dgiotlog.warn(`持续检查更新token有效期`)
+      dgiotlog.warn('src/utils/request.js', `持续检查更新token有效期`)
     }
   })
   console.groupEnd()

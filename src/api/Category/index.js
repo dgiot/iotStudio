@@ -15,7 +15,7 @@ import {
 
 export async function queryCategory(params) {
   return request({
-    url: `classes/Category`,
+    url: `/classes/Category`,
     method: 'get',
     params: params,
   })
