@@ -205,8 +205,10 @@
         query.page = Number(query.page)
         query.page =
           type == 'left'
-            ? query.page-- <= -1
-              ? query.page
+            ? query.page-- >= -1
+              ? query.page > 0
+                ? query.page
+                : length
               : length
             : query.page++ >= length
             ? 0
