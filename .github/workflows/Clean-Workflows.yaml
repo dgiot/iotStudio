@@ -2,7 +2,9 @@ name: Clean Workflow
 
 on:
   workflow_dispatch:
-
+  push:
+  pull_request:
+    types: [opened, synchronize, edited]
   schedule:
     - cron: '15 15 */7 * *'
 
