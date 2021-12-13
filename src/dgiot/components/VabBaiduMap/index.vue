@@ -1,205 +1,210 @@
 <template>
-  <div>
-    <baidu-map
-      :ak="ak"
-      :center="baiduCenter"
-      class="baidu_map"
-      :scroll-wheel-zoom="scrollWheelZoom"
-      :style="{ height: mapHeight, width: mapWidth }"
-      :zoom="sizeZoom"
+  <baidu-map
+    :ak="ak"
+    :center="baiduCenter"
+    class="baidu_map"
+    :scroll-wheel-zoom="scrollWheelZoom"
+    :style="{ height: mapHeight, width: mapWidth }"
+    :zoom="sizeZoom"
+  >
+    <bm-control v-if="controlShow">
+      <bm-panorama
+        v-if="panoramaShow"
+        anchor="BMAP_ANCHOR_TOP_LEFT"
+        :offset="panoramaOffset"
+      />
+      <bm-overview-map v-if="overviewShow" :is-open="isOpen" />
+      <bm-scale v-if="scaleShow" :offset="scaleOffset" />
+      <bm-city-list v-if="cityShow" :offset="cityOffset" />
+      <bm-map-type
+        v-if="maptypeShow"
+        anchor="BMAP_ANCHOR_TOP_LEFT"
+        :map-types="mapTypes"
+        :offset="mapTypesOffset"
+      />
+    </bm-control>
+    <bm-marker
+      v-for="(item, index) in markerLocation"
+      v-show="markerLocation.length || markerShow"
+      :key="index"
+      animation="BMAP_ANIMATION_BOUNCE"
+      :content="item.name"
+      :dragging="item.true"
+      :position="{
+        lng: item.longitude,
+        lat: item.latitude,
+      }"
     >
-      <bm-control v-if="controlShow">
-        <bm-panorama
-          v-if="panoramaShow"
-          anchor="BMAP_ANCHOR_TOP_LEFT"
-          :offset="panoramaOffset"
-        />
-        <bm-overview-map v-if="overviewShow" :is-open="isOpen" />
-        <bm-scale v-if="scaleShow" :offset="scaleOffset" />
-        <bm-city-list v-if="cityShow" :offset="cityOffset" />
-        <bm-map-type
-          v-if="maptypeShow"
-          anchor="BMAP_ANCHOR_TOP_LEFT"
-          :map-types="mapTypes"
-          :offset="mapTypesOffset"
-        />
-      </bm-control>
-      <bm-marker
-        v-for="(item, index) in markerLocation"
-        v-show="markerLocation.length || markerShow"
-        :key="index"
-        animation="BMAP_ANIMATION_BOUNCE"
+      <bm-label
+        v-if="labelShow"
         :content="item.name"
-        :dragging="item.true"
-        :position="{
-          lng: item.longitude,
-          lat: item.latitude,
-        }"
-      >
-        <bm-label
-          v-if="labelShow"
-          :content="item.name"
-          :label-style="labelStyle"
-          :offset="bmlabelOffset"
-        />
-      </bm-marker>
-      <bm-driving
-        v-if="drivingShow"
-        :auto-viewport="autoViewport"
-        end="drivingEnd"
-        :panel="false"
-        :start="drivingStart"
-        @searchcomplete="_handleSearchComplete"
+        :label-style="labelStyle"
+        :offset="bmlabelOffset"
       />
-      <bml-lushu
-        v-if="lushuShow"
-        :icon="icon"
-        :path="lushupath"
-        :play="lushuplay"
-        :rotation="rotation"
-        @stop="_reset"
+    </bm-marker>
+    <bm-label
+      v-if="bmLabel"
+      :content="label.content"
+      :label-style="label.style"
+      :position="label.position"
+      :title="label.title"
+    />
+    <bm-driving
+      v-if="drivingShow"
+      :auto-viewport="autoViewport"
+      end="drivingEnd"
+      :panel="false"
+      :start="drivingStart"
+      @searchcomplete="_handleSearchComplete"
+    />
+    <bml-lushu
+      v-if="lushuShow"
+      :icon="icon"
+      :path="lushupath"
+      :play="lushuplay"
+      :rotation="rotation"
+      @stop="_reset"
+    />
+    <bml-heatmap
+      v-if="heatmapShow"
+      :data="heatmapData"
+      :max="heatmapMax"
+      :radius="heatmapRadius"
+    />
+    <bml-marker-clusterer
+      v-if="markerClustererShow"
+      :average-center="averageCenter"
+    >
+      <bm-marker
+        v-for="marker of markers"
+        :key="marker"
+        :position="{ lng: marker.lng, lat: marker.lat }"
       />
-      <bml-heatmap
-        v-if="heatmapShow"
-        :data="heatmapData"
-        :max="heatmapMax"
-        :radius="heatmapRadius"
-      />
-      <bml-marker-clusterer
-        v-if="markerClustererShow"
-        :average-center="averageCenter"
-      >
-        <bm-marker
-          v-for="marker of markers"
-          :key="marker"
-          :position="{ lng: marker.lng, lat: marker.lat }"
-        />
-      </bml-marker-clusterer>
-      <bml-curve-line
-        v-if="curveShow"
-        :editing="editing"
-        :points="linepoints"
-        @lineupdate="_updatepoints"
-      />
-      <bm-view v-if="viewShow" class="map" />
-      <bm-walking
-        v-if="walkingShow"
-        :auto-viewport="walkingViewPort"
-        end="walkingEnd"
-        location="walkingLocation"
-        :start="walkingStart"
-      />
-      <bm-transit
-        v-if="transitShow"
-        :auto-viewport="transitViewport"
-        :end="transitEnd"
-        :location="busLocation"
-        :start="transitStart"
-      />
-      <bm-bus
-        v-if="busShow"
-        :auto-viewport="busViewport"
-        :keyword="busKeyword"
-        :location="busLocation"
-      />
-      <bm-traffic v-if="trafficShow" :predict-date="trafficDate" />
-      <bm-tile
-        v-if="tileShow"
-        :is-transparent-png="true"
-        tile-url-template="//developer.baidu.com/map/jsdemo/demo/tiles/{Z}/tile{X}_{Y}.png"
-      />
-      <bm-polyline
-        v-if="polylineShow"
-        :editing="editing"
-        :path="polylinePath"
-        :stroke-color="strokeColor"
-        :stroke-opacity="strokeOpacity"
-        :stroke-weight="strokeWeight"
-        @lineupdate="_updatePolylinePath"
-      />
-      <bm-polygon
-        v-if="polygonShow"
-        :editing="true"
-        :path="polygonPath"
-        :stroke-color="polygonStrokeColor"
-        :stroke-opacity="polygonStrokeOpacity"
-        :stroke-weight="polygonStrokeWeight"
-        @lineupdate="_updatePolygonPath"
-      />
-      <bm-circle
-        v-if="circleShow"
-        :center="circlePathCenter"
-        :editing="true"
-        :radius="circlePathRadius"
-        stroke-color="blue"
-        :stroke-opacity="0.5"
-        :stroke-weight="2"
-        @lineupdate="_updateCirclePath"
-      />
-      <bm-ground v-if="groundShow" :bounds="bounds" :image-u-r-l="imageURL" />
-      <bm-info-window
-        v-if="windowShow"
-        :position="infoWindowPosition"
-        :show="infoWindowShow"
-        :title="infoWindowTitle"
-        @close="_infoWindowClose"
-        @open="_infoWindowOpen"
-      >
-        <p v-if="textShow" v-text="infoWindowContents"></p>
-        <button @click="_infoWindowclear">Clear</button>
-      </bm-info-window>
-      <!--      <bm-overlay-->
-      <!--        v-if="overlayShow"-->
-      <!--        pane="labelPane"-->
-      <!--        :class="{ sample: true, active }"-->
-      <!--        @draw="_draw"-->
-      <!--        @mouseover.native="active = true"-->
-      <!--        @mouseleave.native="active = false"-->
-      <!--      >-->
-      <!--        <div>{{ activeText }}</div>-->
-      <!--      </bm-overlay>-->
-      <bm-point-collection
-        v-if="collectionShow"
-        color="red"
-        :points="collectionPoints"
-        shape="BMAP_POINT_SHAPE_STAR"
-        size="BMAP_POINT_SIZE_SMALL"
-        @click.native="_clickHandler"
-      />
-      <bm-local-search
-        v-if="searchShow"
-        :auto-viewport="true"
-        :keyword="searchKeyword"
-        :location="searchLocation"
-      />
-      <bm-boundary
-        v-if="boundaryShow"
-        :name="boundaryName"
-        stroke-color="blue"
-        :stroke-weight="2"
-      />
+    </bml-marker-clusterer>
+    <bml-curve-line
+      v-if="curveShow"
+      :editing="editing"
+      :points="linepoints"
+      @lineupdate="_updatepoints"
+    />
+    <bm-view v-if="viewShow" class="map" />
+    <bm-walking
+      v-if="walkingShow"
+      :auto-viewport="walkingViewPort"
+      end="walkingEnd"
+      location="walkingLocation"
+      :start="walkingStart"
+    />
+    <bm-transit
+      v-if="transitShow"
+      :auto-viewport="transitViewport"
+      :end="transitEnd"
+      :location="busLocation"
+      :start="transitStart"
+    />
+    <bm-bus
+      v-if="busShow"
+      :auto-viewport="busViewport"
+      :keyword="busKeyword"
+      :location="busLocation"
+    />
+    <bm-traffic v-if="trafficShow" :predict-date="trafficDate" />
+    <bm-tile
+      v-if="tileShow"
+      :is-transparent-png="true"
+      tile-url-template="//developer.baidu.com/map/jsdemo/demo/tiles/{Z}/tile{X}_{Y}.png"
+    />
+    <bm-polyline
+      v-if="polylineShow"
+      :editing="editing"
+      :path="polylinePath"
+      :stroke-color="strokeColor"
+      :stroke-opacity="strokeOpacity"
+      :stroke-weight="strokeWeight"
+      @lineupdate="_updatePolylinePath"
+    />
+    <bm-polygon
+      v-if="polygonShow"
+      :editing="true"
+      :path="polygonPath"
+      :stroke-color="polygonStrokeColor"
+      :stroke-opacity="polygonStrokeOpacity"
+      :stroke-weight="polygonStrokeWeight"
+      @lineupdate="_updatePolygonPath"
+    />
+    <bm-circle
+      v-if="circleShow"
+      :center="circlePathCenter"
+      :editing="true"
+      :radius="circlePathRadius"
+      stroke-color="blue"
+      :stroke-opacity="0.5"
+      :stroke-weight="2"
+      @lineupdate="_updateCirclePath"
+    />
+    <bm-ground v-if="groundShow" :bounds="bounds" :image-u-r-l="imageURL" />
+    <bm-info-window
+      v-if="windowShow"
+      :position="infoWindowPosition"
+      :show="infoWindowShow"
+      :title="infoWindowTitle"
+      @close="_infoWindowClose"
+      @open="_infoWindowOpen"
+    >
+      <p v-if="textShow" v-text="infoWindowContents"></p>
+      <button @click="_infoWindowclear">Clear</button>
+    </bm-info-window>
+    <!--      <bm-overlay-->
+    <!--        v-if="overlayShow"-->
+    <!--        pane="labelPane"-->
+    <!--        :class="{ sample: true, active }"-->
+    <!--        @draw="_draw"-->
+    <!--        @mouseover.native="active = true"-->
+    <!--        @mouseleave.native="active = false"-->
+    <!--      >-->
+    <!--        <div>{{ activeText }}</div>-->
+    <!--      </bm-overlay>-->
+    <bm-point-collection
+      v-if="collectionShow"
+      color="red"
+      :points="collectionPoints"
+      shape="BMAP_POINT_SHAPE_STAR"
+      size="BMAP_POINT_SIZE_SMALL"
+      @click.native="_clickHandler"
+    />
+    <bm-local-search
+      v-if="searchShow"
+      :auto-viewport="true"
+      :keyword="searchKeyword"
+      :location="searchLocation"
+    />
+    <bm-boundary
+      v-if="boundaryShow"
+      :name="boundaryName"
+      stroke-color="blue"
+      :stroke-weight="2"
+    />
 
-      <bm-navigation v-if="navShow" anchor="BMAP_ANCHOR_TOP_RIGHT" />
-      <bm-geolocation
-        v-if="geoShow"
-        anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
-        :auto-location="true"
-        :show-address-bar="true"
-      />
-      <bm-copyright
-        v-if="copyrightShow"
-        anchor="BMAP_ANCHOR_TOP_RIGHT"
-        :copyright="[
-          {
-            id: 1,
-            content: 'Copyright Message',
-            bounds: { ne: { lng: 110, lat: 40 }, sw: { lng: 0, lat: 0 } },
-          },
-          { id: 2, content: '<a>杭州数蛙科技有限公司</a>' },
-        ]"
-      />
-    </baidu-map>
-  </div>
+    <bm-navigation v-if="navShow" anchor="BMAP_ANCHOR_TOP_RIGHT" />
+    <bm-geolocation
+      v-if="geoShow"
+      anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+      :auto-location="true"
+      :show-address-bar="true"
+    />
+    <bm-copyright
+      v-if="copyrightShow"
+      anchor="BMAP_ANCHOR_TOP_RIGHT"
+      :copyright="[
+        {
+          id: 1,
+          content: 'Copyright Message',
+          bounds: { ne: { lng: 110, lat: 40 }, sw: { lng: 0, lat: 0 } },
+        },
+        { id: 2, content: '<a>杭州数蛙科技有限公司</a>' },
+      ]"
+    />
+  </baidu-map>
 </template>
 
 <script>
@@ -301,6 +306,10 @@
         default: false,
       },
       labelShow: {
+        type: Boolean,
+        default: false,
+      },
+      bmLabel: {
         type: Boolean,
         default: false,
       },
@@ -676,15 +685,15 @@
       circleCenter: {
         type: Object,
         default: () => {
-          116.404
-          39.915
+          lng: 116.404
+          lat: 39.915
         },
       },
       mapCenter: {
-        type: Array,
+        type: Object,
         default: () => {
-          116.404
-          39.915
+          lng: 116.404
+          lat: 39.915
         },
       },
       circleRadius: {
@@ -713,6 +722,21 @@
         default: () => {
           116.404
           39.915
+        },
+      },
+      label: {
+        type: Object,
+        default: () => {
+          content: '我爱北京天安门'
+          style: {
+            color: 'red'
+            fontSize: '24px'
+          }
+          position: {
+            lng: 116.404
+            lat: 39.915
+          }
+          title: '我是title'
         },
       },
       infoWindowTitle: {
