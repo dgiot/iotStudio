@@ -420,7 +420,7 @@
               <el-form-item
                 v-show="custom_status != 'edit'"
                 :label="$translateTitle('product.Current department')"
-                prop="relationApp"
+                :prop="custom_status != 'edit' ? 'relationApp' : ''"
               >
                 <el-input
                   v-model="form.relationApp"
@@ -2305,8 +2305,8 @@
           },
         }
         this.$refs.form.validate((valid) => {
+          // 判断是新增产品还是修改
           if (valid) {
-            // 判断是新增产品还是修改
             if (this.custom_status === 'add') {
               var ranNum = Math.ceil(Math.random() * 25)
               var productSecret = Base64.encode(
@@ -2338,7 +2338,9 @@
               dgiotlog.log('createProduct', params)
               this.createProduct(params)
             } else {
-              dgiotlog.log('editProduct', initparams)
+              console.log('editProduct', initparams)
+              delete initparams.category
+              delete initparams.producttemplet
               this.editProduct(initparams)
             }
           } else {
