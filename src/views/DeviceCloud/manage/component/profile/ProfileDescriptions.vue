@@ -178,15 +178,6 @@
       <div v-if="tableType == 'things'" :key="tableType + thingKey">
         <el-table-column
           align="center"
-          fixed="left"
-          :label="$translateTitle('product.identifier')"
-          prop="dataForm.round"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-        <el-table-column
-          align="center"
           :label="$translateTitle('product.order')"
           prop="dataForm.order"
           show-overflow-tooltip
@@ -214,15 +205,6 @@
           align="center"
           :label="$translateTitle('product.protocol')"
           prop="dataForm.protocol"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.functionaltypes')"
-          prop="product.attribute"
           show-overflow-tooltip
           sortable
           width="auto"
