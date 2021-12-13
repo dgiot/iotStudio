@@ -131,7 +131,7 @@
           :height="height"
           border
           size="mini"
-          style="width: 90%"
+          style="width: 100%"
         >
           <el-table-column
             label="ProductID"
@@ -753,7 +753,7 @@
       </a-drawer>
       <!--新增字典数据-->
       <el-dialog
-        
+
         :append-to-body="true"
         :before-close="closeDict"
         :close-on-click-modal="false"

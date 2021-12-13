@@ -53,7 +53,6 @@
           :cell-style="{ 'text-align': 'center' }"
           :data="tableData"
           :header-cell-style="{ 'text-align': 'center' }"
-          :height="height"
           style="width: 100%"
         >
           <el-table-column
