@@ -55,7 +55,7 @@ html {
           transition: $base-transition;
 
           > section {
-            height: calc(100vh - #{$base-top-bar-height} * 2.4);
+            height: calc(100vh - #{$base-top-bar-height} * 1.9);
             overflow-x: hidden;
             overflow-y: scroll;
             background: $base-color-white;

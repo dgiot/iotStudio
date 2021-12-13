@@ -45,7 +45,11 @@
           {{ $translateTitle('product.preservation') }}
         </el-button>
       </div>
-      <el-table :data="parserTableList.parser" :height="height" style="width: 100%">
+      <el-table
+        :data="parserTableList.parser"
+        :height="height"
+        style="width: 100%"
+      >
         <el-table-column
           :label="$translateTitle('product.chinesetitle')"
           align="center"
@@ -122,7 +126,7 @@
           </el-button>
         </el-form-item>
       </el-form>
-      <div class="protable">
+      <el-card>
         <el-table
           v-loading="listLoading"
           :cell-style="{ 'text-align': 'center' }"
@@ -136,15 +140,24 @@
           <el-table-column
             label="ProductID"
             prop="objectId"
+            width="auto"
             show-overflow-tooltip
             sortable
           />
-          <el-table-column :label="$translateTitle('product.productname')">
-            <template #default="{ row }">
-              <span>{{ row.name }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column :label="$translateTitle('product.nodetype')">
+          <el-table-column
+            width="auto"
+            show-overflow-tooltip
+            sortable
+            prop="name"
+            :label="$translateTitle('product.productname')"
+          />
+          <el-table-column
+            show-overflow-tooltip
+            sortable
+            prop="nodeType"
+            width="160"
+            :label="$translateTitle('product.nodetype')"
+          >
             <template #default="{ row }">
               <span v-if="row.nodeType == 3">
                 {{ $translateTitle('product.direct') }}
@@ -160,7 +173,13 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column :label="$translateTitle('product.classification')">
+          <el-table-column
+            show-overflow-tooltip
+            sortable
+            prop="nodeType"
+            width="auto"
+            :label="$translateTitle('product.classification')"
+          >
             <template #default="{ row }">
               <span>
                 {{ row.category ? row.category.name : '' }}
@@ -174,7 +193,13 @@
           <!--              </span>-->
           <!--            </template>-->
           <!--          </el-table-column>-->
-          <el-table-column :label="$translateTitle('product.addingtime')">
+          <el-table-column
+            show-overflow-tooltip
+            sortable
+            prop="createdAt"
+            width="auto"
+            :label="$translateTitle('product.addingtime')"
+          >
             <template #default="{ row }">
               <span>{{ utc2beijing(row.createdAt) }}</span>
             </template>
@@ -183,14 +208,15 @@
             ref="rightCol"
             :label="$translateTitle('developer.operation')"
             fixed="right"
-            min-width="100"
+            width="auto"
+            min-width="160"
           >
             <template #default="{ row, $index }">
               <el-button
                 :underline="false"
                 size="mini"
                 type="primary"
-                style="margin-left:10px"
+                style="margin-left: 10px"
                 @click="deviceToDetail(row)"
               >
                 {{ $translateTitle('product.config') }}
@@ -227,17 +253,17 @@
             </template>
           </el-table-column>
         </el-table>
-      </div>
-      <div class="elpagination" style="margin-top: 20px">
-        <el-pagination
-          :page-size="length"
-          :page-sizes="[10, 20, 30, 50]"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @current-change="productCurrentChange"
-          @size-change="productSizeChange"
-        />
-      </div>
+        <div class="elpagination" style="margin-top: 20px">
+          <el-pagination
+            :page-size="length"
+            :page-sizes="[10, 20, 30, 50]"
+            :total="total"
+            layout="total, sizes, prev, pager, next, jumper"
+            @current-change="productCurrentChange"
+            @size-change="productSizeChange"
+          />
+        </div>
+      </el-card>
     </div>
     <div class="devproduct-prodialog">
       <!-- 创建产品对话框 ###-->
@@ -753,7 +779,6 @@
       </a-drawer>
       <!--新增字典数据-->
       <el-dialog
-
         :append-to-body="true"
         :before-close="closeDict"
         :close-on-click-modal="false"

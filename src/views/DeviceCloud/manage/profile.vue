@@ -177,16 +177,14 @@
           >
             <el-table-column
               :label="$translateTitle('product.productname')"
+              prop="name"
               show-overflow-tooltip
               sortable
-              width="80"
-            >
-              <template #default="{ row }">
-                <span>{{ row.name }}</span>
-              </template>
-            </el-table-column>
+              width="auto"
+            />
             <el-table-column
               :label="$translateTitle('product.classification')"
+              prop="name"
               show-overflow-tooltip
               sortable
               width="80"
@@ -200,12 +198,11 @@
             <el-table-column
               fixed="right"
               :label="$translateTitle('developer.operation')"
-              width="145"
+              width="auto"
             >
               <template #default="{ row }">
                 <el-button
-                  size="mini"
-                  type="success"
+                  type="text"
                   :underline="false"
                   @click.stop="editproducttemp(row)"
                 >
@@ -213,8 +210,8 @@
                 </el-button>
                 <el-button
                   slot="reference"
-                  size="mini"
-                  type="danger"
+                  style="color: red"
+                  type="text"
                   @click.stop="deleteproducttemp(row)"
                 >
                   {{ $translateTitle('developer.delete') }}

@@ -108,6 +108,6 @@ router.afterEach((to) => {
     dgiotlog
       .getDgiotlog('src/dgiot/plugins/permissions.js')
       .info('router ->', routecInfo)
-
+  dgiot.router = routecInfo
   if (VabProgress.status) VabProgress.done()
 })

@@ -464,9 +464,11 @@
                 </template>
               </el-table-column>
               <el-table-column
+                align="center"
                 fixed="right"
                 :label="$translateTitle('developer.operation')"
                 min-width="100"
+                width="auto"
               >
                 <template #default="{ row }">
                   <el-button
