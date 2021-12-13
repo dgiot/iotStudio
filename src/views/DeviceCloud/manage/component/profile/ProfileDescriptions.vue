@@ -169,21 +169,56 @@
           : []
       "
       :header-cell-style="{ 'text-align': 'center' }"
-      height="60vh"
       highlight-current-row
       size="medium"
       style="width: 100%"
     >
       <div v-if="tableType == 'things'" :key="tableType + thingKey">
         <el-table-column type="expand">
-          <template
-            v-if="row.dataType.type == 'struct'"
-            slot-scope="{ row }"
-            class="opentable"
-          >
+          <template slot-scope="{ row }" class="opentable">
+            <el-descriptions
+              border
+              :column="2"
+              direction="vertical"
+              size="medium"
+            >
+              <el-descriptions-item :label="$translateTitle('product.Rounds')">
+                {{ row.dataForm.round }}
+              </el-descriptions-item>
+              <el-descriptions-item
+                :label="$translateTitle('product.Strategy')"
+              >
+                {{ row.dataForm.strategy }}
+              </el-descriptions-item>
+              <el-descriptions-item
+                :label="$translateTitle('product.protocol')"
+              >
+                {{
+                  row.dataForm && row.dataForm.protocol
+                    ? row.dataForm.protocol
+                    : ''
+                }}
+              </el-descriptions-item>
+              <el-descriptions-item
+                :label="$translateTitle('product.functionaltypes')"
+              >
+                <el-tag size="small">
+                  {{ $translateTitle('product.attribute') }}
+                </el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item
+                :label="$translateTitle('product.datatype')"
+              >
+                <span>{{ row.dataType.type }}</span>
+              </el-descriptions-item>
+              <el-descriptions-item :label="$translateTitle('product.order')">
+                {{ row.dataForm.order }}
+              </el-descriptions-item>
+            </el-descriptions>
             <el-table
+              v-if="row.dataType.type == 'struct'"
               :data="row.dataType.specs"
-              style="box-sizing: border-box; width: 60%; text-align: center"
+              style="box-sizing: border-box; text-align: center"
             >
               <el-table-column
                 align="center"
@@ -220,53 +255,10 @@
           sortable
           width="80"
         >
-          <template #default="{ row }">
-            {{ row.dataForm.order }}
+          <template #default="{ $index }">
+            {{ $index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.Rounds')"
-          sortable
-          width="80"
-        >
-          <template #default="{ row }">
-            {{ row.dataForm.round }}
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.Strategy')"
-          sortable
-          width="80"
-        >
-          <template #default="{ row }">
-            {{ row.dataForm.strategy }}
-          </template>
-        </el-table-column>
-
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.protocol')"
-          sortable
-          width="80"
-        >
-          <template #default="{ row }">
-            {{
-              row.dataForm && row.dataForm.protocol ? row.dataForm.protocol : ''
-            }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.functionaltypes')"
-          sortable
-          width="120"
-        >
-          <span>{{ $translateTitle('product.attribute') }}</span>
-        </el-table-column>
-
         <el-table-column
           align="center"
           :label="$translateTitle('product.identifier')"
@@ -279,15 +271,6 @@
           prop="name"
           sortable
         />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.datatype')"
-          sortable
-        >
-          <template #default="{ row }">
-            <span>{{ row.dataType.type }}</span>
-          </template>
-        </el-table-column>
         <el-table-column
           align="center"
           :label="$translateTitle('product.datadefinition')"

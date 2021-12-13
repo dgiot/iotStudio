@@ -24,7 +24,7 @@
 
 
 
-## [4.4.1](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.9...v4.4.1) (2021-12-03)
+## [4.4.1](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.0...v4.4.1) (2021-12-03)
 
 
 ### Bug Fixes
@@ -33,7 +33,6 @@
 * **package.json devdependencies:** "amis": "1.4.1", ([cc41fd1](https://github.com/dgiot/dgiot-dashboard/commit/cc41fd1321fd6c978cec643922ecec823938626b))
 * **package.json:** dependencies docx-preview ([d66f132](https://github.com/dgiot/dgiot-dashboard/commit/d66f132662a5a24b75eefb910a8a1b3fa69ae3bc))
 * **src/utils/request.js && src/config/setting.config.js:** ignoreApi ([2f78a6a](https://github.com/dgiot/dgiot-dashboard/commit/2f78a6a4c95194edc2e71fc714d28d7ceca9964f))
-* src/views/CloudFunction/engine/channel.vue ([eff96db](https://github.com/dgiot/dgiot-dashboard/commit/eff96db540214c54ddfec184b1336bb8ce2235ad))
 * **src/views/cloudfunction/engine/createchannel.vue:** channel ([61fb3c0](https://github.com/dgiot/dgiot-dashboard/commit/61fb3c07d0ba2ac124c83d98b0c46084707ef3af))
 * **src/views/cloudfunction/topo/components/topoheader.vue:** src/views/CloudFunction ([d41d339](https://github.com/dgiot/dgiot-dashboard/commit/d41d33967b5d10767e8e39450fe07ae79944f4a7))
 * **src/views/devicecloud/manage/home_index.vue:** device ([10db17a](https://github.com/dgiot/dgiot-dashboard/commit/10db17a2befffc61f257e21c2011f355c2219b89))
@@ -45,9 +44,50 @@
 
 ### Features
 
-* **:bookmark::** dgiot-dashboard version 4.3.9 ([88ea0a9](https://github.com/dgiot/dgiot-dashboard/commit/88ea0a90286db376854c977b463d229b7723d009))
 * /rules_engine/engine ([3ddca7c](https://github.com/dgiot/dgiot-dashboard/commit/3ddca7cc88f0617aa45ba68576e4ac3954be8182))
 * addchilddevice ([e38fedc](https://github.com/dgiot/dgiot-dashboard/commit/e38fedcbb4a686a00fc46290e1331bef36bbdaf2))
+* editdevices ([d93cdb0](https://github.com/dgiot/dgiot-dashboard/commit/d93cdb03cb5a76c45ad0f67361cb447ca8a33624))
+* **package.json:** dependencies ([a7e4506](https://github.com/dgiot/dgiot-dashboard/commit/a7e4506f98f3869d27f5e1a4621ec8c4ce0ed0b2))
+* **src/dgiot/components/vabroletree/index.vue:** click the current role tree by default ([ddeeb71](https://github.com/dgiot/dgiot-dashboard/commit/ddeeb7154b5112836223668c59e81a35a7139edc))
+* **src/registerserviceworker.js:** pwa ([d36c2eb](https://github.com/dgiot/dgiot-dashboard/commit/d36c2ebe3cc65ca07290db727fd440bdbec0ea69))
+* **src/store/index.js:** component information prompt ([24b203c](https://github.com/dgiot/dgiot-dashboard/commit/24b203c833e62a594ed8b29e8aba1d6b8b2a849c))
+* **src/store/modules/user.js:** modify multiple requests after login to Promise.all ([a42bc55](https://github.com/dgiot/dgiot-dashboard/commit/a42bc558db0873fe69b4bd4f1fca76adc47c92d6))
+* **src/utils/dgiotlog.js:** dgiotlog ([ece9228](https://github.com/dgiot/dgiot-dashboard/commit/ece9228f89d00ab9ad6ca3f9cf03c9e644722212))
+* **src/utils/konva/core/canvas.js:** enlarge and reduce the configuration ([a99860b](https://github.com/dgiot/dgiot-dashboard/commit/a99860b6796d1abc7981d0b2cb82e165fab5bd33))
+* **src/views/cloudfunction/dict/components/dgiotword.vue:** samplingnumber ([929dd17](https://github.com/dgiot/dgiot-dashboard/commit/929dd17d5a46babdb81b8031e4f913c3476992b5))
+* **src/views/cloudfunction/topo/evidence/index.vue:** audit data under different circumstances ([807aaa2](https://github.com/dgiot/dgiot-dashboard/commit/807aaa241d6f0d3660ae864e052da6f858dc12dc))
+* **src/views/cloudfunction/topo/evidence/index.vue:** evidence ([3d03948](https://github.com/dgiot/dgiot-dashboard/commit/3d039484454e1251282cf478fdded12667415f7f))
+* **src/views/cloudfunction/topo/evidence/index.vue:** evidence ([3f42b63](https://github.com/dgiot/dgiot-dashboard/commit/3f42b632f89a518dce98b0556635cf2805dfc582))
+* **src/views/cloudfunction/topo/js/evidence.js:** evidence list display ([5617a9a](https://github.com/dgiot/dgiot-dashboard/commit/5617a9a879046d5969b25fc036608835f1d24e1d))
+* **src/views/cloudfunction/topo/js/evidence.js:** perfect review process ([1d2e55f](https://github.com/dgiot/dgiot-dashboard/commit/1d2e55f10fc06312f8f368d5856ad42992b5b600))
+* src/views/CloudTest/js/task.js ([a2e133b](https://github.com/dgiot/dgiot-dashboard/commit/a2e133b1a2c361a0570b93139d2e4f2a87ab2db0))
+* **src/views/cloudtest/js/task.js:** preview after report is generated ([d67716e](https://github.com/dgiot/dgiot-dashboard/commit/d67716eba44c8f964203f9b1fb4d7ce42082eb92))
+* vue.config.js ([70adfaa](https://github.com/dgiot/dgiot-dashboard/commit/70adfaa4fdc7f8b52eeb129366abfbf521a192b4))
+
+
+### Performance Improvements
+
+* **4.4.0:** :bookmark: ([242ab51](https://github.com/dgiot/dgiot-dashboard/commit/242ab51d00bb753c073240c5519c12b22b77259a))
+* **package.json:** :bookmark: ([7cae5ee](https://github.com/dgiot/dgiot-dashboard/commit/7cae5ee9b56a1147109f9cd8ddc51c894540332c))
+
+
+### Reverts
+
+* **delete unnecessary files, in order to avoid unnecessary trouble:** delete unnecessary files ([7bf8517](https://github.com/dgiot/dgiot-dashboard/commit/7bf8517065e334549be64771778bc58c57d44286))
+
+
+
+# [4.4.0](https://github.com/dgiot/dgiot-dashboard/compare/v4.3.9...v4.4.0) (2021-11-26)
+
+
+### Bug Fixes
+
+* src/views/CloudFunction/engine/channel.vue ([eff96db](https://github.com/dgiot/dgiot-dashboard/commit/eff96db540214c54ddfec184b1336bb8ce2235ad))
+
+
+### Features
+
+* **:bookmark::** dgiot-dashboard version 4.3.9 ([88ea0a9](https://github.com/dgiot/dgiot-dashboard/commit/88ea0a90286db376854c977b463d229b7723d009))
 * **amis lowcode:** added amis-editor editor to dgiot-dashboard ([ee93e17](https://github.com/dgiot/dgiot-dashboard/commit/ee93e1749c4733009d4822e36394769c4ecbdbb6))
 * change scope.row.index of element-ui to index ([0bbcc4c](https://github.com/dgiot/dgiot-dashboard/commit/0bbcc4c9415197f9188b478d6c78d267ed651124))
 * change scope.row.index of element-ui to index ([4806d4c](https://github.com/dgiot/dgiot-dashboard/commit/4806d4c72114a928d610acc1a54c52f11ee4f16a))
@@ -58,13 +98,11 @@
 * **dialog:** solve the flickering problem of el-dialog ([0073ae6](https://github.com/dgiot/dgiot-dashboard/commit/0073ae6a28e2b3417848d98fb2f3ce89c63ee2bb))
 * dict ([44c07bd](https://github.com/dgiot/dgiot-dashboard/commit/44c07bd0219fadeb46378db6bbb074ac1c5dda74))
 * down docx ([6599304](https://github.com/dgiot/dgiot-dashboard/commit/659930456f3135aee5b73b7203830972a3ee96ae))
-* editdevices ([d93cdb0](https://github.com/dgiot/dgiot-dashboard/commit/d93cdb03cb5a76c45ad0f67361cb447ca8a33624))
 * **enter the low code when creating the channel:** enter the low code when creating the channel ([c508d65](https://github.com/dgiot/dgiot-dashboard/commit/c508d6548a82698a98472b3ff34876786ea681fc))
 * **file name:** rename the folder directory vab to dgiot ([643d525](https://github.com/dgiot/dgiot-dashboard/commit/643d5252c6a9f6070e8876caefd8773adc8fe595))
 * **global role tree request normalization:** global role tree request normalization ([3df9798](https://github.com/dgiot/dgiot-dashboard/commit/3df97989b7dc822c8fb1ece23f4aabbbc6743cd9))
 * **lowcode amis:** lowcode amis ([f0a70c4](https://github.com/dgiot/dgiot-dashboard/commit/f0a70c4985fe1346a34a04d651301edcf66bdbf2))
 * **lowcode:** lowcode save put ([86f8575](https://github.com/dgiot/dgiot-dashboard/commit/86f85759f10a9911d5438090d1aee766e5e0fcca))
-* **package.json:** dependencies ([a7e4506](https://github.com/dgiot/dgiot-dashboard/commit/a7e4506f98f3869d27f5e1a4621ec8c4ce0ed0b2))
 * **package.json:** increase-memory-limit ([de0b0cf](https://github.com/dgiot/dgiot-dashboard/commit/de0b0cf8c9852037c1e78f4381af81c92974dcd0))
 * **package.json:** max_old_space_size ([b5f2b61](https://github.com/dgiot/dgiot-dashboard/commit/b5f2b61365e364207ec0a6c9f354a319c1478f6b))
 * pwa ([9807e11](https://github.com/dgiot/dgiot-dashboard/commit/9807e11070da2ebeaa31c3951b450e2370a82bba))
@@ -78,39 +116,25 @@
 * **src/dgiot/components/vabamis/render.vue:** amis request variable substitution ([96707c1](https://github.com/dgiot/dgiot-dashboard/commit/96707c1a152ec8553d222d05122e94fbc9602a4b))
 * **src/dgiot/components/vabamiseditor/index.vue:** vabAmisEditor ([13eff01](https://github.com/dgiot/dgiot-dashboard/commit/13eff0112ae608788ab75a5c877e6b5ca248c3b3))
 * **src/dgiot/components/vabparsepagination/index.vue:** processing when components pass parameters ([ac64369](https://github.com/dgiot/dgiot-dashboard/commit/ac643696cd30f951325286b79370e67bf14ff7d1))
-* **src/dgiot/components/vabroletree/index.vue:** click the current role tree by default ([ddeeb71](https://github.com/dgiot/dgiot-dashboard/commit/ddeeb7154b5112836223668c59e81a35a7139edc))
 * **src/dgiot/components/vabroletree/index.vue:** switch department ([082df03](https://github.com/dgiot/dgiot-dashboard/commit/082df03e31a0a3e2bb76b1527544e4af1040b665))
-* **src/registerserviceworker.js:** pwa ([d36c2eb](https://github.com/dgiot/dgiot-dashboard/commit/d36c2ebe3cc65ca07290db727fd440bdbec0ea69))
-* **src/store/index.js:** component information prompt ([24b203c](https://github.com/dgiot/dgiot-dashboard/commit/24b203c833e62a594ed8b29e8aba1d6b8b2a849c))
 * **src/store/modules/topo.js:** report full screen processing ([6ac96d3](https://github.com/dgiot/dgiot-dashboard/commit/6ac96d37e3503ba993ad33cba4558e656dd36a0f))
 * **src/store/modules/user.js:** login prompt message ([43addf6](https://github.com/dgiot/dgiot-dashboard/commit/43addf64ee03d39199dd58f6250fd0be642a6793))
-* **src/store/modules/user.js:** modify multiple requests after login to Promise.all ([a42bc55](https://github.com/dgiot/dgiot-dashboard/commit/a42bc558db0873fe69b4bd4f1fca76adc47c92d6))
-* **src/utils/dgiotlog.js:** dgiotlog ([ece9228](https://github.com/dgiot/dgiot-dashboard/commit/ece9228f89d00ab9ad6ca3f9cf03c9e644722212))
-* **src/utils/konva/core/canvas.js:** enlarge and reduce the configuration ([a99860b](https://github.com/dgiot/dgiot-dashboard/commit/a99860b6796d1abc7981d0b2cb82e165fab5bd33))
 * **src/utils/konva/core/topothing.js:** dgiot_evidence ([1078703](https://github.com/dgiot/dgiot-dashboard/commit/10787038c218bf542f4375c09b0f37eb3dbc549c))
 * **src/utils/request.js:** refreshAuthToken ([18a481b](https://github.com/dgiot/dgiot-dashboard/commit/18a481be558de716eb75d19bdcc0d219a0925a74))
 * **src/views/cloudfunction/amis/editor.vue:** preview ([99689bb](https://github.com/dgiot/dgiot-dashboard/commit/99689bba283040c23ac3dd019e7ec013e3fc6fd1))
 * **src/views/cloudfunction/dict/components/dgiotword.vue:** dgiotword ([9492819](https://github.com/dgiot/dgiot-dashboard/commit/9492819ecf14d687355db7f059835d20459615c9))
-* **src/views/cloudfunction/dict/components/dgiotword.vue:** samplingnumber ([929dd17](https://github.com/dgiot/dgiot-dashboard/commit/929dd17d5a46babdb81b8031e4f913c3476992b5))
 * **src/views/cloudfunction/dict/index.vue:** cloudFunction_dict ([5731a74](https://github.com/dgiot/dgiot-dashboard/commit/5731a74de5aee754c9a8cd0dd8648fd2c2cb9325))
 * **src/views/cloudfunction/dict/index.vue:** cloudFunction_dict ([6ddfac3](https://github.com/dgiot/dgiot-dashboard/commit/6ddfac30827b0bb72b5bf97c9624431f2fafa1fc))
 * **src/views/cloudfunction/lowcode/components/dgiotkonva.vue:** low-code configuration rendering ([f85ac10](https://github.com/dgiot/dgiot-dashboard/commit/f85ac102573aa3b0f805c4edd59145b1214c0ffb))
 * **src/views/cloudfunction/topo/components/thing.vue:** the forensic configuration is saved to view ([4cfa23b](https://github.com/dgiot/dgiot-dashboard/commit/4cfa23bdbd2c2cd5ad9f1039cbf29b4009abf73b))
-* **src/views/cloudfunction/topo/evidence/index.vue:** audit data under different circumstances ([807aaa2](https://github.com/dgiot/dgiot-dashboard/commit/807aaa241d6f0d3660ae864e052da6f858dc12dc))
 * **src/views/cloudfunction/topo/evidence/index.vue:** complete the forensic steps ([fe2684e](https://github.com/dgiot/dgiot-dashboard/commit/fe2684eb40db550a91b5859d9361f908bd5205fe))
-* **src/views/cloudfunction/topo/evidence/index.vue:** evidence ([3d03948](https://github.com/dgiot/dgiot-dashboard/commit/3d039484454e1251282cf478fdded12667415f7f))
-* **src/views/cloudfunction/topo/evidence/index.vue:** evidence ([3f42b63](https://github.com/dgiot/dgiot-dashboard/commit/3f42b632f89a518dce98b0556635cf2805dfc582))
 * **src/views/cloudfunction/topo/evidence/index.vue:** test report display ([bc63e9a](https://github.com/dgiot/dgiot-dashboard/commit/bc63e9a55a80a403a4c72eef67392c0397f94574))
 * src/views/CloudFunction/topo/js/evidence.js ([21353c6](https://github.com/dgiot/dgiot-dashboard/commit/21353c6596e1a3d758b9c87c4a44f09c58e2def6))
 * **src/views/cloudfunction/topo/js/evidence.js:** deposit evidence ([0518656](https://github.com/dgiot/dgiot-dashboard/commit/051865624780d1238f08941fd17748e6a1b47803))
-* **src/views/cloudfunction/topo/js/evidence.js:** evidence list display ([5617a9a](https://github.com/dgiot/dgiot-dashboard/commit/5617a9a879046d5969b25fc036608835f1d24e1d))
 * **src/views/cloudfunction/topo/js/evidence.js:** list of evidence ([69dd9c4](https://github.com/dgiot/dgiot-dashboard/commit/69dd9c4f938bf731c774d7ff29874e833be1a5a2))
-* **src/views/cloudfunction/topo/js/evidence.js:** perfect review process ([1d2e55f](https://github.com/dgiot/dgiot-dashboard/commit/1d2e55f10fc06312f8f368d5856ad42992b5b600))
 * **src/views/cloudot/maintenance/myticket.vue:** query all products ([92fa4b8](https://github.com/dgiot/dgiot-dashboard/commit/92fa4b89309946261c3aa0b8acf42278c32d6a23))
-* src/views/CloudTest/js/task.js ([a2e133b](https://github.com/dgiot/dgiot-dashboard/commit/a2e133b1a2c361a0570b93139d2e4f2a87ab2db0))
 * **src/views/cloudtest/js/task.js:** add test report to remove permissions ([5a9da7b](https://github.com/dgiot/dgiot-dashboard/commit/5a9da7bcebfe66f064c2d11370ddfd05279b8fb0))
 * **src/views/cloudtest/js/task.js:** download the report file ([66aa304](https://github.com/dgiot/dgiot-dashboard/commit/66aa30417ca6cd941fec47dbfc24221aa12a4b3f))
-* **src/views/cloudtest/js/task.js:** preview after report is generated ([d67716e](https://github.com/dgiot/dgiot-dashboard/commit/d67716eba44c8f964203f9b1fb4d7ce42082eb92))
 * **src/views/cloudtest/task/index.vue:** testtask ([5c9d88f](https://github.com/dgiot/dgiot-dashboard/commit/5c9d88f60c283b87a921aca065c8bdd961bea2ad))
 * **src/views/cloudtest/task:** enter pressure test report ([1b38b09](https://github.com/dgiot/dgiot-dashboard/commit/1b38b096c7712179f8abeb1655adef3d67fc1f63))
 * **src/views/devicecloud/manage/component/profile/profiledescriptions.vue:** adding low code amis ([9a4031b](https://github.com/dgiot/dgiot-dashboard/commit/9a4031beed78ebc4d964900b1c3baeae5b4beea5))
@@ -128,20 +152,12 @@
 * **tree:** global department tree switch ([3d7c614](https://github.com/dgiot/dgiot-dashboard/commit/3d7c614853b56595ad4ee868d0581124d6c64cf6))
 * **tree:** u ([a5adc7c](https://github.com/dgiot/dgiot-dashboard/commit/a5adc7cddb3b3ff236caeb26429e071349ab8e44))
 * **user:** toggle token ([6bd0130](https://github.com/dgiot/dgiot-dashboard/commit/6bd01308b4d5b5ec73dac37be227d78bcf58eab7))
-* vue.config.js ([70adfaa](https://github.com/dgiot/dgiot-dashboard/commit/70adfaa4fdc7f8b52eeb129366abfbf521a192b4))
 * **vue.config.js:** monacoWebpackPlugin ([35fccaf](https://github.com/dgiot/dgiot-dashboard/commit/35fccaffabdb19a9570e8e387192c05c9da3cd16))
 
 
 ### Performance Improvements
 
-* **4.4.0:** :bookmark: ([242ab51](https://github.com/dgiot/dgiot-dashboard/commit/242ab51d00bb753c073240c5519c12b22b77259a))
-* **package.json:** :bookmark: ([7cae5ee](https://github.com/dgiot/dgiot-dashboard/commit/7cae5ee9b56a1147109f9cd8ddc51c894540332c))
 * **src/views/cloudfunction/dict/index.vue:** cloudFunctionDict page ([8d1759b](https://github.com/dgiot/dgiot-dashboard/commit/8d1759bcc3ed5c2cfe409a00c28e0e308e2f3803))
-
-
-### Reverts
-
-* **delete unnecessary files, in order to avoid unnecessary trouble:** delete unnecessary files ([7bf8517](https://github.com/dgiot/dgiot-dashboard/commit/7bf8517065e334549be64771778bc58c57d44286))
 
 
 
