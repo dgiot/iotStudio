@@ -77,7 +77,7 @@
     "logrocket": "^2.1.1",
     "logrocket-vuex": "^0.0.3",
     "mammoth": "^1.4.19",
-    "monaco-editor-webpack-plugin": "6.0.0",
+    "monaco-editor-webpack-plugin": "7.0.0",
     "node-cmd": "^5.0.0",
     "plop": "^2.7.6",
     "q": "^1.5.1",
