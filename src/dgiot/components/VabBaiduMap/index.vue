@@ -240,7 +240,7 @@
     BmView,
     BmWalking,
   } from 'vue-baidu-map'
-
+  import { secret } from '@/config/secret.config'
   export default {
     name: 'VabBaiduMap',
     components: {
@@ -411,7 +411,7 @@
       },
       ak: {
         type: String,
-        default: 'fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG',
+        default: secret.baidu.map,
       },
       mapHeight: {
         type: String,
@@ -703,13 +703,13 @@
       bounds: {
         type: Object,
         default: () => {
-          {
-            110
-            40
+          ne: {
+            lng: 110
+            lat: 40
           }
-          {
-            0
-            0
+          sw: {
+            lng: 0
+            lat: 0
           }
         },
       },

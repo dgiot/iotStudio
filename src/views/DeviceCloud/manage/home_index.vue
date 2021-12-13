@@ -41,7 +41,7 @@
         width="80vh"
       >
         <baidu-map
-          ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
+          :ak="secret.baidu.map"
           :center="center"
           :map-click="false"
           :scroll-wheel-zoom="true"
@@ -819,7 +819,7 @@
         </el-tab-pane>
         <el-tab-pane :label="$translateTitle('equipment.map')" name="second">
           <baidu-map
-            ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
+            :ak="secret.baidu.map"
             :center="{ lng: 116.404, lat: 39.915 }"
             class="map"
             :scroll-wheel-zoom="true"
@@ -1281,7 +1281,7 @@
           </el-form>
           <!-- <label>地址：<input v-model="bmapfrom.keyword"></label> -->
           <baidu-map
-            ak="fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG"
+            :ak="secret.baidu.map"
             :center="center"
             :map-click="false"
             :scroll-wheel-zoom="true"
@@ -1353,7 +1353,7 @@
   import { returnLogin } from '@/utils/utilwen'
   import { addimeidevice, putDevice, querycompanyDevice } from '@/api/Device'
   import { getToken } from '@/api/Menu'
-
+  import { secret } from '@/config/secret.config'
   var pcdata
   export default {
     components: {
@@ -1409,6 +1409,7 @@
         }
       }
       return {
+        secret: secret,
         addACL: {},
         videoOptions: ['m3u8', 'mp4', 'flv', 'mp3'],
         queryInfo: {},

@@ -813,7 +813,7 @@
     BmPanorama,
     BmScale,
   } from 'vue-baidu-map'
-
+  import { secret } from '@/config/secret.config'
   window.dgiot.dgiotEnv = process.env
   export default {
     name: 'Index',
@@ -858,7 +858,7 @@
         },
         mapType: 'tencent',
         isShow: true,
-        ak: 'fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG',
+        ak: secret.baidu.map ?? 'fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG',
         // ak: 'oW2UEhdth2tRbEE4FUpF9E5YVDCIPYih',
         // center:{ lng: 120.187273, lat: 30.334877 },
         center: { lng: 121.337516, lat: 28.48195 },

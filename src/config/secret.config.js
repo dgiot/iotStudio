@@ -11,7 +11,7 @@ module.exports = {
     //  百度相关
     baidu: {
       // 百度地图 Ak https://lbsyun.baidu.com/apiconsole/key#/home
-      map: '',
+      map: 'fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG',
       // 百度统计 https://tongji.baidu.com/web/homepage/index
       statistics: '',
     },
