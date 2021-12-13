@@ -787,7 +787,7 @@
 
   .mailtable td {
     box-sizing: border-box;
-    padding: 15px;
+    padding: 12px;
     font-size: 14px;
     color: #74777a;
     text-align: left;
@@ -802,14 +802,45 @@
     background: white;
   }
 </style>
-<style>
-  .editdevices .el-tabs__item {
-    height: 50px;
-    margin: 0;
-    margin-top: 20px;
-    font-family: auto;
-    font-size: 16px;
-    line-height: 50px;
+<style lang="scss">
+  @media screen and(max-width:600px) {
+    .editdevices {
+      .el-tabs__item {
+        height: 50px;
+        margin: 0;
+        margin-top: 5px;
+        font-family: auto;
+        font-size: 12px;
+        line-height: 50px;
+      }
+    }
+
+    .el-tabs {
+      width: 560px;
+      font-size: 12px;
+    }
+    .mailtable {
+      tr {
+        .cloumn {
+          font-size: 12px;
+        }
+      }
+      td {
+        width: 70px;
+        font-size: 10px;
+        padding: 1px;
+      }
+    }
+  }
+  @media screen and(min-width:601px) {
+    .editdevices .el-tabs__item {
+      height: 50px;
+      margin: 0;
+      margin-top: 20px;
+      font-family: auto;
+      font-size: 16px;
+      line-height: 50px;
+    }
   }
 
   .editdevices .el-tabs__content {

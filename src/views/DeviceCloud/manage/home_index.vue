@@ -322,11 +322,12 @@
               ref="filterTable"
               v-loading="listLoading"
               :border="border"
+              class="tab_wrap_1"
               :data="tableData"
               :row-style="rowClass"
               :size="lineHeight"
               :stripe="stripe"
-              style="width: 100%; margin-top: 20px; text-align: center"
+              style="margin-top: 20px; text-align: center"
               @selection-change="changeBox"
             >
               <el-table-column
@@ -343,7 +344,7 @@
                 prop="devaddr"
                 show-overflow-tooltip
                 sortable
-                width="120"
+                width="100"
               />
               <el-table-column
                 align="center"
@@ -413,7 +414,7 @@
                 prop="product.name"
                 show-overflow-tooltip
                 sortable
-                width="200"
+                width="100"
               >
                 <template #default="{ row }">
                   <span v-if="row.product && row.product.name">
@@ -463,14 +464,14 @@
                 </template>
               </el-table-column>
               <el-table-column
-                align="center"
                 fixed="right"
                 :label="$translateTitle('developer.operation')"
-                width="300"
+                min-width="100"
               >
                 <template #default="{ row }">
                   <el-button
                     size="mini"
+                    style="margin-left: 10px"
                     type="primary"
                     @click="deviceToDetail(row)"
                   >
@@ -953,7 +954,7 @@
         :close-on-click-modal="false"
         :title="$translateTitle('product.edit') + equipmentEditor"
         :visible.sync="devicedialogVisible"
-        width="50%"
+        width="70%"
       >
         <div slot="title" class="header-title">
           <span class="title-name">
@@ -2973,12 +2974,48 @@
   }
 </script>
 <style lang="scss" scoped>
-  ::v-deep {
-    .el-input-group__append {
-      //padding: 0;
+  @media screen and(max-width:600px) {
+    .multipane {
+      width: 500px;
+      .equtabs {
+        width: 500px;
+      }
+      .pane {
+        width: 500px;
+      }
+      .equde_wrap {
+        width: 500px;
+        .equdevices {
+          width: 100%;
+          .tabstable {
+            width: 90%;
+            .tab_wrap_1 {
+              width: 500px;
+              .operation_right {
+                width: 100px;
+              }
+            }
+          }
+        }
+      }
+    }
+    .el-tabs {
+      width: 100%;
+    }
+    .el-tabs__content {
+      .el-form {
+        width: 100%;
+        .el-row {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          .el-col-12 {
+            width: 80%;
+          }
+        }
+      }
     }
   }
-
   .equtabs {
     margin-top: -40px;
     //height: calc(120vh - #{$base-top-bar-height} * 4);

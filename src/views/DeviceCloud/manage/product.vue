@@ -45,7 +45,7 @@
           {{ $translateTitle('product.preservation') }}
         </el-button>
       </div>
-      <el-table :data="parserTableList.parser" :height="height">
+      <el-table :data="parserTableList.parser" :height="height" style="width: 100%">
         <el-table-column
           :label="$translateTitle('product.chinesetitle')"
           align="center"
@@ -131,7 +131,7 @@
           :height="height"
           border
           size="mini"
-          style="width: 100%"
+          style="width: 90%"
         >
           <el-table-column
             label="ProductID"
@@ -183,13 +183,14 @@
             ref="rightCol"
             :label="$translateTitle('developer.operation')"
             fixed="right"
-            width="360"
+            min-width="100"
           >
             <template #default="{ row, $index }">
               <el-button
                 :underline="false"
                 size="mini"
                 type="primary"
+                style="margin-left:10px"
                 @click="deviceToDetail(row)"
               >
                 {{ $translateTitle('product.config') }}
@@ -241,12 +242,13 @@
     <div class="devproduct-prodialog">
       <!-- 创建产品对话框 ###-->
       <el-drawer
+        v-drawerDrag
         :before-close="handleClose"
         :close-on-click-modal="false"
         :title="moduleTitle"
         :visible.sync="dialogFormVisible"
         append-to-body
-        size="60%"
+        size="80%"
         top="5vh"
       >
         <el-alert
@@ -751,6 +753,7 @@
       </a-drawer>
       <!--新增字典数据-->
       <el-dialog
+        
         :append-to-body="true"
         :before-close="closeDict"
         :close-on-click-modal="false"
@@ -2555,6 +2558,11 @@
   }
 </style>
 <style lang="scss" scoped>
+  @media screen and(max-width: 600px) {
+    .devproduct {
+      width: 500px;
+    }
+  }
   .devproduct {
     box-sizing: border-box;
     width: 100%;
