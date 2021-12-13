@@ -8,6 +8,7 @@
 // * @Demo http://39.97.252.98:3000
 import addNodeEvent from '@/utils/konva/common'
 import canvas from '@/utils/konva/core/canvas'
+import { noReloadRouter } from '@/config'
 
 const { konvaAttr, Layering, randomXy } = canvas
 window.canvas = canvas
@@ -146,7 +147,14 @@ const mutations = {
   },
   initKonva(state, args) {
     //  初始化konva
-    KonvaBus({
+    console.groupCollapsed(
+      '%c 初始化konva',
+      'color:#009a61; font-size: 28px; font-weight: 300'
+    )
+    console.info('state ->\n', state)
+    console.log('args)\n', args)
+    console.groupEnd()
+    return KonvaBus({
       type: 'createKonva',
       attr: args.id,
       json: args.data,
@@ -200,6 +208,7 @@ const mutations = {
         path: Evidence,
       })
     )
+    console.log('simpleEvidence\n', simpleEvidence)
     canvas.layer.add(simpleEvidence)
     canvas.layer.batchDraw()
     canvas.stage.batchDraw()

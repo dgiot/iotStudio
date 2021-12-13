@@ -18,7 +18,7 @@ const topoLable = {
         node: args,
       },
     }
-    dgiotlog.log('我是取证控件', params)
+    console.log('我是取证控件', params)
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   on(args) {
@@ -30,7 +30,7 @@ const topoLable = {
         text: args.findOne('Text').getAttr('text'),
       },
     }
-    // dgiotlog.log(params,Vue.prototype.$dgiotBus.emit(params.busTopicKey,params.msg))
+    // console.log(params,Vue.prototype.$dgiotBus.emit(params.busTopicKey,params.msg))
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   contextMenu(args) {
@@ -38,7 +38,7 @@ const topoLable = {
       const contextNode = canvas.clickItem
       if (!_.isEmpty(contextNode)) {
         contextNode[`${args.handler}`]((e) => {
-          dgiotlog.log(e, 'contextNode')
+          console.log(e, 'contextNode')
           canvas.layer.batchDraw()
           // canvas.stage.batchDraw()
         })
@@ -48,9 +48,9 @@ const topoLable = {
       // canvas.stage.batchDraw()
       // if(args.handler === 'remove') contextNode.destroy()
     } else {
-      dgiotlog.log(args)
+      console.log(args)
     }
-    dgiotlog.log('contextNode args', args)
+    console.log('contextNode args', args)
     canvas.layer.batchDraw()
     canvas.stage.batchDraw()
   },
@@ -108,8 +108,8 @@ const topoLable = {
         },
       ],
     })
-    dgiotlog.log('topoLable')
-    dgiotlog.log(topoThing)
+    console.log('topoLable')
+    console.log(topoThing)
     // return topoLable
 
     var simpleLabel = new Konva.Label({
@@ -146,11 +146,16 @@ const topoLable = {
         fill: 'white',
       })
     )
-    dgiotlog.log(simpleLabel)
+    console.log(simpleLabel)
     return simpleLabel
   },
   createdEvidence(args) {
-    dgiotlog.info('createdEvidence', args.path, args)
+    console.info(
+      'src/utils/konva/core/topoLable.js',
+      'createdEvidence',
+      args.path,
+      args
+    )
     const Axis = {
       x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
       y: 600 + canvas.randomXy(40, 10),

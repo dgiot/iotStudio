@@ -156,13 +156,13 @@
                 class="el-icon-plus"
                 plain
                 size="mini"
-                type="primary"
+                type="text"
                 @click.stop="addproducttemp(item)"
               />
             </li>
           </ul>
         </el-col>
-        <el-col :lg="7" :md="8" :sm="8" :xl="5" :xs="6">
+        <el-col :lg="5" :md="6" :sm="6" :xl="3" :xs="4">
           <el-table
             ref="multipleTable"
             v-loading="listLoading"
@@ -183,39 +183,25 @@
               width="auto"
             />
             <el-table-column
-              :label="$translateTitle('product.classification')"
-              prop="name"
-              show-overflow-tooltip
-              sortable
-              width="80"
-            >
-              <template #default="{ row }">
-                <span>
-                  {{ row.category ? row.category.name : '' }}
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column
               fixed="right"
               :label="$translateTitle('developer.operation')"
               width="auto"
             >
               <template #default="{ row }">
                 <el-button
-                  type="text"
-                  :underline="false"
-                  @click.stop="editproducttemp(row)"
-                >
-                  {{ $translateTitle('concentrator.edit') }}
-                </el-button>
-                <el-button
-                  slot="reference"
+                  class="el-icon-edit"
                   style="color: red"
+                  :title="$translateTitle('developer.delete')"
+                  type="text"
+                  @click.stop="editproducttemp(row)"
+                />
+                <el-button
+                  class="el-icon-delete"
+                  style="color: red"
+                  :title="$translateTitle('developer.delete')"
                   type="text"
                   @click.stop="deleteproducttemp(row)"
-                >
-                  {{ $translateTitle('developer.delete') }}
-                </el-button>
+                />
               </template>
             </el-table-column>
           </el-table>
@@ -230,7 +216,7 @@
             />
           </div>
         </el-col>
-        <el-col :lg="13" :md="11" :sm="10" :xl="16" :xs="14">
+        <el-col :lg="15" :md="13" :sm="12" :xl="18" :xs="16">
           <profile-descriptions
             ref="ProfileDescription"
             :decoder-table-list="decoderTableList"

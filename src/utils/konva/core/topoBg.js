@@ -25,18 +25,18 @@ const topoBg = {
       ? topobgSrc
       : Cookies.get('fileServer') + topobgSrc
     const setattrs = canvas.konvaAttr
-    dgiotlog.log('当前组态的背景底图是：', bgSrc, stage)
+    console.log('当前组态的背景底图是：', bgSrc, stage)
     // bgNode.on('contextmenu', (e) => {
-    //   dgiotlog.log('组态底图点击触发了鼠标右键事件 现在没有写处理事件 可能用得上 contextmenu', e.target)
+    //   console.log('组态底图点击触发了鼠标右键事件 现在没有写处理事件 可能用得上 contextmenu', e.target)
     // })
     // bgNode.on('click', (e) => {
     //   // canvas.clickItem = e.target
-    //   // dgiotlog.log('img click', e.target)
-    //   dgiotlog.log('点击了组态底图 现在没有写处理事件 可能用得上 contextmenu', e.target)
+    //   // console.log('img click', e.target)
+    //   console.log('点击了组态底图 现在没有写处理事件 可能用得上 contextmenu', e.target)
     // })
     BgimageObj.onload = () => {
       // layer.add(yoda)
-      dgiotlog.warn('setBg', layer)
+      console.warn('setBg', layer)
       var yoda = new Konva.Image(
         _.merge(
           bgNode.attrs,
@@ -55,7 +55,7 @@ const topoBg = {
       })
       // removeBg(canvas.json.file)
       layer.add(yoda)
-      dgiotlog.warn(yoda)
+      console.warn(yoda)
       // yoda.zIndex(-211111)
       yoda.moveToBottom()
     }
@@ -82,17 +82,17 @@ const topoBg = {
     stage.batchDraw()
     if (bgNode) {
       canvas.layer.find('Image').forEach((bgImg) => {
-        dgiotlog.log(bgImg, bgImg.getAttr('class'), bgImg.attrs.type)
+        console.log(bgImg, bgImg.getAttr('class'), bgImg.attrs.type)
         if (bgImg.attrs.type == 'bg-image' || bgImg.attrs.id == 'bg') {
           // 这里应该删掉所有的id为bg的元素 然后再创建
-          dgiotlog.log('删除这个元素', bgImg)
+          console.log('删除这个元素', bgImg)
           bgImg.remove()
           bgImg.destroy()
         } else {
-          dgiotlog.log('该图元不删除')
+          console.log('该图元不删除')
         }
         // bgImg.hide()
-        dgiotlog.log(bgImg)
+        console.log(bgImg)
         canvas.layer.batchDraw()
         canvas.stage.batchDraw()
         // canvas.bgNode = {}
@@ -100,16 +100,16 @@ const topoBg = {
       const BgimageObj = new Image()
       const bgSrc = src.includes('//') ? src : Cookies.get('fileServer') + src
       // bgNode.on('contextmenu', (e) => {
-      //   dgiotlog.log('组态底图点击触发了鼠标右键事件 现在没有写处理事件 可能用得上 contextmenu', e.target)
+      //   console.log('组态底图点击触发了鼠标右键事件 现在没有写处理事件 可能用得上 contextmenu', e.target)
       // })
       // bgNode.on('click', (e) => {
       //   // canvas.clickItem = e.target
-      //   // dgiotlog.log('img click', e.target)
-      //   dgiotlog.log('点击了组态底图 现在没有写处理事件 可能用得上 contextmenu', e.target)
+      //   // console.log('img click', e.target)
+      //   console.log('点击了组态底图 现在没有写处理事件 可能用得上 contextmenu', e.target)
       // })
       BgimageObj.onload = () => {
         // layer.add(yoda)
-        dgiotlog.warn('setBg', layer)
+        console.warn('setBg', layer)
         const yoda = new Konva.Image(
           _.merge(
             {
@@ -131,11 +131,11 @@ const topoBg = {
         })
         // removeBg(canvas.json.file)
         layer.add(yoda)
-        dgiotlog.warn(yoda)
+        console.warn(yoda)
         // yoda.zIndex(-211111)
         yoda.moveToBottom()
         // "attrs":{"id":"bg","type":"bg-image","width":1200,"height":700,"src":"//img7.ddove.com/upload/20181127/134600237598.jpg"
-        dgiotlog.log(yoda.toJSON())
+        console.log(yoda.toJSON())
         canvas.layer.batchDraw()
       }
       BgimageObj.src = bgSrc

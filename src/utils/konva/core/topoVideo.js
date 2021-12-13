@@ -4,7 +4,7 @@
  */
 const topoVideo = {
   on(args) {
-    dgiotlog.log(args)
+    console.log(args)
   },
 }
 window.topoVideo = topoVideo

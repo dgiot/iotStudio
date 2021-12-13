@@ -37,33 +37,34 @@
             :xs="isDevice || isFull ? 24 : gutter.xs"
             class="konva-container-main-baseCol"
           >
+            <div id="kevCurrent"></div>
             <el-main class="konva-container-baseCol-baseContainer">
               <Topo-base
                 ref="topobase"
                 style="position: absolute; width: 100%"
               />
-              <el-button
-                v-show="Boolean($route.query.guide)"
-                size="mini"
-                type="primary"
-                :disabled="$route.query.page < 0"
-                icon="el-icon-arrow-left"
-                style="position: relative; left: 0"
-                @click.native="nextPage('left')"
-              >
-                {{ $translateTitle('button.previous') }}
-              </el-button>
-              <el-button
-                :disabled="$route.query.page > $route.query.list.length"
-                v-show="Boolean($route.query.guide)"
-                type="primary"
-                size="mini"
-                icon="el-icon-arrow-right"
-                @click.native="nextPage('right')"
-                style="position: fixed; right: 30px"
-              >
-                {{ $translateTitle('button.next') }}
-              </el-button>
+              <div v-show="Boolean($route.query.guide)">
+                <el-button
+                  size="mini"
+                  type="primary"
+                  :disabled="$route.query.page < 0"
+                  icon="el-icon-arrow-left"
+                  style="position: relative; left: 0"
+                  @click.native="nextPage('left')"
+                >
+                  {{ $translateTitle('button.previous') }}
+                </el-button>
+                <el-button
+                  :disabled="$route.query.page > $route.query.list.length"
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-arrow-right"
+                  @click.native="nextPage('right')"
+                  style="position: fixed; right: 30px"
+                >
+                  {{ $translateTitle('button.next') }}
+                </el-button>
+              </div>
               <div
                 id="konva"
                 ref="konva"
@@ -246,7 +247,19 @@
           })
           _this.productconfig = results[0]
           // console.log(_this.productconfig)
+          console.groupCollapsed(
+            '%c productconfig',
+            'color:#009a61; font-size: 28px; font-weight: 300'
+          )
+          console.info('productconfig ->\n', _this.productconfig)
+          console.groupEnd()
           if (message == 'SUCCESS') {
+            console.groupCollapsed(
+              '%c _getTopo',
+              'color:#009a61; font-size: 28px; font-weight: 300'
+            )
+            console.info('data ->\n', data)
+            console.groupEnd()
             // console.log(this.$refs['edrawer'].$refs, 'edrawer')
             _this.$refs['operation']
               ? (_this.$refs['operation'].productconfig = results[0])

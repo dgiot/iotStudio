@@ -110,11 +110,11 @@ function topoUtils() {
     //       scaleX: scale,
     //       scaleY: scale,
     //     })
-    //   dgiotlog.log(child)
+    //   console.log(child)
     // })
     // canvas.layer.draw()
     //
-    // dgiotlog.log(
+    // console.log(
     //   canvas.stage.setAttrs({
     //     width: newWidth,
     //     height: newHeight,

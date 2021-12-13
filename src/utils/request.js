@@ -28,6 +28,7 @@ const csi = new CSI({
   feID: 'dgiot',
   report: (lines) => {
     // todo 自定义你的上报逻辑
+    dgiot.lines = lines
     console.log('CSI lins', lines)
   },
 })

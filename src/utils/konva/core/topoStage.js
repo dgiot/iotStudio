@@ -49,13 +49,13 @@ const topoStage = {
           })
           node.on('contextmenu', (e) => {
             canvas.contextmenu = e.target
-            dgiotlog.log('contextmenu', e.target)
+            console.log('contextmenu', e.target)
           })
           tag.on('click', (e) => {
-            dgiotlog.log(e)
+            console.log(e)
             canvas.clickItem = e.target
             canvas.contextmenu = e.target
-            dgiotlog.log('tag click', e.target.attrs)
+            console.log('tag click', e.target.attrs)
           })
           if (event) {
             info.tagevent.push({
@@ -81,12 +81,12 @@ const topoStage = {
       // })
       node.on('contextmenu', (e) => {
         canvas.contextmenu = e.target
-        dgiotlog.log('contextmenu', e.target)
+        console.log('contextmenu', e.target)
       })
       node.on('click', (e) => {
         canvas.contextmenu = {}
         canvas.clickItem = e.target
-        dgiotlog.log('click', e.target.attrs)
+        console.log('click', e.target.attrs)
       })
       node.on('mouseover', function (e) {
         document.body.style.cursor = 'pointer'
@@ -125,24 +125,24 @@ const topoStage = {
       // })
       // 定义事件监听
       // node.on('mouseover', function(e) {
-      //   dgiotlog.log('鼠标mouseover')
+      //   console.log('鼠标mouseover')
       //   layer.draw()
       // })
       // node.on('mouseout', function() {
-      //   dgiotlog.log('鼠标mouseout')
+      //   console.log('鼠标mouseout')
       //   layer.draw()
       // })
       // node.on('mousedown', function(e){
-      //   dgiotlog.log('mousedown',e)
+      //   console.log('mousedown',e)
       //   layer.draw()
       // })
       // node.on('mouseup', function(e) {
-      //   dgiotlog.log('鼠标移出星',e)
+      //   console.log('鼠标移出星',e)
       //   layer.draw()
       // })
       // node.on('contextmenu',e=>{
       //   canvas.contextmenu = e.target
-      //   dgiotlog.log('contextmenu',e.target)
+      //   console.log('contextmenu',e.target)
       // })
       node.on('mouseover', function (e) {
         document.body.style.cursor = 'pointer'
@@ -151,17 +151,17 @@ const topoStage = {
         document.body.style.cursor = 'default'
       })
       node.on('click', (e) => {
-        dgiotlog.log(e, 'eeeeee')
+        console.log(e, 'eeeeee')
         canvas.clickItem = e.target
         canvas.contextmenu = {}
-        dgiotlog.log('click', e.target.attrs)
+        console.log('click', e.target.attrs)
       })
     })
     console.groupCollapsed(
       '%ctopoStage log',
       'color:#009a61; font-size: 28px; font-weight: 300'
     )
-    dgiotlog.info(info)
+    console.info(info)
     console.groupEnd()
   },
 }

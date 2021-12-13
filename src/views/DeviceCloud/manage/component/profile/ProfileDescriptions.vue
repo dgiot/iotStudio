@@ -158,6 +158,7 @@
       v-if="!codeFlag && !dialogTableVisible && !dialogDictVisible"
       :key="tableType"
       v-loading="tableLoading"
+      border
       :cell-style="{ 'text-align': 'center' }"
       :data="
         tableType == 'things'
@@ -170,113 +171,76 @@
       "
       :header-cell-style="{ 'text-align': 'center' }"
       highlight-current-row
+      row-key="objectId"
       size="medium"
       style="width: 100%"
     >
       <div v-if="tableType == 'things'" :key="tableType + thingKey">
-        <el-table-column type="expand">
-          <template slot-scope="{ row }" class="opentable">
-            <el-descriptions
-              border
-              :column="2"
-              direction="vertical"
-              size="medium"
-            >
-              <el-descriptions-item :label="$translateTitle('product.Rounds')">
-                {{ row.dataForm.round }}
-              </el-descriptions-item>
-              <el-descriptions-item
-                :label="$translateTitle('product.Strategy')"
-              >
-                {{ row.dataForm.strategy }}
-              </el-descriptions-item>
-              <el-descriptions-item
-                :label="$translateTitle('product.protocol')"
-              >
-                {{
-                  row.dataForm && row.dataForm.protocol
-                    ? row.dataForm.protocol
-                    : ''
-                }}
-              </el-descriptions-item>
-              <el-descriptions-item
-                :label="$translateTitle('product.functionaltypes')"
-              >
-                <el-tag size="small">
-                  {{ $translateTitle('product.attribute') }}
-                </el-tag>
-              </el-descriptions-item>
-              <el-descriptions-item
-                :label="$translateTitle('product.datatype')"
-              >
-                <span>{{ row.dataType.type }}</span>
-              </el-descriptions-item>
-              <el-descriptions-item :label="$translateTitle('product.order')">
-                {{ row.dataForm.order }}
-              </el-descriptions-item>
-            </el-descriptions>
-            <el-table
-              v-if="row.dataType.type == 'struct'"
-              :data="row.dataType.specs"
-              style="box-sizing: border-box; text-align: center"
-            >
-              <el-table-column
-                align="center"
-                :label="$translateTitle('product.identifier')"
-              >
-                <template slot-scope="scope1">
-                  <span>{{ scope1.row.identifier }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$translateTitle('product.functionaltypes')"
-              >
-                <span>
-                  {{ $translateTitle('product.attribute') }}
-                </span>
-              </el-table-column>
-
-              <el-table-column
-                align="center"
-                :label="$translateTitle('product.functionname')"
-                prop="name"
-              />
-              <el-table-column
-                align="center"
-                :label="$translateTitle('product.datadefinition')"
-              />
-            </el-table>
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.order')"
-          sortable
-          width="80"
-        >
-          <template #default="{ $index }">
-            {{ $index + 1 }}
-          </template>
-        </el-table-column>
         <el-table-column
           align="center"
           :label="$translateTitle('product.identifier')"
           prop="identifier"
+          show-overflow-tooltip
           sortable
+          width="auto"
         />
         <el-table-column
           align="center"
           :label="$translateTitle('product.functionname')"
           prop="name"
+          show-overflow-tooltip
           sortable
+          width="auto"
+        />
+        <el-table-column
+          align="center"
+          :label="$translateTitle('product.Rounds')"
+          prop="dataForm.round"
+          show-overflow-tooltip
+          sortable
+          width="auto"
+        />
+        <el-table-column
+          align="center"
+          :label="$translateTitle('product.Strategy')"
+          prop="dataForm.strategy"
+          show-overflow-tooltip
+          sortable
+          width="auto"
+        />
+        <el-table-column
+          align="center"
+          :label="$translateTitle('product.protocol')"
+          prop="dataForm.protocol"
+          show-overflow-tooltip
+          sortable
+          width="auto"
+        />
+        <el-table-column
+          align="center"
+          :label="$translateTitle('product.datatype')"
+          prop="dataType.type"
+          show-overflow-tooltip
+          sortable
+          width="auto"
         />
         <el-table-column
           align="center"
           :label="$translateTitle('product.datadefinition')"
+          prop="dataForm.protocol"
+          show-overflow-tooltip
           sortable
+          width="auto"
+        />
+        <el-table-column
+          align="center"
+          :label="$translateTitle('product.protocol')"
+          prop="dataForm.protocol"
+          show-overflow-tooltip
+          sortable
+          width="auto"
         >
-          <template #default="{ row }">
+          <template #default="{ row, $index }">
             <span
               v-if="
                 row.dataType.specs &&
@@ -304,30 +268,28 @@
             <span v-else-if="row.dataType.type != 'struct'">
               {{ row.dataType.specs }}
             </span>
-            <span v-else />
           </template>
         </el-table-column>
         <el-table-column
           align="center"
+          fixed="right"
           :label="$translateTitle('developer.operation')"
-          width="160"
+          width="auto"
         >
           <template #default="{ row, $index }">
             <el-button
-              size="mini"
-              type="danger"
+              class="el-icon-delete"
+              style="color: red"
+              :title="$translateTitle('developer.delete')"
+              type="text"
               @click.native="deletewmx($index)"
-            >
-              {{ $translateTitle('developer.delete') }}
-            </el-button>
+            />
             <el-button
-              size="mini"
-              type="primary"
+              class="el-icon-edit"
+              :title="$translateTitle('task.Edit')"
+              type="text"
               @click.native="wmxDataFill(row, $index)"
-            >
-              <!-- 编辑 -->
-              {{ $translateTitle('task.Edit') }}
-            </el-button>
+            />
           </template>
         </el-table-column>
       </div>
