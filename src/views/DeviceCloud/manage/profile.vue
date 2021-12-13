@@ -190,7 +190,6 @@
               <template #default="{ row }">
                 <el-button
                   class="el-icon-edit"
-                  style="color: red"
                   :title="$translateTitle('developer.delete')"
                   type="text"
                   @click.stop="editproducttemp(row)"

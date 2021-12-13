@@ -178,16 +178,17 @@
       <div v-if="tableType == 'things'" :key="tableType + thingKey">
         <el-table-column
           align="center"
+          fixed="left"
           :label="$translateTitle('product.identifier')"
-          prop="identifier"
+          prop="dataForm.round"
           show-overflow-tooltip
           sortable
           width="auto"
         />
         <el-table-column
           align="center"
-          :label="$translateTitle('product.functionname')"
-          prop="name"
+          :label="$translateTitle('product.order')"
+          prop="dataForm.order"
           show-overflow-tooltip
           sortable
           width="auto"
@@ -208,10 +209,37 @@
           sortable
           width="auto"
         />
+
         <el-table-column
           align="center"
           :label="$translateTitle('product.protocol')"
           prop="dataForm.protocol"
+          show-overflow-tooltip
+          sortable
+          width="auto"
+        />
+
+        <el-table-column
+          align="center"
+          :label="$translateTitle('product.functionaltypes')"
+          prop="product.attribute"
+          show-overflow-tooltip
+          sortable
+          width="auto"
+        />
+
+        <el-table-column
+          align="center"
+          :label="$translateTitle('product.identifier')"
+          prop="identifier"
+          show-overflow-tooltip
+          sortable
+          width="auto"
+        />
+        <el-table-column
+          align="center"
+          :label="$translateTitle('product.functionname')"
+          prop="name"
           show-overflow-tooltip
           sortable
           width="auto"
@@ -226,21 +254,14 @@
         />
         <el-table-column
           align="center"
+          fixed="right"
           :label="$translateTitle('product.datadefinition')"
-          prop="dataForm.protocol"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.protocol')"
-          prop="dataForm.protocol"
+          prop="dataType.type"
           show-overflow-tooltip
           sortable
           width="auto"
         >
-          <template #default="{ row, $index }">
+          <template #default="{ row }">
             <span
               v-if="
                 row.dataType.specs &&
@@ -264,7 +285,6 @@
                 $translateTitle('product.byte')
               }}
             </span>
-            <span v-else-if="row.dataType.type == 'date'" />
             <span v-else-if="row.dataType.type != 'struct'">
               {{ row.dataType.specs }}
             </span>
@@ -274,22 +294,25 @@
           align="center"
           fixed="right"
           :label="$translateTitle('developer.operation')"
+          min-width="240"
           width="auto"
         >
           <template #default="{ row, $index }">
             <el-button
-              class="el-icon-delete"
-              style="color: red"
-              :title="$translateTitle('developer.delete')"
-              type="text"
+              size="mini"
+              type="danger"
               @click.native="deletewmx($index)"
-            />
+            >
+              {{ $translateTitle('developer.delete') }}
+            </el-button>
             <el-button
-              class="el-icon-edit"
-              :title="$translateTitle('task.Edit')"
-              type="text"
+              size="mini"
+              type="primary"
               @click.native="wmxDataFill(row, $index)"
-            />
+            >
+              <!-- 编辑 -->
+              {{ $translateTitle('task.Edit') }}
+            </el-button>
           </template>
         </el-table-column>
       </div>
