@@ -17,6 +17,7 @@ import {
 import { globalUrl } from './utilwen'
 import store from '@/store'
 import { refreshToken } from '@/api/Role/index'
+const ip = require('ip')
 import router from '@/router'
 import { isArray } from '@/utils/validate'
 import CSI from 'csijs'
@@ -97,6 +98,7 @@ const instance = axios.create({
   timeout: requestTimeout,
   headers: {
     'Content-Type': contentType,
+    ip: ip.address(),
   },
 })
 

@@ -160,7 +160,7 @@ export function aclObj(roles) {
   if (!roles) return
   let aclObj = {}
   roles.map((e) => {
-    dgiotlog.log(e.name, '')
+    console.log(e.name, '')
     aclObj[`${'role' + ':' + e.name}`] = {
       read: true,
       write: true,
@@ -265,7 +265,7 @@ function downBinary(res) {
   if (!res) return false
   const { data, headers } = res
   let blob = new Blob([data], { type: headers['content-type'] }) // 这里标识下载文件类型
-  dgiotlog.log(blob, res.data)
+  console.log(blob, res.data)
   let downloadElement = document.createElement('a')
   let href = window.URL.createObjectURL(blob) // 创建下载的链接
   downloadElement.href = href

@@ -69,6 +69,7 @@
       },
     },
     created() {
+      this.$dgiotBus.$off('reload-router-view')
       const { showProgressBar } = this.theme
       // 单页面情况下重载路由
       this.$dgiotBus.$on('reload-router-view', () => {

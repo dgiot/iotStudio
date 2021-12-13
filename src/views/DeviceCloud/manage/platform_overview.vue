@@ -28,7 +28,6 @@
         </el-dialog>
       </div>
       <div
-        v-show="mapType == 'baidu'"
         class="map_header"
         :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
       >
@@ -239,9 +238,9 @@
         </vab-query-form>
       </div>
       <el-card shadow="hover">
-        <el-radio-group v-model="mapType" size="mini">
-          <el-radio-button label="tencent" />
-          <el-radio-button label="baidu" />
+        <el-radio-group v-model="mapType" size="mini" @change="queryData()">
+          <el-radio-button label="tencent">tencent</el-radio-button>
+          <el-radio-button label="baidu">baidu</el-radio-button>
         </el-radio-group>
         <vab-qq-map
           v-show="mapType == 'tencent'"
@@ -815,7 +814,7 @@
     BmScale,
   } from 'vue-baidu-map'
 
-  window.dgiotEnv = process.env
+  window.dgiot.dgiotEnv = process.env
   export default {
     name: 'Index',
     components: {
@@ -998,7 +997,6 @@
     created() {},
     mounted() {
       this.router = this.$dgiotBus.router(this.$route.fullPath)
-      this.initDgiotMqtt()
       this.$dgiotBus.$off('qqMapClcik')
       this.$dgiotBus.$on('qqMapClcik', (ev) => {
         console.log(ev)
@@ -1006,6 +1004,7 @@
       // dgiotlog.log(`global static url ${this._role}`)
       this.queryForm.account =
         this.language == 'zh' ? '全部产品' : 'All Products'
+      this.initDgiotMqtt()
     },
     activated() {
       // dgiotlog.log('keep-alive生效')

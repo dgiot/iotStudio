@@ -43,10 +43,9 @@
   import { Roletree } from '@/api/Menu'
   import { mapGetters, mapMutations } from 'vuex'
   import { departmentToken } from '@/api/Role'
-
+  import { noReloadRouter } from '@/config'
   export default {
     name: 'VabRoleTree',
-    components: {},
     /**
      * @document https://element.eleme.cn/#/zh-CN/component/tree#attributes
      * @description VabPropTree
@@ -180,6 +179,35 @@
         setDepartmentToken: 'user/setDepartmentToken',
         setCurrentDepartment: 'user/setCurrentDepartment',
       }),
+      /**
+       * @Author: h7ml
+       * @Date: 2021-12-13 10:43:48
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async reloadRouter(name, router) {
+        console.groupCollapsed(
+          '%c reloadRouter',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.info('router ->\n', router)
+        console.log('includes\n', _.includes(noReloadRouter, name))
+        console.groupEnd()
+        // https://www.lodashjs.com/docs/lodash.includes
+        try {
+          if (!_.includes(noReloadRouter, name))
+            this.$dgiotBus.$emit('reload-router-view')
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
+      },
       async asyncTreeData() {
         const { results } = await Roletree()
         dgiotlog.error(results, 'results')
@@ -208,7 +236,8 @@
           loading.close()
           this.setDepartmentToken({ sessionToken, expires_in })
           // this._setToken(access_token)
-          this.$dgiotBus.$emit('reload-router-view')
+          const { name } = this.$route
+          await this.reloadRouter(name, this.$route)
           console.groupCollapsed(
             '%ctree handleNodeClick',
             'color:#009a61; font-size: 28px; font-weight: 300'
