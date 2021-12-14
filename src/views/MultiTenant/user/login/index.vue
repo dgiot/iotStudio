@@ -237,6 +237,12 @@
               ? process.env.VUE_APP_URL
               : location.origin
           Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
+          console.groupCollapsed(
+            '%c 单点登录日志',
+            'color:#009a61; font-size: 28px; font-weight: 300'
+          )
+          console.info('id_token ->\n', Cookies.get('id_token'))
+          console.groupEnd()
           if (Cookies.get('id_token')) {
             console.info(
               '检测到页面存在 jwt token \n',
