@@ -40,10 +40,25 @@
               <p>{{ $translateTitle('konva.save') }}</p>
             </a>
           </a-dropdown>
-          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+          <a-dropdown
+            v-if="Boolean($route.query.noTools)"
+            class="topo-header-top-query-left-panel-dropdown"
+          >
             <a class="ant-dropdown-link" @click="eyeTopo">
               <a-icon type="eye" />
               <p>{{ $translateTitle('application.preview') }}</p>
+            </a>
+          </a-dropdown>
+          <a-dropdown
+            v-if="Boolean($route.query.noTools)"
+            class="topo-header-top-query-left-panel-dropdown"
+          >
+            <a
+              class="ant-dropdown-link"
+              @click="$router.push({ path: '/cloudTest/report' })"
+            >
+              <a-icon type="home" />
+              <p>{{ $translateTitle('cloudTest.report template') }}</p>
             </a>
           </a-dropdown>
           <a-dropdown

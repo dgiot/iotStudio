@@ -1228,6 +1228,7 @@ export default {
       'Draggable column settings': '可拖拽列设置',
     },
     cloudTest: {
+      'add task': '添加任务',
       file: '文件',
       image: '图片',
       video: '视频',

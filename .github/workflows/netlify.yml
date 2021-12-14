@@ -3,6 +3,7 @@ name: netlify
 on:
   push:
   pull_request:
+  workflow_dispatch:
 jobs:
   netlify:
     runs-on: ubuntu-18.04

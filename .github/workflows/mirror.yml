@@ -1,6 +1,7 @@
 name: mirror
 
 on:
+  workflow_dispatch:
   push:
   watch:
     types: started
@@ -9,22 +10,6 @@ on:
 
 jobs:
   mirror:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Mirror the Github organization repos to Gitee.
-        uses: Yikun/hub-mirror-action@v1.0
-        with:
-          src: github/dgiot
-          dst: gitee/dgiiot
-          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
-          dst_token: ${{ secrets.GIT_TOKEN }}
-          account_type: org
-          timeout: '1h'
-          debug: true
-          force_update: true
-          white_list: 'dgiot-dashboard'
-          black_list: 'issue-generator'
-  page:
     runs-on: ubuntu-latest
     steps:
       - name: Sync to Gitee page
@@ -49,4 +34,4 @@ jobs:
           # Gitee 仓库
           gitee-repo: dgiiot/dgiot-dashboard
           # 要部署的分支
-          branch: cdn-pages
+          branch: master
