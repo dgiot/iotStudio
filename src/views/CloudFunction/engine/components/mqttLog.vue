@@ -9,7 +9,6 @@
           </span>
           <vab-editor
             :key="refreshFlag"
-            :height="isFullscreen ? 1000 + 80 : 1000 + 40"
             lang="text"
             :max-lines="isFullscreen ? 1000 / 12 : 1000 / 12"
             :min-lines="isFullscreen ? 1000 / 12 : 1000 / 12"
@@ -30,7 +29,6 @@
                 queryForm.pageNo * queryForm.pageSize
               )
             "
-            :height="height"
           >
             <el-table-column
               align="center"
@@ -117,12 +115,7 @@
               </vab-query-form-top-panel>
             </vab-query-form>
           </el-row>
-          <el-table
-            border
-            :data="Device"
-            :height="$baseTableHeight(0) - 90"
-            style="width: 100%"
-          >
+          <el-table border :data="Device" style="width: 100%">
             <el-table-column
               align="center"
               :label="$translateTitle('equipment.devicename')"
@@ -166,7 +159,6 @@
       >
         <vab-editor
           :key="editorKey"
-          :height="isFullscreen ? 1000 + 80 : 1000 + 40"
           lang="text"
           :max-lines="isFullscreen ? 1000 / 12 : 1000 / 12"
           :min-lines="isFullscreen ? 1000 / 12 : 1000 / 12"

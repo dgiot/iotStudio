@@ -138,7 +138,6 @@
     <el-table
       v-loading="listLoading"
       :data="list"
-      :height="height"
       @selection-change="changeBox"
     >
       <el-table-column

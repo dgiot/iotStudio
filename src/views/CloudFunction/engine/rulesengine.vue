@@ -16,7 +16,6 @@
       <el-table
         :cell-class-name="getRowindex"
         :data="engineData"
-        :height="height"
         style="width: 100%; text-align: center"
       >
         <el-table-column

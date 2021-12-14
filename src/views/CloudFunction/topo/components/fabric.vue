@@ -5,7 +5,7 @@
     </div>
     <div class="panel-body">
       <div class="demo">
-        <canvas id="canvas" :height="height" :width="width"></canvas>
+        <canvas id="canvas" :width="width"></canvas>
         <div class="draw-btn-group">
           <div
             :class="{ active: drawType == '' }"

@@ -239,7 +239,6 @@
       v-loading="listLoading"
       border
       :data="list"
-      :height="height"
       stripe
       @selection-change="changeBox"
     >

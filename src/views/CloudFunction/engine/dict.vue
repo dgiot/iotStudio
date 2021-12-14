@@ -291,7 +291,6 @@
 
                 <el-table
                   :data="dictTempForm.params"
-                  :height="height"
                   style="width: 100%; text-align: center"
                 >
                   <!-- <el-table-column prop="name" label="名称" /> -->
@@ -664,7 +663,6 @@
           :cell-style="{ 'text-align': 'center' }"
           :data="dictRecord"
           :header-cell-style="{ 'text-align': 'center' }"
-          :height="height"
           :row-class-name="tableRowClassName"
           style="width: 100%"
         >

@@ -20,11 +20,7 @@
         <!-- 新增 -->
         {{ $translateTitle('product.newlyadded') }}
       </el-button>
-      <el-table
-        :data="data.params"
-        :height="height"
-        style="width: 100%; text-align: center"
-      >
+      <el-table :data="data.params" style="width: 100%; text-align: center">
         <el-table-column
           :label="$translateTitle('equipment.serialnumber')"
           prop="order"

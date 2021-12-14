@@ -114,13 +114,17 @@
             {{ $translateTitle('developer.search') }}
           </el-button>
         </el-form-item>
-        <el-form-item style="float: right; text-align: right">
+        <el-form-item style="text-align: right">
           <el-button type="primary" @click.native="addproduct">
             {{ $translateTitle('product.createproduct') }}
           </el-button>
+        </el-form-item>
+        <el-form-item style="text-align: right">
           <el-button type="primary" @click.native="exportpro">
             {{ $translateTitle('product.exportpro') }}
           </el-button>
+        </el-form-item>
+        <el-form-item style="text-align: right">
           <el-button type="primary" @click.native="handleImport()">
             {{ $translateTitle('product.importpro') }}
           </el-button>
