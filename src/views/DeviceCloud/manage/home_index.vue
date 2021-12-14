@@ -414,21 +414,15 @@
                 prop="product.name"
                 show-overflow-tooltip
                 sortable
-                width="100"
-              >
-                <template #default="{ row }">
-                  <span v-if="row.product && row.product.name">
-                    {{ row.product.name || '' }}
-                  </span>
-                </template>
-              </el-table-column>
+                width="auto"
+              />
               <el-table-column
                 align="center"
                 :label="$translateTitle('developer.Company')"
                 prop="Company"
                 show-overflow-tooltip
                 sortable
-                width="200"
+                width="auto"
               />
               <el-table-column
                 align="center"
@@ -440,7 +434,7 @@
                 prop="isEnable"
                 show-overflow-tooltip
                 sortable
-                width="120"
+                width="auto"
               >
                 <template #default="{ row, $index }">
                   <el-switch
@@ -457,7 +451,7 @@
                 prop="createdAt"
                 show-overflow-tooltip
                 sortable
-                width="200"
+                width="auto"
               >
                 <template #default="{ row }">
                   <span>{{ utc2beijing(row.createdAt) }}</span>
@@ -467,7 +461,7 @@
                 align="center"
                 fixed="right"
                 :label="$translateTitle('developer.operation')"
-                min-width="100"
+                min-width="220"
                 width="auto"
               >
                 <template #default="{ row }">
@@ -623,7 +617,7 @@
                 :label="$translateTitle('equipment.product')"
                 show-overflow-tooltip
                 sortable
-                width="200"
+                width="auto"
               >
                 <template #default="{ row }">
                   <span v-if="row.product && row.product.name">
@@ -636,7 +630,7 @@
                 :label="$translateTitle('developer.Company')"
                 show-overflow-tooltip
                 sortable
-                width="200"
+                width="auto"
               >
                 <template #default="{ row }">
                   <span>
