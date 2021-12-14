@@ -26,6 +26,7 @@
           <el-table-column
             align="center"
             :label="$translateTitle('cloudTest.evidence')"
+            min-width="100"
             prop="original.path"
             width="auto"
           >
@@ -41,7 +42,7 @@
                 v-else-if="types.image.includes(`${row.original.type}`)"
                 :preview-src-list="[$FileServe + row.original.path]"
                 :src="$FileServe + row.original.path"
-                style="width: 100px; height: 100px"
+                style="width: 50px; height: 50px"
               />
               <av-bars
                 v-else-if="types.audio.includes(`${row.original.type}`)"
@@ -195,7 +196,7 @@
                 v-else-if="types.image.includes(`${row.original.type}`)"
                 :preview-src-list="[$FileServe + row.original.path]"
                 :src="$FileServe + row.original.path"
-                style="width: 100px; height: 100px"
+                style="width: 50px; height: 50px"
               />
               <av-bars
                 v-else-if="types.audio.includes(`${row.original.type}`)"

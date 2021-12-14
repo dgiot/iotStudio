@@ -12,7 +12,7 @@
     <el-drawer
       v-drawerDrag
       append-to-body
-      size="90%"
+      size="80%"
       :visible.sync="dialogVisible"
     >
       <iframe :src="officeapps" style="width: 100%; height: 100%" />
@@ -210,7 +210,7 @@
         align="center"
         :label="$translateTitle('cloudTest.number')"
         show-overflow-tooltip
-        width="95"
+        width="auto"
       >
         <template #default="{ $index }">
           {{ $index + 1 }}
