@@ -902,7 +902,9 @@
             <dgiot-wmx
               ref="sizeForm"
               :size-form1="sizeForm"
+              @addDas="addDas"
               @addDomain="addDomain"
+              @removeDas="removeDas"
               @removeDomain="removeDomain"
               @submitForm="submitForm"
               @wmxhandleClose="wmxhandleClose"

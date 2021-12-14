@@ -566,14 +566,6 @@
                       @current-change="wmxCurrentChange"
                       @size-change="wmxSizeChange"
                     />
-                    <!--                    <el-button-->
-                    <!--                      slot="reference"-->
-                    <!--                      style="text-align: center"-->
-                    <!--                      size="mini"-->
-                    <!--                    >-->
-                    <!--                      &lt;!&ndash; 添加变量 &ndash;&gt;-->
-                    <!--                      {{ $translateTitle('product.addvariable') }}-->
-                    <!--                    </el-button>-->
                   </el-popover>
                 </el-col>
               </el-row>
@@ -809,187 +801,7 @@
                 <!--type-->
               </el-col>
             </el-row>
-            <!-- <el-col :span="10">
-                <el-form-item label="修正偏移">
-                  <el-input v-model="sizeForm.offset" auto-complete="off" />
-                </el-form-item>
-              </el-col> -->
           </el-collapse-item>
-          <!--          <el-collapse-item name="3">-->
-          <!--            <template slot="title">-->
-          <!--              {{ $translateTitle('task.datacount') }}-->
-          <!--            </template>-->
-          <!--            <el-row :gutter="24">-->
-          <!--              <el-col :span="12">-->
-          <!--                <el-form-item label="是否统计">-->
-          <!--                  <el-select-->
-          <!--                    v-model="sizeForm.iscount"-->
-          <!--                    style="width: 100%"-->
-          <!--                    size="mini"-->
-          <!--                    filterable-->
-          <!--                    allow-create-->
-          <!--                    default-first-option-->
-          <!--                    placeholder="请选择"-->
-          <!--                  >-->
-          <!--                    <el-option label="否" value="0" />-->
-          <!--                    <el-option label="是" value="1" />-->
-          <!--                  </el-select>-->
-          <!--                </el-form-item>-->
-          <!--              </el-col>-->
-          <!--              <el-col :span="12">-->
-          <!--                <el-tooltip-->
-          <!--                  style="float: left"-->
-          <!--                  effect="dark"-->
-          <!--                  placement="right-start"-->
-          <!--                >-->
-          <!--                  <div slot="content">-->
-          <!--                    统计策略表达式 。-->
-          <!--                    <br />-->
-
-          <!--                    如：-->
-          <!--                    <br />-->
-
-          <!--                    5分钟 = 5 * 60-->
-          <!--                    <br />-->
-
-          <!--                    1小时 = 60 * 60-->
-          <!--                    <br />-->
-
-          <!--                    5小时 = 5 * 60 * 60-->
-          <!--                    <br />-->
-
-          <!--                    1天 = 24 * 60 * 60-->
-          <!--                    <br />-->
-          <!--                  </div>-->
-          <!--                  <i class="el-icon-question" />-->
-          <!--                </el-tooltip>-->
-          <!--                <el-form-item label="统计策略(单位：秒)">-->
-          <!--                  &lt;!&ndash; <el-input v-model="sizeForm.rate" auto-complete="off">   <template slot="append">秒</template>-->
-          <!--                  </el-input> &ndash;&gt;-->
-          <!--                  <el-select-->
-          <!--                    v-model="sizeForm.countstrategy"-->
-          <!--                    style="width: 95%"-->
-          <!--                    size="mini"-->
-          <!--                    filterable-->
-          <!--                    allow-create-->
-          <!--                    default-first-option-->
-          <!--                    placeholder="请选择"-->
-          <!--                  >-->
-          <!--                    <el-option-->
-          <!--                      v-for="item in countsizeOption"-->
-          <!--                      :key="item.val"-->
-          <!--                      :label="item.label"-->
-          <!--                      :value="item.val"-->
-          <!--                      size="mini"-->
-          <!--                    />-->
-          <!--                  </el-select>-->
-          <!--                </el-form-item>-->
-          <!--              </el-col>-->
-          <!--            </el-row>-->
-          <!--            <el-row :gutter="24">-->
-          <!--              <el-col :span="12">-->
-          <!--                <el-form-item label="统计轮次">-->
-          <!--                  &lt;!&ndash; <el-input v-model="sizeForm.rate" auto-complete="off">   <template slot="append">秒</template>-->
-          <!--                  </el-input> &ndash;&gt;-->
-          <!--                  <el-select-->
-          <!--                    v-model="sizeForm.countround"-->
-          <!--                    style="width: 100%"-->
-          <!--                    size="mini"-->
-          <!--                    filterable-->
-          <!--                    allow-create-->
-          <!--                    default-first-option-->
-          <!--                    placeholder="请选择生效轮次"-->
-          <!--                  >-->
-          <!--                    <el-option-->
-          <!--                      v-for="item in options"-->
-          <!--                      :key="item.value"-->
-          <!--                      :label="item.label"-->
-          <!--                      :value="item.value"-->
-          <!--                    />-->
-          <!--                  </el-select>-->
-          <!--                  <p-->
-          <!--                    style="-->
-          <!--                      position: absolute;-->
-          <!--                      top: 26px;-->
-          <!--                      margin: 0;-->
-          <!--                      font-size: 12px;-->
-          <!--                      color: black;-->
-          <!--                    "-->
-          <!--                  >-->
-          <!--                    例如:1,3,5,8;(可选可自主填写)(注意:逗号为英文逗号)-->
-          <!--                  </p>-->
-          <!--                </el-form-item>-->
-          <!--              </el-col>-->
-          <!--              <el-col :span="12">-->
-          <!--                <el-tooltip-->
-          <!--                  style="float: left"-->
-          <!--                  effect="dark"-->
-          <!--                  placement="right-start"-->
-          <!--                >-->
-          <!--                  <div slot="content">-->
-          <!--                    1. 采集值 设备上行数据经采集公式计算后显示 。-->
-          <!--                    <br />-->
-
-          <!--                    公式中的%s为占位符，是固定字段。-->
-          <!--                    <br />-->
-
-          <!--                    如：-->
-          <!--                    <br />-->
-
-          <!--                    加：%s+10-->
-          <!--                    <br />-->
-
-          <!--                    减：%s-10-->
-          <!--                    <br />-->
-
-          <!--                    乘：%s*10-->
-          <!--                    <br />-->
-
-          <!--                    除：%s/10-->
-          <!--                    <br />-->
-
-          <!--                    余数：%s%10-->
-          <!--                    <br />-->
-
-          <!--                    2. 计算值 添加变量按钮,-->
-          <!--                    <br />-->
-          <!--                    复制对应的标识符-->
-          <!--                    <br />-->
-
-          <!--                    例：pressure_out-->
-          <!--                    <br />-->
-          <!--                    加：pressure_out+10-->
-          <!--                    <br />-->
-
-          <!--                    减：pressure_out-10-->
-          <!--                    <br />-->
-
-          <!--                    乘：pressure_out*10-->
-          <!--                    <br />-->
-
-          <!--                    除：pressure_out/10-->
-          <!--                    <br />-->
-
-          <!--                    余数：pressure_out%10-->
-          <!--                    <br />-->
-
-          <!--                    3. 复杂值 ：关闭本弹窗后使用物解析处理-->
-          <!--                    <br />-->
-          <!--                  </div>-->
-          <!--                  <i class="el-icon-question" />-->
-          <!--                </el-tooltip>-->
-          <!--                <el-form-item label="统计公式">-->
-          <!--                  <el-input-->
-          <!--                    v-model="sizeForm.countcollection"-->
-          <!--                    style="width: 95%"-->
-          <!--                    :rows="1"-->
-          <!--                    type="textarea"-->
-          <!--                    placeholder="%s"-->
-          <!--                  />-->
-          <!--                </el-form-item>-->
-          <!--              </el-col>-->
-          <!--            </el-row>-->
-          <!--          </el-collapse-item>-->
           <el-collapse-item name="4">
             <template slot="title">数据来源</template>
             <el-row :gutter="24">
@@ -1003,6 +815,7 @@
                     <el-option
                       v-for="(item, index) in [
                         'normal',
+                        'opc',
                         'modbus',
                         'DLT645',
                         'xinchuangwei',
@@ -1043,6 +856,43 @@
                       :value="item.value"
                     />
                   </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row v-show="sizeForm.protocol == 'opc'" :gutter="24">
+              <el-col :span="24">
+                <el-form-item label="数据地址集">
+                  <el-link
+                    icon="el-icon-plus"
+                    type="primary"
+                    :underline="false"
+                    @click="addDas"
+                  >
+                    {{ $translateTitle('product.add') }}
+                  </el-link>
+                  <el-table
+                    :data="sizeForm.daslist"
+                    style="width: 100%; text-align: center"
+                  >
+                    <el-table-column align="center" label="数据地址">
+                      <template #default="{ row }">
+                        <el-input v-model="row.addr" />
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="center" label="操作">
+                      <template #default="{ row }">
+                        <el-button
+                          plain
+                          size="mini"
+                          title="删除"
+                          type="danger"
+                          @click.native="removeDas(row)"
+                        >
+                          删除
+                        </el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -1136,7 +986,12 @@
                 </template>
               </el-table-column>
             </el-table>
-            <el-row v-show="sizeForm.protocol != 'modbus'" :gutter="24">
+            <el-row
+              v-show="
+                sizeForm.protocol != 'modbus' && sizeForm.protocol != 'opc'
+              "
+              :gutter="24"
+            >
               <el-col :span="12">
                 <el-form-item label="数据地址">
                   <el-input v-model="sizeForm.dis" placeholder="数据地址" />
@@ -1828,6 +1683,12 @@
       },
       addDomain() {
         this.$emit('addDomain')
+      },
+      addDas() {
+        this.$emit('addDas')
+      },
+      removeDas(item) {
+        this.$emit('removeDas', item)
       },
       wmxhandleClose() {
         this.$emit('wmxhandleClose')
