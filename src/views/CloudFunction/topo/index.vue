@@ -37,13 +37,12 @@
             :xs="isDevice || isFull ? 24 : gutter.xs"
             class="konva-container-main-baseCol"
           >
-            <div id="kevCurrent"></div>
             <el-main class="konva-container-baseCol-baseContainer">
-              <Topo-base
+              <topo-base
                 ref="topobase"
                 style="position: absolute; width: 100%"
               />
-              <div v-show="Boolean($route.query.guide)">
+              <div v-if="Boolean($route.query.guide)">
                 <el-button
                   size="mini"
                   type="primary"
@@ -183,7 +182,8 @@
       this.setTreeFlag(false)
     },
     destroyed() {
-      localStorage.setItem('konvaStale', JSON.stringify(canvas.stageJson))
+      if (!_.isEmpty(localStorage.getItem('konvaStale')))
+        localStorage.setItem('konvaStale', JSON.stringify(canvas.stageJson))
       this.$dgiotBus.$emit(
         'MqttUnbscribe',
         this.$dgiotBus.topicKey(this.router + this.topotopic),
