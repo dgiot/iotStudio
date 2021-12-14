@@ -1,8 +1,9 @@
 name: ci
 
 on:
-  pull_request:
-    types: [opened, synchronize, edited]
+  push:
+    tags:
+      - 't*'
   workflow_dispatch:
 
 jobs:
