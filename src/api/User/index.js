@@ -110,6 +110,16 @@ export async function login(data) {
   })
 }
 
+export async function jwtlogin(id_token) {
+  return request({
+    headers: {
+      'Content-Type': 'text/plain',
+    },
+    url: `/jwtlogin?id_token=${id_token}`,
+    method: 'get',
+  })
+}
+
 export async function socialLogin(data) {
   return request({
     url: '/socialLogin',

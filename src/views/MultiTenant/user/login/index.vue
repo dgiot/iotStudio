@@ -112,7 +112,6 @@
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/validate'
   import { SiteDefault } from '@/api/License'
-
   export default {
     name: 'Login',
     directives: {
@@ -211,12 +210,8 @@
         immediate: true,
       },
     },
-    created() {
-      const url =
-        process.env.NODE_ENV === 'development'
-          ? process.env.VUE_APP_URL
-          : location.origin
-      Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
+    async created() {
+      await this.defaultSet()
     },
     mounted() {
       this.initShuwa()
@@ -227,6 +222,34 @@
         setCopyright: 'acl/setCopyright',
         setDefault: 'acl/setDefault',
       }),
+      /**
+       * @Author: h7ml
+       * @Date: 2021-12-14 12:46:36
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async defaultSet() {
+        try {
+          const url =
+            process.env.NODE_ENV === 'development'
+              ? process.env.VUE_APP_URL
+              : location.origin
+          Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
+          if (Cookies.get('id_token')) {
+            console.info(
+              '检测到页面存在 jwt token \n',
+              Cookies.get('id_token'),
+              '\n采用jwt token 登录'
+            )
+            await this.jwtlogin(Cookies.get('id_token'))
+            await this.goHome()
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      },
       changeInfo(e) {
         this.$set(
           this.info,
@@ -247,7 +270,7 @@
       ...mapActions({
         login: 'user/login',
         queryAll: 'user/queryAll',
-        // getlicense: 'user/getlicense',
+        jwtlogin: 'user/jwtlogin',
         // getDefault: 'user/getDefault',
       }),
       getCategory(key) {
@@ -289,10 +312,7 @@
             try {
               this.loading = true
               await this.login(this.form)
-              await this.$router.push(this.handleRoute())
-              setTimeout(() => {
-                document.querySelector('.el-tree-node__content').click()
-              }, 1200)
+              await this.goHome()
             } finally {
               this.loading = false
             }
@@ -300,6 +320,29 @@
             return false
           }
         })
+      },
+      /**
+       * @Author: h7ml
+       * @Date: 2021-12-14 11:46:23
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async goHome() {
+        try {
+          await this.$router.push(this.handleRoute())
+          await setTimeout(() => {
+            document.querySelector('.el-tree-node__content').click()
+          }, 1200)
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
       },
     },
   }

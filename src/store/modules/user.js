@@ -10,7 +10,18 @@ const getLocalStorage = (key) => {
   }
 }
 const { language } = getLocalStorage('language')
-async function queryAllMsg(commit) {
+async function queryAllMsg(commit, data) {
+  const {
+    sessionToken,
+    nick,
+    objectId,
+    roles,
+    tag = {},
+    fileServer,
+    expires_in = 86400,
+  } = data
+  await commit('_setToken', { sessionToken, expires_in })
+  await commit('setDepartmentToken', { sessionToken, expires_in })
   const params = {
     count: 'objectId',
     order: '-updatedAt',
@@ -41,6 +52,46 @@ async function queryAllMsg(commit) {
     commit('setMenu', promiseRes.Menu)
     commit('setPermission', promiseRes.Permission)
     commit('setRoleTree', promiseRes.Tree)
+
+    Vue.prototype.$FileServe = Cookies.get('fileServer')
+    // clientMqtt()
+    // initDgiotMqtt(objectId)
+    commit('setExpired', {
+      time: (Date.parse(new Date()) / 1000 + expires_in) * 1000,
+      expires_in: 7,
+    })
+    if (nick) commit('setUsername', nick)
+    const page_title = getToken('title') || title
+    const { title, Copyright, name, logo, _pcimg, _mimg } = tag.companyinfo
+    const { avatar } = tag.userinfo
+    commit('setAvatar', avatar)
+    commit('setname', name)
+    commit('setlogo', logo)
+    dispatch('settings/setTitle', title, { root: true })
+    dispatch('settings/saveTheme', tag.theme, { root: true })
+    dispatch('settings/togglePicture', tag.theme.pictureSwitch, {
+      root: true,
+    })
+    dispatch('dashboard/set_pcimg', _pcimg, { root: true })
+    dispatch('dashboard/set_mimg', _mimg, { root: true })
+    dispatch('acl/setRole', roles, { root: true })
+    dispatch('settings/setTitle', title, { root: true })
+    dispatch('acl/setCopyright', Copyright, { root: true })
+    dispatch('settings/setTag', tag, { root: true })
+    commit('setObejectId', objectId)
+    // 登录后设置当前部门
+    const hour = new Date().getHours()
+    const thisTime =
+      hour < 8
+        ? '早上好'
+        : hour <= 11
+        ? '上午好'
+        : hour <= 13
+        ? '中午好'
+        : hour < 18
+        ? '下午好'
+        : '晚上好'
+    Vue.prototype.$baseNotify(title, `${thisTime}！`)
     console.groupCollapsed(
       '%c login promise.all log',
       'color:#009a61; font-size: 28px; font-weight: 300'
@@ -76,7 +127,7 @@ import {
   title,
   tokenName,
 } from '@/config'
-import { getUserInfo, login, logout, socialLogin } from '@/api/User/index'
+import { getUserInfo, login, logout, socialLogin, jwtlogin } from '@/api/User'
 import { queryMenu } from '@/api/Menu/index'
 import { Permission } from '@/api/Permission/index'
 import { clearCookie, getToken, removeToken, setToken } from '@/utils/vuex'
@@ -282,6 +333,54 @@ const actions = {
     commit('setUsername', 'admin(未开启登录拦截)')
   },
   /**
+   * @description jwtlogin登录
+   * @param {*} { commit }
+   * @param {*} userInfo
+   */
+  async jwtlogin({ commit, dispatch }, token) {
+    const {
+      userinfo = {},
+      state = {},
+      code = 0,
+      msg = '',
+    } = await jwtlogin(token)
+    if (Number(code) != 200) return false
+    Cookies.set('fileServer', state.extendFields.companyName, {
+      expires: 1,
+    })
+    Cookies.set('fileServer', state.externalId, { expires: 1 })
+    let data = _.merge(
+      {
+        tag: {
+          companyinfo: {
+            title: ``,
+            Copyright: '',
+            name: '',
+            logo: '',
+            _pcimg: '',
+            _mimg: '',
+          },
+          userinfo: {
+            avatar: '',
+          },
+          theme: { ...defaultTheme },
+        },
+      },
+      userinfo
+    )
+    const { sessionToken = '' } = data
+    if (sessionToken) {
+      await queryAllMsg(commit, data)
+    } else {
+      Vue.prototype.$baseMessage(
+        `登录失败，可能是密码错误或者账号被禁用！请与平台管理员联系。`,
+        'error'
+      )
+      return Promise.reject()
+    }
+  },
+
+  /**
    * @description 登录
    * @param {*} { commit }
    * @param {*} userInfo
@@ -307,59 +406,10 @@ const actions = {
       },
       _userInfo
     )
-    const {
-      sessionToken = '',
-      nick,
-      objectId,
-      roles,
-      tag = {},
-      fileServer,
-      expires_in = 86400,
-    } = data
+    const { sessionToken = '' } = data
     if (sessionToken) {
-      queryAllMsg(commit)
-      Vue.prototype.$FileServe = Cookies.get('fileServer')
+      await queryAllMsg(commit, data)
       commit('setLoginInfo', userInfo)
-      // clientMqtt()
-      // initDgiotMqtt(objectId)
-      commit('_setToken', { sessionToken, expires_in })
-      commit('setExpired', {
-        time: (Date.parse(new Date()) / 1000 + expires_in) * 1000,
-        expires_in: 7,
-      })
-      commit('setDepartmentToken', { sessionToken, expires_in })
-      if (nick) commit('setUsername', nick)
-      const page_title = getToken('title') || title
-      const { title, Copyright, name, logo, _pcimg, _mimg } = tag.companyinfo
-      const { avatar } = tag.userinfo
-      commit('setAvatar', avatar)
-      commit('setname', name)
-      commit('setlogo', logo)
-      dispatch('settings/setTitle', title, { root: true })
-      dispatch('settings/saveTheme', tag.theme, { root: true })
-      dispatch('settings/togglePicture', tag.theme.pictureSwitch, {
-        root: true,
-      })
-      dispatch('dashboard/set_pcimg', _pcimg, { root: true })
-      dispatch('dashboard/set_mimg', _mimg, { root: true })
-      dispatch('acl/setRole', roles, { root: true })
-      dispatch('settings/setTitle', title, { root: true })
-      dispatch('acl/setCopyright', Copyright, { root: true })
-      dispatch('settings/setTag', tag, { root: true })
-      commit('setObejectId', objectId)
-      // 登录后设置当前部门
-      const hour = new Date().getHours()
-      const thisTime =
-        hour < 8
-          ? '早上好'
-          : hour <= 11
-          ? '上午好'
-          : hour <= 13
-          ? '中午好'
-          : hour < 18
-          ? '下午好'
-          : '晚上好'
-      Vue.prototype.$baseNotify(title, `${thisTime}！`)
     } else {
       Vue.prototype.$baseMessage(
         `登录失败，可能是密码错误或者账号被禁用！请与平台管理员联系。`,
