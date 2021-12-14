@@ -126,144 +126,138 @@
           </el-button>
         </el-form-item>
       </el-form>
-      <el-card>
-        <el-table
-          v-loading="listLoading"
-          :cell-style="{ 'text-align': 'center' }"
-          :data="proTableData"
-          :header-cell-style="{ 'text-align': 'center' }"
-          :height="height"
-          border
-          size="mini"
-          style="width: 100%"
+      <el-table
+        v-loading="listLoading"
+        :cell-style="{ 'text-align': 'center' }"
+        :data="proTableData"
+        :header-cell-style="{ 'text-align': 'center' }"
+        :height="height"
+        border
+        size="mini"
+        style="width: 100%"
+      >
+        <el-table-column
+          label="ProductID"
+          prop="objectId"
+          width="auto"
+          show-overflow-tooltip
+          sortable
+        />
+        <el-table-column
+          width="auto"
+          show-overflow-tooltip
+          sortable
+          prop="name"
+          :label="$translateTitle('product.productname')"
+        />
+        <el-table-column
+          show-overflow-tooltip
+          sortable
+          prop="nodeType"
+          width="auto"
+          :label="$translateTitle('product.nodetype')"
         >
-          <el-table-column
-            label="ProductID"
-            prop="objectId"
-            width="auto"
-            show-overflow-tooltip
-            sortable
-          />
-          <el-table-column
-            width="auto"
-            show-overflow-tooltip
-            sortable
-            prop="name"
-            :label="$translateTitle('product.productname')"
-          />
-          <el-table-column
-            show-overflow-tooltip
-            sortable
-            prop="nodeType"
-            width="160"
-            :label="$translateTitle('product.nodetype')"
-          >
-            <template #default="{ row }">
-              <span v-if="row.nodeType == 3">
-                {{ $translateTitle('product.direct') }}
-              </span>
-              <span v-if="row.nodeType == 1">
-                {{ $translateTitle('product.gateway') }}
-              </span>
-              <span v-if="row.nodeType == 2">
-                {{ $translateTitle('product.groupgateway') }}
-              </span>
-              <span v-else-if="row.nodeType == 0">
-                {{ $translateTitle('product.equipment') }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            show-overflow-tooltip
-            sortable
-            prop="nodeType"
-            width="auto"
-            :label="$translateTitle('product.classification')"
-          >
-            <template #default="{ row }">
-              <span>
-                {{ row.category ? row.category.name : '' }}
-              </span>
-            </template>
-          </el-table-column>
-          <!--          <el-table-column :label="$translateTitle('product.producttemplet')">-->
-          <!--            <template #default="{ row }">-->
-          <!--              <span>-->
-          <!--                {{ row.producttemplet ? row.producttemplet.name : '' }}-->
-          <!--              </span>-->
-          <!--            </template>-->
-          <!--          </el-table-column>-->
-          <el-table-column
-            show-overflow-tooltip
-            sortable
-            prop="createdAt"
-            width="auto"
-            :label="$translateTitle('product.addingtime')"
-          >
-            <template #default="{ row }">
-              <span>{{ utc2beijing(row.createdAt) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            ref="rightCol"
-            :label="$translateTitle('developer.operation')"
-            fixed="right"
-            width="auto"
-            min-width="160"
-          >
-            <template #default="{ row, $index }">
-              <el-button
-                :underline="false"
-                size="mini"
-                type="primary"
-                style="margin-left: 10px"
-                @click="deviceToDetail(row)"
-              >
-                {{ $translateTitle('product.config') }}
-              </el-button>
-              <el-button
-                :underline="false"
-                size="mini"
-                type="warning"
-                @click="editorDict(row.objectId)"
-              >
-                {{ $translateTitle('product.dict') }}
-              </el-button>
+          <template #default="{ row }">
+            <span v-if="row.nodeType == 3">
+              {{ $translateTitle('product.direct') }}
+            </span>
+            <span v-if="row.nodeType == 1">
+              {{ $translateTitle('product.gateway') }}
+            </span>
+            <span v-if="row.nodeType == 2">
+              {{ $translateTitle('product.groupgateway') }}
+            </span>
+            <span v-else-if="row.nodeType == 0">
+              {{ $translateTitle('product.equipment') }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          show-overflow-tooltip
+          sortable
+          prop="nodeType"
+          width="auto"
+          :label="$translateTitle('product.classification')"
+        >
+          <template #default="{ row }">
+            <span>
+              {{ row.category ? row.category.name : '' }}
+            </span>
+          </template>
+        </el-table-column>
+        <!--          <el-table-column :label="$translateTitle('product.producttemplet')">-->
+        <!--            <template #default="{ row }">-->
+        <!--              <span>-->
+        <!--                {{ row.producttemplet ? row.producttemplet.name : '' }}-->
+        <!--              </span>-->
+        <!--            </template>-->
+        <!--          </el-table-column>-->
+        <el-table-column
+          show-overflow-tooltip
+          sortable
+          prop="createdAt"
+          width="auto"
+          :label="$translateTitle('product.addingtime')"
+        >
+          <template #default="{ row }">
+            <span>{{ utc2beijing(row.createdAt) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          ref="rightCol"
+          :label="$translateTitle('developer.operation')"
+          fixed="right"
+          width="auto"
+          min-width="280"
+        >
+          <template #default="{ row, $index }">
+            <el-button
+              :underline="false"
+              size="mini"
+              type="primary"
+              style="margin-left: 10px"
+              @click="deviceToDetail(row)"
+            >
+              {{ $translateTitle('product.config') }}
+            </el-button>
+            <el-button
+              :underline="false"
+              size="mini"
+              type="warning"
+              @click="editorDict(row.objectId)"
+            >
+              {{ $translateTitle('product.dict') }}
+            </el-button>
 
-              <el-button size="mini" @click="goKonva(row.objectId)">
-                {{ $translateTitle('concentrator.konva') }}
-              </el-button>
+            <el-button size="mini" @click="goKonva(row.objectId)">
+              {{ $translateTitle('concentrator.konva') }}
+            </el-button>
 
-              <el-button
-                :underline="false"
-                size="mini"
-                type="success"
-                @click="editorProduct(row)"
-              >
-                {{ $translateTitle('concentrator.edit') }}
-              </el-button>
+            <el-button
+              :underline="false"
+              size="mini"
+              type="success"
+              @click="editorProduct(row)"
+            >
+              {{ $translateTitle('concentrator.edit') }}
+            </el-button>
 
-              <el-button
-                size="mini"
-                type="danger"
-                @click="makeSure(row, $index)"
-              >
-                {{ $translateTitle('task.Delete') }}
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <div class="elpagination" style="margin-top: 20px">
-          <el-pagination
-            :page-size="length"
-            :page-sizes="[10, 20, 30, 50]"
-            :total="total"
-            layout="total, sizes, prev, pager, next, jumper"
-            @current-change="productCurrentChange"
-            @size-change="productSizeChange"
-          />
-        </div>
-      </el-card>
+            <el-button size="mini" type="danger" @click="makeSure(row, $index)">
+              {{ $translateTitle('task.Delete') }}
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="elpagination" style="margin-top: 20px">
+        <el-pagination
+          :page-size="length"
+          :page-sizes="[10, 20, 30, 50]"
+          :total="total"
+          layout="total, sizes, prev, pager, next, jumper"
+          @current-change="productCurrentChange"
+          @size-change="productSizeChange"
+        />
+      </div>
     </div>
     <div class="devproduct-prodialog">
       <!-- 创建产品对话框 ###-->
