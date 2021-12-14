@@ -1,16 +1,14 @@
 <template>
-  <div class="websocket-view">
-    <dgiot-mqtt-dashboard ref="mqtt-dashboard" />
-  </div>
+  <dgiot-mqtt-dashboard ref="mqtt-dashboard" />
 </template>
 
 <script>
-  import dgiotMqttdashboard from '@dgiot/dgiot-mqtt-dashboard/src/components/mqtt'
-
+  import dgiotMqttdashboard from '@dgiot/dgiot-mqtt-dashboard'
+  console.error('mqtt', dgiotMqttdashboard)
   export default {
     name: 'Mqtt',
     components: {
-      dgiotMqttdashboard,
+      'dgiot-mqtt-dashboard': dgiotMqttdashboard,
     },
     mounted() {
       this.hiddenClass([
