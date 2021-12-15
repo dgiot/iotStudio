@@ -4,7 +4,7 @@
     class="login-container"
     :style="{ backgroundImage: 'url(' + backgroundImage + ')' }"
   >
-    <el-row>
+    <el-row v-if="isShow">
       <el-col :lg="14" :md="11" :sm="24" :xl="14" :xs="24">
         <div style="color: transparent">占位符</div>
       </el-col>
@@ -142,6 +142,7 @@
         }
       }
       return {
+        isShow: !_.isEmpty(Cookies.get('id_token')) ? false : true,
         locationPath: location.href.split('/#')[0],
         info: {
           empty: this.$translateTitle('home.Username can not be empty'),
@@ -215,6 +216,7 @@
     },
     mounted() {
       this.initShuwa()
+      this.defaultSet()
     },
     methods: {
       ...mapMutations({
@@ -231,16 +233,35 @@
        * @Description:
        */
       async defaultSet() {
+        // window.addEventListener('message', function (e) {
+        //   console.error(e)
+        // })
         try {
           const url =
             process.env.NODE_ENV === 'development'
               ? process.env.VUE_APP_URL
               : location.origin
           Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
+          window.onload = function () {
+            window.addEventListener('message', function (e) {
+              console.groupCollapsed(
+                '%c iframe message',
+                'color:#009a61; font-size: 28px; font-weight: 300'
+              )
+              console.log(e)
+              // if (e.origin !== "https://pumpd.runoob.com") {  // 验证消息来源地址
+              //   return;
+              // }
+              console.error('从' + e.origin + '收到消息： \n')
+              console.log(e.data)
+              console.groupEnd()
+            })
+          }
           console.groupCollapsed(
             '%c 单点登录日志',
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
+          console.info('iframe', window.name)
           console.info('id_token ->\n', Cookies.get('id_token'))
           console.groupEnd()
           if (Cookies.get('id_token')) {

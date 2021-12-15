@@ -339,7 +339,11 @@ const actions = {
    */
   async jwtlogin({ commit, dispatch }, token) {
     const userInfo = await jwtlogin(token)
-    if (Number(userInfo.code) != 200) return false
+    if (Number(userInfo.code) != 200) {
+      console.error('userInfo', userInfo)
+      Cookies.remove('id_token')
+      return false
+    }
     const { state = {} } = userInfo
     Cookies.set('companyName', state.extendFields.companyName, {
       expires: 1,
@@ -368,10 +372,7 @@ const actions = {
     if (sessionToken) {
       await queryAllMsg(commit, dispatch, data)
     } else {
-      Vue.prototype.$baseMessage(
-        `登录失败，可能是密码错误或者账号被禁用！请与平台管理员联系。`,
-        'error'
-      )
+      Cookies.remove('id_token')
       return Promise.reject()
     }
   },
