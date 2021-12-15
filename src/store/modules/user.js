@@ -338,17 +338,13 @@ const actions = {
    * @param {*} userInfo
    */
   async jwtlogin({ commit, dispatch }, token) {
-    const {
-      userinfo = {},
-      state = {},
-      code = 0,
-      msg = '',
-    } = await jwtlogin(token)
-    if (Number(code) != 200) return false
-    Cookies.set('fileServer', state.extendFields.companyName, {
+    const userInfo = await jwtlogin(token)
+    if (Number(userInfo.code) != 200) return false
+    const { state = {} } = userInfo
+    Cookies.set('companyName', state.extendFields.companyName, {
       expires: 1,
     })
-    Cookies.set('fileServer', state.externalId, { expires: 1 })
+    Cookies.set('userId', state.externalId, { expires: 1 })
     let data = _.merge(
       {
         tag: {
@@ -366,7 +362,7 @@ const actions = {
           theme: { ...defaultTheme },
         },
       },
-      userinfo
+      userInfo
     )
     const { sessionToken = '' } = data
     if (sessionToken) {

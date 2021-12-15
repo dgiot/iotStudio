@@ -8,11 +8,13 @@ import { queryView } from '@/api/View'
 import { generatereport, queryEvidence } from '@/api/Evidence'
 // const docx = require('docx-preview')
 // import mammoth from 'mammoth'
+const VueAliplayerV2 = window['vue-aliplayer-v2'].default
 export default {
   name: 'ReviewIndex',
   components: {
     VabDraggable,
     lowcodeDesign,
+    'vue-aliplayer-v2': VueAliplayerV2,
   },
   data() {
     return {

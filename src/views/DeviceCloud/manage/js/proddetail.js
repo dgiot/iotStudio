@@ -465,6 +465,7 @@ export default {
         specs: [],
         dis: '0X10',
         dinumber: 'null',
+        das:[],
       },
       tableData: [],
       activeName: 'first',
@@ -686,6 +687,8 @@ export default {
             attributevalue: '',
           },
         ],
+        das:[],
+        daslist:[],
         rate: 1,
         offset: 0,
         order: 0,
@@ -1467,6 +1470,17 @@ export default {
         attributevalue: '',
       })
     },
+    addDas() {
+        this.sizeForm.daslist.push({
+            addr: '',
+        })
+    },
+    removeDas(item) {
+      var index = this.sizeForm.daslist.indexOf(item)
+      if (index !== -1) {
+        this.sizeForm.daslist.splice(index, 1)
+      }
+    },
     removeDomain1(item) {
       var index = this.structform.specs.indexOf(item)
       if (index !== -1) {
@@ -1481,6 +1495,11 @@ export default {
     },
     // 物模型提交
     submitForm(sizeForm) {
+      var das = []
+      sizeForm.daslist.map((items) => {
+        var newval = items['addr']
+        das.push(newval)
+      })
       var obj = {
         name: sizeForm.name,
         devicetype: sizeForm.devicetype,
@@ -1526,6 +1545,7 @@ export default {
               precision: Number(sizeForm.precision),
               unit: sizeForm.unit == '' ? '' : sizeForm.unit,
             },
+            das:das,
           },
         }
         Object.assign(obj, obj1)
@@ -1541,6 +1561,7 @@ export default {
             type: sizeForm.type.toLowerCase(),
             imagevalue: sizeForm.imagevalue,
             specs: {},
+            das:das,
           },
         }
         Object.assign(obj, obj1)
@@ -1552,6 +1573,7 @@ export default {
               0: sizeForm.false,
               1: sizeForm.true,
             },
+            das:das,
           },
         }
         Object.assign(obj, obj1)
@@ -1565,6 +1587,7 @@ export default {
           dataType: {
             type: sizeForm.type.toLowerCase(),
             specs: specs,
+            das:das,
           },
         }
         Object.assign(obj, obj1)
@@ -1573,6 +1596,7 @@ export default {
           dataType: {
             type: sizeForm.type.toLowerCase(),
             specs: sizeForm.struct,
+            das:das,
           },
         }
         Object.assign(obj, obj1)
@@ -1582,6 +1606,7 @@ export default {
             type: sizeForm.type.toLowerCase(),
             size: sizeForm.string,
             specs: {},
+            das:das,
           },
         }
         Object.assign(obj, obj1)
@@ -1590,6 +1615,7 @@ export default {
           dataType: {
             type: sizeForm.type.toLowerCase(),
             specs: {},
+            das:das,
           },
         }
         Object.assign(obj, obj1)
@@ -1599,6 +1625,7 @@ export default {
             type: sizeForm.type.toLowerCase(),
             gpstype: sizeForm.gpstype,
             specs: {},
+            das:das,
           },
         }
         Object.assign(obj, obj1)
@@ -1670,16 +1697,22 @@ export default {
     },
     createProperty() {
       this.setSizeForm(this.getFormOrginalData())
+        console.log("sizeForm", this.sizeForm)
       this.wmxdialogVisible = true
       this.wmxSituation = '新增'
     },
     // 物模型修改submitForm
     wmxDataFill(rowData, index) {
       this.modifyIndex = index
-      // dgiotlog.log("rowData ", rowData);
       this.wmxdialogVisible = true
       this.wmxSituation = '编辑'
       var obj = {}
+      var daslist = []
+      rowData.dataType.das.forEach((val) => {
+        daslist.push({
+          addr:val
+        })
+      })
       // 提交之前需要先判断类型
       if (
         ['float', 'double', 'int', 'long'].indexOf(rowData.dataType.type) != -1
@@ -1688,6 +1721,7 @@ export default {
           name: rowData.name,
           devicetype: rowData.devicetype,
           type: rowData.dataType.type,
+          daslist: daslist,
           endnumber: this.$objGet(rowData, 'dataType.specs.max'),
           startnumber: this.$objGet(rowData, 'dataType.specs.min'),
           step: this.$objGet(rowData, 'dataType.specs.step'),
@@ -1730,7 +1764,7 @@ export default {
           type: rowData.dataType.type,
           true: rowData.dataType.specs[1],
           false: rowData.dataType.specs[0],
-          // rowData.dataForm.
+          daslist: daslist,
           startnumber: this.$objGet(rowData, 'dataType.specs.min'),
           step: this.$objGet(rowData, 'dataType.specs.step'),
           unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1767,7 +1801,7 @@ export default {
           devicetype: rowData.devicetype,
           type: rowData.dataType.type,
           imagevalue: rowData.dataType.imagevalue,
-          // rowData.dataForm.
+          daslist: daslist,
           startnumber: this.$objGet(rowData, 'dataType.specs.min'),
           step: this.$objGet(rowData, 'dataType.specs.step'),
           unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1812,6 +1846,7 @@ export default {
           type: rowData.dataType.type,
           specs: rowData.dataType.specs,
           struct: structArray,
+          daslist: daslist,
           startnumber: this.$objGet(rowData, 'dataType.specs.min'),
           step: this.$objGet(rowData, 'dataType.specs.step'),
           unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1848,6 +1883,7 @@ export default {
           devicetype: rowData.devicetype,
           type: rowData.dataType.type,
           struct: rowData.dataType.specs,
+          daslist: daslist,
           startnumber: this.$objGet(rowData, 'dataType.specs.min'),
           step: this.$objGet(rowData, 'dataType.specs.step'),
           unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1888,6 +1924,7 @@ export default {
           control:
             rowData.dataForm == undefined ? '' : rowData.dataForm.control,
           string: rowData.dataType.size,
+          daslist: daslist,
           startnumber: this.$objGet(rowData, 'dataType.specs.min'),
           step: this.$objGet(rowData, 'dataType.specs.step'),
           unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1925,6 +1962,7 @@ export default {
             rowData.dataForm == undefined ? '' : rowData.dataForm.control,
           strategy:
             rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
+          daslist: daslist,
           startnumber: this.$objGet(rowData, 'dataType.specs.min'),
           step: this.$objGet(rowData, 'dataType.specs.step'),
           unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1961,6 +1999,7 @@ export default {
             rowData.dataForm == undefined ? '' : rowData.dataForm.control,
           strategy:
             rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
+          daslist: daslist,
           startnumber: this.$objGet(rowData, 'dataType.specs.min'),
           step: this.$objGet(rowData, 'dataType.specs.step'),
           unit: this.$objGet(rowData, 'dataType.specs.unit'),
