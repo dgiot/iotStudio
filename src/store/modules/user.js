@@ -340,8 +340,12 @@ const actions = {
   async jwtlogin({ commit, dispatch }, token) {
     const userInfo = await jwtlogin(token)
     if (Number(userInfo.code) != 200) {
-      console.error('userInfo', userInfo)
-      Cookies.remove('id_token')
+      Vue.prototype.$baseMessage(
+        `jwt登录失败,\n${userInfo.msg}`,
+        `jwt登录失败,\n${userInfo.msg}`,
+        'error'
+      )
+      // Cookies.remove('id_token')
       return false
     }
     const { state = {} } = userInfo

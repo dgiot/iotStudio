@@ -211,12 +211,9 @@
         immediate: true,
       },
     },
-    async created() {
+    async mounted() {
       await this.defaultSet()
-    },
-    mounted() {
-      this.initShuwa()
-      this.defaultSet()
+      await this.initShuwa()
     },
     methods: {
       ...mapMutations({
@@ -265,6 +262,8 @@
           console.info('id_token ->\n', Cookies.get('id_token'))
           console.groupEnd()
           if (Cookies.get('id_token')) {
+            this.backgroundImage =
+              'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
             console.info(
               '检测到页面存在 jwt token \n',
               Cookies.get('id_token'),
@@ -310,7 +309,7 @@
         return name
       },
       async initShuwa() {
-        if (this.backgroundimage) {
+        if (this.backgroundimage && !_.isEmpty(Cookies.get('id_token'))) {
           this.backgroundImage = this.backgroundimage
         }
         // await this.getlicense()

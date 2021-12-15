@@ -32,10 +32,16 @@
             <vab-search :title="$translateTitle(`home.search`)" />
             <vab-notice :title="$translateTitle(`home.notice`)" />
             <vab-full-screen :title="$translateTitle(`home.full screen`)" />
-            <vab-language :title="$translateTitle(`home.language`)" />
-            <vab-theme :title="$translateTitle(`home.theme`)" />
+            <vab-language
+              v-show="isShow"
+              :title="$translateTitle(`home.language`)"
+            />
+            <vab-theme v-show="isShow" :title="$translateTitle(`home.theme`)" />
             <vab-refresh :title="$translateTitle(`home.refresh`)" />
-            <vab-avatar :title="$translateTitle(`home.avatar`)" />
+            <vab-avatar
+              v-show="isShow"
+              :title="$translateTitle(`home.avatar`)"
+            />
           </div>
         </el-col>
       </el-row>
@@ -47,7 +53,6 @@
   import variables from '@/dgiot/styles/variables/variables.scss'
   import { mapGetters } from 'vuex'
   import { handleActivePath } from '@/utils/routes'
-
   export default {
     name: 'VabHeader',
     props: {
@@ -58,6 +63,7 @@
     },
     data() {
       return {
+        isShow: window.name != 'dgiot_iframe',
         activeMenu: '',
         menuTrigger: 'hover',
       }
