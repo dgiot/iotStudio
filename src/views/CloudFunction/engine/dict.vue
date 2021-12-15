@@ -751,7 +751,7 @@
           <el-table-column
             fixed="right"
             :label="$translateTitle('task.Operation')"
-            min-width="220"
+            min-width="200"
             width="auto"
           >
             <template #default="{ row }">
