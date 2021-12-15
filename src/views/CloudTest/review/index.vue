@@ -34,6 +34,7 @@
             <el-table-column
               align="center"
               :label="$translateTitle('cloudTest.evidence')"
+              min-width="180"
               prop="row.original.path"
               show-overflow-tooltip
               sortable
