@@ -14,21 +14,36 @@
       width="70%"
     >
       <el-table border :data="errorLogs">
-        <el-table-column label="报错路由">
+        <el-table-column
+          align="center"
+          label="报错路由"
+          show-overflow-tooltip
+          width="auto"
+        >
           <template #default="{ row }">
             <a :href="row.url" target="_blank">
               <el-tag type="success">{{ row.url }}</el-tag>
             </a>
           </template>
         </el-table-column>
-        <el-table-column label="错误信息">
+        <el-table-column
+          align="center"
+          label="错误信息"
+          show-overflow-tooltip
+          width="auto"
+        >
           <template #default="{ row }">
             <el-tag type="danger">
               {{ decodeUnicode(row.err.message) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="错误详情" width="120">
+        <el-table-column
+          align="center"
+          label="错误详情"
+          show-overflow-tooltip
+          width="auto"
+        >
           <template #default="{ row }">
             <el-popover placement="top-start" trigger="hover">
               {{ row.err.stack }}
@@ -38,7 +53,7 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="380">
+        <el-table-column align="center" label="操作" width="auto">
           <template #default="{ row }">
             <a
               v-for="(item, index) in searchList"

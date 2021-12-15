@@ -2,7 +2,11 @@
   <div
     ref="container"
     class="login-container"
-    :style="{ backgroundImage: 'url(' + backgroundImage + ')' }"
+    :style="{
+      backgroundImage: 'url(' + backgroundImage + ')',
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: '100% 100%',
+    }"
   >
     <el-row v-if="isShow">
       <el-col :lg="14" :md="11" :sm="24" :xl="14" :xs="24">
@@ -236,8 +240,10 @@
         try {
           if (this.backgroundimage) {
             this.backgroundImage = !_.isEmpty(Cookies.get('id_token'))
-              ? 'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
-              : this.backgroundimage
+              ? 'https://s2.loli.net/2021/12/15/ciVTb7w62rxQ3a9.jpg'
+              : // 'https://s2.loli.net/2021/12/15/aJYcUGVixXhTML3.png'
+                // 'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
+                this.backgroundimage
           }
           const url =
             process.env.NODE_ENV === 'development'

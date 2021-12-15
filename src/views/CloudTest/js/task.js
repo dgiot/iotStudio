@@ -247,19 +247,35 @@ export default {
         }
       })
     },
-    forensics(row) {
-      console.warn(row)
-      this.$router.push({
-        path: '/cloudTest/evidence',
-        query: {
-          taskid: row.objectId,
-          suite: 0,
-          state: 'preview',
-          step: 1,
-          back: row.profile.step,
-          message: row.profile.message,
-        },
-      })
+    /**
+     * @Author: h7ml
+     * @Date: 2021-12-15 18:58:04
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async forensics(row) {
+      try {
+        await this.$router.push({
+          path: '/cloudTest/evidence',
+          query: {
+            taskid: row.objectId,
+            suite: 0,
+            state: 'preview',
+            step: 1,
+            back: row.profile.step,
+            message: row.profile.message,
+          },
+        })
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
     },
     /**
      * @Author: h7ml
@@ -314,6 +330,7 @@ export default {
         null,
         async () => {
           try {
+            await generatereport(row.objectId)
             const loading = this.$baseColorfullLoading()
             const params = {
               profile: _.merge(row.profile, {

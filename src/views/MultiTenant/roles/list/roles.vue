@@ -194,6 +194,7 @@
                 <!--                </el-button>-->
               </div>
               <el-tree
+                :key="hashKey"
                 ref="permissionTree"
                 accordion
                 check-on-click-node
@@ -263,6 +264,7 @@
             </div>
             <div class="menucontrol" style="margin-top: 0px">
               <el-tree
+                :key="hashKey"
                 ref="menusTree"
                 accordion
                 check-on-click-node
@@ -409,6 +411,7 @@
     name: 'Role',
     data() {
       return {
+        hashKey: '',
         tableHeight: this.$baseTableHeight(2),
         isExpand: false,
         menuExpand: false,
@@ -513,9 +516,15 @@
       expand(tree, isExpand) {
         // 展开/折叠
         this[isExpand] = !this[isExpand]
-        dgiotlog.log('tree', tree, this.$refs[tree], isExpand)
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          'tree',
+          tree,
+          this.$refs[tree],
+          isExpand
+        )
         const nodes = this.$refs[tree].store._getAllNodes()
-        dgiotlog.log(nodes)
+        dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue', nodes)
         // 或者方法二
         // const nodes = this.$refs.tree.store.nodesMap
         for (let i in nodes) {
@@ -550,7 +559,7 @@
       },
       ...mapMutations({}),
       change(e) {
-        dgiotlog.log(e)
+        dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue', e)
         if (e) {
           $('.el-tree').css({
             height: '300px',
@@ -560,7 +569,11 @@
         }
       },
       getMenu() {
-        dgiotlog.log('this.Menu', this.Menu)
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          'this.Menu',
+          this.Menu
+        )
         this.menusTreeloading = true
         this.data = []
         this.dataMenus = []
@@ -576,7 +589,11 @@
             this.data.push(obj)
             this.dataMenus.push(obj)
           })
-          dgiotlog.log('this.dataMenus', this.dataMenus)
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            'this.dataMenus',
+            this.dataMenus
+          )
           this.handleNodeClick(this.roleTree[0])
         }
         this.menusTreeloading = false
@@ -584,7 +601,7 @@
       diguiquchu(datas, arr, v, needdelarr) {
         // 递归找出半选中的数据
         arr.map((item) => {
-          // dgiotlog.log(item.key, v, "----------");
+          //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',item.key, v, "----------");
           if (item.key == v && item.children.length > 0) {
             // datas.splice(i, 1);//因为每次截取会改变原数组，所以不能这样
             needdelarr.push(v)
@@ -658,7 +675,7 @@
       },
       //增加菜单
       addmenu(row) {
-        // dgiotlog.log(row)
+        //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',row)
         this.rolename = row.attributes.name
 
         // this.dialogVisible = true;
@@ -707,12 +724,44 @@
           roles: roles,
           objectId: objectId,
         }
-        dgiotlog.log(' this.roleItem', this.roleItem)
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          ' this.roleItem',
+          this.roleItem
+        )
         this.loadingService.close()
         if (menus && rules) {
           this.checkMenus = menus
           this.checkRoles = rules
-          this.doSetChecked()
+          this.hashKey = row.objectId
+          this.roleMenuList = []
+          this.rolePermissonList = []
+
+          this.Menu.map((items) => {
+            this.checkMenus.map((mentItem) => {
+              if (items.name == mentItem.name)
+                // this.roleMenuList.push(items.objectId)
+                this.$nextTick(() => {
+                  this.$refs.menusTree.setChecked(items.objectId, true, false)
+                })
+            })
+          })
+          this.Permission.map((items) => {
+            this.checkRoles.map((mentItem) => {
+              if (items.name === mentItem.name)
+                this.$nextTick(() => {
+                  this.$refs.permissionTree.setChecked(
+                    items.objectId,
+                    true,
+                    false
+                  )
+                })
+            })
+          })
+          // this.$refs.menusTree.setCheckedKeys([]);
+          // this.$refs.permissionTree.setCheckedKeys([]);
+          //
+          // this.doSetChecked(this.roleMenuList, this.rolePermissonList)
         } else {
           this.$message({
             type: 'warning',
@@ -720,32 +769,22 @@
           })
         }
       },
-      doSetChecked() {
-        this.roleMenuList = []
-        this.rolePermissonList = []
-
-        this.Menu.map((items) => {
-          this.checkMenus.map((mentItem) => {
-            if (items.name == mentItem.name) {
-              this.roleMenuList.push(items.objectId)
-            }
-          })
-        })
-        // dgiotlog.log("this.Menu", this.Menu)
-        // dgiotlog.log("this.checkMenus", this.checkMenus)
-        // dgiotlog.log("this.roleMenuList", this.roleMenuList)
+      doSetChecked(checkMenus, checkRoles) {
+        //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',"this.Menu", this.Menu)
+        //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',"this.checkMenus", this.checkMenus)
+        //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',"this.roleMenuList", this.roleMenuList)
         // set ###
-        this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
+        // this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
 
-        this.Permission.map((items) => {
-          this.checkRoles.map((mentItem) => {
-            if (items.name === mentItem.name) {
-              this.rolePermissonList.push(items.objectId)
-            }
-          })
+        checkMenus.forEach((value) => {
+          console.error(this.roleMenuList)
+          this.$refs.menusTree.setChecked(value, true, false)
         })
         // set ###
-        this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
+        // this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
+        checkRoles.forEach((value) => {
+          this.$refs.permissionTree.setChecked(value, true, false)
+        })
       },
 
       //初始化权限列表
@@ -788,11 +827,19 @@
         this.getRolesList()
       },
       handleCheckChange(data, checked) {
-        dgiotlog.log(data, checked)
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          data,
+          checked
+        )
       },
       // 获取权限
       getRoleschema() {
-        dgiotlog.log('this.Permission', this.Permission)
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          'this.Permission',
+          this.Permission
+        )
         this.permissionTreeloading = true
         this.dataPermissions = []
         if (this.Permission) {
@@ -874,21 +921,45 @@
           usersList.push(item.username)
         })
         rolesData.forEach((item) => {
-          dgiotlog.log('loadsh', _.assign(...rolesData))
-          dgiotlog.log('item', item)
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            'loadsh',
+            _.assign(...rolesData)
+          )
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            'item',
+            item
+          )
           rolesList.push(item.name)
         })
         if (selectMenu && selectRermission) {
           selectMenu.forEach((item) => {
             checkmenu.push(item.label)
           })
-          dgiotlog.log('selectMenu', checkmenu)
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            'selectMenu',
+            checkmenu
+          )
           selectRermission.forEach((item) => {
             checkrole.push(item.alias)
           })
-          dgiotlog.log('selectRermission', checkrole)
-          dgiotlog.log(row, 'row', row)
-          dgiotlog.log(_.uniq(checkrole))
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            'selectRermission',
+            checkrole
+          )
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            row,
+            'row',
+            row
+          )
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            _.uniq(checkrole)
+          )
           if (_.uniq(checkrole).length == 0 || _.uniq(checkmenu) == 0) {
             this.$message.warning(
               `${this.$translateTitle(
@@ -977,7 +1048,11 @@
       },
       // 添加子节点
       appendChildTree(data) {
-        dgiotlog.log(data, '添加子节点')
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          data,
+          '添加子节点'
+        )
       },
       renderContent(h, { node, data, store }) {
         return (
