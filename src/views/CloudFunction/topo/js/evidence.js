@@ -12,7 +12,7 @@ import { uppyUpload } from '@/api/Upload'
 const VueAliplayerV2 = window['vue-aliplayer-v2'].default
 export default {
   name: 'Index',
-  components: { VueAliplayerV2 },
+  components: { 'vue-aliplayer-v2': VueAliplayerV2 },
   data() {
     return {
       badge: {
