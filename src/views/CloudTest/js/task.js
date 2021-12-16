@@ -16,6 +16,46 @@ export default {
   },
   data() {
     return {
+      tableData: [
+        {
+          id: '12987122',
+          name: '王小虎',
+          amount1: '234',
+          amount2: '3.2',
+          amount3: 10,
+        },
+        {
+          id: '12987123',
+          name: '王小虎',
+          amount1: '165',
+          amount2: '4.43',
+          amount3: 12,
+        },
+        {
+          id: '12987124',
+          name: '王小虎',
+          amount1: '324',
+          amount2: '1.9',
+          amount3: 9,
+        },
+        {
+          id: '12987125',
+          name: '王小虎',
+          amount1: '621',
+          amount2: '2.2',
+          amount3: 17,
+        },
+        {
+          id: '12987126',
+          name: '王小虎',
+          amount1: '539',
+          amount2: '4.1',
+          amount3: 15,
+        },
+      ],
+      visible: false,
+      router: '',
+      topicKey: '',
       activeName: this?.$route?.query?.tabs
         ? this.$route.query.tabs == 'examination'
           ? 'examination'
@@ -166,8 +206,19 @@ export default {
       return this.columns.filter((item) => this.checkList.includes(item.label))
     },
   },
+  topicKey: {
+    handler: function (newVal) {
+      this.$dgiotBus.$off(newVal)
+      this.$dgiotBus.$on(newVal, (mqttMsg) => {
+        console.error('mqttMsg', mqttMsg)
+      })
+    },
+    deep: true,
+    limit: true,
+  },
   created() {
     this.fetchData()
+    this.router = this.$dgiotBus.router(this.$route.fullPath)
   },
   methods: {
     async paginationQuery(queryPayload) {
@@ -536,6 +587,74 @@ export default {
         }
       })
       this.listLoading = false
+    },
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-16 14:46:53
+     * @LastEditors: dext7r
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async collection(params) {
+      try {
+        this.subtopic = `/${params.product.objectId}/${params.devaddr}/opc/properties/read`
+        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        const message = {
+          timestamp: moment().valueOf(), //毫秒时间戳
+          deviceId: params.objectId, //'设备ID',
+          properties: ['GCU331_YJ.p_L_1', 'GCU331_YJ.SX_PZ96_U_55'], //要读取到属性列表
+        }
+        this.$dgiotBus.$emit('MqttSubscribe', {
+          router: this.router,
+          topic: this.subtopic,
+          qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
+        })
+        this.$dgiotBus.$emit(`MqttPublish`, this.subtopic, message, 0, false)
+        this.visible = true
+        this.getSummaries({ columns: [], data: this.tableData })
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-16 15:19:12
+     * @LastEditors: dext7r
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    getSummaries(params) {
+      console.log(params, 'params')
+      const { columns, data } = params
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '平均值'
+          return
+        }
+        const values = data.map((item) => Number(item[column.property]))
+        if (!values.every((value) => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
+            }
+          }, 0)
+          sums[index] = sums[index] / data.length
+        } else sums[index] = ''
+      })
+      return sums
     },
   },
 }

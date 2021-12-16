@@ -9,6 +9,45 @@
 -->
 <template>
   <div ref="custom-table" class="custom-table-container">
+    <a-drawer
+      :body-style="{ paddingBottom: '80px' }"
+      :mask-closable="false"
+      placement="right"
+      :visible="visible"
+      width="50%"
+      @close="visible = false"
+    >
+      <el-table
+        border
+        :data="tableData"
+        show-summary
+        style="width: 100%; margin-top: 20px"
+        :summary-method="getSummaries"
+      >
+        <el-table-column label="ID" prop="id" width="180" />
+        <el-table-column label="姓名" prop="name" />
+        <el-table-column label="数值 1（元）" prop="amount1" />
+        <el-table-column label="数值 2（元）" prop="amount2" />
+        <el-table-column label="数值 3（元）" prop="amount3" />
+      </el-table>
+      <div
+        :style="{
+          position: 'absolute',
+          right: 0,
+          bottom: 0,
+          width: '100%',
+          borderTop: '1px solid #e9e9e9',
+          padding: '10px 16px',
+          background: '#fff',
+          textAlign: 'right',
+          zIndex: 1,
+        }"
+      >
+        <a-button type="primary" @click="visible = false">
+          {{ $translateTitle('tagsView.close') }}
+        </a-button>
+      </div>
+    </a-drawer>
     <el-drawer
       v-drawerDrag
       append-to-body
@@ -239,6 +278,13 @@
             @click.native="taskStart(row)"
           >
             {{ $translateTitle(`task.start`) }}
+          </el-button>
+          <el-button
+            v-show="row.profile.step == 1"
+            size="mini"
+            @click.native="collection(row)"
+          >
+            {{ $translateTitle(`task.dataacquisition`) }}
           </el-button>
           <el-button
             v-show="row.profile.step == 1 || row.profile.step == -1"
