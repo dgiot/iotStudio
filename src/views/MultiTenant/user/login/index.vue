@@ -318,6 +318,7 @@
         return name
       },
       async initShuwa() {
+        if (window.name !== 'dgiot_iframe') Cookies.remove('id_token')
         // await this.getlicense()
         const Default = await SiteDefault()
         const { copyright, logo, objectId, title } = Default
