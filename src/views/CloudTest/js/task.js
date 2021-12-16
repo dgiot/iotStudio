@@ -19,38 +19,10 @@ export default {
       tableData: [
         {
           id: '12987122',
-          name: '王小虎',
+          name: '96',
           amount1: '234',
           amount2: '3.2',
           amount3: 10,
-        },
-        {
-          id: '12987123',
-          name: '王小虎',
-          amount1: '165',
-          amount2: '4.43',
-          amount3: 12,
-        },
-        {
-          id: '12987124',
-          name: '王小虎',
-          amount1: '324',
-          amount2: '1.9',
-          amount3: 9,
-        },
-        {
-          id: '12987125',
-          name: '王小虎',
-          amount1: '621',
-          amount2: '2.2',
-          amount3: 17,
-        },
-        {
-          id: '12987126',
-          name: '王小虎',
-          amount1: '539',
-          amount2: '4.1',
-          amount3: 15,
         },
       ],
       visible: false,
@@ -211,6 +183,7 @@ export default {
       this.$dgiotBus.$off(newVal)
       this.$dgiotBus.$on(newVal, (mqttMsg) => {
         console.error('mqttMsg', mqttMsg)
+        this.getSummaries({ columns: [], data: this.tableData })
       })
     },
     deep: true,

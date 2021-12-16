@@ -9,7 +9,12 @@
 -->
 <template>
   <el-container class="evidence">
-    <el-drawer v-drawerDrag append-to-body :visible.sync="auditDialog">
+    <el-drawer
+      v-drawerDrag
+      append-to-body
+      :visible.sync="auditDialog"
+      :wrapper-closable="false"
+    >
       <span>
         <el-table border :data="auditList" size="mini" stripe>
           <el-table-column
@@ -139,7 +144,12 @@
         </div>
       </span>
     </el-drawer>
-    <el-drawer v-drawerDrag append-to-body :visible.sync="evidenceDialog">
+    <el-drawer
+      v-drawerDrag
+      append-to-body
+      :visible.sync="evidenceDialog"
+      :wrapper-closable="false"
+    >
       <el-card class="box-card" shadow="hover">
         <div
           v-if="evidenceList.id"
@@ -147,15 +157,12 @@
           slot="header"
           class="clearfix"
         >
-          <i class="material-icons" :title="evidenceList.node.attrs.icon">
-            {{ evidenceList.node.attrs.icon }}
-          </i>
           <i
             class="el-icon-upload"
             style="
               float: right;
               padding: 3px 0;
-              font-size: 46px;
+              font-size: 18px;
               cursor: pointer;
             "
             title="取证"

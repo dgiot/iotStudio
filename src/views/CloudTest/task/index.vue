@@ -24,11 +24,46 @@
         style="width: 100%; margin-top: 20px"
         :summary-method="getSummaries"
       >
-        <el-table-column label="ID" prop="id" width="180" />
-        <el-table-column label="姓名" prop="name" />
-        <el-table-column label="数值 1（元）" prop="amount1" />
-        <el-table-column label="数值 2（元）" prop="amount2" />
-        <el-table-column label="数值 3（元）" prop="amount3" />
+        <el-table-column
+          align="center"
+          label="ID"
+          prop="id"
+          show-overflow-tooltip
+          sortable
+          width="auto"
+        />
+        <el-table-column
+          align="center"
+          label="姓名"
+          prop="name"
+          show-overflow-tooltip
+          sortable
+          width="auto"
+        />
+        <el-table-column
+          align="center"
+          label="数值"
+          prop="amount1"
+          show-overflow-tooltip
+          sortable
+          width="auto"
+        />
+        <el-table-column
+          align="center"
+          label="数值"
+          prop="amount2"
+          show-overflow-tooltip
+          sortable
+          width="auto"
+        />
+        <el-table-column
+          align="center"
+          label="数值"
+          prop="amount3"
+          show-overflow-tooltip
+          sortable
+          width="auto"
+        />
       </el-table>
       <div
         :style="{

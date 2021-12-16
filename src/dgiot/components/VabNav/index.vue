@@ -93,7 +93,7 @@
         immediate: true,
       },
     },
-    mounted() {
+    async mounted() {
       // 写在页面公共组件里。确保全局只订阅一个mqtt。刷新则再次重新订阅
       const md5Info = {
         token: md5(this.token),
@@ -101,7 +101,13 @@
         password: md5(this.loginInfo.password),
         router: md5(this.$route.fullPath),
       }
-      this.Mqtt(md5Info)
+      console.groupCollapsed(
+        '%c md5Info',
+        'color:#009a61; font-size: 28px; font-weight: 300'
+      )
+      console.log(md5Info)
+      console.groupEnd()
+      await this.Mqtt(md5Info)
     },
     methods: {
       async Mqtt(md5Info) {
@@ -125,6 +131,13 @@
           connectTimeout: 10 * 1000,
           router: md5Info.router,
         }
+        console.groupCollapsed(
+          '%c option',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+
+        console.log(this.option)
+        console.groupEnd()
         await this.$dgiotBus.$emit('MqttConnect', this.option)
         // this.$dgiotBus.$emit('MqttSubscribe', {
         //   router: md5(this.$route.fullPath),
