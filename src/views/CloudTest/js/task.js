@@ -338,8 +338,25 @@ export default {
         null,
         async () => {
           try {
+            const items = []
+            if (row.basedata) {
+              /**
+               * @description 判断下发组态topic的item
+               * @description 必须以 标识符 dgiot_testing_equipment_ 开头
+               */
+              for (let key in row.basedata) {
+                if (key.indexOf('dgiot_testing_equipment_') == 0)
+                  items.push(row.basedata[key])
+              }
+            }
+            // mqtt 消息回调
+            console.groupCollapsed(
+              '%c send mqttMsg items',
+              'color:#009a61; font-size: 28px; font-weight: 300'
+            )
+            console.log(items)
+            console.groupEnd()
             const pubTopic = `/${row.parentId.product.objectId}/${row.parentId.devaddr}/device/event` // 读取opc属性topic
-            const items = ['GCU331_YJ.p_L_1', 'GCU331_YJ.SX_PZ96_U_55'] // topo 从basedata里拿
             const message = {
               cmd: 'opc_items',
               groupid: row.parentId.objectId, //'设备ID',
@@ -563,13 +580,30 @@ export default {
      */
     async collection(params) {
       try {
+        const items = []
+        if (params.basedata) {
+          /**
+           * @description 判断下发组态topic的item
+           * @description 必须以 标识符 dgiot_testing_equipment_ 开头
+           */
+          for (let key in params.basedata) {
+            if (key.indexOf('dgiot_testing_equipment_') == 0)
+              items.push(params.basedata[key])
+          }
+        }
+        // mqtt 消息回调
+        console.groupCollapsed(
+          '%c send mqttMsg items',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.groupEnd()
+        this.thingcolumns = items // 设置el-table 对应的键值
         this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
         const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
-        this.thingcolumns = items // 设置el-table 对应的键值
         const message = {
           cmd: 'opc_report', // 采集时长
           duration: 5, //时长
-          groupid: row.parentId.objectId,
+          groupid: params.parentId.objectId,
         }
         this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始采集
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识

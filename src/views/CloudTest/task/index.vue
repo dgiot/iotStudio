@@ -9,74 +9,76 @@
 -->
 <template>
   <div ref="custom-table" class="custom-table-container">
-    <a-drawer
-      :body-style="{ paddingBottom: '80px' }"
-      :mask-closable="false"
-      placement="right"
-      :visible="visible"
-      width="50%"
-      @close="visible = false"
-    >
-      <el-table
-        border
-        :data="thingdata"
-        show-summary
-        style="width: 100%; margin-top: 20px"
-        :summary-method="getSummaries"
-      >
-        <el-table-column
-          align="center"
-          label="ID"
-          prop="id"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-        <el-table-column
-          align="center"
-          label="姓名"
-          prop="name"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-        <el-table-column
-          v-for="(item, index) in thingcolumns"
-          :key="index"
-          align="center"
-          :label="$translateTitle(`cloudTest.${item}`)"
-          :prop="item"
-          show-overflow-tooltip
-          width="auto"
-        />
-      </el-table>
-      <div
-        :style="{
-          position: 'absolute',
-          right: 0,
-          bottom: 0,
-          width: '100%',
-          borderTop: '1px solid #e9e9e9',
-          padding: '10px 16px',
-          background: '#fff',
-          textAlign: 'right',
-          zIndex: 1,
-        }"
-      >
-        <a-button type="primary" @click="visible = false">
-          {{ $translateTitle('tagsView.close') }}
-        </a-button>
-      </div>
-    </a-drawer>
-    <el-drawer
-      v-drawerDrag
-      append-to-body
-      size="80%"
-      :visible.sync="dialogVisible"
-    >
-      <iframe :src="officeapps" style="width: 100%; height: 100%" />
-    </el-drawer>
     <div class="components">
+      <a-drawer
+        :body-style="{ paddingBottom: '80px' }"
+        :mask-closable="false"
+        placement="right"
+        :visible="visible"
+        width="50%"
+        @close="visible = false"
+      >
+        <el-table
+          border
+          :data="thingdata"
+          show-summary
+          style="width: 100%; margin-top: 20px"
+          :summary-method="getSummaries"
+        >
+          <el-table-column
+            v-for="(item, index) in thingcolumns"
+            :key="index"
+            align="center"
+            :label="$translateTitle(`cloudTest.${item}`)"
+            :prop="item"
+            show-overflow-tooltip
+            width="auto"
+          />
+          <el-table-column
+            align="center"
+            :label="$translateTitle('Maintenance.operating')"
+            width="auto"
+          >
+            <template #default="{ $index }">
+              {{ $index + 1 }}
+              <el-button>保存</el-button>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-image
+              class="vab-data-empty"
+              :src="
+                require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+              "
+            />
+          </template>
+        </el-table>
+        <div
+          :style="{
+            position: 'absolute',
+            right: 0,
+            bottom: 0,
+            width: '100%',
+            borderTop: '1px solid #e9e9e9',
+            padding: '10px 16px',
+            background: '#fff',
+            textAlign: 'right',
+            zIndex: 1,
+          }"
+        >
+          <a-button type="primary" @click="visible = false">
+            {{ $translateTitle('tagsView.close') }}
+          </a-button>
+        </div>
+      </a-drawer>
+      <el-drawer
+        v-drawerDrag
+        append-to-body
+        size="80%"
+        :visible.sync="dialogVisible"
+      >
+        <iframe :src="officeapps" style="width: 100%; height: 100%" />
+      </el-drawer>
       <vab-dialog :show.sync="activePopShow">
         <h2 slot="title">
           {{ $translateTitle('cloudTest.addwordtask') }}
@@ -292,7 +294,7 @@
             {{ $translateTitle(`task.Configuration`) }}
           </el-button>
           <el-button
-            v-show="row.profile.step == 0"
+            v-show="row.profile.step == 0 && !$loadsh.isEmpty(row.basedata)"
             size="mini"
             type="info"
             @click.native="taskStart(row)"
@@ -302,6 +304,7 @@
           <el-button
             v-show="row.profile.step == 1"
             size="mini"
+            type="success"
             @click.native="collection(row)"
           >
             {{ $translateTitle(`task.dataacquisition`) }}

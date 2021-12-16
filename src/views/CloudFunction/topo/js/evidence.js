@@ -63,8 +63,6 @@ export default {
         name: '',
         profile: { message: '' },
       },
-      taskList: [],
-      taskFlag: false,
       asideShow: true,
       loading: false,
     }
@@ -91,7 +89,6 @@ export default {
         this.queryevidences()
       }
     )
-    this.fetchData()
     if (this.taskid) {
       this.queryTask(this.taskid)
       this.queryEvidence(this.taskid)
@@ -429,41 +426,6 @@ export default {
         loading.close()
         this.queryTask(query.taskid)
         this.queryEvidence(query.taskid)
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'vab-hey-message-error'
-        )
-      }
-    },
-    /**
-     * @Author: h7ml
-     * @Date: 2021-11-25 20:44:31
-     * @LastEditors:
-     * @param
-     * @return {Promise<void>}
-     * @Description:
-     */
-    async fetchData() {
-      try {
-        const loading = this.$baseColorfullLoading()
-        this.queryPayload.include = 'product,parentId'
-        this.queryPayload.where = {
-          'profile.identifier': 'inspectionReportTemp',
-        }
-        const { count = 0, results = [] } = await queryDevice(this.queryPayload)
-        this.$nextTick(() => {
-          this.$refs['pagination'].ination.total = count
-        })
-        this.taskList = results
-        // this.$baseMessage(
-        //   this.$translateTitle('alert.Data request successfully'),
-        //   'success',
-        //   'vab-hey-message-success'
-        // )
-        loading.close()
       } catch (error) {
         console.log(error)
         this.$baseMessage(

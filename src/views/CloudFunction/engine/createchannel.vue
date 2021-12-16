@@ -127,7 +127,7 @@
           </el-form-item>
         </el-col>
         <!-- 低代码-->
-        <el-col :span="24">
+        <el-col v-if="viewShow" :span="24">
           <el-form-item :label="$translateTitle('product.view')">
             <!--            <el-input-->
             <!--              v-model="addchannel.data"-->
@@ -243,6 +243,7 @@
     components: {},
     data() {
       return {
+        viewShow: false,
         channelregion: [],
         defaultProps: {
           children: 'children',
@@ -389,6 +390,7 @@
         return arr.sort(this.arrSort)
       },
       removeauto(val) {
+        this.viewShow = false
         console.log(val)
         var obj = {}
         var obj1 = {
@@ -502,6 +504,8 @@
         this.addchannel = obj
         this.addchannel.region = val
         this.addrules = obj1
+        this.viewShow = true
+        this.addchannel.codes = '{}'
       },
       async addchannelaxios(data) {
         await postChannel(data).then((results) => {
