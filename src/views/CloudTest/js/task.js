@@ -16,15 +16,8 @@ export default {
   },
   data() {
     return {
-      tableData: [
-        {
-          id: '12987122',
-          name: '96',
-          amount1: '234',
-          amount2: '3.2',
-          amount3: 10,
-        },
-      ],
+      thingdata: [],
+      thingcolumns: [],
       visible: false,
       router: '',
       topicKey: '',
@@ -178,19 +171,10 @@ export default {
       return this.columns.filter((item) => this.checkList.includes(item.label))
     },
   },
-  topicKey: {
-    handler: function (newVal) {
-      this.$dgiotBus.$off(newVal)
-      this.$dgiotBus.$on(newVal, (mqttMsg) => {
-        console.error('mqttMsg', mqttMsg)
-        this.getSummaries({ columns: [], data: this.tableData })
-      })
-    },
-    deep: true,
-    limit: true,
-  },
   created() {
     this.fetchData()
+  },
+  mounted() {
     this.router = this.$dgiotBus.router(this.$route.fullPath)
   },
   methods: {
@@ -354,6 +338,14 @@ export default {
         null,
         async () => {
           try {
+            const pubTopic = `/${row.parentId.product.objectId}/${row.parentId.devaddr}/device/event` // 读取opc属性topic
+            const items = ['GCU331_YJ.p_L_1', 'GCU331_YJ.SX_PZ96_U_55'] // topo 从basedata里拿
+            const message = {
+              cmd: 'opc_items',
+              groupid: row.parentId.objectId, //'设备ID',
+              items: items, //要读取到属性列表
+            } // 下发的消息内容
+            this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始任务
             await generatereport(row.objectId)
             const loading = this.$baseColorfullLoading()
             const params = {
@@ -571,22 +563,38 @@ export default {
      */
     async collection(params) {
       try {
-        this.subtopic = `/${params.product.objectId}/${params.devaddr}/opc/properties/read`
-        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
+        const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
+        this.thingcolumns = items // 设置el-table 对应的键值
         const message = {
-          timestamp: moment().valueOf(), //毫秒时间戳
-          deviceId: params.objectId, //'设备ID',
-          properties: ['GCU331_YJ.p_L_1', 'GCU331_YJ.SX_PZ96_U_55'], //要读取到属性列表
+          cmd: 'opc_report', // 采集时长
+          duration: 5, //时长
+          groupid: row.parentId.objectId,
         }
+        this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始采集
+        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
+        this.$dgiotBus.$off(this.topicKey) // dgiotBus 关闭事件
+        this.$dgiotBus.$on(this.topicKey, (mqttMsg) => {
+          // mqtt 消息回调
+          console.groupCollapsed(
+            `%c mqttMsg\n${this.topicKey}`,
+            'color:#009a61; font-size: 28px; font-weight: 300'
+          )
+          console.log(mqttMsg)
+          console.log('payload:', mqttMsg.payload)
+          console.groupEnd()
+          if (mqttMsg?.payload?.thingdata) {
+            this.thingdata.unshift(mqttMsg.payload.thingdata) // 最新数据放在最前面
+            this.getSummaries({ columns: [], data: this.thingdata }) // 计算平均值
+          }
+        })
         this.$dgiotBus.$emit('MqttSubscribe', {
           router: this.router,
           topic: this.subtopic,
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        this.$dgiotBus.$emit(`MqttPublish`, this.subtopic, message, 0, false)
         this.visible = true
-        this.getSummaries({ columns: [], data: this.tableData })
       } catch (error) {
         console.log(error)
         this.$baseMessage(

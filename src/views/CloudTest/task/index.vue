@@ -19,7 +19,7 @@
     >
       <el-table
         border
-        :data="tableData"
+        :data="thingdata"
         show-summary
         style="width: 100%; margin-top: 20px"
         :summary-method="getSummaries"
@@ -41,27 +41,12 @@
           width="auto"
         />
         <el-table-column
+          v-for="(item, index) in thingcolumns"
+          :key="index"
           align="center"
-          label="数值"
-          prop="amount1"
+          :label="$translateTitle(`cloudTest.${item}`)"
+          :prop="item"
           show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-        <el-table-column
-          align="center"
-          label="数值"
-          prop="amount2"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-        <el-table-column
-          align="center"
-          label="数值"
-          prop="amount3"
-          show-overflow-tooltip
-          sortable
           width="auto"
         />
       </el-table>
