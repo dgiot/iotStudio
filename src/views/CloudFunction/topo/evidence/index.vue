@@ -9,7 +9,7 @@
 -->
 <template>
   <el-container class="evidence">
-    <el-drawer append-to-body :visible.sync="auditDialog">
+    <el-drawer v-drawerDrag append-to-body :visible.sync="auditDialog">
       <span>
         <el-table border :data="auditList" size="mini" stripe>
           <el-table-column
@@ -33,10 +33,9 @@
             <template #default="{ row }">
               <vue-aliplayer-v2
                 v-if="types.video.includes(`${row.original.type}`)"
-                :autoplay="false"
-                height="290"
+                ref="VueAliplayerV2"
+                :options="options"
                 :source="$FileServe + row.original.path"
-                width="290"
               />
               <el-image
                 v-else-if="types.image.includes(`${row.original.type}`)"
@@ -112,7 +111,10 @@
           <el-form-item
             :label="$translateTitle('cloudTest.report audit opinion')"
           >
-            <el-input v-model="task.profile.message" />
+            <el-input
+              v-show="task.profile.message"
+              v-model="task.profile.message"
+            />
           </el-form-item>
         </el-form>
       </span>
@@ -137,7 +139,7 @@
         </div>
       </span>
     </el-drawer>
-    <el-drawer append-to-body :visible.sync="evidenceDialog">
+    <el-drawer v-drawerDrag append-to-body :visible.sync="evidenceDialog">
       <el-card class="box-card" shadow="hover">
         <div
           v-if="evidenceList.id"
@@ -187,10 +189,9 @@
             <template #default="{ row }">
               <vue-aliplayer-v2
                 v-if="types.video.includes(`${row.original.type}`)"
-                :autoplay="false"
-                height="290"
+                ref="VueAliplayerV2"
+                :options="options"
                 :source="$FileServe + row.original.path"
-                width="290"
               />
               <el-image
                 v-else-if="types.image.includes(`${row.original.type}`)"

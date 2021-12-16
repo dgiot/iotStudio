@@ -43,10 +43,8 @@
               <template #default="{ row }">
                 <vue-aliplayer-v2
                   v-if="types.video.includes(`${row.original.type}`)"
-                  :autoplay="false"
-                  height="290"
+                  :options="aliplayer"
                   :source="$FileServe + row.original.path"
-                  width="290"
                 />
                 <el-image
                   v-else-if="types.image.includes(`${row.original.type}`)"

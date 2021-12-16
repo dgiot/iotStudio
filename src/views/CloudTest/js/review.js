@@ -18,6 +18,11 @@ export default {
   },
   data() {
     return {
+      aliplayer: {
+        autoplay: false,
+        // width: '100px',
+        height: '200px',
+      },
       types: {
         video: ['video', 'personal_video'],
         audio: ['audio', 'volume_up'],

@@ -349,9 +349,13 @@ const actions = {
       return false
     }
     const { state = {} } = userInfo
-    Cookies.set('companyName', state.extendFields.companyName, {
-      expires: 1,
-    })
+    Cookies.set(
+      'companyName',
+      encodeURIComponent(state.extendFields.companyName),
+      {
+        expires: 1,
+      }
+    )
     Cookies.set('userId', state.externalId, { expires: 1 })
     let data = _.merge(
       {

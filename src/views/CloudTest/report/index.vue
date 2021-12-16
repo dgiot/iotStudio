@@ -176,11 +176,7 @@
                 :label="$translateTitle('developer.operation')"
               >
                 <template #default="{ row }">
-                  <el-button
-                    size="mini"
-                    type="text"
-                    @click="chooseTemplate(row)"
-                  >
+                  <el-button type="text" @click="chooseTemplate(row)">
                     {{ $translateTitle('product.choose') }}
                   </el-button>
                 </template>
@@ -237,18 +233,10 @@
               width="auto"
             >
               <template #default="{ row, $index }">
-                <el-button
-                  size="mini"
-                  type="success"
-                  @click="handlekonva(row, $index)"
-                >
+                <el-button type="success" @click="handlekonva(row, $index)">
                   {{ $translateTitle(`developer.task mapping`) }}
                 </el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(row, 1)"
-                >
+                <el-button type="danger" @click="handleDelete(row, 1)">
                   {{ $translateTitle(`cloudTest.delete`) }}
                 </el-button>
               </template>

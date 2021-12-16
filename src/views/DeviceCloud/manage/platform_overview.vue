@@ -239,8 +239,8 @@
       </div>
       <el-card shadow="hover">
         <el-radio-group v-model="mapType" size="mini" @change="queryData()">
-          <el-radio-button label="tencent">tencent</el-radio-button>
-          <el-radio-button label="baidu">baidu</el-radio-button>
+          <el-radio-button label="tencent">腾讯地图</el-radio-button>
+          <el-radio-button label="baidu">百度地图</el-radio-button>
         </el-radio-group>
         <vab-qq-map
           v-show="mapType == 'tencent'"
@@ -856,7 +856,7 @@
           longitude: '121.331121',
           zoom: 15,
         },
-        mapType: 'tencent',
+        mapType: window.name == 'dgiot_iframe' ? 'tencent' : 'baidu',
         isShow: true,
         ak: secret.baidu.map ?? 'fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG',
         // ak: 'oW2UEhdth2tRbEE4FUpF9E5YVDCIPYih',

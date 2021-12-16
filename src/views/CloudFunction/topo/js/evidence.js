@@ -15,6 +15,11 @@ export default {
   components: { 'vue-aliplayer-v2': VueAliplayerV2 },
   data() {
     return {
+      options: {
+        autoplay: false,
+        // width: '100px',
+        height: '200px',
+      },
       badge: {
         Unreviewed: [],
         Approved: [],
@@ -56,6 +61,7 @@ export default {
       evidenceDialog: false,
       task: {
         name: '',
+        profile: { message: '' },
       },
       taskList: [],
       taskFlag: false,
