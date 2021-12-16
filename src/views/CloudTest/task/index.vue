@@ -29,8 +29,8 @@
             v-for="(item, index) in thingcolumns"
             :key="index"
             align="center"
-            :label="$translateTitle(`cloudTest.${item}`)"
-            :prop="item"
+            :label="$translateTitle(`cloudTest.${item.label}`)"
+            :prop="item.prop"
             show-overflow-tooltip
             width="auto"
           />

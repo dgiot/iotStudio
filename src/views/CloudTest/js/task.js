@@ -1,5 +1,6 @@
 import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
 import { queryDevice, delDevice, putDevice } from '@/api/Device'
+import { postHead } from '@/api/Opc'
 import { postreport } from '@/api/Report'
 import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
@@ -596,8 +597,20 @@ export default {
           '%c send mqttMsg items',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
+        console.log(items)
         console.groupEnd()
-        this.thingcolumns = items // 设置el-table 对应的键值
+        const { head = {} } = await postHead({
+          items: items,
+          productid: params.parentId.product.objectId,
+        })
+        if (!_.isEmpty(head)) {
+          for (let key in head) {
+            this.thingcolumns.push({
+              label: head[key],
+              prop: key,
+            }) // 设置el-table 对应的键值
+          }
+        }
         this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
         const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
         const message = {

@@ -9,6 +9,7 @@ import {
 } from '@/api/Evidence'
 import { queryView } from '@/api/View'
 import { uppyUpload } from '@/api/Upload'
+import { generatereport } from '@/api/Evidence'
 const VueAliplayerV2 = window['vue-aliplayer-v2'].default
 export default {
   name: 'Index',
@@ -17,8 +18,9 @@ export default {
     return {
       options: {
         autoplay: false,
-        // width: '100px',
-        height: '200px',
+        width: '220px',
+        height: '180px',
+        margin: '0 auto',
       },
       badge: {
         Unreviewed: [],
@@ -111,6 +113,38 @@ export default {
     }),
     async paginationQuery(queryPayload) {
       this.queryPayload = queryPayload
+    },
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-16 21:13:11
+     * @LastEditors: dext7r
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async saveEvidences(objectId, index, row) {
+      console.log(objectId, index, row)
+      try {
+        const loading = this.$baseColorfullLoading()
+        const params = {
+          original: row.original,
+        }
+        const res = await putEvidence(objectId, params)
+        console.log(res)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
     },
     /**
      * @Author: h7ml
@@ -591,6 +625,7 @@ export default {
                 step: step,
               }),
             }
+            await generatereport(params.objectId)
             const res = await putDevice(params.objectId, finish)
             this.$router.push({
               path: '/cloudTest/Task',

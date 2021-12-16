@@ -13,12 +13,56 @@
       v-drawerDrag
       append-to-body
       placement="right"
+      size="50%"
       :visible="auditDialog"
-      width="50%"
       :with-header="false"
-      :wrapper-closable="false"
-      @close="auditDialog = false"
+      :wrapper-closable="true"
+      @close="evidenceDialog = false"
     >
+      <vab-query-form style="margin: 10px 20px">
+        <vab-query-form-left-panel>
+          <div v-if="taskType == 'review'">
+            <el-button
+              type="primary"
+              @click="
+                finishEvidence(task, Number($route.query.step) == 1 ? 2 : 3)
+              "
+            >
+              {{ $translateTitle('cloudTest.submit review') }}
+            </el-button>
+          </div>
+          <div v-if="taskType == 'evidence'">
+            <el-button @click="notapproved(task, -1)">
+              {{ $translateTitle('cloudTest.notapproved') }}
+            </el-button>
+            <el-button type="primary" @click="notapproved(task, 3)">
+              {{ $translateTitle('cloudTest.Approved') }}
+            </el-button>
+          </div>
+          <el-form
+            v-if="taskType != 'review'"
+            ref="form"
+            label-width="120px"
+            :model="task"
+          >
+            <el-form-item
+              v-show="task.profile.message"
+              :label="$translateTitle('cloudTest.report audit opinion')"
+            >
+              <el-input v-model="task.profile.message" />
+            </el-form-item>
+          </el-form>
+        </vab-query-form-left-panel>
+        <vab-query-form-right-panel>
+          <el-button
+            title="关闭"
+            type="info"
+            @click.native="evidenceDialog = false"
+          >
+            关闭
+          </el-button>
+        </vab-query-form-right-panel>
+      </vab-query-form>
       <span>
         <el-table border :data="auditList" size="mini" stripe>
           <el-table-column
@@ -35,7 +79,6 @@
           <el-table-column
             align="center"
             :label="$translateTitle('cloudTest.evidence')"
-            min-width="100"
             prop="original.path"
             width="auto"
           >
@@ -45,6 +88,7 @@
                 ref="VueAliplayerV2"
                 :options="options"
                 :source="$FileServe + row.original.path"
+                style="margin: 0 auto"
               />
               <el-image
                 v-else-if="types.image.includes(`${row.original.type}`)"
@@ -66,18 +110,49 @@
           </el-table-column>
           <el-table-column
             align="center"
-            :label="$translateTitle('developer.filepath')"
-            prop="original.path"
-            show-overflow-tooltip
+            :label="$translateTitle('user.Remarks')"
+            prop="row.original.Remarks"
+            sortable
             width="auto"
           >
             <template #default="{ row }">
-              <el-link :href="$FileServe + row.original.path" type="success">
-                {{ row.original.path }}
-              </el-link>
+              <el-input
+                v-model="row.original.remarks"
+                readonly
+                :rows="2"
+                type="textarea"
+              />
             </template>
           </el-table-column>
 
+          <el-table-column
+            align="center"
+            :label="
+              Number($route.query.step) == 1
+                ? $translateTitle('concentrator.operation')
+                : $translateTitle('cloudTest.single audit')
+            "
+            :width="Number($route.query.step) == 1 ? '220' : '420'"
+          >
+            <template #default="{ row, $index }">
+              <el-button
+                v-if="Number($route.query.step) == 1"
+                sizes="mini"
+                type="danger"
+                @click.native="deleteFile(row.objectId, $index, evidences)"
+              >
+                {{ $translateTitle('cloudTest.delete') }}
+              </el-button>
+              <el-button
+                v-if="Number($route.query.step) == 1"
+                sizes="mini"
+                type="success"
+                @click.native="saveEvidences(row.objectId, $index, row)"
+              >
+                {{ $translateTitle('konva.save') }}
+              </el-button>
+            </template>
+          </el-table-column>
           <el-table-column
             v-if="taskType != 'review'"
             align="center"
@@ -111,49 +186,13 @@
             show-overflow-tooltip
           />
         </el-table>
-        <el-form
-          v-if="taskType != 'review'"
-          ref="form"
-          label-width="120px"
-          :model="task"
-        >
-          <el-form-item
-            :label="$translateTitle('cloudTest.report audit opinion')"
-          >
-            <el-input
-              v-show="task.profile.message"
-              v-model="task.profile.message"
-            />
-          </el-form-item>
-        </el-form>
-      </span>
-      <span slot="footer" class="dialog-footer">
-        <div v-if="taskType == 'review'">
-          <el-button
-            type="primary"
-            @click="
-              finishEvidence(task, Number($route.query.step) == 1 ? 2 : 3)
-            "
-          >
-            {{ $translateTitle('cloudTest.submit review') }}
-          </el-button>
-        </div>
-        <div v-if="taskType == 'evidence'">
-          <el-button @click="notapproved(task, -1)">
-            {{ $translateTitle('cloudTest.notapproved') }}
-          </el-button>
-          <el-button type="primary" @click="notapproved(task, 3)">
-            {{ $translateTitle('cloudTest.Approved') }}
-          </el-button>
-        </div>
       </span>
     </el-drawer>
     <el-drawer
       v-drawerDrag
       append-to-body
-      placement="right"
+      size="60%"
       :visible="evidenceDialog"
-      width="50%"
       :with-header="false"
       :wrapper-closable="false"
       @close="evidenceDialog = false"
@@ -233,11 +272,26 @@
         </el-table-column>
         <el-table-column
           align="center"
+          :label="$translateTitle('user.Remarks')"
+          prop="row.original.Remarks"
+          sortable
+          width="auto"
+        >
+          <template #default="{ row }">
+            <el-input
+              v-model="row.original.remarks"
+              :rows="2"
+              type="textarea"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
           :label="$translateTitle('deviceLog.type')"
           prop="row.original.type"
           show-overflow-tooltip
           sortable
-          :width="120"
+          width="auto"
         >
           <template #default="{ row }">
             <el-tag effect="plain">
@@ -252,7 +306,7 @@
               ? $translateTitle('concentrator.operation')
               : $translateTitle('cloudTest.single audit')
           "
-          :width="Number($route.query.step) == 1 ? '120' : '320'"
+          :width="Number($route.query.step) == 1 ? '220' : '420'"
         >
           <template #default="{ row, $index }">
             <el-button
@@ -263,9 +317,18 @@
             >
               {{ $translateTitle('cloudTest.delete') }}
             </el-button>
+            <el-button
+              v-if="Number($route.query.step) == 1"
+              sizes="mini"
+              type="success"
+              @click.native="saveEvidences(row.objectId, $index, row)"
+            >
+              {{ $translateTitle('konva.save') }}
+            </el-button>
             <el-radio-group
               v-if="
-                Number($route.query.step) > 1 && Number($route.query.step) != 4
+                Number($route.query.step) !== 1 &&
+                Number($route.query.step) != 4
               "
               v-model="row.original.status"
               size="mini"
@@ -282,7 +345,7 @@
             </el-radio-group>
 
             <el-tag
-              v-else
+              v-if="Number($route.query.step) !== 1"
               effect="dark"
               :type="
                 ['', 'success', 'danger'][
