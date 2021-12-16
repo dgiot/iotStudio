@@ -87,7 +87,7 @@ export default {
       columns: [
         {
           label: 'objectId',
-          width: 'auto',
+          width: 120,
           prop: 'objectId',
           sortable: true,
           disableCheck: true,

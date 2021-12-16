@@ -74,7 +74,7 @@ module.exports = {
   // 消息框消失时间
   messageDuration: 3000,
   // 在哪些环境下显示高亮错误
-  errorLog: ['development' /* , 'production' */],
+  errorLog: ['development', 'production'],
   // 是否开启登录拦截
   loginInterception: true,
   // 是否开启登录RSA加密

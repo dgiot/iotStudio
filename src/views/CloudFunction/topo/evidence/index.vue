@@ -9,7 +9,7 @@
 -->
 <template>
   <el-container class="evidence">
-    <el-dialog append-to-body :visible.sync="auditDialog">
+    <el-drawer append-to-body :visible.sync="auditDialog">
       <span>
         <el-table border :data="auditList" size="mini" stripe>
           <el-table-column
@@ -136,8 +136,8 @@
           </el-button>
         </div>
       </span>
-    </el-dialog>
-    <el-dialog append-to-body :visible.sync="evidenceDialog">
+    </el-drawer>
+    <el-drawer append-to-body :visible.sync="evidenceDialog">
       <el-card class="box-card" shadow="hover">
         <div
           v-if="evidenceList.id"
@@ -306,7 +306,7 @@
       <!--          {{ $translateTitle('cloudTest.save evidence') }}-->
       <!--        </el-button>-->
       <!--      </span>-->
-    </el-dialog>
+    </el-drawer>
     <el-header class="evidence_header">
       <el-row class="evidence_header_row" :gutter="24">
         <el-col :lg="1" :md="1" :sm="1" title="检测详情" :xl="1" :xs="1">
@@ -402,8 +402,8 @@
           v-show="taskFlag"
           style="
             width: 400px !important;
-            background: #fff;
             height: 100vh;
+            background: #fff;
             overflow: scroll;
           "
         >

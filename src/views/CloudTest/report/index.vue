@@ -297,75 +297,6 @@
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
-        <!--        <div class="stripe-panel">-->
-        <!--          <el-checkbox v-model="stripe">-->
-        <!--            {{ $translateTitle('cloudTest.Zebra pattern') }}-->
-        <!--          </el-checkbox>-->
-        <!--        </div>-->
-        <!--        <div class="border-panel">-->
-        <!--          <el-checkbox v-model="border">-->
-        <!--            {{ $translateTitle('cloudTest.frame') }}-->
-        <!--          </el-checkbox>-->
-        <!--        </div>-->
-        <el-button
-          style="margin: 0 10px 10px 0 !important"
-          type="primary"
-          @click="clickFullScreen"
-        >
-          <dgiot-icon
-            :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
-          />
-          {{ $translateTitle('cloudTest.full screen') }}
-        </el-button>
-        <el-popover
-          ref="popover"
-          popper-class="custom-table-checkbox"
-          trigger="hover"
-        >
-          <el-radio-group v-model="lineHeight">
-            <el-radio label="medium">
-              {{ $translateTitle('cloudTest.medium') }}
-            </el-radio>
-            <el-radio label="small">
-              {{ $translateTitle('cloudTest.small') }}
-            </el-radio>
-            <el-radio label="mini">
-              {{ $translateTitle('cloudTest.mini') }}
-            </el-radio>
-          </el-radio-group>
-          <template #reference>
-            <el-button style="margin: 0 10px 10px 0 !important" type="primary">
-              <dgiot-icon icon="line-height" />
-              {{ $translateTitle('cloudTest.size') }}
-            </el-button>
-          </template>
-        </el-popover>
-        <el-popover popper-class="custom-table-checkbox" trigger="hover">
-          <el-checkbox-group v-model="checkList">
-            <vab-draggable :list="columns" v-bind="dragOptions">
-              <div v-for="(item, index) in columns" :key="item + index">
-                <dgiot-icon icon="drag-drop-line" />
-                <el-checkbox
-                  :disabled="item.disableCheck === true"
-                  :label="item.label"
-                >
-                  {{ $translateTitle(`cloudTest.${item.label}`) }}
-                </el-checkbox>
-              </div>
-            </vab-draggable>
-          </el-checkbox-group>
-          <template #reference>
-            <el-button
-              icon="el-icon-setting"
-              style="margin: 0 0 10px 0 !important"
-              type="primary"
-            >
-              {{ $translateTitle('cloudTest.Draggable column') }}
-            </el-button>
-          </template>
-        </el-popover>
-      </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       ref="tableSort"
@@ -379,7 +310,7 @@
         align="center"
         :label="$translateTitle('cloudTest.number')"
         show-overflow-tooltip
-        width="95"
+        width="60"
       >
         <template #default="{ $index }">
           {{ $index + 1 }}
@@ -398,15 +329,21 @@
 
       <el-table-column
         align="center"
+        fixed="right"
         :label="$translateTitle(`cloudTest.operate`)"
         show-overflow-tooltip
-        width="185"
+        width="auto"
       >
         <template #default="{ row }">
-          <el-button size="mini" type="success" @click="handleManagement(row)">
+          <el-button size="mini" type="text" @click="handleManagement(row)">
             {{ $translateTitle(`product.task management`) }}
           </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(row, 0)">
+          <el-button
+            size="mini"
+            style="color: red"
+            type="text"
+            @click="handleDelete(row, 0)"
+          >
             {{ $translateTitle(`cloudTest.delete`) }}
           </el-button>
         </template>

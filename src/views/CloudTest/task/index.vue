@@ -181,21 +181,21 @@
       <el-table-column
         align="center"
         :label="$translateTitle(`deviceLog.status`)"
-        show-overflow-tooltip
         width="auto"
       >
         <template #default="{ row }">
-          <el-tooltip
+          <el-popover
             v-show="row.profile.step == -1"
-            class="item"
-            :content="row.profile.message"
-            effect="dark"
             placement="top-start"
+            trigger="hover"
           >
-            <el-tag effect="dark" type="warning">
-              {{ $translateTitle('cloudTest.notapproved') }}
-            </el-tag>
-          </el-tooltip>
+            {{ row.profile.message }}
+            <template #reference>
+              <el-tag effect="dark" type="warning">
+                {{ $translateTitle('cloudTest.notapproved') }}
+              </el-tag>
+            </template>
+          </el-popover>
           <el-tag
             v-show="row.profile.step != -1"
             effect="dark"
