@@ -177,6 +177,10 @@ export default {
   },
   mounted() {
     this.router = this.$dgiotBus.router(this.$route.fullPath)
+    this.$dgiotBus.$off('lowcodeClose')
+    this.$dgiotBus.$on('lowcodeClose', (_) => {
+      this.fetchData()
+    })
   },
   methods: {
     async paginationQuery(queryPayload) {
@@ -553,7 +557,7 @@ export default {
       }
       this.listLoading = true
       const { count = 0, results = [] } = await queryDevice(this.queryPayload)
-      this.$refs['forensics'].ination.total = count
+      if (this.$refs['forensics']) this.$refs['forensics'].ination.total = count
       results.forEach((item) => {
         if (!item.profile.step) item.profile.step = 0
         item.endtime = item.profile.endtime

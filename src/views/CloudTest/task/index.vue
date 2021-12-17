@@ -39,8 +39,8 @@
             :label="$translateTitle('Maintenance.operating')"
             width="auto"
           >
-            <template #default="{ $index }">
-              {{ $index + 1 }}
+            <template #default="{ row }">
+              {{ row }}
               <el-button>保存</el-button>
             </template>
           </el-table-column>
@@ -286,7 +286,7 @@
       >
         <template #default="{ row }">
           <el-button
-            v-show="row.profile.step == 0"
+            v-show="row.profile.step == 0 && $loadsh.isEmpty(row.basedata)"
             size="mini"
             type="success"
             @click.native="handleManagement(row)"

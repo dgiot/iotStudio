@@ -15,7 +15,7 @@ import request from '@/utils/request'
  */
 export async function postHead(data) {
   return request({
-    url: 'iotapi/head',
+    url: 'head',
     method: 'post',
     headers: {
       accept: 'application/json',

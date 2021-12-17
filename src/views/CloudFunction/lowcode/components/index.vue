@@ -13,6 +13,7 @@
       :key="type + objectId"
       v-drawerDrag
       append-to-body
+      :before-close="handleClose"
       size="90%"
       :title="objectId"
       :visible.sync="flag"
@@ -92,6 +93,26 @@
       ...mapMutations({
         setData: 'view/setData',
       }),
+      /**
+       * @Author: dext7r
+       * @Date: 2021-12-17 10:12:03
+       * @LastEditors: dext7r
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async handleClose(done) {
+        try {
+          this.$confirm('确认关闭？')
+            .then((_) => {
+              done()
+              this.$dgiotBus.$emit('lowcodeClose')
+            })
+            .catch((_) => {})
+        } catch (error) {
+          console.log(error)
+        }
+      },
       /**
        * @description 代码设计
        * @param type
