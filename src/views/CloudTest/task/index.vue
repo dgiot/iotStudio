@@ -15,44 +15,58 @@
         :mask-closable="false"
         placement="right"
         :visible="visible"
-        width="50%"
+        width="100%"
         @close="visible = false"
       >
-        <el-table
-          border
-          :data="thingdata"
-          show-summary
-          style="width: 100%; margin-top: 20px"
-          :summary-method="getSummaries"
-        >
-          <el-table-column
-            v-for="(item, index) in thingcolumns"
-            :key="index"
-            align="center"
-            :label="$translateTitle(`cloudTest.${item.label}`)"
-            :prop="item.prop"
-            show-overflow-tooltip
-            width="auto"
-          />
-          <el-table-column
-            align="center"
-            :label="$translateTitle('Maintenance.operating')"
-            width="auto"
-          >
-            <template #default="{ row }">
-              {{ row }}
-              <el-button>保存</el-button>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-image
-              class="vab-data-empty"
-              :src="
-                require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
-              "
-            />
-          </template>
-        </el-table>
+        <el-row :gutter="24">
+          <el-col :span="12">
+            <el-card>
+              <el-image
+                src="https://pump.dgiotcloud.com/dgiot_file/device/1639483984.jpg"
+              />
+            </el-card>
+          </el-col>
+          <el-col :span="12">
+            <el-card>
+              <el-table
+                border
+                :data="thingdata"
+                show-summary
+                style="width: 100%; margin-top: 20px"
+                :summary-method="getSummaries"
+              >
+                <el-table-column
+                  v-for="(item, index) in thingcolumns"
+                  :key="index"
+                  align="center"
+                  :label="$translateTitle(`cloudTest.${item.label}`)"
+                  :prop="item.prop"
+                  show-overflow-tooltip
+                  width="auto"
+                />
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('Maintenance.operating')"
+                  width="auto"
+                >
+                  <template #default="{ row }">
+                    {{ row }}
+                    <el-button>保存</el-button>
+                  </template>
+                </el-table-column>
+                <template #empty>
+                  <el-image
+                    class="vab-data-empty"
+                    :src="
+                      require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                    "
+                  />
+                </template>
+              </el-table>
+            </el-card>
+          </el-col>
+        </el-row>
+
         <div
           :style="{
             position: 'absolute',

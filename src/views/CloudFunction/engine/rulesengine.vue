@@ -97,7 +97,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="block">
+      <div class="block" style="display: none">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
           :page-size="pagesize"
@@ -105,6 +105,14 @@
           :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
+        />
+        <vab-parser-pagination
+          :key="engineData.length + 'forensics'"
+          ref="forensics"
+          :pagination="paginations"
+          :query-payload="queryPayload"
+          @pagination="featchData"
+          @paginationQuery="paginationQuery"
         />
       </div>
     </div>
@@ -119,6 +127,15 @@
     // components: { VabParser },
     data() {
       return {
+        paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
+        queryPayload: {
+          excludeKeys: 'data',
+          include: '',
+          order: '-createdAt',
+          limit: 10,
+          skip: 0,
+          count: 'objectId',
+        },
         height: this.$baseTableHeight(0),
         engineData: [],
         pagesize: 10,
@@ -131,18 +148,18 @@
       }
     },
     mounted() {
-      this.featchData({})
+      this.featchData()
     },
     methods: {
-      featchData(args) {
-        console.log(args)
+      async paginationQuery(queryPayload) {
+        this.queryPayload = queryPayload
+      },
+      featchData() {
         if (this.productid && this.uid && this.ruleType) {
           this.alarmsRuleId = `rule:${this.ruleType}_${this.productid}_${this.uid}`
           this.getalarmsRule(this.alarmsRuleId)
           // this.orginRule()
-        } else {
-          this.orginRule()
-        }
+        } else this.orginRule()
       },
       async getalarmsRule(ruleId) {
         const response = await getRuleDetail(ruleId)
@@ -153,18 +170,35 @@
         console.log(this.engineData, '  this.engineData')
         this.total = this.engineData.length
       },
+      /**
+       * @Author: h7ml
+       * @Date: 2021-12-17 14:55:46
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
       // 初始化数据
-      orginRule() {
-        getRule({})
-          .then((response) => {
-            if (response) {
-              this.engineData = response.data
-              this.total = this.engineData.length
-            }
-          })
-          .catch((error) => {
-            this.$message(error.error)
-          })
+      async orginRule() {
+        try {
+          const loading = this.$baseColorfullLoading()
+          const { data = [] } = await getRule({})
+          this.engineData = data
+          this.total = this.engineData.length
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request successfully'),
+            'success',
+            'vab-hey-message-success'
+          )
+          loading.close()
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
       },
       // 分页
       handleSizeChange(val) {},

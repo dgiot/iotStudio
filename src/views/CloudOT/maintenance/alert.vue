@@ -274,12 +274,20 @@
         <vab-empty />
       </template>
     </el-table>
-    <VabPagination
-      v-show="total"
-      :limit.sync="queryForm.pageSize"
-      :page.sync="queryForm.pageNo"
-      :total="total"
+    <!--    <VabPagination-->
+    <!--      v-show="total"-->
+    <!--      :limit.sync="queryForm.pageSize"-->
+    <!--      :page.sync="queryForm.pageNo"-->
+    <!--      :total="total"-->
+    <!--      @pagination="fetchData"-->
+    <!--    />-->
+    <vab-parser-pagination
+      :key="list.length + 'forensics'"
+      ref="forensics"
+      :pagination="paginations"
+      :query-payload="queryPayload"
       @pagination="fetchData"
+      @paginationQuery="paginationQuery"
     />
   </div>
 </template>
@@ -300,6 +308,15 @@
     components: {},
     data() {
       return {
+        paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
+        queryPayload: {
+          excludeKeys: 'dynamicform',
+          include: '',
+          order: '-createdAt',
+          limit: 10,
+          skip: 0,
+          count: 'objectId',
+        },
         selectedList: [],
         isDisable: false,
         parserView: false,
@@ -372,7 +389,7 @@
           product: '',
           type: '',
           searchDate: [],
-          limit: 20,
+          limit: 10,
           skip: 0,
           order: '-createdAt',
           keys: 'count(*)',
@@ -394,6 +411,9 @@
       this.fetchData()
     },
     methods: {
+      async paginationQuery(queryPayload) {
+        this.queryPayload = queryPayload
+      },
       fetchDelete(row) {
         let batchParams = []
         row.forEach((item) => {
@@ -548,10 +568,10 @@
         if (!args.limit) {
           args = this.queryForm
         }
-        dgiotlog.log(this.queryForm, 'queryForm', args)
+
         this.listLoading = false
         const loading = this.$baseColorfullLoading(3)
-        let params = {
+        this.queryPayload = {
           limit: args.limit,
           order: args.order,
           skip: args.skip,
@@ -568,32 +588,27 @@
           },
         }
         if (this.queryForm.searchDate.length) {
-          params.where['createdAt'] = {
+          this.queryPayload.where['createdAt'] = {
             $gt: {
               __type: 'Date',
               iso: this.queryForm.searchDate[0],
             },
           }
-          params.where['updatedAt'] = {
+          this.queryPayload.where['updatedAt'] = {
             $lt: {
               __type: 'Date',
               iso: this.queryForm.searchDate[1],
             },
           }
         }
-        await queryNotification(params)
-          .then((res) => {
-            dgiotlog.log(res, 'res')
-            const { results = [], count = 0 } = res
-            this.list = results
-            this.total = count
-            loading.close()
-          })
-          .catch((e) => {
-            this.$message.error(`${e}`)
-            loading.close()
-          })
-        dgiotlog.log(this.list, 'this.list')
+        const { results = [], count = 0 } = await queryNotification(
+          this.queryPayload
+        )
+        this.list = results
+        this.total = count
+        this.$refs['forensics'].ination.total = count
+        loading.close()
+        console.log(this.list, 'this.list')
       },
       async prodChange(e) {
         this.Device = []
