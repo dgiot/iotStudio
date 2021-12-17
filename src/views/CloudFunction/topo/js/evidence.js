@@ -30,8 +30,8 @@ export default {
       taskType: 'review',
       nowItem: {},
       types: {
-        video: ['video', 'personal_video'],
-        audio: ['audio', 'volume_up'],
+        video: ['video', 'videocam_black'],
+        audio: ['audio', 'volume_mute'],
         image: ['image', 'image'],
         file: ['file', 'archive'],
       },

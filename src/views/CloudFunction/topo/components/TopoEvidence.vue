@@ -46,8 +46,8 @@
             />
           </div>
           <div v-else-if="evidence.node.attrs.icon === 'live_tv'"></div>
-          <div v-else-if="evidence.node.attrs.icon === 'personal_video'"></div>
-          <div v-else-if="evidence.node.attrs.icon === 'volume_up'"></div>
+          <div v-else-if="evidence.node.attrs.icon === 'videocam_black'"></div>
+          <div v-else-if="evidence.node.attrs.icon === 'volume_mute'"></div>
           <div v-else-if="evidence.node.attrs.icon === 'image'">
             <el-image
               :preview-src-list="srcList"
@@ -55,7 +55,7 @@
               style="width: 100px; height: 100px"
             ></el-image>
           </div>
-          <div v-else-if="evidence.node.attrs.icon === 'archive'"></div>
+          <div v-else-if="evidence.node.attrs.icon === 'folder_black'"></div>
           <div v-else>
             无该类型取证类型
             {{ evidence }}
@@ -81,7 +81,8 @@
           draggable
           @click="evidenceHandle(item, index)"
         >
-          {{ item.icon }} <br>
+          {{ item.icon }}
+          <br />
           <el-link :underline="false">{{ item.text }}</el-link>
         </i>
       </div>
@@ -238,16 +239,16 @@
           //   path: 'M21 6h-7.59l3.29-3.29L16 2l-4 4-4-4-.71.71L10.59 6H3c-1.1 0-2 .89-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.11-.9-2-2-2zm0 14H3V8h18v12zM9 10v8l7-4z',
           // },
           {
-            icon: 'personal_video',
+            icon: 'videocam_black',
             type: 'video',
             text: '视频',
-            path: 'M21 3H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.11-.9-2-2-2zm0 14H3V5h18v12z',
+            path: 'M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z',
           },
           {
-            icon: 'volume_up',
+            icon: 'volume_mute',
             type: 'audio',
             text: '音频',
-            path: 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z',
+            path: 'M7 9v6h4l5 5V4l-5 5H7z',
           },
           {
             icon: 'image',
@@ -256,10 +257,10 @@
             path: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z',
           },
           {
-            icon: 'archive',
+            icon: 'folder_black',
             type: 'file',
             text: '文件',
-            path: 'M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z',
+            path: 'M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z',
           },
         ],
       }
@@ -299,6 +300,8 @@
 </script>
 <style>
   .material-icons {
+    width: 48px;
+    height: 48px;
     font-size: 48px !important;
     cursor: pointer;
   }
@@ -308,13 +311,9 @@
     width: 100%;
     height: 100%;
 
-    &--content {
+    &-content {
       width: 100%;
       height: 100%;
-
-      .material-icons {
-        font-size: 48px !important;
-      }
     }
   }
 </style>
