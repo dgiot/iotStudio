@@ -1,3 +1,57 @@
+## [4.4.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.2...v4.4.3) (2021-12-17)
+
+
+### Bug Fixes
+
+* **src/dgiot/components/vabheader/index.vue:** dgiot-mqtt ([2e105e7](https://github.com/dgiot/dgiot-dashboard/commit/2e105e720bf9701b67715b80c5062afc8c3a318d))
+* **src/store/modules/user.js:** fix jwt login parameter problem ([74fad94](https://github.com/dgiot/dgiot-dashboard/commit/74fad9494a133dfb69765b79fe2819ce19bbdc72))
+* **src/views/cloudfunction/engine/createchannel.vue:** dgiot-channel ([a88690d](https://github.com/dgiot/dgiot-dashboard/commit/a88690d80be775d1442d7fc6c9f4eb19f9b4ee4d))
+* **src/views/cloudfunction/topo/components/topoevidence.vue:** topoevidence material icons ([93ebb21](https://github.com/dgiot/dgiot-dashboard/commit/93ebb2169a9e89ebb68c1d295bdbb5bd9c1a3e05))
+* **src/views/cloudfunction/topo/index.vue:** fix the configuration interface cannot be displayed ([a182959](https://github.com/dgiot/dgiot-dashboard/commit/a182959136d3e4d94d73e94fb596cf97312af62a))
+* **src/views/cloudfunction/topo/js/evidence.js:** vueAliplayerV2 ([1882b6c](https://github.com/dgiot/dgiot-dashboard/commit/1882b6c95ebc51e847046ad309822e4f3bf23b73))
+* **src/views/cloudot/maintenance/alert.vue:** fix the page turning button in the alarm center ([03d4938](https://github.com/dgiot/dgiot-dashboard/commit/03d4938e29bb635afdbefb7431822b0655b5812e))
+* **src/views/cloudtest/review/index.vue:** vue-aliplayer-v2 ([70b4c08](https://github.com/dgiot/dgiot-dashboard/commit/70b4c083193e3a3d5d41378167cbba909eff22bb))
+* **src/views/devicecloud/manage/product.vue:** product management ([1ad3c28](https://github.com/dgiot/dgiot-dashboard/commit/1ad3c28a4299ace1de8b93ca544f193632b359b9))
+* **src/views/multitenant/roles/list/roles.vue:** fix the el-tree echo problem of role management ([a4895f6](https://github.com/dgiot/dgiot-dashboard/commit/a4895f63256f2b708f88c0ee7662511b8249ad0d)), closes [#396](https://github.com/dgiot/dgiot-dashboard/issues/396)
+* **src/views/multitenant/user/login/index.vue:** cookies ([b01aefb](https://github.com/dgiot/dgiot-dashboard/commit/b01aefb5d5293a2ebe3d10d87fb2e84408b3612b))
+
+
+### Features
+
+* **.github/workflows/clean-workflows.yaml:** clean Workflow ([47d9efc](https://github.com/dgiot/dgiot-dashboard/commit/47d9efc4511fccf9b02f2eae9e866319013f994a))
+* **.github/workflows/clean-workflows.yaml:** workflow_dispatch ([c0c4b9c](https://github.com/dgiot/dgiot-dashboard/commit/c0c4b9cbd5dec15aa8c6b72a672ef5c6239549dd))
+* **.gitignore:** pack-lock.json ([55dff0c](https://github.com/dgiot/dgiot-dashboard/commit/55dff0ca52e1b90b9b5f7b37f41d655dc609d1ee))
+* **changelog.en.md:** changelog ([820095c](https://github.com/dgiot/dgiot-dashboard/commit/820095cfef12dfab0ebe175ee6b5d4b7545757e9))
+* **csijs:** 1.0.10 ([81b50ca](https://github.com/dgiot/dgiot-dashboard/commit/81b50ca8a369c35a09a8ae08a609ed38d27a930f))
+* **evidence:** change the el-dialog component to el-drawer ([5afc173](https://github.com/dgiot/dgiot-dashboard/commit/5afc1731c7e711c81f11f81903ddef2c0d6f7a99))
+* setTimeout ([f4f91b0](https://github.com/dgiot/dgiot-dashboard/commit/f4f91b058de53b93ad30d40bec0667c2f78ec6f0))
+* **src/config/secret.config.js:** dgiot secret ([3ae3f32](https://github.com/dgiot/dgiot-dashboard/commit/3ae3f32d59a07dba12bd0e835283e5871afe9c72))
+* **src/dgiot/components/vabappmain/index.vue:** delete dgiot-footer ([936f965](https://github.com/dgiot/dgiot-dashboard/commit/936f96506249d4d78af0515009f5c4c0ef8c4ab4))
+* **src/store/modules/user.js:** fix the problem of vuex passing value when logging in jwt ([75e8e23](https://github.com/dgiot/dgiot-dashboard/commit/75e8e235da322ef63367110a8216cd3b9e5f1fe2))
+* **src/store/modules/user.js:** login ([8b74dcb](https://github.com/dgiot/dgiot-dashboard/commit/8b74dcbc9429fae165b6f8c681f1f52adfb2744c))
+* **src/views/cloudfunction/topo/index.vue:** page layout adjustment ([c8e3ad0](https://github.com/dgiot/dgiot-dashboard/commit/c8e3ad0be5696275946aa767b022b7cb9591aa95))
+* **src/views/cloudtest/js/task.js:** dgiot-mqtt collect data ([5aa9ad8](https://github.com/dgiot/dgiot-dashboard/commit/5aa9ad8e84cbe78979accd12270815d1fe47004f))
+* **src/views/cloudtest/js/task.js:** dynamic equipment collection data list header ([56c644a](https://github.com/dgiot/dgiot-dashboard/commit/56c644a1895469cae6bf19687c483255897ed776))
+* **src/views/cloudtest/js/task.js:** forensics ([a394ea9](https://github.com/dgiot/dgiot-dashboard/commit/a394ea96e09385044c18eafe2c6f95ab7463808a))
+* **src/views/cloudtest/task/index.vue:** data collection average table ([ad98f82](https://github.com/dgiot/dgiot-dashboard/commit/ad98f8283d81a3a60f9b3566bea37832d5156518))
+* **src/views/devicecloud/manage/component/profile/profiledescriptions.vue:** device template ([a412145](https://github.com/dgiot/dgiot-dashboard/commit/a4121456296d46ed4e592539adc1112ee06eafed))
+* **src/views/devicecloud/manage/component/profile/profiledescriptions.vue:** profileDescriptions ([d58b70b](https://github.com/dgiot/dgiot-dashboard/commit/d58b70b25125066e0d9311cdddfb0d6118f5534e))
+* **src/views/devicecloud/manage/component/profile/profiledescriptions.vue:** profileDescriptions ([3ae32e6](https://github.com/dgiot/dgiot-dashboard/commit/3ae32e6c742f8c4064237e65f02569ebf347e9e5))
+* **src/views/devicecloud/manage/editdevices.vue:** add device location display in device details ([bca9227](https://github.com/dgiot/dgiot-dashboard/commit/bca9227416c47286fbfcdeb33dc30993447690fb))
+* **src/views/devicecloud/manage/home_index.vue:** thing add das ([d6f1b73](https://github.com/dgiot/dgiot-dashboard/commit/d6f1b73cdc244f9c2b876169578906a2aa9afa3f))
+* **src/views/devicecloud/manage/platform_overview.vue:** qqmap ([6babe6a](https://github.com/dgiot/dgiot-dashboard/commit/6babe6ac9c6f9818f492ca778ff548b40dac6be4))
+* **src/views/devicecloud/manage/product.vue:** style ([34ebfa7](https://github.com/dgiot/dgiot-dashboard/commit/34ebfa78e81d2147a3b8611c4df5dd352021dc98))
+* **src/views/tools/mqtt.vue:** webscroket ([d9541b0](https://github.com/dgiot/dgiot-dashboard/commit/d9541b0a6f791c65b335ac63f2a899e7faee437d))
+* **src/views:** unified global Baidu map key ([edad56b](https://github.com/dgiot/dgiot-dashboard/commit/edad56b93cf96067420282d9c9d9fd2b9eba9ba9))
+
+
+### Performance Improvements
+
+* :bookmark: ([03dda33](https://github.com/dgiot/dgiot-dashboard/commit/03dda334959595c2c9bfad14c4ced7b559d92dad))
+* **src/views/multitenant/user/login/index.vue:** use iframe postMessage communication ([f7d7ff8](https://github.com/dgiot/dgiot-dashboard/commit/f7d7ff87970e22468c544b7a089efdcf250e0163))
+
+
+
 ## [4.4.2](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.1...v4.4.2) (2021-12-09)
 
 
