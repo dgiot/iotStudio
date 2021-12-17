@@ -44,16 +44,16 @@
                   show-overflow-tooltip
                   width="auto"
                 />
-                <el-table-column
-                  align="center"
-                  :label="$translateTitle('Maintenance.operating')"
-                  width="auto"
-                >
-                  <template #default="{ row }">
-                    {{ row }}
-                    <el-button>保存</el-button>
-                  </template>
-                </el-table-column>
+                <!--                <el-table-column-->
+                <!--                  align="center"-->
+                <!--                  :label="$translateTitle('Maintenance.operating')"-->
+                <!--                  width="auto"-->
+                <!--                >-->
+                <!--                  <template #default="{ row }">-->
+                <!--                    {{ row }}-->
+                <!--                    <el-button>保存</el-button>-->
+                <!--                  </template>-->
+                <!--                </el-table-column>-->
                 <template #empty>
                   <el-image
                     class="vab-data-empty"

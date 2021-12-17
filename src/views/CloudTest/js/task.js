@@ -586,6 +586,8 @@ export default {
     async collection(params) {
       try {
         const items = []
+        this.thingdata = []
+        this.thingcolumns = []
         if (params.basedata) {
           /**
            * @description 判断下发组态topic的item
@@ -628,14 +630,15 @@ export default {
         this.$dgiotBus.$on(this.topicKey, (mqttMsg) => {
           // mqtt 消息回调
           console.groupCollapsed(
-            `%c mqttMsg\n${this.topicKey}`,
+            `%c mqttMsg消息回调 \n${this.topicKey}`,
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
           console.log(mqttMsg)
           console.log('payload:', mqttMsg.payload)
           console.groupEnd()
-          if (mqttMsg?.payload?.thingdata) {
-            this.thingdata.unshift(mqttMsg.payload.thingdata) // 最新数据放在最前面
+          if (mqttMsg?.payload) {
+            const { thingdata = {} } = JSON.parse(mqttMsg.payload)
+            this.thingdata.unshift(thingdata) // 最新数据放在最前面
             this.getSummaries({ columns: [], data: this.thingdata }) // 计算平均值
           }
         })
@@ -668,9 +671,26 @@ export default {
       console.log(params, 'params')
       const { columns, data } = params
       const sums = []
+      // columns.forEach((column, index) => {
+      //   if (index === 0) {
+      //     sums[index] = '平均值'
+      //     return
+      //   }
+      //   const values = data.map((item) => Number(item[column.property]))
+      //   if (!values.every((value) => isNaN(value))) {
+      //     sums[index] = values.reduce((prev, curr) => {
+      //       const value = Number(curr)
+      //       if (!isNaN(value)) return prev + curr
+      //       else return prev
+      //     }, 0)
+      //     sums[index] = sums[index] / data.length
+      //   } else sums[index] = ''
+      // })
+      // console.log(sums, 'sums')
+      // return sums
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = '平均值'
+          sums[index] = '总价'
           return
         }
         const values = data.map((item) => Number(item[column.property]))
@@ -683,10 +703,11 @@ export default {
               return prev
             }
           }, 0)
-          sums[index] = sums[index] / data.length
-        } else sums[index] = ''
+          sums[index] += ' 元'
+        } else {
+          sums[index] = 'N/A'
+        }
       })
-      return sums
     },
   },
 }
