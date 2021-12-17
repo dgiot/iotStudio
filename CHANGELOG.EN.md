@@ -18,6 +18,7 @@
 
 ### Features
 
+* **:bookmark:	dgiot-dashboard4.4.3:** :bookmark:      dgiot-dashboard4.4.3 ([004c37d](https://github.com/dgiot/dgiot-dashboard/commit/004c37d119b15b35bf6eadd9f482f2c81cd6998e))
 * **.github/workflows/clean-workflows.yaml:** clean Workflow ([47d9efc](https://github.com/dgiot/dgiot-dashboard/commit/47d9efc4511fccf9b02f2eae9e866319013f994a))
 * **.github/workflows/clean-workflows.yaml:** workflow_dispatch ([c0c4b9c](https://github.com/dgiot/dgiot-dashboard/commit/c0c4b9cbd5dec15aa8c6b72a672ef5c6239549dd))
 * **.gitignore:** pack-lock.json ([55dff0c](https://github.com/dgiot/dgiot-dashboard/commit/55dff0ca52e1b90b9b5f7b37f41d655dc609d1ee))

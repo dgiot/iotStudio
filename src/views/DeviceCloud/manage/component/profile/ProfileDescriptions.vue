@@ -1,372 +1,243 @@
 <template>
   <div :key="productId">
-    <el-descriptions
-      border
-      class="margin-top"
-      :column="2"
-      :content-style="{ 'text-align': 'left' }"
-      :label-style="{ 'text-align': 'center' }"
-    >
-      <!--      <el-descriptions-item :label="$translateTitle('home.category')">-->
-      <!--        {{ productDetail.netType }}-->
-      <!--      </el-descriptions-item>-->
-      <!--      <el-descriptions-item :label="$translateTitle('product.nodetype')">-->
-      <!--        <span v-if="productDetail.nodeType == 1">-->
-      <!--          {{ $translateTitle('product.gateway') }}-->
-      <!--        </span>-->
-      <!--        <span v-if="productDetail.nodeType == 0">-->
-      <!--          {{ $translateTitle('product.equipment') }}-->
-      <!--        </span>-->
-      <!--      </el-descriptions-item>-->
-      <el-descriptions-item>
-        <template slot="label">
-          <el-link
-            type="success"
-            @click.native="feateditorParser(productDetail, 'things', false)"
-          >
-            {{ $translateTitle('product.physicalmodel') }}
-          </el-link>
-        </template>
-        <el-link
-          :disabled="productDetail.thing.properties.length ? false : true"
-          :type="productDetail.thing.properties.length ? 'success' : 'default'"
-          @click.native="featProperties(productDetail.thing.properties)"
+    <a-tabs default-active-key="物模型" s type="card" @change="handletabs">
+      <a-tab-pane key="物模型" tab="物模型">
+        <vab-query-form-left-panel>
+          <el-button size="small" type="primary" @click.native="checkschema">
+            {{ $translateTitle('product.viewobjectmodel') }}
+          </el-button>
+          <!-- 新增自定义属性 -->
+          <el-button size="small" type="primary" @click.native="createProperty">
+            {{ $translateTitle('product.newobjectmodel') }}
+          </el-button>
+        </vab-query-form-left-panel>
+        <el-table
+          :key="tableType"
+          v-loading="tableLoading"
+          border
+          :cell-style="{ 'text-align': 'center' }"
+          :data="
+            tableType == 'things'
+              ? things
+              : tableType == 'profile' || tableType == 'parser'
+              ? parserTableList
+              : tableType == 'basedate.params'
+              ? dictTableList
+              : []
+          "
+          :header-cell-style="{ 'text-align': 'center' }"
+          highlight-current-row
+          row-key="objectId"
+          size="medium"
+          style="width: 100%"
         >
-          {{ productDetail.thing.properties.length || 0 }}
-        </el-link>
-      </el-descriptions-item>
-      <el-descriptions-item
-        v-if="false"
-        :label="$translateTitle('product.parser')"
-      >
-        <template slot="label">
-          <el-link
-            type="success"
-            @click.native="feateditorParser(productDetail, 'parser', true)"
-          >
-            {{ $translateTitle('product.parser') }}
-          </el-link>
-        </template>
-        <el-link
-          :type="productDetail.config.parser.length ? 'success' : 'default'"
-          @click.native="feateditorParser(productDetail, 'parser', false)"
-        >
-          {{ productDetail.config.parser.length || 0 }}
-        </el-link>
-      </el-descriptions-item>
-      <el-descriptions-item v-if="false">
-        <template slot="label">
-          <el-link
-            type="success"
-            @click.native="feateditorParser(productDetail, 'profile', true)"
-          >
-            {{ $translateTitle('product.profile') }}
-          </el-link>
-        </template>
-        <el-link
-          type="primary"
-          @click.native="feateditorParser(productDetail, 'profile', false)"
-        >
-          {{ productDetail.config.profile.length || 0 }}
-        </el-link>
-      </el-descriptions-item>
-      <!--      组态完善之后再加-->
-      <el-descriptions-item v-if="false">
-        <template slot="label">
-          <el-link
-            type="warning"
-            @click.native="goKonva(productDetail.objectId)"
-          >
-            {{ $translateTitle('concentrator.konva') }}
-          </el-link>
-        </template>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <el-link
-            :disabled="!productDetail.decoder.code.length"
-            type="primary"
-            @click.native="seeDecoder(productDetail)"
-          >
-            {{ $translateTitle('product.decoder') }}
-          </el-link>
-        </template>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <el-link
-            :disabled="productId.length != 10"
-            type="success"
-            @click.native="openView"
-          >
-            {{ $translateTitle('product.lowcode') }}
-          </el-link>
-        </template>
-        <el-link
-          :disabled="productId.length != 10"
-          type="success"
-          @click.native="openView"
-        >
-          {{ lowcodeLen }}
-        </el-link>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <el-link
-            :disabled="productId.length != 10"
-            type="success"
-            @click.native="openDict"
-          >
-            {{ $translateTitle('product.dict') }}
-          </el-link>
-        </template>
-        <el-link
-          :disabled="productId.length != 10"
-          type="success"
-          @click.native="openDict"
-        >
-          {{ dictLen }}
-        </el-link>
-      </el-descriptions-item>
-    </el-descriptions>
-    <vab-query-form
-      v-show="
-        productId.length == 10 &&
-        !dialogTableVisible &&
-        tableType == 'things' &&
-        !dialogDictVisible
-      "
-    >
-      <vab-query-form-left-panel>
-        <el-button size="small" type="primary" @click.native="checkschema">
-          {{ $translateTitle('product.viewobjectmodel') }}
-        </el-button>
-        <!-- 新增自定义属性 -->
-        <el-button size="small" type="primary" @click.native="createProperty">
-          {{ $translateTitle('product.newobjectmodel') }}
-        </el-button>
-      </vab-query-form-left-panel>
-    </vab-query-form>
-    <div v-if="dialogTableVisible" style="margin-top: 10px">
-      <dgiot-views :view-form="viewForm" />
-    </div>
-    <!--   字典 -->
-    <div v-if="dialogDictVisible" style="margin-top: 10px">
-      <dgiot-dict :dict-form="dictForm" />
-    </div>
-    <el-table
-      v-if="!codeFlag && !dialogTableVisible && !dialogDictVisible"
-      :key="tableType"
-      v-loading="tableLoading"
-      border
-      :cell-style="{ 'text-align': 'center' }"
-      :data="
-        tableType == 'things'
-          ? things
-          : tableType == 'profile' || tableType == 'parser'
-          ? parserTableList
-          : tableType == 'basedate.params'
-          ? dictTableList
-          : []
-      "
-      :header-cell-style="{ 'text-align': 'center' }"
-      highlight-current-row
-      row-key="objectId"
-      size="medium"
-      style="width: 100%"
-    >
-      <div v-if="tableType == 'things'" :key="tableType + thingKey">
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.order')"
-          prop="dataForm.order"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.Rounds')"
-          prop="dataForm.round"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.Strategy')"
-          prop="dataForm.strategy"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
+          <div v-if="tableType == 'things'" :key="tableType + thingKey">
+            <el-table-column
+              align="center"
+              :label="$translateTitle('product.order')"
+              prop="dataForm.order"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            />
+            <el-table-column
+              align="center"
+              :label="$translateTitle('product.Rounds')"
+              prop="dataForm.round"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            />
+            <el-table-column
+              align="center"
+              :label="$translateTitle('product.Strategy')"
+              prop="dataForm.strategy"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            />
 
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.protocol')"
-          prop="dataForm.protocol"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
+            <el-table-column
+              align="center"
+              :label="$translateTitle('product.protocol')"
+              prop="dataForm.protocol"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            />
 
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.identifier')"
-          prop="identifier"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.functionname')"
-          prop="name"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.datatype')"
-          prop="dataType.type"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        />
-        <el-table-column
-          align="center"
-          fixed="right"
-          :label="$translateTitle('product.datadefinition')"
-          prop="dataType.type"
-          show-overflow-tooltip
-          sortable
-          width="auto"
-        >
-          <template #default="{ row }">
-            <span
-              v-if="
-                row.dataType.specs &&
-                (row.dataType.type == 'double' ||
-                  row.dataType.type == 'float' ||
-                  row.dataType.type == 'int')
-              "
+            <el-table-column
+              align="center"
+              :label="$translateTitle('product.identifier')"
+              prop="identifier"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            />
+            <el-table-column
+              align="center"
+              :label="$translateTitle('product.functionname')"
+              prop="name"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            />
+            <el-table-column
+              align="center"
+              :label="$translateTitle('product.datatype')"
+              prop="dataType.type"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            />
+            <el-table-column
+              align="center"
+              fixed="right"
+              :label="$translateTitle('product.datadefinition')"
+              prop="dataType.type"
+              show-overflow-tooltip
+              sortable
+              width="auto"
             >
-              {{
-                $translateTitle('product.rangeofvalues') +
-                row.dataType.specs.min +
-                '~' +
-                row.dataType.specs.max
-              }}
-            </span>
-            <span v-else-if="row.dataType.type == 'string'">
-              {{
-                $translateTitle('product.datalength') +
-                ':' +
-                row.dataType.size +
-                $translateTitle('product.byte')
-              }}
-            </span>
-            <span v-else-if="row.dataType.type != 'struct'">
-              {{ row.dataType.specs }}
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          fixed="right"
-          :label="$translateTitle('developer.operation')"
-          min-width="240"
-          width="auto"
-        >
-          <template #default="{ row, $index }">
-            <el-button
-              size="mini"
-              type="danger"
-              @click.native="deletewmx($index)"
+              <template #default="{ row }">
+                <span
+                  v-if="
+                    row.dataType.specs &&
+                    (row.dataType.type == 'double' ||
+                      row.dataType.type == 'float' ||
+                      row.dataType.type == 'int')
+                  "
+                >
+                  {{
+                    $translateTitle('product.rangeofvalues') +
+                    row.dataType.specs.min +
+                    '~' +
+                    row.dataType.specs.max
+                  }}
+                </span>
+                <span v-else-if="row.dataType.type == 'string'">
+                  {{
+                    $translateTitle('product.datalength') +
+                    ':' +
+                    row.dataType.size +
+                    $translateTitle('product.byte')
+                  }}
+                </span>
+                <span v-else-if="row.dataType.type != 'struct'">
+                  {{ row.dataType.specs }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              fixed="right"
+              :label="$translateTitle('developer.operation')"
+              min-width="240"
+              width="auto"
             >
-              {{ $translateTitle('developer.delete') }}
-            </el-button>
-            <el-button
-              size="mini"
-              type="primary"
-              @click.native="wmxDataFill(row, $index)"
+              <template #default="{ row, $index }">
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click.native="deletewmx($index)"
+                >
+                  {{ $translateTitle('developer.delete') }}
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="primary"
+                  @click.native="wmxDataFill(row, $index)"
+                >
+                  <!-- 编辑 -->
+                  {{ $translateTitle('task.Edit') }}
+                </el-button>
+              </template>
+            </el-table-column>
+          </div>
+          <div v-else-if="tableType == 'profile' || tableType == 'parser'">
+            <el-table-column
+              align="center"
+              label="uid"
+              prop="uid"
+              show-overflow-tooltip
+              sortable
+            />
+            <el-table-column
+              align="center"
+              :label="$translateTitle('product.chinesetitle')"
+              prop="name"
+              show-overflow-tooltip
+              sortable
             >
-              <!-- 编辑 -->
-              {{ $translateTitle('task.Edit') }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </div>
-      <div v-else-if="tableType == 'profile' || tableType == 'parser'">
-        <el-table-column
-          align="center"
-          label="uid"
-          prop="uid"
-          show-overflow-tooltip
-          sortable
+              <template #default="{ row }">
+                <el-popover placement="top" trigger="hover">
+                  <p>
+                    {{ $translateTitle('product.englishtitle') }}:
+                    {{ row.enname }}
+                  </p>
+                  <p>
+                    {{ $translateTitle('developer.describe') }}:
+                    {{ row.description }}
+                  </p>
+                  <p>
+                    {{ $translateTitle('product.identifier') }}:
+                    {{ row.identifier }}
+                  </p>
+                  <p>
+                    {{ $translateTitle('developer.describe') }}:
+                    {{ row.description }}
+                  </p>
+                  <p>
+                    {{ $translateTitle('product.Table Name') }}:
+                    {{ row.table }}
+                  </p>
+                  <p>
+                    {{ $translateTitle('product.class') }}:
+                    {{ row.field }}
+                  </p>
+                  <div slot="reference" class="name-wrapper">
+                    <el-tag size="medium">
+                      {{ row.name }}
+                    </el-tag>
+                  </div>
+                </el-popover>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              :label="$translateTitle('product.functionaltypes')"
+              prop="type"
+              show-overflow-tooltip
+              sortable
+            />
+          </div>
+          <div v-else>
+            <el-empty :image-size="200" />
+          </div>
+        </el-table>
+      </a-tab-pane>
+      <a-tab-pane key="解码器" tab="解码器">
+        <vab-monaco-plus
+          ref="monacoCode"
+          :codes="ace_editor"
+          :language="'json'"
+          :read-only="true"
+          :theme="'vs-dark'"
         />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.chinesetitle')"
-          prop="name"
-          show-overflow-tooltip
-          sortable
-        >
-          <template #default="{ row }">
-            <el-popover placement="top" trigger="hover">
-              <p>
-                {{ $translateTitle('product.englishtitle') }}:
-                {{ row.enname }}
-              </p>
-              <p>
-                {{ $translateTitle('developer.describe') }}:
-                {{ row.description }}
-              </p>
-              <p>
-                {{ $translateTitle('product.identifier') }}:
-                {{ row.identifier }}
-              </p>
-              <p>
-                {{ $translateTitle('developer.describe') }}:
-                {{ row.description }}
-              </p>
-              <p>
-                {{ $translateTitle('product.Table Name') }}:
-                {{ row.table }}
-              </p>
-              <p>
-                {{ $translateTitle('product.class') }}:
-                {{ row.field }}
-              </p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">
-                  {{ row.name }}
-                </el-tag>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          :label="$translateTitle('product.functionaltypes')"
-          prop="type"
-          show-overflow-tooltip
-          sortable
-        />
-      </div>
-      <div v-else>
+      </a-tab-pane>
+      <a-tab-pane key="低代码" tab="低代码">
+        <dgiot-views :view-form="viewForm" />
+      </a-tab-pane>
+      <a-tab-pane key="组态" tab="组态">
         <el-empty :image-size="200" />
-      </div>
-    </el-table>
-    <vab-editor
-      v-else-if="codeFlag"
-      v-model="ace_editor"
-      lang="erlang"
-      style="height: 500px"
-      theme="monokai"
-    />
-    <el-empty v-else :image-size="200" />
+      </a-tab-pane>
+      <a-tab-pane key="规则" tab="规则">
+        <el-empty :image-size="200" />
+      </a-tab-pane>
+      <a-tab-pane key="字典" tab="字典">
+        <dgiot-dict :dict-form="dictForm" />
+      </a-tab-pane>
+    </a-tabs>
   </div>
 </template>
 <script>
@@ -426,6 +297,7 @@
     },
     data() {
       return {
+        dialogTopoVisible: false,
         lowcodeLen: 0,
         dictLen: 0,
         viewForm: {},
@@ -465,70 +337,6 @@
           this.amisJsonPlus = JSON.stringify(val)
         },
       },
-      productId: {
-        deep: true,
-        handler(val) {
-          if (val.length == 10)
-            this.viewForm = {
-              class: 'ProductTemplet',
-              type: 'amis',
-              key: val,
-              title: '',
-              disabled: true,
-              data: {
-                type: 'page',
-                initApi: {
-                  url: 'iotapi/classes/Device/parse_objectid',
-                  method: 'get',
-                  adaptor:
-                    'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
-                  headers: {
-                    store: 'localStorage',
-                    dgiotReplace: 'parse_objectid',
-                  },
-                  dataType: 'json',
-                },
-                body: [
-                  {
-                    type: 'form',
-                    api: {
-                      method: 'put',
-                      url: 'iotapi/classes/Device/parse_objectid',
-                      headers: {
-                        store: 'localStorage',
-                        dgiotReplace: 'parse_objectid',
-                      },
-                      dataType: 'json',
-                      requestAdaptor:
-                        'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
-                    },
-                    body: [
-                      {
-                        type: 'input-text',
-                        label: '设备名称',
-                        name: 'name',
-                      },
-                    ],
-                  },
-                ],
-              },
-              hiddenRow: ['class', 'key', 'createdAt'],
-            }
-          this.dictForm = {
-            class: 'ProductTemplet',
-            type: '',
-            key: val,
-            title: '',
-            disabled: true,
-            data: {
-              params: [],
-            },
-            hiddenRow: ['class', 'key', 'createdAt'],
-          }
-          dgiotlog.log('viewForm', this.viewForm)
-          dgiotlog.log('dictForm', this.dictForm)
-        },
-      },
     },
     mounted() {
       this.$dgiotBus.$off('lowcodeLen')
@@ -541,15 +349,94 @@
       })
     },
     methods: {
+      async handletabs(tabs) {
+        console.log('handletabs', tabs)
+        this.viewForm = {
+          class: 'ProductTemplet',
+          type: 'amis',
+          key: this.productId,
+          title: '',
+          disabled: true,
+          data: {
+            type: 'page',
+            initApi: {
+              url: 'iotapi/classes/Device/parse_objectid',
+              method: 'get',
+              adaptor:
+                'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
+              headers: {
+                store: 'localStorage',
+                dgiotReplace: 'parse_objectid',
+              },
+              dataType: 'json',
+            },
+            body: [
+              {
+                type: 'form',
+                api: {
+                  method: 'put',
+                  url: 'iotapi/classes/Device/parse_objectid',
+                  headers: {
+                    store: 'localStorage',
+                    dgiotReplace: 'parse_objectid',
+                  },
+                  dataType: 'json',
+                  requestAdaptor:
+                    'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
+                },
+                body: [
+                  {
+                    type: 'input-text',
+                    label: '设备名称',
+                    name: 'name',
+                  },
+                ],
+              },
+            ],
+          },
+          hiddenRow: ['class', 'key', 'createdAt'],
+        }
+        this.dictForm = {
+          class: 'ProductTemplet',
+          type: '',
+          key: this.productId,
+          title: '',
+          disabled: true,
+          data: {
+            params: [],
+          },
+          hiddenRow: ['class', 'key', 'createdAt'],
+        }
+        switch (tabs) {
+          case '物模型':
+            await this.featProperties(this.productDetail.thing.properties)
+            break
+          case '解码器':
+            console.log('ace_editor', this.ace_editor)
+            break
+          case '低代码':
+            break
+          case '组态':
+            await this.topoView()
+            break
+          case '规则':
+            this.openRule()
+            break
+          case '字典':
+            this.openDict()
+            break
+        }
+      },
       openView() {
         this.dialogTableVisible = true
-        this.dialogDictVisible = false
-        dgiotlog.log('this.dialogTableVisible', this.dialogTableVisible)
-        dgiotlog.log('this.dialogDictVisible', this.dialogDictVisible)
       },
+      topoView() {
+        this.dialogTopoVisible = true
+      },
+      openRule() {},
       openDict() {
+        // this.feateditorParser(this.productDetail, 'parser', true)
         this.dialogDictVisible = true
-        this.dialogTableVisible = false
       },
       async saveAmis(productId, amisconfig, productDetail) {
         const mergeAmis = _.merge(this.productDetail, {
@@ -740,6 +627,8 @@
       seeDecoder(productDetail) {
         dgiotlog.log(ace, 'ace', this.ace_editor)
         const { decoder = {} } = productDetail
+        this.dialogTableVisible = false
+        this.dialogDictVisible = false
         this.codeFlag = !this.codeFlag
         this.ace_editor = Base64.decode(decoder.code)
         // editor.gotoLine(editor.session.getLength())
