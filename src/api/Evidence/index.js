@@ -75,7 +75,7 @@ export async function generatereport(id) {
  */
 export async function postDrawxnqx(params) {
   return request({
-    url: 'post_drawxnqx',
+    url: 'drawxnqx',
     method: 'post',
     data: params,
   })

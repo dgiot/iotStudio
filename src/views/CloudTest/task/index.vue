@@ -22,17 +22,29 @@
           <el-col :span="12">
             <el-card>
               <el-image
-                src="https://pump.dgiotcloud.com/dgiot_file/device/1639483984.jpg"
-              />
+                :preview-src-list="[$FileServe + drawxnqxPath]"
+                :src="$FileServe + drawxnqxPath"
+                style="width: 600px; height: 600px"
+              >
+                <div slot="error" class="image-slot">
+                  <el-image
+                    class="vab-data-empty"
+                    :src="
+                      require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                    "
+                  />
+                </div>
+              </el-image>
             </el-card>
           </el-col>
           <el-col :span="12">
             <el-card>
               <el-table
+                :key="thingdata.length"
                 border
                 :data="thingdata"
                 show-summary
-                style="width: 100%; margin-top: 20px"
+                style="width: 100%; margin-top: 20px; min-height: 580px"
                 :summary-method="getSummaries"
               >
                 <el-table-column

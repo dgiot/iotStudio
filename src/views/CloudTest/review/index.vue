@@ -41,26 +41,27 @@
               width="auto"
             >
               <template #default="{ row }">
-                <vue-aliplayer-v2
-                  v-if="types.video.includes(`${row.original.type}`)"
-                  :options="aliplayer"
-                  :source="$FileServe + row.original.path"
-                />
-                <el-image
-                  v-else-if="types.image.includes(`${row.original.type}`)"
-                  :preview-src-list="[$FileServe + row.original.path]"
-                  :src="$FileServe + row.original.path"
-                  style="width: 100px; height: 100px"
-                />
-                <av-bars
-                  v-else-if="types.audio.includes(`${row.original.type}`)"
-                  :audio-src="$FileServe + row.original.path"
-                />
-                <el-link
-                  v-else-if="types.file.includes(`${row.original.type}`)"
-                  :href="$FileServe + row.original.path"
-                >
-                  {{ $FileServe + row.original.path }}
+                <!--                <vue-aliplayer-v2-->
+                <!--                  v-if="types.video.includes(`${row.original.type}`)"-->
+                <!--                  :options="aliplayer"-->
+                <!--                  :source="$FileServe + row.original.path"-->
+                <!--                />-->
+                <!--                <el-image-->
+                <!--                  v-else-if="types.image.includes(`${row.original.type}`)"-->
+                <!--                  :preview-src-list="[$FileServe + row.original.path]"-->
+                <!--                  :src="$FileServe + row.original.path"-->
+                <!--                  style="width: 100px; height: 100px"-->
+                <!--                />-->
+                <!--                <av-bars-->
+                <!--                  v-else-if="types.audio.includes(`${row.original.type}`)"-->
+                <!--                  :audio-src="$FileServe + row.original.path"-->
+                <!--                />-->
+                <el-link :href="$FileServe + row.original.path">
+                  {{
+                    row.original.path.split('/')[
+                      `${row.original.path.split('/').length - 1}`
+                    ]
+                  }}
                 </el-link>
               </template>
             </el-table-column>

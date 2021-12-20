@@ -17,6 +17,7 @@ export default {
   },
   data() {
     return {
+      drawxnqxPath: '',
       thingdata: [],
       thingcolumns: [],
       visible: false,
@@ -621,7 +622,18 @@ export default {
               prop: key,
             }) // 设置el-table 对应的键值
           }
+        } else {
+          for (let key in thingcolumns) {
+            _this.thingcolumns.push({
+              label: thingcolumns[key],
+              prop: thingcolumns[key],
+            }) // 设置el-table 对应的键值
+          }
         }
+        _this.thingcolumns.unshift({
+          label: 'timestamp',
+          prop: 'timestamp',
+        }) // 追加el-table 对应的键值
         _this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
         const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
         const message = {
@@ -642,7 +654,8 @@ export default {
           console.log('payload:', mqttMsg.payload)
           console.groupEnd()
           if (mqttMsg?.payload) {
-            const { thingdata = {} } = JSON.parse(mqttMsg.payload)
+            const { thingdata = {}, timestamp } = JSON.parse(mqttMsg.payload)
+            thingdata.timestamp = timestamp
             _this.thingdata.unshift(thingdata) // 最新数据放在最前面
             _this.drawxnqx(params.objectId, _this.thingdata)
             // _this.getSummaries({ columns: [], data: _this.thingdata }) // 计算平均值
@@ -680,7 +693,9 @@ export default {
           data: data,
           taskid: taskid,
         }
-        const { code, path } = await postDrawxnqx(params)
+        const { code, path = '/dgiot_file/pump_pytoh/ecfd3a227c.png' } =
+          await postDrawxnqx(params)
+        this.drawxnqxPath = path
         console.log(code, path)
       } catch (error) {
         console.log(error)
@@ -721,11 +736,11 @@ export default {
       // console.log(sums, 'sums')
       // return sums
       columns.forEach((column, index) => {
-        console.log(column, index, 'column, index')
         if (index === 0) {
           sums[index] = '总价'
           return
         }
+        console.log(column, index, sums, 'column, index, sums')
         const values = data.map((item) => Number(item[column.property]))
         if (!values.every((value) => isNaN(value))) {
           sums[index] = values.reduce((prev, curr) => {
