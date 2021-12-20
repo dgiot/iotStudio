@@ -1407,6 +1407,7 @@
       }
       return {
         secret: secret,
+        productDetail: {},
         addACL: {},
         videoOptions: ['m3u8', 'mp4', 'flv', 'mp3'],
         queryInfo: {},
@@ -2755,6 +2756,7 @@
         this.arrlist = []
         getProduct(objectId).then((res) => {
           const { config = { basedate: {} }, ACL } = res
+          this.productDetail = res
           this.addACL = ACL
           if (config.basedate && config.basedate.params.length > 0) {
             this.arrlist = config.basedate.params
@@ -2897,6 +2899,10 @@
                     location: location,
                     basedata: obj,
                   }
+                  devicesParmas.detail.devType = this.productDetail.devType
+                  devicesParmas.detail.category =
+                    this.productDetail.category.objectId
+                  console.log('createDevice params\n ', devicesParmas)
                   this.createDevice(devicesParmas)
                 }
               })

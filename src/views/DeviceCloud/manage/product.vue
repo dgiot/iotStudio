@@ -2019,6 +2019,7 @@
         this.$set(this.form, 'producttempid', row.objectId)
         this.form.thing = row.thing ? row.thing : {}
         this.cascaderDrawer = !this.cascaderDrawer
+        console.log('select', row)
       },
       async getcategoryname(category) {
         const { name } = await getCategory(category.parent.objectId)

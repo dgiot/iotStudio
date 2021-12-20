@@ -6,7 +6,7 @@ import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
-import { generatereport } from '@/api/Evidence'
+import { generatereport, postDrawxnqx } from '@/api/Evidence'
 // const docx = require('docx-preview')
 import mammoth from 'mammoth'
 export default {
@@ -212,7 +212,7 @@ export default {
     async getgroup() {
       const params = {
         where: {
-          'detail.devModel': 'DGIOT_GROUP',
+          'detail.category': '84abda3154',
         },
       }
       const { results } = await queryDevice(params)
@@ -584,18 +584,22 @@ export default {
      * @Description:
      */
     async collection(params) {
+      let _this = this
       try {
+        const thingcolumns = []
         const items = []
-        this.thingdata = []
-        this.thingcolumns = []
+        _this.thingdata = []
+        _this.thingcolumns = []
         if (params.basedata) {
           /**
            * @description 判断下发组态topic的item
            * @description 必须以 标识符 dgiot_testing_equipment_ 开头
            */
           for (let key in params.basedata) {
-            if (key.indexOf('dgiot_testing_equipment_') == 0)
+            if (key.indexOf('dgiot_testing_equipment_') == 0) {
+              thingcolumns.push(key.split('dgiot_testing_equipment_')[1])
               items.push(params.basedata[key])
+            }
           }
         }
         // mqtt 消息回调
@@ -604,6 +608,7 @@ export default {
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
         console.log(items)
+        console.log(thingcolumns)
         console.groupEnd()
         const { head = {} } = await postHead({
           items: items,
@@ -611,23 +616,23 @@ export default {
         })
         if (!_.isEmpty(head)) {
           for (let key in head) {
-            this.thingcolumns.push({
+            _this.thingcolumns.push({
               label: head[key],
               prop: key,
             }) // 设置el-table 对应的键值
           }
         }
-        this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
+        _this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
         const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
         const message = {
           cmd: 'opc_report', // 采集时长
           duration: 5, //时长
           groupid: params.parentId.objectId,
         }
-        this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始采集
-        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
-        this.$dgiotBus.$off(this.topicKey) // dgiotBus 关闭事件
-        this.$dgiotBus.$on(this.topicKey, (mqttMsg) => {
+        _this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始采集
+        _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic) // dgiot-mqtt topicKey 唯一标识
+        _this.$dgiotBus.$off(_this.topicKey) // dgiotBus 关闭事件
+        _this.$dgiotBus.$on(_this.topicKey, (mqttMsg) => {
           // mqtt 消息回调
           console.groupCollapsed(
             `%c mqttMsg消息回调 \n${this.topicKey}`,
@@ -638,17 +643,45 @@ export default {
           console.groupEnd()
           if (mqttMsg?.payload) {
             const { thingdata = {} } = JSON.parse(mqttMsg.payload)
-            this.thingdata.unshift(thingdata) // 最新数据放在最前面
-            this.getSummaries({ columns: [], data: this.thingdata }) // 计算平均值
+            _this.thingdata.unshift(thingdata) // 最新数据放在最前面
+            _this.drawxnqx(params.objectId, _this.thingdata)
+            // _this.getSummaries({ columns: [], data: _this.thingdata }) // 计算平均值
           }
         })
-        this.$dgiotBus.$emit('MqttSubscribe', {
-          router: this.router,
-          topic: this.subtopic,
+        console.log('_this.thingdata', _this.thingdata)
+        _this.$dgiotBus.$emit('MqttSubscribe', {
+          router: _this.router,
+          topic: _this.subtopic,
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
         this.visible = true
+      } catch (error) {
+        console.log(error)
+        _this.$baseMessage(
+          _this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-20 10:51:49
+     * @LastEditors: dext7r
+     * @param
+     * @return {Promise<void>}
+     * @Description: /drawxnqx
+     */
+    async drawxnqx(taskid, thingdata) {
+      try {
+        const data = thingdata // 要處理下
+        const params = {
+          data: data,
+          taskid: taskid,
+        }
+        const res = await postDrawxnqx(params)
+        console.log(res)
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -658,7 +691,6 @@ export default {
         )
       }
     },
-
     /**
      * @Author: dext7r
      * @Date: 2021-12-16 15:19:12
@@ -689,6 +721,7 @@ export default {
       // console.log(sums, 'sums')
       // return sums
       columns.forEach((column, index) => {
+        console.log(column, index, 'column, index')
         if (index === 0) {
           sums[index] = '总价'
           return
