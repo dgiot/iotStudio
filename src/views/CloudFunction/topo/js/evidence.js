@@ -116,6 +116,27 @@ export default {
     },
     /**
      * @Author: dext7r
+     * @Date: 2021-12-20 11:22:30
+     * @LastEditors: dext7r
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    clouseDraw() {
+      try {
+        this.evidenceDialog = false
+        this.auditDialog = false
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: dext7r
      * @Date: 2021-12-16 21:13:11
      * @LastEditors: dext7r
      * @param

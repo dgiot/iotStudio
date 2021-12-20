@@ -17,7 +17,7 @@
       :visible="auditDialog"
       :with-header="false"
       :wrapper-closable="true"
-      @close="evidenceDialog = false"
+      @close="auditDialog = false"
     >
       <vab-query-form style="margin: 10px 20px">
         <vab-query-form-left-panel>
@@ -54,11 +54,7 @@
           </el-form>
         </vab-query-form-left-panel>
         <vab-query-form-right-panel>
-          <el-button
-            title="关闭"
-            type="info"
-            @click.native="evidenceDialog = false"
-          >
+          <el-button title="关闭" type="info" @click.native="clouseDraw">
             关闭
           </el-button>
         </vab-query-form-right-panel>
@@ -79,39 +75,56 @@
           <el-table-column
             align="center"
             :label="$translateTitle('cloudTest.evidence')"
-            prop="original.path"
+            prop="row.original.path"
+            show-overflow-tooltip
+            sortable
             width="auto"
           >
             <template #default="{ row }">
-              <vue-aliplayer-v2
-                v-if="types.video.includes(`${row.original.type}`)"
-                ref="VueAliplayerV2"
-                :options="options"
-                :source="$FileServe + row.original.path"
-                style="margin: 0 auto"
-              />
-              <el-image
-                v-else-if="types.image.includes(`${row.original.type}`)"
-                :preview-src-list="[$FileServe + row.original.path]"
-                :src="$FileServe + row.original.path"
-                style="width: 50px; height: 50px"
-              />
-              <av-bars
-                v-else-if="types.audio.includes(`${row.original.type}`)"
-                :audio-src="$FileServe + row.original.path"
-              />
-              <el-link
-                v-else-if="types.file.includes(`${row.original.type}`)"
-                :href="$FileServe + row.original.path"
-              >
-                {{ $FileServe + row.original.path }}
+              <!--              <vue-aliplayer-v2-->
+              <!--                v-if="types.video.includes(`${row.original.type}`)"-->
+              <!--                ref="VueAliplayerV2"-->
+              <!--                :options="options"-->
+              <!--                :source="$FileServe + row.original.path"-->
+              <!--                style="margin: 0 auto"-->
+              <!--              />-->
+              <!--              <el-image-->
+              <!--                v-else-if="types.image.includes(`${row.original.type}`)"-->
+              <!--                :preview-src-list="[$FileServe + row.original.path]"-->
+              <!--                :src="$FileServe + row.original.path"-->
+              <!--                style="width: 50px; height: 50px"-->
+              <!--              />-->
+              <!--              <av-bars-->
+              <!--                v-else-if="types.audio.includes(`${row.original.type}`)"-->
+              <!--                :audio-src="$FileServe + row.original.path"-->
+              <!--              />-->
+              <el-link :href="$FileServe + row.original.path">
+                {{
+                  row.original.path.split('/')[
+                    `${row.original.path.split('/').length - 1}`
+                  ]
+                }}
               </el-link>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
+            :label="$translateTitle('deviceLog.type')"
+            prop="row.original.type"
+            show-overflow-tooltip
+            sortable
+            width="auto"
+          >
+            <template #default="{ row }">
+              <el-tag effect="plain">
+                {{ $translateTitle(`cloudTest.${row.original.type}`) }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
             :label="$translateTitle('user.Remarks')"
-            prop="row.original.Remarks"
+            prop="row.original.remarks"
             sortable
             width="auto"
           >
@@ -126,6 +139,7 @@
           </el-table-column>
 
           <el-table-column
+            v-if="Number($route.query.step) == 1"
             align="center"
             :label="
               Number($route.query.step) == 1
@@ -136,7 +150,6 @@
           >
             <template #default="{ row, $index }">
               <el-button
-                v-if="Number($route.query.step) == 1"
                 sizes="mini"
                 type="danger"
                 @click.native="deleteFile(row.objectId, $index, evidences)"
@@ -144,7 +157,6 @@
                 {{ $translateTitle('cloudTest.delete') }}
               </el-button>
               <el-button
-                v-if="Number($route.query.step) == 1"
                 sizes="mini"
                 type="success"
                 @click.native="saveEvidences(row.objectId, $index, row)"
@@ -184,7 +196,15 @@
             :label="$translateTitle('cloudTest.single audit opinion')"
             prop="original.message"
             show-overflow-tooltip
-          />
+          >
+            <template #default="{ row }">
+              <el-input
+                v-model="row.original.message"
+                :rows="2"
+                type="textarea"
+              />
+            </template>
+          </el-table-column>
         </el-table>
       </span>
     </el-drawer>
@@ -197,9 +217,12 @@
       :wrapper-closable="false"
       @close="evidenceDialog = false"
     >
-      <div v-if="evidenceList.id" v-show="Number($route.query.step) == 1">
+      <div>
         <vab-query-form style="margin: 10px 20px">
-          <vab-query-form-left-panel>
+          <vab-query-form-left-panel
+            v-if="evidenceList.id"
+            v-show="Number($route.query.step) == 1"
+          >
             <el-button
               class="el-icon-upload"
               title="取证"
@@ -209,12 +232,8 @@
               上传
             </el-button>
           </vab-query-form-left-panel>
-          <vab-query-form-right-panel>
-            <el-button
-              title="关闭"
-              type="info"
-              @click.native="evidenceDialog = false"
-            >
+          <vab-query-form-right-panel style="float: right">
+            <el-button title="关闭" type="info" @click.native="clouseDraw">
               关闭
             </el-button>
           </vab-query-form-right-panel>
@@ -242,38 +261,41 @@
         <el-table-column
           align="center"
           :label="$translateTitle('cloudTest.evidence')"
+          prop="row.original.path"
           show-overflow-tooltip
+          sortable
           width="auto"
         >
           <template #default="{ row }">
-            <vue-aliplayer-v2
-              v-if="types.video.includes(`${row.original.type}`)"
-              ref="VueAliplayerV2"
-              :options="options"
-              :source="$FileServe + row.original.path"
-            />
-            <el-image
-              v-else-if="types.image.includes(`${row.original.type}`)"
-              :preview-src-list="[$FileServe + row.original.path]"
-              :src="$FileServe + row.original.path"
-              style="width: 50px; height: 50px"
-            />
-            <av-bars
-              v-else-if="types.audio.includes(`${row.original.type}`)"
-              :audio-src="$FileServe + row.original.path"
-            />
-            <el-link
-              v-else-if="types.file.includes(`${row.original.type}`)"
-              :href="$FileServe + row.original.path"
-            >
-              {{ $FileServe + row.original.path }}
+            <!--            <vue-aliplayer-v2-->
+            <!--              v-if="types.video.includes(`${row.original.type}`)"-->
+            <!--              ref="VueAliplayerV2"-->
+            <!--              :options="options"-->
+            <!--              :source="$FileServe + row.original.path"-->
+            <!--            />-->
+            <!--            <el-image-->
+            <!--              v-else-if="types.image.includes(`${row.original.type}`)"-->
+            <!--              :preview-src-list="[$FileServe + row.original.path]"-->
+            <!--              :src="$FileServe + row.original.path"-->
+            <!--              style="width: 50px; height: 50px"-->
+            <!--            />-->
+            <!--            <av-bars-->
+            <!--              v-else-if="types.audio.includes(`${row.original.type}`)"-->
+            <!--              :audio-src="$FileServe + row.original.path"-->
+            <!--            />-->
+            <el-link :href="$FileServe + row.original.path">
+              {{
+                row.original.path.split('/')[
+                  `${row.original.path.split('/').length - 1}`
+                ]
+              }}
             </el-link>
           </template>
         </el-table-column>
         <el-table-column
           align="center"
           :label="$translateTitle('user.Remarks')"
-          prop="row.original.Remarks"
+          prop="row.original.remarks"
           sortable
           width="auto"
         >
@@ -345,7 +367,10 @@
             </el-radio-group>
 
             <el-tag
-              v-if="Number($route.query.step) !== 1"
+              v-if="
+                Number($route.query.step) !== 1 &&
+                Number($route.query.step) != 3
+              "
               effect="dark"
               :type="
                 ['', 'success', 'danger'][
@@ -367,7 +392,11 @@
           width="auto"
         >
           <template #default="{ row, $index }">
-            <el-input v-model="row.original.message" size="mini" />
+            <el-input
+              v-model="row.original.message"
+              size="mini"
+              type="textarea"
+            />
           </template>
         </el-table-column>
         <el-table-column

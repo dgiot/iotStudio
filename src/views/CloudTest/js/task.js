@@ -680,8 +680,8 @@ export default {
           data: data,
           taskid: taskid,
         }
-        const res = await postDrawxnqx(params)
-        console.log(res)
+        const { code, path } = await postDrawxnqx(params)
+        console.log(code, path)
       } catch (error) {
         console.log(error)
         this.$baseMessage(
