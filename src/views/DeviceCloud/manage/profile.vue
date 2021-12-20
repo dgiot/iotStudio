@@ -17,7 +17,9 @@
       <wmxdetail
         ref="sizeForm"
         :size-form1="sizeForm"
+        @addDas="addDas"
         @addDomain="addDomain"
+        @removeDas="removeDas"
         @removeDomain="removeDomain"
         @submitForm="submitFormwmx"
         @wmxhandleClose="wmxhandleClose"
@@ -1394,6 +1396,12 @@
         this.wmxdialogVisible = true
         this.wmxSituation = '编辑'
         var obj = {}
+        var daslist = []
+        rowData.dataType.das.forEach((val) => {
+          daslist.push({
+            addr:val
+          })
+        })
         // 提交之前需要先判断类型
         if (
           ['float', 'double', 'int', 'long'].indexOf(rowData.dataType.type) !=
@@ -1403,6 +1411,7 @@
             name: rowData.name,
             devicetype: rowData.devicetype,
             type: rowData.dataType.type,
+            daslist: daslist,
             endnumber: this.$objGet(rowData, 'dataType.specs.max'),
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
@@ -1445,7 +1454,7 @@
             type: rowData.dataType.type,
             true: rowData.dataType.specs[1],
             false: rowData.dataType.specs[0],
-            // rowData.dataForm.
+            daslist: daslist,
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1482,7 +1491,7 @@
             devicetype: rowData.devicetype,
             type: rowData.dataType.type,
             imagevalue: rowData.dataType.imagevalue,
-            // rowData.dataForm.
+            daslist: daslist,
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1527,6 +1536,7 @@
             type: rowData.dataType.type,
             specs: rowData.dataType.specs,
             struct: structArray,
+            daslist: daslist,
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1563,6 +1573,7 @@
             devicetype: rowData.devicetype,
             type: rowData.dataType.type,
             struct: rowData.dataType.specs,
+            daslist: daslist,
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1603,6 +1614,7 @@
             control:
               rowData.dataForm == undefined ? '' : rowData.dataForm.control,
             string: rowData.dataType.size,
+            daslist: daslist,
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1640,6 +1652,7 @@
               rowData.dataForm == undefined ? '' : rowData.dataForm.control,
             strategy:
               rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
+            daslist: daslist,
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1676,6 +1689,7 @@
               rowData.dataForm == undefined ? '' : rowData.dataForm.control,
             strategy:
               rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
+            daslist: daslist,
             startnumber: this.$objGet(rowData, 'dataType.specs.min'),
             step: this.$objGet(rowData, 'dataType.specs.step'),
             unit: this.$objGet(rowData, 'dataType.specs.unit'),
@@ -1704,8 +1718,24 @@
         this.setSizeForm(obj)
         // dgiotlog.log('this.sizeForm', this.sizeForm)
       },
+      addDas() {
+        this.sizeForm.daslist.push({
+          addr: '',
+        })
+      },
+      removeDas(item) {
+        var index = this.sizeForm.daslist.indexOf(item)
+        if (index !== -1) {
+          this.sizeForm.daslist.splice(index, 1)
+        }
+      },
       // 物模型提交
       submitFormwmx(sizeForm) {
+        var das = []
+        sizeForm.daslist.map((items) => {
+          var newval = items['addr']
+          das.push(newval)
+        })
         dgiotlog.log('sizeForm', sizeForm)
         var obj = {
           name: sizeForm.name,
@@ -1752,12 +1782,14 @@
                 precision: Number(sizeForm.precision),
                 unit: sizeForm.unit == '' ? '' : sizeForm.unit,
               },
+              das:das,
             },
           }
           Object.assign(obj, obj1)
         } else if (sizeForm.type == 'image') {
           obj1 = {
             dataType: {
+              das:das,
               type: sizeForm.type.toLowerCase(),
               imagevalue: sizeForm.imagevalue,
               specs: {},
@@ -1767,6 +1799,7 @@
         } else if (sizeForm.type == 'bool') {
           obj1 = {
             dataType: {
+              das:das,
               type: sizeForm.type.toLowerCase(),
               specs: {
                 0: sizeForm.false,
@@ -1783,6 +1816,7 @@
           })
           obj1 = {
             dataType: {
+              das:das,
               type: sizeForm.type.toLowerCase(),
               specs: specs,
             },
@@ -1791,6 +1825,7 @@
         } else if (sizeForm.type == 'struct') {
           obj1 = {
             dataType: {
+              das:das,
               type: sizeForm.type.toLowerCase(),
               specs: sizeForm.struct,
             },
@@ -1799,6 +1834,7 @@
         } else if (sizeForm.type == 'text') {
           obj1 = {
             dataType: {
+              das:das,
               type: sizeForm.type.toLowerCase(),
               size: sizeForm.string,
               specs: {},
@@ -1808,6 +1844,7 @@
         } else if (sizeForm.type == 'date') {
           obj1 = {
             dataType: {
+              das:das,
               type: sizeForm.type.toLowerCase(),
               specs: {},
             },
@@ -1816,6 +1853,7 @@
         } else if (sizeForm.type == 'geopoint') {
           obj1 = {
             dataType: {
+              das:das,
               type: sizeForm.type.toLowerCase(),
               gpstype: sizeForm.gpstype,
               specs: {},
