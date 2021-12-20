@@ -192,7 +192,7 @@ export default {
     },
     testbedChange(val) {
       this.$set(this.ruleForm, 'testbedid', val.objectId)
-      dgiotlog.log(
+      console.log(
         'src/views/CloudTest/js/task.js',
         'this.ruleForm',
         this.ruleForm,
@@ -218,6 +218,34 @@ export default {
       }
       const { results } = await queryDevice(params)
       this.grouplist = results
+    },
+
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-20 17:33:31
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async saveThingdata() {
+      try {
+        const loading = this.$baseColorfullLoading(1)
+        console.log(this.thingdata)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
     },
     submitForm(formName) {
       const aclKey1 = 'role' + ':' + this.currentDepartment.name
@@ -249,7 +277,7 @@ export default {
           this.fetchData()
           loading.close()
         } else {
-          dgiotlog.log('error submit!!')
+          console.log('error submit!!')
           return false
         }
         this.ruleForm = {
@@ -318,7 +346,7 @@ export default {
             this.fetchData()
             loading.close()
           } catch (error) {
-            dgiotlog.log(error)
+            console.log(error)
             this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
@@ -381,7 +409,7 @@ export default {
             this.fetchData()
             loading.close()
           } catch (error) {
-            dgiotlog.log(error)
+            console.log(error)
             this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
@@ -407,7 +435,7 @@ export default {
         ele.click()
         // window.location.href = this.$FileServe + url
       } catch (error) {
-        dgiotlog.log(error)
+        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -435,7 +463,7 @@ export default {
           },
         })
       } catch (error) {
-        dgiotlog.log(error)
+        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -486,7 +514,7 @@ export default {
         }
         loading.close()
       } catch (error) {
-        dgiotlog.log(error)
+        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -502,7 +530,7 @@ export default {
         where: { type: 'amis', key: row.objectId },
       }
       const { results } = await queryView(params)
-      dgiotlog.log(results)
+      console.log(results)
       this.lowcodeId = results[0].objectId
       this.$dgiotBus.$emit('lowcodePreview', results[0])
     },
@@ -526,7 +554,7 @@ export default {
         loading.close()
         this.fetchData()
       } catch (error) {
-        dgiotlog.log(error)
+        console.log(error)
         this.$baseMessage(
           this.$translateTitle('user.error deleted') + `${error}`,
           'error',
@@ -587,7 +615,7 @@ export default {
     async collection(params) {
       let _this = this
       try {
-        const thingcolumns = []
+        const thingcolumns = {}
         const items = []
         _this.thingdata = []
         _this.thingcolumns = []
@@ -598,7 +626,8 @@ export default {
            */
           for (let key in params.basedata) {
             if (key.indexOf('dgiot_testing_equipment_') == 0) {
-              thingcolumns.push(key.split('dgiot_testing_equipment_')[1])
+              const splitColumns = key.split('dgiot_testing_equipment_')[1]
+              thingcolumns[`${splitColumns}`] = splitColumns
               items.push(params.basedata[key])
             }
           }
@@ -615,32 +644,33 @@ export default {
           items: items,
           productid: params.parentId.product.objectId,
         })
-        if (!_.isEmpty(head)) {
-          for (let key in head) {
-            _this.thingcolumns.push({
-              label: head[key],
-              prop: key,
-            }) // 设置el-table 对应的键值
-          }
-        } else {
-          for (let key in thingcolumns) {
-            _this.thingcolumns.push({
-              label: thingcolumns[key],
-              prop: thingcolumns[key],
-            }) // 设置el-table 对应的键值
-          }
+        const columns = !_.isEmpty(head) ? head : thingcolumns
+        for (let key in columns) {
+          _this.thingcolumns.push({
+            prop: key,
+            label: columns[key],
+          }) // 设置el-table 对应的键值
         }
+        console.log(' _this.thingcolumns', _this.thingcolumns)
         _this.thingcolumns.unshift({
-          label: 'timestamp',
           prop: 'timestamp',
+          label: '时间',
         }) // 追加el-table 对应的键值
         _this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
         const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
-        const message = {
+        const message = JSON.stringify({
           cmd: 'opc_report', // 采集时长
           duration: 5, //时长
           groupid: params.parentId.objectId,
-        }
+        })
+        console.groupCollapsed(
+          `%c 发送采集消息`,
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.log('message', message)
+        console.log('pubTopic', pubTopic)
+        console.groupEnd()
+        _this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始采集
         _this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始采集
         _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic) // dgiot-mqtt topicKey 唯一标识
         _this.$dgiotBus.$off(_this.topicKey) // dgiotBus 关闭事件
@@ -655,9 +685,14 @@ export default {
           console.groupEnd()
           if (mqttMsg?.payload) {
             const { thingdata = {}, timestamp } = JSON.parse(mqttMsg.payload)
-            thingdata.timestamp = timestamp
-            _this.thingdata.unshift(thingdata) // 最新数据放在最前面
-            _this.drawxnqx(params.objectId, _this.thingdata)
+            thingdata.timestamp = moment(Number(timestamp)).format(
+              'YYYY-MM-DD HH:mm:ss'
+            )
+            if (!_.isEmpty(thingdata)) {
+              console.log(thingdata)
+              _this.thingdata.unshift(thingdata) // 最新数据放在最前面
+              _this.drawxnqx(params.objectId, _this.thingdata)
+            }
             // _this.getSummaries({ columns: [], data: _this.thingdata }) // 计算平均值
           }
         })
@@ -711,51 +746,36 @@ export default {
      * @Date: 2021-12-16 15:19:12
      * @LastEditors: dext7r
      * @param
-     * @return {Promise<void>}
+     * @return {*[]}
      * @Description:
      */
     getSummaries(params) {
       console.log(params, 'params')
       const { columns, data } = params
       const sums = []
-      // columns.forEach((column, index) => {
-      //   if (index === 0) {
-      //     sums[index] = '平均值'
-      //     return
-      //   }
-      //   const values = data.map((item) => Number(item[column.property]))
-      //   if (!values.every((value) => isNaN(value))) {
-      //     sums[index] = values.reduce((prev, curr) => {
-      //       const value = Number(curr)
-      //       if (!isNaN(value)) return prev + curr
-      //       else return prev
-      //     }, 0)
-      //     sums[index] = sums[index] / data.length
-      //   } else sums[index] = ''
-      // })
-      // console.log(sums, 'sums')
-      // return sums
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = '总价'
+          sums[index] = '平均值'
           return
         }
-        console.log(column, index, sums, 'column, index, sums')
         const values = data.map((item) => Number(item[column.property]))
         if (!values.every((value) => isNaN(value))) {
+          let totalCount = 0
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr)
             if (!isNaN(value)) {
+              totalCount++
               return prev + curr
             } else {
               return prev
             }
           }, 0)
-          sums[index] += ' 元'
+          sums[index] = sums[index] / totalCount
         } else {
-          sums[index] = 'N/A'
+          sums[index] = 0
         }
       })
+      return sums
     },
   },
 }

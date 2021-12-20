@@ -39,12 +39,18 @@
           </el-col>
           <el-col :span="12">
             <el-card>
+              <el-button
+                :disabled="thingdata.length == 0"
+                type="primary"
+                @click="saveThingdata"
+              >
+                保存
+              </el-button>
               <el-table
                 :key="thingdata.length"
                 border
                 :data="thingdata"
                 show-summary
-                style="width: 100%; margin-top: 20px; min-height: 580px"
                 :summary-method="getSummaries"
               >
                 <el-table-column
@@ -54,18 +60,9 @@
                   :label="$translateTitle(`cloudTest.${item.label}`)"
                   :prop="item.prop"
                   show-overflow-tooltip
+                  sortable
                   width="auto"
                 />
-                <!--                <el-table-column-->
-                <!--                  align="center"-->
-                <!--                  :label="$translateTitle('Maintenance.operating')"-->
-                <!--                  width="auto"-->
-                <!--                >-->
-                <!--                  <template #default="{ row }">-->
-                <!--                    {{ row }}-->
-                <!--                    <el-button>保存</el-button>-->
-                <!--                  </template>-->
-                <!--                </el-table-column>-->
                 <template #empty>
                   <el-image
                     class="vab-data-empty"

@@ -214,7 +214,7 @@ export default {
     async getgroup() {
       const params = {
         where: {
-          'detail.devModel': 'DGIOT_GROUP',
+          'detail.category': '84abda3154',
         },
       }
       const { results } = await queryDevice(params)
