@@ -109,7 +109,7 @@ export function roletree() {
 
 /**
  * @description 切换部门时的token
- * @docs-api https://pump.dgiotcloud.com/dgiot_swagger/#/_User/get_token
+ * @docs-api https://prod.iotn2n.com/dgiot_swagger/#/_User/get_token
  * @param department
  * @return {Promise<*>}
  */
@@ -122,7 +122,7 @@ export async function departmentToken(department) {
 
 /**
  * @description 刷新用户token
- * @docs-api https://pump.dgiotcloud.com/dgiot_swagger/#/_User/get_refresh_session
+ * @docs-api https://prod.iotn2n.com/dgiot_swagger/#/_User/get_refresh_session
  * @param department
  * @return {Promise<*>}
  */

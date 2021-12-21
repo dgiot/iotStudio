@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /**
- * @doc-apis https://pump.dgiotcloud.com/dgiot_swagger/#/Data/post_upload
+ * @doc-apis https://prod.iotn2n.com/dgiot_swagger/#/Data/post_upload
  * @param params
  * @return {*}
  */
