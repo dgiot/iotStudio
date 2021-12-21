@@ -131,6 +131,8 @@ instance.interceptors.request.use(
     const { path = '/' } = router.history.current
     let { headers = {} } = config
     config.headers['departmentToken'] = departmentToken
+    config.headers['pageUrl'] = location.hash
+    config.headers['jwtInfo'] = Cookies.get('jwtInfo')
     if (headers['proxy'] == true) {
       dgiotlog.log('src/utils/Request/request.js', config, 'config')
       NODE_ENV == 'production'

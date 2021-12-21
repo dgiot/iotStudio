@@ -51,7 +51,7 @@
                 <el-button
                   :disabled="thingdata.length == 0"
                   type="primary"
-                  @click.native="saveThingdata"
+                  @click.native="drawxnqx(collectionInfo.objectId, thingdata)"
                 >
                   计算平均值
                 </el-button>
@@ -95,39 +95,23 @@
                 sortable
                 width="auto"
               >
-                <template #default="{ row }">
-                  <el-table
-                    :key="row.original.thingdata.length"
-                    border
-                    :data="row.original.thingdata"
-                  >
-                    <el-table-column
-                      v-for="(item, index) in historycolumns"
-                      :key="index"
-                      align="center"
-                      :label="$translateTitle(`cloudTest.${item.label}`)"
-                      :prop="item.prop"
-                      show-overflow-tooltip
-                      sortable
-                      width="auto"
-                    />
-                    <template #empty>
-                      <el-image
-                        class="vab-data-empty"
-                        :src="
-                          require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
-                        "
-                      />
-                    </template>
-                  </el-table>
-                </template>
+                <el-table-column
+                  v-for="(item, index) in historycolumns"
+                  :key="index"
+                  align="center"
+                  :label="$translateTitle(`cloudTest.${item.label}`)"
+                  :prop="item.prop"
+                  show-overflow-tooltip
+                  sortable
+                  width="auto"
+                />
               </el-table-column>
               <el-table-column align="center" label="操作" width="60">
-                <template #default="{ row }">
+                <template #default="{ row, $index }">
                   <el-button
                     class="el-icon-delete"
                     type="text"
-                    @click.native="deleteHistory(row.objectId)"
+                    @click.native="deleteHistory(row, $index)"
                   />
                 </template>
               </el-table-column>

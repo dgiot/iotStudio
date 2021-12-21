@@ -358,6 +358,7 @@ const actions = {
       }
     )
     Cookies.set('userId', state.externalId, { expires: 1 })
+    Cookies.set('jwtInfo', encodeURIComponent(state), { expires: 1 })
     let data = _.merge(
       {
         tag: {

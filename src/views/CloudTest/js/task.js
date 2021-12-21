@@ -25,18 +25,15 @@ export default {
   },
   data() {
     return {
+      historyEvidenceid: '',
       nowTime: window.datetime,
       historyEvidence: [],
+      original: {},
       collectionInfo: {},
       drawxnqxPath: '/dgiot_file/pump_pytoh/ecfd3a227c.png',
       thingdata: [],
       thingcolumns: [],
-      historycolumns: [
-        {
-          prop: 'timestamp',
-          label: '时间',
-        },
-      ],
+      historycolumns: [],
       visible: false,
       router: '',
       topicKey: '',
@@ -205,10 +202,7 @@ export default {
   },
   methods: {
     datetime() {
-      const date = moment(new Date())
-      console.log(date.format('YYYY-MM-DD HH:mm:ss'))
-
-      this.nowTime = date.format('YYYY-MM-DD HH:mm:ss')
+      this.nowTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     },
     async paginationQuery(queryPayload) {
       this.queryPayload = queryPayload
@@ -253,10 +247,14 @@ export default {
      * @return {Promise<void>}
      * @Description:
      */
-    async deleteHistory(evidenceid) {
+    async deleteHistory(row, index) {
       try {
+        console.log('deleteHistory', row, index)
+        this.historyEvidence.splice(index, 1)
         const loading = this.$baseColorfullLoading()
-        const res = await delEvidence(evidenceid)
+        const res = await putEvidence(this.historyEvidenceid, {
+          original: this.original,
+        })
         if (res) await this.featHistoryEvidence(this.collectionInfo.objectId)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
@@ -382,8 +380,8 @@ export default {
         }
         const loading = this.$baseColorfullLoading()
         const { results } = await queryEvidence(params)
-        this.historyEvidence = results
-        await this.drawxnqx(this.collectionInfo.objectId, this.historyEvidence)
+        // this.historyEvidence = results
+        // await this.drawxnqx(this.collectionInfo.objectId, this.historyEvidence)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
@@ -729,6 +727,7 @@ export default {
       let _this = this
       _this.collectionInfo = params
       _this.featHistoryEvidence(this.collectionInfo.objectId)
+      _this.drawxnqx(this.collectionInfo.objectId, _this.thingdata)
       try {
         const thingcolumns = {}
         const items = []
@@ -772,7 +771,6 @@ export default {
           prop: 'timestamp',
           label: '时间',
         }) // 追加el-table 对应的键值
-        _this.historycolumns = _this.thingcolumns
         _this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
         const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
         const message = JSON.stringify({
@@ -835,7 +833,7 @@ export default {
      * @LastEditors: dext7r
      * @param
      * @return {Promise<void>}
-     * @Description: /drawxnqx
+     * @Description: 计算平均值
      */
     async drawxnqx(taskid, thingdata) {
       try {
@@ -844,9 +842,28 @@ export default {
           data: data,
           taskid: taskid,
         }
-        const { code, path = '/dgiot_file/pump_pytoh/ecfd3a227c.png' } =
-          await postDrawxnqx(params)
-        this.drawxnqxPath = path
+        const {
+          code,
+          error = '',
+          original = {},
+          evidenceid = '',
+        } = await postDrawxnqx(params)
+        if (Number(code) == 200) {
+          this.historyEvidenceid = evidenceid
+          this.historyEvidence = original.avgs
+          this.original = original
+          this.historycolumns = _.filter(this.thingcolumns, function (item) {
+            return item.prop !== 'timestamp'
+          })
+          console.log('this.historycolumns', this.historycolumns)
+          // this.drawxnqxPath = path
+        } else {
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
         console.log(code, path)
       } catch (error) {
         console.log(error)
