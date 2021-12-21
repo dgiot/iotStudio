@@ -6,10 +6,10 @@ import {
   postEvidence,
   putEvidence,
   delEvidence,
+  generatereport,
 } from '@/api/Evidence'
 import { queryView } from '@/api/View'
 import { uppyUpload } from '@/api/Upload'
-import { generatereport } from '@/api/Evidence'
 const VueAliplayerV2 = window['vue-aliplayer-v2'].default
 export default {
   name: 'Index',

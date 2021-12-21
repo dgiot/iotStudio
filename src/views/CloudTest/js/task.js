@@ -6,7 +6,15 @@ import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
-import { generatereport, postDrawxnqx } from '@/api/Evidence'
+import {
+  generatereport,
+  postDrawxnqx,
+  getEvidence,
+  queryEvidence,
+  postEvidence,
+  putEvidence,
+  delEvidence,
+} from '@/api/Evidence'
 // const docx = require('docx-preview')
 import mammoth from 'mammoth'
 export default {
@@ -17,9 +25,18 @@ export default {
   },
   data() {
     return {
-      drawxnqxPath: '',
+      nowTime: window.datetime,
+      historyEvidence: [],
+      collectionInfo: {},
+      drawxnqxPath: '/dgiot_file/pump_pytoh/ecfd3a227c.png',
       thingdata: [],
       thingcolumns: [],
+      historycolumns: [
+        {
+          prop: 'timestamp',
+          label: '时间',
+        },
+      ],
       visible: false,
       router: '',
       topicKey: '',
@@ -182,8 +199,17 @@ export default {
     this.$dgiotBus.$on('lowcodeClose', (_) => {
       this.fetchData()
     })
+    this.timer = setInterval(() => {
+      this.datetime()
+    }, 1000)
   },
   methods: {
+    datetime() {
+      const date = moment(new Date())
+      console.log(date.format('YYYY-MM-DD HH:mm:ss'))
+
+      this.nowTime = date.format('YYYY-MM-DD HH:mm:ss')
+    },
     async paginationQuery(queryPayload) {
       this.queryPayload = queryPayload
     },
@@ -219,10 +245,38 @@ export default {
       const { results } = await queryDevice(params)
       this.grouplist = results
     },
-
     /**
      * @Author: dext7r
-     * @Date: 2021-12-20 17:33:31
+     * @Date: 2021-12-21 11:13:03
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async deleteHistory(evidenceid) {
+      try {
+        const loading = this.$baseColorfullLoading()
+        const res = await delEvidence(evidenceid)
+        if (res) await this.featHistoryEvidence(this.collectionInfo.objectId)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: dext7r
+     * @Date: 2021-1
+     * 2-20 17:33:31
      * @LastEditors:
      * @param
      * @return {Promise<void>}
@@ -230,8 +284,28 @@ export default {
      */
     async saveThingdata() {
       try {
+        // 平均值 thingdata
+        let thingdata = []
+        // topo 接口获取平均值
         const loading = this.$baseColorfullLoading(1)
-        console.log(this.thingdata)
+        const ukey = '74C800E00055C08D'
+        const evidenceid = md5(
+          'Evidence' + ukey + Math.round(this.timer) + new Date().getTime()
+        ).substring(0, 10)
+        const Evidence = {
+          objectId: evidenceid,
+          ukey: ukey,
+          timestamp: Math.round(new Date()),
+          md5: md5('Evidence' + ukey + Math.round(this.timer) + ''),
+          original: {
+            controlid: evidenceid,
+            taskid: this.collectionInfo.objectId,
+            thingdata: thingdata,
+            type: 'Thingdata',
+          },
+        }
+        const res = await postEvidence(evidenceid, Evidence)
+        if (res) await this.featHistoryEvidence(this.collectionInfo.objectId)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
@@ -288,6 +362,42 @@ export default {
           templatenameid: '',
         }
       })
+    },
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-21 09:34:37
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description: 查询历史存证
+     */
+    async featHistoryEvidence(EvidenceId) {
+      try {
+        const params = {
+          order: '-createdAt',
+          skip: 0,
+          where: {
+            'original.taskid': EvidenceId,
+          },
+        }
+        const loading = this.$baseColorfullLoading()
+        const { results } = await queryEvidence(params)
+        this.historyEvidence = results
+        await this.drawxnqx(this.collectionInfo.objectId, this.historyEvidence)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
     },
     /**
      * @Author: h7ml
@@ -394,6 +504,9 @@ export default {
             const message = {
               cmd: 'opc_items',
               groupid: row.parentId.objectId, //'设备ID',
+              opcserver:
+                row.basedata.dgiot_testing_opcserver ??
+                'Kepware.KEPServerEX.V6',
               items: items, //要读取到属性列表
             } // 下发的消息内容
             this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始任务
@@ -614,6 +727,8 @@ export default {
      */
     async collection(params) {
       let _this = this
+      _this.collectionInfo = params
+      _this.featHistoryEvidence(this.collectionInfo.objectId)
       try {
         const thingcolumns = {}
         const items = []
@@ -651,11 +766,13 @@ export default {
             label: columns[key],
           }) // 设置el-table 对应的键值
         }
+
         console.log(' _this.thingcolumns', _this.thingcolumns)
         _this.thingcolumns.unshift({
           prop: 'timestamp',
           label: '时间',
         }) // 追加el-table 对应的键值
+        _this.historycolumns = _this.thingcolumns
         _this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
         const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
         const message = JSON.stringify({
@@ -691,7 +808,6 @@ export default {
             if (!_.isEmpty(thingdata)) {
               console.log(thingdata)
               _this.thingdata.unshift(thingdata) // 最新数据放在最前面
-              _this.drawxnqx(params.objectId, _this.thingdata)
             }
             // _this.getSummaries({ columns: [], data: _this.thingdata }) // 计算平均值
           }
@@ -775,7 +891,11 @@ export default {
           sums[index] = 0
         }
       })
+      console.log(sums)
       return sums
     },
+  },
+  beforeDestroy() {
+    clearInterval(this.timer) // 在Vue实例销毁前，清除我们的定时器
   },
 }

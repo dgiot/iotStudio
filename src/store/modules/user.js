@@ -11,6 +11,7 @@ const getLocalStorage = (key) => {
 }
 const { language } = getLocalStorage('language')
 async function queryAllMsg(commit, dispatch, data) {
+  tickTime()
   const {
     sessionToken,
     nick,
@@ -136,7 +137,7 @@ import { Roletree } from '@/api/Menu'
 import { queryProduct } from '@/api/Product'
 import { license } from '@/api/License'
 import { isJson } from '@/utils/validate'
-
+import { tickTime } from '@/utils/time'
 const defaultTheme = {
   layout,
   themeName,

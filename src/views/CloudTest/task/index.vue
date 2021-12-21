@@ -11,7 +11,6 @@
   <div ref="custom-table" class="custom-table-container">
     <div class="components">
       <a-drawer
-        :body-style="{ paddingBottom: '80px' }"
         :mask-closable="false"
         placement="right"
         :visible="visible"
@@ -20,11 +19,126 @@
       >
         <el-row :gutter="24">
           <el-col :span="12">
+            <el-divider>采集数据</el-divider>
+            <el-table
+              :key="thingdata.length"
+              border
+              :data="thingdata"
+              style="min-height: 280px"
+            >
+              <el-table-column
+                v-for="(item, index) in thingcolumns"
+                :key="index"
+                align="center"
+                :label="$translateTitle(`cloudTest.${item.label}`)"
+                :prop="item.prop"
+                show-overflow-tooltip
+                sortable
+                width="auto"
+              />
+            </el-table>
+          </el-col>
+          <el-col v-if="collectionInfo.name" :span="12">
+            <el-divider>检测信息</el-divider>
+            <el-card>
+              <div class="setting">
+                <el-button
+                  type="success"
+                  @click.native="collection(collectionInfo)"
+                >
+                  采集数据
+                </el-button>
+                <el-button
+                  :disabled="thingdata.length == 0"
+                  type="primary"
+                  @click.native="saveThingdata"
+                >
+                  计算平均值
+                </el-button>
+                <el-button
+                  type="info"
+                  @click.native="handleManagement(collectionInfo)"
+                >
+                  任务配置
+                </el-button>
+                <el-button type="warning" @click="visible = false">
+                  退出采集
+                </el-button>
+              </div>
+              <a-descriptions bordered>
+                <a-descriptions-item label="当前时间" :span="12">
+                  {{ nowTime }}
+                </a-descriptions-item>
+                <a-descriptions-item label="检测台体" :span="8">
+                  {{ collectionInfo.profile.testbed }}
+                </a-descriptions-item>
+                <a-descriptions-item label="检测任务" :span="4">
+                  {{ collectionInfo.name }}
+                </a-descriptions-item>
+              </a-descriptions>
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="12" style="margin-top: 20px">
+            <el-divider>平均值</el-divider>
+            <el-table
+              :key="historyEvidence.length"
+              border
+              :data="historyEvidence"
+              style="min-height: 530px"
+            >
+              <el-table-column
+                align="center"
+                label="历史数据"
+                show-overflow-tooltip
+                sortable
+                width="auto"
+              >
+                <template #default="{ row }">
+                  <el-table
+                    :key="row.original.thingdata.length"
+                    border
+                    :data="row.original.thingdata"
+                  >
+                    <el-table-column
+                      v-for="(item, index) in historycolumns"
+                      :key="index"
+                      align="center"
+                      :label="$translateTitle(`cloudTest.${item.label}`)"
+                      :prop="item.prop"
+                      show-overflow-tooltip
+                      sortable
+                      width="auto"
+                    />
+                    <template #empty>
+                      <el-image
+                        class="vab-data-empty"
+                        :src="
+                          require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                        "
+                      />
+                    </template>
+                  </el-table>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="操作" width="60">
+                <template #default="{ row }">
+                  <el-button
+                    class="el-icon-delete"
+                    type="text"
+                    @click.native="deleteHistory(row.objectId)"
+                  />
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-col>
+          <el-col :span="12" style="margin-top: 20px">
+            <el-divider>曲线数据</el-divider>
             <el-card>
               <el-image
                 :preview-src-list="[$FileServe + drawxnqxPath]"
                 :src="$FileServe + drawxnqxPath"
-                style="width: 600px; height: 600px"
               >
                 <div slot="error" class="image-slot">
                   <el-image
@@ -37,62 +151,7 @@
               </el-image>
             </el-card>
           </el-col>
-          <el-col :span="12">
-            <el-card>
-              <el-button
-                :disabled="thingdata.length == 0"
-                type="primary"
-                @click="saveThingdata"
-              >
-                保存
-              </el-button>
-              <el-table
-                :key="thingdata.length"
-                border
-                :data="thingdata"
-                show-summary
-                :summary-method="getSummaries"
-              >
-                <el-table-column
-                  v-for="(item, index) in thingcolumns"
-                  :key="index"
-                  align="center"
-                  :label="$translateTitle(`cloudTest.${item.label}`)"
-                  :prop="item.prop"
-                  show-overflow-tooltip
-                  sortable
-                  width="auto"
-                />
-                <template #empty>
-                  <el-image
-                    class="vab-data-empty"
-                    :src="
-                      require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
-                    "
-                  />
-                </template>
-              </el-table>
-            </el-card>
-          </el-col>
         </el-row>
-
-        <div
-          :style="{
-            position: 'absolute',
-            right: 0,
-            bottom: 0,
-            width: '100%',
-            borderTop: '1px solid #e9e9e9',
-            padding: '10px 16px',
-            background: '#fff',
-            textAlign: 'right',
-            zIndex: 1,
-          }"
-        >
-          <a-button type="primary" @click="visible = false">
-            {{ $translateTitle('tagsView.close') }}
-          </a-button>
-        </div>
       </a-drawer>
       <el-drawer
         v-drawerDrag
@@ -410,5 +469,8 @@
 <style>
   .el-divider__text {
     font-size: 18px;
+  }
+  .setting {
+    margin: 20px 0;
   }
 </style>

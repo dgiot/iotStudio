@@ -20,44 +20,47 @@
       @close="auditDialog = false"
     >
       <vab-query-form style="margin: 10px 20px">
-        <vab-query-form-left-panel>
-          <div v-if="taskType == 'review'">
+        <el-form ref="form" label-width="120px" :model="task">
+          <el-form-item
+            v-if="taskType == 'review'"
+            label-width="0"
+            style="float: left"
+          >
             <el-button
               type="primary"
               @click="
                 finishEvidence(task, Number($route.query.step) == 1 ? 2 : 3)
               "
             >
-              {{ $translateTitle('cloudTest.submit review') }}
+              {{ $translateTitle('application.submit') }}
             </el-button>
-          </div>
-          <div v-if="taskType == 'evidence'">
+          </el-form-item>
+          <el-form-item
+            v-if="taskType == 'evidence'"
+            label-width="0"
+            style="float: left"
+          >
             <el-button @click="notapproved(task, -1)">
               {{ $translateTitle('cloudTest.notapproved') }}
             </el-button>
             <el-button type="primary" @click="notapproved(task, 3)">
               {{ $translateTitle('cloudTest.Approved') }}
             </el-button>
-          </div>
-          <el-form
-            v-if="taskType != 'review'"
-            ref="form"
-            label-width="120px"
-            :model="task"
+          </el-form-item>
+          <el-form-item
+            :label="$translateTitle('cloudTest.report audit opinion')"
           >
-            <el-form-item
-              v-show="task.profile.message"
-              :label="$translateTitle('cloudTest.report audit opinion')"
-            >
-              <el-input v-model="task.profile.message" />
-            </el-form-item>
-          </el-form>
-        </vab-query-form-left-panel>
-        <vab-query-form-right-panel>
-          <el-button title="关闭" type="info" @click.native="clouseDraw">
-            关闭
-          </el-button>
-        </vab-query-form-right-panel>
+            <el-input
+              v-model="task.profile.message"
+              :rows="2"
+              style="width: 60%"
+              type="textarea"
+            />
+            <!--            <el-button title="关闭" type="info" @click.native="clouseDraw">-->
+            <!--              关闭-->
+            <!--            </el-button>-->
+          </el-form-item>
+        </el-form>
       </vab-query-form>
       <span>
         <el-table border :data="auditList" size="mini" stripe>
@@ -402,12 +405,12 @@
         <el-table-column
           v-if="Number($route.query.step) == 3"
           align="center"
-          :label="$translateTitle('cloudTest.submit review')"
+          :label="$translateTitle('application.submit')"
           width="auto"
         >
           <template #default="{ row }">
             <el-button plain @click.native="changeItem(row)">
-              {{ $translateTitle('cloudTest.submit review') }}
+              {{ $translateTitle('application.submit') }}
             </el-button>
           </template>
         </el-table-column>
