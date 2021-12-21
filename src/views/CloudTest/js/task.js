@@ -849,9 +849,10 @@ export default {
           evidenceid = '',
         } = await postDrawxnqx(params)
         if (Number(code) == 200) {
-          this.historyEvidenceid = evidenceid
-          this.historyEvidence = original.avgs
-          this.original = original
+          this.historyEvidenceid = evidenceid ?? ''
+          this.historyEvidence = original.avgs ?? []
+          this.original = original ?? {}
+          // https://www.lodashjs.com/docs/lodash.filter
           this.historycolumns = _.filter(this.thingcolumns, function (item) {
             return item.prop !== 'timestamp'
           })

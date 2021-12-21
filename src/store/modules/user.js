@@ -137,7 +137,7 @@ import { Roletree } from '@/api/Menu'
 import { queryProduct } from '@/api/Product'
 import { license } from '@/api/License'
 import { isJson } from '@/utils/Data/validate'
-import { tickTime } from '@/utils/Time'
+import { tickTime } from '@/utils/Time/index'
 const defaultTheme = {
   layout,
   themeName,
