@@ -395,7 +395,7 @@
       },
       /**
        * 跳转到某个时刻进行播放
-       * @argument time 的单位为秒
+       * @argument Time 的单位为秒
        */
       seek: function (time) {
         this.instance.seek(time)
@@ -428,7 +428,7 @@
       /**
        *直接播放视频url，time为可选值（单位秒）目前只支持同种格式（mp4/flv/m3u8）之间切换暂不支持直播rtmp流切换
        *@argument url 视频地址
-       *@argument time 跳转到多少秒
+       *@argument Time 跳转到多少秒
        */
       loadByUrl: function (url, time) {
         this.instance.loadByUrl(url, time)

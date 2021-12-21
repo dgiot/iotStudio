@@ -80,12 +80,12 @@
 <script>
   import steps from './js/guide'
   import 'element-ui/lib/theme-chalk/display.css'
-  import { requireModule } from '@/utils/file'
+  import requireModule from '@/utils/File/requireModule'
   import { mapGetters, mapMutations } from 'vuex'
   import { _getTopo } from '@/api/Topo'
   import { queryProduct } from '@/api/Product'
   import canvas from '@/utils/konva/core/canvas'
-  import { handleActivePath } from '@/utils/routes'
+  import { handleActivePath } from '@/utils/Router/routes'
 
   export default {
     components: {

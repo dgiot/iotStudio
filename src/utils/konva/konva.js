@@ -6,7 +6,7 @@
  * @param {regExp} regExp 读取文件的路径
  */
 
-const modulesFiles = require.context('./konva', true, /.js$/)
+const modulesFiles = require.context('../konva', true, /.js$/)
 const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   const moduleName = modulePath.replace(/^.\/(.*)\.js/, '$1')
   const value = modulesFiles(modulePath)

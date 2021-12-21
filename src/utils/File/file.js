@@ -5,7 +5,7 @@
 //   ...FileModule,
 // }
 
-const modulesFiles = require.context('./File', true, /.js$/)
+const modulesFiles = require.context('../File', true, /.js$/)
 const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   const moduleName = modulePath.replace(/^.\/(.*)\.js/, '$1')
   const value = modulesFiles(modulePath)

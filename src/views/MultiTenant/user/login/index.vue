@@ -114,7 +114,7 @@
 <script>
   import backgroundImage from '../../../../../public/assets/images/platform/assets/login_images/background.jpg'
   import { mapActions, mapGetters, mapMutations } from 'vuex'
-  import { isPassword } from '@/utils/validate'
+  import { isPassword } from '@/utils/Data/validate'
   import { SiteDefault } from '@/api/License'
   export default {
     name: 'Login',

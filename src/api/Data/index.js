@@ -5,7 +5,7 @@
 // * @Description:
 // * @FilePath: src\api\Data\index.js
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/Data
-import request from '@/utils/request'
+import request from '@/utils/Request/request'
 
 export async function post_tree(params) {
   return request({

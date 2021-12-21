@@ -1,12 +1,12 @@
 import i18n from '@/i18n'
-import Bus from './eventBus'
+import Bus from '@/utils/Vue/eventBus'
 import dgiotBus from '@dgiot/dgiot-mqtt-dashboard/src/utils/bus'
 import dgiotMixin from '@dgiot/dgiot-mqtt-dashboard/src/mixins/mqtt'
-import { getToken, removeToken, setToken } from './vuex'
-import globalConfig from './globalConfig'
+import { getToken, removeToken, setToken } from './Vue/vuex'
+import globalConfig from '@/utils/Config/globalConfig'
 import store from '@/store'
 import { Message } from 'element-ui'
-import dgiotlog from './dgiotlog'
+import dgiotlog from '@/utils/DgiotLog/index'
 import {
   create_object,
   del_object,
@@ -39,7 +39,7 @@ import { getMqttEventId, getTopicEventId } from '@/utils'
  * @param option
  * @returns {*}
  */
-import o2Log from './o2Console'
+import o2Log from '@/utils/DgiotLog/o2Console'
 
 const { CDN_URL } = require('../config')
 

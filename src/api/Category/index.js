@@ -5,7 +5,7 @@
 // * @Description: Category api
 // * @FilePath: src\api\Category\index.js
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/category
-import request from '@/utils/request'
+import request from '@/utils/Request/request'
 import {
   create_object,
   del_object,

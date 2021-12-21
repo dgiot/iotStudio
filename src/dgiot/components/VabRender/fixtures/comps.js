@@ -1047,7 +1047,7 @@ export default [
     },
   },
   {
-    type: 'time-picker',
+    type: 'Time-picker',
     label: '时间Picker',
     sort: 12,
     config: {
@@ -1799,7 +1799,7 @@ export default [
                       label: 'Slider 滑块',
                     },
                     {
-                      value: 'time-picker',
+                      value: 'Time-picker',
                       label: 'TimePicker 时间选择器',
                     },
                     {
@@ -2201,7 +2201,7 @@ export default [
                       label: 'Slider 滑块',
                     },
                     {
-                      value: 'time-picker',
+                      value: 'Time-picker',
                       label: 'TimePicker 时间选择器',
                     },
                     {

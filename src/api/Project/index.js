@@ -12,7 +12,7 @@ import {
   get_object,
   query_object,
 } from '@/api/shuwa_parse'
-import request from '@/utils/request'
+import request from '@/utils/Request/request'
 
 export async function queryProject(params) {
   return query_object('Project', params)

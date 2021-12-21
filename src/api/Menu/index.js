@@ -4,7 +4,7 @@ import {
   query_object,
   update_object,
 } from '@/api/shuwa_parse'
-import request from '@/utils/request'
+import request from '@/utils/Request/request'
 
 export async function queryMenu(params) {
   return query_object('Menu', params)

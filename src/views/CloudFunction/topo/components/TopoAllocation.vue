@@ -98,7 +98,7 @@
   // console.log(imgHost, process.env.BASE_URL, process.env)
   import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
-  import { getSvgPath } from '@/utils/konva'
+  import getSvgPath from '@/utils/konva/getSvgPath'
   //   20210821112723
   //   https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json
   // const iconfont = require('https://at.alicdn.com/t/font_2759556_r8d9wroaw8.json')

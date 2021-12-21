@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/utils/Request/request'
 
 // 获取统计信息
 export function getMeterStatistic(objectId, time) {

@@ -89,7 +89,7 @@
 
 <script>
   import { uuid } from '@/utils'
-  import { requireModule } from '@/utils/file'
+  import requireModule from '@/utils/File/requireModule'
   import {
     createArticle,
     delArticle,

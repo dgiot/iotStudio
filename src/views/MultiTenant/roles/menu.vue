@@ -303,7 +303,7 @@
             width: 100,
           },
           {
-            label: 'Created time',
+            label: 'Created Time',
             key: 'createtime',
             align: 'center',
           },

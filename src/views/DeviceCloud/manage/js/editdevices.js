@@ -658,7 +658,7 @@ export default {
           })
       } else {
         this.$message.error(
-          this.$translateTitle('developer.Please select the query time')
+          this.$translateTitle('developer.Please select the query Time')
         )
       }
     },

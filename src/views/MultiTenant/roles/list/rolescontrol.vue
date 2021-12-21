@@ -196,7 +196,7 @@
             align: 'center',
           },
           {
-            label: 'Created time',
+            label: 'Created Time',
             key: 'scope',
           },
           {

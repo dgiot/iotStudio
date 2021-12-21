@@ -81,7 +81,7 @@
       send: function () {
         var s = this.msg
         if (s) {
-          s = '{time:' + new Date() + ', content:' + s + ', from: web console}'
+          s = '{Time:' + new Date() + ', content:' + s + ', from: web console}'
           var message = new Paho.MQTT.Message(s)
           message.destinationName = this.topic
           this.client.send(message)
@@ -93,7 +93,7 @@
           function () {
             if (this.client.isConnected) {
               var s =
-                '{time:' +
+                '{Time:' +
                 new Date() +
                 ', content:' +
                 this.count++ +

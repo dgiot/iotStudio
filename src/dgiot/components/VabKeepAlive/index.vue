@@ -36,11 +36,11 @@
           //      1级路由   null               /setting/user
           //      2级路由   /setting/user      /setting/user/username(fullPath)
           // eg1 -> eg2: 1级路由情况特殊, 直接更新key, 新旧一致, key值保持原样, 最后1级路由会直接使用fullPath
-          // eg3. /setting/system/time
+          // eg3. /setting/system/Time
           //      路由层级  判断条件(父组件名)    key
           //      1级路由   null               /setting/user
           //      2级路由   /setting/user      /setting/user/username(Keep)
-          //      2级路由   /setting/system    /setting/system/time(fullPath)
+          //      2级路由   /setting/system    /setting/system/Time(fullPath)
           // eg2 -> eg3: 跳转新的2级路由并不是替换之前的2级路由, 而是新建了一个,
           //             旧的2级判断条件与新的不符, key值就保持不变
           //             新的2级路由, 最后一个路由, key值直接使用fullPath
@@ -48,7 +48,7 @@
           //      路由层级  判断条件(父组件名)    key
           //      1级路由   null               /setting/user
           //      2级路由   /setting/user      /setting/user/username(Keep)
-          //      2级路由   /setting/system    /setting/system/time(Keep)
+          //      2级路由   /setting/system    /setting/system/Time(Keep)
           //      2级路由   /vab/icon          /vab/icon/remix
           //      3级路由   /vab/icon/remix    /vab/icon/remix/list(fullPath)
           // eg3 -> eg4: 从2级路由跳转3级路由, 新建2级路由和3级路由各一个

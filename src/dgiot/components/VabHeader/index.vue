@@ -52,7 +52,7 @@
 <script>
   import variables from '@/dgiot/styles/variables/variables.scss'
   import { mapGetters } from 'vuex'
-  import { handleActivePath } from '@/utils/routes'
+  import { handleActivePath } from '@/utils/Router/routes'
   export default {
     name: 'VabHeader',
     props: {

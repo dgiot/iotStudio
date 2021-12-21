@@ -27,7 +27,7 @@
   import variables from '@/dgiot/styles/variables/variables.scss'
   import { mapGetters } from 'vuex'
   import { defaultOpeneds, uniqueOpened } from '@/config'
-  import { handleActivePath } from '@/utils/routes'
+  import { handleActivePath } from '@/utils/Router/routes'
 
   export default {
     name: 'VabSideBar',

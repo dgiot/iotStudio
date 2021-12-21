@@ -7,7 +7,7 @@ var datetime = null,
   date = null
 
 export function tickTime() {
-  console.log('start tick time')
+  console.log('start tick Time')
   setInterval(update, 1000)
 }
 

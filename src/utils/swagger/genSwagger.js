@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const http = require('http')
-const network = require('../config/net.config')
+const network = require('../../config/net.config')
 const baseURL = network.proxy[0].target
 
 function mkdirsSync(dirname) {
@@ -20,7 +20,7 @@ function getPath(pathUrl) {
 }
 
 function generateTemplate(arr) {
-  return `import { ${arr.join(', ')} } from '@/utils/request'\n`
+  return `import { ${arr.join(', ')} } from '@/utils/Request/request'\n`
 }
 
 function generateFunc(name, summary, type = 'post') {

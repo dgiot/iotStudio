@@ -64,10 +64,10 @@
 </template>
 <script>
   import 'element-ui/lib/theme-chalk/display.css'
-  import { requireModule } from '@/utils/file'
+  import requireModule from '@/utils/File/requireModule'
   import { mapGetters, mapMutations } from 'vuex'
   import { isBase64, uuid } from '@/utils'
-  import { createState } from '@/utils/konva'
+  import createState from '@/utils/konva/createState'
   import { _getTopo } from '@/api/Topo'
   import { putProduct, queryProduct } from '@/api/Product'
 

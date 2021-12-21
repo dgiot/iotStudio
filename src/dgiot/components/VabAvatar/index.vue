@@ -28,7 +28,7 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { toLoginRoute } from '@/utils/routes'
+  import { toLoginRoute } from '@/utils/Router/routes'
 
   export default {
     name: 'VabAvatar',

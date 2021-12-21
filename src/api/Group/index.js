@@ -5,7 +5,7 @@ import {
   query_object,
   update_object,
 } from '@/api/shuwa_parse'
-import request from '@/utils/request'
+import request from '@/utils/Request/request'
 
 // 获取虚拟设备分组
 /**

@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: \dgiot-dashboard\src\api\Device\index.js
  */
-import request from '@/utils/request'
+import request from '@/utils/Request/request'
 
 export async function getTable() {
   const serverTable = request({

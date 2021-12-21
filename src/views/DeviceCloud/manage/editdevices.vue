@@ -19,7 +19,7 @@
           </el-card>
         </el-tab-pane>
         <el-tab-pane
-          :label="$translateTitle('equipment.real time data')"
+          :label="$translateTitle('equipment.real Time data')"
           name="first1"
         >
           <vab-query-form>
@@ -158,8 +158,8 @@
             <!--                  show-overflow-tooltip-->
             <!--                />-->
             <!--                <el-table-column-->
-            <!--                  :label="$translateTitle('equipment.time')"-->
-            <!--                  prop="time"-->
+            <!--                  :label="$translateTitle('equipment.Time')"-->
+            <!--                  prop="Time"-->
             <!--                  align="center"-->
             <!--                  width="300"-->
             <!--                />-->

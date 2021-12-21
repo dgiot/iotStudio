@@ -1,5 +1,5 @@
 import store from '@/store'
-import { isArray } from '@/utils/validate'
+import { isArray } from '@/utils/Data/validate'
 
 export function hasAccess(value) {
   if (store.getters['acl/admin']) return true

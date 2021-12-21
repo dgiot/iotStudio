@@ -4,8 +4,8 @@
 import { asyncRoutes, constantRoutes, resetRouter } from '@/router'
 import { defaultRoutes, errorRoutes } from '@/config/router.config'
 import { getRouterList } from '@/api/User'
-import { convertRouter, filterRoutes } from '@/utils/routes'
-import { getToken } from '@/utils/vuex'
+import { convertRouter, filterRoutes } from '@/utils/Router/routes'
+import { getToken } from '@/utils/Vue/vuex'
 
 const state = () => ({
   routes: [],

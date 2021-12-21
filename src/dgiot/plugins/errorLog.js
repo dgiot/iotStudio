@@ -1,5 +1,5 @@
 import store from '@/store'
-import { isArray, isString } from '@/utils/validate'
+import { isArray, isString } from '@/utils/Data/validate'
 import { errorLog } from '@/config'
 
 const needErrorLog = errorLog

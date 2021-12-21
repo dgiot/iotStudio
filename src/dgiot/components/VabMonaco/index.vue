@@ -5,7 +5,10 @@
 <script>
   import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
   import Monokai from '@/assets/themes/monokai.json'
-  import { createMonacoComplete, createMonacoHover } from '@/utils/monacoUtils'
+  import {
+    createMonacoComplete,
+    createMonacoHover,
+  } from '@/utils/Monaco/monacoUtils'
 
   export default {
     name: 'VabMonaco',

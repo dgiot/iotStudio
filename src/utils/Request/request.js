@@ -14,12 +14,12 @@ import {
   successCode,
   tokenName,
 } from '@/config'
-import { globalUrl } from './utilwen'
+import { globalUrl } from '@/utils/utilwen'
 import store from '@/store'
 import { refreshToken } from '@/api/Role/index'
 const ip = require('ip')
 import router from '@/router'
-import { isArray } from '@/utils/validate'
+import { isArray } from '@/utils/Data/validate'
 import CSI from 'csijs'
 let loadingInstance
 
@@ -132,7 +132,7 @@ instance.interceptors.request.use(
     let { headers = {} } = config
     config.headers['departmentToken'] = departmentToken
     if (headers['proxy'] == true) {
-      dgiotlog.log('src/utils/request.js', config, 'config')
+      dgiotlog.log('src/utils/Request/request.js', config, 'config')
       NODE_ENV == 'production'
         ? (config.baseURL = headers.produrl)
         : (config.baseURL = headers.devurl)
@@ -174,7 +174,7 @@ instance.interceptors.request.use(
         'color:black; font-size: 18px; font-weight: 300'
       )
       dgiotlog.log(
-        'src/utils/request.js',
+        'src/utils/Request/request.js',
         `拦截的url为${config.url}\n当前请求使用了部门token：为${departmentToken}\n用户登录token为${usertoken}`,
         'color:black; font-size: 18px; font-weight: 300'
       )
@@ -186,7 +186,7 @@ instance.interceptors.request.use(
           'color:black; font-size: 18px; font-weight: 300'
         )
         dgiotlog.log(
-          'src/utils/request.js',
+          'src/utils/Request/request.js',
           `忽略的url为${config.url}\n当前请求用户登录token：为${usertoken}\n部门token为${departmentToken}`,
           'color:black; font-size: 18px; font-weight: 300'
         )
@@ -212,9 +212,9 @@ instance.interceptors.response.use(
     if (response) {
       return handleData(response)
     } else {
-      console.log('src/utils/request.js', 'error', error)
-      console.log('src/utils/request.js', 'config', config)
-      console.log('src/utils/request.js', 'response', response)
+      console.log('src/utils/Request/request.js', 'error', error)
+      console.log('src/utils/Request/request.js', 'config', config)
+      console.log('src/utils/Request/request.js', 'response', response)
       Vue.prototype.$baseMessage(
         `请求出错：请求链接：${config.url}，错误信息：${error}`,
         'error'
@@ -251,7 +251,7 @@ function refreshAuthToken(tokens) {
         time: (Date.parse(new Date()) / 1000 + 86400) * 1000,
         expires_in: 7,
       })
-      console.warn('src/utils/request.js', `持续检查更新token有效期`)
+      console.warn('src/utils/Request/request.js', `持续检查更新token有效期`)
     }
   })
   console.groupEnd()

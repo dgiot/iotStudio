@@ -140,7 +140,7 @@
   import createThing from '@/utils/konva/createThing'
   import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
-  import { getSvgPath } from '@/utils/konva'
+  import getSvgPath from '@/utils/konva/getSvgPath'
   import Thing from '@/views/CloudFunction/topo/components/Thing'
   // import TopoThing from '@/views/topo/components/TopoThing'
   import Background from '@/views/CloudFunction/topo/components/Background'

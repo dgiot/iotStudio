@@ -107,7 +107,7 @@
 </template>
 
 <script>
-  import { isPassword, isPhone } from '@/utils/validate'
+  import { isPassword, isPhone } from '@/utils/Data/validate'
   import { register } from '@/api/User/index'
 
   export default {

@@ -133,7 +133,7 @@ export default {
           sortable: true,
         },
         // {
-        //   label: 'Creation time',
+        //   label: 'Creation Time',
         //   width: 'auto',
         //   prop: 'createdAt',
         //   sortable: true,

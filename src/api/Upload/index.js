@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/utils/Request/request'
 
 /**
  * @doc-apis https://prod.iotn2n.com/dgiot_swagger/#/Data/post_upload

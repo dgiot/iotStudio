@@ -9,7 +9,7 @@ import { getRule } from "@/api/Rules";
 import { postProductTemplet } from "@/api/ProductTemplet";
 import { Compile, subupadte } from "@/api/System/index";
 import { setTimeout } from "timers";
-import { Websocket } from "@/utils/wxscoket.js";
+import { Websocket } from "@/utils/Webscroket/index";
 import wmxdetail from "@/views/DeviceCloud/manage/component/wmxdetail";
 import { returnLogin } from "@/utils/utilwen";
 import profile from "@/views/DeviceCloud/manage/profile";

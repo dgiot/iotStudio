@@ -75,13 +75,13 @@
           <!--            />-->
           <!--          </el-form-item>-->
           <el-form-item
-            :label="$translateTitle('Maintenance.the starting time')"
+            :label="$translateTitle('Maintenance.the starting Time')"
           >
             <el-date-picker
               v-model="queryForm.searchDate"
-              :end-placeholder="$translateTitle('Maintenance.end time')"
+              :end-placeholder="$translateTitle('Maintenance.end Time')"
               format="yyyy-MM-dd"
-              :start-placeholder="$translateTitle('Maintenance.start time')"
+              :start-placeholder="$translateTitle('Maintenance.start Time')"
               type="daterange"
               value-format="yyyy-MM-dd"
             />
@@ -180,7 +180,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        :label="$translateTitle('Maintenance.the starting time')"
+        :label="$translateTitle('Maintenance.the starting Time')"
         show-overflow-tooltip
         sortable
       >

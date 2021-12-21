@@ -314,7 +314,7 @@
               <!-- <el-form-item :label=" $translateTitle('application.tokeneffectivetime')">
                 <el-input
                   controls-position="left"
-                  v-model.number="form.time"
+                  v-model.number="form.Time"
                   type="number"
                   :min="1"
                   :placheholder=" $translateTitle('application.tokeneffectivetime')"

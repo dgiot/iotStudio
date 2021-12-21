@@ -6,7 +6,7 @@
  * @FilePath: \dgiot-dashboard\src\vab\plugins\directive.js
  * @Description:
  */
-import { hasAccess } from '@/utils/hasAccess'
+import { hasAccess } from '@/utils/Data/hasAccess'
 
 /**
  * @description 自定义指令v-permissions

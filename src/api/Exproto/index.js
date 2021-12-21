@@ -6,7 +6,7 @@
  * @FilePath: \dgiot-dashboard\src\api\Exproto\index.js
  * @Description:拓展编程api整合
  */
-import request from '@/utils/request'
+import request from '@/utils/Request/request'
 
 export async function getExproto(params) {
   return request({

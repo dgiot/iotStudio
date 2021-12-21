@@ -13,8 +13,8 @@ var info = {
   qos: 2,
 }
 import { storage, tokenTableName } from '@/config'
-import { globalUrl } from './utilwen'
-import { getToken } from '@/utils/vuex'
+import { globalUrl } from '@/utils/utilwen'
+import { getToken } from '@/utils/Vue/vuex'
 
 const { hostname } = window.location
 

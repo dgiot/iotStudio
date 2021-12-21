@@ -7,7 +7,7 @@
  */
 // https://docs.parseplatform.org/rest/guide/#batch-operations
 // http://132.232.119.105:5080/swagger/#/Data/post_batch
-import request from '@/utils/request'
+import request from '@/utils/Request/request'
 import { Message } from 'element-ui'
 import store from '@/store'
 

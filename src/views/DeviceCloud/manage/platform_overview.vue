@@ -526,7 +526,7 @@
                                       @click="goLink('real-time', item)"
                                     >
                                       {{
-                                        $translateTitle('equipment.real-time')
+                                        $translateTitle('equipment.real-Time')
                                       }}
                                     </el-link>
                                   </el-col>
@@ -705,7 +705,7 @@
                                       :title="
                                         row.name +
                                         $translateTitle(
-                                          'home.Last online time'
+                                          'home.Last online Time'
                                         ) +
                                         row.updatedAt
                                       "
@@ -762,7 +762,7 @@
                                       :title="
                                         row.name +
                                         $translateTitle(
-                                          'home.Last online time'
+                                          'home.Last online Time'
                                         ) +
                                         row.updatedAt
                                       "

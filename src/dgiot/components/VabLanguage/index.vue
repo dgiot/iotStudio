@@ -20,7 +20,7 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import getPageTitle from '@/utils/pageTitle'
+  import getPageTitle from '@/utils/Vue/pageTitle'
 
   export default {
     name: 'VabLanguage',

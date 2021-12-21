@@ -1,8 +1,8 @@
 import path from 'path'
-import { isExternal } from '@/utils/validate'
-import { hasAccess } from '@/utils/hasAccess'
+import { isExternal } from '@/utils/Data/validate'
+import { hasAccess } from '@/utils/Data/hasAccess'
 import { recordRoute } from '@/config'
-import { json2params } from '@/utils/index'
+import { json2params } from '@/utils'
 
 /**
  * @description all模式渲染后端返回路由,支持包含views路径的所有页面
