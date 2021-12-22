@@ -16,6 +16,7 @@ export default {
   components: { 'vue-aliplayer-v2': VueAliplayerV2 },
   data() {
     return {
+      badgePath: canvas.info.Path ?? [],
       options: {
         autoplay: false,
         width: '220px',
@@ -719,6 +720,8 @@ export default {
           })
         )
         this.deleteTopo(window.deletePath)
+        this.badgePath = canvas.info.Path ?? []
+        console.error(' this.badgePath', this.badgePath)
       }, 1000)
     },
   }, //如果页面有keep-alive缓存功能，这个函数会触发

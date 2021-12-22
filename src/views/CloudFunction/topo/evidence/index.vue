@@ -101,7 +101,7 @@
               <!--                v-else-if="types.audio.includes(`${row.original.type}`)"-->
               <!--                :audio-src="$FileServe + row.original.path"-->
               <!--              />-->
-              <el-link :href="$FileServe + row.original.path">
+              <el-link :href="$FileServe + row.original.path" target="_blank">
                 {{
                   row.original.path.split('/')[
                     `${row.original.path.split('/').length - 1}`
@@ -286,7 +286,7 @@
             <!--              v-else-if="types.audio.includes(`${row.original.type}`)"-->
             <!--              :audio-src="$FileServe + row.original.path"-->
             <!--            />-->
-            <el-link :href="$FileServe + row.original.path">
+            <el-link :href="$FileServe + row.original.path" target="_blank">
               {{
                 row.original.path.split('/')[
                   `${row.original.path.split('/').length - 1}`
@@ -541,6 +541,13 @@
             {{ task.profile.message || '' }}
           </el-link>
         </el-col>
+        <!--        <span>-->
+        <!--          <el-badge v-for="badge in badgePath" :key="badge.index" :value="3">-->
+        <!--            <i class="material-icons" style="font-size: 12px">-->
+        <!--              {{ badge.attrs.icon }}-->
+        <!--            </i>-->
+        <!--          </el-badge>-->
+        <!--        </span>-->
         <el-col
           v-if="Number($route.query.step) != 1"
           :lg="4"

@@ -6,6 +6,7 @@ let info = {
   tag: [],
   evidence: [],
 }
+canvas.info = info
 /**
  * @description 组态Stage公共函数
  * @type {{handleChildren(*=): void}}

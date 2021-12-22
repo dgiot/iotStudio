@@ -473,8 +473,9 @@ export default {
      * @Description:
      */
     taskStart(row) {
-      this.$baseConfirm(
-        this.$translateTitle(
+      let _this = this
+      _this.$baseConfirm(
+        _this.$translateTitle(
           'Maintenance.Are you sure you want to start the current mission'
         ),
         null,
@@ -507,9 +508,23 @@ export default {
                 'Kepware.KEPServerEX.V6',
               items: items, //要读取到属性列表
             } // 下发的消息内容
-            this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始任务
+            // mqtt 消息回调
+            console.groupCollapsed(
+              '%c 下发消息',
+              'color:#009a61; font-size: 28px; font-weight: 300'
+            )
+            console.log(message)
+            console.log(pubTopic)
+            console.groupEnd()
+            _this.$dgiotBus.$emit(
+              `MqttPublish`,
+              pubTopic,
+              JSON.stringify(message),
+              0,
+              false
+            ) // 开始任务
             await generatereport(row.objectId)
-            const loading = this.$baseColorfullLoading()
+            const loading = _this.$baseColorfullLoading()
             const params = {
               profile: _.merge(row.profile, {
                 step: 1,
@@ -517,11 +532,11 @@ export default {
               }),
             }
             const res = await putDevice(row.objectId, params)
-            this.fetchData()
+            _this.fetchData()
             loading.close()
           } catch (error) {
             console.log(error)
-            this.$baseMessage(
+            _this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
               'vab-hey-message-error'
@@ -773,11 +788,11 @@ export default {
         }) // 追加el-table 对应的键值
         _this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
         const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
-        const message = JSON.stringify({
+        const message = {
           cmd: 'opc_report', // 采集时长
           duration: 5, //时长
           groupid: params.parentId.objectId,
-        })
+        }
         console.groupCollapsed(
           `%c 发送采集消息`,
           'color:#009a61; font-size: 28px; font-weight: 300'
@@ -785,7 +800,6 @@ export default {
         console.log('message', message)
         console.log('pubTopic', pubTopic)
         console.groupEnd()
-        _this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始采集
         _this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始采集
         _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic) // dgiot-mqtt topicKey 唯一标识
         _this.$dgiotBus.$off(_this.topicKey) // dgiotBus 关闭事件
@@ -865,7 +879,6 @@ export default {
             'vab-hey-message-error'
           )
         }
-        console.log(code, path)
       } catch (error) {
         console.log(error)
         this.$baseMessage(
