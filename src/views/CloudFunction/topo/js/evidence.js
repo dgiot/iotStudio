@@ -111,8 +111,8 @@ export default {
   activated() {},
   watch: {
     badgePath: {
-      handler(val) {
-        if (val && val.length) this.getNumberEvidence(val)
+      handler(badge) {
+        if (badge && badge.length) this.getNumberEvidence(badge)
       },
     },
   },
@@ -132,10 +132,13 @@ export default {
      * @Description:
      */
     async getNumberEvidence(params) {
-      let requests = []
-      let icon = { img: [], num: [], x: [], y: [], fill: [] }
+      /**
+       * @description 图元数据 请求数据
+       * @type {{path: *[], batch: *[]}}
+       */
+      let evidence = { path: [], batch: [] }
       params.forEach((item) => {
-        requests.push({
+        evidence.batch.push({
           body: {
             order: '-createdAt',
             skip: 0,
@@ -146,47 +149,29 @@ export default {
             },
           },
           method: 'GET',
-          icon: item.attrs.icon,
+          evidence: item.attrs.icon,
           path: `/classes/Evidence`,
         })
-        icon.img.push(item.attrs.icon)
-        icon.x.push(item.attrs.x)
-        icon.y.push(item.attrs.y)
-        icon.fill.push(item.attrs.fill)
+        evidence.path.push(item)
       })
       try {
-        console.log(requests, 'requests', icon)
-        // const res = await Promise.all([queryEvidence(_params)])
-        const res = await this.$shuwa_batch({
-          requests: requests,
+        const batchNum = await this.$shuwa_batch({
+          requests: evidence.batch,
         })
-        res.forEach((item) => {
-          icon.num.push(item.success.count)
-        })
-        icon.img.forEach((i, index) => {
-          var simpleText = new Konva.Text({
-            x: icon.x[index],
+        evidence.path.forEach((i, index) => {
+          const simpleText = new Konva.Text({
+            x: evidence.path[index].attrs.x,
             y:
-              icon.img[index] === 'volume_mute'
-                ? icon.y[index]
-                : icon.y[index] - 13,
-            text: icon.num[index],
+              evidence.path[index].attrs.icon === 'volume_mute'
+                ? evidence.path[index].attrs.y
+                : evidence.path[index].attrs.y - 13,
+            text: batchNum[index].success.count ?? 0,
             fontSize: 24,
             fontFamily: 'Calibri',
-            // fill: item.attrs.fill ?? 'green',
             fill: 'orange',
           })
           canvas.layer.add(simpleText)
         })
-        // const loading = this.$baseColorfullLoading()
-        // const res = await getProduct(params.objectId)
-        // console.log(res)
-        // this.$baseMessage(
-        //   this.$translateTitle('alert.Data request successfully'),
-        //   'success',
-        //   'vab-hey-message-success'
-        // )
-        // loading.close()
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -265,6 +250,7 @@ export default {
       try {
         const loading = this.$baseColorfullLoading()
         const res = await delEvidence(objectId)
+        this.getNumberEvidence(this.badgePath)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
@@ -408,6 +394,7 @@ export default {
           'success',
           'vab-hey-message-success'
         )
+        this.getNumberEvidence(this.badgePath)
         loading.close()
       } catch (error) {
         console.log(error)

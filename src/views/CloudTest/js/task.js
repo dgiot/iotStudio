@@ -731,6 +731,30 @@ export default {
       this.listLoading = false
     },
     /**
+     * @Author:
+     * @Date: 2021-12-22 17:26:30
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async visibleInfo(params) {
+      let _this = this
+      _this.collectionInfo = params
+      try {
+        _this.featHistoryEvidence(this.collectionInfo.objectId)
+        _this.drawxnqx(this.collectionInfo.objectId, _this.thingdata)
+        _this.visible = true
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
      * @Author: dext7r
      * @Date: 2021-12-16 14:46:53
      * @LastEditors: dext7r
@@ -837,7 +861,6 @@ export default {
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        this.visible = true
       } catch (error) {
         console.log(error)
         _this.$baseMessage(

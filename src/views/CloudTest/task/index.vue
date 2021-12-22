@@ -371,7 +371,7 @@
             v-show="row.profile.step == 1"
             size="mini"
             type="success"
-            @click.native="collection(row)"
+            @click.native="visibleInfo(row)"
           >
             {{ $translateTitle(`task.dataacquisition`) }}
           </el-button>
