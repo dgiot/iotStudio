@@ -262,55 +262,6 @@
           </el-form-item>
         </el-form>
       </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
-        <el-popover
-          ref="popover"
-          popper-class="custom-table-checkbox"
-          trigger="hover"
-        >
-          <el-radio-group v-model="lineHeight">
-            <el-radio label="medium">
-              {{ $translateTitle('cloudTest.medium') }}
-            </el-radio>
-            <el-radio label="small">
-              {{ $translateTitle('cloudTest.small') }}
-            </el-radio>
-            <el-radio label="mini">
-              {{ $translateTitle('cloudTest.mini') }}
-            </el-radio>
-          </el-radio-group>
-          <template #reference>
-            <el-button style="margin: 0 10px 10px 0 !important" type="primary">
-              <dgiot-icon icon="line-height" />
-              {{ $translateTitle('cloudTest.size') }}
-            </el-button>
-          </template>
-        </el-popover>
-        <el-popover popper-class="custom-table-checkbox" trigger="hover">
-          <el-checkbox-group v-model="checkList">
-            <vab-draggable :list="columns" v-bind="dragOptions">
-              <div v-for="(item, index) in columns" :key="item + index">
-                <dgiot-icon icon="drag-drop-line" />
-                <el-checkbox
-                  :disabled="item.disableCheck === true"
-                  :label="item.label"
-                >
-                  {{ $translateTitle(`cloudTest.${item.label}`) }}
-                </el-checkbox>
-              </div>
-            </vab-draggable>
-          </el-checkbox-group>
-          <template #reference>
-            <el-button
-              icon="el-icon-setting"
-              style="margin: 0 0 10px 0 !important"
-              type="primary"
-            >
-              {{ $translateTitle('cloudTest.Draggable column') }}
-            </el-button>
-          </template>
-        </el-popover>
-      </vab-query-form-right-panel>
     </vab-query-form>
     <el-table
       ref="tableSort"

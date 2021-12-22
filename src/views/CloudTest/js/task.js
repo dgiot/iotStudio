@@ -742,6 +742,47 @@ export default {
       let _this = this
       _this.collectionInfo = params
       try {
+        const thingcolumns = {}
+        const items = []
+        _this.thingdata = []
+        _this.thingcolumns = []
+        if (params.basedata) {
+          /**
+           * @description 判断下发组态topic的item
+           * @description 必须以 标识符 dgiot_testing_equipment_ 开头
+           */
+          for (let key in params.basedata) {
+            if (key.indexOf('dgiot_testing_equipment_') == 0) {
+              const splitColumns = key.split('dgiot_testing_equipment_')[1]
+              thingcolumns[`${splitColumns}`] = splitColumns
+              items.push(params.basedata[key])
+            }
+          }
+        }
+        // mqtt 消息回调
+        console.groupCollapsed(
+          '%c send mqttMsg items',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.log(items)
+        console.groupEnd()
+        const { head = {} } = await postHead({
+          items: items,
+          productid: params.parentId.product.objectId,
+        })
+        const columns = !_.isEmpty(head) ? head : thingcolumns
+        for (let key in columns) {
+          _this.thingcolumns.push({
+            prop: key,
+            label: columns[key],
+          }) // 设置el-table 对应的键值
+        }
+
+        console.log(' _this.thingcolumns', _this.thingcolumns)
+        _this.thingcolumns.unshift({
+          prop: 'timestamp',
+          label: '时间',
+        }) // 追加el-table 对应的键值
         _this.featHistoryEvidence(this.collectionInfo.objectId)
         _this.visible = true
       } catch (error) {
@@ -776,11 +817,8 @@ export default {
            * @description 必须以 标识符 dgiot_testing_equipment_ 开头
            */
           for (let key in params.basedata) {
-            if (key.indexOf('dgiot_testing_equipment_') == 0) {
-              const splitColumns = key.split('dgiot_testing_equipment_')[1]
-              thingcolumns[`${splitColumns}`] = splitColumns
+            if (key.indexOf('dgiot_testing_equipment_') == 0)
               items.push(params.basedata[key])
-            }
           }
         }
         // mqtt 消息回调
@@ -789,25 +827,7 @@ export default {
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
         console.log(items)
-        console.log(thingcolumns)
         console.groupEnd()
-        const { head = {} } = await postHead({
-          items: items,
-          productid: params.parentId.product.objectId,
-        })
-        const columns = !_.isEmpty(head) ? head : thingcolumns
-        for (let key in columns) {
-          _this.thingcolumns.push({
-            prop: key,
-            label: columns[key],
-          }) // 设置el-table 对应的键值
-        }
-
-        console.log(' _this.thingcolumns', _this.thingcolumns)
-        _this.thingcolumns.unshift({
-          prop: 'timestamp',
-          label: '时间',
-        }) // 追加el-table 对应的键值
         _this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
         const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
         const message = {
