@@ -52,15 +52,12 @@
                     :model="userinfo"
                     :rules="registerRules"
                   >
-                    <el-form-item label="姓名">
-                      <el-input v-model="username" />
+                    <el-form-item label="用户名">
+                      <el-input v-model="username" readonly="true" />
                     </el-form-item>
-                    <el-form-item label="昵称">
+                    <el-form-item label="姓名">
                       <el-input v-model="nick" />
                     </el-form-item>
-                    <!-- <el-form-item label="objectId">
-                      <el-input v-model="userinfo.objectId" disabled />
-                    </el-form-item> -->
                     <el-form-item label="性别">
                       <el-select v-model="userinfo.sex" style="width: 100%">
                         <el-option label="保密" value="保密" />

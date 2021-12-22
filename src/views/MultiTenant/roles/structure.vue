@@ -167,6 +167,11 @@
                       <div>{{ row.username }}</div>
                     </template>
                   </el-table-column>
+                  <el-table-column :label="$translateTitle('user.name1')">
+                    <template #default="{ row }">
+                      <div>{{ row.nick }}</div>
+                    </template>
+                  </el-table-column>
                   <el-table-column :label="$translateTitle('user.phonenumber')">
                     <template #default="{ row }">
                       <div>{{ row.phone }}</div>
@@ -180,13 +185,13 @@
                       <div>{{ row.email }}</div>
                     </template>
                   </el-table-column>
-                  <el-table-column :label="$translateTitle('user.department')">
-                    <template #default="{ row }">
-                      <div>
-                        {{ row.departmentname || departmentname }}
-                      </div>
-                    </template>
-                  </el-table-column>
+                  <!--                  <el-table-column :label="$translateTitle('user.department')">-->
+                  <!--                    <template #default="{ row }">-->
+                  <!--                      <div>-->
+                  <!--                        {{ row.departmentname || departmentname }}-->
+                  <!--                      </div>-->
+                  <!--                    </template>-->
+                  <!--                  </el-table-column>-->
 
                   <el-table-column
                     :label="$translateTitle('user.createdtime')"
