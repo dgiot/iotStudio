@@ -350,15 +350,11 @@ const actions = {
       return false
     }
     const { state = {} } = userInfo
-    Cookies.set(
-      'companyName',
-      encodeURIComponent(state.extendFields.companyName),
-      {
-        expires: 1,
-      }
-    )
+    Cookies.set('companyName', '迪格（杭州）物联科技有限公司', {
+      expires: 1,
+    })
     Cookies.set('userId', state.externalId, { expires: 1 })
-    Cookies.set('jwtInfo', encodeURIComponent(state), { expires: 1 })
+    Cookies.set('jwtInfo', state, { expires: 1 })
     let data = _.merge(
       {
         tag: {
