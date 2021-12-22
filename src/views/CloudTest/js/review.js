@@ -20,6 +20,8 @@ export default {
   },
   data() {
     return {
+      statisticsVisible: false,
+      evidenceId: '',
       aliplayer: {
         autoplay: false,
         // width: '100px',
@@ -187,6 +189,30 @@ export default {
     this.fetchData()
   },
   methods: {
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-22 20:28:01
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async handleHistory(params) {
+      try {
+        this.evidenceId = params.objectId
+        this.statisticsVisible = true
+        this.$nextTick(() => {
+          this.$refs['statistics'].evidence(params.objectId)
+        })
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
     async paginationQuery(queryPayload) {
       this.queryPayload = queryPayload
     },

@@ -9,7 +9,6 @@
 -->
 <template>
   <div ref="custom-table" class="custom-table-container">
-    <evidence-statistics evidence-id="ce20301be2" />
     <el-drawer
       v-drawerDrag
       append-to-body
@@ -17,6 +16,14 @@
       :visible.sync="dialogVisible"
     >
       <iframe :src="officeapps" style="width: 100%; height: 100%" />
+    </el-drawer>
+    <el-drawer
+      v-drawerDrag
+      append-to-body
+      size="90%"
+      :visible.sync="statisticsVisible"
+    >
+      <evidence-statistics ref="statistics" :evidence-id="evidenceId" />
     </el-drawer>
     <div class="components">
       <el-dialog append-to-body :visible.sync="evidenceDialog">
@@ -377,7 +384,7 @@
         align="center"
         fixed="right"
         :label="$translateTitle(`cloudTest.operate`)"
-        width="280"
+        width="380"
       >
         <template #default="{ row }">
           <el-button
@@ -447,6 +454,13 @@
             @click.native="handleRouter(row)"
           >
             {{ $translateTitle(`application.evidence`) }}
+          </el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click.native="handleHistory(row)"
+          >
+            历史数据
           </el-button>
         </template>
       </el-table-column>

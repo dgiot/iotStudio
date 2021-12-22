@@ -11,54 +11,52 @@
   <div class="statistics-container">
     <div class="statistics-content">
       <div class="statistics-content-chart">
-        <el-card>
-          <el-row :gutter="10">
-            <el-col :span="12">
-              <el-divider>历史数据</el-divider>
-              <vab-chart
-                ref="charts"
-                :after-config="afterConfig"
-                :data="chartData"
-                :data-empty="dataEmpty"
-                :data-zoom="chartDataZoom"
-                :extend="chartExtend"
-                :loading="loading"
-                :set-option-opts="false"
-                :settings="chartSettings"
-                :toolbox="toolbox"
-                :type="params.style"
-              />
-            </el-col>
-            <el-col :span="12">
-              <el-divider>平均值</el-divider>
-              <el-table
-                :key="historyEvidence.length"
-                border
-                :data="historyEvidence"
-                style="min-height: 530px"
+        <el-row :gutter="10">
+          <el-col :span="12">
+            <el-divider>历史数据</el-divider>
+            <vab-chart
+              ref="charts"
+              :after-config="afterConfig"
+              :data="chartData"
+              :data-empty="dataEmpty"
+              :data-zoom="chartDataZoom"
+              :extend="chartExtend"
+              :loading="loading"
+              :set-option-opts="false"
+              :settings="chartSettings"
+              :toolbox="toolbox"
+              :type="params.style"
+            />
+          </el-col>
+          <el-col :span="12">
+            <el-divider>平均值</el-divider>
+            <el-table
+              :key="historyEvidence.length"
+              border
+              :data="historyEvidence"
+              style="min-height: 530px"
+            >
+              <el-table-column
+                align="center"
+                label="历史数据"
+                show-overflow-tooltip
+                sortable
+                width="auto"
               >
                 <el-table-column
+                  v-for="(item, index) in historycolumns"
+                  :key="index"
                   align="center"
-                  label="历史数据"
+                  :label="$translateTitle(`cloudTest.${item.label}`)"
+                  :prop="item.prop"
                   show-overflow-tooltip
                   sortable
                   width="auto"
-                >
-                  <el-table-column
-                    v-for="(item, index) in historycolumns"
-                    :key="index"
-                    align="center"
-                    :label="$translateTitle(`cloudTest.${item.label}`)"
-                    :prop="item.prop"
-                    show-overflow-tooltip
-                    sortable
-                    width="auto"
-                  />
-                </el-table-column>
-              </el-table>
-            </el-col>
-          </el-row>
-        </el-card>
+                />
+              </el-table-column>
+            </el-table>
+          </el-col>
+        </el-row>
       </div>
     </div>
   </div>
@@ -163,7 +161,7 @@
     computed: {},
     mounted() {
       this.params.style = chartType[0].type
-      this.evidence(this.evidenceId)
+      // this.evidence(this.evidenceId)
     },
     methods: {
       afterConfig(options) {
@@ -289,12 +287,12 @@
   .statistics-container {
     width: 100%;
     height: 100%;
-    &-container {
-      width: 100%;
-      height: 100%;
-      &-chart {
-        height: 400px;
-      }
-    }
+    //&-container {
+    //  width: 100%;
+    //  height: 100%;
+    //  &-chart {
+    //    height: 400px;
+    //  }
+    //}
   }
 </style>
