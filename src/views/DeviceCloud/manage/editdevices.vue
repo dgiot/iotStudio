@@ -19,7 +19,7 @@
           </el-card>
         </el-tab-pane>
         <el-tab-pane
-          :label="$translateTitle('equipment.real Time data')"
+          :label="$translateTitle('equipment.realTime data')"
           name="first1"
         >
           <vab-query-form>

@@ -209,7 +209,7 @@ export default {
       subordinatenode: '所处节点',
       deviceinformation: '设备信息',
       'historical data': '历史数据',
-      'real time data': '实时数据',
+      'realTime data': '实时数据',
       deviceextensioninformation: '设备扩展信息',
       realtimerefresh: '实时刷新',
       operationauthority: '操作权限',

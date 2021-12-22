@@ -481,6 +481,7 @@ export default {
         null,
         async () => {
           try {
+            const loading = _this.$baseColorfullLoading()
             const items = []
             if (row.basedata) {
               /**
@@ -516,7 +517,7 @@ export default {
             console.log(message)
             console.log(pubTopic)
             console.groupEnd()
-            _this.$dgiotBus.$emit(
+            await _this.$dgiotBus.$emit(
               `MqttPublish`,
               pubTopic,
               JSON.stringify(message),
@@ -524,7 +525,6 @@ export default {
               false
             ) // 开始任务
             await generatereport(row.objectId)
-            const loading = _this.$baseColorfullLoading()
             const params = {
               profile: _.merge(row.profile, {
                 step: 1,
@@ -706,7 +706,7 @@ export default {
       this.queryPayload.where = {
         'profile.identifier': 'inspectionReportTemp',
         name: this.queryForm.name.length
-          ? { $in: this.queryForm.name }
+          ? { $regex: this.queryForm.name }
           : { $ne: null },
         'profile.step': { $lte: 1 },
       }
@@ -800,7 +800,13 @@ export default {
         console.log('message', message)
         console.log('pubTopic', pubTopic)
         console.groupEnd()
-        _this.$dgiotBus.$emit(`MqttPublish`, pubTopic, message, 0, false) // 开始采集
+        _this.$dgiotBus.$emit(
+          `MqttPublish`,
+          pubTopic,
+          JSON.stringify(message),
+          0,
+          false
+        ) // 开始采集
         _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic) // dgiot-mqtt topicKey 唯一标识
         _this.$dgiotBus.$off(_this.topicKey) // dgiotBus 关闭事件
         _this.$dgiotBus.$on(_this.topicKey, (mqttMsg) => {

@@ -720,9 +720,14 @@ export default {
           })
         )
         this.deleteTopo(window.deletePath)
-        this.badgePath = canvas.info.Path ?? []
-        console.error(' this.badgePath', this.badgePath)
+        this.badgePath =
+          _.filter(canvas.info.Path, function (item) {
+            console.log(item)
+            console.log(item.attrs.id) // 请求 获取每一个报告图元所存储的证据个数
+            return item.attrs.icon !== 'timeline'
+          }) ?? []
       }, 1000)
+      console.error(' this.badgePath', this.badgePath)
     },
   }, //如果页面有keep-alive缓存功能，这个函数会触发
 }

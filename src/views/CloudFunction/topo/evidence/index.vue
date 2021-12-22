@@ -541,13 +541,13 @@
             {{ task.profile.message || '' }}
           </el-link>
         </el-col>
-        <!--        <span>-->
-        <!--          <el-badge v-for="badge in badgePath" :key="badge.index" :value="3">-->
-        <!--            <i class="material-icons" style="font-size: 12px">-->
-        <!--              {{ badge.attrs.icon }}-->
-        <!--            </i>-->
-        <!--          </el-badge>-->
-        <!--        </span>-->
+        <span>
+          <el-badge v-for="badge in badgePath" :key="badge.index" :value="3">
+            <i class="material-icons" style="font-size: 12px; color: black">
+              {{ badge.attrs.icon }}
+            </i>
+          </el-badge>
+        </span>
         <el-col
           v-if="Number($route.query.step) != 1"
           :lg="4"
