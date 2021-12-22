@@ -9,6 +9,7 @@
 -->
 <template>
   <div ref="custom-table" class="custom-table-container">
+    <evidence-statistics evidence-id="ce20301be2" />
     <el-drawer
       v-drawerDrag
       append-to-body

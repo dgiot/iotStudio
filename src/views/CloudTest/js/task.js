@@ -743,7 +743,6 @@ export default {
       _this.collectionInfo = params
       try {
         _this.featHistoryEvidence(this.collectionInfo.objectId)
-        _this.drawxnqx(this.collectionInfo.objectId, _this.thingdata)
         _this.visible = true
       } catch (error) {
         console.log(error)
@@ -766,7 +765,6 @@ export default {
       let _this = this
       _this.collectionInfo = params
       _this.featHistoryEvidence(this.collectionInfo.objectId)
-      _this.drawxnqx(this.collectionInfo.objectId, _this.thingdata)
       try {
         const thingcolumns = {}
         const items = []
@@ -861,6 +859,18 @@ export default {
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
+        // 把 cloum 存储一下
+        const _profile = {
+          profile: _.merge(_this.collectionInfo.profile, {
+            columns: _.filter(_this.thingcolumns, function (item) {
+              return item.prop !== 'timestamp'
+            }),
+          }),
+        }
+        const collectionInfo = await putDevice(
+          this.collectionInfo.objectId,
+          _profile
+        )
       } catch (error) {
         console.log(error)
         _this.$baseMessage(

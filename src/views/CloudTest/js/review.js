@@ -1,4 +1,5 @@
 import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
+import evidenceStatistics from '@/views/CloudTest/review/statistics'
 import { queryDevice, delDevice, putDevice } from '@/api/Device'
 import { postreport } from '@/api/Report'
 import VabDraggable from 'vuedraggable'
@@ -14,6 +15,7 @@ export default {
   components: {
     VabDraggable,
     lowcodeDesign,
+    evidenceStatistics,
     'vue-aliplayer-v2': VueAliplayerV2,
   },
   data() {
@@ -587,7 +589,7 @@ export default {
       this.queryPayload.where = {
         'profile.identifier': 'inspectionReportTemp',
         name: this.queryForm.name.length
-          ? { $in: this.queryForm.name }
+          ? { $regex: this.queryForm.name }
           : { $ne: null },
         'profile.step': { $gt: 1 },
       }
