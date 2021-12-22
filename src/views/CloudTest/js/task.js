@@ -330,7 +330,7 @@ export default {
         if (valid) {
           const task = {
             profile: {
-              testbedid: this.ruleForm.testbedid,
+              testbedid: this.ruleForm.teestbedid,
               testbed: this.ruleForm.testbed.name,
               wordtemplatename: this.ruleForm.templatename.name,
               reportId: this.ruleForm.templatenameid,

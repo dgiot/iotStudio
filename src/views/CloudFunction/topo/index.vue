@@ -308,8 +308,8 @@
           this.createdEvidence(
             _.merge(icon, {
               index: 7,
-              // 灰色表示取证阶段，黄色表示审核阶段，绿色标识审核通过，红色标识审核不过
-              fill: 'grey',
+              // blue表示取证阶段，黄色表示审核阶段，绿色标识审核通过，红色标识审核不过
+              fill: 'orange',
               productid: this.$route.query.productid,
             })
           )

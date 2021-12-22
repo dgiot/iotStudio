@@ -10,6 +10,10 @@ import {
 } from '@/api/Evidence'
 import { queryView } from '@/api/View'
 import { uppyUpload } from '@/api/Upload'
+import canvas from '@/utils/konva/core/canvas'
+import { queryProduct } from '@/api/Product'
+import { queryMenu, Roletree } from '@/api/Menu'
+import { Permission } from '@/api/Permission'
 const VueAliplayerV2 = window['vue-aliplayer-v2'].default
 export default {
   name: 'Index',
@@ -105,6 +109,13 @@ export default {
   beforeDestroy() {}, //生命周期 - 销毁之前
   destroyed() {}, //生命周期 - 销毁完成
   activated() {},
+  watch: {
+    badgePath: {
+      handler(val) {
+        if (val && val.length) this.getNumberEvidence(val)
+      },
+    },
+  },
   methods: {
     ...mapActions({
       deleteTopo: 'topo/deleteTopo',
@@ -112,6 +123,79 @@ export default {
       setTreeFlag: 'settings/setTreeFlag',
       createdEvidence: 'topo/createdEvidence',
     }),
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-22 15:53:39
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async getNumberEvidence(params) {
+      let requests = []
+      let icon = { img: [], num: [], x: [], y: [], fill: [] }
+      params.forEach((item) => {
+        requests.push({
+          body: {
+            order: '-createdAt',
+            skip: 0,
+            count: 'objectId',
+            where: {
+              reportId: this.nowItem.objectId,
+              'original.controlid': item.attrs.id,
+            },
+          },
+          method: 'GET',
+          icon: item.attrs.icon,
+          path: `/classes/Evidence`,
+        })
+        icon.img.push(item.attrs.icon)
+        icon.x.push(item.attrs.x)
+        icon.y.push(item.attrs.y)
+        icon.fill.push(item.attrs.fill)
+      })
+      try {
+        console.log(requests, 'requests', icon)
+        // const res = await Promise.all([queryEvidence(_params)])
+        const res = await this.$shuwa_batch({
+          requests: requests,
+        })
+        res.forEach((item) => {
+          icon.num.push(item.success.count)
+        })
+        icon.img.forEach((i, index) => {
+          var simpleText = new Konva.Text({
+            x: icon.x[index],
+            y:
+              icon.img[index] === 'volume_mute'
+                ? icon.y[index]
+                : icon.y[index] - 13,
+            text: icon.num[index],
+            fontSize: 24,
+            fontFamily: 'Calibri',
+            // fill: item.attrs.fill ?? 'green',
+            fill: 'orange',
+          })
+          canvas.layer.add(simpleText)
+        })
+        // const loading = this.$baseColorfullLoading()
+        // const res = await getProduct(params.objectId)
+        // console.log(res)
+        // this.$baseMessage(
+        //   this.$translateTitle('alert.Data request successfully'),
+        //   'success',
+        //   'vab-hey-message-success'
+        // )
+        // loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
     async paginationQuery(queryPayload) {
       this.queryPayload = queryPayload
     },
@@ -715,19 +799,16 @@ export default {
           _.merge(icon, {
             index: 7,
             // 灰色表示取证阶段，黄色表示审核阶段，绿色标识审核通过，红色标识审核不过
-            fill: 'grey',
+            fill: 'orange',
             productid: this.$route.query.taskid,
           })
         )
         this.deleteTopo(window.deletePath)
-        this.badgePath =
-          _.filter(canvas.info.Path, function (item) {
-            console.log(item)
-            console.log(item.attrs.id) // 请求 获取每一个报告图元所存储的证据个数
-            return item.attrs.icon !== 'timeline'
-          }) ?? []
       }, 1000)
-      console.error(' this.badgePath', this.badgePath)
+      this.badgePath =
+        _.filter(canvas.info.Path, function (item) {
+          return item.attrs.icon !== 'timeline'
+        }) ?? []
     },
   }, //如果页面有keep-alive缓存功能，这个函数会触发
 }
