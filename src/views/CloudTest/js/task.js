@@ -380,7 +380,10 @@ export default {
         }
         const loading = this.$baseColorfullLoading()
         const { results } = await queryEvidence(params)
-        // this.historyEvidence = results
+        this.historyEvidence = results[0].original.avgs ?? []
+        this.historycolumns = _.filter(this.thingcolumns, function (item) {
+          return item.prop !== 'timestamp'
+        })
         // await this.drawxnqx(this.collectionInfo.objectId, this.historyEvidence)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
@@ -708,11 +711,12 @@ export default {
         name: this.queryForm.name.length
           ? { $regex: this.queryForm.name }
           : { $ne: null },
-        'profile.step': { $lte: 1 },
+        // 'profile.step': { $lte: 1 },
       }
       this.listLoading = true
       const { count = 0, results = [] } = await queryDevice(this.queryPayload)
       if (this.$refs['forensics']) this.$refs['forensics'].ination.total = count
+      this.list.forensics = results
       results.forEach((item) => {
         if (!item.profile.step) item.profile.step = 0
         item.endtime = item.profile.endtime
@@ -722,11 +726,6 @@ export default {
           ? moment(Number(item.profile.starttime)).format('YYYY-MM-DD HH:mm:ss')
           : ''
         item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
-        if (item.profile.step <= 1) {
-          this.list.forensics.push(item)
-        } else {
-          this.list.examination.push(item)
-        }
       })
       this.listLoading = false
     },
@@ -879,22 +878,47 @@ export default {
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        // 把 cloum 存储一下
-        const _profile = {
-          profile: _.merge(_this.collectionInfo.profile, {
-            columns: _.filter(_this.thingcolumns, function (item) {
-              return item.prop !== 'timestamp'
-            }),
-          }),
-        }
-        const collectionInfo = await putDevice(
-          this.collectionInfo.objectId,
-          _profile
-        )
       } catch (error) {
         console.log(error)
         _this.$baseMessage(
           _this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-23 10:11:02
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async saveHistorical(collectionInfo, thingcolumns, historyEvidence) {
+      const _profile = {
+        profile: _.merge(collectionInfo.profile, {
+          historicaldatacolumns: _.filter(thingcolumns, function (item) {
+            return item.prop !== 'timestamp'
+          }),
+          historicaldata: historyEvidence,
+        }),
+      }
+      console.log(collectionInfo, _profile)
+      try {
+        const loading = this.$baseColorfullLoading()
+        const results = await putDevice(collectionInfo.objectId, _profile)
+        console.log(results)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request successfully'),
+          'success',
+          'vab-hey-message-success'
+        )
+        loading.close()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
           'vab-hey-message-error'
         )

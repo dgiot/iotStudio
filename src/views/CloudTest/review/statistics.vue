@@ -65,7 +65,7 @@
 <script>
   import chartType from '@/api/Mock/Chart'
   import { getDevice, getDabDevice } from '@/api/Device'
-  import { queryEvidence } from '@/api/Evidence'
+  import { postDrawxnqx } from '@/api/Evidence'
   export default {
     name: 'Statistics',
     components: {},
@@ -205,16 +205,18 @@
        */
       async featHistoryEvidence(EvidenceId) {
         try {
-          const params = {
-            order: '-createdAt',
-            skip: 0,
-            where: {
-              'original.taskid': EvidenceId,
-            },
-          }
           // const loading = this.$baseColorfullLoading()
-          const { results = {} } = await queryEvidence(params)
-          this.historyEvidence = results.original.avgs ?? []
+          const params = {
+            data: [],
+            taskid: EvidenceId,
+          }
+          const {
+            code,
+            error = '',
+            original = {},
+            evidenceid = '',
+          } = await postDrawxnqx(params)
+          this.historyEvidence = original.avgs ?? []
           // await this.drawxnqx(this.collectionInfo.objectId, this.historyEvidence)
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),

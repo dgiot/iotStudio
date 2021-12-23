@@ -61,7 +61,19 @@
                 >
                   任务配置
                 </el-button>
-                <el-button type="warning" @click="visible = false">
+                <el-button
+                  type="warning"
+                  @click.native="
+                    saveHistorical(
+                      collectionInfo,
+                      thingcolumns,
+                      historyEvidence
+                    )
+                  "
+                >
+                  保存数据
+                </el-button>
+                <el-button type="danger" @click="visible = false">
                   退出采集
                 </el-button>
               </div>

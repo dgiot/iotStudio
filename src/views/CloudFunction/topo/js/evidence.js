@@ -99,7 +99,7 @@ export default {
     if (this.taskid) {
       this.queryTask(this.taskid)
       this.queryEvidence(this.taskid)
-      this.auditQuery('init')
+      this.auditQuery(0, 'init')
     }
   },
   beforeCreate() {}, //生命周期 - 创建之前
@@ -510,9 +510,13 @@ export default {
         const { results = [] } = await queryEvidence(_params)
         if (results?.length)
           results.forEach((item) => {
-            item.original.path =
-              '/dgiot_file' + item.original.path.split('/dgiot_file')[1]
+            _.filter(item, function (item) {
+              item.original.path =
+                '/dgiot_file' + item.original.path.split('/dgiot_file')[1]
+              return item.original.type !== 'avgs'
+            })
           })
+
         this.evidences = results
         this.evidenceDialog = true
         this.$baseMessage(
@@ -588,13 +592,13 @@ export default {
         const loading = this.$baseColorfullLoading()
         if (num == 1) this.auditDialog = true
         const { results } = await queryEvidence(params)
-        results.forEach((item) => {
+        this.auditList = _.filter(results, function (item) {
+          return item.original.type !== 'avgs'
           if (item.original.status == '未审核') this.badge.Unreviewed.push(item)
           else if (item.original.status == '通过审核')
             this.badge.Approved.push(item)
           else this.badge.notapproved.push(item)
         })
-        this.auditList = results
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
