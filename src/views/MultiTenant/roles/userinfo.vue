@@ -216,7 +216,7 @@
 </template>
 <script>
   import { mapGetters, mapMutations } from 'vuex'
-  import { isPhone } from '@/utils/Data/validate'
+  import { isPhone } from '@/utils/data/validate'
   import { putUser } from '@/api/User'
   import { putProject } from '@/api/Project'
 

@@ -1,4 +1,4 @@
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 
 // 获取模板
 export function getReport(start, len) {

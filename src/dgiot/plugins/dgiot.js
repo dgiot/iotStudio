@@ -1,7 +1,7 @@
 import { messageDuration } from '@/config'
 import { Loading, Message, MessageBox, Notification } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/Data/token'
+import { getToken } from '@/utils/data/token'
 import i18n from '@/i18n'
 
 const token = store.getters['user/token']

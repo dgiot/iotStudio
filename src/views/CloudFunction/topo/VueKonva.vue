@@ -118,10 +118,10 @@
 <script lang="js">
   import backgroundImage from '../../../../public/assets/images/topo/bg/boiler.jpg'
   import { isBase64, isImage, uuid } from '@/utils'
-  import requireModule from '@/utils/File/requireModule'
+  import requireModule from '@/utils/file/requireModule'
   import createState from '@/utils/konva/createState'
   import { mapGetters, mapMutations } from 'vuex'
-  import { Websocket } from '@/utils/Webscroket/index'
+  import { Websocket } from '@/utils/webscroket/index'
   import { _getTopo } from '@/api/Topo'
   import { putProduct, queryProduct } from '@/api/Product'
 

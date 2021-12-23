@@ -8,7 +8,7 @@
 // * @DocumentLink: https://docs.parseplatform.org/dotnet/guide/#push-notifications
 // -->
 
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 import {
   create_object,
   del_object,

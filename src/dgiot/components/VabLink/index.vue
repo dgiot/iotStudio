@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import { isExternal } from '@/utils/Data/validate'
+  import { isExternal } from '@/utils/data/validate'
 
   export default {
     name: 'VabLink',

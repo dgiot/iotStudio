@@ -13,8 +13,8 @@ import router from '@/router'
 import store from '@/store'
 import VabProgress from 'nprogress'
 // import 'nprogress/nprogress.css'
-import getPageTitle from '@/utils/Vue/pageTitle'
-import { toLoginRoute } from '@/utils/Router/routes'
+import getPageTitle from '@/utils/vue/pageTitle'
+import { toLoginRoute } from '@/utils/router/routes'
 import {
   authentication,
   loginInterception,

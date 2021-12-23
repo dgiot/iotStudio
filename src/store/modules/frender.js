@@ -5,7 +5,7 @@
  * @LastEditors: h7ml
  * @Description: Global vuex
  */
-import { getToken, setToken } from '@/utils/Vue/vuex'
+import { getToken, setToken } from '@/utils/vue/vuex'
 import { storage } from '@/config'
 import formItemCommonDefault from '@/assets/data/form-item-common'
 

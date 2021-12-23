@@ -60,7 +60,7 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { toLoginRoute } from '@/utils/Router/routes'
+  import { toLoginRoute } from '@/utils/router/routes'
 
   export default {
     // eslint-disable-next-line

@@ -1,4 +1,4 @@
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 
 export function ZetaEtag(tag, status) {
   return request({

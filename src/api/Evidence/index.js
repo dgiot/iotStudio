@@ -14,7 +14,7 @@ import {
   query_object,
   update_object,
 } from '@/api/shuwa_parse'
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 export async function queryEvidence(params) {
   return query_object('Evidence', params)
 }

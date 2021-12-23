@@ -54,7 +54,7 @@
 </template>
 
 <script>
-  import requireModule from '@/utils/File/requireModule'
+  import requireModule from '@/utils/file/requireModule'
   import { mapMutations } from 'vuex'
   import { post_tree } from '@/api/Data'
   import {

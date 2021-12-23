@@ -75,7 +75,7 @@
   import variables from '@/dgiot/styles/variables/variables.scss'
   import { mapGetters } from 'vuex'
   import { defaultOpeneds, openFirstMenu, uniqueOpened } from '@/config'
-  import { handleActivePath } from '@/utils/Router/routes'
+  import { handleActivePath } from '@/utils/router/routes'
 
   export default {
     name: 'ColumnBar',

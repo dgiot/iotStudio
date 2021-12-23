@@ -648,7 +648,7 @@
   </div>
 </template>
 <script>
-  import requireModule from '@/utils/File/requireModule'
+  import requireModule from '@/utils/file/requireModule'
   import {
     delChannel,
     postChannel,

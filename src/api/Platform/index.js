@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: \dgiot-dashboard\src\api\Platform\index.js
  */
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 
 export async function Project_count(params) {
   return request({

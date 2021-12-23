@@ -1,4 +1,4 @@
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 import { Message } from 'element-ui'
 
 /**

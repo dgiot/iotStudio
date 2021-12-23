@@ -1,4 +1,4 @@
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 
 // 获取抄表数据
 export function getMeterDate(

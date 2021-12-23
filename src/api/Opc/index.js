@@ -5,7 +5,7 @@
 // * @Description:
 // * @FilePath: src\api\Opc\index.js
 // * @DocumentLink: http://prod.iotn2n.com/dgiot_swagger/#/OPC
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 
 /**
  * @docs-api http://prod.iotn2n.com/dgiot_swagger/#/OPC/post_head

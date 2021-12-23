@@ -127,7 +127,7 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { handleActivePath } from '@/utils/Router/routes'
+  import { handleActivePath } from '@/utils/router/routes'
 
   export default {
     name: 'VabTabs',

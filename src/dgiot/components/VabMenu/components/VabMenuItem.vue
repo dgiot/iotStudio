@@ -47,7 +47,7 @@
 </template>
 
 <script>
-  import { isExternal } from '@/utils/Data/validate'
+  import { isExternal } from '@/utils/data/validate'
   import { mapActions, mapGetters } from 'vuex'
 
   export default {

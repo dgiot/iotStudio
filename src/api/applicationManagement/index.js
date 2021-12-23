@@ -1,4 +1,4 @@
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 
 // 上传图片
 export function Upload({ file }) {

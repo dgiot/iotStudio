@@ -355,7 +355,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import { putProduct } from '@/api/Product'
   import { getAllunit } from '@/api/Dict/index'
-  import { export_txt_to_zip } from '@/utils/File/Export2Zip.js'
+  import { export_txt_to_zip } from '@/utils/file/Export2Zip.js'
   import { getServer } from '@/api/Role/index'
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'

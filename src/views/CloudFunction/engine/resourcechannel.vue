@@ -473,7 +473,7 @@
   import { queryRole } from '@/api/Role/index'
   import { resourceTypes } from '@/api/Rules'
   import { returnLogin } from '@/utils/utilwen'
-  import { Websocket } from '@/utils/Webscroket/index'
+  import { Websocket } from '@/utils/webscroket/index'
   var subdialog
 
   export default {

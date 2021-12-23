@@ -8,7 +8,7 @@
   import {
     createMonacoComplete,
     createMonacoHover,
-  } from '@/utils/Monaco/monacoUtils'
+  } from '@/utils/monaco/monacoUtils'
 
   export default {
     name: 'VabMonaco',

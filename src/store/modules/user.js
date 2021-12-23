@@ -131,13 +131,13 @@ import {
 import { getUserInfo, login, logout, socialLogin, jwtlogin } from '@/api/User'
 import { queryMenu } from '@/api/Menu/index'
 import { Permission } from '@/api/Permission/index'
-import { clearCookie, getToken, removeToken, setToken } from '@/utils/Vue/vuex'
+import { clearCookie, getToken, removeToken, setToken } from '@/utils/vue/vuex'
 import { resetRouter } from '@/router'
 import { Roletree } from '@/api/Menu'
 import { queryProduct } from '@/api/Product'
 import { license } from '@/api/License'
-import { isJson } from '@/utils/Data/validate'
-import { tickTime } from '@/utils/Time/index'
+import { isJson } from '@/utils/data/validate'
+import { tickTime } from '@/utils/time/index'
 const defaultTheme = {
   layout,
   themeName,

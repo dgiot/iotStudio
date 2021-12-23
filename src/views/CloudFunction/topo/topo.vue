@@ -64,7 +64,7 @@
 </template>
 <script>
   import 'element-ui/lib/theme-chalk/display.css'
-  import requireModule from '@/utils/File/requireModule'
+  import requireModule from '@/utils/file/requireModule'
   import { mapGetters, mapMutations } from 'vuex'
   import { isBase64, uuid } from '@/utils'
   import createState from '@/utils/konva/createState'

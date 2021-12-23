@@ -383,7 +383,7 @@
   </div>
 </template>
 <script>
-  import { Websocket } from '@/utils/Webscroket/index'
+  import { Websocket } from '@/utils/webscroket/index'
   import { getProduct, queryProduct } from '@/api/Product/index'
   import { delDict, postDict, putDict, queryDict } from '@/api/Dict/index'
   import { getChannelCountByProduct } from '@/api/Channel/index'

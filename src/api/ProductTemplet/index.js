@@ -5,7 +5,7 @@
 // * @Description: api ProductTemplet
 // * @FilePath: src\api\ProductTemplet\index.js
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/ProductTemplet
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 import {
   create_object,
   del_object,

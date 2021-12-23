@@ -809,6 +809,7 @@ export default {
       })
       item.type = 'success'
       const { konva } = item.data
+      canvas.info.badge = []
       await this.initKonva({
         data: konva.Stage,
         id: 'konva',
@@ -836,7 +837,6 @@ export default {
         _.filter(canvas.info.Path, function (item) {
           return item.attrs.icon !== 'timeline'
         }) ?? []
-      canvas.info.badge = []
     },
   }, //如果页面有keep-alive缓存功能，这个函数会触发
 }

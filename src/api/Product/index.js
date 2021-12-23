@@ -13,7 +13,7 @@ import {
   query_object,
   update_object,
 } from '@/api/shuwa_parse'
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 
 export async function queryProduct(params) {
   return query_object('Product', params)

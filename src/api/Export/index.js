@@ -1,5 +1,5 @@
 import store from '@/store'
-import request from '@/utils/Request/request'
+import request from '@/utils/request/request'
 
 /**
  * @description 导出菜单

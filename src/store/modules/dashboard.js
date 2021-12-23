@@ -5,7 +5,7 @@
  * @LastEditors: h7ml
  * @Description: 存储首页mqtt数据
  */
-import { getToken, setToken } from '@/utils/Vue/vuex'
+import { getToken, setToken } from '@/utils/vue/vuex'
 
 const state = () => ({
   _pcimg: getToken('_pcimg') || 'https://z3.ax1x.com/2021/06/16/2OxUUJ.png',
