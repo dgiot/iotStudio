@@ -57,6 +57,55 @@
             </el-table>
           </el-col>
         </el-row>
+        <div class="chartOther">
+          <el-row :gutter="20">
+            <el-col
+              v-for="(item, index) in chartData.child"
+              v-show="item.columns[1] != '日期'"
+              :key="index"
+              :md="md"
+              :sm="sm"
+              :xl="xl"
+              :xs="xs"
+            >
+              <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                  <span>{{ item.columns[1] }} : {{ item.unit }}</span>
+
+                  <el-button-group
+                    style="float: right; padding: 3px 0"
+                    type="text"
+                  >
+                    <el-button icon="el-icon-warning-outline" />
+                    <el-button
+                      icon="el-icon-full-screen"
+                      @click="toggleCardRow(index, xs, sm, md, xl)"
+                    />
+                  </el-button-group>
+                </div>
+
+                <vabChart
+                  ref="charts"
+                  :after-config="afterConfig"
+                  :data="chartData.child[index]"
+                  :data-empty="dataEmpty"
+                  :data-zoom="chartDataZoom"
+                  :extend="chartExtend"
+                  height="300px"
+                  :legend-visible="false"
+                  :loading="loading"
+                  :set-option-opts="false"
+                  :settings="chartSettings"
+                  :toolbox="toolbox"
+                  :type="params.style"
+                />
+              </el-card>
+            </el-col>
+            <el-col v-show="!chartData.child" :span="24">
+              <vab-empty />
+            </el-col>
+          </el-row>
+        </div>
       </div>
     </div>
   </div>
@@ -133,6 +182,10 @@
         },
       }
       return {
+        xl: 6,
+        xs: 24,
+        sm: 24,
+        md: 12,
         historyEvidence: [],
         historycolumns: [],
         params: {
@@ -169,23 +222,19 @@
         return options
       },
       /**
-       * @Author: dext7r
-       * @Date: 2021-12-22 19:50:29
+       * @Author:
+       * @Date: 2021-12-23 18:38:28
        * @LastEditors:
        * @param
        * @return {Promise<void>}
        * @Description:
        */
-      async evidence(evidenceId) {
+      async toggleCardRow(index, xs, sm, md, xl) {
         try {
-          const res = await getDevice(evidenceId)
-          this.infoData = res
-          const { profile = {} } = res
-          this.params.startTime = profile.starttime
-          this.params.endTime = profile.endtime
-          this.historycolumns = profile.columns
-          await this.queryStatistics(this.evidenceId)
-          await this.featHistoryEvidence(this.evidenceId)
+          this.sm = sm == 24 ? 12 : 24
+          this.md = sm == 12 ? 24 : 12
+          this.xl = sm == 6 ? 12 : 6
+          this.loading = true
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -197,33 +246,22 @@
       },
       /**
        * @Author: dext7r
-       * @Date: 2021-12-21 09:34:37
+       * @Date: 2021-12-22 19:50:29
        * @LastEditors:
        * @param
        * @return {Promise<void>}
-       * @Description: 查询历史存证
+       * @Description:
        */
-      async featHistoryEvidence(EvidenceId) {
+      async evidence(evidenceId) {
         try {
-          // const loading = this.$baseColorfullLoading()
-          const params = {
-            data: [],
-            taskid: EvidenceId,
-          }
-          const {
-            code,
-            error = '',
-            original = {},
-            evidenceid = '',
-          } = await postDrawxnqx(params)
-          this.historyEvidence = original.avgs ?? []
-          // await this.drawxnqx(this.collectionInfo.objectId, this.historyEvidence)
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request successfully'),
-            'success',
-            'vab-hey-message-success'
-          )
-          // loading.close()
+          const res = await getDevice(evidenceId)
+          this.infoData = res
+          const { profile = {}, parentId = {} } = res
+          this.params.startTime = profile.starttime
+          this.params.endTime = profile.endtime
+          this.historycolumns = profile.historicaldatacolumns
+          this.historyEvidence = profile.historicaldata
+          await this.queryStatistics(parentId.objectId)
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -250,7 +288,7 @@
           style,
           _function,
           startTime,
-          endTime,
+          endTime = moment(new Date()).format('x'),
         } = this.params
         let params = {
           starttime: moment(Number(startTime)).valueOf(),
