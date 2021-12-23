@@ -14,7 +14,7 @@ var info = {
 }
 import { storage, tokenTableName } from '@/config'
 import { globalUrl } from '@/utils/utilwen'
-import { getToken } from '@/utils/vue/vuex'
+import { getToken } from '@/utils/vue'
 
 const { hostname } = window.location
 

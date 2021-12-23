@@ -479,7 +479,7 @@
   } from '@/api/Product'
   // import { getIndustry } from '@/api/applicationManagement'
   import { returnLogin } from '@/utils/utilwen'
-  import { export_txt_to_zip } from '@/utils/file/Export2Zip.js'
+  import { export_txt_to_zip } from '@/utils/file/export2Zip.js'
   // import IconSelect from '@/components/IconSelect'
   import Cookies from 'js-cookie'
   import { getServer } from '@/api/Role/index'

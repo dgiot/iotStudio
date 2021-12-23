@@ -3,7 +3,7 @@
  * @Date: 2021-03-15 11:16:40
  * @LastEditTime: 2021-03-17 21:24:25
  * @LastEditors: h7ml
- * @FilePath: \dgiot-dashboard\src\utils\vuex.js
+ * @FilePath: \dgiot-dashboard\src\utils\index.js
  * @Description: vuex持久化方法
  */
 import { cookieWhiteList, expiresTime } from '@/config'

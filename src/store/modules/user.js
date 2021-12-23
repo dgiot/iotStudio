@@ -131,7 +131,7 @@ import {
 import { getUserInfo, login, logout, socialLogin, jwtlogin } from '@/api/User'
 import { queryMenu } from '@/api/Menu/index'
 import { Permission } from '@/api/Permission/index'
-import { clearCookie, getToken, removeToken, setToken } from '@/utils/vue/vuex'
+import { clearCookie, getToken, removeToken, setToken } from '@/utils/vue'
 import { resetRouter } from '@/router'
 import { Roletree } from '@/api/Menu'
 import { queryProduct } from '@/api/Product'

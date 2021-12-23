@@ -3,7 +3,7 @@
  * @Date: 2021-03-11 12:41:30
  * @LastEditTime: 2021-03-11 17:55:38
  * @LastEditors: h7ml
- * @FilePath: \dgiot-dashboard\src\utils\Export2Zip.js
+ * @FilePath: \dgiot-dashboard\src\utils\export2Zip.js
  * @Description:
  */
 // require('script-loader!file-saver')
