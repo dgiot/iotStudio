@@ -299,6 +299,7 @@ export default {
         }
         const res = await putEvidence(row.objectId, params)
         console.log(res)
+        this.auditQuery(0, 'init')
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
@@ -604,22 +605,25 @@ export default {
             reportId: { $ne: this.taskid },
           },
         }
-        const loading = this.$baseColorfullLoading()
+        // const loading = this.$baseColorfullLoading()
         if (num == 1) this.auditDialog = true
         const { results } = await queryEvidence(params)
         this.auditList = _.filter(results, function (item) {
           return item.original.type !== 'avgs'
-          if (item.original.status == '未审核') this.badge.Unreviewed.push(item)
-          else if (item.original.status == '通过审核')
-            this.badge.Approved.push(item)
-          else this.badge.notapproved.push(item)
         })
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'vab-hey-message-success'
-        )
-        loading.close()
+        this.auditList.forEach((audit) => {
+          if (audit.original.status == '未审核')
+            this.badge.Unreviewed.push(audit)
+          else if (audit.original.status == '通过审核')
+            this.badge.Approved.push(audit)
+          else this.badge.notapproved.push(audit)
+        })
+        // this.$baseMessage(
+        //   this.$translateTitle('alert.Data request successfully'),
+        //   'success',
+        //   'vab-hey-message-success'
+        // )
+        // loading.close()
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -686,6 +690,15 @@ export default {
      * @Description:
      */
     async notapproved(params, step) {
+      // 判断下未审核任务的个数
+      if (this.badge.Unreviewed.length === this.auditList) {
+        this.$baseMessage(
+          '当前任务证据没有被审核',
+          'warning',
+          'vab-hey-message-warning'
+        )
+        return false
+      }
       try {
         const loading = this.$baseColorfullLoading()
         const finish = {

@@ -135,6 +135,7 @@
             <template #default="{ row }">
               <el-input
                 v-model="row.original.remarks"
+                :readonly="Number($route.query.step) > 2"
                 :rows="2"
                 type="textarea"
               />

@@ -333,7 +333,7 @@
           >
             {{ row.profile.message }}
             <template #reference>
-              <el-tag effect="dark" type="warning">
+              <el-tag effect="dark" type="danger">
                 {{ $translateTitle('cloudTest.notapproved') }}
               </el-tag>
             </template>
@@ -383,7 +383,7 @@
             {{ $translateTitle(`task.start`) }}
           </el-button>
           <el-button
-            v-show="row.profile.step == 1"
+            v-show="row.profile.step == 1 || row.profile.step == -1"
             size="mini"
             type="success"
             @click.native="visibleInfo(row)"

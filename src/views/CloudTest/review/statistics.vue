@@ -37,23 +37,15 @@
               style="min-height: 530px"
             >
               <el-table-column
+                v-for="(item, index) in historycolumns"
+                :key="index"
                 align="center"
-                label="历史数据"
+                :label="$translateTitle(`cloudTest.${item.label}`)"
+                :prop="item.prop"
                 show-overflow-tooltip
                 sortable
                 width="auto"
-              >
-                <el-table-column
-                  v-for="(item, index) in historycolumns"
-                  :key="index"
-                  align="center"
-                  :label="$translateTitle(`cloudTest.${item.label}`)"
-                  :prop="item.prop"
-                  show-overflow-tooltip
-                  sortable
-                  width="auto"
-                />
-              </el-table-column>
+              />
             </el-table>
           </el-col>
         </el-row>
@@ -68,7 +60,7 @@
               :xl="xl"
               :xs="xs"
             >
-              <el-card class="box-card">
+              <el-card class="box-card" shadow="hover">
                 <div slot="header" class="clearfix">
                   <span>{{ item.columns[1] }} : {{ item.unit }}</span>
 
@@ -76,15 +68,14 @@
                     style="float: right; padding: 3px 0"
                     type="text"
                   >
-                    <el-button icon="el-icon-warning-outline" />
                     <el-button
                       icon="el-icon-full-screen"
-                      @click="toggleCardRow(index, xs, sm, md, xl)"
+                      @click.native="toggleCardRow(index, xs, sm, md, xl)"
                     />
                   </el-button-group>
                 </div>
 
-                <vabChart
+                <vab-chart
                   ref="charts"
                   :after-config="afterConfig"
                   :data="chartData.child[index]"
@@ -192,7 +183,7 @@
           _function: 'last',
           style: '',
           number: 1,
-          interval: 'h',
+          interval: 's',
           datetimerange: '',
           keys: '*',
           limit: 100,
@@ -217,6 +208,14 @@
       // this.evidence(this.evidenceId)
     },
     methods: {
+      resizeTheChart() {
+        let charts = this.$refs[`charts`]
+        if (charts instanceof Array) {
+          charts.forEach((chart) => {
+            chart.$children[0].resize()
+          })
+        } else charts.$children[0].resize()
+      },
       afterConfig(options) {
         options.tooltip.showDelay = 500
         return options
@@ -232,9 +231,12 @@
       async toggleCardRow(index, xs, sm, md, xl) {
         try {
           this.sm = sm == 24 ? 12 : 24
-          this.md = sm == 12 ? 24 : 12
-          this.xl = sm == 6 ? 12 : 6
-          this.loading = true
+          this.md = md == 12 ? 24 : 12
+          this.xl = xl == 6 ? 12 : 6
+          this.xs = xs == 24 ? 12 : 24
+          this.$nextTick((_) => {
+            this.resizeTheChart()
+          })
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -257,10 +259,10 @@
           const res = await getDevice(evidenceId)
           this.infoData = res
           const { profile = {}, parentId = {} } = res
-          this.params.startTime = profile.starttime
+          this.params.startTime = profile.starttime ?? []
           this.params.endTime = profile.endtime
-          this.historycolumns = profile.historicaldatacolumns
-          this.historyEvidence = profile.historicaldata
+          this.historycolumns = profile.historicaldatacolumns ?? []
+          this.historyEvidence = profile.historicaldata ?? []
           await this.queryStatistics(parentId.objectId)
         } catch (error) {
           console.log(error)
