@@ -810,7 +810,7 @@ export default {
         const thingcolumns = {}
         const items = []
         _this.thingdata = []
-        _this.thingcolumns = []
+        // _this.thingcolumns = []
         if (params.basedata) {
           /**
            * @description 判断下发组态topic的item
