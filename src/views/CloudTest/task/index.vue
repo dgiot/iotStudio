@@ -61,6 +61,9 @@
                 >
                   任务配置
                 </el-button>
+                <el-button @click.native="startOpc(collectionInfo)">
+                  任务下发
+                </el-button>
                 <el-button
                   type="warning"
                   @click.native="

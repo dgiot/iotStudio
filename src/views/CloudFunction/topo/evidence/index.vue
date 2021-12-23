@@ -32,7 +32,7 @@
                 finishEvidence(task, Number($route.query.step) == 1 ? 2 : 3)
               "
             >
-              {{ $translateTitle('application.submit') }}
+              提交审核
             </el-button>
           </el-form-item>
           <el-form-item
@@ -135,7 +135,6 @@
             <template #default="{ row }">
               <el-input
                 v-model="row.original.remarks"
-                readonly
                 :rows="2"
                 type="textarea"
               />
@@ -510,7 +509,7 @@
               $translateTitle(
                 `${
                   Number($route.query.step) == 1
-                    ? 'cloudTest.submit review'
+                    ? 'cloudTest.预览审核'
                     : 'cloudTest.audit opinion'
                 }`
               )

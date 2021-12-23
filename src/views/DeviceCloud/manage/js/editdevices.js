@@ -1,7 +1,7 @@
 import info from '@/components/Device/info'
 import SceneLog from '@/views/DeviceCloud/manage/component/SceneLog'
 import deviceLog from '@/views/CloudSystem/logs/device'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import {
   getCardDevice,
   getDabDevice,
@@ -425,6 +425,7 @@ export default {
     },
   },
   mounted() {
+    this.setTreeFlag(false)
     this.params.style = this.chartType[0].type
     dgiotlog.log(' this.params.style', this.params.style)
     if (this.$route.query.deviceid) {
@@ -445,6 +446,9 @@ export default {
     window.removeEventListener('resize', this.resizeTheChart)
   },
   methods: {
+    ...mapActions({
+      setTreeFlag: 'settings/setTreeFlag',
+    }),
     Unbscribe() {
       const subtopic = 'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
       const topicKey = this.$dgiotBus.topicKey(this.router, subtopic)
@@ -666,20 +670,33 @@ export default {
       dgiotlog.log(item)
     },
     tabHandleClick(tab) {
-      if (tab.name == 'ninth') {
-        this.$router.push({
-          path: '/roles/onlinetest',
-          query: {
-            deviceid: this.devicedevaddr,
-            productid: this.productid,
-          },
-        })
-      } else if (tab.name == 'children') {
-        this.getDevices()
-      } else if (tab.name == 'third') {
-        this.queryChart()
-      } else if (tab.name == 'task') {
-        this.$refs.SceneLog.get_topic()
+      this.updateTrue(false)
+      switch (tab.name) {
+        case 'ninth':
+          this.$router.push({
+            path: '/roles/onlinetest',
+            query: {
+              deviceid: this.devicedevaddr,
+              productid: this.productid,
+            },
+          })
+          break
+        case 'children':
+          this.getDevices()
+          break
+        case 'third':
+          this.queryChart()
+          break
+        case 'right':
+          this.toggleClass('rightrow')
+          break
+        case 'task':
+          this.$refs.SceneLog.get_topic()
+          break
+        case 'first1':
+          this.Update()
+          this.updateTrue(true)
+          break
       }
     },
     timestampToTime(timestamp) {
