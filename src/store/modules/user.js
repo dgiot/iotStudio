@@ -350,7 +350,7 @@ const actions = {
       return false
     }
     const { state = {} } = userInfo
-    Cookies.set('companyName', '迪格（杭州）物联科技有限公司', {
+    Cookies.set('companyName', state.extendFields.companyName, {
       expires: 1,
     })
     Cookies.set('userId', state.externalId, { expires: 1 })
