@@ -89,7 +89,7 @@
 
 <script>
   import { uuid } from '@/utils'
-  import requireModule from '@/utils/file/requireModule'
+  import requiremodule from '@/utils/file/requiremodule'
   import {
     createArticle,
     delArticle,
@@ -100,7 +100,7 @@
   export default {
     name: 'DgiotDoc',
     components: {
-      ...requireModule(require.context('./components/module', true, /\.vue$/)),
+      ...requiremodule(require.context('./components/module', true, /\.vue$/)),
     },
     data() {
       return {

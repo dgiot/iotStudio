@@ -11,7 +11,7 @@ import {
 import { utc2beijing } from '@/utils/index'
 import Instruct from '@/views/DeviceCloud/category/instruct_manage'
 import chartType from '@/api/Mock/Chart'
-// import { requireModule } from '@/utils/file'
+// import { requiremodule } from '@/utils/file'
 const columns = [
   {
     title: '图片',
@@ -49,7 +49,7 @@ export default {
     info,
     deviceLog,
     SceneLog,
-    // ...requireModule(require.context('./component', true, /\.vue$/)),
+    // ...requiremodule(require.context('./component', true, /\.vue$/)),
   },
   filters: {
     filterVal(val) {

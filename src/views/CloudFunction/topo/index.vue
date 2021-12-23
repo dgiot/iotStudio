@@ -80,7 +80,7 @@
 <script>
   import steps from './js/guide'
   import 'element-ui/lib/theme-chalk/display.css'
-  import requireModule from '@/utils/file/requireModule'
+  import requiremodule from '@/utils/file/requiremodule'
   import { mapGetters, mapMutations } from 'vuex'
   import { _getTopo } from '@/api/Topo'
   import { queryProduct } from '@/api/Product'
@@ -89,7 +89,7 @@
 
   export default {
     components: {
-      ...requireModule(require.context('./components', true, /\.vue$/)),
+      ...requiremodule(require.context('./components', true, /\.vue$/)),
     },
     data() {
       return {

@@ -1,7 +1,7 @@
 /**
  * @description require context module
  */
-function requireFile(modulesFiles, path, flag, type) {
+function requirefile(modulesFiles, path, flag, type) {
   let modules = {}
   if (modulesFiles) {
     modules = modulesFiles.keys().reduce((modules, modulePath) => {
@@ -14,4 +14,4 @@ function requireFile(modulesFiles, path, flag, type) {
   return modules
 }
 
-export default requireFile
+export default requirefile

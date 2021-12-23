@@ -7,7 +7,7 @@
  * @return {{}}
  * @description require context module
  */
-function requireModule(context, path, flag, type) {
+function requiremodule(context, path, flag, type) {
   let components = {}
   if (context) {
     context.keys().forEach((fileName) => {
@@ -18,4 +18,4 @@ function requireModule(context, path, flag, type) {
   return components
 }
 
-export default requireModule
+export default requiremodule

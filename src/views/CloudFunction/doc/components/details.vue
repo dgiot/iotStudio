@@ -54,7 +54,7 @@
 </template>
 
 <script>
-  import requireModule from '@/utils/file/requireModule'
+  import requiremodule from '@/utils/file/requiremodule'
   import { mapMutations } from 'vuex'
   import { post_tree } from '@/api/Data'
   import {
@@ -68,7 +68,7 @@
   export default {
     name: 'DgiotDoc',
     components: {
-      ...requireModule(require.context('./module', true, /\.vue$/)),
+      ...requiremodule(require.context('./module', true, /\.vue$/)),
     },
     data() {
       return {

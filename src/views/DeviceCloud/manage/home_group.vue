@@ -514,7 +514,7 @@
   import { getHashClass } from '@/api/Hash/index'
   import { postDict, queryDict } from '@/api/Dict/index'
   // const Base64 = require('js-base64').Base64
-  import { export_txt_to_zip } from '@/utils/file/export2Zip.js'
+  import { export_txt_to_zip } from '@/utils/file/export2zip.js'
   import Cookies from 'js-cookie'
   import { addGroup } from '@/api/Group/index'
 

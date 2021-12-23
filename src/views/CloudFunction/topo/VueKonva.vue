@@ -118,7 +118,7 @@
 <script lang="js">
   import backgroundImage from '../../../../public/assets/images/topo/bg/boiler.jpg'
   import { isBase64, isImage, uuid } from '@/utils'
-  import requireModule from '@/utils/file/requireModule'
+  import requiremodule from '@/utils/file/requiremodule'
   import createState from '@/utils/konva/createState'
   import { mapGetters, mapMutations } from 'vuex'
   import { Websocket } from '@/utils/webscroket/index'
@@ -127,7 +127,7 @@
 
   export default {
     components: {
-      ...requireModule(require.context('./components', true, /\.vue$/)),
+      ...requiremodule(require.context('./components', true, /\.vue$/)),
     },
     data() {
       return {

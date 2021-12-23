@@ -648,7 +648,7 @@
   </div>
 </template>
 <script>
-  import requireModule from '@/utils/file/requireModule'
+  import requiremodule from '@/utils/file/requiremodule'
   import {
     delChannel,
     postChannel,
@@ -670,7 +670,7 @@
   export default {
     components: {
       VabInput,
-      ...requireModule(require.context('./components', true, /\.vue$/)),
+      ...requiremodule(require.context('./components', true, /\.vue$/)),
     },
     // inject: ['reload'],
     data() {
