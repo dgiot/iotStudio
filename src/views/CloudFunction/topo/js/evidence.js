@@ -124,6 +124,35 @@ export default {
       createdEvidence: 'topo/createdEvidence',
     }),
     /**
+     * @Author:
+     * @Date: 2021-12-23 11:51:33
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description: 删除创建的text 图元
+     */
+    async clearbadgePath(params) {
+      console.error(params, 'clearbadgePath')
+      try {
+        await canvas.layer.find('Text').forEach((Text) => {
+          console.log(Text)
+          Text.remove()
+          Text.destroy()
+          canvas.layer.batchDraw()
+          canvas.stage.batchDraw()
+        })
+        // const res = await getProduct(params.objectId)
+        // console.log(res)
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
      * @Author: dext7r
      * @Date: 2021-12-22 15:53:39
      * @LastEditors:
@@ -132,6 +161,7 @@ export default {
      * @Description:
      */
     async getNumberEvidence(params) {
+      canvas.info.badge = []
       /**
        * @description 图元数据 请求数据
        * @type {{path: *[], batch: *[]}}
@@ -160,6 +190,7 @@ export default {
         })
         evidence.path.forEach((i, index) => {
           const simpleText = new Konva.Text({
+            id: `${evidence.path[index].attrs.x}_text`,
             x: evidence.path[index].attrs.x,
             y:
               evidence.path[index].attrs.icon === 'volume_mute'
@@ -170,6 +201,7 @@ export default {
             fontFamily: 'Calibri',
             fill: 'orange',
           })
+          canvas.info.badge.push(simpleText)
           canvas.layer.add(simpleText)
         })
       } catch (error) {
@@ -765,6 +797,8 @@ export default {
       }
     },
     async activeBtn(item, index) {
+      if (!_.isEmpty(canvas.info.badge))
+        await this.clearbadgePath(canvas.info.badge)
       this.nowItem = item
       const query = JSON.parse(JSON.stringify(this.$route.query))
       query.suite = index
@@ -780,6 +814,8 @@ export default {
         id: 'konva',
       })
       setTimeout(() => {
+        this.badgePath = []
+        canvas.info.Path = []
         this.loading = false
         const icon = {
           icon: 'timeline',
@@ -800,6 +836,7 @@ export default {
         _.filter(canvas.info.Path, function (item) {
           return item.attrs.icon !== 'timeline'
         }) ?? []
+      canvas.info.badge = []
     },
   }, //如果页面有keep-alive缓存功能，这个函数会触发
 }

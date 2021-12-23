@@ -379,8 +379,9 @@ export default {
           },
         }
         const loading = this.$baseColorfullLoading()
-        const { results } = await queryEvidence(params)
-        this.historyEvidence = results[0].original.avgs ?? []
+        const { results = [] } = await queryEvidence(params)
+        if (results?.length)
+          this.historyEvidence = results[0].original.avgs ?? []
         this.historycolumns = _.filter(this.thingcolumns, function (item) {
           return item.prop !== 'timestamp'
         })
@@ -711,7 +712,7 @@ export default {
         name: this.queryForm.name.length
           ? { $regex: this.queryForm.name }
           : { $ne: null },
-        // 'profile.step': { $lte: 1 },
+        'profile.step': { $lte: 3 },
       }
       this.listLoading = true
       const { count = 0, results = [] } = await queryDevice(this.queryPayload)

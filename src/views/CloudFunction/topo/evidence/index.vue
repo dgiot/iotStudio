@@ -48,6 +48,7 @@
             </el-button>
           </el-form-item>
           <el-form-item
+            v-if="Number($route.query.step) != 1"
             :label="$translateTitle('cloudTest.report audit opinion')"
           >
             <el-input

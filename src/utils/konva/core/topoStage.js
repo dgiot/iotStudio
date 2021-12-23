@@ -5,6 +5,7 @@ let info = {
   tagevent: [],
   tag: [],
   evidence: [],
+  badge: [],
 }
 canvas.info = info
 /**

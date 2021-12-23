@@ -399,30 +399,6 @@
                 : $translateTitle(`cloudTest.re-review`)
             }}
           </el-button>
-          <el-button
-            v-show="row.profile.step == 2"
-            size="mini"
-            type="primary"
-            @click.native="handleUnderreview(row.objectId)"
-          >
-            {{ $translateTitle(`product.Underreview`) }}
-          </el-button>
-          <el-button
-            v-show="row.profile.step == 3"
-            size="mini"
-            type="success"
-            @click.native="taskEnd(row)"
-          >
-            {{ $translateTitle(`concentrator.end`) }}
-          </el-button>
-          <el-button
-            v-show="row.profile.step >= 4"
-            size="mini"
-            type="primary"
-            @click.native="handleReport(row)"
-          >
-            {{ $translateTitle(`product.generate`) }}
-          </el-button>
           <!--          <el-button-->
           <!--            v-show="row.profile.step == 5"-->
           <!--            size="mini"-->
@@ -432,6 +408,7 @@
           <!--            {{ $translateTitle(`application.preview`) }}-->
           <!--          </el-button>-->
           <el-button
+            v-show="row.profile.step <= 1"
             size="mini"
             type="danger"
             @click.native="handleDelete(row.objectId)"
