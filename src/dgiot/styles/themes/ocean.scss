@@ -1,0 +1,157 @@
+/**
+ * @description 海洋之心主题
+ */
+
+body.vab-theme-ocean {
+  $base-color-blue-active: #399efd;
+  $base-color-blue: #1890ff;
+  $base-color-blue-light: mix($base-color-white, $base-color-blue, 90%);
+
+  @mixin container {
+    background: linear-gradient(to right, #006cff, #399efd) !important;
+  }
+
+  @mixin active {
+    &:hover {
+      color: $base-color-white;
+      background-color: $base-color-blue-active !important;
+    }
+
+    &.is-active {
+      color: $base-color-white;
+      background-color: $base-color-blue-active !important;
+    }
+  }
+
+  .logo-container-horizontal {
+    background: $base-color-blue !important;
+  }
+
+  .logo-container-vertical,
+  .logo-container-comprehensive {
+    @include container;
+  }
+
+  .logo-container-column {
+    .logo {
+      @include container;
+    }
+  }
+
+  .column-bar-container {
+    .el-tabs {
+      .el-tabs__nav-wrap.is-left {
+        @include container;
+      }
+
+      .el-tabs__nav {
+        @include container;
+      }
+    }
+
+    .el-menu {
+      .el-menu-item.is-active,
+      .el-submenu__title.is-active,
+      .el-menu-item:hover,
+      .el-submenu__title:hover {
+        i {
+          color: $base-color-blue !important;
+        }
+
+        color: $base-color-blue !important;
+        background-color: $base-color-blue-light !important;
+      }
+    }
+
+    &-card {
+      .el-tabs {
+        .el-tabs__item {
+          &.is-active {
+            background: transparent !important;
+          }
+        }
+      }
+    }
+  }
+
+  .vab-layout-horizontal {
+    .vab-header {
+      background: $base-color-blue !important;
+    }
+
+    .el-menu {
+      background: $base-color-blue !important;
+
+      .el-submenu__title {
+        background: $base-color-blue !important;
+      }
+
+      .el-menu-item {
+        background: $base-color-blue !important;
+      }
+    }
+
+    .vab-side-bar,
+    .comprehensive-bar-container {
+      background: $base-color-blue !important;
+
+      .el-menu-item {
+        @include active;
+      }
+    }
+  }
+
+  .vab-layout-vertical,
+  .vab-layout-comprehensive,
+  .vab-layout-common {
+    .vab-side-bar,
+    .comprehensive-bar-container {
+      @include container;
+
+      .el-menu {
+        @include container;
+        @include active;
+
+        .el-submenu__title,
+        .el-menu-item {
+          background-color: transparent !important;
+          @include active;
+
+          &.is-active {
+            background-color: $base-color-blue-active !important;
+          }
+        }
+      }
+    }
+  }
+
+  .vab-header {
+    background-color: $base-color-blue !important;
+
+    .vab-main {
+      .el-menu.el-menu {
+        background-color: $base-color-blue !important;
+
+        &--horizontal {
+          .el-submenu,
+          .el-menu-item {
+            background-color: $base-color-blue !important;
+
+            &.is-active {
+              background-color: $base-color-blue-active !important;
+            }
+          }
+
+          > .el-menu-item,
+          .el-submenu__title {
+            background-color: $base-color-blue !important;
+
+            &.is-active {
+              background-color: $base-color-blue-active !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}

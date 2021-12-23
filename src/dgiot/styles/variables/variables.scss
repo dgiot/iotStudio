@@ -1,0 +1,113 @@
+/**
+ * @description 全局主题变量配置
+ */
+//颜色配置
+$base-color-black: #222;
+$base-color-blue: #1890ff;
+$base-color-green: #13ce66;
+$base-color-white: #fff;
+/**
+ * @description 全局主题变量配置
+ */
+//颜色配置
+$base-color-black: #222;
+$base-color-blue: #1890ff;
+$base-color-green: #13ce66;
+$base-color-white: #fff;
+$base-color-black: #515a6e;
+$base-color-yellow: #ffba00;
+$base-color-orange: #ff6700;
+$base-color-red: #ff4d4f;
+$base-color-grey: rgba(0, 0, 0, 0.65);
+$base-color-gray: rgba(0, 0, 0, 0.65);
+$base-color-background: #f6f8f9;
+
+$base-color-text-primary: #303133;
+$base-color-text-regular: #606266;
+$base-color-text-secondary: #909399;
+$base-color-text-placeholder: #c0c4cc;
+$base-border-color-base: #dcdfe6;
+$base-border-color-light: #e4e7ed;
+$base-border-color-lighter: #ebeef5;
+$base-border-color-extra-light: #f2f6fc;
+$base-background-color-base: #f5f7fa;
+
+//默认层级
+$base-z-index: 1999;
+//分栏最左侧菜单背景色
+$base-column-first-menu-background: linear-gradient(to right, #282c34, #000);
+//分栏菜单背景色
+$base-column-second-menu-background: #fff;
+//分栏菜单选中背景色
+$base-column-second-menu-background-active: rgba(#1890ff, 0.1);
+//横向、纵向菜单背景色
+$base-menu-background: #282c34;
+//菜单文字颜色
+$base-menu-color: hsla(0, 0%, 100%, 0.95);
+//菜单选中文字颜色
+$base-menu-color-active: hsla(0, 0%, 100%, 0.95);
+//菜单选中背景色
+$base-menu-background-active: $base-color-blue;
+//标题颜色
+$base-title-color: #fff;
+//字体大小配置
+$base-font-size-small: 12px;
+$base-font-size-default: 14px;
+$base-font-size-big: 16px;
+$base-font-size-bigger: 18px;
+$base-font-size-max: 22px;
+//最大宽度
+$base-main-width: 1279px;
+//圆角
+$base-border-radius: 2.5px;
+//边框颜色
+$base-border-color: #dcdfe6;
+//输入框高度
+$base-input-height: 32px;
+//默认margin
+$base-margin: 20px;
+//默认padding
+$base-padding: 20px;
+//默认阴影
+$base-box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+//横向top-bar、logo、一级菜单的高度
+$base-top-bar-height: 60px;
+//纵向、综合、分栏logo的高度
+$base-logo-height: 60px;
+//顶部nav-bar的高度
+$base-nav-height: 60px;
+//顶部标签页tabs-bar的高度
+$base-tabs-height: 50px;
+//顶部标签页tabs-bar中每一个item的高度
+$base-tag-item-height: 34px;
+//菜单li标签的高度
+$base-menu-item-height: 50px;
+//app-main的高度
+$base-keep-alive-height: calc(
+        100vh - #{$base-nav-height} - #{$base-tabs-height} - #{$base-padding} * 2 - 55px
+);
+//纵向左侧导航未折叠的宽度
+$base-left-menu-width: 200px;
+//纵向左侧导航未折叠右侧内容的宽度
+$base-right-content-width: calc(100% - #{$base-left-menu-width});
+//纵向左侧导航已折叠的宽度
+$base-left-menu-width-min: 64px;
+//纵向左侧导航已折叠右侧内容的宽度
+$base-right-content-width-min: calc(100% - #{$base-left-menu-width-min});
+//默认动画
+$base-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), border 0s,
+color 0.1s, font-size 0s;
+//默认动画长
+$base-transition-time: 0.3s;
+//footer 的高度
+$base-footer-height: 50px;
+:export {
+  // 菜单文字颜色变量导出
+  menu-color: $base-menu-color;
+  // 菜单选中文字颜色变量导出
+  menu-color-active: $base-menu-color-active;
+  // 菜单背景色变量导出
+  menu-background: $base-menu-background;
+  // 分栏菜单背景色变量导出
+  column-second-menu-background: $base-column-second-menu-background;
+}
