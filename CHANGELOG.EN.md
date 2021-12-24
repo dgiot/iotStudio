@@ -1,3 +1,53 @@
+## [4.4.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.3...v4.4.4) (2021-12-24)
+
+
+### Bug Fixes
+
+* **casesensitivepathsplugin:** solve the problem of warning case during Jenkins build ([7025269](https://github.com/dgiot/dgiot-dashboard/commit/7025269beda24c3f248789885c2d6c6abaae9f06))
+* file case sensitive ([c3ee038](https://github.com/dgiot/dgiot-dashboard/commit/c3ee03886a70c63310de9b5713a4a882f903d3e9))
+* **file:** repair file loss ([4abe241](https://github.com/dgiot/dgiot-dashboard/commit/4abe241bbc90964b8abbc0e58ff3614d6b725d07))
+* **file:** solve the problem that cli Dabaoshan does not recognize the case of files ([0b2e1f7](https://github.com/dgiot/dgiot-dashboard/commit/0b2e1f7060d1de20c144d4a2aac39bdb75330d47))
+* **src/store/modules/user.js:** tickTime ([84a3ba6](https://github.com/dgiot/dgiot-dashboard/commit/84a3ba6f539daae5c49cfde4f3ba09d20442fdf9))
+* **src/views/cloudtest/js/task.js:** search ([4c48d3e](https://github.com/dgiot/dgiot-dashboard/commit/4c48d3e4081b812470f5ad350373f94cfb89d201))
+* **src/views/cloudtest/js/task.js:** task ([7bec104](https://github.com/dgiot/dgiot-dashboard/commit/7bec104c579670e43ab2d903caa164a18caee37a))
+* **src/views/cloudtest/review/statistics.vue:** toggleCardRow ([2bb1fd0](https://github.com/dgiot/dgiot-dashboard/commit/2bb1fd07d99cedccfed07623faa2c9ec98526665))
+* **src/views/devicecloud/manage/home_index.vue:** fix device paging bug ([955ef3b](https://github.com/dgiot/dgiot-dashboard/commit/955ef3b6d46083ddc8ba5e59f0cf05f818d6aca6))
+* **src/views/devicecloud/manage/home_index.vue:** pager query ([73995ba](https://github.com/dgiot/dgiot-dashboard/commit/73995bacbf5fe6681bfddd17b86ca2be024215e3))
+* **utils:** jenkins ([3024c96](https://github.com/dgiot/dgiot-dashboard/commit/3024c9617756aebf318e8556a3816d783751a25d))
+
+
+### Features
+
+* companyName ([db1900c](https://github.com/dgiot/dgiot-dashboard/commit/db1900c2dd5d6a8a9df834c269fadee4beb2aa7e))
+* **ignore:** ignore ([e95d601](https://github.com/dgiot/dgiot-dashboard/commit/e95d601106e89aff8d271edaf1475bc0b63e8164))
+* profile_addDas ([2948312](https://github.com/dgiot/dgiot-dashboard/commit/2948312a9fe3bf157854c3e2813ccacb950f276a))
+* profile.step ([bffc214](https://github.com/dgiot/dgiot-dashboard/commit/bffc214b5048cdd6c5ab61be3f40990ca336c4eb))
+* **src/config/developer.config.js:** api ([1bf7f47](https://github.com/dgiot/dgiot-dashboard/commit/1bf7f479028cb26b6930b4cb7098b7676477b549))
+* **src/store/modules/user.js\:** encodeURIComponent ([84d3e1d](https://github.com/dgiot/dgiot-dashboard/commit/84d3e1dd63142314c9ee380f2fbf81c883bb2301))
+* **src/views/cloudfunction/topo/evidence/index.vue:** evidence ([54d6c7e](https://github.com/dgiot/dgiot-dashboard/commit/54d6c7e700a989292357bff63a3803b1e3a4be41))
+* **src/views/cloudfunction/topo/js/evidence.js:** clearbadgePath ([c5da0a4](https://github.com/dgiot/dgiot-dashboard/commit/c5da0a476b20680240fb3265075fc2f60c155b24))
+* **src/views/cloudfunction/topo/js/evidence.js:** getNumberEvidence ([8f5faf5](https://github.com/dgiot/dgiot-dashboard/commit/8f5faf50f66114292a8ab7e5a2575ec66d84db2c))
+* **src/views/cloudfunction/topo/js/evidence.js:** item.original.type ([adbdfce](https://github.com/dgiot/dgiot-dashboard/commit/adbdfce5d628bd77153759ef4dbb1bcaaca00e15))
+* **src/views/cloudfunction/topo/js/evidence.js:** optimize query statement ([b15e36c](https://github.com/dgiot/dgiot-dashboard/commit/b15e36c973a305932d89c0f529acbc530c8c9c3f))
+* **src/views/cloudtest/js/review.js:** review ([f163777](https://github.com/dgiot/dgiot-dashboard/commit/f1637778c7b15d1200225f26065e2c56bd5dc051))
+* **src/views/cloudtest/js/task.js:** calculate the average value of collected data ([6d7f375](https://github.com/dgiot/dgiot-dashboard/commit/6d7f375f26ea4614a74ed9cfc3c1df0309b085bd))
+* **src/views/cloudtest/js/task.js:** mqttPublish ([114f9d8](https://github.com/dgiot/dgiot-dashboard/commit/114f9d823c09d7e3c5924a008a88c9fe8a8d9e86))
+* **src/views/cloudtest/js/task.js:** postDrawxnqx ([500f536](https://github.com/dgiot/dgiot-dashboard/commit/500f53684ec5b7518c18f6666877e66cabffd8af))
+* **src/views/cloudtest/js/task.js:** putEvidence ([58c2b46](https://github.com/dgiot/dgiot-dashboard/commit/58c2b466a151055550a9d6386f7abb20ef7aceba))
+* **src/views/cloudtest/js/task.js:** task ([01a768c](https://github.com/dgiot/dgiot-dashboard/commit/01a768c277b0b4ae5fa90b72e73296abe47f954a))
+* **src/views/cloudtest/review/statistics.vue:** review/statistics ([4bced2b](https://github.com/dgiot/dgiot-dashboard/commit/4bced2bc42479e5bd26e8ee241398edb38205b7f))
+* **src/views/cloudtest/task/index.vue:** saveHistorical ([482bf2e](https://github.com/dgiot/dgiot-dashboard/commit/482bf2e951a8fed1fea123cee166e9c0b5b43821))
+* **src/views/cloudtest/task/index.vue:** style ([151fb39](https://github.com/dgiot/dgiot-dashboard/commit/151fb3925262753e82a4f2ed3765027cc02c3abd))
+* **src/views/cloudtest/task/index.vue:** task ([0a92731](https://github.com/dgiot/dgiot-dashboard/commit/0a9273175817fe5a276623ffec2b4a07ab89b4b9))
+* **src/views/cloudtest/task/index.vue:** task ([b8bd184](https://github.com/dgiot/dgiot-dashboard/commit/b8bd18409645decc642aff183127f34e4424c828))
+* **src/views/devicecloud/manage/component/profile/profiledescriptions.vue:** profiledescriptions ([0b2c0b1](https://github.com/dgiot/dgiot-dashboard/commit/0b2c0b126d106002eceaf54c5512282782a8cd16))
+* **src/views/multitenant/roles/userinfo.vue:** username ([c45266b](https://github.com/dgiot/dgiot-dashboard/commit/c45266b51bc86e48cd5d839156cb874c0d3b5a04))
+* **subrealtimedata:** subRealtimedata ([cfa0270](https://github.com/dgiot/dgiot-dashboard/commit/cfa0270452ed7af0835d6d2682eaf63f8f627be8))
+* thingcolumns ([e1105ab](https://github.com/dgiot/dgiot-dashboard/commit/e1105ab0c22b2ada8ec3416700efca5919d3a246))
+* **utils:** utils filename ([2014e1e](https://github.com/dgiot/dgiot-dashboard/commit/2014e1ef9cc1689f474a6bc24bd3e6b8e093c2fa))
+
+
+
 ## [4.4.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.2...v4.4.3) (2021-12-17)
 
 
