@@ -47,6 +47,11 @@
 * **utils:** utils filename ([2014e1e](https://github.com/dgiot/dgiot-dashboard/commit/2014e1ef9cc1689f474a6bc24bd3e6b8e093c2fa))
 
 
+### Performance Improvements
+
+* **dgiot-dashboard:** :bookmark: ([73ff482](https://github.com/dgiot/dgiot-dashboard/commit/73ff482c0bc97740630a0ed648bec5195ddd317c))
+
+
 
 ## [4.4.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.2...v4.4.3) (2021-12-17)
 

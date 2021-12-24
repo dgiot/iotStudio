@@ -1,83 +1,91 @@
 <template>
   <div v-if="errorLogs.length > 0">
-    <el-badge
-      :value="errorLogs.length"
-      @click.native="dialogTableVisible = true"
-    >
-      <dgiot-icon icon="bug-line" />
-    </el-badge>
+    <div v-show="isShow">
+      <el-badge
+        :value="errorLogs.length"
+        @click.native="dialogTableVisible = true"
+      >
+        <dgiot-icon icon="bug-line" />
+      </el-badge>
 
-    <el-dialog
-      :append-to-body="true"
-      title="dgiot-dashboard异常捕获(温馨提示：错误必须解决)"
-      :visible.sync="dialogTableVisible"
-      width="70%"
-    >
-      <el-table border :data="errorLogs">
-        <el-table-column
-          align="center"
-          label="报错路由"
-          show-overflow-tooltip
-          width="auto"
-        >
-          <template #default="{ row }">
-            <a :href="row.url" target="_blank">
-              <el-tag type="success">{{ row.url }}</el-tag>
-            </a>
-          </template>
-        </el-table-column>
-        <el-table-column
-          align="center"
-          label="错误信息"
-          show-overflow-tooltip
-          width="auto"
-        >
-          <template #default="{ row }">
-            <el-tag type="danger">
-              {{ decodeUnicode(row.err.message) }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="错误详情" show-overflow-tooltip>
-          <template #default="{ row }">
-            <el-popover placement="top-start" trigger="click">
-              {{ row.err.stack }}
-              <template #reference>
-                <el-button>查看</el-button>
-              </template>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="操作" width="auto">
-          <template #default="{ row }">
-            <a
-              v-for="(item, index) in searchList"
-              :key="index"
-              :href="item.url + decodeUnicode(row.err.message)"
-              target="_blank"
-            >
-              <el-button type="text">
-                {{ item.title }}
+      <el-dialog
+        :append-to-body="true"
+        title="dgiot-dashboard异常捕获(温馨提示：错误必须解决)"
+        :visible.sync="dialogTableVisible"
+        width="70%"
+      >
+        <el-table border :data="errorLogs">
+          <el-table-column
+            align="center"
+            label="报错路由"
+            show-overflow-tooltip
+            width="auto"
+          >
+            <template #default="{ row }">
+              <a :href="row.url" target="_blank">
+                <el-tag type="success">{{ row.url }}</el-tag>
+              </a>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="错误信息"
+            show-overflow-tooltip
+            width="auto"
+          >
+            <template #default="{ row }">
+              <el-tag type="danger">
+                {{ decodeUnicode(row.err.message) }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            label="错误详情"
+            show-overflow-tooltip
+          >
+            <template #default="{ row }">
+              <el-popover placement="top-start" trigger="click">
+                {{ row.err.stack }}
+                <template #reference>
+                  <el-button>查看</el-button>
+                </template>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="操作" width="auto">
+            <template #default="{ row }">
+              <a
+                v-for="(item, index) in searchList"
+                :key="index"
+                :href="item.url + decodeUnicode(row.err.message)"
+                target="_blank"
+              >
+                <el-button type="text">
+                  {{ item.title }}
+                </el-button>
+              </a>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="issues反馈" width="auto">
+            <template #default="{ row }">
+              <el-button type="primary" @click="issues('github', row)">
+                github
               </el-button>
-            </a>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="issues反馈" width="auto">
-          <template #default="{ row }">
-            <el-button type="primary" @click="issues('github', row)">
-              github
-            </el-button>
-            <el-button type="primary" @click="issues('gitee', row)">
-              gitee
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <template #footer>
-        <el-button @click.native="dialogTableVisible = false">取 消</el-button>
-        <el-button type="danger" @click.native="clearAll">暂不显示</el-button>
-      </template>
-    </el-dialog>
+              <el-button type="primary" @click="issues('gitee', row)">
+                gitee
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <template #footer>
+          <el-button @click.native="dialogTableVisible = false">
+            取 消
+          </el-button>
+          <el-button type="danger" @click.native="clearAll">暂不显示</el-button>
+        </template>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -89,6 +97,7 @@
     name: 'VabErrorLog',
     data() {
       return {
+        isShow: window.name != 'dgiot_iframe',
         dialogTableVisible: false,
         title,
         abbreviation,
