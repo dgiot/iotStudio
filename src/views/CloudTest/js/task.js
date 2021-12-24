@@ -191,6 +191,7 @@ export default {
     this.fetchData()
   },
   mounted() {
+    this.historyEvidence = []
     this.router = this.$dgiotBus.router(this.$route.fullPath)
     this.$dgiotBus.$off('lowcodeClose')
     this.$dgiotBus.$on('lowcodeClose', (_) => {
