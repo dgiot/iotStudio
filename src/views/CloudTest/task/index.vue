@@ -15,7 +15,9 @@
         placement="right"
         :visible="visible"
         width="100%"
-        @close="visible = false"
+        @close="
+          saveHistorical(collectionInfo, thingcolumns, historyEvidence, true)
+        "
       >
         <el-row :gutter="24">
           <el-col :span="12">
@@ -61,13 +63,17 @@
                 >
                   任务配置
                 </el-button>
+                <el-button @click.native="startOpc(collectionInfo)">
+                  任务下发
+                </el-button>
                 <el-button
                   type="warning"
                   @click.native="
                     saveHistorical(
                       collectionInfo,
                       thingcolumns,
-                      historyEvidence
+                      historyEvidence,
+                      false
                     )
                   "
                 >
@@ -101,23 +107,15 @@
               style="min-height: 530px"
             >
               <el-table-column
+                v-for="(item, index) in historycolumns"
+                :key="index"
                 align="center"
-                label="历史数据"
+                :label="$translateTitle(`cloudTest.${item.label}`)"
+                :prop="item.prop"
                 show-overflow-tooltip
                 sortable
                 width="auto"
-              >
-                <el-table-column
-                  v-for="(item, index) in historycolumns"
-                  :key="index"
-                  align="center"
-                  :label="$translateTitle(`cloudTest.${item.label}`)"
-                  :prop="item.prop"
-                  show-overflow-tooltip
-                  sortable
-                  width="auto"
-                />
-              </el-table-column>
+              />
               <el-table-column align="center" label="操作" width="60">
                 <template #default="{ row, $index }">
                   <el-button
@@ -330,7 +328,7 @@
           >
             {{ row.profile.message }}
             <template #reference>
-              <el-tag effect="dark" type="warning">
+              <el-tag effect="dark" type="danger">
                 {{ $translateTitle('cloudTest.notapproved') }}
               </el-tag>
             </template>
@@ -380,7 +378,7 @@
             {{ $translateTitle(`task.start`) }}
           </el-button>
           <el-button
-            v-show="row.profile.step == 1"
+            v-show="row.profile.step == 1 || row.profile.step == -1"
             size="mini"
             type="success"
             @click.native="visibleInfo(row)"

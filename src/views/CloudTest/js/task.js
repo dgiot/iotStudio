@@ -191,6 +191,7 @@ export default {
     this.fetchData()
   },
   mounted() {
+    this.historyEvidence = []
     this.router = this.$dgiotBus.router(this.$route.fullPath)
     this.$dgiotBus.$off('lowcodeClose')
     this.$dgiotBus.$on('lowcodeClose', (_) => {
@@ -369,13 +370,14 @@ export default {
      * @return {Promise<void>}
      * @Description: 查询历史存证
      */
-    async featHistoryEvidence(EvidenceId) {
+    async featHistoryEvidence(taskid) {
       try {
         const params = {
           order: '-createdAt',
           skip: 0,
           where: {
-            'original.taskid': EvidenceId,
+            'original.taskid': taskid,
+            'original.type': 'avgs',
           },
         }
         const loading = this.$baseColorfullLoading()
@@ -486,48 +488,7 @@ export default {
         async () => {
           try {
             const loading = _this.$baseColorfullLoading()
-            const items = []
-            if (row.basedata) {
-              /**
-               * @description 判断下发组态topic的item
-               * @description 必须以 标识符 dgiot_testing_equipment_ 开头
-               */
-              for (let key in row.basedata) {
-                if (key.indexOf('dgiot_testing_equipment_') == 0)
-                  items.push(row.basedata[key])
-              }
-            }
-            // mqtt 消息回调
-            console.groupCollapsed(
-              '%c send mqttMsg items',
-              'color:#009a61; font-size: 28px; font-weight: 300'
-            )
-            console.log(items)
-            console.groupEnd()
-            const pubTopic = `/${row.parentId.product.objectId}/${row.parentId.devaddr}/device/event` // 读取opc属性topic
-            const message = {
-              cmd: 'opc_items',
-              groupid: row.parentId.objectId, //'设备ID',
-              opcserver:
-                row.basedata.dgiot_testing_opcserver ??
-                'Kepware.KEPServerEX.V6',
-              items: items, //要读取到属性列表
-            } // 下发的消息内容
-            // mqtt 消息回调
-            console.groupCollapsed(
-              '%c 下发消息',
-              'color:#009a61; font-size: 28px; font-weight: 300'
-            )
-            console.log(message)
-            console.log(pubTopic)
-            console.groupEnd()
-            await _this.$dgiotBus.$emit(
-              `MqttPublish`,
-              pubTopic,
-              JSON.stringify(message),
-              0,
-              false
-            ) // 开始任务
+            await _this.startOpc(row)
             await generatereport(row.objectId)
             const params = {
               profile: _.merge(row.profile, {
@@ -787,6 +748,66 @@ export default {
         _this.visible = true
       } catch (error) {
         console.log(error)
+        _this.$baseMessage(
+          _this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-23 16:53:51
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description:
+     */
+    async startOpc(row) {
+      try {
+        const items = []
+        if (row.basedata) {
+          /**
+           * @description 判断下发组态topic的item
+           * @description 必须以 标识符 dgiot_testing_equipment_ 开头
+           */
+          for (let key in row.basedata) {
+            if (key.indexOf('dgiot_testing_equipment_') == 0)
+              items.push(row.basedata[key])
+          }
+        }
+        // mqtt 消息回调
+        console.groupCollapsed(
+          '%c send mqttMsg items',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.log(items)
+        console.groupEnd()
+        const pubTopic = `/${row.parentId.product.objectId}/${row.parentId.devaddr}/device/event` // 读取opc属性topic
+        const message = {
+          cmd: 'opc_items',
+          groupid: row.parentId.objectId, //'设备ID',
+          opcserver:
+            row.basedata.dgiot_testing_opcserver ?? 'Kepware.KEPServerEX.V6',
+          items: items, //要读取到属性列表
+        } // 下发的消息内容
+        // mqtt 消息回调
+        console.groupCollapsed(
+          '%c 下发消息',
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.log(message)
+        console.log(pubTopic)
+        console.groupEnd()
+        await this.$dgiotBus.$emit(
+          `MqttPublish`,
+          pubTopic,
+          JSON.stringify(message),
+          0,
+          false
+        ) // 开始任务
+      } catch (error) {
+        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -832,7 +853,8 @@ export default {
         const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
         const message = {
           cmd: 'opc_report', // 采集时长
-          duration: 5, //时长
+          duration:
+            Number(params.basedata.dgiot_sampling_parametric_frequency) ?? 5, //时长
           groupid: params.parentId.objectId,
         }
         console.groupCollapsed(
@@ -896,7 +918,7 @@ export default {
      * @return {Promise<void>}
      * @Description:
      */
-    async saveHistorical(collectionInfo, thingcolumns, historyEvidence) {
+    async saveHistorical(collectionInfo, thingcolumns, historyEvidence, type) {
       const _profile = {
         profile: _.merge(collectionInfo.profile, {
           historicaldatacolumns: _.filter(thingcolumns, function (item) {
@@ -906,6 +928,7 @@ export default {
         }),
       }
       console.log(collectionInfo, _profile)
+      if (type) this.visible = false
       try {
         const loading = this.$baseColorfullLoading()
         const results = await putDevice(collectionInfo.objectId, _profile)
@@ -945,6 +968,7 @@ export default {
           error = '',
           original = {},
           evidenceid = '',
+          path = '',
         } = await postDrawxnqx(params)
         if (Number(code) == 200) {
           this.historyEvidenceid = evidenceid ?? ''
@@ -955,7 +979,7 @@ export default {
             return item.prop !== 'timestamp'
           })
           console.log('this.historycolumns', this.historycolumns)
-          // this.drawxnqxPath = path
+          this.drawxnqxPath = path
         } else {
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,

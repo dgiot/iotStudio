@@ -352,13 +352,7 @@
                 prop="name"
                 show-overflow-tooltip
                 sortable
-              >
-                <template #default="{ row }">
-                  <span style="margin: 0; color: green">
-                    {{ row.name }}
-                  </span>
-                </template>
-              </el-table-column>
+              />
               <el-table-column
                 align="center"
                 :label="$translateTitle('equipment.state')"
@@ -555,26 +549,19 @@
               <el-table-column
                 align="center"
                 :label="$translateTitle('equipment.devicenumber')"
+                prop="devaddr"
                 show-overflow-tooltip
                 sortable
-                width="120"
-              >
-                <template #default="{ row }">
-                  {{ row.devaddr }}
-                </template>
-              </el-table-column>
+                width="auto"
+              />
               <el-table-column
                 align="center"
                 :label="$translateTitle('equipment.name')"
+                prop="name"
                 show-overflow-tooltip
                 sortable
-              >
-                <template #default="{ row }">
-                  <span style="margin: 0; color: green">
-                    {{ row.name }}
-                  </span>
-                </template>
-              </el-table-column>
+                width="auto"
+              />
               <el-table-column
                 align="center"
                 :label="$translateTitle('equipment.state')"
@@ -720,68 +707,71 @@
                 <template #default="{ row }">
                   <el-button
                     size="mini"
+                    style="margin-left: 10px"
                     type="primary"
                     @click="deviceToDetail(row)"
                   >
-                    {{ $translateTitle('equipment.see') }}
+                    {{ $translateTitle('product.details') }}
                   </el-button>
-
                   <el-button
                     size="mini"
+                    style="text-align: center"
                     type="warning"
-                    @click="editorDevice(row)"
+                    @click="showInfo(row)"
                   >
-                    {{ $translateTitle('concentrator.edit') }}
+                    {{ $translateTitle('product.parser') }}
                   </el-button>
-                  <el-button
-                    size="mini"
-                    type="danger"
-                    @click="handleDelete(row, 2)"
-                  >
-                    {{ $translateTitle('developer.delete') }}
+                  <el-button size="mini" type="info" @click="konvaDevice(row)">
+                    {{ $translateTitle('concentrator.konva') }}
                   </el-button>
-
-                  <el-popover
-                    placement="left"
-                    style="margin: 0 10px"
-                    trigger="click"
-                  >
-                    <el-button
-                      :disabled="!row.location"
-                      size="mini"
-                      type="primary"
-                      @click="showMap(row.location, row.objectId)"
-                    >
-                      {{ $translateTitle('equipment.location') }}
-                    </el-button>
+                  <el-dropdown style="margin: 0 10px">
                     <el-button
                       size="mini"
-                      type="warning"
-                      @click="showInfo(row)"
+                      type="danger"
+                      @click="isFullscreen = !isFullscreen"
                     >
-                      {{ $translateTitle('equipment.info') }}
+                      {{ $translateTitle('concentrator.more') }}
                     </el-button>
 
-                    <el-button
-                      size="mini"
-                      type="success"
-                      @click="showTree(row.objectId, row.Company)"
-                    >
-                      {{ $translateTitle('equipment.move') }}
-                    </el-button>
-
-                    <el-button
-                      size="mini"
-                      type="info"
-                      @click="konvaDevice(row)"
-                    >
-                      {{ $translateTitle('concentrator.konva') }}
-                    </el-button>
-
-                    <el-button slot="reference" size="mini" type="info">
-                      {{ $translateTitle('developer.operation') }}
-                    </el-button>
-                  </el-popover>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item>
+                        <el-link
+                          size="info"
+                          type="success"
+                          @click="editorDevice(row)"
+                        >
+                          {{ $translateTitle('concentrator.edit') }}
+                        </el-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-link
+                          size="mini"
+                          type="primary"
+                          @click="showTree(row.objectId, row.Company)"
+                        >
+                          {{ $translateTitle('equipment.move') }}
+                        </el-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-link
+                          size="mini"
+                          type="warning"
+                          @click="goLink('video', row)"
+                        >
+                          {{ $translateTitle('concentrator.video') }}
+                        </el-link>
+                      </el-dropdown-item>
+                      <el-dropdown-item>
+                        <el-link
+                          size="mini"
+                          type="danger"
+                          @click="handleDelete(row, 2)"
+                        >
+                          {{ $translateTitle('developer.delete') }}
+                        </el-link>
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
                 </template>
               </el-table-column>
             </el-table>
@@ -794,12 +784,20 @@
               <!--                @size-change="deviceSizeChange"-->
               <!--                @current-change="deviceCurrentChange"-->
               <!--              />-->
-              <vab-Pagination
-                v-show="devicetotal > 0"
-                :limit.sync="queryForm.pageSize"
-                :page.sync="queryForm.pageNo"
-                :total="devicetotal"
+              <!--              <vab-Pagination-->
+              <!--                v-show="devicetotal > 0"-->
+              <!--                :limit.sync="queryForm.pageSize"-->
+              <!--                :page.sync="queryForm.pageNo"-->
+              <!--                :total="devicetotal"-->
+              <!--                @pagination="getDevices"-->
+              <!--              />-->
+              <vab-parser-pagination
+                :key="devicetotal.length + 'forensics'"
+                ref="devicePagination"
+                :pagination="paginations"
+                :query-payload="queryPayload"
                 @pagination="getDevices"
+                @paginationQuery="paginationQuery"
               />
             </div>
           </div>
@@ -870,7 +868,6 @@
             />
           </baidu-map>
         </el-tab-pane>
-
         <!--        <el-tab-pane-->
         <!--          :label="$translateTitle('leftbar.analysis')"-->
         <!--          name="analysis"-->
@@ -1327,12 +1324,12 @@
   </div>
 </template>
 <script>
+  import deviceState from '@/components/Device/deviceState'
   import { mapGetters, mapMutations } from 'vuex'
   import { get_object } from '@/api/shuwa_parse'
   import { batch, Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
   import { getProduct, queryProduct } from '@/api/Product/index'
-  import deviceState from '@/components/Device/deviceState'
   import {
     BaiduMap,
     BmCityList,
@@ -1406,6 +1403,15 @@
         }
       }
       return {
+        paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
+        queryPayload: {
+          excludeKeys: 'data',
+          include: '',
+          order: '-createdAt',
+          limit: 10,
+          skip: 0,
+          count: 'objectId',
+        },
         secret: secret,
         productDetail: {},
         addACL: {},
@@ -1667,6 +1673,9 @@
       dgiotlog.log('this.aclObj', this.aclObj)
     },
     methods: {
+      async paginationQuery(queryPayload) {
+        this.queryPayload = queryPayload
+      },
       goLink(type, item) {
         const { basedata } = item
         if (basedata?.videoSrc?.length) {
@@ -2301,43 +2310,29 @@
         }
       },
       async getDevices(args = {}) {
-        if (!args.limit) {
-          args = this.queryForm
-        }
-        dgiotlog.log('args', args)
         this.listLoading = true
         const loading = this.$baseColorfullLoading(3)
         this.tableData = []
-        const params = {
-          limit: args.limit,
-          skip: args.skip,
-          order: args.order,
-          count: 'objectId',
-          include: 'product,name',
-          where: {
-            product: { $ne: null },
-            name: {
-              $ne: null,
-              $exists: true,
-            },
-          },
-        }
-        if (this.deviceinput != '') {
-          if (this.selectdevice == '设备名称') {
-            params.where.name = { $regex: this.deviceinput }
-          } else {
-            params.where.devaddr = { $regex: this.deviceinput }
-          }
-        }
-        if (this.onlinedevices != '') {
-          if (this.onlinedevices == '在线') {
-            params.where.status = 'ONLINE'
-          } else {
-            params.where.status = 'OFFLINE'
-          }
-        }
-        if (this.devicenumber != '') {
-          params.where.devaddr = { $regex: this.deviceinput }
+        this.queryPayload.include = 'product,name'
+        this.queryPayload.where = {
+          product: { $ne: null },
+          name:
+            this.selectdevice === '设备名称' && this.deviceinput
+              ? { $regex: this.deviceinput }
+              : {
+                  $ne: null,
+                  $exists: true,
+                },
+          devaddr:
+            this.selectdevice === '设备编号' && this.deviceinput
+              ? { $regex: this.deviceinput }
+              : { $ne: null },
+          status:
+            this.onlinedevices.onlinedevices == '在线'
+              ? 'ONLINE'
+              : this.onlinedevices.onlinedevices == '离线'
+              ? 'OFFLINE'
+              : { $ne: null },
         }
         if (this.equvalue != 0) {
           // params.where.product = this.equvalue
@@ -2348,7 +2343,7 @@
         }
         try {
           const { results = [], count = 0 } = await querycompanyDevice(
-            params,
+            this.queryPayload,
             this.queryForm.access_token
           )
           this.listLoading = false
@@ -2372,6 +2367,8 @@
           })
           this.tableData = results
           this.devicetotal = count
+          this.$refs['devicePagination'].ination.total = count
+
           // 查询在线设备
           // this.getOnlineDevices()
         } catch (error) {

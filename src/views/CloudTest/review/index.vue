@@ -339,34 +339,6 @@
       >
         <template #default="{ row }">
           <el-button
-            v-show="row.profile.step == 0"
-            size="mini"
-            type="success"
-            @click.native="handleManagement(row)"
-          >
-            {{ $translateTitle(`task.Configuration`) }}
-          </el-button>
-          <el-button
-            v-show="row.profile.step == 0"
-            size="mini"
-            type="info"
-            @click.native="taskStart(row)"
-          >
-            {{ $translateTitle(`task.start`) }}
-          </el-button>
-          <el-button
-            v-show="row.profile.step == 1 || row.profile.step == -1"
-            size="mini"
-            type="warning"
-            @click.native="forensics(row)"
-          >
-            {{
-              row.profile.step == 1
-                ? $translateTitle(`cloudTest.forensics`)
-                : $translateTitle(`cloudTest.re-review`)
-            }}
-          </el-button>
-          <el-button
             v-show="row.profile.step == 2"
             size="mini"
             type="primary"
@@ -407,6 +379,7 @@
             {{ $translateTitle(`application.evidence`) }}
           </el-button>
           <el-button
+            v-show="row.profile.step != -1"
             size="mini"
             type="danger"
             @click.native="handleHistory(row)"

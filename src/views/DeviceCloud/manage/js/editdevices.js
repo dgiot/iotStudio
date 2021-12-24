@@ -1,17 +1,11 @@
 import info from '@/components/Device/info'
 import SceneLog from '@/views/DeviceCloud/manage/component/SceneLog'
 import deviceLog from '@/views/CloudSystem/logs/device'
-import { mapGetters } from 'vuex'
-import {
-  getCardDevice,
-  getDabDevice,
-  getDevice,
-  queryDevice,
-} from '@/api/Device/index.js'
-import { utc2beijing } from '@/utils/index'
+import { mapGetters, mapActions } from 'vuex'
+import { getCardDevice, getDabDevice, getDevice } from '@/api/Device/index.js'
 import Instruct from '@/views/DeviceCloud/category/instruct_manage'
 import chartType from '@/api/Mock/Chart'
-// import { requiremodule } from '@/utils/file'
+
 const columns = [
   {
     title: '图片',
@@ -49,7 +43,6 @@ export default {
     info,
     deviceLog,
     SceneLog,
-    // ...requiremodule(require.context('./component', true, /\.vue$/)),
   },
   filters: {
     filterVal(val) {
@@ -371,7 +364,6 @@ export default {
       ],
       thirdData: [],
       thirdDatas: [],
-      isupdate: false,
       ispushdata: true,
       timer: null,
       isshowtable: false,
@@ -411,10 +403,6 @@ export default {
     }),
   },
   watch: {
-    machinelist: {
-      deep: true,
-      handler(val) {},
-    },
     sm(v) {
       this.$nextTick((_) => {
         this.resizeTheChart()
@@ -425,30 +413,92 @@ export default {
     },
   },
   mounted() {
+    this.setTreeFlag(false)
     this.params.style = this.chartType[0].type
-    dgiotlog.log(' this.params.style', this.params.style)
+    console.log(' this.params.style', this.params.style)
+    this.subtopic = `thing/${this.$route.query.deviceid}/realtimedata/post` // 设备实时数据topic
+    this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
+    this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
     if (this.$route.query.deviceid) {
+      this.subRealtimedata()
       this.deviceid = this.$route.query.deviceid
       this.initChart()
       this.getDeviceInfo(this.deviceid)
       window.addEventListener('resize', this.resizeTheChart)
     }
-    this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
   },
   // 清除定时器
   destroyed: function () {
     this.Unbscribe()
-    window.clearInterval(this.timer)
-    this.timer = null
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.resizeTheChart)
+    this.Unbscribe()
   },
   methods: {
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-24 12:13:39
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description: 订阅实时数据
+     */
+    async subRealtimedata() {
+      try {
+        // 订阅mqtt
+        this.$dgiotBus.$emit('MqttSubscribe', {
+          router: this.router,
+          topic: this.subtopic,
+          qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
+        })
+        // mqtt 消息回调
+        console.groupCollapsed(
+          `%c mqtt 订阅日志`,
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.log('topic:', this.subtopic)
+        console.log('router:', this.router)
+        console.groupEnd()
+
+        this.$dgiotBus.$off(this.topicKey) // dgiotBus 关闭事件
+        this.$dgiotBus.$on(this.topicKey, (mqttMsg) => {
+          // mqtt 消息回调
+          console.groupCollapsed(
+            `%c mqttMsg消息回调`,
+            'color:#009a61; font-size: 28px; font-weight: 300'
+          )
+          console.log(mqttMsg)
+          console.log(Base64.decode(mqttMsg.payload))
+          console.log(JSON.parse(Base64.decode(mqttMsg.payload)).data)
+          console.log('Base64.decode(payload):', Base64.decode(mqttMsg.payload))
+          console.groupEnd()
+          const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payload))
+          if (data) {
+            this.renderCard(data)
+          } else {
+            this.getCardDevice()
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    ...mapActions({
+      setTreeFlag: 'settings/setTreeFlag',
+    }),
     Unbscribe() {
+      console.error('Unbscribe')
       const subtopic = 'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
       const topicKey = this.$dgiotBus.topicKey(this.router, subtopic)
       this.$dgiotBus.$emit('MqttUnbscribe', topicKey, subtopic)
+      this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
     },
     /**
      * @Author: h7ml
@@ -495,8 +545,8 @@ export default {
               fontSize: '24px',
             },
             position: {
-              lng: Number(resultes.location.longitude),
-              lat: Number(resultes.location.latitude),
+              lng: Number(resultes.location.longitude) ?? 116.404,
+              lat: Number(resultes.location.latitude) ?? 39.915,
             },
             title: resultes.name,
           }
@@ -666,20 +716,33 @@ export default {
       dgiotlog.log(item)
     },
     tabHandleClick(tab) {
-      if (tab.name == 'ninth') {
-        this.$router.push({
-          path: '/roles/onlinetest',
-          query: {
-            deviceid: this.devicedevaddr,
-            productid: this.productid,
-          },
-        })
-      } else if (tab.name == 'children') {
-        this.getDevices()
-      } else if (tab.name == 'third') {
-        this.queryChart()
-      } else if (tab.name == 'task') {
-        this.$refs.SceneLog.get_topic()
+      this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
+      switch (tab.name) {
+        case 'ninth':
+          this.$router.push({
+            path: '/roles/onlinetest',
+            query: {
+              deviceid: this.devicedevaddr,
+              productid: this.productid,
+            },
+          })
+          break
+        case 'children':
+          this.getDevices()
+          break
+        case 'third':
+          this.queryChart()
+          break
+        case 'right':
+          this.toggleClass('rightrow')
+          break
+        case 'task':
+          this.$refs.SceneLog.get_topic()
+          break
+        case 'first1':
+          this.subRealtimedata()
+          this.getCardDevice()
+          break
       }
     },
     timestampToTime(timestamp) {
@@ -744,56 +807,41 @@ export default {
           this.$baseMessage('请求出错11', err.error, 3000)
         })
     },
-    Update() {
+    getCardDevice() {
       var vm = this
-      dgiotlog.log('实时刷新')
       getCardDevice(vm.deviceid)
         .then((response) => {
           vm.machinelist = {}
           if (response?.data) {
-            let array = []
-            const resData = response.data
-            resData.forEach((item) => {
-              if (item.devicetype) {
-                array.push(item.devicetype)
-              }
-            })
-            array = _.uniqBy(array)
-            let machine = {}
-            array.forEach((item) => {
-              let arr = []
-              resData.forEach((item1) => {
-                if (item == item1.devicetype) {
-                  arr.push(item1)
-                }
-              })
-              machine[item] = arr
-            })
-            vm.machinelist = machine
-            vm.thirdtbKey = moment(new Date()).valueOf()
-            dgiotlog.log('this.machinelist', vm.machinelist)
-          } else {
-            this.updateTrue(false)
-            this.isupdate = false
+            vm.renderCard(response.data)
           }
         })
         .catch((error) => {
           dgiotlog.log('update error 清除timer', error)
-          this.updateTrue(false)
-          this.isupdate = false
         })
     },
-    // 定时器启动
-    updateTrue(event) {
-      this.ispushdata = false
-      if (event == true) {
-        this.timer = window.setInterval(() => {
-          this.Update()
-        }, 10000)
-      } else {
-        window.clearInterval(this.timer)
-        this.timer = null
-      }
+    //渲染卡片
+    renderCard(resData) {
+      var vm = this
+      let array = []
+      resData.forEach((item) => {
+        if (item.devicetype) {
+          array.push(item.devicetype)
+        }
+      })
+      array = _.uniqBy(array)
+      let machine = {}
+      array.forEach((item) => {
+        let arr = []
+        resData.forEach((item1) => {
+          if (item == item1.devicetype) {
+            arr.push(item1)
+          }
+        })
+        machine[item] = arr
+      })
+      vm.machinelist = machine
+      vm.thirdtbKey = moment(new Date()).valueOf()
     },
     // 实时数据的分页
     dataDeviceSizeChange(val) {

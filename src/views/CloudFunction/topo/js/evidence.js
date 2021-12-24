@@ -109,13 +109,7 @@ export default {
   beforeDestroy() {}, //生命周期 - 销毁之前
   destroyed() {}, //生命周期 - 销毁完成
   activated() {},
-  watch: {
-    badgePath: {
-      handler(badge) {
-        if (badge && badge.length) this.getNumberEvidence(badge)
-      },
-    },
-  },
+  watch: {},
   methods: {
     ...mapActions({
       deleteTopo: 'topo/deleteTopo',
@@ -125,32 +119,19 @@ export default {
     }),
     /**
      * @Author:
-     * @Date: 2021-12-23 11:51:33
+     * @Date: 2021-12-23 17:19:27
      * @LastEditors:
      * @param
      * @return {Promise<void>}
-     * @Description: 删除创建的text 图元
+     * @Description: 清空_evidence_delete_text
      */
-    async clearbadgePath(params) {
-      console.error(params, 'clearbadgePath')
-      try {
-        await canvas.layer.find('Text').forEach((Text) => {
-          console.log(Text)
+    clearKonvaText() {
+      canvas.layer.find('Text').forEach((Text) => {
+        if (Text.attrs.id.indexOf('_evidence_delete_text') != 0) {
           Text.remove()
           Text.destroy()
-          canvas.layer.batchDraw()
-          canvas.stage.batchDraw()
-        })
-        // const res = await getProduct(params.objectId)
-        // console.log(res)
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'vab-hey-message-error'
-        )
-      }
+        }
+      })
     },
     /**
      * @Author: dext7r
@@ -161,6 +142,7 @@ export default {
      * @Description:
      */
     async getNumberEvidence(params) {
+      this.clearKonvaText()
       canvas.info.badge = []
       /**
        * @description 图元数据 请求数据
@@ -190,7 +172,7 @@ export default {
         })
         evidence.path.forEach((i, index) => {
           const simpleText = new Konva.Text({
-            id: `${evidence.path[index].attrs.x}_text`,
+            id: `${evidence.path[index].attrs.x}_evidence_delete_text`,
             x: evidence.path[index].attrs.x,
             y:
               evidence.path[index].attrs.icon === 'volume_mute'
@@ -317,6 +299,7 @@ export default {
         }
         const res = await putEvidence(row.objectId, params)
         console.log(res)
+        this.auditQuery(0, 'init')
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
@@ -465,10 +448,12 @@ export default {
           this.ukey = results[0].devaddr
           console.info('-----------------this.ukey', this.ukey)
         } else {
-          this.$message.error(
+          this.$baseMessage(
             this.$translateTitle(
               'cloudTest.There is no uKey for this product, please contact the administrator'
-            )
+            ),
+            'error',
+            'vab-hey-message-error'
           )
         }
         loading.close()
@@ -541,12 +526,10 @@ export default {
         }
         const { results = [] } = await queryEvidence(_params)
         if (results?.length)
-          results.forEach((item) => {
-            _.filter(item, function (item) {
-              item.original.path =
-                '/dgiot_file' + item.original.path.split('/dgiot_file')[1]
-              return item.original.type !== 'avgs'
-            })
+          _.filter(results, function (item) {
+            item.original.path =
+              '/dgiot_file' + item.original.path.split('/dgiot_file')[1]
+            return item.original.type !== 'avgs'
           })
 
         this.evidences = results
@@ -619,24 +602,28 @@ export default {
           skip: 0,
           where: {
             'original.taskid': this.taskid,
+            reportId: { $ne: this.taskid },
           },
         }
-        const loading = this.$baseColorfullLoading()
+        // const loading = this.$baseColorfullLoading()
         if (num == 1) this.auditDialog = true
         const { results } = await queryEvidence(params)
         this.auditList = _.filter(results, function (item) {
           return item.original.type !== 'avgs'
-          if (item.original.status == '未审核') this.badge.Unreviewed.push(item)
-          else if (item.original.status == '通过审核')
-            this.badge.Approved.push(item)
-          else this.badge.notapproved.push(item)
         })
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'vab-hey-message-success'
-        )
-        loading.close()
+        this.auditList.forEach((audit) => {
+          if (audit.original.status == '未审核')
+            this.badge.Unreviewed.push(audit)
+          else if (audit.original.status == '通过审核')
+            this.badge.Approved.push(audit)
+          else this.badge.notapproved.push(audit)
+        })
+        // this.$baseMessage(
+        //   this.$translateTitle('alert.Data request successfully'),
+        //   'success',
+        //   'vab-hey-message-success'
+        // )
+        // loading.close()
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -703,6 +690,15 @@ export default {
      * @Description:
      */
     async notapproved(params, step) {
+      // 判断下未审核任务的个数
+      if (this.badge.Unreviewed.length === this.auditList) {
+        this.$baseMessage(
+          '当前任务证据没有被审核',
+          'warning',
+          'vab-hey-message-warning'
+        )
+        return false
+      }
       try {
         const loading = this.$baseColorfullLoading()
         const finish = {
@@ -748,18 +744,27 @@ export default {
         null,
         async () => {
           try {
-            const loading = this.$baseColorfullLoading()
-            const finish = {
-              profile: _.merge(params.profile, {
-                step: step,
-              }),
+            if (this.auditList?.length) {
+              const loading = this.$baseColorfullLoading()
+              const finish = {
+                profile: _.merge(params.profile, {
+                  step: step,
+                }),
+              }
+              await generatereport(params.objectId)
+              const res = await putDevice(params.objectId, finish)
+              this.$router.push({
+                path: '/cloudTest/Task',
+              })
+              loading.close()
+            } else {
+              this.$baseMessage(
+                '未提交任何证据',
+                'error',
+                'vab-hey-message-error'
+              )
+              return
             }
-            await generatereport(params.objectId)
-            const res = await putDevice(params.objectId, finish)
-            this.$router.push({
-              path: '/cloudTest/Task',
-            })
-            loading.close()
           } catch (error) {
             console.log(error)
             this.$baseMessage(
@@ -797,8 +802,6 @@ export default {
       }
     },
     async activeBtn(item, index) {
-      if (!_.isEmpty(canvas.info.badge))
-        await this.clearbadgePath(canvas.info.badge)
       this.nowItem = item
       const query = JSON.parse(JSON.stringify(this.$route.query))
       query.suite = index
@@ -814,7 +817,8 @@ export default {
         data: konva.Stage,
         id: 'konva',
       })
-      setTimeout(() => {
+      this.clearKonvaText()
+      await setTimeout(() => {
         this.badgePath = []
         canvas.info.Path = []
         this.loading = false
@@ -832,11 +836,12 @@ export default {
           })
         )
         this.deleteTopo(window.deletePath)
+        this.badgePath =
+          _.filter(canvas.info.Path, function (item) {
+            return item.attrs.icon !== 'timeline'
+          }) ?? []
+        this.getNumberEvidence(this.badgePath)
       }, 1000)
-      this.badgePath =
-        _.filter(canvas.info.Path, function (item) {
-          return item.attrs.icon !== 'timeline'
-        }) ?? []
     },
   }, //如果页面有keep-alive缓存功能，这个函数会触发
 }

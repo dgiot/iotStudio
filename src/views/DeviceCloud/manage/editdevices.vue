@@ -22,26 +22,6 @@
           :label="$translateTitle('equipment.realTime data')"
           name="first1"
         >
-          <vab-query-form>
-            <vab-query-form-left-panel>
-              <span>
-                {{ $translateTitle('equipment.realtimerefresh') }}
-              </span>
-              <el-switch
-                v-model="isupdate"
-                active-color="#13ce66"
-                inactive-color="#cccccc"
-                @change="updateTrue($event)"
-              />
-            </vab-query-form-left-panel>
-            <vab-query-form-right-panel>
-              <vab-help
-                src="https://tech.iotn2n.com/w/docs/details?id=6"
-                title="产品下的所有设备都会继承该产品的 Topic 类"
-                trigger="click"
-              />
-            </vab-query-form-right-panel>
-          </vab-query-form>
           <div>
             <div class="thirdtb">
               <!--运行状态卡片-->

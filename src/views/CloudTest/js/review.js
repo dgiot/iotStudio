@@ -477,6 +477,7 @@ export default {
           skip: 0,
           where: {
             'original.taskid': objectId,
+            reportId: { $ne: objectId },
           },
         }
         const loading = this.$baseColorfullLoading()
@@ -617,13 +618,17 @@ export default {
         name: this.queryForm.name.length
           ? { $regex: this.queryForm.name }
           : { $ne: null },
-        'profile.step': { $gt: 1 },
+        'profile.step': { $regex: '' + '^(-1|[2-9]\\d*)$' },
+        // 'profile.step': {
+        //   $regex: '.+',
+        // },
       }
+      // 匹配 -1 且在 1-9之间的  /^[-1|2-9]\d*$
+      // 测试方法 /^[-1|2-9]\d*$/.test(-1)
       this.listLoading = true
       const { count = 0, results = [] } = await queryDevice(this.queryPayload)
       this.$refs['examination'].ination.total = count
       results.forEach((item) => {
-        if (!item.profile.step) item.profile.step = 0
         item.endtime = item.profile.endtime
           ? moment(Number(item.profile.endtime)).format('YYYY-MM-DD HH:mm:ss')
           : ''
@@ -631,11 +636,7 @@ export default {
           ? moment(Number(item.profile.starttime)).format('YYYY-MM-DD HH:mm:ss')
           : ''
         item.createdAt = moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
-        if (item.profile.step <= 1) {
-          this.list.forensics.push(item)
-        } else {
-          this.list.examination.push(item)
-        }
+        this.list.examination.push(item)
       })
       this.listLoading = false
     },

@@ -7,6 +7,7 @@ import globalConfig from '@/utils/config/globalConfig'
 import store from '@/store'
 import { Message } from 'element-ui'
 import dgiotlog from '@/utils/dgiotLog/index'
+import dgiotConsole from '@/utils/dgiotLog/console'
 import {
   create_object,
   del_object,
@@ -534,5 +535,6 @@ export default {
     Vue.prototype.$downBinary = downBinary
     Vue.prototype.$FileServe = Cookies.get('fileServer')
     Vue.prototype.$dgiotlog = dgiotlog
+    Vue.prototype.$dgiotConsole = dgiotConsole
   },
 }
