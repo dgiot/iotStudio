@@ -517,7 +517,6 @@
   import { export_txt_to_zip } from '@/utils/file/export2zip.js'
   import Cookies from 'js-cookie'
   import { addGroup } from '@/api/Group/index'
-
   export default {
     data() {
       return {

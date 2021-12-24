@@ -868,7 +868,6 @@
             />
           </baidu-map>
         </el-tab-pane>
-
         <!--        <el-tab-pane-->
         <!--          :label="$translateTitle('leftbar.analysis')"-->
         <!--          name="analysis"-->
@@ -1325,12 +1324,12 @@
   </div>
 </template>
 <script>
+  import chartTest from '@/config/ignore/view/chart/index'
   import { mapGetters, mapMutations } from 'vuex'
   import { get_object } from '@/api/shuwa_parse'
   import { batch, Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
   import { getProduct, queryProduct } from '@/api/Product/index'
-  import deviceState from '@/components/Device/deviceState'
   import {
     BaiduMap,
     BmCityList,
