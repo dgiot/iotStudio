@@ -183,7 +183,7 @@
           _function: 'last',
           style: '',
           number: 1,
-          interval: 's',
+          interval: 'm',
           datetimerange: '',
           keys: '*',
           limit: 100,
@@ -258,8 +258,11 @@
         try {
           const res = await getDevice(evidenceId)
           this.infoData = res
-          const { profile = {}, parentId = {} } = res
-          this.params.startTime = profile.starttime ?? []
+          const {
+            profile = { endtime: moment(Number(endTime)).valueOf() },
+            parentId = {},
+          } = res
+          this.params.startTime = profile.starttime
           this.params.endTime = profile.endtime
           this.historycolumns = profile.historicaldatacolumns ?? []
           this.historyEvidence = profile.historicaldata ?? []

@@ -15,7 +15,9 @@
         placement="right"
         :visible="visible"
         width="100%"
-        @close="visible = false"
+        @close="
+          saveHistorical(collectionInfo, thingcolumns, historyEvidence, true)
+        "
       >
         <el-row :gutter="24">
           <el-col :span="12">
@@ -70,7 +72,8 @@
                     saveHistorical(
                       collectionInfo,
                       thingcolumns,
-                      historyEvidence
+                      historyEvidence,
+                      false
                     )
                   "
                 >
@@ -104,23 +107,15 @@
               style="min-height: 530px"
             >
               <el-table-column
+                v-for="(item, index) in historycolumns"
+                :key="index"
                 align="center"
-                label="历史数据"
+                :label="$translateTitle(`cloudTest.${item.label}`)"
+                :prop="item.prop"
                 show-overflow-tooltip
                 sortable
                 width="auto"
-              >
-                <el-table-column
-                  v-for="(item, index) in historycolumns"
-                  :key="index"
-                  align="center"
-                  :label="$translateTitle(`cloudTest.${item.label}`)"
-                  :prop="item.prop"
-                  show-overflow-tooltip
-                  sortable
-                  width="auto"
-                />
-              </el-table-column>
+              />
               <el-table-column align="center" label="操作" width="60">
                 <template #default="{ row, $index }">
                   <el-button

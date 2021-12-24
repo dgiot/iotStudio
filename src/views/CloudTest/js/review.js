@@ -618,7 +618,7 @@ export default {
         name: this.queryForm.name.length
           ? { $regex: this.queryForm.name }
           : { $ne: null },
-        'profile.step': { $regex: '^(-1|[2-9]\\d*)$' },
+        'profile.step': { $regex: '' + '^(-1|[2-9]\\d*)$' },
         // 'profile.step': {
         //   $regex: '.+',
         // },

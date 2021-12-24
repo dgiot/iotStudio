@@ -747,8 +747,8 @@ export default {
         _this.visible = true
       } catch (error) {
         console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
+        _this.$baseMessage(
+          _this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
           'vab-hey-message-error'
         )
@@ -917,7 +917,7 @@ export default {
      * @return {Promise<void>}
      * @Description:
      */
-    async saveHistorical(collectionInfo, thingcolumns, historyEvidence) {
+    async saveHistorical(collectionInfo, thingcolumns, historyEvidence, type) {
       const _profile = {
         profile: _.merge(collectionInfo.profile, {
           historicaldatacolumns: _.filter(thingcolumns, function (item) {
@@ -927,6 +927,7 @@ export default {
         }),
       }
       console.log(collectionInfo, _profile)
+      if (type) this.visible = false
       try {
         const loading = this.$baseColorfullLoading()
         const results = await putDevice(collectionInfo.objectId, _profile)
