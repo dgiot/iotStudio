@@ -1324,7 +1324,7 @@
   </div>
 </template>
 <script>
-  import chartTest from '@/config/ignore/view/chart/index'
+  import deviceState from '@/components/Device/deviceState'
   import { mapGetters, mapMutations } from 'vuex'
   import { get_object } from '@/api/shuwa_parse'
   import { batch, Batchdelete } from '@/api/Batch'

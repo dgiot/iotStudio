@@ -371,7 +371,6 @@ export default {
       ],
       thirdData: [],
       thirdDatas: [],
-      isupdate: false,
       ispushdata: true,
       timer: null,
       isshowtable: false,
@@ -411,10 +410,6 @@ export default {
     }),
   },
   watch: {
-    machinelist: {
-      deep: true,
-      handler(val) {},
-    },
     sm(v) {
       this.$nextTick((_) => {
         this.resizeTheChart()
@@ -427,14 +422,27 @@ export default {
   mounted() {
     this.setTreeFlag(false)
     this.params.style = this.chartType[0].type
-    dgiotlog.log(' this.params.style', this.params.style)
+    console.log(' this.params.style', this.params.style)
+    this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
+    this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
     if (this.$route.query.deviceid) {
+      this.subRealtimedata()
       this.deviceid = this.$route.query.deviceid
       this.initChart()
       this.getDeviceInfo(this.deviceid)
       window.addEventListener('resize', this.resizeTheChart)
     }
-    this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
+    this.$dgiotBus.$off(this.topicKey) // dgiotBus 关闭事件
+    this.$dgiotBus.$on(this.topicKey, (mqttMsg) => {
+      // mqtt 消息回调
+      console.groupCollapsed(
+        `%c mqttMsg消息回调 \n${this.topicKey}`,
+        'color:#009a61; font-size: 28px; font-weight: 300'
+      )
+      console.log(mqttMsg)
+      console.log('payload:', mqttMsg.payload)
+      console.groupEnd()
+    })
   },
   // 清除定时器
   destroyed: function () {
@@ -446,6 +454,41 @@ export default {
     window.removeEventListener('resize', this.resizeTheChart)
   },
   methods: {
+    /**
+     * @Author: dext7r
+     * @Date: 2021-12-24 12:13:39
+     * @LastEditors:
+     * @param
+     * @return {Promise<void>}
+     * @Description: 订阅实时数据
+     */
+    async subRealtimedata() {
+      try {
+        // 订阅mqtt
+        this.subtopic = `thing/${this.$route.query.deviceid}/realtimedata/post` // 设备实时数据topic
+        this.$dgiotBus.$emit('MqttSubscribe', {
+          router: this.router,
+          topic: this.subtopic,
+          qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
+        })
+        // mqtt 消息回调
+        console.groupCollapsed(
+          `%c mqtt 订阅日志`,
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.log('topic:', this.subtopic)
+        console.log('router:', this.router)
+        console.groupEnd()
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
     ...mapActions({
       setTreeFlag: 'settings/setTreeFlag',
     }),
@@ -499,8 +542,8 @@ export default {
               fontSize: '24px',
             },
             position: {
-              lng: Number(resultes.location.longitude),
-              lat: Number(resultes.location.latitude),
+              lng: Number(resultes.location.longitude) ?? 116.404,
+              lat: Number(resultes.location.latitude) ?? 39.915,
             },
             title: resultes.name,
           }
@@ -670,7 +713,6 @@ export default {
       dgiotlog.log(item)
     },
     tabHandleClick(tab) {
-      this.updateTrue(false)
       switch (tab.name) {
         case 'ninth':
           this.$router.push({
@@ -694,8 +736,8 @@ export default {
           this.$refs.SceneLog.get_topic()
           break
         case 'first1':
+          this.subRealtimedata()
           this.Update()
-          this.updateTrue(true)
           break
       }
     },
@@ -788,29 +830,11 @@ export default {
             })
             vm.machinelist = machine
             vm.thirdtbKey = moment(new Date()).valueOf()
-            dgiotlog.log('this.machinelist', vm.machinelist)
-          } else {
-            this.updateTrue(false)
-            this.isupdate = false
           }
         })
         .catch((error) => {
           dgiotlog.log('update error 清除timer', error)
-          this.updateTrue(false)
-          this.isupdate = false
         })
-    },
-    // 定时器启动
-    updateTrue(event) {
-      this.ispushdata = false
-      if (event == true) {
-        this.timer = window.setInterval(() => {
-          this.Update()
-        }, 10000)
-      } else {
-        window.clearInterval(this.timer)
-        this.timer = null
-      }
     },
     // 实时数据的分页
     dataDeviceSizeChange(val) {
