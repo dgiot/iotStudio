@@ -7,6 +7,7 @@
 * file case sensitive ([c3ee038](https://github.com/dgiot/dgiot-dashboard/commit/c3ee03886a70c63310de9b5713a4a882f903d3e9))
 * **file:** repair file loss ([4abe241](https://github.com/dgiot/dgiot-dashboard/commit/4abe241bbc90964b8abbc0e58ff3614d6b725d07))
 * **file:** solve the problem that cli Dabaoshan does not recognize the case of files ([0b2e1f7](https://github.com/dgiot/dgiot-dashboard/commit/0b2e1f7060d1de20c144d4a2aac39bdb75330d47))
+* **src/dgiot/components/vaberrorlog/index.vue:** judgment display mechanism ([90873d0](https://github.com/dgiot/dgiot-dashboard/commit/90873d009950d232f99170da16d68168e4b58e2c))
 * **src/store/modules/user.js:** tickTime ([84a3ba6](https://github.com/dgiot/dgiot-dashboard/commit/84a3ba6f539daae5c49cfde4f3ba09d20442fdf9))
 * **src/views/cloudtest/js/task.js:** search ([4c48d3e](https://github.com/dgiot/dgiot-dashboard/commit/4c48d3e4081b812470f5ad350373f94cfb89d201))
 * **src/views/cloudtest/js/task.js:** task ([7bec104](https://github.com/dgiot/dgiot-dashboard/commit/7bec104c579670e43ab2d903caa164a18caee37a))

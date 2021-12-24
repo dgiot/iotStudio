@@ -2328,9 +2328,9 @@
               ? { $regex: this.deviceinput }
               : { $ne: null },
           status:
-            this.onlinedevices.onlinedevices == '在线'
+            this.onlinedevices == '在线'
               ? 'ONLINE'
-              : this.onlinedevices.onlinedevices == '离线'
+              : this.onlinedevices == '离线'
               ? 'OFFLINE'
               : { $ne: null },
         }
