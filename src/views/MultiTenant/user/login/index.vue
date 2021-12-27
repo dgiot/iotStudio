@@ -146,7 +146,7 @@
         }
       }
       return {
-        isShow: !_.isEmpty(Cookies.get('id_token')) ? false : true,
+        isShow: window.name == 'dgiot_iframe' ? false : true,
         locationPath: location.href.split('/#')[0],
         info: {
           empty: this.$translateTitle('home.Username can not be empty'),
@@ -216,8 +216,15 @@
       },
     },
     async mounted() {
+      await Cookies.remove('startIframe')
+      this.isShow = window.name == 'dgiot_iframe' ? false : true
+      await Cookies.set('startIframe', moment().format('YYYY:MM:DD HH:mm:ss'))
       await this.initShuwa()
       await this.defaultSet()
+    },
+    created() {
+      this.isShow = window.name == 'dgiot_iframe' ? false : true
+      Cookies.set('startIframe', moment().format('YYYY:MM:DD HH:mm:ss'))
     },
     methods: {
       ...mapMutations({
@@ -234,12 +241,13 @@
        * @Description:
        */
       async defaultSet() {
+        let _this = this
         // window.addEventListener('message', function (e) {
         //   console.error(e)
         // })
         try {
-          if (this.backgroundimage) {
-            this.backgroundImage = !_.isEmpty(Cookies.get('id_token'))
+          if (_this.backgroundimage) {
+            _this.backgroundImage = !_.isEmpty(Cookies.get('id_token'))
               ? 'https://s2.loli.net/2021/12/15/ciVTb7w62rxQ3a9.jpg'
               : // 'https://s2.loli.net/2021/12/15/aJYcUGVixXhTML3.png'
                 // 'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
@@ -250,6 +258,7 @@
               ? process.env.VUE_APP_URL
               : location.origin
           Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
+          Cookies.remove('pwaLogin')
           console.log(
             `addEventListener time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
           )
@@ -262,27 +271,40 @@
               type: 'cookie',
               time: moment().format('YYYY:MM:DD  HH:mm:ss'),
             }
-            e.source.postMessage(message, e.origin)
-            console.log(
-              `receive time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
-            )
-            console.groupCollapsed(
-              '%c iframe message',
-              'color:#009a61; font-size: 28px; font-weight: 300'
-            )
-            console.log(e)
-            console.error('从' + e.origin + '收到消息： \n')
-            console.log(e.data.id_token)
-            console.groupEnd()
             if (e.data.id_token) {
-              Cookies.set('id_token', e.data.id_token, {
-                expires: 60 * 1000 * 30,
-              })
+              console.log(
+                `receive time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
+              )
+              console.groupCollapsed(
+                '%c iframe message',
+                'color:#009a61; font-size: 28px; font-weight: 300'
+              )
+              console.log(e)
+              console.error('从' + e.origin + '收到消息： \n')
+              console.error(e.data)
+              e.source.postMessage(message, e.origin)
+              console.log(e.data.id_token)
+              console.groupEnd()
+              if (e.data.id_token) {
+                Cookies.set('id_token', e.data.id_token, {
+                  expires: 60 * 1000 * 30,
+                })
+                console.info(
+                  `检测到页面存在 jwt token \n`,
+                  e.data.id_token,
+                  '\n采用jwt token 登录'
+                )
+                _this.isShow = !_.isEmpty(Cookies.get('id_token'))
+                  ? false
+                  : true
+                _this.jwtlogin(e.data.id_token)
+                _this.goHome()
+              }
+              console.groupEnd()
             }
           })
           // }
           console.log(window.parent)
-          window.parent.saveCookie('window', 'windowwindowwindow', 1)
           console.groupCollapsed(
             `%c 单点登录日志 ${moment().format('YYYY:MM:DD HH:mm:ss')}`,
             'color:#009a61; font-size: 28px; font-weight: 300'
@@ -290,15 +312,6 @@
           console.info('iframe', window.name)
           console.info('id_token ->\n', Cookies.get('id_token'))
           console.groupEnd()
-          if (Cookies.get('id_token')) {
-            console.info(
-              '检测到页面存在 jwt token \n',
-              Cookies.get('id_token'),
-              '\n采用jwt token 登录'
-            )
-            await this.jwtlogin(Cookies.get('id_token'))
-            await this.goHome()
-          }
         } catch (error) {
           console.log(error)
         }
@@ -336,8 +349,9 @@
         return name
       },
       async initShuwa() {
-        if (window.name !== 'dgiot_iframe') Cookies.remove('id_token')
+        // if (window.name !== 'dgiot_iframe') Cookies.remove('id_token')
         // await this.getlicense()
+        Cookies.remove('fileServer')
         const Default = await SiteDefault()
         const { copyright, logo, objectId, title } = Default
         this.setDefault(Default)

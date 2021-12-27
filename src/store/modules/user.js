@@ -20,8 +20,9 @@ async function queryAllMsg(commit, dispatch, data, type) {
     tag = {},
     fileServer,
     expires_in = 86400,
+    userInfo = {},
   } = data
-
+  console.log(data)
   Vue.prototype.$FileServe = Cookies.get('fileServer')
   // clientMqtt()
   // initDgiotMqtt(objectId)
@@ -31,9 +32,8 @@ async function queryAllMsg(commit, dispatch, data, type) {
   })
 
   if (type === 'jwt') {
-    const { state = {} } = data.userInfo
+    const { state = {} } = userInfo
     // Cookies.set('jwtInfo', state, { expires: 1 })
-    Cookies.set('pwaLogin', true, { expires: 1 })
     window.addEventListener('message', function (e) {
       const companyName = {
         value: state.extendFields.companyName,
@@ -365,12 +365,9 @@ const actions = {
    */
   async jwtlogin({ commit, dispatch }, token) {
     const userInfo = await jwtlogin(token)
+    Cookies.set('pwaLogin', true, { expires: 1 })
     if (Number(userInfo.code) != 200) {
-      Vue.prototype.$baseMessage(
-        `jwt登录失败,\n${userInfo.msg}`,
-        `jwt登录失败,\n${userInfo.msg}`,
-        'error'
-      )
+      Vue.prototype.$baseMessage(`jwt登录失败,\n${userInfo.msg}`, 'error')
       // Cookies.remove('id_token')
       return false
     }

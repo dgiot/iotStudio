@@ -4,7 +4,7 @@
  */
 module.exports = {
   // 是否启用pwa功能
-  isPwa: true,
+  isPwa: false,
   pwaConfig: {
     workboxOptions: {
       skipWaiting: true,
