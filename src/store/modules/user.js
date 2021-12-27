@@ -10,7 +10,7 @@ const getLocalStorage = (key) => {
   }
 }
 const { language } = getLocalStorage('language')
-async function queryAllMsg(commit, dispatch, data) {
+async function queryAllMsg(commit, dispatch, data, type) {
   tickTime()
   const {
     sessionToken,
@@ -29,6 +29,31 @@ async function queryAllMsg(commit, dispatch, data) {
     time: (Date.parse(new Date()) / 1000 + expires_in) * 1000,
     expires_in: 7,
   })
+
+  if (type === 'jwt') {
+    const { state = {} } = data.userInfo
+    // Cookies.set('jwtInfo', state, { expires: 1 })
+    Cookies.set('pwaLogin', true, { expires: 1 })
+    window.addEventListener('message', function (e) {
+      const companyName = {
+        value: state.extendFields.companyName,
+        key: 'companyName',
+        action: 'save',
+        type: 'cookie',
+        time: moment().format('YYYY:MM:DD  HH:mm:ss'),
+      }
+      const userId = {
+        value: state.externalId,
+        key: 'userId',
+        action: 'save',
+        type: 'cookie',
+        time: moment().format('YYYY:MM:DD  HH:mm:ss'),
+      }
+      e.source.postMessage(companyName, e.origin)
+      e.source.postMessage(userId, e.origin)
+    })
+  }
+
   if (nick) commit('setUsername', nick)
   const page_title = getToken('title') || title
   const { title, Copyright, name, logo, _pcimg, _mimg } = tag.companyinfo
@@ -349,12 +374,6 @@ const actions = {
       // Cookies.remove('id_token')
       return false
     }
-    const { state = {} } = userInfo
-    Cookies.set('companyName', state.extendFields.companyName, {
-      expires: 1,
-    })
-    Cookies.set('userId', state.externalId, { expires: 1 })
-    Cookies.set('jwtInfo', state, { expires: 1 })
     let data = _.merge(
       {
         tag: {
@@ -376,7 +395,7 @@ const actions = {
     )
     const { sessionToken = '' } = data
     if (sessionToken) {
-      await queryAllMsg(commit, dispatch, data)
+      await queryAllMsg(commit, dispatch, data, 'jwt')
     } else {
       Cookies.remove('id_token')
       return Promise.reject()
@@ -411,7 +430,7 @@ const actions = {
     )
     const { sessionToken = '' } = data
     if (sessionToken) {
-      await queryAllMsg(commit, dispatch, data)
+      await queryAllMsg(commit, dispatch, data, 'ajax')
       commit('setLoginInfo', userInfo)
     } else {
       Vue.prototype.$baseMessage(

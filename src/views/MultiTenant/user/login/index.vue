@@ -250,23 +250,41 @@
               ? process.env.VUE_APP_URL
               : location.origin
           Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
-          window.onload = function () {
-            window.addEventListener('message', function (e) {
-              console.groupCollapsed(
-                '%c iframe message',
-                'color:#009a61; font-size: 28px; font-weight: 300'
-              )
-              console.log(e)
-              // if (e.origin !== "https://pumpd.runoob.com") {  // 验证消息来源地址
-              //   return;
-              // }
-              console.error('从' + e.origin + '收到消息： \n')
-              console.log(e.data)
-              console.groupEnd()
-            })
-          }
+          console.log(
+            `addEventListener time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
+          )
+          // window.onload = function () {
+          window.addEventListener('message', function (e) {
+            const message = {
+              value: 'id_token',
+              key: 'test',
+              action: 'save',
+              type: 'cookie',
+              time: moment().format('YYYY:MM:DD  HH:mm:ss'),
+            }
+            e.source.postMessage(message, e.origin)
+            console.log(
+              `receive time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
+            )
+            console.groupCollapsed(
+              '%c iframe message',
+              'color:#009a61; font-size: 28px; font-weight: 300'
+            )
+            console.log(e)
+            console.error('从' + e.origin + '收到消息： \n')
+            console.log(e.data.id_token)
+            console.groupEnd()
+            if (e.data.id_token) {
+              Cookies.set('id_token', e.data.id_token, {
+                expires: 60 * 1000 * 30,
+              })
+            }
+          })
+          // }
+          console.log(window.parent)
+          window.parent.saveCookie('window', 'windowwindowwindow', 1)
           console.groupCollapsed(
-            '%c 单点登录日志',
+            `%c 单点登录日志 ${moment().format('YYYY:MM:DD HH:mm:ss')}`,
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
           console.info('iframe', window.name)
