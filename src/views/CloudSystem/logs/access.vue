@@ -266,7 +266,7 @@
             skip: args.skip,
             order: args.order,
             count: this.queryForm.count,
-            keys: 'Time,msg',
+            keys: 'time,msg',
             include: '',
             where: {
               domain: this.queryForm.domain
