@@ -127,6 +127,7 @@
     },
     beforeRouteLeave(to, from, next) {
       clearInterval(this.timer)
+      clearInterval(this.interval)
       next()
     },
     data() {
@@ -146,6 +147,7 @@
         }
       }
       return {
+        interval: null,
         isShow: window.name == 'dgiot_iframe' ? false : true,
         locationPath: location.href.split('/#')[0],
         info: {
@@ -181,6 +183,7 @@
         timer: 0,
       }
     },
+
     computed: {
       ...mapGetters({
         language: 'settings/language',
@@ -216,13 +219,19 @@
         immediate: true,
       },
     },
+    beforeDestroy() {
+      window.removeEventListener('message', this.iframeLogin)
+    },
     async mounted() {
-      await this.init()
-      await this.initShuwa()
-      await this.defaultSet()
+      this.$nextTick(async () => {
+        await this.init()
+        await this.initShuwa()
+        await this.defaultSet()
+      })
     },
     created() {
       this.isShow = window.name == 'dgiot_iframe' ? false : true
+      window.addEventListener('message', this.iframeLogin)
     },
     methods: {
       ...mapMutations({
@@ -230,6 +239,93 @@
         setCopyright: 'acl/setCopyright',
         setDefault: 'acl/setDefault',
       }),
+      /**
+       * @Author: dext7r
+       * @Date: 2021-12-28 20:30:01
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async iframeLogin(e) {
+        // const vm = this
+        try {
+          const startIframe = {
+            value: moment().format('YYYY:MM:DD  HH:mm:ss'),
+            key: 'startIframe',
+            action: 'save',
+            type: 'cookie',
+            time: moment().format('YYYY:MM:DD  HH:mm:ss'),
+          }
+          e.source.postMessage(startIframe, e.origin)
+          const message = {
+            value: moment().format('YYYY:MM:DD  HH:mm:ss'),
+            key: 'pwaLogin',
+            action: 'save',
+            type: 'cookie',
+            time: moment().format('YYYY:MM:DD  HH:mm:ss'),
+          }
+          if (e.data.id_token) {
+            if (_.isEmpty(Cookies.get('handleRoute'))) {
+              this.jwtlogin(e.data.id_token)
+              this.goHome()
+            }
+            console.log(
+              `receive time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
+            )
+            console.groupCollapsed(
+              '%c iframe message',
+              'color:#009a61; font-size: 28px; font-weight: 300'
+            )
+            console.info('从' + e.origin + '收到消息： \n')
+            console.log(e.data)
+            e.source.postMessage(message, e.origin)
+            console.groupEnd()
+            Cookies.set('id_token', e.data.id_token, {
+              expires: 60 * 1000 * 30,
+            })
+            console.info(
+              `检测到页面存在 jwt token \n`,
+              e.data.id_token,
+              '\n采用jwt token 登录'
+            )
+            console.groupEnd()
+            Cookies.set('handleRoute', 'true', { expires: 60 * 1000 * 30 })
+          }
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
+      },
+      /**
+       * @Author: dext7r
+       * @Date: 2021-12-28 19:39:28
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async routeDgiot() {
+        try {
+          await setTimeout(() => {
+            if (this.objectId) {
+              console.log('userid', this.objectId)
+              document.querySelector('.el-tree-node__content').click()
+            }
+          }, 1200)
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
+      },
       /**
        * @Author: dext7r
        * @Date: 2021-12-27 19:53:22
@@ -243,11 +339,17 @@
           Cookies.remove('startIframe')
           Cookies.remove('pwaLogin')
           Cookies.remove('fileServer')
-          if (window.name == 'dgiot_iframe') {
-            Cookies.set('startIframe', moment().format('YYYY:MM:DD HH:mm:ss'), {
-              expires: 60 * 1000 * 30,
-            })
-          }
+          this.$nextTick(() => {
+            if (window.name == 'dgiot_iframe') {
+              Cookies.set(
+                'startIframe',
+                moment().format('YYYY:MM:DD HH:mm:ss'),
+                {
+                  expires: 60 * 1000 * 30,
+                }
+              )
+            }
+          })
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -266,13 +368,13 @@
        * @Description:
        */
       async defaultSet() {
-        const vm = this
         console.log(`dgiot build time: ${dgiot.dateTime}`)
-        vm.backgroundImage = Cookies.get('startIframe')
+        console.log(`startIframe time: ${Cookies.get('startIframe')}`)
+        this.backgroundImage = Cookies.get('startIframe')
           ? 'https://s2.loli.net/2021/12/15/ciVTb7w62rxQ3a9.jpg'
           : // 'https://s2.loli.net/2021/12/15/aJYcUGVixXhTML3.png'
             // 'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
-            vm.backgroundimage
+            this.backgroundimage
         const url =
           process.env.NODE_ENV === 'development'
             ? process.env.VUE_APP_URL
@@ -282,48 +384,6 @@
           console.log(
             `addEventListener time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
           )
-          // window.onload = function () {
-          window.addEventListener('message', function (e) {
-            const startIframe = {
-              value: moment().format('YYYY:MM:DD  HH:mm:ss'),
-              key: 'startIframe',
-              action: 'save',
-              type: 'cookie',
-              time: moment().format('YYYY:MM:DD  HH:mm:ss'),
-            }
-            e.source.postMessage(startIframe, e.origin)
-            const message = {
-              value: moment().format('YYYY:MM:DD  HH:mm:ss'),
-              key: 'pwaLogin',
-              action: 'save',
-              type: 'cookie',
-              time: moment().format('YYYY:MM:DD  HH:mm:ss'),
-            }
-            if (e.data.id_token) {
-              vm.jwtlogin(e.data.id_token)
-              console.log(
-                `receive time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
-              )
-              console.groupCollapsed(
-                '%c iframe message',
-                'color:#009a61; font-size: 28px; font-weight: 300'
-              )
-              console.info('从' + e.origin + '收到消息： \n')
-              console.log(e.data)
-              e.source.postMessage(message, e.origin)
-              console.groupEnd()
-              Cookies.set('id_token', e.data.id_token, {
-                expires: 60 * 1000 * 30,
-              })
-              console.info(
-                `检测到页面存在 jwt token \n`,
-                e.data.id_token,
-                '\n采用jwt token 登录'
-              )
-              console.groupEnd()
-              vm.goHome()
-            }
-          })
           // }
           console.groupCollapsed(
             `%c 单点登录日志 ${moment().format('YYYY:MM:DD HH:mm:ss')}`,
@@ -414,19 +474,20 @@
        * @Description:
        */
       async goHome() {
-        const vm = this
         try {
-          await vm.$router.push(vm.handleRoute())
-          await setTimeout(() => {
-            if (vm.objectId) {
-              console.log('userid', vm.objectId)
-              document.querySelector('.el-tree-node__content').click()
+          this.interval = setInterval(async () => {
+            if (Cookies.get('handleRoute') != '') {
+              console.log('handleRoute 存在，跳转页面')
+              await this.$router.push(this.handleRoute())
+              await this.routeDgiot()
+              clearInterval(this.interval)
+              window.clearInterval(this.interval)
             }
-          }, 1200)
+          }, 1500)
         } catch (error) {
           console.log(error)
-          vm.$baseMessage(
-            vm.$translateTitle('alert.Data request error') + `${error}`,
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
             'vab-hey-message-error'
           )

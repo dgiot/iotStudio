@@ -1,6 +1,8 @@
 /**
  * @description 登录、获取用户信息、退出登录、清除token逻辑，不建议修改
  */
+import cookie from 'cookie'
+
 const getLocalStorage = (key) => {
   const value = localStorage.getItem(key)
   if (isJson(value)) {
@@ -29,29 +31,6 @@ async function queryAllMsg(commit, dispatch, data, type) {
     time: (Date.parse(new Date()) / 1000 + expires_in) * 1000,
     expires_in: 7,
   })
-
-  if (type == 'jwt') {
-    // Cookies.set('jwtInfo', state, { expires: 1 })
-    console.log('jwt info', state)
-    window.addEventListener('message', function (e) {
-      const companyName = {
-        value: state.extendFields.companyName,
-        key: 'companyName',
-        action: 'save',
-        type: 'cookie',
-        time: moment().format('YYYY:MM:DD  HH:mm:ss'),
-      }
-      const userId = {
-        value: state.externalId,
-        key: 'userId',
-        action: 'save',
-        type: 'cookie',
-        time: moment().format('YYYY:MM:DD  HH:mm:ss'),
-      }
-      e.source.postMessage(companyName, e.origin)
-      e.source.postMessage(userId, e.origin)
-    })
-  }
 
   if (nick) commit('setUsername', nick)
   const page_title = getToken('title') || title
@@ -121,8 +100,34 @@ async function queryAllMsg(commit, dispatch, data, type) {
       '%c login promise.all log',
       'color:#009a61; font-size: 28px; font-weight: 300'
     )
-    console.info('login promise.all log ->', promiseRes)
+    console.info('login promise.all log ->')
+    console.log(promiseRes)
     console.groupEnd()
+    Cookies.set('handleRoute', 'true', { expires: 60 * 1000 * 30 })
+
+    if (type == 'jwt') {
+      // Cookies.set('jwtInfo', state, { expires: 1 })
+      console.log('jwt info', state)
+      window.addEventListener('message', function (e) {
+        const companyName = {
+          value: state.extendFields.companyName,
+          key: 'companyName',
+          action: 'save',
+          type: 'cookie',
+          time: moment().format('YYYY:MM:DD  HH:mm:ss'),
+        }
+        const userId = {
+          value: state.externalId,
+          key: 'userId',
+          action: 'save',
+          type: 'cookie',
+          time: moment().format('YYYY:MM:DD  HH:mm:ss'),
+        }
+        e.source.postMessage(companyName, e.origin)
+        e.source.postMessage(userId, e.origin)
+      })
+      // this.$router.push(this.handleRoute())
+    }
   } catch (e) {
     dgiotlog.warn(`await Promise.all error ${e}`)
   }
@@ -388,7 +393,7 @@ const actions = {
       userInfo
     )
     const { sessionToken = '' } = data
-    if (sessionToken || Number(userInfo.code) == 200) {
+    if (sessionToken) {
       await queryAllMsg(commit, dispatch, data, 'jwt')
     } else {
       Cookies.remove('id_token')
