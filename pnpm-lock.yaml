@@ -10700,7 +10700,7 @@ packages:
     dev: false
 
   /pretty-time/1.1.0:
-    resolution: {integrity: sha1-/7dCmvq7hTXDRqNOQYc63z103Q4=, tarball: pretty-Time/download/pretty-Time-1.1.0.tgz}
+    resolution: {integrity: sha1-/7dCmvq7hTXDRqNOQYc63z103Q4=, tarball: pretty-time/download/pretty-time-1.1.0.tgz}
     engines: {node: '>=4'}
     dev: true
 

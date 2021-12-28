@@ -216,15 +216,12 @@
       },
     },
     async mounted() {
-      await Cookies.remove('startIframe')
-      this.isShow = window.name == 'dgiot_iframe' ? false : true
-      await Cookies.set('startIframe', moment().format('YYYY:MM:DD HH:mm:ss'))
+      await init()
       await this.initShuwa()
       await this.defaultSet()
     },
     created() {
       this.isShow = window.name == 'dgiot_iframe' ? false : true
-      Cookies.set('startIframe', moment().format('YYYY:MM:DD HH:mm:ss'))
     },
     methods: {
       ...mapMutations({
@@ -232,6 +229,32 @@
         setCopyright: 'acl/setCopyright',
         setDefault: 'acl/setDefault',
       }),
+      /**
+       * @Author: dext7r
+       * @Date: 2021-12-27 19:53:22
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async init() {
+        try {
+          Cookies.remove('startIframe')
+          Cookies.remove('pwaLogin')
+          Cookies.remove('fileServer')
+          if (window.name == 'dgiot_iframe')
+            Cookies.set('startIframe', moment().format('YYYY:MM:DD HH:mm:ss'), {
+              expires: 60 * 1000 * 30,
+            })
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'vab-hey-message-error'
+          )
+        }
+      },
       /**
        * @Author: h7ml
        * @Date: 2021-12-14 12:46:36
@@ -241,13 +264,13 @@
        * @Description:
        */
       async defaultSet() {
-        let _this = this
+        console.log(`dgiot build time: ${dgiot.dateTime}`)
         // window.addEventListener('message', function (e) {
         //   console.error(e)
         // })
         try {
-          if (_this.backgroundimage) {
-            _this.backgroundImage = !_.isEmpty(Cookies.get('id_token'))
+          if (this.backgroundimage) {
+            this.backgroundImage = Cookies.get('startIframe').length
               ? 'https://s2.loli.net/2021/12/15/ciVTb7w62rxQ3a9.jpg'
               : // 'https://s2.loli.net/2021/12/15/aJYcUGVixXhTML3.png'
                 // 'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
@@ -258,14 +281,13 @@
               ? process.env.VUE_APP_URL
               : location.origin
           Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
-          Cookies.remove('pwaLogin')
           console.log(
             `addEventListener time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
           )
           // window.onload = function () {
           window.addEventListener('message', function (e) {
             const message = {
-              value: 'id_token',
+              value: moment().format('YYYY:MM:DD  HH:mm:ss'),
               key: 'test',
               action: 'save',
               type: 'cookie',
@@ -285,21 +307,16 @@
               e.source.postMessage(message, e.origin)
               console.log(e.data.id_token)
               console.groupEnd()
-              if (e.data.id_token) {
-                Cookies.set('id_token', e.data.id_token, {
-                  expires: 60 * 1000 * 30,
-                })
-                console.info(
-                  `检测到页面存在 jwt token \n`,
-                  e.data.id_token,
-                  '\n采用jwt token 登录'
-                )
-                _this.isShow = !_.isEmpty(Cookies.get('id_token'))
-                  ? false
-                  : true
-                _this.jwtlogin(e.data.id_token)
-                _this.goHome()
-              }
+              Cookies.set('id_token', e.data.id_token, {
+                expires: 60 * 1000 * 30,
+              })
+              console.info(
+                `检测到页面存在 jwt token \n`,
+                e.data.id_token,
+                '\n采用jwt token 登录'
+              )
+              this.jwtlogin(e.data.id_token)
+              this.goHome()
               console.groupEnd()
             }
           })
@@ -351,7 +368,6 @@
       async initShuwa() {
         // if (window.name !== 'dgiot_iframe') Cookies.remove('id_token')
         // await this.getlicense()
-        Cookies.remove('fileServer')
         const Default = await SiteDefault()
         const { copyright, logo, objectId, title } = Default
         this.setDefault(Default)
