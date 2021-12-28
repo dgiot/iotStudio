@@ -187,6 +187,7 @@
         Default: 'acl/Default',
         license: 'acl/license',
         logo: 'user/logo',
+        objectId: 'user/objectId',
         backgroundimage: 'user/backgroundimage',
       }),
     },
@@ -282,9 +283,17 @@
           )
           // window.onload = function () {
           window.addEventListener('message', function (e) {
+            const startIframe = {
+              value: moment().format('YYYY:MM:DD  HH:mm:ss'),
+              key: 'startIframe',
+              action: 'save',
+              type: 'cookie',
+              time: moment().format('YYYY:MM:DD  HH:mm:ss'),
+            }
+            e.source.postMessage(startIframe, e.origin)
             const message = {
               value: moment().format('YYYY:MM:DD  HH:mm:ss'),
-              key: 'test',
+              key: 'pwaLogin',
               action: 'save',
               type: 'cookie',
               time: moment().format('YYYY:MM:DD  HH:mm:ss'),
@@ -407,7 +416,10 @@
         try {
           await this.$router.push(this.handleRoute())
           await setTimeout(() => {
-            document.querySelector('.el-tree-node__content').click()
+            if (this.objectId) {
+              console.log('userid', this.objectId)
+              document.querySelector('.el-tree-node__content').click()
+            }
           }, 1200)
         } catch (error) {
           console.log(error)
