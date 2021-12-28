@@ -264,23 +264,19 @@
        * @Description:
        */
       async defaultSet() {
+        const vm = this
         console.log(`dgiot build time: ${dgiot.dateTime}`)
-        // window.addEventListener('message', function (e) {
-        //   console.error(e)
-        // })
+        vm.backgroundImage = Cookies.get('startIframe')
+          ? 'https://s2.loli.net/2021/12/15/ciVTb7w62rxQ3a9.jpg'
+          : // 'https://s2.loli.net/2021/12/15/aJYcUGVixXhTML3.png'
+            // 'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
+            vm.backgroundimage
+        const url =
+          process.env.NODE_ENV === 'development'
+            ? process.env.VUE_APP_URL
+            : location.origin
+        Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
         try {
-          if (this.backgroundimage) {
-            this.backgroundImage = Cookies.get('startIframe')
-              ? 'https://s2.loli.net/2021/12/15/ciVTb7w62rxQ3a9.jpg'
-              : // 'https://s2.loli.net/2021/12/15/aJYcUGVixXhTML3.png'
-                // 'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
-                this.backgroundimage
-          }
-          const url =
-            process.env.NODE_ENV === 'development'
-              ? process.env.VUE_APP_URL
-              : location.origin
-          Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
           console.log(
             `addEventListener time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
           )
@@ -294,6 +290,8 @@
               time: moment().format('YYYY:MM:DD  HH:mm:ss'),
             }
             if (e.data.id_token) {
+              vm.jwtlogin(e.data.id_token)
+              vm.goHome()
               console.log(
                 `receive time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
               )
@@ -301,11 +299,9 @@
                 '%c iframe message',
                 'color:#009a61; font-size: 28px; font-weight: 300'
               )
-              console.log(e)
-              console.error('从' + e.origin + '收到消息： \n')
-              console.error(e.data)
+              console.info('从' + e.origin + '收到消息： \n')
+              console.log(e.data)
               e.source.postMessage(message, e.origin)
-              console.log(e.data.id_token)
               console.groupEnd()
               Cookies.set('id_token', e.data.id_token, {
                 expires: 60 * 1000 * 30,
@@ -315,13 +311,10 @@
                 e.data.id_token,
                 '\n采用jwt token 登录'
               )
-              this.jwtlogin(e.data.id_token)
-              this.goHome()
               console.groupEnd()
             }
           })
           // }
-          console.log(window.parent)
           console.groupCollapsed(
             `%c 单点登录日志 ${moment().format('YYYY:MM:DD HH:mm:ss')}`,
             'color:#009a61; font-size: 28px; font-weight: 300'
