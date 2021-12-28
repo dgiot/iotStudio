@@ -20,7 +20,7 @@ async function queryAllMsg(commit, dispatch, data, type) {
     tag = {},
     fileServer,
     expires_in = 86400,
-    userInfo = {},
+    state = {},
   } = data
   console.log(data)
   Vue.prototype.$FileServe = Cookies.get('fileServer')
@@ -32,7 +32,6 @@ async function queryAllMsg(commit, dispatch, data, type) {
   })
 
   if (type === 'jwt') {
-    const { state = {} } = userInfo
     // Cookies.set('jwtInfo', state, { expires: 1 })
     window.addEventListener('message', function (e) {
       const companyName = {
@@ -122,9 +121,7 @@ async function queryAllMsg(commit, dispatch, data, type) {
       '%c login promise.all log',
       'color:#009a61; font-size: 28px; font-weight: 300'
     )
-    dgiotlog
-      .getDgiotlog('src/store/modules/user.js')
-      .info('login promise.all log ->', promiseRes)
+    console.info('login promise.all log ->', promiseRes)
     console.groupEnd()
   } catch (e) {
     dgiotlog.warn(`await Promise.all error ${e}`)

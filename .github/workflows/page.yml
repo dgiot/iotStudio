@@ -2,8 +2,7 @@ name: page
 
 on:
   push:
-    tags:
-      - 't*'
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:

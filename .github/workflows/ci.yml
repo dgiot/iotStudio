@@ -2,8 +2,6 @@ name: ci
 
 on:
   push:
-    tags:
-      - 't*'
   workflow_dispatch:
 
 jobs:
