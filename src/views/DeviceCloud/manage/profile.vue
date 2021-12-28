@@ -1344,6 +1344,7 @@
           countstrategy: 20,
           countround: 'all',
           countcollection: '%s',
+          daslist: [],
         }
       },
       createProperty() {
