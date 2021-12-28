@@ -216,7 +216,7 @@
       },
     },
     async mounted() {
-      await init()
+      await this.init()
       await this.initShuwa()
       await this.defaultSet()
     },
@@ -270,7 +270,7 @@
         // })
         try {
           if (this.backgroundimage) {
-            this.backgroundImage = Cookies.get('startIframe').length
+            this.backgroundImage = Cookies.get('startIframe')
               ? 'https://s2.loli.net/2021/12/15/ciVTb7w62rxQ3a9.jpg'
               : // 'https://s2.loli.net/2021/12/15/aJYcUGVixXhTML3.png'
                 // 'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
