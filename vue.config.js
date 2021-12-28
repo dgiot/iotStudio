@@ -263,7 +263,7 @@ const configure = {
     new MonacoWebpackPlugin({
       filename: 'output/assets/js/[name].worker.js',
     }),
-    new ForkTsCheckerWebpackPlugin(),
+    // new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),
     new Webpack.ProvidePlugin(providePlugin),
     new WebpackBar({

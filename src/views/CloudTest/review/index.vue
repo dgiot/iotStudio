@@ -64,7 +64,7 @@
                 <!--                  v-else-if="types.audio.includes(`${row.original.type}`)"-->
                 <!--                  :audio-src="$FileServe + row.original.path"-->
                 <!--                />-->
-                <el-link :href="$FileServe + row.original.path">
+                <el-link :href="$FileServe + row.original.path" target="_blank">
                   {{
                     row.original.path.split('/')[
                       `${row.original.path.split('/').length - 1}`

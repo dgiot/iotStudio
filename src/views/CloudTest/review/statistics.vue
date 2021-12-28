@@ -29,7 +29,7 @@
             />
           </el-col>
           <el-col :span="12">
-            <el-divider>平均值</el-divider>
+            <el-divider>存储的数据</el-divider>
             <el-table
               :key="historyEvidence.length"
               border

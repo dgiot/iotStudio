@@ -371,6 +371,7 @@ export default {
      * @Description: 查询历史存证
      */
     async featHistoryEvidence(taskid) {
+      this.historyEvidence = []
       try {
         const params = {
           order: '-createdAt',
@@ -382,8 +383,9 @@ export default {
         }
         const loading = this.$baseColorfullLoading()
         const { results = [] } = await queryEvidence(params)
-        if (results?.length)
+        if (results?.length) {
           this.historyEvidence = results[0].original.avgs ?? []
+        }
         this.historycolumns = _.filter(this.thingcolumns, function (item) {
           return item.prop !== 'timestamp'
         })

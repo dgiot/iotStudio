@@ -23,4 +23,4 @@ const messages = [
   )}`,
 ]
 // eslint-disable-next-line no-console
-dgiotlog.log(messages.join('\n'))
+console.log(messages.join('\n'))

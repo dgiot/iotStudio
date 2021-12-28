@@ -22,7 +22,6 @@ async function queryAllMsg(commit, dispatch, data, type) {
     expires_in = 86400,
     state = {},
   } = data
-  console.log(data)
   Vue.prototype.$FileServe = Cookies.get('fileServer')
   // clientMqtt()
   // initDgiotMqtt(objectId)
@@ -31,8 +30,9 @@ async function queryAllMsg(commit, dispatch, data, type) {
     expires_in: 7,
   })
 
-  if (type === 'jwt') {
+  if (type == 'jwt') {
     // Cookies.set('jwtInfo', state, { expires: 1 })
+    console.log('jwt info', state)
     window.addEventListener('message', function (e) {
       const companyName = {
         value: state.extendFields.companyName,
@@ -388,7 +388,7 @@ const actions = {
       userInfo
     )
     const { sessionToken = '' } = data
-    if (sessionToken) {
+    if (sessionToken || Number(userInfo.code) == 200) {
       await queryAllMsg(commit, dispatch, data, 'jwt')
     } else {
       Cookies.remove('id_token')

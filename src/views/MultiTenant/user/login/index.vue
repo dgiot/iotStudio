@@ -243,10 +243,11 @@
           Cookies.remove('startIframe')
           Cookies.remove('pwaLogin')
           Cookies.remove('fileServer')
-          if (window.name == 'dgiot_iframe')
+          if (window.name == 'dgiot_iframe') {
             Cookies.set('startIframe', moment().format('YYYY:MM:DD HH:mm:ss'), {
               expires: 60 * 1000 * 30,
             })
+          }
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -300,7 +301,6 @@
             }
             if (e.data.id_token) {
               vm.jwtlogin(e.data.id_token)
-              vm.goHome()
               console.log(
                 `receive time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
               )
@@ -321,6 +321,7 @@
                 '\n采用jwt token 登录'
               )
               console.groupEnd()
+              vm.goHome()
             }
           })
           // }
@@ -328,7 +329,7 @@
             `%c 单点登录日志 ${moment().format('YYYY:MM:DD HH:mm:ss')}`,
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
-          console.info('iframe', window.name)
+
           console.info('id_token ->\n', Cookies.get('id_token'))
           console.groupEnd()
         } catch (error) {
@@ -413,18 +414,19 @@
        * @Description:
        */
       async goHome() {
+        const vm = this
         try {
-          await this.$router.push(this.handleRoute())
+          await vm.$router.push(vm.handleRoute())
           await setTimeout(() => {
-            if (this.objectId) {
-              console.log('userid', this.objectId)
+            if (vm.objectId) {
+              console.log('userid', vm.objectId)
               document.querySelector('.el-tree-node__content').click()
             }
           }, 1200)
         } catch (error) {
           console.log(error)
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request error') + `${error}`,
+          vm.$baseMessage(
+            vm.$translateTitle('alert.Data request error') + `${error}`,
             'error',
             'vab-hey-message-error'
           )

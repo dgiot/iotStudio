@@ -55,7 +55,7 @@
                   type="primary"
                   @click.native="drawxnqx(collectionInfo.objectId, thingdata)"
                 >
-                  计算平均值
+                  存储数据
                 </el-button>
                 <el-button
                   type="info"
@@ -99,7 +99,7 @@
         </el-row>
         <el-row :gutter="24">
           <el-col :span="12" style="margin-top: 20px">
-            <el-divider>平均值</el-divider>
+            <el-divider>存储的数据</el-divider>
             <el-table
               :key="historyEvidence.length"
               border
