@@ -37,6 +37,7 @@ jobs:
           wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
           tar xf dgiot_file.tar.gz
           rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
+          wget https://dev.iotn2n.com/swagger.json
       - uses: actions/upload-artifact@v2
         name: Upload Installer
         with:
