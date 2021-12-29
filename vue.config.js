@@ -25,7 +25,6 @@ const {
   webpackBanner,
   webpackBarName,
   systemStatic: localUrl,
-  runTimeStatic,
   Keywords,
   Description,
   dateTime,
@@ -68,26 +67,13 @@ function getChainWebpack(config) {
   config.plugins.delete('prefetch')
   // config.plugin('monaco').use(new MonacoWebpackPlugin())
   config.plugin('html').tap((args) => {
-    var _runTimeStatic = runTimeStatic
     var _staticUrl = localUrl
     // if (useCdn || process.env.NODE_ENV !== 'development') {
     const { css, js } = _staticUrl
-    const { css: runTimecss, js: runTimejs } = _runTimeStatic
     _staticUrl = {
       css: [],
       js: [],
     }
-    _runTimeStatic = {
-      css: [],
-      js: [],
-    }
-    runTimecss.forEach((_css) => {
-      _runTimeStatic.css.push(`${staticUrl}css/${_css}`)
-    })
-    runTimejs.forEach((_js) => {
-      _runTimeStatic.js.push(`${staticUrl}js/${_js}`)
-      _runTimeStatic.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
-    })
     css.forEach((_css) => {
       _staticUrl.css.push(`${staticUrl}css/${_css}`)
     })
@@ -96,7 +82,6 @@ function getChainWebpack(config) {
       // _staticUrl.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
     })
     args[0].staticUrl = _staticUrl
-    args[0].runTimeStatic = _runTimeStatic
     args[0].ogConfig = ogConfig
     return args
   })

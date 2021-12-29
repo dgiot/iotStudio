@@ -112,10 +112,10 @@
 </template>
 
 <script>
-  // import backgroundImage from '../../../../../public/assets/images/platform/assets/login_images/background.jpg'
+  import backgroundImage from '../../../../../public/assets/images/platform/assets/login_images/background.jpg'
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/data/validate'
-  import { SiteDefault, backgroundImage } from '@/api/License'
+  import { SiteDefault } from '@/api/License'
   export default {
     name: 'Login',
     directives: {
@@ -223,8 +223,8 @@
       window.removeEventListener('message', this.iframeLogin)
     },
     async mounted() {
-      await this.defaultSet()
       this.$nextTick(async () => {
+        await this.defaultSet()
         await this.init()
         await this.initShuwa()
       })
@@ -376,7 +376,7 @@
           ? 'https://s2.loli.net/2021/12/15/ciVTb7w62rxQ3a9.jpg'
           : // 'https://s2.loli.net/2021/12/15/aJYcUGVixXhTML3.png'
             // 'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
-            this.backgroundImage
+            this.backgroundimage
         const url =
           process.env.NODE_ENV === 'development'
             ? process.env.VUE_APP_URL

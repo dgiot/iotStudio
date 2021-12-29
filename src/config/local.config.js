@@ -7,10 +7,26 @@
 // * @DocumentLink: http://prod.iotn2n.com/swagger/#/
 // 系统启动时加载的文件
 let systemStatic = {
-  css: ['normalize.css', 'nprogress.css'],
+  css: [
+    'normalize.css',
+    'nprogress.css',
+    'material_icons.css', // 谷歌字体图标
+    'iview.css', // iview 组件库
+    'antd.min.css',
+    'google.css',
+    'materialdesignicons.min.css',
+    'style.min.css',
+    'codemirror.css',
+    'lint.css',
+    //  amis 相关
+    'amis/lib/themes/cxd.css',
+    'amis/lib/helper.css',
+    'amis/lib/themes/antd.css',
+  ],
   js: [
     'vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
     'mqttws31.js',
+    'echarts.min.js',
     'vue-router.min.js',
     'vue-i18n.min.js',
     'nprogress.js',
@@ -24,7 +40,6 @@ let systemStatic = {
     'mqtt.min.js',
     'jquery.min.js',
     'index.min.js',
-    'echarts-amap.min.js',
     'bmap.min.js',
     'dayjs.min.js',
     'lodash.min.js',
@@ -40,9 +55,11 @@ let systemStatic = {
     'iview.min.js',
     'vuetify.min.js',
     'resize-observer-polyfill.js',
+    'vue-aliplayer-v2.js',
+    'echarts-amap.min.js',
   ],
 }
-// 运行时加载的js文件
+// 运行时加载的文件
 let runTimeStatic = {
   css: [
     'material_icons.css', // 谷歌字体图标
@@ -63,7 +80,6 @@ let runTimeStatic = {
     'vuedraggable.umd.min.js',
     'jszip.min.js',
     'Sortable.min.js',
-    'echarts.min.js',
     'macarons.js',
     'jsplumb.min.js',
     'vuedraggable.umd.min.js',
@@ -75,7 +91,6 @@ let runTimeStatic = {
     'vue-multipane.js',
     'vditor.js',
     'aliplayer-min.js',
-    'vue-aliplayer-v2.js',
     'bcryptjs.js',
     // monaco 编辑器相关
     'monaco/css.worker.js',

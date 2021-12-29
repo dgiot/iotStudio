@@ -15,7 +15,7 @@ module.exports = {
      */
     {
       path: 'dgiot_dashboard',
-      target: 'https://dev.iotn2n.com',
+      target: 'http://dev.iotn2n.com:5080',
     },
     /**
      * @description amis server 开发使用
