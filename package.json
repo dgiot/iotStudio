@@ -45,8 +45,7 @@
     "lighthouse": "node utils/lighthouse.js",
     "prod": "lighthouse https://prod.iotn2n.com/",
     "template": "plop",
-    "rmDist": "npm run monaco",
-    "monaco": "rimraf dist/output/assets/js/monaco"
+    "rmDist": "rimraf dist/output/assets/js/monaco"
   },
   "repository": {
     "type": "git",

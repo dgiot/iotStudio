@@ -110,20 +110,20 @@ function getChainWebpack(config) {
     config.performance.set('hints', false)
     config.devtool('none')
     config.optimization.splitChunks({
-      // chunks: 'all',
-      // minSize: 30000, //字节 引入的文件大于300kb才进行分割
-      // maxSize: 700000, //700kb，尝试将大于700kb的文件拆分成n个700kb的文件
-      // minChunks: 1, // 模块的最小被引用次数
-      // maxAsyncRequests: 5, // 按需加载的最大并行请求数
-      // maxInitialRequests: 3, // 一个入口最大并行请求数
+      chunks: 'all',
+      minSize: 30000, //字节 引入的文件大于300kb才进行分割
+      maxSize: 700000, //700kb，尝试将大于700kb的文件拆分成n个700kb的文件
+      minChunks: 1, // 模块的最小被引用次数
+      maxAsyncRequests: 5, // 按需加载的最大并行请求数
+      maxInitialRequests: 3, // 一个入口最大并行请求数
       automaticNameDelimiter: '-dgiot-', // 文件名的连接符
       cacheGroups: {
         chunk: {
           name: 'chunk',
           test: /[\\/]node_modules[\\/]/,
-          minSize: 30000,
-          maxSize: 700000,
-          chunks: 'async',
+          // minSize: 30000,
+          // maxSize: 700000,
+          // chunks: 'async',
           minChunks: 2,
           priority: 10,
         },

@@ -31,7 +31,7 @@ module.exports = {
   // iconfront 的id //
   iconfontId: ['font_2759556_r8d9wroaw8'],
   // 是否开启 SpeedMeasurePlugin 打包速度输出日志插件
-  isSmp: false,
+  isSmp: true,
   // 代理后的文件地址
   CDN_URL: '/dgiot_dashboard/public',
   // cdn资源文件 https://blog.csdn.net/qq_37210523/article/details/106267946
