@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-      - name: Cache pnpm modules
+      - name: Cache pnpm modules  🚀
         uses: actions/cache@v2
         env:
           cache-name: cache-pnpm-modules
@@ -24,7 +24,7 @@ jobs:
         with:
           version: 6.3.0
           run_install: false
-      - name: Pnpm script
+      - name: Pnpm script  🚀
         run: |
           pnpm config set registry https://registry.npmmirror.com
           pnpm i --frozen-lockfile
@@ -86,6 +86,28 @@ jobs:
         with:
           name: WeakAuras-Companion-PRCI-Installer
           path: dist_electron/*.exe\
+      - name: dgiot-dashboard Pages  🚀
+        uses: yanglbme/gitee-pages-action@main
+        with:
+          # Gitee 用户名
+          gitee-username: ${{ secrets.GITEE_USERNAME }}
+          # Gitee 密码
+          gitee-password: ${{ secrets.GITEE_PASSWORD }}
+          # Gitee 仓库
+          gitee-repo: dgiiot/dgiot-dashboard
+          # 要部署的分支
+          branch: cdn-pages
+      - name: dgiot-dashboard Pages  🚀
+        uses: yanglbme/gitee-pages-action@main
+        with:
+          # Gitee 用户名
+          gitee-username: ${{ secrets.GITEE_USERNAME }}
+          # Gitee 密码
+          gitee-password: ${{ secrets.GITEE_PASSWORD }}
+          # Gitee 仓库
+          gitee-repo: dgiot-dashboard/dgiot-dashboard
+          # 要部署的分支
+          branch: cdn-pages
   accurics:
     runs-on: ubuntu-latest
     name: accurics-scan
@@ -124,57 +146,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
           EXPIRE_TIME: '1h'
         run: pipenv run python run.py
-
-  gitee:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Sync to Gitee page
-        uses: wearerequired/git-mirror-action@master
-        env:
-          # 在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-        with:
-          # GitHub 源仓库地址
-          source-repo: git@github.com:dgiot/dgiot-dashboard.git
-          # Gitee 目标仓库地址
-          destination-repo: git@gitee.com:dgiot-dashboard/dgiot-dashboard.git
-
-      # 绕过手机验证码：https://github.com/yanglbme/gitee-pages-action/issues/6#issuecomment-664812675
-      - name: Build Gitee Pages
-        uses: yanglbme/gitee-pages-action@main
-        with:
-          # Gitee 用户名
-          gitee-username: ${{ secrets.GITEE_USERNAME }}
-          # Gitee 密码
-          gitee-password: ${{ secrets.GITEE_PASSWORD }}
-          # Gitee 仓库
-          gitee-repo: dgiiot/dgiot-dashboard
-          # 要部署的分支
-          branch: master
-
-  sync:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Sync to Gitee page
-        uses: wearerequired/git-mirror-action@master
-        env:
-          # 在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-        with:
-          # GitHub 源仓库地址
-          source-repo: git@github.com:dgiot/dgiot-dashboard.git
-          # Gitee 目标仓库地址
-          destination-repo: git@gitee.com:dgiot-dashboard/dgiot-dashboard.git
-
-      # 绕过手机验证码：https://github.com/yanglbme/gitee-pages-action/issues/6#issuecomment-664812675
-      - name: Build Gitee Pages
-        uses: yanglbme/gitee-pages-action@main
-        with:
-          # Gitee 用户名
-          gitee-username: ${{ secrets.GITEE_USERNAME }}
-          # Gitee 密码
-          gitee-password: ${{ secrets.GITEE_PASSWORD }}
-          # Gitee 仓库
-          gitee-repo: dgiot-dashboard/dgiot-dashboard
-          # 要部署的分支
-          branch: cdn-pages
