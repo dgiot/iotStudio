@@ -37,86 +37,19 @@ jobs:
           wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
           tar xf dgiot_file.tar.gz
           rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
-      - name: Deploy static to github pagese 🚀
+      - name: Deploy to github gh-pages 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist
-
-  cdn:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.3.0
-          run_install: false
-      - name: Pnpm script
-        run: |
-          pnpm config set registry https://registry.npmmirror.com
-          pnpm i --frozen-lockfile
-          pnpm build
-          cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
-          cd dist
-          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
-          tar xf dgiot_dashboard.tar.gz
-          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz
-          tar xf dgiot_swagger.tar.gz
-          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
-          tar xf dgiot_file.tar.gz
-          rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
-          wget https://dev.iotn2n.com/swagger.json
-      - name: Deploy static to github pagese 🚀
+      - name: Deploy to github cdn-pages 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           BRANCH: cdn-pages
           FOLDER: dist
-
-  lighthouse:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.3.0
-          run_install: false
-      - name: Pnpm script
-        run: |
-          pnpm config set registry https://registry.npmmirror.com
-          pnpm i --frozen-lockfile
-          pnpm build
-          cd dist
-          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
-          tar xf dgiot_dashboard.tar.gz
-          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz
-          tar xf dgiot_swagger.tar.gz
-          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
-          tar xf dgiot_file.tar.gz
-          rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
-          wget https://dev.iotn2n.com/swagger.json
-      - name: Audit with lighthouse CI
+      - name: lighthouse 🚀
         uses: treosh/lighthouse-ci-action@v2
         with:
           # Configuración para auditar sobre un sito estático
@@ -125,3 +58,123 @@ jobs:
           runs: 5
           uploadArtifacts: true
           configPath: './.github/workflows/setup/lighthouse-audit.json'
+      - name: Deploy to Netlify  🚀
+        uses: nwtgck/actions-netlify@v1.2
+        with:
+          publish-dir: './dist'
+          production-branch: master
+          github-token: ${{ secrets.GIT_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: true
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
+      - name: Deploy to VERCEL  🚀
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
+          github-token: ${{ secrets.GIT_TOKEN }} #Optional
+          vercel-args: '--prod' #Optional
+          vercel-org-id: ${{ secrets.ORG_ID}}  #Required
+          vercel-project-id: ${{ secrets.PROJECT_ID}} #Required
+          working-directory: ./dist
+      - name: Upload  🚀
+        uses: actions/upload-artifact@v2
+        with:
+          name: WeakAuras-Companion-PRCI-Installer
+          path: dist_electron/*.exe\
+  accurics:
+    runs-on: ubuntu-latest
+    name: accurics-scan
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Accurics Scan
+        id: accurics-scan
+        uses: docker://accurics/terrascan-action:latest
+        with:
+          only_warn: true
+          verbose: true
+          webhook_url: https://app.accurics.com/v1/api/terrascan
+          webhook_token: a20de3ab-f00e-4e1a-a37f-dbceafe4150e
+
+  clean:
+    name: Clean
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: 'jdsync/Workflows-Cleaner'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install pipenv
+        run: python -m pip install --upgrade pipenv wheel
+      - name: Install dependencies
+        run: pipenv install
+      - name: Clean
+        env:
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
+          EXPIRE_TIME: '1h'
+        run: pipenv run python run.py
+
+  gitee:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync to Gitee page
+        uses: wearerequired/git-mirror-action@master
+        env:
+          # 在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        with:
+          # GitHub 源仓库地址
+          source-repo: git@github.com:dgiot/dgiot-dashboard.git
+          # Gitee 目标仓库地址
+          destination-repo: git@gitee.com:dgiot-dashboard/dgiot-dashboard.git
+
+      # 绕过手机验证码：https://github.com/yanglbme/gitee-pages-action/issues/6#issuecomment-664812675
+      - name: Build Gitee Pages
+        uses: yanglbme/gitee-pages-action@main
+        with:
+          # Gitee 用户名
+          gitee-username: ${{ secrets.GITEE_USERNAME }}
+          # Gitee 密码
+          gitee-password: ${{ secrets.GITEE_PASSWORD }}
+          # Gitee 仓库
+          gitee-repo: dgiiot/dgiot-dashboard
+          # 要部署的分支
+          branch: master
+
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync to Gitee page
+        uses: wearerequired/git-mirror-action@master
+        env:
+          # 在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        with:
+          # GitHub 源仓库地址
+          source-repo: git@github.com:dgiot/dgiot-dashboard.git
+          # Gitee 目标仓库地址
+          destination-repo: git@gitee.com:dgiot-dashboard/dgiot-dashboard.git
+
+      # 绕过手机验证码：https://github.com/yanglbme/gitee-pages-action/issues/6#issuecomment-664812675
+      - name: Build Gitee Pages
+        uses: yanglbme/gitee-pages-action@main
+        with:
+          # Gitee 用户名
+          gitee-username: ${{ secrets.GITEE_USERNAME }}
+          # Gitee 密码
+          gitee-password: ${{ secrets.GITEE_PASSWORD }}
+          # Gitee 仓库
+          gitee-repo: dgiot-dashboard/dgiot-dashboard
+          # 要部署的分支
+          branch: cdn-pages
