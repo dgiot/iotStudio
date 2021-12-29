@@ -229,7 +229,7 @@
                     <i
                       slot="suffix"
                       class="el-icon-search"
-                      style="color: #606266; cursor: pointer; line-height: 32px"
+                      style="line-height: 32px; color: #606266; cursor: pointer"
                       @click="getDevices({ start: 0 })"
                     ></i>
                   </el-input>

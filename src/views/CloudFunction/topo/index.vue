@@ -357,12 +357,12 @@
           overflow: auto;
 
           &-baseContainer {
-            overflow: auto;
             width: 100%;
             height: calc(
               100vh - #{$base-top-bar-height} * 2.7 - #{$base-padding} * 2 -
                 90px
             ) !important;
+            overflow: auto;
           }
         }
 

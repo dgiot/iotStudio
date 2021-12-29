@@ -265,33 +265,33 @@
             type: 'cookie',
             time: moment().format('YYYY:MM:DD  HH:mm:ss'),
           }
-          if (e.data.id_token) {
-            if (_.isEmpty(Cookies.get('handleRoute'))) {
-              this.jwtlogin(e.data.id_token)
-              this.goHome()
-            }
-            console.log(
-              `receive time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
-            )
-            console.groupCollapsed(
-              '%c iframe message',
-              'color:#009a61; font-size: 28px; font-weight: 300'
-            )
-            console.info('从' + e.origin + '收到消息： \n')
-            console.log(e.data)
-            e.source.postMessage(message, e.origin)
-            console.groupEnd()
-            Cookies.set('id_token', e.data.id_token, {
-              expires: 60 * 1000 * 30,
-            })
-            console.info(
-              `检测到页面存在 jwt token \n`,
-              e.data.id_token,
-              '\n采用jwt token 登录'
-            )
-            console.groupEnd()
-            Cookies.set('handleRoute', 'true', { expires: 60 * 1000 * 30 })
-          }
+          // if (e.data.id_token) {
+          //   if (_.isEmpty(Cookies.get('handleRoute'))) {
+          //     this.jwtlogin(e.data.id_token)
+          //     this.goHome()
+          //   }
+          //   console.log(
+          //     `receive time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
+          //   )
+          //   console.groupCollapsed(
+          //     '%c iframe message',
+          //     'color:#009a61; font-size: 28px; font-weight: 300'
+          //   )
+          //   console.info('从' + e.origin + '收到消息： \n')
+          //   console.log(e.data)
+          //   e.source.postMessage(message, e.origin)
+          //   console.groupEnd()
+          //   Cookies.set('id_token', e.data.id_token, {
+          //     expires: 60 * 1000 * 30,
+          //   })
+          //   console.info(
+          //     `检测到页面存在 jwt token \n`,
+          //     e.data.id_token,
+          //     '\n采用jwt token 登录'
+          //   )
+          //   console.groupEnd()
+          //   Cookies.set('handleRoute', 'true', { expires: 60 * 1000 * 30 })
+          // }
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -339,7 +339,7 @@
           Cookies.remove('startIframe')
           Cookies.remove('pwaLogin')
           Cookies.remove('fileServer')
-          this.$nextTick(() => {
+          this.$nextTick(async () => {
             if (window.name == 'dgiot_iframe') {
               Cookies.set(
                 'startIframe',
@@ -348,6 +348,8 @@
                   expires: 60 * 1000 * 30,
                 }
               )
+              await this.login({ username: 'feiiplat', password: 'feiiplat' })
+              await this.goHome()
             }
           })
         } catch (error) {

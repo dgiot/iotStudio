@@ -243,24 +243,24 @@
     position: relative;
     width: 100%;
     height: 100%;
-    overflow: hidden;
     margin-top: 15px;
+    overflow: hidden;
   }
   .lngTips {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 123456;
     display: none;
     width: 255px;
     height: 40px;
     padding: 5px 7px;
     overflow: hidden;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 123456;
-    background: #ffffff;
-    border-radius: 5px;
-    line-height: 20px;
-    box-shadow: #eeeeee 1px 1px 3px;
-    border: #eeeeee 1px solid;
     font-size: 12px;
+    line-height: 20px;
+    background: #ffffff;
+    border: #eeeeee 1px solid;
+    border-radius: 5px;
+    box-shadow: #eeeeee 1px 1px 3px;
   }
 </style>

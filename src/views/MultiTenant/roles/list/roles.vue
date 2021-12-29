@@ -160,7 +160,7 @@
               </span>
             </p>
             <div class="rolecontrol">
-              <div style="text-align: center; margin-top: 5px">
+              <div style="margin-top: 5px; text-align: center">
                 <!--                <el-button-->
                 <!--                  size="mini"-->
                 <!--                  type="primary"-->
@@ -229,7 +229,7 @@
                 {{ $translateTitle('user.assignmenu') }}
               </span>
             </p>
-            <div style="text-align: center; margin-top: 5px">
+            <div style="margin-top: 5px; text-align: center">
               <!--              <el-button-->
               <!--                size="mini"-->
               <!--                type="primary"-->

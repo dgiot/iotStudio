@@ -53,14 +53,14 @@
       top="1vh"
       :visible.sync="dialogVisible"
     >
-      <vab-parser
-        :dba-table="DbaTable"
-        :dict="parserDict"
-        :form-config="formConfig"
-        :parserindex="editIndex"
-        :productid="producttempId"
-        @ParserSave="saveParse"
-      />
+      <!--      <vab-parser-->
+      <!--        :dba-table="DbaTable"-->
+      <!--        :dict="parserDict"-->
+      <!--        :form-config="formConfig"-->
+      <!--        :parserindex="editIndex"-->
+      <!--        :productid="producttempId"-->
+      <!--        @ParserSave="saveParse"-->
+      <!--      />-->
       <!--      <span slot="footer" class="dialog-footer">-->
       <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
       <!--        <el-button type="primary" @click.native="dialogVisible = false">-->
@@ -1400,7 +1400,7 @@
         var daslist = []
         rowData.dataType.das.forEach((val) => {
           daslist.push({
-            addr:val
+            addr: val,
           })
         })
         // 提交之前需要先判断类型
@@ -1783,14 +1783,14 @@
                 precision: Number(sizeForm.precision),
                 unit: sizeForm.unit == '' ? '' : sizeForm.unit,
               },
-              das:das,
+              das: das,
             },
           }
           Object.assign(obj, obj1)
         } else if (sizeForm.type == 'image') {
           obj1 = {
             dataType: {
-              das:das,
+              das: das,
               type: sizeForm.type.toLowerCase(),
               imagevalue: sizeForm.imagevalue,
               specs: {},
@@ -1800,7 +1800,7 @@
         } else if (sizeForm.type == 'bool') {
           obj1 = {
             dataType: {
-              das:das,
+              das: das,
               type: sizeForm.type.toLowerCase(),
               specs: {
                 0: sizeForm.false,
@@ -1817,7 +1817,7 @@
           })
           obj1 = {
             dataType: {
-              das:das,
+              das: das,
               type: sizeForm.type.toLowerCase(),
               specs: specs,
             },
@@ -1826,7 +1826,7 @@
         } else if (sizeForm.type == 'struct') {
           obj1 = {
             dataType: {
-              das:das,
+              das: das,
               type: sizeForm.type.toLowerCase(),
               specs: sizeForm.struct,
             },
@@ -1835,7 +1835,7 @@
         } else if (sizeForm.type == 'text') {
           obj1 = {
             dataType: {
-              das:das,
+              das: das,
               type: sizeForm.type.toLowerCase(),
               size: sizeForm.string,
               specs: {},
@@ -1845,7 +1845,7 @@
         } else if (sizeForm.type == 'date') {
           obj1 = {
             dataType: {
-              das:das,
+              das: das,
               type: sizeForm.type.toLowerCase(),
               specs: {},
             },
@@ -1854,7 +1854,7 @@
         } else if (sizeForm.type == 'geopoint') {
           obj1 = {
             dataType: {
-              das:das,
+              das: das,
               type: sizeForm.type.toLowerCase(),
               gpstype: sizeForm.gpstype,
               specs: {},

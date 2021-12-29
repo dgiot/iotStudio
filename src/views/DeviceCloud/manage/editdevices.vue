@@ -807,8 +807,8 @@
       }
       td {
         width: 70px;
-        font-size: 10px;
         padding: 1px;
+        font-size: 10px;
       }
     }
   }

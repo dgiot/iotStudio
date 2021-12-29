@@ -303,7 +303,7 @@
         </div>
       </el-drawer>
     </div>
-    <VabRender v-show="false" :config="config" :loading="true" />
+    <!--    <VabRender v-show="false" :config="config" :loading="true" />-->
   </div>
 </template>
 <script>

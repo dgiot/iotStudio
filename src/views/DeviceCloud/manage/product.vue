@@ -15,13 +15,13 @@
       top="1vh"
       width="90%"
     >
-      <VabParser
-        :dict="parserDict"
-        :form-config="formConfig"
-        :parserindex="editIndex"
-        :productid="productid"
-        @ParserSave="saveParse"
-      />
+<!--      <VabParser-->
+<!--        :dict="parserDict"-->
+<!--        :form-config="formConfig"-->
+<!--        :parserindex="editIndex"-->
+<!--        :productid="productid"-->
+<!--        @ParserSave="saveParse"-->
+<!--      />-->
     </el-dialog>
     <el-dialog :append-to-body="true" :visible.sync="parserView">
       <f-render v-model="formConfig" :config="formConfig" pure />
@@ -1289,7 +1289,7 @@
         </div>
       </el-dialog>
     </div>
-    <VabRender v-show="false" :config="config" :loading="true" />
+<!--    <VabRender v-show="false" :config="config" :loading="true" />-->
   </div>
 </template>
 <!--eslint-disable-->

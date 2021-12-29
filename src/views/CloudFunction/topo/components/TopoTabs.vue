@@ -10,7 +10,7 @@
       />
     </div>
     <Thing />
-    <div v-show="isDirver" style="text-align: center; margin: 0 auto">
+    <div v-show="isDirver" style="margin: 0 auto; text-align: center">
       <Evidence />
     </div>
     <a-collapse v-show="!isDirver" accordion>
