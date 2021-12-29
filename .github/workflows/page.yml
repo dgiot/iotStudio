@@ -95,25 +95,25 @@ jobs:
           # 要部署的分支
           branch: cdn-pages
       - name: Sync to dgiot 🚀
-          uses: wearerequired/git-mirror-action@master
-          env:
-            # 在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
-            SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-          with:
-            # GitHub 源仓库地址
-            source-repo: git@github.com:dgiot/dgiot-dashboard.git
-            # Gitee 目标仓库地址
-            destination-repo: git@gitee.com:dgiiot/dgiot-dashboard.git
+        uses: wearerequired/git-mirror-action@master
+        env:
+          # 在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        with:
+          # GitHub 源仓库地址
+          source-repo: git@github.com:dgiot/dgiot-dashboard.git
+          # Gitee 目标仓库地址
+          destination-repo: git@gitee.com:dgiiot/dgiot-dashboard.git
       - name: Sync to dgiot-dashboard 🚀
-          uses: wearerequired/git-mirror-action@master
-          env:
-            # 在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
-            SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-          with:
-            # GitHub 源仓库地址
-            source-repo: git@github.com:dgiot/dgiot-dashboard.git
-            # Gitee 目标仓库地址
-            destination-repo: git@gitee.com:dgiot-dashboard/dgiot-dashboard.git
+        uses: wearerequired/git-mirror-action@master
+        env:
+          # 在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        with:
+          # GitHub 源仓库地址
+          source-repo: git@github.com:dgiot/dgiot-dashboard.git
+          # Gitee 目标仓库地址
+          destination-repo: git@gitee.com:dgiot-dashboard/dgiot-dashboard.git
       - name: Upload  🚀
         uses: actions/upload-artifact@v2
         with:
