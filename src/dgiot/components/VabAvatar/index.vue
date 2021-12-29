@@ -29,7 +29,8 @@
 <script>
   import { mapActions, mapGetters } from 'vuex'
   import { toLoginRoute } from '@/utils/router/routes'
-
+  import { loadScript } from '@/utils/file/load'
+  import { runTimeStatic, proxy, CDN_URL } from '@/config'
   export default {
     name: 'VabAvatar',
     data() {
@@ -42,13 +43,42 @@
         avatar: 'user/avatar',
         username: 'user/username',
         objectId: 'user/objectId',
+        extra: 'settings/extra',
+        visitedRoutes: 'tabs/visitedRoutes',
       }),
+    },
+    async created() {
+      await this.reloadScript()
     },
     mounted() {
       console.log('window.name\n', window.name)
       // document.getElementsByTagName('link')[0].href = this.avatar
     },
     methods: {
+      /**
+       * @Author: dext7r
+       * @Date: 2021-12-29 17:36:31
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async reloadScript() {
+        const NODE_ENV =
+          process.env.NODE_ENV == 'development'
+            ? proxy[1].target + CDN_URL
+            : CDN_URL
+        console.info('NODE_ENV', NODE_ENV)
+        const staticUrl = NODE_ENV ? `${CDN_URL}/assets/` : '/assets/'
+        var _runTimeStatic = { js: [] }
+        const { js: runTimejs } = runTimeStatic
+        runTimejs.forEach((_js) => {
+          _runTimeStatic.js.push(`${staticUrl}js/${_js}`)
+          _runTimeStatic.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
+        })
+        await loadScript(_runTimeStatic.js)
+        await this.$dgiotBus.$emit('refresh')
+      },
       ...mapActions({
         _logout: 'user/logout',
       }),

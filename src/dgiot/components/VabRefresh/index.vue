@@ -18,10 +18,10 @@
         visitedRoutes: 'tabs/visitedRoutes',
       }),
     },
-    created() {
+    mounted() {
       this.$dgiotBus.$off('refresh')
       this.$dgiotBus.$on('refresh', (args) => {
-        dgiotlog.log('我调用了', args)
+        console.log('我调用了', args)
         // location.reload()
         // this.$router.go(0)
         this.refreshRoute()

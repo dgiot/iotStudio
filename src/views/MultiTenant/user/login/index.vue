@@ -223,10 +223,10 @@
       window.removeEventListener('message', this.iframeLogin)
     },
     async mounted() {
+      await this.initShuwa()
       this.$nextTick(async () => {
         await this.defaultSet()
         await this.init()
-        await this.initShuwa()
       })
     },
     created() {

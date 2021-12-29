@@ -30,7 +30,6 @@
 <script>
   import { mapActions, mapGetters } from 'vuex'
   import VabProgress from 'nprogress'
-
   export default {
     name: 'VabAppMain',
     data() {
