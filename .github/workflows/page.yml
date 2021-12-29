@@ -24,9 +24,19 @@ jobs:
         with:
           version: 6.3.0
           run_install: false
-      - run: pnpm config set registry https://registry.npmmirror.com
-      - run: pnpm i --frozen-lockfile
-      - run: pnpm build
+      - name: Pnpm script
+        run: |
+          pnpm config set registry https://registry.npmmirror.com
+          pnpm i --frozen-lockfile
+          pnpm build
+          cd dist
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
+          tar xf dgiot_dashboard.tar.gz
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz
+          tar xf dgiot_swagger.tar.gz
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
+          tar xf dgiot_file.tar.gz
+          rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
       - name: Deploy static to github pagese 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
@@ -52,9 +62,19 @@ jobs:
         with:
           version: 6.3.0
           run_install: false
-      - run: pnpm config set registry https://registry.npmmirror.com
-      - run: pnpm i --frozen-lockfile
-      - run: pnpm build
+      - name: Pnpm script
+        run: |
+          pnpm config set registry https://registry.npmmirror.com
+          pnpm i --frozen-lockfile
+          pnpm build
+          cd dist
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
+          tar xf dgiot_dashboard.tar.gz
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz
+          tar xf dgiot_swagger.tar.gz
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
+          tar xf dgiot_file.tar.gz
+          rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
       - name: Deploy static to github pagese 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
@@ -80,9 +100,19 @@ jobs:
         with:
           version: 6.3.0
           run_install: false
-      - run: pnpm config set registry https://registry.npmmirror.com
-      - run: pnpm i --frozen-lockfile
-      - run: pnpm build
+      - name: Pnpm script
+        run: |
+          pnpm config set registry https://registry.npmmirror.com
+          pnpm i --frozen-lockfile
+          pnpm build
+          cd dist
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
+          tar xf dgiot_dashboard.tar.gz
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz
+          tar xf dgiot_swagger.tar.gz
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
+          tar xf dgiot_file.tar.gz
+          rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
       - name: Audit with lighthouse CI
         uses: treosh/lighthouse-ci-action@v2
         with:

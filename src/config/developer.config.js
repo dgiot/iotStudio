@@ -8,7 +8,7 @@ module.exports = {
      */
     {
       path: 'iotapi',
-      target: 'https://pump.dgiotcloud.com',
+      target: 'https://dev.iotn2n.com',
     },
     /**
      * @description 静态资源目录。开发使用
