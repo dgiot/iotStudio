@@ -121,8 +121,8 @@ function getChainWebpack(config) {
         chunk: {
           name: 'chunk',
           test: /[\\/]node_modules[\\/]/,
-          minSize: 131072,
-          maxSize: 524288,
+          minSize: 30000,
+          maxSize: 700000,
           chunks: 'async',
           minChunks: 2,
           priority: 10,
