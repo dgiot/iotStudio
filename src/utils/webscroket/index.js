@@ -2,7 +2,13 @@ var TOPIC_EMPTY = 'topic为空！'
 var MSG_EMPTY = '消息内容为空！'
 var DISCONNECT_MSG = '当前尚未连接'
 var userName = 'konva'
-let localHost = ['tcloudbaseapp.com', 'gitee.io', 'github.io']
+let localHost = [
+  'tcloudbaseapp.com',
+  'gitee.io',
+  'github.io',
+  'netlify.app',
+  'vercel.app',
+]
 
 if (process.env.NODE_ENV == 'development') {
   localHost.push('localhost', '127.0.0.1')
