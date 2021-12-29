@@ -53,7 +53,7 @@
                     :rules="registerRules"
                   >
                     <el-form-item label="用户名">
-                      <el-input v-model="username" readonly="true" />
+                      <el-input v-model="username" readonly />
                     </el-form-item>
                     <el-form-item label="姓名">
                       <el-input v-model="nick" />

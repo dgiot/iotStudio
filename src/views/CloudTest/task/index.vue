@@ -128,22 +128,93 @@
             </el-table>
           </el-col>
           <el-col :span="12" style="margin-top: 20px">
-            <el-divider>曲线数据</el-divider>
-            <el-card>
-              <el-image
-                :preview-src-list="[$FileServe + drawxnqxPath]"
-                :src="$FileServe + drawxnqxPath"
+            <el-divider>其他数据</el-divider>
+            <el-tabs v-model="activeName1" @tab-click="tabHandleClick">
+              <el-tab-pane
+                :label="$translateTitle('equipment.realTime data')"
+                name="first"
               >
-                <div slot="error" class="image-slot">
-                  <el-image
-                    class="vab-data-empty"
-                    :src="
-                      require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
-                    "
-                  />
+                <div class="thirdtb">
+                  <!--运行状态-->
+                  <el-row :key="thirdtbKey">
+                    <el-descriptions
+                      v-for="(value, key, index) in machinelist"
+                      :key="index"
+                      border
+                      :column="4"
+                      :title="key"
+                    >
+                      <el-descriptions-item
+                        v-for="(item, index) in value"
+                        :key="index"
+                      >
+                        <div style="height: 40px">
+                          <span style="font-size: 16px">
+                            {{ item.name }}
+                          </span>
+                          <span
+                            style="
+                              float: right;
+                              margin-top: 10px;
+                              margin-right: 15px;
+                            "
+                          >
+                            <el-image
+                              :src="item.imgurl"
+                              style="width: 60px; height: 60px"
+                            >
+                              <div
+                                slot="error"
+                                class="image-slot"
+                                style="width: 60px; height: 60px"
+                              >
+                                <i class="el-icon-picture-outline"></i>
+                              </div>
+                            </el-image>
+                          </span>
+                        </div>
+                        <div class="stla">
+                          <span :title="item.number | filterVal">
+                            {{ item.number | filterVal }}
+                          </span>
+                          <span v-if="item.unit" :title="item.unit">
+                            {{ item.unit }}
+                          </span>
+                        </div>
+                        <div class="ta">
+                          <span class="fontSize">
+                            {{ $translateTitle('equipment.updatetime') + ':' }}
+                          </span>
+                          <span class="fontSize" @click="print(machinelist)">
+                            {{ item.time }}
+                          </span>
+                        </div>
+                      </el-descriptions-item>
+                    </el-descriptions>
+                  </el-row>
                 </div>
-              </el-image>
-            </el-card>
+              </el-tab-pane>
+              <el-tab-pane
+                :label="$translateTitle('equipment.chart')"
+                name="second"
+              >
+                <el-card>
+                  <el-image
+                    :preview-src-list="[$FileServe + drawxnqxPath]"
+                    :src="$FileServe + drawxnqxPath"
+                  >
+                    <div slot="error" class="image-slot">
+                      <el-image
+                        class="vab-data-empty"
+                        :src="
+                          require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                        "
+                      />
+                    </div>
+                  </el-image>
+                </el-card>
+              </el-tab-pane>
+            </el-tabs>
           </el-col>
         </el-row>
       </a-drawer>

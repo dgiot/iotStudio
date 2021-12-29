@@ -6,37 +6,47 @@ import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
+import { getCardDevice } from '@/api/Device/index.js'
 import {
   generatereport,
   postDrawxnqx,
-  getEvidence,
   queryEvidence,
   postEvidence,
   putEvidence,
-  delEvidence,
 } from '@/api/Evidence'
-// const docx = require('docx-preview')
-import mammoth from 'mammoth'
 export default {
   name: 'TaskIndex',
+  filters: {
+    filterVal(val) {
+      if (val || val == 0) {
+        return val
+      } else {
+        return '--'
+      }
+    },
+  },
   components: {
     VabDraggable,
     lowcodeDesign,
   },
   data() {
     return {
+      machinelist: {},
       historyEvidenceid: '',
       nowTime: window.datetime,
       historyEvidence: [],
+      thirdtbKey: moment(new Date()).valueOf(),
       original: {},
       collectionInfo: {},
       drawxnqxPath: '/dgiot_file/pump_pytoh/ecfd3a227c.png',
       thingdata: [],
+      realtimedata: [],
       thingcolumns: [],
       historycolumns: [],
       visible: false,
       router: '',
       topicKey: '',
+      activeName1: 'first',
       activeName: this?.$route?.query?.tabs
         ? this.$route.query.tabs == 'examination'
           ? 'examination'
@@ -202,6 +212,99 @@ export default {
     }, 1000)
   },
   methods: {
+    tabHandleClick(tab) {
+      switch (tab.name) {
+        case 'first':
+          break
+        case 'second':
+          break
+      }
+    },
+    getCardDevice(deviceid) {
+      var vm = this
+      getCardDevice(deviceid)
+        .then((response) => {
+          vm.machinelist = {}
+          if (response?.data) {
+            vm.renderCard(response.data)
+          }
+        })
+        .catch((error) => {
+          dgiotlog.log('update error 清除timer', error)
+        })
+    },
+    async subRealtimedata(params) {
+      let subtopic = `thing/${params.parentId.objectId}/realtimedata/post` // 设备实时数据topic
+      let router = this.$dgiotBus.router(location.href + this.$route.fullPath)
+      let topicKey = this.$dgiotBus.topicKey(router, subtopic) // dgiot-mqtt topicKey 唯一标识
+      try {
+        // 订阅mqtt
+        this.$dgiotBus.$emit('MqttSubscribe', {
+          router: router,
+          topic: subtopic,
+          qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
+        })
+        // mqtt 消息回调
+        console.groupCollapsed(
+          `%c mqtt 订阅日志`,
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.log('topic:', subtopic)
+        console.log('router:', router)
+        console.groupEnd()
+
+        this.$dgiotBus.$off(topicKey) // dgiotBus 关闭事件
+        this.$dgiotBus.$on(topicKey, (mqttMsg) => {
+          // mqtt 消息回调
+          console.groupCollapsed(
+            `%c mqttMsg消息回调`,
+            'color:#009a61; font-size: 28px; font-weight: 300'
+          )
+          console.log(mqttMsg)
+          console.log(Base64.decode(mqttMsg.payload))
+          console.log(JSON.parse(Base64.decode(mqttMsg.payload)).data)
+          console.log('Base64.decode(payload):', Base64.decode(mqttMsg.payload))
+          console.groupEnd()
+          const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payload))
+          if (data) {
+            console.log('aaaaaaaaaaa', data)
+            this.renderCard(data)
+          } else {
+            this.getCardDevice()
+          }
+        })
+      } catch (error) {
+        console.log(error)
+        this.$baseMessage(
+          this.$translateTitle('alert.Data request error') + `${error}`,
+          'error',
+          'vab-hey-message-error'
+        )
+      }
+    },
+    renderCard(resData) {
+      var vm = this
+      let array = []
+      resData.forEach((item) => {
+        if (item.devicetype) {
+          array.push(item.devicetype)
+        }
+      })
+      array = _.uniqBy(array)
+      let machine = {}
+      array.forEach((item) => {
+        let arr = []
+        resData.forEach((item1) => {
+          if (item == item1.devicetype) {
+            arr.push(item1)
+          }
+        })
+        machine[item] = arr
+      })
+      vm.machinelist = machine
+      vm.thirdtbKey = moment(new Date()).valueOf()
+    },
     datetime() {
       this.nowTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     },
@@ -704,10 +807,13 @@ export default {
     async visibleInfo(params) {
       let _this = this
       _this.collectionInfo = params
+      _this.getCardDevice(params.parentId.objectId)
+      _this.subRealtimedata(params)
       try {
         const thingcolumns = {}
         const items = []
         _this.thingdata = []
+        _this.realtimedata = []
         _this.thingcolumns = []
         if (params.basedata) {
           /**
@@ -878,7 +984,7 @@ export default {
         _this.$dgiotBus.$on(_this.topicKey, (mqttMsg) => {
           // mqtt 消息回调
           console.groupCollapsed(
-            `%c mqttMsg消息回调 \n${this.topicKey}`,
+            `%c mqttMsg消息回调 \n${_this.topicKey}`,
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
           console.log(mqttMsg)
@@ -889,9 +995,12 @@ export default {
             thingdata.timestamp = moment(Number(timestamp)).format(
               'YYYY-MM-DD HH:mm:ss'
             )
-            if (!_.isEmpty(thingdata)) {
+            if (!_.isEmpty(thingdata) && thingdata?.dgiotcollectflag == 0) {
               console.log(thingdata)
               _this.thingdata.unshift(thingdata) // 最新数据放在最前面
+            } else {
+              //实时数据
+              _this.realtimedata.unshift(thingdata) // 最新数据放在最前面
             }
             // _this.getSummaries({ columns: [], data: _this.thingdata }) // 计算平均值
           }
@@ -911,6 +1020,7 @@ export default {
           'vab-hey-message-error'
         )
       }
+      _this.subRealtimedata(params)
     },
     /**
      * @Author: dext7r
