@@ -67,6 +67,7 @@ jobs:
           pnpm config set registry https://registry.npmmirror.com
           pnpm i --frozen-lockfile
           pnpm build
+          cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
           cd dist
           wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
           tar xf dgiot_dashboard.tar.gz
