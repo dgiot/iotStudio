@@ -56,7 +56,7 @@
 <script>
   import requiremodule from '@/utils/file/requiremodule'
   import { mapMutations } from 'vuex'
-  import { post_tree } from '@/api/Data'
+  import { post_tree } from '@/api/System/index'
   import {
     createArticle,
     delArticle,

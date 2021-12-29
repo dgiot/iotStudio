@@ -371,7 +371,7 @@
   import { uuid } from '@/utils'
   import wmxdetail from './component/wmxdetail'
   import { setTimeout } from 'timers'
-  import { post_tree } from '@/api/Data'
+  import { post_tree } from '@/api/Logs'
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}

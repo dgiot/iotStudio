@@ -5,18 +5,6 @@ import request from '@/utils/request/request'
  * @param params
  * @return {*}
  */
-export function dgiotUpload(params) {
-  return request({
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    url: '/upload',
-    method: 'post',
-    data: params,
-  })
-}
-
 export async function uppyUpload(
   url,
   params,

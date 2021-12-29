@@ -231,7 +231,7 @@
 </template>
 
 <script>
-  import { query_object } from '@/api/shuwa_parse'
+  import { query_object } from '@/api/Parse'
   import { exlout } from '@/api/File'
   import { queryDevice } from '@/api/Device'
   import ChangeInfo from '@/views/CloudOT/maintenance/ChangeInfo'

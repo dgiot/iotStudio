@@ -1,4 +1,18 @@
 import request from '@/utils/request/request'
+export async function Startdashboard(data) {
+  return request({
+    url: `dashboard`,
+    method: 'post',
+    data: data,
+  })
+}
+export async function post_tree(params) {
+  return request({
+    url: 'tree',
+    method: 'post',
+    data: params,
+  })
+}
 
 export function getNode() {
   return request({

@@ -11,7 +11,7 @@ import {
   del_object,
   get_object,
   query_object,
-} from '@/api/shuwa_parse'
+} from '@/api/Parse'
 import request from '@/utils/request/request'
 
 export async function queryProject(params) {

@@ -14,7 +14,7 @@ import {
   query_object,
   query_object_header,
   update_object,
-} from '@/api/shuwa_parse'
+} from '@/api/Parse'
 
 export async function queryDevice(params) {
   return query_object('Device', params)

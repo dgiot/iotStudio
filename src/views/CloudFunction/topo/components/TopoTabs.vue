@@ -138,7 +138,6 @@
 
 <script>
   import createThing from '@/utils/konva/createThing'
-  import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
   import getSvgPath from '@/utils/konva/getSvgPath'
   import Thing from '@/views/CloudFunction/topo/components/Thing'
@@ -208,7 +207,7 @@
     },
     computed: {},
     created() {
-      this.fetchData()
+      // this.fetchData()
       // this.$dgiotBus.$off(location.hash)
       // this.$dgiotBus.$on(location.hash, (args) => {
       //   console.log(args, 'args')
@@ -282,27 +281,6 @@
       // mouseup(item) {
       //   this.$emit('fatherMouseup', item)
       // },
-
-      async fetchData() {
-        const { data, totalCount } = await getMaterial(this.queryForm)
-        this.queryIcon = data
-        this.total = totalCount
-      },
-      handleChange(val) {
-        console.log(val)
-      },
-      handleSizeChange(val) {
-        this.queryForm.pageSize = val
-        this.fetchData()
-      },
-      handleCurrentChange(val) {
-        this.queryForm.pageNo = val
-        this.fetchData()
-      },
-      queryData() {
-        this.queryForm.pageNo = 1
-        this.fetchData()
-      },
       async fileInfo(res) {
         console.log(res)
         if (this.upImgType === 'img') {

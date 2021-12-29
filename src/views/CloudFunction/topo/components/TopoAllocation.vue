@@ -23,61 +23,6 @@
           </el-col>
         </el-row>
       </el-collapse-item>
-      <el-collapse-item name="1" title="图标">
-        <el-row :gutter="20">
-          <el-col :span="24">
-            <vab-query-form>
-              <vab-query-form-top-panel>
-                <el-form :inline="true" label-width="0" @submit.native.prevent>
-                  <el-form-item label="">
-                    <el-input v-model="queryForm.title" size="mini">
-                      <el-button
-                        slot="append"
-                        icon="el-icon-search"
-                        native-type="submit"
-                        type="primary"
-                        @click="queryData"
-                      />
-                      <el-button
-                        slot="prepend"
-                        icon="el-icon-upload"
-                        type="success"
-                        @click="uploadCkick()"
-                      />
-                    </el-input>
-                  </el-form-item>
-                </el-form>
-              </vab-query-form-top-panel>
-            </vab-query-form>
-          </el-col>
-
-          <el-col
-            v-for="(item, index) in queryIcon"
-            v-show="index <= 11"
-            :key="index"
-            :span="8"
-          >
-            <i>
-              <el-image
-                :src="imgHost + item"
-                style="width: 100%; height: 40px; cursor: pointer"
-                @click.native="handleIcon(imgHost + item)"
-              />
-            </i>
-          </el-col>
-          <el-col :span="24">
-            <el-pagination
-              :background="background"
-              :current-page="queryForm.pageNo"
-              :layout="layout"
-              :page-size="queryForm.pageSize"
-              :total="total"
-              @current-change="handleCurrentChange"
-              @size-change="handleSizeChange"
-            />
-          </el-col>
-        </el-row>
-      </el-collapse-item>
     </el-collapse>
   </div>
 </template>
@@ -96,7 +41,6 @@
       )
   // https://blog.csdn.net/u010007013/article/details/102674042
   // console.log(imgHost, process.env.BASE_URL, process.env)
-  import { getMaterial } from '@/api/Material'
   import { mapMutations } from 'vuex'
   import getSvgPath from '@/utils/konva/getSvgPath'
   //   20210821112723
@@ -132,9 +76,7 @@
       }
     },
     computed: {},
-    created() {
-      this.fetchData()
-    },
+    created() {},
     mounted() {
       console.log(this.$router)
     },
@@ -181,25 +123,8 @@
       //   this.$emit('fatherMouseup', item)
       // },
 
-      async fetchData() {
-        const { data, totalCount } = await getMaterial(this.queryForm)
-        this.queryIcon = data
-        this.total = totalCount
-      },
       handleChange(val) {
         console.log(val)
-      },
-      handleSizeChange(val) {
-        this.queryForm.pageSize = val
-        this.fetchData()
-      },
-      handleCurrentChange(val) {
-        this.queryForm.pageNo = val
-        this.fetchData()
-      },
-      queryData() {
-        this.queryForm.pageNo = 1
-        this.fetchData()
       },
       fileInfo(res) {
         console.log(res)

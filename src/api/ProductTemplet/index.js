@@ -11,7 +11,7 @@ import {
   del_object,
   get_object,
   update_object,
-} from '@/api/shuwa_parse'
+} from '@/api/Parse'
 
 export async function queryProductTemplet(params) {
   return request({

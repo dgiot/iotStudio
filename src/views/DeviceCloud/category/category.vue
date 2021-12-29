@@ -109,7 +109,7 @@
 <script>
   import categoryEdit from './categoryEdit'
   import { delCategory } from '@/api/Category'
-  import { post_tree } from '@/api/Data'
+  import { post_tree } from '@/api/Logs'
 
   export default {
     name: 'Empty',

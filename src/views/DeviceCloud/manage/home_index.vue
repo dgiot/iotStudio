@@ -1326,7 +1326,7 @@
 <script>
   import deviceState from '@/components/Device/deviceState'
   import { mapGetters, mapMutations } from 'vuex'
-  import { get_object } from '@/api/shuwa_parse'
+  import { get_object } from '@/api/Parse'
   import { batch, Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
   import { getProduct, queryProduct } from '@/api/Product/index'

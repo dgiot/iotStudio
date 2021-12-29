@@ -1071,7 +1071,7 @@
   </div>
 </template>
 <script>
-  import { getDict, postDict, putDict, queryDict } from '@/api/Direct/index.js'
+  import { getDict, postDict, putDict, queryDict } from '@/api/Dict'
   import { mapGetters } from 'vuex'
   import { resourceTypes } from '@/api/Rules'
 

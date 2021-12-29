@@ -318,7 +318,7 @@
   import { ExportParse, ImportParse } from '@/api/Export'
   import { queryProductTemplet } from '@/api/ProductTemplet'
   import { queryCategory } from '@/api/Category'
-  import { post_tree } from '@/api/Data'
+  import { post_tree } from '@/api/Logs'
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}

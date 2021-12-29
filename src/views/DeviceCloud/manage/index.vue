@@ -745,8 +745,7 @@
 <script>
   import { Promise } from 'q'
   import { Batchdelete } from '@/api/Batch'
-  import { queryDict } from '@/api/Direct/index.js'
-  import { delDict, getBatchNumer } from '@/api/Dict'
+  import { delDict, getBatchNumer, queryDict } from '@/api/Dict'
   import { mapGetters } from 'vuex'
   import {
     BaiduMap,

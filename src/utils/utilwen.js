@@ -16,7 +16,7 @@ import {
   query_object_header,
   shuwa_batch,
   update_object,
-} from '@/api/shuwa_parse'
+} from '@/api/Parse'
 import {
   delDict,
   getBatchNumer,

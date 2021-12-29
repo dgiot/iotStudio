@@ -24,7 +24,8 @@ const {
   imageCompression,
   webpackBanner,
   webpackBarName,
-  localUrl,
+  systemStatic: localUrl,
+  runTimeStatic,
   Keywords,
   Description,
   dateTime,
@@ -67,21 +68,35 @@ function getChainWebpack(config) {
   config.plugins.delete('prefetch')
   // config.plugin('monaco').use(new MonacoWebpackPlugin())
   config.plugin('html').tap((args) => {
+    var _runTimeStatic = runTimeStatic
     var _staticUrl = localUrl
     // if (useCdn || process.env.NODE_ENV !== 'development') {
     const { css, js } = _staticUrl
+    const { css: runTimecss, js: runTimejs } = _runTimeStatic
     _staticUrl = {
       css: [],
       js: [],
     }
+    _runTimeStatic = {
+      css: [],
+      js: [],
+    }
+    runTimecss.forEach((_css) => {
+      _runTimeStatic.css.push(`${staticUrl}css/${_css}`)
+    })
+    runTimejs.forEach((_js) => {
+      _runTimeStatic.js.push(`${staticUrl}js/${_js}`)
+      _runTimeStatic.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
+    })
     css.forEach((_css) => {
       _staticUrl.css.push(`${staticUrl}css/${_css}`)
     })
     js.forEach((_js) => {
       _staticUrl.js.push(`${staticUrl}js/${_js}`)
-      _staticUrl.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
+      // _staticUrl.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
     })
     args[0].staticUrl = _staticUrl
+    args[0].runTimeStatic = _runTimeStatic
     args[0].ogConfig = ogConfig
     return args
   })
@@ -110,19 +125,22 @@ function getChainWebpack(config) {
     config.performance.set('hints', false)
     config.devtool('none')
     config.optimization.splitChunks({
-      chunks: 'all',
-      minSize: 30000, //字节 引入的文件大于300kb才进行分割
-      maxSize: 700000, //700kb，尝试将大于700kb的文件拆分成n个700kb的文件
-      minChunks: 1, // 模块的最小被引用次数
-      maxAsyncRequests: 5, // 按需加载的最大并行请求数
-      maxInitialRequests: 3, // 一个入口最大并行请求数
+      // chunks: 'all',
+      // minSize: 30000, //字节 引入的文件大于300kb才进行分割
+      // maxSize: 700000, //700kb，尝试将大于700kb的文件拆分成n个700kb的文件
+      // minChunks: 1, // 模块的最小被引用次数
+      // maxAsyncRequests: 5, // 按需加载的最大并行请求数
+      // maxInitialRequests: 3, // 一个入口最大并行请求数
       automaticNameDelimiter: '-dgiot-', // 文件名的连接符
       cacheGroups: {
-        libs: {
-          name: 'libs',
+        chunk: {
+          name: 'chunk',
           test: /[\\/]node_modules[\\/]/,
+          minSize: 131072,
+          maxSize: 524288,
+          chunks: 'async',
+          minChunks: 2,
           priority: 10,
-          chunks: 'initial',
         },
         elementUI: {
           name: 'element',
@@ -256,7 +274,7 @@ const configure = {
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new MonacoWebpackPlugin({
-      filename: 'output/assets/js/[name].worker.js',
+      filename: 'output/assets/js/monaco/[name].worker.js',
     }),
     // new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),

@@ -123,7 +123,7 @@
 </template>
 
 <script>
-  import { update_object } from '@/api/shuwa_parse'
+  import { update_object } from '@/api/Parse'
   import { queryUser } from '@/api/User'
   import { mapGetters, mapMutations } from 'vuex'
 

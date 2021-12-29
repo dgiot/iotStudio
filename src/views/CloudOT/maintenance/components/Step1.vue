@@ -171,7 +171,7 @@
 </template>
 
 <script>
-  import { update_object } from '@/api/shuwa_parse'
+  import { update_object } from '@/api/Parse'
   import { queryRoledepartment } from '@/api/Role/index'
   import { Roletree } from '@/api/Menu'
   import { mapGetters, mapMutations } from 'vuex'

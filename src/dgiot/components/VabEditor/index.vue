@@ -3,6 +3,13 @@
 </template>
 
 <script>
+  import ace from 'ace-builds'
+  ace.config.set(
+    'basePath',
+    'https://cdn.jsdelivr.net/npm/ace-builds@' +
+      require('ace-builds').version +
+      '/src-noconflict/'
+  )
   /**
    * @document https://unpkg.com/v-ace-editor
    * @api https://ace.c9.io/#nav=api
@@ -89,7 +96,6 @@
         const style = {
           height: height + 'px !important',
         }
-        // dgiotlog.log('height', height, style)
         return style
       },
     },
@@ -127,17 +133,6 @@
       maxLines(val) {
         this.editor.setOption('maxLines', val)
       },
-    },
-    created() {
-      if (!this.lazy) {
-        // require('ace-builds/src-noconflict/ext-language_tools')
-        ace.config.set(
-          'basePath',
-          'https://cdn.jsdelivr.net/npm/ace-builds@' +
-            require('ace').version +
-            '/src-noconflict/'
-        )
-      }
     },
     mounted() {
       const editor = (this.editor = ace.edit(this.$el, {
@@ -238,8 +233,3 @@
     },
   }
 </script>
-
-<style lang="scss" scoped>
-  .VabEditor {
-  }
-</style>

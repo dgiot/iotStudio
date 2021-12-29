@@ -29,7 +29,6 @@
               :title="$translateTitle(`home.department switch`)"
             />
             <vab-error-log :title="$translateTitle(`home.error log`)" />
-            <vab-search :title="$translateTitle(`home.search`)" />
             <vab-notice :title="$translateTitle(`home.notice`)" />
             <vab-full-screen :title="$translateTitle(`home.full screen`)" />
             <vab-language

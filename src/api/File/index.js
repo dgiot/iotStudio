@@ -1,53 +1,6 @@
 import request from '@/utils/request/request'
 import store from '@/store'
 import { Message } from 'element-ui'
-
-export function Upload({ file }) {
-  return request({
-    url: 'upload',
-    method: 'post',
-    params: {
-      file,
-    },
-  })
-}
-
-// 配置管理API
-export function file_reload(params) {
-  return request({
-    url: 'file_reload',
-    method: 'post',
-    params: params,
-  })
-}
-
-// 文件信息统计
-export function file_stat(params) {
-  return request({
-    url: 'file_stat',
-    method: 'get',
-    params: params,
-  })
-}
-
-// 获取文件列表
-export function list_dir(params) {
-  return request({
-    url: 'list_dir',
-    method: 'get',
-    params: params,
-  })
-}
-
-// 获取文件信息
-export function file_info(params) {
-  return request({
-    url: 'file_info',
-    method: 'get',
-    params: params,
-  })
-}
-
 // 删除文件
 export function Delete(params) {
   return request({

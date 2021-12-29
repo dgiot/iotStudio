@@ -464,7 +464,7 @@
   </div>
 </template>
 <script>
-  import { create_object, query_object, update_object } from '@/api/shuwa_parse'
+  import { create_object, query_object, update_object } from '@/api/Parse'
   import { batch } from '@/api/Batch'
   import { queryDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'

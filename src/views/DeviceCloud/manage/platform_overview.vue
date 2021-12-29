@@ -795,7 +795,7 @@
   import { getDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import { getToken } from '@/api/Menu'
-  import { Startdashboard } from '@/api/dashboard'
+  import { Startdashboard } from '@/api/System/index'
   import { isBase64 } from '@/utils'
   import info from '@/components/Device/info'
   import queryParams from '@/api/Mock/dashboard'

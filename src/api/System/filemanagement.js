@@ -29,13 +29,3 @@ export function delete_file(path) {
     },
   })
 }
-
-// export function joinNode(action, node) {
-//   return request({
-//     url: 'cluster?action=' + action,
-//     method: 'post',
-//     data: {
-//       node: node,
-//     },
-//   })
-// }

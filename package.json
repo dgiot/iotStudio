@@ -10,7 +10,7 @@
     "start": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "dgiot:install": "start ./pnpm.sh",
-    "build": "vue-cli-service build --report",
+    "build": "vue-cli-service build --report && npm run rmDist",
     "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
     "lint": "eslint --ext .js --fix&&vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
@@ -44,13 +44,16 @@
     "local:server": "node utils/server.js",
     "lighthouse": "node utils/lighthouse.js",
     "prod": "lighthouse https://prod.iotn2n.com/",
-    "template": "plop"
+    "template": "plop",
+    "rmDist": "npm run monaco",
+    "monaco": "rimraf dist/output/assets/js/monaco"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dgiot/dgiot-dashboard.git"
   },
   "dependencies": {
+    "ace-builds": "^1.4.12",
     "@babel/helper-plugin-utils": "7.14.5",
     "@dgiot/dgiot-component": "0.0.3",
     "@dgiot/dgiot-icons": "0.0.19",
