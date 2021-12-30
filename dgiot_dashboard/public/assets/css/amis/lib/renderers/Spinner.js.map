@@ -1,0 +1,13 @@
+{
+    "version": 3,
+    "file": "Spinner.js",
+    "sourceRoot": "",
+    "sources": [
+        "/src/renderers/Spinner.tsx"
+    ],
+    "names": [],
+    "mappings": ";;;;AAAA,+EAA4C;AAC5C,sCAAmD;AACnD,6DAA0B;AAO1B;IAAqC,gDAA6B;IAAlE;;IAIA,CAAC;IAHC,gCAAM,GAAN;QACE,OAAO,8BAAC,iBAAO,4BAAK,IAAI,CAAC,KAAK,EAAI,CAAC;IACrC,CAAC;IAHU,eAAe;QAH3B,IAAA,kBAAQ,EAAC;YACR,IAAI,EAAE,SAAS;SAChB,CAAC;OACW,eAAe,CAI3B;IAAD,sBAAC;CAAA,AAJD,CAAqC,eAAK,CAAC,SAAS,GAInD;AAJY,0CAAe",
+    "sourcesContent": [
+        "import Spinner from '../components/Spinner';\nimport {Renderer, RendererProps} from '../factory';\nimport React from 'react';\n\ninterface SpinnerProps extends RendererProps {}\n\n@Renderer({\n  type: 'spinner'\n})\nexport class SpinnerRenderer extends React.Component<SpinnerProps> {\n  render() {\n    return <Spinner {...this.props} />;\n  }\n}\n"
+    ]
+}

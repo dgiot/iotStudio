@@ -1,0 +1,13 @@
+{
+    "version": 3,
+    "file": "markdown.js",
+    "sourceRoot": "",
+    "sources": [
+        "/src/utils/markdown.ts"
+    ],
+    "names": [],
+    "mappings": ";AAAA;;GAEG;;;AAEH,yEAAqC;AACrC,aAAa;AACb,mEAAmD;AAEnD,IAAM,QAAQ,GAAG,IAAA,qBAAU,EAAC;IAC1B,OAAO,EAAE,IAAI;CACd,CAAC,CAAC;AAEH,QAAQ,CAAC,GAAG,CAAC,oCAAU,CAAC,CAAC;AAEzB,mBAAyB,OAAe;IACtC,OAAO,QAAQ,CAAC,MAAM,CAAC,OAAO,CAAC,CAAC;AAClC,CAAC;AAFD,4BAEC",
+    "sourcesContent": [
+        "/**\n * @file markdown 解析\n */\n\nimport markdownIt from 'markdown-it';\n// @ts-ignore\nimport {html5Media} from 'markdown-it-html5-media';\n\nconst markdown = markdownIt({\n  linkify: true\n});\n\nmarkdown.use(html5Media);\n\nexport default function (content: string) {\n  return markdown.render(content);\n}\n"
+    ]
+}

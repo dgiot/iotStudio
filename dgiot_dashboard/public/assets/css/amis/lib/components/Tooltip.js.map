@@ -1,0 +1,13 @@
+{
+    "version": 3,
+    "file": "Tooltip.js",
+    "sourceRoot": "",
+    "sources": [
+        "/src/components/Tooltip.tsx"
+    ],
+    "names": [],
+    "mappings": ";AAAA;;;;GAIG;;;;AAEH,6DAA0B;AAG1B,kCAAiD;AAcjD;IAA6B,wCAA6B;IAA1D;;IAwCA,CAAC;IAnCC,wBAAM,GAAN;QACE,IAAM,KAeF,IAAI,CAAC,KAAK,EAdC,EAAE,iBAAA,EACf,SAAS,eAAA,EACT,KAAK,WAAA,EACL,QAAQ,cAAA,EACR,UAAU,gBAAA,EACV,KAAK,WAAA,EACL,SAAS,eAAA,EACT,eAAe,qBAAA,EACf,cAAc,oBAAA,EACd,YAAY,kBAAA,EACZ,WAAW,iBAAA,EACC,EAAE,gBAAA,EACd,eAAe,qBAAA,EACZ,IAAI,2BAdH,0LAeL,CAAa,CAAC;QAEf,OAAO,CACL,+DACM,IAAI,IACR,SAAS,EAAE,EAAE,CACX,SAAS,EACT,eAAe,CAAC,CAAC,CAAC,cAAY,eAAiB,CAAC,CAAC,CAAC,EAAE,EACpD,SAAS,CACV,EACD,KAAK,EAAE,KAAK,EACZ,IAAI,EAAC,SAAS;YAEd,6DAAK,SAAS,EAAE,EAAE,CAAC,eAAe,CAAC,IAAM,UAAU,EAAI;YACtD,KAAK,CAAC,CAAC,CAAC,uCAAK,SAAS,EAAE,EAAE,CAAC,eAAe,CAAC,IAAG,KAAK,CAAO,CAAC,CAAC,CAAC,IAAI;YAClE,uCAAK,SAAS,EAAE,EAAE,CAAC,cAAc,CAAC,IAAG,QAAQ,CAAO,CAChD,CACP,CAAC;IACJ,CAAC;IAtCM,oBAAY,GAAG;QACpB,SAAS,EAAE,EAAE;KACd,CAAC;IAqCJ,cAAC;CAAA,AAxCD,CAA6B,eAAK,CAAC,SAAS,GAwC3C;AAxCY,0BAAO;AA0CpB,kBAAe,IAAA,iBAAS,EAAC,OAAO,CAAC,CAAC",
+    "sourcesContent": [
+        "/**\n * @file Tooltip\n * @description\n * @author fex\n */\n\nimport React from 'react';\nimport cx from 'classnames';\nimport {classPrefix, classnames} from '../themes/default';\nimport {ClassNamesFn, themeable} from '../theme';\n\ninterface TooltipProps extends React.HTMLProps<HTMLDivElement> {\n  title?: string;\n  classPrefix: string;\n  classnames: ClassNamesFn;\n  theme?: string;\n  className?: string;\n  style?: any;\n  arrowProps?: any;\n  placement?: string;\n  [propName: string]: any;\n}\n\nexport class Tooltip extends React.Component<TooltipProps> {\n  static defaultProps = {\n    className: ''\n  };\n\n  render() {\n    const {\n      classPrefix: ns,\n      className,\n      title,\n      children,\n      arrowProps,\n      style,\n      placement,\n      arrowOffsetLeft,\n      arrowOffsetTop,\n      positionLeft,\n      positionTop,\n      classnames: cx,\n      activePlacement,\n      ...rest\n    } = this.props;\n\n    return (\n      <div\n        {...rest}\n        className={cx(\n          `Tooltip`,\n          activePlacement ? `Tooltip--${activePlacement}` : '',\n          className\n        )}\n        style={style}\n        role=\"tooltip\"\n      >\n        <div className={cx(`Tooltip-arrow`)} {...arrowProps} />\n        {title ? <div className={cx('Tooltip-title')}>{title}</div> : null}\n        <div className={cx('Tooltip-body')}>{children}</div>\n      </div>\n    );\n  }\n}\n\nexport default themeable(Tooltip);\n"
+    ]
+}
