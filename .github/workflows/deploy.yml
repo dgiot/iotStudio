@@ -1,8 +1,4 @@
 name: deploy
-<<<<<<< HEAD:.github/workflows/deploy.yml
-
-=======
->>>>>>> f3c3251d049b800bc641333ebb6b5090bcfc71d4:.github/workflows/page.yml
 on:
   push:
     branches: [ master ]
@@ -11,7 +7,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -53,9 +48,6 @@ jobs:
           wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
           tar xf dgiot_file.tar.gz
           rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
-<<<<<<< HEAD:.github/workflows/deploy.yml
-          wget https://dev.iotn2n.com/swagger.json
-=======
           wget http://dev.iotn2n.com/swagger.json
       - name: Deploy to github gh-pages 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
@@ -63,7 +55,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist
->>>>>>> f3c3251d049b800bc641333ebb6b5090bcfc71d4:.github/workflows/page.yml
       - name: dgiot-dashboard Pages  🚀
         uses: yanglbme/gitee-pages-action@main
         with:
@@ -86,10 +77,6 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-<<<<<<< HEAD:.github/workflows/deploy.yml
-        timeout-minutes: 1
-=======
->>>>>>> f3c3251d049b800bc641333ebb6b5090bcfc71d4:.github/workflows/page.yml
       - name: Accurics Scan 🚀
         id: accurics-scan
         uses: docker://accurics/terrascan-action:latest
@@ -97,11 +84,7 @@ jobs:
           only_warn: true
           verbose: true
           webhook_url: https://app.accurics.com/v1/api/terrascan
-<<<<<<< HEAD:.github/workflows/deploy.yml
-          webhook_token: a20de3ab-f00e-4e1a-a37f-dbceafe4150e
-=======
           webhook_token: d73c0d62-aab9-4d65-940d-2e6b690a48a7
->>>>>>> f3c3251d049b800bc641333ebb6b5090bcfc71d4:.github/workflows/page.yml
       - name: dgiot-dashboard Pages  🚀
         uses: yanglbme/gitee-pages-action@main
         with:
@@ -144,30 +127,19 @@ jobs:
           project: '.'
           login: ${{ secrets.surge_login }}
           token: ${{ secrets.surge_token }}
-<<<<<<< HEAD:.github/workflows/deploy.yml
-      - name: Get the preview_url 🚀
-        run: echo "url => ${{ steps.preview_step.outputs.preview_url }}"
-#      - name: Deploy to heroku 🚀
-#      - uses: CDNievas/heroku-action@v1.0 # This is the action
-#        with:
-#          heroku_email:  ${{ secrets.heroku_email }}
-#          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-#          heroku_app_name: "this-is-an-example"
-=======
-#      - name: Deploy to heroku 🚀
-#        uses: CDNievas/heroku-action@v1.0 # This is the action
-#        with:
-#          heroku_email:  ${{ secrets.heroku_email }}
-#          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-#          heroku_app_name: ${{secrets.heroku_app_name}}
-#      - name: Deploy to render 🚀
-#        uses: bounceapp/render-action@0.2.0
-#        with:
-#        email: ${{ secrets.RENDER_EMAIL }}
-#         password: ${{ secrets.RENDER_PASSWORD }}
-#          token: ${{ secrets.ACTION_SECRET }}
-#          service-id: ${{ secrets.service_id }}
->>>>>>> f3c3251d049b800bc641333ebb6b5090bcfc71d4:.github/workflows/page.yml
+      #      - name: Deploy to heroku 🚀
+      #        uses: CDNievas/heroku-action@v1.0 # This is the action
+      #        with:
+      #          heroku_email:  ${{ secrets.heroku_email }}
+      #          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+      #          heroku_app_name: ${{secrets.heroku_app_name}}
+      #      - name: Deploy to render 🚀
+      #        uses: bounceapp/render-action@0.2.0
+      #        with:
+      #        email: ${{ secrets.RENDER_EMAIL }}
+      #         password: ${{ secrets.RENDER_PASSWORD }}
+      #          token: ${{ secrets.ACTION_SECRET }}
+      #          service-id: ${{ secrets.service_id }}
       - name: Deploy to vercel 🚀
         uses: amondnet/vercel-action@v20
         if: steps.update_status.outputs.made_changes == 'yes'
@@ -178,10 +150,7 @@ jobs:
           vercel-org-id: ${{ secrets.ORG_ID}}  #Required
           vercel-project-id: ${{ secrets.PROJECT_ID}} #Required
           working-directory: ./dist
-<<<<<<< HEAD:.github/workflows/deploy.yml
-=======
 
->>>>>>> f3c3251d049b800bc641333ebb6b5090bcfc71d4:.github/workflows/page.yml
   clean:
     name: Clean
     runs-on: ubuntu-latest
@@ -203,10 +172,7 @@ jobs:
           python -m pip install --upgrade pipenv wheel
           pipenv install
           pipenv run python run.py
-<<<<<<< HEAD:.github/workflows/deploy.yml
-=======
 
->>>>>>> f3c3251d049b800bc641333ebb6b5090bcfc71d4:.github/workflows/page.yml
   codecov:
     runs-on: ubuntu-latest
     steps:
@@ -236,8 +202,3 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-<<<<<<< HEAD:.github/workflows/deploy.yml
-
-#    needs: setup
-=======
->>>>>>> f3c3251d049b800bc641333ebb6b5090bcfc71d4:.github/workflows/page.yml

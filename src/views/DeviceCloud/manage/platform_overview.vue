@@ -1022,6 +1022,7 @@
       async initDgiotMqtt() {
         await this.getProduct()
         await this.queryData()
+        await this.setTreeFlag(true)
       },
       async getWarnCount(
         params = {

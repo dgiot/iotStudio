@@ -112,6 +112,14 @@
 </template>
 
 <script>
+  /**
+   * @Author: dext7r
+   * @Date: 2021-12-29 16:20:29
+   * @LastEditors:
+   * @param
+   * @return {Promise<void>}
+   * @Description:
+   */
   import backgroundImage from '../../../../../public/assets/images/platform/assets/login_images/background.jpg'
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/data/validate'

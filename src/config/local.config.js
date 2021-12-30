@@ -57,6 +57,10 @@ let systemStatic = {
     'resize-observer-polyfill.js',
     'vue-aliplayer-v2.js',
     'echarts-amap.min.js',
+    'md5.min.js',
+    'codemirror.js',
+    'vue-codemirror.js',
+    'vuedraggable.umd.min.js',
   ],
 }
 // 运行时加载的文件
@@ -69,6 +73,7 @@ let runTimeStatic = {
     'materialdesignicons.min.css',
     'style.min.css',
     'codemirror.css',
+    'macarons.js',
     'lint.css',
     //  amis 相关
     'amis/lib/themes/cxd.css',
@@ -76,17 +81,12 @@ let runTimeStatic = {
     'amis/lib/themes/antd.css',
   ],
   js: [
-    'md5.min.js',
-    'vuedraggable.umd.min.js',
     'jszip.min.js',
     'Sortable.min.js',
-    'macarons.js',
     'jsplumb.min.js',
     'vuedraggable.umd.min.js',
-    'codemirror.js',
     'javascript.js',
     'json-lint.js',
-    'vue-codemirror.js',
     'vue-flv-player.umd.min.js',
     'vue-multipane.js',
     'vditor.js',
