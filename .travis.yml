@@ -1,23 +1,41 @@
 language: node_js
 node_js:
-  - 12
+  - 16.13.0
 branchs:
   only:
     - master
 cache:
+  npm: false
   directories:
-    - node_modules
+    - "~/.pnpm-store"
+before_install:
+  - curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@6
+  - pnpm config set store-dir ~/.pnpm-store
+  - pnpm config set registry https://registry.npmmirror.com
+  - pnpm lint
+  - pnpm lint:fix
+  - pnpm lint:style
 install:
-  - yarn install
+  - pnpm i --frozen-lockfile
 scripts:
-  - yarn build
+  - pnpm build
+  - cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
+  - cd dist
+  - wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
+  - tar xf dgiot_dashboard.tar.gz
+  - wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz
+  - tar xf dgiot_swagger.tar.gz
+  - wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
+  - tar xf dgiot_file.tar.gz
+  - rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
+  - wget https://dev.iotn2n.com/swagger.json
 deploy:
   provider: pages
   local_dir: dist
   skip_cleanup: true
   # 在 GitHub 上生成的令牌，允许 Travis 推送代码到你的仓库。
   # 在仓库对应的 Travis 设置页面中配置，用于安全控制。
-  github_token: $TOKEN
+  github_token: $GIT_TOKEN
   keep_history: true
   on:
-    branch: master
+    branch: travis-pages

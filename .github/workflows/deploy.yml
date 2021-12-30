@@ -1,4 +1,4 @@
-name: page
+name: deploy
 
 on:
   push:
@@ -6,8 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  local:
+  deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -24,17 +25,22 @@ jobs:
         with:
           version: 6.3.0
           run_install: false
-      - name: Pnpm script  🚀
+      - name: check if branch still exists 🚀
+        id: ls-remote
+        run: |
+          gh=$(git ls-remote --heads origin gh-pages)
+          echo  "::set-output name=gh::$gh"
+      - name: delete page branch 🚀
+        if: steps.ls-remote.gh
+        run: git push origin --delete gh-pages
+      - name: Pnpm script 🚀
         run: |
           pnpm config set registry https://registry.npmmirror.com
           pnpm i --frozen-lockfile
-          pnpm install
           pnpm lint
           pnpm lint:fix
           pnpm lint:style
           pnpm build
-          git push origin --delete gh-pages
-          git push origin --delete cdn-pages
           cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
           cd dist
           wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
@@ -45,18 +51,15 @@ jobs:
           tar xf dgiot_file.tar.gz
           rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
           wget https://dev.iotn2n.com/swagger.json
-      - name: Deploy to github gh-pages 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+      - name: dgiot-dashboard Pages  🚀
+        uses: yanglbme/gitee-pages-action@main
         with:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: dist
-      - name: Deploy to github cdn-pages 🚀
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-          BRANCH: cdn-pages
-          FOLDER: dist
+          # Gitee 用户名
+          gitee-username: ${{ secrets.GITEE_USERNAME }}
+          # Gitee 密码
+          gitee-password: ${{ secrets.GITEE_PASSWORD }}
+          # Gitee 仓库
+          gitee-repo: dgiiot/dgiot-dashboard
       - name: Deploy to Netlify  🚀
         uses: nwtgck/actions-netlify@v1.2
         with:
@@ -71,15 +74,14 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         timeout-minutes: 1
-      - name: Deploy to VERCEL  🚀
-        uses: amondnet/vercel-action@v20
+      - name: Accurics Scan 🚀
+        id: accurics-scan
+        uses: docker://accurics/terrascan-action:latest
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
-          github-token: ${{ secrets.GIT_TOKEN }} #Optional
-          vercel-args: '--prod' #Optional
-          vercel-org-id: ${{ secrets.ORG_ID}}  #Required
-          vercel-project-id: ${{ secrets.PROJECT_ID}} #Required
-          working-directory: ./dist
+          only_warn: true
+          verbose: true
+          webhook_url: https://app.accurics.com/v1/api/terrascan
+          webhook_token: a20de3ab-f00e-4e1a-a37f-dbceafe4150e
       - name: dgiot-dashboard Pages  🚀
         uses: yanglbme/gitee-pages-action@main
         with:
@@ -90,18 +92,7 @@ jobs:
           # Gitee 仓库
           gitee-repo: dgiiot/dgiot-dashboard
           # 要部署的分支
-          branch: cdn-pages
-      - name: dgiot-dashboard Pages  🚀
-        uses: yanglbme/gitee-pages-action@main
-        with:
-          # Gitee 用户名
-          gitee-username: ${{ secrets.GITEE_USERNAME }}
-          # Gitee 密码
-          gitee-password: ${{ secrets.GITEE_PASSWORD }}
-          # Gitee 仓库
-          gitee-repo: dgiot-dashboard/dgiot-dashboard
-          # 要部署的分支
-          branch: cdn-pages
+          branch: gh-pages
       - name: Sync to dgiot 🚀
         uses: wearerequired/git-mirror-action@master
         env:
@@ -112,16 +103,6 @@ jobs:
           source-repo: git@github.com:dgiot/dgiot-dashboard.git
           # Gitee 目标仓库地址
           destination-repo: git@gitee.com:dgiiot/dgiot-dashboard.git
-      - name: Sync to dgiot-dashboard 🚀
-        uses: wearerequired/git-mirror-action@master
-        env:
-          # 在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-        with:
-          # GitHub 源仓库地址
-          source-repo: git@github.com:dgiot/dgiot-dashboard.git
-          # Gitee 目标仓库地址
-          destination-repo: git@gitee.com:dgiot-dashboard/dgiot-dashboard.git
       - name: Upload  🚀
         uses: actions/upload-artifact@v2
         with:
@@ -136,41 +117,81 @@ jobs:
           runs: 5
           uploadArtifacts: true
           configPath: './.github/workflows/setup/lighthouse-audit.json'
-  accurics:
-    runs-on: ubuntu-latest
-    name: accurics-scan
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Accurics Scan
-        id: accurics-scan
-        uses: docker://accurics/terrascan-action:latest
+      - name: Deploy to surge 🚀
+        uses: dswistowski/surge-sh-action@v1
         with:
-          only_warn: true
-          verbose: true
-          webhook_url: https://app.accurics.com/v1/api/terrascan
-          webhook_token: a20de3ab-f00e-4e1a-a37f-dbceafe4150e
-
+          domain: 'dgiot-dashboard.surge.sh'
+          project: '.'
+          login: ${{ secrets.surge_login }}
+          token: ${{ secrets.surge_token }}
+      - name: Get the preview_url 🚀
+        run: echo "url => ${{ steps.preview_step.outputs.preview_url }}"
+#      - name: Deploy to heroku 🚀
+#      - uses: CDNievas/heroku-action@v1.0 # This is the action
+#        with:
+#          heroku_email:  ${{ secrets.heroku_email }}
+#          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+#          heroku_app_name: "this-is-an-example"
+      - name: Deploy to vercel 🚀
+        uses: amondnet/vercel-action@v20
+        if: steps.update_status.outputs.made_changes == 'yes'
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
+          github-token: ${{ secrets.GIT_TOKEN }} #Optional
+          vercel-args: '--prod' #Optional
+          vercel-org-id: ${{ secrets.ORG_ID}}  #Required
+          vercel-project-id: ${{ secrets.PROJECT_ID}} #Required
+          working-directory: ./dist
   clean:
     name: Clean
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - name: Checkout
+      - name: Checkout 🚀
         uses: actions/checkout@v2
         with:
           repository: 'jdsync/Workflows-Cleaner'
-      - name: Set up Python
+      - name: Set up Python 🚀
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
-      - name: Install pipenv
-        run: python -m pip install --upgrade pipenv wheel
-      - name: Install dependencies
-        run: pipenv install
-      - name: Clean
+      - name: Install pipenv 🚀
         env:
           GITHUB_REPO: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
           EXPIRE_TIME: '1h'
-        run: pipenv run python run.py
+        run: |
+          python -m pip install --upgrade pipenv wheel
+          pipenv install
+          pipenv run python run.py
+  codecov:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout  🚀
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Cache pnpm modules  🚀
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.3.0
+          run_install: true
+
+      - name: Generate coverage report  🚀
+        run: pnpm test
+        env:
+          COVERAGE: "true"
+
+      - name: Upload coverage to Codecov  🚀
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+#    needs: setup
