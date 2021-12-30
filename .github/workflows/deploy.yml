@@ -133,13 +133,13 @@ jobs:
 #          heroku_email:  ${{ secrets.heroku_email }}
 #          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
 #          heroku_app_name: ${{secrets.heroku_app_name}}
-      - name: Deploy to render 🚀
-        uses: bounceapp/render-action@0.2.0
-        with:
-          email: ${{ secrets.RENDER_EMAIL }}
-          password: ${{ secrets.RENDER_PASSWORD }}
-          token: ${{ secrets.ACTION_SECRET }}
-          service-id: ${{ secrets.service_id }}
+#      - name: Deploy to render 🚀
+#        uses: bounceapp/render-action@0.2.0
+#        with:
+#        email: ${{ secrets.RENDER_EMAIL }}
+#         password: ${{ secrets.RENDER_PASSWORD }}
+#          token: ${{ secrets.ACTION_SECRET }}
+#          service-id: ${{ secrets.service_id }}
       - name: Deploy to vercel 🚀
         uses: amondnet/vercel-action@v20
         if: steps.update_status.outputs.made_changes == 'yes'
