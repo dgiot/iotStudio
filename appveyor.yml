@@ -16,7 +16,7 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version
   - curl -L https://unpkg.com/@pnpm/self-installer | node
-#  - pnpm config set registry https://registry.npmmirror.com
+  - pnpm config set registry https://registry.npmmirror.com
   - git --version
   - node --version
   - pnpm --version

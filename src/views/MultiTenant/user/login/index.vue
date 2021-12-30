@@ -338,7 +338,7 @@
         try {
           Cookies.remove('startIframe')
           Cookies.remove('pwaLogin')
-          Cookies.remove('fileServer')
+          // Cookies.remove('fileServer')
           this.$nextTick(async () => {
             if (window.name == 'dgiot_iframe') {
               Cookies.set(
