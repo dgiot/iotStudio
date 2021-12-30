@@ -269,7 +269,6 @@ export default {
           console.groupEnd()
           const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payload))
           if (data) {
-            console.log('aaaaaaaaaaa', data)
             this.renderCard(data)
           } else {
             this.getCardDevice()
@@ -874,19 +873,14 @@ export default {
      */
     async startOpc(row) {
       try {
-        const items = []
-        getDevice(row.objectId).then((dev) => {
-          if (dev.basedata) {
-            /**
-             * @description 判断下发组态topic的item
-             * @description 必须以 标识符 dgiot_testing_equipment_ 开头
-             */
-            for (let key in dev.basedata) {
-              if (key.indexOf('dgiot_testing_equipment_') == 0)
-                items.push(dev.basedata[key])
-            }
+        var items = []
+        const { basedata = [] } = await getDevice(row.objectId)
+        if (!_.isEmpty(basedata)) {
+          for (let key in basedata) {
+            if (key.indexOf('dgiot_testing_equipment_') == 0)
+              items.push(basedata[key])
           }
-        })
+        }
         // mqtt 消息回调
         console.groupCollapsed(
           '%c send mqttMsg items',
