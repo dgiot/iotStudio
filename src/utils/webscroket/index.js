@@ -8,6 +8,7 @@ let localHost = [
   'github.io',
   'netlify.app',
   'vercel.app',
+  'surge.sh',
 ]
 
 if (process.env.NODE_ENV == 'development') {

@@ -14,6 +14,7 @@ import {
   postEvidence,
   putEvidence,
 } from '@/api/Evidence'
+import { getDevice } from '../../../api/Device'
 export default {
   name: 'TaskIndex',
   filters: {
@@ -874,16 +875,18 @@ export default {
     async startOpc(row) {
       try {
         const items = []
-        if (row.basedata) {
-          /**
-           * @description 判断下发组态topic的item
-           * @description 必须以 标识符 dgiot_testing_equipment_ 开头
-           */
-          for (let key in row.basedata) {
-            if (key.indexOf('dgiot_testing_equipment_') == 0)
-              items.push(row.basedata[key])
+        getDevice(row.objectId).then((dev) => {
+          if (dev.basedata) {
+            /**
+             * @description 判断下发组态topic的item
+             * @description 必须以 标识符 dgiot_testing_equipment_ 开头
+             */
+            for (let key in dev.basedata) {
+              if (key.indexOf('dgiot_testing_equipment_') == 0)
+                items.push(dev.basedata[key])
+            }
           }
-        }
+        })
         // mqtt 消息回调
         console.groupCollapsed(
           '%c send mqttMsg items',

@@ -22,6 +22,10 @@
 	alt="Vulnerablities" maxretrytimes="3" class="m-1 transition-all duration-1000">
   <img src="https://img.shields.io/github/release/dgiot/dgiot-dashboard?color=brightgreen" alt="release">
   <img src="https://img.shields.io/github/license/dgiot/dgiot-dashboard" alt="license">
+  <img src="https://img.shields.io/circleci/build/github/dgiot/dgiot-dashboard/master?style=flat-square" alt="circleci">
+  <img src="https://api.netlify.com/api/v1/badges/e89ab785-b26a-4096-b3b9-c5e149a78588/deploy-status" alt="netlify">
+  <a href='https://gitee.com/dgiiot/dgiot-dashboard/stargazers'><img src='https://gitee.com/dgiiot/dgiot-dashboard/badge/star.svg?theme=dark' alt='star'></img></a>
+  <a href='https://gitee.com/dgiiot/dgiot-dashboard/stargazers'><img src='https://gitee.com/dgiiot/dgiot-dashboard/widgets/widget_card.svg?colors=ffffff,1e252b,323d47,455059,d7deea,99a0ae' alt='star'></img></a>
 <p>
 
 ![微服务架构图_02.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84%E5%9B%BE_02.png)
