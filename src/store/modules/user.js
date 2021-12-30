@@ -13,6 +13,7 @@ const getLocalStorage = (key) => {
 const { language } = getLocalStorage('language')
 async function queryAllMsg(commit, dispatch, data, type) {
   tickTime()
+  await loadDgiotScript()
   const {
     sessionToken,
     nick,
@@ -153,7 +154,37 @@ import {
   themeName,
   title,
   tokenName,
+  runTimeStatic,
+  proxy,
+  CDN_URL,
 } from '@/config'
+
+/**
+ * @Author: dext7r
+ * @Date: 2021-12-29 16:20:29
+ * @LastEditors:
+ * @param
+ * @return {Promise<void>}
+ * @Description:
+ */
+async function loadDgiotScript() {
+  const NODE_ENV =
+    process.env.NODE_ENV == 'development' ? proxy[1].target + CDN_URL : CDN_URL
+  console.info('NODE_ENV', NODE_ENV)
+  const staticUrl = NODE_ENV ? `${CDN_URL}/assets/` : '/assets/'
+  var _runTimeStatic = { js: [] }
+  const { js: runTimejs } = runTimeStatic
+  runTimejs.forEach((_js) => {
+    _runTimeStatic.js.push(`${staticUrl}js/${_js}`)
+    _runTimeStatic.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
+  })
+  try {
+    const res = await loadScript(_runTimeStatic.js)
+    console.log(res, 'loadDgiotScript success')
+  } catch (error) {
+    console.error(error, 'loadDgiotScript error')
+  }
+}
 
 import { getUserInfo, login, logout, socialLogin, jwtlogin } from '@/api/User'
 import { queryMenu } from '@/api/Menu/index'
