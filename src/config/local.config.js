@@ -61,6 +61,9 @@ let systemStatic = {
     'codemirror.js',
     'vue-codemirror.js',
     'vuedraggable.umd.min.js',
+    'vue-multipane.js',
+    'bcryptjs.js',
+    'macarons.js',
   ],
 }
 // 运行时加载的文件
@@ -73,7 +76,6 @@ let runTimeStatic = {
     'materialdesignicons.min.css',
     'style.min.css',
     'codemirror.css',
-    'macarons.js',
     'lint.css',
     //  amis 相关
     'amis/lib/themes/cxd.css',
@@ -88,10 +90,8 @@ let runTimeStatic = {
     'javascript.js',
     'json-lint.js',
     'vue-flv-player.umd.min.js',
-    'vue-multipane.js',
     'vditor.js',
     'aliplayer-min.js',
-    'bcryptjs.js',
     // monaco 编辑器相关
     'monaco/css.worker.js',
     'monaco/editor.worker.js',

@@ -28,11 +28,7 @@ scripts:
   - wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
   - tar xf dgiot_file.tar.gz
   - rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
-<<<<<<< HEAD
-  - wget https://dev.iotn2n.com/swagger.json
-=======
   - wget http://dev.iotn2n.com/swagger.json
->>>>>>> f3c3251d049b800bc641333ebb6b5090bcfc71d4
 deploy:
   provider: pages
   local_dir: dist
