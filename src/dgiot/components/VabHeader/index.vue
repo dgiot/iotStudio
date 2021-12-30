@@ -99,7 +99,7 @@
       },
     },
     async mounted() {
-      await that.loadDgiotScript()
+      await this.loadDgiotScript()
       // 写在页面公共组件里。确保全局只订阅一个mqtt。刷新则再次重新订阅
       const md5Info = {
         token: md5(this.token),
