@@ -26,7 +26,6 @@ let systemStatic = {
   js: [
     'vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
     'mqttws31.js',
-    'echarts.min.js',
     'vue-router.min.js',
     'vue-i18n.min.js',
     'nprogress.js',
@@ -83,6 +82,7 @@ let runTimeStatic = {
     'amis/lib/themes/antd.css',
   ],
   js: [
+    'echarts.min.js',
     'jszip.min.js',
     'Sortable.min.js',
     'jsplumb.min.js',
