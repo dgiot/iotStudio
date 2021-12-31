@@ -1,0 +1,27 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    cache-control = "max-age=7200"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    cache-control = "max-age=31536000"
+
+[[headers]]
+  for = "/dgiot_file/*"
+  [headers.values]
+    cache-control = "max-age=31536000"
+
+[[headers]]
+  for = "/dgiot_dashboard/*"
+  [headers.values]
+    cache-control = "max-age=31536000"
+
+
+[[redirects]]
+  from = "/iotapi/"
+  to = "https://dev.iotn2n.com"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
