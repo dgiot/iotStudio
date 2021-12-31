@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/iotapi/",
+      "destination": "/api/proxy"
+    }
+  ]
+}
+

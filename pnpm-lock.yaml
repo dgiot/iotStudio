@@ -47,6 +47,7 @@ specifiers:
   fork-ts-checker-webpack-plugin: 6.5.0
   hard-source-webpack-plugin: 0.13.1
   html-webpack-plugin: 5.5.0
+  http-proxy-middleware: ^2.0.1
   husky: 7.0.4
   increase-memory-limit: ^1.0.3
   indent-string: 5.0.0
@@ -115,6 +116,7 @@ dependencies:
   file-loader: 6.2.0_webpack@4.46.0
   fork-ts-checker-webpack-plugin: 6.5.0_f9de60b1db7b6ad65c3f0f0928e19310
   html-webpack-plugin: 5.5.0_webpack@4.46.0
+  http-proxy-middleware: 2.0.1
   increase-memory-limit: 1.0.7
   indent-string: 5.0.0
   ip: 1.1.5
@@ -2070,7 +2072,6 @@ packages:
     resolution: {integrity: sha512-5kPLG5BKpWYkw/LVOGWpiq3nEVqxiN32rTgI53Sk12/xHFQ2rG3ehI9IO+O3W2QoKeyB92dJkoka8SUm6BX1pA==, tarball: '@types/http-proxy/download/@types/http-proxy-1.17.8.tgz'}
     dependencies:
       '@types/node': 17.0.5
-    dev: true
 
   /@types/inquirer/6.5.0:
     resolution: {integrity: sha1-uDsL8wuIuL5yRtQOUdMv6dEOCb4=, tarball: '@types/inquirer/download/@types/inquirer-6.5.0.tgz'}
@@ -6026,7 +6027,6 @@ packages:
 
   /eventemitter3/4.0.7:
     resolution: {integrity: sha1-Lem2j2Uo1WRO9cWVJqG0oHMGFp8=, tarball: eventemitter3/download/eventemitter3-4.0.7.tgz}
-    dev: true
 
   /events/3.3.0:
     resolution: {integrity: sha1-Mala0Kkk4tLEGagTrrLE6HjqdAA=, tarball: events/download/events-3.3.0.tgz}
@@ -6587,6 +6587,19 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: false
+
+  /follow-redirects/1.14.6_debug@4.3.3:
+    resolution: {integrity: sha512-fhUl5EwSJbbl8AR+uYL2KQDxLkdSjZGR36xy46AO7cOMTrCMON6Sa28FmAnC2tRTDbd/Uuzz3aJBv7EBN7JH8A==, tarball: follow-redirects/download/follow-redirects-1.14.6.tgz}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.3
+    dev: true
 
   /for-in/1.0.2:
     resolution: {integrity: sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=, tarball: for-in/download/for-in-1.0.2.tgz}
@@ -7489,12 +7502,36 @@ packages:
       - debug
     dev: true
 
-  /http-proxy/1.18.1_debug@4.3.3:
+  /http-proxy-middleware/2.0.1:
+    resolution: {integrity: sha1-fvNBekeft2ZqVx4Jlmxmo5vSwV8=, tarball: http-proxy-middleware/download/http-proxy-middleware-2.0.1.tgz}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      '@types/http-proxy': 1.17.8
+      http-proxy: 1.18.1
+      is-glob: 4.0.3
+      is-plain-obj: 3.0.0
+      micromatch: 4.0.4
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /http-proxy/1.18.1:
     resolution: {integrity: sha1-QBVB8FNIhLv5UmAzTnL4juOXZUk=, tarball: http-proxy/download/http-proxy-1.18.1.tgz}
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
       follow-redirects: 1.14.6
+      requires-port: 1.0.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /http-proxy/1.18.1_debug@4.3.3:
+    resolution: {integrity: sha1-QBVB8FNIhLv5UmAzTnL4juOXZUk=, tarball: http-proxy/download/http-proxy-1.18.1.tgz}
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      eventemitter3: 4.0.7
+      follow-redirects: 1.14.6_debug@4.3.3
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -8048,7 +8085,6 @@ packages:
   /is-plain-obj/3.0.0:
     resolution: {integrity: sha1-r28uoUrFpkYYOlu9tbqrvBVq2dc=, tarball: is-plain-obj/download/is-plain-obj-3.0.0.tgz}
     engines: {node: '>=10'}
-    dev: true
 
   /is-plain-object/2.0.4:
     resolution: {integrity: sha1-LBY7P6+xtgbZ0Xko8FwqHDjgdnc=, tarball: is-plain-object/download/is-plain-object-2.0.4.tgz}
@@ -11681,7 +11717,6 @@ packages:
 
   /requires-port/1.0.0:
     resolution: {integrity: sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=, tarball: requires-port/download/requires-port-1.0.0.tgz}
-    dev: true
 
   /resize-detector/0.3.0:
     resolution: {integrity: sha1-/klREuGEaVUAqPUeA4nxV3TLHPw=, tarball: resize-detector/download/resize-detector-0.3.0.tgz}

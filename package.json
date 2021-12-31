@@ -1,6 +1,6 @@
 {
   "name": "@dgiot/dgiot-dashboard",
-  "version": "4.4.5",
+  "version": "4.4.6",
   "author": "iotn2n",
   "license": "MPL-2.0",
   "private": false,
@@ -73,6 +73,7 @@
     "file-loader": "6.2.0",
     "fork-ts-checker-webpack-plugin": "6.5.0",
     "html-webpack-plugin": "5.5.0",
+    "http-proxy-middleware": "^2.0.1",
     "increase-memory-limit": "^1.0.3",
     "indent-string": "5.0.0",
     "ip": "1.1.5",
