@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/iotapi/",
-      "destination": "http://dev.iotn2n.com"
+      "destination": "http://dev.iotn2n.com/iotapi/"
     }
   ]
 }
