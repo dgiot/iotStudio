@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/iotapi/*",
-      "destination": "http://dev.iotn2n.com/*"
+      "source": "/iotapi/",
+      "destination": "/api/proxy"
     }
   ]
 }
