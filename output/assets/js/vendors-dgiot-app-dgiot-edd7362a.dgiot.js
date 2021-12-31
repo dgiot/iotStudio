@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2021-12-31 08:52:52
+ *  Time: 2021-12-31 09:18:16
  */
 (window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["vendors-dgiot-app-dgiot-edd7362a"],{"199d":function(t,e,i){"use strict";i.d(e,"a",(function(){return s}));let n=!1,o=null;function r(t){if(!t.parent||t.parent===t)return null;try{let e=t.location,i=t.parent.location;if("null"!==e.origin&&"null"!==i.origin&&e.origin!==i.origin)return n=!0,null}catch(e){return n=!0,null}return t.parent}class s{static getSameOriginWindowChain(){if(!o){o=[];let t,e=window;do{t=r(e),t?o.push({window:e,iframeElement:e.frameElement||null}):o.push({window:e,iframeElement:null}),e=t}while(e)}return o.slice(0)}static hasDifferentOriginAncestor(){return o||this.getSameOriginWindowChain(),n}static getPositionOfChildWindowRelativeToAncestorWindow(t,e){if(!e||t===e)return{top:0,left:0};let i=0,n=0,o=this.getSameOriginWindowChain();for(const r of o){if(i+=r.window.scrollY,n+=r.window.scrollX,r.window===e)break;if(!r.iframeElement)break;let t=r.iframeElement.getBoundingClientRect();i+=t.top,n+=t.left}return{top:i,left:n}}}},"1bb5":function(t,e,i){"use strict";
 /*! @license DOMPurify 2.3.1 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.3.1/LICENSE */
