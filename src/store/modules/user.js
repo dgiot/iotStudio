@@ -13,6 +13,7 @@ const getLocalStorage = (key) => {
 const { language } = getLocalStorage('language')
 async function queryAllMsg(commit, dispatch, data, type) {
   tickTime()
+
   const {
     sessionToken,
     nick,
@@ -30,8 +31,7 @@ async function queryAllMsg(commit, dispatch, data, type) {
     time: (Date.parse(new Date()) / 1000 + expires_in) * 1000,
     expires_in: 7,
   })
-
-  if (nick) commit('setUsername', nick)
+  http: if (nick) commit('setUsername', nick)
   const page_title = getToken('title') || title
   const { title, Copyright, name, logo, _pcimg, _mimg } = tag.companyinfo
   const { avatar } = tag.userinfo
@@ -165,7 +165,6 @@ import { queryProduct } from '@/api/Product'
 import { license } from '@/api/License'
 import { isJson } from '@/utils/data/validate'
 import { tickTime } from '@/utils/time/index'
-import { loadScript } from '@/utils/file/load'
 const defaultTheme = {
   layout,
   themeName,

@@ -61,6 +61,7 @@ specifiers:
   monaco-editor: 0.30.1
   monaco-editor-webpack-plugin: 6.0.0
   node-cmd: ^5.0.0
+  npm-run-all: ^4.1.5
   plop: ^2.7.6
   prettier: 2.4.1
   pushstate-server: 3.1.0
@@ -90,13 +91,14 @@ specifiers:
   vue-eslint-parser: 8.0.1
   vue-template-compiler: 2.6.14
   vuera: ^0.2.7
+  webpack: 4.46.0
   webpackbar: 5.0.2
 
 dependencies:
   '@babel/helper-plugin-utils': 7.14.5
-  '@dgiot/dgiot-component': 0.0.3
+  '@dgiot/dgiot-component': 0.0.3_webpack@4.46.0
   '@dgiot/dgiot-icons': 0.0.19
-  '@dgiot/dgiot-mqtt-dashboard': 1.1.5
+  '@dgiot/dgiot-mqtt-dashboard': 1.1.5_webpack@4.46.0
   '@material/icon-button': 13.0.0
   '@vue/babel-helper-vue-jsx-merge-props': 1.2.1
   '@vue/cli-plugin-pwa': 4.5.15_@vue+cli-service@4.5.15
@@ -104,15 +106,15 @@ dependencies:
   amis: 1.5.3
   amis-editor: 3.3.11_amis@1.5.3+react-dom@16.14.0
   axios: 0.24.0
-  clean-webpack-plugin: 4.0.0
+  clean-webpack-plugin: 4.0.0_webpack@4.46.0
   clone: 2.1.2
   conventional-changelog-cli: 2.2.2
   csijs: 1.0.10
   driver.js: 0.9.8
   element-ui: 2.15.6
-  file-loader: 6.2.0
-  fork-ts-checker-webpack-plugin: 6.5.0_79d5386a1cbf2ce51f20748cd0e82c5e
-  html-webpack-plugin: 5.5.0
+  file-loader: 6.2.0_webpack@4.46.0
+  fork-ts-checker-webpack-plugin: 6.5.0_f9de60b1db7b6ad65c3f0f0928e19310
+  html-webpack-plugin: 5.5.0_webpack@4.46.0
   increase-memory-limit: 1.0.7
   indent-string: 5.0.0
   ip: 1.1.5
@@ -120,8 +122,9 @@ dependencies:
   logrocket: 2.1.2
   logrocket-vuex: 0.0.3
   mammoth: 1.4.19
-  monaco-editor-webpack-plugin: 6.0.0_monaco-editor@0.30.1
+  monaco-editor-webpack-plugin: 6.0.0_e4146de625aad8e6c67af0b29262186e
   node-cmd: 5.0.0
+  npm-run-all: 4.1.5
   plop: 2.7.6
   q: 1.5.1
   qs: 6.10.1
@@ -152,7 +155,7 @@ devDependencies:
   chokidar: 3.5.2
   chrome-launcher: 0.15.0
   commitizen: 4.2.4
-  compression-webpack-plugin: 6.1.1
+  compression-webpack-plugin: 6.1.1_webpack@4.46.0
   copy-to-clipboard: 3.3.1
   core-js: 3.19.1
   cross-env: 5.2.1
@@ -161,30 +164,31 @@ devDependencies:
   eslint: 7.32.0
   eslint-plugin-prettier: 4.0.0_eslint@7.32.0+prettier@2.4.1
   eslint-plugin-vue: 8.0.3_eslint@7.32.0
-  filemanager-webpack-plugin: 6.1.7
-  hard-source-webpack-plugin: 0.13.1
+  filemanager-webpack-plugin: 6.1.7_webpack@4.46.0
+  hard-source-webpack-plugin: 0.13.1_webpack@4.46.0
   husky: 7.0.4
   lighthouse: 8.6.0
   lint-staged: 11.2.6
-  mini-css-extract-plugin: 2.4.4
+  mini-css-extract-plugin: 2.4.4_webpack@4.46.0
   monaco-editor: 0.30.1
   prettier: 2.4.1
   pushstate-server: 3.1.0
-  raw-loader: 4.0.2
+  raw-loader: 4.0.2_webpack@4.46.0
   rimraf: 3.0.2
   sass: 1.32.13
-  sass-loader: 10.2.0_sass@1.32.13
+  sass-loader: 10.2.0_sass@1.32.13+webpack@4.46.0
   script-loader: 0.7.2
   shelljs: 0.8.4
-  speed-measure-webpack-plugin: 1.5.0
+  speed-measure-webpack-plugin: 1.5.0_webpack@4.46.0
   stylelint: 13.13.1
   stylelint-config-prettier: 9.0.3_stylelint@13.13.1
   stylelint-config-recess-order: 2.6.0_stylelint@13.13.1
   svg-sprite-loader: 6.0.11
-  url-loader: 4.1.1_file-loader@6.2.0
+  url-loader: 4.1.1_file-loader@6.2.0+webpack@4.46.0
   vue-eslint-parser: 8.0.1_eslint@7.32.0
   vue-template-compiler: 2.6.14
-  webpackbar: 5.0.2
+  webpack: 4.46.0
+  webpackbar: 5.0.2_webpack@4.46.0
 
 packages:
 
@@ -1598,7 +1602,7 @@ packages:
       '@cspotcode/source-map-consumer': 0.8.0
     optional: true
 
-  /@dgiot/dgiot-component/0.0.3:
+  /@dgiot/dgiot-component/0.0.3_webpack@4.46.0:
     resolution: {integrity: sha1-X5IkLxDaUwcfftzF9ARxDkI2Irc=, tarball: '@dgiot/dgiot-component/download/@dgiot/dgiot-component-0.0.3.tgz'}
     engines: {node: '>= 12.0.0', npm: '>= 3.0.0'}
     dependencies:
@@ -1610,7 +1614,7 @@ packages:
       md5: 2.3.0
       moment: 2.29.1
       sass: 1.32.13
-      sass-loader: 7.3.1
+      sass-loader: 7.3.1_webpack@4.46.0
       vue: 2.6.14
       vuex: 3.6.2_vue@2.6.14
       vuex-persistedstate: 4.1.0_vuex@3.6.2
@@ -1629,7 +1633,7 @@ packages:
       vue: 2.6.14
     dev: false
 
-  /@dgiot/dgiot-mqtt-dashboard/1.1.5:
+  /@dgiot/dgiot-mqtt-dashboard/1.1.5_webpack@4.46.0:
     resolution: {integrity: sha1-nGDvjv0fqiAakf/0eZh0xVSVk0U=, tarball: '@dgiot/dgiot-mqtt-dashboard/download/@dgiot/dgiot-mqtt-dashboard-1.1.5.tgz'}
     engines: {node: '>= 12.0.0', npm: '>= 3.0.0'}
     dependencies:
@@ -1641,7 +1645,7 @@ packages:
       md5: 2.3.0
       moment: 2.29.1
       sass: 1.32.13
-      sass-loader: 7.3.1
+      sass-loader: 7.3.1_webpack@4.46.0
       vue: 2.6.14
       vuex: 3.6.2_vue@2.6.14
       vuex-persistedstate: 4.1.0_vuex@3.6.2
@@ -2506,8 +2510,8 @@ packages:
       pnp-webpack-plugin: 1.7.0
       portfinder: 1.0.28
       postcss-loader: 3.0.0
-      raw-loader: 4.0.2
-      sass-loader: 10.2.0_sass@1.32.13
+      raw-loader: 4.0.2_webpack@4.46.0
+      sass-loader: 10.2.0_sass@1.32.13+webpack@4.46.0
       ssri: 8.0.1
       terser-webpack-plugin: 1.4.5_webpack@4.46.0
       thread-loader: 2.1.3_webpack@4.46.0
@@ -2829,6 +2833,7 @@ packages:
       mobx-state-tree: 3.17.3_mobx@4.15.7
       react-json-view: 1.21.3_react-dom@16.14.0
     transitivePeerDependencies:
+      - '@types/react'
       - react
       - react-dom
       - react-native
@@ -2897,6 +2902,7 @@ packages:
       uncontrollable: 7.2.1_react@16.14.0
       video-react: 0.14.1_react-dom@16.14.0+react@16.14.0
     transitivePeerDependencies:
+      - '@types/react'
       - react-native
     dev: false
 
@@ -4009,13 +4015,14 @@ packages:
     resolution: {integrity: sha1-7oRy27Ep5yezHooQpCfe6d/kAIs=, tarball: clean-stack/download/clean-stack-2.2.0.tgz}
     engines: {node: '>=6'}
 
-  /clean-webpack-plugin/4.0.0:
+  /clean-webpack-plugin/4.0.0_webpack@4.46.0:
     resolution: {integrity: sha1-cpR9RAPUUvOO1hqf8K2oEiqs1yk=, tarball: clean-webpack-plugin/download/clean-webpack-plugin-4.0.0.tgz}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       webpack: '>=4.0.0 <6.0.0'
     dependencies:
       del: 4.1.1
+      webpack: 4.46.0
     dev: false
 
   /cli-boxes/2.2.1:
@@ -4262,7 +4269,7 @@ packages:
       mime-db: 1.51.0
     dev: true
 
-  /compression-webpack-plugin/6.1.1:
+  /compression-webpack-plugin/6.1.1_webpack@4.46.0:
     resolution: {integrity: sha1-ro5LL/23OWu3duZpGNdRog2Mzw4=, tarball: compression-webpack-plugin/download/compression-webpack-plugin-6.1.1.tgz}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -4272,6 +4279,7 @@ packages:
       find-cache-dir: 3.3.2
       schema-utils: 3.1.1
       serialize-javascript: 5.0.1
+      webpack: 4.46.0
       webpack-sources: 1.4.3
     dev: true
 
@@ -5277,7 +5285,6 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       object-keys: 1.1.1
-    dev: true
 
   /define-property/0.2.5:
     resolution: {integrity: sha1-w1se+RjsPJkPmlvFe+BKrOxcgRY=, tarball: define-property/download/define-property-0.2.5.tgz}
@@ -5759,7 +5766,6 @@ packages:
       string.prototype.trimend: 1.0.4
       string.prototype.trimstart: 1.0.4
       unbox-primitive: 1.0.1
-    dev: true
 
   /es-to-primitive/1.2.1:
     resolution: {integrity: sha1-5VzUyc3BiLzvsDs2bHNjI/xciYo=, tarball: es-to-primitive/download/es-to-primitive-1.2.1.tgz}
@@ -5768,7 +5774,6 @@ packages:
       is-callable: 1.2.4
       is-date-object: 1.0.5
       is-symbol: 1.0.4
-    dev: true
 
   /es6-promise/4.2.8:
     resolution: {integrity: sha1-TrIVlMlyvEBVPSduUQU5FD21Pgo=, tarball: es6-promise/download/es6-promise-4.2.8.tgz}
@@ -6336,7 +6341,7 @@ packages:
       webpack: 4.46.0
     dev: true
 
-  /file-loader/6.2.0:
+  /file-loader/6.2.0_webpack@4.46.0:
     resolution: {integrity: sha1-uu98+OGEDfMl5DkLRISHlIDuvk0=, tarball: file-loader/download/file-loader-6.2.0.tgz}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -6344,6 +6349,7 @@ packages:
     dependencies:
       loader-utils: 2.0.2
       schema-utils: 3.1.1
+      webpack: 4.46.0
     dev: false
 
   /file-saver/2.0.5:
@@ -6362,7 +6368,7 @@ packages:
     requiresBuild: true
     optional: true
 
-  /filemanager-webpack-plugin/6.1.7:
+  /filemanager-webpack-plugin/6.1.7_webpack@4.46.0:
     resolution: {integrity: sha1-I2XEsarut6oJP4QsnnrZUaA+DM8=, tarball: filemanager-webpack-plugin/download/filemanager-webpack-plugin-6.1.7.tgz}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     peerDependencies:
@@ -6375,6 +6381,7 @@ packages:
       fs-extra: 10.0.0
       is-glob: 4.0.3
       schema-utils: 3.1.1
+      webpack: 4.46.0
     dev: true
 
   /filesize/3.6.1:
@@ -6595,7 +6602,7 @@ packages:
   /forever-agent/0.6.1:
     resolution: {integrity: sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=, tarball: forever-agent/download/forever-agent-0.6.1.tgz}
 
-  /fork-ts-checker-webpack-plugin/6.5.0_79d5386a1cbf2ce51f20748cd0e82c5e:
+  /fork-ts-checker-webpack-plugin/6.5.0_f9de60b1db7b6ad65c3f0f0928e19310:
     resolution: {integrity: sha512-cS178Y+xxtIjEUorcHddKS7yCMlrDPV31mt47blKKRfMd70Kxu5xruAFE2o9sDY6wVC5deuob/u/alD04YYHnw==, tarball: fork-ts-checker-webpack-plugin/download/fork-ts-checker-webpack-plugin-6.5.0.tgz}
     engines: {node: '>=10', yarn: '>=1.0.0'}
     peerDependencies:
@@ -6624,6 +6631,7 @@ packages:
       semver: 7.3.5
       tapable: 1.1.3
       vue-template-compiler: 2.6.14
+      webpack: 4.46.0
     dev: false
 
   /form-data/2.3.3:
@@ -6840,7 +6848,6 @@ packages:
     dependencies:
       call-bind: 1.0.2
       get-intrinsic: 1.1.1
-    dev: true
 
   /get-value/2.0.6:
     resolution: {integrity: sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=, tarball: get-value/download/get-value-2.0.6.tgz}
@@ -7115,7 +7122,7 @@ packages:
     resolution: {integrity: sha1-HG7aXBaFxjlCdm15u0Cudzzs2IM=, tarball: hard-rejection/download/hard-rejection-2.1.0.tgz}
     engines: {node: '>=6'}
 
-  /hard-source-webpack-plugin/0.13.1:
+  /hard-source-webpack-plugin/0.13.1_webpack@4.46.0:
     resolution: {integrity: sha1-qZBx4lsjLxQ4pbw8mfEKOGnkQo4=, tarball: hard-source-webpack-plugin/download/hard-source-webpack-plugin-0.13.1.tgz}
     engines: {node: '>=8.0.0'}
     peerDependencies:
@@ -7132,6 +7139,7 @@ packages:
       rimraf: 2.7.1
       semver: 5.7.1
       tapable: 1.1.3
+      webpack: 4.46.0
       webpack-sources: 1.4.3
       write-json-file: 2.3.0
     dev: true
@@ -7144,7 +7152,6 @@ packages:
 
   /has-bigints/1.0.1:
     resolution: {integrity: sha1-ZP5qywIGc+O3jbA1pa9pqp0HsRM=, tarball: has-bigints/download/has-bigints-1.0.1.tgz}
-    dev: true
 
   /has-flag/1.0.0:
     resolution: {integrity: sha1-nZ55MWXOAXoA8AQYxD+UKnsdEfo=, tarball: has-flag/download/has-flag-1.0.0.tgz}
@@ -7175,7 +7182,6 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       has-symbols: 1.0.2
-    dev: true
 
   /has-value/0.3.1:
     resolution: {integrity: sha1-ex9YutpiyoJ+wKIHgCVlSEWZXh8=, tarball: has-value/download/has-value-0.3.1.tgz}
@@ -7375,7 +7381,7 @@ packages:
       webpack: 4.46.0
     dev: true
 
-  /html-webpack-plugin/5.5.0:
+  /html-webpack-plugin/5.5.0_webpack@4.46.0:
     resolution: {integrity: sha512-sy88PC2cRTVxvETRgUHFrL4No3UxvcH8G1NepGhqaTT+GXN2kTamqasot0inS5hXeg1cMbFDt27zzo9p35lZVw==, tarball: html-webpack-plugin/download/html-webpack-plugin-5.5.0.tgz}
     engines: {node: '>=10.13.0'}
     peerDependencies:
@@ -7386,6 +7392,7 @@ packages:
       lodash: 4.17.21
       pretty-error: 4.0.0
       tapable: 2.2.1
+      webpack: 4.46.0
     transitivePeerDependencies:
       - acorn
     dev: false
@@ -7718,7 +7725,6 @@ packages:
       get-intrinsic: 1.1.1
       has: 1.0.3
       side-channel: 1.0.4
-    dev: true
 
   /interpret/1.4.0:
     resolution: {integrity: sha1-Zlq4vE2iendKQFhOgS4+D6RbGh4=, tarball: interpret/download/interpret-1.4.0.tgz}
@@ -7814,7 +7820,6 @@ packages:
     resolution: {integrity: sha1-CBR6GHW8KzIAXUHM2Ckd/8ZpHfM=, tarball: is-bigint/download/is-bigint-1.0.4.tgz}
     dependencies:
       has-bigints: 1.0.1
-    dev: true
 
   /is-binary-path/1.0.1:
     resolution: {integrity: sha1-dfFmQrSA8YenEcgUFh/TpKdlWJg=, tarball: is-binary-path/download/is-binary-path-1.0.1.tgz}
@@ -7834,7 +7839,6 @@ packages:
     dependencies:
       call-bind: 1.0.2
       has-tostringtag: 1.0.0
-    dev: true
 
   /is-buffer/1.1.6:
     resolution: {integrity: sha1-76ouqdqg16suoTqXsritUf776L4=, tarball: is-buffer/download/is-buffer-1.1.6.tgz}
@@ -7847,7 +7851,6 @@ packages:
   /is-callable/1.2.4:
     resolution: {integrity: sha1-RzAdWN0CWUB4ZVR4U99tYf5HGUU=, tarball: is-callable/download/is-callable-1.2.4.tgz}
     engines: {node: '>= 0.4'}
-    dev: true
 
   /is-ci/1.2.1:
     resolution: {integrity: sha1-43ecjuF/zPQoSI9uKBGH8uYyhBw=, tarball: is-ci/download/is-ci-1.2.1.tgz}
@@ -7896,7 +7899,6 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       has-tostringtag: 1.0.0
-    dev: true
 
   /is-decimal/1.0.4:
     resolution: {integrity: sha1-ZaOllYocW2OnBuGzM9fNn2MNP6U=, tarball: is-decimal/download/is-decimal-1.0.4.tgz}
@@ -7984,7 +7986,6 @@ packages:
   /is-negative-zero/2.0.2:
     resolution: {integrity: sha512-dqJvarLawXsFbNDeJW7zAz8ItJ9cd28YufuuFzh0G8pNHjJMnY08Dv7sYX2uF5UpQOwieAeOExEYAWWfu7ZZUA==, tarball: is-negative-zero/download/is-negative-zero-2.0.2.tgz}
     engines: {node: '>= 0.4'}
-    dev: true
 
   /is-npm/4.0.0:
     resolution: {integrity: sha1-yQ3YOAaW34enptgjwg0LErvjyE0=, tarball: is-npm/download/is-npm-4.0.0.tgz}
@@ -7996,7 +7997,6 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       has-tostringtag: 1.0.0
-    dev: true
 
   /is-number/3.0.0:
     resolution: {integrity: sha1-JP1iAaR4LPUFYcgQJ2r8fRLXEZU=, tarball: is-number/download/is-number-3.0.0.tgz}
@@ -8062,7 +8062,6 @@ packages:
     dependencies:
       call-bind: 1.0.2
       has-tostringtag: 1.0.0
-    dev: true
 
   /is-regexp/1.0.0:
     resolution: {integrity: sha1-/S2INUXEa6xaYz57mgnof6LLUGk=, tarball: is-regexp/download/is-regexp-1.0.0.tgz}
@@ -8086,7 +8085,6 @@ packages:
 
   /is-shared-array-buffer/1.0.1:
     resolution: {integrity: sha1-l7DIX72stZycRG/mU7gs8rW3z+Y=, tarball: is-shared-array-buffer/download/is-shared-array-buffer-1.0.1.tgz}
-    dev: true
 
   /is-stream/1.1.0:
     resolution: {integrity: sha1-EtSj3U5o4Lec6428hBc66A2RykQ=, tarball: is-stream/download/is-stream-1.1.0.tgz}
@@ -8102,14 +8100,12 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       has-tostringtag: 1.0.0
-    dev: true
 
   /is-symbol/1.0.4:
     resolution: {integrity: sha1-ptrJO2NbBjymhyI23oiRClevE5w=, tarball: is-symbol/download/is-symbol-1.0.4.tgz}
     engines: {node: '>= 0.4'}
     dependencies:
       has-symbols: 1.0.2
-    dev: true
 
   /is-text-path/1.0.1:
     resolution: {integrity: sha1-Thqg+1G/vLPpJogAE5cgLBd1tm4=, tarball: is-text-path/download/is-text-path-1.0.1.tgz}
@@ -8145,7 +8141,6 @@ packages:
     resolution: {integrity: sha512-qctsuLZmIQ0+vSSMfoVvyFe2+GSEvnmZ2ezTup1SBse9+twCCeial6EEi3Nc2KFcf6+qz2FBPnjXsk8xhKSaPQ==, tarball: is-weakref/download/is-weakref-1.0.2.tgz}
     dependencies:
       call-bind: 1.0.2
-    dev: true
 
   /is-windows/1.0.2:
     resolution: {integrity: sha1-0YUOuXkezRjmGCzhKjDzlmNLsZ0=, tarball: is-windows/download/is-windows-1.0.2.tgz}
@@ -9042,6 +9037,11 @@ packages:
       errno: 0.1.8
       readable-stream: 2.3.7
 
+  /memorystream/0.3.1:
+    resolution: {integrity: sha1-htcJCzDORV1j+64S3aUaR93K+bI=, tarball: memorystream/download/memorystream-0.3.1.tgz}
+    engines: {node: '>= 0.10.0'}
+    dev: false
+
   /meow/8.1.2:
     resolution: {integrity: sha1-vL5FvaDuFynTUMA8/8g5WjbE6Jc=, tarball: meow/download/meow-8.1.2.tgz}
     engines: {node: '>=10'}
@@ -9230,13 +9230,14 @@ packages:
       webpack-sources: 1.4.3
     dev: true
 
-  /mini-css-extract-plugin/2.4.4:
+  /mini-css-extract-plugin/2.4.4_webpack@4.46.0:
     resolution: {integrity: sha1-x+XS2THc8QCuUK6Um6dXxQa1Sw8=, tarball: mini-css-extract-plugin/download/mini-css-extract-plugin-2.4.4.tgz}
     engines: {node: '>= 12.13.0'}
     peerDependencies:
       webpack: ^5.0.0
     dependencies:
       schema-utils: 3.1.1
+      webpack: 4.46.0
     dev: true
 
   /minimalistic-assert/1.0.1:
@@ -9422,7 +9423,7 @@ packages:
     resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==, tarball: moment/download/moment-2.29.1.tgz}
     dev: false
 
-  /monaco-editor-webpack-plugin/6.0.0_monaco-editor@0.30.1:
+  /monaco-editor-webpack-plugin/6.0.0_e4146de625aad8e6c67af0b29262186e:
     resolution: {integrity: sha1-YolWzhhRr6Kl9siNDsuyTppESJg=, tarball: monaco-editor-webpack-plugin/download/monaco-editor-webpack-plugin-6.0.0.tgz}
     peerDependencies:
       monaco-editor: 0.30.x
@@ -9430,6 +9431,7 @@ packages:
     dependencies:
       loader-utils: 2.0.2
       monaco-editor: 0.30.1
+      webpack: 4.46.0
     dev: false
 
   /monaco-editor/0.30.1:
@@ -9682,6 +9684,22 @@ packages:
     resolution: {integrity: sha1-rsiGr/2wRQcNhWRH32Ls+GFG7EU=, tarball: normalize-wheel/download/normalize-wheel-1.0.1.tgz}
     dev: false
 
+  /npm-run-all/4.1.5:
+    resolution: {integrity: sha1-BEdiAqFe4OLiFAgIYb/xKlHZj7o=, tarball: npm-run-all/download/npm-run-all-4.1.5.tgz}
+    engines: {node: '>= 4'}
+    hasBin: true
+    dependencies:
+      ansi-styles: 3.2.1
+      chalk: 2.4.2
+      cross-spawn: 6.0.5
+      memorystream: 0.3.1
+      minimatch: 3.0.4
+      pidtree: 0.3.1
+      read-pkg: 3.0.0
+      shell-quote: 1.7.3
+      string.prototype.padend: 3.1.3
+    dev: false
+
   /npm-run-path/2.0.2:
     resolution: {integrity: sha1-NakjLfo11wZ7TLLd8jV7GHFTbF8=, tarball: npm-run-path/download/npm-run-path-2.0.2.tgz}
     engines: {node: '>=4'}
@@ -9754,7 +9772,6 @@ packages:
   /object-keys/1.1.1:
     resolution: {integrity: sha1-HEfyct8nfzsdrwYWd9nILiMixg4=, tarball: object-keys/download/object-keys-1.1.1.tgz}
     engines: {node: '>= 0.4'}
-    dev: true
 
   /object-visit/1.0.1:
     resolution: {integrity: sha1-95xEk68MU3e1n+OdOV5BBC3QRbs=, tarball: object-visit/download/object-visit-1.0.1.tgz}
@@ -9770,7 +9787,6 @@ packages:
       define-properties: 1.1.3
       has-symbols: 1.0.2
       object-keys: 1.1.1
-    dev: true
 
   /object.defaults/1.1.0:
     resolution: {integrity: sha1-On+GgzS0B96gbaFtiNXNKeQ1/s8=, tarball: object.defaults/download/object.defaults-1.1.0.tgz}
@@ -10256,6 +10272,12 @@ packages:
   /picomatch/2.3.0:
     resolution: {integrity: sha1-8fBh3o9qS/AiiS4tEoI0+5gwKXI=, tarball: picomatch/download/picomatch-2.3.0.tgz}
     engines: {node: '>=8.6'}
+
+  /pidtree/0.3.1:
+    resolution: {integrity: sha1-7wmsLMBTPfHzJQzPLE02aw0SEUo=, tarball: pidtree/download/pidtree-0.3.1.tgz}
+    engines: {node: '>=0.10'}
+    hasBin: true
+    dev: false
 
   /pify/2.3.0:
     resolution: {integrity: sha1-7RQaasBDqEnqWISY59yosVMw6Qw=, tarball: pify/download/pify-2.3.0.tgz}
@@ -11081,7 +11103,7 @@ packages:
     resolution: {integrity: sha1-DD0L6u2KAclm2Xh793goElKpeao=, tarball: raw-loader/download/raw-loader-0.5.1.tgz}
     dev: true
 
-  /raw-loader/4.0.2:
+  /raw-loader/4.0.2_webpack@4.46.0:
     resolution: {integrity: sha1-GqxrfRrRUB5m79rBUixz5ZpYTrY=, tarball: raw-loader/download/raw-loader-4.0.2.tgz}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -11089,6 +11111,7 @@ packages:
     dependencies:
       loader-utils: 2.0.2
       schema-utils: 3.1.1
+      webpack: 4.46.0
     dev: true
 
   /rc-input-number/7.3.4_react-dom@16.14.0+react@16.14.0:
@@ -11255,6 +11278,8 @@ packages:
       react-dom: 16.14.0
       react-lifecycles-compat: 3.0.4
       react-textarea-autosize: 8.3.3
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-json-view/1.21.3_react-dom@16.14.0+react@16.14.0:
@@ -11269,6 +11294,8 @@ packages:
       react-dom: 16.14.0_react@16.14.0
       react-lifecycles-compat: 3.0.4
       react-textarea-autosize: 8.3.3_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-lifecycles-compat/3.0.4:
@@ -11312,6 +11339,8 @@ packages:
       '@babel/runtime': 7.16.3
       use-composed-ref: 1.2.1
       use-latest: 1.2.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-textarea-autosize/8.3.3_react@16.14.0:
@@ -11324,6 +11353,8 @@ packages:
       react: 16.14.0
       use-composed-ref: 1.2.1_react@16.14.0
       use-latest: 1.2.0_react@16.14.0
+    transitivePeerDependencies:
+      - '@types/react'
     dev: false
 
   /react-transition-group/4.4.2_react-dom@16.14.0+react@16.14.0:
@@ -11817,7 +11848,7 @@ packages:
   /safer-buffer/2.1.2:
     resolution: {integrity: sha1-RPoWGwGHuVSd2Eu5GAL5vYOFzWo=, tarball: safer-buffer/download/safer-buffer-2.1.2.tgz}
 
-  /sass-loader/10.2.0_sass@1.32.13:
+  /sass-loader/10.2.0_sass@1.32.13+webpack@4.46.0:
     resolution: {integrity: sha1-PWTBWQ+REBOz+kigsiqD1eFJRxY=, tarball: sass-loader/download/sass-loader-10.2.0.tgz}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -11839,9 +11870,10 @@ packages:
       sass: 1.32.13
       schema-utils: 3.1.1
       semver: 7.3.5
+      webpack: 4.46.0
     dev: true
 
-  /sass-loader/7.3.1:
+  /sass-loader/7.3.1_webpack@4.46.0:
     resolution: {integrity: sha1-pb9ooEvOocE/+ELXRxUPerfQ0j8=, tarball: sass-loader/download/sass-loader-7.3.1.tgz}
     engines: {node: '>= 6.9.0'}
     peerDependencies:
@@ -11852,6 +11884,7 @@ packages:
       neo-async: 2.6.2
       pify: 4.0.1
       semver: 6.3.0
+      webpack: 4.46.0
     dev: false
 
   /sass/1.32.13:
@@ -12343,13 +12376,14 @@ packages:
     hasBin: true
     dev: true
 
-  /speed-measure-webpack-plugin/1.5.0:
+  /speed-measure-webpack-plugin/1.5.0_webpack@4.46.0:
     resolution: {integrity: sha1-yvLFvuJKtmwcfDDo2qeRBJf3aBo=, tarball: speed-measure-webpack-plugin/download/speed-measure-webpack-plugin-1.5.0.tgz}
     engines: {node: '>=6.0.0'}
     peerDependencies:
       webpack: ^1 || ^2 || ^3 || ^4 || ^5
     dependencies:
       chalk: 4.1.2
+      webpack: 4.46.0
     dev: true
 
   /speedline-core/1.4.3:
@@ -12526,19 +12560,26 @@ packages:
       is-fullwidth-code-point: 3.0.0
       strip-ansi: 6.0.1
 
+  /string.prototype.padend/3.1.3:
+    resolution: {integrity: sha1-mXpt4SySx8s03IogGmxT2b2IpfE=, tarball: string.prototype.padend/download/string.prototype.padend-3.1.3.tgz}
+    engines: {node: '>= 0.4'}
+    dependencies:
+      call-bind: 1.0.2
+      define-properties: 1.1.3
+      es-abstract: 1.19.1
+    dev: false
+
   /string.prototype.trimend/1.0.4:
     resolution: {integrity: sha1-51rpDClCxjUEaGwYsoe0oLGkX4A=, tarball: string.prototype.trimend/download/string.prototype.trimend-1.0.4.tgz}
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.1.3
-    dev: true
 
   /string.prototype.trimstart/1.0.4:
     resolution: {integrity: sha1-s2OZr0qymZtMnGSL16P7K7Jv7u0=, tarball: string.prototype.trimstart/download/string.prototype.trimstart-1.0.4.tgz}
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.1.3
-    dev: true
 
   /string_decoder/1.1.1:
     resolution: {integrity: sha1-nPFhG6YmhdcDCunkujQUnDrwP8g=, tarball: string_decoder/download/string_decoder-1.1.1.tgz}
@@ -13307,7 +13348,6 @@ packages:
       has-bigints: 1.0.1
       has-symbols: 1.0.2
       which-boxed-primitive: 1.0.2
-    dev: true
 
   /unc-path-regex/0.1.2:
     resolution: {integrity: sha1-5z3T17DXxe2G+6xrCufYxqadUPo=, tarball: unc-path-regex/download/unc-path-regex-0.1.2.tgz}
@@ -13516,7 +13556,7 @@ packages:
       webpack: 4.46.0
     dev: true
 
-  /url-loader/4.1.1_file-loader@6.2.0:
+  /url-loader/4.1.1_file-loader@6.2.0+webpack@4.46.0:
     resolution: {integrity: sha1-KFBekFyuFYzwfJLKYi1/I35wpOI=, tarball: url-loader/download/url-loader-4.1.1.tgz}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -13526,10 +13566,11 @@ packages:
       file-loader:
         optional: true
     dependencies:
-      file-loader: 6.2.0
+      file-loader: 6.2.0_webpack@4.46.0
       loader-utils: 2.0.2
       mime-types: 2.1.34
       schema-utils: 3.1.1
+      webpack: 4.46.0
     dev: true
 
   /url-parse-lax/3.0.0:
@@ -13575,13 +13616,21 @@ packages:
   /use-isomorphic-layout-effect/1.1.1:
     resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dev: false
 
   /use-isomorphic-layout-effect/1.1.1_react@16.14.0:
     resolution: {integrity: sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU=, tarball: use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: 16.14.0
     dev: false
@@ -13589,7 +13638,11 @@ packages:
   /use-latest/1.2.0:
     resolution: {integrity: sha1-pE9lcrgojgly7EEb3QhAraNm8jI=, tarball: use-latest/download/use-latest-1.2.0.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       use-isomorphic-layout-effect: 1.1.1
     dev: false
@@ -13597,7 +13650,11 @@ packages:
   /use-latest/1.2.0_react@16.14.0:
     resolution: {integrity: sha1-pE9lcrgojgly7EEb3QhAraNm8jI=, tarball: use-latest/download/use-latest-1.2.0.tgz}
     peerDependencies:
+      '@types/react': '*'
       react: ^16.8.0 || ^17.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
     dependencies:
       react: 16.14.0
       use-isomorphic-layout-effect: 1.1.1_react@16.14.0
@@ -14061,7 +14118,7 @@ packages:
       watchpack: 1.7.5
       webpack-sources: 1.4.3
 
-  /webpackbar/5.0.2:
+  /webpackbar/5.0.2_webpack@4.46.0:
     resolution: {integrity: sha1-091GYhHHOFJ0HfyEK3VW3LwrBXA=, tarball: webpackbar/download/webpackbar-5.0.2.tgz}
     engines: {node: '>=12'}
     peerDependencies:
@@ -14071,6 +14128,7 @@ packages:
       consola: 2.15.3
       pretty-time: 1.1.0
       std-env: 3.0.1
+      webpack: 4.46.0
     dev: true
 
   /websocket-driver/0.7.4:
@@ -14099,7 +14157,6 @@ packages:
       is-number-object: 1.0.6
       is-string: 1.0.7
       is-symbol: 1.0.4
-    dev: true
 
   /which-module/2.0.0:
     resolution: {integrity: sha1-2e8H3Od7mQK4o6j6SzHD4/fm6Ho=, tarball: which-module/download/which-module-2.0.0.tgz}

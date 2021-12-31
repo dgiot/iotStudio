@@ -14,7 +14,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-*.lock
 *.idea
 *-lock.json
 
@@ -43,3 +42,4 @@ src/config/ignore
 # files
 public/assets/js/*
 public/assets/css/*
+swagger.json

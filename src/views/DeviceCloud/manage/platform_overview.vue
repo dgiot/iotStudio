@@ -1019,9 +1019,13 @@
        * @param
        * @returns
        */
-      async initDgiotMqtt() {
-        await this.getProduct()
-        await this.queryData()
+      initDgiotMqtt() {
+        // 页面加载完cdn 资源后执行。
+        this.$nextTick(async () => {
+          await this.getProduct()
+          await this.queryData()
+          await this.setTreeFlag(true)
+        })
       },
       async getWarnCount(
         params = {

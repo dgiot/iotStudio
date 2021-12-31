@@ -21,6 +21,11 @@ export const constantRoutes = [
     hidden: true,
   },
   {
+    path: '/jwtLogin',
+    component: () => import('@/views/MultiTenant/user/jwtlogin'),
+    hidden: true,
+  },
+  {
     path: '/register',
     component: () => import('@/views/MultiTenant/user/register'),
     hidden: true,

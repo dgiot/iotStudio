@@ -125,7 +125,7 @@
   import { isPassword } from '@/utils/data/validate'
   import { SiteDefault } from '@/api/License'
   export default {
-    name: 'Login',
+    name: 'JwtLogin',
     directives: {
       focus: {
         inserted(el) {

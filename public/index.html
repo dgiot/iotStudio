@@ -47,6 +47,8 @@
 
     <script>
       // doc https://mp.umeng.com/realtime/61cc0914e014255fcbcf694d/overview
+      // https://tongji.baidu.com/web/welcome/ico?s=a0f8b01930320b849a92a00e0c6da990
+      // https://tongji.baidu.com/web/welcome/ico?s=32e7c4bdc95a01203a3c27102912a44e
       ;(function (w, d, s, q, i) {
         w[q] = w[q] || []
         var f = d.getElementsByTagName(s)[0],
@@ -74,19 +76,10 @@
         action: 'aplus.setMetaInfo',
         arguments: ['DEBUG', true],
       })
-      //是否指定用作计算umid的id类型，默认为cnaid，目前支持:
-      //1. 微信和QQ: openid; 字节和百度 anonymousid; 支付宝 alipay_id
-      //2. 微信、QQ、字节、百度平台的 unionid
-      //3. 业务方自己生成的随机id uuid
-      aplus_queue.push({
-        action: 'aplus.setMetaInfo',
-        arguments: ['aplus-idtype', 'xxxx'], //取值参考见附表1
-      })
       aplus_queue.push({
         action: 'aplus.sendPV',
         arguments: [{ is_auto: false }, { userData: 'dgiot' }],
       })
-      /******************************************************************/
     </script>
   </head>
   <body>
@@ -121,13 +114,34 @@
   <!--  </script>-->
   <!-- 所有站点统计代码  -->
   <div style="display: none">
+    <!--    prod-->
     <script
       charset="utf-8"
       src="https://hm.baidu.com/hm.js?24f17767262929947cc3631f99bfd274"
     ></script>
+    <!--    pump-->
+    <script
+      charset="utf-8"
+      src="https://hm.baidu.com/hm.js?a0f8b01930320b849a92a00e0c6da990"
+    ></script>
+    <!--    gitee -->
+    <script
+      charset="utf-8"
+      src="https://hm.baidu.com/hm.js?32e7c4bdc95a01203a3c27102912a44e"
+    ></script>
+    <!--    cnzz-->
     <script
       src="//s4.cnzz.com/z_stat.php?id=1279876845&web_id=1279876845"
       type="text/javascript"
     ></script>
+    <script
+      async
+      src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
+    ></script>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量
+      <span id="busuanzi_value_site_pv"></span>
+      次
+    </span>
   </div>
 </html>

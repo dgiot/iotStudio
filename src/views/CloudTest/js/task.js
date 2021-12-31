@@ -14,6 +14,7 @@ import {
   postEvidence,
   putEvidence,
 } from '@/api/Evidence'
+import { getDevice } from '../../../api/Device'
 export default {
   name: 'TaskIndex',
   filters: {
@@ -38,7 +39,7 @@ export default {
       thirdtbKey: moment(new Date()).valueOf(),
       original: {},
       collectionInfo: {},
-      drawxnqxPath: '/dgiot_file/pump_pytoh/ecfd3a227c.png',
+      drawxnqxPath: '',
       thingdata: [],
       realtimedata: [],
       thingcolumns: [],
@@ -268,7 +269,6 @@ export default {
           console.groupEnd()
           const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payload))
           if (data) {
-            console.log('aaaaaaaaaaa', data)
             this.renderCard(data)
           } else {
             this.getCardDevice()
@@ -355,11 +355,13 @@ export default {
       try {
         console.log('deleteHistory', row, index)
         this.historyEvidence.splice(index, 1)
-        const loading = this.$baseColorfullLoading()
-        const res = await putEvidence(this.historyEvidenceid, {
-          original: this.original,
-        })
-        if (res) await this.featHistoryEvidence(this.collectionInfo.objectId)
+        await this.saveHistorical(
+          this.collectionInfo,
+          this.thingdata,
+          this.historyEvidence,
+          false
+        )
+        this.featHistoryEvidence(this.collectionInfo.objectId)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
@@ -873,15 +875,12 @@ export default {
      */
     async startOpc(row) {
       try {
-        const items = []
-        if (row.basedata) {
-          /**
-           * @description 判断下发组态topic的item
-           * @description 必须以 标识符 dgiot_testing_equipment_ 开头
-           */
-          for (let key in row.basedata) {
+        var items = []
+        const { basedata = [] } = await getDevice(row.objectId)
+        if (!_.isEmpty(basedata)) {
+          for (let key in basedata) {
             if (key.indexOf('dgiot_testing_equipment_') == 0)
-              items.push(row.basedata[key])
+              items.push(basedata[key])
           }
         }
         // mqtt 消息回调
@@ -990,6 +989,8 @@ export default {
           console.log(mqttMsg)
           console.log('payload:', mqttMsg.payload)
           console.groupEnd()
+          // _this.thingdata = []
+          // this.realtimedata = []
           if (mqttMsg?.payload) {
             const { thingdata = {}, timestamp } = JSON.parse(mqttMsg.payload)
             thingdata.timestamp = moment(Number(timestamp)).format(
@@ -997,9 +998,11 @@ export default {
             )
             if (!_.isEmpty(thingdata) && thingdata?.dgiotcollectflag == 0) {
               console.log(thingdata)
-              _this.thingdata.unshift(thingdata) // 最新数据放在最前面
+              _this.thingdata[0] = thingdata // 只显示一条
+              // _this.thingdata.unshift(thingdata) // 最新数据放在最前面
             } else {
               //实时数据
+              // _this.realtimedata.push(thingdata) // 只显示一条
               _this.realtimedata.unshift(thingdata) // 最新数据放在最前面
             }
             // _this.getSummaries({ columns: [], data: _this.thingdata }) // 计算平均值
@@ -1030,10 +1033,10 @@ export default {
      * @return {Promise<void>}
      * @Description:
      */
-    async saveHistorical(collectionInfo, thingcolumns, historyEvidence, type) {
+    async saveHistorical(collectionInfo, thingdata, historyEvidence, type) {
       const _profile = {
         profile: _.merge(collectionInfo.profile, {
-          historicaldatacolumns: _.filter(thingcolumns, function (item) {
+          historicaldatacolumns: _.filter(thingdata, function (item) {
             return item.prop !== 'timestamp'
           }),
           historicaldata: historyEvidence,
@@ -1080,18 +1083,16 @@ export default {
           error = '',
           original = {},
           evidenceid = '',
-          path = '',
         } = await postDrawxnqx(params)
         if (Number(code) == 200) {
           this.historyEvidenceid = evidenceid ?? ''
           this.historyEvidence = original.avgs ?? []
+          this.drawxnqxPath = original.path || ''
           this.original = original ?? {}
           // https://www.lodashjs.com/docs/lodash.filter
           this.historycolumns = _.filter(this.thingcolumns, function (item) {
             return item.prop !== 'timestamp'
           })
-          console.log('this.historycolumns', this.historycolumns)
-          this.drawxnqxPath = path
         } else {
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,

@@ -19,7 +19,7 @@
       </el-col>
       <el-col :span="7">
         <div class="grid-content bg-purple">
-          {{ $translateTitle('Maintenance.the starting Time') }} :
+          {{ $translateTitle('Maintenance.the starting time') }} :
           {{ $moment(detail.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </div>
       </el-col>
