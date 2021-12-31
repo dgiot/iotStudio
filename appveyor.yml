@@ -11,6 +11,4 @@ install:
   - pnpm i --frozen-lockfile
 test_script:
   - pnpm build
-cache:
-  - node_modules -> appveyor.yml, **\package.json, pnpm-lock.yaml
 build: off

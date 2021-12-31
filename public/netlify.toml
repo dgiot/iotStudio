@@ -23,7 +23,7 @@
     cache-control = "max-age=31536000"
 
 [[redirects]]
-  from = "/iotapi/"
+  from = "/iotapi"
   to = "https://dev.iotn2n.com"
   status = 200
   force = true
