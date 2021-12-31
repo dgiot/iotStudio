@@ -1,6 +1,6 @@
 {
   "name": "@dgiot/dgiot-dashboard",
-  "version": "4.4.4",
+  "version": "4.4.5",
   "author": "iotn2n",
   "license": "MPL-2.0",
   "private": false,
@@ -11,7 +11,7 @@
     "serve": "vue-cli-service serve",
     "test": "vue-cli-service lint --fix",
     "dgiot:install": "start ./pnpm.sh",
-    "build":"vue-cli-service build",
+    "build": "vue-cli-service build",
     "report": "run-s monaco",
     "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
     "lint": "eslint --ext .js --fix&&vue-cli-service lint",
