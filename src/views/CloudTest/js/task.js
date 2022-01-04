@@ -470,6 +470,7 @@ export default {
         const { results = [] } = await queryEvidence(params)
         if (results?.length) {
           this.historyEvidence = results[0].original.avgs ?? []
+          this.collectionInfo.profile.historicaldata = this.historyEvidence
           this.historyInfo = results[0]
           this.drawxnqxPath = results[0].original.path ?? ''
         }
@@ -762,7 +763,8 @@ export default {
         name: this.queryForm.name.length
           ? { $regex: this.queryForm.name }
           : { $ne: null },
-        'profile.step': { $lte: 3 },
+        // 'profile.step': { $lte: 3 },
+        'profile.step': { $regex: '' + '^(-1|[0-9]\\d*)$' },
       }
       this.listLoading = true
       const { count = 0, results = [] } = await queryDevice(this.queryPayload)
@@ -1022,6 +1024,7 @@ export default {
             return item.prop !== 'timestamp'
           }),
           historicaldata: historyEvidence,
+          drawxnqxPath: this.drawxnqxPath,
         }),
       }
       console.log(collectionInfo, _profile)

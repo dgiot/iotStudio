@@ -34,6 +34,7 @@ const {
   isSmp,
   ogConfig,
   CDN_URL,
+  CDN,
 } = require('./src/config')
 const { version, author } = require('./package.json')
 const Webpack = require('webpack')

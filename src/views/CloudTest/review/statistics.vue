@@ -8,95 +8,118 @@
 * @DocumentLink:
 -->
 <template>
-  <div class="statistics-container">
-    <div class="statistics-content">
-      <div class="statistics-content-chart">
-        <el-row :gutter="10">
-          <el-col :span="12">
-            <el-divider>历史数据</el-divider>
-            <vab-chart
-              ref="charts"
-              :after-config="afterConfig"
-              :data="chartData"
-              :data-empty="dataEmpty"
-              :data-zoom="chartDataZoom"
-              :extend="chartExtend"
-              :loading="loading"
-              :set-option-opts="false"
-              :settings="chartSettings"
-              :toolbox="toolbox"
-              :type="params.style"
-            />
-          </el-col>
-          <el-col :span="12">
-            <el-divider>存储的数据</el-divider>
-            <el-table
-              :key="historyEvidence.length"
-              border
-              :data="historyEvidence"
-              style="min-height: 530px"
+  <div class="statistics-content">
+    <div class="statistics-content-chart">
+      <el-row :gutter="10">
+        <el-col :span="12">
+          <el-divider>历史数据</el-divider>
+          <vab-chart
+            ref="charts"
+            :after-config="afterConfig"
+            :data="chartData"
+            :data-empty="dataEmpty"
+            :data-zoom="chartDataZoom"
+            :extend="chartExtend"
+            :loading="loading"
+            :set-option-opts="false"
+            :settings="chartSettings"
+            :toolbox="toolbox"
+            :type="params.style"
+          />
+        </el-col>
+        <el-col :span="12">
+          <el-divider>存储的数据</el-divider>
+          <el-tabs v-model="activeName">
+            <el-tab-pane label="存储的数据" name="first">
+              <el-table
+                :key="historyEvidence.length"
+                border
+                :data="historyEvidence"
+                style="min-height: 530px"
+              >
+                <el-table-column
+                  v-for="(item, index) in historycolumns"
+                  :key="index"
+                  align="center"
+                  :label="$translateTitle(`cloudTest.${item.label}`)"
+                  :prop="item.prop"
+                  show-overflow-tooltip
+                  sortable
+                  width="auto"
+                />
+              </el-table>
+            </el-tab-pane>
+            <el-tab-pane
+              :label="$translateTitle('equipment.chart')"
+              name="second"
             >
-              <el-table-column
-                v-for="(item, index) in historycolumns"
-                :key="index"
-                align="center"
-                :label="$translateTitle(`cloudTest.${item.label}`)"
-                :prop="item.prop"
-                show-overflow-tooltip
-                sortable
-                width="auto"
+              <el-card>
+                <el-image
+                  :key="drawxnqxPath"
+                  :preview-src-list="[$FileServe + drawxnqxPath]"
+                  :src="$FileServe + drawxnqxPath"
+                >
+                  <div slot="error" class="image-slot">
+                    <el-image
+                      class="vab-data-empty"
+                      :src="
+                        require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                      "
+                    />
+                  </div>
+                </el-image>
+              </el-card>
+            </el-tab-pane>
+          </el-tabs>
+        </el-col>
+      </el-row>
+      <div class="chartOther">
+        <el-row :gutter="20">
+          <el-col
+            v-for="(item, index) in chartData.child"
+            v-show="item.columns[1] != '日期'"
+            :key="index"
+            :md="md"
+            :sm="sm"
+            :xl="xl"
+            :xs="xs"
+          >
+            <el-card class="box-card" shadow="hover">
+              <div slot="header" class="clearfix">
+                <span>{{ item.columns[1] }} : {{ item.unit }}</span>
+
+                <el-button-group
+                  style="float: right; padding: 3px 0"
+                  type="text"
+                >
+                  <el-button
+                    icon="el-icon-full-screen"
+                    @click.native="toggleCardRow(index, xs, sm, md, xl)"
+                  />
+                </el-button-group>
+              </div>
+
+              <vab-chart
+                ref="charts"
+                :after-config="afterConfig"
+                :data="chartData.child[index]"
+                :data-empty="dataEmpty"
+                :data-zoom="chartDataZoom"
+                :extend="chartExtend"
+                height="300px"
+                :legend-visible="false"
+                :loading="loading"
+                :set-option-opts="false"
+                :settings="chartSettings"
+                :toolbox="toolbox"
+                :type="params.style"
               />
-            </el-table>
+            </el-card>
+          </el-col>
+          <el-col v-show="!chartData.child" :span="24">
+            <vab-empty />
           </el-col>
         </el-row>
-        <div class="chartOther">
-          <el-row :gutter="20">
-            <el-col
-              v-for="(item, index) in chartData.child"
-              v-show="item.columns[1] != '日期'"
-              :key="index"
-              :md="md"
-              :sm="sm"
-              :xl="xl"
-              :xs="xs"
-            >
-              <el-card class="box-card" shadow="hover">
-                <div slot="header" class="clearfix">
-                  <span>{{ item.columns[1] }} : {{ item.unit }}</span>
-
-                  <el-button-group
-                    style="float: right; padding: 3px 0"
-                    type="text"
-                  >
-                    <el-button
-                      icon="el-icon-full-screen"
-                      @click.native="toggleCardRow(index, xs, sm, md, xl)"
-                    />
-                  </el-button-group>
-                </div>
-
-                <vab-chart
-                  ref="charts"
-                  :after-config="afterConfig"
-                  :data="chartData.child[index]"
-                  :data-empty="dataEmpty"
-                  :data-zoom="chartDataZoom"
-                  :extend="chartExtend"
-                  height="300px"
-                  :legend-visible="false"
-                  :loading="loading"
-                  :set-option-opts="false"
-                  :settings="chartSettings"
-                  :toolbox="toolbox"
-                  :type="params.style"
-                />
-              </el-card>
-            </el-col>
-            <el-col v-show="!chartData.child" :span="24">
-              <vab-empty />
-            </el-col>
-          </el-row>
-        </div>
       </div>
     </div>
   </div>
@@ -173,6 +196,8 @@
         },
       }
       return {
+        activeName: 'first',
+        drawxnqxPath: '',
         xl: 6,
         xs: 24,
         sm: 24,
@@ -259,13 +284,17 @@
           const res = await getDevice(evidenceId)
           this.infoData = res
           const {
-            profile = { endtime: moment(Number(endTime)).valueOf() },
+            profile = {
+              endtime: moment(Number(endTime)).valueOf(),
+              drawxnqxPath: '',
+            },
             parentId = {},
           } = res
           this.params.startTime = profile.starttime
           this.params.endTime = profile.endtime
           this.historycolumns = profile.historicaldatacolumns ?? []
           this.historyEvidence = profile.historicaldata ?? []
+          this.drawxnqxPath = profile.drawxnqxPath
           await this.queryStatistics(parentId.objectId)
         } catch (error) {
           console.log(error)

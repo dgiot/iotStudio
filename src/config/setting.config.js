@@ -43,7 +43,15 @@ module.exports = {
   refreshSession: true,
   // 不需要token请求的路由
   noCookiePages: ['', '/login'],
-  localHost: ['tcloudbaseapp.com', 'gitee.io', 'github.io', 'vercel.app'],
+  localHost: [
+    'tcloudbaseapp.com',
+    'gitee.io',
+    'github.io',
+    'netlify.app',
+    'vercel.app',
+    'surge.sh',
+    'h7ml.icu',
+  ],
   // token过期刷新时间秒 当前设置为十分钟
   expiredTime: 60 * 10,
   // 部门token刷新后,页面刷新,不需要刷新的api规则

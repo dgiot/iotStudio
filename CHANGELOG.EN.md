@@ -1,4 +1,23 @@
-## [4.4.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.5...v4.4.6) (2021-12-31)
+## [4.4.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.5...v4.4.6) (2022-01-04)
+
+
+### Bug Fixes
+
+* **fix the problem of pointing this when the user refreshes the interface:** this ([81ca743](https://github.com/dgiot/dgiot-dashboard/commit/81ca743978f287a80b65050877e01b821a57bbdf))
+* **load after closing pwa echarts:** pwa && echarts 🚀 ([17bdcc5](https://github.com/dgiot/dgiot-dashboard/commit/17bdcc5ef2c03b40388dd0439234902f155525f1))
+* **repair the fileserver lost when logging in for the first time:** login ([4cde25e](https://github.com/dgiot/dgiot-dashboard/commit/4cde25e27cdcfb0fdbb7df395571c077ca50fb4b))
+* **resolve code conflicts:** resolve code conflicts ([416bcaf](https://github.com/dgiot/dgiot-dashboard/commit/416bcafc6733fb30a6ca881769f487cbaa5969db))
+* small bug ([5341dbc](https://github.com/dgiot/dgiot-dashboard/commit/5341dbc3dcd9db795e0c6fcb238fd05cf51bb217))
+* **src/dgiot/components/vabnav/index.vue:** loadscript ([4bc0bf8](https://github.com/dgiot/dgiot-dashboard/commit/4bc0bf83e159f2f3670561a78827f4db2b738b12))
+* **src/store/modules/user.js:** fix the problem of blank login for the first time ([804ad15](https://github.com/dgiot/dgiot-dashboard/commit/804ad1589c671c1c8fb39b3ee76b0da488164c7b))
+* **src/views/cloudtest/js/task.js:** drawxnqxPath ([3b5697c](https://github.com/dgiot/dgiot-dashboard/commit/3b5697c35c8ccbe823e40b171279fb702771c098))
+
+
+### Performance Improvements
+
+* **dgiot-dashboard@4.4.5  🚀:** dgiot-dashboard@4.4.5  � ([fc5088f](https://github.com/dgiot/dgiot-dashboard/commit/fc5088fd00f3bfe580108605700c46e1efda6d70))
+* **src/config/cdn.config.js:** echarts ([d081ebe](https://github.com/dgiot/dgiot-dashboard/commit/d081ebe467121cb62e4fcbe1abd5b86b204963af))
+* **src/views/cloudtest/js/task.js:** putEvidence ([09e160e](https://github.com/dgiot/dgiot-dashboard/commit/09e160e17d852a217dcd6e7e8ee2d4dab55d140c))
 
 
 
