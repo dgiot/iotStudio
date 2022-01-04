@@ -42,3 +42,4 @@ src/config/ignore
 # files
 public/assets/js/*
 public/assets/css/*
+swagger.json

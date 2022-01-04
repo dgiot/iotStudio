@@ -29,9 +29,9 @@
             <el-date-picker
               v-model="queryForm.searchDate"
               class="item-time-picker"
-              :end-placeholder="$translateTitle('Maintenance.end Time')"
+              :end-placeholder="$translateTitle('Maintenance.end time')"
               format="yyyy-MM-dd"
-              :start-placeholder="$translateTitle('Maintenance.start Time')"
+              :start-placeholder="$translateTitle('Maintenance.start time')"
               type="daterange"
               value-format="yyyy-MM-dd"
             />

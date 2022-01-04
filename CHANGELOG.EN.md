@@ -1,3 +1,43 @@
+## [4.4.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.5...v4.4.6) (2021-12-31)
+
+
+
+## [4.4.5](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.4...v4.4.5) (2021-12-31)
+
+
+### Bug Fixes
+
+* **.github/workflows/netlify.yml:** rEADME ([6084aee](https://github.com/dgiot/dgiot-dashboard/commit/6084aeedc292360b6acccfa4168d55cabf7a69a2))
+* **.github/workflows/page.yml:** .github/workflows/page.yml ([d0e5cfb](https://github.com/dgiot/dgiot-dashboard/commit/d0e5cfbedd7009e441a9c6e79196a10902485d3d))
+* **':** src/views/MultiTenant/user/login/index.vue ([810dbf3](https://github.com/dgiot/dgiot-dashboard/commit/810dbf3395155f41156a64ac1416b752de3504d7))
+* **ci:** fix cli compilation error ([905f1f5](https://github.com/dgiot/dgiot-dashboard/commit/905f1f522ac2d1d3f7704ae3e82bdd254b0116f8))
+* cl ([647c8ca](https://github.com/dgiot/dgiot-dashboard/commit/647c8cac90195520a4972f1c13814f8db30999ea))
+* **package.json:** pnpm-lock.yaml ([165cfb7](https://github.com/dgiot/dgiot-dashboard/commit/165cfb742c4beb06f1708ed5e2f17936728238be))
+* **pnpm-lock.yaml:** time ([2a60364](https://github.com/dgiot/dgiot-dashboard/commit/2a603643183148ea824d6a582d44666180c78317))
+* pnpm.sh ([4292351](https://github.com/dgiot/dgiot-dashboard/commit/4292351a0d3b37fef49ede640d9ed2554539bd9e))
+* **src/config/local.config.js:** runTimeStatic ([830480c](https://github.com/dgiot/dgiot-dashboard/commit/830480c3f502608384a32d7ebb1cc9bbb1fd892a))
+* **src/config/pwa.config.js:** pwa ([b32cd1f](https://github.com/dgiot/dgiot-dashboard/commit/b32cd1f6cfcd097f6878d3f86d00b7fafaba611e))
+* **src/dgiot/components/vabrefresh/index.vue:** fix the problem that dynamically loaded js ([88482e9](https://github.com/dgiot/dgiot-dashboard/commit/88482e9c90eceaff8904bdb404ed3f409e530e41))
+* **src/views/cloudsystem/logs/access.vue:** time->time ([59b9b8d](https://github.com/dgiot/dgiot-dashboard/commit/59b9b8d70c52a06589936469191783c3c28eb512))
+* **src/views/cloudtest/js/task.js:** o ([e17f4a9](https://github.com/dgiot/dgiot-dashboard/commit/e17f4a997caa725b9dbbdfad6d5e6d539342d83e))
+* **src/views/devicecloud/manage/home_index.vue:** onlinedevices ([3af1a46](https://github.com/dgiot/dgiot-dashboard/commit/3af1a462f2b8588dafdc53591ae9fc8d981acbe9))
+* **src/views/devicecloud/manage/profile.vue:** daslist set default value ([1b54e68](https://github.com/dgiot/dgiot-dashboard/commit/1b54e680e674f1b75d4575cc46ee738733e38bb4))
+* **src/views/multitenant/user/login/index.vue:** userid ([ff8b0dd](https://github.com/dgiot/dgiot-dashboard/commit/ff8b0ddf7f41313852d5ca9c7e06cdfb34e9db19))
+
+
+### Features
+
+* src/store/modules/user.js ([7564c94](https://github.com/dgiot/dgiot-dashboard/commit/7564c948f2b7a9ac0b6d76f0dae739c71ded9ab2))
+* **src/store/modules/user.js:** iframe store ([7246569](https://github.com/dgiot/dgiot-dashboard/commit/7246569d2c29ac0b237d9985c028237c37ee3610))
+* subRealtimedata ([8dcfdc0](https://github.com/dgiot/dgiot-dashboard/commit/8dcfdc04ab14e6277b306b6b6354dbd2a1982e6a))
+
+
+### Performance Improvements
+
+* **src/store/modules/user.js:** loadScript ([0973ce9](https://github.com/dgiot/dgiot-dashboard/commit/0973ce9961f88121e936387cabf05ddce5d601c6)), closes [#302](https://github.com/dgiot/dgiot-dashboard/issues/302)
+
+
+
 ## [4.4.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.3...v4.4.4) (2021-12-24)
 
 

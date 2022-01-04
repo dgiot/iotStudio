@@ -9,6 +9,7 @@ let localHost = [
   'netlify.app',
   'vercel.app',
   'surge.sh',
+  'h7ml.icu',
 ]
 
 if (process.env.NODE_ENV == 'development') {

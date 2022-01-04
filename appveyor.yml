@@ -1,47 +1,14 @@
 # http://www.appveyor.com/docs/appveyor-yml
 environment:
   matrix:
-    # - nodejs_version: "4" (not supported any more)
-    # - nodejs_version: "6" (not supported anu more => lack of util.promisify )
-    # - nodejs_version: "8" ( Jan 2021 -> not supported any more sicnce Jan 2020 - lack for await require by new version of mocha)
-    # - nodejs_version: "9"  (not supported any more)
-    # - nodejs_version: "10" (not supported any mopre -> end of life 2021-04-30)
-    # - nodejs_version: "11" (not supported any more)
-    - nodejs_version: "12"
-    - nodejs_version: "14"
-    - nodejs_version: "15"
     - nodejs_version: "16"
-    - nodejs_version: 'LTS'
 
 install:
   - ps: Install-Product node $env:nodejs_version
   - curl -L https://unpkg.com/@pnpm/self-installer | node
   - pnpm config set registry https://registry.npmmirror.com
-  - pnpm add -g rimraf
-  - git --version
-  - node --version
-  - pnpm --version
-  - pnpm -v
   - pnpm config get registry
   - pnpm i --frozen-lockfile
 test_script:
-  - pnpm lint
-  - pnpm lint:fix
-  - pnpm lint:style
   - pnpm build
-  - cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
-  - cd dist
-  - curl -OL https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
-  - tar xf dgiot_dashboard.tar.gz
-  - curl -OL https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz
-  - tar xf dgiot_swagger.tar.gz
-  - curl -OL https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
-  - tar xf dgiot_file.tar.gz
-  - rimraf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
-  - curl -OL http://dev.iotn2n.com/swagger.json
-
-cache:
-  - node_modules -> appveyor.yml, **\package.json, yarn.lock, pnpm-lock.yaml
-  - '%LOCALAPPDATA%\Yarn -> appveyor.yml, **\package.json, yarn.lock'
-
 build: off

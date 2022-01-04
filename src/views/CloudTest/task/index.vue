@@ -15,9 +15,7 @@
         placement="right"
         :visible="visible"
         width="100%"
-        @close="
-          saveHistorical(collectionInfo, thingcolumns, historyEvidence, true)
-        "
+        @close="saveHistorical(collectionInfo, thingcolumns, thingdata, true)"
       >
         <el-row :gutter="24">
           <el-col :span="12">
@@ -72,7 +70,7 @@
                     saveHistorical(
                       collectionInfo,
                       thingcolumns,
-                      historyEvidence,
+                      thingdata,
                       false
                     )
                   "

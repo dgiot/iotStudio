@@ -1,0 +1,30 @@
+# doc https://my.oschina.net/u/4592353/blog/4777432
+# [[redirects]]
+#   from = "/graphql/"
+#   to = "https://graphql.shanyue.tech"
+#   status = 200
+#   force = true
+#   headers = {X-From = "Netlify"}
+#
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    cache-control = "max-age=31536000"
+
+[[headers]]
+  for = "/dgiot_file/*"
+  [headers.values]
+    cache-control = "max-age=31536000"
+
+[[headers]]
+  for = "/dgiot_dashboard/*"
+  [headers.values]
+    cache-control = "max-age=31536000"
+
+[[redirects]]
+  from = "/iotapi"
+  to = "https://dev.iotn2n.com"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}

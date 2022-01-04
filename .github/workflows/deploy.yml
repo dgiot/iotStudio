@@ -1,7 +1,7 @@
 name: deploy
 on:
   push:
-    branches: [ master ]
+    branches: [ master,dev ]
   workflow_dispatch:
 
 jobs:
@@ -23,21 +23,10 @@ jobs:
         with:
           version: 6.3.0
           run_install: false
-      - name: check if branch still exists 🚀
-        id: ls-remote
-        run: |
-          gh=$(git ls-remote --heads origin gh-pages)
-          echo  "::set-output name=gh::$gh"
-      - name: delete page branch 🚀
-        if: steps.ls-remote.gh
-        run: git push origin --delete gh-pages
       - name: Pnpm script 🚀
         run: |
           pnpm config set registry https://registry.npmmirror.com
           pnpm i --frozen-lockfile
-          pnpm lint
-          pnpm lint:fix
-          pnpm lint:style
           pnpm build
           cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
           cd dist
@@ -55,15 +44,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist
-      - name: dgiot-dashboard Pages  🚀
-        uses: yanglbme/gitee-pages-action@main
-        with:
-          # Gitee 用户名
-          gitee-username: ${{ secrets.GITEE_USERNAME }}
-          # Gitee 密码
-          gitee-password: ${{ secrets.GITEE_PASSWORD }}
-          # Gitee 仓库
-          gitee-repo: dgiiot/dgiot-dashboard
       - name: Deploy to Netlify  🚀
         uses: nwtgck/actions-netlify@v1.2
         with:
@@ -71,12 +51,43 @@ jobs:
           production-branch: master
           github-token: ${{ secrets.GIT_TOKEN }}
           deploy-message: "Deploy from GitHub Actions"
-          enable-pull-request-comment: true
+          enable-pull-request-comment: false
           enable-commit-comment: true
-          overwrites-pull-request-comment: true
+          netlify-config-path: './public/netlify.toml'
+          overwrites-pull-request-comment: false
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Deploy to surge 🚀
+        uses: dswistowski/surge-sh-action@v1
+        with:
+          domain: 'dgiot-dashboard.surge.sh'
+          project: './dist'
+          login: ${{ secrets.surge_login }}
+          token: ${{ secrets.surge_token }}
+      - name: Deploy to vercel 🚀
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          github-token: ${{ secrets.GIT_TOKEN }}
+          vercel-args: '--prod' #Optional
+          vercel-org-id: ${{ secrets.ORG_ID}}
+          vercel-project-id: ${{ secrets.PROJECT_ID}}
+          working-directory: ./dist
+      - name: Sync dgiot-dashboard Pages  🚀
+        uses: yanglbme/gitee-pages-action@main
+        with:
+          gitee-username: ${{ secrets.GITEE_USERNAME }}
+          gitee-password: ${{ secrets.GITEE_PASSWORD }}
+          gitee-repo: dgiiot/dgiot-dashboard
+          branch: gh-pages
+      - name: Sync to dgiot 🚀
+        uses: wearerequired/git-mirror-action@master
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        with:
+          source-repo: git@github.com:dgiot/dgiot-dashboard.git
+          destination-repo: git@gitee.com:dgiiot/dgiot-dashboard.git
       - name: Accurics Scan 🚀
         id: accurics-scan
         uses: docker://accurics/terrascan-action:latest
@@ -85,27 +96,6 @@ jobs:
           verbose: true
           webhook_url: https://app.accurics.com/v1/api/terrascan
           webhook_token: d73c0d62-aab9-4d65-940d-2e6b690a48a7
-      - name: dgiot-dashboard Pages  🚀
-        uses: yanglbme/gitee-pages-action@main
-        with:
-          # Gitee 用户名
-          gitee-username: ${{ secrets.GITEE_USERNAME }}
-          # Gitee 密码
-          gitee-password: ${{ secrets.GITEE_PASSWORD }}
-          # Gitee 仓库
-          gitee-repo: dgiiot/dgiot-dashboard
-          # 要部署的分支
-          branch: gh-pages
-      - name: Sync to dgiot 🚀
-        uses: wearerequired/git-mirror-action@master
-        env:
-          # 在 Settings->Secrets 配置 GITEE_RSA_PRIVATE_KEY
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-        with:
-          # GitHub 源仓库地址
-          source-repo: git@github.com:dgiot/dgiot-dashboard.git
-          # Gitee 目标仓库地址
-          destination-repo: git@gitee.com:dgiiot/dgiot-dashboard.git
       - name: Upload  🚀
         uses: actions/upload-artifact@v2
         with:
@@ -114,42 +104,9 @@ jobs:
       - name: lighthouse 🚀
         uses: treosh/lighthouse-ci-action@v2
         with:
-          # Configuración para auditar sobre un sito estático
-          # Lee más en:
-          # treosh/lg-ci-action options https://github.com/marketplace/actions/lighthouse-ci-action
           runs: 5
           uploadArtifacts: true
           configPath: './.github/workflows/setup/lighthouse-audit.json'
-      - name: Deploy to surge 🚀
-        uses: dswistowski/surge-sh-action@v1
-        with:
-          domain: 'dgiot-dashboard.surge.sh'
-          project: '.'
-          login: ${{ secrets.surge_login }}
-          token: ${{ secrets.surge_token }}
-      #      - name: Deploy to heroku 🚀
-      #        uses: CDNievas/heroku-action@v1.0 # This is the action
-      #        with:
-      #          heroku_email:  ${{ secrets.heroku_email }}
-      #          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-      #          heroku_app_name: ${{secrets.heroku_app_name}}
-      #      - name: Deploy to render 🚀
-      #        uses: bounceapp/render-action@0.2.0
-      #        with:
-      #        email: ${{ secrets.RENDER_EMAIL }}
-      #         password: ${{ secrets.RENDER_PASSWORD }}
-      #          token: ${{ secrets.ACTION_SECRET }}
-      #          service-id: ${{ secrets.service_id }}
-      - name: Deploy to vercel 🚀
-        uses: amondnet/vercel-action@v20
-        if: steps.update_status.outputs.made_changes == 'yes'
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Required
-          github-token: ${{ secrets.GIT_TOKEN }} #Optional
-          vercel-args: '--prod' #Optional
-          vercel-org-id: ${{ secrets.ORG_ID}}  #Required
-          vercel-project-id: ${{ secrets.PROJECT_ID}} #Required
-          working-directory: ./dist
 
   clean:
     name: Clean
@@ -172,32 +129,6 @@ jobs:
           python -m pip install --upgrade pipenv wheel
           pipenv install
           pipenv run python run.py
-
-  codecov:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout  🚀
-        uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - name: Cache pnpm modules  🚀
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 6.3.0
-          run_install: true
-
-      - name: Generate coverage report  🚀
-        run: pnpm test
-        env:
-          COVERAGE: "true"
-
       - name: Upload coverage to Codecov  🚀
         uses: codecov/codecov-action@v1
         with:
