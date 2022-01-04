@@ -198,6 +198,7 @@
               >
                 <el-card>
                   <el-image
+                    :key="drawxnqxPath"
                     :preview-src-list="[$FileServe + drawxnqxPath]"
                     :src="$FileServe + drawxnqxPath"
                   >

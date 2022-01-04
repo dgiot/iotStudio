@@ -36,6 +36,7 @@ export default {
       historyEvidenceid: '',
       nowTime: window.datetime,
       historyEvidence: [],
+      historyInfo: {},
       thirdtbKey: moment(new Date()).valueOf(),
       original: {},
       collectionInfo: {},
@@ -203,6 +204,7 @@ export default {
   },
   mounted() {
     this.historyEvidence = []
+    this.historyInfo = {}
     this.router = this.$dgiotBus.router(this.$route.fullPath)
     this.$dgiotBus.$off('lowcodeClose')
     this.$dgiotBus.$on('lowcodeClose', (_) => {
@@ -353,21 +355,22 @@ export default {
      */
     async deleteHistory(row, index) {
       try {
-        console.log('deleteHistory', row, index)
-        this.historyEvidence.splice(index, 1)
+        await this.historyEvidence.splice(index, 1)
+        console.log(
+          'deleteHistory',
+          row,
+          index,
+          this.historyEvidence,
+          this.historyEvidence.length
+        )
         await this.saveHistorical(
           this.collectionInfo,
           this.thingdata,
           this.historyEvidence,
           false
         )
-        this.featHistoryEvidence(this.collectionInfo.objectId)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'vab-hey-message-success'
-        )
-        loading.close()
+        await this.saveThingdata()
+        // this.featHistoryEvidence(this.collectionInfo.objectId)
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -388,34 +391,10 @@ export default {
      */
     async saveThingdata() {
       try {
-        // 平均值 thingdata
-        let thingdata = []
-        // topo 接口获取平均值
-        const loading = this.$baseColorfullLoading(1)
-        const ukey = '74C800E00055C08D'
-        const evidenceid = md5(
-          'Evidence' + ukey + Math.round(this.timer) + new Date().getTime()
-        ).substring(0, 10)
         const Evidence = {
-          objectId: evidenceid,
-          ukey: ukey,
-          timestamp: Math.round(new Date()),
-          md5: md5('Evidence' + ukey + Math.round(this.timer) + ''),
-          original: {
-            controlid: evidenceid,
-            taskid: this.collectionInfo.objectId,
-            thingdata: thingdata,
-            type: 'Thingdata',
-          },
+          original: this.historyInfo.original,
         }
-        const res = await postEvidence(evidenceid, Evidence)
-        if (res) await this.featHistoryEvidence(this.collectionInfo.objectId)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'vab-hey-message-success'
-        )
-        loading.close()
+        const res = await putEvidence(this.historyInfo.objectId, Evidence)
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -490,6 +469,7 @@ export default {
         const { results = [] } = await queryEvidence(params)
         if (results?.length) {
           this.historyEvidence = results[0].original.avgs ?? []
+          this.historyInfo = results[0]
         }
         this.historycolumns = _.filter(this.thingcolumns, function (item) {
           return item.prop !== 'timestamp'
@@ -1072,6 +1052,7 @@ export default {
      * @Description: 计算平均值
      */
     async drawxnqx(taskid, thingdata) {
+      this.drawxnqxPath = ''
       try {
         const data = thingdata // 要處理下
         const params = {
@@ -1087,7 +1068,7 @@ export default {
         if (Number(code) == 200) {
           this.historyEvidenceid = evidenceid ?? ''
           this.historyEvidence = original.avgs ?? []
-          this.drawxnqxPath = original.path || ''
+          this.drawxnqxPath = original.path
           this.original = original ?? {}
           // https://www.lodashjs.com/docs/lodash.filter
           this.historycolumns = _.filter(this.thingcolumns, function (item) {

@@ -15,7 +15,7 @@ module.exports = {
      */
     {
       path: 'dgiot_dashboard',
-      target: 'http://dev.iotn2n.com',
+      target: 'https://dgiot.netlify.app',
     },
     /**
      * @description amis server 开发使用
