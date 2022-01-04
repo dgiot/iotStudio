@@ -15,6 +15,7 @@ import {
   putEvidence,
 } from '@/api/Evidence'
 import { getDevice } from '../../../api/Device'
+import moment from 'moment'
 export default {
   name: 'TaskIndex',
   filters: {
@@ -470,6 +471,7 @@ export default {
         if (results?.length) {
           this.historyEvidence = results[0].original.avgs ?? []
           this.historyInfo = results[0]
+          this.drawxnqxPath = results[0].original.path ?? ''
         }
         this.historycolumns = _.filter(this.thingcolumns, function (item) {
           return item.prop !== 'timestamp'
@@ -1068,7 +1070,9 @@ export default {
         if (Number(code) == 200) {
           this.historyEvidenceid = evidenceid ?? ''
           this.historyEvidence = original.avgs ?? []
-          this.drawxnqxPath = original.path
+          this.drawxnqxPath = `${original.path}?t=${moment(new Date()).format(
+            'x'
+          )}`
           this.original = original ?? {}
           // https://www.lodashjs.com/docs/lodash.filter
           this.historycolumns = _.filter(this.thingcolumns, function (item) {
