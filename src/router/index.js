@@ -16,6 +16,11 @@ import { publicPath, routerMode } from '@/config'
 
 export const constantRoutes = [
   {
+    path: '/datav',
+    component: () => import('@/components/datav/index'),
+    hidden: true,
+  },
+  {
     path: '/login',
     component: () => import('@/views/MultiTenant/user/login'),
     hidden: true,

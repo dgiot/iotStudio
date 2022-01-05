@@ -83,13 +83,6 @@
                         <el-form-item label="">
                           <el-input v-model="queryForm.title" size="mini">
                             <el-button
-                              slot="append"
-                              icon="el-icon-search"
-                              native-type="submit"
-                              type="primary"
-                              @click="queryData"
-                            />
-                            <el-button
                               slot="prepend"
                               icon="el-icon-upload"
                               type="success"
@@ -100,32 +93,6 @@
                       </el-form>
                     </vab-query-form-top-panel>
                   </vab-query-form>
-                </el-col>
-
-                <el-col
-                  v-for="(item, index) in queryIcon"
-                  v-show="index <= 11"
-                  :key="index"
-                  :span="24"
-                >
-                  <i>
-                    <el-image
-                      :src="imgHost + item"
-                      style="width: 100%; height: 40px; cursor: pointer"
-                      @click.native="handleIcon(imgHost + item)"
-                    />
-                  </i>
-                </el-col>
-                <el-col :span="24">
-                  <el-pagination
-                    :background="background"
-                    :current-page="queryForm.pageNo"
-                    :layout="layout"
-                    :page-size="queryForm.pageSize"
-                    :total="total"
-                    @current-change="handleCurrentChange"
-                    @size-change="handleSizeChange"
-                  />
                 </el-col>
               </el-row>
             </el-collapse-item>

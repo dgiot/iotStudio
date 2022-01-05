@@ -27,6 +27,16 @@
               style="min-height: 280px"
             >
               <el-table-column
+                align="center"
+                :label="$translateTitle('cloudTest.number')"
+                show-overflow-tooltip
+                width="auto"
+              >
+                <template #default="{ $index }">
+                  {{ $index + 1 }}
+                </template>
+              </el-table-column>
+              <el-table-column
                 v-for="(item, index) in thingcolumns"
                 :key="index"
                 align="center"
@@ -104,6 +114,16 @@
               :data="historyEvidence"
               style="min-height: 530px"
             >
+              <el-table-column
+                align="center"
+                :label="$translateTitle('cloudTest.number')"
+                show-overflow-tooltip
+                width="auto"
+              >
+                <template #default="{ $index }">
+                  {{ $index + 1 }}
+                </template>
+              </el-table-column>
               <el-table-column
                 v-for="(item, index) in historycolumns"
                 :key="index"

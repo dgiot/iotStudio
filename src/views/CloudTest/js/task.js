@@ -821,23 +821,12 @@ export default {
         )
         console.log(items)
         console.groupEnd()
-        const { head = {} } = await postHead({
+        const { table = [] } = await postHead({
           items: items,
           productid: params.parentId.product.objectId,
         })
-        const columns = !_.isEmpty(head) ? head : thingcolumns
-        for (let key in columns) {
-          _this.thingcolumns.push({
-            prop: key,
-            label: columns[key],
-          }) // 设置el-table 对应的键值
-        }
-
+        _this.thingcolumns = table
         console.log(' _this.thingcolumns', _this.thingcolumns)
-        _this.thingcolumns.unshift({
-          prop: 'timestamp',
-          label: '时间',
-        }) // 追加el-table 对应的键值
         _this.featHistoryEvidence(this.collectionInfo.objectId)
         _this.visible = true
       } catch (error) {

@@ -263,13 +263,23 @@
       async handleEdit(row) {
         const loading = this.$baseLoading(1)
         const { data = {} } = await getView(row.objectId)
-        this.$router.push({
-          path: `/design/editor/${row.type}`,
-          query: {
-            viewId: row.objectId,
-            type: row.type,
-          },
-        })
+        if (['amis_view', 'amis'].includes(row.type)) {
+          this.$router.push({
+            path: `/design/editor/amis`,
+            query: {
+              viewId: row.objectId,
+              type: 'amis',
+            },
+          })
+        } else {
+          this.$router.push({
+            path: `/design/editor/${row.type}`,
+            query: {
+              viewId: row.objectId,
+              type: row.type,
+            },
+          })
+        }
         loading.close()
         this.set_amisJson(data)
       },

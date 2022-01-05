@@ -24,7 +24,7 @@
 
 [[redirects]]
   from = "/iotapi"
-  to = "https://dev.iotn2n.com"
+  to = "https://dev.iotn2n.com/iotapi"
   status = 200
   force = true
   headers = {X-From = "Netlify"}
