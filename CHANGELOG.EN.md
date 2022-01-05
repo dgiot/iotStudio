@@ -1,4 +1,4 @@
-## [4.4.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.5...v4.4.6) (2022-01-04)
+## [4.4.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.5...v4.4.6) (2022-01-05)
 
 
 ### Bug Fixes
@@ -13,11 +13,18 @@
 * **src/views/cloudtest/js/task.js:** drawxnqxPath ([3b5697c](https://github.com/dgiot/dgiot-dashboard/commit/3b5697c35c8ccbe823e40b171279fb702771c098))
 
 
+### Features
+
+* **src/views/cloudfunction/lowcode/index.vue:** lowcode ([be3d495](https://github.com/dgiot/dgiot-dashboard/commit/be3d4950b04d60b2f5f675c9b4135e5302d383b1))
+* **vue.config.js:** cDN_URL ([34b674d](https://github.com/dgiot/dgiot-dashboard/commit/34b674d1fa3e6db5849544584fa8b50be3daff77))
+
+
 ### Performance Improvements
 
 * **dgiot-dashboard@4.4.5  🚀:** dgiot-dashboard@4.4.5  � ([fc5088f](https://github.com/dgiot/dgiot-dashboard/commit/fc5088fd00f3bfe580108605700c46e1efda6d70))
 * **src/config/cdn.config.js:** echarts ([d081ebe](https://github.com/dgiot/dgiot-dashboard/commit/d081ebe467121cb62e4fcbe1abd5b86b204963af))
 * **src/views/cloudtest/js/task.js:** putEvidence ([09e160e](https://github.com/dgiot/dgiot-dashboard/commit/09e160e17d852a217dcd6e7e8ee2d4dab55d140c))
+* **src/views/cloudtest/js/task.js:** task ([9cb1be1](https://github.com/dgiot/dgiot-dashboard/commit/9cb1be18f29c221a900635d32888e17bda8f3fc6))
 
 
 

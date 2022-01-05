@@ -335,7 +335,7 @@
         align="center"
         fixed="right"
         :label="$translateTitle(`cloudTest.operate`)"
-        width="380"
+        width="480"
       >
         <template #default="{ row }">
           <el-button
@@ -385,6 +385,14 @@
             @click.native="handleHistory(row)"
           >
             历史数据
+          </el-button>
+          <el-button
+            v-show="row.profile.step != -1"
+            size="mini"
+            type="success"
+            @click.native="handleManagement(row)"
+          >
+            {{ $translateTitle(`task.Configuration`) }}
           </el-button>
         </template>
       </el-table-column>

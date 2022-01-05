@@ -21,6 +21,11 @@
     >
       <topo v-if="type === 'topo'" :code="code.konva" :object-id="objectId" />
       <amis v-else-if="type === 'amis'" :code="code" :object-id="objectId" />
+      <amis
+        v-else-if="type === 'amis_view'"
+        :code="code"
+        :object-id="objectId"
+      />
     </el-drawer>
   </div>
 </template>
@@ -38,7 +43,7 @@
     data() {
       return {
         withHeader: true,
-        types: ['amis', 'topo'],
+        types: ['amis', 'amis_view', 'topo'],
         code: {},
         objectId: '',
         flag: false,

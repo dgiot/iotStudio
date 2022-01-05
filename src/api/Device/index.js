@@ -72,8 +72,8 @@ export async function getTdDevice(objectId) {
     order: '-createdAt',
     where: { objectId: objectId },
   }
-  // dgiotlog.info("params", initData)
-  // dgiotlog.log(new Date())
+  // console.info("params", initData)
+  // console.log(new Date())
   return request({
     url: `device`,
     method: 'post',

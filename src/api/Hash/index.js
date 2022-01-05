@@ -35,7 +35,7 @@ function verifyRule(classNmae, keys, data) {
         duration: 6 * 1000,
         showClose: true,
       })
-      dgiotlog.warn(`class为 ${classNmae} 的 key不符合:`, keys[key])
+      console.warn(`class为 ${classNmae} 的 key不符合:`, keys[key])
     }
     // eslint-disable-next-line no-prototype-builtins
     results = results && data.hasOwnProperty(keys[key])

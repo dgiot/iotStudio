@@ -563,10 +563,12 @@ export default {
       localStorage.setItem('parse_objectid', row.objectId)
       const params = {
         limit: 1,
-        where: { type: 'amis', key: row.objectId },
+        where: { type: 'amis_view', key: row.objectId },
       }
-      const { results } = await queryView(params)
-      dgiotlog.log(results)
+      const { results = [] } = await queryView(params)
+      console.log(results)
+      if (results.length == 0)
+        this.$baseMessage('暂无配置', 'success', 'vab-hey-message-success')
       this.lowcodeId = results[0].objectId
       this.$dgiotBus.$emit('lowcodePreview', results[0])
     },

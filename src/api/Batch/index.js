@@ -44,7 +44,7 @@ export async function Batchdelete(method, tableClass, ObjectIdArr, body) {
     const params = {
       requests: requests,
     }
-    dgiotlog.log(params)
+    console.log(params)
     return request({
       url: `batch`,
       method: 'post',
@@ -63,7 +63,7 @@ export async function batch(
   access_token = store.getters['user/token'],
   _company = false
 ) {
-  dgiotlog.log(data, 'axios from batch')
+  console.log(data, 'axios from batch')
   return request({
     url: 'batch',
     method: 'post',

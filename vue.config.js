@@ -57,9 +57,9 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
+// process.env.CDN_URL = proxy[1].target + CDN_URL
 process.env.CDN_URL =
   process.env.NODE_ENV === 'development' ? proxy[1].target + CDN_URL : CDN_URL
-// process.env.CDN_URL = process.env.CDN_URL
 const staticUrl = process.env.CDN_URL
   ? `${process.env.CDN_URL}/assets/`
   : '/assets/'
@@ -103,30 +103,26 @@ function getChainWebpack(config) {
   })
   // https://blog.csdn.net/weixin_34294049/article/details/97278751
   config.when(process.env.NODE_ENV === 'production', (config) => {
-    if (process.env.CDN_URL) {
+    if (process.env.CDN_URL)
       console.log(`当前使用了cdn,cdn资源链接地址为${process.env.CDN_URL}`)
-    } else {
-      console.log(`当前未使用cdn,可能会导致打包体积过大`)
-    }
+    else console.log(`当前未使用cdn,可能会导致打包体积过大`)
     config.performance.set('hints', false)
     config.devtool('none')
     config.optimization.splitChunks({
       chunks: 'all',
-      minSize: 30000, //字节 引入的文件大于300kb才进行分割
-      maxSize: 700000, //700kb，尝试将大于700kb的文件拆分成n个700kb的文件
+      minSize: 300000, //字节 引入的文件大于300kb才进行分割
+      maxSize: 500000, //500kb，尝试将大于500kb的文件拆分成n个500kb的文件
       minChunks: 1, // 模块的最小被引用次数
       maxAsyncRequests: 5, // 按需加载的最大并行请求数
       maxInitialRequests: 3, // 一个入口最大并行请求数
       automaticNameDelimiter: '-dgiot-', // 文件名的连接符
       cacheGroups: {
-        chunk: {
-          name: 'chunk',
+        vendors: {
+          name: 'vendors',
+          //自定义打包模块
           test: /[\\/]node_modules[\\/]/,
-          minSize: 30000,
-          maxSize: 700000,
-          chunks: 'async',
-          minChunks: 2,
-          priority: 10,
+          priority: -10, //优先级，先打包到哪个组里面，值越大，优先级越高
+          // filename: 'vendors.js',
         },
         elementUI: {
           name: 'element',

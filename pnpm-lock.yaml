@@ -8,6 +8,9 @@ specifiers:
   '@dgiot/dgiot-component': 0.0.3
   '@dgiot/dgiot-icons': 0.0.19
   '@dgiot/dgiot-mqtt-dashboard': 1.1.5
+  '@jiaminghi/c-render': ^0.4.3
+  '@jiaminghi/charts': ^0.2.18
+  '@jiaminghi/data-view': ^2.10.0
   '@material/icon-button': 13.0.0
   '@vue/babel-helper-vue-jsx-merge-props': 1.2.1
   '@vue/cli-plugin-babel': ^4.5.14
@@ -100,6 +103,9 @@ dependencies:
   '@dgiot/dgiot-component': 0.0.3_webpack@4.46.0
   '@dgiot/dgiot-icons': 0.0.19
   '@dgiot/dgiot-mqtt-dashboard': 1.1.5_webpack@4.46.0
+  '@jiaminghi/c-render': 0.4.3
+  '@jiaminghi/charts': 0.2.18
+  '@jiaminghi/data-view': 2.10.0
   '@material/icon-button': 13.0.0
   '@vue/babel-helper-vue-jsx-merge-props': 1.2.1
   '@vue/cli-plugin-pwa': 4.5.15_@vue+cli-service@4.5.15
@@ -1782,6 +1788,47 @@ packages:
       postcss: 7.0.39
       webpack: 4.46.0
     dev: true
+
+  /@jiaminghi/bezier-curve/0.0.9:
+    resolution: {integrity: sha1-UZasqTyLBhphK0w+q87flJDO9u4=, tarball: '@jiaminghi/bezier-curve/download/@jiaminghi/bezier-curve-0.0.9.tgz'}
+    dependencies:
+      '@babel/runtime': 7.16.3
+    dev: false
+
+  /@jiaminghi/c-render/0.4.3:
+    resolution: {integrity: sha1-mC69j3G0Q7uVB4NCJ4NJc+vZttg=, tarball: '@jiaminghi/c-render/download/@jiaminghi/c-render-0.4.3.tgz'}
+    dependencies:
+      '@babel/runtime': 7.16.3
+      '@jiaminghi/bezier-curve': 0.0.9
+      '@jiaminghi/color': 0.1.1
+      '@jiaminghi/transition': 1.1.11
+    dev: false
+
+  /@jiaminghi/charts/0.2.18:
+    resolution: {integrity: sha1-Y97ZUgB4n8Gh/QS3/Z5W9Y0i2Q8=, tarball: '@jiaminghi/charts/download/@jiaminghi/charts-0.2.18.tgz'}
+    dependencies:
+      '@babel/runtime': 7.16.3
+      '@jiaminghi/c-render': 0.4.3
+    dev: false
+
+  /@jiaminghi/color/0.1.1:
+    resolution: {integrity: sha1-vd+QEt/OaYLTgpqYP/65Hundp7Y=, tarball: '@jiaminghi/color/download/@jiaminghi/color-0.1.1.tgz'}
+    dependencies:
+      '@babel/runtime': 7.16.3
+    dev: false
+
+  /@jiaminghi/data-view/2.10.0:
+    resolution: {integrity: sha1-IUbY/HG58kvoCCOMoFDdt6TIlJ8=, tarball: '@jiaminghi/data-view/download/@jiaminghi/data-view-2.10.0.tgz'}
+    dependencies:
+      '@babel/runtime': 7.16.3
+      '@jiaminghi/charts': 0.2.18
+    dev: false
+
+  /@jiaminghi/transition/1.1.11:
+    resolution: {integrity: sha1-V22K8JJDSzQgHrpersx53TPIrYw=, tarball: '@jiaminghi/transition/download/@jiaminghi/transition-1.1.11.tgz'}
+    dependencies:
+      '@babel/runtime': 7.16.3
+    dev: false
 
   /@material/animation/13.0.0:
     resolution: {integrity: sha1-Qux67mVIuifttJBjx6euQx5O9FA=, tarball: '@material/animation/download/@material/animation-13.0.0.tgz'}
