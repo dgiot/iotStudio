@@ -1494,150 +1494,12 @@ export default {
       })
     },
     // 物模型提交
-    submitForm(sizeForm) {
-      var das = []
-      sizeForm.daslist.map((items) => {
-        var newval = items['addr']
-        das.push(newval)
-      })
-      var obj = {
-        name: sizeForm.name,
-        devicetype: sizeForm.devicetype,
-        dataForm: {
-          round: sizeForm.round,
-          data: sizeForm.dinumber,
-          address: sizeForm.dis,
-          rate: sizeForm.rate,
-          offset: sizeForm.offset,
-          order: sizeForm.order,
-          protocol: sizeForm.protocol,
-          operatetype: sizeForm.operatetype,
-          originaltype: sizeForm.originaltype,
-          slaveid: sizeForm.slaveid,
-          collection: sizeForm.collection,
-          control: sizeForm.control,
-          strategy: sizeForm.strategy,
-          iscount: sizeForm.iscount,
-          countstrategy: sizeForm.countstrategy,
-          countround: sizeForm.countround,
-          countcollection: sizeForm.countcollection,
-        },
-        ico: sizeForm.ico,
-        required: true,
-        accessMode: sizeForm.isread,
-        isshow: sizeForm.isshow,
-        identifier: sizeForm.identifier,
-      }
-      // 提交之前需要先判断类型
-      if (
-        sizeForm.type == 'float' ||
-        sizeForm.type == 'double' ||
-        sizeForm.type == 'int' ||
-        sizeForm.type == 'long'
-      ) {
-        let obj1 = {
-          dataType: {
-            type: sizeForm.type.toLowerCase(),
-            specs: {
-              max: sizeForm.endnumber,
-              min: sizeForm.startnumber,
-              step: sizeForm.step,
-              precision: Number(sizeForm.precision),
-              unit: sizeForm.unit == '' ? '' : sizeForm.unit,
-            },
-            das:das,
-          },
-        }
-        Object.assign(obj, obj1)
-        // 去除多余的属性
-        if (!this.showNewItem) {
-          delete obj.dataForm.operatetype
-          delete obj.dataForm.originaltype
-          delete obj.dataForm.slaveid
-        }
-      } else if (sizeForm.type == 'image') {
-        var obj1 = {
-          dataType: {
-            type: sizeForm.type.toLowerCase(),
-            imagevalue: sizeForm.imagevalue,
-            specs: {},
-            das:das,
-          },
-        }
-        Object.assign(obj, obj1)
-      } else if (sizeForm.type == 'bool') {
-        var obj1 = {
-          dataType: {
-            type: sizeForm.type.toLowerCase(),
-            specs: {
-              0: sizeForm.false,
-              1: sizeForm.true,
-            },
-            das:das,
-          },
-        }
-        Object.assign(obj, obj1)
-      } else if (sizeForm.type == 'enum') {
-        var specs = {}
-        sizeForm.struct.map((items) => {
-          var newkey = items['attribute']
-          specs[newkey] = items['attributevalue']
-        })
-        var obj1 = {
-          dataType: {
-            type: sizeForm.type.toLowerCase(),
-            specs: specs,
-            das:das,
-          },
-        }
-        Object.assign(obj, obj1)
-      } else if (sizeForm.type == 'struct') {
-        var obj1 = {
-          dataType: {
-            type: sizeForm.type.toLowerCase(),
-            specs: sizeForm.struct,
-            das:das,
-          },
-        }
-        Object.assign(obj, obj1)
-      } else if (sizeForm.type == 'text') {
-        var obj1 = {
-          dataType: {
-            type: sizeForm.type.toLowerCase(),
-            size: sizeForm.string,
-            specs: {},
-            das:das,
-          },
-        }
-        Object.assign(obj, obj1)
-      } else if (sizeForm.type == 'date') {
-        var obj1 = {
-          dataType: {
-            type: sizeForm.type.toLowerCase(),
-            specs: {},
-            das:das,
-          },
-        }
-        Object.assign(obj, obj1)
-      } else if (sizeForm.type == 'geopoint') {
-        var obj1 = {
-          dataType: {
-            type: sizeForm.type.toLowerCase(),
-            gpstype: sizeForm.gpstype,
-            specs: {},
-            das:das,
-          },
-        }
-        Object.assign(obj, obj1)
-      }
-      delete obj.index
-
+    submitForm(obj) {
       dgiotlog.log('obj', obj)
       let data = {
         item: obj,
         productid: this.productId,
       }
-
       // 检测到
       if (this.wmxSituation == '新增') {
         // dgiotlog.log("新增");
@@ -1658,8 +1520,6 @@ export default {
           }
         })
       } else if (this.wmxSituation == '编辑') {
-        // dgiotlog.log("编辑" + obj);
-        // this.productdetail.thing.properties[this.modifyIndex] = obj
         putThing(data).then((res) => {
           dgiotlog.log('编辑', res)
           if (res.code == 200) {
@@ -1677,23 +1537,6 @@ export default {
         })
       }
       this.wmxdialogVisible = false
-      // const params = {
-      //   thing: this.productdetail.thing,
-      // }
-      // this.$update_object('Product', this.productId, params)
-      //   .then((resultes) => {
-      //     if (resultes) {
-      //       this.$message({
-      //         type: 'success',
-      //         message: '添加成功',
-      //       })
-      //       this.getProDetail()
-      //       this.wmxdialogVisible = false
-      //     }
-      //   })
-      //   .catch((e) => {
-      //     dgiotlog.log(e)
-      //   })
     },
     createProperty() {
       this.setSizeForm(this.getFormOrginalData())

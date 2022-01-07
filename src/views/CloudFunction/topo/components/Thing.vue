@@ -18,7 +18,9 @@
       <wmxdetail
         ref="sizeForm"
         :size-form1="sizeForm"
+        @addDas="addDas"
         @addDomain="addDomain"
+        @removeDas="removeDas"
         @removeDomain="removeDomain"
         @submitForm="submitForm"
         @updataForm="updataForm"
@@ -46,6 +48,8 @@
         text: 'text',
         shapeid: '',
         viewInfo: {},
+        das: [],
+        daslist: [],
       }
     },
     computed: {
@@ -100,131 +104,21 @@
         console.log(from)
         this.setSizeForm(from)
       },
+      addDas() {
+        console.log(this.sizeForm)
+        this.sizeForm.daslist.push({
+          addr: '',
+        })
+      },
+      removeDas(item) {
+        var index = this.sizeForm.daslist.indexOf(item)
+        if (index !== -1) {
+          this.sizeForm.daslist.splice(index, 1)
+        }
+      },
       // 提交
-      submitForm(sizeForm) {
-        console.log('sizeForm', sizeForm)
-        var obj = {
-          name: sizeForm.name,
-          devicetype: sizeForm.devicetype,
-          dataForm: {
-            round: sizeForm.round,
-            data: sizeForm.dinumber,
-            address: sizeForm.dis,
-            rate: sizeForm.rate,
-            offset: sizeForm.offset,
-            order: sizeForm.order,
-            protocol: sizeForm.protocol,
-            operatetype: sizeForm.operatetype,
-            originaltype: sizeForm.originaltype,
-            slaveid: sizeForm.slaveid,
-            collection: sizeForm.collection,
-            control: sizeForm.control,
-            strategy: sizeForm.strategy,
-            iscount: sizeForm.iscount,
-            countstrategy: sizeForm.countstrategy,
-            countround: sizeForm.countround,
-            countcollection: sizeForm.countcollection,
-          },
-          ico: sizeForm.ico,
-          required: true,
-          accessMode: sizeForm.isread,
-          isshow: sizeForm.isshow,
-          identifier: sizeForm.identifier,
-        }
-        // 提交之前需要先判断类型
-        if (
-          sizeForm.type == 'float' ||
-          sizeForm.type == 'double' ||
-          sizeForm.type == 'int' ||
-          sizeForm.type == 'long'
-        ) {
-          var obj1 = {
-            dataType: {
-              type: sizeForm.type.toLowerCase(),
-              specs: {
-                max: sizeForm.endnumber,
-                min: sizeForm.startnumber,
-                step: sizeForm.step,
-                unit: sizeForm.unit == '' ? '' : sizeForm.unit,
-              },
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'image') {
-          var obj1 = {
-            dataType: {
-              type: sizeForm.type.toLowerCase(),
-              imagevalue: sizeForm.imagevalue,
-              specs: {},
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'bool') {
-          var obj1 = {
-            dataType: {
-              type: sizeForm.type.toLowerCase(),
-              specs: {
-                0: sizeForm.false,
-                1: sizeForm.true,
-              },
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'enum') {
-          var specs = {}
-          sizeForm.struct.map((items) => {
-            var newkey = items['attribute']
-            specs[newkey] = items['attributevalue']
-          })
-          var obj1 = {
-            dataType: {
-              type: sizeForm.type.toLowerCase(),
-              specs: specs,
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'struct') {
-          var obj1 = {
-            dataType: {
-              type: sizeForm.type.toLowerCase(),
-              specs: sizeForm.struct,
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'string') {
-          var obj1 = {
-            dataType: {
-              type: sizeForm.type.toLowerCase(),
-              size: sizeForm.string,
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'text') {
-          var obj1 = {
-            dataType: {
-              type: sizeForm.type.toLowerCase(),
-              size: sizeForm.string,
-              specs: {},
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'date') {
-          var obj1 = {
-            dataType: {
-              type: sizeForm.type.toLowerCase(),
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'geopoint') {
-          var obj1 = {
-            dataType: {
-              type: sizeForm.type.toLowerCase(),
-              gpstype: sizeForm.gpstype,
-              specs: {},
-            },
-          }
-          Object.assign(obj, obj1)
-        }
+      submitForm(obj) {
+        console.log('sizeForm', obj)
         let data = {
           item: obj,
           productid: this.$route.query.productid,
@@ -333,6 +227,12 @@
             console.log(`物模型存在这个属性`, konvathing)
             this.reset(nobound)
             var obj = {}
+            var daslist = []
+            konvathing.dataType.das.forEach((val) => {
+              daslist.push({
+                addr: val,
+              })
+            })
             // 提交之前需要先判断类型
             if (
               ['float', 'double', 'int', 'long'].indexOf(
@@ -343,6 +243,7 @@
                 name: konvathing.name,
                 devicetype: konvathing.devicetype,
                 type: konvathing.dataType.type,
+                daslist: daslist,
                 endnumber: this.$objGet(konvathing, 'dataType.specs.max'),
                 startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
                 step: this.$objGet(konvathing, 'dataType.specs.step'),
@@ -389,6 +290,7 @@
                 name: konvathing.name,
                 devicetype: konvathing.devicetype,
                 type: konvathing.dataType.type,
+                daslist: daslist,
                 true: konvathing.dataType.specs[1],
                 false: konvathing.dataType.specs[0],
                 // konvathing.dataForm.
@@ -439,6 +341,7 @@
                 name: konvathing.name,
                 devicetype: konvathing.devicetype,
                 type: konvathing.dataType.type,
+                daslist: daslist,
                 imagevalue: konvathing.dataType.imagevalue,
                 // konvathing.dataForm.
                 startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
@@ -495,6 +398,7 @@
                 name: konvathing.name,
                 devicetype: konvathing.devicetype,
                 type: konvathing.dataType.type,
+                daslist: daslist,
                 specs: konvathing.dataType.specs,
                 struct: structArray,
                 startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
@@ -544,6 +448,7 @@
                 name: konvathing.name,
                 devicetype: konvathing.devicetype,
                 type: konvathing.dataType.type,
+                daslist: daslist,
                 struct: konvathing.dataType.specs,
                 startnumber: this.$objGet(konvathing, 'dataType.specs.min'),
                 step: this.$objGet(konvathing, 'dataType.specs.step'),
@@ -593,6 +498,7 @@
                 name: konvathing.name,
                 devicetype: konvathing.devicetype,
                 type: konvathing.dataType.type,
+                daslist: daslist,
                 collection:
                   konvathing.dataForm == undefined
                     ? ''
@@ -641,6 +547,7 @@
                 name: konvathing.name,
                 devicetype: konvathing.devicetype,
                 type: konvathing.dataType.type,
+                daslist: daslist,
                 collection:
                   konvathing.dataForm == undefined
                     ? ''
@@ -688,6 +595,7 @@
                 name: konvathing.name,
                 devicetype: konvathing.devicetype,
                 type: konvathing.dataType.type,
+                daslist: daslist,
                 gpstype: konvathing.dataType.gpstype,
                 collection:
                   konvathing.dataForm == undefined
@@ -773,6 +681,8 @@
           string: '',
           date: 'String类型的UTC时间戳 (毫秒)',
           specs: {},
+          das: [],
+          daslist: [],
           round: 'all',
           struct: [
             {

@@ -40,6 +40,7 @@
                     filterable
                     placeholder="请选择"
                     style="width: 100%"
+                    value-key="name"
                     @change="changeThing"
                   >
                     <el-option
@@ -1704,8 +1705,145 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            dgiotlog.log(this.sizeForm, 'dsaf')
-            this.$emit('submitForm', this.sizeForm)
+            var sizeForm = this.sizeForm
+            var das = []
+            sizeForm.daslist.map((items) => {
+              var newval = items['addr']
+              das.push(newval)
+            })
+            var obj = {
+              name: sizeForm.name,
+              devicetype: sizeForm.devicetype,
+              dataForm: {
+                round: sizeForm.round,
+                data: sizeForm.dinumber,
+                address: sizeForm.dis,
+                rate: sizeForm.rate,
+                offset: sizeForm.offset,
+                order: sizeForm.order,
+                protocol: sizeForm.protocol,
+                operatetype: sizeForm.operatetype,
+                originaltype: sizeForm.originaltype,
+                slaveid: sizeForm.slaveid,
+                collection: sizeForm.collection,
+                control: sizeForm.control,
+                strategy: sizeForm.strategy,
+                iscount: sizeForm.iscount,
+                countstrategy: sizeForm.countstrategy,
+                countround: sizeForm.countround,
+                countcollection: sizeForm.countcollection,
+              },
+              ico: sizeForm.ico,
+              required: true,
+              accessMode: sizeForm.isread,
+              isshow: sizeForm.isshow,
+              identifier: sizeForm.identifier,
+            }
+            // 提交之前需要先判断类型
+            if (
+              sizeForm.type == 'float' ||
+              sizeForm.type == 'double' ||
+              sizeForm.type == 'int' ||
+              sizeForm.type == 'long'
+            ) {
+              var obj1 = {
+                dataType: {
+                  type: sizeForm.type.toLowerCase(),
+                  specs: {
+                    max: sizeForm.endnumber,
+                    min: sizeForm.startnumber,
+                    step: sizeForm.step,
+                    unit: sizeForm.unit == '' ? '' : sizeForm.unit,
+                  },
+                  das: das,
+                },
+              }
+              Object.assign(obj, obj1)
+            } else if (sizeForm.type == 'image') {
+              var obj1 = {
+                dataType: {
+                  type: sizeForm.type.toLowerCase(),
+                  imagevalue: sizeForm.imagevalue,
+                  specs: {},
+                  das: das,
+                },
+              }
+              Object.assign(obj, obj1)
+            } else if (sizeForm.type == 'bool') {
+              var obj1 = {
+                dataType: {
+                  type: sizeForm.type.toLowerCase(),
+                  specs: {
+                    0: sizeForm.false,
+                    1: sizeForm.true,
+                  },
+                  das: das,
+                },
+              }
+              Object.assign(obj, obj1)
+            } else if (sizeForm.type == 'enum') {
+              var specs = {}
+              sizeForm.struct.map((items) => {
+                var newkey = items['attribute']
+                specs[newkey] = items['attributevalue']
+              })
+              var obj1 = {
+                dataType: {
+                  type: sizeForm.type.toLowerCase(),
+                  specs: specs,
+                  das: das,
+                },
+              }
+              Object.assign(obj, obj1)
+            } else if (sizeForm.type == 'struct') {
+              var obj1 = {
+                dataType: {
+                  type: sizeForm.type.toLowerCase(),
+                  specs: sizeForm.struct,
+                  das: das,
+                },
+              }
+              Object.assign(obj, obj1)
+            } else if (sizeForm.type == 'string') {
+              var obj1 = {
+                dataType: {
+                  type: sizeForm.type.toLowerCase(),
+                  size: sizeForm.string,
+                  das: das,
+                },
+              }
+              Object.assign(obj, obj1)
+            } else if (sizeForm.type == 'text') {
+              var obj1 = {
+                dataType: {
+                  type: sizeForm.type.toLowerCase(),
+                  size: sizeForm.string,
+                  specs: {},
+                  das: das,
+                },
+              }
+              Object.assign(obj, obj1)
+            } else if (sizeForm.type == 'date') {
+              var obj1 = {
+                dataType: {
+                  type: sizeForm.type.toLowerCase(),
+                  das: das,
+                },
+              }
+              Object.assign(obj, obj1)
+            } else if (sizeForm.type == 'geopoint') {
+              var obj1 = {
+                dataType: {
+                  type: sizeForm.type.toLowerCase(),
+                  gpstype: sizeForm.gpstype,
+                  specs: {},
+                  das: das,
+                },
+              }
+              Object.assign(obj, obj1)
+            }
+            delete obj.index
+            this.$emit('submitForm', obj)
             // this.$refs[formName].resetFields()
           } else {
             dgiotlog.log(valid)

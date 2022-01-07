@@ -120,9 +120,9 @@ const topoLable = {
       x: Axis.x,
       y: Axis.y,
       draggable: true,
-      id: thing.productid + '_flow',
+      id: thing.productid + '_text' + uuid(5),
       attrs: {
-        id: thing.productid + '_flow',
+        id: thing.productid + '_text' + uuid(5),
         name: 'thing',
         x: Axis.x,
         y: Axis.y,
@@ -139,8 +139,8 @@ const topoLable = {
     simpleLabel.add(
       new Konva.Text({
         hidden: thing.hidden ? thing.hidden : false,
-        id: thing.productid + '_flow_text',
-        text: 'dgiot' + '_flow_text' + uuid(5),
+        id: thing.productid + '_text',
+        text: 'dgiot_text' + uuid(5),
         fontSize: 24,
         lineHeight: 1.2,
         padding: 10,
