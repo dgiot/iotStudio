@@ -134,12 +134,9 @@ export default {
       },
     }
     return {
-      mapCenter: {
-        lng: 116.404,
-        lat: 39.915,
-      },
+      bmLabel: false,
       mapLabel: {
-        content: '',
+        content: '我爱北京天安门',
         style: {
           color: 'red',
           fontSize: '24px',
@@ -148,7 +145,7 @@ export default {
           lng: 116.404,
           lat: 39.915,
         },
-        title: '',
+        title: '我爱北京天安门',
       },
       router: '',
       chartKey: moment(new Date()).valueOf(),
@@ -413,19 +410,20 @@ export default {
     },
   },
   mounted() {
+    // this.deviceInfo.product.objectId = this.$route.query.productid
+    this.getDeviceInfo(this.$route.query.deviceid)
     this.setTreeFlag(false)
     this.params.style = this.chartType[0].type
     console.log(' this.params.style', this.params.style)
     this.subtopic = `thing/${this.$route.query.deviceid}/realtimedata/post` // 设备实时数据topic
     this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
     this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
-    if (this.$route.query.deviceid) {
-      this.subRealtimedata()
-      this.deviceid = this.$route.query.deviceid
-      this.initChart()
-      this.getDeviceInfo(this.deviceid)
-      window.addEventListener('resize', this.resizeTheChart)
-    }
+    // if (this.$route.query.deviceid) {
+    this.deviceid = this.$route.query.deviceid
+    this.subRealtimedata()
+    this.initChart()
+    window.addEventListener('resize', this.resizeTheChart)
+    // }
   },
   // 清除定时器
   destroyed: function () {
@@ -494,7 +492,6 @@ export default {
       setTreeFlag: 'settings/setTreeFlag',
     }),
     Unbscribe() {
-      console.error('Unbscribe')
       const subtopic = 'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
       const topicKey = this.$dgiotBus.topicKey(this.router, subtopic)
       this.$dgiotBus.$emit('MqttUnbscribe', topicKey, subtopic)
@@ -511,11 +508,22 @@ export default {
     async getDeviceInfo(deviceid) {
       try {
         const loading = this.$baseColorfullLoading()
-        const resultes = await getDevice(deviceid)
-        var ProductId = ''
-        resultes?.product?.objectId
-          ? (ProductId = resultes.product.objectId)
-          : (ProductId = '')
+        var resultes = await getDevice(deviceid)
+        const { location = { longitude: '116.404', latitude: '39.915' } } =
+          resultes
+        const mapLabel = {
+          content: resultes.name,
+          style: {
+            color: 'red',
+            fontSize: '24px',
+          },
+          position: {
+            lng: Number(location.longitude),
+            lat: Number(location.latitude),
+          },
+          title: resultes.name,
+        }
+        var ProductId = resultes.product.objectId ?? ''
         const DevAddr = resultes.devaddr
         let _toppic = [
           {
@@ -531,35 +539,24 @@ export default {
             isdef: true,
           },
         ]
-        if (resultes.product.topics) {
-          resultes.topicData = resultes.product.topics.concat(_toppic)
-        } else {
-          resultes.topicData = _toppic
-        }
-        this.deviceInfo = resultes
-        if (this.deviceInfo?.location?.latitude) {
-          this.mapLabel = {
-            content: resultes.name,
-            style: {
-              color: 'red',
-              fontSize: '24px',
-            },
-            position: {
-              lng: Number(resultes.location.longitude) ?? 116.404,
-              lat: Number(resultes.location.latitude) ?? 39.915,
-            },
-            title: resultes.name,
-          }
-          this.mapCenter = this.mapLabel.position
-          console.info('this.mapLabel\n', this.mapLabel)
-        }
 
+        resultes.topicData = resultes.product.topics
+          ? resultes.product.topics.concat(_toppic)
+          : _toppic
+        console.log(resultes, 'resultes')
+        this.deviceInfo = resultes
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
           'vab-hey-message-success'
         )
         loading.close()
+        this.mapLabel = mapLabel
+        this.$refs['map'].baiduCenter = this.mapLabel.position
+        this.bmLabel = true
+        // this.$refs['map'].label = this.mapLabel
+        console.info('vm.mapLabel\n', this.mapLabel)
+        console.info('vm.mapLabel\n', this.$refs['map'])
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -572,7 +569,7 @@ export default {
     toggleChart(e) {
       this.chartKey = moment(new Date()).valueOf()
       this.loading = false
-      dgiotlog.log(e)
+      console.log(e)
       this.chartExtend = {}
       this.chartDataZoom = []
       let type = ['funnel', 'radar', 'radar']
@@ -622,7 +619,7 @@ export default {
         charts.forEach((chart) => {
           chart.$children[0].resize()
         })
-        dgiotlog.log('重绘完成', charts)
+        console.log('重绘完成', charts)
       } else {
         charts.$children[0].resize()
       }
@@ -661,8 +658,8 @@ export default {
         let deviceid = this.$route.query.deviceid
         // let endTime = moment(this.params.datetimerange[1]).valueOf()
         // let startTime = moment(this.params.datetimerange[0]).valueOf()
-        dgiotlog.log('endTime', endTime)
-        dgiotlog.log('startTime', startTime)
+        console.log('endTime', endTime)
+        console.log('startTime', startTime)
         // const limit = moment(endTime).diff(moment(startTime), 'days')
         const {
           interval,
@@ -686,7 +683,7 @@ export default {
         await getDabDevice(deviceid, params)
           .then((res) => {
             this.$baseColorfullLoading().close()
-            dgiotlog.log(res, 'res charts')
+            console.log(res, 'res charts')
             if (res?.chartData) {
               const { chartData = {} } = res
               this.chartData = chartData
@@ -697,12 +694,12 @@ export default {
                 }, 1000)
               })
             }
-            dgiotlog.log('this.chartData', this.chartData)
+            console.log('this.chartData', this.chartData)
             this.loading = false
             this.dataEmpty = false
           })
           .catch((e) => {
-            dgiotlog.log(e)
+            console.log(e)
             this.loading = false
             this.$baseColorfullLoading().close()
           })
@@ -713,7 +710,7 @@ export default {
       }
     },
     print(item) {
-      dgiotlog.log(item)
+      console.log(item)
     },
     tabHandleClick(tab) {
       this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
@@ -782,7 +779,7 @@ export default {
       if (this.childrendevices.devicesname != '') {
         params.where.devaddr = this.childrendevices.devicesname
       }
-      dgiotlog.log('this.params', params)
+      console.log('this.params', params)
       this.$queryDevice(params)
         .then((res) => {
           this.childrenDeviceTotal = res.count
@@ -803,7 +800,7 @@ export default {
           }
         })
         .catch((err) => {
-          dgiotlog.log(err)
+          console.log(err)
           this.$baseMessage('请求出错11', err.error, 3000)
         })
     },
@@ -817,7 +814,7 @@ export default {
           }
         })
         .catch((error) => {
-          dgiotlog.log('update error 清除timer', error)
+          console.log('update error 清除timer', error)
         })
     },
     //渲染卡片
@@ -894,7 +891,7 @@ export default {
       })
     },
     deviceToDetail(row) {
-      dgiotlog.log('row', row)
+      console.log('row', row)
       this.$router.push({
         path: '/roles/editdevices',
         query: {
@@ -936,7 +933,7 @@ export default {
             }
           )
         } else {
-          dgiotlog.log('error submit!!')
+          console.log('error submit!!')
           return false
         }
       })
@@ -965,7 +962,7 @@ export default {
           }
         })
         .catch((error) => {
-          dgiotlog.log(error)
+          console.log(error)
         })
     },
     // 设备多个启用和禁用
@@ -993,7 +990,7 @@ export default {
           }
         })
         .catch((error) => {
-          dgiotlog.log(error)
+          console.log(error)
         })
     },
     activeDevice(val) {
@@ -1020,7 +1017,7 @@ export default {
           }
         })
         .catch((error) => {
-          dgiotlog.log(error)
+          console.log(error)
         })
     },
     /* el-popover点击关闭*/

@@ -208,6 +208,20 @@
 </template>
 
 <script>
+  const mapDefault = {
+    label: {
+      content: '我爱北京天安门',
+      style: {
+        color: 'red',
+        fontSize: '24px',
+      },
+      position: {
+        lng: 116.404,
+        lat: 39.915,
+      },
+      title: '我是title',
+    },
+  }
   import {
     BaiduMap,
     BmBoundary,
@@ -242,7 +256,7 @@
   } from 'vue-baidu-map'
   import { secret } from '@/config/secret.config'
   export default {
-    name: 'VabBaiduMap',
+    name: 'VabBaidu',
     components: {
       BmScale,
       BmMapType,
@@ -427,9 +441,11 @@
       },
       center: {
         type: Object,
-        default: () => {
-          116.404
-          39.915
+        default: function () {
+          return {
+            lng: 116.404,
+            lat: 39.915,
+          }
         },
       },
       sizeZoom: {
@@ -438,9 +454,11 @@
       },
       panoramaOffset: {
         type: Object,
-        default: () => {
-          0
-          0
+        default: function () {
+          return {
+            width: 0,
+            height: 0,
+          }
         },
       },
       isOpen: {
@@ -449,27 +467,35 @@
       },
       cityOffset: {
         type: Object,
-        default: () => {
-          0
-          0
+        default: function () {
+          return {
+            width: 0,
+            height: 0,
+          }
         },
       },
       scaleOffset: {
         type: Object,
-        default: () => {
-          0
-          0
+        default: function () {
+          return {
+            width: 0,
+            height: 0,
+          }
         },
       },
       mapTypes: {
         type: Array,
-        default: () => ['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP'],
+        default: function () {
+          return ['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']
+        },
       },
       mapTypesOffset: {
         type: Object,
-        default: () => {
-          0
-          0
+        default: function () {
+          return {
+            width: 0,
+            height: 0,
+          }
         },
       },
       markerLocation: {
@@ -478,157 +504,159 @@
       },
       bmlabelOffset: {
         type: Object,
-        default: () => {
-          0
-          0
+        default: function () {
+          return {
+            width: 0,
+            height: 0,
+          }
         },
       },
       labelStyle: {
         type: Object,
-        default: () => {
-          'red'
-          '12px'
-        },
-      },
-      drivingStart: {
-        type: String,
-        default: '天安门',
-      },
-      drivingEnd: {
-        type: String,
-        default: '杭州',
-      },
-      infoWindowContents: {
-        type: String,
-        default: '杭州',
-      },
-      autoViewport: {
-        type: Boolean,
-        default: false,
-      },
-      path: {
-        type: Array,
-        default: () => [],
-      },
-      icon: {
-        type: Array,
-        default: () => {
-          'http://api.map.baidu.com/library/LuShu/1.2/examples/car.png'
-          {
-            52
-            26
-          }
-          {
-            {
-              27
-              13
-            }
+        default: function () {
+          return {
+            color: 'red',
+            fontSize: '12px',
           }
         },
       },
-      play: {
-        type: Boolean,
-        default: true,
+    },
+    drivingStart: {
+      type: String,
+      default: '天安门',
+    },
+    drivingEnd: {
+      type: String,
+      default: '杭州',
+    },
+    infoWindowContents: {
+      type: String,
+      default: '杭州',
+    },
+    autoViewport: {
+      type: Boolean,
+      default: false,
+    },
+    path: {
+      type: Array,
+      default: () => [],
+    },
+    icon: {
+      type: Object,
+      default: function () {
+        return {
+          url: 'http://api.map.baidu.com/library/LuShu/1.2/examples/car.png',
+          size: { width: 52, height: 26 },
+          opts: { anchor: { width: 27, height: 13 } },
+        }
       },
-      rotation: {
-        type: Boolean,
-        default: true,
-      },
-      reset: {
-        type: Boolean,
-        default: true,
-      },
-      heatmapData: {
-        type: Array,
-        default: () => [],
-      },
-      heatmapMax: {
-        type: Number,
-        default: 100,
-      },
-      heatmapRadius: {
-        type: Number,
-        default: 20,
-      },
-      averageCenter: {
-        type: Boolean,
-        default: true,
-      },
-      markers: {
-        type: Array,
-        default: () => [],
-      },
-      points: {
-        type: Array,
-        default: () => [],
-      },
-      editing: {
-        type: Boolean,
-        default: false,
-      },
-      walkingStart: {
-        type: String,
-        default: '北京天安门',
-      },
-      walkingEnd: {
-        type: String,
-        default: '北京邮电大学',
-      },
-      walkingViewPort: {
-        type: Boolean,
-        default: true,
-      },
-      walkingLocation: {
-        type: String,
-        default: '北京',
-      },
-      transitStart: {
-        type: String,
-        default: '北京天安门',
-      },
-      transitEnd: {
-        type: String,
-        default: '北京邮电大学西门',
-      },
-      transitViewport: {
-        type: Boolean,
-        default: true,
-      },
+    },
+    play: {
+      type: Boolean,
+      default: true,
+    },
+    rotation: {
+      type: Boolean,
+      default: true,
+    },
+    reset: {
+      type: Boolean,
+      default: true,
+    },
+    heatmapData: {
+      type: Array,
+      default: () => [],
+    },
+    heatmapMax: {
+      type: Number,
+      default: 100,
+    },
+    heatmapRadius: {
+      type: Number,
+      default: 20,
+    },
+    averageCenter: {
+      type: Boolean,
+      default: true,
+    },
+    markers: {
+      type: Array,
+      default: () => [],
+    },
+    points: {
+      type: Array,
+      default: () => [],
+    },
+    editing: {
+      type: Boolean,
+      default: false,
+    },
+    walkingStart: {
+      type: String,
+      default: '北京天安门',
+    },
+    walkingEnd: {
+      type: String,
+      default: '北京邮电大学',
+    },
+    walkingViewPort: {
+      type: Boolean,
+      default: true,
+    },
+    walkingLocation: {
+      type: String,
+      default: '北京',
+    },
+    transitStart: {
+      type: String,
+      default: '北京天安门',
+    },
+    transitEnd: {
+      type: String,
+      default: '北京邮电大学西门',
+    },
+    transitViewport: {
+      type: Boolean,
+      default: true,
+    },
 
-      busViewport: {
-        type: Boolean,
-        default: true,
+    busViewport: {
+      type: Boolean,
+      default: true,
+    },
+    busLocation: {
+      type: String,
+      default: '北京',
+    },
+    trafficDate: {
+      type: Object,
+      default: function () {
+        return {
+          weekday: 7,
+          hour: 12,
+        }
       },
-      busLocation: {
-        type: String,
-        default: '北京',
-      },
-      trafficDate: {
-        type: Object,
-        default: () => {
-          7
-          12
-        },
-      },
-      strokeColor: {
-        type: String,
-        default: 'blue',
-      },
-      strokeOpacity: {
-        type: Number,
-        default: 0.5,
-      },
-      strokeWeight: {
-        type: Number,
-        default: 2,
-      },
-      busKeyword: {
-        type: Number,
-        default: 331,
-      },
-      linePath: {
-        type: Array,
-        default: () => [
+    },
+    strokeColor: {
+      type: String,
+      default: 'blue',
+    },
+    strokeOpacity: {
+      type: Number,
+      default: 0.5,
+    },
+    strokeWeight: {
+      type: Number,
+      default: 2,
+    },
+    busKeyword: {
+      type: Number,
+      default: 331,
+    },
+    linePath: {
+      type: Array,
+      default: function () {
+        return [
           {
             lng: 116.404,
             lat: 39.915,
@@ -641,11 +669,13 @@
             lng: 116.423493,
             lat: 39.907445,
           },
-        ],
+        ]
       },
-      gonPath: {
-        type: Array,
-        default: () => [
+    },
+    gonPath: {
+      type: Array,
+      default: function () {
+        return [
           {
             lng: 116.412732,
             lat: 39.911707,
@@ -658,60 +688,68 @@
             lng: 116.403461,
             lat: 39.921336,
           },
-        ],
+        ]
       },
-      polygonStrokeColor: {
-        type: String,
-        default: 'blue',
+    },
+    polygonStrokeColor: {
+      type: String,
+      default: 'blue',
+    },
+    polygonStrokeOpacity: {
+      type: Number,
+      default: 0.5,
+    },
+    polygonStrokeWeight: {
+      type: Number,
+      default: 2,
+    },
+    circlePath: {
+      type: Object,
+      default: function () {
+        return {
+          center: {
+            lng: 116.404,
+            lat: 39.915,
+          },
+          radius: 500,
+        }
       },
-      polygonStrokeOpacity: {
-        type: Number,
-        default: 0.5,
+    },
+    circleCenter: {
+      type: Object,
+      default: function () {
+        return {
+          lng: 116.404,
+          lat: 39.915,
+        }
       },
-      polygonStrokeWeight: {
-        type: Number,
-        default: 2,
+    },
+    mapCenter: {
+      type: Object,
+      default: function () {
+        return {
+          lng: 116.404,
+          lat: 39.915,
+        }
       },
-      circlePath: {
-        type: Object,
-        default: () => {
-          {
-            116.404
-            39.915
-          }
-          500
-        },
-      },
-      circleCenter: {
-        type: Object,
-        default: () => {
-          lng: 116.404
-          lat: 39.915
-        },
-      },
-      mapCenter: {
-        type: Object,
-        default: () => {
-          lng: 116.404
-          lat: 39.915
-        },
-      },
-      circleRadius: {
-        type: Number,
-        default: 500,
-      },
-      bounds: {
-        type: Object,
-        default: () => {
+    },
+    circleRadius: {
+      type: Number,
+      default: 500,
+    },
+    bounds: {
+      type: Object,
+      default: function () {
+        return {
           ne: {
-            lng: 110
-            lat: 40
-          }
+            lng: 110,
+            lat: 40,
+          },
           sw: {
-            lng: 0
-            lat: 0
-          }
-        },
+            lng: 0,
+            lat: 0,
+          },
+        }
       },
       imageURL: {
         type: String,
@@ -719,24 +757,17 @@
       },
       infoWindowPosition: {
         type: Object,
-        default: () => {
-          116.404
-          39.915
+        default: function () {
+          return {
+            lng: 116.404,
+            lat: 39.915,
+          }
         },
       },
       label: {
         type: Object,
         default: () => {
-          content: '我爱北京天安门'
-          style: {
-            color: 'red'
-            fontSize: '24px'
-          }
-          position: {
-            lng: 116.404
-            lat: 39.915
-          }
-          title: '我是title'
+          mapDefault.label
         },
       },
       infoWindowTitle: {
@@ -783,10 +814,12 @@
         circlePathRadius: this.circleRadius,
         infoWindowShow: this.infoWindowIsShow,
         active: this.isActive,
-        baiduCenter: this.mapCenter || {
-          lng: 116.404,
-          lat: 39.915,
-        },
+        baiduCenter: this.mapCenter
+          ? this.mapCenter
+          : {
+              lng: 116.404,
+              lat: 39.915,
+            },
       }
     },
     mounted() {
@@ -798,18 +831,18 @@
     },
     methods: {
       _handleSearchComplete(e) {
-        dgiotlog.log(e, 'handleSearchComplete')
+        console.log(e, 'handleSearchComplete')
         this.lushupath = res.getPlan(0).getRoute(0).getPath()
       },
       _reset() {
         this.lushuplay = false
       },
       _updatepoints(e) {
-        dgiotlog.log(e)
+        console.log(e)
         this.linepoints = e.target.cornerPoints
       },
       _updatePolylinePath(e) {
-        dgiotlog.log(e)
+        console.log(e)
         this.polylinePath = e.target.getPath()
       },
       _updatePolygonPath(e) {

@@ -55,11 +55,14 @@
     },
     mounted() {
       if (this.$route.query.viewid) this.view(this.$route.query.viewid)
+      this.$dgiotBus.$off('busUpdata')
       this.$dgiotBus.$on('busUpdata', () => {
         this.updataTopo()
       })
-      // this.$dgiotBus.$off(this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'))
-      this.$dgiotBus.$on(
+      this.$baseEventBus.$off(
+        this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing')
+      )
+      this.$baseEventBus.$on(
         this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'),
         (args) => {
           console.log(args)
@@ -307,7 +310,22 @@
             shapeid: args.id.slice(11),
           }
           this.shapeid = args.id
-          const { data } = await get_konva_thing(params)
+          const {
+            data,
+            code = 200,
+            message = '',
+            error = '',
+          } = await get_konva_thing(params)
+          if (code == 204 || error) {
+            this.$baseMessage(
+              message || error,
+              'error',
+              false,
+              'vab-hey-message-error'
+            )
+            loading.close()
+            return
+          }
           const { konvathing, nobound } = data
           console.log(konvathing, 'konvathing')
           console.log(nobound, 'nobound')

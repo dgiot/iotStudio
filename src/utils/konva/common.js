@@ -19,7 +19,7 @@ function createThing(thing, saleInfo, randomXy) {
  */
 function thingEVent(type, event, node) {
   node.on(`${event}`, (e) => {
-    console.warn(e)
+    console.log(type, e, event, node)
     if (type == 'thing') {
       return topoLable.on(node)
     }

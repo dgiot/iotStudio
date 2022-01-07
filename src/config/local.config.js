@@ -27,6 +27,7 @@ let systemStatic = {
     'vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
     'mqttws31.js',
     'vue-router.min.js',
+    'vuedraggable.umd.min.js',
     'vue-i18n.min.js',
     'echarts.min.js',
     'echarts-amap.min.js',
@@ -58,12 +59,10 @@ let systemStatic = {
     'resize-observer-polyfill.js',
     'vue-aliplayer-v2.js',
     'Sortable.min.js',
-    'vuedraggable.umd.min.js',
     'vue-flv-player.umd.min.js',
     'md5.min.js',
     'codemirror.js',
     'vue-codemirror.js',
-    'vuedraggable.umd.min.js',
     'vue-multipane.js',
     'bcryptjs.js',
     'macarons.js',
@@ -92,12 +91,6 @@ let runTimeStatic = {
     'json-lint.js',
     'vditor.js',
     'aliplayer-min.js',
-    // monaco 编辑器相关
-    'monaco/css.worker.js',
-    'monaco/editor.worker.js',
-    'monaco/html.worker.js',
-    'monaco/json.worker.js',
-    'monaco/ts.worker.js',
   ],
 }
 if (process.env.NODE_ENV !== 'development') {

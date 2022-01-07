@@ -83,16 +83,15 @@
   import requiremodule from '@/utils/file/requiremodule'
   import { mapGetters, mapMutations } from 'vuex'
   import { _getTopo } from '@/api/Topo'
-  import { queryProduct } from '@/api/Product'
-  import canvas from '@/utils/konva/core/canvas'
-  import { handleActivePath } from '@/utils/router/routes'
-
+  import { putProduct, queryProduct } from '@/api/Product'
+  import { putView, getView } from '@/api/View'
   export default {
     components: {
       ...requiremodule(require.context('./components', true, /\.vue$/)),
     },
     data() {
       return {
+        viewInfo: {},
         driver: null,
         Stage: {},
         router: '',
@@ -149,6 +148,12 @@
       },
     },
     mounted() {
+      this.$dgiotBus.$off('_busUpdata')
+      this.$dgiotBus.$on('_busUpdata', async () => {
+        if (this.viewInfo.objectId) {
+          await this._updataTopo(this.viewInfo.objectId)
+        }
+      })
       this.driver = new this.$Driver({
         className: 'vue-admin-beautiful-wrapper', // className to wrap driver.js popover
         animate: true, // Animate while changing highlighted element
@@ -223,6 +228,20 @@
         this.driver.start()
       },
       saveKonvaitem() {},
+      async _updataTopo(objectId) {
+        try {
+          const res = await putView(objectId, {
+            data: _.merge(
+              {
+                konva: { Stage: JSON.parse(canvas.stage.toJSON()) },
+              },
+              this.viewInfo.data
+            ),
+          })
+        } catch (e) {
+          console.log(e)
+        }
+      },
       async handleMqtt() {
         let _this = this
         if (_this.$route.query.type == 'device') {
@@ -273,8 +292,14 @@
             //
             console.log(
               'topo info msg 请求数据有组态 就设置这个组态为请求回来的组态',
-              data.Stage
+              data.Stage,
+              data.viewid
             )
+            if (data.viewid) {
+              const res = await getView(data.viewid)
+              this.viewInfo = res
+            }
+            console.error(this.viewInfo)
             await _this.initKonva({
               data: data.Stage,
               id: 'kevCurrent',

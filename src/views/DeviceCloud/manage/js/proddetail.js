@@ -2207,6 +2207,8 @@ export default {
               message: '添加成功',
             })
             this.schemadialogVisible = false
+            // 手动更新完物模型后，再去查询一下当前页面的物模型
+            this.getProDetail()
           }
         })
         .catch((e) => {

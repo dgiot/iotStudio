@@ -48,7 +48,9 @@ const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const smp = new SpeedMeasurePlugin()
-const productionGzipExtensions = ['html', 'js', 'css', 'svg']
+// const productionGzipExtensions = ['html', 'js', 'css', 'svg']
+const productionGzipExtensions =
+  /\.(js|css|json|txt|html|ico|svg|ttf|woff|png|gif|woff|woff2|woff3)(\?.*)?$/i
 process.env.VUE_APP_TITLE = title
 process.env.VUE_APP_AUTHOR = author
 process.env.VUE_APP_UPDATE_TIME = dateTime
@@ -65,7 +67,10 @@ const staticUrl = process.env.CDN_URL
   : '/assets/'
 
 function getChainWebpack(config) {
+  config.plugins.delete('preload')
   config.plugins.delete('prefetch')
+  config.plugins.delete('preload-index')
+  config.plugins.delete('prefetch-index')
   // config.plugin('monaco').use(new MonacoWebpackPlugin())
   config.plugin('html').tap((args) => {
     var _staticUrl = localUrl
@@ -150,11 +155,16 @@ function getChainWebpack(config) {
         {
           filename: '[path][base].gz[query]', // 一个 {Function} (asset) => asset 函数，接收原资源名（通过 asset 选项）返回新资源名
           algorithm: 'gzip', // 可以是 (buffer, cb) => cb(buffer) 或者是使用 zlib 里面的算法的 {String}
-          test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'), //匹配文件名
-          threshold: 10240, //对10K以上的数据进行压缩
+          // test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'), //匹配文件名
+          test: productionGzipExtensions,
+          threshold: 2048, //对1K以上的数据进行压缩
           minRatio: 0.8, // 只有压缩率比这个值小的资源才会被处理
           // deleteOriginalAssets: true, //是否删除源文件
         },
+        new Webpack.optimize.LimitChunkCountPlugin({
+          maxChunks: 5,
+          minChunkSize: 100,
+        }),
       ])
     }
     if (build7z) {

@@ -200,6 +200,7 @@
       },
       saveTopo() {
         this.$dgiotBus.$emit('busUpdata')
+        this.$dgiotBus.$emit('_busUpdata')
       },
       eyeTopo() {
         this.infoVisible = !this.infoVisible

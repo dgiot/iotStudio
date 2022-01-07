@@ -18,7 +18,6 @@ const topoLable = {
         node: args,
       },
     }
-    console.log('我是取证控件', params)
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   on(args) {
@@ -30,7 +29,10 @@ const topoLable = {
         text: args.findOne('Text').getAttr('text'),
       },
     }
-    // console.log(params,Vue.prototype.$dgiotBus.emit(params.busTopicKey,params.msg))
+    // console.log(
+    //   params,
+    //   Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
+    // )
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   contextMenu(args) {

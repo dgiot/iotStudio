@@ -10,11 +10,12 @@
           <info :devicedetail="deviceInfo" />
           <el-card>
             <vab-baidu-map
-              :mapCenter="mapCenter"
-              :bmLabel="true"
+              ref="map"
+              :bmLabel="bmLabel"
               :label="mapLabel"
               :navShow="true"
               :scaleShow="true"
+              :mapCenter="mapLabel.position"
             />
           </el-card>
         </el-tab-pane>
@@ -658,9 +659,8 @@
         >
           <Instruct :devices-id="deviceid" :product-id="productid" />
         </el-tab-pane>
-        <el-tab-pane :label="$translateTitle('device.trace')" name="task">
+        <el-tab-pane   v-show="activeName == 'task'" :label="$translateTitle('device.trace')" name="task">
           <scene-log
-            v-show="activeName == 'task'"
             ref="SceneLog"
             :device-info="deviceInfo"
             :name="activeName"

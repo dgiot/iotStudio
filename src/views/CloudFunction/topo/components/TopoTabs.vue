@@ -46,59 +46,59 @@
         <!--        </el-button>-->
         <Evidence />
       </a-collapse-panel>
-      <a-collapse-panel key="4" :header="$translateTitle('topo.image')">
-        <div>
-          <el-collapse v-model="activeNames" accordion>
-            <el-collapse-item name="icon" title="iconfont">
-              <el-row :gutter="20">
-                <el-col
-                  v-for="(item, index) in iconfont.glyphs"
-                  v-show="index <= 11"
-                  :key="item.icon_id"
-                  :span="24"
-                >
-                  <i
-                    v-svg-drag="{ callback: coordinate }"
-                    @mousedown="moveSvg(item)"
-                  >
-                    <VabIconfont
-                      :name="item.font_class"
-                      :title="item.name"
-                      type="svg"
-                    />
-                  </i>
-                </el-col>
-              </el-row>
-            </el-collapse-item>
-            <el-collapse-item name="image" title="图标">
-              <el-row :gutter="20">
-                <el-col :span="24">
-                  <vab-query-form>
-                    <vab-query-form-top-panel>
-                      <el-form
-                        :inline="true"
-                        label-width="0"
-                        @submit.native.prevent
-                      >
-                        <el-form-item label="">
-                          <el-input v-model="queryForm.title" size="mini">
-                            <el-button
-                              slot="prepend"
-                              icon="el-icon-upload"
-                              type="success"
-                              @click="uploadCkick('img')"
-                            />
-                          </el-input>
-                        </el-form-item>
-                      </el-form>
-                    </vab-query-form-top-panel>
-                  </vab-query-form>
-                </el-col>
-              </el-row>
-            </el-collapse-item>
-          </el-collapse>
-        </div>
-      </a-collapse-panel>
+      <!--      <a-collapse-panel key="4" :header="$translateTitle('topo.image')">-->
+      <!--        <div>-->
+      <!--          <el-collapse v-model="activeNames" accordion>-->
+      <!--            <el-collapse-item name="icon" title="iconfont">-->
+      <!--              <el-row :gutter="20">-->
+      <!--                <el-col-->
+      <!--                  v-for="(item, index) in iconfont.glyphs"-->
+      <!--                  v-show="index <= 11"-->
+      <!--                  :key="item.icon_id"-->
+      <!--                  :span="24"-->
+      <!--                >-->
+      <!--                  <i-->
+      <!--                    v-svg-drag="{ callback: coordinate }"-->
+      <!--                    @mousedown="moveSvg(item)"-->
+      <!--                  >-->
+      <!--                    <VabIconfont-->
+      <!--                      :name="item.font_class"-->
+      <!--                      :title="item.name"-->
+      <!--                      type="svg"-->
+      <!--                    />-->
+      <!--                  </i>-->
+      <!--                </el-col>-->
+      <!--              </el-row>-->
+      <!--            </el-collapse-item>-->
+      <!--            <el-collapse-item name="image" title="图标">-->
+      <!--              <el-row :gutter="20">-->
+      <!--                <el-col :span="24">-->
+      <!--                  <vab-query-form>-->
+      <!--                    <vab-query-form-top-panel>-->
+      <!--                      <el-form-->
+      <!--                        :inline="true"-->
+      <!--                        label-width="0"-->
+      <!--                        @submit.native.prevent-->
+      <!--                      >-->
+      <!--                        <el-form-item label="">-->
+      <!--                          <el-input v-model="queryForm.title" size="mini">-->
+      <!--                            <el-button-->
+      <!--                              slot="prepend"-->
+      <!--                              icon="el-icon-upload"-->
+      <!--                              type="success"-->
+      <!--                              @click="uploadCkick('img')"-->
+      <!--                            />-->
+      <!--                          </el-input>-->
+      <!--                        </el-form-item>-->
+      <!--                      </el-form>-->
+      <!--                    </vab-query-form-top-panel>-->
+      <!--                  </vab-query-form>-->
+      <!--                </el-col>-->
+      <!--              </el-row>-->
+      <!--            </el-collapse-item>-->
+      <!--          </el-collapse>-->
+      <!--        </div>-->
+      <!--      </a-collapse-panel>-->
     </a-collapse>
   </div>
 </template>
