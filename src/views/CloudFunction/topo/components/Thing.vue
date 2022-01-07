@@ -69,7 +69,7 @@
       this.$baseEventBus.$on(
         this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'),
         (args) => {
-          console.log(args)
+          console.log('aaaaa', args)
           if (args) {
             // 绑定物模型
             if (args.type == 'bind_topo') {
@@ -138,7 +138,7 @@
             }
             edit_konva_thing(params).then((res) => {
               console.log(res)
-              this.handleCloseSub()
+              // this.handleCloseSub()
             })
             this.wmxhandleClose()
           } else {
@@ -197,6 +197,7 @@
           productid: args.id.split('_')[0],
           text: args.text,
         }
+        console.log('args', args)
         try {
           // const { thing={},config } = await getProduct(args.id.split('_')[0])
           let params = {

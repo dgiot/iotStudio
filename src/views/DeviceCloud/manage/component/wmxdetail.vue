@@ -1313,6 +1313,12 @@
         dgiotlog.log('this.sizeFormaaa', that.$refs.sizeForm.model.name)
         dgiotlog.log('item', item)
         var obj = {}
+        var daslist = []
+        item.dataType.das.forEach((val) => {
+          daslist.push({
+            addr: val,
+          })
+        })
         // 提交之前需要先判断类型
         if (
           ['float', 'double', 'int', 'long'].indexOf(item.dataType.type) != -1
@@ -1323,6 +1329,7 @@
             ico: item.ico,
             // item.dataType
             type: item.dataType.type,
+            daslist: daslist,
             endnumber: that.$objGet(item, 'dataType.specs.max'),
             startnumber: that.$objGet(item, 'dataType.specs.min'),
             step: that.$objGet(item, 'dataType.specs.step'),
@@ -1361,6 +1368,7 @@
             devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
+            daslist: daslist,
             imagevalue: item.dataType.imagevalue,
             true: item.dataType.specs[1],
             false: item.dataType.specs[0],
@@ -1396,6 +1404,7 @@
             devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
+            daslist: daslist,
             true: item.dataType.specs[1],
             false: item.dataType.specs[0],
             // item.dataForm.
@@ -1437,6 +1446,7 @@
             devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
+            daslist: daslist,
             specs: item.dataType.specs,
             struct: structArray,
             startnumber: that.$objGet(item, 'dataType.specs.min'),
@@ -1470,6 +1480,7 @@
             devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
+            daslist: daslist,
             struct: item.dataType.specs,
             startnumber: that.$objGet(item, 'dataType.specs.min'),
             step: that.$objGet(item, 'dataType.specs.step'),
@@ -1502,6 +1513,7 @@
             devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
+            daslist: daslist,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
             control: item.dataForm == undefined ? '' : item.dataForm.control,
@@ -1534,6 +1546,7 @@
             devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
+            daslist: daslist,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
             control: item.dataForm == undefined ? '' : item.dataForm.control,
@@ -1565,6 +1578,7 @@
             devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
+            daslist: daslist,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
             control: item.dataForm == undefined ? '' : item.dataForm.control,
@@ -1596,6 +1610,7 @@
             devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
+            daslist: daslist,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
             control: item.dataForm == undefined ? '' : item.dataForm.control,
@@ -1627,6 +1642,7 @@
             devicetype: item.devicetype,
             ico: item.ico,
             type: item.dataType.type,
+            daslist: daslist,
             gpstype: item.dataType.gpstype,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
