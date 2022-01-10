@@ -1647,6 +1647,7 @@
         language: 'settings/language',
         _product: 'user/_Product',
         _role: 'acl/role',
+        currentDepartment: 'user/currentDepartment',
       }),
     },
     watch: {
@@ -2754,7 +2755,7 @@
         getProduct(objectId).then((res) => {
           const { config = { basedate: {} }, ACL } = res
           this.productDetail = res
-          this.addACL = ACL
+          // this.addACL = ACL
           if (config.basedate && config.basedate.params.length > 0) {
             this.arrlist = config.basedate.params
             if (flag == 'add') {
@@ -2879,6 +2880,12 @@
                   //   read: true,
                   //   write: true,
                   // }
+                  const aclKey = 'role' + ':' + this.currentDepartment.name
+                  const setAcl = {}
+                  setAcl[aclKey] = {
+                    read: true,
+                    write: true,
+                  }
                   var devicesParmas = {
                     product: {
                       __type: 'Pointer',
@@ -2887,7 +2894,7 @@
                     },
                     status: 'OFFLINE',
                     isEnable: false,
-                    ACL: this.addACL,
+                    ACL: setAcl,
                     name: this.deviceform.name,
                     devaddr: this.deviceform.devaddr,
                     objectId: this.deviceform.devaddr,
