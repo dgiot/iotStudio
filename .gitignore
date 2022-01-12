@@ -44,6 +44,6 @@ public/assets/js/*
 public/assets/css/*
 swagger.json
 lite.sh
-cli.config.js
+/cli.config.js
 /lite
 /full
