@@ -10,7 +10,7 @@
 module.exports = {
   ogConfig: {
     'og:site_name': 'dgiot-物联网平台',
-    'og:title': '物联网开发平台',
+    'og:title': 'dgiot-物联网开发平台',
     'og:description': '提供物联网垂直领域应用使能平台及解决方案',
     'og:url': 'https://prod.iotn2n.com',
     'og:type': 'article',

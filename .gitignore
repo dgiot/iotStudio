@@ -43,3 +43,7 @@ src/config/ignore
 public/assets/js/*
 public/assets/css/*
 swagger.json
+lite.sh
+cli.config.js
+/lite
+/full

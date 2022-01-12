@@ -43,7 +43,6 @@ const FileManagerPlugin = require('filemanager-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
@@ -71,7 +70,6 @@ function getChainWebpack(config) {
   config.plugins.delete('prefetch')
   config.plugins.delete('preload-index')
   config.plugins.delete('prefetch-index')
-  // config.plugin('monaco').use(new MonacoWebpackPlugin())
   config.plugin('html').tap((args) => {
     var _staticUrl = localUrl
     // if (useCdn || process.env.NODE_ENV !== 'development') {
@@ -265,9 +263,6 @@ const configure = {
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
-    new MonacoWebpackPlugin({
-      filename: 'output/assets/js/monaco/[name].worker.js',
-    }),
     // new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),
     new Webpack.ProvidePlugin(providePlugin),
