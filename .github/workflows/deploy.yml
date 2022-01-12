@@ -28,8 +28,8 @@ jobs:
           pnpm config set registry https://registry.npmmirror.com
           pnpm i --frozen-lockfile
           pnpm build
-          cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
-          cd dist
+          cp -r README.md README-CN.md CHANGELOG.md LICENSE lite
+          cd lite
           wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
           tar xf dgiot_dashboard.tar.gz
           wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz
@@ -43,11 +43,11 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: dist
+          FOLDER: lite
       - name: Deploy to Netlify  🚀
         uses: nwtgck/actions-netlify@v1.2
         with:
-          publish-dir: './dist'
+          publish-dir: './lite'
           production-branch: master
           github-token: ${{ secrets.GIT_TOKEN }}
           deploy-message: "Deploy from GitHub Actions"
@@ -62,7 +62,7 @@ jobs:
         uses: dswistowski/surge-sh-action@v1
         with:
           domain: 'dgiot-dashboard.surge.sh'
-          project: './dist'
+          project: './lite'
           login: ${{ secrets.surge_login }}
           token: ${{ secrets.surge_token }}
       - name: Deploy to vercel 🚀
@@ -73,7 +73,7 @@ jobs:
           vercel-args: '--prod' #Optional
           vercel-org-id: ${{ secrets.ORG_ID}}
           vercel-project-id: ${{ secrets.PROJECT_ID}}
-          working-directory: ./dist
+          working-directory: ./lite
       - name: Sync dgiot-dashboard Pages  🚀
         uses: yanglbme/gitee-pages-action@main
         with:
@@ -100,7 +100,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dgiot-dashboard
-          path: dist
+          path: lite
       - name: lighthouse 🚀
         uses: treosh/lighthouse-ci-action@v2
         with:
