@@ -62,6 +62,8 @@ specifiers:
   logrocket-vuex: ^0.0.3
   mammoth: ^1.4.19
   mini-css-extract-plugin: 2.4.4
+  monaco-editor: 0.30.1
+  monaco-editor-webpack-plugin: 6.0.0
   node-cmd: ^5.0.0
   npm-run-all: ^4.1.5
   plop: ^2.7.6
@@ -128,6 +130,7 @@ dependencies:
   logrocket: 2.1.3
   logrocket-vuex: 0.0.3
   mammoth: 1.4.19
+  monaco-editor-webpack-plugin: 6.0.0_e4146de625aad8e6c67af0b29262186e
   node-cmd: 5.0.0
   npm-run-all: 4.1.5
   plop: 2.7.6
@@ -175,6 +178,7 @@ devDependencies:
   lighthouse: 8.6.0
   lint-staged: 11.2.6
   mini-css-extract-plugin: 2.4.4_webpack@4.46.0
+  monaco-editor: 0.30.1
   prettier: 2.4.1
   pushstate-server: 3.1.0
   raw-loader: 4.0.2_webpack@4.46.0
@@ -2920,6 +2924,7 @@ packages:
       mobx-react: 6.3.1_e98576d7b318dc515d875aefe88d0b88
       mobx-state-tree: 3.17.3_mobx@4.15.7
       moment: 2.29.1
+      monaco-editor: 0.30.1
       mpegts.js: 1.6.10
       papaparse: 5.3.1
       prop-types: 15.8.1
@@ -9501,7 +9506,22 @@ packages:
   /moment/2.29.1:
     resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==, tarball: moment/download/moment-2.29.1.tgz}
     dev: false
- /move-concurrently/1.0.1:
+
+  /monaco-editor-webpack-plugin/6.0.0_e4146de625aad8e6c67af0b29262186e:
+    resolution: {integrity: sha1-YolWzhhRr6Kl9siNDsuyTppESJg=, tarball: monaco-editor-webpack-plugin/download/monaco-editor-webpack-plugin-6.0.0.tgz}
+    peerDependencies:
+      monaco-editor: 0.30.x
+      webpack: ^4.5.0 || 5.x
+    dependencies:
+      loader-utils: 2.0.2
+      monaco-editor: 0.30.1
+      webpack: 4.46.0
+    dev: false
+
+  /monaco-editor/0.30.1:
+    resolution: {integrity: sha512-B/y4+b2O5G2gjuxIFtCE2EkM17R2NM7/3F8x0qcPsqy4V83bitJTIO4TIeZpYlzu/xy6INiY/+84BEm6+7Cmzg==, tarball: monaco-editor/download/monaco-editor-0.30.1.tgz}
+
+  /move-concurrently/1.0.1:
     resolution: {integrity: sha1-viwAX9oy4LKa8fBdfEszIUxwH5I=, tarball: move-concurrently/download/move-concurrently-1.0.1.tgz}
     dependencies:
       aproba: 1.2.0

@@ -12,6 +12,7 @@
     "test": "vue-cli-service lint --fix",
     "dgiot:install": "start ./pnpm.sh",
     "build": "vue-cli-service build --report",
+    "report": "run-s monaco",
     "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
     "lint": "eslint --ext .js --fix&&vue-cli-service lint",
     "lint:fix": "vue-cli-service lint --fix",
@@ -45,9 +46,10 @@
     "lighthouse": "node utils/lighthouse.js",
     "prod": "lighthouse https://dev.iotn2n.com/",
     "template": "plop",
+    "monaco": "rimraf swagger.json dist/output/assets/js/monaco",
     "config:delete": "rimraf vue.config.js package.json pnpm-lock.yaml",
-    "config:all": "config:delete && cp -r config/all",
-    "config:lite": "config:delete && cp -r config/lite"
+    "config:all": "node config:delete && cp -r config/all",
+    "config:lite": "node config:delete && cp -r config/lite"
   },
   "repository": {
     "type": "git",
@@ -85,6 +87,7 @@
     "logrocket": "^2.1.3",
     "logrocket-vuex": "^0.0.3",
     "mammoth": "^1.4.19",
+    "monaco-editor-webpack-plugin": "6.0.0",
     "node-cmd": "^5.0.0",
     "npm-run-all": "^4.1.5",
     "plop": "^2.7.6",
@@ -132,6 +135,7 @@
     "lighthouse": "8.6.0",
     "lint-staged": "11.2.6",
     "mini-css-extract-plugin": "2.4.4",
+    "monaco-editor": "0.30.1",
     "prettier": "2.4.1",
     "pushstate-server": "3.1.0",
     "raw-loader": "4.0.2",

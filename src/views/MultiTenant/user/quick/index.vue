@@ -238,7 +238,6 @@
       })
     },
     created() {
-      // quick 快速登陆时，将浏览器地址栏的登陆信息写入
       if (this.$route.query.username) {
         const { username, password } = this.$route.query
         this.form = {
