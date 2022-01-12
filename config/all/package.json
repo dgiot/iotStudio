@@ -48,8 +48,8 @@
     "template": "plop",
     "monaco": "rimraf swagger.json dist/output/assets/js/monaco",
     "config:delete": "rimraf vue.config.js package.json pnpm-lock.yaml",
-    "config:all": "node config:delete && cp -r config/all",
-    "config:lite": "node config:delete && cp -r config/lite"
+    "config:all": "config:delete && cp -r config/all",
+    "config:lite": "config:delete && cp -r config/lite"
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,13 @@
-## [4.4.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.5...v4.4.6) (2022-01-06)
+## [4.4.5](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.6...v4.4.5) (2022-01-12)
+
+
+### Bug Fixes
+
+* **src/views/devicecloud/manage/home_index.vue:** create a device permission issue ([5bafc32](https://github.com/dgiot/dgiot-dashboard/commit/5bafc325147aa6e8b6892658e3af81e4237c2128))
+
+
+
+## [4.4.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.5...v4.4.6) (2022-01-07)
 
 
 ### Bug Fixes
@@ -10,14 +19,15 @@
 * small bug ([5341dbc](https://github.com/dgiot/dgiot-dashboard/commit/5341dbc3dcd9db795e0c6fcb238fd05cf51bb217))
 * **src/dgiot/components/vabnav/index.vue:** loadscript ([4bc0bf8](https://github.com/dgiot/dgiot-dashboard/commit/4bc0bf83e159f2f3670561a78827f4db2b738b12))
 * **src/store/modules/user.js:** fix the problem of blank login for the first time ([804ad15](https://github.com/dgiot/dgiot-dashboard/commit/804ad1589c671c1c8fb39b3ee76b0da488164c7b))
-* **src/views/cloudfunction/topo/components/thing.vue:** boundary check throws an error ([9f33f02](https://github.com/dgiot/dgiot-dashboard/commit/9f33f02785b1388451427e1f97b049bf812bbd55))
+* **src/views/cloudfunction/topo/components/thing.vue:** bind_topo ([3f9e23b](https://github.com/dgiot/dgiot-dashboard/commit/3f9e23bf8fbca5b01d25a949b9c904e7d2aa1482))
 * **src/views/cloudtest/js/task.js:** drawxnqxPath ([3b5697c](https://github.com/dgiot/dgiot-dashboard/commit/3b5697c35c8ccbe823e40b171279fb702771c098))
 * **vue.config.js:** cDN_URL ([abc0375](https://github.com/dgiot/dgiot-dashboard/commit/abc0375c3e56011f6df970ed86f4a11a94d9ba55))
+* wmx_topo ([b29a1e8](https://github.com/dgiot/dgiot-dashboard/commit/b29a1e89e3afa1f536bf0accfd63f157ae15d401))
 
 
 ### Features
 
-* **src/views/cloudfunction/topo/components/thing.vue:** thing ([a20c13d](https://github.com/dgiot/dgiot-dashboard/commit/a20c13d3d087c3845503cf56d13290cc324bb5d4))
+* **package.json:** version ([4b54572](https://github.com/dgiot/dgiot-dashboard/commit/4b5457294512533e3171b19eb3e88ffd4ce33dbf))
 
 
 ### Performance Improvements

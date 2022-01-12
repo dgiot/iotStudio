@@ -156,7 +156,7 @@
       }
       return {
         interval: null,
-        isShow: window.name == 'dgiot_iframe' ? false : true,
+        isShow: false,
         locationPath: location.href.split('/#')[0],
         info: {
           empty: this.$translateTitle('home.Username can not be empty'),
@@ -238,7 +238,9 @@
       })
     },
     created() {
-      this.isShow = window.name == 'dgiot_iframe' ? false : true
+      if (this.$route.query.id_token) {
+        this.jwtlogin(this.$route.query.id_token)
+      }
       window.addEventListener('message', this.iframeLogin)
     },
     methods: {
@@ -356,7 +358,7 @@
                   expires: 60 * 1000 * 30,
                 }
               )
-              await this.login({ username: 'feiiplat', password: 'feiiplat' })
+              // await this.login({ username: 'feiiplat', password: 'feiiplat' })
               await this.goHome()
             }
           })
