@@ -27,7 +27,7 @@
   <a href='https://gitee.com/dgiiot/dgiot-dashboard/stargazers'><img src='https://gitee.com/dgiiot/dgiot-dashboard/badge/star.svg?theme=dark' alt='star'></img></a>
   <a href='https://gitee.com/dgiiot/dgiot-dashboard/stargazers'><img src='https://gitee.com/dgiiot/dgiot-dashboard/widgets/widget_card.svg?colors=ffffff,1e252b,323d47,455059,d7deea,99a0ae' alt='star'></img></a>
 <p>
-
+  
   ## DG-IoT简介
 DG-IoT是国内首款轻量级开源工业物联网平台，我们致力于提供五类物联网解决方案：
 + **国企/研究院**：平台代码开源，无版权产权困扰，国产无“卡脖”之忧
@@ -46,7 +46,7 @@ DG-IoT是国内首款轻量级开源工业物联网平台，我们致力于提�
 
 dgiot 前端框架
 
-简体中文 | [English](./README.md)
+
 
 ## 相关源码地址项目源码
 
@@ -107,15 +107,4 @@ pnpm dev
 yarn build
 ```
 
-## [线上预览](https://prod.iotn2n.com?from=git)
 
-### 关于我们
-
-| 联系方式       | 地址                                                                                      |
-| -------------- | ----------------------------------------------------------------------------------------- |
-| github         | [https://github.com/dgiot](https://github.com/dgiot?from=git)                             |
-| gitee          | [https://gitee.com/dgiot](https://gitee.com/dgiiot?from=git)                              |
-| 官网           | [https://www.iotn2n.com](https://www.iotn2n.com?from=git)                                 |
-| 博客           | [https://tech.iotn2n.com](https://tech.iotn2n.com?from=git)                               |
-| 物联网接入平台 | [https://dgiot.iotn2n.com](https://prod.iotn2n.com?from=git)                              |
-| 公众号         | ![qrcode.png](http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/wechat/qrcode.png) |
