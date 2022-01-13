@@ -206,7 +206,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <div class="elpagination" style="margin-top: 20px">
+          <!-- <div class="elpagination" style="margin-top: 20px">
             <el-pagination
               layout="total, sizes, prev, pager, next, jumper"
               :page-size="length"
@@ -215,7 +215,7 @@
               @current-change="productCurrentChange"
               @size-change="productSizeChange"
             />
-          </div>
+          </div> -->
         </el-col>
         <el-col :lg="15" :md="13" :sm="12" :xl="18" :xs="16">
           <profile-descriptions
