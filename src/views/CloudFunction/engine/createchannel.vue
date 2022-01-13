@@ -1,6 +1,7 @@
 <template>
   <div class="createResourcechannel">
     <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+
     <el-form
       ref="addchannel"
       label-width="auto"
@@ -12,142 +13,27 @@
         <el-button @click="handleClose">
           {{ $translateTitle('developer.back') }}
         </el-button>
-        <el-button type="primary" @click.native="addchannelForm('addchannel')">
+        <el-button
+          v-show="active == 2"
+          type="primary"
+          @click.native="addchannelForm('addchannel')"
+        >
           {{ $translateTitle('developer.create') }}
         </el-button>
+        <el-button v-show="active == 2" type="info" @click="active = 1">
+          上一步
+        </el-button>
       </div>
+
       <el-row>
-        <el-form-item label="通道类型" prop="region">
-          <el-select
-            v-model="addchannel.region"
-            placeholder="通道类型"
-            style="display: block"
-            @change="removeauto"
-          >
-            <el-option
-              v-for="(item, index) in channelregion"
-              :key="index"
-              :label="item.title.zh"
-              style="display: block"
-              :value="item.cType"
-            />
-          </el-select>
-        </el-form-item>
-        <el-col :span="12">
-          <el-form-item
-            :label="$translateTitle('developer.channelname')"
-            prop="name"
-          >
-            <el-input
-              v-model="addchannel.name"
-              autocomplete="off"
-              :placeholder="$translateTitle('developer.channelname')"
-              style="float: left"
-            />
-          </el-form-item>
+        <el-col :offset="1" :span="22">
+          <el-steps :active="active" finish-status="success">
+            <el-step title="通道类型" />
+            <el-step title="通道配置" />
+          </el-steps>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="所属应用" prop="applicationtText">
-            <el-input
-              v-model="addchannel.applicationtText"
-              readonly
-              @focus="showTree = !showTree"
-            />
-            <div v-if="showTree" class="device-tree">
-              <el-tree
-                :data="allApps"
-                default-expand-all
-                :props="defaultProps"
-                @node-click="handleNodeClick"
-              />
-            </div>
-          </el-form-item>
-        </el-col>
-        <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
-          <el-form-item
-            v-show="item.showname != 'ico'"
-            :label="item.title.zh"
-            :prop="item.showname"
-            :required="item.required"
-          >
-            <el-tooltip effect="dark" placement="right-start">
-              <div slot="content">
-                {{ item.description.zh }}
-              </div>
-              <i class="el-icon-question" style="float: left" />
-            </el-tooltip>
-            <el-input
-              v-if="item.type == 'string'"
-              v-model="addchannel[item.showname]"
-              style="width: 98%"
-            />
-            <el-input
-              v-else-if="item.type == 'integer'"
-              v-model.number="addchannel[item.showname]"
-              style="width: 98%"
-            />
-            <el-image
-              v-else-if="item.showname == 'ico'"
-              style="display: none; width: 98%"
-            />
-            <el-select
-              v-else-if="item.type == 'boolean'"
-              v-model="addchannel[item.showname]"
-              class="notauto"
-              readonly
-              style="width: 98%"
-            >
-              <el-option label="是" :value="true" />
-              <el-option label="否" :value="false" />
-            </el-select>
-            <el-select
-              v-else-if="item.type == 'enum'"
-              v-model="addchannel[item.showname]"
-              style="width: 98%"
-            >
-              <el-option
-                v-for="(item1, index1) in item.enum"
-                :key="index1"
-                :label="item.enum[index1]"
-                :value="item.enum[index1]"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <!---------------------统一的配置描述---------------------------->
-        <el-col :span="24">
-          <el-form-item :label="$translateTitle('developer.describe')">
-            <el-input
-              v-model="addchannel.desc"
-              autocomplete="off"
-              :placeholder="$translateTitle('developer.describe')"
-              :rows="3"
-              type="textarea"
-            />
-          </el-form-item>
-        </el-col>
-        <!-- 低代码-->
-        <el-col v-if="viewShow" :span="24">
-          <el-form-item :label="$translateTitle('product.view')">
-            <!--            <el-input-->
-            <!--              v-model="addchannel.data"-->
-            <!--              autocomplete="off"-->
-            <!--              :placeholder="$translateTitle('product.view')"-->
-            <!--              :rows="3"-->
-            <!--              type="textarea"-->
-            <!--            />-->
-            <div style="height: 30vh; overflow: auto">
-              <vab-monaco-plus
-                ref="monacoCode"
-                :codes="addchannel.codes"
-                :language="'json'"
-                :read-only="false"
-                :theme="'vs-dark'"
-              />
-            </div>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
+
+        <el-col v-show="active == 1" :span="24">
           <el-row
             :gutter="24"
             style="
@@ -216,7 +102,14 @@
                             {{ item.cType }}
                           </el-tag>
                         </p>
-                        <p :title="item.title.zh">
+                        <p
+                          style="
+                            font-size: 12px;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                          "
+                          :title="item.title.zh"
+                        >
                           {{ item.title.zh }}
                         </p>
                       </span>
@@ -226,6 +119,141 @@
               </el-card>
             </el-col>
           </el-row>
+        </el-col>
+        <el-form-item v-show="active == 2" label="通道类型" prop="region">
+          <el-select
+            v-model="addchannel.region"
+            placeholder="通道类型"
+            style="display: block"
+            @change="removeauto"
+          >
+            <el-option
+              v-for="(item, index) in channelregion"
+              :key="index"
+              :label="item.title.zh"
+              style="display: block"
+              :value="item.cType"
+            />
+          </el-select>
+        </el-form-item>
+        <el-col v-show="active == 2" :span="12">
+          <el-form-item
+            :label="$translateTitle('developer.channelname')"
+            prop="name"
+          >
+            <el-input
+              v-model="addchannel.name"
+              autocomplete="off"
+              :placeholder="$translateTitle('developer.channelname')"
+              style="float: left"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col v-show="active == 2" :span="12">
+          <el-form-item label="所属应用" prop="applicationtText">
+            <el-input
+              v-model="addchannel.applicationtText"
+              readonly
+              @focus="showTree = !showTree"
+            />
+            <div v-if="showTree" class="device-tree">
+              <el-tree
+                :data="allApps"
+                default-expand-all
+                :props="defaultProps"
+                @node-click="handleNodeClick"
+              />
+            </div>
+          </el-form-item>
+        </el-col>
+        <el-col
+          v-for="(item, index) in arrlist"
+          v-show="active == 2"
+          :key="index"
+          :span="12"
+        >
+          <el-form-item
+            v-show="item.showname != 'ico'"
+            :label="item.title.zh"
+            :prop="item.showname"
+            :required="item.required"
+          >
+            <el-tooltip effect="dark" placement="right-start">
+              <div slot="content">
+                {{ item.description.zh }}
+              </div>
+              <i class="el-icon-question" style="float: left" />
+            </el-tooltip>
+            <el-input
+              v-if="item.type == 'string'"
+              v-model="addchannel[item.showname]"
+              style="width: 98%"
+            />
+            <el-input
+              v-else-if="item.type == 'integer'"
+              v-model.number="addchannel[item.showname]"
+              style="width: 98%"
+            />
+            <el-image
+              v-else-if="item.showname == 'ico'"
+              style="display: none; width: 98%"
+            />
+            <el-select
+              v-else-if="item.type == 'boolean'"
+              v-model="addchannel[item.showname]"
+              class="notauto"
+              readonly
+              style="width: 98%"
+            >
+              <el-option label="是" :value="true" />
+              <el-option label="否" :value="false" />
+            </el-select>
+            <el-select
+              v-else-if="item.type == 'enum'"
+              v-model="addchannel[item.showname]"
+              style="width: 98%"
+            >
+              <el-option
+                v-for="(item1, index1) in item.enum"
+                :key="index1"
+                :label="item.enum[index1]"
+                :value="item.enum[index1]"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <!---------------------统一的配置描述---------------------------->
+        <el-col v-show="active == 2" :span="24">
+          <el-form-item :label="$translateTitle('developer.describe')">
+            <el-input
+              v-model="addchannel.desc"
+              autocomplete="off"
+              :placeholder="$translateTitle('developer.describe')"
+              :rows="3"
+              type="textarea"
+            />
+          </el-form-item>
+        </el-col>
+        <!-- 低代码-->
+        <el-col v-if="viewShow" v-show="active == 2" :span="24">
+          <el-form-item :label="$translateTitle('product.view')">
+            <!--            <el-input-->
+            <!--              v-model="addchannel.data"-->
+            <!--              autocomplete="off"-->
+            <!--              :placeholder="$translateTitle('product.view')"-->
+            <!--              :rows="3"-->
+            <!--              type="textarea"-->
+            <!--            />-->
+            <div style="height: 30vh; overflow: auto">
+              <vab-monaco-plus
+                ref="monacoCode"
+                :codes="addchannel.codes"
+                :language="'json'"
+                :read-only="false"
+                :theme="'vs-dark'"
+              />
+            </div>
+          </el-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -243,6 +271,7 @@
     components: {},
     data() {
       return {
+        active: 1,
         viewShow: false,
         channelregion: [],
         defaultProps: {
@@ -390,6 +419,7 @@
         return arr.sort(this.arrSort)
       },
       removeauto(val) {
+        this.active = 2
         this.viewShow = false
         console.log(val)
         var obj = {}
