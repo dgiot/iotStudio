@@ -2342,6 +2342,7 @@
         if (args.start == 0) {
           this.devicestart = 0
         }
+        delete this.queryPayload.productid
         try {
           const { results = [], count = 0 } = await querycompanyDevice(
             this.queryPayload,
