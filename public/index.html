@@ -20,6 +20,13 @@
     <!--  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
     <meta content="#ffffff" name="msapplication-TileColor" />
     <link
+      href="<%= BASE_URL %>assets/style/loading.css?random=<%= VUE_APP_UPDATE_TIME %>"
+      auth="<%= VUE_APP_AUTHOR %>"
+      rel="stylesheet"
+      time="<%= VUE_APP_UPDATE_TIME %>"
+      version="<%= VUE_APP_VERSION %>"
+    />
+    <link
       auth="<%= VUE_APP_AUTHOR %>"
       href="<%= BASE_URL %>manifest.json"
       rel="manifest"
@@ -88,14 +95,13 @@
       非常抱歉鉴于安全考量,您无法查看<%= VUE_APP_TITLE %>源代码
     </noscript>
     <div id="dgiot">
-      <div class="first-loading-wrp">
-        <div class="loading-wrp">
-          <span class="dot dot-spin">
-            <i></i>
-            <i></i>
-            <i></i>
-            <i></i>
-          </span>
+      <div id="loader-wrapper">
+        <div id="loader"></div>
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+        <div class="load_title">正在加载<%= VUE_APP_TITLE %>系统,请耐心等待...
+          <br>
+          <p>v<%= VUE_APP_VERSION %></p>
         </div>
       </div>
     </div>
