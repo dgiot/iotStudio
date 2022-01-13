@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022-01-13 09:57:28
+ *  Time: 2022-01-13 10:07:17
  */
 @charset "UTF-8";
 :root {
@@ -8809,6 +8809,7 @@ input[type=button].a-Button--block {
   border-top: none;
 }
 .a-Table--autoFillHeight > .a-Table-contentWrap > .a-Table-content table thead {
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1;
