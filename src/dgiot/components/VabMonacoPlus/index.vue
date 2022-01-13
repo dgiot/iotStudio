@@ -1,12 +1,15 @@
 <template>
   <div>
-    <div ref="container" class="monaco-editor"></div>
+    <div id="dgiot-monaco" ref="container" class="monaco-editor"></div>
   </div>
 </template>
 
 <script>
-  import * as monaco from 'monaco-editor'
-
+  // import * as monaco from 'monaco-editor'
+  import { setLocaleData } from 'monaco-editor-nls'
+  import zh_CN from 'monaco-editor-nls/locale/zh-hans'
+  setLocaleData(zh_CN)
+  const monaco = require('monaco-editor/esm/vs/editor/editor.api')
   export default {
     name: 'VabMonacoPlus',
     props: {
@@ -71,6 +74,8 @@
         theme: this.theme, // 编辑器主题：vs, hc-black, or vs-dark，更多选择详见官网
         editorOptions: this.editorOptions, // 同codes
       })
+      // 自动格式化代码
+      this.monacoEditor.getAction('editor.action.formatDocument').run()
     },
   }
 </script>

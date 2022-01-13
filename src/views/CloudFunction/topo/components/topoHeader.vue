@@ -95,13 +95,25 @@
           <!--            "-->
           <!--            @click="handFullscreen"-->
           <!--          />-->
-          <vab-help
-            src="https://tech.iotn2n.com/w/docs/details?id=6"
-            title="组态文档"
-            trigger="click"
-          />
+          <el-button
+            style="margin-left: 16px"
+            type="primary"
+            @click.native="topoJson"
+          >
+            组态数据
+          </el-button>
         </vab-query-form-right-panel>
       </vab-query-form>
+      <el-drawer append-to-body :visible.sync="drawerTopo" :with-header="false">
+        <vab-monaco-plus
+          ref="monacoCodeTopo"
+          :codes="codes"
+          :language="'json'"
+          :read-only="false"
+          style="margin-top: 26px"
+          :theme="'vs-dark'"
+        />
+      </el-drawer>
     </div>
   </div>
 </template>
@@ -137,6 +149,8 @@
     },
     data() {
       return {
+        codes: canvas.stage.toJSON(),
+        drawerTopo: false,
         konva_key: moment(new Date()).valueOf(),
         infoVisible: false,
         topic: '',
@@ -195,6 +209,18 @@
         setGraphColor: 'konva/setGraphColor',
         setDrawParams: 'konva/setDrawParams',
       }),
+      topoJson() {
+        this.codes = canvas.stage.toJSON()
+        this.drawerTopo = true
+        // 自动格式化代码
+        this.$nextTick(() => {
+          console.log(this.$refs.monacoCodeTopo.monacoEditor)
+          if (this.$refs.monacoCodeTopo.monacoEditor)
+            this.$refs.monacoCodeTopo.monacoEditor
+              .getAction('editor.action.formatDocument')
+              .run()
+        })
+      },
       ToggleView() {
         this.$baseEventBus.$emit('ToggleView')
       },

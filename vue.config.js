@@ -43,7 +43,8 @@ const FileManagerPlugin = require('filemanager-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
@@ -262,6 +263,20 @@ const configure = {
       '@': resolve('src'),
       '*': resolve(''),
     },
+  },
+  module: {
+    /**
+     * @description: 汉化 Monaco 右键菜单
+     * @doc: https://blog.csdn.net/m0_37986789/article/details/121135519
+     */
+    rules: [
+      {
+        test: /\.js/,
+        enforce: 'pre',
+        include: /node_modules[\\\/]monaco-editor[\\\/]esm/,
+        use: MonacoWebpackPlugin.loader,
+      },
+    ],
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
