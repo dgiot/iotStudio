@@ -11,7 +11,7 @@ fi
 
 if [ "$BRANCH" != "dev" ] && [ "$HEAD" != "dev" ]
 then
-  yarn build
+  pnpm build
 else
   echo "this script only runs in targeting dev's PR deploy preview, bye"
 fi
