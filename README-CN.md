@@ -49,7 +49,7 @@ dgiot 前端框架
 - 获取项目代码
 
 ```bash
-git clone https://github.com.cnpmjs.org/dgiot/dgiot-dashboard.git
+git clone -b master https://github.com.cnpmjs.org/dgiot/dgiot-dashboard.git
 ```
 
 - 安装依赖
@@ -89,7 +89,7 @@ pnpm dev
 - 打包
 
 ```bash
-yarn build
+pnpm build
 ```
 
 
