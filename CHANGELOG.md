@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [4.4.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.5...v4.4.6) (2021-12-31)
+### [4.4.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.5...v4.4.7) (2021-12-31)
 
 ### [4.4.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.2...v4.4.3) (2021-12-09)
 
