@@ -62,10 +62,8 @@ specifiers:
   logrocket-vuex: ^0.0.3
   mammoth: ^1.4.19
   mini-css-extract-plugin: 2.4.4
-  monaco-editor: 0.30.1
   monaco-editor-esm-webpack-plugin: ^2.0.0
   monaco-editor-nls: ^2.0.0
-  monaco-editor-webpack-plugin: 6.0.0
   node-cmd: ^5.0.0
   npm-run-all: ^4.1.5
   plop: ^2.7.6
@@ -132,9 +130,8 @@ dependencies:
   logrocket: 2.1.3
   logrocket-vuex: 0.0.3
   mammoth: 1.4.19
-  monaco-editor-esm-webpack-plugin: 2.0.0_85581103a3ea58751bcc44f935fa2d08
+  monaco-editor-esm-webpack-plugin: 2.0.0_1083e6f516448ab7360cb7a746ca35f8
   monaco-editor-nls: 2.0.0
-  monaco-editor-webpack-plugin: 6.0.0_e4146de625aad8e6c67af0b29262186e
   node-cmd: 5.0.0
   npm-run-all: 4.1.5
   plop: 2.7.6
@@ -182,7 +179,6 @@ devDependencies:
   lighthouse: 8.6.0
   lint-staged: 11.2.6
   mini-css-extract-plugin: 2.4.4_webpack@4.46.0
-  monaco-editor: 0.30.1
   prettier: 2.4.1
   pushstate-server: 3.1.0
   raw-loader: 4.0.2_webpack@4.46.0
@@ -3899,7 +3895,7 @@ packages:
       supports-color: 5.5.0
 
   /chalk/3.0.0:
-    resolution: {integrity: sha1-P3PCv1JlkfV0zEksUeJFY0n4ROQ=, tarball: chalk/download/chalk-3.0.0.tgz}
+    resolution: {integrity: sha512-4D3B6Wf41KOYRFdszmDqMCGq5VV/uMAB273JILmO+3jAlh8X4qDtdtgCR3fxtbLEMzSx22QdhnDcJvu2u1fVwg==, tarball: chalk/download/chalk-3.0.0.tgz}
     engines: {node: '>=8'}
     dependencies:
       ansi-styles: 4.3.0
@@ -9511,7 +9507,7 @@ packages:
     resolution: {integrity: sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==, tarball: moment/download/moment-2.29.1.tgz}
     dev: false
 
-  /monaco-editor-esm-webpack-plugin/2.0.0_85581103a3ea58751bcc44f935fa2d08:
+  /monaco-editor-esm-webpack-plugin/2.0.0_1083e6f516448ab7360cb7a746ca35f8:
     resolution: {integrity: sha1-51CZmr/t6iJV6qqu4D/HdaG693Y=, tarball: monaco-editor-esm-webpack-plugin/download/monaco-editor-esm-webpack-plugin-2.0.0.tgz}
     peerDependencies:
       monaco-editor: '*'
@@ -9519,9 +9515,7 @@ packages:
       monaco-editor-webpack-plugin: '*'
       webpack: 4.x
     dependencies:
-      monaco-editor: 0.30.1
       monaco-editor-nls: 2.0.0
-      monaco-editor-webpack-plugin: 6.0.0_e4146de625aad8e6c67af0b29262186e
       webpack: 4.46.0
     dev: false
 
@@ -9529,19 +9523,9 @@ packages:
     resolution: {integrity: sha1-JkP0SzsjCe+DsXg23KXSAKgalxM=, tarball: monaco-editor-nls/download/monaco-editor-nls-2.0.0.tgz}
     dev: false
 
-  /monaco-editor-webpack-plugin/6.0.0_e4146de625aad8e6c67af0b29262186e:
-    resolution: {integrity: sha1-YolWzhhRr6Kl9siNDsuyTppESJg=, tarball: monaco-editor-webpack-plugin/download/monaco-editor-webpack-plugin-6.0.0.tgz}
-    peerDependencies:
-      monaco-editor: 0.30.x
-      webpack: ^4.5.0 || 5.x
-    dependencies:
-      loader-utils: 2.0.2
-      monaco-editor: 0.30.1
-      webpack: 4.46.0
-    dev: false
-
   /monaco-editor/0.30.1:
     resolution: {integrity: sha512-B/y4+b2O5G2gjuxIFtCE2EkM17R2NM7/3F8x0qcPsqy4V83bitJTIO4TIeZpYlzu/xy6INiY/+84BEm6+7Cmzg==, tarball: monaco-editor/download/monaco-editor-0.30.1.tgz}
+    dev: false
 
   /move-concurrently/1.0.1:
     resolution: {integrity: sha1-viwAX9oy4LKa8fBdfEszIUxwH5I=, tarball: move-concurrently/download/move-concurrently-1.0.1.tgz}

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
+  const monaco = window.monaco || null
   import Monokai from '@/assets/themes/monokai.json'
   import {
     createMonacoComplete,

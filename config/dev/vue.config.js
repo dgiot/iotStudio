@@ -44,7 +44,7 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 // const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
-const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin')
+// const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
@@ -82,10 +82,14 @@ function getChainWebpack(config) {
       js: [],
     }
     css.forEach((_css) => {
-      _staticUrl.css.push(`${staticUrl}css/${_css}`)
+      _staticUrl.css.push(
+        `${staticUrl}css/${_css}?v=${process.env.VUE_APP_VERSION}&t=${dateTime}`
+      )
     })
     js.forEach((_js) => {
-      _staticUrl.js.push(`${staticUrl}js/${_js}`)
+      _staticUrl.js.push(
+        `${staticUrl}js/${_js}?v=${process.env.VUE_APP_VERSION}&t=${dateTime}`
+      )
       // _staticUrl.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
     })
     args[0].staticUrl = _staticUrl
@@ -114,29 +118,29 @@ function getChainWebpack(config) {
     else console.log(`当前未使用cdn,可能会导致打包体积过大`)
     config.performance.set('hints', false)
     config.devtool('none')
-    config.optimization.splitChunks({
-      chunks: 'all',
-      minSize: 300000, //字节 引入的文件大于300kb才进行分割
-      maxSize: 500000, //500kb，尝试将大于500kb的文件拆分成n个500kb的文件
-      minChunks: 1, // 模块的最小被引用次数
-      maxAsyncRequests: 5, // 按需加载的最大并行请求数
-      maxInitialRequests: 3, // 一个入口最大并行请求数
-      automaticNameDelimiter: '-dgiot-', // 文件名的连接符
-      cacheGroups: {
-        vendors: {
-          name: 'vendors',
-          //自定义打包模块
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10, //优先级，先打包到哪个组里面，值越大，优先级越高
-          // filename: 'vendors.js',
-        },
-        elementUI: {
-          name: 'element',
-          priority: 20,
-          test: /[\\/]node_modules[\\/]_?element-ui(.*)/,
-        },
-      },
-    })
+    // config.optimization.splitChunks({
+    //   chunks: 'all',
+    //   minSize: 300000, //字节 引入的文件大于300kb才进行分割
+    //   maxSize: 500000, //500kb，尝试将大于500kb的文件拆分成n个500kb的文件
+    //   minChunks: 1, // 模块的最小被引用次数
+    //   maxAsyncRequests: 5, // 按需加载的最大并行请求数
+    //   maxInitialRequests: 3, // 一个入口最大并行请求数
+    //   automaticNameDelimiter: '-dgiot-', // 文件名的连接符
+    //   cacheGroups: {
+    //     vendors: {
+    //       name: 'vendors',
+    //       //自定义打包模块
+    //       test: /[\\/]node_modules[\\/]/,
+    //       priority: -10, //优先级，先打包到哪个组里面，值越大，优先级越高
+    //       // filename: 'vendors.js',
+    //     },
+    //     elementUI: {
+    //       name: 'element',
+    //       priority: 20,
+    //       test: /[\\/]node_modules[\\/]_?element-ui(.*)/,
+    //     },
+    //   },
+    // })
     config
       .plugin('banner')
       .use(Webpack.BannerPlugin, [`${webpackBanner}${dateTime}`])
@@ -158,9 +162,9 @@ function getChainWebpack(config) {
           algorithm: 'gzip', // 可以是 (buffer, cb) => cb(buffer) 或者是使用 zlib 里面的算法的 {String}
           // test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'), //匹配文件名
           test: productionGzipExtensions,
-          threshold: 2048, //对1K以上的数据进行压缩
-          minRatio: 0.8, // 只有压缩率比这个值小的资源才会被处理
-          // deleteOriginalAssets: true, //是否删除源文件
+          // threshold: 2048, //对1K以上的数据进行压缩
+          // minRatio: 0.8, // 只有压缩率比这个值小的资源才会被处理
+          // deleteOriginalAssets: false, //是否删除源文件
         },
         new Webpack.optimize.LimitChunkCountPlugin({
           maxChunks: 5,
@@ -219,6 +223,7 @@ const configure = {
     bcrypt: 'bcrypt',
     'be-full': 'BeFull',
     JSONEditor: 'JSONEditor',
+    'monaco-editor': 'monaco',
     AMap: 'VueAMap',
     konva: 'Konva',
     VCharts: 'v-charts',
@@ -269,20 +274,21 @@ const configure = {
      * @description: 汉化 Monaco 右键菜单
      * @doc: https://blog.csdn.net/m0_37986789/article/details/121135519
      */
-    rules: [
-      {
-        test: /\.js/,
-        enforce: 'pre',
-        include: /node_modules[\\\/]monaco-editor[\\\/]esm/,
-        use: MonacoWebpackPlugin.loader,
-      },
-    ],
+    // rules: [
+    //   {
+    //     test: /\.js/,
+    //     enforce: 'pre',
+    //     include: /node_modules[\\\/]monaco-editor[\\\/]esm/,
+    //     use: MonacoWebpackPlugin.loader,
+    //   },
+    // ],
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
-    new MonacoWebpackPlugin({
-      filename: 'output/assets/js/monaco/[name].worker.js',
-    }),
+    // new MonacoWebpackPlugin({
+    //   // filename: 'output/assets/js/monaco/[name].worker.js',
+    //   features: ['coreCommands'],
+    // }),
     // new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),
     new Webpack.ProvidePlugin(providePlugin),

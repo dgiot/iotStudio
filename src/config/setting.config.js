@@ -116,7 +116,7 @@ module.exports = {
   templateFolder: 'project',
   webpackBarName: '杭州数蛙科技有限公司',
   // 控制台输出的名称
-  dateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+  dateTime: moment().format('YYYY-MM-DD-HH:mm:ss'),
   // 点击角色树时不重载页面的路由name
   noReloadRouter: ['Workbench'],
   // 打包时间

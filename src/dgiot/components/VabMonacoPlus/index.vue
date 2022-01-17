@@ -9,7 +9,7 @@
   import { setLocaleData } from 'monaco-editor-nls'
   import zh_CN from 'monaco-editor-nls/locale/zh-hans'
   setLocaleData(zh_CN)
-  const monaco = require('monaco-editor/esm/vs/editor/editor.api')
+  const monaco = window.monaco || null
   export default {
     name: 'VabMonacoPlus',
     props: {
@@ -62,6 +62,11 @@
         },
       },
     },
+    data() {
+      return {
+        monacoEditor: monaco,
+      }
+    },
     watch: {
       current() {
         this.monacoEditor.setValue(this.codes)
@@ -74,6 +79,7 @@
         theme: this.theme, // 编辑器主题：vs, hc-black, or vs-dark，更多选择详见官网
         editorOptions: this.editorOptions, // 同codes
       })
+      console.log(this.monacoEditor, 'monacoEditor')
       // 自动格式化代码
       this.monacoEditor.getAction('editor.action.formatDocument').run()
     },

@@ -4,6 +4,7 @@
 ### Bug Fixes
 
 * **.github/workflows/deploy.yml:** output dir ([cd3b423](https://github.com/dgiot/dgiot-dashboard/commit/cd3b423b36880df390ae9ed13d8cd98d8c4246b7))
+* **headers:** delete headers _company ([467b13f](https://github.com/dgiot/dgiot-dashboard/commit/467b13fbf8ce68e8e181dafa7bc17273ffa6af1a))
 * **src/dgiot/plugins/dgiot.js:** baseTableHeight ([98b6c26](https://github.com/dgiot/dgiot-dashboard/commit/98b6c267f46468e908c1e5b520e7412b30804db0))
 * **src/views/devicecloud/manage/home_index.vue:** create a device permission issue ([5bafc32](https://github.com/dgiot/dgiot-dashboard/commit/5bafc325147aa6e8b6892658e3af81e4237c2128))
 * **src/views/multitenant/user/jwtlogin/index.vue:** fix the problem that jwt login fails ([de761b7](https://github.com/dgiot/dgiot-dashboard/commit/de761b72f271e9bac175322c1655185aedcd9330))
