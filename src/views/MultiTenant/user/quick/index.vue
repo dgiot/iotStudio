@@ -8,7 +8,7 @@
       backgroundSize: '100% 100%',
     }"
   >
-    <el-row v-if="isShow">
+    <el-row>
       <el-col :lg="14" :md="11" :sm="24" :xl="14" :xs="24">
         <div style="color: transparent">占位符</div>
       </el-col>
@@ -156,7 +156,6 @@
       }
       return {
         interval: null,
-        isShow: false,
         locationPath: location.href.split('/#')[0],
         info: {
           empty: this.$translateTitle('home.Username can not be empty'),
@@ -231,6 +230,7 @@
       window.removeEventListener('message', this.iframeLogin)
     },
     async mounted() {
+      await this.dgiotReset()
       await this.initShuwa()
       this.$nextTick(async () => {
         await this.defaultSet()
@@ -430,6 +430,7 @@
         this.$message(this.$translateTitle('home.Forgot password'))
       },
       ...mapActions({
+        dgiotReset: 'user/dgiotReset',
         login: 'user/login',
         queryAll: 'user/queryAll',
         jwtlogin: 'user/jwtlogin',

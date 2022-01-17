@@ -99,7 +99,6 @@ const instance = axios.create({
   timeout: requestTimeout,
   headers: {
     'Content-Type': contentType,
-    ip: ip.address(),
   },
 })
 
@@ -130,21 +129,13 @@ instance.interceptors.request.use(
     }
     const { path = '/' } = router.history.current
     let { headers = {} } = config
-    config.headers['departmentToken'] = departmentToken
-    config.headers['pageUrl'] = location.hash
-    // config.headers['jwtInfo'] = Cookies.get('jwtInfo')
+    headers[`${tokenName}`] = usertoken
     if (headers['proxy'] == true) {
-      dgiotlog.log('src/utils/Request/request.js', config, 'config')
+      console.log('src/utils/Request/request.js', config, 'config')
       NODE_ENV == 'production'
         ? (config.baseURL = headers.produrl)
         : (config.baseURL = headers.devurl)
     }
-    _.merge(headers, {
-      departmentToken: departmentToken,
-      sessionToken: usertoken,
-      Auth: 'h7ml',
-      Timestamp: moment(new Date()).unix() + '',
-    })
     if (noCookiePages.indexOf(path) == -1 && !headers[`${tokenName}`]) {
       Vue.prototype.$baseMessage(`当前页${path}未获取到${tokenName}`, 'error')
       router.push({
@@ -195,8 +186,12 @@ instance.interceptors.request.use(
         console.groupEnd()
         config.headers[`${tokenName}`] = usertoken
       }
+      if (
+        config.url.indexOf('classes/Site/default') == 1 ||
+        config.url.indexOf('login') == 1
+      )
+        delete config.headers[`${tokenName}`]
     }
-
     return config
   },
   (error) => {

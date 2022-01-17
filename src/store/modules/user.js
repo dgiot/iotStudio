@@ -520,6 +520,14 @@ const actions = {
     await dispatch('resetAll')
   },
   /**
+   * @description 清除缓存数据
+   * @param dispatch
+   * @returns {Promise<void>}
+   */
+  async dgiotReset({ dispatch }) {
+    await dispatch('resetAll')
+  },
+  /**
    * @description 重置token、roles、ability、router、tabsBar等
    * @param {*} { commit, dispatch }
    */

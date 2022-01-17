@@ -4,6 +4,10 @@ on:
     branches: [ master,dev ]
   workflow_dispatch:
 
+# 设置上海时区
+env:
+  TZ: Asia/Shanghai
+
 jobs:
   deploy:
     runs-on: ubuntu-latest

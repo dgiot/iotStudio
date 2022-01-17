@@ -7,6 +7,10 @@ on:
       - 'v*'
   workflow_dispatch:
 
+# 设置上海时区
+env:
+  TZ: Asia/Shanghai
+
 jobs:
   publish:
     runs-on: ubuntu-latest
