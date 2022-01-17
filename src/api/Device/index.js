@@ -23,7 +23,6 @@ export async function queryDevice(params) {
 export async function querycompanyDevice(params, access_token) {
   return query_object_header('Device', params, {
     sessionToken: access_token,
-    _company: true,
   })
 }
 

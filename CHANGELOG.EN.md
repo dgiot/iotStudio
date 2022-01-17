@@ -4,12 +4,9 @@
 ### Bug Fixes
 
 * **.github/workflows/deploy.yml:** output dir ([cd3b423](https://github.com/dgiot/dgiot-dashboard/commit/cd3b423b36880df390ae9ed13d8cd98d8c4246b7))
-* **config/index.html:** link-dev ([55b2707](https://github.com/dgiot/dgiot-dashboard/commit/55b2707a0d98ddb1fc3cfb6ca0a8834c581ad293))
-* **config/index.html:** link-dev ([655897a](https://github.com/dgiot/dgiot-dashboard/commit/655897a619c10e8b1896d40258e685692b643a9c))
 * **src/dgiot/plugins/dgiot.js:** baseTableHeight ([98b6c26](https://github.com/dgiot/dgiot-dashboard/commit/98b6c267f46468e908c1e5b520e7412b30804db0))
 * **src/views/devicecloud/manage/home_index.vue:** create a device permission issue ([5bafc32](https://github.com/dgiot/dgiot-dashboard/commit/5bafc325147aa6e8b6892658e3af81e4237c2128))
 * **src/views/multitenant/user/jwtlogin/index.vue:** fix the problem that jwt login fails ([de761b7](https://github.com/dgiot/dgiot-dashboard/commit/de761b72f271e9bac175322c1655185aedcd9330))
-* **src/views/multitenant/user/quick/index.vue:** dgiotReset ([e7fb536](https://github.com/dgiot/dgiot-dashboard/commit/e7fb536d9386e989f4c77185436a7bb761fbb806))
 * **src/views/multitenant/user/quick/index.vue:** quick login ([b908c77](https://github.com/dgiot/dgiot-dashboard/commit/b908c7716bb5040fa7b5c4ffa00a55d6ff77821f))
 * **src\views\cloudfunction\engine\createchannel.vue:** create channel process modification ([6ba6d0b](https://github.com/dgiot/dgiot-dashboard/commit/6ba6d0b4539f4505a6d5b309bf9a37cc202c74f3))
 * **src\views\devicecloud\manage\component\profile\producttemplet.vue:** pagination query ([5f7b376](https://github.com/dgiot/dgiot-dashboard/commit/5f7b3764e8c90b0aacf0d5b6b795370df047a862))
@@ -21,6 +18,7 @@
 * **.github/workflows/deploy.yml:** outputDir ([03abe77](https://github.com/dgiot/dgiot-dashboard/commit/03abe77ee6252005b7a946b358d321f25f3b96af))
 * **.gitignore:** .gitignore ([4cb9968](https://github.com/dgiot/dgiot-dashboard/commit/4cb9968f2cd4b0d55db75e9308b3d516df50d871))
 * clone ([c1e3970](https://github.com/dgiot/dgiot-dashboard/commit/c1e39708dd98e2643b6f114e29987a097e34c7f5))
+* **config/index.html:** link-dev ([5f62643](https://github.com/dgiot/dgiot-dashboard/commit/5f62643e659be73bba7a28c33abcb7a8681a0c4e))
 * **loading:** white screen optimization ([caf41de](https://github.com/dgiot/dgiot-dashboard/commit/caf41deabf02d6c33357988494ac793a0ec38da3))
 * **src/config/cli.config.js:** outputDir ([827d53c](https://github.com/dgiot/dgiot-dashboard/commit/827d53c0e811eae3aa47c4f074ac7650f6c11995))
 * **src/dgiot/components/vabmonacoplus/index.vue:** chinese monacoEditor ([732c87e](https://github.com/dgiot/dgiot-dashboard/commit/732c87e0653d304dd512318d56c3d7b520a3ebe5))

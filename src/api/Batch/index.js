@@ -58,11 +58,7 @@ export async function Batchdelete(method, tableClass, ObjectIdArr, body) {
  * @param {*}
  * @description  调用方法参考  src\views\equipment_management\platform_overview.vue
  */
-export async function batch(
-  data,
-  access_token = store.getters['user/token'],
-  _company = false
-) {
+export async function batch(data, access_token = store.getters['user/token']) {
   console.log(data, 'axios from batch')
   return request({
     url: 'batch',
@@ -70,8 +66,6 @@ export async function batch(
     headers: {
       accept: 'application/json',
       'Content-Type': 'application/json',
-      sessionToken: access_token,
-      _company: _company,
     },
     data: { requests: data },
   })
