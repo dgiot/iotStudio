@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022-01-17 03:40:22
+ *  Time: 2022-01-17 04:00:41
  */
 
 .amap-demo {
@@ -21,6 +21,16 @@
 }
 
 [data-v-1eff206c]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}*[data-v-1eff206c]{padding:0;margin:0}.remove-text[data-v-1eff206c]{padding:20px;font-size:24px;text-align:center}.show-multiple[data-v-1eff206c]{display:flex}.show-multiple .multiple-player[data-v-1eff206c]{width:calc(100% / 4);margin:20px}.player-btns[data-v-1eff206c]{display:flex;flex-wrap:wrap;justify-content:center;width:100%}.player-btns span[data-v-1eff206c]{display:inline-block;width:150px;height:40px;padding:5px 10px;margin:0 auto;margin:5px;line-height:40px;text-align:center;cursor:pointer;background:#e1e1e1;border:1px solid #eee;border-radius:10px}.source-box[data-v-1eff206c]{padding:5px 10px;margin-bottom:20px}.source-box .source-label[data-v-1eff206c]{display:block;margin-right:20px;font-size:16px}.source-box #source[data-v-1eff206c]{margin-top:10px}.source-box .source-input[data-v-1eff206c]{width:80%;padding:5px 10px;margin-top:10px;border:1px solid #ccc}
+
+.monaco-editor {
+  width: 100%;
+  height: 100%;
+  border: 1px solid grey;
+}
+.monaco-editor {
+  height: 93vh;
+}
+
 [data-v-0040fdf8]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.drawerCode-container[data-v-0040fdf8]{width:100%;height:100%}.drawerCode-container .fixed-btn[data-v-0040fdf8]{position:fixed;right:24px;bottom:48px;z-index:999}.drawerCode-container .demo-drawer__footer[data-v-0040fdf8]{text-align:center;cursor:pointer}
 .amis{width:100%;height:calc(100vh - 60px * 2.7) !important}.amis #editor{width:100%;height:calc(100vh - 60px * 2.7) !important}.ae-Editor .ae-Editor-inner{height:calc(100vh - 60px * 2.7) !important}
 [data-v-2a46489a]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.node-tree[data-v-2a46489a]{height:85vh;margin:12px 0 auto 12px;text-align:center}.custom-resizer[data-v-2a46489a]{width:100%;height:90vh}.custom[data-v-2a46489a]{width:auto;height:auto}.custom-resizer>.pane[data-v-2a46489a]{overflow:hidden}.custom-resizer>.multipane-resizer[data-v-2a46489a]{position:relative;left:0;margin:0}.custom-resizer>.multipane-resizer[data-v-2a46489a]:before{position:absolute;top:50%;left:50%;display:block;width:3px;height:40px;margin-top:-20px;margin-left:-1.5px;content:"";border-right:1px solid #ccc;border-left:1px solid #ccc}.custom-resizer>.multipane-resizer[data-v-2a46489a]:hover:before{border-color:#999}
@@ -123,3 +133,5 @@ code[data-v-c2f15328] {
 }
 
 [data-v-6a52191b]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.logo-container-horizontal[data-v-6a52191b],.logo-container-common[data-v-6a52191b]{position:relative;height:60px;overflow:hidden;line-height:60px;background:transparent}.logo-container-horizontal .logoico svg[data-v-6a52191b],.logo-container-horizontal .logoico img[data-v-6a52191b],.logo-container-common .logoico svg[data-v-6a52191b],.logo-container-common .logoico img[data-v-6a52191b]{display:inline-block;width:32px;height:32px;color:#fff;vertical-align:middle}.logo-container-horizontal .title[data-v-6a52191b],.logo-container-common .title[data-v-6a52191b]{display:inline-block;margin-left:5px;overflow:hidden;font-size:20px;line-height:55px;color:#fff;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}.logo-container-vertical[data-v-6a52191b],.logo-container-column[data-v-6a52191b],.logo-container-comprehensive[data-v-6a52191b]{position:relative;height:60px;overflow:hidden;line-height:60px;background:transparent;height:60px;line-height:60px;text-align:center}.logo-container-vertical .logoico svg[data-v-6a52191b],.logo-container-vertical .logoico img[data-v-6a52191b],.logo-container-column .logoico svg[data-v-6a52191b],.logo-container-column .logoico img[data-v-6a52191b],.logo-container-comprehensive .logoico svg[data-v-6a52191b],.logo-container-comprehensive .logoico img[data-v-6a52191b]{display:inline-block;width:32px;height:32px;color:#fff;vertical-align:middle}.logo-container-vertical .title[data-v-6a52191b],.logo-container-column .title[data-v-6a52191b],.logo-container-comprehensive .title[data-v-6a52191b]{display:inline-block;margin-left:5px;overflow:hidden;font-size:20px;line-height:55px;color:#fff;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;max-width:140px}.logo-container-column[data-v-6a52191b]{background:#fff !important}.logo-container-column .logoico[data-v-6a52191b]{position:fixed;top:0;display:block;width:64px !important;max-height:60px;margin:0}.logo-container-column .title[data-v-6a52191b]{padding-right:15px;padding-left:15px;margin-left:64px !important;color:#515a6e !important;background:#fff !important;display:inline-block;margin-left:5px;overflow:hidden;font-size:20px;line-height:55px;color:#fff;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+[data-v-215cab54]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}[data-v-215cab54] .el-tag{float:right;height:16px;padding-right:4px;padding-left:4px;margin-top:17px;line-height:16px;border:0}.vab-dot[data-v-215cab54]{float:right;margin-top:23px}
+.monaco-view{position:relative;height:100%}
