@@ -2064,15 +2064,17 @@
       },
       // 迁移设备
       transferAcl(data) {
+        const { detail = {} } = data
         const aclKey1 = 'role' + ':' + data.name
         const aclObj = {}
         aclObj[aclKey1] = {
           read: true,
           write: true,
         }
+        detail['factory'] = data.depname
         const parmas = {
           ACL: aclObj,
-          detail: { factory: data.depname },
+          detail: detail,
         }
         this.$confirm(
           this.$translateTitle(`确定要将设备迁移到` + data.name + '吗'),
