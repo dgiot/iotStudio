@@ -15,7 +15,8 @@ module.exports = {
      */
     {
       path: 'dgiot_dashboard',
-      target: 'https://dgiot.h7ml.icu',
+      target:
+        'https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0',
     },
     /**
      * @description amis server 开发使用

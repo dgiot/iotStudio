@@ -22,6 +22,7 @@
 * **.gitignore:** .gitignore ([4cb9968](https://github.com/dgiot/dgiot-dashboard/commit/4cb9968f2cd4b0d55db75e9308b3d516df50d871))
 * clone ([c1e3970](https://github.com/dgiot/dgiot-dashboard/commit/c1e39708dd98e2643b6f114e29987a097e34c7f5))
 * **config/index.html:** link-dev ([5f62643](https://github.com/dgiot/dgiot-dashboard/commit/5f62643e659be73bba7a28c33abcb7a8681a0c4e))
+* **config/lite/vue.config.js:** monaco ([3e1ea9e](https://github.com/dgiot/dgiot-dashboard/commit/3e1ea9e6721044b70c75abcf8f7d8145cb46de14))
 * **const { css, js } = _staticurl:** })splitChunks ([11b442e](https://github.com/dgiot/dgiot-dashboard/commit/11b442eca68919a2b75ecbf988a84a699be3a778))
 * **loading:** white screen optimization ([caf41de](https://github.com/dgiot/dgiot-dashboard/commit/caf41deabf02d6c33357988494ac793a0ec38da3))
 * **src/config/cli.config.js:** outputDir ([827d53c](https://github.com/dgiot/dgiot-dashboard/commit/827d53c0e811eae3aa47c4f074ac7650f6c11995))

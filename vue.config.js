@@ -1,9 +1,8 @@
 /**
  * release
  */
-// prod /data/dgiot/lib/dgiot_api-4.3.0/priv/www
-// flow /data/dgiot/lib/dgiot_api-1.6.4/priv/www
-// local D:\msys64\home\h7ml\dgiot_dashboard\dist
+// prod /data/dgiot/dgiot/lib/dgiot_api-4.3.0/priv/www
+// local E:\work\code\dgiot\dgiot-dashboard\dev
 
 /**
  * @description vue.config.js全局配置
@@ -60,9 +59,9 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
-// process.env.CDN_URL = proxy[1].target + CDN_URL
-process.env.CDN_URL =
-  process.env.NODE_ENV === 'development' ? proxy[1].target + CDN_URL : CDN_URL
+process.env.CDN_URL = proxy[1].target + CDN_URL
+// process.env.CDN_URL =
+//   process.env.NODE_ENV === 'development' ? proxy[1].target + CDN_URL : CDN_URL
 const staticUrl = process.env.CDN_URL
   ? `${process.env.CDN_URL}/assets/`
   : '/assets/'

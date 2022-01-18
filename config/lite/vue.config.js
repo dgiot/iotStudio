@@ -1,9 +1,8 @@
 /**
  * release
  */
-// prod /data/dgiot/lib/dgiot_api-4.3.0/priv/www
-// flow /data/dgiot/lib/dgiot_api-1.6.4/priv/www
-// local D:\msys64\home\h7ml\dgiot_dashboard\dist
+// prod /data/dgiot/dgiot/lib/dgiot_api-4.3.0/priv/www
+// local E:\work\code\dgiot\dgiot-dashboard\dev
 
 /**
  * @description vue.config.js全局配置
@@ -17,6 +16,7 @@ const {
   transpileDependencies,
   title,
   abbreviation,
+
   devPort,
   providePlugin,
   build7z,

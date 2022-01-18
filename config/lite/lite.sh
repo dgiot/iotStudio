@@ -12,14 +12,14 @@ echo "delete-config: success"
 
 # 删除的组件文件路径
 echo "delete-view: starting"
-rm -rf ./src/dgiot/components/VabDrawerCode/
-rm -rf ./src/dgiot/components/VabAmis/
-rm -rf ./src/dgiot/components/VabMonaco/
-rm -rf ./src/dgiot/components/VabMonacoPlus/
+#rm -rf ./src/dgiot/components/VabDrawerCode/
+#rm -rf ./src/dgiot/components/VabAmis/
+#rm -rf ./src/dgiot/components/VabMonaco/
+#rm -rf ./src/dgiot/components/VabMonacoPlus/
 # 删除的页面文件路径
-rm -rf ./src/views/cloudFunction/
-rm -rf ./src/views/CloudTest/
-rm -rf ./src/views/DeviceCloud/manage/component/profile/ProfileDescriptions.vue
+#rm -rf ./src/views/cloudFunction/
+#rm -rf ./src/views/CloudTest/
+#rm -rf ./src/views/DeviceCloud/manage/component/profile/ProfileDescriptions.vue
 echo "delete-view: success"
 #if [ -f "./package.json" ];
 #then
