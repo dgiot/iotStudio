@@ -5,6 +5,7 @@
 
 * **.github/workflows/deploy.yml:** output dir ([cd3b423](https://github.com/dgiot/dgiot-dashboard/commit/cd3b423b36880df390ae9ed13d8cd98d8c4246b7))
 * detail ([45c9f31](https://github.com/dgiot/dgiot-dashboard/commit/45c9f317320e7136a140595416b6c25e1d71d9ba))
+* **device:** when repairing migrating devices ([cd0f52b](https://github.com/dgiot/dgiot-dashboard/commit/cd0f52bb842a600386189df1041743b82be0a30c))
 * **headers:** delete headers _company ([467b13f](https://github.com/dgiot/dgiot-dashboard/commit/467b13fbf8ce68e8e181dafa7bc17273ffa6af1a))
 * **src/dgiot/plugins/dgiot.js:** baseTableHeight ([98b6c26](https://github.com/dgiot/dgiot-dashboard/commit/98b6c267f46468e908c1e5b520e7412b30804db0))
 * **src/views/devicecloud/manage/home_index.vue:** create a device permission issue ([5bafc32](https://github.com/dgiot/dgiot-dashboard/commit/5bafc325147aa6e8b6892658e3af81e4237c2128))
