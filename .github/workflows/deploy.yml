@@ -78,17 +78,17 @@ jobs:
           vercel-org-id: ${{ secrets.ORG_ID}}
           vercel-project-id: ${{ secrets.PROJECT_ID}}
           working-directory: ./dev
-      # 使用云开发 Github Action 部署
-      - name: Deploy CloudBase 🚀
-        uses: TencentCloudBase/cloudbase-action@v1.1.0
-        with:
-          # 云开发的访问密钥 secretId 和 secretKey
-          secretId: ${{ secrets.SECRET_ID }}
-          secretKey: ${{ secrets.SECRET_KEY }}
-          # 云开发的环境id
-          envId: ${{ secrets.ENV_ID }}
-          # Github 项目静态文件的路径
-          staticSrcPath: ./dev
+#      # 使用云开发 Github Action 部署
+#      - name: Deploy CloudBase 🚀
+#        uses: TencentCloudBase/cloudbase-action@v1.1.0
+#        with:
+#          # 云开发的访问密钥 secretId 和 secretKey
+#          secretId: ${{ secrets.SECRET_ID }}
+#          secretKey: ${{ secrets.SECRET_KEY }}
+#          # 云开发的环境id
+#          envId: ${{ secrets.ENV_ID }}
+#          # Github 项目静态文件的路径
+#          staticSrcPath: ./dev
       - name: Sync dgiot-dashboard Pages  🚀
         uses: yanglbme/gitee-pages-action@main
         with:

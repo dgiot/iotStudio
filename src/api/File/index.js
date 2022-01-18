@@ -62,7 +62,7 @@ export async function UploadImg(params) {
 
   NODE_ENV == 'development'
     ? (url = `${process.env.VUE_APP_URL}/upload`)
-    : (url = 'upload')
+    : (url = location.origin + '/upload')
   if (result) {
     return axios
       .post(url, formData, {
