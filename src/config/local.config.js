@@ -18,6 +18,8 @@ let systemStatic = {
     'style.min.css',
     'codemirror.css',
     'lint.css',
+    'vditor.css',
+    'xterm.css',
     //  amis 相关
     'amis/lib/themes/cxd.css',
     'amis/lib/helper.css',

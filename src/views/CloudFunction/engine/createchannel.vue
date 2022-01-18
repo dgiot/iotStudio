@@ -391,7 +391,9 @@
               write: true,
             }
             const data = {
-              data: JSON.parse(this.$refs.monacoCode.monacoEditor.getValue()),
+              data: this.$refs.monacoCode.monacoEditor
+                ? JSON.parse(this.$refs.monacoCode.monacoEditor.getValue())
+                : {},
               ACL: aclObj,
               config: obj,
               name: this.addchannel.name,

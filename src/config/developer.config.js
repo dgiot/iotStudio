@@ -15,7 +15,7 @@ module.exports = {
      */
     {
       path: 'dgiot_dashboard',
-      target: 'https://dev.iotn2n.com',
+      target: 'https://dgiot.h7ml.icu',
     },
     /**
      * @description amis server 开发使用

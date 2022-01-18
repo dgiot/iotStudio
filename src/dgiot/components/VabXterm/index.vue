@@ -61,6 +61,3 @@
     },
   }
 </script>
-<style lang="scss" scoped>
-  @import 'https://unpkg.com/xterm@4.13.0/css/xterm.css';
-</style>

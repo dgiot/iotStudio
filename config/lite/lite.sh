@@ -5,6 +5,8 @@ set -e
 echo "delete-config: starting"
 rm -rf ./lite.sh ./vue.config.js  ./package.json ./pnpm-lock.yaml ./cli.config.js ./src/config/cli.config.js
 cp -r ./config/lite/* ./
+rm -rf ./public/index.html
+cp -r ./index.html ./public/index.html
 cp -r ./cli.config.js ./src/config/cli.config.js
 echo "delete-config: success"
 
