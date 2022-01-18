@@ -3,11 +3,11 @@ set -e
 # ./config/lite/delete.sh
 # 删除的配置文件路径并拷贝配置文件到项目根目录
 echo "delete-config: starting"
-rm -rf ./lite.sh ./vue.config.js  ./package.json ./pnpm-lock.yaml ./cli.config.js ./src/config/cli.config.js
-cp -r ./config/lite/* ./
-rm -rf ./public/index.html
-cp -r ./index.html ./public/index.html
-cp -r ./cli.config.js ./src/config/cli.config.js
+#rm -rf ./lite.sh ./vue.config.js  ./package.json ./pnpm-lock.yaml ./cli.config.js ./src/config/cli.config.js
+#cp -r ./config/lite/* ./
+#rm -rf ./public/index.html
+#cp -r ./index.html ./public/index.html
+#cp -r ./cli.config.js ./src/config/cli.config.js
 echo "delete-config: success"
 
 # 删除的组件文件路径

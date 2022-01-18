@@ -4,6 +4,7 @@
 ### Bug Fixes
 
 * **.github/workflows/deploy.yml:** output dir ([cd3b423](https://github.com/dgiot/dgiot-dashboard/commit/cd3b423b36880df390ae9ed13d8cd98d8c4246b7))
+* **config/lite/lite.sh:** components ([2289431](https://github.com/dgiot/dgiot-dashboard/commit/22894310e43337566399bacc04c903f43734bf90))
 * detail ([45c9f31](https://github.com/dgiot/dgiot-dashboard/commit/45c9f317320e7136a140595416b6c25e1d71d9ba))
 * **device:** when repairing migrating devices ([cd0f52b](https://github.com/dgiot/dgiot-dashboard/commit/cd0f52bb842a600386189df1041743b82be0a30c))
 * **headers:** delete headers _company ([467b13f](https://github.com/dgiot/dgiot-dashboard/commit/467b13fbf8ce68e8e181dafa7bc17273ffa6af1a))
