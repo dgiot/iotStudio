@@ -20,7 +20,7 @@
     <!--  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
     <meta content="#ffffff" name="msapplication-TileColor" />
     <link
-      href="<%= BASE_URL %>assets/dgiot_dashboard/public/assets/css/loading.css?random=<%= VUE_APP_UPDATE_TIME %>"
+      href="<%= VUE_APP_CDN_URL %>/assets/css/loading.css?random=<%= VUE_APP_UPDATE_TIME %>"
       auth="<%= VUE_APP_AUTHOR %>"
       rel="stylesheet"
       time="<%= VUE_APP_UPDATE_TIME %>"
@@ -115,9 +115,9 @@
       version="<%= VUE_APP_VERSION %>"
     ></script>
     <% } %>
-    <script src="<%= BASE_URL %>/dgiot_dashboard/public/assets/js/monaco-editor/min/vs/loader.js?v=<%= VUE_APP_VERSION %>&t=<%= VUE_APP_UPDATE_TIME %>"></script>
+    <script src="<%= VUE_APP_CDN_URL %>/assets/js/monaco-editor/min/vs/loader.js?v=<%= VUE_APP_VERSION %>&t=<%= VUE_APP_UPDATE_TIME %>"></script>
     <script>
-      require.config({ paths: { 'vs': '<%= BASE_URL %>/dgiot_dashboard/public/assets/js/monaco-editor/min/vs' }});
+      require.config({ paths: { 'vs': '<%= VUE_APP_CDN_URL %>/assets/js/monaco-editor/min/vs' }});
       require(['vs/editor/editor.main'], function(monaco) {
         window.monaco = monaco
       });
