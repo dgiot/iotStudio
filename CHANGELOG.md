@@ -1,9 +1,10 @@
-## [4.4.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.6...v4.4.7) (2022-01-17)
+## [4.4.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.6...v4.4.7) (2022-01-18)
 
 
 ### Bug Fixes
 
 * **.github/workflows/deploy.yml:** output dir ([cd3b423](https://github.com/dgiot/dgiot-dashboard/commit/cd3b423b36880df390ae9ed13d8cd98d8c4246b7))
+* detail ([45c9f31](https://github.com/dgiot/dgiot-dashboard/commit/45c9f317320e7136a140595416b6c25e1d71d9ba))
 * **headers:** delete headers _company ([467b13f](https://github.com/dgiot/dgiot-dashboard/commit/467b13fbf8ce68e8e181dafa7bc17273ffa6af1a))
 * **src/dgiot/plugins/dgiot.js:** baseTableHeight ([98b6c26](https://github.com/dgiot/dgiot-dashboard/commit/98b6c267f46468e908c1e5b520e7412b30804db0))
 * **src/views/devicecloud/manage/home_index.vue:** create a device permission issue ([5bafc32](https://github.com/dgiot/dgiot-dashboard/commit/5bafc325147aa6e8b6892658e3af81e4237c2128))
@@ -24,6 +25,7 @@
 * **loading:** white screen optimization ([caf41de](https://github.com/dgiot/dgiot-dashboard/commit/caf41deabf02d6c33357988494ac793a0ec38da3))
 * **src/config/cli.config.js:** outputDir ([827d53c](https://github.com/dgiot/dgiot-dashboard/commit/827d53c0e811eae3aa47c4f074ac7650f6c11995))
 * **src/dgiot/components/vabmonacoplus/index.vue:** chinese monacoEditor ([732c87e](https://github.com/dgiot/dgiot-dashboard/commit/732c87e0653d304dd512318d56c3d7b520a3ebe5))
+* **src/utils/monaco/monacoutils.js:** monaco ([034a47d](https://github.com/dgiot/dgiot-dashboard/commit/034a47dcc62939a367f058904e04d2d87530f244))
 * **src/views/multitenant/user/quick/index.vue:** dgiot Quick ([2c16aa2](https://github.com/dgiot/dgiot-dashboard/commit/2c16aa2949ea0fdb74c5319362e0c16a76e6a104))
 * **vue.config.js:** speedMeasurePlugin ([07dd2a3](https://github.com/dgiot/dgiot-dashboard/commit/07dd2a3f2aa812f2f04ffd5e6f0b95453a469d90))
 

@@ -501,7 +501,7 @@
                         <el-link
                           size="mini"
                           type="primary"
-                          @click="showTree(row.objectId, row.Company)"
+                          @click="showTree(row, row.objectId, row.Company)"
                         >
                           {{ $translateTitle('equipment.move') }}
                         </el-link>
@@ -747,7 +747,7 @@
                         <el-link
                           size="mini"
                           type="primary"
-                          @click="showTree(row.objectId, row.Company)"
+                          @click="showTree(row, row.objectId, row.Company)"
                         >
                           {{ $translateTitle('equipment.move') }}
                         </el-link>
@@ -1403,6 +1403,7 @@
         }
       }
       return {
+        deviceInfo: {},
         paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
         queryPayload: {
           excludeKeys: 'data',
@@ -1943,7 +1944,8 @@
       },
 
       // 显示菜单树
-      showTree(objectId, acl) {
+      showTree(row, objectId, acl) {
+        this.deviceInfo = row
         this.deviceId = objectId
         this.deciceCompany = acl
         this.popoverVisible = !this.popoverVisible
@@ -2064,17 +2066,16 @@
       },
       // 迁移设备
       transferAcl(data) {
-        const { detail = {} } = data
         const aclKey1 = 'role' + ':' + data.name
         const aclObj = {}
         aclObj[aclKey1] = {
           read: true,
           write: true,
         }
-        detail['factory'] = data.depname
+        this.deviceInfo.detail['factory'] = data.depname
         const parmas = {
           ACL: aclObj,
-          detail: detail,
+          detail: this.deviceInfo.detail,
         }
         this.$confirm(
           this.$translateTitle(`确定要将设备迁移到` + data.name + '吗'),
