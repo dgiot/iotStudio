@@ -1,4 +1,4 @@
-## [4.4.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.6...v4.4.7) (2022-01-18)
+## [4.4.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.6...v4.4.7) (2022-01-19)
 
 
 ### Bug Fixes
@@ -15,10 +15,12 @@
 * **src\views\cloudfunction\engine\createchannel.vue:** create channel process modification ([6ba6d0b](https://github.com/dgiot/dgiot-dashboard/commit/6ba6d0b4539f4505a6d5b309bf9a37cc202c74f3))
 * **src\views\devicecloud\manage\component\profile\producttemplet.vue:** pagination query ([5f7b376](https://github.com/dgiot/dgiot-dashboard/commit/5f7b3764e8c90b0aacf0d5b6b795370df047a862))
 * **src\views\devicecloud\manage\home_index.vue:** fix pagination ([cdc21fa](https://github.com/dgiot/dgiot-dashboard/commit/cdc21faea0a8af596ed73dbc11b3382b71507f5b))
+* **upload:** fix file upload failure ([2931455](https://github.com/dgiot/dgiot-dashboard/commit/29314553cf51222892fba3429059dcca439c6b74))
 
 
 ### Features
 
+* **.github/workflows/deploy.yml:** deploy CloudBase 🚀 ([8e4c151](https://github.com/dgiot/dgiot-dashboard/commit/8e4c151de0a0fff52c4bc6a4ff6bf97b6873abef))
 * **.github/workflows/deploy.yml:** outputDir ([03abe77](https://github.com/dgiot/dgiot-dashboard/commit/03abe77ee6252005b7a946b358d321f25f3b96af))
 * **.gitignore:** .gitignore ([4cb9968](https://github.com/dgiot/dgiot-dashboard/commit/4cb9968f2cd4b0d55db75e9308b3d516df50d871))
 * clone ([c1e3970](https://github.com/dgiot/dgiot-dashboard/commit/c1e39708dd98e2643b6f114e29987a097e34c7f5))
