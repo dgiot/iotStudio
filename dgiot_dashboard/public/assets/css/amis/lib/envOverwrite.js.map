@@ -1,0 +1,13 @@
+{
+    "version": 3,
+    "file": "envOverwrite.js",
+    "sourceRoot": "",
+    "sources": [
+        "/src/envOverwrite.ts"
+    ],
+    "names": [],
+    "mappings": ";AAAA;;GAEG;;;;AAGH,qCAAyE;AAEzE,IAAM,QAAQ,GAAG,CAAA,MAAA,MAAC,MAAc,EAAC,UAAU,mDAAG,oBAAoB,EAAE,OAAO;IACzE,CAAC,CAAC,IAAI;IACN,CAAC,CAAC,KAAK,CAAC;AAEV,IAAA,yBAAe,EAAC,UAAU,MAAc,EAAE,QAAQ,EAAE,KAAW;IAC7D,IAAI,MAAM,IAAI,MAAM,CAAC,MAAM,IAAI,QAAQ,EAAE;QACvC,uDAAW,MAAM,GAAK,MAAM,CAAC,MAAM,EAAE;KACtC;IAED,IAAI,CAAA,KAAK,aAAL,KAAK,uBAAL,KAAK,CAAE,MAAM,KAAI,MAAM,CAAC,KAAK,CAAC,MAAM,CAAC,EAAE;QACzC,uDAAW,MAAM,GAAK,MAAM,CAAC,KAAK,CAAC,MAAM,CAAC,EAAE;KAC7C;IAED,OAAO,MAAM,CAAC;AAChB,CAAC,CAAC,CAAC",
+    "sourcesContent": [
+        "/**\n * @file 用于在移动端或不同语言环境下使用不同配置\n */\n\nimport {SchemaNode, Schema} from './types';\nimport {RendererProps, RendererConfig, addSchemaFilter} from './factory';\n\nconst isMobile = (window as any).matchMedia?.('(max-width: 768px)').matches\n  ? true\n  : false;\n\naddSchemaFilter(function (schema: Schema, renderer, props?: any) {\n  if (schema && schema.mobile && isMobile) {\n    return {...schema, ...schema.mobile};\n  }\n\n  if (props?.locale && schema[props.locale]) {\n    return {...schema, ...schema[props.locale]};\n  }\n\n  return schema;\n});\n"
+    ]
+}

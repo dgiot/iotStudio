@@ -1,0 +1,13 @@
+{
+    "version": 3,
+    "file": "Markdown.js",
+    "sourceRoot": "",
+    "sources": [
+        "/src/renderers/Markdown.tsx"
+    ],
+    "names": [],
+    "mappings": ";;;;AAAA;;GAEG;AACH,6DAA0B;AAC1B,sCAAmD;AAEnD,oDAA8D;AAC9D,2FAAwD;AACxD,0CAA6C;AA4B7C,SAAS,aAAa;IACpB,OAAO,8EAAO,wBAAwB,OAAE,IAAI,CAAC,UAAA,IAAI,IAAI,OAAA,IAAI,CAAC,OAAO,EAAZ,CAAY,CAAC,CAAC;AACrE,CAAC;AAMD;IAA8B,yCAAsC;IAApE;;IAaA,CAAC;IAZC,yBAAM,GAAN;QACQ,IAAA,KAA0C,IAAI,CAAC,KAAK,EAAnD,SAAS,eAAA,EAAE,IAAI,UAAA,EAAc,EAAE,gBAAA,EAAE,IAAI,UAAc,CAAC;QAC3D,IAAM,OAAO,GACX,IAAA,qBAAY,EAAC,IAAI,CAAC,KAAK,CAAC;YACxB,CAAC,IAAI,CAAC,CAAC,CAAC,IAAA,sCAAwB,EAAC,IAAI,EAAE,IAAI,EAAE,OAAO,CAAC,CAAC,CAAC,CAAC,IAAI,CAAC,CAAC;QAEhE,OAAO,CACL,uCAAK,SAAS,EAAE,EAAE,CAAC,UAAU,EAAE,SAAS,CAAC;YACvC,8BAAC,uBAAa,IAAC,YAAY,EAAE,aAAa,EAAE,OAAO,EAAE,OAAO,GAAI,CAC5D,CACP,CAAC;IACJ,CAAC;IACH,eAAC;AAAD,CAAC,AAbD,CAA8B,eAAK,CAAC,SAAS,GAa5C;AAbY,4BAAQ;AAkBrB;IAAsC,iDAAQ;IAA9C;;IAAgD,CAAC;IAApC,gBAAgB;QAH5B,IAAA,kBAAQ,EAAC;YACR,IAAI,EAAE,UAAU;SACjB,CAAC;OACW,gBAAgB,CAAoB;IAAD,uBAAC;CAAA,AAAjD,CAAsC,QAAQ,GAAG;AAApC,4CAAgB",
+    "sourcesContent": [
+        "/**\n * @file 用来渲染 Markdown\n */\nimport React from 'react';\nimport {Renderer, RendererProps} from '../factory';\nimport {BaseSchema} from '../Schema';\nimport {resolveVariableAndFilter} from '../utils/tpl-builtin';\nimport LazyComponent from '../components/LazyComponent';\nimport {getPropValue} from '../utils/helper';\n\n/**\n * Markdown 渲染\n * 文档：https://baidu.gitee.io/amis/docs/components/markdown\n */\nexport interface MarkdownSchema extends BaseSchema {\n  /**\n   * markdown 渲染\n   */\n  type: 'markdown';\n\n  /**\n   * markdown 内容\n   */\n  value?: string;\n\n  /**\n   * 样式类\n   */\n  className?: string;\n\n  /**\n   * 名字映射\n   */\n  name?: string;\n}\n\nfunction loadComponent(): Promise<any> {\n  return import('../components/Markdown').then(item => item.default);\n}\n\nexport interface MarkdownProps\n  extends RendererProps,\n    Omit<MarkdownSchema, 'type' | 'className'> {}\n\nexport class Markdown extends React.Component<MarkdownProps, object> {\n  render() {\n    const {className, data, classnames: cx, name} = this.props;\n    const content =\n      getPropValue(this.props) ||\n      (name ? resolveVariableAndFilter(name, data, '| raw') : null);\n\n    return (\n      <div className={cx('Markdown', className)}>\n        <LazyComponent getComponent={loadComponent} content={content} />\n      </div>\n    );\n  }\n}\n\n@Renderer({\n  type: 'markdown'\n})\nexport class MarkdownRenderer extends Markdown {}\n"
+    ]
+}

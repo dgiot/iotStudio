@@ -1,0 +1,13 @@
+{
+    "version": 3,
+    "file": "Alert.js",
+    "sourceRoot": "",
+    "sources": [
+        "/src/renderers/Alert.tsx"
+    ],
+    "names": [],
+    "mappings": ";;;;AAAA,sCAAmD;AACnD,6DAA0B;AAC1B,6EAAuD;AAgCvD;IAAiC,4CAA2C;IAA5E;;IAKA,CAAC;IAJC,4BAAM,GAAN;QACE,IAAM,KAA0B,IAAI,CAAC,KAAK,EAAnC,MAAM,YAAA,EAAE,IAAI,UAAA,EAAK,IAAI,2BAAtB,kBAAuB,CAAa,CAAC;QAC3C,OAAO,8BAAC,gBAAK,4BAAK,IAAI,GAAG,MAAM,CAAC,MAAM,EAAE,IAAI,CAAC,CAAS,CAAC;IACzD,CAAC;IAJU,WAAW;QAHvB,IAAA,kBAAQ,EAAC;YACR,IAAI,EAAE,OAAO;SACd,CAAC;OACW,WAAW,CAKvB;IAAD,kBAAC;CAAA,AALD,CAAiC,eAAK,CAAC,SAAS,GAK/C;AALY,kCAAW",
+    "sourcesContent": [
+        "import {Renderer, RendererProps} from '../factory';\nimport React from 'react';\nimport Alert, {AlertProps} from '../components/Alert2';\nimport {BaseSchema, SchemaCollection} from '../Schema';\n\n/**\n * Alert 提示渲染器。\n * 文档：https://baidu.gitee.io/amis/docs/components/alert\n */\nexport interface AlertSchema extends BaseSchema {\n  /**\n   * 指定为提示框类型\n   */\n  type: 'alert';\n\n  /**\n   * 内容区域\n   */\n  body: SchemaCollection;\n\n  /**\n   * 提示类型\n   */\n  level?: 'info' | 'warning' | 'success' | 'error' | 'danger';\n\n  /**\n   * 是否显示关闭按钮\n   */\n  showCloseButton?: boolean;\n}\n\n@Renderer({\n  type: 'alert'\n})\nexport class TplRenderer extends React.Component<AlertProps & RendererProps> {\n  render() {\n    const {render, body, ...rest} = this.props;\n    return <Alert {...rest}>{render('body', body)}</Alert>;\n  }\n}\n"
+    ]
+}
