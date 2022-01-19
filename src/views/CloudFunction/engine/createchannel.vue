@@ -14,13 +14,13 @@
           {{ $translateTitle('developer.back') }}
         </el-button>
         <el-button
-          v-show="active == 2"
+          v-if="active == 2"
           type="primary"
           @click.native="addchannelForm('addchannel')"
         >
           {{ $translateTitle('developer.create') }}
         </el-button>
-        <el-button v-show="active == 2" type="info" @click="active = 1">
+        <el-button v-if="active == 2" type="info" @click="active = 1">
           上一步
         </el-button>
       </div>
@@ -33,7 +33,7 @@
           </el-steps>
         </el-col>
 
-        <el-col v-show="active == 1" :span="24">
+        <el-col v-if="active == 1" :span="24">
           <el-row
             :gutter="24"
             style="
@@ -120,7 +120,7 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-form-item v-show="active == 2" label="通道类型" prop="region">
+        <el-form-item v-if="active == 2" label="通道类型" prop="region">
           <el-select
             v-model="addchannel.region"
             placeholder="通道类型"
@@ -136,7 +136,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-col v-show="active == 2" :span="12">
+        <el-col v-if="active == 2" :span="12">
           <el-form-item
             :label="$translateTitle('developer.channelname')"
             prop="name"
@@ -149,7 +149,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col v-show="active == 2" :span="12">
+        <el-col v-if="active == 2" :span="12">
           <el-form-item label="所属应用" prop="applicationtText">
             <el-input
               v-model="addchannel.applicationtText"
@@ -168,7 +168,7 @@
         </el-col>
         <el-col
           v-for="(item, index) in arrlist"
-          v-show="active == 2"
+          v-show="active === 2"
           :key="index"
           :span="12"
         >
@@ -223,7 +223,7 @@
           </el-form-item>
         </el-col>
         <!---------------------统一的配置描述---------------------------->
-        <el-col v-show="active == 2" :span="24">
+        <el-col v-if="active == 2" :span="24">
           <el-form-item :label="$translateTitle('developer.describe')">
             <el-input
               v-model="addchannel.desc"
@@ -235,7 +235,7 @@
           </el-form-item>
         </el-col>
         <!-- 低代码-->
-        <el-col v-if="viewShow" v-show="active == 2" :span="24">
+        <el-col v-if="active == 2" :span="24">
           <el-form-item :label="$translateTitle('product.view')">
             <!--            <el-input-->
             <!--              v-model="addchannel.data"-->
@@ -422,7 +422,7 @@
       },
       removeauto(val) {
         this.active = 2
-        this.viewShow = false
+        this.viewShow = true
         console.log(val)
         var obj = {}
         var obj1 = {
@@ -538,6 +538,10 @@
         this.addrules = obj1
         this.viewShow = true
         this.addchannel.codes = '{}'
+        this.$nextTick(() => {
+          console.log("this.$refs['monacoCode']", this.$refs['monacoCode'])
+          this.addchannel.codes = '{}'
+        })
       },
       async addchannelaxios(data) {
         await postChannel(data).then((results) => {

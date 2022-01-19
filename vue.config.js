@@ -59,10 +59,12 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
-process.env.VUE_APP_CDN_URL = proxy[1].target + CDN_URL
-process.env.CDN_URL = proxy[1].target + CDN_URL
-// process.env.CDN_URL =
-//   process.env.NODE_ENV === 'development' ? proxy[1].target + CDN_URL : CDN_URL
+// process.env.VUE_APP_CDN_URL = proxy[1].target + CDN_URL
+process.env.VUE_APP_CDN_URL =
+  process.env.NODE_ENV === 'development' ? proxy[1].target + CDN_URL : CDN_URL
+// process.env.CDN_URL = proxy[1].target + CDN_URL
+process.env.CDN_URL =
+  process.env.NODE_ENV === 'development' ? proxy[1].target + CDN_URL : CDN_URL
 const staticUrl = process.env.CDN_URL
   ? `${process.env.CDN_URL}/assets/`
   : '/assets/'

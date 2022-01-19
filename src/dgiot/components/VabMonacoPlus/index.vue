@@ -73,15 +73,17 @@
       },
     },
     mounted() {
-      this.monacoEditor = monaco.editor.create(this.$refs.container, {
-        value: this.codes, // 见props
-        language: this.language,
-        theme: this.theme, // 编辑器主题：vs, hc-black, or vs-dark，更多选择详见官网
-        editorOptions: this.editorOptions, // 同codes
+      this.$nextTick(() => {
+        this.monacoEditor = monaco.editor.create(this.$refs.container, {
+          value: this.codes, // 见props
+          language: this.language,
+          theme: this.theme, // 编辑器主题：vs, hc-black, or vs-dark，更多选择详见官网
+          editorOptions: this.editorOptions, // 同codes
+        })
+        console.log(this.monacoEditor, 'monacoEditor')
+        // 自动格式化代码
+        this.monacoEditor.getAction('editor.action.formatDocument').run()
       })
-      console.log(this.monacoEditor, 'monacoEditor')
-      // 自动格式化代码
-      this.monacoEditor.getAction('editor.action.formatDocument').run()
     },
   }
 </script>
