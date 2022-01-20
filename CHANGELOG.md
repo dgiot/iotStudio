@@ -15,6 +15,7 @@
 * **src\views\cloudfunction\engine\createchannel.vue:** create channel process modification ([6ba6d0b](https://github.com/dgiot/dgiot-dashboard/commit/6ba6d0b4539f4505a6d5b309bf9a37cc202c74f3))
 * **src\views\devicecloud\manage\component\profile\producttemplet.vue:** pagination query ([5f7b376](https://github.com/dgiot/dgiot-dashboard/commit/5f7b3764e8c90b0aacf0d5b6b795370df047a862))
 * **src\views\devicecloud\manage\home_index.vue:** fix pagination ([cdc21fa](https://github.com/dgiot/dgiot-dashboard/commit/cdc21faea0a8af596ed73dbc11b3382b71507f5b))
+* upload file ([3b00039](https://github.com/dgiot/dgiot-dashboard/commit/3b000393e13756675afaf17fc67973c0339f3000))
 * **upload:** fix file upload failure ([2931455](https://github.com/dgiot/dgiot-dashboard/commit/29314553cf51222892fba3429059dcca439c6b74))
 
 
