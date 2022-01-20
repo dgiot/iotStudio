@@ -31,6 +31,7 @@
 * **config/lite/vue.config.js:** monaco ([3e1ea9e](https://github.com/dgiot/dgiot-dashboard/commit/3e1ea9e6721044b70c75abcf8f7d8145cb46de14))
 * **const { css, js } = _staticurl:** })splitChunks ([11b442e](https://github.com/dgiot/dgiot-dashboard/commit/11b442eca68919a2b75ecbf988a84a699be3a778))
 * **loading:** white screen optimization ([caf41de](https://github.com/dgiot/dgiot-dashboard/commit/caf41deabf02d6c33357988494ac793a0ec38da3))
+* **openapi:** src/views/CloudFunction/swagger/index.vue ([0c024b7](https://github.com/dgiot/dgiot-dashboard/commit/0c024b70653648c4d3e40587f51281c6268c23a7))
 * **public/index.html:** vUE_APP_CDN_URL ([532d48c](https://github.com/dgiot/dgiot-dashboard/commit/532d48c519112314e73cd6460813d6c3a3825541))
 * **router:** logic processing of page access 404 ([4cf59fa](https://github.com/dgiot/dgiot-dashboard/commit/4cf59fa42df2af17b06ead348a121505828d77f7))
 * **src/config/cli.config.js:** outputDir ([827d53c](https://github.com/dgiot/dgiot-dashboard/commit/827d53c0e811eae3aa47c4f074ac7650f6c11995))
