@@ -32,11 +32,13 @@
 * **const { css, js } = _staticurl:** })splitChunks ([11b442e](https://github.com/dgiot/dgiot-dashboard/commit/11b442eca68919a2b75ecbf988a84a699be3a778))
 * **loading:** white screen optimization ([caf41de](https://github.com/dgiot/dgiot-dashboard/commit/caf41deabf02d6c33357988494ac793a0ec38da3))
 * **public/index.html:** vUE_APP_CDN_URL ([532d48c](https://github.com/dgiot/dgiot-dashboard/commit/532d48c519112314e73cd6460813d6c3a3825541))
+* **router:** logic processing of page access 404 ([4cf59fa](https://github.com/dgiot/dgiot-dashboard/commit/4cf59fa42df2af17b06ead348a121505828d77f7))
 * **src/config/cli.config.js:** outputDir ([827d53c](https://github.com/dgiot/dgiot-dashboard/commit/827d53c0e811eae3aa47c4f074ac7650f6c11995))
 * **src/dgiot/components/vabmonacoplus/index.vue:** chinese monacoEditor ([732c87e](https://github.com/dgiot/dgiot-dashboard/commit/732c87e0653d304dd512318d56c3d7b520a3ebe5))
 * **src/dgiot/components/vabmonacoplus/index.vue:** monacoEditor ([21ef508](https://github.com/dgiot/dgiot-dashboard/commit/21ef508f13df4b601d5eb5a87d98ebc05cd721b0))
 * **src/utils/monaco/monacoutils.js:** monaco ([034a47d](https://github.com/dgiot/dgiot-dashboard/commit/034a47dcc62939a367f058904e04d2d87530f244))
 * **src/views/multitenant/user/quick/index.vue:** dgiot Quick ([2c16aa2](https://github.com/dgiot/dgiot-dashboard/commit/2c16aa2949ea0fdb74c5319362e0c16a76e6a104))
+* **src\components\datav:** make configuration large screen page ([8c03b99](https://github.com/dgiot/dgiot-dashboard/commit/8c03b99c21e5262b7f7e47f7213f3dac764aaa80))
 * **vue.config.js:** speedMeasurePlugin ([07dd2a3](https://github.com/dgiot/dgiot-dashboard/commit/07dd2a3f2aa812f2f04ffd5e6f0b95453a469d90))
 
 
