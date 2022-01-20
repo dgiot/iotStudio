@@ -1,4 +1,4 @@
-## [4.4.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.6...v4.4.7) (2022-01-19)
+## [4.4.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.4.6...v4.4.7) (2022-01-20)
 
 
 ### Bug Fixes
@@ -23,6 +23,7 @@
 * **.github/workflows/deploy.yml:** deploy CloudBase 🚀 ([8e4c151](https://github.com/dgiot/dgiot-dashboard/commit/8e4c151de0a0fff52c4bc6a4ff6bf97b6873abef))
 * **.github/workflows/deploy.yml:** outputDir ([03abe77](https://github.com/dgiot/dgiot-dashboard/commit/03abe77ee6252005b7a946b358d321f25f3b96af))
 * **.gitignore:** .gitignore ([4cb9968](https://github.com/dgiot/dgiot-dashboard/commit/4cb9968f2cd4b0d55db75e9308b3d516df50d871))
+* **cdn static acceleration resources:** replace cdn resources with local ones ([1717d5a](https://github.com/dgiot/dgiot-dashboard/commit/1717d5a458f0762c87988aed5cdd1e6960d2dc0b))
 * clone ([c1e3970](https://github.com/dgiot/dgiot-dashboard/commit/c1e39708dd98e2643b6f114e29987a097e34c7f5))
 * **config/index.html:** link-dev ([5f62643](https://github.com/dgiot/dgiot-dashboard/commit/5f62643e659be73bba7a28c33abcb7a8681a0c4e))
 * **config/lite/lite.sh:** config/lite/lite.sh ([1f7f17f](https://github.com/dgiot/dgiot-dashboard/commit/1f7f17fef4dbd3a26f39287c6100f5a681f7d874))
@@ -32,6 +33,7 @@
 * **public/index.html:** vUE_APP_CDN_URL ([532d48c](https://github.com/dgiot/dgiot-dashboard/commit/532d48c519112314e73cd6460813d6c3a3825541))
 * **src/config/cli.config.js:** outputDir ([827d53c](https://github.com/dgiot/dgiot-dashboard/commit/827d53c0e811eae3aa47c4f074ac7650f6c11995))
 * **src/dgiot/components/vabmonacoplus/index.vue:** chinese monacoEditor ([732c87e](https://github.com/dgiot/dgiot-dashboard/commit/732c87e0653d304dd512318d56c3d7b520a3ebe5))
+* **src/dgiot/components/vabmonacoplus/index.vue:** monacoEditor ([21ef508](https://github.com/dgiot/dgiot-dashboard/commit/21ef508f13df4b601d5eb5a87d98ebc05cd721b0))
 * **src/utils/monaco/monacoutils.js:** monaco ([034a47d](https://github.com/dgiot/dgiot-dashboard/commit/034a47dcc62939a367f058904e04d2d87530f244))
 * **src/views/multitenant/user/quick/index.vue:** dgiot Quick ([2c16aa2](https://github.com/dgiot/dgiot-dashboard/commit/2c16aa2949ea0fdb74c5319362e0c16a76e6a104))
 * **vue.config.js:** speedMeasurePlugin ([07dd2a3](https://github.com/dgiot/dgiot-dashboard/commit/07dd2a3f2aa812f2f04ffd5e6f0b95453a469d90))

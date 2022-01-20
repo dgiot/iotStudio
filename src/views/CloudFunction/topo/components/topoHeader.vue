@@ -2,6 +2,7 @@
 <template>
   <div class="topo-header">
     <el-drawer
+      v-show="infoVisible"
       v-drawerDrag
       append-to-body
       size="100%"
@@ -44,7 +45,7 @@
             v-if="Boolean($route.query.noTools)"
             class="topo-header-top-query-left-panel-dropdown"
           >
-            <a class="ant-dropdown-link" @click="eyeTopo">
+            <a class="ant-dropdown-link" @click="preview">
               <a-icon type="eye" />
               <p>{{ $translateTitle('application.preview') }}</p>
             </a>
@@ -95,17 +96,18 @@
           <!--            "-->
           <!--            @click="handFullscreen"-->
           <!--          />-->
-          <el-button
-            style="margin-left: 16px"
-            type="primary"
-            @click.native="topoJson"
-          >
-            组态数据
-          </el-button>
+          <!--          <el-button-->
+          <!--            style="margin-left: 16px"-->
+          <!--            type="primary"-->
+          <!--            @click.native="topoJson"-->
+          <!--          >-->
+          <!--            组态数据-->
+          <!--          </el-button>-->
         </vab-query-form-right-panel>
       </vab-query-form>
       <el-drawer append-to-body :visible.sync="drawerTopo" :with-header="false">
         <vab-monaco-plus
+          v-if="drawerTopo"
           ref="monacoCodeTopo"
           :codes="codes"
           :language="'json'"
@@ -149,7 +151,7 @@
     },
     data() {
       return {
-        codes: canvas.stage.toJSON(),
+        codes: '',
         drawerTopo: false,
         konva_key: moment(new Date()).valueOf(),
         infoVisible: false,
@@ -184,6 +186,7 @@
     },
     mounted() {
       this.$nextTick(() => {
+        this.codes = canvas.stage.toJSON() ?? ''
         document.onkeydown = (e) => {
           if (e.keyCode == 46) {
             //这是delete健，当然也可以根据自己的需求更改
@@ -210,11 +213,12 @@
         setDrawParams: 'konva/setDrawParams',
       }),
       topoJson() {
-        this.codes = canvas.stage.toJSON()
-        this.drawerTopo = true
         // 自动格式化代码
         this.$nextTick(() => {
-          console.log(this.$refs.monacoCodeTopo.monacoEditor)
+          this.codes = canvas.stage.toJSON()
+          this.drawerTopo = true
+          console.log('monacoCodeTopo 加载日志')
+          console.log(this.$refs.monacoCodeTopo)
           if (this.$refs.monacoCodeTopo.monacoEditor)
             this.$refs.monacoCodeTopo.monacoEditor
               .getAction('editor.action.formatDocument')
@@ -228,9 +232,9 @@
         this.$dgiotBus.$emit('busUpdata')
         this.$dgiotBus.$emit('_busUpdata')
       },
-      eyeTopo() {
-        this.infoVisible = !this.infoVisible
+      preview() {
         this.$nextTick(() => {
+          this.infoVisible = !this.infoVisible
           this.initKonva({
             data: JSON.parse(canvas.stage.toJSON()),
             id: 'konva_preview',
@@ -245,12 +249,12 @@
       setColor(v) {
         this.setGraphColor(v)
       },
-      // flagFn
-      // 打开websocket
-      drawerFlag() {
-        this.topic = `thing/${this.productid}/post`
-        this.drawer = true
-      },
+      // // flagFn
+      // // 打开websocket
+      // drawerFlag() {
+      //   this.topic = `thing/${this.productid}/post`
+      //   this.drawer = true
+      // },
       // mqtt订阅
       subscribe(subdialogid) {
         var info = {
