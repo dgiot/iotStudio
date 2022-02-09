@@ -755,5 +755,5 @@ Lajax.colorEnum = {
   desc: '#d30775',
 }
 
-// export default Lajax
+export default Lajax
 window.Lajax = Lajax

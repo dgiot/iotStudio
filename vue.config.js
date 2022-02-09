@@ -138,9 +138,10 @@ function getChainWebpack(config) {
   })
   // https://blog.csdn.net/weixin_34294049/article/details/97278751
   config.when(process.env.NODE_ENV === 'production', (config) => {
-    if (process.env.CDN_URL)
+    if (process.env.CDN_URL) {
+      console.log(`当前时间${dateTime}`)
       console.log(`当前使用了cdn,cdn资源链接地址为${process.env.CDN_URL}`)
-    else console.log(`当前未使用cdn,可能会导致打包体积过大`)
+    } else console.log(`当前未使用cdn,可能会导致打包体积过大`)
     config.performance.set('hints', false)
     config.devtool('none')
     config.optimization.splitChunks({
@@ -179,7 +180,24 @@ function getChainWebpack(config) {
         })
         .end()
     }
-    // gzip 打包方式已删除，若需使用，请参考 https://github.com/dgiot/dgiot-dashboard/blob/d71e9e0b4ceb8977b5ea9506f4dd3bbc34ceb483/vue.config.js#L182
+    if (buildGzip) {
+      // https://blog.csdn.net/weixin_42164539/article/details/110389256
+      config.plugin('compression').use(CompressionWebpackPlugin, [
+        {
+          filename: '[path][base].gz', // 一个 {Function} (asset) => asset 函数，接收原资源名（通过 asset 选项）返回新资源名
+          algorithm: 'gzip', // 可以是 (buffer, cb) => cb(buffer) 或者是使用 zlib 里面的算法的 {String}
+          // test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'), //匹配文件名
+          test: productionGzipExtensions,
+          threshold: 2048, //对1K以上的数据进行压缩
+          minRatio: 0.8, // 只有压缩率比这个值小的资源才会被处理
+          deleteOriginalAssets: false, //是否删除源文件
+        },
+        new Webpack.optimize.LimitChunkCountPlugin({
+          maxChunks: 5,
+          minChunkSize: 100,
+        }),
+      ])
+    }
     if (build7z) {
       config.plugin('fileManager').use(FileManagerPlugin, [
         {

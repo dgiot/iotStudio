@@ -9,6 +9,32 @@
 /**
  * @description 导出通用配置
  */
+/**
+ * @description 时间戳转换
+ * @param value
+ * @returns {string}
+ * @url https://blog.csdn.net/qq_39293316/article/details/105369743
+ */
+function formatDate(value) {
+  if (typeof value == 'undefined') {
+    return ''
+  } else {
+    let date = new Date(parseInt(value))
+    let y = date.getFullYear()
+    let MM = date.getMonth() + 1
+    MM = MM < 10 ? '0' + MM : MM
+    let d = date.getDate()
+    d = d < 10 ? '0' + d : d
+    let h = date.getHours()
+    h = h < 10 ? '0' + h : h
+    let m = date.getMinutes()
+    m = m < 10 ? '0' + m : m
+    let s = date.getSeconds()
+    s = s < 10 ? '0' + s : s
+    return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
+  }
+}
+
 module.exports = {
   // 标题，此项修改后需要重启项目！！！ (包括初次加载雪花屏的标题 页面的标题 浏览器的标题)
   title: '物联网开发平台',
@@ -118,7 +144,7 @@ module.exports = {
   webpackBarName: '杭州数蛙科技有限公司',
   // 控制台输出的名称
   // dateTime: moment().format('YYYY-MM-DD-HH:mm:ss'),
-  dateTime: Math.round(new Date() / 1000),
+  dateTime: formatDate(Math.round(new Date())),
   // 点击角色树时不重载页面的路由name
   noReloadRouter: ['Workbench'],
   // 打包时间
