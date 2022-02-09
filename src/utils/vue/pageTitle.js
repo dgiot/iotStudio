@@ -26,7 +26,7 @@ export default function getPageTitle(pageTitle) {
   if (store.getters['settings/title']) {
     retutnTitle = newTitles
       .join(titleSeparator)
-      .replace('shuwa Admin Pro', store.getters['settings/title'])
+      .replace(title, store.getters['settings/title'])
   }
   return retutnTitle
 }

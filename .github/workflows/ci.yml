@@ -59,27 +59,27 @@ jobs:
 #          rimraf node_modules dev dist
 #          cnpm install
 #          cnpm run build
-      - name: yarn 🚀
-        run: |
-          npm install --global yarn --registry https://registry.npmmirror.com
-          yarn config set registry https://registry.npmmirror.com
-          yarn -v
-          yarn global add rimraf
-          rimraf node_modules dev dist
-          yarn install
-          yarn build
-      - name: yarn2 🚀
-        run: |
-          npm install --global yarn --registry https://registry.npmmirror.com
-          yarn config set registry https://registry.npmmirror.com
-          yarn -v
-          yarn global add rimraf
-          rimraf node_modules dev dist
-          yarn set version berry
-          yarn -v
-          yarn policies set-version berry
-          yarn install
-          yarn build
+#      - name: yarn 🚀
+#        run: |
+#          npm install --global yarn --registry https://registry.npmmirror.com
+#          yarn config set registry https://registry.npmmirror.com
+#          yarn -v
+#          yarn global add rimraf
+#          rimraf node_modules dev dist
+#          yarn install
+#          yarn build
+#      - name: yarn2 🚀
+#        run: |
+#          npm install --global yarn --registry https://registry.npmmirror.com
+#          yarn config set registry https://registry.npmmirror.com
+#          yarn -v
+#          yarn global add rimraf
+#          rimraf node_modules dev dist
+#          yarn set version berry
+#          yarn -v
+#          yarn policies set-version berry
+#          yarn install
+#          yarn build
 
 
 
@@ -139,24 +139,24 @@ jobs:
 #          rimraf node_modules dev dist
 #          cnpm install
 #          cnpm run build
-      - name: yarn 🚀
-        run: |
-          npm install --global yarn --registry https://registry.npmmirror.com
-          yarn config set registry https://registry.npmmirror.com
-          yarn -v
-          yarn global add rimraf
-          rimraf node_modules dev dist
-          yarn install
-          yarn build
-      - name: yarn2 🚀
-        run: |
-          npm install --global yarn --registry https://registry.npmmirror.com
-          yarn config set registry https://registry.npmmirror.com
-          yarn -v
-          yarn global add rimraf
-          rimraf node_modules dev dist
-          yarn set version berry
-          yarn policies set-version berry
-          yarn -v
-          yarn install
-          yarn build
+#      - name: yarn 🚀
+#        run: |
+#          npm install --global yarn --registry https://registry.npmmirror.com
+#          yarn config set registry https://registry.npmmirror.com
+#          yarn -v
+#          yarn global add rimraf
+#          rimraf node_modules dev dist
+#          yarn install
+#          yarn build
+#      - name: yarn2 🚀
+#        run: |
+#          npm install --global yarn --registry https://registry.npmmirror.com
+#          yarn config set registry https://registry.npmmirror.com
+#          yarn -v
+#          yarn global add rimraf
+#          rimraf node_modules dev dist
+#          yarn set version berry
+#          yarn policies set-version berry
+#          yarn -v
+#          yarn install
+#          yarn build

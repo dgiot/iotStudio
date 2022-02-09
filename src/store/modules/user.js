@@ -21,6 +21,7 @@ async function queryAllMsg(commit, dispatch, data, type) {
     roles,
     tag = {},
     fileServer,
+    name: username,
     expires_in = 86400,
     state = {},
   } = data
@@ -31,14 +32,13 @@ async function queryAllMsg(commit, dispatch, data, type) {
     time: (Date.parse(new Date()) / 1000 + expires_in) * 1000,
     expires_in: 7,
   })
-  http: if (nick) commit('setUsername', nick)
-  const page_title = getToken('title') || title
+  if (nick) commit('setUsername', nick)
   const { title, Copyright, name, logo, _pcimg, _mimg } = tag.companyinfo
+  const page_title = getToken('title') || title
   const { avatar } = tag.userinfo
   commit('setAvatar', avatar)
-  commit('setname', name)
+  commit('setname', username)
   commit('setlogo', logo)
-  dispatch('settings/setTitle', title, { root: true })
   dispatch('settings/saveTheme', tag.theme, { root: true })
   dispatch('settings/togglePicture', tag.theme.pictureSwitch, {
     root: true,
@@ -46,7 +46,7 @@ async function queryAllMsg(commit, dispatch, data, type) {
   dispatch('dashboard/set_pcimg', _pcimg, { root: true })
   dispatch('dashboard/set_mimg', _mimg, { root: true })
   dispatch('acl/setRole', roles, { root: true })
-  dispatch('settings/setTitle', title, { root: true })
+  dispatch('settings/setTitle', name, { root: true })
   dispatch('acl/setCopyright', Copyright, { root: true })
   dispatch('settings/setTag', tag, { root: true })
   commit('setObejectId', objectId)

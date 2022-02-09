@@ -1,7 +1,7 @@
 /**
  * @description 所有全局配置的状态管理，如无必要请勿修改
  */
-import { getToken, setToken } from '@/utils/vue'
+import { getToken, setToken } from '@/utils/vue/index'
 import {
   columnStyle,
   fixedHeader,
