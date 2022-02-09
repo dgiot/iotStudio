@@ -1,0 +1,32 @@
+# https://github.com/actions/create-release
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+# 设置上海时区
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.15.4'
+          registry-url: https://registry.npmjs.org/
+      - run: npm publish --access=public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+      - name: Prepare the changelog from the tag message
+        run: |
+          VERSION=${GITHUB_REF/refs\/tags\//}
+          echo "Setting release version to $VERSION"
+          echo "release_version=$VERSION" >> $GITHUB_ENV

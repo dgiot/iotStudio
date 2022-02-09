@@ -1,0 +1,33 @@
+name: claer
+on:
+  push:
+    branches: [ master,dev ]
+  workflow_dispatch:
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  claer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🚀
+        uses: actions/checkout@v2
+        with:
+          repository: 'jdsync/Workflows-Cleaner'
+      - name: Set up Python 🚀
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install pipenv 🚀
+        env:
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.ACTION_SECRET }}
+          EXPIRE_TIME: '1h'
+        run: |
+          python -m pip install --upgrade pipenv wheel
+          pipenv install
+          pipenv run python run.py
+      - name: Upload coverage to Codecov  🚀
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

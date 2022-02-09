@@ -1,0 +1,162 @@
+name: ci
+on:
+  push
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 16.13.2 ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }} 🚀
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache pnpm modules 🚀
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.3.0
+          run_install: false
+      - name: cache yarn modules
+        uses: actions/cache@v2.1.3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+      - name: pnpm 🚀
+        run: |
+          node -v
+          npm install --global pnpm --registry https://registry.npmmirror.com
+          pnpm config set registry https://registry.npmmirror.com
+          pnpm -v
+          pnpm add -g rimraf
+          rimraf node_modules dev dist
+          pnpm install
+          pnpm build
+      - name: npm 🚀
+        run: |
+          npm config set registry https://registry.npmmirror.com
+          npm -v
+          npm install rimraf -g
+          rimraf node_modules dev dist
+          npm install --legacy-peer-deps
+          npm install
+          npm run build
+#      - name: cnpm 🚀
+#        run: |
+#          npm install -g cnpm --registry=https://registry.npmmirror.com
+#          cnpm -v
+#          cnpm install rimraf -g
+#          rimraf node_modules dev dist
+#          cnpm install
+#          cnpm run build
+      - name: yarn 🚀
+        run: |
+          npm install --global yarn --registry https://registry.npmmirror.com
+          yarn config set registry https://registry.npmmirror.com
+          yarn -v
+          yarn global add rimraf
+          rimraf node_modules dev dist
+          yarn install
+          yarn build
+      - name: yarn2 🚀
+        run: |
+          npm install --global yarn --registry https://registry.npmmirror.com
+          yarn config set registry https://registry.npmmirror.com
+          yarn -v
+          yarn global add rimraf
+          rimraf node_modules dev dist
+          yarn set version berry
+          yarn -v
+          yarn policies set-version berry
+          yarn install
+          yarn build
+
+
+
+  windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        node-version: [ 16.13.2 ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }} 🚀
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: cache pnpm modules  🚀
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.3.0
+          run_install: false
+      - name: cache yarn modules
+        uses: actions/cache@v2.1.3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+      - name: pnpm 🚀
+        run: |
+          node -v
+          npm install --global pnpm --registry https://registry.npmmirror.com
+          pnpm config set registry https://registry.npmmirror.com
+          pnpm -v
+          pnpm add -g rimraf
+          rimraf node_modules dev dist
+          pnpm install
+          pnpm build
+      - name: npm 🚀
+        run: |
+          npm config set registry https://registry.npmmirror.com
+          npm -v
+          npm install rimraf -g
+          rimraf node_modules dev dist
+          npm install --legacy-peer-deps
+          npm install
+          npm run build
+#      - name: cnpm 🚀
+#        run: |
+#          npm install -g cnpm --registry=https://registry.npmmirror.com
+#          cnpm -v
+#          cnpm install rimraf -g
+#          rimraf node_modules dev dist
+#          cnpm install
+#          cnpm run build
+      - name: yarn 🚀
+        run: |
+          npm install --global yarn --registry https://registry.npmmirror.com
+          yarn config set registry https://registry.npmmirror.com
+          yarn -v
+          yarn global add rimraf
+          rimraf node_modules dev dist
+          yarn install
+          yarn build
+      - name: yarn2 🚀
+        run: |
+          npm install --global yarn --registry https://registry.npmmirror.com
+          yarn config set registry https://registry.npmmirror.com
+          yarn -v
+          yarn global add rimraf
+          rimraf node_modules dev dist
+          yarn set version berry
+          yarn policies set-version berry
+          yarn -v
+          yarn install
+          yarn build

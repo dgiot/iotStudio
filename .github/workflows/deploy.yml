@@ -1,0 +1,133 @@
+name: deploy
+on:
+  push:
+    branches: [ master,dev ]
+  workflow_dispatch:
+
+# 设置上海时区
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Cache pnpm modules  🚀
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.3.0
+          run_install: false
+      - name: Pnpm script 🚀
+        run: |
+          pnpm config set registry https://registry.npmmirror.com
+          pnpm i --frozen-lockfile
+          pnpm build
+          cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
+      - name: Deploy to github www 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          BRANCH: www
+          FOLDER: dist
+      - name: cdn static 🚀
+        run: |
+          cd dist
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
+          tar xf dgiot_dashboard.tar.gz
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz
+          tar xf dgiot_swagger.tar.gz
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
+          tar xf dgiot_file.tar.gz
+          rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
+          wget http://dev.iotn2n.com/swagger.json
+      - name: Deploy to github gh-pages 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist
+      - name: Deploy to Netlify  🚀
+        uses: nwtgck/actions-netlify@v1.2
+        with:
+          publish-dir: './dist'
+          production-branch: master
+          github-token: ${{ secrets.GIT_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          netlify-config-path: './public/netlify.toml'
+          overwrites-pull-request-comment: false
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Deploy to surge 🚀
+        uses: dswistowski/surge-sh-action@v1
+        with:
+          domain: 'dgiot-dashboard.surge.sh'
+          project: './dist'
+          login: ${{ secrets.surge_login }}
+          token: ${{ secrets.surge_token }}
+#      - name: Deploy to vercel 🚀
+#        uses: amondnet/vercel-action@v20
+#        with:
+#          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+#          github-token: ${{ secrets.GIT_TOKEN }}
+#          vercel-args: '--prod' #Optional
+#          vercel-org-id: ${{ secrets.ORG_ID}}
+#          vercel-project-id: ${{ secrets.PROJECT_ID}}
+#          working-directory: ./dev
+#      # 使用云开发 Github Action 部署
+#      - name: Deploy CloudBase 🚀
+#        uses: TencentCloudBase/cloudbase-action@v1.1.0
+#        with:
+#          # 云开发的访问密钥 secretId 和 secretKey
+#          secretId: ${{ secrets.SECRET_ID }}
+#          secretKey: ${{ secrets.SECRET_KEY }}
+#          # 云开发的环境id
+#          envId: ${{ secrets.ENV_ID }}
+#          # Github 项目静态文件的路径
+#          staticSrcPath: ./dev
+      - name: Sync dgiot-dashboard Pages  🚀
+        uses: yanglbme/gitee-pages-action@main
+        with:
+          gitee-username: ${{ secrets.GITEE_USERNAME }}
+          gitee-password: ${{ secrets.GITEE_PASSWORD }}
+          gitee-repo: dgiiot/dgiot-dashboard
+          branch: gh-pages
+      - name: Sync to dgiot 🚀
+        uses: wearerequired/git-mirror-action@master
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        with:
+          source-repo: git@github.com:dgiot/dgiot-dashboard.git
+          destination-repo: git@gitee.com:dgiiot/dgiot-dashboard.git
+      - name: Accurics Scan 🚀
+        id: accurics-scan
+        uses: docker://accurics/terrascan-action:latest
+        with:
+          only_warn: true
+          verbose: true
+          webhook_url: https://app.accurics.com/v1/api/terrascan
+          webhook_token: d73c0d62-aab9-4d65-940d-2e6b690a48a7
+      - name: Upload  🚀
+        uses: actions/upload-artifact@v2
+        with:
+          name: dgiot-dashboard
+          path: dist
+      - name: lighthouse 🚀
+        uses: treosh/lighthouse-ci-action@v2
+        with:
+          runs: 5
+          uploadArtifacts: true
+          configPath: './.github/workflows/setup/lighthouse-audit.json'
