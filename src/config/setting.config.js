@@ -31,7 +31,7 @@ function formatDate(value) {
     m = m < 10 ? '0' + m : m
     let s = date.getSeconds()
     s = s < 10 ? '0' + s : s
-    return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
+    return y + '年' + MM + '月' + d + '日' + h + '时' + m + '分' + s + '秒'
   }
 }
 

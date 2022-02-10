@@ -52,7 +52,7 @@ function addNodeEvent(args) {
     `%cKonvaBus ${args.type}`,
     'color:#009a61; font-size: 28px; font-weight: 300'
   )
-  console.info('addNodeEvent args:', '\n:' + args)
+  dgiotlogger.info('addNodeEvent args:', args)
   console.groupEnd()
   const { type, event, node, thing, saleInfo, randomXy } = args
   /*

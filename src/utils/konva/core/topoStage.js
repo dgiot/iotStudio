@@ -42,6 +42,13 @@ const topoStage = {
         const nodeTags = node.getChildren()
         nodeTags.forEach((tag) => {
           info['tag'].push(tag)
+          if (location.href.includes('&type=device')) {
+            dgiotlogger.info('dgiotlogger node:', tag)
+            tag.setAttrs({
+              draggable: false,
+            })
+            return false
+          }
           const event = tag.getAttr('name')
           node.on('mouseover', function (e) {
             document.body.style.cursor = 'pointer'
@@ -76,6 +83,13 @@ const topoStage = {
     })
     stage.find('Text').forEach((node) => {
       info['Text'] = stage.find('Text')
+      if (location.href.includes('&type=device')) {
+        dgiotlogger.info('dgiotlogger node:', node)
+        node.setAttrs({
+          draggable: false,
+        })
+        return false
+      }
       if (node.getAttr('hidden') === true) node.hide()
       // node.setAttrs({
       //   scaleX: args.saleInfo.scaleX,
@@ -99,9 +113,14 @@ const topoStage = {
     })
     stage.find('Path').forEach((node) => {
       info['Path'] = stage.find('Path')
-
-      if (node.getAttr('name') == 'evidence') {
-        if (location.href.includes('preview')) {
+      if (
+        node.getAttr('name') == 'evidence' ||
+        node.getAttr('name') == 'thing'
+      ) {
+        if (
+          location.href.includes('preview') ||
+          location.href.includes('&type=device')
+        ) {
           node.setAttrs({
             draggable: false,
           })
@@ -110,6 +129,7 @@ const topoStage = {
             node.setAttrs({
               fill: 'yellow',
             })
+          return false
         }
 
         // canvas.layer.batchDraw()
