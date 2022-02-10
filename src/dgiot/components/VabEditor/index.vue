@@ -6,7 +6,8 @@
   // import ace from 'ace-builds'
   ace.config.set(
     'basePath',
-    'https://unpkg.com/ace-builds@1.4.14/src-noconflict/'
+    location.origin +
+      '/dgiot_dashboard/public/assets/js/ace-builds-1.4.14/src-min-noconflict/'
   )
   /**
    * @document https://unpkg.com/v-ace-editor

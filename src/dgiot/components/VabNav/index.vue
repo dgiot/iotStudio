@@ -155,7 +155,7 @@
             : hostname.split(':')[0] // 修复代理带端口的问题
         this.option = {
           keepalive: 60,
-          clientId: 'dgiot_mqtt_' + md5(this.token),
+          clientId: this.token, // dlink 协议 user 认证改为user token
           ip,
           isSSL: protocol === 'https:' ? true : false,
           port: protocol == 'http:' ? 8083 : 8084,

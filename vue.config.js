@@ -246,6 +246,7 @@ const cssExport = {
 }
 const configure = {
   externals: {
+    react: 'react',
     'react-dom': 'ReactDOM',
     bcrypt: 'bcrypt',
     'be-full': 'BeFull',
