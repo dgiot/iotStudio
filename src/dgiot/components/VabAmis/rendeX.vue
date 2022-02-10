@@ -13,7 +13,7 @@
   import { alert, confirm } from 'amis/lib/components/Alert'
   import { toast } from 'amis/lib/components/Toast'
   import copy from 'copy-to-clipboard'
-  import ReactDOM from 'react-dom'
+  // import ReactDOM from 'react-dom'
 
   export default {
     name: 'AmisRenderX',
