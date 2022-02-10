@@ -63,7 +63,6 @@ specifiers:
   pushstate-server: 3.1.0
   q: ^1.5.1
   raw-loader: 4.0.2
-  react-dom: ^16.14.0
   register-service-worker: 1.7.2
   resize-detector: 0.3.0
   rimraf: 3.0.2
@@ -102,7 +101,7 @@ dependencies:
   '@vue/babel-helper-vue-jsx-merge-props': 1.2.1
   '@vue/cli-plugin-pwa': 4.5.15_@vue+cli-service@4.5.15
   amis: 1.5.3
-  amis-editor: 3.3.11_amis@1.5.3+react-dom@16.14.0
+  amis-editor: 3.3.11_amis@1.5.3
   axios: 0.24.0
   clean-webpack-plugin: 4.0.0_webpack@4.46.0
   conventional-changelog-cli: 2.2.2
@@ -119,7 +118,6 @@ dependencies:
   npm-run-all: 4.1.5
   plop: 2.7.6
   q: 1.5.1
-  react-dom: 16.14.0
   register-service-worker: 1.7.2
   resize-detector: 0.3.0
   standard-version: 9.3.2
@@ -128,7 +126,7 @@ dependencies:
   vue-contextmenu: 1.5.11
   vue-ele-form-data-editor: 0.1.6
   vue-ele-form-dynamic: 0.4.3
-  vuera: 0.2.7_react-dom@16.14.0
+  vuera: 0.2.7
 
 devDependencies:
   '@babel/runtime': 7.16.3
@@ -2884,7 +2882,7 @@ packages:
     resolution: {integrity: sha512-0FcBfdcmaumGPQ0qPn7Q5qTgz/ooXgIyp1rf8ik5bGX8mpE2YHjC0P/eyQvxu1GURYQgq9ozf2mteQ5ZD9YiyQ==}
     dev: true
 
-  /amis-editor/3.3.11_amis@1.5.3+react-dom@16.14.0:
+  /amis-editor/3.3.11_amis@1.5.3:
     resolution: {integrity: sha512-OAP/Z0viiwi6V8NZ+39f0B+/9ofgV6Fd5GYZKW/xABIITYdgf7/zC3XJ9L/B02p6sKRL8zP6so/6jNd146rjzg==}
     peerDependencies:
       amis: '*'
@@ -2894,9 +2892,9 @@ packages:
       deep-diff: 1.0.2
       json-ast-comments: 1.1.0
       mobx: 4.15.7
-      mobx-react: 6.3.1_mobx@4.15.7+react-dom@16.14.0
+      mobx-react: 6.3.1_mobx@4.15.7
       mobx-state-tree: 3.17.3_mobx@4.15.7
-      react-json-view: 1.21.3_react-dom@16.14.0
+      react-json-view: 1.21.3
     transitivePeerDependencies:
       - '@types/react'
       - encoding
@@ -9437,7 +9435,7 @@ packages:
       react-dom: 16.14.0_react@16.14.0
     dev: false
 
-  /mobx-react-lite/2.2.2_mobx@4.15.7+react-dom@16.14.0:
+  /mobx-react-lite/2.2.2_mobx@4.15.7:
     resolution: {integrity: sha512-2SlXALHIkyUPDsV4VTKVR9DW7K3Ksh1aaIv3NrNJygTbhXe2A9GrcKHZ2ovIiOp/BXilOcTYemfHHZubP431dg==}
     peerDependencies:
       mobx: ^4.0.0 || ^5.0.0
@@ -9451,7 +9449,6 @@ packages:
         optional: true
     dependencies:
       mobx: 4.15.7
-      react-dom: 16.14.0
     dev: false
 
   /mobx-react/6.3.1_e98576d7b318dc515d875aefe88d0b88:
@@ -9468,14 +9465,14 @@ packages:
       - react-native
     dev: false
 
-  /mobx-react/6.3.1_mobx@4.15.7+react-dom@16.14.0:
+  /mobx-react/6.3.1_mobx@4.15.7:
     resolution: {integrity: sha512-IOxdJGnRSNSJrL2uGpWO5w9JH5q5HoxEqwOF4gye1gmZYdjoYkkMzSGMDnRCUpN/BNzZcFoMdHXrjvkwO7KgaQ==}
     peerDependencies:
       mobx: ^5.15.4 || ^4.15.4
       react: ^16.8.0 || 16.9.0-alpha.0
     dependencies:
       mobx: 4.15.7
-      mobx-react-lite: 2.2.2_mobx@4.15.7+react-dom@16.14.0
+      mobx-react-lite: 2.2.2_mobx@4.15.7
     transitivePeerDependencies:
       - react-dom
       - react-native
@@ -11296,17 +11293,6 @@ packages:
       react-onclickoutside: 6.12.1_react-dom@16.14.0+react@16.14.0
     dev: false
 
-  /react-dom/16.14.0:
-    resolution: {integrity: sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==}
-    peerDependencies:
-      react: ^16.14.0
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      prop-types: 15.8.1
-      scheduler: 0.19.1
-    dev: false
-
   /react-dom/16.14.0_react@16.14.0:
     resolution: {integrity: sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==}
     peerDependencies:
@@ -11351,7 +11337,7 @@ packages:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
     dev: false
 
-  /react-json-view/1.21.3_react-dom@16.14.0:
+  /react-json-view/1.21.3:
     resolution: {integrity: sha512-13p8IREj9/x/Ye4WI/JpjhoIwuzEgUAtgJZNBJckfzJt1qyh24BdTm6UQNGnyTq9dapQdrqvquZTo3dz1X6Cjw==}
     peerDependencies:
       react: ^17.0.0 || ^16.3.0 || ^15.5.4
@@ -11359,7 +11345,6 @@ packages:
     dependencies:
       flux: 4.0.3
       react-base16-styling: 0.6.0
-      react-dom: 16.14.0
       react-lifecycles-compat: 3.0.4
       react-textarea-autosize: 8.3.3
     transitivePeerDependencies:
@@ -14006,14 +13991,12 @@ packages:
     resolution: {integrity: sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==}
     dev: false
 
-  /vuera/0.2.7_react-dom@16.14.0:
+  /vuera/0.2.7:
     resolution: {integrity: sha512-MZErNEK+xXjxBzIDFL9cdEtX3TDZk4pMJGB+WLrlFOVro9okS/FeOSpdPFkpdyZUImZN/or4CrmztA932ChGEQ==}
     peerDependencies:
       react: '>= 15.2.0'
       react-dom: '>= 15.2.0'
       vue: '>= 2.2'
-    dependencies:
-      react-dom: 16.14.0
     dev: false
 
   /vuex-persistedstate/4.1.0_vuex@3.6.2:
