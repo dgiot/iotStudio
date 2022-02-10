@@ -12,19 +12,6 @@
 import { appId, uid, name, email, subscriptionType, isPwa } from '@/config'
 const info = require('@/config/index')
 Vue.use(Vuex)
-// https://app.logrocket.com/wj9jpe/dgiot/settings/setup
-import LogRocket from 'logrocket'
-import createPlugin from 'logrocket-vuex'
-
-if (process.env.NODE_ENV === 'production' && isPwa) {
-  LogRocket.init(appId)
-  LogRocket.identify(uid, {
-    name: name,
-    email: email,
-    subscriptionType: subscriptionType,
-  })
-}
-const logrocketPlugin = createPlugin(LogRocket)
 const files = require.context('./modules', false, /\.js$/)
 const modules = {}
 const plugins = []
@@ -34,7 +21,6 @@ files.keys().forEach((key) => {
 Object.keys(modules).forEach((key) => {
   modules[key]['namespaced'] = true
 })
-plugins.push(logrocketPlugin)
 const store = new Vuex.Store({
   modules,
   // plugins: [createLogger()],

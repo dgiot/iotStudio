@@ -2,7 +2,7 @@
  * release
  */
 // prod /data/dgiot/dgiot/lib/dgiot_api-4.3.0/priv/www
-// local E:\work\code\dgiot\dgiot-dashboard\dev
+// local E:\work\code\dgiot\dgiot-dashboard\dist
 
 /**
  * @description vue.config.js全局配置
@@ -248,6 +248,7 @@ const configure = {
   externals: {
     bcrypt: 'bcrypt',
     'be-full': 'BeFull',
+    loadsh: '_',
     JSONEditor: 'JSONEditor',
     AMap: 'VueAMap',
     konva: 'Konva',
@@ -276,6 +277,7 @@ const configure = {
     echarts: 'echarts',
     screenfull: 'screenfull',
     Qs: 'qs',
+    'ace-builds': 'ace',
     qs: 'Qs',
     moment: 'moment',
     jsplumb: 'jsplumb',

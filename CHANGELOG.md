@@ -1,4 +1,4 @@
-## 4.4.8 (2022-02-10)
+## 4.4.9 (2022-02-10)
 
 
 ### Bug Fixes
@@ -9,6 +9,7 @@
 ### Features
 
 * pnpm ([db37de3](https://github.com/dgiot/dgiot-dashboard/commit/db37de39b3b74b19e0e357084767b2befb99eaf2))
+* **topo:** topo draggable ([553ea2a](https://github.com/dgiot/dgiot-dashboard/commit/553ea2a16c097fcb2fb668d2600622566b8acd49))
 
 
 

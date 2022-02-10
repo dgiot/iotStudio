@@ -9,7 +9,8 @@ import { isPwa } from './config'
 import dgiotStore from '@dgiot/dgiot-mqtt-dashboard/src/store'
 import '@/dgiot'
 window.dgiotlogger = new Lajax('https://reqres.in/api/users')
-dgiotlogger.info('dgiotlogger', 'dgiot-dashboard环境变量：', dgiot)
+dgiotlogger.info('dgiot-dashboard环境变量：', dgiot)
+dgiotlogger.info('dgiotlogger.queue：', dgiotlogger.queue)
 if (isPwa) require('./registerServiceWorker')
 process.env.NODE_ENV !== 'development'
   ? (Vue.config.productionTip = true)

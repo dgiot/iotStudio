@@ -17,24 +17,9 @@ import {
 import { globalUrl } from '@/utils/utilwen'
 import store from '@/store'
 import { refreshToken } from '@/api/Role/index'
-const ip = require('ip')
 import router from '@/router'
 import { isArray } from '@/utils/data/validate'
-import CSI from 'csijs'
 let loadingInstance
-
-// 示例：自定义上报
-const csi = new CSI({
-  feID: 'dgiot',
-  report: (lines) => {
-    // todo 自定义你的上报逻辑
-    dgiot.lines = lines
-    console.log('CSI lins', lines)
-  },
-})
-
-// 如果你想主动上报
-csi.report()
 
 // 操作正常Code数组
 const codeVerificationArray = isArray(successCode)

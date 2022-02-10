@@ -24,6 +24,65 @@ if (!('toJSON' in Error.prototype)) {
   /* eslint-enable no-extend-native */
 }
 
+function performanceListener(type, fn) {
+  if (window.addEventListener) {
+    window.addEventListener(type, fn)
+  } else {
+    window.attachEvent('on' + type, fn)
+  }
+}
+function getTiming() {
+  try {
+    var time = performance.timing
+    var timingObj = {}
+
+    var loadTime = (time.loadEventEnd - time.loadEventStart) / 1000
+
+    if (loadTime < 0) {
+      setTimeout(function () {
+        getTiming()
+      }, 200)
+      return
+    }
+
+    timingObj['重定向时间'] = (time.redirectEnd - time.redirectStart) / 1000
+    timingObj['DNS解析时间'] =
+      (time.domainLookupEnd - time.domainLookupStart) / 1000
+    timingObj['TCP完成握手时间'] = (time.connectEnd - time.connectStart) / 1000
+    timingObj['HTTP请求响应完成时间'] =
+      (time.responseEnd - time.requestStart) / 1000
+    timingObj['DOM开始加载前所花费时间'] =
+      (time.responseEnd - time.navigationStart) / 1000
+    timingObj['DOM加载完成时间'] = (time.domComplete - time.domLoading) / 1000
+    timingObj['DOM结构解析完成时间'] =
+      (time.domInteractive - time.domLoading) / 1000
+    timingObj['脚本加载时间'] =
+      (time.domContentLoadedEventEnd - time.domContentLoadedEventStart) / 1000
+    timingObj['onload事件时间'] =
+      (time.loadEventEnd - time.loadEventStart) / 1000
+    timingObj['页面完全加载时间'] =
+      timingObj['重定向时间'] +
+      timingObj['DNS解析时间'] +
+      timingObj['TCP完成握手时间'] +
+      timingObj['HTTP请求响应完成时间'] +
+      timingObj['DOM结构解析完成时间'] +
+      timingObj['DOM加载完成时间']
+
+    for (item in timingObj) {
+      console.info(
+        'timingObj',
+        'timingObj',
+        item + ':' + timingObj[item] + '毫秒(ms)'
+      )
+    }
+    console.info('performance', performance)
+    console.info('timing', performance.timing)
+  } catch (e) {
+    console.warn('timingObj', timingObj)
+    console.warn('timing', performance.timing)
+    console.warn('performance', performance)
+  }
+}
 class Lajax {
   /* eslint-disable no-console, no-bitwise*/
   constructor(param) {
@@ -134,6 +193,9 @@ class Lajax {
     // 加载之前未发送的历史日志
     this._loadFromStorage()
 
+    // 页面加载时长
+    this.handleAddListener()
+
     // 打印描述信息
     this._printDesc()
 
@@ -232,6 +294,12 @@ class Lajax {
     }
   }
 
+  /**
+   *
+   */
+  handleAddListener() {
+    performanceListener('load', getTiming)
+  }
   /**
    * 是否开启了无痕模式
    *
@@ -346,8 +414,8 @@ class Lajax {
             }`
           )
 
-          // 请求头中添加请求 id
-          this.setRequestHeader('X-Request-Id', that.reqId)
+          // // 请求头中添加请求 id
+          // this.setRequestHeader('X-Request-Id', that.reqId)
         }
 
         // 添加 readystatechange 事件

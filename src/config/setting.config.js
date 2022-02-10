@@ -136,7 +136,7 @@ module.exports = {
   // 需要加loading层的请求，防止重复提交
   debounce: ['doEdit'],
   // 生成环境中是否清除console信息
-  clearConsole: true,
+  clearConsole: false,
   // 分栏布局和综合布局时，是否点击一级菜单默认开启第一个二级菜单
   openFirstMenu: true,
   // 代码生成机生成在view下的文件夹名称

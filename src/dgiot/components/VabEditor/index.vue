@@ -3,12 +3,10 @@
 </template>
 
 <script>
-  import ace from 'ace-builds'
+  // import ace from 'ace-builds'
   ace.config.set(
     'basePath',
-    'https://cdn.jsdelivr.net/npm/ace-builds@' +
-      require('ace-builds').version +
-      '/src-noconflict/'
+    'https://unpkg.com/ace-builds@1.4.14/src-noconflict/'
   )
   /**
    * @document https://unpkg.com/v-ace-editor
