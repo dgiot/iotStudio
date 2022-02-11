@@ -1,13 +1,23 @@
 <template>
   <div :key="productId">
-    <a-tabs default-active-key="物模型" s type="card" @change="handletabs">
-      <a-tab-pane key="物模型" tab="物模型">
+    <a-tabs default-active-key="物模型" type="card" @change="handletabs">
+      <a-tab-pane key="物模型" :disabled="!productId" tab="物模型">
         <vab-query-form-left-panel>
-          <el-button size="small" type="primary" @click.native="checkschema">
+          <el-button
+            :disabled="!productId"
+            size="small"
+            type="primary"
+            @click.native="checkschema"
+          >
             {{ $translateTitle('product.viewobjectmodel') }}
           </el-button>
           <!-- 新增自定义属性 -->
-          <el-button size="small" type="primary" @click.native="createProperty">
+          <el-button
+            :disabled="!productId"
+            size="small"
+            type="primary"
+            @click.native="createProperty"
+          >
             {{ $translateTitle('product.newobjectmodel') }}
           </el-button>
         </vab-query-form-left-panel>
@@ -216,37 +226,62 @@
           </div>
         </el-table>
       </a-tab-pane>
-      <a-tab-pane key="解码器" tab="解码器">
-        <vab-monaco-plus
-          ref="monacoCode"
-          :codes="ace_editor"
-          :lang="'json'"
-          :read-only="true"
-          :theme="'vs-dark'"
-        />
+      <a-tab-pane key="解码器" :disabled="!productId" tab="解码器">
+        <div :style="{ height: $baseTableHeight(0) + 'px', overflow: 'auto' }">
+          <el-form
+            class="demo-form-inline"
+            :inline="true"
+            :model="decoderInfo"
+            size="mini"
+          >
+            <el-form-item label="解码器标题">
+              <el-input v-model="decoderInfo.title" placeholder="解码器标题" />
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                effect="dark"
+                :type="decodeType == 'post' ? 'success' : 'info'"
+                @click.native="savecodes"
+              >
+                {{
+                  decodeType == 'post'
+                    ? $translateTitle('button.add')
+                    : $translateTitle('button.edit')
+                }}
+              </el-button>
+            </el-form-item>
+          </el-form>
+          <vab-monaco-plus
+            ref="dgiotCodes"
+            :codes="ace_editor"
+            :lang="'proto'"
+            :read-only="true"
+            :theme="'vs-dark'"
+          />
+        </div>
       </a-tab-pane>
-      <a-tab-pane key="低代码" tab="低代码">
+      <a-tab-pane key="低代码" :disabled="!productId" tab="低代码">
         <dgiot-views :view-form="viewForm" />
       </a-tab-pane>
-      <a-tab-pane key="组态" tab="组态">
+      <a-tab-pane key="组态" :disabled="!productId" tab="组态">
         <el-empty :image-size="200" />
       </a-tab-pane>
-      <a-tab-pane key="规则" tab="规则">
+      <a-tab-pane key="规则" :disabled="!productId" tab="规则">
         <el-empty :image-size="200" />
       </a-tab-pane>
-      <a-tab-pane key="字典" tab="字典">
+      <a-tab-pane key="字典" :disabled="!productId" tab="字典">
         <dgiot-dict :dict-form="dictForm" />
       </a-tab-pane>
     </a-tabs>
   </div>
 </template>
 <script>
+  import { queryDict, putDict, postDict } from '@/api/Dict/index'
   import { mapGetters, mapMutations } from 'vuex'
   import moment from 'moment'
   import { putProductTemplet } from '@/api/ProductTemplet'
   import dgiotViews from '@/views/CloudFunction/lowcode'
   import dgiotDict from '@/views/CloudFunction/dict'
-
   export default {
     name: 'ProfileDescriptions',
     components: {
@@ -310,6 +345,8 @@
         editType: 0,
         amisJsonPlus: '',
         ace_editor: '',
+        decoderInfo: {},
+        decodeType: 'put',
         codeFlag: false,
         amisFlag: false,
         activeName: 'first',
@@ -347,6 +384,9 @@
       this.$dgiotBus.$on('dictLen', (length) => {
         this.dictLen = length
       })
+    },
+    destroyed: function () {
+      this.$dgiotBus.$off('monaco-save')
     },
     methods: {
       async handletabs(tabs) {
@@ -407,12 +447,12 @@
           },
           hiddenRow: ['class', 'key', 'createdAt'],
         }
+        await this.queryDecoder(this.productId)
         switch (tabs) {
           case '物模型':
             await this.featProperties(this.productDetail.thing.properties)
             break
           case '解码器':
-            console.log('ace_editor', this.ace_editor)
             break
           case '低代码':
             break
@@ -427,6 +467,48 @@
             break
         }
       },
+      async queryDecoder(codeid) {
+        const { results } = await queryDict({
+          limit: 1,
+          where: {
+            key: codeid,
+            type: 'decoder',
+          },
+        })
+        this.decodeType = results.length == 0 ? 'post' : 'put'
+        // 首先查一下是否存在解码器
+        this.ace_editor =
+          this.decodeType == 'put'
+            ? Base64.decode(results[0].data.decoder)
+            : Base64.decode(
+                'Ly8gY29weSBmcm9tOiBodHRwczovL2dycGMuaW8vZG9jcy93aGF0LWlzLWdycGMvaW50cm9kdWN0aW9uLwoKCnN5bnRheCA9ICJwcm90bzMiOwoKb3B0aW9uIGphdmFfbXVsdGlwbGVfZmlsZXMgPSB0cnVlOwpvcHRpb24gamF2YV9wYWNrYWdlID0gImlvLmdycGMuZXhhbXBsZXMuZGxpbmsiOwpvcHRpb24gamF2YV9vdXRlcl9jbGFzc25hbWUgPSAiRGxpbmtQcm90byI7Cm9wdGlvbiBvYmpjX2NsYXNzX3ByZWZpeCA9ICJkbGluayI7CgpwYWNrYWdlIGRnaW90OwoKLy8gVGhlIGRsaW5rIHNlcnZpY2UgZGVmaW5pdGlvbi4Kc2VydmljZSBEbGluayB7CiAgLy8gU2VuZHMgYSBncmVldGluZwogIHJwYyBTYXlIZWxsbyAoSGVsbG9SZXF1ZXN0KSByZXR1cm5zIChIZWxsb1JlcGx5KSB7fQoKICAvLyBJZiB0aGUgcmVxdWVzdGVkIHNlcnZpY2UgaXMgdW5rbm93biwgdGhlIGNhbGwgd2lsbCBmYWlsIHdpdGggc3RhdHVzCiAgLy8gTk9UX0ZPVU5ELgogIHJwYyBDaGVjayhIZWFsdGhDaGVja1JlcXVlc3QpIHJldHVybnMgKEhlYWx0aENoZWNrUmVzcG9uc2UpOwoKICAvLyBQZXJmb3JtcyBhIHdhdGNoIGZvciB0aGUgc2VydmluZyBzdGF0dXMgb2YgdGhlIHJlcXVlc3RlZCBzZXJ2aWNlLgogIC8vIFRoZSBzZXJ2ZXIgd2lsbCBpbW1lZGlhdGVseSBzZW5kIGJhY2sgYSBtZXNzYWdlIGluZGljYXRpbmcgdGhlIGN1cnJlbnQKICAvLyBzZXJ2aW5nIHN0YXR1cy4gIEl0IHdpbGwgdGhlbiBzdWJzZXF1ZW50bHkgc2VuZCBhIG5ldyBtZXNzYWdlIHdoZW5ldmVyCiAgLy8gdGhlIHNlcnZpY2UncyBzZXJ2aW5nIHN0YXR1cyBjaGFuZ2VzLgogIC8vCiAgLy8gSWYgdGhlIHJlcXVlc3RlZCBzZXJ2aWNlIGlzIHVua25vd24gd2hlbiB0aGUgY2FsbCBpcyByZWNlaXZlZCwgdGhlCiAgLy8gc2VydmVyIHdpbGwgc2VuZCBhIG1lc3NhZ2Ugc2V0dGluZyB0aGUgc2VydmluZyBzdGF0dXMgdG8KICAvLyBTRVJWSUNFX1VOS05PV04gYnV0IHdpbGwgKm5vdCogdGVybWluYXRlIHRoZSBjYWxsLiAgSWYgYXQgc29tZQogIC8vIGZ1dHVyZSBwb2ludCwgdGhlIHNlcnZpbmcgc3RhdHVzIG9mIHRoZSBzZXJ2aWNlIGJlY29tZXMga25vd24sIHRoZQogIC8vIHNlcnZlciB3aWxsIHNlbmQgYSBuZXcgbWVzc2FnZSB3aXRoIHRoZSBzZXJ2aWNlJ3Mgc2VydmluZyBzdGF0dXMuCiAgLy8KICAvLyBJZiB0aGUgY2FsbCB0ZXJtaW5hdGVzIHdpdGggc3RhdHVzIFVOSU1QTEVNRU5URUQsIHRoZW4gY2xpZW50cwogIC8vIHNob3VsZCBhc3N1bWUgdGhpcyBtZXRob2QgaXMgbm90IHN1cHBvcnRlZCBhbmQgc2hvdWxkIG5vdCByZXRyeSB0aGUKICAvLyBjYWxsLiAgSWYgdGhlIGNhbGwgdGVybWluYXRlcyB3aXRoIGFueSBvdGhlciBzdGF0dXMgKGluY2x1ZGluZyBPSyksCiAgLy8gY2xpZW50cyBzaG91bGQgcmV0cnkgdGhlIGNhbGwgd2l0aCBhcHByb3ByaWF0ZSBleHBvbmVudGlhbCBiYWNrb2ZmLgogIHJwYyBXYXRjaChIZWFsdGhDaGVja1JlcXVlc3QpIHJldHVybnMgKHN0cmVhbSBIZWFsdGhDaGVja1Jlc3BvbnNlKTsKCn0KCi8vIFRoZSByZXF1ZXN0IG1lc3NhZ2UgY29udGFpbmluZyB0aGUgdXNlcidzIG5hbWUuCm1lc3NhZ2UgSGVsbG9SZXF1ZXN0IHsKICBzdHJpbmcgbmFtZSA9IDE7Cn0KCi8vIFRoZSByZXNwb25zZSBtZXNzYWdlIGNvbnRhaW5pbmcgdGhlIGdyZWV0aW5ncwptZXNzYWdlIEhlbGxvUmVwbHkgewogIHN0cmluZyBtZXNzYWdlID0gMTsKfQoKCm1lc3NhZ2UgSGVhbHRoQ2hlY2tSZXF1ZXN0IHsKICBzdHJpbmcgc2VydmljZSA9IDE7Cn0KCm1lc3NhZ2UgSGVhbHRoQ2hlY2tSZXNwb25zZSB7CiAgZW51bSBTZXJ2aW5nU3RhdHVzIHsKICAgIFVOS05PV04gPSAwOwogICAgU0VSVklORyA9IDE7CiAgICBOT1RfU0VSVklORyA9IDI7CiAgICBTRVJWSUNFX1VOS05PV04gPSAzOyAgLy8gVXNlZCBvbmx5IGJ5IHRoZSBXYXRjaCBtZXRob2QuCiAgfQogIFNlcnZpbmdTdGF0dXMgc3RhdHVzID0gMTsKfQ'
+              )
+        this.decoderInfo =
+          results.length > 0 ? results[0] : { title: codeid + '的解码器' }
+        this.$nextTick(() => {
+          this.$dgiotBus.$on('monaco-save', async (data) => {
+            const params = {
+              data: { decoder: Base64.encode(data) },
+              class: 'Product',
+              title: this.decoderInfo.title,
+              type: 'decoder',
+              key: this.productId,
+            }
+            if (this.decodeType == 'post') {
+              const res = await postDict(params)
+              this.$message.success(
+                `${this.$translateTitle('user.Save the template successfully')}`
+              )
+            } else {
+              const { msg } = await putDict(this.decoderInfo.objectId, params)
+              this.$message.success(
+                `${this.$translateTitle('user.Save the template successfully')}`
+              )
+            }
+          })
+        })
+        // monaco-save bus 事件，这里将解码器的代码编码后提交到库
+      },
       openView() {
         this.dialogTableVisible = true
       },
@@ -437,6 +519,10 @@
       openDict() {
         // this.feateditorParser(this.productDetail, 'parser', true)
         this.dialogDictVisible = true
+      },
+      savecodes() {
+        if (!this.productId) return false
+        else this.$refs.dgiotCodes.save()
       },
       async saveAmis(productId, amisconfig, productDetail) {
         const mergeAmis = _.merge(this.productDetail, {
@@ -625,7 +711,7 @@
         set_amisJson: 'amis/set_amisJson',
       }),
       seeDecoder(productDetail) {
-        dgiotlog.log(ace, 'ace', this.ace_editor)
+        console.log(ace, 'ace', this.ace_editor)
         const { decoder = {} } = productDetail
         this.dialogTableVisible = false
         this.dialogDictVisible = false

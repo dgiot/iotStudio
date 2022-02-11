@@ -74,6 +74,10 @@
           {{ $translateTitle('equipment.Failure analysis') + ':' }}
         </td>
         <td>{{ devicedetail.lastOnlineTime || '-' }}</td>
+        <td class="cloumn">
+          {{ $translateTitle('application.secretkey') + ':' }}
+        </td>
+        <td>{{ devicedetail.deviceSecret || '-' }}</td>
       </tr>
     </table>
     <el-table

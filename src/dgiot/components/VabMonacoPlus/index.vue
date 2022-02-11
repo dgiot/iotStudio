@@ -106,6 +106,11 @@
       height="100%"
       :options="monacoOptions"
       width="100%"
+      @on-before-mount="mount"
+      @on-change="change"
+      @on-input="input"
+      @on-mounted="beforeount"
+      @on-save="save"
     />
   </div>
 </template>
@@ -185,6 +190,26 @@
     //   this.monacoEditor = this.$refs.monacoEditor
     // },
     methods: {
+      async mount(monaco) {
+        // console.log('mount', monaco)
+        await this.$dgiotBus.$emit('monaco-mount', monaco)
+      },
+      async beforeount(editor, monaco) {
+        // console.log('beforeount', editor, monaco)
+        await this.$dgiotBus.$emit('monaco-beforeount', editor, monaco)
+      },
+      async change(value, event) {
+        // console.log('change', value, event)
+        await this.$dgiotBus.$emit('monaco-change', (value, event))
+      },
+      async input(value) {
+        // console.log('input', value)
+        await this.$dgiotBus.$emit('monaco-input', value)
+      },
+      async save(value) {
+        // console.log('save', value)
+        await this.$dgiotBus.$emit('monaco-save', value)
+      },
       // getValue() {
       //   console.log('getValue', this.$refs.monacoEditor.$refs)
       //   return this.$refs.monacoEditor.$refs

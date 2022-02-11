@@ -7,7 +7,7 @@ specifiers:
   '@commitlint/config-conventional': 14.1.0
   '@dgiot/dgiot-component': 0.0.3
   '@dgiot/dgiot-icons': 0.0.19
-  '@dgiot/dgiot-monaco': ^0.2.0
+  '@dgiot/dgiot-monaco': ^0.2.2
   '@dgiot/dgiot-mqtt-dashboard': 1.1.5
   '@jiaminghi/c-render': ^0.4.3
   '@jiaminghi/charts': ^0.2.18
@@ -92,7 +92,7 @@ dependencies:
   '@babel/helper-plugin-utils': 7.14.5
   '@dgiot/dgiot-component': 0.0.3_webpack@4.46.0
   '@dgiot/dgiot-icons': 0.0.19
-  '@dgiot/dgiot-monaco': 0.2.0_webpack@4.46.0
+  '@dgiot/dgiot-monaco': 0.2.2_webpack@4.46.0
   '@dgiot/dgiot-mqtt-dashboard': 1.1.5_webpack@4.46.0
   '@jiaminghi/c-render': 0.4.3
   '@jiaminghi/charts': 0.2.18
@@ -1631,8 +1631,8 @@ packages:
       vue: 2.6.14
     dev: false
 
-  /@dgiot/dgiot-monaco/0.2.0_webpack@4.46.0:
-    resolution: {integrity: sha512-3HwFUA+I00849HChpZoIlcbu6X2gaSuFPKNeEuqJKHmBwIGYj4MF1ifC9ACTIl3gGncpKlIPqgh49jcnqPz+qg==}
+  /@dgiot/dgiot-monaco/0.2.2_webpack@4.46.0:
+    resolution: {integrity: sha512-eAoKz+lDgjG829Xkauz289Q7l8p50XSuIp6bBM9SY4KvVI42CogTCaH2nAVFTvFQiEZG/+OswRX6ntwryQe+vQ==}
     dependencies:
       core-js: 3.19.1
       font-awesome: 4.7.0
@@ -5739,7 +5739,7 @@ packages:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
 
   /emojis-list/2.1.0:
-    resolution: {integrity: sha512-knHEZMgs8BB+MInokmNTg/OyPlAddghe1YBgNwJBc5zsJi/uyIcXoSDsL/W9ymOsBoBGdPIHXYJ9+qKFwRwDng==}
+    resolution: {integrity: sha1-TapNnbAPmBmIDHn6RXrlsJof04k=}
     engines: {node: '>= 0.10'}
     dev: true
 
@@ -6421,7 +6421,7 @@ packages:
     dev: false
 
   /file-uri-to-path/1.0.0:
-    resolution: {integrity: sha1-VTp7hEb/b2hDWcRF8eN6BdrMM90=, tarball: file-uri-to-path/download/file-uri-to-path-1.0.0.tgz}
+    resolution: {integrity: sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==}
     requiresBuild: true
     optional: true
 
@@ -6663,7 +6663,7 @@ packages:
     dev: true
 
   /font-awesome/4.7.0:
-    resolution: {integrity: sha512-U6kGnykA/6bFmg1M/oT9EkFeIYv7JlX3bozwQJWiiLz6L0w3F5vBVPxHlwyX/vtNq1ckcpRKOB9f2Qal/VtFpg==}
+    resolution: {integrity: sha1-j6jPBBGhoxr9B7BtKQK7n8gVoTM=}
     engines: {node: '>=0.10.3'}
     dev: false
 
@@ -8386,7 +8386,7 @@ packages:
     dev: true
 
   /json5/0.5.1:
-    resolution: {integrity: sha512-4xrs1aW+6N5DalkqSVA8fxh458CXvR99WU8WLKmq4v8eWAL86Xo3BVqyd3SkA9wEVjCMqyvvRRkshAdOnBp5rw==}
+    resolution: {integrity: sha1-Hq3nrMASA0rYTiOWdn6tn6VJWCE=}
     hasBin: true
     dev: true
 
@@ -8672,7 +8672,7 @@ packages:
     engines: {node: '>=4.3.0 <5.0.0 || >=5.10'}
 
   /loader-utils/0.2.17:
-    resolution: {integrity: sha512-tiv66G0SmiOx+pLWMtGEkfSEejxvb6N6uRrQjfWJIT79W9GMpgKeCAmm9aVBKtd4WEgntciI8CsGqjpDoCWJug==}
+    resolution: {integrity: sha1-+G5jdNQyBabmxg6RlvF8Apm/s0g=}
     dependencies:
       big.js: 3.2.0
       emojis-list: 2.1.0

@@ -57,7 +57,7 @@
     "@babel/helper-plugin-utils": "7.14.5",
     "@dgiot/dgiot-component": "0.0.3",
     "@dgiot/dgiot-icons": "0.0.19",
-    "@dgiot/dgiot-monaco": "^0.2.0",
+    "@dgiot/dgiot-monaco": "^0.2.2",
     "@dgiot/dgiot-mqtt-dashboard": "1.1.5",
     "@jiaminghi/c-render": "^0.4.3",
     "@jiaminghi/charts": "^0.2.18",
