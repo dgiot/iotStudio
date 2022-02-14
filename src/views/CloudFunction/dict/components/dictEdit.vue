@@ -16,6 +16,9 @@
       <el-form-item label="类型" prop="type">
         <el-select
           v-model="form.type"
+          allow-create
+          default-first-option
+          filterable
           :placeholder="$translateTitle('rule.Type')"
           style="width: 100%"
         >
@@ -82,7 +85,7 @@
           title: '',
           author: '',
         },
-        dicttype: ['dict', 'word', 'rule'],
+        dicttype: ['dict', 'word', 'rule', 'datav'],
         titleOption: ['worddict', 'ruledict'],
         rules: {
           title: [{ required: true, trigger: 'blur', message: '请输入标题' }],

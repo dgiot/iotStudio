@@ -222,7 +222,7 @@
           count: 'objectId',
         },
         queryForm: this.dictForm,
-        dicttype: ['dict', 'word', 'rule'],
+        dicttype: ['dict', 'word', 'rule', 'datav'],
         titleOption: ['worddict', 'ruledict'],
         list: [],
         imageList: [],

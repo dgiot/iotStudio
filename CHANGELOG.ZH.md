@@ -5,6 +5,7 @@
 
 * **cdn:** react ([b21aede](https://github.com/dgiot/dgiot-dashboard/commit/b21aedefe3660292611b101d69cf8ede4c8319d6))
 * Fixed the problem that the company name could not be set to take effect ([3411c08](https://github.com/dgiot/dgiot-dashboard/commit/3411c085dc72ae04c6cfce5359134f921707e88a))
+* **src/views/devicecloud/manage/component/profile/profiledescriptions.vue:** monacoEditor getCode ([9b40bde](https://github.com/dgiot/dgiot-dashboard/commit/9b40bdee855ed1b3ea3956e7000f5d94557bf2e4))
 
 
 ### Features
