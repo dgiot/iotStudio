@@ -376,6 +376,7 @@
       },
     },
     mounted() {
+      this.$dgiotBus.$off('monaco-save')
       this.$dgiotBus.$off('lowcodeLen')
       this.$dgiotBus.$on('lowcodeLen', (length) => {
         this.lowcodeLen = length
@@ -447,12 +448,13 @@
           },
           hiddenRow: ['class', 'key', 'createdAt'],
         }
-        await this.queryDecoder(this.productId)
         switch (tabs) {
           case '物模型':
             await this.featProperties(this.productDetail.thing.properties)
             break
           case '解码器':
+            await this.$dgiotBus.$off('monaco-save')
+            await this.queryDecoder(this.productId)
             break
           case '低代码':
             break
@@ -487,6 +489,7 @@
           results.length > 0 ? results[0] : { title: codeid + '的解码器' }
         this.$nextTick(() => {
           this.$dgiotBus.$on('monaco-save', async (data) => {
+            console.log(data, 'data')
             const params = {
               data: { decoder: Base64.encode(data) },
               class: 'Product',
@@ -522,7 +525,13 @@
       },
       savecodes() {
         if (!this.productId) return false
-        else this.$refs.dgiotCodes.save()
+        else {
+          // fix refs.editor.getValue()
+          this.$refs.dgiotCodes.save(
+            this.$refs.dgiotCodes.$refs.monacoEditor.editor.getValue()
+          )
+          this.decodeType = 'put'
+        }
       },
       async saveAmis(productId, amisconfig, productDetail) {
         const mergeAmis = _.merge(this.productDetail, {

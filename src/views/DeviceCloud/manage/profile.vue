@@ -650,6 +650,7 @@
         }
       },
       async StepsListRowClick(params) {
+        this.$dgiotBus.$off('monaco-save')
         var productDetail = {}
         var isLoading = true
         try {
