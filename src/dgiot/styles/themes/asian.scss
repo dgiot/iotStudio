@@ -3,27 +3,27 @@
  */
 
 body.vab-theme-asian {
-  $base-menu-background: #fff;
-  $base-color-blue: #f34d37;
+  $base-menu-background: #1653b7;
+  $base-color-blue: #1653b7;
   $base-color-blue-light: mix($base-color-white, $base-color-blue, 90%);
-  background: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      color-stop(0%, #000000),
-      color-stop(100%, #1289dd)
-  ) !important;
-  filter: alpha(opacity=95); /* IE8 及其更早版本 */
-  opacity: 0.95;
+  //background: -webkit-gradient(
+  //    linear,
+  //    left top,
+  //    left bottom,
+  //    color-stop(0%, #ffffff),
+  //    color-stop(100%, #1289dd)
+  //) !important;
+  //filter: alpha(opacity=85); /* IE8 及其更早版本 */
+  //opacity: 0.85;
   @import '../default.scss';
   @mixin container {
-    color: #515a6e !important;
+    color: #bfefff !important;
     background: $base-menu-background !important;
   }
 
   @mixin container-column {
-    color: #515a6e !important;
-    background: #f7f9ff !important;
+    color: #1653b7 !important;
+    background: #1653b7 !important;
   }
 
   @mixin active {
@@ -190,7 +190,7 @@ body.vab-theme-asian {
       @include container;
 
       .ri-notification-line {
-        color: #515a6e !important;
+        color: #bfefff !important;
       }
 
       .el-menu {

@@ -278,23 +278,22 @@
       }),
     },
     watch: {
-      // pictureSwitch: {
-      //   handler(pictureSwitch) {
-      //     $('.appendLogo').remove()
-      //     dgiotlog.log(pictureSwitch, 'this.pictureSwitch')
-      //     if (pictureSwitch) {
-      //       $('.logo-container .router-link-active').css({
-      //         display: 'none',
-      //       })
-      //     } else {
-      //       $('.logo-container .router-link-active').css({
-      //         display: 'block',
-      //       })
-      //     }
-      //   },
-      //   deep: true,
-      //   immediate: true,
-      // },
+      theme: {
+        handler(theme) {
+          const { showTabs = false, themeName } = theme
+          console.log(theme, showTabs, 'theme')
+          if (themeName == 'asian') {
+            $('.vab-tabs').css('border', '0')
+            $('.vab-tabs').css('background-color', '#282c34')
+          } else
+            $('.vab-tabs').css('background-color', 'calc(100vh - 60px * 1)')
+          if (showTabs) {
+            $('section').css('section', '#282c34')
+          }
+        },
+        deep: true,
+        immediate: true,
+      },
     },
     created() {
       this.$dgiotBus.$on('theme', () => {
