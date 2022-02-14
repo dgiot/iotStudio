@@ -1,6 +1,12 @@
 <template>
   <div class="asian">
     <div class="main-container">
+      <div class="top-header">
+        <div id="top-header">
+          <dv-decoration-5 class="header-center-decoration" />
+          <div class="center-title">电竞馆数字孪生驾驶舱</div>
+        </div>
+      </div>
       <dv-border-box-13 class="main-container-left">
         设备状态
         <dv-scroll-board
@@ -10,7 +16,7 @@
         告警数据
         <dv-scroll-ranking-board
           :config="rankingconfig"
-          style="width: calc(100% - 0); height: 40%"
+          style="width: calc(100% - 0); height: 35%"
         />
         监控数据
         <dv-capsule-chart
@@ -28,7 +34,14 @@
 
       <dv-border-box-13 class="main-container-right">
         人流数据
-        <dv-charts :option="options" />
+        <dv-charts
+          :option="options"
+          style="width: calc(100% - 0); height: 45%"
+        />
+        <dv-charts
+          :option="options"
+          style="width: calc(100% - 0); height: 50%"
+        />
       </dv-border-box-13>
     </div>
   </div>
@@ -324,6 +337,7 @@
     width: 100%;
     height: 100%;
     margin: 0 0px;
+    color: #bfefff !important;
     .main-container {
       background-image: url('../../../public/assets/images/Asian/5138162066c98d21b4467e3ad7bbb04.jpg');
       background-repeat: repeat;
@@ -332,6 +346,34 @@
       background-color: skyblue;
       opacity: 0.9;
       height: 100%;
+      .top-header {
+        position: absolute;
+        width: 100%;
+        height: 20%;
+      }
+      #top-header {
+        position: relative;
+        width: 100%;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        flex-shrink: 0;
+
+        .header-center-decoration {
+          width: 40%;
+          height: 60px;
+          margin-top: 30px;
+        }
+
+        .center-title {
+          position: absolute;
+          font-size: 30px;
+          font-weight: bold;
+          left: 50%;
+          top: 15px;
+          transform: translateX(-50%);
+        }
+      }
       &-left,
       &-right {
         flex: 1;

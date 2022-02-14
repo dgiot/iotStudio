@@ -9,6 +9,7 @@
 
 ### Features
 
+* **asian.vue:** asian ([5f38008](https://github.com/dgiot/dgiot-dashboard/commit/5f3800816e3e02974ea09a8ff4a9783d8ac8d986))
 * **asian:** theme ([2234d5d](https://github.com/dgiot/dgiot-dashboard/commit/2234d5d2d70decfe13339f4517b2b20a1aae9ee4))
 * pnpm ([db37de3](https://github.com/dgiot/dgiot-dashboard/commit/db37de39b3b74b19e0e357084767b2befb99eaf2))
 * **src/views/devicecloud/manage/component/profile/profiledescriptions.vue:** dgiotCodes ([0707f8b](https://github.com/dgiot/dgiot-dashboard/commit/0707f8b841bba1b7885ff7c2a03b6a9bdb270806))
